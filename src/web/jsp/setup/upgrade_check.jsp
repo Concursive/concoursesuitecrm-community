@@ -27,7 +27,10 @@
   </tr>
   <tr>
     <td nowrap>
-      You are now logged in as administrator. Please review the following information<br />
+      You are now logged in as administrator.<br />
+      Make sure you have backed up your database and file library.<br />
+      <br />
+      Please review the following information<br />
       <br />
       <table border="0" class="empty">
         <tr>
