@@ -225,8 +225,8 @@
       <td colspan="3" width="100%" align="center" bgcolor='#808080' height='30'>
         <input type="hidden" name="insertMembers">
         <input type="hidden" name="deleteMembers">
-        <input type="button" value="Restore Values" onClick="resetValues(this.form)"> &nbsp;
         <input type="submit" value="Update Team" onClick="checkSubmit(this.form)"> &nbsp;
+        <input type="button" value="Restore Values" onClick="resetValues(this.form)"> &nbsp;
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'">
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
