@@ -106,27 +106,24 @@
       <property>guid</property>
       <property lookup="user">owner</property>
       <property>description</property>
-      <property>acctlink</property>
+      <property>accountLink</property>
       <property>contactlink</property>
-      <property>closedate</property>
-      <property>closeprob</property>
+      <property>closeDate</property>
+      <property>closeProb</property>
       <property>terms</property>
       <property>units</property>
-      <property>lowvalue</property>
-      <property>guessvalue</property>
-      <property>highvalue</property>
+      <property>low</property>
+      <property>guess</property>
+      <property>high</property>
       <property>stage</property>
-      <property>stagedate</property>
+      <property>stageDate</property>
       <property>commission</property>
       <property>type</property>
-      <property>alertdate</property>
-      <property lookup="user">enteredby</property>
-      <property lookup="user">modifiedby</property>
-      <property>custom1</property>
-      <property>custom2</property>
+      <property>alertDate</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
       <property>closed</property>
-      <property>custom_data</property>
-      <property>alert</property>
+      <property>alertText</property>
       <property>enabled</property>
     </map>
   </mappings>
