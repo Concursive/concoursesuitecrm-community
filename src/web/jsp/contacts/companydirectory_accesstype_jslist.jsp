@@ -26,7 +26,7 @@ function page_init() {
   <%
     }
   }else{%>
-    list.options[list.length] = newOpt("---------None---------", "-1");
+    list.options[list.length] = newOpt("--None--", "-1");
  <%}%>
 }
 </script>
