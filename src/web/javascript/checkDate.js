@@ -97,3 +97,43 @@ function checkAlertDate(datein) {
   }
 }
 
+/*
+if (date1 == date2) return 0
+if (date1 < date2) return -1
+if (date1 > date2) return 1
+*/
+function compareDates(date1,date2){
+  
+  if (date1.indexOf("/") != -1) {
+    sep = date1.split("/");
+  } else if (date1.indexOf("-") != -1) {
+    sep = date1.split("-");
+  } 
+  m = parseInt(sep[0],10);
+  d = parseInt(sep[1],10);
+  y = parseInt(sep[2],10);
+  var thisDate1 = new Date(y, m, d);
+
+
+  if (date2.indexOf("/") != -1) {
+    sep = date2.split("/");
+  } else if (date1.indexOf("-") != -1) {
+    sep = date2.split("-");
+  } 
+  m = parseInt(sep[0],10);
+  d = parseInt(sep[1],10);
+  y = parseInt(sep[2],10);
+  var thisDate2 = new Date(y, m, d);
+
+  var difference = thisDate1.getTime() - thisDate2.getTime();
+  var daysDifference = Math.floor(difference/1000/60/60/24);
+
+  if (daysDifference < 0 )
+    return -1;
+  
+  if (daysDifference > 0)
+    return 1;
+ 
+  return 0; 
+}
+
