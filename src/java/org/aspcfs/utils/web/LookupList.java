@@ -300,7 +300,7 @@ public class LookupList extends HtmlSelect {
       }
     }
 
-    return thisSelect.getHtml(selectName, defaultValue);
+    return thisSelect.getHtml(selectName);
   }
 
   /**

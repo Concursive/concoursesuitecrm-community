@@ -529,18 +529,16 @@ public class HtmlSelect extends ArrayList {
         tmp2 += "|" + values.nextToken();
       }
       
-
-      
       String optionChecked = "";
       String optionSelected = "";
       
       if ( multipleSelects != null && multipleSelects.containsKey( Integer.parseInt(tmp1) ) ) { 
 		optionSelected = "selected ";
 		optionChecked = " checked";
-      } else if ( (tmp2.equals(this.defaultValue)) ||
+      } else if ( multipleSelects == null && ((tmp2.equals(this.defaultValue)) ||
            (tmp1.equals(this.defaultValue)) ||
           (rowSelect == processedRowCount) ||
-          (tmp1.equals(this.defaultKey)) ) {
+          (tmp1.equals(this.defaultKey)) )) {
         optionSelected = "selected ";
         optionChecked = " checked";
       }
