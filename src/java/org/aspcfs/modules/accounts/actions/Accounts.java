@@ -64,7 +64,6 @@ public final class Accounts extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      rptListInfo.setDefaultSort("subject", null);
       files.setPagedListInfo(rptListInfo);
 
       if ("all".equals(rptListInfo.getListView())) {
