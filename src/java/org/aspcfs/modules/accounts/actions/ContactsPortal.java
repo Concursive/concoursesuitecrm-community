@@ -467,7 +467,7 @@ public final class ContactsPortal extends CFSModule {
       } else {
         emailAddress = getAddressToEmail(thisContact);
       }
-      addRecentItem(context, newUser);
+      //addRecentItem(context, newUser);
       context.getRequest().setAttribute("UserRecord", newUser);
       updateSystemHierarchyCheck(db, context);
       //send email
