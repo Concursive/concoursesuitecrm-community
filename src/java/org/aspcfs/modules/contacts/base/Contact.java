@@ -70,6 +70,8 @@ public class Contact extends GenericBean {
   private boolean orgEnabled = true;
   private boolean hasEnabledOwnerAccount = true;
   private boolean hasEnabledAccount = true;
+  
+  private boolean primaryContact = false;
 
   /**
    *  Constructor for the Contact object
@@ -206,7 +208,13 @@ public class Contact extends GenericBean {
   public void setUrl(String url) {
     this.url = url;
   }
-
+  
+  public void setPrimaryContact(boolean primaryContact) {
+    this.primaryContact = primaryContact;
+  }
+  public boolean getPrimaryContact() {
+    return primaryContact;
+  }
 
   /**
    *  Gets the fullNameAbbr attribute of the Contact object
@@ -1550,7 +1558,7 @@ public class Contact extends GenericBean {
       }
       sql.append(
           "INSERT INTO contact " +
-          "(user_id, type_id, namefirst, namelast, owner, ");
+          "(user_id, type_id, namefirst, namelast, owner, primary_contact, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1558,7 +1566,7 @@ public class Contact extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1587,6 +1595,7 @@ public class Contact extends GenericBean {
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
+      pst.setBoolean(++i, this.getPrimaryContact());
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1658,6 +1667,15 @@ public class Contact extends GenericBean {
     try {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
+      
+      if (this.getPrimaryContact()) {
+        Organization thisOrg = new Organization(db, this.getOrgId());
+        thisOrg.setNameFirst(this.getNameFirst());
+        thisOrg.setNameLast(this.getNameLast());
+        thisOrg.setNameMiddle(this.getNameMiddle());
+        thisOrg.setName(thisOrg.getNameLastFirstMiddle());
+        thisOrg.update(db);
+      }
 
       //Process the phone numbers if there are any
       Iterator iphone = phoneNumberList.iterator();
@@ -1932,7 +1950,7 @@ public class Contact extends GenericBean {
         "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
         "namefirst = ?, namelast = ?, " +
         "namemiddle = ?, namesuffix = ?, type_id = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
-        "org_id = ?, ");
+        "org_id = ?, primary_contact = ?, ");
     if (imService > -1) {
       sql.append("imservice = ?, ");
     }
@@ -1988,6 +2006,7 @@ public class Contact extends GenericBean {
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
+    pst.setBoolean(++i, this.getPrimaryContact());
     if (imService > -1) {
       pst.setInt(++i, this.getImService());
     }
@@ -2071,7 +2090,8 @@ public class Contact extends GenericBean {
     }
     custom1 = rs.getInt("custom1");
     url = rs.getString("url");
-
+    primaryContact = rs.getBoolean("primary_contact");
+    
     //lookup_department table
     departmentName = rs.getString("departmentname");
 

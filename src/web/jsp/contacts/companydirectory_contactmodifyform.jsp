@@ -424,6 +424,7 @@ Modify Contact<br>
 <%}%>
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="primaryContact" value="<%=ContactDetails.getPrimaryContact()%>">
   </td>
   </tr>
   </table>

@@ -3,8 +3,11 @@
 <jsp:useBean id="IndustryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="OrgPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="ContactPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <jsp:useBean id="StateSelect" class="com.darkhorseventures.webutils.StateSelect" scope="request"/>
@@ -18,6 +21,9 @@
 
 
 <script language="JavaScript">
+  indSelected = 0;
+  orgSelected = 0; 
+  
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
       return true;
@@ -25,6 +31,171 @@
       return(checkForm(form));
     }
   }
+  
+  function initializeClassification() {
+      <% if (OrgDetails.getPrimaryContact() != null) { %>
+          indSelected = 1;
+          updateFormElements(1);
+      <%} else if (OrgDetails.getPrimaryContact() == null) {%>
+          orgSelected = 1;
+          updateFormElements(0);
+      <%}%>
+  }
+  
+  function resetFormElements() {
+    //some checks
+    isNS4 = (document.layers) ? true : false;
+    isIE4 = (document.all && !document.getElementById) ? true : false;
+    isIE5 = (document.all && document.getElementById) ? true : false;
+    isNS6 = (!document.all && document.getElementById) ? true : false;  
+    //end checks 
+    
+    if (isNS4){
+      elm1 = document.layers["nameFirst1"];
+      elm2 = document.layers["nameMiddle1"];
+      elm3 = document.layers["nameLast1"];
+      elm4 = document.layers["orgname1"];
+      elm5 = document.layers["ticker1"];
+    }
+    else if (isIE4) {
+      elm1 = document.all["nameFirst1"];
+      elm2 = document.all["nameMiddle1"];
+      elm3 = document.all["nameLast1"];
+      elm4 = document.all["orgname1"];
+      elm5 = document.all["ticker1"];
+    }    
+    else if (isIE5 || isNS6) {
+      elm1 = document.getElementById("nameFirst1");
+      elm2 = document.getElementById("nameMiddle1");
+      elm3 = document.getElementById("nameLast1");
+      elm4 = document.getElementById("orgname1");
+      elm5 = document.getElementById("ticker1");
+      
+      elm1.style.color = "#000000";
+      document.addAccount.nameFirst.style.background = "#ffffff";
+      
+      elm2.style.color = "#000000";      
+      document.addAccount.nameMiddle.style.background = "#ffffff";
+      
+      elm3.style.color = "#000000";          
+      document.addAccount.nameLast.style.background = "#ffffff";
+      
+      elm4.style.color = "#000000"; 
+      document.addAccount.name.style.background = "#ffffff";
+      
+      elm5.style.color = "#000000";      
+      document.addAccount.ticker.style.background = "#ffffff";
+    }
+  }  
+    
+  function updateFormElements(index) {
+    //some checks
+    isNS4 = (document.layers) ? true : false;
+    isIE4 = (document.all && !document.getElementById) ? true : false;
+    isIE5 = (document.all && document.getElementById) ? true : false;
+    isNS6 = (!document.all && document.getElementById) ? true : false;  
+    //end checks 
+    
+    if (isNS4){
+      elm1 = document.layers["nameFirst1"];
+      elm2 = document.layers["nameMiddle1"];
+      elm3 = document.layers["nameLast1"];
+      elm4 = document.layers["orgname1"];
+      elm5 = document.layers["ticker1"];
+    }
+    else if (isIE4) {
+      elm1 = document.all["nameFirst1"];
+      elm2 = document.all["nameMiddle1"];
+      elm3 = document.all["nameLast1"];
+      elm4 = document.all["orgname1"];
+      elm5 = document.all["ticker1"];
+    }
+    else if (isIE5 || isNS6) {
+      elm1 = document.getElementById("nameFirst1");
+      elm2 = document.getElementById("nameMiddle1");
+      elm3 = document.getElementById("nameLast1");
+      elm4 = document.getElementById("orgname1");
+      elm5 = document.getElementById("ticker1");
+      
+      if (index == 1) {
+        indSelected = 1;
+        orgSelected = 0;        
+        
+        resetFormElements();
+      
+        elm4.style.color="#cccccc";
+        document.addAccount.name.style.background = "#cccccc";
+        document.addAccount.name.value = "";
+
+        elm5.style.color="#cccccc";
+        document.addAccount.ticker.style.background = "#cccccc";
+        document.addAccount.ticker.value = "";        
+      } else {
+        indSelected = 0;
+        orgSelected = 1;
+        
+        resetFormElements();        
+        
+        elm1.style.color = "#cccccc";
+        document.addAccount.nameFirst.style.background = "#cccccc";
+        document.addAccount.nameFirst.value = "";
+        
+        elm2.style.color = "#cccccc";  
+        document.addAccount.nameMiddle.style.background = "#cccccc";
+        document.addAccount.nameMiddle.value = ""; 
+        
+        elm3.style.color = "#cccccc";      
+        document.addAccount.nameLast.style.background = "#cccccc";
+        document.addAccount.nameLast.value = "";     
+      }
+    }
+  }    
+  
+  //-------------------------------------------------------------------
+  // getElementIndex(input_object)
+  //   Pass an input object, returns index in form.elements[] for the object
+  //   Returns -1 if error
+  //-------------------------------------------------------------------
+  function getElementIndex(obj) {
+    var theform = obj.form;
+    for (var i=0; i<theform.elements.length; i++) {
+      if (obj.name == theform.elements[i].name) {
+        return i;
+        }
+      }
+      return -1;
+    }
+
+  // -------------------------------------------------------------------
+  // tabNext(input_object)
+  //   Pass an form input object. Will focus() the next field in the form
+  //   after the passed element.
+  //   a) Will not focus to hidden or disabled fields
+  //   b) If end of form is reached, it will loop to beginning
+  //   c) If it loops through and reaches the original field again without
+  //      finding a valid field to focus, it stops
+  // -------------------------------------------------------------------
+  function tabNext(obj) {
+    if (navigator.platform.toUpperCase().indexOf("SUNOS") != -1) {
+      obj.blur(); return; // Sun's onFocus() is messed up
+      }
+    var theform = obj.form;
+    var i = getElementIndex(obj);
+    var j=i+1;
+    if (j >= theform.elements.length) { j=0; }
+    if (i == -1) { return; }
+    while (j != i) {
+      if ((theform.elements[j].type!="hidden") && 
+          (theform.elements[j].name != theform.elements[i].name) && 
+        (!theform.elements[j].disabled)) {
+        theform.elements[j].focus();
+        break;
+        }
+      j++;
+      if (j >= theform.elements.length) { j=0; }
+      }
+  }  
+  
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -70,6 +241,7 @@
       }
     }
 </script>
+<body onLoad="javascript:initializeClassification();">
 <form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <%boolean popUp = false;
   if(request.getParameter("popup")!=null){
@@ -176,14 +348,60 @@ Modify Account<br>
       <a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_account_types');">Select</a>
   </td>
   </tr>
+  
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Name
+      Classification
     </td>
     <td>
-      <input type=text size=35 name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+        <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
+          Individual
+          <input type=hidden name="form_type" value="individual">
+        </dhv:evaluate>
+        <dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
+          Organization
+          <input type=hidden name="form_type" value="organization">
+        </dhv:evaluate>        
+    </td>
+  </tr>  
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel" name="orgname1" id="orgname1">
+      Organization Name
+    </td>
+    <td>
+      <input onFocus="if (indSelected == 1) { tabNext(this) }" type=text size=35 name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
+  
+  <tr class="containerBody">
+    <td name="nameFirst1" id="nameFirst1" nowrap class="formLabel">
+      First Name
+    </td>
+    <td>
+        <input onFocus="if (orgSelected == 1) { tabNext(this) }" type=text size=35 name="nameFirst" value="<%= toHtmlValue(OrgDetails.getNameFirst()) %>">
+    </td>
+  </tr>
+
+  <tr class="containerBody">
+    <td name="nameMiddle1" id="nameMiddle1" nowrap class="formLabel">
+      Middle Name
+    </td>
+    <td>
+        <input onFocus="if (orgSelected == 1) { tabNext(this) }" type=text size=35 name="nameMiddle" value="<%= toHtmlValue(OrgDetails.getNameMiddle()) %>">
+    </td>
+  </tr>
+
+  <tr class="containerBody">
+    <td name="nameLast1" id="nameLast1" nowrap class="formLabel">
+      Last Name
+    </td>
+    <td>
+        <input onFocus="if (orgSelected == 1) { tabNext(this) }" type=text size=35 name="nameLast" value="<%= toHtmlValue(OrgDetails.getNameLast()) %>"><font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
+    </td>
+  </tr>  
+  
+  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Account Number
@@ -231,11 +449,11 @@ Modify Account<br>
   </dhv:include>
   
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td name="ticker1" id="ticker1" nowrap class="formLabel">
       Ticker Symbol
     </td>
     <td valign=center colspan=1>
-      <input type=text size=10 name="ticker" value="<%= toHtmlValue(OrgDetails.getTicker()) %>">
+      <input onFocus="if (indSelected == 1) { tabNext(this) }" type=text size=10 name="ticker" value="<%= toHtmlValue(OrgDetails.getTicker()) %>">
     </td>
   </tr>
   
@@ -280,6 +498,7 @@ Modify Account<br>
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">    
 <%  
   int icount = 0;
   Iterator inumber = OrgDetails.getPhoneNumberList().iterator();
@@ -304,6 +523,7 @@ Modify Account<br>
 <%    
   }
 %>
+
   <tr class="containerBody">
     <td>
       <%= OrgPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Main") %>
@@ -314,6 +534,40 @@ Modify Account<br>
       <input type=text size=5 name="phone<%= icount %>ext" maxlength=10>
     </td>
   </tr>
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">    
+<%  
+  int icount = 0;
+  Iterator inumber = OrgDetails.getPrimaryContact().getPhoneNumberList().iterator();
+  
+  while (inumber.hasNext()) {
+    ++icount;
+    ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
+%>    
+  <tr class="containerBody">
+    <td>
+      <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
+      <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
+      
+      <input type=text size=20 name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
+      <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
+      <input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove
+    </td>
+  </tr>    
+<%    
+  }
+%>
+
+  <tr class="containerBody">
+    <td>
+      <%= ContactPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Business") %>
+      <input type=text size=20 name="phone<%= icount %>number">&nbsp;ext.
+      <input type=text size=5 name="phone<%= icount %>ext" maxlength=10>
+    </td>
+  </tr>
+</dhv:evaluate>
+  
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -322,6 +576,8 @@ Modify Account<br>
       <strong>Addresses</strong>
     </td>
   </tr>
+  
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">  
 <%  
   int acount = 0;
   Iterator anumber = OrgDetails.getAddressList().iterator();
@@ -459,6 +715,146 @@ Modify Account<br>
       <!--input type=text size=28 name="address<%= acount %>country" maxlength=80-->
     </td>
   </tr>
+  </dhv:evaluate>
+  
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">  
+<%  
+  int acount = 0;
+  Iterator anumber = OrgDetails.getPrimaryContact().getAddressList().iterator();
+  while (anumber.hasNext()) {
+    ++acount;
+    ContactAddress thisAddress = (ContactAddress)anumber.next();
+%>    
+  <tr class="containerBody">
+    <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
+    <td>
+      &nbsp;
+    </td>
+    <td>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
+      <input type="checkbox" name="address<%= acount %>delete" value="on">mark to remove
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type=text size=40 name="address<%= acount %>line1" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type=text size=40 name="address<%= acount %>line2" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type=text size=28 name="address<%= acount %>city" maxlength=80 value="<%= toHtmlValue(thisAddress.getCity()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <%=StateSelect.getHtml("address" + acount + "state", thisAddress.getState())%>
+      <% StateSelect = new StateSelect(); %>
+      <!--input type=text size=28 name="address<%= acount %>state" maxlength=80 value="<%= toHtmlValue(thisAddress.getState()) %>"-->
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type=text size=10 name="address<%= acount %>zip" maxlength=12 value="<%= toHtmlValue(thisAddress.getZip()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <%=CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry())%>
+      <% CountrySelect = new CountrySelect(); %>
+      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80 value="<%= toHtmlValue(thisAddress.getCountry()) %>"-->
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr> 
+<%    
+  }
+%>
+  <tr class="containerBody">
+    <td>
+      &nbsp;
+    </td>
+    <td>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Business") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type=text size=40 name="address<%= acount %>line1" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type=text size=40 name="address<%= acount %>line2" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type=text size=28 name="address<%= acount %>city" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <%=StateSelect.getHtml("address" + acount + "state")%>
+      <% StateSelect = new StateSelect(); %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type=text size=10 name="address<%= acount %>zip" maxlength=12>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <%=CountrySelect.getHtml("address" + acount + "country")%>
+      <% CountrySelect = new CountrySelect(); %>
+    </td>
+  </tr>
+  </dhv:evaluate>  
+  
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -467,6 +863,8 @@ Modify Account<br>
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
+  
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%  
   int ecount = 0;
   Iterator enumber = OrgDetails.getEmailAddressList().iterator();
@@ -485,12 +883,44 @@ Modify Account<br>
 <%    
   }
 %>
+
   <tr class="containerBody">
     <td>
       <%= OrgEmailTypeList.getHtmlSelect("email" + (++ecount) + "type", "Primary") %>
       <input type=text size=40 name="email<%= ecount %>address" maxlength=255>
     </td>
   </tr>
+</dhv:evaluate>
+
+
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
+<%  
+  int ecount = 0;
+  Iterator enumber = OrgDetails.getPrimaryContact().getEmailAddressList().iterator();
+  while (enumber.hasNext()) {
+    ++ecount;
+    ContactEmailAddress thisEmailAddress = (ContactEmailAddress)enumber.next();
+%>    
+  <tr class="containerBody">
+    <td>
+      <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
+      <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", thisEmailAddress.getType()) %>
+      <input type=text size=40 name="email<%= ecount %>address" maxlength=255 value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
+      <input type="checkbox" name="email<%= ecount %>delete" value="on">mark to remove
+    </td>
+  </tr>
+<%    
+  }
+%>
+
+  <tr class="containerBody">
+    <td>
+      <%= ContactEmailTypeList.getHtmlSelect("email" + (++ecount) + "type", "Business") %>
+      <input type=text size=40 name="email<%= ecount %>address" maxlength=255>
+    </td>
+  </tr>
+</dhv:evaluate>
+
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

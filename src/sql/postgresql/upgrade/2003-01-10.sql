@@ -154,3 +154,22 @@ CREATE TABLE active_survey (
 );
 
 INSERT INTO lookup_survey_types (description) VALUES ('Item List');
+
+/*
+post-upgrade
+*/
+
+alter table organization add column nameSalutation varchar(80);
+alter table organization add column nameLast varchar(80);
+alter table organization add column nameFirst varchar(80);
+alter table organization add column nameMiddle varchar(80);
+alter table organization add column nameSuffix varchar(80);
+
+/*
+update pg_attribute set attnotnull = false where attname = 'name' and attrelid = (SELECT oid from pg_class where relname = 'organization');
+*/
+
+alter table contact add column primary_contact boolean;
+alter table contact alter column primary_contact set default 'f';
+update contact set primary_contact = 'f';
+

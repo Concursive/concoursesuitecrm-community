@@ -800,6 +800,12 @@ public final class ExternalContacts extends CFSModule {
     Exception errorMessage = null;
 
     Contact thisContact = (Contact) context.getFormBean();
+    
+    if (context.getRequest().getParameter("primaryContact") != null) {
+      if (context.getRequest().getParameter("primaryContact").equalsIgnoreCase("true")) {
+        thisContact.setPrimaryContact(true);
+      }
+    }
 
     Connection db = null;
     int resultCount = 0;
@@ -1259,10 +1265,15 @@ public final class ExternalContacts extends CFSModule {
       htmlDialog.setRelationships(thisContact.processDependencies(db));
 
       if (!thisContact.hasAccount()) {
-        htmlDialog.setTitle("CFS: Confirm Delete");
-        htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContacts.do?command=DeleteContact&id=" + id + "'");
-        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        if (thisContact.getPrimaryContact()) {
+          htmlDialog.setHeader("This contact cannot be deleted because it is also an individual account.");
+          htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        } else {        
+          htmlDialog.setTitle("CFS: Confirm Delete");
+          htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");
+          htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContacts.do?command=DeleteContact&id=" + id + "'");
+          htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        }
       } else {
         htmlDialog.setHeader("This contact cannot be deleted because it is associated with a User account.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");

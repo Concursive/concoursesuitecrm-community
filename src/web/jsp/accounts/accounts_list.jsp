@@ -75,15 +75,35 @@ View Accounts<br>
 		<td width="30%" class="row<%= rowid %>">
       <a href="/Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>
 		</td>
-		<td width=20% valign=center class="row<%= rowid %>" nowrap><%= toHtml(thisOrg.getPhoneNumber("Main")) %></td>
+		<td width=20% valign=center class="row<%= rowid %>" nowrap>
+    <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
+    <%= toHtml(thisOrg.getPhoneNumber("Main")) %>
+    </dhv:evaluate>    
+    <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() != null)%>">
+    <%= toHtml(thisOrg.getPrimaryContact().getPhoneNumber("Business")) %>
+    </dhv:evaluate>
+    </td>
+    
+    
 		<td width=20% valign=center class="row<%= rowid %>" nowrap><%= toHtml(thisOrg.getPhoneNumber("Fax")) %></td>
 		<td width=30% valign=center class="row<%= rowid %>" nowrap>
-		
+    
+    <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
 		<% if ( (thisOrg.getEmailAddress("Primary")).length() > 0 ) { %>
 			<a href="mailto:<%= toHtml(thisOrg.getEmailAddress("Primary")) %>"><%= toHtml(thisOrg.getEmailAddress("Primary")) %></a>
 		<%} else {%>
 			&nbsp;
 		<%}%>
+    </dhv:evaluate>
+    
+    <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() != null)%>">
+		<% if ( (thisOrg.getPrimaryContact().getEmailAddress("Business")).length() > 0 ) { %>
+			<a href="mailto:<%= toHtml(thisOrg.getPrimaryContact().getEmailAddress("Business")) %>"><%= toHtml(thisOrg.getPrimaryContact().getEmailAddress("Business")) %></a>
+		<%} else {%>
+			&nbsp;
+		<%}%>    
+    </dhv:evaluate>
+    
 		</td>
   </tr>
 <%}%>

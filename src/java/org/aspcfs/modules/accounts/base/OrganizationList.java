@@ -535,6 +535,12 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
         break;
       }
       Organization thisOrganization = this.getObject(rs);
+      
+      //if this is an individual account, populate the primary contact record
+      if (thisOrganization.getNameLast() != null) {
+        thisOrganization.populatePrimaryContact(db);
+      }
+      
       if (buildRevenueYTD && revenueYear > -1 && revenueOwnerId > -1) {
         thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType(), this.getRevenueOwnerId());
 

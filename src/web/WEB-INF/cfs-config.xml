@@ -389,6 +389,7 @@
     <forward name="DeleteReportOK" resource="/Accounts.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/Accounts.do?command=Reports"/>
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
+    <forward name="RebuildElementsOK" resource="/accounts_js_buildelements.jsp"/>
   </action>
   <action name="Contacts" class="com.darkhorseventures.cfsmodule.Contacts">
     <bean name="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>

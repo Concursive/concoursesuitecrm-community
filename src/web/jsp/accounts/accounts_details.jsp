@@ -193,6 +193,7 @@ Account Details<br>
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%  
   Iterator inumber = OrgDetails.getPhoneNumberList().iterator();
   if (inumber.hasNext()) {
@@ -217,6 +218,35 @@ Account Details<br>
       </td>
     </tr>
 <%}%>
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
+<%  
+  Iterator inumber = OrgDetails.getPrimaryContact().getPhoneNumberList().iterator();
+  if (inumber.hasNext()) {
+    while (inumber.hasNext()) {
+      ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
+%>    
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <%= toHtml(thisPhoneNumber.getTypeName()) %>
+      </td>
+      <td width=100%>
+        <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
+      </td>
+    </tr>
+<%    
+    }
+  } else {
+%>
+    <tr class="containerBody">
+      <td colspan=2>
+        <font color="#9E9E9E">No phone numbers entered.</font>
+      </td>
+    </tr>
+<%}%>
+</dhv:evaluate>
+
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF"> 
@@ -225,6 +255,7 @@ Account Details<br>
 	    <strong>Addresses</strong>
 	  </td>
   </tr>
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%  
   Iterator iaddress = OrgDetails.getAddressList().iterator();
   if (iaddress.hasNext()) {
@@ -249,6 +280,36 @@ Account Details<br>
       </td>
     </tr>
 <%}%>
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
+<%  
+  Iterator iaddress = OrgDetails.getPrimaryContact().getAddressList().iterator();
+  if (iaddress.hasNext()) {
+    while (iaddress.hasNext()) {
+      ContactAddress thisAddress = (ContactAddress)iaddress.next();
+%>    
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <%= toHtml(thisAddress.getTypeName()) %>
+      </td>
+      <td width=100%>
+        <%= toHtml(thisAddress.toString()) %>
+      </td>
+    </tr>
+<%    
+    }
+  } else {
+%>
+    <tr class="containerBody">
+      <td colspan=2>
+        <font color="#9E9E9E">No addresses entered.</font>
+      </td>
+    </tr>
+<%}%>
+</dhv:evaluate>
+
+
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -257,6 +318,8 @@ Account Details<br>
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
+  
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%
   Iterator iemail = OrgDetails.getEmailAddressList().iterator();
   if (iemail.hasNext()) {
@@ -281,6 +344,35 @@ Account Details<br>
       </td>
     </tr>
 <%}%>
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
+<%
+  Iterator iemail = OrgDetails.getPrimaryContact().getEmailAddressList().iterator();
+  if (iemail.hasNext()) {
+    while (iemail.hasNext()) {
+      ContactEmailAddress thisEmailAddress = (ContactEmailAddress)iemail.next();
+%>    
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <%= toHtml(thisEmailAddress.getTypeName()) %>
+      </td>
+      <td width=100%>
+        <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
+      </td>
+    </tr>
+<%    
+    }
+  } else {
+%>
+    <tr class="containerBody">
+      <td colspan=2>
+        <font color="#9E9E9E">No email addresses entered.</font>
+      </td>
+    </tr>
+<%}%>
+</dhv:evaluate>
+
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

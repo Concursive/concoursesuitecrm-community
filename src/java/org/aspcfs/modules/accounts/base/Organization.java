@@ -32,7 +32,7 @@ public class Organization extends GenericBean {
   private String industryName = null;
   private boolean minerOnly = false;
   private int enteredBy = -1;
-
+  
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
   private java.sql.Date contractEndDate = null;
@@ -64,7 +64,15 @@ public class Organization extends GenericBean {
   private boolean documentDelete = false;
   
   private boolean hasEnabledOwnerAccount = true;
-
+  
+  //contact as account stuff
+  private String nameSalutation = null;
+  private String nameFirst = null;
+  private String nameMiddle = null;
+  private String nameLast = null;
+  private String nameSuffix = null;  
+  
+  private Contact primaryContact = null;
 
   /**
    *  Constructor for the Organization object, creates an empty Organization
@@ -121,6 +129,10 @@ public class Organization extends GenericBean {
     if (rs.next()) {
       buildRecord(rs);
       buildTypes(db);
+      //if this is an individual account, populate the primary contact record
+      if (this.getNameLast() != null) {
+        this.populatePrimaryContact(db);
+      }      
     }
     else {
       rs.close();
@@ -175,7 +187,6 @@ public class Organization extends GenericBean {
   public void setContactDelete(boolean tmp) {
     this.contactDelete = tmp;
   }
-
 
   /**
    *  Sets the RevenueDelete attribute of the Organization object
@@ -282,6 +293,12 @@ public class Organization extends GenericBean {
     this.owner = owner;
   }
 
+  public Contact getPrimaryContact() {
+    return primaryContact;
+  }
+  public void setPrimaryContact(Contact primaryContact) {
+    this.primaryContact = primaryContact;
+  }
 
   /**
    *  Sets the OwnerId attribute of the Organization object
@@ -852,7 +869,17 @@ public class Organization extends GenericBean {
     }
     return tmp;
   }
-
+  
+  public String getNameSalutation() { return nameSalutation; }
+  public String getNameFirst() { return nameFirst; }
+  public String getNameMiddle() { return nameMiddle; }
+  public String getNameLast() { return nameLast; }
+  public String getNameSuffix() { return nameSuffix; }
+  public void setNameSalutation(String tmp) { this.nameSalutation = tmp; }
+  public void setNameFirst(String tmp) { this.nameFirst = tmp; }
+  public void setNameMiddle(String tmp) { this.nameMiddle = tmp; }
+  public void setNameLast(String tmp) { this.nameLast = tmp; }
+  public void setNameSuffix(String tmp) { this.nameSuffix = tmp; }
 
   /**
    *  Gets the ContractEndDate attribute of the Organization object
@@ -1036,8 +1063,7 @@ public class Organization extends GenericBean {
   public int getOwner() {
     return owner;
   }
-
-
+  
   /**
    *  Gets the OwnerId attribute of the Organization object
    *
@@ -1124,9 +1150,15 @@ public class Organization extends GenericBean {
    *@return    The Name value
    */
   public String getName() {
+    if (name != null && name.trim().length() > 0) {
+      return name;
+    }
+    return this.getNameLastFirstMiddle();
+  }
+  
+  public String getAccountNameOnly() {
     return name;
   }
-
 
   /**
    *  Gets the Url attribute of the Organization object
@@ -1572,7 +1604,7 @@ public class Organization extends GenericBean {
       modifiedBy = enteredBy;
       db.setAutoCommit(false);
       sql.append("INSERT INTO ORGANIZATION (name, industry_temp_code, url, miner_only, owner, duplicate_id, ");
-      sql.append("notes, employees, revenue, ticker_symbol, account_number, ");
+      sql.append("notes, employees, revenue, ticker_symbol, account_number, nameFirst, nameLast, nameMiddle, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1580,7 +1612,7 @@ public class Organization extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1606,6 +1638,9 @@ public class Organization extends GenericBean {
       pst.setDouble(++i, this.getRevenue());
       pst.setString(++i, this.getTicker());
       pst.setString(++i, this.getAccountNumber());
+      pst.setString(++i, this.getNameFirst());
+      pst.setString(++i, this.getNameLast());
+      pst.setString(++i, this.getNameMiddle());
 
       if (entered != null) {
         pst.setTimestamp(++i, entered);
@@ -1620,7 +1655,7 @@ public class Organization extends GenericBean {
       pst.close();
 
       orgId = DatabaseUtils.getCurrVal(db, "organization_org_id_seq");
-
+      
       //Insert the phone numbers if there are any
       Iterator iphone = phoneNumberList.iterator();
       while (iphone.hasNext()) {
@@ -1721,6 +1756,47 @@ public class Organization extends GenericBean {
     
     return true;
   }
+  
+  /**
+   * This function populates the primaryContact with information from the account
+   * The Contact addresses, etc. must be set using the context in the actual Account module.
+  */
+  
+  public void populatePrimaryContact() {
+      primaryContact = new Contact();
+      primaryContact.setNameFirst(this.getNameFirst());
+      primaryContact.setNameMiddle(this.getNameMiddle());
+      primaryContact.setOrgId(this.getOrgId());
+      primaryContact.setEnteredBy(this.getEnteredBy());
+      primaryContact.setModifiedBy(this.getModifiedBy());
+      primaryContact.setOwner(this.getOwner());
+      primaryContact.setNameLast(this.getNameLast());
+      //designate this as a primary contact
+      primaryContact.setPrimaryContact(true);
+  }
+  
+  public void updatePrimaryContact() {
+      primaryContact.setNameFirst(this.getNameFirst());
+      primaryContact.setNameLast(this.getNameLast());
+      primaryContact.setNameMiddle(this.getNameMiddle());
+      primaryContact.setModifiedBy(this.getModifiedBy());
+      primaryContact.setOwner(this.getOwner());
+  }
+
+  public void populatePrimaryContact(Connection db) throws SQLException {
+      PreparedStatement pst = db.prepareStatement(
+        "SELECT contact_id " +
+        "FROM contact " +
+        "WHERE org_id = ? AND primary_contact = ? ");
+      pst.setInt(1, this.getOrgId());
+      pst.setBoolean(2, true);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        primaryContact = new Contact(db, rs.getInt("contact_id"));
+      } 
+      rs.close();
+      pst.close();
+  }
 
   /**
    *  Description of the Method
@@ -1755,7 +1831,7 @@ public class Organization extends GenericBean {
       sql.append("owner = ?, ");
     }
 
-    sql.append("duplicate_id = ?, contract_end = ?, alertdate = ?, alert = ? " +
+    sql.append("duplicate_id = ?, contract_end = ?, alertdate = ?, alert = ?, nameFirst = ?, nameMiddle = ?, nameLast = ? " +
         "WHERE org_id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -1791,6 +1867,9 @@ public class Organization extends GenericBean {
       pst.setDate(++i, this.getAlertDate());
     }
     pst.setString(++i, alertText);
+    pst.setString(++i, nameFirst);
+    pst.setString(++i, nameMiddle);
+    pst.setString(++i, nameLast);
     pst.setInt(++i, orgId);
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
@@ -1966,8 +2045,9 @@ public class Organization extends GenericBean {
   protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
 
-    if (name == null || name.trim().equals("")) {
+    if ( (name == null || name.trim().equals("")) && (nameLast == null || nameLast.trim().equals("")) ) {
       errors.put("nameError", "An account name is required.");
+      errors.put("nameLastError", "An account name is required.");
     }
 
     if (hasErrors()) {
@@ -2012,6 +2092,13 @@ public class Organization extends GenericBean {
     contractEndDate = rs.getDate("contract_end");
     alertDate = rs.getDate("alertdate");
     alertText = rs.getString("alert");
+    
+    //contacts as accounts
+    nameSalutation = rs.getString("nameSalutation");
+    nameLast = rs.getString("nameLast");
+    nameFirst = rs.getString("nameFirst");
+    nameMiddle = rs.getString("nameMiddle");
+    nameSuffix = rs.getString("nameSuffix");
 
     //contact table
     ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
@@ -2043,6 +2130,31 @@ public class Organization extends GenericBean {
 
     return (recordCount > 0);
   }
+  
+  public String getNameLastFirstMiddle() {
+    StringBuffer out = new StringBuffer();
+    if (nameLast != null && nameLast.trim().length() > 0) {
+      out.append(nameLast);
+    }
+    if (nameFirst != null && nameFirst.trim().length() > 0) {
+      if (nameLast.length() > 0) {
+        out.append(", ");
+      }
+      out.append(nameFirst);
+    }
+    if (nameMiddle != null && nameMiddle.trim().length() > 0) {
+      if (nameMiddle.length() > 0) {
+        out.append(" ");
+      }
+      out.append(nameMiddle);
+    }    
+    
+    if (out.toString().length() == 0) {
+      return null;
+    }
+    return out.toString().trim();
+  }
+  
 }
 
 
