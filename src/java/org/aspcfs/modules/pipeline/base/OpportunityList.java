@@ -112,6 +112,10 @@ public void setStage(String stage) {
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
   }
+  
+  public void setContactId(int tmp) {
+    this.contactId = tmp;
+  }
 
 
   /**
