@@ -170,12 +170,14 @@ public class Setup extends CFSModule {
       BASE64Encoder encoder = new BASE64Encoder();
       bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
       bean.setText(PrivateString.encrypt(key, "5USERBINARY-1.0"));
-      bean.setWebserver(HTTPUtils.getServerName("http://127.0.0.1"));
+      bean.setWebserver(
+          HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
+          HTTPUtils.getServerUrl(context.getRequest())));
       //Make sure the server received the key ok
       if (bean.getSsl()) {
-        response = HTTPUtils.sendPacket("https://ds21.darkhorseventures.com/setup/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
+        response = HTTPUtils.sendPacket("https://registration.darkhorsecrm.com/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
       } else {
-        response = HTTPUtils.sendPacket("http://ds21.darkhorseventures.com/setup/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
+        response = HTTPUtils.sendPacket("http://registration.darkhorsecrm.com/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
       }
       if (response == null) {
         context.getRequest().setAttribute("actionError",

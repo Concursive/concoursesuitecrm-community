@@ -334,8 +334,8 @@ public class Zlib {
     mail.setHost("127.0.0.1");
     mail.setType("text/html");
     mail.addTo(email);
-    mail.setFrom("Dark Horse CRM Registration <register@darkhorseventures.com>");
-    mail.addReplyTo("register@darkhorseventures.com");
+    mail.setFrom("Dark Horse CRM Registration <registration@darkhorsecrm.com>");
+    mail.addReplyTo("registration@darkhorsecrm.com");
     mail.setSubject("Dark Horse CRM Registration");
     mail.setBody(
         "Thank you for your interest in Dark Horse CRM.<br>" +
