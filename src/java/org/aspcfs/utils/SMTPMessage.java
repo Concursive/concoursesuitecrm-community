@@ -304,6 +304,8 @@ public class SMTPMessage {
     MimeMessage message = new MimeMessage(session);
 
     try {
+      // Set the sent date
+      message.setSentDate(Calendar.getInstance().getTime());
 
       // Set the from address
       message.setFrom(new InternetAddress(from));
