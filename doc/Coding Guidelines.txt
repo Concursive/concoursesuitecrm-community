@@ -6,6 +6,8 @@
  *@version    $Id$
  */
 
+http://java.sun.com/docs/codeconv/
+ 
 Commenting Code:
   - Comment code using JavaDoc style
   - Each class should have "@author" "@created" and "@version" tags
