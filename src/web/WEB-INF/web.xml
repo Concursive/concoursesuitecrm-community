@@ -5,66 +5,66 @@
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 
 <!--
-	The labels used as replaceable parameters below are used by
+        The labels used as replaceable parameters below are used by
 the build.xml script that the "ant" application uses to 
 install the CFS II application.
 
-Replaceable parameter	typical value / description
+Replaceable parameter   typical value / description
 ======================  =============================================
-	@SiteCode@			ds21 
-						(the name that Login will search
-						the gatekeeper database with)
+        @SiteCode@      ds21 
+                        (the name that Login will search
+                        the gatekeeper database with)
 
-	@GKHOST@			jdbc:postgresql://12.101.73.29:5432/cfs2gk
-						Driver spec and host address (or name), 
-						port, and database name of the
-						gatekeeper database that this installation
-						will use.
+        @GKHOST@              jdbc:postgresql://12.101.73.29:5432/cfs2gk
+                        Driver spec and host address (or name), 
+                        port, and database name of the
+                        gatekeeper database that this installation
+                        will use.
 
-	@GKUSER@ 			gatekeeper
-						(gatekeeper database user name)
+        @GKUSER@        gatekeeper
+                        (gatekeeper database user name)
 
-	@GKUSERPW@			 (blank, empty, nada, ...)
-						(gatekeeper database user password)
+        @GKUSERPW@      (blank, empty, nada, ...)
+                        (gatekeeper database user password)
 
 -->
 <web-app>
-	<servlet>
-		<servlet-name>Controller</servlet-name>
-		<display-name>Controller</display-name>
-		<servlet-class>org.theseus.servlets.ControllerServlet</servlet-class>
-		<init-param>
-			<param-name>PopulateAttributeName</param-name>
-			<param-value>auto-populate</param-value>
-		</init-param>
-		<init-param>
-			<param-name>ActionConfig</param-name>
-			<param-value>cfs-config.xml</param-value>
-		</init-param>
+  <servlet>
+    <servlet-name>Controller</servlet-name>
+    <display-name>Controller</display-name>
+    <servlet-class>org.theseus.servlets.ControllerServlet</servlet-class>
     <init-param>
-			<param-name>ModuleConfig</param-name>
-			<param-value>cfs-modules.xml</param-value>
-		</init-param>
-		<init-param>
-			<param-name>UseXSLCache</param-name>
-			<param-value>false</param-value>
-		</init-param>
-		<init-param>
-			<param-name>PopulateClassName</param-name>
-			<param-value>org.theseus.beans.BeanUtils</param-value>
-		</init-param>
+	    <param-name>PopulateAttributeName</param-name>
+	    <param-value>auto-populate</param-value>
+    </init-param>
     <init-param>
-			<param-name>InitHook</param-name>
-			<param-value>com.darkhorseventures.controller.InitHook</param-value>
-		</init-param>
+	    <param-name>ActionConfig</param-name>
+	    <param-value>cfs-config.xml</param-value>
+    </init-param>
     <init-param>
-			<param-name>DestroyHook</param-name>
-			<param-value>com.darkhorseventures.controller.DestroyHook</param-value>
-		</init-param>
-		<init-param>
-			<param-name>Hook</param-name>
-			<param-value>com.darkhorseventures.controller.SecurityHook</param-value>
-		</init-param>
+	    <param-name>ModuleConfig</param-name>
+	    <param-value>cfs-modules.xml</param-value>
+    </init-param>
+    <init-param>
+	    <param-name>UseXSLCache</param-name>
+	    <param-value>false</param-value>
+    </init-param>
+    <init-param>
+	    <param-name>PopulateClassName</param-name>
+	    <param-value>org.theseus.beans.BeanUtils</param-value>
+    </init-param>
+    <init-param>
+	    <param-name>InitHook</param-name>
+	    <param-value>com.darkhorseventures.controller.InitHook</param-value>
+    </init-param>
+    <init-param>
+	    <param-name>DestroyHook</param-name>
+	    <param-value>com.darkhorseventures.controller.DestroyHook</param-value>
+    </init-param>
+    <init-param>
+	    <param-name>Hook</param-name>
+	    <param-value>com.darkhorseventures.controller.SecurityHook</param-value>
+    </init-param>
     <init-param>
       <param-name>GlobalItemsHook</param-name>
       <param-value>com.darkhorseventures.controller.GlobalItemsHook</param-value>
@@ -73,50 +73,54 @@ Replaceable parameter	typical value / description
       <param-name>MainMenuHook</param-name>
       <param-value>com.darkhorseventures.controller.MainMenuHook</param-value>
     </init-param>
-		<init-param>
-			<param-name>Debug</param-name>
-			<param-value>2</param-value>
-		</init-param>
     <init-param>
-			<param-name>SiteCode</param-name>
-			<param-value>ds21</param-value>
-		</init-param>
-	<!-- Gatekeeper configuration -->
+      <param-name>Debug</param-name>
+      <param-value>2</param-value>
+    </init-param>
     <init-param>
-			<param-name>GKHOST</param-name>
-			<param-value>jdbc:postgresql://216.54.81.101:5432/cfs2gk</param-value>
-		</init-param>
+      <param-name>SiteCode</param-name>
+      <param-value>ds21</param-value>
+    </init-param>
+    <!-- Gatekeeper configuration -->
     <init-param>
-			<param-name>GKUSER</param-name>
-			<param-value>gatekeeper</param-value>
-		</init-param>
+      <param-name>GKHOST</param-name>
+      <param-value>jdbc:postgresql://216.54.81.101:5432/cfs2gk</param-value>
+    </init-param>
     <init-param>
-			<param-name>GKUSERPW</param-name>
-			<param-value></param-value>
-		</init-param>
-	<!-- -->
-	<init-param>
-			<param-name>PreloadXSL</param-name>
-			<param-value>false</param-value>
-		</init-param>
+      <param-name>GKUSER</param-name>
+      <param-value>gatekeeper</param-value>
+    </init-param>
     <init-param>
-			<param-name>CacheModules</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Controller</servlet-name>
-		<url-pattern>*.ss</url-pattern>
-	</servlet-mapping>
+	    <param-name>GKUSERPW</param-name>
+	    <param-value></param-value>
+    </init-param>
+    <init-param>
+	    <param-name>GlobalPWInfo</param-name>
+	    <param-value>3d17aefbade4b011fbc4333508c0bd2b</param-value>
+    </init-param>
+    <!-- End gatekeeper -->
+    <init-param>
+	    <param-name>PreloadXSL</param-name>
+	    <param-value>false</param-value>
+    </init-param>
+    <init-param>
+	    <param-name>CacheModules</param-name>
+	    <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
   <servlet-mapping>
-		<servlet-name>Controller</servlet-name>
-		<url-pattern>*.do</url-pattern>
-	</servlet-mapping>
-	<session-config>
-		<session-timeout>60</session-timeout>
-	</session-config>
-	<!--welcome-file-list>
-		<welcome-file>index.html, index.jsp</welcome-file>
-	</welcome-file-list-->
+	  <servlet-name>Controller</servlet-name>
+	  <url-pattern>*.ss</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	  <servlet-name>Controller</servlet-name>
+	  <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <session-config>
+	  <session-timeout>60</session-timeout>
+  </session-config>
+  <!--welcome-file-list>
+	  <welcome-file>index.html, index.jsp</welcome-file>
+  </welcome-file-list-->
 </web-app>

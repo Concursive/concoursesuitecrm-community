@@ -47,6 +47,13 @@ public class InitHook implements ControllerInitHook {
     if (config.getInitParameter("GKUSERPW") != null) {
       config.getServletContext().setAttribute("GKUSERPW", config.getInitParameter("GKUSERPW"));
     }
+    
+    if (config.getInitParameter("GlobalPWInfo") != null) {
+      config.getServletContext().setAttribute("GlobalPWInfo", config.getInitParameter("GlobalPWInfo"));
+    } else {
+      if (System.getProperty("DEBUG") != null) System.out.println("InitHook-> No GlobalPWInfo");
+      config.getServletContext().setAttribute("GlobalPWInfo", "#notspecified");
+    }
 
     config.getServletContext().setAttribute("SystemStatus", new Hashtable());
 

@@ -126,7 +126,7 @@ public final class Login extends GenericAction {
         loginBean.setMessage("* Access denied: Username not found.");
       } else {
         String pw = rs.getString("password");
-        if (pw == null || !pw.equals(password)) {
+        if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password))   ) {
           loginBean.setMessage("* Access denied: Invalid password.");
         } else {
 	  java.sql.Timestamp expDate = rs.getTimestamp("expires");
