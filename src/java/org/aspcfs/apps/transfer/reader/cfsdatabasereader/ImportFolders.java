@@ -45,6 +45,8 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           return false;
         }
         
+        ArrayList fieldLookup = new ArrayList();
+        
         //Insert the fields
         Iterator groups = thisCategory.iterator();
         while (groups.hasNext()) {
@@ -59,6 +61,10 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           while (fields.hasNext()) {
             CustomField thisField = (CustomField)fields.next();
             if (thisField.getType() == CustomField.SELECT) {
+              
+              //Stash this item id so we know it is a lookup for later
+              fieldLookup.add(new Integer(thisField.getId()));
+              
               thisField.buildElementData(db);
               Iterator lookupItems = ((LookupList)thisField.getElementData()).iterator();
               while (lookupItems.hasNext()) {
@@ -132,7 +138,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
             thisFieldRecord.setAction("insert");
             thisFieldRecord.addField("recordId", String.valueOf(thisData.getRecordId()), "customFieldRecord", null);
             thisFieldRecord.addField("fieldId", String.valueOf(thisData.getFieldId()), "customField", null);
-            if (thisData.getType(db) == CustomField.SELECT) {
+            if (fieldLookup.contains(new Integer(thisData.getFieldId()))) {
               thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()), "customFieldLookup", null);
             } else {
               thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()));
@@ -143,9 +149,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
             processOK = writer.save(thisFieldRecord);
           }
         }
-        
       }
-      
       
       if (!processOK) {
         return false;
