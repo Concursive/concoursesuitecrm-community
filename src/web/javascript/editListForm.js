@@ -9,11 +9,12 @@ function addValues(){
     
     var newOption = searchText;
     
-    if (searchList.length == 0 || searchList.options[0].value == "-1"){
-      searchList.options[0] = new Option(newOption);
-    } else {
+    //if (searchList.length == 0 || searchList.options[0].value == "-1"){
+    //  alert("try");
+    //  searchList.options[0] = new Option(newOption);
+    //} else {
       searchList.options[searchList.length] = new Option(newOption, ("*" + searchText));
-    }
+    //}
     
     document.modifyList.newValue.value = "";
     document.modifyList.newValue.focus();
