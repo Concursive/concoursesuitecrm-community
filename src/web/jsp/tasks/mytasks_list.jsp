@@ -183,7 +183,7 @@ Tasks
         <% } %>
         </dhv:evaluate>
         </td>
-        <dhv:evaluate if="<%= thisTask.getType() != Task.GENERAL %>">
+        <dhv:evaluate if="<%= ((thisTask.getType() != Task.GENERAL) && (thisTask.getLinkDetails().getLinkItemId() != -1)) %>">
           <td valign="top">
             &nbsp; [<a href="<%= thisTask.getLinkDetails().getLink() %>"><font color="orange"><%= thisTask.getLinkDetails().getDisplayNameFull() %></font></a>]
           </td>
