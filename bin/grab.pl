@@ -22,7 +22,7 @@ use CGI qw(:standard);
 # argument is the site code.
 ##########################################################
 
-$LOGFILE = "/home/chris/grab.log";
+$LOGFILE = "/tmp/grab.log";
 $DBNAME = '';
 #$SITE_CODE = '';
 

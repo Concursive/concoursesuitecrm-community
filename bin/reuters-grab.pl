@@ -16,7 +16,7 @@ use CGI qw(:standard);
 # $LOGFILE == log destination
 ##########################################################
 
-$LOGFILE = "/home/chris/reuters-grab.log";
+$LOGFILE = "/tmp/reuters-grab.log";
 $DBNAME = '';
 #$SITE_CODE = '';
 
