@@ -98,6 +98,8 @@ public final class CampaignManager extends CFSModule {
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignListInfo");
     pagedListInfo.setLink("/CampaignManager.do?command=View");
 
+    deletePagedListInfo(context, "CampaignCenterGroupInfo");
+    
     try {
       db = this.getConnection(context);
       CampaignList campaignList = new CampaignList();
@@ -237,6 +239,7 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
+      
       if ("true".equals(context.getRequest().getParameter("reset"))) {
         context.getSession().removeAttribute("CampaignCenterGroupInfo");
       }
@@ -248,6 +251,36 @@ public final class CampaignManager extends CFSModule {
 
     if (errorMessage == null) {
       return ("ViewDetailsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandModify(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
+    Exception errorMessage = null;
+    addModuleBean(context, "ManageCampaigns", "Edit Campaign Details");
+    Connection db = null;
+
+    String campaignId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      Campaign campaign = new Campaign(db, campaignId);
+      context.getRequest().setAttribute("Campaign", campaign);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("ModifyOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -429,12 +462,6 @@ public final class CampaignManager extends CFSModule {
       messageList.addItem(0, "--None--");
       context.getRequest().setAttribute("MessageList", messageList);
       
-      SurveyList surveyList = new SurveyList();
-      surveyList.setEnteredBy(this.getUserId(context));
-      surveyList.buildList(db);
-      surveyList.addItem(0, "--None--");
-      context.getRequest().setAttribute("SurveyList", surveyList);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -449,6 +476,42 @@ public final class CampaignManager extends CFSModule {
     }
   }
 
+  public String executeCommandViewAttachment(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-view"))) {
+	    return ("PermissionError");
+    	}
+	
+    Exception errorMessage = null;
+    addModuleBean(context, "ManageCampaigns", "Build New Campaign");
+    Connection db = null;
+
+    String campaignId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      Campaign campaign = new Campaign(db, campaignId);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      SurveyList surveyList = new SurveyList();
+      surveyList.setEnteredBy(this.getUserId(context));
+      surveyList.buildList(db);
+      surveyList.addItem(0, "--None--");
+      context.getRequest().setAttribute("SurveyList", surveyList);
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("ViewAttachmentOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 
   /**
    *  Campaign Center: Schedule of a Campaign
@@ -524,10 +587,22 @@ public final class CampaignManager extends CFSModule {
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
 
+      //Complete List
       SearchCriteriaListList sclList = new SearchCriteriaListList();
-      sclList.setOwner(getUserId(context));
+      if ("all".equals(pagedListInfo.getListView())) {
+        sclList.setOwnerIdRange(getUserRange(context));
+      } else {
+        sclList.setOwner(getUserId(context));
+      }
       sclList.buildList(db);
       context.getRequest().setAttribute("sclList", sclList);
+      
+      //Selected List
+      SearchCriteriaListList selectedList = new SearchCriteriaListList();
+      selectedList.setCampaignId(campaignId);
+      selectedList.buildList(db);
+      processListCheckBoxes(selectedList, context);
+      context.getRequest().setAttribute("selectedList", selectedList);
 
     } catch (Exception e) {
       errorMessage = e;
@@ -632,6 +707,37 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandAddAttachment(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
+    Exception errorMessage = null;
+    Connection db = null;
+    addModuleBean(context, "ManageCampaigns", "Campaign: Add Attachment");
+
+    String campaignId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      Campaign campaign = new Campaign(db, campaignId);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("AddMessageOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 
 
   /**
@@ -656,17 +762,11 @@ public final class CampaignManager extends CFSModule {
     String campaignId = context.getRequest().getParameter("id");
     String messageId = context.getRequest().getParameter("messageId");
     
-    if (context.getRequest().getParameter("surveyId") != null) {
-	    surveyId = Integer.parseInt(context.getRequest().getParameter("surveyId"));
-    }
-    
-
     if (messageId != null) {
       try {
         db = this.getConnection(context);
         campaign = new Campaign(db, campaignId);
         campaign.setMessageId(Integer.parseInt(messageId));
-	campaign.setSurveyId(surveyId);
         campaign.setModifiedBy(this.getUserId(context));
         resultCount = campaign.updateMessage(db);
       } catch (Exception e) {
@@ -681,6 +781,45 @@ public final class CampaignManager extends CFSModule {
         return ("InsertMessageOK");
       } else {
         return executeCommandAddMessage(context);
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+  public String executeCommandInsertAttachment(ActionContext context) {
+	  
+	if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+	    return ("PermissionError");
+    	}
+	
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = 0;
+    Campaign campaign = null;
+    int surveyId = -1;
+
+    String campaignId = context.getRequest().getParameter("id");
+  
+    try {
+      surveyId = Integer.parseInt(context.getRequest().getParameter("surveyId"));
+      db = this.getConnection(context);
+      campaign = new Campaign(db, campaignId);
+      campaign.setSurveyId(surveyId);
+      campaign.setModifiedBy(this.getUserId(context));
+      resultCount = campaign.updateMessage(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCount == 1) {
+        return ("InsertAttachmentOK");
+      } else {
+        return executeCommandAddAttachment(context);
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1151,5 +1290,17 @@ public final class CampaignManager extends CFSModule {
 	return ("PopupOK");  
   }
   
+  private static void processListCheckBoxes(SearchCriteriaListList selectedList, ActionContext context) {
+    int count = 0;
+    while (context.getRequest().getParameter("select" + (++count)) != null) {
+      SearchCriteriaList scl = new SearchCriteriaList();
+      scl.setId(context.getRequest().getParameter("select" + count));
+      if ("on".equalsIgnoreCase(context.getRequest().getParameter("select" + count + "check"))) {
+        selectedList.add(scl);
+      } else {
+        selectedList.removeItem(scl);
+      }
+    }
+  }
 }
 

@@ -3,23 +3,140 @@
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="modForm" action="/CampaignManager.do?command=Update&id=<%= Campaign.getId() %>&auto-populate=true" method="post">
-<a href="/CampaignManager.do?command=View">Back to Campaign List</a><br>&nbsp;
+<form name="modForm" action="/CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>" method="post">
+Communications Manager > 
+<a href="/CampaignManager.do?command=View">Campaign List</a> >
+Campaign Details
+<hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(Campaign.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + Campaign.getId(); %>      
-      <dhv:container name="communications" selected="details" param="<%= param1 %>" />
+      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
+<ul>
+  <li>Select from the following items to build a campaign</li>
+  <li>Items can be worked on in any order</li>
+  <li>Campaigns will not start until each section is complete, and the campaign has been activated</li>
+</ul>
+<%--
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td valign="center" align="left">
+      <strong>Campaign Details</strong>
+    </td>     
+  </tr>
+  <tr class="containerBody">
+    <td>
+  --%>
+      <table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+        <tr>
+          <td valign="top" align="center">
+            <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+              <tr class="title">
+                <td align="center">
+                  <strong>Group(s)</strong>
+                </td>
+              </tr>
+              <tr class="containerBody">
+                <td align="center">
+                  <%= (Campaign.hasGroups()?"<font color='green'>" + Campaign.getGroupCount() + " selected</font>":"<font color='red'>No Groups Selected</font>") %><br>
+                  &nbsp;<br>
+                  <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>">Choose Groups</a><br>&nbsp;</dhv:permission>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            &nbsp;
+          </td>
+          <td valign="top" align="center">
+            <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+              <tr class="title">
+                <td align="center">
+                  <strong>Message</strong>
+                </td>
+              </tr>
+              <tr class="containerBody">
+                <td align="center">
+                  <%= (Campaign.hasMessage()?"<font color='green'>" + Campaign.getMessageName() + "</font>":"<font color='red'>No Message Selected</font>") %><br>
+                  &nbsp;<br>
+                  <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>">Choose Message</a><br>&nbsp;</dhv:permission>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            &nbsp;
+          </td>
+          <td valign="top" align="center">
+            <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+              <tr class="title">
+                <td align="center">
+                  <strong>Attachments</strong>
+                </td>
+              </tr>
+              <tr class="containerBody">
+                <td align="center">
+                  <%= (Campaign.hasSurvey()?"<font color='green'>Survey</font>":"None") %><br>
+                  &nbsp;<br>
+                  <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=ViewAttachment&id=<%= Campaign.getId() %>">Choose optional<br>attachments</a></dhv:permission>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            &nbsp;
+          </td>
+          <td valign="top" align="center">
+            <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+              <tr class="title">
+                <td align="center">
+                  <strong>Delivery</strong>
+                </td>
+              </tr>
+              <tr class="containerBody">
+                <td align="center">
+                  <%= (Campaign.hasDetails()?"<font color='green'>Scheduled for " + Campaign.getActiveDateString() + "<br>" + toHtml(Campaign.getDeliveryName()) + "</font><br>":"<font color='red'>Not Scheduled</font><br>&nbsp;<br>") %>
+                  <dhv:permission name="campaign-campaigns-view"><a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>">Choose Options</a><br>&nbsp;</dhv:permission>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+  <%--
+    </td>
+  </tr>
+</table>
+  --%>
+&nbsp;
+
+<%  
+  if (Campaign.isReadyToActivate()) {
+%>  
+  <dhv:permission name="campaign-campaigns-edit">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+    <tr class="containerBody">
+      <td class="formLabel">
+        <center>
+          This campaign has been configured and can now be activated.<br>
+          Once active, today's campaigns will begin processing in under 5 minutes and cannot be cancelled.<br>
+          Verify the campaign then
+          <a href="javascript:confirmForward('/CampaignManager.do?command=Activate&id=<%= Campaign.getId() %>&notify=true&modified=<%= Campaign.getModified() %>');"><font color="red">click to Activate</font></a>.
+        </center>
+      </td>
+    </tr>
+  </table>
+  &nbsp;
+  </dhv:permission>
+<%
+  }
+%>
 <br>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -28,73 +145,15 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Name
-    </td>
-    <td width="100%">
-      <input type=text size=35 name="name" value="<%= toHtmlValue(Campaign.getName()) %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
       Description
     </td>
     <td width="100%">
-      <input type=text size=55 name="description" value="<%= toHtmlValue(Campaign.getDescription()) %>">
+      <%= toHtmlValue(Campaign.getDescription()) %>&nbsp;
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Groups
-    </td>
-    <td width="100%">
-      <dhv:permission name="campaign-campaigns-groups-view"><a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>"></dhv:permission><%= (Campaign.hasGroups()?"<font color='green'>" + Campaign.getGroupCount() + " selected</font>":"<font color='red'>No Groups Selected</font>") %><dhv:permission name="campaign-campaigns-groups-view"></a></dhv:permission>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Message
-    </td>
-    <td width="100%">
-      <dhv:permission name="campaign-campaigns-messages-view"><a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>"></dhv:permission><%= (Campaign.hasMessage()?"<font color='green'>" + Campaign.getMessageName() + "</font>":"<font color='red'>No Message Selected</font>") %><dhv:permission name="campaign-campaigns-messages-view"></a></dhv:permission>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Schedule
-    </td>
-    <td width="100%">
-      <dhv:permission name="campaign-campaigns-view"><a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"></dhv:permission><%= (Campaign.hasDetails()?"<font color='green'>Scheduled to run on " + Campaign.getActiveDateString() + "</font>":"<font color='red'>Not Scheduled</font>") %><dhv:permission name="campaign-campaigns-view"></a></dhv:permission>
-    </td>
-  </tr>
-  
-  <tr class="containerBody">
-    <td class="formLabel">
-      Delivery
-    </td>
-    <td width="100%">
-      <dhv:permission name="campaign-campaigns-view"><a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"></dhv:permission><%= (Campaign.hasDetails()?"<font color='green'>" + toHtml(Campaign.getDeliveryName())  + "</font>":"<font color='red'>Not Specified</font>") %><dhv:permission name="campaign-campaigns-view"></a></dhv:permission>
-    </td>
-  </tr>
-  
-<%  
-  if (Campaign.isReadyToActivate()) {
-%>  
-  <dhv:permission name="campaign-campaigns-edit">
-  <tr class="containerBody">
-    <td class="formLabel">
-      Begin Processing
-    </td>
-    <td>
-      <a href="javascript:confirmForward('/CampaignManager.do?command=Activate&id=<%= Campaign.getId() %>&notify=true&modified=<%= Campaign.getModified() %>');"><font color="red">Click to Activate</font></a>
-    </td>
-  </tr>
-  </dhv:permission>
-<%
-  }
-%>  
-  <tr class="containerBody">
-    <td class="formLabel">
-      Entered
+      Created
     </td>
     <td width="100%">
       <dhv:username id="<%= Campaign.getEnteredBy() %>" /> - <%= Campaign.getEnteredString() %>
@@ -109,11 +168,15 @@
       <dhv:username id="<%= Campaign.getModifiedBy() %>" /> - <%= Campaign.getModifiedString() %>
     </td>
   </tr>
-  
 </table>
+&nbsp;<br>
+
+
 <dhv:permission name="campaign-campaigns-edit">
-<br>
-<input type='submit' value="Update Campaign Details" name="Save">
+  <input type="button" value="Modify Campaign Details" onClick="javascript:this.form.action='/CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>';submit();">
+</dhv:permission>
+<dhv:permission name="campaign-campaigns-delete">
+  <input type="button" value="Delete Campaign" onClick="javascript:this.form.action='/CampaignManager.do?command=Delete&id=<%= Campaign.getId() %>';confirmSubmit(document.modForm);">
 </dhv:permission>
   </td>
   </tr>

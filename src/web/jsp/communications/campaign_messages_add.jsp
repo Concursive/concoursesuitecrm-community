@@ -23,62 +23,51 @@
   }  
 </style>
 <body onLoad="javascript:document.forms[0].name.focus();">
-<a href="/CampaignManagerMessage.do?command=View">Back to Message List</a><br>
+Communications Manager >
+<a href="/CampaignManagerMessage.do?command=View">Message List</a> >
+Add Message
+<hr color="#BFBFBB" noshade>
 <form name="addMessage" method="post" action="/CampaignManagerMessage.do?command=Insert&auto-populate=true">
-&nbsp;<br>
-<input type="submit" value="Save" onclick="javascript:save();">
+<input type="submit" value="Save Message" onclick="javascript:save();">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
 <input type="reset" value="Reset">
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2" valign="center" align="left">
       <strong>New Message</strong>
     </td>
   </tr>
   <tr>
-    <td valign=center align=right class="formLabel">
+    <td valign="center" align="right" class="formLabel">
       Name
     </td>
-    <td valign=center width="100%">
-      <input type=text size=50 maxlength=80 name="name" value="<%= toHtmlValue(Message.getName()) %>">
+    <td valign="center" width="100%">
+      <input type="text" size="50" maxlength="80" name="name" value="<%= toHtmlValue(Message.getName()) %>">
       <font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
   <tr>
-    <td valign=center align=right class="formLabel">
-      Description
+    <td valign="top" align="right" class="formLabel">
+      Internal Description
     </td>
-    <td colspan=1 valign=center>
+    <td valign="top">
       <input type="text" size="50" maxlength="255" name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
     </td>
   </tr>
 	<tr>
-    <td valign=center align=right class="formLabel">
-      Reply To
+    <td valign="top" align="right" class="formLabel">
+      Message
     </td>
     <td valign=center>
-      <input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
+      From: <input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
 			<font color="red">*</font> <%= showAttribute(request, "replyToError") %>
-    </td>
-  </tr>
-	<tr>
-    <td valign=center align=right class="formLabel">
-      Message Subject
-    </td>
-    <td valign=center>
-      <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
-			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %>
-    </td>
-  </tr>
-	
-  <tr>
-    <td valign=top align=right class="formLabel">
-      Message Text
-    </td>
-    <td valign=center>
+      (Email address)<br>
+      Subject: <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
+			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %><br>
+      &nbsp;<br>
 		<dhv:browser id="ie" minVersion="5.5" include="false">
-		  HTML tags allowed in text entry<br>
+		  HTML tags are allowed in text message<br>
       <textarea name="messageText" rows="10" cols="75" wrap="physical"><%= Message.getMessageText() %></textarea>
     </dhv:browser>
     <dhv:browser id="ie" minVersion="5.5" include="true">
@@ -110,17 +99,9 @@
     </dhv:browser>
     </td>
   </tr>
-  <tr>
-    <td valign=center align=right class="formLabel">
-      URL
-    </td>
-    <td valign=center>
-      <input type=text size=50 name="url" value="<%= toHtmlValue(Message.getUrl()) %>">
-    </td>
-  </tr>
 </table>
 <br>
-<input type="submit" value="Save" onclick="javascript:save();">
+<input type="submit" value="Save Message" onclick="javascript:save();">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
 <input type="reset" value="Reset">
 </form>

@@ -81,6 +81,10 @@ public class SearchCriteriaListList extends ArrayList {
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
   }
+  
+  public void setCampaignId(String tmp) {
+    this.campaignId = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -245,6 +249,28 @@ public class SearchCriteriaListList extends ArrayList {
     }
 
     return i;
+  }
+  
+  public boolean containsItem(SearchCriteriaList listB) {
+    //Similar to contains, but will find copies as well
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      SearchCriteriaList listA = (SearchCriteriaList)i.next();
+      if (listA.getId() == listB.getId()) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public void removeItem(SearchCriteriaList listB) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      SearchCriteriaList listA = (SearchCriteriaList)i.next();
+      if (listA.getId() == listB.getId()) {
+        i.remove();
+      }
+    }
   }
 
 }

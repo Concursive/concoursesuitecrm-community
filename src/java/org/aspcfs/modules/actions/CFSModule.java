@@ -515,51 +515,7 @@ public class CFSModule {
       context.getSession().setAttribute("RecentItems", recentItems);
     }
 
-    RecentItem thisItem = null;
-
-    //Build the recent item object
-    if (itemObject instanceof Contact) {
-      Contact thisContact = (Contact) itemObject;
-
-      if (thisContact.getTypeId() == Contact.EMPLOYEE_TYPE) {
-        thisItem = new RecentItem(
-            RecentItem.EMPLOYEE,
-            thisContact.getNameFirstLast(),
-            "/CompanyDirectory.do?command=EmployeeDetails&empid=" + thisContact.getId());
-      } else {
-        thisItem = new RecentItem(
-            RecentItem.CONTACT,
-            thisContact.getNameFull(),
-            "/ExternalContacts.do?command=ContactDetails&id=" + thisContact.getId());
-      }
-
-    } else if (itemObject instanceof Organization) {
-      Organization thisOrganization = (Organization) itemObject;
-      thisItem = new RecentItem(
-          RecentItem.ACCOUNT,
-          thisOrganization.getName(),
-          "/Accounts.do?command=Details&orgId=" + thisOrganization.getOrgId());
-
-    } else if (itemObject instanceof User) {
-      User thisUser = (User) itemObject;
-      thisItem = new RecentItem(
-          RecentItem.USER,
-          thisUser.getContact().getNameFirstLast(),
-          "/Users.do?command=UserDetails&id=" + thisUser.getId());
-    } else if (itemObject instanceof Ticket) {
-      Ticket thisTicket = (Ticket) itemObject;
-      thisItem = new RecentItem(
-          RecentItem.TICKET,
-          thisTicket.getPaddedId(),
-          "/TroubleTickets.do?command=Details&id=" + thisTicket.getId());
-    } else if (itemObject instanceof Opportunity) {
-      Opportunity thisOpp = (Opportunity) itemObject;
-      thisItem = new RecentItem(
-          RecentItem.OPPORTUNITY,
-          thisOpp.getShortDescription(),
-          "/Opportunities.do?command=Details&id=" + thisOpp.getId() + "&orgId=" + thisOpp.getAccountLink() + "&contactId=" + thisOpp.getContactLink());
-    }
-
+    RecentItem thisItem = this.getRecentItem(itemObject);
     if (thisItem != null) {
       Iterator i = recentItems.iterator();
       while (i.hasNext()) {
@@ -588,9 +544,31 @@ public class CFSModule {
       context.getSession().setAttribute("RecentItems", recentItems);
     }
 
-    RecentItem thisItem = null;
+    RecentItem thisItem = this.getRecentItem(itemObject);
+    if (thisItem != null) {
+      Iterator i = recentItems.iterator();
+      while (i.hasNext()) {
+        RecentItem existingItem = (RecentItem) i.next();
+        if (existingItem.getUrl().equals(thisItem.getUrl())) {
+          recentItems.remove(recentItems.indexOf(existingItem));
+          break;
+        }
+      }
 
+      if (recentItems.size() > 0) {
+        recentItems.add(0, thisItem);
+      } else {
+        recentItems.add(thisItem);
+      }
+      while (recentItems.size() > 10) {
+        recentItems.remove(10);
+      }
+    }
+  }
+  
+  public RecentItem getRecentItem(Object itemObject) {
     //Build the recent item object
+    RecentItem thisItem = null;
     if (itemObject instanceof Contact) {
       Contact thisContact = (Contact) itemObject;
 
@@ -637,28 +615,21 @@ public class CFSModule {
         RecentItem.PROJECT,
         thisProject.getTitle(),
         "/ProjectManagement.do?command=ProjectCenter&pid=" + thisProject.getId());
-    }
-
-    //Insert the object
-    if (thisItem != null) {
-      Iterator i = recentItems.iterator();
-      while (i.hasNext()) {
-        RecentItem existingItem = (RecentItem) i.next();
-        if (existingItem.getUrl().equals(thisItem.getUrl())) {
-          recentItems.remove(recentItems.indexOf(existingItem));
-          break;
-        }
-      }
-
-      if (recentItems.size() > 0) {
-        recentItems.add(0, thisItem);
+    } else if (itemObject instanceof Campaign) {
+      Campaign thisCampaign = (Campaign)itemObject;
+      if (thisCampaign.getActive()) {
+        thisItem = new RecentItem(
+          RecentItem.CAMPAIGN,
+          thisCampaign.getSubject(),
+          "/CampaignManager.do?command=Details&id=" + thisCampaign.getId() + "&reset=true");
       } else {
-        recentItems.add(thisItem);
-      }
-      while (recentItems.size() > 10) {
-        recentItems.remove(10);
+        thisItem = new RecentItem(
+          RecentItem.CAMPAIGN,
+          thisCampaign.getSubject(),
+          "/CampaignManager.do?command=ViewDetails&id=" + thisCampaign.getId() + "&reset=true");
       }
     }
+    return thisItem;
   }
 
 

@@ -4,8 +4,10 @@
 <jsp:useBean id="CampaignMessageListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+Communications Manager >
+Message List
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="campaign-campaigns-messages-add"><a href="/CampaignManagerMessage.do?command=Add">Add a Message</a></dhv:permission>
-<dhv:permission name="campaign-campaigns-messages-add" none="true"><br></dhv:permission>
 <center><%= CampaignMessageListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>

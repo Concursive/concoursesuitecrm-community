@@ -33,7 +33,7 @@ public class RecentItem {
   private final static String OPPORTUNITY_TEXT = "O: ";
   private final static String CAMPAIGN_TEXT = "Campaign: ";
   private final static String PROJECT_TEXT = "Project: ";
-  private final static String TICKET_TEXT = "T: ";
+  private final static String TICKET_TEXT = "Ticket: ";
   private final static String USER_TEXT = "U: ";
 
 

@@ -23,26 +23,28 @@
   }
 </script>
 <form name="inputForm" action="/CampaignManager.do?command=InsertSchedule&id=<%= Campaign.getId() %>" method="post" onSubmit="return checkForm(this);">
-<a href="/CampaignManager.do?command=View">Back to Campaign List</a><br>&nbsp;
+Communications Manager > 
+<a href="/CampaignManager.do?command=View">Campaign List</a> >
+<a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+Delivery
+<hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(Campaign.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + Campaign.getId(); %>      
-      <dhv:container name="communications" selected="schedule" param="<%= param1 %>" />
+      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
-<br>
+      <ul>
+        <li>Choose a date for the campaign to run</li>
+        <li>Choose how messages should be delivered to recipients</li>
+        <li>Campaigns will not run until the campaign has been activated</li>
+      </ul>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong>Schedule when the campaign should start</strong>
+      <strong>Delivery Options</strong>
     </td>     
   </tr>
   <tr class="containerBody">

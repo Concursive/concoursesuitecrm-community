@@ -381,22 +381,25 @@
     <forward name="AddOK" resource="/campaign_add.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/CampaignManager.do?command=View"/>
     <forward name="InsertOK" resource="/campaign_center_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/campaign_center_modify.jsp" layout="nav"/>
     <forward name="ViewDetailsOK" resource="/campaign_center_details.jsp" layout="nav"/>
     <forward name="ViewGroupsOK" resource="/campaign_center_groups.jsp" layout="nav"/>
     <forward name="ViewRecipientsOK" resource="/campaign_center_recipients.jsp" layout="nav"/>
     <forward name="ViewMessageOK" resource="/campaign_center_message.jsp" layout="nav"/>
+    <forward name="ViewAttachmentOK" resource="/campaign_center_attachments.jsp" layout="nav"/>
     <forward name="ViewScheduleOK" resource="/campaign_center_schedule.jsp" layout="nav"/>
     <forward name="AddGroupsOK" resource="/campaign_center_groups_add.jsp" layout="nav"/>
     <forward name="InsertGroupsOK" resource="/CampaignManager.do?command=ViewDetails"/>
     <forward name="RemoveGroupsOK" resource="/CampaignManager.do?command=ViewGroups"/>
     <forward name="AddMessageOK" resource="/campaign_center_message_add.jsp" layout="nav"/>
     <forward name="InsertMessageOK" resource="/CampaignManager.do?command=ViewDetails"/>
+    <forward name="InsertAttachmentOK" resource="/CampaignManager.do?command=ViewDetails"/>
     <forward name="InsertScheduleOK" resource="/CampaignManager.do?command=ViewDetails"/>
-    <forward name="UpdateDetailsOK" resource="/CampaignManager.do?command=View"/>
+    <forward name="UpdateDetailsOK" resource="/CampaignManager.do?command=ViewDetails"/>
     <forward name="CancelOK" resource="/CampaignManager.do?command=View"/>
     <forward name="ActivateOK" resource="/CampaignManager.do?command=Dashboard"/>
     <forward name="DetailsOK" resource="/campaign_details.jsp" layout="nav"/>
-    <forward name="PreviewGroupsOK" resource="/campaign_center_groups_preview.jsp" layout="nav"/>
+    <forward name="PreviewGroupsOK" resource="/campaign_center_groups_preview.jsp" layout="style"/>
     <forward name="ToggleOK" resource="/CampaignManager.do?command=PreviewGroups"/>
     <forward name="PrepareDownloadOK" resource="/campaign_download.jsp" layout="nav"/>
     <forward name="PopupOK" resource="/campaign_survey_comments.jsp" layout="style"/>

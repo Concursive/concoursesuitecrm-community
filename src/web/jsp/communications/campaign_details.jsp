@@ -6,8 +6,10 @@
 <jsp:useBean id="CampaignDashboardRecipientInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <%@ include file="initPage.jsp" %>
-<a href="/CampaignManager.do?command=Dashboard">Back to Dashboard</a>
-<br>&nbsp;
+Communications Manager >
+<a href="/CampaignManager.do?command=Dashboard">Dashboard</a> >
+Campaign Details
+<hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2" valign="center" align="left">

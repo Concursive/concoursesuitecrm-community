@@ -504,9 +504,20 @@ public void setServerName(String serverName) {
    */
   public void setGroups(HttpServletRequest request) {
     StringBuffer sb = new StringBuffer();
-
+    
+    int selectCount = 0;
+    String item = null;
+    while ((item = request.getParameter("select" + (++selectCount))) != null) {
+      if ("on".equalsIgnoreCase(request.getParameter("select" + selectCount + "check"))) {
+        if (sb.length() > 0) {
+          sb.append("*");
+        }
+        sb.append(item);
+      }
+    }
+    
+/* 
     Enumeration parameters = request.getParameterNames();
-
     while (parameters.hasMoreElements()) {
       String param = (String) parameters.nextElement();
 
@@ -517,7 +528,7 @@ public void setServerName(String serverName) {
         sb.append(param);
       }
     }
-
+ */
     groupList = sb.toString();
   }
 
@@ -1047,6 +1058,10 @@ public void setServerName(String serverName) {
   public boolean hasMessage() {
     return (messageId > 0);
   }
+  
+  public boolean hasSurvey() {
+    return (surveyId > 0);
+  }
 
 
   /**
@@ -1285,41 +1300,25 @@ public void setServerName(String serverName) {
   public boolean insertGroups(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
+      
+      deleteAllGroups(db);
 
       if (this.getGroupList() != null && !this.getGroupList().equals("")) {
         StringTokenizer strt = new StringTokenizer(this.getGroupList(), "*");
-
         while (strt.hasMoreTokens()) {
           String tmpString = (String) strt.nextToken();
 
-          boolean doInsert = true;
-          Statement st = db.createStatement();
-          ResultSet rs = st.executeQuery(
-              "SELECT * " +
-              "FROM campaign_list_groups " +
-              "WHERE campaign_id = " + id + " " +
-              "AND group_id = " + tmpString);
-          if (rs.next()) {
-            doInsert = false;
-          }
-          rs.close();
-          st.close();
-
-          if (doInsert) {
-            PreparedStatement pstx = null;
-            StringBuffer groupSql = new StringBuffer();
-            groupSql.append(
-                "INSERT INTO campaign_list_groups " +
-                "(campaign_id, group_id ) " +
-                "VALUES (?, ?) ");
-
-            int j = 0;
-            pstx = db.prepareStatement(groupSql.toString());
-            pstx.setInt(++j, this.getId());
-            pstx.setInt(++j, Integer.parseInt(tmpString));
-            pstx.execute();
-            pstx.close();
-          }
+          PreparedStatement pstx = null;
+          String groupSql = 
+              "INSERT INTO campaign_list_groups " +
+              "(campaign_id, group_id ) " +
+              "VALUES (?, ?) ";
+          int j = 0;
+          pstx = db.prepareStatement(groupSql);
+          pstx.setInt(++j, this.getId());
+          pstx.setInt(++j, Integer.parseInt(tmpString));
+          pstx.execute();
+          pstx.close();
         }
       }
 
@@ -1341,6 +1340,18 @@ public void setServerName(String serverName) {
     return true;
   }
 
+  public boolean deleteAllGroups(Connection db) throws SQLException {
+    PreparedStatement pstx = null;
+    String groupSql = 
+        "DELETE FROM campaign_list_groups " +
+        "WHERE campaign_id = ? ";
+    int j = 0;
+    pstx = db.prepareStatement(groupSql);
+    pstx.setInt(++j, this.getId());
+    pstx.execute();
+    pstx.close();
+    return true;
+  }
 
   /**
    *  Description of the Method
@@ -1438,13 +1449,15 @@ public void setServerName(String serverName) {
     try {
       db.setAutoCommit(false);
       st.executeUpdate(
-        "DELETE FROM campaign WHERE id = " + this.getId());
-      st.executeUpdate(
         "DELETE FROM campaign_list_groups WHERE campaign_id = " + this.getId());
       st.executeUpdate(
         "DELETE FROM scheduled_recipient WHERE campaign_id = " + this.getId());
       st.executeUpdate(
         "DELETE FROM campaign_run WHERE campaign_id = " + this.getId());
+      st.executeUpdate(
+        "DELETE FROM excluded_recipient WHERE campaign_id = " + this.getId());
+      st.executeUpdate(
+        "DELETE FROM campaign WHERE id = " + this.getId());
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1657,7 +1670,7 @@ public void setServerName(String serverName) {
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET message_id = " + messageId + ", " +
-	"survey_id = " + surveyId + ", " +
+        "survey_id = " + surveyId + ", " +
         "reply_addr = null, " +
         "subject = null, " +
         "message = null, " +

@@ -118,7 +118,10 @@ listOfOperators[0] = stringOperators
 listOfOperators[1] = dateOperators
 listOfOperators[2] = numberOperators
 </script>
-<a href="/CampaignManagerGroup.do?command=View">Back to Group List</a><br>
+Communications Manager >
+<a href="/CampaignManagerGroup.do?command=View">Group List</a> >
+Group Details (Add)
+<hr color="#BFBFBB" noshade>
 <form name="searchForm" method="post" action="/CampaignManagerGroup.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -140,7 +143,6 @@ listOfOperators[2] = numberOperators
     </td>
     <td width="100%">
       <%= ContactSource.getHtml("contactSource", SCL.getContactSource()) %>
-      <a href="javascript:popURLCampaign('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a>
     </td>
   </tr>
 </table>
@@ -212,6 +214,7 @@ listOfOperators[2] = numberOperators
 			</select>
 		<%}%>
       <br>
+      <a href="javascript:popURLCampaign('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a><br>
       &nbsp;<br>
       <input type="button" value="Remove" onclick="removeValues()">
 		</td>

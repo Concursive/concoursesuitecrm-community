@@ -22,7 +22,11 @@
     background: buttonface;
   }  
 </style>
-<a href="/CampaignManagerMessage.do?command=View">Back to Message List</a><br>
+Communications Manager >
+<a href="/CampaignManagerMessage.do?command=View">Message List</a> >
+<a href="/CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>">Message Details</a> >
+Modify Message
+<hr color="#BFBFBB" noshade>
 <form name="modMessage" action="/CampaignManagerMessage.do?command=Update&auto-populate=true" method="post">
 <input type="hidden" name="id" value="<%= Message.getId() %>">
 <input type="hidden" name="modified" value="<%= Message.getModified() %>">
@@ -31,7 +35,7 @@
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 
-<input type="submit" value="Update" name="Save" onclick="javascript:save();">
+<input type="submit" value="Update Message" name="Save" onclick="javascript:save();">
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -45,56 +49,42 @@
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr class="title">
-  	<td colspan=2 valign=center align=left>
+  	<td colspan="2" valign="center" align="left">
     	<strong>Modify Message</strong>
   	</td>
 	</tr>
   <tr>
-    <td valign=center align=right class="formLabel">
+    <td valign="center" align="right" class="formLabel">
       Name
     </td>
-    <td valign=center width="100%">
+    <td valign="center" width="100%">
       <input type=text size=50 maxlength=80 name="name" value="<%= toHtmlValue(Message.getName()) %>">
 			<font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
   
   <tr>
-    <td valign=center align=right class="formLabel">
-      Description
+    <td valign="top" align="right" class="formLabel">
+      Internal Description
     </td>
-    <td valign=center>
-      <input type=text size=50 maxlength=255 name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
+    <td valign="top">
+      <input type="text" size="50" maxlength="255" name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
     </td>
   </tr>
 	
 	<tr>
-    <td valign=center align=right class="formLabel">
-      Reply To
+    <td valign="top" align="right" class="formLabel">
+      Message
     </td>
     <td valign=center>
-      <input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
+      From: <input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
 			<font color="red">*</font> <%= showAttribute(request, "replyToError") %>
-    </td>
-  </tr>
-	
-	<tr>
-    <td valign=center align=right class="formLabel">
-      Message Subject
-    </td>
-    <td valign=center>
-      <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
-			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %>
-    </td>
-  </tr>
-	
-  <tr>
-    <td valign=top align=right class="formLabel">
-      Message Text
-    </td>
-    <td valign=center>
+      (Email address)<br>
+      Subject: <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
+			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %><br>
+      &nbsp;<br>
 		<dhv:browser id="ie" minVersion="5.5" include="false">
-		  HTML tags allowed in text entry<br>
+		  HTML tags are allowed in text entry<br>
       <textarea name="messageText" rows="10" cols="75" wrap="physical"><%= Message.getMessageText() %></textarea>
     </dhv:browser>
 		<dhv:browser id="ie" minVersion="5.5" include="true">
@@ -126,18 +116,9 @@
 			</dhv:browser>
     </td>
   </tr>
-  
-  <tr>
-    <td valign=center align=right class="formLabel">
-      URL
-    </td>
-    <td valign=center>
-      <input type=text size=50 name="url" value="<%= toHtmlValue(Message.getUrl()) %>">
-    </td>
-  </tr>
 </table>
 <br>
-<input type="submit" value="Update" name="Save" onclick="javascript:save();">
+<input type="submit" value="Update Message" name="Save" onclick="javascript:save();">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">

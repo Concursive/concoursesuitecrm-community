@@ -268,6 +268,10 @@ public class SearchCriteriaList extends HashMap {
   public void setId(int tmp) {
     this.id = tmp;
   }
+  
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
 
 
   /**

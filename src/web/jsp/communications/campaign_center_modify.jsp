@@ -25,19 +25,21 @@
 <body onLoad="javascript:document.forms[0].name.focus();">
 Communications Manager > 
 <a href="/CampaignManager.do?command=View">Campaign List</a> >
-Campaign Details (New)
+<a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+Modify
 <hr color="#BFBFBB" noshade>
-<form name="addForm" action="/CampaignManager.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="addForm" action="/CampaignManager.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
   <input type="hidden" name="dosubmit" value="true">
-  <input type="submit" value="Insert" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=View';">
+  <input type="hidden" name="id" value="<%= Campaign.getId() %>">
+  <input type="submit" value="Update" name="Save">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=ViewDetails';">
   <input type="reset" value="Reset">
   <br>
   &nbsp;
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <td valign=center colspan=2 align=left>
-        <strong>Begin by naming the campaign</strong>
+        <strong>Modify base campaign information</strong>
       </td>
     </tr>
     <tr>
@@ -58,8 +60,8 @@ Campaign Details (New)
     </tr>
   </table>
   <br>
-  <input type="submit" value="Insert" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=View';">
+  <input type="submit" value="Update" name="Save">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=ViewDetails';">
   <input type="reset" value="Reset">
 </form>
 </body>

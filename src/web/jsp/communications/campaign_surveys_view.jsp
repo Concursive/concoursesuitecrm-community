@@ -4,12 +4,16 @@
 <jsp:useBean id="SurveyList" class="com.darkhorseventures.cfsbase.SurveyList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="listView" method="post" action="/CampaignManagerSurvey.do?command=View">
+Communications Manager >
+<a href="CampaignManagerAttachment.do">Create Attachments</a> >
+Surveys
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="campaign-campaigns-surveys-add"><a href="/CampaignManagerSurvey.do?command=Add">Add a Survey</a></dhv:permission>
 <dhv:permission name="campaign-campaigns-surveys-add" none="true"><br></dhv:permission>
 <center><%= CampaignSurveyListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/CampaignManagerSurvey.do?command=View">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= CampaignSurveyListInfo.getOptionValue("my") %>>My Surveys</option>
@@ -17,6 +21,7 @@
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -84,5 +89,5 @@
 <%}%>
 </table>
 <br>
-[<%= CampaignSurveyListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignSurveyListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignSurveyListInfo.getNumericalPageLinks() %>
-</form>
+<dhv:pagedListControl object="CampaignSurveyListInfo" tdClass="row1"/>
+

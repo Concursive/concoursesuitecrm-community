@@ -52,10 +52,10 @@
 							if (thisField.getType() == CustomField.ROWLIST) {
 								for(int k=1; k<=thisField.getMaxRowItems(); k++) {%>
 								<tr class="containerBody">
-								<td width=125 valign="center" nowrap class="formLabel">
+								<td width=125 valign="top" nowrap class="formLabel">
 								<%= thisField.getDisplayHtml() %> <%=k%>
 								</td>
-								<td width=100% valign="center">
+								<td width=100% valign="top">
 								<%= thisField.getRowListElement(k, (thisField.getType() == CustomField.ROWLIST)) %> <font color="red"><%= (thisField.getRequired()?"*":"") %></font>
 								<font color='#006699'><%= toHtml(thisField.getError()) %></font>
 								</td>
@@ -72,7 +72,7 @@
 								<td width=100% valign="center">
 									<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 									<tr class="containerHeader">
-									<td colspan=7 valign="center">
+									<td colspan=7 valign="top">
 									<%= thisField.getRowListElement(k, (thisField.getType() == CustomField.ROWLIST)) %>
 									</td>
 									</tr>
@@ -88,7 +88,7 @@
 											
 											<tr class="containerBody">
 											<% for(int z=1; z<8; z++) {%>
-											<td valign=center align=center><input name="ans<%=k%>" type="radio"></td>
+											<td valign="top" align="center"><input name="ans<%=k%>" type="radio"></td>
 											<%}%>
 											</tr>
 										<%}%>
@@ -97,17 +97,17 @@
 									<% if (request.getParameter("type") != null) {
 										if (Integer.parseInt(request.getParameter("type")) == 3) {%>
 											<tr class="containerBody">
-											<td width=15% valign=center align=right>
+											<td width="15%" valign="top" align="right">
 											Comments
 											</td>
-											<td colspan=6 valign=center><textarea name="comments<%=k%>" rows=2 cols=80></textarea></td>
+											<td colspan="6" valign="top"><textarea name="comments<%=k%>" rows=2 cols=80></textarea></td>
 											</tr>
 										<%} else if (Integer.parseInt(request.getParameter("type")) == 1) {%>
 											<tr class="containerBody">
-											<td width=15% valign=center align=right>
+											<td width="15%" valign="top" align="right">
 											Response
 											</td>
-											<td colspan=6 valign=center><textarea name="response<%=k%>" rows=2 cols=80></textarea></td>
+											<td colspan="6" valign="top"><textarea name="response<%=k%>" rows=2 cols=80></textarea></td>
 											</tr>
 										<%}%>
 									<%}%>

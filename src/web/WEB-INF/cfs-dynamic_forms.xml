@@ -1,6 +1,14 @@
 <application>
   <!-- Form used in the survey module -->
-  <form name="survey" defaultField="name" button0text="Save" button0link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" button1text="Preview" button1link="CampaignManagerSurvey.do?command=Preview&amp;auto-populate=true" action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" cancel="CampaignManagerSurvey.do?command=View" returnLinkText="Back to Survey List" returnLink="CampaignManagerSurvey.do?command=View">
+  <form name="survey" 
+        defaultField="name" 
+        button0text="Save" 
+        button0link="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
+        button1text="Preview" 
+        button1link="CampaignManagerSurvey.do?command=Preview&amp;auto-populate=true" 
+        action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
+        cancel="CampaignManagerSurvey.do?command=View" 
+        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;"> 
     <tab name="Page 1" next="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=1" id="0">
       <group name="Create a New Survey">
         <field name="name" display="Name" type="text" parameters="size=50^maxlength=80" required="on"/>
@@ -18,7 +26,14 @@
     </tab>
   </form>
   
-  <form name="surveydetails" button0text="Modify" button0link="CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true" button1text="Delete Survey" button1link="CampaignManagerSurvey.do?command=Delete&amp;auto-populate=true" action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" cancel="CampaignManagerSurvey.do?command=View" returnLinkText="Back to Survey List" returnLink="CampaignManagerSurvey.do?command=View">
+  <form name="surveydetails" 
+        button0text="Modify" 
+        button0link="CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true" 
+        button1text="Delete Survey" 
+        button1link="CampaignManagerSurvey.do?command=Delete&amp;auto-populate=true" 
+        action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
+        cancel="CampaignManagerSurvey.do?command=View" 
+        returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
     <tab name="Page 1" id="0">
       <group name="Survey Details">
         <field name="name" display="Name" type="displaytext"/>
@@ -35,7 +50,8 @@
     </tab>
   </form>
   
-  <form name="surveypreview" cancel="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true">
+  <form name="surveypreview" 
+        cancel="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true">
     <tab name="Page 1" id="0">
       <group name="Survey Preview">
         <field name="intro" type="survey_intro"/>
@@ -55,7 +71,9 @@
     </tab>
   </form>
   
-  <form name="surveyview" action="ProcessSurvey.do?command=Insert&amp;auto-populate=true" cancel="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true">
+  <form name="surveyview" 
+        action="ProcessSurvey.do?command=Insert&amp;auto-populate=true" 
+        cancel="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true">
     <tab name="Page 1" id="0">
       <group name="Survey Preview">
         <field name="intro" type="survey_intro"/>

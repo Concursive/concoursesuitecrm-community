@@ -8,13 +8,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(Campaign.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + Campaign.getId(); %>      
-      <dhv:container name="communications" selected="recipients" param="<%= param1 %>" />
+      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
   <tr>

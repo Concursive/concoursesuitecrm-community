@@ -5,17 +5,15 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="modForm" action="/CampaignManager.do?command=RemoveGroups&id=<%= Campaign.getId() %>" method="post">
-<a href="/CampaignManager.do?command=View">Back to Campaign List</a><br>&nbsp;
+Communications Manager > 
+<a href="/CampaignManager.do?command=View">Campaign List</a> >
+<a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+Groups
+<hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(Campaign.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + Campaign.getId(); %>      
-      <dhv:container name="communications" selected="groups" param="<%= param1 %>" />
+      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>
   </tr>
   <tr>

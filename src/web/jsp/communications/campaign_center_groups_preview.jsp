@@ -6,27 +6,26 @@
 <jsp:useBean id="CampaignCenterPreviewInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<a href="/CampaignManager.do?command=View">Back to Campaign List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(Campaign.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + Campaign.getId(); %>      
-      <dhv:container name="communications" selected="message" param="<%= param1 %>" />
+      <strong>Group Preview: </strong><%= toHtml(SCL.getGroupName()) %>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
+      <ul>
+        <li>A recipient can be removed from this campaign</li>
+        <li>The removed recipient will not be deleted from the group or from other campaigns</li>
+      </ul>
+<%--
 <a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>">Back to Group List</a>
 <br>&nbsp;
+--%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan="4" valign="center" align="left">
-      <strong>List of Matching Contacts</strong>
+      <strong>Contacts in this group</strong>
     </td>     
   </tr>
   <tr class="title">

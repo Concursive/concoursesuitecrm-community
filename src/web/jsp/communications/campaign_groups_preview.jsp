@@ -3,9 +3,11 @@
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <jsp:useBean id="CampaignGroupsPreviewInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-<a href="/CampaignManagerGroup.do?command=View">Back to Group List</a><dhv:permission name="campaign-campaigns-groups-edit"> |
-<a href="/CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>">Modify this Group</a></dhv:permission>
-<br>&nbsp;
+Communications Manager >
+<a href="/CampaignManagerGroup.do?command=View">Group List</a> >
+<dhv:permission name="campaign-campaigns-groups-edit"><a href="/CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>">Group Details (Modify)</a> ></dhv:permission>
+Contact Preview
+<hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="3" valign="center" align="left">
