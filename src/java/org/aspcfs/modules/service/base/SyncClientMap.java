@@ -211,6 +211,22 @@ public class SyncClientMap {
     return true;
   }
   
+  public boolean insertConflict(Connection db) throws SQLException {
+    String sql = 
+      "INSERT INTO sync_conflict_log " +
+      "(client_id, table_id, record_id) " +
+      "VALUES (?, ?, ?) ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, clientId);
+    pst.setInt(++i, tableId);
+    pst.setInt(++i, recordId);
+    pst.execute();
+    pst.close();
+
+    return true;
+  }
+  
   /**
    *  Description of the Method
    *

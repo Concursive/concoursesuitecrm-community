@@ -427,16 +427,23 @@ public class TransactionItem {
             Object insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
             syncClientMap.insert(db, ObjectUtils.getParam(insertedObject, "modified"));
           }
-        } else if (action == UPDATE) {
-          //Update the modified date in client mapping
-          if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
-            Object updatedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
-            syncClientMap.updateStatusDate(db, ObjectUtils.getParam(updatedObject, "modified"));
-          }
-        }
-        if (action == INSERT || action == UPDATE) {
           addRecords(object, recordList, "processed");
+        } else if (action == UPDATE) {
+          //If the result is an Integer == 1, then the update is successful, else a "conflict"
+          //since someone else updated it first
+          if (((Integer)result).intValue() == 1) {
+            //Update the modified date in client mapping
+            if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
+              Object updatedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
+              syncClientMap.updateStatusDate(db, ObjectUtils.getParam(updatedObject, "modified"));
+            }
+            addRecords(object, recordList, "processed");
+          } else {
+            addRecords(object, recordList, "conflict");
+            syncClientMap.insertConflict(db);
+          }
         } else {
+          //It wasn't an insert or an update...
           addRecords(object, recordList, null);
         }
       }

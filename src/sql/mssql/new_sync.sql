@@ -46,3 +46,10 @@ CREATE TABLE sync_map (
 
 CREATE UNIQUE INDEX idx_sync_map ON sync_map (client_id, table_id, record_id);
 
+CREATE TABLE sync_conflict_log (
+  client_id INT NOT NULL,
+  table_id INT NOT NULL,
+  record_id INT NOT NULL,
+  status_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
