@@ -251,7 +251,7 @@ public final class ProcessSystem extends CFSModule {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean deleteImportedRecords(ActionContext context) throws SQLException {
+  public synchronized boolean deleteImportedRecords(ActionContext context) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ProcessSystem-> Checking imports for deletion");
     }
