@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="SelectedList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="/javascript/editListForm.js"></script>
 <script language="JavaScript" type="text/javascript">

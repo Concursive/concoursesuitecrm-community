@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="com.darkhorseventures.cfsbase.User" %>
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request"/>
@@ -5,10 +6,16 @@
 <p>
 <form name="details" action="/Users.do?auto-populate=true" method="post">
 <input type=hidden name="id" value="<%= UserRecord.getId() %>">
-<input type=button name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
-<input type=button name="action" value="Delete" onClick="document.details.command.value='DeleteUser';document.details.submit()">
-<br>
-&nbsp;
+<dhv:permission name="admin-users-edit">
+  <input type=button name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
+</dhv:permission>
+<dhv:permission name="admin-users-delete">  
+  <input type=button name="action" value="Delete" onClick="document.details.command.value='DeleteUser';document.details.submit()">
+</dhv:permission>
+<dhv:permission name="admin-users-edit,admin-users-delete">
+  <br>
+  &nbsp;
+</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
@@ -42,5 +49,9 @@
 </table>
 <br>
 <input type=hidden name="command" value="">
-<input type=button name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
-<input type=button name="action" value="Delete" onClick="document.details.command.value='DeleteUser';document.details.submit()">
+<dhv:permission name="admin-users-edit">
+  <input type=button name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
+</dhv:permission>
+<dhv:permission name="admin-users-delete">  
+  <input type=button name="action" value="Delete" onClick="document.details.command.value='DeleteUser';document.details.submit()">
+</dhv:permission>

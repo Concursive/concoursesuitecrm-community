@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="com.darkhorseventures.cfsbase.User,java.util.*,com.darkhorseventures.cfsbase.Permission" %>
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="Role" class="com.darkhorseventures.cfsbase.Role" scope="request"/>
@@ -6,9 +7,11 @@
 <form action='Roles.do?command=UpdateRole&auto-populate=true' method='post'>
 <input type="hidden" name="id" value="<%= Role.getId() %>">
 <input type="hidden" name="modified" value="<%= Role.getModified() %>">
-<input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
-<input type="reset" value="Reset">
+<dhv:permission name="admin-roles-edit">
+  <input type="submit" value="Update" name="Save">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
+  <input type="reset" value="Reset">
+</dhv:permission>
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -115,8 +118,10 @@
   }
 %>
 </table>
-<br>
-<input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
-<input type="reset" value="Reset">
+<dhv:permission name="admin-roles-edit">
+  <br>
+  <input type="submit" value="Update" name="Save">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
+  <input type="reset" value="Reset">
+</dhv:permission>
 </form>

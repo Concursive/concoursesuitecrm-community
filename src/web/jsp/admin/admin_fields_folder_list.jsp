@@ -14,13 +14,17 @@ Custom Folders<br>
 %>
   Module: <%= ModuleList.getHtmlSelect("modId", ModuleList.getSelectedKey()) %><br>
   &nbsp;<br>
-  <a href="/AdminFieldsFolder.do?command=AddFolder&modId=<%= ModuleList.getSelectedKey() %>">Add a Folder to this Module</a><br>
-  &nbsp;<br>
+  <dhv:permission name="admin-sysconfig-folders-add">
+    <a href="/AdminFieldsFolder.do?command=AddFolder&modId=<%= ModuleList.getSelectedKey() %>">Add a Folder to this Module</a><br>
+    &nbsp;<br>
+  </dhv:permission>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
+      <dhv:permission name="admin-sysconfig-folders-edit">
       <td width="8" align="center">
         <strong>Action</strong>
       </td>
+      </dhv:permission>
       <td align="left">
         <strong>Custom Folders</strong>
       </td>
@@ -43,14 +47,19 @@ Custom Folders<br>
       CustomFieldCategory thisCategory = (CustomFieldCategory)records.next();
 %>    
     <tr class="row<%= rowId %>">
+      <dhv:permission name="admin-sysconfig-folders-edit">
       <td align="center">
         <a href="/AdminFieldsFolder.do?command=ModifyFolder&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= thisCategory.getId() %>">Edit</a>
       </td>
+      </dhv:permission>
       <td align="left" width="100%" nowrap>
-        <a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a>
+        <dhv:permission name="admin-sysconfig-folders-view"><a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a></dhv:permission>
       </td>
       <td align="center" nowrap>
-        <a href="/AdminFieldsFolder.do?command=ToggleFolder&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= thisCategory.getId() %>"><%= (thisCategory.getEnabled()? "Yes" : "No") %></a>
+        <dhv:permission name="admin-sysconfig-folders-edit">
+          <a href="/AdminFieldsFolder.do?command=ToggleFolder&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= thisCategory.getId() %>"></dhv:permission>
+          <%= (thisCategory.getEnabled()? "Yes" : "No") %>
+          <dhv:permission name="admin-sysconfig-folders-edit"></a></dhv:permission>
       </td>
       <td align="center" nowrap>
         <%= toHtml(toDateString(thisCategory.getStartDate())) %>

@@ -7,7 +7,7 @@
 <form name="details" action="/AdminFieldsFolder.do?command=InsertFolder&modId=<%= ModuleList.getSelectedKey() %>&auto-populate=true" method="post">
 <a href="/Admin.do">Setup</a> >
 <a href="/Admin.do?command=Config">System Configuration</a> >
-<a href="/AdminFieldsFolders.do?command=ListFolders&modId=<%= ModuleList.getSelectedKey() %>">Custom Folders</a> >
+<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModuleList.getSelectedKey() %>">Custom Folders</a> >
 New Folder<br>
 <%= showAttribute(request, "actionError") %><br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

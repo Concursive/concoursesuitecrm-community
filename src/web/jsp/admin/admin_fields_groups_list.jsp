@@ -53,8 +53,10 @@ Folder<br>
   </tr>
   <tr>
     <td class="containerBack">
-      <a href="/AdminFieldsGroup.do?command=AddGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
-      &nbsp;<br>
+      <dhv:permission name="admin-sysconfig-folders-add">
+        <a href="/AdminFieldsGroup.do?command=AddGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
+        &nbsp;<br>
+      </dhv:permission>
 <%
   if (Category.size() > 0) {
     int rowId = 0;
@@ -63,23 +65,33 @@ Folder<br>
     while (groups.hasNext()) {
       rowId = 0;
       ++groupLevel;
-      
       CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
-%>      
+%>
+  <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-add,admin-sysconfig-folders-delete">
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td>
-        <a href="/AdminFieldsGroup.do?command=ModifyGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Edit</a> |
-        <a href="javascript:confirmDeleteGroup('/AdminFieldsGroup.do?command=DeleteGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisGroup.getId() %>&auto-populate=true');">Del</a> | 
-        <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|U">Up</a> |
-        <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|D">Down</a> |
-        <a href="/AdminFields.do?command=AddField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Add a Custom Field</a>
+        <dhv:permission name="admin-sysconfig-folders-edit">
+          <a href="/AdminFieldsGroup.do?command=ModifyGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Edit</a> |
+        </dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-delete">
+          <a href="javascript:confirmDeleteGroup('/AdminFieldsGroup.do?command=DeleteGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisGroup.getId() %>&auto-populate=true');">Del</a> |
+        </dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-add">
+          <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|U">Up</a> |
+          <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|D">Down</a> 
+          <dhv:permission name="admin-sysconfig-folders-add">|</dhv:permission>
+        </dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-add">
+          <a href="/AdminFields.do?command=AddField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Add a Custom Field</a>
+        </dhv:permission>
       </td>
     </tr>
   </table>
+  </dhv:permission>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
-      <td colspan="4" width="100%" nowrap>
+      <td <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete,admin-sysconfig-folders-add">colspan="3" </dhv:permission><dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete" none="true">colspan="2" </dhv:permission>width="100%" nowrap>
         <strong><%= thisGroup.getName() %></strong>
       </td>
       <td align="center">
@@ -101,12 +113,21 @@ Folder<br>
         CustomField thisField = (CustomField)fields.next();
 %>    
     <tr class="row<%= rowId %>">
-      <td align="left" width="8" nowrap>
-        <a href="/AdminFields.do?command=ModifyField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisField.getGroupId() %>">Edit</a>|<a href="javascript:confirmDeleteField('/AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');">Del</a>
+      <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete,admin-sysconfig-folders-add">
+      <td align="left" width="16" nowrap>
+        <dhv:permission name="admin-sysconfig-folders-edit">
+          <a href="/AdminFields.do?command=ModifyField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisField.getGroupId() %>">Edit</a>
+        </dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete" all="true">|</dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-delete">
+          <a href="javascript:confirmDeleteField('/AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');">Del</a>
+        </dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete">|</dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-add">
+          <a href="/AdminFields.do?command=MoveField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|U">Up </a>| <a href="/AdminFields.do?command=MoveField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|D">Down</a>
+        </dhv:permission>
       </td>
-      <td align="left" width="8" nowrap>
-        <a href="/AdminFields.do?command=MoveField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|U">Up</a>|<a href="/AdminFields.do?command=MoveField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|D">Down</a>
-      </td>
+      </dhv:permission>
       <td width="30%" nowrap>
         <%= thisField.getName() %>
       </td>
@@ -144,7 +165,9 @@ Folder<br>
       <input type="hidden" name="dosubmit" value="false">
       <input type="hidden" name="moduleId" value="<%= ModuleList.getSelectedKey() %>">
       <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
-      <input type='submit' value='Delete this folder and all fields' onClick="javascript:this.form.dosubmit.value='true';">
+      <dhv:permission name="admin-sysconfig-folders-delete">
+        <input type='submit' value='Delete this folder and all fields' onClick="javascript:this.form.dosubmit.value='true';">
+      </dhv:permission>
     </td>
   </tr>
 </table>

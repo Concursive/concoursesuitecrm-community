@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="RoleList" class="com.darkhorseventures.cfsbase.RoleList" scope="request"/>
 <jsp:useBean id="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request"/>

@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="com.darkhorseventures.cfsbase.Permission, java.util.*" %>
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="Role" class="com.darkhorseventures.cfsbase.Role" scope="request"/>
@@ -69,6 +70,7 @@
   }
 %>
 </table>
+<br>
 <input type="submit" value="Add" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
 </form>

@@ -1,10 +1,11 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="UserListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="listView" method="post" action="/Users.do?command=ListUsers">
-<a href="/Users.do?command=InsertUserForm">Add New User</a>
+<dhv:permission name="admin-users-add"><a href="/Users.do?command=InsertUserForm">Add New User</a></dhv:permission>
 <center><%= UserListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
@@ -20,9 +21,11 @@
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
+    <dhv:permission name="admin-users-edit,admin-users-delete">
     <td valign=center align=left bgcolor="#DEE0FA">
       <strong>Action</strong>
     </td>
+    </dhv:permission>
     <td bgcolor="#DEE0FA"><b><font class="column">
       <a href="/Users.do?command=ListUsers&column=c.namelast">
       Name</a></font></b>
@@ -58,9 +61,11 @@
       Contact thisContact = (Contact)thisUser.getContact();
 %>      
       <tr>
+        <dhv:permission name="admin-users-edit,admin-users-delete">
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <a href="/Users.do?command=ModifyUser&id=<%= thisUser.getId() %>">Edit</a>|<a href="javascript:confirmDelete('/Users.do?command=DeleteUser&id=<%= thisUser.getId() %>');">Del</a>
+          <dhv:permission name="admin-users-edit"><a href="/Users.do?command=ModifyUser&id=<%= thisUser.getId() %>">Edit</a></dhv:permission><dhv:permission name="admin-users-edit,admin-users-delete" all="true">|</dhv:permission><dhv:permission name="admin-users-delete"><a href="javascript:confirmDelete('/Users.do?command=DeleteUser&id=<%= thisUser.getId() %>');">Del</a></dhv:permission>
         </td>
+        </dhv:permission>
         <td class="row<%= rowid %>"><font class="columntext1">
           <a href="/Users.do?command=UserDetails&id=<%= thisUser.getId() %>"><%= toHtml(thisContact.getNameLast()) %>, <%= toHtml(thisContact.getNameFirst()) %></a></font>
         </td>

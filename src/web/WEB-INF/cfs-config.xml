@@ -481,7 +481,7 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="HomeOK" resource="/admin.jsp" layout="nav"/>
-    <forward name="ConfigurationOK" resource="/admin_maintenance.jsp" layout="nav"/>
+    <forward name="ConfigurationOK" resource="/admin_configuration.jsp" layout="nav"/>
     <forward name="EditListsOK" resource="/admin_editlists.jsp" layout="nav"/>
     <forward name="ModifyListOK" resource="/admin_modifylist.jsp" layout="nav"/>
     <forward name="UpdateListOK" resource="/admin_editlists.jsp" layout="nav"/>
