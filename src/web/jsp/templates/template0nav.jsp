@@ -17,9 +17,12 @@
 <div id="header">
 <table border="0" width="100%">
   <tr>
-    <th align="left" class="highlight">
+    <th align="left" valign="top">
       <dhv:label name="logo">&nbsp;</dhv:label>
       &nbsp;
+      <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) %>">
+        Action took: <b class="highlight"><%= request.getAttribute("debug.action.time") %> ms</b>
+      </dhv:evaluate>
     </th>
     <th align="right">
       <a href="javascript:window.print()" class="s">Print</a>

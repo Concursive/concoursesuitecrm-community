@@ -510,8 +510,22 @@ public class ControllerServlet extends HttpServlet
         if (classRef == null) {
           System.out.println("Class ref is null");
         }
-        Method method = classRef.getClass().getMethod("executeCommand" + context.getCommand(), new Class[]{context.getClass()});
-        result = (String) method.invoke(classRef, new Object[]{context});
+        //Debug performance
+        if (debug == 2) {
+          long actionStartTime = System.currentTimeMillis();
+          if (request.getAttribute("debug.action.startTime") != null) {
+            actionStartTime = Long.parseLong((String) request.getAttribute("debug.action.startTime"));
+          } else {
+            request.setAttribute("debug.action.startTime", String.valueOf(actionStartTime));
+          }
+          Method method = classRef.getClass().getMethod("executeCommand" + context.getCommand(), new Class[]{context.getClass()});
+          result = (String) method.invoke(classRef, new Object[]{context});
+          long actionExecuteTime = System.currentTimeMillis() - actionStartTime;
+          request.setAttribute("debug.action.time", String.valueOf(actionExecuteTime));
+        } else {
+          Method method = classRef.getClass().getMethod("executeCommand" + context.getCommand(), new Class[]{context.getClass()});
+          result = (String) method.invoke(classRef, new Object[]{context});
+        }
       } catch (NoSuchMethodException nm) {
         System.out.println("No Such Method Exception for method executeCommand" + context.getCommand() + ". MESAGE = " + nm.getMessage());
       } catch (IllegalAccessException ia) {
