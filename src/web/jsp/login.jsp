@@ -84,7 +84,7 @@
               </tr>
 <%} else {%>
               <tr>
-                <td valign="center" colspan="4">&nbsp;</td>
+                <td align="center" colspan="4"><font face="Arial, Helvetica, sans-serif" size="2" color='red'><%= LoginBean.getMessage() %></font></td>
               </tr>
               <tr>
                 <td width="33%">&nbsp;</td>
@@ -92,7 +92,7 @@
                   <font face="Arial, Helvetica, sans-serif" size="2">Username:</font>
                 </td>
                 <td valign="top" align="left" width="200">
-                  <font face="Arial, Helvetica, sans-serif" size="2"><input type="text" name="username" value="<%= LoginBean.getUsername() %>" size="20">&nbsp;<font color='red'><%= LoginBean.getMessage() %></font></font>
+                  <font face="Arial, Helvetica, sans-serif" size="2"><input type="text" name="username" value="<%= LoginBean.getUsername() %>" size="20">&nbsp;</font>
                 </td>
                 <td width="33%">&nbsp;</td>
               </tr>
