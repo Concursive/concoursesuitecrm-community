@@ -50,11 +50,11 @@ Custom Folders<br>
     <tr class="row<%= rowId %>">
       <dhv:permission name="admin-sysconfig-folders-edit">
       <td align="center">
-        <a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>">Edit</a>
+        <a href="AdminFieldsFolder.do?command=ModifyFolder&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>">Edit</a>
       </td>
       </dhv:permission>
       <td width="100%">
-        <dhv:permission name="admin-sysconfig-folders-view"><a href="AdminFieldsFolder.do?command=ModifyFolder&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a><%= (thisCategory.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif'>":"") %></dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-view"><a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a><%= (thisCategory.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif'>":"") %></dhv:permission>
       </td>
       <td align="center" nowrap>
         <dhv:permission name="admin-sysconfig-folders-edit">
