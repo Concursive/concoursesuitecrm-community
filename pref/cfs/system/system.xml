@@ -1,5 +1,17 @@
 <aspcfs>
-  <!-- Each config is a unique name and must only be listed once -->
+  <!-- This file can be altered to support terminology or language changes -->
+  
+  <!-- Each config entry below is a unique name and must only be listed once -->
+  
+  <!-- XML notation must be used -->
+  
+  <!-- To specify free text, use CDATA notation for the value, as follows
+       <![CDATA[Any "characters" can go between the 'brackets']]>
+  -->
+  
+  <!-- NOTE: by setting enabled="false" the config entry is completely ignored -->
+  
+  <!-- The following fields are set to be hidden from the application -->
   <config name="system.fields.ignore" enabled="true">
     <!-- An unlimited number of parameters can exist under each config -->
     <param name="accounts-employees" obsolete="true" since="2004-01-22"/>
@@ -10,32 +22,167 @@
     <param name="organization.phoneNumbers"/>
     <param name="organization.emailAddresses"/>
     <param name="organization.addresses"/>
+    <param name="organization.types"/>
+    <param name="organization.alert"/>
+    <param name="organization.classification"/>
+    <param name="organization.contractEndDate"/>
     <param name="organization.industry"/>
     <param name="organization.url"/>
-    <param name="organization.alert"/>
     <param name="organization.ticker"/>
-    <param name="organization.contractEndDate"/>
-    <param name="organization.types"/>
+    <param name="ticket.contact"/>
+    <param name="ticket.contractNumber"/>
+    <param name="ticket.asset"/>
+    <param name="ticket.laborCategory"/>
+    <param name="ticket.location"/>
+    <param name="ticket.severity"/>
+    <param name="ticket.cause"/>
+    <param name="ticket.resolution"/>
+    <param name="ticket.resolution.date"/>
+    <param name="ticket.feedback"/>
+		<param name="ticket.subCat2"/>
+		<param name="ticket.subCat3"/>
+    <param name="ticketList.ticketsCreatedByMe"/>
+    <param name="ticketList.allTickets"/>
+    <param name="calendar.legend"/>
+    <param name="global.quickactions"/>
     -->
   </config>
+  
+  <!-- The following text is dynamically renamed in the application -->
   <config name="system.fields.label" enabled="false">
     <!--
-    <param name="logo">
-      <value><![CDATA[<img border="0" src="images/dev21.jpg">]]></value>
-    </param>
-    <param name="ticket.issue">
-      <value>Description of Issue</value>
-    </param>
-    <param name="organization.accountNumber">
-      <value>Cust ID</value>
-    </param>
-    <param name="organization.owner">
-      <value>Salesperson</value>
-    </param>
-    <param name="organization.employees">
-      <value>No. of Employees</value>
-    </param>
+    <param name="logo"><value><![CDATA[<img border="0" src="images/dev21.jpg">]]></value></param>
     -->
+    <!-- NOTE: object.property, used in any module -->
+    <param name="organization.name"><value>Account Name</value></param>
+    <param name="organization.accountNumber"><value>Account Number</value></param>
+    <param name="organization.owner"><value>Salesperson</value></param>
+    <param name="organization.employees"><value>No. of Employees</value></param>
+    <param name="ticket.issue"><value>Description</value></param>
+    <param name="ticket.issueNotes"><value>Notes</value></param>
+    <param name="ticket.estimatedResolutionDate"><value>Estimated Completion Date</value></param>
+    <param name="ticket.resolutionDate"><value>Complete Date</value></param>
+    <param name="ticket.organizationLink"><value>Account</value></param>
+    <!-- NOTE: module specific text -->
+    <!-- My Home Page Module -->
+    <!-- Employees Module -->
+    <param name="employees.employees"><value>Employees</value></param>
+    <param name="employees.employee"><value>Employee</value></param>
+    <param name="employees.view"><value>View Employees</value></param>
+    <param name="employees.details"><value>Employee Details</value></param>
+    <param name="employees.modify"><value>Modify Employee</value></param>
+    <param name="employees.add"><value>Add an Employee</value></param>
+    <param name="employees.search.notFound"><value>No Employees found.</value></param>
+    <!-- Contacts Module -->
+    <!-- Pipeline Module -->
+    <!-- Accounts Module -->
+    <param name="accounts.account"><value>Account</value></param>
+    <param name="accounts.account.status"><value>Account Status</value></param>
+    <param name="accounts.accounts"><value>Accounts</value></param>
+    <param name="accounts.details"><value>Account Details</value></param>
+    <param name="accounts.radio.header"><value>Where do you want to go after this action is complete?</value></param>
+    <param name="accounts.radio.details"><value>View this account's details</value></param>
+    <param name="accounts.radio.addContact"><value>Add a contact to this account</value></param>
+    <param name="accounts.add"><value>Add Account</value></param>
+    <param name="accounts.type"><value>Account Type</value></param>
+    <param name="accounts.search"><value>Search Accounts</value></param>
+    <param name="accounts.search.notFound"><value>No accounts found with the specified search parameters.</value></param>
+    <param name="accounts.modify"><value>Modify Account</value></param>
+    <param name="accounts.account.types"><value>Account Type(s)</value></param>
+    <param name="accounts.all.accounts"><value>Active Accounts</value></param>
+    <param name="accounts.disabled.accounts"><value>Inactive Accounts</value></param>
+    <param name="accounts.my.accounts"><value>My Accounts</value></param>
+    <param name="accounts.account.alerts"><value>Account Alerts</value></param>
+    <param name="accounts.accountContractEndAlerts"><value>Account Contract End Alerts</value></param>
+    <param name="accounts.manage"><value>Select an account to manage.</value></param>
+    <param name="accounts.portalAccessDisabled"><value>Portal access has been disbled for this account contact.</value></param>
+    <param name="accounts.alert.invalidAccount"><value>You have to select an Account first</value></param>
+    <param name="accounts.tickets.ticket.close"><value>Ticket complete</value></param>
+    <param name="accounts.tickets.information"><value>Ticket Information</value></param>
+    <param name="accounts.tickets.source"><value>Ticket Source</value></param>
+    <param name="accounts.tickets.print"><value>Printable Ticket Form</value></param>
+    <param name="accounts.tickets.ticket"><value>Ticket</value></param>
+    <param name="accounts.tickets.ticket.lowercase"><value>ticket</value></param>
+    <param name="accounts.tickets.tickets.lowercase"><value>tickets</value></param>
+    <param name="accounts.tickets.tickets"><value>Tickets</value></param>
+    <param name="accounts.tickets.details"><value>Ticket Details</value></param>
+    <param name="accounts.tickets.symbol.number"><value>Ticket #</value></param>
+    <param name="accounts.tickets.number"><value>Ticket Number</value></param>
+    <param name="accounts.tickets.modify"><value>Modify Ticket</value></param>
+    <param name="accounts.tickets.search"><value>Search Tickets</value></param>
+    <param name="accounts.tickets.add"><value>Add a new Ticket</value></param>
+    <param name="accounts.accounts.contacts"><value>Account w/Contacts</value></param>
+    <param name="accounts.accounts.tickets"><value>Account w/Actions</value></param>
+    <param name="accounts.accounts.opportunities"><value>Account w/Opportunities</value></param>
+    <param name="accounts.accounts.folders"><value>Account w/Folders</value></param>
+    <param name="accounts.tickets.symbol.number"><value>Ticket #</value></param>
+    <param name="accounts.tickets.number"><value>Ticket Number</value></param>
+    <param name="accounts.tickets.ticket.previousTicket"><value>(Previous notes for this ticket are listed under the history tab.)</value></param>
+    <param name="accounts.tickets.search.notFound"><value>No tickets found.</value></param>
+    <param name="accounts.tickets.historyLog"><value>Ticket Log History</value></param>
+    <param name="accounts.revenue.dashboard.notFound"><value>No account found with revenue.</value></param>
+    <!-- Communications Module -->
+    <!-- Project Management Module -->
+    <!-- Help Desk Module -->
+    <param name="tickets.view"><value>View Ticket</value></param>
+    <param name="tickets.symbol.number"><value>Ticket #</value></param>
+    <param name="tickets.number"><value>Ticket Number</value></param>
+    <param name="tickets.print"><value>Printable Ticket Form</value></param>
+    <param name="tickets.details"><value>Ticket Details</value></param>
+    <param name="tickets.modify"><value>Modify Ticket</value></param>
+    <param name="tickets.search"><value>Search Tickets</value></param>
+    <param name="tickets.source"><value>Ticket Source</value></param>
+    <param name="tickets.assigned.to.me"><value>Tickets Assigned to Me</value></param>
+    <param name="tickets.created.by.me"><value>Tickets Created by Me</value></param>
+    <param name="tickets.other"><value>Shared Tickets</value></param>
+    <param name="tickets.all"><value>All Tickets</value></param>
+    <param name="tickets.helpdesk"><value>Ticket Log</value></param>
+    <param name="tickets.ticket"><value>Ticket</value></param>
+    <param name="tickets.ticket.lowercase"><value>ticket</value></param>
+    <param name="tickets.tickets.lowercase"><value>tickets</value></param>
+    <param name="tickets.add"><value>Add Ticket</value></param>
+    <param name="tickets.tickets"><value>Tickets</value></param>
+    <param name="tickets.information"><value>Ticket Information</value></param>
+    <param name="tickets.ticket.close"><value>Ticket complete</value></param>
+    <param name="tickets.search.notFound"><value>No tickets found.</value></param>
+    <param name="tickets.invalidForm"><value>When a supported form type is found, this page shows the ticket activity log or the asset maintenance notes.</value></param>
+    <param name="tickets.alert.closed"><value>This ticket has been closed:</value></param>
+    <!-- Admin Module -->
+    <!-- Global Items -->
+    <param name="search.results.tickets.count"><value><![CDATA[<strong>${ticketList.count}</strong> result(s) in <strong>Tickets</strong>]]></value></param>
+    <param name="search.results.tickets.multiPagecount"><value><![CDATA[Showing ${ticketList.count} result(s) of ${ticketListInfo.maxRecords} in <strong>Tickets</strong>]]></value></param>
+    <param name="search.results.searchString"><value><![CDATA[Your search for <b>${searchText}</b> returned:]]></value></param>
   </config>
+
+  <!-- The following are the menu names that are renamed -->
+	<config name="system.modules.label" enabled="false">
+		<param name="Employees">
+			<page_title>Users</page_title>>
+			<long_html>Users</long_html>
+			<short_html>&amp;nbsp;Users&amp;nbsp;</short_html>
+		</param>
+		<param name="Accounts">
+			<page_title>Providers</page_title>
+			<long_html>Providers</long_html>
+			<short_html>&amp;nbsp;Providers&amp;nbsp;</short_html>
+		</param>
+		<param name="Help Desk">
+			<page_title>Action Log</page_title>
+			<long_html>Action Log</long_html>
+			<short_html>&amp;nbsp;Action Log&amp;nbsp;</short_html>
+		</param>
+	</config>
+  
+  <!-- The following are the container names that are relabeled -->
+  <config name="system.container.menu.label" enabled="false">
+    <param name="accounts.tickets.long_html">
+      <value>Actions</value>
+    </param>
+    <param name="accounts.folders.long_html">
+      <value>Application</value>
+    </param>
+  </config>
+  
+  
 </aspcfs>
 
