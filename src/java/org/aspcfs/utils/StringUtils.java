@@ -302,5 +302,20 @@ public class StringUtils {
     return text.toString();
   }
 
+  public static String addS(long count) {
+    if (count == 1) {
+      return "";
+    } else {
+      return "s";
+    }
+  }
+  
+  public static String addES(long count) {
+    if (count == 1) {
+      return "";
+    } else {
+      return "es";
+    }
+  }
 }
 
