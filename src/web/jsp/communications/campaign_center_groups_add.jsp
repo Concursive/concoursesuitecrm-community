@@ -59,7 +59,7 @@ Choose Groups
       <%= toHtml(thisList.getGroupName()) %>
     </td>
     <td valign="center" nowrap class="row<%= rowid %>">
-      <a href="javascript:popURL('CampaignManager.do?command=PreviewGroups&id=<%= Campaign.getId() %>&scl=<%= thisList.getId() %>&reset=true&popup=true','CFS_Recipients',600,450,true,true)">Preview Recipients</a>
+      <a href="javascript:popURL('CampaignManager.do?command=PreviewGroups&id=<%= Campaign.getId() %>&scl=<%= thisList.getId() %>&reset=true&popup=true','CFS_Recipients',600,450,'yes','yes')">Preview Recipients</a>
     </td>
   </tr>
 <%
