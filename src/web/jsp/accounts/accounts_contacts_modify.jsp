@@ -132,7 +132,7 @@ Modify Contact
     </th>     
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td nowrap class="formLabel" valign="top">
       Contact Type(s)
     </td>
     <td>
