@@ -80,7 +80,7 @@ WHERE con.org_id = $P{org_id}]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{namefirst} + " " + $F{namelast}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{namelast}, $F{namefirst})]]></textFieldExpression>
 				</textField>
 				<subreport  isUsingCache="true">
 					<reportElement

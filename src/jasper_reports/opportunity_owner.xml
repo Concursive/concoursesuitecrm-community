@@ -435,8 +435,7 @@ $F{header_contactlink}.intValue() > 0)]]></printWhenExpression>
 					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{last_name} + ", " +
-$F{first_name} + ": " + 
+				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{last_name}, $F{first_name}) + ": " + 
 $F{header_description}]]></textFieldExpression>
 				</textField>
 				<staticText>
@@ -813,4 +812,3 @@ $F{header_description}]]></textFieldExpression>
 			</band>
 		</summary>
 </jasperReport>
-

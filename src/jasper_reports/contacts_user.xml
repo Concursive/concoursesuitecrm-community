@@ -97,7 +97,7 @@ new Integer(0))]]></variableExpression>		<initialValueExpression><![CDATA[new In
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[($F{namelast} != null && !$F{namelast}.equals("")? $F{namelast} : "") + ($F{namefirst} != null && !$F{namefirst}.equals("")? ((!$F{namelast}.equals("") && $F{namelast}.length() > 0) ? ", " + $F{namefirst} : $F{namefirst}) : "")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{namelast}, $F{namefirst})]]></textFieldExpression>
 				</textField>
 				<subreport  isUsingCache="true">
 					<reportElement

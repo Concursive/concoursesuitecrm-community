@@ -23,7 +23,7 @@
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression><![CDATA["/home/ananth/source/cfs2/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
-  <parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
+	<parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT o.name as name,
@@ -76,8 +76,7 @@ AND o.enabled = $P{TRUE}]]></queryString>
 						<font fontName="Serif" pdfFontName="Times-Bold" size="14" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Accounts Owned by " + 
-$F{o_namelast} + ", " +
-$F{o_namefirst}]]></textFieldExpression>
+org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{o_namelast}, $F{o_namefirst})]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement
