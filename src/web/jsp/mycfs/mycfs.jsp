@@ -38,7 +38,7 @@
   <%-- Calendar and Details --%>
   <tr valign="top">
     <td valign="top" width="320">
-      <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="320" height="400" src="MyCFS.do?command=MonthView&source=Calendar<%= returnPage != null ? "&return="+returnPage : "" %>">
+      <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="320" height="400" src="MyCFS.do?command=MonthView&source=Calendar<%= returnPage != null ? "&return="+returnPage : "" %>&reloadCalendarDetails=true">
       </iframe>
     </td>
     <td valign="top" height="100%" width="100%">
@@ -71,7 +71,7 @@
         </tr>
         <tr>
           <td width="100%" valign="top" height="100%">
-            <iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="100%" height="100%" src="MyCFS.do?command=Alerts&source=calendarDetails<%=returnPage!=null?"&return="+returnPage:""%>">
+            <iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="100%" height="100%">
             </iframe>
           </td>
         </tr>
