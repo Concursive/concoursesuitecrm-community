@@ -20,7 +20,7 @@ CREATE TABLE opportunity (
 	guessvalue float,
 	highvalue float,
 	stage INT references lookup_stage(code),
-	stagedate date,
+	stagedate date NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	commission float,
 	type char(1),
 	alertdate date,

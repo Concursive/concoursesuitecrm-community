@@ -1935,7 +1935,7 @@ public class Opportunity extends GenericBean {
         "SET lowvalue = ?, guessvalue = ?, highvalue = ?, closeprob = ?, " +
         "commission = ?, ");
 
-    if ( (this.getStageChange() == true && override == false) || override == true) {
+    if ( (this.getStageChange() == true && override == false) ) {
       sql.append("stagedate = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
 
