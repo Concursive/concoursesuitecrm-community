@@ -1,5 +1,5 @@
 /**
- *  Server Installation (not tested)
+ *  ASPCFS Server Installation
  *
  *@author     matt rajkowski
  *@created    October 9, 2002
@@ -7,79 +7,199 @@
  */
 
 
-## Install and configure applications (root user)
-- Install java into /usr/java/
-- Make a soft link to /usr/java/j2sdk
+*** Software Installation ***
 
-- Install tomcat into /usr/java/
-- Make a soft link to /usr/java/tomcat
-- Make a soft link from /usr/java/tomcat/bin/catalina.sh to /etc/init.d/tomcat
-- Modify /etc/init.d/tomcat, adding the following switch to the "START" section:
-  -Djava.awt.headless="true" \
-- Modify /etc/init.d/tomcat, adding the following after the CATALINA_HOME is set:
-  CATALINA_HOME=/usr/java/tomcat
-- Make sure tomcat is enabled on restart:
-  $ chkconfig --list tomcat # Make necessary changes for the current runlevel
-- Backup the server configure and add a new service, connector, host, and context
-  $ cd /usr/java/tomcat/conf
-  $ cp server.xml server.xml.bak
-  $ vi server.xml # Add the new server information
+- Install Red Hat 8.0
+  Purpose: Operating system
+  http://www.redhat.com
+  - Configure to boot up to shell
+  - Choose Custom Install (Everything)
+  - Configure IP
 
-- Install ant into /usr/java/
-- Make a soft link to /usr/java/ant
+- Install Postgresql 7.2.3 RPMS for Red Hat 8.0
+  Purpose: Database server
+  http://www.postgresql.org
+  destination: /var/lib/pgsql
+  $ rpm --install [files]
 
-- Modify postgres to allow connections
-  $ vi /var/lib/pgsql/data/pg_hba.conf # Uncomment host 127.0.0.1
-  $ vi /var/lib/pgsql/data/postgresql.conf # Turn on tcp_ip connections
-  $ service postgresql restart
+- Install Java2 SDK 1.4.1 RPM for Linux
+  Purpose: Programming language just-in-time compiler, 
+    required for executing Java applications
+  http://java.sun.com
+  file: 2sdk-1_4_1-fcs-linux-i586.rpm
+  destination: /usr/java/j2sdk1.4.1
+  $ rpm --install [file]
+  $ ln -s /usr/java/j2sdk1.4.1 /usr/java/j2se
 
-## Configure application environment
-- Modify /etc/bashrc, adding the following:
-  export JAVA_HOME=/usr/java/j2sdk
-  export TOMCAT_HOME=/usr/java/tomcat
-  export ANT_HOME=/usr/java/ant
-  PATH=${PATH}:${JAVA_HOME}/bin:${ANT_HOME}/bin
+- Install Apache Tomcat 4.1.12 binary
+  Purpose: Web Server
+  http://jakarta.apache.org 
+  file: jakarta-tomcat-4.1.12-LE-jdk14.tar.gz
+  destination: /usr/java/jakarta-tomcat-4.1.12-LE-jdk14
+  $ tar -xvzf jakarta-tomcat-4.1.12-LE-jdk14.tar.gz
+  $ ln -s /usr/java/jakarta-tomcat-4.1.12-LE-jdk14 /usr/java/tomcat
+  
+- Install Apache Ant 1.5.1 binary
+  Purpose: Deployment utility for compiling and deploying ASPCFS
+  http://jakarta.apache.org
+  file: jakarta-ant-1.5.1-bin.tar.gz
+  destination: /usr/java/jakarta-ant-1.5.1
+  $ tar -xvzf jakarta-ant-1.5.1-bin.tar.gz
+  $ ln -s /usr/java/jakarta-ant-1.5.1 /usr/java/ant
 
-## Configure users
-- As root user, perform the following:
-  $ adduser cfsdba
-  $ adduser <yourname>
-  $ mkdir /home/cfs
-  $ visudo #Add <yourname> to the list of allowed users
-- As postgres user, perform the following:
-  $ createuser gatekeeper #Respond n,n,n
-  $ createuser cfsdba #Respond y,y,y
-  $ createuser <yourname> #Respond y,y,y
+- Install HtmlDoc 1.8.23 from source code
+  Purpose: Converts HTML pages to Postscript for ASPCFS
+  http://www.easysw.com/htmldoc/
+  file: htmldoc-1.8.23-source.tar.gz
+  $ tar -xvzf htmldoc-1.8.23-source.tar.gz
+  $ cd htmldoc-1.8.23
+  $ ./configure
+  $ make
+  $ make install
 
-## Configure personal environment
-- Login as yourself, check the commands: java, ant
-- From your home directory, add the following to .bashrc and execute:
-  export CVSROOT=:pserver:216.54.81.126:/usr/local/cvs
+- Install HylaFax 4.1.5 RPM for Red Hat 8.0 
+  Purpose: Fax client for sending documents to fax server
+  http://www.hylafax.org
+  file: hylafax-4.1.5-1rh8.i386.rpm
+  $ rpm --install [file]
 
-## Download the source code
-- From your home directory, checkout the source:
-  $ cvs checkout cfs2
 
-## Configure this system's default cfs application
-- Run the compile script to see what environment file is needed:
-  $ cd cfs2
-  $ sudo sh upgrade_ds
-- Create a new environment file if an error stated it was missing
-  $ cp scripts/env.aspcfs.darkhorseventures.com scripts/env.${thishost}
-- Modify the defaults to match this host
-  $ vi scripts/env.${thishost}
-- Run the compile script again, this time should be a success
-  $ sudo sh upgrade_ds
 
-## Build the gatekeeper database (if cfs2gk doesn't already exist)
-- Execute the following:
-  $ sudo sh gatekeeper.init
+*** Software Configuration ***
 
-## Build a customer database
-- Build the first database:
-  $ sudo sh install_ds [databasename]
+- Configure OS environment
+  # Add users to the system:
+    $ adduser cfsdba
+    $ adduser [your name]
+  # Add [your name] to sudo users
+    $ visudo
 
-## Verification
-- Start the tomcat server:
-  $ sudo /sbin/service tomcat start
+  # Add the following to /etc/profile:
+    export CATALINA_HOME=/usr/java/tomcat
+    export TOMCAT_HOME=${CATALINA_HOME}
+    export JAVA_HOME=/usr/java/j2se
+    export ANT_HOME=/usr/java/ant
+    PATH=$PATH:${JAVA_HOME}/bin:${ANT_HOME}/bin
+
+  # Remove the GNU Java if installed
+    $ rm /usr/bin/java
+    
+  # Make the web folders
+    $ mkdir /home/cfs
+    $ mkdir /home/webapps
+    
+  # Log back in for changes to take affect, then test:
+  # Java version should say: java version "1.4.1"
+    $ java -version
+  # Ant version should say: Apache Ant version 1.5.1 compiled on October 2 2002
+    $ ant -version
+
+- Configure Apache Tomcat Web Server
+  # Setup tomcat as a service
+    $ ln -s /usr/java/tomcat/bin/catalina.sh /etc/init.d/tomcat
+    $ vi /etc/init.d/tomcat
+  # At top of file make sure the following is added:
+
+#!/bin/sh
+# -----------------------------------------------------------------------------
+# Start/Stop Script for the CATALINA Server
+#
+# chkconfig: - 85 15
+# description: Tomcat is a World Wide Web server.  It is used to serve \
+#              JSP files and CGI.
+# processname: tomcat
+#
+
+    # Right before the line "# Get standard Java environment variables" add the lines:
+      export CATALINA_HOME=/usr/java/tomcat
+      export JAVA_HOME=/usr/java/j2se
+    # Search for:
+      "elif [ $1" = "start" ] ; then
+    # Scroll down past the "else" statement and insert the following 
+    #  on a new line after "-Djava.io.tmpdir="$CATALINA_TMPDIR" \
+      -Djava.awt.headless="true" \
+
+  # Setup tomcat to start when server starts up
+    $ chkconfig --level 2345 tomcat on
+
+  # Setup the port and web context
+    $ cd /usr/java/tomcat/conf
+    $ vi server.xml
+    ...skipped relevent code to add port 80 connector and context...
+
+  # Test the web server, Tomcat welcome page should show:
+    $ service tomcat start
+    $ mozilla http://127.0.0.1
+
+
+- Configure Postgresql
+  # Initialize the database by starting the service the first time:
+    $ service postgresql start
+  
+  # Configure postgresql to start when server starts up
+    $ chkconfig --level 2345 postgresql on
+
+  # Configure Postgresql connections, make sure any connecting servers are allowed,
+  # like a backup server.
+    $ service postgresql stop
+    $ cd /var/lib/pgsql/data
+    $ vi pg_hba.config
+  # Verify this line is uncommented: 
+    host all 127.0.0.1 255.255.255.255 trust
+  # Add the backup server
+    host all 216.54.81.126 255.255.255 trust
+  # Save and exit
+
+  # Configure Postgresql to accept TCP/IP connections
+    $ vi postgresql.conf
+  # Uncomment and change the following line:
+    tcpip_socket = true
+  # Save and exit
+
+  # Start the server
+    $ service postgresql start
+
+  # Create the initial user
+    $ su postgres
+  # Respond y,y,y
+    $ createuser cfsdba
+    $ createuser [your name]
+  # Respond n,n,n
+    $ createuser gatekeeper
+    $ exit
+
+
+- Install ASPCFS
+  # Login as your own username
+    $ cvs -d :pserver:username@216.54.81.126:/usr/local/cvs login
+    $ cvs -d :pserver:username@216.54.81.126:/usr/local/cvs checkout cfs2
+    $ cd ~/cfs2
+  
+  # An environment script will need to be created for this system
+    $ cd scripts
+    $ cp env.aspcfs.dakhorseventures.com.sh env.`hostname`.sh
+  # Now modify with correct paths and configuration information
+    $ vi env.`hostname`.sh
+
+  # Initialize the gatekeeper database
+    $ cd ~/cfs2
+    $ createdb cfs2gk
+    $ psql -f database/postgresql/gatekeeper.sql cfs2gk
+    $ cp database/gatekeeper.init ./`hostname`.init
+  # Make changes to sites table for this system
+    $ vi `hostname`.init
+
+  # Install ASPCFS additional .jars to Apache Tomcat
+    $ cd ~/cfs2
+    $ sudo cp production/common/lib/*.jar /usr/java/tomcat/common/lib/
+
+  # Install the ASPCFS web software (Compile & Install)
+    $ cd ~/cfs2
+    $ sudo sh upgrade_ds
+
+  # Create the first customer database
+    $ sudo sh install_ds [vhost part before .aspcfs.com]
+
+  # Test ASPCFS
+    $ mozilla http://127.0.0.1
 
