@@ -259,6 +259,7 @@ public class User extends GenericBean {
   
   public int generateRandomPassword(Connection db, ActionContext context) throws SQLException {
       int resultCount = -1;
+      User modUser = null;
       String newPassword = randomstring(6,8);
       this.setPassword1(newPassword);
       this.setPassword2(newPassword);
@@ -266,6 +267,9 @@ public class User extends GenericBean {
       
               
       if (resultCount > -1) {
+          modUser = new User();
+          modUser.setBuildContact(true);
+          modUser.buildRecord(db, modifiedBy);
           //send email
           SMTPMessage mail = new SMTPMessage();
           mail.setHost("127.0.0.1");
@@ -273,8 +277,9 @@ public class User extends GenericBean {
           mail.setType("text/html");      
           mail.setTo("chris@darkhorseventures.com");
           mail.setSubject("CFS password changed");
-          mail.setBody("Your CFS User account password has been changed by " + modifiedBy + ".<br><br>" +
-            " Your new CFS password is:<br>" + newPassword);
+          mail.setBody("Your CFS User account password has been changed by " + modUser.getUsername() + " (" + modUser.getContact().getNameLastFirst() + ").<br><br>" +
+            " Your new CFS password is the following:<br>" + newPassword + "<br><br>" +
+            "It is reccomended that you change your password next time you login to CFS." );
         
           if (mail.send() == 2) {
             System.err.println(mail.getErrorMsg());
