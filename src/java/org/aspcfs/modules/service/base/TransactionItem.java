@@ -40,6 +40,7 @@ public class TransactionItem {
   private String name = null;
   private Object object = null;
   private int action = -1;
+  private String actionMethod = null;
   private int identity = 1;
   private PagedListInfo pagedListInfo = null;
   private StringBuffer errorMessage = new StringBuffer();
@@ -128,8 +129,11 @@ public class TransactionItem {
    *@param  tmp  The new action value
    */
   public void setAction(String tmp) {
-    if ("insert".equals(tmp)) {
+    if ("insert".equals(tmp) || tmp.startsWith("insert")) {
       setAction(this.INSERT);
+      if (tmp.length() > 6) {
+        actionMethod = tmp;
+      }
     } else if ("update".equals(tmp)) {
       setAction(this.UPDATE);
     } else if ("select".equals(tmp)) {
@@ -388,7 +392,11 @@ public class TransactionItem {
             appendErrorMessage("Action not specified");
             break;
           case INSERT:
-            executeMethod = "insert";
+            if (actionMethod != null) {
+              executeMethod = actionMethod;
+            } else {
+              executeMethod = "insert";
+            }
             break;
           case UPDATE:
             executeMethod = "update";

@@ -68,6 +68,7 @@ public class CustomField extends GenericBean {
   private java.sql.Timestamp startDate = null;
   private java.sql.Timestamp endDate = null;
   private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
   private boolean enabled = false;
   private String error = null;
 
@@ -95,6 +96,23 @@ public class CustomField extends GenericBean {
    */
   public CustomField() { }
 
+  public CustomField(Connection db, int thisId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM custom_field cf " +
+        "WHERE cf.field_id = ? ");
+    pst.setInt(1, thisId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+    
+    if (this.getType() == CustomField.SELECT) {
+      this.buildElementData(db);
+    }
+  }
 
   /**
    *  Constructor for the CustomField object
@@ -489,6 +507,13 @@ public class CustomField extends GenericBean {
     this.entered = DateUtils.parseTimestampString(tmp);
   }
 
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+  
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
+  }
 
   /**
    *  Sets the Enabled attribute of the CustomField object
@@ -669,6 +694,15 @@ public class CustomField extends GenericBean {
     }
   }
 
+  public void setParameters(String param) {
+    StringTokenizer st = new StringTokenizer(param, "^");
+    while (st.hasMoreTokens()) {
+      StringTokenizer kv = new StringTokenizer(st.nextToken(), "|");
+      if (kv.hasMoreTokens()) {
+        parameters.put(kv.nextToken(), kv.nextToken());
+      }
+    }
+  }
 
   /**
    *  Gets the recordId attribute of the CustomField object
@@ -810,8 +844,7 @@ public class CustomField extends GenericBean {
   public boolean getRequired() {
     return required;
   }
-
-
+  
   /**
    *  Gets the StartDate attribute of the CustomField object
    *
@@ -821,7 +854,7 @@ public class CustomField extends GenericBean {
   public java.sql.Timestamp getStartDate() {
     return startDate;
   }
-
+  
 
   /**
    *  Gets the EndDate attribute of the CustomField object
@@ -844,6 +877,9 @@ public class CustomField extends GenericBean {
     return entered;
   }
 
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
 
   /**
    *  Gets the Enabled attribute of the CustomField object
@@ -1332,32 +1368,11 @@ public class CustomField extends GenericBean {
       pst.setString(++i, additionalText);
       pst.execute();
       pst.close();
+      
+      id = DatabaseUtils.getCurrVal(db, "custom_field_info_field_id_seq");
 
-      if (type == SELECT) {
-        id = DatabaseUtils.getCurrVal(db, "custom_field_info_field_id_seq");
-
-        sql =
-            "INSERT INTO custom_field_lookup " +
-            "(field_id, description, default_item, level, enabled) " +
-            "values (?, ?, ?, ?, ? ) ";
-        Iterator lookupItems = ((LookupList) elementData).iterator();
-        int count = 0;
-        while (lookupItems.hasNext()) {
-          i = 0;
-          ++count;
-          LookupElement thisElement = (LookupElement) lookupItems.next();
-          pst = db.prepareStatement(sql);
-          pst.setInt(++i, id);
-          pst.setString(++i, thisElement.getDescription());
-          pst.setBoolean(++i, false);
-          pst.setInt(++i, count);
-          //pst.setTimestamp(++i, );
-          //pst.setTimestamp(++i, );
-          pst.setBoolean(++i, true);
-          pst.execute();
-          pst.close();
-        }
-
+      if (type == SELECT && elementData != null && elementData instanceof LookupList) {
+        insertLookupList(db);
       }
       db.commit();
       result = true;
@@ -1368,6 +1383,22 @@ public class CustomField extends GenericBean {
     db.setAutoCommit(true);
 
     return result;
+  }
+  
+  public boolean insertLookupList(Connection db) throws SQLException {
+    if (elementData == null || !(elementData instanceof LookupList)) {
+      return false;
+    }
+    Iterator lookupItems = ((LookupList) elementData).iterator();
+    while (lookupItems.hasNext()) {
+      LookupElement thisElement = (LookupElement) lookupItems.next();
+      thisElement.setTableName("custom_field_lookup");
+      thisElement.setFieldId(id);
+      thisElement.setDefaultItem(false);
+      thisElement.setEnabled(true);
+      thisElement.insert(db);
+    }
+    return true;
   }
 
 
@@ -1510,12 +1541,14 @@ public class CustomField extends GenericBean {
         }
       }
     }
+/*     
+    //Removed because this doesn't have to happen here
     if (type == SELECT &&
         (elementData == null || (((LookupList) elementData).size() == 0))
         ) {
       errors.put("lookupListError", "Items are required");
     }
-
+ */
     return (errors.size() == 0);
   }
 
@@ -1661,16 +1694,11 @@ public class CustomField extends GenericBean {
     startDate = rs.getTimestamp("start_date");
     endDate = rs.getTimestamp("end_date");
     entered = rs.getTimestamp("entered");
+    modified = entered;
     enabled = rs.getBoolean("enabled");
     additionalText = rs.getString("additional_text");
 
-    StringTokenizer st = new StringTokenizer(param, "^");
-    while (st.hasMoreTokens()) {
-      StringTokenizer kv = new StringTokenizer(st.nextToken(), "|");
-      if (kv.hasMoreTokens()) {
-        parameters.put(kv.nextToken(), kv.nextToken());
-      }
-    }
+    this.setParameters(param);
   }
 
 

@@ -71,8 +71,7 @@ public class CustomFieldRecordList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
         "FROM custom_field_record cfr " +
-        "WHERE cfr.module_id = " + linkModuleId + " " +
-        "AND cfr.item_id = " + linkItemId + " ");
+        "WHERE cfr.module_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -104,9 +103,7 @@ public class CustomFieldRecordList extends ArrayList {
     sqlSelect.append(
         "* " +
         "FROM custom_field_record cfr " +
-        "WHERE cfr.link_module_id = " + linkModuleId + " " +
-        "AND cfr.link_item_id = " + linkItemId + " ");
-
+        "WHERE cfr.module_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -135,6 +132,14 @@ public class CustomFieldRecordList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+    
+    if (linkModuleId > -1) {
+      sqlFilter.append("AND cfr.module_id = ? ");
+    }
+    
+    if (linkItemId > -1) {
+      sqlFilter.append("AND cfr.item_id = ? ");
+    }
 
     if (includeEnabled == TRUE || includeEnabled == FALSE) {
       sqlFilter.append("AND cfr.enabled = ? ");
@@ -148,6 +153,14 @@ public class CustomFieldRecordList extends ArrayList {
 
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    
+    if (linkModuleId > -1) {
+      pst.setInt(++i, linkModuleId);
+    }
+    
+    if (linkItemId > -1) {
+      pst.setInt(++i, linkItemId);
+    }
     
     if (includeEnabled == TRUE) {
       pst.setBoolean(++i, true);

@@ -29,6 +29,7 @@ public class CustomFieldGroup extends ArrayList {
   private java.sql.Timestamp startDate = null;
   private java.sql.Timestamp endDate = null;
   private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
   private boolean enabled = false;
 
   //Properties for building a list
@@ -57,6 +58,20 @@ public class CustomFieldGroup extends ArrayList {
    */
   public CustomFieldGroup(ResultSet rs) throws SQLException {
     buildRecord(rs);
+  }
+  
+  public CustomFieldGroup(Connection db, int thisId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM custom_field_group cfg " +
+        "WHERE cfg.group_id = ? ");
+    pst.setInt(1, thisId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
   }
 
 
@@ -187,6 +202,14 @@ public class CustomFieldGroup extends ArrayList {
   
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
+  }
+  
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+  
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -372,6 +395,10 @@ public class CustomFieldGroup extends ArrayList {
   public java.sql.Timestamp getEntered() {
     return entered;
   }
+  
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
 
 
   /**
@@ -512,6 +539,9 @@ public class CustomFieldGroup extends ArrayList {
     pst.setString(++i, this.getDescription());
     pst.execute();
     pst.close();
+    
+    id = DatabaseUtils.getCurrVal(db, "custom_field_group_group_id_seq");
+    
     return true;
   }
 
@@ -699,6 +729,7 @@ public class CustomFieldGroup extends ArrayList {
     startDate = rs.getTimestamp("start_date");
     endDate = rs.getTimestamp("end_date");
     entered = rs.getTimestamp("entered");
+    modified = entered;
     enabled = rs.getBoolean("enabled");
   }
 

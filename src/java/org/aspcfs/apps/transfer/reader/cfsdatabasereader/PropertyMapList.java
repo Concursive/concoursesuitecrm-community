@@ -27,7 +27,7 @@ public class PropertyMapList extends HashMap {
     }
   }
   
-  public void saveList(DataWriter writer, AbstractList list, String action) {
+  public boolean saveList(DataWriter writer, AbstractList list, String action) {
     boolean processOK = true;
     Iterator i = list.iterator();
     while (i.hasNext() && processOK) {
@@ -35,5 +35,6 @@ public class PropertyMapList extends HashMap {
       DataRecord thisRecord = createDataRecord(object, action);
       processOK = writer.save(thisRecord);
     }
+    return processOK;
   }
 }

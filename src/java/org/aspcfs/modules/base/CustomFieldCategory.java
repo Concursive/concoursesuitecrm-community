@@ -81,16 +81,17 @@ public class CustomFieldCategory extends ArrayList {
    *@since
    */
   public CustomFieldCategory(Connection db, int categoryId) throws SQLException {
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM custom_field_category cfc " +
-        "WHERE cfc.category_id = " + categoryId + " ");
+        "WHERE cfc.category_id = ? ");
+    pst.setInt(1, categoryId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     }
     rs.close();
-    st.close();
+    pst.close();
   }
 
 
@@ -887,6 +888,9 @@ public class CustomFieldCategory extends ArrayList {
     pst.setBoolean(++i, this.getReadOnly());
     pst.execute();
     pst.close();
+    
+    id = DatabaseUtils.getCurrVal(db, "custom_field_ca_category_id_seq");
+    
     return true;
   }
 
@@ -1042,6 +1046,7 @@ public class CustomFieldCategory extends ArrayList {
     endDate = rs.getTimestamp("end_date");
     defaultItem = rs.getBoolean("default_item");
     entered = rs.getTimestamp("entered");
+    modified = entered;
     enabled = rs.getBoolean("enabled");
     allowMultipleRecords = rs.getBoolean("multiple_records");
     readOnly = rs.getBoolean("read_only");

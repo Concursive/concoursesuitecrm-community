@@ -663,5 +663,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'customFieldList', 'com.darkhorseventures.cfsbase.CustomFieldList');
 
- 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'customFieldLookup', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'customFieldLookupList', 'com.darkhorseventures.webutils.LookupList');
+
  

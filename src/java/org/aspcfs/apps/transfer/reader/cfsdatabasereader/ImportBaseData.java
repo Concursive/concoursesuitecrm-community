@@ -29,6 +29,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer; 
     this.mappings = mappings;
+    boolean processOK = true;
     
     //Copy Users
     logger.info("ImportBaseData-> Inserting users");
@@ -37,15 +38,17 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     userList.add(baseUser);
     writer.setAutoCommit(false);
     this.saveUserList(db, userList);
-    writer.commit();
+    processOK = writer.commit();
     userList = null;
     baseUser = null;
+    if (!processOK) {
+      return false;
+    }
+    
     
     //TODO: update all user managers
-    
 
     //Copy Accounts
-    /**
     logger.info("ImportBaseData-> Inserting accounts");
     writer.setAutoCommit(false);
     OrganizationList accounts = new OrganizationList();
@@ -53,41 +56,25 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     accounts.setIncludeEnabled(-1);
     accounts.buildList(db);
     mappings.saveList(writer, accounts, "insert");
-    writer.commit();
-    */
-    
-    logger.info("ImportBaseData-> Inserting accounts");
-    OrganizationList accounts = new OrganizationList();
-    accounts.setShowMyCompany(true);
-    accounts.setIncludeEnabled(-1);
-    accounts.buildList(db);
-    writer.setAutoCommit(false);
-    saveOrgList(db, accounts, mappings);
-    writer.commit();
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
     
     //Iterate and get emails, addresses
     
     //Copy Contacts
-    /**
     logger.info("ImportBaseData-> Inserting contacts");
-    writer.setAutoCommit(true);
+    writer.setAutoCommit(false);
     ContactList contacts = new ContactList();
     contacts.setIncludeEnabled(-1);
     contacts.setPersonalId(-2);
     contacts.buildList(db);
     mappings.saveList(writer, contacts, "insert");
-    writer.commit();
-    writer.setAutoCommit(true);
-    */
-    
-    logger.info("ImportBaseData-> Inserting contacts");
-    ContactList contacts = new ContactList();
-    contacts.setIncludeEnabled(-1);
-    contacts.setPersonalId(-2);
-    contacts.buildList(db);
-    writer.setAutoCommit(false);
-    saveContactList(db, contacts, mappings);
-    writer.commit();
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
     
     return true;
   }
@@ -111,41 +98,5 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       saveUserList(db, newUserList);
     }
   }
-  
-  
-  private void saveOrgList(Connection db, OrganizationList orgList, PropertyMapList mappings) throws SQLException {
-          Iterator orgs = orgList.iterator();
-        
-            while (orgs.hasNext()) {
-              Organization thisOrg = (Organization)orgs.next();
-              DataRecord thisRecord = mappings.createDataRecord(thisOrg, "insert");
-              writer.save(thisRecord);
-              
-              logger.info("ImportBaseData-> Inserting Organization Calls");
-              
-              CallList callList = new CallList();
-              callList.setOrgId(thisOrg.getId());
-              callList.buildList(db);
-              mappings.saveList(writer, callList, "insert");
-            }
-  }
-  
-  private void saveContactList(Connection db, ContactList contactList, PropertyMapList mappings) throws SQLException {
-          Iterator contacts = contactList.iterator();
-        
-            while (contacts.hasNext()) {
-              Contact thisContact = (Contact)contacts.next();
-              DataRecord thisRecord = mappings.createDataRecord(thisContact, "insert");
-              writer.save(thisRecord);
-              
-              logger.info("ImportBaseData-> Inserting Contact Calls");
-              
-              CallList callList = new CallList();
-              callList.setContactId(thisContact.getId());
-              callList.buildList(db);
-              mappings.saveList(writer, callList, "insert");
-            }
-  }
-  
 }
 

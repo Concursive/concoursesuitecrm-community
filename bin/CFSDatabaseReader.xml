@@ -186,6 +186,7 @@
       <property>type</property>
       <property>validationType</property>
       <property>required</property>
+      <property alias="parameters">parameterData</property>
       <property>startDate</property>
       <property>endDate</property>
       <property>entered</property>
