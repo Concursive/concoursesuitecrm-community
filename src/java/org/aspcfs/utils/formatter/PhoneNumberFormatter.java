@@ -61,7 +61,9 @@ public class PhoneNumberFormatter {
       extractExtension(number, "ext.");
       extractExtension(number, "ext");
       extractExtension(number, "x");
-      thisNumber.setExtension(number[1]);
+      if (number[1] != null && !"".equals(number[1])) {
+        thisNumber.setExtension(number[1]);
+      }
       //Format just the number
       if (!(number[0].charAt(0) == '+')) {
         //Skip if someone has entered something other than basic numbers
