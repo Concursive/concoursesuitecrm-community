@@ -27,21 +27,16 @@ public class JasperReportUtils {
     }
     System.setProperty("jasper.reports.compiler.class",
         "dori.jasper.engine.design.JRBshCompiler");
-    //The XML should exist
-    File xmlFile = new File(filename);
-    if (!xmlFile.exists()) {
-      return null;
-    }
     //Check to see if the .jasper exists
-    filename = filename.substring(0, filename.lastIndexOf(".xml"));
-    File jasperFile = new File(filename + ".jasper");
+    String jasperFilename = filename.substring(0, filename.lastIndexOf(".xml"));
+    File jasperFile = new File(jasperFilename + ".jasper");
     if (!jasperFile.exists()) {
-      //synchronized (this) {
-      //Only compile one report at a time in case same 2 try to compile
-      //if (!jasperFile.exists()) {
+      //The XML should exist so compile that
+      File xmlFile = new File(filename);
+      if (!xmlFile.exists()) {
+        return null;
+      }
       JasperCompileManager.compileReportToFile(xmlFile.getPath(), jasperFile.getPath());
-      //}
-      //}
     }
     if (!jasperFile.exists()) {
       return null;
