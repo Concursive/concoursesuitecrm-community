@@ -14,7 +14,8 @@ import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.actionlist.base.*;
 
 /**
  *  Represents a Ticket in CFS
@@ -77,6 +78,9 @@ public class Ticket extends GenericBean {
 
   private TicketLogList history = new TicketLogList();
   private FileItemList files = new FileItemList();
+
+  //action list properties
+  private int actionId = -1;
 
 
   /**
@@ -279,6 +283,37 @@ public class Ticket extends GenericBean {
    */
   public void setThisContact(Contact thisContact) {
     this.thisContact = thisContact;
+  }
+
+
+
+  /**
+   *  Sets the actionId attribute of the Ticket object
+   *
+   *@param  actionId  The new actionId value
+   */
+  public void setActionId(int actionId) {
+    this.actionId = actionId;
+  }
+
+
+  /**
+   *  Sets the actionId attribute of the Ticket object
+   *
+   *@param  actionId  The new actionId value
+   */
+  public void setActionId(String actionId) {
+    this.actionId = Integer.parseInt(actionId);
+  }
+
+
+  /**
+   *  Gets the actionId attribute of the Ticket object
+   *
+   *@return    The actionId value
+   */
+  public int getActionId() {
+    return actionId;
   }
 
 
@@ -1563,8 +1598,11 @@ public class Ticket extends GenericBean {
     try {
       db.setAutoCommit(false);
       sql.append(
-          "INSERT INTO ticket (org_id, contact_id, problem, pri_code, " +
+          "INSERT INTO ticket (contact_id, problem, pri_code, " +
           "department_code, cat_code, scode, ");
+      if (orgId > 0) {
+        sql.append("org_id, ");
+      }
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1572,7 +1610,10 @@ public class Ticket extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+      if (orgId > 0) {
+        sql.append("?, ");
+      }
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1582,7 +1623,6 @@ public class Ticket extends GenericBean {
       sql.append("?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, this.getOrgId());
       if (contactId > -1) {
         pst.setInt(++i, this.getContactId());
       } else {
@@ -1613,7 +1653,9 @@ public class Ticket extends GenericBean {
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-
+      if (orgId > 0) {
+        pst.setInt(++i, orgId);
+      }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1630,6 +1672,9 @@ public class Ticket extends GenericBean {
       } else {
         this.update(db, true);
       }
+      if (actionId > 0) {
+        updateLog(db);
+      }
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1638,6 +1683,38 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(true);
     }
     return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateLog(Connection db) throws SQLException {
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      ActionItemLog thisLog = new ActionItemLog();
+      thisLog.setEnteredBy(this.getEnteredBy());
+      thisLog.setModifiedBy(this.getModifiedBy());
+      thisLog.setItemId(this.getActionId());
+      thisLog.setLinkItemId(this.getId());
+      thisLog.setType(Constants.TICKET_OBJECT);
+      thisLog.insert(db);
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    }
   }
 
 
@@ -1810,7 +1887,7 @@ public class Ticket extends GenericBean {
       pst.setInt(++i, this.getId());
       resultCount = pst.executeUpdate();
       pst.close();
-  
+
       TicketLog thisEntry = new TicketLog();
       thisEntry.setEnteredBy(this.getModifiedBy());
       thisEntry.setDepartmentCode(this.getDepartmentCode());
@@ -1834,6 +1911,28 @@ public class Ticket extends GenericBean {
   /**
    *  Description of the Method
    *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public DependencyList processDependencies(Connection db) throws SQLException {
+    String sql = null;
+    DependencyList dependencyList = new DependencyList();
+    ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId());
+    if (actionList != null) {
+      Dependency thisDependency = new Dependency();
+      thisDependency.setName(actionList.getDescription());
+      thisDependency.setCount(1);
+      thisDependency.setCanDelete(true);
+      dependencyList.add(thisDependency);
+    }
+    return dependencyList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
@@ -1845,10 +1944,23 @@ public class Ticket extends GenericBean {
     }
     try {
       db.setAutoCommit(false);
-      Statement st = db.createStatement();
-      st.executeUpdate("DELETE FROM ticketlog WHERE ticketid = " + this.getId());
-      st.executeUpdate("DELETE FROM ticket WHERE ticketid = " + this.getId());
-      st.close();
+
+      //delete any related action list items
+      ActionItemLog.deleteLink(db, this.getId(), Constants.TICKET_OBJECT);
+
+      //delete all log data
+      PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM ticketlog WHERE ticketid = ?");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      //delete the ticket
+      pst = db.prepareStatement(
+          "DELETE FROM ticket WHERE ticketid = ?");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1927,9 +2039,11 @@ public class Ticket extends GenericBean {
     if (closeIt == true && (solution == null || solution.trim().equals(""))) {
       errors.put("closedError", "A solution is required when closing a ticket");
     }
-    if (orgId == -1) {
-      errors.put("orgIdError", "You must associate an Account with a Ticket");
-    }
+    /*
+     *  if (orgId == -1) {
+     *  errors.put("orgIdError", "You must associate an Account with a Ticket");
+     *  }
+     */
     if (contactId == -1) {
       errors.put("contactIdError", "You must associate a Contact with a Ticket");
     }
@@ -2030,14 +2144,14 @@ public class Ticket extends GenericBean {
         //ageDays = java.lang.Math.round(ageCheck);
         float ageCheck = ((closed.getTime() - entered.getTime()) / 3600000);
         int totalHours = java.lang.Math.round(ageCheck);
-        ageDays = java.lang.Math.round(totalHours/24);
+        ageDays = java.lang.Math.round(totalHours / 24);
         ageHours = java.lang.Math.round(totalHours - (24 * ageDays));
       } else {
         //float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
         //ageDays = java.lang.Math.round(ageCheck);
         float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 3600000);
         int totalHours = java.lang.Math.round(ageCheck);
-        ageDays = java.lang.Math.round(totalHours/24);
+        ageDays = java.lang.Math.round(totalHours / 24);
         ageHours = java.lang.Math.round(totalHours - (24 * ageDays));
       }
     }
