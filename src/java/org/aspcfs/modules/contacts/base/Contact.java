@@ -2769,9 +2769,46 @@ public class Contact extends GenericBean {
         thisDependency.setCanDelete(false);
         dependencyList.add(thisDependency);
       }
+      
       rs.close();
       pst.close();
 
+      i=0;
+      pst = db.prepareStatement(
+          "SELECT count(*) as servicecontractcount " +
+          "FROM service_contract " +
+          "WHERE contact_id = ? ");
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Service Contracts");
+        thisDependency.setCount(rs.getInt("servicecontractcount"));
+        thisDependency.setCanDelete(false);
+        dependencyList.add(thisDependency);
+      }
+      
+      rs.close();
+      pst.close();
+
+      i=0;
+      pst = db.prepareStatement(
+          "SELECT count(*) as assetcount " +
+          "FROM asset " +
+          "WHERE contact_id = ? ");
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Assets");
+        thisDependency.setCount(rs.getInt("assetcount"));
+        thisDependency.setCanDelete(false);
+        dependencyList.add(thisDependency);
+      }
+      
+      rs.close();
+      pst.close();
+      
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }

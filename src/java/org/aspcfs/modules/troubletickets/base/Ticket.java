@@ -37,6 +37,22 @@ public class Ticket extends GenericBean {
   private String errorMessage = "";
   private int id = -1;
   private int orgId = -1;
+
+  private int contractId = -1;
+  private String serviceContractNumber = null;
+  private double totalHoursRemaining = -1;
+  private java.sql.Timestamp contractStartDate = null;
+  private java.sql.Timestamp contractEndDate = null;
+  private int contractOnsiteResponseModel = -1;
+
+  private int assetId = -1;
+  private String assetSerialNumber = null;
+  private String assetManufacturer = null;
+  private String assetVendor = null;
+  private String assetModelVersion = null;
+  private String assetLocation = null;
+  private int assetOnsiteResponseModel = -1;
+
   private int contactId = -1;
   private int assignedTo = -1;
   private java.sql.Timestamp assignedDate = null;
@@ -87,7 +103,6 @@ public class Ticket extends GenericBean {
 
   //action list properties
   private int actionId = -1;
-
 
   /**
    *  Constructor for the Ticket object, creates an empty Ticket
@@ -141,7 +156,18 @@ public class Ticket extends GenericBean {
         "tp.description AS ticpri, " +
         "ts.description AS ticsev, " +
         "tc.description AS catname, " +
-        "lu_ts.description AS sourcename " +
+        "lu_ts.description AS sourcename, " +
+        "sc.contract_number AS contractnumber, " +
+        "sc.total_hours_remaining AS hoursremaining, " +
+        "sc.current_start_date AS contractstartdate, " +
+        "sc.current_end_date AS contractenddate, " +
+        "sc.onsite_service_model AS contractonsiteservicemodel, " +
+        "a.serial_number AS serialnumber, " +
+        "a.manufacturer AS assetmanufacturer, " +
+        "a.vendor AS assetvendor, " +
+        "a.model_version AS modelversion, " +
+        "a.location AS assetlocation, " +
+        "a.onsite_service_model AS assetonsiteservicemodel " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
@@ -149,6 +175,8 @@ public class Ticket extends GenericBean {
         "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
         "LEFT JOIN ticket_category tc ON (t.cat_code = tc.id) " +
         "LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code) " +
+        "LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id) " +
+        "LEFT JOIN asset a ON (t.link_asset_id = a.asset_id) " +
         "WHERE t.ticketid = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -661,6 +689,206 @@ public class Ticket extends GenericBean {
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the contractId attribute of the Ticket object
+   *
+   *@param  tmp  The new contractId value
+   */
+  public void setContractId(int tmp) {
+    this.contractId = tmp;
+  }
+
+
+  /**
+   *  Sets the contractId attribute of the Ticket object
+   *
+   *@param  tmp  The new contractId value
+   */
+  public void setContractId(String tmp) {
+    this.contractId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the serviceContractNumber attribute of the Ticket object
+   *
+   *@param  tmp  The new serviceContractNumber value
+   */
+  public void setServiceContractNumber(String tmp) {
+    this.serviceContractNumber = tmp;
+  }
+
+
+  /**
+   *  Sets the totalHoursRemaining attribute of the Ticket object
+   *
+   *@param  tmp  The new totalHoursRemaining value
+   */
+  public void setTotalHoursRemaining(double tmp) {
+    this.totalHoursRemaining = tmp;
+  }
+
+
+  /**
+   *  Sets the totalHoursRemaining attribute of the Ticket object
+   *
+   *@param  tmp  The new totalHoursRemaining value
+   */
+  public void setTotalHoursRemaining(String tmp) {
+    this.totalHoursRemaining = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Sets the contractStartDate attribute of the Ticket object
+   *
+   *@param  tmp  The new contractStartDate value
+   */
+  public void setContractStartDate(java.sql.Timestamp tmp) {
+    this.contractStartDate = tmp;
+  }
+
+
+  /**
+   *  Sets the contractStartDate attribute of the Ticket object
+   *
+   *@param  tmp  The new contractStartDate value
+   */
+  public void setContractStartDate(String tmp) {
+    this.contractStartDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the contractEndDate attribute of the Ticket object
+   *
+   *@param  tmp  The new contractEndDate value
+   */
+  public void setContractEndDate(java.sql.Timestamp tmp) {
+    this.contractEndDate = tmp;
+  }
+
+
+  /**
+   *  Sets the contractEndDate attribute of the Ticket object
+   *
+   *@param  tmp  The new contractEndDate value
+   */
+  public void setContractEndDate(String tmp) {
+    this.contractEndDate = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the contractOnsiteResponseModel attribute of the Ticket object
+   *
+   *@param  tmp  The new contractOnsiteResponseModel value
+   */
+  public void setContractOnsiteResponseModel(int tmp) {
+    this.contractOnsiteResponseModel = tmp;
+  }
+
+
+  /**
+   *  Sets the contractOnsiteResponseModel attribute of the Ticket object
+   *
+   *@param  tmp  The new contractOnsiteResponseModel value
+   */
+  public void setContractOnsiteResponseModel(String tmp) {
+    this.contractOnsiteResponseModel = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the assetId attribute of the Ticket object
+   *
+   *@param  tmp  The new assetId value
+   */
+  public void setAssetId(int tmp) {
+    this.assetId = tmp;
+  }
+
+
+  /**
+   *  Sets the assetId attribute of the Ticket object
+   *
+   *@param  tmp  The new assetId value
+   */
+  public void setAssetId(String tmp) {
+    this.assetId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the assetSerialNumber attribute of the Ticket object
+   *
+   *@param  tmp  The new assetSerialNumber value
+   */
+  public void setAssetSerialNumber(String tmp) {
+    this.assetSerialNumber = tmp;
+  }
+
+
+  /**
+   *  Sets the assetManufacturer attribute of the Ticket object
+   *
+   *@param  tmp  The new assetManufacturer value
+   */
+  public void setAssetManufacturer(String tmp) {
+    this.assetManufacturer = tmp;
+  }
+
+
+  /**
+   *  Sets the assetVendor attribute of the Ticket object
+   *
+   *@param  tmp  The new assetVendor value
+   */
+  public void setAssetVendor(String tmp) {
+    this.assetVendor = tmp;
+  }
+
+
+  /**
+   *  Sets the modelVersion attribute of the Ticket object
+   *
+   *@param  tmp  The new modelVersion value
+   */
+  public void setAssetModelVersion(String tmp) {
+    this.assetModelVersion = tmp;
+  }
+
+
+  /**
+   *  Sets the location attribute of the Ticket object
+   *
+   *@param  tmp  The new location value
+   */
+  public void setAssetLocation(String tmp) {
+    this.assetLocation = tmp;
+  }
+
+
+  /**
+   *  Sets the assetOnsiteResponseModel attribute of the Ticket object
+   *
+   *@param  tmp  The new assetOnsiteResponseModel value
+   */
+  public void setAssetOnsiteResponseModel(int tmp) {
+    this.assetOnsiteResponseModel = tmp;
+  }
+
+
+  /**
+   *  Sets the assetOnsiteResponseModel attribute of the Ticket object
+   *
+   *@param  tmp  The new assetOnsiteResponseModel value
+   */
+  public void setAssetOnsiteResponseModel(String tmp) {
+    this.assetOnsiteResponseModel = Integer.parseInt(tmp);
   }
 
 
@@ -1431,6 +1659,136 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Gets the contractId attribute of the Ticket object
+   *
+   *@return    The contractId value
+   */
+  public int getContractId() {
+    return contractId;
+  }
+
+
+  /**
+   *  Gets the serviceContractNumber attribute of the Ticket object
+   *
+   *@return    The serviceContractNumber value
+   */
+  public String getServiceContractNumber() {
+    return serviceContractNumber;
+  }
+
+
+  /**
+   *  Gets the totalHoursRemaining attribute of the Ticket object
+   *
+   *@return    The totalHoursRemaining value
+   */
+  public double getTotalHoursRemaining() {
+    return round(totalHoursRemaining,2);
+  }
+
+
+  /**
+   *  Gets the contractStartDate attribute of the Ticket object
+   *
+   *@return    The contractStartDate value
+   */
+  public java.sql.Timestamp getContractStartDate() {
+    return contractStartDate;
+  }
+
+
+  /**
+   *  Gets the contractEndDate attribute of the Ticket object
+   *
+   *@return    The contractEndDate value
+   */
+  public java.sql.Timestamp getContractEndDate() {
+    return contractEndDate;
+  }
+
+
+  /**
+   *  Gets the contractOnsiteResponseModel attribute of the Ticket object
+   *
+   *@return    The contractOnsiteResponseModel value
+   */
+  public int getContractOnsiteResponseModel() {
+    return contractOnsiteResponseModel;
+  }
+
+
+  /**
+   *  Gets the assetId attribute of the Ticket object
+   *
+   *@return    The assetId value
+   */
+  public int getAssetId() {
+    return assetId;
+  }
+
+
+  /**
+   *  Gets the assetSerialNumber attribute of the Ticket object
+   *
+   *@return    The assetSerialNumber value
+   */
+  public String getAssetSerialNumber() {
+    return assetSerialNumber;
+  }
+
+
+  /**
+   *  Gets the assetManufacturer attribute of the Ticket object
+   *
+   *@return    The assetManufacturer value
+   */
+  public String getAssetManufacturer() {
+    return assetManufacturer;
+  }
+
+
+  /**
+   *  Gets the assetVendor attribute of the Ticket object
+   *
+   *@return    The assetVendor value
+   */
+  public String getAssetVendor() {
+    return assetVendor;
+  }
+
+
+  /**
+   *  Gets the modelVersion attribute of the Ticket object
+   *
+   *@return    The modelVersion value
+   */
+  public String getAssetModelVersion() {
+    return assetModelVersion;
+  }
+
+
+  /**
+   *  Gets the location attribute of the Ticket object
+   *
+   *@return    The location value
+   */
+  public String getAssetLocation() {
+    return assetLocation;
+  }
+
+
+  /**
+   *  Gets the assetOnsiteResponseModel attribute of the Ticket object
+   *
+   *@return    The assetOnsiteResponseModel value
+   */
+  public int getAssetOnsiteResponseModel() {
+    return assetOnsiteResponseModel;
+  }
+
+
+  /**
    *  Gets the ContactId attribute of the Ticket object
    *
    *@return    The ContactId value
@@ -1460,7 +1818,6 @@ public class Ticket extends GenericBean {
   public String getLocation() {
     return location;
   }
-
 
   /**
    *  Gets the problemHeader attribute of the Ticket object
@@ -1689,7 +2046,7 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO ticket (contact_id, problem, pri_code, " +
-          "department_code, cat_code, scode, org_id, ");
+          "department_code, cat_code, scode, org_id, link_contract_id, link_asset_id, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1697,7 +2054,7 @@ public class Ticket extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1730,6 +2087,8 @@ public class Ticket extends GenericBean {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
       DatabaseUtils.setInt(pst, ++i, orgId);
+      DatabaseUtils.setInt(pst, ++i, contractId);
+      DatabaseUtils.setInt(pst, ++i, assetId);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1814,7 +2173,7 @@ public class Ticket extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE ticket SET department_code = ?, pri_code = ?, scode = ?, " +
+        "UPDATE ticket SET link_contract_id = ?, link_asset_id = ?, department_code = ?, pri_code = ?, scode = ?, " +
         "cat_code = ?, assigned_to = ?, " +
         "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, " +
         "source_code = ?, contact_id = ?, problem = ?, ");
@@ -1836,6 +2195,8 @@ public class Ticket extends GenericBean {
     }
     int i = 0;
     pst = db.prepareStatement(sql.toString());
+    DatabaseUtils.setInt(pst, ++i, this.getContractId());
+    DatabaseUtils.setInt(pst, ++i, this.getAssetId());
     if (this.getDepartmentCode() > 0) {
       pst.setInt(++i, this.getDepartmentCode());
     } else {
@@ -2034,6 +2395,55 @@ public class Ticket extends GenericBean {
     folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.FOLDERS_TICKETS, this.getId()));
     folderDependency.setCanDelete(true);
     dependencyList.add(folderDependency);
+    //Check for Form - Asset Maintenance links
+    try {
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT count(*) as linkcount " +
+          "FROM ticket_sun_form " +
+          "WHERE link_ticket_id = ? ");
+      pst.setInt(++i, this.getId());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        int linkcount = rs.getInt("linkcount");
+        if (linkcount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("Maintenance Notes");
+          thisDependency.setCount(linkcount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
+        }
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
+    //Check for Form - Activities links
+    try {
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT count(*) as linkcount " +
+          "FROM ticket_csstm_form " +
+          "WHERE link_ticket_id = ? ");
+      pst.setInt(++i, this.getId());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        int linkcount = rs.getInt("linkcount");
+        if (linkcount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("Activities");
+          thisDependency.setCount(linkcount);
+          thisDependency.setCanDelete(false);
+          dependencyList.add(thisDependency);
+        }
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
+
     return dependencyList;
   }
 
@@ -2082,6 +2492,34 @@ public class Ticket extends GenericBean {
       //delete related task links
       pst = db.prepareStatement(
           "DELETE FROM tasklink_ticket WHERE ticket_id = ?");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      
+      //delete related activity items
+      pst = db.prepareStatement(
+          "DELETE FROM trouble_asset_replacement WHERE link_form_id IN (SELECT form_id FROM ticket_sun_form WHERE link_ticket_id = ?)");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      
+      //delete related activity items
+      pst = db.prepareStatement(
+          "DELETE FROM ticket_sun_form WHERE link_ticket_id = ?");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      
+      //delete related activity items
+      pst = db.prepareStatement(
+          "DELETE FROM ticket_activity_item WHERE link_form_id IN (SELECT form_id FROM ticket_csstm_form WHERE link_ticket_id = ?) ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      
+      //delete related activity items
+      pst = db.prepareStatement(
+          "DELETE FROM ticket_csstm_form WHERE link_ticket_id = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
@@ -2214,6 +2652,8 @@ public class Ticket extends GenericBean {
     estimatedResolutionDate = rs.getTimestamp("est_resolution_date");
     resolutionDate = rs.getTimestamp("resolution_date");
     cause = rs.getString("cause");
+    contractId = DatabaseUtils.getInt(rs,"link_contract_id");
+    assetId = DatabaseUtils.getInt(rs,"link_asset_id");
 
     //organization table
     companyName = rs.getString("orgname");
@@ -2233,6 +2673,21 @@ public class Ticket extends GenericBean {
 
     //lookup_ticket_source table
     sourceName = rs.getString("sourcename");
+
+    //service_contract table
+    serviceContractNumber = rs.getString("contractnumber");
+    totalHoursRemaining = rs.getFloat("hoursremaining");
+    contractStartDate = rs.getTimestamp("contractstartdate");
+    contractEndDate = rs.getTimestamp("contractenddate");
+    contractOnsiteResponseModel = DatabaseUtils.getInt(rs,"contractonsiteservicemodel");
+
+    //asset table
+    assetSerialNumber = rs.getString("serialnumber");
+    assetManufacturer = rs.getString("assetmanufacturer");
+    assetVendor = rs.getString("assetvendor");
+    assetModelVersion = rs.getString("modelversion");
+    assetLocation = rs.getString("assetlocation");
+    assetOnsiteResponseModel = DatabaseUtils.getInt(rs,"assetonsiteservicemodel");
 
     //Calculations
     if (entered != null) {
@@ -2275,6 +2730,8 @@ public class Ticket extends GenericBean {
     thisList.add("assignedDate");
     thisList.add("estimatedResolutionDate");
     thisList.add("resolutionDate");
+    thisList.add("contractStartDate");
+    thisList.add("contractEndDate");
     return thisList;
   }
 }

@@ -138,7 +138,8 @@ Search Results
   } else {%>  
   <tr>
     <td class="containerBody" colspan="5">
-      No  Contacts found for the specified search parameters. <a href="ExternalContacts.do?command=SearchContactsForm">Modify Search</a>.
+      No contacts found with the specified search parameters.<br />
+      <a href="ExternalContacts.do?command=SearchContactsForm">Modify Search</a>.
     </td>
   </tr>
 <%}%>

@@ -23,6 +23,16 @@
     document.forms['searchTicket'].searchcodeAssignedTo.value="-1";
     changeDivContent('changeowner',' Anyone ');
   }
+  
+  function clearAccount(){
+    document.forms['searchTicket'].searchcodeOrgId.value="-1";
+    changeDivContent('changeaccount','All');
+  }
+  
+  function clearOwner(){
+    document.forms['searchTicket'].searchcodeAssignedTo.value="-1";
+    changeDivContent('changeowner',' Anyone ');
+  }
 </script>
 <body onLoad="javascript:document.forms[0].searchcodeId.focus();">
 <form name="searchTicket" action="TroubleTickets.do?command=SearchTickets" method="post">
@@ -77,6 +87,7 @@ Search Form
           <td>
             <input type="hidden" name="searchcodeOrgId" id="searchcodeOrgId" value="<%= TicListInfo.getSearchOptionValue("searchcodeOrgId") %>">
             &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'filters=all|my|disabled');">Select</a>]
+            &nbsp;[<a href="javascript:clearAccount();">Clear</a>]
           </td>
         </tr>
       </table>
@@ -130,6 +141,7 @@ Search Form
           <td>
             <input type="hidden" name="searchcodeAssignedTo" id="ownerid" value="<%= TicListInfo.getSearchOptionValue("searchcodeAssignedTo") %>">
             &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&reset=true');">Change Owner</a>]
+            &nbsp;[<a href="javascript:clearOwner();">Clear</a>]
           </td>
         </tr>
       </table>

@@ -17,6 +17,8 @@ import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
+import org.aspcfs.modules.assets.base.AssetList;
+import org.aspcfs.modules.servicecontracts.base.ServiceContractList;
 
 /**
  *@author     chris
@@ -1544,7 +1546,19 @@ public class Organization extends GenericBean {
       oppDependency.setCount(oppCount);
       oppDependency.setCanDelete(true);
       dependencyList.add(oppDependency);
-
+      
+      Dependency scDependency = new Dependency();
+      scDependency.setName("Service Contracts");
+      scDependency.setCount(ServiceContractList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      scDependency.setCanDelete(true);
+      dependencyList.add(scDependency);
+      
+      Dependency assetDependency = new Dependency();
+      assetDependency.setName("Assets");
+      assetDependency.setCount(AssetList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      assetDependency.setCanDelete(true);
+      dependencyList.add(assetDependency);
+      
       Dependency ticDependency = new Dependency();
       ticDependency.setName("Tickets");
       ticDependency.setCount(TicketList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
@@ -2153,13 +2167,27 @@ public class Organization extends GenericBean {
     }
     try {
       db.setAutoCommit(false);
-
-      //Tickets have accounts and contact related, so delete them first
+      
+      //Tickets have accounts, contacts, assets, service contracts related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setOrgId(this.getOrgId());
       ticketList.buildList(db);
       ticketList.delete(db, baseFilePath);
       ticketList = null;
+      
+      // Delete after tickets
+      AssetList assetList = new AssetList();
+      assetList.setOrgId(this.getOrgId());
+      assetList.buildList(db);
+      assetList.delete(db);
+      assetList = null;
+      
+      // Delete after tickets and after assets
+      ServiceContractList scList = new ServiceContractList();
+      scList.setOrgId(this.getOrgId());
+      scList.buildList(db);
+      scList.delete(db);
+      scList = null;
 
       if (documentDelete) {
         FileItemList fileList = new FileItemList();
@@ -2169,7 +2197,7 @@ public class Organization extends GenericBean {
         fileList.delete(db, baseFilePath);
         fileList = null;
       }
-
+      
       CustomFieldRecordList folderList = new CustomFieldRecordList();
       folderList.setLinkModuleId(Constants.ACCOUNTS);
       folderList.setLinkItemId(this.getOrgId());
@@ -2277,8 +2305,8 @@ public class Organization extends GenericBean {
   protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
     if ((name == null || name.trim().equals("")) && (nameLast == null || nameLast.trim().equals(""))) {
-      errors.put("nameError", "An account name is required.");
-      errors.put("nameLastError", "An account name is required.");
+      errors.put("nameError", "Organization name is required.");
+      errors.put("nameLastError", "Last name is required.");
     }
     if (hasErrors()) {
       return false;

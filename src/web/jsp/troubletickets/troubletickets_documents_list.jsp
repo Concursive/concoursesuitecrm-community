@@ -25,18 +25,12 @@ Documents
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-<%= toHtml(TicketDetails.getCompanyName()) %></strong>
-<dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
+<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="documents" param="<%= param1 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-    <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
-      &nbsp;<br>
-    </dhv:evaluate>
     <dhv:permission name="tickets-tickets-edit"><a href="TroubleTicketsDocuments.do?command=Add&tId=<%= TicketDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
     <center><%= TicketDocumentListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="TicketDocumentListInfo"/>

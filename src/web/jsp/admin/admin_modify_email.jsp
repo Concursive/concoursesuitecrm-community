@@ -12,8 +12,10 @@ Modify Setting
 </tr>
 </table>
 <%-- End Trails --%>
-<table class="note"><tr><td>
-<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>Which 
+<table class="note">
+<tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td><b>Which 
 email server should Dark Horse CRM use?</b><br />
 Dark Horse CRM sends various notifications to users by email.  Dark Horse CRM can also be used
 to send email to contacts that have been entered into the Contacts and Accounts modules.

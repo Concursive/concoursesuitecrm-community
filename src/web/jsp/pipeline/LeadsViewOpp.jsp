@@ -130,7 +130,10 @@ Search Results
     }
   } else {%>
   <tr class="containerBody">
-    <td colspan="8" valign="center">No  Opportunities found for the specified search parameters. <a href="Leads.do?command=SearchForm">Modify Search</a>. 
+    <td colspan="8" valign="center">
+      No opportunities found with the specified search parameters.<br />
+      <a href="Leads.do?command=SearchForm">Modify Search</a>.
+    </td>
   </tr>
 <%}%>
 </table>

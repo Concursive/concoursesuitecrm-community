@@ -83,6 +83,10 @@
       <permission name="accounts-dashboard" attributes="v---" description="Dashboard"/>
       <permission name="accounts-accounts-revenue" attributes="vaed" description="Revenue" enabled="false"/>
       <permission name="accounts-autoguide-inventory" attributes="vaed" description="Auto Guide Vehicle Inventory" enabled="false"/>
+      <permission name="accounts-service-contracts" attributes="vaed" description="Service Contracts"/>
+      <permission name="accounts-assets" attributes="vaed" description="Assets"/>
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" description="Ticket Maintenance Notes"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" description="Ticket Activity Log"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
@@ -109,8 +113,22 @@
       <permission name="projects-enterprise" attributes="v---" description="Enterprise View"/>
       <permission name="projects-projects" attributes="vaed" description="Project Records"/>
     </category>
+    <category id="130041100" name="Service Contracts" folders="false" lookups="true" reports="false" categories="false">
+      <lookup constantId="130041305" class="lookupList" table="lookup_sc_category" description="Service Contract Category"/>
+      <lookup constantId="130041306" class="lookupList" table="lookup_sc_type" description="Service Contract Type"/>
+      <lookup constantId="116041409" class="lookupList" table="lookup_response_model" description="Response Time Model"/>
+      <lookup constantId="116041410" class="lookupList" table="lookup_phone_model" description="Phone Service Model"/>
+      <lookup constantId="116041411" class="lookupList" table="lookup_onsite_model" description="Onsite Service Model"/>
+      <lookup constantId="116041412" class="lookupList" table="lookup_email_model" description="Email Service Model"/>
+      <lookup constantId="308041546" class="lookupList" table="lookup_hours_reason" description="Contract Hours Adjustment Reason"/>
+    </category>
+    <category id="130041000" name="Assets" folders="false" lookups="true" reports="false" categories="true">
+      <lookup constantId="130041304" class="lookupList" table="lookup_asset_status" description="Asset Status"/>
+      <multipleCategory constantId="202041400" table="asset_category" maxLevels="3" description="Asset Categories"/>
+    </category>
     <category id="8" name="Help Desk" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true">
       <folder constantId="11072003" description="Tickets"/>
+      <lookup constantId="127041246" class="lookupList" table="lookup_ticket_form" description="Form Type"/>
       <lookup constantId="1" class="lookupList" table="lookup_ticketsource" description="Ticket Source"/>
       <lookup constantId="2" class="lookupList" table="ticket_severity" description="Ticket Severity"/>
       <lookup constantId="3" class="lookupList" table="ticket_priority" description="Ticket Priority"/>
@@ -118,9 +136,12 @@
       <permission name="tickets-tickets" attributes="vaed" description="Ticket Records"/>
       <permission name="tickets-reports" attributes="vaed" description="Export Ticket Data"/>
       <permission name="tickets-tickets-tasks" attributes="vaed" description="Tasks"/>
+      <permission name="tickets-maintenance-report" attributes="vaed" description="Maintenance Notes"/>
+      <permission name="tickets-activity-log" attributes="vaed" description="Activity Log"/>
       <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets by Department" description="What tickets are there in each department?"/>
       <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Ticket counts by Department" description="How man tickets are there in the system on a particular date?"/>
       <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Ticket activity by Department" description="How many tickets exist within a date range?"/>
+      <multipleCategory constantId="202041401" table="ticket_category" maxLevels="4" description="Ticket Categories"/>
     </category>
     <category id="16" name="Reports" folders="false" lookups="false">
       <permission name="reports" attributes="v---" description="Access to Reports module"/>
@@ -175,6 +196,10 @@
       <permission name="accounts-accounts-tickets-documents" attributes="vaed"/>
       <permission name="accounts-accounts-documents" attributes="vaed" description="Documents"/>
       <permission name="accounts-accounts-reports" attributes="va-d" description="Export Account Data"/>
+      <permission name="accounts-service-contracts" attributes="vaed" />
+      <permission name="accounts-assets" attributes="vaed" />
+      <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
       <permission name="campaign" attributes="v---"/>
       <permission name="campaign-dashboard" attributes="v---"/>
       <permission name="campaign-campaigns" attributes="vaed"/>
@@ -182,6 +207,8 @@
       <permission name="tickets-tickets" attributes="vaed"/>
       <permission name="tickets-reports" attributes="vaed"/>
       <permission name="tickets-tickets-tasks" attributes="vaed"/>
+      <permission name="tickets-maintenance-report" attributes="vaed" />
+      <permission name="tickets-activity-log" attributes="vaed" />
       <permission name="employees" attributes="vae-"/>
       <permission name="contacts-internal_contacts" attributes="vaed"/>
       <permission name="reports" attributes="v---"/>
@@ -238,6 +265,10 @@
        <permission name="accounts-accounts-tickets-documents" attributes="vaed"/>
        <permission name="accounts-accounts-tickets-folders" attributes="vaed"/>
        <permission name="accounts-accounts-tickets-tasks" attributes="vaed"/>
+       <permission name="accounts-service-contracts" attributes="vaed" />
+       <permission name="accounts-assets" attributes="vaed" />
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="vae-"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -248,6 +279,8 @@
        <permission name="tickets-tickets" attributes="vae-"/>
        <permission name="tickets-reports" attributes="vaed"/>
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="vae-" />
+       <permission name="tickets-activity-log" attributes="vae-" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="reports" attributes="v---"/>
@@ -288,14 +321,18 @@
        <permission name="accounts-accounts-contacts-calls" attributes="vaed"/>
        <permission name="accounts-accounts-contacts-messages" attributes="vaed"/>
        <permission name="accounts-accounts-opportunities" attributes="vaed"/>
-       <permission name="accounts-accounts-tickets" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets" attributes="vae-"/>
        <permission name="accounts-accounts-documents" attributes="vaed"/>
        <permission name="accounts-accounts-reports" attributes="va-d"/>
        <permission name="accounts-dashboard" attributes="v---"/>
        <permission name="accounts-accounts-revenue" attributes="vaed"/>
-       <permission name="accounts-accounts-tickets-documents" attributes="vaed"/>
-       <permission name="accounts-accounts-tickets-folders" attributes="vaed"/>
-       <permission name="accounts-accounts-tickets-tasks" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-documents" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-folders" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-tasks" attributes="vae-"/>
+       <permission name="accounts-service-contracts" attributes="vae-" />
+       <permission name="accounts-assets" attributes="vae-" />
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -306,6 +343,8 @@
        <permission name="tickets-tickets" attributes="vae-"/>
        <permission name="tickets-reports" attributes="vaed"/>
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="v---" />
+       <permission name="tickets-activity-log" attributes="v---" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="reports" attributes="v---"/>
@@ -352,6 +391,10 @@
        <permission name="accounts-accounts-tickets-documents" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-folders" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-tasks" attributes="vae-"/>
+       <permission name="accounts-service-contracts" attributes="v---" />
+       <permission name="accounts-assets" attributes="v---" />
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -362,6 +405,8 @@
        <permission name="tickets-tickets" attributes="vae-"/>
        <permission name="tickets-reports" attributes="va-d"/>
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="v---" />
+       <permission name="tickets-activity-log" attributes="v---" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="reports" attributes="v---"/>
@@ -386,12 +431,16 @@
        <permission name="accounts-accounts-contacts" attributes="vae-"/>
        <permission name="accounts-accounts-contacts-calls" attributes="vae-"/>
        <permission name="accounts-accounts-contacts-messages" attributes="vae-"/>
-       <permission name="accounts-accounts-tickets" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets" attributes="vaed"/>
        <permission name="accounts-accounts-documents" attributes="vae-"/>
        <permission name="accounts-accounts-reports" attributes="va-d"/>
-       <permission name="accounts-accounts-tickets-documents" attributes="vae-"/>
-       <permission name="accounts-accounts-tickets-folders" attributes="vae-"/>
-       <permission name="accounts-accounts-tickets-tasks" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-documents" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-folders" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-tasks" attributes="vaed"/>
+       <permission name="accounts-service-contracts" attributes="vaed" />
+       <permission name="accounts-assets" attributes="vaed" />
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -402,6 +451,8 @@
        <permission name="tickets-tickets" attributes="vaed"/>
        <permission name="tickets-reports" attributes="vaed"/>
        <permission name="tickets-tickets-tasks" attributes="vaed"/>
+       <permission name="tickets-maintenance-report" attributes="vaed" />
+       <permission name="tickets-activity-log" attributes="vaed" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="reports" attributes="v---"/>
@@ -432,6 +483,10 @@
        <permission name="accounts-accounts-tickets-documents" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-folders" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-tasks" attributes="vae-"/>
+       <permission name="accounts-service-contracts" attributes="vae-" />
+       <permission name="accounts-assets" attributes="vae-" />
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="vae-"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -442,6 +497,8 @@
        <permission name="tickets-tickets" attributes="vae-"/>
        <permission name="tickets-reports" attributes="vae-"/>
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="vae-" />
+       <permission name="tickets-activity-log" attributes="vae-" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="reports" attributes="v---"/>
@@ -490,6 +547,10 @@
        <permission name="accounts-accounts-tickets-documents" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-folders" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-tasks" attributes="vae-"/>
+       <permission name="accounts-service-contracts" attributes="v---" />
+       <permission name="accounts-assets" attributes="v---" />
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -500,6 +561,8 @@
        <permission name="tickets-tickets" attributes="vae-"/>
        <permission name="tickets-reports" attributes="vae-"/>
        <permission name="tickets-tickets-tasks" attributes="vae-"/>
+       <permission name="tickets-maintenance-report" attributes="v---" />
+       <permission name="tickets-activity-log" attributes="v---" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="reports" attributes="v---"/>
@@ -545,6 +608,10 @@
        <permission name="accounts-accounts-tickets-documents" attributes="v---"/>
        <permission name="accounts-accounts-tickets-folders" attributes="v---"/>
        <permission name="accounts-accounts-tickets-tasks" attributes="v---"/>
+       <permission name="accounts-service-contracts" attributes="v---" />
+       <permission name="accounts-assets" attributes="v---" />
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -555,6 +622,8 @@
        <permission name="tickets-tickets" attributes="v---"/>
        <permission name="tickets-reports" attributes="vaed"/>
        <permission name="tickets-tickets-tasks" attributes="v---"/>
+       <permission name="tickets-maintenance-report" attributes="v---" />
+       <permission name="tickets-activity-log" attributes="v---" />
        <permission name="employees" attributes="v---"/>
        <permission name="contacts-internal_contacts" attributes="v---"/>
        <permission name="reports" attributes="v---"/>

@@ -16,6 +16,7 @@ public class HtmlOption {
   String jsEvent = null;
   HashMap attributeList = null;
   boolean group = false;
+  boolean enabled = true;
 
 
   /**
@@ -61,6 +62,22 @@ public class HtmlOption {
     this.value = value;
     this.text = text;
     this.attributeList = attributeList;
+  }
+
+
+  /**
+   *  Constructor for the HtmlOption object
+   *
+   *@param  value          Description of the Parameter
+   *@param  text           Description of the Parameter
+   *@param  attributeList  Description of the Parameter
+   *@param  enabled        Description of the Parameter
+   */
+  public HtmlOption(String value, String text, HashMap attributeList, boolean enabled) {
+    this.value = value;
+    this.text = text;
+    this.attributeList = attributeList;
+    this.enabled = enabled;
   }
 
 
@@ -111,6 +128,26 @@ public class HtmlOption {
    */
   public HashMap getAttributeList() {
     return attributeList;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the HtmlOption object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the HtmlOption object
+   *
+   *@return    The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
   }
 
 

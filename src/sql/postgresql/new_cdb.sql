@@ -506,6 +506,18 @@ CREATE TABLE lookup_lists_lookup (
   category_id INT NOT NULL
 );
 
+CREATE TABLE category_editor_lookup (
+  id SERIAL PRIMARY KEY,
+  module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
+  constant_id INT NOT NULL,
+  table_name VARCHAR(60),
+  level INTEGER DEFAULT 0,
+  description TEXT,
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  category_id INT NOT NULL,
+  max_levels INT NOT NULL
+);
+
 /* Viewpoints */
 CREATE TABLE viewpoint(
   viewpoint_id SERIAL PRIMARY KEY,

@@ -1,7 +1,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*, org.aspcfs.utils.StringUtils" %>
-<jsp:useBean id="CategoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList" scope="request"/>
 <jsp:useBean id="ParentCategory" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraft" scope="request"/>
+<jsp:useBean id="categoryEditor" class="org.aspcfs.modules.admin.base.CategoryEditor" scope="request"/>
+<jsp:useBean id="categoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList" scope="request"/>
 <html>
 <head>
 </head>
@@ -21,8 +22,8 @@ function page_init() {
   var list = parent.document.getElementById('level' + level);
   list.options.length = 0;
 <%
-  Iterator list1 = CategoryList.iterator();
-  if(list1.hasNext()){
+  Iterator list1 = categoryList.iterator();
+  if (list1.hasNext()) {
     while (list1.hasNext()) {
       TicketCategoryDraft thisCategory = (TicketCategoryDraft)list1.next();
       String elementText = StringUtils.replacePattern(thisCategory.getDescription(), "'", "\\\\'");
@@ -30,24 +31,24 @@ function page_init() {
     list.options[list.length] = newOpt('<%= elementText %>', '<%= thisCategory.getId() %>', '<%= !(thisCategory.getEnabled()) ? "Red" : (thisCategory.getActualCatId() == -1 ? "blue" : "-none-") %>');
   <%
     }
-  }else{%>
+  } else {%>
     list.options[list.length] = newOpt("---------None---------", "-1");
- <%}%>
-  if(level == '0'){
-    resetList(parent.document.getElementById('level1'));
-    resetList(parent.document.getElementById('level2'));
-    resetList(parent.document.getElementById('level3'));
-  }else if(level == '1'){
-    resetList(parent.document.getElementById('level2'));
-    resetList(parent.document.getElementById('level3'));
-  }else if(level == '2'){
-    resetList(parent.document.getElementById('level3'));
+<%
   }
-  
+  // Since level and level + 1 are filled, erase the others
+  int thisLevel = Integer.parseInt(request.getParameter("level")) + 2;
+  if (thisLevel < categoryEditor.getMaxLevels()) {
+    for (int k = thisLevel; k < categoryEditor.getMaxLevels(); k++) {
+%>
+    resetList(parent.document.getElementById('level<%= k %>'));
+<%
+    }
+  }
   //disable the edit button if the parent is disabled
-  <% if(!ParentCategory.getEnabled()){ %>
+  if (!ParentCategory.getEnabled()) {
+%>
       parent.document.getElementById('edit' + level).disabled = true;
-  <% } %>
+<%}%>
 }
 function resetList(list) {
   list.options.length = 0;

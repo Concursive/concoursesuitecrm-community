@@ -2,11 +2,14 @@
 <%@ page import="org.aspcfs.modules.admin.base.*,org.aspcfs.modules.troubletickets.base.*, java.util.*" %>
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
-<jsp:useBean id="CategoryEditor" class="org.aspcfs.modules.admin.base.CategoryEditor" scope="request"/>
-<jsp:useBean id="SubList1" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList" scope="request"/>
-<jsp:useBean id="SubList2" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList" scope="request"/>
-<jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList" scope="request"/>
-<jsp:useBean id="selectedCategories" class="java.util.HashMap" scope="session"/>
+<jsp:useBean id="categoryEditor" class="org.aspcfs.modules.admin.base.CategoryEditor" scope="request"/>
+<%
+  HashMap selectedCategories = (HashMap) request.getSession().getAttribute("selectedCategories" + categoryEditor.getConstantId());
+  //if (selectedCategories == null) {
+  //  selectedCategories = new HashMap();
+  //  request.getSession().setAttribute("selectedCategories" + categoryEditor.getConstantId(), selectedCategories);
+  //}
+%>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
 <%-- Trails --%>
@@ -16,7 +19,8 @@
 <a href="Admin.do">Admin</a> > 
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-Categories
+<a href="AdminCategories.do?command=Show&moduleId=<%= PermissionCategory.getId() %>&constantId=<%= request.getParameter("constantId") %>">Categories</a> >
+Editor
 </td>
 </tr>
 </table>
@@ -25,16 +29,15 @@ Categories
 function loadCategories(level) {
   var url = "";
   var categoryId =  document.getElementById('level' + level).options[document.getElementById('level' + level).selectedIndex].value;
-  
-  if(level < 3 && categoryId != -1){
-      url = "AdminCategories.do?command=CategoryJSList&categoryId=" + categoryId + '&level=' + level;
+  if (level < <%= categoryEditor.getMaxLevels() - 1 %> && categoryId != -1){
+      url = "AdminCategories.do?command=CategoryJSList&constantId=<%= request.getParameter("constantId") %>&categoryId=" + categoryId + '&level=' + level;
       window.frames['server_commands'].location.href=url;
       processButtons(level);
   }
 }
 
 function loadTopCategories() {
-  var url = "AdminCategories.do?command=CategoryJSList&categoryId=-1&level=-1";
+  var url = "AdminCategories.do?command=CategoryJSList&constantId=<%= request.getParameter("constantId") %>&categoryId=-1&level=-1";
   window.frames['server_commands'].location.href=url;
   processButtons('0');
 }
@@ -45,7 +48,7 @@ function editCategory(level){
   if(tmpLevel > -1){
     categoryId =  document.getElementById('level' + tmpLevel).options[document.getElementById('level' + tmpLevel).selectedIndex].value;
   }
-  var url = "AdminCategories.do?command=Modify&categoryId=" + categoryId + '&level=' + level;
+  var url = "AdminCategories.do?command=Modify&constantId=<%= request.getParameter("constantId") %>&categoryId=" + categoryId + '&level=' + level;
   popURL(url, 'Modify_Category','540','250','yes','no');
 }
 
@@ -57,7 +60,7 @@ function confirmReset(url, msg) {
 
 function processButtons(level){
   if(document.getElementById('level' + level).selectedIndex != -1){
-    for(i = (parseInt(level) + 1); i < 4; i++){
+    for (i = (parseInt(level) + 1); i < <%= categoryEditor.getMaxLevels() %>; i++){
       document.getElementById('edit' + i).disabled = true;
     }
    }
@@ -67,17 +70,17 @@ function processButtons(level){
 function activate(){
  var catList = document.getElementById('level0');
   if(catList.length > 0 && catList.options[0].value != -1){
-    confirmForward('AdminCategories.do?command=Activate&moduleId=<%= PermissionCategory.getId() %>');
+    confirmForward('AdminCategories.do?command=Activate&constantId=<%= request.getParameter("constantId") %>&moduleId=<%= PermissionCategory.getId() %>');
   }else{
     alert('No entries to activate');
   }
 }
 
 </script>
-<%--  This jsp is currently ticket specific but can be extended to make it generic  --%>
 <strong>Categories</strong>
-<% String param1 = "moduleId=" + PermissionCategory.getId();   %>
-<dhv:container name="categories" selected="draft categories" param="<%= param1 %>" style="tabs"/>
+<% String param1 = "moduleId=" + PermissionCategory.getId(); %>
+<% String param2 = "constantId=" + request.getParameter("constantId"); %>
+<dhv:container name="categories" selected="draft categories" param="<%= param1 + "|" + param2 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack" align="center">
@@ -86,57 +89,50 @@ function activate(){
           <td align="center">
             Level 1<br>
             <% int value = ((selectedCategories.get(new Integer(0)) != null) ? ((Integer) selectedCategories.get(new Integer(0))).intValue() : -1); 
-            CategoryEditor.getTopCategoryList().getCatListSelect().setSelectSize(10);
-            CategoryEditor.getTopCategoryList().setHtmlJsEvent("onChange=\"javascript:loadCategories('0');\"");
-            CategoryEditor.getTopCategoryList().getCatListSelect().addAttribute("style", "width: 150px");
+            categoryEditor.getTopCategoryList().getCatListSelect().setSelectSize(10);
+            categoryEditor.getTopCategoryList().setHtmlJsEvent("onChange=\"javascript:loadCategories('0');\"");
+            categoryEditor.getTopCategoryList().getCatListSelect().addAttribute("style", "width: 150px");
             %>
-            
-            <%= CategoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %><br>
+            <%= categoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %><br>
             <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit0" onClick="javascript:editCategory('0');"></dhv:permission>
           </td>
+<%-- Variably draw the rest of the editors --%>
+<%
+   for (int k = 1; k < categoryEditor.getMaxLevels(); k++) {
+     TicketCategoryDraftList thisSubList = (TicketCategoryDraftList) request.getAttribute("SubList" + k);
+     if (thisSubList == null) {
+       thisSubList = new TicketCategoryDraftList();
+     }
+%>
           <td align="center">
-            Level 2 <br>
-            <% value = ((selectedCategories.get(new Integer(1)) != null) ? ((Integer) selectedCategories.get(new Integer(1))).intValue() : -1);
-            SubList1.getCatListSelect().setSelectSize(10);
-            SubList1.getCatListSelect().addAttribute("onChange", "javascript:loadCategories('1');");
-            SubList1.getCatListSelect().addAttribute("style", "width: 150px");
-            %>
-            <%= SubList1.getHtmlSelect("level1", value) %><br>
-            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit1" onClick="javascript:editCategory('1');" disabled></dhv:permission>
+            Level <%= k + 1 %><br>
+<%
+            value = ((selectedCategories.get(new Integer(k)) != null) ? ((Integer) selectedCategories.get(new Integer(k))).intValue() : -1);
+            thisSubList.getCatListSelect().setSelectSize(10);
+            thisSubList.getCatListSelect().addAttribute("onChange", "javascript:loadCategories('" + k + "');");
+            thisSubList.getCatListSelect().addAttribute("style", "width: 150px");
+%>
+            <%= thisSubList.getHtmlSelect("level" + k, value) %><br>
+            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit<%= k %>" onClick="javascript:editCategory('<%= k %>');" disabled></dhv:permission>
           </td>
-          <td align="center">
-            Level 3<br>
-            <% value = ((selectedCategories.get(new Integer(2)) != null) ? ((Integer) selectedCategories.get(new Integer(2))).intValue() : -1);
-            SubList2.getCatListSelect().setSelectSize(10);
-            SubList2.getCatListSelect().addAttribute("onChange", "javascript:loadCategories('2');");
-            SubList2.getCatListSelect().addAttribute("style", "width: 150px");
-            %>
-            <%= SubList2.getHtmlSelect("level2", value) %><br>
-            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit2" onClick="javascript:editCategory('2');" disabled></dhv:permission>
-          </td>
-          <td align="center">
-            Level 4<br>
-            <%
-              SubList3.getCatListSelect().setSelectSize(10);
-              SubList3.getCatListSelect().addAttribute("style", "width: 150px");
-            %>
-            <%= SubList3.getHtmlSelect("level3", -1) %><br>
-            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit3" onClick="javascript:editCategory('3');" disabled></dhv:permission>
-          </td>
+<%
+   }
+%>
         </tr>
       </table>
     </td>
   </tr>
 </table>
-<dhv:permission name="admin-sysconfig-categories-edit"><br><input type="button" value="Revert to Active List" onClick="javascript:confirmReset('AdminCategories.do?command=Reset&moduleId=<%= PermissionCategory.getId() %>', 'You will lose all the changes made to the draft. Proceed ?');">
+<dhv:permission name="admin-sysconfig-categories-edit"><br>
+<input type="button" value="Revert to Active List" onClick="javascript:confirmReset('AdminCategories.do?command=Reset&constantId=<%= request.getParameter("constantId") %>&moduleId=<%= PermissionCategory.getId() %>', 'You will lose all the changes made to the draft. Proceed ?');">
 <input type="button" value="Activate Now" onClick="javascript:activate();"></dhv:permission>
 <%-- script to enable edit buttons if any categories are selected --%>
 <script>
 <%
-  HashMap categories  = CategoryEditor.getCategoryList();
+  HashMap categories  = categoryEditor.getCategoryList();
   boolean done = false;
   TicketCategoryDraft thisCat = null;
-  for (int k = 0; k < 4; k++) {
+  for (int k = 0; k < categoryEditor.getMaxLevels(); k++) {
     if (selectedCategories.get(new Integer(k)) != null) {
     thisCat = (TicketCategoryDraft) categories.get((Integer) (selectedCategories.get(new Integer(k))));
     if(thisCat.getParentCode() != 0){

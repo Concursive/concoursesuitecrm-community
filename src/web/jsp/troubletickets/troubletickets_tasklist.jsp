@@ -28,18 +28,12 @@ Tasks
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-<%= toHtml(TicketDetails.getCompanyName()) %></strong>
-<dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
+<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="tasks" param="<%= param1 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-        <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
-        &nbsp;<br>
-      </dhv:evaluate>
       <dhv:permission name="tickets-tickets-tasks-add">
       <a href="javascript:popURL('TroubleTicketTasks.do?command=Add&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a><br><br>
       </dhv:permission>

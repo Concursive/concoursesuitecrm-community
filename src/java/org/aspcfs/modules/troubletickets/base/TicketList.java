@@ -18,7 +18,8 @@ import java.util.Calendar;
  *
  *@author     chris
  *@created    December 5, 2001
- *@version    $Id$
+ *@version    $Id: TicketList.java,v 1.31.12.1 2004/01/30 16:35:15 kbhoopal Exp
+ *      $
  */
 public class TicketList extends ArrayList implements SyncableList {
   //sync api
@@ -34,6 +35,8 @@ public class TicketList extends ArrayList implements SyncableList {
   private boolean onlyClosed = false;
   private int id = -1;
   private int orgId = -1;
+  private int serviceContractId = -1;
+  private int assetId = -1;
   private int department = -1;
   private int assignedTo = -1;
   private int excludeAssignedTo = -1;
@@ -331,6 +334,46 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
+   *  Sets the serviceContractId attribute of the TicketList object
+   *
+   *@param  tmp  The new serviceContractId value
+   */
+  public void setServiceContractId(int tmp) {
+    this.serviceContractId = tmp;
+  }
+
+
+  /**
+   *  Sets the serviceContractId attribute of the TicketList object
+   *
+   *@param  tmp  The new serviceContractId value
+   */
+  public void setServiceContractId(String tmp) {
+    this.serviceContractId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the assetId attribute of the TicketList object
+   *
+   *@param  tmp  The new assetId value
+   */
+  public void setAssetId(int tmp) {
+    this.assetId = tmp;
+  }
+
+
+  /**
+   *  Sets the assetId attribute of the TicketList object
+   *
+   *@param  tmp  The new assetId value
+   */
+  public void setAssetId(String tmp) {
+    this.assetId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the PagedListInfo attribute of the TicketList object
    *
    *@param  tmp  The new PagedListInfo value
@@ -537,6 +580,26 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
+   *  Gets the serviceContractId attribute of the TicketList object
+   *
+   *@return    The serviceContractId value
+   */
+  public int getServiceContractId() {
+    return serviceContractId;
+  }
+
+
+  /**
+   *  Gets the assetId attribute of the TicketList object
+   *
+   *@return    The assetId value
+   */
+  public int getAssetId() {
+    return assetId;
+  }
+
+
+  /**
    *  Gets the Id attribute of the TicketList object
    *
    *@return    The Id value
@@ -644,7 +707,18 @@ public class TicketList extends ArrayList implements SyncableList {
         "tp.description AS ticpri, " +
         "ts.description AS ticsev, " +
         "tc.description AS catname, " +
-        "lu_ts.description AS sourcename " +
+        "lu_ts.description AS sourcename, " +
+        "sc.contract_number AS contractnumber, " +
+        "sc.total_hours_remaining AS hoursremaining, " +
+        "sc.current_start_date AS contractstartdate, " +
+        "sc.current_end_date AS contractenddate, " +
+        "sc.onsite_service_model AS contractonsiteservicemodel, " +
+        "a.serial_number AS serialnumber, " +
+        "a.manufacturer AS assetmanufacturer, " +
+        "a.vendor AS assetvendor, " +
+        "a.model_version AS modelversion, " +
+        "a.location AS assetlocation, " +
+        "a.onsite_service_model AS assetonsiteservicemodel " +
         "FROM ticket t " +
         "LEFT JOIN organization o ON (t.org_id = o.org_id) " +
         "LEFT JOIN lookup_department ld ON (t.department_code = ld.code) " +
@@ -652,6 +726,8 @@ public class TicketList extends ArrayList implements SyncableList {
         "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
         "LEFT JOIN ticket_category tc ON (t.cat_code = tc.id) " +
         "LEFT JOIN lookup_ticketsource lu_ts ON (t.source_code = lu_ts.code) " +
+        "LEFT JOIN service_contract sc ON (t.link_contract_id = sc.contract_id) " +
+        "LEFT JOIN asset a ON (t.link_asset_id = a.asset_id) " +
         "WHERE t.ticketid > 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -688,6 +764,7 @@ public class TicketList extends ArrayList implements SyncableList {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@param  basePath          Description of the Parameter
    *@exception  SQLException  Description of Exception
    */
   public void delete(Connection db, String basePath) throws SQLException {
@@ -750,6 +827,12 @@ public class TicketList extends ArrayList implements SyncableList {
     }
     if (orgId > -1) {
       sqlFilter.append("AND t.org_id = ? ");
+    }
+    if (serviceContractId > -1) {
+      sqlFilter.append("AND t.link_contract_id = ? ");
+    }
+    if (assetId > -1) {
+      sqlFilter.append("AND t.link_asset_id = ? ");
     }
     if (department > -1) {
       if (unassignedToo) {
@@ -841,6 +924,12 @@ public class TicketList extends ArrayList implements SyncableList {
     if (orgId > -1) {
       pst.setInt(++i, orgId);
     }
+    if (serviceContractId > -1) {
+      pst.setInt(++i, serviceContractId);
+    }
+    if (assetId > -1) {
+      pst.setInt(++i, assetId);
+    }
     if (department > -1) {
       pst.setInt(++i, department);
     }
@@ -925,8 +1014,20 @@ public class TicketList extends ArrayList implements SyncableList {
     if (moduleId == Constants.ACCOUNTS) {
       sql.append("AND t.org_id = ?");
     }
+    if (moduleId == Constants.SERVICE_CONTRACTS) {
+      sql.append("AND t.link_contract_id = ?");
+    }
+    if (moduleId == Constants.ASSETS) {
+      sql.append("AND t.link_asset_id = ?");
+    }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     if (moduleId == Constants.ACCOUNTS) {
+      pst.setInt(1, itemId);
+    }
+    if (moduleId == Constants.SERVICE_CONTRACTS) {
+      pst.setInt(1, itemId);
+    }
+    if (moduleId == Constants.ASSETS) {
       pst.setInt(1, itemId);
     }
     ResultSet rs = pst.executeQuery();

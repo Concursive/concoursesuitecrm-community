@@ -56,19 +56,19 @@ View Tickets
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
        <a href="javascript:displayMenu('menuTicket', '<%= assignedTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-		<td width="15" valign="top" nowrap>
+		<td width="10%" valign="top" nowrap>
 			<a href="TroubleTickets.do?command=Details&id=<%= assignedTic.getId() %>"><%= assignedTic.getPaddedId() %></a>
 		</td>
-		<td width="10" valign="top" nowrap>
+		<td width="12%" valign="top" nowrap>
 			<%= toHtml(assignedTic.getPriorityName()) %>
 		</td>
-		<td width="8%" align="right" valign="top" nowrap>
+		<td width="6%" align="right" valign="top" nowrap>
 			<%= assignedTic.getAgeOf() %>
 		</td>
-		<td width="90%" valign="top">
+		<td width="50%" valign="top">
 			<%= toHtml(assignedTic.getCompanyName()) %><dhv:evaluate exp="<%= !(assignedTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td width="150" nowrap valign="top">
+		<td width="20%" nowrap valign="top">
 			<dhv:username id="<%= assignedTic.getAssignedTo() %>" default="-- unassigned --"/><dhv:evaluate exp="<%= !(assignedTic.getHasEnabledOwnerAccount()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 	</tr>
@@ -141,19 +141,19 @@ View Tickets
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
        <a href="javascript:displayMenu('menuTicket', '<%= openTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-		<td width="15" valign="top" nowrap class="row<%= rowid %>">
+		<td width="10%" valign="top" nowrap class="row<%= rowid %>">
 			<a href="TroubleTickets.do?command=Details&id=<%= openTic.getId() %>"><%= openTic.getPaddedId() %></a>
 		</td>
-		<td width="10" valign="top" nowrap class="row<%= rowid %>">
+		<td width="12%" valign="top" nowrap class="row<%= rowid %>">
 			<%= toHtml(openTic.getPriorityName()) %>
 		</td>
-		<td width="8%" align="right" valign="top" nowrap class="row<%= rowid %>">
+		<td width="6%" align="right" valign="top" nowrap class="row<%= rowid %>">
 			<%= openTic.getAgeOf() %>
 		</td>
-		<td width="90%" valign="top" class="row<%= rowid %>">
+		<td width="50%" valign="top" class="row<%= rowid %>">
 			<%= toHtml(openTic.getCompanyName()) %><dhv:evaluate exp="<%= !(openTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td width="150" nowrap valign="top" class="row<%= rowid %>">
+		<td width="20%" nowrap valign="top" class="row<%= rowid %>">
       <dhv:evaluate if="<%= openTic.isAssigned() %>">
         <dhv:username id="<%= openTic.getAssignedTo() %>" default="-- unassigned --"/>
       </dhv:evaluate>
@@ -232,19 +232,19 @@ View Tickets
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
        <a href="javascript:displayMenu('menuTicket', '<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-		<td width="15" valign="top" nowrap>
+		<td width="10%" valign="top" nowrap>
 			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
 		</td>
-		<td width="10" valign="top" nowrap>
+		<td width="12%" valign="top" nowrap>
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
-		<td width="8%" align="right" valign="top" nowrap>
+		<td width="6%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>
 		</td>
-		<td width="90%" valign="top">
+		<td width="50%" valign="top">
 			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate exp="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td width="150" nowrap valign="top">
+		<td width="20%" nowrap valign="top">
       <dhv:evaluate exp="<%= thisTic.isAssigned() %>">
         <dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/>
       </dhv:evaluate>

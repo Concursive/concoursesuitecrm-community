@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.modules.admin.base.*,org.aspcfs.modules.troubletickets.base.*, java.util.*, org.aspcfs.utils.web.HtmlSelect" %>
-<jsp:useBean id="CategoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList"  scope="request"/>
+<jsp:useBean id="categoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList"  scope="request"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript">
@@ -163,7 +163,8 @@
     var params =
     'categories=' + escape(document.getElementById('categories').value) + 
     '&parentCode=' + <%= request.getParameter("categoryId") %> + 
-    '&level=' + <%= request.getParameter("level") %>;
+    '&level=' + <%= request.getParameter("level") %> +
+    '&constantId=' + <%= request.getParameter("constantId") %>;
     window.location.href = 'AdminCategories.do?command=Save&' + params;
   }
   
@@ -201,9 +202,9 @@
   <td align="center" valign="center" width="50%">
     <%
     int count = 0;
-    HtmlSelect itemListSelect = CategoryList.getCatListSelect();
+    HtmlSelect itemListSelect = categoryList.getCatListSelect();
     itemListSelect.setSelectSize(10);
-    Iterator i = CategoryList.iterator();
+    Iterator i = categoryList.iterator();
     if (i.hasNext()) {
       while (i.hasNext()) {
           TicketCategoryDraft thisCategory = (TicketCategoryDraft) i.next();
@@ -212,8 +213,8 @@
      <% 
         count++;
      }%>
-        <% CategoryList.setHtmlJsEvent("onChange=\"javascript:reset();\""); %>
-        <%= CategoryList.getHtmlSelect("itemSelect", -1) %>
+        <% categoryList.setHtmlJsEvent("onChange=\"javascript:reset();\""); %>
+        <%= categoryList.getHtmlSelect("itemSelect", -1) %>
     <%}else{%>
       <select name="itemSelect" id="itemSelect" size="10">
         <option value="-1">--------Item List-------</option>

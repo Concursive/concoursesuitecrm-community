@@ -58,7 +58,7 @@ public class SystemStatus {
   private SessionManager sessionManager = new SessionManager();
 
   //Category Editor
-  private CategoryEditor categoryEditor = new CategoryEditor();
+  private Map categoryEditorList = new HashMap();
 
   //Cached access types
   private HashMap accessTypes = new HashMap();
@@ -94,7 +94,6 @@ public class SystemStatus {
     buildHierarchyList(db);
     buildPreferences(db);
     buildRolePermissions(db);
-    buildCategoryLists(db);
   }
 
 
@@ -161,22 +160,33 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the categoryEditor attribute of the SystemStatus object
+   *  Gets the categoryEditorList attribute of the SystemStatus object
    *
-   *@param  categoryEditor  The new categoryEditor value
+   *@return    The categoryEditorList value
    */
-  public void setCategoryEditor(CategoryEditor categoryEditor) {
-    this.categoryEditor = categoryEditor;
+  public Map getCategoryEditorList() {
+    return categoryEditorList;
   }
 
 
   /**
    *  Gets the categoryEditor attribute of the SystemStatus object
    *
-   *@return    The categoryEditor value
+   *@param  db                Description of the Parameter
+   *@param  constantId        Description of the Parameter
+   *@return                   The categoryEditor value
+   *@exception  SQLException  Description of the Exception
    */
-  public CategoryEditor getCategoryEditor() {
-    return categoryEditor;
+  public CategoryEditor getCategoryEditor(Connection db, int constantId) throws SQLException {
+    synchronized (this) {
+      CategoryEditor categoryEditor = (CategoryEditor) categoryEditorList.get(new Integer(constantId));
+      if (categoryEditor == null) {
+        categoryEditor = new CategoryEditor(db, constantId);
+        categoryEditor.build(db);
+        categoryEditorList.put(new Integer(constantId), categoryEditor);
+      }
+      return categoryEditor;
+    }
   }
 
 
@@ -347,17 +357,6 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public void buildCategoryLists(Connection db) throws SQLException {
-    categoryEditor.build(db);
-  }
-
-
-  /**
    *  A method to reload the user hierarchy, typically used when a user is added
    *  or changed in the hierarchy.
    *
@@ -438,9 +437,9 @@ public class SystemStatus {
             if (configNode != null &&
                 configNode.getNodeType() == Node.ELEMENT_NODE &&
                 "config".equals(((Element) configNode).getTagName()) &&
-                (((Element) configNode).getAttribute("enabled") == null || 
-                 "".equals(((Element) configNode).getAttribute("enabled")) ||
-                 "true".equals(((Element) configNode).getAttribute("enabled")))) {
+                (((Element) configNode).getAttribute("enabled") == null ||
+                "".equals(((Element) configNode).getAttribute("enabled")) ||
+                "true".equals(((Element) configNode).getAttribute("enabled")))) {
               //For each config name, create a map for each of the params
               String configName = ((Element) configNode).getAttribute("name");
               Map preferenceGroup = null;
@@ -611,17 +610,6 @@ public class SystemStatus {
       }
     }
     return (AccessTypeList) accessTypes.get(new Integer(accessId));
-  }
-
-
-  /**
-   *  Gets the categoryEditor attribute of the SystemStatus object
-   *
-   *@param  db  Description of the Parameter
-   *@return     The categoryEditor value
-   */
-  public CategoryEditor getCategoryEditor(Connection db) {
-    return categoryEditor;
   }
 
 

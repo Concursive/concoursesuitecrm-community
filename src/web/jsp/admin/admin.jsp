@@ -9,8 +9,12 @@ Admin
 </tr>
 </table>
 <%-- End Trails --%>
-Manage Dark Horse CRM by reviewing system usage, configuring specific modules, and configuring system parameters.<br>
-&nbsp;<br>
+<table class="note">
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td>Manage Dark Horse CRM by reviewing system usage, configuring specific modules, and configuring system parameters.</td>
+  </tr>
+</table>
 <dhv:permission name="admin-users-view,admin-roles-view">
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>

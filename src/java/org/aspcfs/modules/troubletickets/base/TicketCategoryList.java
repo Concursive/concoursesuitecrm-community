@@ -1,6 +1,4 @@
 //Copyright 2001-2002 Dark Horse Ventures
-//The createFilter method and the prepareFilter method need to have the same
-//number of parameters if modified.
 
 package org.aspcfs.modules.troubletickets.base;
 
@@ -21,7 +19,6 @@ import org.aspcfs.modules.base.Constants;
  */
 public class TicketCategoryList extends Vector {
   HtmlSelect catListSelect = new HtmlSelect();
-
   private PagedListInfo pagedListInfo = null;
   private int parentCode = -1;
   private int catLevel = -1;
@@ -404,5 +401,33 @@ public class TicketCategoryList extends Vector {
     return i;
   }
 
+
+  /**
+   *  Returns just an HtmlSelect object without generating the Html output
+   *
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public HtmlSelect getHtmlSelect(int defaultKey) {
+    HtmlSelect catListSelect = new HtmlSelect();
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      TicketCategory thisCat = (TicketCategory) i.next();
+      String elementText = thisCat.getDescription();
+      if (thisCat.getEnabled()) {
+        catListSelect.addItem(thisCat.getId(), elementText);
+      } else if ((!thisCat.getEnabled() && thisCat.getId() == defaultKey) || includeDisabled) {
+        if (catListSelect.getSelectSize() > 1) {
+          HashMap colorAttribute = new HashMap();
+          colorAttribute.put("style", "color: red");
+          catListSelect.addItem(thisCat.getId(), elementText, colorAttribute, false);
+        } else {
+          elementText += "*";
+          catListSelect.addItem(thisCat.getId(), elementText);
+        }
+      }
+    }
+    return catListSelect;
+  }
 }
 

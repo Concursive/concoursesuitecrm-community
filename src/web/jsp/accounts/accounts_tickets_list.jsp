@@ -41,20 +41,20 @@ Tickets
     <th>
       <strong>Action</strong>
     </th>
-    <th valign="center" align="left">
+    <th width="30%" valign="center" align="left">
       <strong>Number</strong>
     </th>
-    <th>
+    <th width="20%" nowrap>
       <b><strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=pri_code">Priority</a></strong></b>
       <%= AccountTicketInfo.getSortIcon("pri_code") %>
     </th>
-    <th>
+    <th width="15%">
       <b>Age</b>
     </th>
-		<th>
+		<th width="20%">
       <b>Assigned&nbsp;To</b>
     </th>
-    <th>
+    <th width="20%">
       <b>Modified</b>
     </th>
     </tr>
@@ -77,7 +77,7 @@ Tickets
     <td width="15" valign="top" nowrap>
 			<a href="AccountTickets.do?command=TicketDetails&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
 		</td>
-		<td width="10" valign="top" nowrap>
+		<td valign="top" nowrap>
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
 		<td width="8%" align="right" valign="top" nowrap>

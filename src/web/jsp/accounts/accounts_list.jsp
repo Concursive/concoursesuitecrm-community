@@ -101,7 +101,8 @@ Search Results
 <%} else {%>
   <tr class="containerBody">
     <td colspan="5">
-      No  Accounts found for the specified search parameters. <a href="Accounts.do?command=SearchForm">Modify Search</a>. 
+      No accounts found with the specified search parameters.<br />
+      <a href="Accounts.do?command=SearchForm">Modify Search</a>.
     </td>
   </tr>
 <%}%>

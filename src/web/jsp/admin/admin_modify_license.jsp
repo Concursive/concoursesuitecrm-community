@@ -15,7 +15,9 @@ License
 </table>
 <%-- End Trails --%>
 <table class="note"><tr><td>
-<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>Have
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td><b>Have
 you upgraded your license?</b><br />
 Every Dark Horse CRM application requires a license agreement from Dark Horse Ventures.
 If changes have been made to the license, for example, 

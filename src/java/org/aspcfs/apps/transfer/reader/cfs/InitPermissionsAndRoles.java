@@ -14,28 +14,75 @@ import org.aspcfs.apps.transfer.*;
 import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
 import org.aspcfs.utils.*;
 
+/**
+ *  Processes the permissions.xml file, turns the data into objects and can be
+ *  used by a writer. Specifically, this file is used during the installation of
+ *  a new database.
+ *
+ *@author     matt rajkowski
+ *@created    January 23, 2003
+ *@version    $Id$
+ */
 public class InitPermissionsAndRoles implements DataReader {
   public final static String fs = System.getProperty("file.separator");
   private String processConfigFile = "InitPermissions.xml";
-  
-  public void setProcessConfigFile(String tmp) { this.processConfigFile = tmp; }
-  public String getProcessConfigFile() { return processConfigFile; }
-  
+
+
+  /**
+   *  Sets the processConfigFile attribute of the InitPermissionsAndRoles object
+   *
+   *@param  tmp  The new processConfigFile value
+   */
+  public void setProcessConfigFile(String tmp) {
+    this.processConfigFile = tmp;
+  }
+
+
+  /**
+   *  Gets the processConfigFile attribute of the InitPermissionsAndRoles object
+   *
+   *@return    The processConfigFile value
+   */
+  public String getProcessConfigFile() {
+    return processConfigFile;
+  }
+
+
+  /**
+   *  Gets the version attribute of the InitPermissionsAndRoles object
+   *
+   *@return    The version value
+   */
   public double getVersion() {
     return 1.0d;
   }
 
 
+  /**
+   *  Gets the name attribute of the InitPermissionsAndRoles object
+   *
+   *@return    The name value
+   */
   public String getName() {
     return "Dark Horse CRM Permissions and Roles XML Reader";
   }
 
 
+  /**
+   *  Gets the description attribute of the InitPermissionsAndRoles object
+   *
+   *@return    The description value
+   */
   public String getDescription() {
     return "Reads permissions and categories; reads in associated roles";
   }
 
 
+  /**
+   *  Gets the configured attribute of the InitPermissionsAndRoles object
+   *
+   *@return    The configured value
+   */
   public boolean isConfigured() {
     boolean configOK = true;
 
@@ -43,7 +90,7 @@ public class InitPermissionsAndRoles implements DataReader {
     if (tmpFile != null && !"".equals(tmpFile)) {
       processConfigFile = tmpFile;
     }
-    
+
     File configFile = new File(processConfigFile);
     if (!configFile.exists()) {
       logger.info("InitPermissionsAndRoles-> Config: process config file not found: " + processConfigFile);
@@ -54,13 +101,19 @@ public class InitPermissionsAndRoles implements DataReader {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  writer  Description of the Parameter
+   *@return         Description of the Return Value
+   */
   public boolean execute(DataWriter writer) {
     boolean processOK = true;
-    
+
     try {
       File configFile = new File(processConfigFile);
       XMLUtils xml = new XMLUtils(configFile);
-      
+
       //Read in all of the permission categories (categories and permissions)
       ArrayList categoryList = new ArrayList();
       xml.getAllChildren(xml.getFirstChild("permissions"), "category", categoryList);
@@ -68,12 +121,12 @@ public class InitPermissionsAndRoles implements DataReader {
       Comparator comparator = new CategoryElementComparator();
       Object sortArray[] = categoryList.toArray();
       Arrays.sort(sortArray, comparator);
-      
+
       ArrayList sortedCategoryList = new ArrayList();
       for (int i = 0; i < sortArray.length; i++) {
         sortedCategoryList.add((Element) sortArray[i]);
       }
-      
+
       //Insert the category, then insert the permission, keep a hashmap of permission IDs for
       //processing roles
       HashMap permissionIds = new HashMap();
@@ -104,7 +157,7 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.addField("categories", (String) category.getAttribute("categories"));
         processOK = writer.save(thisRecord);
         int categoryId = Integer.parseInt(writer.getLastResponse());
-        
+
         //Insert any permissions under this category
         ArrayList permissionList = new ArrayList();
         XMLUtils.getAllChildren(category, "permission", permissionList);
@@ -142,7 +195,7 @@ public class InitPermissionsAndRoles implements DataReader {
           int permissionId = Integer.parseInt(writer.getLastResponse());
           permissionIds.put((String) permission.getAttribute("name"), new Integer(permissionId));
         }
-        
+
         //Insert any folders under this category
         ArrayList folderList = new ArrayList();
         XMLUtils.getAllChildren(category, "folder", folderList);
@@ -160,7 +213,7 @@ public class InitPermissionsAndRoles implements DataReader {
           folderRecord.addField("description", (String) folder.getAttribute("description"));
           writer.save(folderRecord);
         }
-        
+
         //Insert any lookups under this category
         ArrayList lookupList = new ArrayList();
         XMLUtils.getAllChildren(category, "lookup", lookupList);
@@ -181,7 +234,7 @@ public class InitPermissionsAndRoles implements DataReader {
           lookupRecord.addField("categoryId", uniqueCategoryId);
           writer.save(lookupRecord);
         }
-        
+
         //Insert any reports under this category
         ArrayList reportList = new ArrayList();
         XMLUtils.getAllChildren(category, "report", reportList);
@@ -208,8 +261,29 @@ public class InitPermissionsAndRoles implements DataReader {
           reportRecord.addField("modifiedBy", "0");
           writer.save(reportRecord);
         }
+
+        //Insert any multiple categories under this category
+        ArrayList multipleCategory = new ArrayList();
+        XMLUtils.getAllChildren(category, "multipleCategory", multipleCategory);
+        Iterator multipleItems = multipleCategory.iterator();
+        int multipleLevel = 0;
+        while (multipleItems.hasNext()) {
+          multipleLevel = multipleLevel + 10;
+          Element multiple = (Element) multipleItems.next();
+          DataRecord multipleRecord = new DataRecord();
+          multipleRecord.setName("multipleCategory");
+          multipleRecord.setAction("insert");
+          multipleRecord.addField("moduleId", String.valueOf(categoryId));
+          multipleRecord.addField("categoryId", uniqueCategoryId);
+          multipleRecord.addField("constantId", (String) multiple.getAttribute("constantId"));
+          multipleRecord.addField("table", (String) multiple.getAttribute("table"));
+          multipleRecord.addField("level", String.valueOf(multipleLevel));
+          multipleRecord.addField("description", (String) multiple.getAttribute("description"));
+          multipleRecord.addField("maxLevels", (String) multiple.getAttribute("maxLevels"));
+          writer.save(multipleRecord);
+        }
       }
-      
+
       //Read in all of the roles and associate with previously read in permissions so IDs match
       ArrayList roleList = new ArrayList();
       xml.getAllChildren(xml.getFirstChild("roles"), "role", roleList);
@@ -224,7 +298,7 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.addField("description", (String) role.getAttribute("description"));
         writer.save(thisRecord);
         int roleId = Integer.parseInt(writer.getLastResponse());
-        
+
         //Process the permissions within the role
         ArrayList rolePermissionList = new ArrayList();
         xml.getAllChildren(role, "permission", rolePermissionList);
@@ -250,8 +324,23 @@ public class InitPermissionsAndRoles implements DataReader {
     }
     return processOK;
   }
-  
+
+
+  /**
+   *  Used for comparing this object by id
+   *
+   *@author     matt rajkowski
+   *@created    January 23, 2003
+   *@version    $Id$
+   */
   class CategoryElementComparator implements Comparator {
+    /**
+     *  Description of the Method
+     *
+     *@param  left   Description of the Parameter
+     *@param  right  Description of the Parameter
+     *@return        Description of the Return Value
+     */
     public int compare(Object left, Object right) {
       int a = Integer.parseInt((String) ((Element) left).getAttribute("id"));
       int b = Integer.parseInt((String) ((Element) right).getAttribute("id"));

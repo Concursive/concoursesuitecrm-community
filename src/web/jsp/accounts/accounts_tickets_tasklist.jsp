@@ -36,15 +36,12 @@ Tasks
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
   	<td class="containerBack">
+        <%@ include file="accounts_ticket_header_include.jsp" %>
         <% String param2 = "id=" + TicketDetails.getId(); %>
-        <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>
         [ <dhv:container name="accountstickets" selected="tasks" param="<%= param2 %>"/> ]
-        <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-          <br><font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-        </dhv:evaluate><br>
+        <br>
         <dhv:permission name="accounts-accounts-tickets-tasks-add">
         <br>
-        <%-- display all tasks --%>
         <a  href="javascript:popURL('AccountTicketTasks.do?command=Add&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a><br>
         </dhv:permission>
         &nbsp;<br>

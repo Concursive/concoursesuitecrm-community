@@ -37,13 +37,18 @@ public final class AccountTicketTasks extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-tickets-tasks-view")) {
       return ("PermissionError");
     }
+    // Parameters
     String ticketId = context.getRequest().getParameter("ticketId");
-    Connection db = null;
     TaskList taskList = new TaskList();
+    Connection db = null;
+    // Paged List
+    PagedListInfo ticTaskListInfo = this.getPagedListInfo(context, "AccountTicketTaskListInfo");
+    ticTaskListInfo.setItemsPerPage(0);
     try {
       db = this.getConnection(context);
       //Load the task list
       taskList.setTicketId(Integer.parseInt(ticketId));
+      taskList.setPagedListInfo(ticTaskListInfo);
       taskList.buildList(db);
       context.getRequest().setAttribute("TaskList", taskList);
       //Load the ticket

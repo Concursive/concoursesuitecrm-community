@@ -359,8 +359,26 @@ A:visited:hover{color:#FF3300;}
   border-spacing: 0px;
   padding-bottom: 10px;
 }
+.note th {
+  vertical-align: top;
+  padding-top: 4px;
+  padding-left: 4px;
+  padding-right: 2px;
+  padding-bottom: 4px;
+  border-top: 1px solid #333;
+  border-left: 1px solid #333;
+  border-bottom: 1px solid #333;
+  background-color: #FFFDED;
+}
 .note td {
-  border: 1px solid #333;
+  width: 100%;
+  padding-top: 4px;
+  padding-left: 2px;
+  padding-right: 4px;
+  padding-bottom: 4px;
+  border-top: 1px solid #333;
+  border-right: 1px solid #333;
+  border-bottom: 1px solid #333;
   background-color: #FFFDED;
 }
 .pagedListTab {
@@ -371,4 +389,9 @@ A:visited:hover{color:#FF3300;}
   background-color: #fffbde;
   border-right: 1px solid #41413a;
 }
-
+.underlineSection td {
+  border-bottom: 1px #333 solid;
+}
+.overlineSection td {
+  border-top: 1px #333 solid;
+}

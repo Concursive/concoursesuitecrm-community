@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.TicketLog" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.*" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
@@ -14,6 +14,8 @@
 <jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function updateSubList1() {
@@ -40,6 +42,23 @@
     var url = "TroubleTickets.do?command=DepartmentJSList&departmentCode=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
+  function changeDivContent(divName, divContents) {
+    if(document.layers){
+      // Netscape 4 or equiv.
+      divToChange = document.layers[divName];
+      divToChange.document.open();
+      divToChange.document.write(divContents);
+      divToChange.document.close();
+    } else if(document.all){
+      // MS IE or equiv.
+      divToChange = document.all[divName];
+      divToChange.innerHTML = divContents;
+    } else if(document.getElementById){
+      // Netscape 6 or equiv.
+      divToChange = document.getElementById(divName);
+      divToChange.innerHTML = divContents;
+    }
+  }
   function checkForm(form) {
     formTest = true;
     message = "";
@@ -54,6 +73,10 @@
       return true;
     }
   }
+
+ function resetNumericFieldValue(fieldId){
+  document.getElementById(fieldId).value = -1;
+ }  
 </script>
 <body>
 <%-- Trails --%>
@@ -74,21 +97,14 @@ Modify Ticket
 <%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<% if (TicketDetails.getClosed() != null) { %>  
-  <br>
-  <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
-<%}%>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
 <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
+          <%@ include file="accounts_ticket_header_include.jsp" %>
           <% String param2 = "id=" + TicketDetails.getId(); %>
-          <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>
           [ <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/> ]
-          <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-            <br><font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-          </dhv:evaluate>
           <br><br>
         <form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" onSubmit="return checkForm(this);" method="post">    
         <% if (TicketDetails.getClosed() != null) { %>
@@ -123,6 +139,49 @@ Modify Ticket
               <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
             </td>
           </tr>
+          <tr class="containerBody">
+          <td class="formLabel">
+            Service Contract Number
+          </td>
+          <td>
+           <table cellspacing="0" cellpadding="0" border="0" class="empty">
+            <tr>
+              <td>
+                <div id="addServiceContract"><%= toHtml((TicketDetails.getContractId() != -1) ? TicketDetails.getServiceContractNumber() :"None Selected") %></div>
+              </td>
+              <td>
+                <input type="hidden" name="contractId" id="contractId" value="<%= TicketDetails.getContractId() %>">
+                &nbsp;
+                <%= showAttribute(request, "contractIdError") %>
+                [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%= TicketDetails.getOrgId() %>);">Select</a>]
+                &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+              </td>
+            </tr>
+          </table>
+         </td>
+        </tr>
+      
+        <tr class="containerBody">
+          <td class="formLabel">
+            Asset
+          </td>
+          <td>
+           <table cellspacing="0" cellpadding="0" border="0" class="empty">
+            <tr>
+              <td>
+                <div id="addAsset"><%= toHtml((TicketDetails.getAssetId() != -1) ? TicketDetails.getAssetSerialNumber():"None Selected")%></div>
+              </td>
+              <td>
+                <input type="hidden" name="assetId" id="assetId" value="<%=  TicketDetails.getAssetId() %>">
+                &nbsp;
+                <%= showAttribute(request, "assetIdError") %>
+                [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=all|my|disabled','contractId','addServiceContract', <%= TicketDetails.getOrgId() %>);">Select</a>]
+                &nbsp [<a href="javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+             </td>
+            </tr>
+          </table>
+         </td>
+        </tr>
           <tr class="containerBody">
             <td nowrap class="formLabel">
               Contact

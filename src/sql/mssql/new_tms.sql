@@ -82,10 +82,10 @@ CREATE TABLE ticket (
   level_code INT REFERENCES ticket_level(code),
   department_code INT REFERENCES lookup_department,
   source_code INT REFERENCES lookup_ticketsource(code),
-  cat_code INT,
-  subcat_code1 INT,
-  subcat_code2 INT,
-  subcat_code3 INT,
+  cat_code INT REFERENCES ticket_category(id),
+  subcat_code1 INT REFERENCES ticket_category(id),
+  subcat_code2 INT REFERENCES ticket_category(id),
+  subcat_code3 INT REFERENCES ticket_category(id),
   assigned_to INT REFERENCES access,
   comment TEXT,
   solution TEXT,
@@ -97,7 +97,9 @@ CREATE TABLE ticket (
   assigned_date DATETIME,
   est_resolution_date DATETIME,
   resolution_date DATETIME,
-  cause TEXT
+  cause TEXT,
+  link_contract_id INTEGER REFERENCES service_contract(contract_id),
+  link_asset_id INTEGER REFERENCES asset(asset_id)
 );
 
 CREATE INDEX "ticket_cidx" ON "ticket" ("assigned_to", "closed");
@@ -119,5 +121,54 @@ CREATE TABLE ticketlog (
   ,enteredby INT NOT NULL REFERENCES access(user_id)
   ,modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,modifiedby INT NOT NULL REFERENCES access(user_id)
+);
+
+CREATE TABLE ticket_csstm_form(
+  form_id INT IDENTITY PRIMARY KEY,
+  link_ticket_id INT REFERENCES ticket(ticketid), 
+  form_type VARCHAR(20),
+  phone_response_time VARCHAR(10),
+  engineer_response_time VARCHAR(10),
+  follow_up_required BIT DEFAULT 0,
+  follow_up_description VARCHAR(2048),
+  alert_date DATETIME,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  enabled BIT DEFAULT 1,
+  travel_towards_sc BIT DEFAULT 1,
+  labor_towards_sc BIT DEFAULT 1
+);
+
+CREATE TABLE ticket_activity_item(
+  item_id INT IDENTITY PRIMARY KEY,
+  link_form_id INT REFERENCES ticket_csstm_form(form_id),
+  activity_date DATETIME,
+  description TEXT,
+  travel_time FLOAT,
+  labor_time FLOAT,
+  travel_hours INT,
+  travel_minutes INT,
+  labor_hours INT,
+  labor_minutes INT
+);
+
+CREATE TABLE ticket_sun_form(
+  form_id INT IDENTITY PRIMARY KEY,
+  link_ticket_id INT REFERENCES ticket(ticketid), 
+  description_of_service TEXT,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  enabled BIT DEFAULT 1
+);
+
+CREATE TABLE trouble_asset_replacement(
+  replacement_id INT IDENTITY PRIMARY KEY,
+  link_form_id INT REFERENCES ticket_sun_form(form_id),
+  part_number VARCHAR(256),
+  part_description TEXT
 );
 

@@ -13,7 +13,9 @@ Modify Setting
 </table>
 <%-- End Trails --%>
 <table class="note"><tr><td>
-<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>Which 
+<tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td><b>Which 
 fax server should Dark Horse CRM use?</b><br />
 Users will have the
 capability to send faxes using Dark Horse CRM.<br />

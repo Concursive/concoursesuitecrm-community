@@ -13,6 +13,8 @@
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
@@ -55,7 +57,7 @@
       formTest = false;
     }
     if (form.problem.value == "") { 
-      message += "- Check that <dhv:label name="ticket.issue">Issue</dhv:label> is entered\r\n";
+      message += "- <dhv:label name="ticket.issue">Issue</dhv:label> is required\r\n";
       formTest = false;
     }
     if (formTest == false) {
@@ -88,11 +90,18 @@
       divToChange = document.getElementById(divName);
       divToChange.innerHTML = divContents;
     }
-    //
+    //when the content of any of the select items changes, do something here
     if(document.forms['addticket'].orgId.value != '-1'){
       updateContactList();
     }
-	}
+    //reset the sc and asset
+    if (divName == 'changeaccount') {
+      changeDivContent('addServiceContract','None Selected');
+      resetNumericFieldValue('contractId');
+      changeDivContent('addAsset','None Selected');
+      resetNumericFieldValue('assetId');
+    }
+  }
   
   function addNewContact(){
     <dhv:permission name="accounts-accounts-contacts-add">
@@ -128,6 +137,11 @@
       }
     }
   }
+  
+ function resetNumericFieldValue(fieldId){
+  document.getElementById(fieldId).value = -1;
+ }
+  
 </script>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
 	<tr>
@@ -164,6 +178,48 @@
       </table>
     </td>
 	</tr>	
+  <tr class="containerBody">
+    <td class="formLabel">
+      Service Contract Number
+    </td>
+    <td>
+     <table cellspacing="0" cellpadding="0" border="0" class="empty">
+      <tr>
+        <td>
+          <div id="addServiceContract"><%= (TicketDetails.getContractId() != -1) ? TicketDetails.getServiceContractNumber() :"None Selected" %></div>
+        </td>
+        <td>
+          <input type="hidden" name="contractId" id="contractId" value="<%=  TicketDetails.getContractId() %>">
+          &nbsp;
+          <%= showAttribute(request, "contractIdError") %>
+          [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled');">Select</a>]
+          &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+        </td>
+      </tr>
+    </table>
+   </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Asset
+    </td>
+    <td>
+     <table cellspacing="0" cellpadding="0" border="0" class="empty">
+      <tr>
+        <td>
+          <div id="addAsset"><%= (TicketDetails.getAssetId() != -1) ? TicketDetails.getAssetSerialNumber() :"None Selected" %></div>
+        </td>
+        <td>
+          <input type="hidden" name="assetId" id="assetId" value="<%=  TicketDetails.getAssetId() %>">
+          &nbsp;
+          <%= showAttribute(request, "assetIdError") %>
+          [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=all|my|disabled','contractId','addServiceContract');">Select</a>]
+          &nbsp [<a href="javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+        </td>
+      </tr>
+    </table>
+   </td>
+  </tr>
 	<tr>
     <td class="formLabel">
       Contact
@@ -201,6 +257,7 @@
           <td>
             <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
             <input type="hidden" name="refresh" value="-1">
+            <input type="hidden" name="close" value="">
           </td>
           <td valign="top">
             <font color="red">*</font> <%= showAttribute(request, "problemError") %>
@@ -234,7 +291,6 @@
     </td>
     <td>
       <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
-      <input type="hidden" name="close" value="">
     </td>
 	</tr>
 </dhv:include>

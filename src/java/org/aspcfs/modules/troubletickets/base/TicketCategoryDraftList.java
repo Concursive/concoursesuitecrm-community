@@ -10,7 +10,8 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
 
 /**
- *  Description of the Class
+ *  NOTE: This class is not dependent on tickets anymore and is used for working
+ *  on drafts for Category objects.
  *
  *@author     akhi_m
  *@created    May 23, 2003
@@ -18,7 +19,6 @@ import org.aspcfs.modules.base.Constants;
  */
 public class TicketCategoryDraftList extends ArrayList {
   HtmlSelect catListSelect = new HtmlSelect();
-
   private PagedListInfo pagedListInfo = null;
   private int parentCode = -1;
   private int catLevel = -1;
@@ -30,8 +30,6 @@ public class TicketCategoryDraftList extends ArrayList {
 
   /**
    *  Constructor for the TicketCategoryDraftList object
-   *
-   *@since
    */
   public TicketCategoryDraftList() { }
 
@@ -40,7 +38,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Sets the PagedListInfo attribute of the TicketCategoryDraftList object
    *
    *@param  tmp  The new PagedListInfo value
-   *@since
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -51,7 +48,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Sets the HtmlJsEvent attribute of the TicketCategoryDraftList object
    *
    *@param  htmlJsEvent  The new htmlJsEvent value
-   *@since
    */
   public void setHtmlJsEvent(String htmlJsEvent) {
     this.htmlJsEvent = htmlJsEvent;
@@ -62,7 +58,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Sets the CatListSelect attribute of the TicketCategoryDraftList object
    *
    *@param  catListSelect  The new CatListSelect value
-   *@since
    */
   public void setCatListSelect(HtmlSelect catListSelect) {
     this.catListSelect = catListSelect;
@@ -73,7 +68,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Sets the ParentCode attribute of the TicketCategoryDraftList object
    *
    *@param  tmp  The new ParentCode value
-   *@since
    */
   public void setParentCode(int tmp) {
     this.parentCode = tmp;
@@ -84,7 +78,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Sets the ParentCode attribute of the TicketCategoryDraftList object
    *
    *@param  tmp  The new ParentCode value
-   *@since
    */
   public void setParentCode(String tmp) {
     this.parentCode = Integer.parseInt(tmp);
@@ -95,7 +88,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Sets the CatLevel attribute of the TicketCategoryDraftList object
    *
    *@param  catLevel  The new CatLevel value
-   *@since
    */
   public void setCatLevel(int catLevel) {
     this.catLevel = catLevel;
@@ -106,7 +98,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Sets the CatLevel attribute of the TicketCategoryDraftList object
    *
    *@param  catLevel  The new CatLevel value
-   *@since
    */
   public void setCatLevel(String catLevel) {
     this.catLevel = Integer.parseInt(catLevel);
@@ -167,7 +158,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Gets the CatListSelect attribute of the TicketCategoryDraftList object
    *
    *@return    The CatListSelect value
-   *@since
    */
   public HtmlSelect getCatListSelect() {
     return catListSelect;
@@ -178,7 +168,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Gets the HtmlJsEvent attribute of the TicketCategoryDraftList object
    *
    *@return    The HtmlJsEvent value
-   *@since
    */
   public String getHtmlJsEvent() {
     return htmlJsEvent;
@@ -190,7 +179,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *
    *@param  selectName  Description of Parameter
    *@return             The HtmlSelect value
-   *@since
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -201,7 +189,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Gets the CatLevel attribute of the TicketCategoryDraftList object
    *
    *@return    The CatLevel value
-   *@since
    */
   public int getCatLevel() {
     return catLevel;
@@ -212,7 +199,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Gets the PagedListInfo attribute of the TicketCategoryDraftList object
    *
    *@return    The PagedListInfo value
-   *@since
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -223,7 +209,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Gets the ParentCode attribute of the TicketCategoryDraftList object
    *
    *@return    The ParentCode value
-   *@since
    */
   public int getParentCode() {
     return parentCode;
@@ -246,7 +231,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *@param  selectName  Description of Parameter
    *@param  defaultKey  Description of Parameter
    *@return             The HtmlSelect value
-   *@since
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     Iterator i = this.iterator();
@@ -260,12 +244,12 @@ public class TicketCategoryDraftList extends ArrayList {
         HashMap colorAttribute = new HashMap();
         if (!(thisCat.getEnabled())) {
           colorAttribute.put("style", "color: red");
-        }else if(thisCat.getActualCatId() == -1){
+        } else if (thisCat.getActualCatId() == -1) {
           colorAttribute.put("style", "color: blue");
         }
         catListSelect.addItem(
-              thisCat.getId(),
-              elementText, colorAttribute);
+            thisCat.getId(),
+            elementText, colorAttribute);
       }
     } else {
       catListSelect.addItem(-1, "---------None---------");
@@ -281,24 +265,21 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@param  tableName         Description of the Parameter
    *@exception  SQLException  Description of Exception
-   *@since
    */
-  public void buildList(Connection db) throws SQLException {
-
+  public void buildList(Connection db, String tableName) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM ticket_category_draft tc " +
+        "FROM " + tableName + "_draft tc " +
         "WHERE tc.id > -1 ");
 
     createFilter(sqlFilter);
@@ -347,16 +328,14 @@ public class TicketCategoryDraftList extends ArrayList {
     }
     sqlSelect.append(
         "tc.* " +
-        "FROM ticket_category_draft tc " +
+        "FROM " + tableName + "_draft tc " +
         "WHERE tc.id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -377,7 +356,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Description of the Method
    *
    *@param  sqlFilter  Description of Parameter
-   *@since
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -405,7 +383,6 @@ public class TicketCategoryDraftList extends ArrayList {
    *@param  pst               Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
-   *@since
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -426,14 +403,15 @@ public class TicketCategoryDraftList extends ArrayList {
    *  Delete the draft entries.
    *
    *@param  db                Description of the Parameter
+   *@param  baseTableName     Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public static boolean deleteDraft(Connection db) throws SQLException {
+  public static boolean deleteDraft(Connection db, String baseTableName) throws SQLException {
     try {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
-          "DELETE from ticket_category_draft ");
+      "DELETE from " + baseTableName + "_draft ");
       pst.execute();
       pst.close();
       db.commit();

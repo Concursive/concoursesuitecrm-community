@@ -351,8 +351,8 @@ public final class TroubleTickets extends CFSModule {
       return ("SystemError");
     }
   }
-  
-  
+
+
   /**
    *  Description of the Method
    *
@@ -503,42 +503,40 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDetails(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-view"))) {
+    if (!hasPermission(context, "tickets-tickets-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
     String ticketId = null;
-
     try {
+      // Parameters
       ticketId = context.getRequest().getParameter("id");
+      // Reset the pagedLists since this could be a new visit to this ticket
+      deletePagedListInfo(context, "TicketDocumentListInfo");
+      deletePagedListInfo(context, "SunListInfo");
+      deletePagedListInfo(context, "TMListInfo");
+      deletePagedListInfo(context, "CSSListInfo");
+      deletePagedListInfo(context, "TicketsFolderInfo");
+      deletePagedListInfo(context, "TicketTaskListInfo");
       db = this.getConnection(context);
+      // Load the ticket
       newTic = new Ticket();
       newTic.queryRecord(db, Integer.parseInt(ticketId));
-
-      //check whether or not the owner is an active User
+      // check whether or not the owner is an active User
       if (newTic.getAssignedTo() > -1) {
         newTic.checkEnabledOwnerAccount(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    addModuleBean(context, "View Tickets", "Ticket Details");
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("TicketDetails", newTic);
-      addRecentItem(context, newTic);
-      addModuleBean(context, "ViewTickets", "View Tickets");
-      return ("DetailsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("TicketDetails", newTic);
+    addRecentItem(context, newTic);
+    addModuleBean(context, "ViewTickets", "View Tickets");
+    return ("DetailsOK");
   }
 
 
@@ -558,7 +556,6 @@ public final class TroubleTickets extends CFSModule {
     Connection db = null;
     Ticket thisTic = null;
     String ticketId = null;
-
 
     try {
       ticketId = context.getRequest().getParameter("id");
@@ -739,7 +736,6 @@ public final class TroubleTickets extends CFSModule {
 
     TicketList ticList = new TicketList();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    String type = context.getRequest().getParameter("listFilter1");
 
     ticListInfo.setLink("TroubleTickets.do?command=SearchTickets");
     ticList.setPagedListInfo(ticListInfo);
@@ -763,9 +759,9 @@ public final class TroubleTickets extends CFSModule {
       }
 
       //set the status
-      if ("1".equals(type)) {
+      if (ticListInfo.getFilterKey("listFilter1") == 1){
         ticList.setOnlyOpen(true);
-      } else if ("2".equals(type)) {
+      } else if (ticListInfo.getFilterKey("listFilter1") == 2) {
         ticList.setOnlyClosed(true);
       }
 
@@ -949,20 +945,20 @@ public final class TroubleTickets extends CFSModule {
       LookupList severityList = new LookupList(db, "ticket_severity");
       severityList.addItem(0, "-- Any --");
       context.getRequest().setAttribute("SeverityList", severityList);
-      
+
       //Prepare priority list form data
       LookupList priorityList = new LookupList(db, "ticket_priority");
       priorityList.addItem(0, "-- Any --");
       context.getRequest().setAttribute("PriorityList", priorityList);
       addModuleBean(context, "SearchTickets", "Tickets Search");
-      
+
       //check if account/owner is already selected, if so build it
       if (!"".equals(ticListInfo.getSearchOptionValue("searchcodeOrgId")) && !"-1".equals(ticListInfo.getSearchOptionValue("searchcodeOrgId"))) {
         String orgId = ticListInfo.getSearchOptionValue("searchcodeOrgId");
         Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
         context.getRequest().setAttribute("OrgDetails", thisOrg);
       }
-      
+
       return ("SearchTicketsFormOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1075,11 +1071,20 @@ public final class TroubleTickets extends CFSModule {
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
-      } else {
+      } else if (dependencies.canDelete()){
         htmlDialog.addMessage(dependencies.getHtmlString());
         htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        
+        String returnType = (String)context.getRequest().getParameter("return");
+        if ("searchResults".equals(returnType)){
+          htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id +"&return=searchResults"+ HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        }else{
+          htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        }
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      } else {
+        htmlDialog.setHeader("This ticket cannot be deleted because it is associated with an activities form.");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -1118,7 +1123,13 @@ public final class TroubleTickets extends CFSModule {
       if (recordDeleted) {
         processDeleteHook(context, thisTic);
         deleteRecentItem(context, thisTic);
-        context.getRequest().setAttribute("refreshUrl", "TroubleTickets.do?command=Home" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+
+        String returnType = (String)context.getRequest().getParameter("return");
+        if ("searchResults".equals(returnType)){
+          context.getRequest().setAttribute("refreshUrl", "TroubleTickets.do?command=SearchTickets" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+        }else{
+          context.getRequest().setAttribute("refreshUrl", "TroubleTickets.do?command=Home" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+        }
         return ("DeleteOK");
       }
       return (executeCommandHome(context));
@@ -1266,7 +1277,7 @@ public final class TroubleTickets extends CFSModule {
         context.getRequest().setAttribute("SubList3", subList3);
       }
     } catch (Exception errorMessage) {
-      
+
     } finally {
       this.freeConnection(context, db);
     }
@@ -1296,7 +1307,7 @@ public final class TroubleTickets extends CFSModule {
       }
       context.getRequest().setAttribute("UserList", userList);
     } catch (Exception errorMessage) {
-      
+
     } finally {
       this.freeConnection(context, db);
     }
@@ -1324,7 +1335,7 @@ public final class TroubleTickets extends CFSModule {
       }
       context.getRequest().setAttribute("ContactList", contactList);
     } catch (Exception errorMessage) {
-      
+
     } finally {
       this.freeConnection(context, db);
     }

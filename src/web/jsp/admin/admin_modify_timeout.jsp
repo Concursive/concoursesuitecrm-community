@@ -12,7 +12,9 @@ Modify Timeout
 </table>
 <%-- End Trails --%>
 <table class="note"><tr><td>
-<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>What
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td><b>What
 should the session timeout be for users?</b><br />
 The session timeout is the time in which a user will automatically be logged out 
 if the specified period of inactivity is reached.

@@ -157,6 +157,13 @@ public final class AccountTickets extends CFSModule {
     }
     try {
       db = this.getConnection(context);
+
+      //Display account name in the header
+      String temporgId = context.getRequest().getParameter("orgId");
+      int tempid = Integer.parseInt(temporgId);
+      Organization newOrg = new Organization(db, tempid);
+      context.getRequest().setAttribute("OrgDetails", newOrg);
+
       if (nc != null) {
         contactRecordInserted = nc.insert(db);
         if (contactRecordInserted) {
@@ -209,17 +216,21 @@ public final class AccountTickets extends CFSModule {
     String ticketId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
-      Ticket newTic = new Ticket();
+      // Load the ticket
+      Ticket newTic = new Ticket(db, Integer.parseInt(ticketId));
       if (newTic.getAssignedTo() > 0) {
         newTic.checkEnabledOwnerAccount(db);
       }
-      newTic.queryRecord(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("TicketDetails", newTic);
       addRecentItem(context, newTic);
-      //Load the organization for the header
+      // Load the organization for the header
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       addModuleBean(context, "View Accounts", "View Tickets");
+      // Reset any pagedLists since this could be a new visit to this ticket
+      deletePagedListInfo(context, "AccountTicketsFolderInfo");
+      deletePagedListInfo(context, "AccountTicketDocumentListInfo");
+      deletePagedListInfo(context, "AccountTicketTaskListInfo");
       return ("TicketDetailsOK");
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -254,11 +265,14 @@ public final class AccountTickets extends CFSModule {
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
-      } else {
+      } else if (dependencies.canDelete()){
         htmlDialog.addMessage(dependencies.getHtmlString());
         htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      } else {
+        htmlDialog.setHeader("This ticket cannot be deleted because it is associated with an activities form.");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }
       context.getSession().setAttribute("Dialog", htmlDialog);
       return ("ConfirmDeleteOK");

@@ -27,7 +27,9 @@ Queue
 </table>
 <%-- End Trails --%>
 <table class="note">
-  <tr><td><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/>Generated reports are deleted from the server every 24 hours.</td></tr>
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td>Generated reports are deleted from the server every 24 hours.</td></tr>
 </table>
 <%-- Completed Reports --%>
 <%= showError(request, "actionError", false) %>

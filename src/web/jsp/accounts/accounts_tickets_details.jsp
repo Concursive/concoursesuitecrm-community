@@ -26,13 +26,9 @@ Ticket Details
   <tr>
   	<td class="containerBack">
       <%-- Begin container content --%>
+        <%@ include file="accounts_ticket_header_include.jsp" %>
         <% String param2 = "id=" + TicketDetails.getId(); %>
-        <strong>Ticket # <%= TicketDetails.getPaddedId() %>:</strong>
         [ <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/> ]
-        <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-          <br>
-          <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-        </dhv:evaluate>
       <br>
       <br>
        <% if (TicketDetails.getClosed() != null) { %>
@@ -56,11 +52,27 @@ Ticket Details
             <td>
               <%= toHtml(TicketDetails.getSourceName()) %>
             </td>
-          </tr>
-          <tr class="containerBody">
-            <td valign="top" class="formLabel">
-              <dhv:label name="ticket.issue">Issue</dhv:label>
-            </td>
+            </tr>
+            <tr class="containerBody">
+              <td nowrap class="formLabel">
+                Service Contract Number
+              </td>
+              <td>
+                <%= toHtml(TicketDetails.getServiceContractNumber()) %>
+              </td>
+            </tr>
+            <tr class="containerBody">
+              <td nowrap class="formLabel">
+                Asset Serial Number
+              </td>
+              <td>
+                <%= toHtml(TicketDetails.getAssetSerialNumber()) %>
+              </td>
+            </tr>
+            <tr class="containerBody">
+              <td valign="top" class="formLabel">
+                <dhv:label name="ticket.issue">Issue</dhv:label>
+              </td>
             <td>
               <%= toHtml(TicketDetails.getProblem()) %>
               <input type="hidden" name="problem" value="<%= toHtml(TicketDetails.getProblem()) %>">

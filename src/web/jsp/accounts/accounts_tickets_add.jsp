@@ -16,6 +16,8 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -75,6 +77,28 @@
    obj.options[insertIndex] = new Option(text,value);
    obj.selectedIndex = insertIndex;
   }
+  function changeDivContent(divName, divContents) {
+    if(document.layers){
+      // Netscape 4 or equiv.
+      divToChange = document.layers[divName];
+      divToChange.document.open();
+      divToChange.document.write(divContents);
+      divToChange.document.close();
+    } else if(document.all){
+      // MS IE or equiv.
+      divToChange = document.all[divName];
+      divToChange.innerHTML = divContents;
+    } else if(document.getElementById){
+      // Netscape 6 or equiv.
+      divToChange = document.getElementById(divName);
+      divToChange.innerHTML = divContents;
+    }
+  }  
+
+  function resetNumericFieldValue(fieldId){
+    document.getElementById(fieldId).value = -1;
+  }
+
 </script>
 <%-- Trails --%>
 <table class="trails">
@@ -98,7 +122,6 @@ Add Ticket
 <form name="addticket" action="AccountTickets.do?command=InsertTicket&auto-populate=true" onSubmit="return doCheck(this);" method="post">
   <input type="submit" value="Insert" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
-  <input type="reset" value="Reset">	
   <%= showAttribute(request, "closedError") %>
   <br>
   <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
@@ -125,6 +148,50 @@ Add Ticket
       <input type="hidden" name="orgId" value="<%=OrgDetails.getOrgId()%>">
     </td>
 	</tr>	
+  <tr class="containerBody">
+  <td class="formLabel">
+    Service Contract Number
+  </td>
+  <td>
+   <table cellspacing="0" cellpadding="0" border="0" class="empty">
+    <tr>
+      <td>
+        <div id="addServiceContract"><%= toHtml((TicketDetails.getContractId() != -1) ? TicketDetails.getServiceContractNumber() :"None Selected") %></div>
+      </td>
+      <td>
+        <input type="hidden" name="contractId" id="contractId" value="<%= TicketDetails.getContractId() %>">
+        &nbsp;
+        <%= showAttribute(request, "contractIdError") %>
+        [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%= TicketDetails.getOrgId() %>);">Select</a>]
+         &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+      </td>
+    </tr>
+  </table>
+ </td>
+</tr>
+
+<tr class="containerBody">
+  <td class="formLabel">
+    Asset
+  </td>
+  <td>
+   <table cellspacing="0" cellpadding="0" border="0" class="empty">
+    <tr>
+      <td>
+        <div id="addAsset"><%= toHtml((TicketDetails.getAssetId() != -1) ? TicketDetails.getAssetSerialNumber():"None Selected")%></div>
+      </td>
+      <td>
+        <input type="hidden" name="assetId" id="assetId" value="<%=  TicketDetails.getAssetId() %>">
+        &nbsp;
+        <%= showAttribute(request, "assetIdError") %>
+        [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=all|my|disabled','contractId','addServiceContract', <%= TicketDetails.getOrgId() %>);">Select</a>]
+        &nbsp [<a href="javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+     </td>
+    </tr>
+  </table>
+ </td>
+</tr>
+  
 	<tr class="containerBody">
     <td class="formLabel">
       Contact
@@ -327,7 +394,6 @@ Add Ticket
 <br>
 <input type="submit" value="Insert" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 </td>
 </tr>

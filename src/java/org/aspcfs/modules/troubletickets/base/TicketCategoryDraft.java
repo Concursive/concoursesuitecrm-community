@@ -11,7 +11,9 @@ import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ *  Used for maintaining the work-in-progress state of a Category.<br />
+ *  NOTE: This class is not dependent on tickets anymore and is used for working
+ *  on drafts for Category objects.
  *
  *@author     akhi_m
  *@created    May 23, 2003
@@ -30,13 +32,13 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *Constructor for the TicketCategoryDraft object
+   *  Constructor for the TicketCategoryDraft object
    */
   public TicketCategoryDraft() { }
 
 
   /**
-   *Constructor for the TicketCategoryDraft object
+   *  Constructor for the TicketCategoryDraft object
    *
    *@param  rs                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -47,19 +49,20 @@ public class TicketCategoryDraft extends GenericBean {
 
 
   /**
-   *Constructor for the TicketCategoryDraft object
+   *  Constructor for the TicketCategoryDraft object
    *
    *@param  db                Description of the Parameter
    *@param  id                Description of the Parameter
+   *@param  tableName         Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public TicketCategoryDraft(Connection db, int id) throws SQLException {
+  public TicketCategoryDraft(Connection db, int id, String tableName) throws SQLException {
     if (id < 0) {
       throw new SQLException("Ticket Category not specified");
     }
     String sql =
         "SELECT tc.* " +
-        "FROM ticket_category_draft tc " +
+        "FROM " + tableName + "_draft tc " +
         "WHERE tc.id > -1 " +
         "AND tc.id = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
@@ -311,15 +314,16 @@ public class TicketCategoryDraft extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@param  baseTableName     Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  public boolean insert(Connection db) throws SQLException {
+  public boolean insert(Connection db, String baseTableName) throws SQLException {
     try {
       db.setAutoCommit(false);
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
-          "INSERT INTO ticket_category_draft " +
+          "INSERT INTO " + baseTableName + "_draft " +
           "(cat_level, link_id, parent_cat_code, description, level, enabled) " +
           "VALUES (?, ?, ?, ?, ?, ?) "
           );
@@ -335,7 +339,7 @@ public class TicketCategoryDraft extends GenericBean {
       pst.setBoolean(++i, this.getEnabled());
       pst.execute();
       pst.close();
-      id = DatabaseUtils.getCurrVal(db, "ticket_category_draft_id_seq");
+      id = DatabaseUtils.getCurrVal(db, baseTableName + "_draft_id_seq");
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -351,10 +355,11 @@ public class TicketCategoryDraft extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  tableName         Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public int update(Connection db) throws SQLException {
+  public int update(Connection db, String tableName) throws SQLException {
     if (id == -1) {
       throw new SQLException("Id not specified");
     }
@@ -363,7 +368,7 @@ public class TicketCategoryDraft extends GenericBean {
     try {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
-          "UPDATE ticket_category_draft " +
+          "UPDATE " + tableName + "_draft " +
           "SET description = ?, cat_level = ?, level = ?, enabled = ? " +
           "WHERE  id = ? ");
       pst.setString(++i, this.getDescription());
@@ -384,7 +389,15 @@ public class TicketCategoryDraft extends GenericBean {
   }
 
 
-  public boolean delete(Connection db) throws SQLException {
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  tableName         Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean delete(Connection db, String tableName) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Category Id not specified");
     }
@@ -392,12 +405,11 @@ public class TicketCategoryDraft extends GenericBean {
     int recordCount = 0;
 
     PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM ticket_category_draft " +
+        "DELETE FROM " + tableName + "_draft " +
         "WHERE id = ? ");
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
     pst.close();
-
     if (recordCount == 0) {
       errors.put("actionError", "Category could not be deleted because it no longer exists.");
       return false;
@@ -405,7 +417,8 @@ public class TicketCategoryDraft extends GenericBean {
       return true;
     }
   }
-  
+
+
   /**
    *  Description of the Method
    *

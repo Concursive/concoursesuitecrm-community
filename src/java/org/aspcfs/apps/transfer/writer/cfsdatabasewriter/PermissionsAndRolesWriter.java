@@ -9,11 +9,12 @@ import org.aspcfs.modules.admin.base.*;
 import com.darkhorseventures.database.*;
 
 /**
- *  Description of the Class
+ *  Inserts related PermissionCategory data into a database
  *
  *@author     matt rajkowski
  *@created    January 23, 2003
- *@version    $Id$
+ *@version    $Id: PermissionsAndRolesWriter.java,v 1.13 2003/12/02 22:28:24
+ *      mrajkowski Exp $
  */
 public class PermissionsAndRolesWriter implements DataWriter {
   private ConnectionPool sqlDriver = null;
@@ -245,13 +246,13 @@ public class PermissionsAndRolesWriter implements DataWriter {
         id = thisPermission.getId();
         return true;
       }
-      
+
       if (record.getName().equals("folder")) {
         try {
           PreparedStatement pst = db.prepareStatement(
-            "INSERT INTO module_field_categorylink " +
-            "(module_id, category_id, level, description) " +
-            "VALUES (?, ?, ?, ?) ");
+              "INSERT INTO module_field_categorylink " +
+              "(module_id, category_id, level, description) " +
+              "VALUES (?, ?, ?, ?) ");
           pst.setInt(1, record.getIntValue("moduleId"));
           pst.setInt(2, record.getIntValue("categoryId"));
           pst.setInt(3, record.getIntValue("level"));
@@ -264,13 +265,13 @@ public class PermissionsAndRolesWriter implements DataWriter {
         }
         return true;
       }
-      
+
       if (record.getName().equals("lookup")) {
         try {
           PreparedStatement pst = db.prepareStatement(
-            "INSERT INTO lookup_lists_lookup " +
-            "(module_id, lookup_id, class_name, table_name, level, description, category_id) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+              "INSERT INTO lookup_lists_lookup " +
+              "(module_id, lookup_id, class_name, table_name, level, description, category_id) " +
+              "VALUES (?, ?, ?, ?, ?, ?, ?) ");
           pst.setInt(1, record.getIntValue("moduleId"));
           pst.setInt(2, record.getIntValue("lookupId"));
           pst.setString(3, record.getValue("class"));
@@ -286,14 +287,14 @@ public class PermissionsAndRolesWriter implements DataWriter {
         }
         return true;
       }
-      
+
       if (record.getName().equals("report")) {
         try {
           PreparedStatement pst = db.prepareStatement(
-            "INSERT INTO report " +
-            "(category_id, permission_id, filename, type, title, description, " +
-            "enteredby, modifiedby) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+              "INSERT INTO report " +
+              "(category_id, permission_id, filename, type, title, description, " +
+              "enteredby, modifiedby) " +
+              "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
           pst.setInt(1, record.getIntValue("categoryId"));
           DatabaseUtils.setInt(pst, 2, record.getIntValue("permissionId"));
           pst.setString(3, record.getValue("file"));
@@ -302,6 +303,28 @@ public class PermissionsAndRolesWriter implements DataWriter {
           pst.setString(6, record.getValue("description"));
           pst.setInt(7, record.getIntValue("enteredBy"));
           pst.setInt(8, record.getIntValue("modifiedBy"));
+          pst.executeUpdate();
+          pst.close();
+        } catch (SQLException e) {
+          e.printStackTrace(System.out);
+          return false;
+        }
+        return true;
+      }
+
+      if (record.getName().equals("multipleCategory")) {
+        try {
+          PreparedStatement pst = db.prepareStatement(
+              "INSERT INTO category_editor_lookup " +
+              "(module_id, constant_id, table_name, level, description, category_id, max_levels) " +
+              "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+          pst.setInt(1, record.getIntValue("moduleId"));
+          pst.setInt(2, record.getIntValue("constantId"));
+          pst.setString(3, record.getValue("table"));
+          pst.setInt(4, record.getIntValue("level"));
+          pst.setString(5, record.getValue("description"));
+          pst.setInt(6, record.getIntValue("categoryId"));
+          pst.setInt(7, record.getIntValue("maxLevels"));
           pst.executeUpdate();
           pst.close();
         } catch (SQLException e) {

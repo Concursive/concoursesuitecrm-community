@@ -25,7 +25,9 @@ View Users
 <%-- License info --%>
 <dhv:evaluate if="<%= hasText(APP_SIZE) %>">
 <table class="note">
-  <tr><td><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/>The installed Dark Horse CRM license limits this system to <%= APP_SIZE %> active users.</td></tr>
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td>The installed Dark Horse CRM license limits this system to <%= APP_SIZE %> active users.</td></tr>
 </table>
 </dhv:evaluate>
 <%-- End license info --%>

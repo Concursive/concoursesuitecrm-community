@@ -15,6 +15,8 @@
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
 function updateSubList1() {
   var sel = document.forms['details'].elements['catCode'];
@@ -40,6 +42,29 @@ function updateUserList() {
   var url = "TroubleTickets.do?command=DepartmentJSList&departmentCode=" + escape(value);
   window.frames['server_commands'].location.href=url;
 }
+
+function changeDivContent(divName, divContents) {
+  if(document.layers){
+    // Netscape 4 or equiv.
+    divToChange = document.layers[divName];
+    divToChange.document.open();
+    divToChange.document.write(divContents);
+    divToChange.document.close();
+  } else if(document.all){
+    // MS IE or equiv.
+    divToChange = document.all[divName];
+    divToChange.innerHTML = divContents;
+  } else if(document.getElementById){
+    // Netscape 6 or equiv.
+    divToChange = document.getElementById(divName);
+    divToChange.innerHTML = divContents;
+  }
+}
+
+ function resetNumericFieldValue(fieldId){
+  document.getElementById(fieldId).value = -1;
+ }
+
 </SCRIPT>
 <body>
 <form name="details" action="TroubleTickets.do?command=Update&auto-populate=true" method="post">
@@ -61,11 +86,7 @@ Modify Ticket
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-<%= toHtml(TicketDetails.getCompanyName()) %></strong>
-<dhv:evaluate if="<%= !(TicketDetails.getCompanyEnabled()) %>">
-  <font color="red">(account disabled)</font>
-</dhv:evaluate>
+<%@ include file="ticket_header_include.jsp" %>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="details" param="<%= param1 %>" style="tabs"/>
@@ -77,13 +98,15 @@ Modify Ticket
         &nbsp;<br>
       </dhv:evaluate>
       <% if (TicketDetails.getClosed() != null) { %>
-        <input type="button" value="Reopen">
+        <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
       <%} else {%>
         <input type="submit" value="Update">
         <% if ("list".equals(request.getParameter("return"))) {%>
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
-        <%} else {%>
+        <%} else if ("searchResults".equals(request.getParameter("return"))){%> 
+          <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=SearchTickets'">
+        <% }else {%>
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
         <%}%>
       <%}%>
@@ -106,6 +129,50 @@ Modify Ticket
         <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
       </td>
 		</tr>
+
+    <tr class="containerBody">
+    <td class="formLabel">
+      Service Contract Number
+    </td>
+    <td>
+     <table cellspacing="0" cellpadding="0" border="0" class="empty">
+      <tr>
+        <td>
+          <div id="addServiceContract"><%= toHtml((TicketDetails.getContractId() != -1) ? TicketDetails.getServiceContractNumber() :"None Selected") %></div>
+        </td>
+        <td>
+          <input type="hidden" name="contractId" id="contractId" value="<%= TicketDetails.getContractId() %>">
+          &nbsp;
+          <%= showAttribute(request, "contractIdError") %>
+          [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%= TicketDetails.getOrgId() %>);">Select</a>]
+          &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+        </td>
+      </tr>
+    </table>
+   </td>
+  </tr>
+
+  <tr class="containerBody">
+    <td class="formLabel">
+      Asset
+    </td>
+    <td>
+     <table cellspacing="0" cellpadding="0" border="0" class="empty">
+      <tr>
+        <td>
+          <div id="addAsset"><%= toHtml((TicketDetails.getAssetId() != -1) ? TicketDetails.getAssetSerialNumber():"None Selected")%></div>
+        </td>
+        <td>
+          <input type="hidden" name="assetId" id="assetId" value="<%=  TicketDetails.getAssetId() %>">
+          &nbsp;
+          <%= showAttribute(request, "assetIdError") %>
+          [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=all|my|disabled','contractId','addServiceContract');">Select</a>]
+          &nbsp [<a href="javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+        </td>
+      </tr>
+    </table>
+   </td>
+  </tr>
 		<tr class="containerBody">
       <td class="formLabel">
         Contact
@@ -119,7 +186,7 @@ Modify Ticket
         <font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
       </td>
 		</tr>
-  </table>
+    </table>
   <br>
   <a name="categories"></a> 
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -141,8 +208,8 @@ Modify Ticket
             <td valign="top">
               <font color="red">*</font> <%= showAttribute(request, "problemError") %>
               <input type="hidden" name="modified" value="<%= TicketDetails.getModified() %>">
-              <input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
               <input type="hidden" name="id" value="<%=TicketDetails.getId()%>">
+              <input type="hidden" name="orgId" id="orgId" value="<%=TicketDetails.getOrgId()%>">
               <input type="hidden" name="companyName" value="<%=toHtml(TicketDetails.getCompanyName())%>">
               <input type="hidden" name="refresh" value="-1">
             </td>
@@ -331,17 +398,17 @@ Modify Ticket
 	</table>
 &nbsp;<br>
 <% if (TicketDetails.getClosed() != null) { %>
-  <input type="button" value="Reopen">
+  <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
 <%} else {%>
   <input type="submit" value="Update">
 <%}%>
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
+	<% if ("list".equals(request.getParameter("return"))) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
-	<%}%>
-<%} else {%>
+  <%} else if ("searchResults".equals(request.getParameter("return"))){%> 
+    <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=SearchTickets'">
+  <%} else {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
-<%}%>
+  <%}%>
   </td>
   </tr>
 </table>

@@ -15,23 +15,23 @@ Ticket Details
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-<%= toHtml(TicketDetails.getCompanyName()) %></strong>
-<dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
+<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="details" param="<%= param1 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-    <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
-      &nbsp;<br>
-    </dhv:evaluate>
     <% if (TicketDetails.getClosed() != null) { %>
       <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
     <%} else {%>
       <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
-      <dhv:permission name="tickets-tickets-delete"><input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
+      <dhv:permission name="tickets-tickets-delete">
+      <% if ("searchResults".equals(request.getParameter("return"))){ %>
+        <input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&return=searchResults&popup=true', 'Delete_ticket','320','200','yes','no');">
+      <%}else{%>
+        <input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">
+      <%}%>
+      </dhv:permission>
     <%}%>
 <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete"><br>&nbsp;<br></dhv:permission>
 <%-- Ticket Information --%>
@@ -47,6 +47,22 @@ Ticket Details
 		</td>
 		<td>
       <%= toHtml(TicketDetails.getSourceName()) %>
+		</td>
+  </tr>
+  <tr class="containerBody">
+		<td nowrap class="formLabel">
+      Service Contract Number
+		</td>
+		<td>
+      <%= toHtml(TicketDetails.getServiceContractNumber()) %>
+		</td>
+  </tr>
+  <tr class="containerBody">
+		<td nowrap class="formLabel">
+      Asset Serial Number
+		</td>
+		<td>
+      <%= toHtml(TicketDetails.getAssetSerialNumber()) %>
 		</td>
   </tr>
   <tr class="containerBody">
@@ -257,10 +273,18 @@ Ticket Details
 &nbsp;
 <br>
 <% if (TicketDetails.getClosed() != null) { %>
-  <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
+  <dhv:permission name="tickets-tickets-edit">
+    <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
+  </dhv:permission>
 <%} else {%>
   <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
-  <dhv:permission name="tickets-tickets-delete"><input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
+  <dhv:permission name="tickets-tickets-delete">
+    <% if ("searchResults".equals(request.getParameter("return"))){ %>
+      <input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&return=searchResults&popup=true', 'Delete_ticket','320','200','yes','no');">
+    <%}else{%>
+      <input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">
+    <%}%>
+  </dhv:permission>
 <%}%>
 	</td>
   </tr>

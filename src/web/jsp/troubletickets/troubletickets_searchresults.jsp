@@ -5,7 +5,7 @@
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
-<%@ include file="troubletickets_list_menu.jsp" %>
+<%@ include file="troubletickets_searchresults_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript">
@@ -55,7 +55,7 @@ Search Results
        <a href="javascript:displayMenu('menuTicket', '<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
 		<td width="15" valign="top" nowrap class="row<%= rowid %>">
-			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
+  			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>&return=searchResults"><%= thisTic.getPaddedId() %></a>
 		</td>
 		<td width="10" valign="top" nowrap class="row<%= rowid %>">
 			<%= toHtml(thisTic.getPriorityName()) %>
@@ -96,6 +96,7 @@ Search Results
 <%}%>
 </table>
 <br>
+<input type="hidden" id="listFilter1" name="listFilter1" value='<%=request.getParameter("listFilter1")%>' />
 <dhv:pagedListControl object="TicListInfo" tdClass="row1"/>
 	<%} else {%>
 		<tr class="containerBody">

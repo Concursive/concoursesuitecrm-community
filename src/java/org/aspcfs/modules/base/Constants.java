@@ -73,6 +73,9 @@ public final class Constants {
   public final static int COMMUNICATIONS_FILE_ATTACHMENTS = 16;
   public final static int COMMUNICATIONS_DOCUMENTS = 17;
 
+  
+  public final static int SERVICE_CONTRACTS = 209041109;
+  public final static int ASSETS = 209041110;
   //Synchronization API
   public final static int NO_SYNC = -1;
   public final static int SYNC_INSERTS = 2;

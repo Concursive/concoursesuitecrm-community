@@ -17,10 +17,20 @@ import org.aspcfs.modules.troubletickets.base.*;
  *
  *@author     akhi_m
  *@created    May 22, 2003
- *@version    $id: exp$
+ *@version    $Id$
  */
 public class CategoryEditor {
 
+  // Basic properties of an editor
+  private int id = -1;
+  private int moduleId = -1;
+  private int categoryId = -1;
+  private int constantId = -1;
+  private String tableName = null;
+  private int level = -1;
+  private String description = null;
+  private int maxLevels = -1;
+  // Helper properties for working with editors
   private HashMap categoryList = new HashMap();
   private TicketCategoryDraftList topCategoryList = new TicketCategoryDraftList();
   private java.util.Date hierarchyCheck = new java.util.Date();
@@ -28,9 +38,281 @@ public class CategoryEditor {
 
 
   /**
-   *Constructor for the CategoryEditor object
+   *  Constructor for the CategoryEditor object
    */
   public CategoryEditor() { }
+
+
+  /**
+   *  Constructor for the CategoryEditor object
+   *
+   *@param  db                Description of the Parameter
+   *@param  constantId        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public CategoryEditor(Connection db, int constantId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM category_editor_lookup " +
+        "WHERE constant_id = ? ");
+    pst.setInt(1, constantId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  Constructor for the CategoryEditor object
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public CategoryEditor(ResultSet rs) throws SQLException {
+    buildRecord(rs);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildRecord(ResultSet rs) throws SQLException {
+    id = rs.getInt("id");
+    moduleId = rs.getInt("module_id");
+    constantId = rs.getInt("constant_id");
+    tableName = rs.getString("table_name");
+    level = rs.getInt("level");
+    description = rs.getString("description");
+    //entered
+    categoryId = rs.getInt("category_id");
+    maxLevels = rs.getInt("max_levels");
+  }
+
+
+  /**
+   *  Sets the id attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   *  Sets the id attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the moduleId attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new moduleId value
+   */
+  public void setModuleId(int tmp) {
+    this.moduleId = tmp;
+  }
+
+
+  /**
+   *  Sets the moduleId attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new moduleId value
+   */
+  public void setModuleId(String tmp) {
+    this.moduleId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    this.categoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the constantId attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new constantId value
+   */
+  public void setConstantId(int tmp) {
+    this.constantId = tmp;
+  }
+
+
+  /**
+   *  Sets the constantId attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new constantId value
+   */
+  public void setConstantId(String tmp) {
+    this.constantId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the tableName attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new tableName value
+   */
+  public void setTableName(String tmp) {
+    this.tableName = tmp;
+  }
+
+
+  /**
+   *  Sets the level attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new level value
+   */
+  public void setLevel(int tmp) {
+    this.level = tmp;
+  }
+
+
+  /**
+   *  Sets the level attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new level value
+   */
+  public void setLevel(String tmp) {
+    this.level = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the description attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new description value
+   */
+  public void setDescription(String tmp) {
+    this.description = tmp;
+  }
+
+
+  /**
+   *  Sets the maxLevels attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new maxLevels value
+   */
+  public void setMaxLevels(int tmp) {
+    this.maxLevels = tmp;
+  }
+
+
+  /**
+   *  Sets the maxLevels attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new maxLevels value
+   */
+  public void setMaxLevels(String tmp) {
+    this.maxLevels = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the id attribute of the CategoryEditor object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the moduleId attribute of the CategoryEditor object
+   *
+   *@return    The moduleId value
+   */
+  public int getModuleId() {
+    return moduleId;
+  }
+
+
+  /**
+   *  Gets the categoryId attribute of the CategoryEditor object
+   *
+   *@return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
+  }
+
+
+  /**
+   *  Gets the constantId attribute of the CategoryEditor object
+   *
+   *@return    The constantId value
+   */
+  public int getConstantId() {
+    return constantId;
+  }
+
+
+  /**
+   *  Gets the tableName attribute of the CategoryEditor object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the level attribute of the CategoryEditor object
+   *
+   *@return    The level value
+   */
+  public int getLevel() {
+    return level;
+  }
+
+
+  /**
+   *  Gets the description attribute of the CategoryEditor object
+   *
+   *@return    The description value
+   */
+  public String getDescription() {
+    return description;
+  }
+
+
+  /**
+   *  Gets the maxLevels attribute of the CategoryEditor object
+   *
+   *@return    The maxLevels value
+   */
+  public int getMaxLevels() {
+    return maxLevels;
+  }
 
 
   /**
@@ -140,7 +422,7 @@ public class CategoryEditor {
     //Get the top level categories
     topCategoryList.setBuildHierarchy(false);
     topCategoryList.setTopLevelOnly(true);
-    topCategoryList.buildList(db);
+    topCategoryList.buildList(db, tableName);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("CategoryEditor -> buildList: Top Level Size " + topCategoryList.size());
     }
@@ -148,7 +430,7 @@ public class CategoryEditor {
     TicketCategoryDraftList fullCategoryList = new TicketCategoryDraftList();
     fullCategoryList.setBuildHierarchy(false);
     fullCategoryList.setTopLevelOnly(false);
-    fullCategoryList.buildList(db);
+    fullCategoryList.buildList(db, tableName);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> buildList: Full List " + fullCategoryList.size());
     }
@@ -170,8 +452,10 @@ public class CategoryEditor {
   /**
    *  Recursively add draft subcategories to a given draft category
    *
-   *@param  parentCategory  The feature to be added to the SubCategories attribute
-   *@param  fullList        The feature to be added to the SubCategories attribute
+   *@param  parentCategory  The feature to be added to the SubCategories
+   *      attribute
+   *@param  fullList        The feature to be added to the SubCategories
+   *      attribute
    */
   private void addSubCategories(TicketCategoryDraft parentCategory, TicketCategoryDraftList fullList) {
     if (parentCategory.getShortChildList() == null) {
@@ -250,7 +534,7 @@ public class CategoryEditor {
                   toggleSubCategories(db, thisCat, enabled);
                 } else {
                   thisCat.setEnabled(enabled);
-                  thisCat.update(db);
+                  thisCat.update(db, tableName);
                 }
               } else {
                 //add new category
@@ -265,7 +549,7 @@ public class CategoryEditor {
                   thisCat.setCategoryLevel(0);
                   topCategoryList.add(thisCat);
                 }
-                thisCat.insert(db);
+                thisCat.insert(db, tableName);
                 categoryList.put(new Integer(thisCat.getId()), thisCat);
               }
             }
@@ -304,10 +588,10 @@ public class CategoryEditor {
       if (thisCategory.getParentCode() == 0) {
         topCategoryList.remove(new Integer(thisCategory.getId()));
       }
-      thisCategory.delete(db);
+      thisCategory.delete(db, tableName);
     } else {
       thisCategory.setEnabled(enabled);
-      thisCategory.update(db);
+      thisCategory.update(db, tableName);
     }
 
     if (thisCategory.getShortChildList() != null) {
@@ -327,37 +611,33 @@ public class CategoryEditor {
    *@exception  SQLException  Description of the Exception
    */
   public void reset(Connection db) throws SQLException {
-    TicketCategoryList activeTopCategoryList = new TicketCategoryList();
+    CategoryList activeTopCategoryList = new CategoryList(tableName);
     activeTopCategoryList.setParentCode(0);
     activeTopCategoryList.buildList(db);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("CategoryEditor -> buildList: Top Level Size " + activeTopCategoryList.size());
     }
-
     //Build a list of all categories
-    TicketCategoryList fullCategoryList = new TicketCategoryList();
+    CategoryList fullCategoryList = new CategoryList(tableName);
     fullCategoryList.buildList(db);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> buildList: Full List " + fullCategoryList.size());
     }
-
     //Combine the lists
     Iterator listA = activeTopCategoryList.iterator();
     while (listA.hasNext()) {
-      TicketCategory thisCategory = (TicketCategory) listA.next();
+      Category thisCategory = (Category) listA.next();
       if (thisCategory != null) {
         this.addActiveSubCategories(thisCategory, fullCategoryList);
       }
     }
-
     //delete the current draft
-    boolean draftDeleted = TicketCategoryDraftList.deleteDraft(db);
-
+    boolean draftDeleted = TicketCategoryDraftList.deleteDraft(db, tableName);
     //Clone the active entries as a draft
     if (draftDeleted) {
       Iterator topList = activeTopCategoryList.iterator();
       while (topList.hasNext()) {
-        TicketCategory thisCategory = (TicketCategory) topList.next();
+        Category thisCategory = (Category) topList.next();
         copyCategory(db, thisCategory, 0);
       }
       //now rebuild the draft category list
@@ -367,14 +647,15 @@ public class CategoryEditor {
 
 
   /**
-   *  Recursively copies data from an active category to  a draft category at the database level.
+   *  Recursively copies data from an active category to a draft category at the
+   *  database level.
    *
    *@param  db                Description of the Parameter
    *@param  activeCategory    Description of the Parameter
    *@param  parentCode        Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  private void copyCategory(Connection db, TicketCategory activeCategory, int parentCode) throws SQLException {
+  private void copyCategory(Connection db, Category activeCategory, int parentCode) throws SQLException {
     TicketCategoryDraft draftCategory = new TicketCategoryDraft();
     draftCategory.setDescription(activeCategory.getDescription());
     draftCategory.setActualCatId(activeCategory.getId());
@@ -382,11 +663,11 @@ public class CategoryEditor {
     draftCategory.setCategoryLevel(activeCategory.getCategoryLevel());
     draftCategory.setEnabled(activeCategory.getEnabled());
     draftCategory.setParentCode(parentCode);
-    draftCategory.insert(db);
+    draftCategory.insert(db, tableName);
 
     Iterator subCategories = activeCategory.getShortChildList().iterator();
     while (subCategories.hasNext()) {
-      TicketCategory tmpCategory = (TicketCategory) subCategories.next();
+      Category tmpCategory = (Category) subCategories.next();
       copyCategory(db, tmpCategory, draftCategory.getId());
     }
   }
@@ -395,16 +676,18 @@ public class CategoryEditor {
   /**
    *  Builds active subcategories for a given category
    *
-   *@param  parentCategory  The feature to be added to the ActiveSubCategories attribute
-   *@param  fullList        The feature to be added to the ActiveSubCategories attribute
+   *@param  parentCategory  The feature to be added to the ActiveSubCategories
+   *      attribute
+   *@param  fullList        The feature to be added to the ActiveSubCategories
+   *      attribute
    */
-  private void addActiveSubCategories(TicketCategory parentCategory, TicketCategoryList fullList) {
+  private void addActiveSubCategories(Category parentCategory, CategoryList fullList) {
     if (parentCategory.getShortChildList() == null) {
       parentCategory.setShortChildList(new TicketCategoryDraftList());
     }
     Iterator i = fullList.iterator();
     while (i.hasNext()) {
-      TicketCategory tmpCategory = (TicketCategory) i.next();
+      Category tmpCategory = (Category) i.next();
       if (tmpCategory.getParentCode() == parentCategory.getId()) {
         parentCategory.getShortChildList().add(tmpCategory);
         this.addActiveSubCategories(tmpCategory, fullList);
@@ -439,10 +722,9 @@ public class CategoryEditor {
    *@exception  SQLException  Description of the Exception
    */
   private void activateCategory(Connection db, TicketCategoryDraft draftCategory, int parentCode) throws SQLException {
-
-    TicketCategory activeCategory = null;
+    Category activeCategory = null;
     if (draftCategory.getActualCatId() > 0) {
-      activeCategory = new TicketCategory(db, draftCategory.getActualCatId());
+      activeCategory = new Category(db, draftCategory.getActualCatId(), tableName);
       activeCategory.setDescription(draftCategory.getDescription());
       activeCategory.setLevel(draftCategory.getLevel());
       activeCategory.setCategoryLevel(draftCategory.getCategoryLevel());
@@ -450,7 +732,7 @@ public class CategoryEditor {
       activeCategory.setParentCode(parentCode);
       activeCategory.update(db);
     } else {
-      activeCategory = new TicketCategory();
+      activeCategory = new Category(tableName);
       activeCategory.setDescription(draftCategory.getDescription());
       activeCategory.setLevel(draftCategory.getLevel());
       activeCategory.setCategoryLevel(draftCategory.getCategoryLevel());
@@ -458,10 +740,10 @@ public class CategoryEditor {
       activeCategory.setParentCode(parentCode);
       activeCategory.insert(db);
     }
-    
+
     //link draft to active category
     draftCategory.setActualCatId(activeCategory.getId());
-    draftCategory.update(db);
+    draftCategory.update(db, tableName);
 
     Iterator subCategories = draftCategory.getShortChildList().iterator();
     while (subCategories.hasNext()) {

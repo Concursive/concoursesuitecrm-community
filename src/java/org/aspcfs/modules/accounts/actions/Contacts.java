@@ -35,11 +35,20 @@ public final class Contacts extends CFSModule {
    */
   public String executeCommandPrepare(ActionContext context) {
     Connection db = null;
-    String orgId = context.getRequest().getParameter("orgId");
-    Organization thisOrganization = null;
+    // Parse parameters
     Contact thisContact = (Contact) context.getFormBean();
+    Organization thisOrganization = (Organization) context.getRequest().getAttribute("OrgDetails");
+    String orgId = context.getRequest().getParameter("orgId");
+    if (orgId == null) {
+      // Passed from the account insert page
+      if (thisOrganization != null) {
+        orgId = String.valueOf(thisOrganization.getId());
+        // TODO: This is a temporary fix because the field duplicates the org fieldname
+        thisContact.setNotes(null);
+      }
+    }
     if (thisContact.getId() == -1) {
-      if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
+      if (!hasPermission(context, "accounts-accounts-contacts-add")) {
         return ("PermissionError");
       }
       addModuleBean(context, "View Accounts", "Add Contact to Account");
@@ -47,7 +56,7 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       //prepare org
-      if (context.getRequest().getAttribute("OrgDetails") == null) {
+      if (thisOrganization == null) {
         thisOrganization = new Organization(db, Integer.parseInt(orgId));
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
       }

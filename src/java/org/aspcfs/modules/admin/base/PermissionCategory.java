@@ -47,12 +47,27 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_ACCOUNTS_REVENUE_TYPE = 2;
   public final static int LOOKUP_ACCOUNTS_CONTACTS_TYPE = 3;
 
+  // Service Contracts
+  public final static int PERMISSION_CAT_SERVICE_CONTRACTS = 130041100;
+  public final static int LOOKUP_SERVICECONTRACT_CATEGORY = 130041305;
+  public final static int LOOKUP_SERVICECONTRACT_TYPE = 130041306;
+  public final static int LOOKUP_RESPONSE_TIME_MODEL = 116041409;
+  public final static int LOOKUP_PHONE_RESPONSE_MODEL = 116041410;
+  public final static int LOOKUP_ONSITE_RESPONSE_TIME_MODEL = 116041411;
+  public final static int LOOKUP_EMAIL_RESPONSE_TIME_MODEL = 116041412;
+  public final static int LOOKUP_HOURS_REASON = 308041546;
+
+  // Assets
+  public final static int PERMISSION_CAT_ASSETS = 130041000;
+  public final static int LOOKUP_ASSET_STATUS = 130041304;
+  public final static int MULTIPLE_CATEGORY_ASSET = 202041400;
+
   public final static int PERMISSION_CAT_CONTACTS = 2;
   public final static int LOOKUP_CONTACTS_TYPE = 1;
   public final static int LOOKUP_CONTACTS_EMAIL = 2;
   public final static int LOOKUP_CONTACTS_ADDRESS = 3;
   public final static int LOOKUP_CONTACTS_PHONE = 4;
-  
+
   public final static int PERMISSION_CAT_EMPLOYEES = 1111031131;
   public final static int LOOKUP_CONTACTS_DEPT = 1111031132;
 
@@ -60,6 +75,8 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_TICKETS_SOURCE = 1;
   public final static int LOOKUP_TICKETS_SEVERITY = 2;
   public final static int LOOKUP_TICKETS_PRIORITY = 3;
+  public final static int LOOKUP_TICKET_FORM = 127041246;
+  public final static int MULTIPLE_CATEGORY_TICKET = 202041401;
 
 
   /**

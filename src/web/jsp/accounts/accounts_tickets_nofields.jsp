@@ -36,7 +36,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
   	<td class="containerBack">
-      <strong>Ticket # <%= TicketDetails.getPaddedId() %>:</strong>
+      <%@ include file="accounts_ticket_header_include.jsp" %>
       [ <dhv:container name="accountstickets" selected="folders" param="<%= "id=" + TicketDetails.getId() %>"/> ]<br>
       &nbsp;<br>
       There are currently no custom folders configured for this module.<br>

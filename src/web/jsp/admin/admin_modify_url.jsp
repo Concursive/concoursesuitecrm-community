@@ -13,8 +13,10 @@ Modify Setting
 </tr>
 </table>
 <%-- End Trails --%>
-<table class="note"><tr><td>
-<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>Which
+<table class="note">
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td><b>Which
 Dark Horse CRM URL should be included in emails to allow the user to return back to the site?</b>
 <ul>
 <li>Typically this is used when a survey is sent to a contact</li>

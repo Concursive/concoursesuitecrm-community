@@ -14,7 +14,6 @@ Add Ticket
 <%-- End Trails --%>
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
-<input type="reset" value="Reset">	
 <br>
 <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <% if (request.getAttribute("closedError") != null) { %>
@@ -25,5 +24,4 @@ Add Ticket
 <br>
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
-<input type="reset" value="Reset">
 </form>

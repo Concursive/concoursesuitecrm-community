@@ -16,18 +16,12 @@ Add Document
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
-<%= toHtml(TicketDetails.getCompanyName()) %></strong>
-<dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
+<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="documents" param="<%= param1 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-    <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
-      &nbsp;<br>
-    </dhv:evaluate>
     <form method="post" name="inputForm" action="TroubleTicketsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
     <%-- include add document form --%>
       <%@ include file="documents_add_include.jsp" %>

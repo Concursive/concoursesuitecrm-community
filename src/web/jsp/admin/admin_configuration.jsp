@@ -6,56 +6,37 @@
 <table class="trails">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> > 
+<a href="Admin.do">Admin</a> >
 Configure Modules
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-Setup Dark Horse CRM to meet the specific needs of your organization, including configuration of lookup lists and custom fields.  Choose a Dark Horse CRM module to proceed.<br>
-&nbsp;<br>
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<table class="note">
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td>Setup Dark Horse CRM to meet the specific needs of your organization, 
+    including configuration of lookup lists and custom fields.  Choose
+    a Dark Horse CRM module to proceed.</td></tr>
+</table>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th>
+      <strong>Modules</strong>
+    </th>
+  </tr>
 <%
   int column = 0;
   Iterator i = PermissionCategoryList.iterator();
   while (i.hasNext()) {
     column = (column != 1 ? 1 : 2);
-    PermissionCategory thisPermissionCat = (PermissionCategory)i.next();
+    PermissionCategory thisPermissionCat = (PermissionCategory) i.next();
 %>
-<dhv:evaluate if="<%= column == 1 %>">
-  <tr>
-</dhv:evaluate>
-    <td width="49%" valign="top">
-      <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
-        <tr>
-          <th>
-            <strong><a href="Admin.do?command=ConfigDetails&moduleId=<%=thisPermissionCat.getId()%>"><%=thisPermissionCat.getCategory()%></a></strong>
-          </th>
-        </tr>
-        <tr class="containerBody">
-          <td>
-            Changes affect all users
-          </td>
-        </tr>
-      </table>
-      &nbsp;
-    </td>
-<dhv:evaluate if="<%= column == 1 %>">
-    <td width="2%">
-      &nbsp;
-    </td>
-</dhv:evaluate>
-<dhv:evaluate if="<%= column == 2 %>">
-  </tr>
-</dhv:evaluate>
-<%
-  }
-%>
-<dhv:evaluate if="<%= column == 1 %>">
-    <td width="49%">
-      &nbsp;
+  <tr class="row<%= column %>">
+    <td>
+      <a href="Admin.do?command=ConfigDetails&moduleId=<%= thisPermissionCat.getId() %>"><%= toHtml(thisPermissionCat.getCategory()) %></a>
     </td>
   </tr>
-</dhv:evaluate>
+<%}%>
 </table>
 

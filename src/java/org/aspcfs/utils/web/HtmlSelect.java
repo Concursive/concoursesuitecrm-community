@@ -613,6 +613,19 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
+   *  Adds a feature to the Item attribute of the HtmlSelect object
+   *
+   *@param  tmp1        The feature to be added to the Item attribute
+   *@param  tmp2        The feature to be added to the Item attribute
+   *@param  attributes  The feature to be added to the Item attribute
+   *@param  enabled     The feature to be added to the Item attribute
+   */
+  public void addItem(int tmp1, String tmp2, HashMap attributes, boolean enabled) {
+    this.add(new HtmlOption(String.valueOf(tmp1), tmp2, attributes, enabled));
+  }
+
+
+  /**
    *  Add a string to the HTML select, supplying two strings, the first String
    *  is the value, the second String is the display name
    *

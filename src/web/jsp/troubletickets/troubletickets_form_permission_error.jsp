@@ -1,0 +1,34 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.utils.web.*, org.aspcfs.modules.troubletickets.base.*" %>
+<jsp:useBean id="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
+<a href="TroubleTickets.do?">Tickets</a> > 
+<a href="TroubleTickets.do?command=Home">View Tickets</a> >
+Activity Log
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
+<%@ include file="ticket_header_include.jsp" %>
+<% String param1 = "id=" + ticketDetails.getId(); %>
+<dhv:container name="tickets" selected="form" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td class="containerBack">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%">
+  <tr align="left">
+    <th>
+	    <b>You do not have permissions to view this form</b>
+	  </th>
+  </tr>
+  </table>
+ </td>
+ </tr>
+</table>

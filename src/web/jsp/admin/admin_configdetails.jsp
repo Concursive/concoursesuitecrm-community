@@ -31,7 +31,7 @@
   <dhv:permission name="admin-sysconfig-categories-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
   <tr class="row<%= rowid %>">
-    <td><a href="AdminCategories.do?command=ViewActive&moduleId=<%= PermissionCategory.getId() %>">Categories</a></td>
+    <td><a href="AdminCategories.do?command=Show&moduleId=<%= PermissionCategory.getId() %>">Categories</a></td>
   </tr>
   </dhv:permission>
 <%}%>
