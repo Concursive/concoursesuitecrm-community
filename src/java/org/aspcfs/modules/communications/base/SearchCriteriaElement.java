@@ -12,25 +12,26 @@ import java.sql.*;
  *@author     Wesley_S_Gillette
  *@created    November 12, 2001
  *@version    $Id: SearchCriteriaElement.java,v 1.1 2001/11/13 20:36:35
- *      mrajkowski Exp $
+ *      
  */
 public class SearchCriteriaElement {
 
   int fieldId = -1;
   int operatorId = -1;
   int sourceId = -1;
-  
+
   String text = null;
   String operator = null;
   String dataType = null;
   String operatorDisplayText = null;
   String contactTypeName = null;
+  String accountTypeName = null;
   String contactNameFirst = null;
   String contactNameLast = null;
 
 
   /**
-   *  Description of the Method
+   *  SearchCriteriaElement default constructor
    *
    *@since    1.1
    */
@@ -38,9 +39,10 @@ public class SearchCriteriaElement {
 
 
   /**
-   *  Description of the Method
+   *  SearchCriteriaElement constructor that parses a delimited string
+   *  and populates the object based on that
    *
-   *@param  elementText  Description of Parameter
+   *@param  elementText  delimited string to be parsed
    *@since               1.1
    */
   public SearchCriteriaElement(String elementText) {
@@ -56,18 +58,9 @@ public class SearchCriteriaElement {
     }
     if (st.hasMoreTokens()) {
       sourceId = Integer.parseInt((String) st.nextToken());
-    }    
+    }
   }
 
-  public int getSourceId() {
-          return sourceId;
-  }
-  public void setSourceId(int sourceId) {
-          this.sourceId = sourceId;
-  }
-  public void setSourceId(String sourceId) {
-          this.sourceId = Integer.parseInt(sourceId);
-  }
 
   /**
    *  Constructor for the SearchCriteriaElement object
@@ -78,6 +71,36 @@ public class SearchCriteriaElement {
    */
   public SearchCriteriaElement(ResultSet rs) throws SQLException {
     buildRecord(rs);
+  }
+
+
+  /**
+   *  Sets the SourceId attribute of the SearchCriteriaElement object
+   *
+   *@param  sourceId  The new SourceId value
+   */
+  public void setSourceId(int sourceId) {
+    this.sourceId = sourceId;
+  }
+
+
+  /**
+   *  Sets the SourceId attribute of the SearchCriteriaElement object
+   *
+   *@param  sourceId  The new SourceId value
+   */
+  public void setSourceId(String sourceId) {
+    this.sourceId = Integer.parseInt(sourceId);
+  }
+
+
+  /**
+   *  Sets the AccountTypeName attribute of the SearchCriteriaElement object
+   *
+   *@param  accountTypeName  The new AccountTypeName value
+   */
+  public void setAccountTypeName(String accountTypeName) {
+    this.accountTypeName = accountTypeName;
   }
 
 
@@ -174,6 +197,26 @@ public class SearchCriteriaElement {
    */
   public void setText(String text) {
     this.text = text;
+  }
+
+
+  /**
+   *  Gets the SourceId attribute of the SearchCriteriaElement object
+   *
+   *@return    The SourceId value
+   */
+  public int getSourceId() {
+    return sourceId;
+  }
+
+
+  /**
+   *  Gets the AccountTypeName attribute of the SearchCriteriaElement object
+   *
+   *@return    The AccountTypeName value
+   */
+  public String getAccountTypeName() {
+    return accountTypeName;
   }
 
 
@@ -295,10 +338,11 @@ public class SearchCriteriaElement {
 
 
   /**
-   *  Description of the Method
+   *  Retrieves descriptor information from the field_types table that pertains
+   *  to the operator that is associated with this SearchCriteriaElement
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   *@param  db                db connection
+   *@exception  SQLException  SQL Exception
    *@since
    */
   public void buildOperatorData(Connection db) throws SQLException {
@@ -318,11 +362,11 @@ public class SearchCriteriaElement {
 
 
   /**
-   *  Description of the Method
+   *  Inserts this SearchCriteriaElement into the database
    *
-   *@param  listid            Description of Parameter
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   *@param  listid            unique ID of the SearchCriteriaList that contains this element
+   *@param  db                db connection
+   *@exception  SQLException  SQL Exception
    *@since
    */
   public void insert(int listid, Connection db) throws SQLException {
@@ -344,25 +388,27 @@ public class SearchCriteriaElement {
       pst.setInt(++i, this.getOperatorId());
       pst.setString(++i, this.getText());
       pst.setInt(++i, this.getSourceId());
-      
+
       pst.execute();
       pst.close();
 
       db.commit();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    } finally {
+    }
+    finally {
       db.setAutoCommit(true);
     }
   }
 
 
   /**
-   *  Description of the Method
+   *  Retrieves element information in string format
    *
-   *@return    Description of the Returned Value
+   *@return    String representation of this element's info
    *@since
    */
   public String toString() {
@@ -378,10 +424,10 @@ public class SearchCriteriaElement {
 
 
   /**
-   *  Description of the Method
+   *  Populates object from ResultSet data
    *
-   *@param  rs                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   *@param  rs                data resultset from a query
+   *@exception  SQLException  SQL Exception
    *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
@@ -391,10 +437,11 @@ public class SearchCriteriaElement {
     operator = rs.getString("operator");
     text = rs.getString("value");
     sourceId = rs.getInt("source");
-    
+
     //lookup_contact_types table
     contactTypeName = rs.getString("ctype");
-    
+    accountTypeName = rs.getString("atype");
+
     //contact table
     contactNameFirst = rs.getString("cnamefirst");
     contactNameLast = rs.getString("cnamelast");

@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.LookupElement" %>
 <jsp:useBean id="SearchFieldList" class="com.darkhorseventures.cfsbase.SearchFieldList" scope="request"/>
 <jsp:useBean id="StringOperatorList" class="com.darkhorseventures.cfsbase.SearchOperatorList" scope="request"/>
 <jsp:useBean id="DateOperatorList" class="com.darkhorseventures.cfsbase.SearchOperatorList" scope="request"/>
@@ -6,52 +6,75 @@
 <jsp:useBean id="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
 <jsp:useBean id="SCL" class="com.darkhorseventures.cfsbase.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactSource" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 
-
 <SCRIPT LANGUAGE="JavaScript">
-<!-- Begin
-function HideSpans()
-{
-	isNS = (document.layers) ? true : false;
-	isIE = (document.all) ? true : false;
+<!-- 
+//updateOperators has to be defined in each file because it uses bean
+//information to populate selects
+
+function updateOperators(){
+	operatorList = document.searchForm.operatorSelect;
+	fieldSelectIndex = searchField[document.searchForm.fieldSelect.selectedIndex].type
 	
-  if( (isIE) )
-  {
-    //document.all.new0.style.visibility="hidden";
-    //document.all.new1.style.visibility="hidden";
-    //document.all.new2.style.visibility="hidden";
-    //document.all.new3.style.visibility="hidden";
-  }
-  else if( (isNS) )
-  {
-    document.new0.visibility="hidden";
-    document.new1.visibility="hidden";
-    document.new2.visibility="hidden";
-    document.new3.visibility="hidden";
-  }
-
-  return true;
-}
-
-function checkForm(form) {
-	formTest = true;
-        message = "";
-
-        if (form.groupName.value == "") {
-                message += "- Group Name is required\r\n";
-                formTest = false;
-        }
-
-	if (formTest == false) {
-         	alert("Registration could not be processed, please check the following:\r\n\r\n" + message);
-                return false;
-        } else {
-		saveValues();
-                return true;
-        }
-}
+	if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 8) {
+    
+    //clear the select
+    deleteOptions("idSelect");
+    <%
+    Iterator x = ContactTypeList.iterator();
+    if (x.hasNext()) {
+      while (x.hasNext()) {
+        LookupElement thisContactType = (LookupElement)x.next();
+    %>
+        insertOption("<%=thisContactType.getDescription()%>", "<%=thisContactType.getCode()%>", "idSelect");
+    <%
+      }
+    }
+    %>
+    
+		javascript:ShowSpan('new0');
+    javascript:HideSpan('new1');
+		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
+	} else if (document.searchForm.fieldSelect.selectedIndex == 3) {
+		javascript:HideSpan('new0');
+		javascript:ShowSpan('new1');
+		document.searchForm.searchValue.value = "";
+	} else if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11) {
+    javascript:HideSpan('new1');
+    //clear the select
+    deleteOptions("idSelect");
+    <%
+    Iterator z = AccountTypeList.iterator();
+    if (z.hasNext()) {
+      while (z.hasNext()) {
+        LookupElement thisElt = (LookupElement)z.next();
+    %>
+        insertOption("<%=thisElt.getDescription()%>", "<%=thisElt.getCode()%>", "idSelect");
+    <%
+      }
+    }
+    
+    %>
+    
+		javascript:ShowSpan('new0');
+		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
+	} else {
+		javascript:HideSpan('new0');
+    javascript:HideSpan('new1');
+		document.searchForm.searchValue.value = "";
+	}
+	
+	// empty the operator list
+	for (i = operatorList.options.length; i >= 0; i--)
+		operatorList.options[i]= null;
+	// fill operator list with new values
+	for (i = 0; i < listOfOperators[fieldSelectIndex].length; i++) {
+		operatorList.options[i] = new Option(listOfOperators[fieldSelectIndex][i].displayText, listOfOperators[fieldSelectIndex][i].id)
+	}
+} // end updateOperators
 
 //  End -->
 </SCRIPT>
@@ -60,7 +83,6 @@ function checkForm(form) {
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/searchForm.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <script language="JavaScript" type="text/javascript">
@@ -202,7 +224,8 @@ Group Details
     <tr><td valign=center>
     &nbsp;
     </td><td valign=center>
-    <span name="new0" ID="new0" style="position:relative; visibility:hidden"><%=ContactTypeList.getHtmlSelect("typeId",0)%></span>
+    <span name="new0" ID="new0" style="position:relative; visibility:hidden"><select id="idSelect" name="idSelect" onChange="javascript:setText(document.searchForm.idSelect);"></select>
+    </span>
     </td></tr>
     
     <tr>
@@ -254,7 +277,6 @@ Group Details
 			</select>
 		<%}%>
       <br>
-      <!--a href="javascript:popURLCampaign('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a><br-->
       <a href="javascript:popContactsListMultipleCampaign('listViewId','1');">Add/Remove Contacts</a><br>
       &nbsp;<br>
       <input type="hidden" name="previousSelection" value="">

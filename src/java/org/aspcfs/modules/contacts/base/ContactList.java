@@ -60,6 +60,7 @@ public class ContactList extends Vector {
   private HashMap cityHash = null;
   private HashMap typeIdHash = null;
   private HashMap contactIdHash = null;
+  private HashMap accountTypeIdHash = null;
   
   boolean firstCriteria = true;
   
@@ -110,6 +111,12 @@ public class ContactList extends Vector {
     this.contactIdRange = contactIdRange;
   }
   
+  public HashMap getAccountTypeIdHash() {
+    return accountTypeIdHash;
+  }
+  public void setAccountTypeIdHash(HashMap accountTypeIdHash) {
+    this.accountTypeIdHash = accountTypeIdHash;
+  }
   
   /**
    *  Sets the FirstName attribute of the ContactList object
@@ -405,6 +412,7 @@ public class ContactList extends Vector {
     this.cityHash = outerHash[6];
     this.typeIdHash = outerHash[7];
     this.contactIdHash = outerHash[8];
+    this.accountTypeIdHash = outerHash[9];
   }
   
   
@@ -708,6 +716,7 @@ public class ContactList extends Vector {
     HashMap city = new HashMap();
     HashMap typeId = new HashMap();
     HashMap contactId = new HashMap();
+    HashMap accountTypeId = new HashMap();
     
     int count = 0;
     
@@ -722,7 +731,8 @@ public class ContactList extends Vector {
       areacode,
       city,
       typeId,
-      contactId
+      contactId,
+      accountTypeId
     };
     
     if (System.getProperty("DEBUG") != null) {
@@ -740,6 +750,11 @@ public class ContactList extends Vector {
       while (j.hasNext()) {
         
         SearchCriteriaElement thisElement = (SearchCriteriaElement) j.next();
+        
+        //some alterations 
+        if (thisElement.getFieldId() == 11) {
+          thisElement.setFieldId(10);
+        }
         
         readyToGo = replace(thisElement.getText().toLowerCase(), '\'', "\\'");
         //String check = (String) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
@@ -1378,7 +1393,42 @@ public class ContactList extends Vector {
               if (termsProcessed > 0) {
                 sqlFilter.append(") ");
               }              
-            }          
+            }
+            
+            
+      //account types
+      if (accountTypeIdHash != null && accountTypeIdHash.size() > 0) {
+        Iterator outer = accountTypeIdHash.keySet().iterator();
+        
+        while(outer.hasNext()) {
+          
+          termsProcessed = 0;
+          String key1 = (String)outer.next();
+          HashMap innerHash = (HashMap)accountTypeIdHash.get(key1);
+          
+          Iterator inner = innerHash.keySet().iterator();
+          
+             while(inner.hasNext()) {
+                String key2 = (String)inner.next();
+                int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
+                
+                //equals is the only operator supported right now
+                if (elementType == y && key1.equals("=")) {
+                  newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                   if (termsProcessed == 0) {
+                    sqlFilter.append("(");
+                  }
+                  sqlFilter.append(" (c.org_id in (SELECT org_id FROM account_type_levels WHERE type_id = '" + key2 + "')) ");
+                  processElementType(sqlFilter, elementType);
+                  termsProcessed++;
+                }
+              }
+            }
+
+            if (termsProcessed > 0) {
+              sqlFilter.append(") ");
+            }              
+          }
             
         //area codes
         if (areaCodeHash != null && areaCodeHash.size() > 0) {

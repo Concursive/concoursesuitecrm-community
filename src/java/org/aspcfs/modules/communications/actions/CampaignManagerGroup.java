@@ -21,56 +21,9 @@ import com.darkhorseventures.webutils.*;
 public final class CampaignManagerGroup extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  Display a list of the SearchCriteriaLists that are currently in the database
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandShowContactsPopup(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
-      return ("PermissionError");
-    }
-
-    Exception errorMessage = null;
-    Connection db = null;
-    SearchCriteriaList thisSCL = new SearchCriteriaList();
-
-    context.getSession().removeAttribute("CampaginGroupsContactsInfo");
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsContactsInfo");
-    pagedListInfo.setLink("/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true");
-
-    try {
-      db = this.getConnection(context);
-      thisSCL.setEnteredBy(getUserId(context));
-      thisSCL.setModifiedBy(getUserId(context));
-      thisSCL.setOwner(getUserId(context));
-      thisSCL.setContactSource(Integer.parseInt(context.getRequest().getParameter("source")));
-
-      ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
-      contacts.setPagedListInfo(pagedListInfo);
-      contacts.buildList(db);
-      context.getRequest().setAttribute("ContactList", contacts);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      return ("PopupOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of Parameter
+   *@param  context  ActionContext
    *@return          Description of the Returned Value
    *@since           1.1
    */
@@ -93,13 +46,16 @@ public final class CampaignManagerGroup extends CFSModule {
       sclList.setPagedListInfo(pagedListInfo);
       if ("all".equals(pagedListInfo.getListView())) {
         sclList.setOwnerIdRange(this.getUserRange(context));
-      } else {
+      }
+      else {
         sclList.setOwner(this.getUserId(context));
       }
       sclList.buildList(db);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       errorMessage = e;
-    } finally {
+    }
+    finally {
       this.freeConnection(context, db);
     }
 
@@ -116,7 +72,8 @@ public final class CampaignManagerGroup extends CFSModule {
     if (errorMessage == null) {
       context.getRequest().setAttribute("sclList", sclList);
       return ("ViewOK");
-    } else {
+    }
+    else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
@@ -126,7 +83,7 @@ public final class CampaignManagerGroup extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
+   *@param  context  ActionContext
    *@return          Description of the Returned Value
    *@since
    */
@@ -151,9 +108,11 @@ public final class CampaignManagerGroup extends CFSModule {
         SearchCriteriaList scl = new SearchCriteriaList(db, passedId);
         context.getSession().setAttribute("SCL", scl);
       }
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       errorMessage = e;
-    } finally {
+    }
+    finally {
       this.freeConnection(context, db);
     }
 
@@ -169,7 +128,8 @@ public final class CampaignManagerGroup extends CFSModule {
 
     if (errorMessage == null) {
       return ("AddOK");
-    } else {
+    }
+    else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
@@ -177,9 +137,9 @@ public final class CampaignManagerGroup extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Displays the Campaign Group Editor page - used to create a new set of criteria for a query
    *
-   *@param  context  Description of Parameter
+   *@param  context  ActionContext
    *@return          Description of the Returned Value
    *@since
    */
@@ -202,35 +162,46 @@ public final class CampaignManagerGroup extends CFSModule {
       db = this.getConnection(context);
       thisSCL = new SearchCriteriaList(db, passedId);
       recordDeleted = thisSCL.delete(db);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       errorMessage = e;
-    } finally {
+    }
+    finally {
       this.freeConnection(context, db);
     }
 
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl","CampaignManagerGroup.do?command=View");
+        context.getRequest().setAttribute("refreshUrl", "CampaignManagerGroup.do?command=View");
         //deleteRecentItem(context, thisContact);
         return ("DeleteOK");
-      } else {
+      }
+      else {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("CampaignManager-> Error deleting group");
         }
         processErrors(context, thisSCL.getErrors());
         return (executeCommandView(context));
       }
-    } else {
+    }
+    else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Confirms deletion of campaign criteria
+   *
+   *@param  context  ActionContext
+   *@return          Description of the Returned Value
+   */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
     SearchCriteriaList thisSCL = null;
-    
+
     HtmlDialog htmlDialog = new HtmlDialog();
     String id = null;
 
@@ -241,42 +212,46 @@ public final class CampaignManagerGroup extends CFSModule {
     if (context.getRequest().getParameter("id") != null) {
       id = context.getRequest().getParameter("id");
     }
-    
+
     try {
       db = this.getConnection(context);
       thisSCL = new SearchCriteriaList(db, id);
-        htmlDialog.setTitle("CFS: Campaign Manager");
-        
-        htmlDialog.setRelationships(thisSCL.processDependencies(db));
-        
-        if (htmlDialog.getRelationships().size() == 0) {
-                htmlDialog.setShowAndConfirm(false);
-                htmlDialog.setDeleteUrl("javascript:window.location.href='/CampaignManagerGroup.do?command=Delete&id=" + id + "'");
-        } else {
-                htmlDialog.setHeader("This Group cannot be deleted because at least one Campaign is using it.");
-                htmlDialog.addButton("OK", "javascript:parent.window.close()");
-        }
-        
-    } catch (Exception e) {
+      htmlDialog.setTitle("CFS: Campaign Manager");
+
+      htmlDialog.setRelationships(thisSCL.processDependencies(db));
+
+      if (htmlDialog.getRelationships().size() == 0) {
+        htmlDialog.setShowAndConfirm(false);
+        htmlDialog.setDeleteUrl("javascript:window.location.href='/CampaignManagerGroup.do?command=Delete&id=" + id + "'");
+      }
+      else {
+        htmlDialog.setHeader("This Group cannot be deleted because at least one Campaign is using it.");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+      }
+
+    }
+    catch (Exception e) {
       errorMessage = e;
-    } finally {
+    }
+    finally {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
       context.getSession().setAttribute("Dialog", htmlDialog);
       return ("ConfirmDeleteOK");
-    } else {
+    }
+    else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
-  
+
 
 
   /**
-   *  Description of the Method
+   *  Insert criteria into the database
    *
-   *@param  context  Description of Parameter
+   *@param  context  ActionContext
    *@return          Description of the Returned Value
    *@since           1.1
    */
@@ -304,7 +279,8 @@ public final class CampaignManagerGroup extends CFSModule {
 
       if (!recordInserted) {
         processErrors(context, thisSCL.getErrors());
-      } else {
+      }
+      else {
 
         context.getRequest().setAttribute("id", "" + thisSCL.getId());
 
@@ -319,9 +295,11 @@ public final class CampaignManagerGroup extends CFSModule {
         context.getRequest().setAttribute("ContactList", contacts);
       }
 
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       errorMessage = e;
-    } finally {
+    }
+    finally {
       this.freeConnection(context, db);
     }
 
@@ -329,21 +307,22 @@ public final class CampaignManagerGroup extends CFSModule {
       if (recordInserted) {
         addModuleBean(context, "ManageGroups", "Preview");
         return ("InsertOK");
-      } else {
+      }
+      else {
         return (executeCommandAdd(context));
       }
 
-    } else {
+    }
+    else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
 
-
   /**
-   *  Description of the Method
+   *   Displays the Campaign Group Editor page - used to modify an existing set of criteria for a query
    *
-   *@param  context  Description of Parameter
+   *@param  context  ActionContext
    *@return          Description of the Returned Value
    *@since
    */
@@ -367,9 +346,11 @@ public final class CampaignManagerGroup extends CFSModule {
         SearchCriteriaList scl = new SearchCriteriaList(db, passedId);
         context.getRequest().setAttribute("SCL", scl);
       }
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       errorMessage = e;
-    } finally {
+    }
+    finally {
       this.freeConnection(context, db);
     }
 
@@ -385,7 +366,8 @@ public final class CampaignManagerGroup extends CFSModule {
 
     if (errorMessage == null) {
       return ("ModifyOK");
-    } else {
+    }
+    else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
@@ -393,9 +375,9 @@ public final class CampaignManagerGroup extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Updates a SearchCriteriaList in the database
    *
-   *@param  context  Description of Parameter
+   *@param  context  ActionContext
    *@return          Description of the Returned Value
    *@since
    */
@@ -423,7 +405,8 @@ public final class CampaignManagerGroup extends CFSModule {
 
       if (resultCount == -1) {
         processErrors(context, thisSCL.getErrors());
-      } else {
+      }
+      else {
 
         context.getRequest().setAttribute("id", "" + thisSCL.getId());
 
@@ -437,9 +420,11 @@ public final class CampaignManagerGroup extends CFSModule {
         contacts.buildList(db);
         context.getRequest().setAttribute("ContactList", contacts);
       }
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       errorMessage = e;
-    } finally {
+    }
+    finally {
       this.freeConnection(context, db);
     }
 
@@ -447,13 +432,16 @@ public final class CampaignManagerGroup extends CFSModule {
     if (errorMessage == null) {
       if (resultCount == -1) {
         return executeCommandModify(context);
-      } else if (resultCount == 1) {
+      }
+      else if (resultCount == 1) {
         return ("UpdateOK");
-      } else {
+      }
+      else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
       }
-    } else {
+    }
+    else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
@@ -461,9 +449,9 @@ public final class CampaignManagerGroup extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Preview the results of applying a SearchCriteriaList's criteria to the data in the database
    *
-   *@param  context  Description of Parameter
+   *@param  context  ActionContext
    *@return          Description of the Returned Value
    *@since
    */
@@ -491,9 +479,11 @@ public final class CampaignManagerGroup extends CFSModule {
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
 
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       errorMessage = e;
-    } finally {
+    }
+    finally {
       this.freeConnection(context, db);
     }
 
@@ -501,42 +491,55 @@ public final class CampaignManagerGroup extends CFSModule {
 
     if (errorMessage == null) {
       return ("PreviewOK");
-    } else {
+    }
+    else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
 
+
+  /**
+   *  Build the objects that are used in creating the HTML form elements for these pages
+   *
+   *@param  context           ActionContext
+   *@param  db                db connection
+   *@exception  SQLException  SQL Exception
+   */
   public void buildFormElements(ActionContext context, Connection db) throws SQLException {
     SearchFieldList searchFieldList = new SearchFieldList();
     SearchOperatorList stringOperatorList = new SearchOperatorList();
     SearchOperatorList dateOperatorList = new SearchOperatorList();
-    SearchOperatorList numberOperatorList = new SearchOperatorList();         
-    
+    SearchOperatorList numberOperatorList = new SearchOperatorList();
+
     HtmlSelect contactSource = new HtmlSelect();
     contactSource.addItem(SearchCriteriaList.SOURCE_MY_CONTACTS, "My Contacts");
     contactSource.addItem(SearchCriteriaList.SOURCE_ALL_CONTACTS, "All Contacts");
     contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "Account Contacts");
     contactSource.addItem(SearchCriteriaList.SOURCE_EMPLOYEES, "Employees");
     context.getRequest().setAttribute("ContactSource", contactSource);
-    
+
     ContactTypeList typeList = new ContactTypeList(db);
     LookupList ctl = typeList.getLookupList("typeId", 0);
     ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
     context.getRequest().setAttribute("ContactTypeList", ctl);
-    
+
+    LookupList accountTypeList = new LookupList(db, "lookup_account_types");
+    accountTypeList.setSelectSize(1);
+    context.getRequest().setAttribute("AccountTypeList", accountTypeList);
+
     searchFieldList.buildFieldList(db);
     context.getRequest().setAttribute("SearchFieldList", searchFieldList);
-    
+
     stringOperatorList.buildOperatorList(db, 0);
     context.getRequest().setAttribute("StringOperatorList", stringOperatorList);
-    
+
     dateOperatorList.buildOperatorList(db, 1);
     context.getRequest().setAttribute("DateOperatorList", dateOperatorList);
-    
+
     numberOperatorList.buildOperatorList(db, 2);
     context.getRequest().setAttribute("NumberOperatorList", numberOperatorList);
-  }        
+  }
 
 }
 

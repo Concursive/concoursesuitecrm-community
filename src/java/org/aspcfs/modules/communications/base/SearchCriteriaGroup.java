@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.sql.*;
 
 /**
- *  A group contains SearchCriteriaElements which provide the search criteria
+ *  A group contains SearchCriteriaElements which specify the search criteria
  *  for a query.
  *
  *@author     mrajkowski
  *@created    November 13, 2001
- *@version    $Id$
+ *@version    $Id: SearchCriteriaGroup.java,v 1.2 2002/04/24 15:39:44 mrajkowski
+ *      Exp $
  */
 public class SearchCriteriaGroup extends ArrayList {
 
@@ -60,10 +61,11 @@ public class SearchCriteriaGroup extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   *  Retrieves descriptor information from the field_types table that pertains
+   *  to the operator that is associated with the object's SearchField
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   *@param  db                db connection
+   *@exception  SQLException  SQL Exception
    *@since                    1.1
    */
   public void buildFieldData(Connection db) throws SQLException {
@@ -78,7 +80,6 @@ public class SearchCriteriaGroup extends ArrayList {
     rs.close();
     st.close();
   }
-  
 
 
 }
