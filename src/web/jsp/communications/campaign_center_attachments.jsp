@@ -35,15 +35,11 @@ Surveys
   </tr>
   <tr>
     <td width="100%" class="containerBack">
-      <ul>
-        <li>Choose a survey that will be sent to the campaign groups</li>
-        <li>Click "Update Campaign Attachment" to save changes</li>
-        <li>Surveys can be created or edited in the <a href="CampaignManagerAttachment.do">Create Attachments</a> utility</li>
-      </ul>
 <dhv:permission name="campaign-campaigns-edit">
-<input type="submit" value="Save Changes" name="Save"><br>
-&nbsp;<br>
+<input type="submit" value="Save Changes" name="Save">
 </dhv:permission>
+<input type="button" value="Back to Attachment Overview" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'"><br>
+&nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2" valign="center" align="left">
@@ -74,10 +70,11 @@ Surveys
     </td>
   </tr>
 </table>
-<dhv:permission name="campaign-campaigns-edit">
 <br>
+<dhv:permission name="campaign-campaigns-edit">
 <input type="submit" value="Save Changes" name="Save">
 </dhv:permission>
+<input type="button" value="Back to Attachment Overview" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'">
   </td>
   </tr>
 </table>

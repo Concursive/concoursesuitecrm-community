@@ -18,10 +18,8 @@ Attachments
   </tr>
   <tr>
     <td width="100%" class="containerBack">
-      <ul>
-        <li>Choose from any of the following attachment types to include with your Message</li>
-        <li>Certain attachments must be created and modified in the <a href="CampaignManagerAttachment.do">Create Attachments</a> utility</li>
-      </ul>
+<input type="button" value="Back to Campaign Details" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'"><br>
+&nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
@@ -33,12 +31,10 @@ Attachments
       Surveys
     </td>
     <td valign="top">
-      <a href="CampaignManager.do?command=ViewAttachment&id=<%= Campaign.getId() %>">
-        Change survey
-      </a>
       <dhv:evaluate if="<%= Campaign.hasSurvey() %>">
-        <br>Attached: <%= Survey.getName() %>&nbsp;
+        Attached: <%= toHtml(Survey.getName()) %><br>
       </dhv:evaluate>
+      [<a href="CampaignManager.do?command=ViewAttachment&id=<%= Campaign.getId() %>">Change survey</a>]
     </td>
   </tr>
   <tr class="containerBody">
@@ -46,17 +42,15 @@ Attachments
       File Attachments
     </td>
     <td valign="top">
-      <a href="CampaignManager.do?command=ManageFileAttachments&id=<%= Campaign.getId() %>">  
-        Change file attachments
-      </a>
       <dhv:evaluate if="<%= fileItemList.size() > 0 %>">
-        <br>Added: <%= fileItemList.size() %> file<%= (fileItemList.size() != 1?"s":"") %>
+        Files Added: <%= fileItemList.size() %> file<%= (fileItemList.size() != 1?"s":"") %><br>
       </dhv:evaluate>
+      [<a href="CampaignManager.do?command=ManageFileAttachments&id=<%= Campaign.getId() %>">Change file attachments</a>]
     </td>
   </tr>
 </table>
 &nbsp;<br>
-<input type="button" value="Done" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
+<input type="button" value="Back to Campaign Details" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
   </td>
   </tr>
 </table>

@@ -40,6 +40,8 @@ File Attachments
   </tr>
   <tr>
     <td width="100%" class="containerBack">
+      <input type="button" value="Back to Attachment Overview" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'"><br>
+      &nbsp;<br>
       <%-- List of Documents --%>
       <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
@@ -109,7 +111,7 @@ File Attachments
       </table>
       </dhv:permission>
       &nbsp;<br>
-      <input type="button" value="Done" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'">
+      <input type="button" value="Back to Attachment Overview" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'">
     </td>
   </tr>
 </table>

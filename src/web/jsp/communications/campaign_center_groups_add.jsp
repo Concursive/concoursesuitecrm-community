@@ -1,3 +1,4 @@
+<%@ taglib uri="//WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="sclList" class="org.aspcfs.modules.communications.base.SearchCriteriaListList" scope="request"/>
@@ -6,12 +7,16 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<form name="modForm" action="CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>" method="post">
+<form name="modForm" action="CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> > 
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Choose Groups
 <hr color="#BFBFBB" noshade>
+<input type="submit" value="Update Campaign Groups" onClick="this.form.action='CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>'">
+<input type="submit" value="Cancel" onClick="this.form.action='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
+<br>
+&nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -20,12 +25,6 @@ Choose Groups
   </tr>
   <tr>
     <td class="containerBack">
-      <ul>
-        <li>Choose groups of recipients that will be sent a message</li>
-        <li>Click "Update Campaign Groups" to save changes</li>
-        <li>Groups can be created or edited in the <a href="CampaignManagerGroup.do?command=View">Build Groups</a> utility</li>
-        <li>Use "Preview Recipients" to selectively remove a specific recipient from this campaign</li>
-      </ul>
 <table width="100%" border="0">
   <tr>
     <td align="left">
@@ -48,7 +47,7 @@ Choose Groups
   int rowid = 0;
   int selectCount = 0;
   while (i.hasNext()) {
-    if (rowid != 1) { rowid = 1; } else { rowid = 2; }
+    rowid = (rowid != 1?1:2);
     SearchCriteriaList thisList = (SearchCriteriaList)i.next();
 %>  
   <tr class="containerBody">
@@ -86,7 +85,10 @@ Choose Groups
 %>
 </table>
 <br>
-<input type="submit" value="Update Campaign Groups">
+<dhv:pagedListControl object="CampaignCenterGroupInfo" showForm="false" resetList="false"/>
+<br>
+<input type="submit" value="Update Campaign Groups" onClick="this.form.action='CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>'">
+<input type="submit" value="Cancel" onClick="this.form.action='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
   </td>
   </tr>
 </table>

@@ -50,7 +50,7 @@ function validateRadio (field) {
 %> 
 <dhv:evaluate exp="<%=!surveyBlank%>">
 <center>
-<table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="row1">
     <td>
       <font color="#8c8c8c"><strong>Web Survey</strong></font>
@@ -59,7 +59,7 @@ function validateRadio (field) {
 </table>
 &nbsp;<br>
 <form name="survey" action="CampaignManagerSurvey.do?command=MockInsert&id=<%=Survey.getId()%>"  method="post" onSubmit="return checkForm(this);">
-  <table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="containerBody">
       <td colspan="2" valign="center">
         <%= toHtml(Survey.getIntro()) %>
@@ -67,7 +67,7 @@ function validateRadio (field) {
     </tr>
   </table>
   &nbsp;<br>
-  <table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <%
   Iterator j = Survey.getQuestions().iterator();
 	if ( j.hasNext() ) {

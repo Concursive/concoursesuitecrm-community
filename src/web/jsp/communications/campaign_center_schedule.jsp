@@ -36,11 +36,11 @@ Delivery
   </tr>
   <tr>
     <td class="containerBack">
-      <ul>
-        <li>Choose a date for the campaign to run</li>
-        <li>Choose how messages should be delivered to recipients</li>
-        <li>Campaigns will not run until the campaign has been activated</li>
-      </ul>
+<dhv:permission name="campaign-campaigns-edit">
+<input type="submit" name="Save" value="Update Campaign Schedule">
+</dhv:permission>
+<input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'"><br>
+&nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
@@ -65,10 +65,11 @@ Delivery
     </td>
   </tr>
 </table>
-<dhv:permission name="campaign-campaigns-edit">
 <br>
+<dhv:permission name="campaign-campaigns-edit">
 <input type="submit" name="Save" value="Update Campaign Schedule">
 </dhv:permission>
+<input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
   </td>
   </tr>
 </table>
