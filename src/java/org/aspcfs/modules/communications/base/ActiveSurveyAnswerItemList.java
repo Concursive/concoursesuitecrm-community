@@ -6,6 +6,7 @@ import java.util.*;
 import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.communications.base.ActiveSurveyQuestionItem;
 import org.aspcfs.utils.web.PagedListInfo;
 import javax.servlet.http.*;
 
@@ -14,12 +15,14 @@ import javax.servlet.http.*;
  *
  *@author     Mathur
  *@created    February 4, 2003
- *@version    $Id$
+ *@version    $Id: ActiveSurveyAnswerItemList.java,v 1.5 2003/02/17 14:39:16
+ *      akhi_m Exp $
  */
 public class ActiveSurveyAnswerItemList extends ArrayList {
 
   private int itemId = -1;
   protected PagedListInfo pagedListInfo = null;
+  private ActiveSurveyQuestionItem item = null;
 
 
   /**
@@ -45,6 +48,16 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
    */
   public void setItemId(int itemId) {
     this.itemId = itemId;
+  }
+
+
+  /**
+   *  Gets the item attribute of the ActiveSurveyAnswerItemList object
+   *
+   *@return    The item value
+   */
+  public ActiveSurveyQuestionItem getItem() {
+    return item;
   }
 
 
@@ -91,7 +104,6 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
       pst.close();
       rs.close();
 
-
       //Determine column to sort by
       pagedListInfo.setDefaultSort("asr.entered", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
@@ -112,7 +124,7 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlOrder.toString());
     pst.setInt(1, itemId);
-    
+
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ActiveSurveyAnswerItemList Query --> " + pst.toString());
     }
@@ -135,12 +147,12 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
     rs.close();
     pst.close();
 
+    item = new ActiveSurveyQuestionItem(db, itemId);
     //build items & comments
     Iterator thisList = this.iterator();
     while (thisList.hasNext()) {
       ActiveSurveyAnswerItem thisItem = (ActiveSurveyAnswerItem) thisList.next();
       thisItem.buildRecipientInfo(db);
-      thisItem.buildItemDetails(db);
     }
   }
 }

@@ -4,7 +4,6 @@ import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import java.util.ArrayList;
 import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.communications.base.ActiveSurveyQuestionItem;
 
 /**
  *  A Survey Answer Item.
@@ -19,7 +18,6 @@ public class ActiveSurveyAnswerItem {
   private int itemId = -1;
   private int contactId = -1;
   private Contact recipient = null;
-  private ActiveSurveyQuestionItem item = null;
   private java.sql.Timestamp entered = null;
   
 
@@ -102,16 +100,6 @@ public class ActiveSurveyAnswerItem {
 
 
   /**
-   *  Sets the item attribute of the ActiveSurveyAnswerItem object
-   *
-   *@param  item  The new item value
-   */
-  public void setItem(ActiveSurveyQuestionItem item) {
-    this.item = item;
-  }
-
-
-  /**
    *  Sets the itemId attribute of the ActiveSurveyAnswerItem object
    *
    *@param  itemId  The new itemId value
@@ -162,16 +150,6 @@ public class ActiveSurveyAnswerItem {
 
 
   /**
-   *  Gets the item attribute of the ActiveSurveyAnswerItem object
-   *
-   *@return    The item value
-   */
-  public ActiveSurveyQuestionItem getItem() {
-    return item;
-  }
-
-
-  /**
    *  Sets the id attribute of the ActiveSurveyAnswerItem object
    *
    *@param  tmp  The new id value
@@ -188,20 +166,6 @@ public class ActiveSurveyAnswerItem {
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public void buildItemDetails(Connection db) throws SQLException {
-    if (itemId == -1) {
-      throw new SQLException("Item ID not specified");
-    }
-    item = new ActiveSurveyQuestionItem(db, itemId);
   }
 
 
