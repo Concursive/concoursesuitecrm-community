@@ -213,13 +213,11 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
                 }
         }
         
-        //...
       }
       
       //remove contacts that have been un-checked
-      removeOptions(displayFieldId, recipientIds);
+      //removeOptions(displayFieldId, recipientIds);
       
-      /**
       for(i=0; i < recipientEmails.length; i++) {
           var newCriteria = "9|1|" + recipientIds[i];
           
@@ -230,7 +228,6 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
           }
           
 			}
-      */
       
 		} else if(listType == "single"){
         opener.document.getElementById(hiddenFieldId).value = recipientIds[i];
