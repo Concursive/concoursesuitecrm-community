@@ -192,12 +192,10 @@ CREATE TABLE project_folders (
   parent INT NULL
 );
   
-/* project_id will be replaced by link_item_id */
 CREATE TABLE project_files (
   item_id INT IDENTITY PRIMARY KEY ,
   link_module_id INTEGER NOT NULL,
   link_item_id INTEGER NOT NULL,
-  project_id INTEGER NULL, 
   folder_id INTEGER NULL REFERENCES project_folders,
   client_filename VARCHAR(255) NOT NULL,
   filename VARCHAR(255) NOT NULL,
