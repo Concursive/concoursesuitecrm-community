@@ -69,7 +69,7 @@ CREATE TABLE lookup_project_category (
 
 CREATE TABLE projects (
   project_id INT IDENTITY PRIMARY KEY,
-  group_id INTEGER NOT NULL,
+  group_id INTEGER NULL,
   department_id INTEGER REFERENCES lookup_department(code),
   template_id INTEGER,
   title VARCHAR(100) NOT NULL ,

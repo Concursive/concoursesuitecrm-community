@@ -1304,7 +1304,7 @@ GO
 
 CREATE TABLE [projects] (
 	[project_id] [int] IDENTITY (1, 1) NOT NULL ,
-	[group_id] [int] NOT NULL ,
+	[group_id] [int] NULL,
 	[department_id] [int] NULL ,
 	[template_id] [int] NULL ,
 	[title] [varchar] (100) NOT NULL ,
