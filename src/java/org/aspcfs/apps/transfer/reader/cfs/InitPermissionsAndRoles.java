@@ -98,6 +98,9 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.addField("lookups", (String) category.getAttribute("lookups"));
         thisRecord.addField("viewpoints", (String) category.getAttribute("viewpoints"));
         thisRecord.addField("reports", (String) category.getAttribute("reports"));
+        thisRecord.addField("scheduledEvents", (String) category.getAttribute("scheduledEvents"));
+        thisRecord.addField("objectEvents", (String) category.getAttribute("objectEvents"));
+        thisRecord.addField("categories", (String) category.getAttribute("categories"));
         processOK = writer.save(thisRecord);
         int categoryId = Integer.parseInt(writer.getLastResponse());
         

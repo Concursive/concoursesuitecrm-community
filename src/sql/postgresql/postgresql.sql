@@ -137,7 +137,7 @@ SELECT pg_catalog.setval ('events_log_log_id_seq', 1, false);
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 2 (OID 125370)
+-- TOC entry 2 (OID 130494)
 -- Name: access_user_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -150,7 +150,7 @@ CREATE SEQUENCE access_user_id_seq
 
 
 --
--- TOC entry 110 (OID 125372)
+-- TOC entry 110 (OID 130496)
 -- Name: access; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -179,7 +179,7 @@ CREATE TABLE "access" (
 
 
 --
--- TOC entry 111 (OID 125394)
+-- TOC entry 111 (OID 130518)
 -- Name: lookup_industry; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -194,7 +194,7 @@ CREATE TABLE lookup_industry (
 
 
 --
--- TOC entry 112 (OID 125404)
+-- TOC entry 112 (OID 130528)
 -- Name: access_log; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -209,7 +209,7 @@ CREATE TABLE access_log (
 
 
 --
--- TOC entry 113 (OID 125416)
+-- TOC entry 113 (OID 130540)
 -- Name: usage_log; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -224,7 +224,7 @@ CREATE TABLE usage_log (
 
 
 --
--- TOC entry 114 (OID 125424)
+-- TOC entry 114 (OID 130548)
 -- Name: lookup_contact_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -240,7 +240,7 @@ CREATE TABLE lookup_contact_types (
 
 
 --
--- TOC entry 115 (OID 125439)
+-- TOC entry 115 (OID 130563)
 -- Name: lookup_account_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -254,7 +254,7 @@ CREATE TABLE lookup_account_types (
 
 
 --
--- TOC entry 116 (OID 125447)
+-- TOC entry 116 (OID 130571)
 -- Name: state; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -265,7 +265,7 @@ CREATE TABLE state (
 
 
 --
--- TOC entry 117 (OID 125453)
+-- TOC entry 117 (OID 130577)
 -- Name: lookup_department; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -279,7 +279,7 @@ CREATE TABLE lookup_department (
 
 
 --
--- TOC entry 4 (OID 125461)
+-- TOC entry 4 (OID 130585)
 -- Name: lookup_orgaddress_type_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -292,7 +292,7 @@ CREATE SEQUENCE lookup_orgaddress_type_code_seq
 
 
 --
--- TOC entry 118 (OID 125463)
+-- TOC entry 118 (OID 130587)
 -- Name: lookup_orgaddress_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -306,7 +306,7 @@ CREATE TABLE lookup_orgaddress_types (
 
 
 --
--- TOC entry 119 (OID 125473)
+-- TOC entry 119 (OID 130597)
 -- Name: lookup_orgemail_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -320,7 +320,7 @@ CREATE TABLE lookup_orgemail_types (
 
 
 --
--- TOC entry 120 (OID 125483)
+-- TOC entry 120 (OID 130607)
 -- Name: lookup_orgphone_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -334,7 +334,7 @@ CREATE TABLE lookup_orgphone_types (
 
 
 --
--- TOC entry 6 (OID 125491)
+-- TOC entry 6 (OID 130615)
 -- Name: lookup_instantmessenge_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -347,7 +347,7 @@ CREATE SEQUENCE lookup_instantmessenge_code_seq
 
 
 --
--- TOC entry 121 (OID 125493)
+-- TOC entry 121 (OID 130617)
 -- Name: lookup_instantmessenger_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -361,7 +361,7 @@ CREATE TABLE lookup_instantmessenger_types (
 
 
 --
--- TOC entry 8 (OID 125501)
+-- TOC entry 8 (OID 130625)
 -- Name: lookup_employment_type_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -374,7 +374,7 @@ CREATE SEQUENCE lookup_employment_type_code_seq
 
 
 --
--- TOC entry 122 (OID 125503)
+-- TOC entry 122 (OID 130627)
 -- Name: lookup_employment_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -388,7 +388,7 @@ CREATE TABLE lookup_employment_types (
 
 
 --
--- TOC entry 123 (OID 125513)
+-- TOC entry 123 (OID 130637)
 -- Name: lookup_locale; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -402,7 +402,7 @@ CREATE TABLE lookup_locale (
 
 
 --
--- TOC entry 10 (OID 125521)
+-- TOC entry 10 (OID 130645)
 -- Name: lookup_contactaddress__code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -415,7 +415,7 @@ CREATE SEQUENCE lookup_contactaddress__code_seq
 
 
 --
--- TOC entry 124 (OID 125523)
+-- TOC entry 124 (OID 130647)
 -- Name: lookup_contactaddress_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -429,7 +429,7 @@ CREATE TABLE lookup_contactaddress_types (
 
 
 --
--- TOC entry 12 (OID 125531)
+-- TOC entry 12 (OID 130655)
 -- Name: lookup_contactemail_ty_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -442,7 +442,7 @@ CREATE SEQUENCE lookup_contactemail_ty_code_seq
 
 
 --
--- TOC entry 125 (OID 125533)
+-- TOC entry 125 (OID 130657)
 -- Name: lookup_contactemail_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -456,7 +456,7 @@ CREATE TABLE lookup_contactemail_types (
 
 
 --
--- TOC entry 14 (OID 125541)
+-- TOC entry 14 (OID 130665)
 -- Name: lookup_contactphone_ty_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -469,7 +469,7 @@ CREATE SEQUENCE lookup_contactphone_ty_code_seq
 
 
 --
--- TOC entry 126 (OID 125543)
+-- TOC entry 126 (OID 130667)
 -- Name: lookup_contactphone_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -483,7 +483,7 @@ CREATE TABLE lookup_contactphone_types (
 
 
 --
--- TOC entry 127 (OID 125553)
+-- TOC entry 127 (OID 130677)
 -- Name: lookup_access_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -499,7 +499,7 @@ CREATE TABLE lookup_access_types (
 
 
 --
--- TOC entry 16 (OID 125560)
+-- TOC entry 16 (OID 130684)
 -- Name: organization_org_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -512,7 +512,7 @@ CREATE SEQUENCE organization_org_id_seq
 
 
 --
--- TOC entry 128 (OID 125562)
+-- TOC entry 128 (OID 130686)
 -- Name: organization; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -556,7 +556,7 @@ CREATE TABLE organization (
 
 
 --
--- TOC entry 129 (OID 125593)
+-- TOC entry 129 (OID 130717)
 -- Name: contact; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -600,7 +600,7 @@ CREATE TABLE contact (
 
 
 --
--- TOC entry 130 (OID 125650)
+-- TOC entry 130 (OID 130774)
 -- Name: role; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -617,7 +617,7 @@ CREATE TABLE role (
 
 
 --
--- TOC entry 18 (OID 125667)
+-- TOC entry 18 (OID 130791)
 -- Name: permission_cate_category_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -630,7 +630,7 @@ CREATE SEQUENCE permission_cate_category_id_seq
 
 
 --
--- TOC entry 131 (OID 125669)
+-- TOC entry 131 (OID 130793)
 -- Name: permission_category; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -652,7 +652,7 @@ CREATE TABLE permission_category (
 
 
 --
--- TOC entry 132 (OID 125686)
+-- TOC entry 132 (OID 130810)
 -- Name: permission; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -673,7 +673,7 @@ CREATE TABLE permission (
 
 
 --
--- TOC entry 133 (OID 125706)
+-- TOC entry 133 (OID 130830)
 -- Name: role_permission; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -689,7 +689,7 @@ CREATE TABLE role_permission (
 
 
 --
--- TOC entry 134 (OID 125725)
+-- TOC entry 134 (OID 130849)
 -- Name: lookup_stage; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -704,7 +704,7 @@ CREATE TABLE lookup_stage (
 
 
 --
--- TOC entry 20 (OID 125733)
+-- TOC entry 20 (OID 130857)
 -- Name: lookup_delivery_option_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -717,7 +717,7 @@ CREATE SEQUENCE lookup_delivery_option_code_seq
 
 
 --
--- TOC entry 135 (OID 125735)
+-- TOC entry 135 (OID 130859)
 -- Name: lookup_delivery_options; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -731,7 +731,7 @@ CREATE TABLE lookup_delivery_options (
 
 
 --
--- TOC entry 136 (OID 125745)
+-- TOC entry 136 (OID 130869)
 -- Name: news; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -749,7 +749,7 @@ CREATE TABLE news (
 
 
 --
--- TOC entry 22 (OID 125758)
+-- TOC entry 22 (OID 130882)
 -- Name: organization_add_address_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -762,7 +762,7 @@ CREATE SEQUENCE organization_add_address_id_seq
 
 
 --
--- TOC entry 137 (OID 125760)
+-- TOC entry 137 (OID 130884)
 -- Name: organization_address; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -785,7 +785,7 @@ CREATE TABLE organization_address (
 
 
 --
--- TOC entry 24 (OID 125783)
+-- TOC entry 24 (OID 130907)
 -- Name: organization__emailaddress__seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -798,7 +798,7 @@ CREATE SEQUENCE organization__emailaddress__seq
 
 
 --
--- TOC entry 138 (OID 125785)
+-- TOC entry 138 (OID 130909)
 -- Name: organization_emailaddress; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -815,7 +815,7 @@ CREATE TABLE organization_emailaddress (
 
 
 --
--- TOC entry 26 (OID 125808)
+-- TOC entry 26 (OID 130932)
 -- Name: organization_phone_phone_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -828,7 +828,7 @@ CREATE SEQUENCE organization_phone_phone_id_seq
 
 
 --
--- TOC entry 139 (OID 125810)
+-- TOC entry 139 (OID 130934)
 -- Name: organization_phone; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -846,7 +846,7 @@ CREATE TABLE organization_phone (
 
 
 --
--- TOC entry 140 (OID 125835)
+-- TOC entry 140 (OID 130959)
 -- Name: contact_address; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -869,7 +869,7 @@ CREATE TABLE contact_address (
 
 
 --
--- TOC entry 28 (OID 125858)
+-- TOC entry 28 (OID 130982)
 -- Name: contact_email_emailaddress__seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -882,7 +882,7 @@ CREATE SEQUENCE contact_email_emailaddress__seq
 
 
 --
--- TOC entry 141 (OID 125860)
+-- TOC entry 141 (OID 130984)
 -- Name: contact_emailaddress; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -899,7 +899,7 @@ CREATE TABLE contact_emailaddress (
 
 
 --
--- TOC entry 142 (OID 125885)
+-- TOC entry 142 (OID 131009)
 -- Name: contact_phone; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -917,7 +917,7 @@ CREATE TABLE contact_phone (
 
 
 --
--- TOC entry 30 (OID 125908)
+-- TOC entry 30 (OID 131032)
 -- Name: notification_notification_i_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -930,7 +930,7 @@ CREATE SEQUENCE notification_notification_i_seq
 
 
 --
--- TOC entry 143 (OID 125910)
+-- TOC entry 143 (OID 131034)
 -- Name: notification; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -950,7 +950,7 @@ CREATE TABLE notification (
 
 
 --
--- TOC entry 144 (OID 125922)
+-- TOC entry 144 (OID 131046)
 -- Name: cfsinbox_message; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -970,7 +970,7 @@ CREATE TABLE cfsinbox_message (
 
 
 --
--- TOC entry 145 (OID 125943)
+-- TOC entry 145 (OID 131067)
 -- Name: cfsinbox_messagelink; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -985,7 +985,7 @@ CREATE TABLE cfsinbox_messagelink (
 
 
 --
--- TOC entry 146 (OID 125959)
+-- TOC entry 146 (OID 131083)
 -- Name: account_type_levels; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -999,7 +999,7 @@ CREATE TABLE account_type_levels (
 
 
 --
--- TOC entry 147 (OID 125971)
+-- TOC entry 147 (OID 131095)
 -- Name: contact_type_levels; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1013,7 +1013,7 @@ CREATE TABLE contact_type_levels (
 
 
 --
--- TOC entry 148 (OID 125985)
+-- TOC entry 148 (OID 131109)
 -- Name: lookup_lists_lookup; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1031,7 +1031,7 @@ CREATE TABLE lookup_lists_lookup (
 
 
 --
--- TOC entry 149 (OID 126001)
+-- TOC entry 149 (OID 131125)
 -- Name: viewpoint; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1048,7 +1048,7 @@ CREATE TABLE viewpoint (
 
 
 --
--- TOC entry 32 (OID 126025)
+-- TOC entry 32 (OID 131149)
 -- Name: viewpoint_per_vp_permission_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1061,7 +1061,7 @@ CREATE SEQUENCE viewpoint_per_vp_permission_seq
 
 
 --
--- TOC entry 150 (OID 126027)
+-- TOC entry 150 (OID 131151)
 -- Name: viewpoint_permission; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1077,7 +1077,7 @@ CREATE TABLE viewpoint_permission (
 
 
 --
--- TOC entry 151 (OID 126046)
+-- TOC entry 151 (OID 131170)
 -- Name: report; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1099,7 +1099,7 @@ CREATE TABLE report (
 
 
 --
--- TOC entry 152 (OID 126077)
+-- TOC entry 152 (OID 131201)
 -- Name: report_criteria; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1117,7 +1117,7 @@ CREATE TABLE report_criteria (
 
 
 --
--- TOC entry 153 (OID 126103)
+-- TOC entry 153 (OID 131227)
 -- Name: report_criteria_parameter; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1130,7 +1130,7 @@ CREATE TABLE report_criteria_parameter (
 
 
 --
--- TOC entry 154 (OID 126117)
+-- TOC entry 154 (OID 131241)
 -- Name: report_queue; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1148,7 +1148,7 @@ CREATE TABLE report_queue (
 
 
 --
--- TOC entry 155 (OID 126136)
+-- TOC entry 155 (OID 131260)
 -- Name: report_queue_criteria; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1161,7 +1161,7 @@ CREATE TABLE report_queue_criteria (
 
 
 --
--- TOC entry 34 (OID 126148)
+-- TOC entry 34 (OID 131272)
 -- Name: action_list_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1174,7 +1174,7 @@ CREATE SEQUENCE action_list_code_seq
 
 
 --
--- TOC entry 156 (OID 126150)
+-- TOC entry 156 (OID 131274)
 -- Name: action_list; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1193,7 +1193,7 @@ CREATE TABLE action_list (
 
 
 --
--- TOC entry 36 (OID 126170)
+-- TOC entry 36 (OID 131294)
 -- Name: action_item_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1206,7 +1206,7 @@ CREATE SEQUENCE action_item_code_seq
 
 
 --
--- TOC entry 157 (OID 126172)
+-- TOC entry 157 (OID 131296)
 -- Name: action_item; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1224,7 +1224,7 @@ CREATE TABLE action_item (
 
 
 --
--- TOC entry 38 (OID 126192)
+-- TOC entry 38 (OID 131316)
 -- Name: action_item_log_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1237,7 +1237,7 @@ CREATE SEQUENCE action_item_log_code_seq
 
 
 --
--- TOC entry 158 (OID 126194)
+-- TOC entry 158 (OID 131318)
 -- Name: action_item_log; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1254,7 +1254,7 @@ CREATE TABLE action_item_log (
 
 
 --
--- TOC entry 159 (OID 126216)
+-- TOC entry 159 (OID 131340)
 -- Name: database_version; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1267,7 +1267,7 @@ CREATE TABLE database_version (
 
 
 --
--- TOC entry 160 (OID 126341)
+-- TOC entry 160 (OID 131465)
 -- Name: lookup_call_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1281,7 +1281,7 @@ CREATE TABLE lookup_call_types (
 
 
 --
--- TOC entry 40 (OID 126349)
+-- TOC entry 40 (OID 131473)
 -- Name: lookup_opportunity_typ_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1294,7 +1294,7 @@ CREATE SEQUENCE lookup_opportunity_typ_code_seq
 
 
 --
--- TOC entry 161 (OID 126351)
+-- TOC entry 161 (OID 131475)
 -- Name: lookup_opportunity_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1309,7 +1309,7 @@ CREATE TABLE lookup_opportunity_types (
 
 
 --
--- TOC entry 162 (OID 126361)
+-- TOC entry 162 (OID 131485)
 -- Name: opportunity_header; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1326,7 +1326,7 @@ CREATE TABLE opportunity_header (
 
 
 --
--- TOC entry 163 (OID 126380)
+-- TOC entry 163 (OID 131504)
 -- Name: opportunity_component; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1359,7 +1359,7 @@ CREATE TABLE opportunity_component (
 
 
 --
--- TOC entry 164 (OID 126414)
+-- TOC entry 164 (OID 131538)
 -- Name: opportunity_component_levels; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1373,7 +1373,7 @@ CREATE TABLE opportunity_component_levels (
 
 
 --
--- TOC entry 165 (OID 126428)
+-- TOC entry 165 (OID 131552)
 -- Name: call_log; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1398,7 +1398,7 @@ CREATE TABLE call_log (
 
 
 --
--- TOC entry 166 (OID 126481)
+-- TOC entry 166 (OID 131605)
 -- Name: ticket_level; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1412,7 +1412,7 @@ CREATE TABLE ticket_level (
 
 
 --
--- TOC entry 167 (OID 126493)
+-- TOC entry 167 (OID 131617)
 -- Name: ticket_severity; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1427,7 +1427,7 @@ CREATE TABLE ticket_severity (
 
 
 --
--- TOC entry 168 (OID 126509)
+-- TOC entry 168 (OID 131633)
 -- Name: lookup_ticketsource; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1441,7 +1441,7 @@ CREATE TABLE lookup_ticketsource (
 
 
 --
--- TOC entry 169 (OID 126521)
+-- TOC entry 169 (OID 131645)
 -- Name: ticket_priority; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1456,7 +1456,7 @@ CREATE TABLE ticket_priority (
 
 
 --
--- TOC entry 170 (OID 126537)
+-- TOC entry 170 (OID 131661)
 -- Name: ticket_category; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1473,7 +1473,7 @@ CREATE TABLE ticket_category (
 
 
 --
--- TOC entry 171 (OID 126552)
+-- TOC entry 171 (OID 131676)
 -- Name: ticket_category_draft; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1491,7 +1491,7 @@ CREATE TABLE ticket_category_draft (
 
 
 --
--- TOC entry 172 (OID 126568)
+-- TOC entry 172 (OID 131692)
 -- Name: ticket; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1524,7 +1524,7 @@ CREATE TABLE ticket (
 
 
 --
--- TOC entry 173 (OID 126622)
+-- TOC entry 173 (OID 131746)
 -- Name: ticketlog; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1547,7 +1547,7 @@ CREATE TABLE ticketlog (
 
 
 --
--- TOC entry 42 (OID 126680)
+-- TOC entry 42 (OID 131804)
 -- Name: module_field_categorylin_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1560,7 +1560,7 @@ CREATE SEQUENCE module_field_categorylin_id_seq
 
 
 --
--- TOC entry 174 (OID 126682)
+-- TOC entry 174 (OID 131806)
 -- Name: module_field_categorylink; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1575,7 +1575,7 @@ CREATE TABLE module_field_categorylink (
 
 
 --
--- TOC entry 44 (OID 126698)
+-- TOC entry 44 (OID 131822)
 -- Name: custom_field_ca_category_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1588,7 +1588,7 @@ CREATE SEQUENCE custom_field_ca_category_id_seq
 
 
 --
--- TOC entry 175 (OID 126700)
+-- TOC entry 175 (OID 131824)
 -- Name: custom_field_category; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1609,7 +1609,7 @@ CREATE TABLE custom_field_category (
 
 
 --
--- TOC entry 46 (OID 126720)
+-- TOC entry 46 (OID 131844)
 -- Name: custom_field_group_group_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1622,7 +1622,7 @@ CREATE SEQUENCE custom_field_group_group_id_seq
 
 
 --
--- TOC entry 176 (OID 126722)
+-- TOC entry 176 (OID 131846)
 -- Name: custom_field_group; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1640,7 +1640,7 @@ CREATE TABLE custom_field_group (
 
 
 --
--- TOC entry 177 (OID 126741)
+-- TOC entry 177 (OID 131865)
 -- Name: custom_field_info; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1662,7 +1662,7 @@ CREATE TABLE custom_field_info (
 
 
 --
--- TOC entry 178 (OID 126762)
+-- TOC entry 178 (OID 131886)
 -- Name: custom_field_lookup; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1680,7 +1680,7 @@ CREATE TABLE custom_field_lookup (
 
 
 --
--- TOC entry 48 (OID 126776)
+-- TOC entry 48 (OID 131900)
 -- Name: custom_field_reco_record_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1693,7 +1693,7 @@ CREATE SEQUENCE custom_field_reco_record_id_seq
 
 
 --
--- TOC entry 179 (OID 126778)
+-- TOC entry 179 (OID 131902)
 -- Name: custom_field_record; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1711,7 +1711,7 @@ CREATE TABLE custom_field_record (
 
 
 --
--- TOC entry 180 (OID 126799)
+-- TOC entry 180 (OID 131923)
 -- Name: custom_field_data; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1726,7 +1726,7 @@ CREATE TABLE custom_field_data (
 
 
 --
--- TOC entry 50 (OID 126814)
+-- TOC entry 50 (OID 131938)
 -- Name: lookup_project_activit_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1739,7 +1739,7 @@ CREATE SEQUENCE lookup_project_activit_code_seq
 
 
 --
--- TOC entry 181 (OID 126816)
+-- TOC entry 181 (OID 131940)
 -- Name: lookup_project_activity; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1755,7 +1755,7 @@ CREATE TABLE lookup_project_activity (
 
 
 --
--- TOC entry 52 (OID 126826)
+-- TOC entry 52 (OID 131950)
 -- Name: lookup_project_priorit_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1768,7 +1768,7 @@ CREATE SEQUENCE lookup_project_priorit_code_seq
 
 
 --
--- TOC entry 182 (OID 126828)
+-- TOC entry 182 (OID 131952)
 -- Name: lookup_project_priority; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1785,7 +1785,7 @@ CREATE TABLE lookup_project_priority (
 
 
 --
--- TOC entry 183 (OID 126839)
+-- TOC entry 183 (OID 131963)
 -- Name: lookup_project_issues; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1800,7 +1800,7 @@ CREATE TABLE lookup_project_issues (
 
 
 --
--- TOC entry 184 (OID 126850)
+-- TOC entry 184 (OID 131974)
 -- Name: lookup_project_status; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1817,7 +1817,7 @@ CREATE TABLE lookup_project_status (
 
 
 --
--- TOC entry 185 (OID 126861)
+-- TOC entry 185 (OID 131985)
 -- Name: lookup_project_loe; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1833,7 +1833,7 @@ CREATE TABLE lookup_project_loe (
 
 
 --
--- TOC entry 186 (OID 126873)
+-- TOC entry 186 (OID 131997)
 -- Name: projects; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1858,7 +1858,7 @@ CREATE TABLE projects (
 
 
 --
--- TOC entry 54 (OID 126894)
+-- TOC entry 54 (OID 132018)
 -- Name: project_requi_requirement_i_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1871,7 +1871,7 @@ CREATE SEQUENCE project_requi_requirement_i_seq
 
 
 --
--- TOC entry 187 (OID 126896)
+-- TOC entry 187 (OID 132020)
 -- Name: project_requirements; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1900,7 +1900,7 @@ CREATE TABLE project_requirements (
 
 
 --
--- TOC entry 56 (OID 126934)
+-- TOC entry 56 (OID 132058)
 -- Name: project_assig_assignment_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1913,7 +1913,7 @@ CREATE SEQUENCE project_assig_assignment_id_seq
 
 
 --
--- TOC entry 188 (OID 126936)
+-- TOC entry 188 (OID 132060)
 -- Name: project_assignments; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1946,7 +1946,7 @@ CREATE TABLE project_assignments (
 
 
 --
--- TOC entry 58 (OID 126991)
+-- TOC entry 58 (OID 132115)
 -- Name: project_assignmen_status_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -1959,7 +1959,7 @@ CREATE SEQUENCE project_assignmen_status_id_seq
 
 
 --
--- TOC entry 189 (OID 126993)
+-- TOC entry 189 (OID 132117)
 -- Name: project_assignments_status; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1973,7 +1973,7 @@ CREATE TABLE project_assignments_status (
 
 
 --
--- TOC entry 190 (OID 127012)
+-- TOC entry 190 (OID 132136)
 -- Name: project_issues; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -1993,7 +1993,7 @@ CREATE TABLE project_issues (
 
 
 --
--- TOC entry 60 (OID 127042)
+-- TOC entry 60 (OID 132166)
 -- Name: project_issue_repl_reply_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2006,7 +2006,7 @@ CREATE SEQUENCE project_issue_repl_reply_id_seq
 
 
 --
--- TOC entry 191 (OID 127044)
+-- TOC entry 191 (OID 132168)
 -- Name: project_issue_replies; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2025,7 +2025,7 @@ CREATE TABLE project_issue_replies (
 
 
 --
--- TOC entry 192 (OID 127069)
+-- TOC entry 192 (OID 132193)
 -- Name: project_folders; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2040,7 +2040,7 @@ CREATE TABLE project_folders (
 
 
 --
--- TOC entry 193 (OID 127079)
+-- TOC entry 193 (OID 132203)
 -- Name: project_files; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2064,7 +2064,7 @@ CREATE TABLE project_files (
 
 
 --
--- TOC entry 194 (OID 127106)
+-- TOC entry 194 (OID 132230)
 -- Name: project_files_version; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2085,7 +2085,7 @@ CREATE TABLE project_files_version (
 
 
 --
--- TOC entry 195 (OID 127129)
+-- TOC entry 195 (OID 132253)
 -- Name: project_files_download; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2098,7 +2098,7 @@ CREATE TABLE project_files_download (
 
 
 --
--- TOC entry 196 (OID 127141)
+-- TOC entry 196 (OID 132265)
 -- Name: project_team; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2114,7 +2114,7 @@ CREATE TABLE project_team (
 
 
 --
--- TOC entry 197 (OID 127202)
+-- TOC entry 197 (OID 132326)
 -- Name: saved_criterialist; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2132,7 +2132,7 @@ CREATE TABLE saved_criterialist (
 
 
 --
--- TOC entry 198 (OID 127225)
+-- TOC entry 198 (OID 132349)
 -- Name: campaign; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2163,7 +2163,7 @@ CREATE TABLE campaign (
 
 
 --
--- TOC entry 199 (OID 127255)
+-- TOC entry 199 (OID 132379)
 -- Name: campaign_run; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2180,7 +2180,7 @@ CREATE TABLE campaign_run (
 
 
 --
--- TOC entry 200 (OID 127272)
+-- TOC entry 200 (OID 132396)
 -- Name: excluded_recipient; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2192,7 +2192,7 @@ CREATE TABLE excluded_recipient (
 
 
 --
--- TOC entry 201 (OID 127285)
+-- TOC entry 201 (OID 132409)
 -- Name: campaign_list_groups; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2203,7 +2203,7 @@ CREATE TABLE campaign_list_groups (
 
 
 --
--- TOC entry 202 (OID 127297)
+-- TOC entry 202 (OID 132421)
 -- Name: active_campaign_groups; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2216,7 +2216,7 @@ CREATE TABLE active_campaign_groups (
 
 
 --
--- TOC entry 203 (OID 127311)
+-- TOC entry 203 (OID 132435)
 -- Name: scheduled_recipient; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2236,7 +2236,7 @@ CREATE TABLE scheduled_recipient (
 
 
 --
--- TOC entry 204 (OID 127330)
+-- TOC entry 204 (OID 132454)
 -- Name: lookup_survey_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2250,7 +2250,7 @@ CREATE TABLE lookup_survey_types (
 
 
 --
--- TOC entry 205 (OID 127340)
+-- TOC entry 205 (OID 132464)
 -- Name: survey; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2272,7 +2272,7 @@ CREATE TABLE survey (
 
 
 --
--- TOC entry 206 (OID 127362)
+-- TOC entry 206 (OID 132486)
 -- Name: campaign_survey_link; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2283,7 +2283,7 @@ CREATE TABLE campaign_survey_link (
 
 
 --
--- TOC entry 62 (OID 127372)
+-- TOC entry 62 (OID 132496)
 -- Name: survey_question_question_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2296,7 +2296,7 @@ CREATE SEQUENCE survey_question_question_id_seq
 
 
 --
--- TOC entry 207 (OID 127374)
+-- TOC entry 207 (OID 132498)
 -- Name: survey_questions; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2311,7 +2311,7 @@ CREATE TABLE survey_questions (
 
 
 --
--- TOC entry 208 (OID 127391)
+-- TOC entry 208 (OID 132515)
 -- Name: survey_items; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2324,7 +2324,7 @@ CREATE TABLE survey_items (
 
 
 --
--- TOC entry 64 (OID 127401)
+-- TOC entry 64 (OID 132525)
 -- Name: active_survey_active_survey_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2337,7 +2337,7 @@ CREATE SEQUENCE active_survey_active_survey_seq
 
 
 --
--- TOC entry 209 (OID 127403)
+-- TOC entry 209 (OID 132527)
 -- Name: active_survey; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2359,7 +2359,7 @@ CREATE TABLE active_survey (
 
 
 --
--- TOC entry 66 (OID 127431)
+-- TOC entry 66 (OID 132555)
 -- Name: active_survey_q_question_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2372,7 +2372,7 @@ CREATE SEQUENCE active_survey_q_question_id_seq
 
 
 --
--- TOC entry 210 (OID 127433)
+-- TOC entry 210 (OID 132557)
 -- Name: active_survey_questions; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2395,7 +2395,7 @@ CREATE TABLE active_survey_questions (
 
 
 --
--- TOC entry 68 (OID 127456)
+-- TOC entry 68 (OID 132580)
 -- Name: active_survey_items_item_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2408,7 +2408,7 @@ CREATE SEQUENCE active_survey_items_item_id_seq
 
 
 --
--- TOC entry 211 (OID 127458)
+-- TOC entry 211 (OID 132582)
 -- Name: active_survey_items; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2421,7 +2421,7 @@ CREATE TABLE active_survey_items (
 
 
 --
--- TOC entry 70 (OID 127468)
+-- TOC entry 70 (OID 132592)
 -- Name: active_survey_r_response_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2434,7 +2434,7 @@ CREATE SEQUENCE active_survey_r_response_id_seq
 
 
 --
--- TOC entry 212 (OID 127470)
+-- TOC entry 212 (OID 132594)
 -- Name: active_survey_responses; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2449,7 +2449,7 @@ CREATE TABLE active_survey_responses (
 
 
 --
--- TOC entry 72 (OID 127481)
+-- TOC entry 72 (OID 132605)
 -- Name: active_survey_ans_answer_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2462,7 +2462,7 @@ CREATE SEQUENCE active_survey_ans_answer_id_seq
 
 
 --
--- TOC entry 213 (OID 127483)
+-- TOC entry 213 (OID 132607)
 -- Name: active_survey_answers; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2477,7 +2477,7 @@ CREATE TABLE active_survey_answers (
 
 
 --
--- TOC entry 74 (OID 127500)
+-- TOC entry 74 (OID 132624)
 -- Name: active_survey_answer_ite_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2490,7 +2490,7 @@ CREATE SEQUENCE active_survey_answer_ite_id_seq
 
 
 --
--- TOC entry 214 (OID 127502)
+-- TOC entry 214 (OID 132626)
 -- Name: active_survey_answer_items; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2503,7 +2503,7 @@ CREATE TABLE active_survey_answer_items (
 
 
 --
--- TOC entry 76 (OID 127518)
+-- TOC entry 76 (OID 132642)
 -- Name: active_survey_answer_avg_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2516,7 +2516,7 @@ CREATE SEQUENCE active_survey_answer_avg_id_seq
 
 
 --
--- TOC entry 215 (OID 127520)
+-- TOC entry 215 (OID 132644)
 -- Name: active_survey_answer_avg; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2529,7 +2529,7 @@ CREATE TABLE active_survey_answer_avg (
 
 
 --
--- TOC entry 216 (OID 127536)
+-- TOC entry 216 (OID 132660)
 -- Name: field_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2544,7 +2544,7 @@ CREATE TABLE field_types (
 
 
 --
--- TOC entry 217 (OID 127545)
+-- TOC entry 217 (OID 132669)
 -- Name: search_fields; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2561,7 +2561,7 @@ CREATE TABLE search_fields (
 
 
 --
--- TOC entry 218 (OID 127555)
+-- TOC entry 218 (OID 132679)
 -- Name: message; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2585,7 +2585,7 @@ CREATE TABLE message (
 
 
 --
--- TOC entry 219 (OID 127580)
+-- TOC entry 219 (OID 132704)
 -- Name: message_template; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2605,7 +2605,7 @@ CREATE TABLE message_template (
 
 
 --
--- TOC entry 220 (OID 127596)
+-- TOC entry 220 (OID 132720)
 -- Name: saved_criteriaelement; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2621,7 +2621,7 @@ CREATE TABLE saved_criteriaelement (
 
 
 --
--- TOC entry 221 (OID 127654)
+-- TOC entry 221 (OID 132778)
 -- Name: help_module; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2634,7 +2634,7 @@ CREATE TABLE help_module (
 
 
 --
--- TOC entry 222 (OID 127668)
+-- TOC entry 222 (OID 132792)
 -- Name: help_contents; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2659,7 +2659,7 @@ CREATE TABLE help_contents (
 
 
 --
--- TOC entry 223 (OID 127709)
+-- TOC entry 223 (OID 132833)
 -- Name: help_tableof_contents; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2681,7 +2681,7 @@ CREATE TABLE help_tableof_contents (
 
 
 --
--- TOC entry 224 (OID 127743)
+-- TOC entry 224 (OID 132867)
 -- Name: help_tableofcontentitem_links; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2698,7 +2698,7 @@ CREATE TABLE help_tableofcontentitem_links (
 
 
 --
--- TOC entry 225 (OID 127769)
+-- TOC entry 225 (OID 132893)
 -- Name: lookup_help_features; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2712,7 +2712,7 @@ CREATE TABLE lookup_help_features (
 
 
 --
--- TOC entry 226 (OID 127782)
+-- TOC entry 226 (OID 132906)
 -- Name: help_features; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2733,7 +2733,7 @@ CREATE TABLE help_features (
 
 
 --
--- TOC entry 227 (OID 127816)
+-- TOC entry 227 (OID 132940)
 -- Name: help_related_links; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2751,7 +2751,7 @@ CREATE TABLE help_related_links (
 
 
 --
--- TOC entry 228 (OID 127842)
+-- TOC entry 228 (OID 132966)
 -- Name: help_faqs; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2771,7 +2771,7 @@ CREATE TABLE help_faqs (
 
 
 --
--- TOC entry 229 (OID 127871)
+-- TOC entry 229 (OID 132995)
 -- Name: help_business_rules; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2790,7 +2790,7 @@ CREATE TABLE help_business_rules (
 
 
 --
--- TOC entry 230 (OID 127900)
+-- TOC entry 230 (OID 133024)
 -- Name: help_notes; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2809,7 +2809,7 @@ CREATE TABLE help_notes (
 
 
 --
--- TOC entry 231 (OID 127929)
+-- TOC entry 231 (OID 133053)
 -- Name: help_tips; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2826,7 +2826,7 @@ CREATE TABLE help_tips (
 
 
 --
--- TOC entry 232 (OID 127954)
+-- TOC entry 232 (OID 133078)
 -- Name: sync_client; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2843,7 +2843,7 @@ CREATE TABLE sync_client (
 
 
 --
--- TOC entry 233 (OID 127963)
+-- TOC entry 233 (OID 133087)
 -- Name: sync_system; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2855,7 +2855,7 @@ CREATE TABLE sync_system (
 
 
 --
--- TOC entry 234 (OID 127971)
+-- TOC entry 234 (OID 133095)
 -- Name: sync_table; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2874,7 +2874,7 @@ CREATE TABLE sync_table (
 
 
 --
--- TOC entry 235 (OID 127987)
+-- TOC entry 235 (OID 133111)
 -- Name: sync_map; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2889,7 +2889,7 @@ CREATE TABLE sync_map (
 
 
 --
--- TOC entry 236 (OID 127999)
+-- TOC entry 236 (OID 133123)
 -- Name: sync_conflict_log; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2902,7 +2902,7 @@ CREATE TABLE sync_conflict_log (
 
 
 --
--- TOC entry 237 (OID 128012)
+-- TOC entry 237 (OID 133136)
 -- Name: sync_log; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2916,7 +2916,7 @@ CREATE TABLE sync_log (
 
 
 --
--- TOC entry 78 (OID 128026)
+-- TOC entry 78 (OID 133150)
 -- Name: sync_transact_transaction_i_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -2929,7 +2929,7 @@ CREATE SEQUENCE sync_transact_transaction_i_seq
 
 
 --
--- TOC entry 238 (OID 128028)
+-- TOC entry 238 (OID 133152)
 -- Name: sync_transaction_log; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2947,7 +2947,7 @@ CREATE TABLE sync_transaction_log (
 
 
 --
--- TOC entry 239 (OID 128042)
+-- TOC entry 239 (OID 133166)
 -- Name: process_log; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2964,7 +2964,7 @@ CREATE TABLE process_log (
 
 
 --
--- TOC entry 240 (OID 128265)
+-- TOC entry 240 (OID 133389)
 -- Name: autoguide_make; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2979,7 +2979,7 @@ CREATE TABLE autoguide_make (
 
 
 --
--- TOC entry 241 (OID 128274)
+-- TOC entry 241 (OID 133398)
 -- Name: autoguide_model; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -2995,7 +2995,7 @@ CREATE TABLE autoguide_model (
 
 
 --
--- TOC entry 80 (OID 128285)
+-- TOC entry 80 (OID 133409)
 -- Name: autoguide_vehicl_vehicle_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3008,7 +3008,7 @@ CREATE SEQUENCE autoguide_vehicl_vehicle_id_seq
 
 
 --
--- TOC entry 242 (OID 128287)
+-- TOC entry 242 (OID 133411)
 -- Name: autoguide_vehicle; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3025,7 +3025,7 @@ CREATE TABLE autoguide_vehicle (
 
 
 --
--- TOC entry 82 (OID 128302)
+-- TOC entry 82 (OID 133426)
 -- Name: autoguide_inve_inventory_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3038,7 +3038,7 @@ CREATE SEQUENCE autoguide_inve_inventory_id_seq
 
 
 --
--- TOC entry 243 (OID 128304)
+-- TOC entry 243 (OID 133428)
 -- Name: autoguide_inventory; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3068,7 +3068,7 @@ CREATE TABLE autoguide_inventory (
 
 
 --
--- TOC entry 84 (OID 128321)
+-- TOC entry 84 (OID 133445)
 -- Name: autoguide_options_option_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3081,7 +3081,7 @@ CREATE SEQUENCE autoguide_options_option_id_seq
 
 
 --
--- TOC entry 244 (OID 128323)
+-- TOC entry 244 (OID 133447)
 -- Name: autoguide_options; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3097,7 +3097,7 @@ CREATE TABLE autoguide_options (
 
 
 --
--- TOC entry 245 (OID 128333)
+-- TOC entry 245 (OID 133457)
 -- Name: autoguide_inventory_options; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3108,7 +3108,7 @@ CREATE TABLE autoguide_inventory_options (
 
 
 --
--- TOC entry 246 (OID 128342)
+-- TOC entry 246 (OID 133466)
 -- Name: autoguide_ad_run; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3128,7 +3128,7 @@ CREATE TABLE autoguide_ad_run (
 
 
 --
--- TOC entry 86 (OID 128355)
+-- TOC entry 86 (OID 133479)
 -- Name: autoguide_ad_run_types_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3141,7 +3141,7 @@ CREATE SEQUENCE autoguide_ad_run_types_code_seq
 
 
 --
--- TOC entry 247 (OID 128357)
+-- TOC entry 247 (OID 133481)
 -- Name: autoguide_ad_run_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3157,7 +3157,7 @@ CREATE TABLE autoguide_ad_run_types (
 
 
 --
--- TOC entry 248 (OID 128402)
+-- TOC entry 248 (OID 133526)
 -- Name: lookup_revenue_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3171,7 +3171,7 @@ CREATE TABLE lookup_revenue_types (
 
 
 --
--- TOC entry 88 (OID 128410)
+-- TOC entry 88 (OID 133534)
 -- Name: lookup_revenuedetail_t_code_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3184,7 +3184,7 @@ CREATE SEQUENCE lookup_revenuedetail_t_code_seq
 
 
 --
--- TOC entry 249 (OID 128412)
+-- TOC entry 249 (OID 133536)
 -- Name: lookup_revenuedetail_types; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3198,7 +3198,7 @@ CREATE TABLE lookup_revenuedetail_types (
 
 
 --
--- TOC entry 250 (OID 128422)
+-- TOC entry 250 (OID 133546)
 -- Name: revenue; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3220,7 +3220,7 @@ CREATE TABLE revenue (
 
 
 --
--- TOC entry 251 (OID 128455)
+-- TOC entry 251 (OID 133579)
 -- Name: revenue_detail; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3239,7 +3239,7 @@ CREATE TABLE revenue_detail (
 
 
 --
--- TOC entry 252 (OID 128486)
+-- TOC entry 252 (OID 133610)
 -- Name: lookup_task_priority; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3253,7 +3253,7 @@ CREATE TABLE lookup_task_priority (
 
 
 --
--- TOC entry 253 (OID 128496)
+-- TOC entry 253 (OID 133620)
 -- Name: lookup_task_loe; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3267,7 +3267,7 @@ CREATE TABLE lookup_task_loe (
 
 
 --
--- TOC entry 254 (OID 128506)
+-- TOC entry 254 (OID 133630)
 -- Name: lookup_task_category; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3281,7 +3281,7 @@ CREATE TABLE lookup_task_category (
 
 
 --
--- TOC entry 255 (OID 128516)
+-- TOC entry 255 (OID 133640)
 -- Name: task; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3309,7 +3309,7 @@ CREATE TABLE task (
 
 
 --
--- TOC entry 256 (OID 128553)
+-- TOC entry 256 (OID 133677)
 -- Name: tasklink_contact; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3320,7 +3320,7 @@ CREATE TABLE tasklink_contact (
 
 
 --
--- TOC entry 257 (OID 128563)
+-- TOC entry 257 (OID 133687)
 -- Name: tasklink_ticket; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3331,7 +3331,7 @@ CREATE TABLE tasklink_ticket (
 
 
 --
--- TOC entry 258 (OID 128573)
+-- TOC entry 258 (OID 133697)
 -- Name: tasklink_project; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3342,7 +3342,7 @@ CREATE TABLE tasklink_project (
 
 
 --
--- TOC entry 259 (OID 128583)
+-- TOC entry 259 (OID 133707)
 -- Name: taskcategory_project; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3353,7 +3353,7 @@ CREATE TABLE taskcategory_project (
 
 
 --
--- TOC entry 90 (OID 128603)
+-- TOC entry 90 (OID 133727)
 -- Name: business_process_com_lb_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3366,7 +3366,7 @@ CREATE SEQUENCE business_process_com_lb_id_seq
 
 
 --
--- TOC entry 260 (OID 128605)
+-- TOC entry 260 (OID 133729)
 -- Name: business_process_component_library; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3381,7 +3381,7 @@ CREATE TABLE business_process_component_library (
 
 
 --
--- TOC entry 92 (OID 128614)
+-- TOC entry 92 (OID 133738)
 -- Name: business_process_comp_re_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3394,7 +3394,7 @@ CREATE SEQUENCE business_process_comp_re_id_seq
 
 
 --
--- TOC entry 261 (OID 128616)
+-- TOC entry 261 (OID 133740)
 -- Name: business_process_component_result_lookup; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3409,7 +3409,7 @@ CREATE TABLE business_process_component_result_lookup (
 
 
 --
--- TOC entry 94 (OID 128627)
+-- TOC entry 94 (OID 133751)
 -- Name: business_process_pa_lib_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3422,7 +3422,7 @@ CREATE SEQUENCE business_process_pa_lib_id_seq
 
 
 --
--- TOC entry 262 (OID 128629)
+-- TOC entry 262 (OID 133753)
 -- Name: business_process_parameter_library; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3437,7 +3437,7 @@ CREATE TABLE business_process_parameter_library (
 
 
 --
--- TOC entry 263 (OID 128640)
+-- TOC entry 263 (OID 133764)
 -- Name: business_process; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3454,7 +3454,7 @@ CREATE TABLE business_process (
 
 
 --
--- TOC entry 96 (OID 128656)
+-- TOC entry 96 (OID 133780)
 -- Name: business_process_compone_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3467,7 +3467,7 @@ CREATE SEQUENCE business_process_compone_id_seq
 
 
 --
--- TOC entry 264 (OID 128658)
+-- TOC entry 264 (OID 133782)
 -- Name: business_process_component; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3482,7 +3482,7 @@ CREATE TABLE business_process_component (
 
 
 --
--- TOC entry 98 (OID 128676)
+-- TOC entry 98 (OID 133800)
 -- Name: business_process_param_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3495,7 +3495,7 @@ CREATE SEQUENCE business_process_param_id_seq
 
 
 --
--- TOC entry 265 (OID 128678)
+-- TOC entry 265 (OID 133802)
 -- Name: business_process_parameter; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3509,7 +3509,7 @@ CREATE TABLE business_process_parameter (
 
 
 --
--- TOC entry 100 (OID 128691)
+-- TOC entry 100 (OID 133815)
 -- Name: business_process_comp_pa_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3522,7 +3522,7 @@ CREATE SEQUENCE business_process_comp_pa_id_seq
 
 
 --
--- TOC entry 266 (OID 128693)
+-- TOC entry 266 (OID 133817)
 -- Name: business_process_component_parameter; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3536,7 +3536,7 @@ CREATE TABLE business_process_component_parameter (
 
 
 --
--- TOC entry 102 (OID 128710)
+-- TOC entry 102 (OID 133834)
 -- Name: business_process_e_event_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3549,7 +3549,7 @@ CREATE SEQUENCE business_process_e_event_id_seq
 
 
 --
--- TOC entry 267 (OID 128712)
+-- TOC entry 267 (OID 133836)
 -- Name: business_process_events; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3572,7 +3572,7 @@ CREATE TABLE business_process_events (
 
 
 --
--- TOC entry 268 (OID 128734)
+-- TOC entry 268 (OID 133858)
 -- Name: business_process_log; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3583,7 +3583,7 @@ CREATE TABLE business_process_log (
 
 
 --
--- TOC entry 104 (OID 128738)
+-- TOC entry 104 (OID 133862)
 -- Name: business_process_hl_hook_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3596,7 +3596,7 @@ CREATE SEQUENCE business_process_hl_hook_id_seq
 
 
 --
--- TOC entry 269 (OID 128740)
+-- TOC entry 269 (OID 133864)
 -- Name: business_process_hook_library; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3609,7 +3609,7 @@ CREATE TABLE business_process_hook_library (
 
 
 --
--- TOC entry 106 (OID 128750)
+-- TOC entry 106 (OID 133874)
 -- Name: business_process_ho_trig_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3622,7 +3622,7 @@ CREATE SEQUENCE business_process_ho_trig_id_seq
 
 
 --
--- TOC entry 270 (OID 128752)
+-- TOC entry 270 (OID 133876)
 -- Name: business_process_hook_triggers; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3635,7 +3635,7 @@ CREATE TABLE business_process_hook_triggers (
 
 
 --
--- TOC entry 108 (OID 128762)
+-- TOC entry 108 (OID 133886)
 -- Name: business_process_ho_hook_id_seq; Type: SEQUENCE; Schema: public; Owner: matt
 --
 
@@ -3648,7 +3648,7 @@ CREATE SEQUENCE business_process_ho_hook_id_seq
 
 
 --
--- TOC entry 271 (OID 128764)
+-- TOC entry 271 (OID 133888)
 -- Name: business_process_hook; Type: TABLE; Schema: public; Owner: matt
 --
 
@@ -3661,15 +3661,15 @@ CREATE TABLE business_process_hook (
 
 
 --
--- Data for TOC entry 533 (OID 125372)
+-- Data for TOC entry 533 (OID 130496)
 -- Name: access; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO "access" VALUES (0, 'dhvadmin', '---', -1, 1, -1, 8, 18, NULL, 'America/New_York', NULL, '2003-12-22 09:07:16.289', 0, '2003-12-22 09:07:16.289', 0, '2003-12-22 09:07:16.289', NULL, -1, -1, true);
+INSERT INTO "access" VALUES (0, 'dhvadmin', '---', -1, 1, -1, 8, 18, NULL, 'America/New_York', NULL, '2003-12-22 09:58:28.354', 0, '2003-12-22 09:58:28.354', 0, '2003-12-22 09:58:28.354', NULL, -1, -1, true);
 
 
 --
--- Data for TOC entry 534 (OID 125394)
+-- Data for TOC entry 534 (OID 130518)
 -- Name: lookup_industry; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3696,21 +3696,21 @@ INSERT INTO lookup_industry VALUES (20, NULL, 'Transportation', false, 0, true);
 
 
 --
--- Data for TOC entry 535 (OID 125404)
+-- Data for TOC entry 535 (OID 130528)
 -- Name: access_log; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 536 (OID 125416)
+-- Data for TOC entry 536 (OID 130540)
 -- Name: usage_log; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 537 (OID 125424)
+-- Data for TOC entry 537 (OID 130548)
 -- Name: lookup_contact_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3720,7 +3720,7 @@ INSERT INTO lookup_contact_types VALUES (3, 'Technical', false, 0, true, NULL, 0
 
 
 --
--- Data for TOC entry 538 (OID 125439)
+-- Data for TOC entry 538 (OID 130563)
 -- Name: lookup_account_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3733,7 +3733,7 @@ INSERT INTO lookup_account_types VALUES (6, 'Prospect', false, 0, true);
 
 
 --
--- Data for TOC entry 539 (OID 125447)
+-- Data for TOC entry 539 (OID 130571)
 -- Name: state; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3790,7 +3790,7 @@ INSERT INTO state VALUES ('WY', 'Wyoming');
 
 
 --
--- Data for TOC entry 540 (OID 125453)
+-- Data for TOC entry 540 (OID 130577)
 -- Name: lookup_department; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3804,7 +3804,7 @@ INSERT INTO lookup_department VALUES (7, 'Human Resources', false, 0, true);
 
 
 --
--- Data for TOC entry 541 (OID 125463)
+-- Data for TOC entry 541 (OID 130587)
 -- Name: lookup_orgaddress_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3815,7 +3815,7 @@ INSERT INTO lookup_orgaddress_types VALUES (4, 'Shipping', false, 0, true);
 
 
 --
--- Data for TOC entry 542 (OID 125473)
+-- Data for TOC entry 542 (OID 130597)
 -- Name: lookup_orgemail_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3824,7 +3824,7 @@ INSERT INTO lookup_orgemail_types VALUES (2, 'Auxiliary', false, 0, true);
 
 
 --
--- Data for TOC entry 543 (OID 125483)
+-- Data for TOC entry 543 (OID 130607)
 -- Name: lookup_orgphone_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3833,28 +3833,28 @@ INSERT INTO lookup_orgphone_types VALUES (2, 'Fax', false, 0, true);
 
 
 --
--- Data for TOC entry 544 (OID 125493)
+-- Data for TOC entry 544 (OID 130617)
 -- Name: lookup_instantmessenger_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 545 (OID 125503)
+-- Data for TOC entry 545 (OID 130627)
 -- Name: lookup_employment_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 546 (OID 125513)
+-- Data for TOC entry 546 (OID 130637)
 -- Name: lookup_locale; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 547 (OID 125523)
+-- Data for TOC entry 547 (OID 130647)
 -- Name: lookup_contactaddress_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3864,7 +3864,7 @@ INSERT INTO lookup_contactaddress_types VALUES (3, 'Other', false, 0, true);
 
 
 --
--- Data for TOC entry 548 (OID 125533)
+-- Data for TOC entry 548 (OID 130657)
 -- Name: lookup_contactemail_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3874,7 +3874,7 @@ INSERT INTO lookup_contactemail_types VALUES (3, 'Other', false, 0, true);
 
 
 --
--- Data for TOC entry 549 (OID 125543)
+-- Data for TOC entry 549 (OID 130667)
 -- Name: lookup_contactphone_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3890,7 +3890,7 @@ INSERT INTO lookup_contactphone_types VALUES (9, 'Other', false, 0, true);
 
 
 --
--- Data for TOC entry 550 (OID 125553)
+-- Data for TOC entry 550 (OID 130677)
 -- Name: lookup_access_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3905,38 +3905,38 @@ INSERT INTO lookup_access_types VALUES (8, 707031028, 'Personal', false, 3, true
 
 
 --
--- Data for TOC entry 551 (OID 125562)
+-- Data for TOC entry 551 (OID 130686)
 -- Name: organization; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO organization VALUES (0, 'My Company', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, false, NULL, NULL, '2003-12-22 09:07:16.361', 0, '2003-12-22 09:07:16.361', 0, true, NULL, 0, -1, -1, -1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO organization VALUES (0, 'My Company', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, false, NULL, NULL, '2003-12-22 09:58:28.474', 0, '2003-12-22 09:58:28.474', 0, true, NULL, 0, -1, -1, -1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 --
--- Data for TOC entry 552 (OID 125593)
+-- Data for TOC entry 552 (OID 130717)
 -- Name: contact; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 553 (OID 125650)
+-- Data for TOC entry 553 (OID 130774)
 -- Name: role; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO role VALUES (1, 'Administrator', 'Performs system configuration and maintenance', 0, '2003-12-22 09:07:55.171', 0, '2003-12-22 09:07:55.171', true);
-INSERT INTO role VALUES (2, 'Operations Manager', 'Manages operations', 0, '2003-12-22 09:07:55.583', 0, '2003-12-22 09:07:55.583', true);
-INSERT INTO role VALUES (3, 'Sales Manager', 'Manages all accounts and opportunities', 0, '2003-12-22 09:07:55.906', 0, '2003-12-22 09:07:55.906', true);
-INSERT INTO role VALUES (4, 'Salesperson', 'Manages own accounts and opportunities', 0, '2003-12-22 09:07:56.329', 0, '2003-12-22 09:07:56.329', true);
-INSERT INTO role VALUES (5, 'Customer Service Manager', 'Manages all tickets', 0, '2003-12-22 09:07:56.604', 0, '2003-12-22 09:07:56.604', true);
-INSERT INTO role VALUES (6, 'Customer Service Representative', 'Manages own tickets', 0, '2003-12-22 09:07:56.788', 0, '2003-12-22 09:07:56.788', true);
-INSERT INTO role VALUES (7, 'Marketing Manager', 'Manages communications', 0, '2003-12-22 09:07:56.982', 0, '2003-12-22 09:07:56.982', true);
-INSERT INTO role VALUES (8, 'Accounting Manager', 'Reviews revenue and opportunities', 0, '2003-12-22 09:07:57.258', 0, '2003-12-22 09:07:57.258', true);
-INSERT INTO role VALUES (9, 'HR Representative', 'Manages employee information', 0, '2003-12-22 09:07:57.514', 0, '2003-12-22 09:07:57.514', true);
+INSERT INTO role VALUES (1, 'Administrator', 'Performs system configuration and maintenance', 0, '2003-12-22 09:59:16.353', 0, '2003-12-22 09:59:16.353', true);
+INSERT INTO role VALUES (2, 'Operations Manager', 'Manages operations', 0, '2003-12-22 09:59:16.69', 0, '2003-12-22 09:59:16.69', true);
+INSERT INTO role VALUES (3, 'Sales Manager', 'Manages all accounts and opportunities', 0, '2003-12-22 09:59:17.013', 0, '2003-12-22 09:59:17.013', true);
+INSERT INTO role VALUES (4, 'Salesperson', 'Manages own accounts and opportunities', 0, '2003-12-22 09:59:17.426', 0, '2003-12-22 09:59:17.426', true);
+INSERT INTO role VALUES (5, 'Customer Service Manager', 'Manages all tickets', 0, '2003-12-22 09:59:17.705', 0, '2003-12-22 09:59:17.705', true);
+INSERT INTO role VALUES (6, 'Customer Service Representative', 'Manages own tickets', 0, '2003-12-22 09:59:17.896', 0, '2003-12-22 09:59:17.896', true);
+INSERT INTO role VALUES (7, 'Marketing Manager', 'Manages communications', 0, '2003-12-22 09:59:18.091', 0, '2003-12-22 09:59:18.091', true);
+INSERT INTO role VALUES (8, 'Accounting Manager', 'Reviews revenue and opportunities', 0, '2003-12-22 09:59:18.372', 0, '2003-12-22 09:59:18.372', true);
+INSERT INTO role VALUES (9, 'HR Representative', 'Manages employee information', 0, '2003-12-22 09:59:18.625', 0, '2003-12-22 09:59:18.625', true);
 
 
 --
--- Data for TOC entry 554 (OID 125669)
+-- Data for TOC entry 554 (OID 130793)
 -- Name: permission_category; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -3947,7 +3947,7 @@ INSERT INTO permission_category VALUES (4, 'Pipeline', NULL, 400, true, true, fa
 INSERT INTO permission_category VALUES (5, 'Demo', NULL, 1500, false, false, false, false, false, false, false, false, false);
 INSERT INTO permission_category VALUES (6, 'Communications', NULL, 700, true, true, false, false, false, false, false, false, true);
 INSERT INTO permission_category VALUES (7, 'Projects', NULL, 800, false, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (8, 'Help Desk', NULL, 900, true, true, true, true, false, false, false, false, true);
+INSERT INTO permission_category VALUES (8, 'Help Desk', NULL, 900, true, true, true, true, false, true, true, true, true);
 INSERT INTO permission_category VALUES (9, 'Admin', NULL, 1200, true, true, false, false, false, false, false, false, true);
 INSERT INTO permission_category VALUES (10, 'Help', NULL, 1300, true, true, false, false, false, false, false, false, false);
 INSERT INTO permission_category VALUES (11, 'System', NULL, 100, true, true, false, false, false, false, false, false, false);
@@ -3958,7 +3958,7 @@ INSERT INTO permission_category VALUES (15, 'Employees', NULL, 1000, true, true,
 
 
 --
--- Data for TOC entry 555 (OID 125686)
+-- Data for TOC entry 555 (OID 130810)
 -- Name: permission; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4040,7 +4040,7 @@ INSERT INTO permission VALUES (75, 15, 'contacts-internal_contacts', true, true,
 
 
 --
--- Data for TOC entry 556 (OID 125706)
+-- Data for TOC entry 556 (OID 130830)
 -- Name: role_permission; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4468,7 +4468,7 @@ INSERT INTO role_permission VALUES (421, 9, 60, true, false, false, false);
 
 
 --
--- Data for TOC entry 557 (OID 125725)
+-- Data for TOC entry 557 (OID 130849)
 -- Name: lookup_stage; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4484,7 +4484,7 @@ INSERT INTO lookup_stage VALUES (9, 9, 'Closed Lost', false, 9, true);
 
 
 --
--- Data for TOC entry 558 (OID 125735)
+-- Data for TOC entry 558 (OID 130859)
 -- Name: lookup_delivery_options; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4497,208 +4497,208 @@ INSERT INTO lookup_delivery_options VALUES (6, 'Email, Fax, then Letter', false,
 
 
 --
--- Data for TOC entry 559 (OID 125745)
+-- Data for TOC entry 559 (OID 130869)
 -- Name: news; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 560 (OID 125760)
+-- Data for TOC entry 560 (OID 130884)
 -- Name: organization_address; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 561 (OID 125785)
+-- Data for TOC entry 561 (OID 130909)
 -- Name: organization_emailaddress; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 562 (OID 125810)
+-- Data for TOC entry 562 (OID 130934)
 -- Name: organization_phone; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 563 (OID 125835)
+-- Data for TOC entry 563 (OID 130959)
 -- Name: contact_address; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 564 (OID 125860)
+-- Data for TOC entry 564 (OID 130984)
 -- Name: contact_emailaddress; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 565 (OID 125885)
+-- Data for TOC entry 565 (OID 131009)
 -- Name: contact_phone; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 566 (OID 125910)
+-- Data for TOC entry 566 (OID 131034)
 -- Name: notification; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 567 (OID 125922)
+-- Data for TOC entry 567 (OID 131046)
 -- Name: cfsinbox_message; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 568 (OID 125943)
+-- Data for TOC entry 568 (OID 131067)
 -- Name: cfsinbox_messagelink; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 569 (OID 125959)
+-- Data for TOC entry 569 (OID 131083)
 -- Name: account_type_levels; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 570 (OID 125971)
+-- Data for TOC entry 570 (OID 131095)
 -- Name: contact_type_levels; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 571 (OID 125985)
+-- Data for TOC entry 571 (OID 131109)
 -- Name: lookup_lists_lookup; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO lookup_lists_lookup VALUES (1, 1, 1, 'lookupList', 'lookup_account_types', 10, 'Account Types', '2003-12-22 09:07:54.228', 1);
-INSERT INTO lookup_lists_lookup VALUES (2, 1, 2, 'lookupList', 'lookup_revenue_types', 20, 'Revenue Types', '2003-12-22 09:07:54.239', 1);
-INSERT INTO lookup_lists_lookup VALUES (3, 1, 3, 'contactType', 'lookup_contact_types', 30, 'Contact Types', '2003-12-22 09:07:54.243', 1);
-INSERT INTO lookup_lists_lookup VALUES (4, 2, 1, 'contactType', 'lookup_contact_types', 10, 'Types', '2003-12-22 09:07:54.455', 2);
-INSERT INTO lookup_lists_lookup VALUES (5, 2, 2, 'lookupList', 'lookup_contactemail_types', 20, 'Email Types', '2003-12-22 09:07:54.471', 2);
-INSERT INTO lookup_lists_lookup VALUES (6, 2, 3, 'lookupList', 'lookup_contactaddress_types', 30, 'Address Types', '2003-12-22 09:07:54.475', 2);
-INSERT INTO lookup_lists_lookup VALUES (7, 2, 4, 'lookupList', 'lookup_contactphone_types', 40, 'Phone Types', '2003-12-22 09:07:54.484', 2);
-INSERT INTO lookup_lists_lookup VALUES (8, 4, 1, 'lookupList', 'lookup_stage', 10, 'Stage', '2003-12-22 09:07:54.585', 4);
-INSERT INTO lookup_lists_lookup VALUES (9, 4, 2, 'lookupList', 'lookup_opportunity_types', 20, 'Opportunity Types', '2003-12-22 09:07:54.589', 4);
-INSERT INTO lookup_lists_lookup VALUES (10, 8, 1, 'lookupList', 'lookup_ticketsource', 10, 'Ticket Source', '2003-12-22 09:07:54.788', 8);
-INSERT INTO lookup_lists_lookup VALUES (11, 8, 2, 'lookupList', 'ticket_severity', 20, 'Ticket Severity', '2003-12-22 09:07:54.792', 8);
-INSERT INTO lookup_lists_lookup VALUES (12, 8, 3, 'lookupList', 'ticket_priority', 30, 'Ticket Priority', '2003-12-22 09:07:54.797', 8);
-INSERT INTO lookup_lists_lookup VALUES (13, 15, 1111031132, 'lookupList', 'lookup_department', 10, 'Departments', '2003-12-22 09:07:55.064', 15);
+INSERT INTO lookup_lists_lookup VALUES (1, 1, 1, 'lookupList', 'lookup_account_types', 10, 'Account Types', '2003-12-22 09:59:15.163', 1);
+INSERT INTO lookup_lists_lookup VALUES (2, 1, 2, 'lookupList', 'lookup_revenue_types', 20, 'Revenue Types', '2003-12-22 09:59:15.252', 1);
+INSERT INTO lookup_lists_lookup VALUES (3, 1, 3, 'contactType', 'lookup_contact_types', 30, 'Contact Types', '2003-12-22 09:59:15.256', 1);
+INSERT INTO lookup_lists_lookup VALUES (4, 2, 1, 'contactType', 'lookup_contact_types', 10, 'Types', '2003-12-22 09:59:15.535', 2);
+INSERT INTO lookup_lists_lookup VALUES (5, 2, 2, 'lookupList', 'lookup_contactemail_types', 20, 'Email Types', '2003-12-22 09:59:15.551', 2);
+INSERT INTO lookup_lists_lookup VALUES (6, 2, 3, 'lookupList', 'lookup_contactaddress_types', 30, 'Address Types', '2003-12-22 09:59:15.555', 2);
+INSERT INTO lookup_lists_lookup VALUES (7, 2, 4, 'lookupList', 'lookup_contactphone_types', 40, 'Phone Types', '2003-12-22 09:59:15.565', 2);
+INSERT INTO lookup_lists_lookup VALUES (8, 4, 1, 'lookupList', 'lookup_stage', 10, 'Stage', '2003-12-22 09:59:15.684', 4);
+INSERT INTO lookup_lists_lookup VALUES (9, 4, 2, 'lookupList', 'lookup_opportunity_types', 20, 'Opportunity Types', '2003-12-22 09:59:15.688', 4);
+INSERT INTO lookup_lists_lookup VALUES (10, 8, 1, 'lookupList', 'lookup_ticketsource', 10, 'Ticket Source', '2003-12-22 09:59:15.891', 8);
+INSERT INTO lookup_lists_lookup VALUES (11, 8, 2, 'lookupList', 'ticket_severity', 20, 'Ticket Severity', '2003-12-22 09:59:15.894', 8);
+INSERT INTO lookup_lists_lookup VALUES (12, 8, 3, 'lookupList', 'ticket_priority', 30, 'Ticket Priority', '2003-12-22 09:59:15.899', 8);
+INSERT INTO lookup_lists_lookup VALUES (13, 15, 1111031132, 'lookupList', 'lookup_department', 10, 'Departments', '2003-12-22 09:59:16.168', 15);
 
 
 --
--- Data for TOC entry 572 (OID 126001)
+-- Data for TOC entry 572 (OID 131125)
 -- Name: viewpoint; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 573 (OID 126027)
+-- Data for TOC entry 573 (OID 131151)
 -- Name: viewpoint_permission; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 574 (OID 126046)
+-- Data for TOC entry 574 (OID 131170)
 -- Name: report; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO report VALUES (1, 1, NULL, 'accounts_type.xml', 1, 'Accounts by Type', 'What are my accounts by type?', '2003-12-22 09:07:54.249', 0, '2003-12-22 09:07:54.249', 0, true, false);
-INSERT INTO report VALUES (2, 1, NULL, 'accounts_recent.xml', 1, 'Accounts by Date Added', 'What are my recent accounts?', '2003-12-22 09:07:54.307', 0, '2003-12-22 09:07:54.307', 0, true, false);
-INSERT INTO report VALUES (3, 1, NULL, 'accounts_expire.xml', 1, 'Accounts by Contract End Date', 'Which accounts are expiring?', '2003-12-22 09:07:54.32', 0, '2003-12-22 09:07:54.32', 0, true, false);
-INSERT INTO report VALUES (4, 1, NULL, 'accounts_current.xml', 1, 'Current Accounts', 'What are my current accounts?', '2003-12-22 09:07:54.329', 0, '2003-12-22 09:07:54.329', 0, true, false);
-INSERT INTO report VALUES (5, 1, NULL, 'accounts_contacts.xml', 1, 'Account Contacts', 'Who are the contacts in each account?', '2003-12-22 09:07:54.334', 0, '2003-12-22 09:07:54.334', 0, true, false);
-INSERT INTO report VALUES (6, 1, NULL, 'folder_accounts.xml', 1, 'Account Folders', 'What is the folder data for each account?', '2003-12-22 09:07:54.35', 0, '2003-12-22 09:07:54.35', 0, true, false);
-INSERT INTO report VALUES (7, 2, NULL, 'contacts_user.xml', 1, 'Contacts', 'Who are my contacts?', '2003-12-22 09:07:54.488', 0, '2003-12-22 09:07:54.488', 0, true, false);
-INSERT INTO report VALUES (8, 4, NULL, 'opportunity_pipeline.xml', 1, 'Opportunities by Stage', 'What are my upcoming opportunities by stage?', '2003-12-22 09:07:54.593', 0, '2003-12-22 09:07:54.593', 0, true, false);
-INSERT INTO report VALUES (9, 4, NULL, 'opportunity_account.xml', 1, 'Opportunities by Account', 'What are all the accounts associated with my opportunities?', '2003-12-22 09:07:54.597', 0, '2003-12-22 09:07:54.597', 0, true, false);
-INSERT INTO report VALUES (10, 4, NULL, 'opportunity_owner.xml', 1, 'Opportunities by Owner', 'What are all the opportunities based on ownership?', '2003-12-22 09:07:54.601', 0, '2003-12-22 09:07:54.601', 0, true, false);
-INSERT INTO report VALUES (11, 4, NULL, 'opportunity_contact.xml', 1, 'Opportunity Contacts', 'Who are the contacts of my opportunities?', '2003-12-22 09:07:54.606', 0, '2003-12-22 09:07:54.606', 0, true, false);
-INSERT INTO report VALUES (12, 6, NULL, 'campaign.xml', 1, 'Campaigns by date', 'What are my active campaigns?', '2003-12-22 09:07:54.697', 0, '2003-12-22 09:07:54.697', 0, true, false);
-INSERT INTO report VALUES (13, 8, NULL, 'tickets_department.xml', 1, 'Tickets by Department', 'What tickets are there in each department?', '2003-12-22 09:07:54.80', 0, '2003-12-22 09:07:54.80', 0, true, false);
-INSERT INTO report VALUES (14, 8, NULL, 'ticket_summary_date.xml', 1, 'Ticket counts by Department', 'How man tickets are there in the system on a particular date?', '2003-12-22 09:07:54.804', 0, '2003-12-22 09:07:54.804', 0, true, false);
-INSERT INTO report VALUES (15, 8, NULL, 'ticket_summary_range.xml', 1, 'Ticket activity by Department', 'How many tickets exist within a date range?', '2003-12-22 09:07:54.808', 0, '2003-12-22 09:07:54.808', 0, true, false);
-INSERT INTO report VALUES (16, 9, NULL, 'users.xml', 1, 'System Users', 'Who are all the users of the system?', '2003-12-22 09:07:54.899', 0, '2003-12-22 09:07:54.899', 0, true, false);
-INSERT INTO report VALUES (17, 12, NULL, 'task_date.xml', 1, 'Task list by due date', 'What are the tasks due withing a date range?', '2003-12-22 09:07:55.013', 0, '2003-12-22 09:07:55.013', 0, true, false);
-INSERT INTO report VALUES (18, 12, NULL, 'task_nodate.xml', 1, 'Task list', 'What are all the tasks in the system?', '2003-12-22 09:07:55.017', 0, '2003-12-22 09:07:55.017', 0, true, false);
-INSERT INTO report VALUES (19, 15, NULL, 'employees.xml', 1, 'Employees', 'Who are the employees in my organization?', '2003-12-22 09:07:55.068', 0, '2003-12-22 09:07:55.068', 0, true, false);
+INSERT INTO report VALUES (1, 1, NULL, 'accounts_type.xml', 1, 'Accounts by Type', 'What are my accounts by type?', '2003-12-22 09:59:15.273', 0, '2003-12-22 09:59:15.273', 0, true, false);
+INSERT INTO report VALUES (2, 1, NULL, 'accounts_recent.xml', 1, 'Accounts by Date Added', 'What are my recent accounts?', '2003-12-22 09:59:15.412', 0, '2003-12-22 09:59:15.412', 0, true, false);
+INSERT INTO report VALUES (3, 1, NULL, 'accounts_expire.xml', 1, 'Accounts by Contract End Date', 'Which accounts are expiring?', '2003-12-22 09:59:15.419', 0, '2003-12-22 09:59:15.419', 0, true, false);
+INSERT INTO report VALUES (4, 1, NULL, 'accounts_current.xml', 1, 'Current Accounts', 'What are my current accounts?', '2003-12-22 09:59:15.424', 0, '2003-12-22 09:59:15.424', 0, true, false);
+INSERT INTO report VALUES (5, 1, NULL, 'accounts_contacts.xml', 1, 'Account Contacts', 'Who are the contacts in each account?', '2003-12-22 09:59:15.429', 0, '2003-12-22 09:59:15.429', 0, true, false);
+INSERT INTO report VALUES (6, 1, NULL, 'folder_accounts.xml', 1, 'Account Folders', 'What is the folder data for each account?', '2003-12-22 09:59:15.437', 0, '2003-12-22 09:59:15.437', 0, true, false);
+INSERT INTO report VALUES (7, 2, NULL, 'contacts_user.xml', 1, 'Contacts', 'Who are my contacts?', '2003-12-22 09:59:15.569', 0, '2003-12-22 09:59:15.569', 0, true, false);
+INSERT INTO report VALUES (8, 4, NULL, 'opportunity_pipeline.xml', 1, 'Opportunities by Stage', 'What are my upcoming opportunities by stage?', '2003-12-22 09:59:15.692', 0, '2003-12-22 09:59:15.692', 0, true, false);
+INSERT INTO report VALUES (9, 4, NULL, 'opportunity_account.xml', 1, 'Opportunities by Account', 'What are all the accounts associated with my opportunities?', '2003-12-22 09:59:15.696', 0, '2003-12-22 09:59:15.696', 0, true, false);
+INSERT INTO report VALUES (10, 4, NULL, 'opportunity_owner.xml', 1, 'Opportunities by Owner', 'What are all the opportunities based on ownership?', '2003-12-22 09:59:15.701', 0, '2003-12-22 09:59:15.701', 0, true, false);
+INSERT INTO report VALUES (11, 4, NULL, 'opportunity_contact.xml', 1, 'Opportunity Contacts', 'Who are the contacts of my opportunities?', '2003-12-22 09:59:15.705', 0, '2003-12-22 09:59:15.705', 0, true, false);
+INSERT INTO report VALUES (12, 6, NULL, 'campaign.xml', 1, 'Campaigns by date', 'What are my active campaigns?', '2003-12-22 09:59:15.796', 0, '2003-12-22 09:59:15.796', 0, true, false);
+INSERT INTO report VALUES (13, 8, NULL, 'tickets_department.xml', 1, 'Tickets by Department', 'What tickets are there in each department?', '2003-12-22 09:59:15.903', 0, '2003-12-22 09:59:15.903', 0, true, false);
+INSERT INTO report VALUES (14, 8, NULL, 'ticket_summary_date.xml', 1, 'Ticket counts by Department', 'How man tickets are there in the system on a particular date?', '2003-12-22 09:59:15.908', 0, '2003-12-22 09:59:15.908', 0, true, false);
+INSERT INTO report VALUES (15, 8, NULL, 'ticket_summary_range.xml', 1, 'Ticket activity by Department', 'How many tickets exist within a date range?', '2003-12-22 09:59:15.912', 0, '2003-12-22 09:59:15.912', 0, true, false);
+INSERT INTO report VALUES (16, 9, NULL, 'users.xml', 1, 'System Users', 'Who are all the users of the system?', '2003-12-22 09:59:16.005', 0, '2003-12-22 09:59:16.005', 0, true, false);
+INSERT INTO report VALUES (17, 12, NULL, 'task_date.xml', 1, 'Task list by due date', 'What are the tasks due withing a date range?', '2003-12-22 09:59:16.116', 0, '2003-12-22 09:59:16.116', 0, true, false);
+INSERT INTO report VALUES (18, 12, NULL, 'task_nodate.xml', 1, 'Task list', 'What are all the tasks in the system?', '2003-12-22 09:59:16.12', 0, '2003-12-22 09:59:16.12', 0, true, false);
+INSERT INTO report VALUES (19, 15, NULL, 'employees.xml', 1, 'Employees', 'Who are the employees in my organization?', '2003-12-22 09:59:16.172', 0, '2003-12-22 09:59:16.172', 0, true, false);
 
 
 --
--- Data for TOC entry 575 (OID 126077)
+-- Data for TOC entry 575 (OID 131201)
 -- Name: report_criteria; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 576 (OID 126103)
+-- Data for TOC entry 576 (OID 131227)
 -- Name: report_criteria_parameter; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 577 (OID 126117)
+-- Data for TOC entry 577 (OID 131241)
 -- Name: report_queue; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 578 (OID 126136)
+-- Data for TOC entry 578 (OID 131260)
 -- Name: report_queue_criteria; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 579 (OID 126150)
+-- Data for TOC entry 579 (OID 131274)
 -- Name: action_list; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 580 (OID 126172)
+-- Data for TOC entry 580 (OID 131296)
 -- Name: action_item; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 581 (OID 126194)
+-- Data for TOC entry 581 (OID 131318)
 -- Name: action_item_log; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 582 (OID 126216)
+-- Data for TOC entry 582 (OID 131340)
 -- Name: database_version; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO database_version VALUES (1, 'att/source/dhv/cfs2/src/sql/init/workflow.bsh', 'att/source/dhv/cfs2/src/sql/init/workflow', '2003-12-22 09:08:09.879');
+INSERT INTO database_version VALUES (1, 'att/source/dhv/cfs2/src/sql/init/workflow.bsh', 'att/source/dhv/cfs2/src/sql/init/workflow', '2003-12-22 09:59:30.429');
 
 
 --
--- Data for TOC entry 583 (OID 126341)
+-- Data for TOC entry 583 (OID 131465)
 -- Name: lookup_call_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4708,7 +4708,7 @@ INSERT INTO lookup_call_types VALUES (3, 'In-Person', false, 30, true);
 
 
 --
--- Data for TOC entry 584 (OID 126351)
+-- Data for TOC entry 584 (OID 131475)
 -- Name: lookup_opportunity_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4719,35 +4719,35 @@ INSERT INTO lookup_opportunity_types VALUES (4, NULL, 'Type 4', false, 3, true);
 
 
 --
--- Data for TOC entry 585 (OID 126361)
+-- Data for TOC entry 585 (OID 131485)
 -- Name: opportunity_header; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 586 (OID 126380)
+-- Data for TOC entry 586 (OID 131504)
 -- Name: opportunity_component; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 587 (OID 126414)
+-- Data for TOC entry 587 (OID 131538)
 -- Name: opportunity_component_levels; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 588 (OID 126428)
+-- Data for TOC entry 588 (OID 131552)
 -- Name: call_log; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 589 (OID 126481)
+-- Data for TOC entry 589 (OID 131605)
 -- Name: ticket_level; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4759,7 +4759,7 @@ INSERT INTO ticket_level VALUES (5, 'Top level', false, 4, true);
 
 
 --
--- Data for TOC entry 590 (OID 126493)
+-- Data for TOC entry 590 (OID 131617)
 -- Name: ticket_severity; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4769,7 +4769,7 @@ INSERT INTO ticket_severity VALUES (3, 'Critical', 'background-color:red;color:b
 
 
 --
--- Data for TOC entry 591 (OID 126509)
+-- Data for TOC entry 591 (OID 131633)
 -- Name: lookup_ticketsource; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4780,7 +4780,7 @@ INSERT INTO lookup_ticketsource VALUES (4, 'Other', false, 4, true);
 
 
 --
--- Data for TOC entry 592 (OID 126521)
+-- Data for TOC entry 592 (OID 131645)
 -- Name: ticket_priority; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4790,7 +4790,7 @@ INSERT INTO ticket_priority VALUES (3, 'Immediate', 'background-color:red;color:
 
 
 --
--- Data for TOC entry 593 (OID 126537)
+-- Data for TOC entry 593 (OID 131661)
 -- Name: ticket_category; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4802,80 +4802,80 @@ INSERT INTO ticket_category VALUES (5, 0, 0, 'Other', '', false, 5, true);
 
 
 --
--- Data for TOC entry 594 (OID 126552)
+-- Data for TOC entry 594 (OID 131676)
 -- Name: ticket_category_draft; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 595 (OID 126568)
+-- Data for TOC entry 595 (OID 131692)
 -- Name: ticket; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 596 (OID 126622)
+-- Data for TOC entry 596 (OID 131746)
 -- Name: ticketlog; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 597 (OID 126682)
+-- Data for TOC entry 597 (OID 131806)
 -- Name: module_field_categorylink; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO module_field_categorylink VALUES (1, 1, 1, 10, 'Accounts', '2003-12-22 09:07:54.209');
-INSERT INTO module_field_categorylink VALUES (2, 2, 2, 10, 'Contacts', '2003-12-22 09:07:54.451');
-INSERT INTO module_field_categorylink VALUES (3, 8, 11072003, 10, 'Tickets', '2003-12-22 09:07:54.784');
+INSERT INTO module_field_categorylink VALUES (1, 1, 1, 10, 'Accounts', '2003-12-22 09:59:15.145');
+INSERT INTO module_field_categorylink VALUES (2, 2, 2, 10, 'Contacts', '2003-12-22 09:59:15.529');
+INSERT INTO module_field_categorylink VALUES (3, 8, 11072003, 10, 'Tickets', '2003-12-22 09:59:15.887');
 
 
 --
--- Data for TOC entry 598 (OID 126700)
+-- Data for TOC entry 598 (OID 131824)
 -- Name: custom_field_category; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 599 (OID 126722)
+-- Data for TOC entry 599 (OID 131846)
 -- Name: custom_field_group; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 600 (OID 126741)
+-- Data for TOC entry 600 (OID 131865)
 -- Name: custom_field_info; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 601 (OID 126762)
+-- Data for TOC entry 601 (OID 131886)
 -- Name: custom_field_lookup; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 602 (OID 126778)
+-- Data for TOC entry 602 (OID 131902)
 -- Name: custom_field_record; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 603 (OID 126799)
+-- Data for TOC entry 603 (OID 131923)
 -- Name: custom_field_data; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 604 (OID 126816)
+-- Data for TOC entry 604 (OID 131940)
 -- Name: lookup_project_activity; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4892,7 +4892,7 @@ INSERT INTO lookup_project_activity VALUES (10, 'Post Implementation Review', fa
 
 
 --
--- Data for TOC entry 605 (OID 126828)
+-- Data for TOC entry 605 (OID 131952)
 -- Name: lookup_project_priority; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4902,7 +4902,7 @@ INSERT INTO lookup_project_priority VALUES (3, 'High', false, 3, true, 0, NULL, 
 
 
 --
--- Data for TOC entry 606 (OID 126839)
+-- Data for TOC entry 606 (OID 131963)
 -- Name: lookup_project_issues; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4924,7 +4924,7 @@ INSERT INTO lookup_project_issues VALUES (15, 'Security', false, 0, true, 0);
 
 
 --
--- Data for TOC entry 607 (OID 126850)
+-- Data for TOC entry 607 (OID 131974)
 -- Name: lookup_project_status; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4937,7 +4937,7 @@ INSERT INTO lookup_project_status VALUES (6, 'Closed', false, 4, true, 0, 'box-c
 
 
 --
--- Data for TOC entry 608 (OID 126861)
+-- Data for TOC entry 608 (OID 131985)
 -- Name: lookup_project_loe; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -4949,133 +4949,133 @@ INSERT INTO lookup_project_loe VALUES (5, 'Month(s)', 18144000, false, 1, true, 
 
 
 --
--- Data for TOC entry 609 (OID 126873)
+-- Data for TOC entry 609 (OID 131997)
 -- Name: projects; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 610 (OID 126896)
+-- Data for TOC entry 610 (OID 132020)
 -- Name: project_requirements; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 611 (OID 126936)
+-- Data for TOC entry 611 (OID 132060)
 -- Name: project_assignments; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 612 (OID 126993)
+-- Data for TOC entry 612 (OID 132117)
 -- Name: project_assignments_status; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 613 (OID 127012)
+-- Data for TOC entry 613 (OID 132136)
 -- Name: project_issues; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 614 (OID 127044)
+-- Data for TOC entry 614 (OID 132168)
 -- Name: project_issue_replies; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 615 (OID 127069)
+-- Data for TOC entry 615 (OID 132193)
 -- Name: project_folders; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 616 (OID 127079)
+-- Data for TOC entry 616 (OID 132203)
 -- Name: project_files; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 617 (OID 127106)
+-- Data for TOC entry 617 (OID 132230)
 -- Name: project_files_version; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 618 (OID 127129)
+-- Data for TOC entry 618 (OID 132253)
 -- Name: project_files_download; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 619 (OID 127141)
+-- Data for TOC entry 619 (OID 132265)
 -- Name: project_team; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 620 (OID 127202)
+-- Data for TOC entry 620 (OID 132326)
 -- Name: saved_criterialist; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 621 (OID 127225)
+-- Data for TOC entry 621 (OID 132349)
 -- Name: campaign; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 622 (OID 127255)
+-- Data for TOC entry 622 (OID 132379)
 -- Name: campaign_run; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 623 (OID 127272)
+-- Data for TOC entry 623 (OID 132396)
 -- Name: excluded_recipient; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 624 (OID 127285)
+-- Data for TOC entry 624 (OID 132409)
 -- Name: campaign_list_groups; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 625 (OID 127297)
+-- Data for TOC entry 625 (OID 132421)
 -- Name: active_campaign_groups; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 626 (OID 127311)
+-- Data for TOC entry 626 (OID 132435)
 -- Name: scheduled_recipient; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 627 (OID 127330)
+-- Data for TOC entry 627 (OID 132454)
 -- Name: lookup_survey_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -5086,84 +5086,84 @@ INSERT INTO lookup_survey_types VALUES (4, 'Item List', false, 0, true);
 
 
 --
--- Data for TOC entry 628 (OID 127340)
+-- Data for TOC entry 628 (OID 132464)
 -- Name: survey; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 629 (OID 127362)
+-- Data for TOC entry 629 (OID 132486)
 -- Name: campaign_survey_link; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 630 (OID 127374)
+-- Data for TOC entry 630 (OID 132498)
 -- Name: survey_questions; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 631 (OID 127391)
+-- Data for TOC entry 631 (OID 132515)
 -- Name: survey_items; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 632 (OID 127403)
+-- Data for TOC entry 632 (OID 132527)
 -- Name: active_survey; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 633 (OID 127433)
+-- Data for TOC entry 633 (OID 132557)
 -- Name: active_survey_questions; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 634 (OID 127458)
+-- Data for TOC entry 634 (OID 132582)
 -- Name: active_survey_items; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 635 (OID 127470)
+-- Data for TOC entry 635 (OID 132594)
 -- Name: active_survey_responses; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 636 (OID 127483)
+-- Data for TOC entry 636 (OID 132607)
 -- Name: active_survey_answers; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 637 (OID 127502)
+-- Data for TOC entry 637 (OID 132626)
 -- Name: active_survey_answer_items; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 638 (OID 127520)
+-- Data for TOC entry 638 (OID 132644)
 -- Name: active_survey_answer_avg; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 639 (OID 127536)
+-- Data for TOC entry 639 (OID 132660)
 -- Name: field_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -5188,7 +5188,7 @@ INSERT INTO field_types VALUES (18, 2, 'number', 'is null', 'does not exist', tr
 
 
 --
--- Data for TOC entry 640 (OID 127545)
+-- Data for TOC entry 640 (OID 132669)
 -- Name: search_fields; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -5206,28 +5206,28 @@ INSERT INTO search_fields VALUES (11, 'accountTypeId', 'Account Type', true, 0, 
 
 
 --
--- Data for TOC entry 641 (OID 127555)
+-- Data for TOC entry 641 (OID 132679)
 -- Name: message; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 642 (OID 127580)
+-- Data for TOC entry 642 (OID 132704)
 -- Name: message_template; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 643 (OID 127596)
+-- Data for TOC entry 643 (OID 132720)
 -- Name: saved_criteriaelement; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 644 (OID 127654)
+-- Data for TOC entry 644 (OID 132778)
 -- Name: help_module; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -5330,1167 +5330,1167 @@ INSERT INTO help_module VALUES (11, 11, 'System Brief', 'System Detail');
 
 
 --
--- Data for TOC entry 645 (OID 127668)
+-- Data for TOC entry 645 (OID 132792)
 -- Name: help_contents; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO help_contents VALUES (1, 12, 12, 'MyCFS.do', 'Home', NULL, 'Overview', 'You are looking at Home Page view, which has a dashboard view of all your assigned tasks, tickets, assignments, calls you have to make, and accounts that need attention. This view is based on a time selected from the calendar; by default it shows the schedule for the next seven days. You can optionally view the calendar of those below you in your hierarchy.', NULL, NULL, NULL, 0, '2003-12-22 09:08:00.73', 0, '2003-12-22 09:08:00.73', true);
-INSERT INTO help_contents VALUES (2, 12, 12, 'MyCFSInbox.do', 'Inbox', NULL, 'Mailbox', 'The messaging feature is designed to support INTERNAL business messaging needs and to prepare OUTGOING emails to addresses who are already in the system. Messaging is NOT a normal email replacement. It will not send email to address assigned "on-the-fly" and it will not receive OUTSIDE email.', NULL, NULL, NULL, 0, '2003-12-22 09:08:00.841', 0, '2003-12-22 09:08:00.841', true);
-INSERT INTO help_contents VALUES (3, 12, 12, 'MyCFSInbox.do', 'CFSNoteDetails', NULL, 'Message Details', 'This page shows the message details, shows who sent the mail, when it was received and also the text in the mail box.', NULL, NULL, NULL, 0, '2003-12-22 09:08:00.886', 0, '2003-12-22 09:08:00.886', true);
-INSERT INTO help_contents VALUES (4, 12, 12, 'MyCFSInbox.do', 'NewMessage', NULL, 'New Message ', 'Sending mail to other users of the system', NULL, NULL, NULL, 0, '2003-12-22 09:08:00.897', 0, '2003-12-22 09:08:00.897', true);
-INSERT INTO help_contents VALUES (5, 12, 12, 'MyCFSInbox.do', 'ReplyToMessage', NULL, 'Reply Message', 'This pages lets you reply to email. You can also select the list of recipients for your email by clicking the Add Recipients link.', NULL, NULL, NULL, 0, '2003-12-22 09:08:00.907', 0, '2003-12-22 09:08:00.907', true);
-INSERT INTO help_contents VALUES (6, 12, 12, 'MyCFSInbox.do', 'SendMessage', NULL, NULL, 'This page shows the list of recipients for whom your email has been sent to', NULL, NULL, NULL, 0, '2003-12-22 09:08:00.934', 0, '2003-12-22 09:08:00.934', true);
-INSERT INTO help_contents VALUES (7, 12, 12, 'MyCFSInbox.do', 'ForwardMessage', NULL, 'Forward message', 'Each message can be forwarded to any number of recipients', NULL, NULL, NULL, 0, '2003-12-22 09:08:00.94', 0, '2003-12-22 09:08:00.94', true);
-INSERT INTO help_contents VALUES (8, 12, 12, 'MyTasks.do', NULL, NULL, 'Tasks', 'Tasks created can be assigned to the owner/creator of the task or an employee working in the system. This page lists the tasks present along with their priorities, their due dates and age.', NULL, NULL, NULL, 0, '2003-12-22 09:08:00.959', 0, '2003-12-22 09:08:00.959', true);
-INSERT INTO help_contents VALUES (9, 12, 12, 'MyTasks.do', 'New', NULL, 'Advanced Task', 'Allows an advanced task to be created', NULL, NULL, NULL, 0, '2003-12-22 09:08:00.987', 0, '2003-12-22 09:08:00.987', true);
-INSERT INTO help_contents VALUES (10, 12, 12, 'MyTasksForward.do', 'ForwardMessage', NULL, 'Forwarding a Task ', 'A task can be forwarded to any of the recipients. Recipients can either be users of the system or any of the contacts stored in the system. Checking the options fields check box indicates that if the recipient is a user of the system, then a copy of the task is also send to the recipient''s mailbox.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.019', 0, '2003-12-22 09:08:01.019', true);
-INSERT INTO help_contents VALUES (11, 12, 12, 'MyTasks.do', 'Modify', NULL, 'Modify task', 'Allows you to modify any infomation about a task', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.042', 0, '2003-12-22 09:08:01.042', true);
-INSERT INTO help_contents VALUES (12, 12, 12, 'MyActionLists.do', 'List', NULL, 'Action Lists', 'Action Lists allow you to create new Action Lists and assign contacts to the Action Lists created. For each of the contacts in a list, you can add a call, opportunity, ticket, task or send a message, which would correspondingly show up in their respective tabs. For example, adding a ticket to the contact would be reflected in the Ticket module.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.065', 0, '2003-12-22 09:08:01.065', true);
-INSERT INTO help_contents VALUES (13, 12, 12, 'MyActionContacts.do', 'List', NULL, 'Action Contacts', 'This page will list out all the contacts present for the particular contact list. This also shows the status of the call, opportunity, ticket, task, or the message associated with the contact. This also shows when the contact information was last updated.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.085', 0, '2003-12-22 09:08:01.085', true);
-INSERT INTO help_contents VALUES (14, 12, 12, 'MyActionLists.do', 'Add', NULL, 'Add Action List', 'Allows you to add an action list. Basically, you describe the group of contacts you will add, then visually design a query to generate the group of contacts.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.109', 0, '2003-12-22 09:08:01.109', true);
-INSERT INTO help_contents VALUES (15, 12, 12, 'MyActionLists.do', 'Modify', NULL, 'Modify Action', 'The Action Lists details, like the description and status of the Action Lists, can be modified.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.146', 0, '2003-12-22 09:08:01.146', true);
-INSERT INTO help_contents VALUES (16, 12, 12, 'Reassignments.do', 'Reassign', NULL, 'Re-assignments', 'A user can reassign data from one employee to another employee working under him. The data can be of different types related to accounts, contacts opportunities, activities, tickets etc, which the newly reassigned employee could view in his schedule. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.163', 0, '2003-12-22 09:08:01.163', true);
-INSERT INTO help_contents VALUES (17, 12, 12, 'MyCFS.do', 'MyProfile', NULL, 'My Settings', 'This is the personal settings page, where you can modify the information about yourself, your location and also change your password to the system.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.198', 0, '2003-12-22 09:08:01.198', true);
-INSERT INTO help_contents VALUES (18, 12, 12, 'MyCFSProfile.do', 'MyCFSProfile', NULL, 'Personal Information ', 'This page lets you update/add your personal information.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.243', 0, '2003-12-22 09:08:01.243', true);
-INSERT INTO help_contents VALUES (19, 12, 12, 'MyCFSSettings.do', 'MyCFSSettings', NULL, 'Location Settings', 'You can change your location settings', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.258', 0, '2003-12-22 09:08:01.258', true);
-INSERT INTO help_contents VALUES (20, 12, 12, 'MyCFSPassword.do', 'MyCFSPassword', NULL, 'Update password', 'Your password to the system can be changed', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.27', 0, '2003-12-22 09:08:01.27', true);
-INSERT INTO help_contents VALUES (21, 12, 12, 'MyTasks.do', 'ListTasks', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.281', 0, '2003-12-22 09:08:01.281', true);
-INSERT INTO help_contents VALUES (22, 12, 12, 'MyTasks.do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.344', 0, '2003-12-22 09:08:01.344', true);
-INSERT INTO help_contents VALUES (23, 12, 12, 'MyCFS.do', 'Home ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.353', 0, '2003-12-22 09:08:01.353', true);
-INSERT INTO help_contents VALUES (24, 12, 12, 'MyTasksForward.do', 'SendMessage', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.359', 0, '2003-12-22 09:08:01.359', true);
-INSERT INTO help_contents VALUES (25, 12, 12, 'MyCFSProfile.do', 'UpdateProfile', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.365', 0, '2003-12-22 09:08:01.365', true);
-INSERT INTO help_contents VALUES (26, 12, 12, 'MyCFSInbox.do', 'CFSNoteTrash', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.371', 0, '2003-12-22 09:08:01.371', true);
-INSERT INTO help_contents VALUES (27, 12, 12, 'MyActionContacts.do', 'Update', NULL, NULL, 'No introduction available', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.376', 0, '2003-12-22 09:08:01.376', true);
-INSERT INTO help_contents VALUES (28, 12, 12, 'MyActionContacts.do', 'Prepare', NULL, NULL, 'You can add the new Action List and also select the contacts to be present in the Action List.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.381', 0, '2003-12-22 09:08:01.381', true);
-INSERT INTO help_contents VALUES (29, 12, 12, 'MyTasks.do', 'ListTasks ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.394', 0, '2003-12-22 09:08:01.394', true);
-INSERT INTO help_contents VALUES (30, 12, 12, 'MyCFSInbox.do', 'Inbox ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.407', 0, '2003-12-22 09:08:01.407', true);
-INSERT INTO help_contents VALUES (31, 12, 12, 'MyActionContacts.do', 'Modify', NULL, 'Modify Action List', 'Allows you to manually add or remove contacts to or from an existing Action List.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.419', 0, '2003-12-22 09:08:01.419', true);
-INSERT INTO help_contents VALUES (32, 12, 12, 'Reassignments.do', 'DoReassign', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.436', 0, '2003-12-22 09:08:01.436', true);
-INSERT INTO help_contents VALUES (33, 12, 12, 'TaskForm.do', 'Prepare', NULL, NULL, 'Addition of a new Advanced task that can be assigned to the owner or any other employee working  under him.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.441', 0, '2003-12-22 09:08:01.441', true);
-INSERT INTO help_contents VALUES (34, 2, 2, 'ExternalContacts.do', 'Prepare', NULL, 'Add a Contact', 'A new contact can be added to the system. The contact can be a general contact, or one that is associated with an account. All the details about the contact such as the email address, phone numbers, address and some additional details can be added.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.455', 0, '2003-12-22 09:08:01.455', true);
-INSERT INTO help_contents VALUES (35, 2, 2, 'ExternalContacts.do', 'SearchContactsForm', NULL, 'Search Contacts ', 'Use this page to search for contacts in the system based on different filters', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.522', 0, '2003-12-22 09:08:01.522', true);
-INSERT INTO help_contents VALUES (36, 2, 2, 'ExternalContacts.do', 'Reports', NULL, 'Export Data ', 'Contact data can be exported and displayed in different formats, and can be filtered in different ways. The Export page also lets you view the data, download it, and shows the number of times the exported data has been downloaded.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.531', 0, '2003-12-22 09:08:01.531', true);
-INSERT INTO help_contents VALUES (37, 2, 2, 'ExternalContacts.do', 'GenerateForm', NULL, 'Exporting data', 'Use this page to generate a Contacts export report.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.549', 0, '2003-12-22 09:08:01.549', true);
-INSERT INTO help_contents VALUES (38, 2, 2, 'ExternalContacts.do', 'ModifyContact', NULL, 'Modify Contact ', 'The details about the contact can be modified here.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.572', 0, '2003-12-22 09:08:01.572', true);
-INSERT INTO help_contents VALUES (39, 2, 2, 'ExternalContacts.do ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.581', 0, '2003-12-22 09:08:01.581', true);
-INSERT INTO help_contents VALUES (40, 2, 2, 'ExternalContacts.do', 'Save', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.586', 0, '2003-12-22 09:08:01.586', true);
-INSERT INTO help_contents VALUES (41, 2, 2, 'ExternalContactsCalls.do', 'View', NULL, 'Call Details', 'The calls related to the contact are listed here along with the other details such as the length of the call and the date the call was made. You can also add a call.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.591', 0, '2003-12-22 09:08:01.591', true);
-INSERT INTO help_contents VALUES (42, 2, 2, 'ExternalContactsCalls.do', 'Add', NULL, 'Adding a Call', 'A new call can be added which is associated with the contact. The type of call can be selected using the drop down list present.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.608', 0, '2003-12-22 09:08:01.608', true);
-INSERT INTO help_contents VALUES (43, 2, 2, 'ExternalContactsCallsForward.do', 'ForwardMessage', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.617', 0, '2003-12-22 09:08:01.617', true);
-INSERT INTO help_contents VALUES (44, 2, 2, 'ExternalContactsCallsForward.do', 'SendMessage', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.622', 0, '2003-12-22 09:08:01.622', true);
-INSERT INTO help_contents VALUES (45, 2, 2, 'ExternalContactsOpps.do', 'ViewOpps', NULL, 'Opportunity Details', 'All the opportunities associated with the contact are shown here, with its best possible total and the when the opportunity was last modified. You can filter the different types of opportunities using the drop down.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.627', 0, '2003-12-22 09:08:01.627', true);
-INSERT INTO help_contents VALUES (46, 2, 2, 'ExternalContactsCalls.do', 'Details', NULL, 'Call Details', 'Calls associated with the contacts are displayed. The call details are shown with the length of the call, associated notes, alert description, alert date etc.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.655', 0, '2003-12-22 09:08:01.655', true);
-INSERT INTO help_contents VALUES (47, 2, 2, 'ExternalContactsOppComponents.do', 'Prepare', NULL, 'Add a component', 'A component can be added to an opportunity and associated to any employee present in the system. The component type can also be selected.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.664', 0, '2003-12-22 09:08:01.664', true);
-INSERT INTO help_contents VALUES (48, 2, 2, 'ExternalContactsOpps.do', 'DetailsOpp', NULL, 'Opportunity Details ', 'You can view all the details about the components here, such as the status, the guess amount and the current stage. A new component can also be added to an existing opportunity. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.677', 0, '2003-12-22 09:08:01.677', true);
-INSERT INTO help_contents VALUES (49, 2, 2, 'ExternalContactsOppComponents.do', 'DetailsComponent', NULL, 'Component Details ', 'This page shows the details about the opportunity such as the probability of closing the opportunity, the current stage of the opportunity, etc.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.697', 0, '2003-12-22 09:08:01.697', true);
-INSERT INTO help_contents VALUES (50, 2, 2, 'ExternalContactsCalls.do', 'Modify', NULL, 'Modifying call details ', 'You can modify all the details of the calls.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.706', 0, '2003-12-22 09:08:01.706', true);
-INSERT INTO help_contents VALUES (51, 2, 2, 'ExternalContacts.do', 'InsertFields', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.715', 0, '2003-12-22 09:08:01.715', true);
-INSERT INTO help_contents VALUES (52, 2, 2, 'ExternalContacts.do', 'UpdateFields', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.72', 0, '2003-12-22 09:08:01.72', true);
-INSERT INTO help_contents VALUES (53, 2, 2, 'ExternalContacts.do', 'ListContacts', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.725', 0, '2003-12-22 09:08:01.725', true);
-INSERT INTO help_contents VALUES (54, 2, 2, 'ExternalContacts.do', 'Clone', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.73', 0, '2003-12-22 09:08:01.73', true);
-INSERT INTO help_contents VALUES (55, 2, 2, 'ExternalContacts.do', 'AddFolderRecord', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.736', 0, '2003-12-22 09:08:01.736', true);
-INSERT INTO help_contents VALUES (56, 2, 2, 'ExternalContactsOpps.do', 'Save', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.741', 0, '2003-12-22 09:08:01.741', true);
-INSERT INTO help_contents VALUES (57, 2, 2, 'ExternalContacts.do', 'SearchContacts ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.747', 0, '2003-12-22 09:08:01.747', true);
-INSERT INTO help_contents VALUES (58, 2, 2, 'ExternalContacts.do', 'MessageDetails', NULL, NULL, 'The selected message is displayed with the message text and attachments, if any.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.753', 0, '2003-12-22 09:08:01.753', true);
-INSERT INTO help_contents VALUES (59, 2, 2, 'ExternalContactsOppComponents.do', 'SaveComponent', NULL, NULL, 'This page shows the details of an opportunity, such as the probability of closing the opportunity, the current stage of the opportunity, etc.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.762', 0, '2003-12-22 09:08:01.762', true);
-INSERT INTO help_contents VALUES (60, 2, 2, 'ExternalContacts.do', 'SearchContacts', NULL, 'List of Contacts', 'This page shows the list of contacts in the system. The name of the contact along with the company name and phone numbers are shown. If the name of the contact is an account, it''s shown right next to it. You can also add a contact.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.771', 0, '2003-12-22 09:08:01.771', true);
-INSERT INTO help_contents VALUES (61, 2, 2, 'ExternalContacts.do', 'ExportReport', NULL, 'Overview', 'Data can be filtered, exported and displayed in different formats. This also shows the number of times an exported data has been downloaded. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.79', 0, '2003-12-22 09:08:01.79', true);
-INSERT INTO help_contents VALUES (62, 2, 2, 'ExternalContacts.do', 'ContactDetails', NULL, 'Contact Details ', 'The details about the contact are displayed here along with the record information containing the owner, the employee who entered the details and finally the person who last modified these details.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.806', 0, '2003-12-22 09:08:01.806', true);
-INSERT INTO help_contents VALUES (63, 2, 2, 'ExternalContacts.do', 'ViewMessages', NULL, 'Message Details', 'This page lists all the messages associated with the contact, showing the name of the message, its date and its status.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.815', 0, '2003-12-22 09:08:01.815', true);
-INSERT INTO help_contents VALUES (64, 2, 2, 'ExternalContactsCallsForward.do', 'ForwardCall', NULL, 'Forwarding a call', 'The details of the calls that are associated with a contact can be forwarded to different employees present in the system.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.828', 0, '2003-12-22 09:08:01.828', true);
-INSERT INTO help_contents VALUES (65, 2, 2, 'ExternalContactsCallsForward.do', 'SendCall', NULL, 'List of recipients', 'This page shows the list of recipients to whom the call details that are associated with a contact have been forwarded.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.837', 0, '2003-12-22 09:08:01.837', true);
-INSERT INTO help_contents VALUES (66, 2, 2, 'ExternalContactsOppComponents.do', 'ModifyComponent', NULL, 'Modifying the component details ', 'The details of the component associated with an opportunity can be modified.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.842', 0, '2003-12-22 09:08:01.842', true);
-INSERT INTO help_contents VALUES (67, 2, 2, 'ExternalContactsOpps.do', 'ModifyOpp', NULL, 'Modify the opportunity', 'The description of the opportunity can be renamed / updated.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.855', 0, '2003-12-22 09:08:01.855', true);
-INSERT INTO help_contents VALUES (68, 2, 2, 'ExternalContacts.do', 'Fields', NULL, 'List of Folder Records', 'Each contact can have several folders, and each folder further can have multiple records. You can add a record to a folder. Each record present in the folder displays the record name, when it was entered, who modified this record last and when.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.872', 0, '2003-12-22 09:08:01.872', true);
-INSERT INTO help_contents VALUES (69, 2, 2, 'ExternalContacts.do', 'ModifyFields', NULL, 'Modify Folder Record ', 'Here you can modify the details of the folder record.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.897', 0, '2003-12-22 09:08:01.897', true);
-INSERT INTO help_contents VALUES (70, 2, 2, 'ExternalContactsOpps.do', 'UpdateOpp', NULL, 'Opportunity Details', 'All the opportunities associated with the contact are shown here, with its best possible total and the when the opportunity was last modified. You can filter the different types of opportunities that can be selected using the drop down and display them.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.906', 0, '2003-12-22 09:08:01.906', true);
-INSERT INTO help_contents VALUES (71, 2, 2, 'ExternalContacts.do', NULL, NULL, 'Overview', 'If a contact already exists in the system, you can search for that contact by name, company, title, contact type or source, by typing the search term in the appropriate field, and clicking the Search button.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.926', 0, '2003-12-22 09:08:01.926', true);
+INSERT INTO help_contents VALUES (1, 12, 12, 'MyCFS.do', 'Home', NULL, 'Overview', 'You are looking at Home Page view, which has a dashboard view of all your assigned tasks, tickets, assignments, calls you have to make, and accounts that need attention. This view is based on a time selected from the calendar; by default it shows the schedule for the next seven days. You can optionally view the calendar of those below you in your hierarchy.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.238', 0, '2003-12-22 09:59:22.238', true);
+INSERT INTO help_contents VALUES (2, 12, 12, 'MyCFSInbox.do', 'Inbox', NULL, 'Mailbox', 'The messaging feature is designed to support INTERNAL business messaging needs and to prepare OUTGOING emails to addresses who are already in the system. Messaging is NOT a normal email replacement. It will not send email to address assigned "on-the-fly" and it will not receive OUTSIDE email.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.354', 0, '2003-12-22 09:59:22.354', true);
+INSERT INTO help_contents VALUES (3, 12, 12, 'MyCFSInbox.do', 'CFSNoteDetails', NULL, 'Message Details', 'This page shows the message details, shows who sent the mail, when it was received and also the text in the mail box.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.399', 0, '2003-12-22 09:59:22.399', true);
+INSERT INTO help_contents VALUES (4, 12, 12, 'MyCFSInbox.do', 'NewMessage', NULL, 'New Message ', 'Sending mail to other users of the system', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.409', 0, '2003-12-22 09:59:22.409', true);
+INSERT INTO help_contents VALUES (5, 12, 12, 'MyCFSInbox.do', 'ReplyToMessage', NULL, 'Reply Message', 'This pages lets you reply to email. You can also select the list of recipients for your email by clicking the Add Recipients link.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.419', 0, '2003-12-22 09:59:22.419', true);
+INSERT INTO help_contents VALUES (6, 12, 12, 'MyCFSInbox.do', 'SendMessage', NULL, NULL, 'This page shows the list of recipients for whom your email has been sent to', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.446', 0, '2003-12-22 09:59:22.446', true);
+INSERT INTO help_contents VALUES (7, 12, 12, 'MyCFSInbox.do', 'ForwardMessage', NULL, 'Forward message', 'Each message can be forwarded to any number of recipients', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.452', 0, '2003-12-22 09:59:22.452', true);
+INSERT INTO help_contents VALUES (8, 12, 12, 'MyTasks.do', NULL, NULL, 'Tasks', 'Tasks created can be assigned to the owner/creator of the task or an employee working in the system. This page lists the tasks present along with their priorities, their due dates and age.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.472', 0, '2003-12-22 09:59:22.472', true);
+INSERT INTO help_contents VALUES (9, 12, 12, 'MyTasks.do', 'New', NULL, 'Advanced Task', 'Allows an advanced task to be created', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.50', 0, '2003-12-22 09:59:22.50', true);
+INSERT INTO help_contents VALUES (10, 12, 12, 'MyTasksForward.do', 'ForwardMessage', NULL, 'Forwarding a Task ', 'A task can be forwarded to any of the recipients. Recipients can either be users of the system or any of the contacts stored in the system. Checking the options fields check box indicates that if the recipient is a user of the system, then a copy of the task is also send to the recipient''s mailbox.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.531', 0, '2003-12-22 09:59:22.531', true);
+INSERT INTO help_contents VALUES (11, 12, 12, 'MyTasks.do', 'Modify', NULL, 'Modify task', 'Allows you to modify any infomation about a task', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.553', 0, '2003-12-22 09:59:22.553', true);
+INSERT INTO help_contents VALUES (12, 12, 12, 'MyActionLists.do', 'List', NULL, 'Action Lists', 'Action Lists allow you to create new Action Lists and assign contacts to the Action Lists created. For each of the contacts in a list, you can add a call, opportunity, ticket, task or send a message, which would correspondingly show up in their respective tabs. For example, adding a ticket to the contact would be reflected in the Ticket module.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.575', 0, '2003-12-22 09:59:22.575', true);
+INSERT INTO help_contents VALUES (13, 12, 12, 'MyActionContacts.do', 'List', NULL, 'Action Contacts', 'This page will list out all the contacts present for the particular contact list. This also shows the status of the call, opportunity, ticket, task, or the message associated with the contact. This also shows when the contact information was last updated.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.594', 0, '2003-12-22 09:59:22.594', true);
+INSERT INTO help_contents VALUES (14, 12, 12, 'MyActionLists.do', 'Add', NULL, 'Add Action List', 'Allows you to add an action list. Basically, you describe the group of contacts you will add, then visually design a query to generate the group of contacts.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.618', 0, '2003-12-22 09:59:22.618', true);
+INSERT INTO help_contents VALUES (15, 12, 12, 'MyActionLists.do', 'Modify', NULL, 'Modify Action', 'The Action Lists details, like the description and status of the Action Lists, can be modified.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.654', 0, '2003-12-22 09:59:22.654', true);
+INSERT INTO help_contents VALUES (16, 12, 12, 'Reassignments.do', 'Reassign', NULL, 'Re-assignments', 'A user can reassign data from one employee to another employee working under him. The data can be of different types related to accounts, contacts opportunities, activities, tickets etc, which the newly reassigned employee could view in his schedule. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.668', 0, '2003-12-22 09:59:22.668', true);
+INSERT INTO help_contents VALUES (17, 12, 12, 'MyCFS.do', 'MyProfile', NULL, 'My Settings', 'This is the personal settings page, where you can modify the information about yourself, your location and also change your password to the system.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.699', 0, '2003-12-22 09:59:22.699', true);
+INSERT INTO help_contents VALUES (18, 12, 12, 'MyCFSProfile.do', 'MyCFSProfile', NULL, 'Personal Information ', 'This page lets you update/add your personal information.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.728', 0, '2003-12-22 09:59:22.728', true);
+INSERT INTO help_contents VALUES (19, 12, 12, 'MyCFSSettings.do', 'MyCFSSettings', NULL, 'Location Settings', 'You can change your location settings', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.742', 0, '2003-12-22 09:59:22.742', true);
+INSERT INTO help_contents VALUES (20, 12, 12, 'MyCFSPassword.do', 'MyCFSPassword', NULL, 'Update password', 'Your password to the system can be changed', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.752', 0, '2003-12-22 09:59:22.752', true);
+INSERT INTO help_contents VALUES (21, 12, 12, 'MyTasks.do', 'ListTasks', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:22.765', 0, '2003-12-22 09:59:22.765', true);
+INSERT INTO help_contents VALUES (22, 12, 12, 'MyTasks.do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:22.822', 0, '2003-12-22 09:59:22.822', true);
+INSERT INTO help_contents VALUES (23, 12, 12, 'MyCFS.do', 'Home ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:22.835', 0, '2003-12-22 09:59:22.835', true);
+INSERT INTO help_contents VALUES (24, 12, 12, 'MyTasksForward.do', 'SendMessage', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:22.84', 0, '2003-12-22 09:59:22.84', true);
+INSERT INTO help_contents VALUES (25, 12, 12, 'MyCFSProfile.do', 'UpdateProfile', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:22.846', 0, '2003-12-22 09:59:22.846', true);
+INSERT INTO help_contents VALUES (26, 12, 12, 'MyCFSInbox.do', 'CFSNoteTrash', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:22.851', 0, '2003-12-22 09:59:22.851', true);
+INSERT INTO help_contents VALUES (27, 12, 12, 'MyActionContacts.do', 'Update', NULL, NULL, 'No introduction available', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.859', 0, '2003-12-22 09:59:22.859', true);
+INSERT INTO help_contents VALUES (28, 12, 12, 'MyActionContacts.do', 'Prepare', NULL, NULL, 'You can add the new Action List and also select the contacts to be present in the Action List.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.864', 0, '2003-12-22 09:59:22.864', true);
+INSERT INTO help_contents VALUES (29, 12, 12, 'MyTasks.do', 'ListTasks ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:22.88', 0, '2003-12-22 09:59:22.88', true);
+INSERT INTO help_contents VALUES (30, 12, 12, 'MyCFSInbox.do', 'Inbox ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:22.895', 0, '2003-12-22 09:59:22.895', true);
+INSERT INTO help_contents VALUES (31, 12, 12, 'MyActionContacts.do', 'Modify', NULL, 'Modify Action List', 'Allows you to manually add or remove contacts to or from an existing Action List.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.907', 0, '2003-12-22 09:59:22.907', true);
+INSERT INTO help_contents VALUES (32, 12, 12, 'Reassignments.do', 'DoReassign', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:22.925', 0, '2003-12-22 09:59:22.925', true);
+INSERT INTO help_contents VALUES (33, 12, 12, 'TaskForm.do', 'Prepare', NULL, NULL, 'Addition of a new Advanced task that can be assigned to the owner or any other employee working  under him.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.93', 0, '2003-12-22 09:59:22.93', true);
+INSERT INTO help_contents VALUES (34, 2, 2, 'ExternalContacts.do', 'Prepare', NULL, 'Add a Contact', 'A new contact can be added to the system. The contact can be a general contact, or one that is associated with an account. All the details about the contact such as the email address, phone numbers, address and some additional details can be added.', NULL, NULL, NULL, 0, '2003-12-22 09:59:22.945', 0, '2003-12-22 09:59:22.945', true);
+INSERT INTO help_contents VALUES (35, 2, 2, 'ExternalContacts.do', 'SearchContactsForm', NULL, 'Search Contacts ', 'Use this page to search for contacts in the system based on different filters', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.015', 0, '2003-12-22 09:59:23.015', true);
+INSERT INTO help_contents VALUES (36, 2, 2, 'ExternalContacts.do', 'Reports', NULL, 'Export Data ', 'Contact data can be exported and displayed in different formats, and can be filtered in different ways. The Export page also lets you view the data, download it, and shows the number of times the exported data has been downloaded.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.024', 0, '2003-12-22 09:59:23.024', true);
+INSERT INTO help_contents VALUES (37, 2, 2, 'ExternalContacts.do', 'GenerateForm', NULL, 'Exporting data', 'Use this page to generate a Contacts export report.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.041', 0, '2003-12-22 09:59:23.041', true);
+INSERT INTO help_contents VALUES (38, 2, 2, 'ExternalContacts.do', 'ModifyContact', NULL, 'Modify Contact ', 'The details about the contact can be modified here.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.064', 0, '2003-12-22 09:59:23.064', true);
+INSERT INTO help_contents VALUES (39, 2, 2, 'ExternalContacts.do ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.073', 0, '2003-12-22 09:59:23.073', true);
+INSERT INTO help_contents VALUES (40, 2, 2, 'ExternalContacts.do', 'Save', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.078', 0, '2003-12-22 09:59:23.078', true);
+INSERT INTO help_contents VALUES (41, 2, 2, 'ExternalContactsCalls.do', 'View', NULL, 'Call Details', 'The calls related to the contact are listed here along with the other details such as the length of the call and the date the call was made. You can also add a call.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.083', 0, '2003-12-22 09:59:23.083', true);
+INSERT INTO help_contents VALUES (42, 2, 2, 'ExternalContactsCalls.do', 'Add', NULL, 'Adding a Call', 'A new call can be added which is associated with the contact. The type of call can be selected using the drop down list present.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.10', 0, '2003-12-22 09:59:23.10', true);
+INSERT INTO help_contents VALUES (43, 2, 2, 'ExternalContactsCallsForward.do', 'ForwardMessage', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.108', 0, '2003-12-22 09:59:23.108', true);
+INSERT INTO help_contents VALUES (44, 2, 2, 'ExternalContactsCallsForward.do', 'SendMessage', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.114', 0, '2003-12-22 09:59:23.114', true);
+INSERT INTO help_contents VALUES (45, 2, 2, 'ExternalContactsOpps.do', 'ViewOpps', NULL, 'Opportunity Details', 'All the opportunities associated with the contact are shown here, with its best possible total and the when the opportunity was last modified. You can filter the different types of opportunities using the drop down.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.119', 0, '2003-12-22 09:59:23.119', true);
+INSERT INTO help_contents VALUES (46, 2, 2, 'ExternalContactsCalls.do', 'Details', NULL, 'Call Details', 'Calls associated with the contacts are displayed. The call details are shown with the length of the call, associated notes, alert description, alert date etc.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.142', 0, '2003-12-22 09:59:23.142', true);
+INSERT INTO help_contents VALUES (47, 2, 2, 'ExternalContactsOppComponents.do', 'Prepare', NULL, 'Add a component', 'A component can be added to an opportunity and associated to any employee present in the system. The component type can also be selected.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.151', 0, '2003-12-22 09:59:23.151', true);
+INSERT INTO help_contents VALUES (48, 2, 2, 'ExternalContactsOpps.do', 'DetailsOpp', NULL, 'Opportunity Details ', 'You can view all the details about the components here, such as the status, the guess amount and the current stage. A new component can also be added to an existing opportunity. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.163', 0, '2003-12-22 09:59:23.163', true);
+INSERT INTO help_contents VALUES (49, 2, 2, 'ExternalContactsOppComponents.do', 'DetailsComponent', NULL, 'Component Details ', 'This page shows the details about the opportunity such as the probability of closing the opportunity, the current stage of the opportunity, etc.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.183', 0, '2003-12-22 09:59:23.183', true);
+INSERT INTO help_contents VALUES (50, 2, 2, 'ExternalContactsCalls.do', 'Modify', NULL, 'Modifying call details ', 'You can modify all the details of the calls.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.208', 0, '2003-12-22 09:59:23.208', true);
+INSERT INTO help_contents VALUES (51, 2, 2, 'ExternalContacts.do', 'InsertFields', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.217', 0, '2003-12-22 09:59:23.217', true);
+INSERT INTO help_contents VALUES (52, 2, 2, 'ExternalContacts.do', 'UpdateFields', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.222', 0, '2003-12-22 09:59:23.222', true);
+INSERT INTO help_contents VALUES (53, 2, 2, 'ExternalContacts.do', 'ListContacts', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.228', 0, '2003-12-22 09:59:23.228', true);
+INSERT INTO help_contents VALUES (54, 2, 2, 'ExternalContacts.do', 'Clone', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.233', 0, '2003-12-22 09:59:23.233', true);
+INSERT INTO help_contents VALUES (55, 2, 2, 'ExternalContacts.do', 'AddFolderRecord', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.239', 0, '2003-12-22 09:59:23.239', true);
+INSERT INTO help_contents VALUES (56, 2, 2, 'ExternalContactsOpps.do', 'Save', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.244', 0, '2003-12-22 09:59:23.244', true);
+INSERT INTO help_contents VALUES (57, 2, 2, 'ExternalContacts.do', 'SearchContacts ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.249', 0, '2003-12-22 09:59:23.249', true);
+INSERT INTO help_contents VALUES (58, 2, 2, 'ExternalContacts.do', 'MessageDetails', NULL, NULL, 'The selected message is displayed with the message text and attachments, if any.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.254', 0, '2003-12-22 09:59:23.254', true);
+INSERT INTO help_contents VALUES (59, 2, 2, 'ExternalContactsOppComponents.do', 'SaveComponent', NULL, NULL, 'This page shows the details of an opportunity, such as the probability of closing the opportunity, the current stage of the opportunity, etc.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.263', 0, '2003-12-22 09:59:23.263', true);
+INSERT INTO help_contents VALUES (60, 2, 2, 'ExternalContacts.do', 'SearchContacts', NULL, 'List of Contacts', 'This page shows the list of contacts in the system. The name of the contact along with the company name and phone numbers are shown. If the name of the contact is an account, it''s shown right next to it. You can also add a contact.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.272', 0, '2003-12-22 09:59:23.272', true);
+INSERT INTO help_contents VALUES (61, 2, 2, 'ExternalContacts.do', 'ExportReport', NULL, 'Overview', 'Data can be filtered, exported and displayed in different formats. This also shows the number of times an exported data has been downloaded. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.292', 0, '2003-12-22 09:59:23.292', true);
+INSERT INTO help_contents VALUES (62, 2, 2, 'ExternalContacts.do', 'ContactDetails', NULL, 'Contact Details ', 'The details about the contact are displayed here along with the record information containing the owner, the employee who entered the details and finally the person who last modified these details.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.308', 0, '2003-12-22 09:59:23.308', true);
+INSERT INTO help_contents VALUES (63, 2, 2, 'ExternalContacts.do', 'ViewMessages', NULL, 'Message Details', 'This page lists all the messages associated with the contact, showing the name of the message, its date and its status.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.317', 0, '2003-12-22 09:59:23.317', true);
+INSERT INTO help_contents VALUES (64, 2, 2, 'ExternalContactsCallsForward.do', 'ForwardCall', NULL, 'Forwarding a call', 'The details of the calls that are associated with a contact can be forwarded to different employees present in the system.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.33', 0, '2003-12-22 09:59:23.33', true);
+INSERT INTO help_contents VALUES (65, 2, 2, 'ExternalContactsCallsForward.do', 'SendCall', NULL, 'List of recipients', 'This page shows the list of recipients to whom the call details that are associated with a contact have been forwarded.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.339', 0, '2003-12-22 09:59:23.339', true);
+INSERT INTO help_contents VALUES (66, 2, 2, 'ExternalContactsOppComponents.do', 'ModifyComponent', NULL, 'Modifying the component details ', 'The details of the component associated with an opportunity can be modified.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.349', 0, '2003-12-22 09:59:23.349', true);
+INSERT INTO help_contents VALUES (67, 2, 2, 'ExternalContactsOpps.do', 'ModifyOpp', NULL, 'Modify the opportunity', 'The description of the opportunity can be renamed / updated.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.361', 0, '2003-12-22 09:59:23.361', true);
+INSERT INTO help_contents VALUES (68, 2, 2, 'ExternalContacts.do', 'Fields', NULL, 'List of Folder Records', 'Each contact can have several folders, and each folder further can have multiple records. You can add a record to a folder. Each record present in the folder displays the record name, when it was entered, who modified this record last and when.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.37', 0, '2003-12-22 09:59:23.37', true);
+INSERT INTO help_contents VALUES (69, 2, 2, 'ExternalContacts.do', 'ModifyFields', NULL, 'Modify Folder Record ', 'Here you can modify the details of the folder record.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.394', 0, '2003-12-22 09:59:23.394', true);
+INSERT INTO help_contents VALUES (70, 2, 2, 'ExternalContactsOpps.do', 'UpdateOpp', NULL, 'Opportunity Details', 'All the opportunities associated with the contact are shown here, with its best possible total and the when the opportunity was last modified. You can filter the different types of opportunities that can be selected using the drop down and display them.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.403', 0, '2003-12-22 09:59:23.403', true);
+INSERT INTO help_contents VALUES (71, 2, 2, 'ExternalContacts.do', NULL, NULL, 'Overview', 'If a contact already exists in the system, you can search for that contact by name, company, title, contact type or source, by typing the search term in the appropriate field, and clicking the Search button.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.423', 0, '2003-12-22 09:59:23.423', true);
 INSERT INTO help_contents VALUES (72, 2, 2, 'ContactsList.do', 'ContactList', NULL, NULL, 'Enables you to select contacts from a list and then add them to the Action List. It shows the name of the contact along with his email and type of contact. 
 
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.945', 0, '2003-12-22 09:08:01.945', true);
-INSERT INTO help_contents VALUES (73, 2, 2, 'Contacts.do', 'Prepare', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:01.96', 0, '2003-12-22 09:08:01.96', true);
-INSERT INTO help_contents VALUES (74, 2, 2, 'Contacts.do', 'Details', NULL, 'Contact detail page', 'The contact details associated with the account are displayed here. The details such as the account number, email address, phone number and the addresses are shown.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.966', 0, '2003-12-22 09:08:01.966', true);
-INSERT INTO help_contents VALUES (75, 2, 2, 'Contacts.do', 'Modify', NULL, 'Modify contact', 'The details of a contact can be modified or updated here.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.98', 0, '2003-12-22 09:08:01.98', true);
-INSERT INTO help_contents VALUES (76, 2, 2, 'Contacts.do', 'ViewMessages', NULL, 'List of Messages', 'The list of messages related to the contacts.', NULL, NULL, NULL, 0, '2003-12-22 09:08:01.996', 0, '2003-12-22 09:08:01.996', true);
-INSERT INTO help_contents VALUES (77, 2, 2, 'ContactForm.do', 'Prepare', NULL, NULL, 'Adding/Modifying a new contact', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.006', 0, '2003-12-22 09:08:02.006', true);
-INSERT INTO help_contents VALUES (78, 4, 4, 'Leads.do', 'Dashboard', NULL, 'Overview', 'The progress chart is displayed in different views for all the employees working under the owner or creator of the opportunity. The opportunities are shown, with their names and the probable gross revenue associated with that opportunity. Finally the list of employees reporting to a particular employee/supervisor is also shown below the progress chart', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.02', 0, '2003-12-22 09:08:02.02', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.442', 0, '2003-12-22 09:59:23.442', true);
+INSERT INTO help_contents VALUES (73, 2, 2, 'Contacts.do', 'Prepare', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.457', 0, '2003-12-22 09:59:23.457', true);
+INSERT INTO help_contents VALUES (74, 2, 2, 'Contacts.do', 'Details', NULL, 'Contact detail page', 'The contact details associated with the account are displayed here. The details such as the account number, email address, phone number and the addresses are shown.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.462', 0, '2003-12-22 09:59:23.462', true);
+INSERT INTO help_contents VALUES (75, 2, 2, 'Contacts.do', 'Modify', NULL, 'Modify contact', 'The details of a contact can be modified or updated here.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.475', 0, '2003-12-22 09:59:23.475', true);
+INSERT INTO help_contents VALUES (76, 2, 2, 'Contacts.do', 'ViewMessages', NULL, 'List of Messages', 'The list of messages related to the contacts.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.49', 0, '2003-12-22 09:59:23.49', true);
+INSERT INTO help_contents VALUES (77, 2, 2, 'ContactForm.do', 'Prepare', NULL, NULL, 'Adding/Modifying a new contact', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.499', 0, '2003-12-22 09:59:23.499', true);
+INSERT INTO help_contents VALUES (78, 4, 4, 'Leads.do', 'Dashboard', NULL, 'Overview', 'The progress chart is displayed in different views for all the employees working under the owner or creator of the opportunity. The opportunities are shown, with their names and the probable gross revenue associated with that opportunity. Finally the list of employees reporting to a particular employee/supervisor is also shown below the progress chart', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.513', 0, '2003-12-22 09:59:23.513', true);
 INSERT INTO help_contents VALUES (79, 4, 4, 'Leads.do', 'Prepare', NULL, 'Add a Opportunity', 'This page lets you add a opportunity into the system.
 
 Here a new opportunity can be added by giving a description of the opportunity, then adding a component that is associated with the opportunity. An opportunity can have one or more components. Each component can be assigned to a different employee and the type of the component can be selected. For each component the probability of closing the component, the date estimated, the best guess for closing the deal and the duration for that component are required. 
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.079', 0, '2003-12-22 09:08:02.079', true);
-INSERT INTO help_contents VALUES (80, 4, 4, 'Leads.do', 'SearchForm', NULL, 'Search Opportunities ', 'You can search for an existing opportunity based on different filters.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.109', 0, '2003-12-22 09:08:02.109', true);
-INSERT INTO help_contents VALUES (81, 4, 4, 'LeadsReports.do', 'Default', NULL, 'Export Data', 'Pipeline data can be exported, filtered, and displayed in different formats. You can also view the data online in html format, and see number of times the exported data has been downloaded.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.122', 0, '2003-12-22 09:08:02.122', true);
-INSERT INTO help_contents VALUES (82, 4, 4, 'Leads.do', 'SearchOpp', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:02.138', 0, '2003-12-22 09:08:02.138', true);
-INSERT INTO help_contents VALUES (83, 4, 4, 'Leads.do', 'Reports', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:02.143', 0, '2003-12-22 09:08:02.143', true);
-INSERT INTO help_contents VALUES (84, 4, 4, 'LeadsComponents.do', 'ModifyComponent', NULL, 'Modify Component', 'You can modify the component details associated with an opportunity in a pipeline.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.149', 0, '2003-12-22 09:08:02.149', true);
-INSERT INTO help_contents VALUES (85, 4, 4, 'LeadsCalls.do', 'Add', NULL, 'Adding a call', 'You can add a new call here associated with the opportunity. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.193', 0, '2003-12-22 09:08:02.193', true);
-INSERT INTO help_contents VALUES (86, 4, 4, 'Leads.do', 'ModifyOpp', NULL, 'Modify the opportunity:', 'The description of the opportunity can be modified / updated.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.206', 0, '2003-12-22 09:08:02.206', true);
-INSERT INTO help_contents VALUES (87, 4, 4, 'LeadsCalls.do', 'Insert', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:02.234', 0, '2003-12-22 09:08:02.234', true);
-INSERT INTO help_contents VALUES (88, 4, 4, 'LeadsDocuments.do', 'Modify', NULL, 'Modify Document', 'Modify the Subject or filename of a document.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.24', 0, '2003-12-22 09:08:02.24', true);
-INSERT INTO help_contents VALUES (89, 4, 4, 'LeadsCallsForward.do', 'ForwardMessage', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:02.25', 0, '2003-12-22 09:08:02.25', true);
-INSERT INTO help_contents VALUES (90, 4, 4, 'Leads.do', 'Save', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:02.255', 0, '2003-12-22 09:08:02.255', true);
-INSERT INTO help_contents VALUES (91, 4, 4, 'Leads.do', 'GenerateForm', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:02.26', 0, '2003-12-22 09:08:02.26', true);
-INSERT INTO help_contents VALUES (92, 4, 4, 'LeadsComponents.do', 'DetailsComponent', NULL, 'Component Details', 'The component details for the opportunity are shown here. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.266', 0, '2003-12-22 09:08:02.266', true);
-INSERT INTO help_contents VALUES (93, 4, 4, 'LeadsDocuments.do', 'AddVersion', NULL, 'Upload a new version of document', 'You can upload a new version of the document and the new version of the file can be selected and uploaded.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.274', 0, '2003-12-22 09:08:02.274', true);
-INSERT INTO help_contents VALUES (94, 4, 4, 'Leads.do', 'Search', NULL, 'List of components', 'The components resulted from the search are shown here. Different views of the components and its types are displayed. The name of the component with the estimated amount of money associated with the opportunity and the probability of that components being a success is shown. This also displays the time for closing the deal (term) and the organization name or the contact name if they are associated with the opportunity. A new opportunity can also be added.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.287', 0, '2003-12-22 09:08:02.287', true);
-INSERT INTO help_contents VALUES (95, 4, 4, 'Leads.do', 'UpdateOpp', NULL, 'Opportunity Details', 'You can view all the details about the components here and also add a new component to a particular opportunity. Calls and the documents can be associated with the opportunity', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.307', 0, '2003-12-22 09:08:02.307', true);
-INSERT INTO help_contents VALUES (96, 4, 4, 'LeadsCallsForward.do', 'ForwardCall', NULL, 'Forwarding a call', 'The details of calls associated with a contact can be forwarded to different users present in the system.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.341', 0, '2003-12-22 09:08:02.341', true);
-INSERT INTO help_contents VALUES (97, 4, 4, 'LeadsDocuments.do', 'View', NULL, 'Document Details', 'In the Documents tab, the documents associated with a particular opportunity can be added to, and viewed.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.358', 0, '2003-12-22 09:08:02.358', true);
-INSERT INTO help_contents VALUES (98, 4, 4, 'LeadsCalls.do', 'Modify', NULL, 'Modify call details', 'You can modify the details of the calls.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.375', 0, '2003-12-22 09:08:02.375', true);
-INSERT INTO help_contents VALUES (99, 4, 4, 'Leads.do', 'DetailsOpp', NULL, 'Opportunity Details', 'You can view all the details about an opportunity components here and also add a new component to a particular opportunity. Calls and documents can also be added to an opportunity or viewed by clicking on the appropriate tab.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.383', 0, '2003-12-22 09:08:02.383', true);
-INSERT INTO help_contents VALUES (100, 4, 4, 'LeadsCalls.do', 'View', NULL, 'Call Details', 'Calls associated with the opportunity are shown. Calls can be added to the opportunity, and details about listed calls can be examined.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.415', 0, '2003-12-22 09:08:02.415', true);
-INSERT INTO help_contents VALUES (101, 4, 4, 'Leads.do', 'ViewOpp', NULL, NULL, 'The opportunities resulted from the search are shown here. Different views of the opportunities and its types are displayed. The name of the component with the estimated amount of money associated with the opportunity and the probability of that opportunity being a success are shown. This also displays the time for closing the deal (term) and the organization name or the contact name if they are associated with the opportunity.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.428', 0, '2003-12-22 09:08:02.428', true);
-INSERT INTO help_contents VALUES (102, 4, 4, 'Leads.do', NULL, NULL, NULL, 'Pipeline helps in creating prospective opportunities or leads in the company. Each opportunity helps to follow up a lead, who might eventually turn into a client. Here you can create an opportunity, search for an existing opportunity in the system, export the data to different formats. The dashboard reflects the progress chart in different views for all the employees working under the owner/creator of the opportunity. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.448', 0, '2003-12-22 09:08:02.448', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.577', 0, '2003-12-22 09:59:23.577', true);
+INSERT INTO help_contents VALUES (80, 4, 4, 'Leads.do', 'SearchForm', NULL, 'Search Opportunities ', 'You can search for an existing opportunity based on different filters.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.605', 0, '2003-12-22 09:59:23.605', true);
+INSERT INTO help_contents VALUES (81, 4, 4, 'LeadsReports.do', 'Default', NULL, 'Export Data', 'Pipeline data can be exported, filtered, and displayed in different formats. You can also view the data online in html format, and see number of times the exported data has been downloaded.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.614', 0, '2003-12-22 09:59:23.614', true);
+INSERT INTO help_contents VALUES (82, 4, 4, 'Leads.do', 'SearchOpp', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.63', 0, '2003-12-22 09:59:23.63', true);
+INSERT INTO help_contents VALUES (83, 4, 4, 'Leads.do', 'Reports', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.636', 0, '2003-12-22 09:59:23.636', true);
+INSERT INTO help_contents VALUES (84, 4, 4, 'LeadsComponents.do', 'ModifyComponent', NULL, 'Modify Component', 'You can modify the component details associated with an opportunity in a pipeline.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.641', 0, '2003-12-22 09:59:23.641', true);
+INSERT INTO help_contents VALUES (85, 4, 4, 'LeadsCalls.do', 'Add', NULL, 'Adding a call', 'You can add a new call here associated with the opportunity. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.681', 0, '2003-12-22 09:59:23.681', true);
+INSERT INTO help_contents VALUES (86, 4, 4, 'Leads.do', 'ModifyOpp', NULL, 'Modify the opportunity:', 'The description of the opportunity can be modified / updated.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.695', 0, '2003-12-22 09:59:23.695', true);
+INSERT INTO help_contents VALUES (87, 4, 4, 'LeadsCalls.do', 'Insert', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.723', 0, '2003-12-22 09:59:23.723', true);
+INSERT INTO help_contents VALUES (88, 4, 4, 'LeadsDocuments.do', 'Modify', NULL, 'Modify Document', 'Modify the Subject or filename of a document.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.728', 0, '2003-12-22 09:59:23.728', true);
+INSERT INTO help_contents VALUES (89, 4, 4, 'LeadsCallsForward.do', 'ForwardMessage', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.739', 0, '2003-12-22 09:59:23.739', true);
+INSERT INTO help_contents VALUES (90, 4, 4, 'Leads.do', 'Save', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.744', 0, '2003-12-22 09:59:23.744', true);
+INSERT INTO help_contents VALUES (91, 4, 4, 'Leads.do', 'GenerateForm', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:23.749', 0, '2003-12-22 09:59:23.749', true);
+INSERT INTO help_contents VALUES (92, 4, 4, 'LeadsComponents.do', 'DetailsComponent', NULL, 'Component Details', 'The component details for the opportunity are shown here. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.754', 0, '2003-12-22 09:59:23.754', true);
+INSERT INTO help_contents VALUES (93, 4, 4, 'LeadsDocuments.do', 'AddVersion', NULL, 'Upload a new version of document', 'You can upload a new version of the document and the new version of the file can be selected and uploaded.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.763', 0, '2003-12-22 09:59:23.763', true);
+INSERT INTO help_contents VALUES (94, 4, 4, 'Leads.do', 'Search', NULL, 'List of components', 'The components resulted from the search are shown here. Different views of the components and its types are displayed. The name of the component with the estimated amount of money associated with the opportunity and the probability of that components being a success is shown. This also displays the time for closing the deal (term) and the organization name or the contact name if they are associated with the opportunity. A new opportunity can also be added.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.775', 0, '2003-12-22 09:59:23.775', true);
+INSERT INTO help_contents VALUES (95, 4, 4, 'Leads.do', 'UpdateOpp', NULL, 'Opportunity Details', 'You can view all the details about the components here and also add a new component to a particular opportunity. Calls and the documents can be associated with the opportunity', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.796', 0, '2003-12-22 09:59:23.796', true);
+INSERT INTO help_contents VALUES (96, 4, 4, 'LeadsCallsForward.do', 'ForwardCall', NULL, 'Forwarding a call', 'The details of calls associated with a contact can be forwarded to different users present in the system.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.83', 0, '2003-12-22 09:59:23.83', true);
+INSERT INTO help_contents VALUES (97, 4, 4, 'LeadsDocuments.do', 'View', NULL, 'Document Details', 'In the Documents tab, the documents associated with a particular opportunity can be added to, and viewed.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.85', 0, '2003-12-22 09:59:23.85', true);
+INSERT INTO help_contents VALUES (98, 4, 4, 'LeadsCalls.do', 'Modify', NULL, 'Modify call details', 'You can modify the details of the calls.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.867', 0, '2003-12-22 09:59:23.867', true);
+INSERT INTO help_contents VALUES (99, 4, 4, 'Leads.do', 'DetailsOpp', NULL, 'Opportunity Details', 'You can view all the details about an opportunity components here and also add a new component to a particular opportunity. Calls and documents can also be added to an opportunity or viewed by clicking on the appropriate tab.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.876', 0, '2003-12-22 09:59:23.876', true);
+INSERT INTO help_contents VALUES (100, 4, 4, 'LeadsCalls.do', 'View', NULL, 'Call Details', 'Calls associated with the opportunity are shown. Calls can be added to the opportunity, and details about listed calls can be examined.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.907', 0, '2003-12-22 09:59:23.907', true);
+INSERT INTO help_contents VALUES (101, 4, 4, 'Leads.do', 'ViewOpp', NULL, NULL, 'The opportunities resulted from the search are shown here. Different views of the opportunities and its types are displayed. The name of the component with the estimated amount of money associated with the opportunity and the probability of that opportunity being a success are shown. This also displays the time for closing the deal (term) and the organization name or the contact name if they are associated with the opportunity.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.921', 0, '2003-12-22 09:59:23.921', true);
+INSERT INTO help_contents VALUES (102, 4, 4, 'Leads.do', NULL, NULL, NULL, 'Pipeline helps in creating prospective opportunities or leads in the company. Each opportunity helps to follow up a lead, who might eventually turn into a client. Here you can create an opportunity, search for an existing opportunity in the system, export the data to different formats. The dashboard reflects the progress chart in different views for all the employees working under the owner/creator of the opportunity. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.942', 0, '2003-12-22 09:59:23.942', true);
 INSERT INTO help_contents VALUES (103, 4, 4, 'LeadsComponents.do', 'SaveComponent', NULL, 'Component Details', '
 The component details for the opportunity are shown here.
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.467', 0, '2003-12-22 09:08:02.467', true);
-INSERT INTO help_contents VALUES (104, 4, 4, 'LeadsComponents.do', 'Prepare', NULL, 'Add a component', 'A component can be added to an opportunity and assigned to any employee in the system. The component type can also be selected.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.476', 0, '2003-12-22 09:08:02.476', true);
-INSERT INTO help_contents VALUES (105, 4, 4, 'LeadsCalls.do', 'Update', NULL, 'Call Details', 'The calls associated with the opportunity are shown. Calls can be added to the opportunity.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.489', 0, '2003-12-22 09:08:02.489', true);
-INSERT INTO help_contents VALUES (106, 4, 4, 'LeadsCalls.do', 'Details', NULL, 'Call Details ', 'Details about the call associated with the opportunity', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.501', 0, '2003-12-22 09:08:02.501', true);
-INSERT INTO help_contents VALUES (107, 4, 4, 'LeadsDocuments.do', 'Add', NULL, 'Upload a document', 'New documents related to the opportunity can be uploaded into the system.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.512', 0, '2003-12-22 09:08:02.512', true);
-INSERT INTO help_contents VALUES (108, 4, 4, 'LeadsDocuments.do', 'Details', NULL, 'Document Details ', 'This shows all versions of the updated document. The name of the file with it''s size, version and the number of downloads are shown here.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.531', 0, '2003-12-22 09:08:02.531', true);
-INSERT INTO help_contents VALUES (109, 4, 4, 'LeadsReports.do', 'ExportList', NULL, 'List of exported data', 'The data present can be used to export data and display that in different formats. The exported data can be filtered in different ways. This would also let you view the data download it. This also shows the number of times an exported data has been downloaded', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.54', 0, '2003-12-22 09:08:02.54', true);
-INSERT INTO help_contents VALUES (110, 4, 4, 'LeadsReports.do', 'ExportForm', NULL, 'Generating Export data', 'Generate an exported report from pipeline data', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.561', 0, '2003-12-22 09:08:02.561', true);
-INSERT INTO help_contents VALUES (111, 1, 1, 'Accounts.do', 'Dashboard', NULL, 'Overview', 'The date range can be modified which is shown in the right hand window by clicking on a specific date on the calendar. Accounts with contract end dates or other required actions appear in the right hand window reminding the user to take action on them. The schedule, actions, alert dates and contract end dates are displayed for user or the employees under him by using the dropdown at the top of the page. Clicking on the alert link will let the user modify the details of the account owner. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.592', 0, '2003-12-22 09:08:02.592', true);
-INSERT INTO help_contents VALUES (112, 1, 1, 'Accounts.do', 'Add', NULL, 'Add an Account', 'A new account can be added here', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.656', 0, '2003-12-22 09:08:02.656', true);
-INSERT INTO help_contents VALUES (113, 1, 1, 'Accounts.do', 'Modify', NULL, 'Modify Account', 'The details of an account can be modified here', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.685', 0, '2003-12-22 09:08:02.685', true);
-INSERT INTO help_contents VALUES (114, 1, 1, 'Contacts.do', 'View', NULL, 'Contact Details', 'A contact can be associated with an account. The lists of the contacts associated with the account are shown along with the title.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.705', 0, '2003-12-22 09:08:02.705', true);
-INSERT INTO help_contents VALUES (115, 1, 1, 'Accounts.do', 'Fields', NULL, 'Folder Record Details', 'You create folders for accounts. Each folder can have one or more records associated with it, depending on the type of the folder. The details about records associated with the folder are shown', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.721', 0, '2003-12-22 09:08:02.721', true);
-INSERT INTO help_contents VALUES (116, 1, 1, 'Opportunities.do', 'View', NULL, 'Opportunity Details', 'Opportunities associated with the contact, showing the best guess total and last modified date.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.742', 0, '2003-12-22 09:08:02.742', true);
-INSERT INTO help_contents VALUES (117, 1, 1, 'RevenueManager.do', 'View', NULL, 'Revenue Details', 'The revenue associated with the account is shown here. The details about the revenue like the description, the date and the amount associated are displayed.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.765', 0, '2003-12-22 09:08:02.765', true);
-INSERT INTO help_contents VALUES (118, 1, 1, 'RevenueManager.do', 'View', NULL, 'Revenue Details', 'The revenue associated with the account is shown here. Details about the revenue such as the description, the date, and the amount associated are displayed.', NULL, NULL, NULL, 0, '2003-12-22 09:08:02.785', 0, '2003-12-22 09:08:02.785', true);
-INSERT INTO help_contents VALUES (119, 1, 1, 'RevenueManager.do', 'Add', NULL, 'Add Revenue ', 'Adding new revenue to an account', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.333', 0, '2003-12-22 09:08:03.333', true);
-INSERT INTO help_contents VALUES (120, 1, 1, 'RevenueManager.do', 'Modify', NULL, 'Modify Revenue ', 'Here revenue details can be modified', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.346', 0, '2003-12-22 09:08:03.346', true);
-INSERT INTO help_contents VALUES (121, 1, 1, 'Accounts.do', 'ViewTickets', NULL, 'Ticket Details', 'This page shows the complete list of the tickets related to an account, and lets you add a new ticket', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.364', 0, '2003-12-22 09:08:03.364', true);
-INSERT INTO help_contents VALUES (122, 1, 1, 'AccountsDocuments.do', 'View', NULL, 'Document Details', 'Here the documents associated with the account are listed. New documents related to the account can be added.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.396', 0, '2003-12-22 09:08:03.396', true);
-INSERT INTO help_contents VALUES (123, 1, 1, 'Accounts.do', 'SearchForm', NULL, 'Search Accounts ', 'This page provides the search feature for accounts in the system.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.442', 0, '2003-12-22 09:08:03.442', true);
-INSERT INTO help_contents VALUES (124, 1, 1, 'Accounts.do', 'Details', NULL, 'Account Details', 'This shows the details of the account, which can be modified. Each account can have folders, contacts, opportunities, revenue, tickets, and documents, for which there are separate tabs.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.454', 0, '2003-12-22 09:08:03.454', true);
-INSERT INTO help_contents VALUES (125, 1, 1, 'RevenueManager.do', 'Dashboard', NULL, 'Revenue Dashboard ', 'This revenue dashboard shows a progress chart for different years and types. All the accounts with revenue are also shown along with a list of employees working under you are also listed under the progress chart. You can add accounts, search for the existing ones in the system based on different filters and export the data in different formats.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.463', 0, '2003-12-22 09:08:03.463', true);
-INSERT INTO help_contents VALUES (126, 1, 1, 'Accounts.do', 'Reports', NULL, 'Export Data ', 'The data can be filtered, exported, displayed, and downloaded in different formats.You can also see the number of times an exported report has been downloaded.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.48', 0, '2003-12-22 09:08:03.48', true);
-INSERT INTO help_contents VALUES (127, 1, 1, 'Accounts.do', 'ModifyFields', NULL, 'Modify folder record ', 'The Folder record details can be updated. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.499', 0, '2003-12-22 09:08:03.499', true);
-INSERT INTO help_contents VALUES (128, 1, 1, 'AccountTickets.do', 'ReopenTicket', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.508', 0, '2003-12-22 09:08:03.508', true);
-INSERT INTO help_contents VALUES (129, 1, 1, 'Accounts.do', 'Delete', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.513', 0, '2003-12-22 09:08:03.513', true);
-INSERT INTO help_contents VALUES (130, 1, 1, 'Accounts.do', 'GenerateForm', NULL, 'Generate New Export', 'To generate the Export data', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.518', 0, '2003-12-22 09:08:03.518', true);
-INSERT INTO help_contents VALUES (131, 1, 1, 'AccountContactsCalls.do', 'View', NULL, 'Call Details', 'Calls associated with the contact', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.527', 0, '2003-12-22 09:08:03.527', true);
-INSERT INTO help_contents VALUES (132, 1, 1, 'Accounts.do', 'AddFolderRecord', NULL, 'Add folder record', 'A new Folder record can be added to the Folder.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.544', 0, '2003-12-22 09:08:03.544', true);
-INSERT INTO help_contents VALUES (133, 1, 1, 'AccountContactsCalls.do', 'Add', NULL, 'Add a call', 'You can add a new call, which is associated with a particular contact.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.553', 0, '2003-12-22 09:08:03.553', true);
-INSERT INTO help_contents VALUES (134, 1, 1, 'AccountsDocuments.do', 'Add', NULL, 'Upload Document ', 'New documents can be uploaded and associated with an account', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.566', 0, '2003-12-22 09:08:03.566', true);
-INSERT INTO help_contents VALUES (135, 1, 1, 'AccountsDocuments.do', 'Add ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.576', 0, '2003-12-22 09:08:03.576', true);
-INSERT INTO help_contents VALUES (136, 1, 1, 'AccountContactsOpps.do', 'UpdateOpp', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.581', 0, '2003-12-22 09:08:03.581', true);
-INSERT INTO help_contents VALUES (137, 1, 1, 'AccountTicketsDocuments.do', 'AddVersion', NULL, NULL, 'Upload a New Version of an existing Document ', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.586', 0, '2003-12-22 09:08:03.586', true);
-INSERT INTO help_contents VALUES (138, 1, 1, 'Accounts.do', 'Details ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.595', 0, '2003-12-22 09:08:03.595', true);
-INSERT INTO help_contents VALUES (139, 1, 1, 'Accounts.do', 'View', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.60', 0, '2003-12-22 09:08:03.60', true);
-INSERT INTO help_contents VALUES (140, 1, 1, 'AccountTickets.do', 'AddTicket', NULL, 'Adding a new Ticket', 'This page lets you create a new ticket for the account ', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.607', 0, '2003-12-22 09:08:03.607', true);
-INSERT INTO help_contents VALUES (141, 1, 1, 'AccountTicketsDocuments.do', 'View', NULL, 'Document Details', 'Here the documents associated with the ticket are listed. New documents related to the ticket can be added', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.616', 0, '2003-12-22 09:08:03.616', true);
-INSERT INTO help_contents VALUES (142, 1, 1, 'AccountTickets.do', 'UpdateTicket', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.635', 0, '2003-12-22 09:08:03.635', true);
-INSERT INTO help_contents VALUES (143, 1, 1, 'AccountContactsOppComponents.do', 'Prepare', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.64', 0, '2003-12-22 09:08:03.64', true);
-INSERT INTO help_contents VALUES (144, 1, 1, 'Accounts.do', 'InsertFields', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.645', 0, '2003-12-22 09:08:03.645', true);
-INSERT INTO help_contents VALUES (145, 1, 1, 'AccountContactsOpps.do', 'Save', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.65', 0, '2003-12-22 09:08:03.65', true);
-INSERT INTO help_contents VALUES (146, 1, 1, 'Accounts.do', 'Search', NULL, NULL, 'Lists the Accounts present and also lets you create an account', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.656', 0, '2003-12-22 09:08:03.656', true);
-INSERT INTO help_contents VALUES (147, 1, 1, 'AccountTicketsDocuments.do', 'Details', NULL, NULL, 'Page shows all the versions of the current document', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.672', 0, '2003-12-22 09:08:03.672', true);
-INSERT INTO help_contents VALUES (148, 1, 1, 'AccountTicketsDocuments.do', 'Modify', NULL, NULL, 'Modify the current document', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.681', 0, '2003-12-22 09:08:03.681', true);
-INSERT INTO help_contents VALUES (149, 1, 1, 'Accounts.do', 'Insert', NULL, 'Account Details', 'Displays the details of the account, which can be modified. Each account can have folders, the contacts, opportunities, revenue, and tickets. You can update several documents associated with each account. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.692', 0, '2003-12-22 09:08:03.692', true);
-INSERT INTO help_contents VALUES (150, 1, 1, 'AccountContactsCalls.do', 'Details', NULL, 'Call details', 'The details of the call are shown here which can be modified, deleted or forwarded to any of the users.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.701', 0, '2003-12-22 09:08:03.701', true);
-INSERT INTO help_contents VALUES (151, 1, 1, 'AccountContactsCalls.do', 'Modify', NULL, 'Add / update a call', 'You can add a new call to a contact.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.709', 0, '2003-12-22 09:08:03.709', true);
-INSERT INTO help_contents VALUES (152, 1, 1, 'AccountContactsCalls.do', 'Save', NULL, 'Call details', 'The details of the call are shown here, and can be modified, deleted or forwarded to any of the employees', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.723', 0, '2003-12-22 09:08:03.723', true);
-INSERT INTO help_contents VALUES (153, 1, 1, 'AccountContactsCalls.do', 'ForwardCall', NULL, 'Forward Call ', 'The details of the calls that are associated with a contact can be forwarded to different employees.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.732', 0, '2003-12-22 09:08:03.732', true);
-INSERT INTO help_contents VALUES (154, 1, 1, 'AccountContactsOpps.do', 'ViewOpps', NULL, 'List of Opportunities', 'Opportunities associated with the contact, showing the best guess total and last modified date.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.741', 0, '2003-12-22 09:08:03.741', true);
-INSERT INTO help_contents VALUES (155, 1, 1, 'AccountContactsOpps.do', 'DetailsOpp', NULL, 'Opportunity Details', 'You can view all the details about the components here and also add a new component to a particular opportunity. The opportunity can be renamed and its details can be modified', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.762', 0, '2003-12-22 09:08:03.762', true);
-INSERT INTO help_contents VALUES (156, 1, 1, 'AccountTickets.do', 'TicketDetails', NULL, 'Ticket Details ', 'This page lets you view the details of the ticket, and also lets you modify or delete the ticket.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.779', 0, '2003-12-22 09:08:03.779', true);
-INSERT INTO help_contents VALUES (157, 1, 1, 'AccountTickets.do', 'ModifyTicket', NULL, 'Modify ticket', 'This page lets you modify the ticket information and update its details', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.791', 0, '2003-12-22 09:08:03.791', true);
-INSERT INTO help_contents VALUES (158, 1, 1, 'AccountTicketTasks.do', 'List', NULL, 'Task Details', 'This page lists the tasks assigned for a particular account. New tasks can be added, which would then appear in the list of tasks, showing their priority and their assignment.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.808', 0, '2003-12-22 09:08:03.808', true);
-INSERT INTO help_contents VALUES (159, 1, 1, 'AccountTicketsDocuments.do', 'Add', NULL, 'Uploading a Document', 'Upload a new document related to the account.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.825', 0, '2003-12-22 09:08:03.825', true);
-INSERT INTO help_contents VALUES (160, 1, 1, 'AccountTickets.do', 'ViewHistory', NULL, 'Ticket Log History', 'This page maintains a complete log history of each ticket from its creation till the ticket is closed.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.833', 0, '2003-12-22 09:08:03.833', true);
-INSERT INTO help_contents VALUES (161, 1, 1, 'AccountsDocuments.do', 'Details', NULL, 'Document Details ', 'All the versions of the current document are listed here', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.839', 0, '2003-12-22 09:08:03.839', true);
-INSERT INTO help_contents VALUES (162, 1, 1, 'AccountsDocuments.do', 'Modify', NULL, 'Modify Document ', 'Modify the document information', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.848', 0, '2003-12-22 09:08:03.848', true);
-INSERT INTO help_contents VALUES (163, 1, 1, 'AccountsDocuments.do', 'AddVersion', NULL, 'Upload New Version ', 'Upload a new document version', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.857', 0, '2003-12-22 09:08:03.857', true);
-INSERT INTO help_contents VALUES (164, 1, 1, 'Accounts.do', 'ExportReport', NULL, 'List of Exported data', 'The data can be filtered, exported and displayed in different formats. You can then view the data and also download it.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.866', 0, '2003-12-22 09:08:03.866', true);
-INSERT INTO help_contents VALUES (165, 1, 1, 'RevenueManager.do', 'Details', NULL, 'Revenue Details ', 'Details about revenue', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.882', 0, '2003-12-22 09:08:03.882', true);
-INSERT INTO help_contents VALUES (166, 1, 1, 'RevenueManager.do', 'Dashboard ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:03.891', 0, '2003-12-22 09:08:03.891', true);
-INSERT INTO help_contents VALUES (167, 1, 1, 'OpportunityForm.do', 'Prepare', NULL, 'Add Opportunity', 'A new opportunity associated with the contact can be added ', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.896', 0, '2003-12-22 09:08:03.896', true);
-INSERT INTO help_contents VALUES (168, 1, 1, 'Opportunities.do', 'Add', NULL, 'Add opportunity ', 'A new opportunity associated with the contact can be added', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.905', 0, '2003-12-22 09:08:03.905', true);
-INSERT INTO help_contents VALUES (169, 1, 1, 'Opportunities.do', 'Details', NULL, 'Opportunity Details', 'You can view all the details about the components here like the status, the guess amount and the current stage. A new component can also be added to a particular opportunity. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.914', 0, '2003-12-22 09:08:03.914', true);
-INSERT INTO help_contents VALUES (170, 1, 1, 'Opportunities.do', 'Modify', NULL, 'Modify Opportunity ', 'The details of the opportunity can be modified', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.935', 0, '2003-12-22 09:08:03.935', true);
-INSERT INTO help_contents VALUES (171, 1, 1, 'OpportunitiesComponents.do', 'DetailsComponent', NULL, 'Component Details ', 'This page shows the details about the opportunity like what is the probability of closing the opportunity, what is the current stage of the opportunity etc', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.943', 0, '2003-12-22 09:08:03.943', true);
-INSERT INTO help_contents VALUES (172, 1, 1, 'OpportunitiesComponents.do', 'Prepare', NULL, 'Add a component', 'A component can be added to an opportunity and assigned to any employee present in the system. The component type can also be selected.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.952', 0, '2003-12-22 09:08:03.952', true);
-INSERT INTO help_contents VALUES (173, 1, 1, 'OpportunitiesComponents.do', 'ModifyComponent', NULL, 'Modify Component ', 'The details of the component can be added / updated to an opportunity and assigned to any employee present in the system. The component type can also be selected.', NULL, NULL, NULL, 0, '2003-12-22 09:08:03.965', 0, '2003-12-22 09:08:03.965', true);
-INSERT INTO help_contents VALUES (174, 1, 1, 'OpportunitiesComponents.do', 'SaveComponent', NULL, 'Component Details', 'This page shows the details about the opportunity like what is the probability of closing the opportunity, what is the current stage of the opportunity etc', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.018', 0, '2003-12-22 09:08:04.018', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.96', 0, '2003-12-22 09:59:23.96', true);
+INSERT INTO help_contents VALUES (104, 4, 4, 'LeadsComponents.do', 'Prepare', NULL, 'Add a component', 'A component can be added to an opportunity and assigned to any employee in the system. The component type can also be selected.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.969', 0, '2003-12-22 09:59:23.969', true);
+INSERT INTO help_contents VALUES (105, 4, 4, 'LeadsCalls.do', 'Update', NULL, 'Call Details', 'The calls associated with the opportunity are shown. Calls can be added to the opportunity.', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.982', 0, '2003-12-22 09:59:23.982', true);
+INSERT INTO help_contents VALUES (106, 4, 4, 'LeadsCalls.do', 'Details', NULL, 'Call Details ', 'Details about the call associated with the opportunity', NULL, NULL, NULL, 0, '2003-12-22 09:59:23.994', 0, '2003-12-22 09:59:23.994', true);
+INSERT INTO help_contents VALUES (107, 4, 4, 'LeadsDocuments.do', 'Add', NULL, 'Upload a document', 'New documents related to the opportunity can be uploaded into the system.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.005', 0, '2003-12-22 09:59:24.005', true);
+INSERT INTO help_contents VALUES (108, 4, 4, 'LeadsDocuments.do', 'Details', NULL, 'Document Details ', 'This shows all versions of the updated document. The name of the file with it''s size, version and the number of downloads are shown here.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.024', 0, '2003-12-22 09:59:24.024', true);
+INSERT INTO help_contents VALUES (109, 4, 4, 'LeadsReports.do', 'ExportList', NULL, 'List of exported data', 'The data present can be used to export data and display that in different formats. The exported data can be filtered in different ways. This would also let you view the data download it. This also shows the number of times an exported data has been downloaded', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.033', 0, '2003-12-22 09:59:24.033', true);
+INSERT INTO help_contents VALUES (110, 4, 4, 'LeadsReports.do', 'ExportForm', NULL, 'Generating Export data', 'Generate an exported report from pipeline data', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.053', 0, '2003-12-22 09:59:24.053', true);
+INSERT INTO help_contents VALUES (111, 1, 1, 'Accounts.do', 'Dashboard', NULL, 'Overview', 'The date range can be modified which is shown in the right hand window by clicking on a specific date on the calendar. Accounts with contract end dates or other required actions appear in the right hand window reminding the user to take action on them. The schedule, actions, alert dates and contract end dates are displayed for user or the employees under him by using the dropdown at the top of the page. Clicking on the alert link will let the user modify the details of the account owner. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.083', 0, '2003-12-22 09:59:24.083', true);
+INSERT INTO help_contents VALUES (112, 1, 1, 'Accounts.do', 'Add', NULL, 'Add an Account', 'A new account can be added here', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.15', 0, '2003-12-22 09:59:24.15', true);
+INSERT INTO help_contents VALUES (113, 1, 1, 'Accounts.do', 'Modify', NULL, 'Modify Account', 'The details of an account can be modified here', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.178', 0, '2003-12-22 09:59:24.178', true);
+INSERT INTO help_contents VALUES (114, 1, 1, 'Contacts.do', 'View', NULL, 'Contact Details', 'A contact can be associated with an account. The lists of the contacts associated with the account are shown along with the title.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.198', 0, '2003-12-22 09:59:24.198', true);
+INSERT INTO help_contents VALUES (115, 1, 1, 'Accounts.do', 'Fields', NULL, 'Folder Record Details', 'You create folders for accounts. Each folder can have one or more records associated with it, depending on the type of the folder. The details about records associated with the folder are shown', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.214', 0, '2003-12-22 09:59:24.214', true);
+INSERT INTO help_contents VALUES (116, 1, 1, 'Opportunities.do', 'View', NULL, 'Opportunity Details', 'Opportunities associated with the contact, showing the best guess total and last modified date.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.234', 0, '2003-12-22 09:59:24.234', true);
+INSERT INTO help_contents VALUES (117, 1, 1, 'RevenueManager.do', 'View', NULL, 'Revenue Details', 'The revenue associated with the account is shown here. The details about the revenue like the description, the date and the amount associated are displayed.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.257', 0, '2003-12-22 09:59:24.257', true);
+INSERT INTO help_contents VALUES (118, 1, 1, 'RevenueManager.do', 'View', NULL, 'Revenue Details', 'The revenue associated with the account is shown here. Details about the revenue such as the description, the date, and the amount associated are displayed.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.277', 0, '2003-12-22 09:59:24.277', true);
+INSERT INTO help_contents VALUES (119, 1, 1, 'RevenueManager.do', 'Add', NULL, 'Add Revenue ', 'Adding new revenue to an account', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.297', 0, '2003-12-22 09:59:24.297', true);
+INSERT INTO help_contents VALUES (120, 1, 1, 'RevenueManager.do', 'Modify', NULL, 'Modify Revenue ', 'Here revenue details can be modified', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.306', 0, '2003-12-22 09:59:24.306', true);
+INSERT INTO help_contents VALUES (121, 1, 1, 'Accounts.do', 'ViewTickets', NULL, 'Ticket Details', 'This page shows the complete list of the tickets related to an account, and lets you add a new ticket', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.319', 0, '2003-12-22 09:59:24.319', true);
+INSERT INTO help_contents VALUES (122, 1, 1, 'AccountsDocuments.do', 'View', NULL, 'Document Details', 'Here the documents associated with the account are listed. New documents related to the account can be added.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.336', 0, '2003-12-22 09:59:24.336', true);
+INSERT INTO help_contents VALUES (123, 1, 1, 'Accounts.do', 'SearchForm', NULL, 'Search Accounts ', 'This page provides the search feature for accounts in the system.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.361', 0, '2003-12-22 09:59:24.361', true);
+INSERT INTO help_contents VALUES (124, 1, 1, 'Accounts.do', 'Details', NULL, 'Account Details', 'This shows the details of the account, which can be modified. Each account can have folders, contacts, opportunities, revenue, tickets, and documents, for which there are separate tabs.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.37', 0, '2003-12-22 09:59:24.37', true);
+INSERT INTO help_contents VALUES (125, 1, 1, 'RevenueManager.do', 'Dashboard', NULL, 'Revenue Dashboard ', 'This revenue dashboard shows a progress chart for different years and types. All the accounts with revenue are also shown along with a list of employees working under you are also listed under the progress chart. You can add accounts, search for the existing ones in the system based on different filters and export the data in different formats.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.379', 0, '2003-12-22 09:59:24.379', true);
+INSERT INTO help_contents VALUES (126, 1, 1, 'Accounts.do', 'Reports', NULL, 'Export Data ', 'The data can be filtered, exported, displayed, and downloaded in different formats.You can also see the number of times an exported report has been downloaded.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.395', 0, '2003-12-22 09:59:24.395', true);
+INSERT INTO help_contents VALUES (127, 1, 1, 'Accounts.do', 'ModifyFields', NULL, 'Modify folder record ', 'The Folder record details can be updated. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.415', 0, '2003-12-22 09:59:24.415', true);
+INSERT INTO help_contents VALUES (128, 1, 1, 'AccountTickets.do', 'ReopenTicket', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.423', 0, '2003-12-22 09:59:24.423', true);
+INSERT INTO help_contents VALUES (129, 1, 1, 'Accounts.do', 'Delete', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.428', 0, '2003-12-22 09:59:24.428', true);
+INSERT INTO help_contents VALUES (130, 1, 1, 'Accounts.do', 'GenerateForm', NULL, 'Generate New Export', 'To generate the Export data', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.433', 0, '2003-12-22 09:59:24.433', true);
+INSERT INTO help_contents VALUES (131, 1, 1, 'AccountContactsCalls.do', 'View', NULL, 'Call Details', 'Calls associated with the contact', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.442', 0, '2003-12-22 09:59:24.442', true);
+INSERT INTO help_contents VALUES (132, 1, 1, 'Accounts.do', 'AddFolderRecord', NULL, 'Add folder record', 'A new Folder record can be added to the Folder.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.459', 0, '2003-12-22 09:59:24.459', true);
+INSERT INTO help_contents VALUES (133, 1, 1, 'AccountContactsCalls.do', 'Add', NULL, 'Add a call', 'You can add a new call, which is associated with a particular contact.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.468', 0, '2003-12-22 09:59:24.468', true);
+INSERT INTO help_contents VALUES (134, 1, 1, 'AccountsDocuments.do', 'Add', NULL, 'Upload Document ', 'New documents can be uploaded and associated with an account', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.481', 0, '2003-12-22 09:59:24.481', true);
+INSERT INTO help_contents VALUES (135, 1, 1, 'AccountsDocuments.do', 'Add ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.491', 0, '2003-12-22 09:59:24.491', true);
+INSERT INTO help_contents VALUES (136, 1, 1, 'AccountContactsOpps.do', 'UpdateOpp', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.496', 0, '2003-12-22 09:59:24.496', true);
+INSERT INTO help_contents VALUES (137, 1, 1, 'AccountTicketsDocuments.do', 'AddVersion', NULL, NULL, 'Upload a New Version of an existing Document ', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.501', 0, '2003-12-22 09:59:24.501', true);
+INSERT INTO help_contents VALUES (138, 1, 1, 'Accounts.do', 'Details ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.51', 0, '2003-12-22 09:59:24.51', true);
+INSERT INTO help_contents VALUES (139, 1, 1, 'Accounts.do', 'View', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.515', 0, '2003-12-22 09:59:24.515', true);
+INSERT INTO help_contents VALUES (140, 1, 1, 'AccountTickets.do', 'AddTicket', NULL, 'Adding a new Ticket', 'This page lets you create a new ticket for the account ', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.52', 0, '2003-12-22 09:59:24.52', true);
+INSERT INTO help_contents VALUES (141, 1, 1, 'AccountTicketsDocuments.do', 'View', NULL, 'Document Details', 'Here the documents associated with the ticket are listed. New documents related to the ticket can be added', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.53', 0, '2003-12-22 09:59:24.53', true);
+INSERT INTO help_contents VALUES (142, 1, 1, 'AccountTickets.do', 'UpdateTicket', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.55', 0, '2003-12-22 09:59:24.55', true);
+INSERT INTO help_contents VALUES (143, 1, 1, 'AccountContactsOppComponents.do', 'Prepare', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.555', 0, '2003-12-22 09:59:24.555', true);
+INSERT INTO help_contents VALUES (144, 1, 1, 'Accounts.do', 'InsertFields', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.56', 0, '2003-12-22 09:59:24.56', true);
+INSERT INTO help_contents VALUES (145, 1, 1, 'AccountContactsOpps.do', 'Save', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.565', 0, '2003-12-22 09:59:24.565', true);
+INSERT INTO help_contents VALUES (146, 1, 1, 'Accounts.do', 'Search', NULL, NULL, 'Lists the Accounts present and also lets you create an account', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.571', 0, '2003-12-22 09:59:24.571', true);
+INSERT INTO help_contents VALUES (147, 1, 1, 'AccountTicketsDocuments.do', 'Details', NULL, NULL, 'Page shows all the versions of the current document', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.587', 0, '2003-12-22 09:59:24.587', true);
+INSERT INTO help_contents VALUES (148, 1, 1, 'AccountTicketsDocuments.do', 'Modify', NULL, NULL, 'Modify the current document', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.596', 0, '2003-12-22 09:59:24.596', true);
+INSERT INTO help_contents VALUES (149, 1, 1, 'Accounts.do', 'Insert', NULL, 'Account Details', 'Displays the details of the account, which can be modified. Each account can have folders, the contacts, opportunities, revenue, and tickets. You can update several documents associated with each account. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.607', 0, '2003-12-22 09:59:24.607', true);
+INSERT INTO help_contents VALUES (150, 1, 1, 'AccountContactsCalls.do', 'Details', NULL, 'Call details', 'The details of the call are shown here which can be modified, deleted or forwarded to any of the users.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.616', 0, '2003-12-22 09:59:24.616', true);
+INSERT INTO help_contents VALUES (151, 1, 1, 'AccountContactsCalls.do', 'Modify', NULL, 'Add / update a call', 'You can add a new call to a contact.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.624', 0, '2003-12-22 09:59:24.624', true);
+INSERT INTO help_contents VALUES (152, 1, 1, 'AccountContactsCalls.do', 'Save', NULL, 'Call details', 'The details of the call are shown here, and can be modified, deleted or forwarded to any of the employees', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.637', 0, '2003-12-22 09:59:24.637', true);
+INSERT INTO help_contents VALUES (153, 1, 1, 'AccountContactsCalls.do', 'ForwardCall', NULL, 'Forward Call ', 'The details of the calls that are associated with a contact can be forwarded to different employees.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.646', 0, '2003-12-22 09:59:24.646', true);
+INSERT INTO help_contents VALUES (154, 1, 1, 'AccountContactsOpps.do', 'ViewOpps', NULL, 'List of Opportunities', 'Opportunities associated with the contact, showing the best guess total and last modified date.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.654', 0, '2003-12-22 09:59:24.654', true);
+INSERT INTO help_contents VALUES (155, 1, 1, 'AccountContactsOpps.do', 'DetailsOpp', NULL, 'Opportunity Details', 'You can view all the details about the components here and also add a new component to a particular opportunity. The opportunity can be renamed and its details can be modified', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.674', 0, '2003-12-22 09:59:24.674', true);
+INSERT INTO help_contents VALUES (156, 1, 1, 'AccountTickets.do', 'TicketDetails', NULL, 'Ticket Details ', 'This page lets you view the details of the ticket, and also lets you modify or delete the ticket.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.69', 0, '2003-12-22 09:59:24.69', true);
+INSERT INTO help_contents VALUES (157, 1, 1, 'AccountTickets.do', 'ModifyTicket', NULL, 'Modify ticket', 'This page lets you modify the ticket information and update its details', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.703', 0, '2003-12-22 09:59:24.703', true);
+INSERT INTO help_contents VALUES (158, 1, 1, 'AccountTicketTasks.do', 'List', NULL, 'Task Details', 'This page lists the tasks assigned for a particular account. New tasks can be added, which would then appear in the list of tasks, showing their priority and their assignment.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.719', 0, '2003-12-22 09:59:24.719', true);
+INSERT INTO help_contents VALUES (159, 1, 1, 'AccountTicketsDocuments.do', 'Add', NULL, 'Uploading a Document', 'Upload a new document related to the account.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.735', 0, '2003-12-22 09:59:24.735', true);
+INSERT INTO help_contents VALUES (160, 1, 1, 'AccountTickets.do', 'ViewHistory', NULL, 'Ticket Log History', 'This page maintains a complete log history of each ticket from its creation till the ticket is closed.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.744', 0, '2003-12-22 09:59:24.744', true);
+INSERT INTO help_contents VALUES (161, 1, 1, 'AccountsDocuments.do', 'Details', NULL, 'Document Details ', 'All the versions of the current document are listed here', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.75', 0, '2003-12-22 09:59:24.75', true);
+INSERT INTO help_contents VALUES (162, 1, 1, 'AccountsDocuments.do', 'Modify', NULL, 'Modify Document ', 'Modify the document information', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.759', 0, '2003-12-22 09:59:24.759', true);
+INSERT INTO help_contents VALUES (163, 1, 1, 'AccountsDocuments.do', 'AddVersion', NULL, 'Upload New Version ', 'Upload a new document version', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.768', 0, '2003-12-22 09:59:24.768', true);
+INSERT INTO help_contents VALUES (164, 1, 1, 'Accounts.do', 'ExportReport', NULL, 'List of Exported data', 'The data can be filtered, exported and displayed in different formats. You can then view the data and also download it.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.777', 0, '2003-12-22 09:59:24.777', true);
+INSERT INTO help_contents VALUES (165, 1, 1, 'RevenueManager.do', 'Details', NULL, 'Revenue Details ', 'Details about revenue', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.793', 0, '2003-12-22 09:59:24.793', true);
+INSERT INTO help_contents VALUES (166, 1, 1, 'RevenueManager.do', 'Dashboard ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:24.802', 0, '2003-12-22 09:59:24.802', true);
+INSERT INTO help_contents VALUES (167, 1, 1, 'OpportunityForm.do', 'Prepare', NULL, 'Add Opportunity', 'A new opportunity associated with the contact can be added ', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.807', 0, '2003-12-22 09:59:24.807', true);
+INSERT INTO help_contents VALUES (168, 1, 1, 'Opportunities.do', 'Add', NULL, 'Add opportunity ', 'A new opportunity associated with the contact can be added', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.815', 0, '2003-12-22 09:59:24.815', true);
+INSERT INTO help_contents VALUES (169, 1, 1, 'Opportunities.do', 'Details', NULL, 'Opportunity Details', 'You can view all the details about the components here like the status, the guess amount and the current stage. A new component can also be added to a particular opportunity. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.825', 0, '2003-12-22 09:59:24.825', true);
+INSERT INTO help_contents VALUES (170, 1, 1, 'Opportunities.do', 'Modify', NULL, 'Modify Opportunity ', 'The details of the opportunity can be modified', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.845', 0, '2003-12-22 09:59:24.845', true);
+INSERT INTO help_contents VALUES (171, 1, 1, 'OpportunitiesComponents.do', 'DetailsComponent', NULL, 'Component Details ', 'This page shows the details about the opportunity like what is the probability of closing the opportunity, what is the current stage of the opportunity etc', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.854', 0, '2003-12-22 09:59:24.854', true);
+INSERT INTO help_contents VALUES (172, 1, 1, 'OpportunitiesComponents.do', 'Prepare', NULL, 'Add a component', 'A component can be added to an opportunity and assigned to any employee present in the system. The component type can also be selected.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.863', 0, '2003-12-22 09:59:24.863', true);
+INSERT INTO help_contents VALUES (173, 1, 1, 'OpportunitiesComponents.do', 'ModifyComponent', NULL, 'Modify Component ', 'The details of the component can be added / updated to an opportunity and assigned to any employee present in the system. The component type can also be selected.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.88', 0, '2003-12-22 09:59:24.88', true);
+INSERT INTO help_contents VALUES (174, 1, 1, 'OpportunitiesComponents.do', 'SaveComponent', NULL, 'Component Details', 'This page shows the details about the opportunity like what is the probability of closing the opportunity, what is the current stage of the opportunity etc', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.898', 0, '2003-12-22 09:59:24.898', true);
 INSERT INTO help_contents VALUES (175, 6, 6, 'CampaignManager.do', 'Dashboard', NULL, 'Communications Dashboard ', 'Track and analyze campaigns that have been activated and executed.
 
-Messages can be sent out by any combination of email, fax, or mail merge. The Dashboard shows an overview of sent messages and allows you to drill down and view recipients and any survey results.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.12', 0, '2003-12-22 09:08:04.12', true);
-INSERT INTO help_contents VALUES (176, 6, 6, 'CampaignManager.do', 'Add', NULL, 'Add a campaign', 'This page lets you add a new campaign into the system.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.181', 0, '2003-12-22 09:08:04.181', true);
+Messages can be sent out by any combination of email, fax, or mail merge. The Dashboard shows an overview of sent messages and allows you to drill down and view recipients and any survey results.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.917', 0, '2003-12-22 09:59:24.917', true);
+INSERT INTO help_contents VALUES (176, 6, 6, 'CampaignManager.do', 'Add', NULL, 'Add a campaign', 'This page lets you add a new campaign into the system.', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.979', 0, '2003-12-22 09:59:24.979', true);
 INSERT INTO help_contents VALUES (177, 6, 6, 'CampaignManager.do', 'View', NULL, 'Campaign List ', 'Create or work on existing campaigns.
 
 The Campaign Builder allows you to select groups of contacts that you would like to send a message to, as well as schedule a delivery date. Additional options are available.
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.192', 0, '2003-12-22 09:08:04.192', true);
-INSERT INTO help_contents VALUES (178, 6, 6, 'CampaignManagerGroup.do', 'View', NULL, 'View Groups ', 'Each campaign needs at least one group to which to send a message. Use criteria to filter the contacts you need to reach and use them over and over again. As new contacts meet the criteria, they will be automatically included in future campaigns. This page lists the group names. It shows the groups created by you or everybody; i.e. all the groups.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.222', 0, '2003-12-22 09:08:04.222', true);
-INSERT INTO help_contents VALUES (179, 6, 6, 'CampaignManagerGroup.do', 'Add', NULL, 'Add a Group', 'A new contact group can be added. Separate criteria can be specified when creating the group. The criteria can be defined to generate a list. The list to be added can be previewed before saving the group details. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.243', 0, '2003-12-22 09:08:04.243', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:24.99', 0, '2003-12-22 09:59:24.99', true);
+INSERT INTO help_contents VALUES (178, 6, 6, 'CampaignManagerGroup.do', 'View', NULL, 'View Groups ', 'Each campaign needs at least one group to which to send a message. Use criteria to filter the contacts you need to reach and use them over and over again. As new contacts meet the criteria, they will be automatically included in future campaigns. This page lists the group names. It shows the groups created by you or everybody; i.e. all the groups.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.014', 0, '2003-12-22 09:59:25.014', true);
+INSERT INTO help_contents VALUES (179, 6, 6, 'CampaignManagerGroup.do', 'Add', NULL, 'Add a Group', 'A new contact group can be added. Separate criteria can be specified when creating the group. The criteria can be defined to generate a list. The list to be added can be previewed before saving the group details. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.033', 0, '2003-12-22 09:59:25.033', true);
 INSERT INTO help_contents VALUES (180, 6, 6, 'CampaignManagerMessage.do', 'View', NULL, 'Message List ', 'Compose a message to reach your audience.
-Each campaign requires a message that will be sent to selected groups. Write the message once, then use it in any number of future campaigns. Modified messages will only affect future campaigns. Displays the list of messages, with the description and other details.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.263', 0, '2003-12-22 09:08:04.263', true);
-INSERT INTO help_contents VALUES (181, 6, 6, 'CampaignManagerMessage.do', 'Add', NULL, 'Adding a Message', 'You can add a new message for the campaign, which would show up in the message list.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.283', 0, '2003-12-22 09:08:04.283', true);
+Each campaign requires a message that will be sent to selected groups. Write the message once, then use it in any number of future campaigns. Modified messages will only affect future campaigns. Displays the list of messages, with the description and other details.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.053', 0, '2003-12-22 09:59:25.053', true);
+INSERT INTO help_contents VALUES (181, 6, 6, 'CampaignManagerMessage.do', 'Add', NULL, 'Adding a Message', 'You can add a new message for the campaign, which would show up in the message list.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.073', 0, '2003-12-22 09:59:25.073', true);
 INSERT INTO help_contents VALUES (182, 6, 6, 'CampaignManagerAttachment.do', NULL, NULL, 'Create Attachments ', 'Customize and configure your Campaigns with attachments. Attachments can include interactive items, like surveys, or provide additional materials like files.
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.295', 0, '2003-12-22 09:08:04.295', true);
-INSERT INTO help_contents VALUES (183, 6, 6, 'CampaignManagerGroup.do', 'Details', NULL, NULL, 'Contacts of the group are displayed', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.304', 0, '2003-12-22 09:08:04.304', true);
-INSERT INTO help_contents VALUES (184, 6, 6, 'CampaignDocuments.do', 'AddVersion', NULL, NULL, 'version change of a document', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.316', 0, '2003-12-22 09:08:04.316', true);
-INSERT INTO help_contents VALUES (185, 6, 6, 'CampaignManager.do', 'Dashboard ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.325', 0, '2003-12-22 09:08:04.325', true);
-INSERT INTO help_contents VALUES (186, 6, 6, 'CampaignManagerMessage.do', 'Insert', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.33', 0, '2003-12-22 09:08:04.33', true);
-INSERT INTO help_contents VALUES (187, 6, 6, 'CampaignManagerGroup.do', 'Update', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.337', 0, '2003-12-22 09:08:04.337', true);
-INSERT INTO help_contents VALUES (188, 6, 6, 'CampaignDocuments.do', 'Add', NULL, NULL, 'New documents can be uploaded and be associated with the campaign.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.343', 0, '2003-12-22 09:08:04.343', true);
-INSERT INTO help_contents VALUES (189, 6, 6, 'CampaignManager.do', 'ResponseDetails', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.351', 0, '2003-12-22 09:08:04.351', true);
-INSERT INTO help_contents VALUES (190, 6, 6, 'CampaignManagerGroup.do', 'Preview', NULL, NULL, 'Here details about the contacts, i.e. the name, their company, and their email address are displayed.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.356', 0, '2003-12-22 09:08:04.356', true);
-INSERT INTO help_contents VALUES (191, 6, 6, 'CampaignManager.do', 'PrepareDownload', NULL, 'Campaign Details', 'This page shows the details about the campaign and also shows the list of available documents.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.368', 0, '2003-12-22 09:08:04.368', true);
-INSERT INTO help_contents VALUES (192, 6, 6, 'CampaignManager.do', 'ViewGroups', NULL, 'Groups', 'The group name along with the contacts present in the Group are listed ', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.377', 0, '2003-12-22 09:08:04.377', true);
-INSERT INTO help_contents VALUES (193, 6, 6, 'CampaignManagerSurvey.do', 'Add', NULL, 'Adding a survey', 'You can add a new survey here', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.382', 0, '2003-12-22 09:08:04.382', true);
-INSERT INTO help_contents VALUES (194, 6, 6, 'CampaignManagerSurvey.do', 'MoveQuestion', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.391', 0, '2003-12-22 09:08:04.391', true);
-INSERT INTO help_contents VALUES (195, 6, 6, 'CampaignManager.do', 'Details', NULL, 'Campaign Details ', 'Campaign details are the number of groups selected for the campaign, the text message of the campaign, when is it scheduled to run, how the delivery of the message done, who entered these details and who modified it are shown here.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.396', 0, '2003-12-22 09:08:04.396', true);
-INSERT INTO help_contents VALUES (196, 6, 6, 'CampaignDocuments.do', 'Details', NULL, NULL, 'All Versions of this current Document are shown here with the details like the size of the uploaded file, the number of downloads etc.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.405', 0, '2003-12-22 09:08:04.405', true);
-INSERT INTO help_contents VALUES (197, 6, 6, 'CampaignDocuments.do', 'Modify', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.414', 0, '2003-12-22 09:08:04.414', true);
-INSERT INTO help_contents VALUES (198, 6, 6, 'CampaignManager.do', 'Insert', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.42', 0, '2003-12-22 09:08:04.42', true);
-INSERT INTO help_contents VALUES (199, 6, 6, 'CampaignManagerSurvey.do', 'ViewReturn', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.425', 0, '2003-12-22 09:08:04.425', true);
-INSERT INTO help_contents VALUES (200, 6, 6, 'CampaignManagerMessage.do', 'Details ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.43', 0, '2003-12-22 09:08:04.43', true);
-INSERT INTO help_contents VALUES (201, 6, 6, 'CampaignManager.do', 'ViewSchedule', NULL, NULL, 'For the campaign you can schedule a delivery date to send the message to the recipients.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.436', 0, '2003-12-22 09:08:04.436', true);
-INSERT INTO help_contents VALUES (202, 6, 6, 'CampaignManagerGroup.do', 'Modify', NULL, NULL, 'Here you can update the group details and also the update contact criteria.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.446', 0, '2003-12-22 09:08:04.446', true);
-INSERT INTO help_contents VALUES (203, 6, 6, 'CampaignManager.do', 'PreviewRecipients', NULL, 'List of Recipients', 'The page displays a list of recipients with their name, company name, the date when the campaign was sent to those recipients and its status. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.462', 0, '2003-12-22 09:08:04.462', true);
-INSERT INTO help_contents VALUES (204, 6, 6, 'CampaignManager.do', 'PreviewMessage', NULL, 'Message Details ', 'The message details are shown here, in the form of an email with a subject and message.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.467', 0, '2003-12-22 09:08:04.467', true);
-INSERT INTO help_contents VALUES (205, 6, 6, 'CampaignManager.do', 'PreviewSchedule', NULL, 'Campaign Schedule', 'This shows the delivery date and the delivery method or the campaign. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.494', 0, '2003-12-22 09:08:04.494', true);
-INSERT INTO help_contents VALUES (206, 6, 6, 'CampaignManager.do', 'ViewResults', NULL, 'Campaign Results', 'This page shows the results of the responses received from all the recipients in the group. This also shows the Last response received.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.499', 0, '2003-12-22 09:08:04.499', true);
-INSERT INTO help_contents VALUES (207, 6, 6, 'CampaignManager.do', 'ViewResponse', NULL, 'Campaign Response', 'This page shows the responses of all the recipients along with their system IP addresses and their email address', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.505', 0, '2003-12-22 09:08:04.505', true);
-INSERT INTO help_contents VALUES (208, 6, 6, 'CampaignDocuments.do', 'View', NULL, 'Campaign Document details', 'This page lists all the documents associated with this campaign and for each document it lists the size of the file, the extension and the version of the file.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.51', 0, '2003-12-22 09:08:04.51', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.086', 0, '2003-12-22 09:59:25.086', true);
+INSERT INTO help_contents VALUES (183, 6, 6, 'CampaignManagerGroup.do', 'Details', NULL, NULL, 'Contacts of the group are displayed', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.094', 0, '2003-12-22 09:59:25.094', true);
+INSERT INTO help_contents VALUES (184, 6, 6, 'CampaignDocuments.do', 'AddVersion', NULL, NULL, 'version change of a document', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.107', 0, '2003-12-22 09:59:25.107', true);
+INSERT INTO help_contents VALUES (185, 6, 6, 'CampaignManager.do', 'Dashboard ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.116', 0, '2003-12-22 09:59:25.116', true);
+INSERT INTO help_contents VALUES (186, 6, 6, 'CampaignManagerMessage.do', 'Insert', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.121', 0, '2003-12-22 09:59:25.121', true);
+INSERT INTO help_contents VALUES (187, 6, 6, 'CampaignManagerGroup.do', 'Update', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.126', 0, '2003-12-22 09:59:25.126', true);
+INSERT INTO help_contents VALUES (188, 6, 6, 'CampaignDocuments.do', 'Add', NULL, NULL, 'New documents can be uploaded and be associated with the campaign.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.131', 0, '2003-12-22 09:59:25.131', true);
+INSERT INTO help_contents VALUES (189, 6, 6, 'CampaignManager.do', 'ResponseDetails', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.14', 0, '2003-12-22 09:59:25.14', true);
+INSERT INTO help_contents VALUES (190, 6, 6, 'CampaignManagerGroup.do', 'Preview', NULL, NULL, 'Here details about the contacts, i.e. the name, their company, and their email address are displayed.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.145', 0, '2003-12-22 09:59:25.145', true);
+INSERT INTO help_contents VALUES (191, 6, 6, 'CampaignManager.do', 'PrepareDownload', NULL, 'Campaign Details', 'This page shows the details about the campaign and also shows the list of available documents.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.157', 0, '2003-12-22 09:59:25.157', true);
+INSERT INTO help_contents VALUES (192, 6, 6, 'CampaignManager.do', 'ViewGroups', NULL, 'Groups', 'The group name along with the contacts present in the Group are listed ', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.167', 0, '2003-12-22 09:59:25.167', true);
+INSERT INTO help_contents VALUES (193, 6, 6, 'CampaignManagerSurvey.do', 'Add', NULL, 'Adding a survey', 'You can add a new survey here', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.172', 0, '2003-12-22 09:59:25.172', true);
+INSERT INTO help_contents VALUES (194, 6, 6, 'CampaignManagerSurvey.do', 'MoveQuestion', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.18', 0, '2003-12-22 09:59:25.18', true);
+INSERT INTO help_contents VALUES (195, 6, 6, 'CampaignManager.do', 'Details', NULL, 'Campaign Details ', 'Campaign details are the number of groups selected for the campaign, the text message of the campaign, when is it scheduled to run, how the delivery of the message done, who entered these details and who modified it are shown here.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.186', 0, '2003-12-22 09:59:25.186', true);
+INSERT INTO help_contents VALUES (196, 6, 6, 'CampaignDocuments.do', 'Details', NULL, NULL, 'All Versions of this current Document are shown here with the details like the size of the uploaded file, the number of downloads etc.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.194', 0, '2003-12-22 09:59:25.194', true);
+INSERT INTO help_contents VALUES (197, 6, 6, 'CampaignDocuments.do', 'Modify', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.203', 0, '2003-12-22 09:59:25.203', true);
+INSERT INTO help_contents VALUES (198, 6, 6, 'CampaignManager.do', 'Insert', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.208', 0, '2003-12-22 09:59:25.208', true);
+INSERT INTO help_contents VALUES (199, 6, 6, 'CampaignManagerSurvey.do', 'ViewReturn', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.213', 0, '2003-12-22 09:59:25.213', true);
+INSERT INTO help_contents VALUES (200, 6, 6, 'CampaignManagerMessage.do', 'Details ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.218', 0, '2003-12-22 09:59:25.218', true);
+INSERT INTO help_contents VALUES (201, 6, 6, 'CampaignManager.do', 'ViewSchedule', NULL, NULL, 'For the campaign you can schedule a delivery date to send the message to the recipients.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.223', 0, '2003-12-22 09:59:25.223', true);
+INSERT INTO help_contents VALUES (202, 6, 6, 'CampaignManagerGroup.do', 'Modify', NULL, NULL, 'Here you can update the group details and also the update contact criteria.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.233', 0, '2003-12-22 09:59:25.233', true);
+INSERT INTO help_contents VALUES (203, 6, 6, 'CampaignManager.do', 'PreviewRecipients', NULL, 'List of Recipients', 'The page displays a list of recipients with their name, company name, the date when the campaign was sent to those recipients and its status. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.249', 0, '2003-12-22 09:59:25.249', true);
+INSERT INTO help_contents VALUES (204, 6, 6, 'CampaignManager.do', 'PreviewMessage', NULL, 'Message Details ', 'The message details are shown here, in the form of an email with a subject and message.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.255', 0, '2003-12-22 09:59:25.255', true);
+INSERT INTO help_contents VALUES (205, 6, 6, 'CampaignManager.do', 'PreviewSchedule', NULL, 'Campaign Schedule', 'This shows the delivery date and the delivery method or the campaign. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.282', 0, '2003-12-22 09:59:25.282', true);
+INSERT INTO help_contents VALUES (206, 6, 6, 'CampaignManager.do', 'ViewResults', NULL, 'Campaign Results', 'This page shows the results of the responses received from all the recipients in the group. This also shows the Last response received.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.287', 0, '2003-12-22 09:59:25.287', true);
+INSERT INTO help_contents VALUES (207, 6, 6, 'CampaignManager.do', 'ViewResponse', NULL, 'Campaign Response', 'This page shows the responses of all the recipients along with their system IP addresses and their email address', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.292', 0, '2003-12-22 09:59:25.292', true);
+INSERT INTO help_contents VALUES (208, 6, 6, 'CampaignDocuments.do', 'View', NULL, 'Campaign Document details', 'This page lists all the documents associated with this campaign and for each document it lists the size of the file, the extension and the version of the file.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.298', 0, '2003-12-22 09:59:25.298', true);
 INSERT INTO help_contents VALUES (209, 6, 6, 'CampaignManager.do', 'ViewDetails', NULL, 'Campaign Details', 'This is the detail page for the campaign, where step-by-step information is given on how to activate the campaign; i.e. what should be selected before a campaign is activated.
 
 This campaign can be configured and can now be activated.
 Once activated, today''s campaigns will begin processing in under 5 minutes and cannot be cancelled.
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.529', 0, '2003-12-22 09:08:04.529', true);
-INSERT INTO help_contents VALUES (210, 6, 6, 'CampaignManager.do', 'AddGroups', NULL, 'Choose Groups ', 'Selecting or updating the group / groups for the campaign can be done here.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.546', 0, '2003-12-22 09:08:04.546', true);
-INSERT INTO help_contents VALUES (211, 6, 6, 'CampaignManager.do', 'ViewMessage', NULL, 'Message Details', 'Updating a message for the campaign', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.562', 0, '2003-12-22 09:08:04.562', true);
-INSERT INTO help_contents VALUES (212, 6, 6, 'CampaignManager.do', 'ViewAttachmentsOverview', NULL, 'Attachment Details', 'For each message, we can add the attachments.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.575', 0, '2003-12-22 09:08:04.575', true);
-INSERT INTO help_contents VALUES (213, 6, 6, 'CampaignManager.do', 'ViewAttachment', NULL, 'Surveys ', 'A survey can be selected for this campaign.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.586', 0, '2003-12-22 09:08:04.586', true);
-INSERT INTO help_contents VALUES (214, 6, 6, 'CampaignManager.do', 'ManageFileAttachments', NULL, 'File Attachments ', 'Campaign can also have a file as an attachment', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.595', 0, '2003-12-22 09:08:04.595', true);
-INSERT INTO help_contents VALUES (215, 6, 6, 'CampaignManager.do', 'Modify', NULL, 'Modify Campaign Details', 'Updating the campaign name /description', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.603', 0, '2003-12-22 09:08:04.603', true);
-INSERT INTO help_contents VALUES (216, 6, 6, 'CampaignManagerMessage.do', 'Details', NULL, 'Message Details ', 'This page shows the details of the message.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.612', 0, '2003-12-22 09:08:04.612', true);
-INSERT INTO help_contents VALUES (217, 6, 6, 'CampaignManagerMessage.do', 'Modify', NULL, 'Modify Message ', 'This page lets you Add/Update a new message. The message can have an access type, limiting who can view a message.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.622', 0, '2003-12-22 09:08:04.622', true);
-INSERT INTO help_contents VALUES (218, 6, 6, 'CampaignManagerMessage.do', 'Update', NULL, 'Message Details ', 'This page shows the details of the message.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.634', 0, '2003-12-22 09:08:04.634', true);
-INSERT INTO help_contents VALUES (219, 6, 6, 'CampaignManagerMessage.do', 'Clone', NULL, 'Adding a Message ', 'This page lets you Add a new message or Update an existing one. The message can have an access type, defining who can view it.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.643', 0, '2003-12-22 09:08:04.643', true);
-INSERT INTO help_contents VALUES (220, 6, 6, 'CampaignManagerSurvey.do', 'View', NULL, 'List of Surveys', 'This page displays the surveys created and lets you update them.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.66', 0, '2003-12-22 09:08:04.66', true);
-INSERT INTO help_contents VALUES (221, 6, 6, 'CampaignManagerSurvey.do', 'InsertAndAdd', NULL, 'Survey Questions', 'Here you can add a new survey question. If the question type is "Item List", you can edit the list of items present in that list and also mark whether the particular question is required or not.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.68', 0, '2003-12-22 09:08:04.68', true);
-INSERT INTO help_contents VALUES (222, 6, 6, 'CampaignManagerSurvey.do', 'Details', NULL, 'Survey Details ', 'The details about the survey are displayed here along with the option to modify, delete and preview the survey. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.70', 0, '2003-12-22 09:08:04.70', true);
-INSERT INTO help_contents VALUES (223, 6, 6, 'CampaignManagerSurvey.do', 'Modify', NULL, 'Survey Details', 'This page displays all the questions added to a particular survey. It also enables you to add new questions. The order of the questions can be changed by moving questions up or down in the list. Questions can also be edited or deleted. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.716', 0, '2003-12-22 09:08:04.716', true);
-INSERT INTO help_contents VALUES (224, 6, 6, 'CampaignManager.do', NULL, NULL, 'Overview', 'You are looking at the communications module. This page reviews and manages campaigns with the following options: Dashboard, Campaign Builder, Build groups, Create messages and create attachments.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.739', 0, '2003-12-22 09:08:04.739', true);
-INSERT INTO help_contents VALUES (225, 8, 8, 'TroubleTickets.do', 'Details', NULL, 'Ticket Details ', 'This page lets you view the details of the ticket also lets you modify or delete the ticket.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.771', 0, '2003-12-22 09:08:04.771', true);
-INSERT INTO help_contents VALUES (226, 8, 8, 'TroubleTickets.do', 'Add', NULL, 'Add a Ticket', 'You can add a new ticket here', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.783', 0, '2003-12-22 09:08:04.783', true);
-INSERT INTO help_contents VALUES (227, 8, 8, 'TroubleTickets.do', 'SearchTicketsForm', NULL, 'Search Existing Tickets', 'Form used for searching existing tickets based on different filters and parameters.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.833', 0, '2003-12-22 09:08:04.833', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.318', 0, '2003-12-22 09:59:25.318', true);
+INSERT INTO help_contents VALUES (210, 6, 6, 'CampaignManager.do', 'AddGroups', NULL, 'Choose Groups ', 'Selecting or updating the group / groups for the campaign can be done here.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.333', 0, '2003-12-22 09:59:25.333', true);
+INSERT INTO help_contents VALUES (211, 6, 6, 'CampaignManager.do', 'ViewMessage', NULL, 'Message Details', 'Updating a message for the campaign', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.351', 0, '2003-12-22 09:59:25.351', true);
+INSERT INTO help_contents VALUES (212, 6, 6, 'CampaignManager.do', 'ViewAttachmentsOverview', NULL, 'Attachment Details', 'For each message, we can add the attachments.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.368', 0, '2003-12-22 09:59:25.368', true);
+INSERT INTO help_contents VALUES (213, 6, 6, 'CampaignManager.do', 'ViewAttachment', NULL, 'Surveys ', 'A survey can be selected for this campaign.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.379', 0, '2003-12-22 09:59:25.379', true);
+INSERT INTO help_contents VALUES (214, 6, 6, 'CampaignManager.do', 'ManageFileAttachments', NULL, 'File Attachments ', 'Campaign can also have a file as an attachment', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.388', 0, '2003-12-22 09:59:25.388', true);
+INSERT INTO help_contents VALUES (215, 6, 6, 'CampaignManager.do', 'Modify', NULL, 'Modify Campaign Details', 'Updating the campaign name /description', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.397', 0, '2003-12-22 09:59:25.397', true);
+INSERT INTO help_contents VALUES (216, 6, 6, 'CampaignManagerMessage.do', 'Details', NULL, 'Message Details ', 'This page shows the details of the message.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.405', 0, '2003-12-22 09:59:25.405', true);
+INSERT INTO help_contents VALUES (217, 6, 6, 'CampaignManagerMessage.do', 'Modify', NULL, 'Modify Message ', 'This page lets you Add/Update a new message. The message can have an access type, limiting who can view a message.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.415', 0, '2003-12-22 09:59:25.415', true);
+INSERT INTO help_contents VALUES (218, 6, 6, 'CampaignManagerMessage.do', 'Update', NULL, 'Message Details ', 'This page shows the details of the message.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.428', 0, '2003-12-22 09:59:25.428', true);
+INSERT INTO help_contents VALUES (219, 6, 6, 'CampaignManagerMessage.do', 'Clone', NULL, 'Adding a Message ', 'This page lets you Add a new message or Update an existing one. The message can have an access type, defining who can view it.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.437', 0, '2003-12-22 09:59:25.437', true);
+INSERT INTO help_contents VALUES (220, 6, 6, 'CampaignManagerSurvey.do', 'View', NULL, 'List of Surveys', 'This page displays the surveys created and lets you update them.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.454', 0, '2003-12-22 09:59:25.454', true);
+INSERT INTO help_contents VALUES (221, 6, 6, 'CampaignManagerSurvey.do', 'InsertAndAdd', NULL, 'Survey Questions', 'Here you can add a new survey question. If the question type is "Item List", you can edit the list of items present in that list and also mark whether the particular question is required or not.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.474', 0, '2003-12-22 09:59:25.474', true);
+INSERT INTO help_contents VALUES (222, 6, 6, 'CampaignManagerSurvey.do', 'Details', NULL, 'Survey Details ', 'The details about the survey are displayed here along with the option to modify, delete and preview the survey. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.493', 0, '2003-12-22 09:59:25.493', true);
+INSERT INTO help_contents VALUES (223, 6, 6, 'CampaignManagerSurvey.do', 'Modify', NULL, 'Survey Details', 'This page displays all the questions added to a particular survey. It also enables you to add new questions. The order of the questions can be changed by moving questions up or down in the list. Questions can also be edited or deleted. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.509', 0, '2003-12-22 09:59:25.509', true);
+INSERT INTO help_contents VALUES (224, 6, 6, 'CampaignManager.do', NULL, NULL, 'Overview', 'You are looking at the communications module. This page reviews and manages campaigns with the following options: Dashboard, Campaign Builder, Build groups, Create messages and create attachments.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.533', 0, '2003-12-22 09:59:25.533', true);
+INSERT INTO help_contents VALUES (225, 8, 8, 'TroubleTickets.do', 'Details', NULL, 'Ticket Details ', 'This page lets you view the details of the ticket also lets you modify or delete the ticket.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.564', 0, '2003-12-22 09:59:25.564', true);
+INSERT INTO help_contents VALUES (226, 8, 8, 'TroubleTickets.do', 'Add', NULL, 'Add a Ticket', 'You can add a new ticket here', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.62', 0, '2003-12-22 09:59:25.62', true);
+INSERT INTO help_contents VALUES (227, 8, 8, 'TroubleTickets.do', 'SearchTicketsForm', NULL, 'Search Existing Tickets', 'Form used for searching existing tickets based on different filters and parameters.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.629', 0, '2003-12-22 09:59:25.629', true);
 INSERT INTO help_contents VALUES (228, 8, 8, 'TroubleTickets.do', 'Reports', NULL, 'Export Data ', 'This is the page shows exported data.
 The data can be exported in different formats. The exported data can be viewed with its subject, the size of the exported data file, when it was created and by whom. It also shows the number of times that particular exported file was downloaded. A new data file can also be exported.
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.842', 0, '2003-12-22 09:08:04.842', true);
-INSERT INTO help_contents VALUES (229, 8, 8, 'TroubleTickets.do', 'Modify', NULL, 'Modify Ticket Details', 'Here you can modify ticket details like information, classification, assignment and resolution.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.862', 0, '2003-12-22 09:08:04.862', true);
-INSERT INTO help_contents VALUES (230, 8, 8, 'TroubleTickets.do', 'Modify', NULL, 'Modify Ticket Details', 'Here you can modify the ticket details like ticket information, it''s classification, the tickets assignment and it''s resolution.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.871', 0, '2003-12-22 09:08:04.871', true);
-INSERT INTO help_contents VALUES (231, 8, 8, 'TroubleTicketTasks.do', 'List', NULL, 'List of Tasks', 'This page lists the tasks assigned for a particular ticket. New tasks can be added, which would then appear in the list of tasks, showing their priority, their assignment and other details.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.88', 0, '2003-12-22 09:08:04.88', true);
-INSERT INTO help_contents VALUES (232, 8, 8, 'TroubleTicketsDocuments.do', 'View', NULL, 'List of Documents ', 'Here the documents associated with a ticket are listed. New documents related to the ticket can be added. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.896', 0, '2003-12-22 09:08:04.896', true);
-INSERT INTO help_contents VALUES (233, 8, 8, 'TroubleTicketsFolders.do', 'Fields', NULL, 'List of Folder Records', 'New folders can be created for each ticket. New Folders are defined and configured in the Admin Module. This page also displays a list of records with their details such as when the record was created, last modified, the action performed on the record etc.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.918', 0, '2003-12-22 09:08:04.918', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.638', 0, '2003-12-22 09:59:25.638', true);
+INSERT INTO help_contents VALUES (229, 8, 8, 'TroubleTickets.do', 'Modify', NULL, 'Modify Ticket Details', 'Here you can modify ticket details like information, classification, assignment and resolution.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.658', 0, '2003-12-22 09:59:25.658', true);
+INSERT INTO help_contents VALUES (230, 8, 8, 'TroubleTickets.do', 'Modify', NULL, 'Modify Ticket Details', 'Here you can modify the ticket details like ticket information, it''s classification, the tickets assignment and it''s resolution.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.667', 0, '2003-12-22 09:59:25.667', true);
+INSERT INTO help_contents VALUES (231, 8, 8, 'TroubleTicketTasks.do', 'List', NULL, 'List of Tasks', 'This page lists the tasks assigned for a particular ticket. New tasks can be added, which would then appear in the list of tasks, showing their priority, their assignment and other details.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.676', 0, '2003-12-22 09:59:25.676', true);
+INSERT INTO help_contents VALUES (232, 8, 8, 'TroubleTicketsDocuments.do', 'View', NULL, 'List of Documents ', 'Here the documents associated with a ticket are listed. New documents related to the ticket can be added. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.692', 0, '2003-12-22 09:59:25.692', true);
+INSERT INTO help_contents VALUES (233, 8, 8, 'TroubleTicketsFolders.do', 'Fields', NULL, 'List of Folder Records', 'New folders can be created for each ticket. New Folders are defined and configured in the Admin Module. This page also displays a list of records with their details such as when the record was created, last modified, the action performed on the record etc.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.713', 0, '2003-12-22 09:59:25.713', true);
 INSERT INTO help_contents VALUES (234, 8, 8, 'TroubleTicketsFolders.do', 'AddFolderRecord', NULL, 'Add Folder Record', 'The details of the record are added
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.93', 0, '2003-12-22 09:08:04.93', true);
-INSERT INTO help_contents VALUES (235, 8, 8, 'TroubleTickets.do', 'ViewHistory', NULL, 'Ticket Log History', 'The log history of the ticket is maintained. ', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.939', 0, '2003-12-22 09:08:04.939', true);
-INSERT INTO help_contents VALUES (236, 8, 8, 'TroubleTickets.do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.948', 0, '2003-12-22 09:08:04.948', true);
-INSERT INTO help_contents VALUES (237, 8, 8, 'TroubleTickets.do', 'Insert', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.953', 0, '2003-12-22 09:08:04.953', true);
-INSERT INTO help_contents VALUES (238, 8, 8, 'TroubleTicketsFolders.do', 'InsertFields', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.959', 0, '2003-12-22 09:08:04.959', true);
-INSERT INTO help_contents VALUES (239, 8, 8, 'TroubleTickets.do', 'GenerateForm', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.964', 0, '2003-12-22 09:08:04.964', true);
-INSERT INTO help_contents VALUES (240, 8, 8, 'TroubleTickets.do', 'Details ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.969', 0, '2003-12-22 09:08:04.969', true);
-INSERT INTO help_contents VALUES (241, 8, 8, 'TroubleTickets.do', 'Update', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.974', 0, '2003-12-22 09:08:04.974', true);
-INSERT INTO help_contents VALUES (242, 8, 8, 'TroubleTickets.do', 'ExportReport', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:04.979', 0, '2003-12-22 09:08:04.979', true);
-INSERT INTO help_contents VALUES (243, 8, 8, 'TroubleTicketsFolders.do', 'ModifyFields', NULL, 'Modify Folder Record', 'This lists the details of the folder record, which can be modified.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.984', 0, '2003-12-22 09:08:04.984', true);
-INSERT INTO help_contents VALUES (244, 8, 8, 'TroubleTicketsFolders.do', 'UpdateFields', NULL, 'Folder Record Details ', 'The details about the folder along with the record information such as when the record was created and when it was modified is displayed here.', NULL, NULL, NULL, 0, '2003-12-22 09:08:04.993', 0, '2003-12-22 09:08:04.993', true);
-INSERT INTO help_contents VALUES (245, 8, 8, 'TroubleTickets.do', 'SearchTickets', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.003', 0, '2003-12-22 09:08:05.003', true);
-INSERT INTO help_contents VALUES (246, 8, 8, 'TroubleTickets.do', 'Home ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.008', 0, '2003-12-22 09:08:05.008', true);
-INSERT INTO help_contents VALUES (247, 8, 8, 'TroubleTicketsDocuments.do', 'Add', NULL, 'Adding a Document', 'A new document related to a ticket can be uploaded.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.013', 0, '2003-12-22 09:08:05.013', true);
-INSERT INTO help_contents VALUES (248, 8, 8, 'TroubleTicketsDocuments.do', 'Details', NULL, 'Document Details', 'This page shows all the versions of the current document.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.022', 0, '2003-12-22 09:08:05.022', true);
-INSERT INTO help_contents VALUES (249, 8, 8, 'TroubleTicketsDocuments.do', 'Modify', NULL, 'Modify Document Details', 'This page lets you modify the ticket information and update the details.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.032', 0, '2003-12-22 09:08:05.032', true);
-INSERT INTO help_contents VALUES (250, 8, 8, 'TroubleTicketsDocuments.do', 'AddVersion', NULL, 'Add version number to Documents', 'You can upload a new version of an existing document.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.045', 0, '2003-12-22 09:08:05.045', true);
-INSERT INTO help_contents VALUES (251, 8, 8, 'TroubleTickets.do', 'Home', NULL, 'Overview', 'This page displays the complete list of the tickets assigned to the user, the list of the tickets present in his department and finally the list of the tickets created by the user. For each ticket, the details about the ticket, such as the ticket number, priority, age of the ticket, the company and finally the assignment details are displayed. The issue details are also shown separately for each ticket.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.054', 0, '2003-12-22 09:08:05.054', true);
-INSERT INTO help_contents VALUES (252, 15, 15, 'CompanyDirectory.do', 'ListEmployees', NULL, 'Overview', 'The details of each employee can be viewed, modified or deleted and a new detailed employee record can be added.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.098', 0, '2003-12-22 09:08:05.098', true);
-INSERT INTO help_contents VALUES (253, 15, 15, 'CompanyDirectory.do', 'EmployeeDetails', NULL, 'Employee Details ', 'This is the employee detail page. This page displays the email, phone number, addresses and additional details of each employee.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.152', 0, '2003-12-22 09:08:05.152', true);
-INSERT INTO help_contents VALUES (254, 15, 15, 'CompanyDirectory.do', 'Prepare', NULL, 'Add an Employee', 'You can add an employee into the system. The details of the employee such as his email address; phone numbers, address and other additional details can be given along with his name', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.16', 0, '2003-12-22 09:08:05.16', true);
-INSERT INTO help_contents VALUES (255, 15, 15, 'CompanyDirectory.do', 'ModifyEmployee', NULL, 'Modify Employee Details ', 'Employee details such as the name of the employee, email address, phone numbers and address can be modified here.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.173', 0, '2003-12-22 09:08:05.173', true);
-INSERT INTO help_contents VALUES (256, 15, 15, 'CompanyDirectory.do', 'Save', NULL, NULL, 'This page shows the details of the employee record, which can be modified or deleted.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.182', 0, '2003-12-22 09:08:05.182', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.726', 0, '2003-12-22 09:59:25.726', true);
+INSERT INTO help_contents VALUES (235, 8, 8, 'TroubleTickets.do', 'ViewHistory', NULL, 'Ticket Log History', 'The log history of the ticket is maintained. ', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.734', 0, '2003-12-22 09:59:25.734', true);
+INSERT INTO help_contents VALUES (236, 8, 8, 'TroubleTickets.do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.743', 0, '2003-12-22 09:59:25.743', true);
+INSERT INTO help_contents VALUES (237, 8, 8, 'TroubleTickets.do', 'Insert', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.748', 0, '2003-12-22 09:59:25.748', true);
+INSERT INTO help_contents VALUES (238, 8, 8, 'TroubleTicketsFolders.do', 'InsertFields', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.753', 0, '2003-12-22 09:59:25.753', true);
+INSERT INTO help_contents VALUES (239, 8, 8, 'TroubleTickets.do', 'GenerateForm', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.759', 0, '2003-12-22 09:59:25.759', true);
+INSERT INTO help_contents VALUES (240, 8, 8, 'TroubleTickets.do', 'Details ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.764', 0, '2003-12-22 09:59:25.764', true);
+INSERT INTO help_contents VALUES (241, 8, 8, 'TroubleTickets.do', 'Update', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.769', 0, '2003-12-22 09:59:25.769', true);
+INSERT INTO help_contents VALUES (242, 8, 8, 'TroubleTickets.do', 'ExportReport', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.775', 0, '2003-12-22 09:59:25.775', true);
+INSERT INTO help_contents VALUES (243, 8, 8, 'TroubleTicketsFolders.do', 'ModifyFields', NULL, 'Modify Folder Record', 'This lists the details of the folder record, which can be modified.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.78', 0, '2003-12-22 09:59:25.78', true);
+INSERT INTO help_contents VALUES (244, 8, 8, 'TroubleTicketsFolders.do', 'UpdateFields', NULL, 'Folder Record Details ', 'The details about the folder along with the record information such as when the record was created and when it was modified is displayed here.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.789', 0, '2003-12-22 09:59:25.789', true);
+INSERT INTO help_contents VALUES (245, 8, 8, 'TroubleTickets.do', 'SearchTickets', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.799', 0, '2003-12-22 09:59:25.799', true);
+INSERT INTO help_contents VALUES (246, 8, 8, 'TroubleTickets.do', 'Home ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:25.805', 0, '2003-12-22 09:59:25.805', true);
+INSERT INTO help_contents VALUES (247, 8, 8, 'TroubleTicketsDocuments.do', 'Add', NULL, 'Adding a Document', 'A new document related to a ticket can be uploaded.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.81', 0, '2003-12-22 09:59:25.81', true);
+INSERT INTO help_contents VALUES (248, 8, 8, 'TroubleTicketsDocuments.do', 'Details', NULL, 'Document Details', 'This page shows all the versions of the current document.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.818', 0, '2003-12-22 09:59:25.818', true);
+INSERT INTO help_contents VALUES (249, 8, 8, 'TroubleTicketsDocuments.do', 'Modify', NULL, 'Modify Document Details', 'This page lets you modify the ticket information and update the details.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.827', 0, '2003-12-22 09:59:25.827', true);
+INSERT INTO help_contents VALUES (250, 8, 8, 'TroubleTicketsDocuments.do', 'AddVersion', NULL, 'Add version number to Documents', 'You can upload a new version of an existing document.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.839', 0, '2003-12-22 09:59:25.839', true);
+INSERT INTO help_contents VALUES (251, 8, 8, 'TroubleTickets.do', 'Home', NULL, 'Overview', 'This page displays the complete list of the tickets assigned to the user, the list of the tickets present in his department and finally the list of the tickets created by the user. For each ticket, the details about the ticket, such as the ticket number, priority, age of the ticket, the company and finally the assignment details are displayed. The issue details are also shown separately for each ticket.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.848', 0, '2003-12-22 09:59:25.848', true);
+INSERT INTO help_contents VALUES (252, 15, 15, 'CompanyDirectory.do', 'ListEmployees', NULL, 'Overview', 'The details of each employee can be viewed, modified or deleted and a new detailed employee record can be added.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.894', 0, '2003-12-22 09:59:25.894', true);
+INSERT INTO help_contents VALUES (253, 15, 15, 'CompanyDirectory.do', 'EmployeeDetails', NULL, 'Employee Details ', 'This is the employee detail page. This page displays the email, phone number, addresses and additional details of each employee.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.95', 0, '2003-12-22 09:59:25.95', true);
+INSERT INTO help_contents VALUES (254, 15, 15, 'CompanyDirectory.do', 'Prepare', NULL, 'Add an Employee', 'You can add an employee into the system. The details of the employee such as his email address; phone numbers, address and other additional details can be given along with his name', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.959', 0, '2003-12-22 09:59:25.959', true);
+INSERT INTO help_contents VALUES (255, 15, 15, 'CompanyDirectory.do', 'ModifyEmployee', NULL, 'Modify Employee Details ', 'Employee details such as the name of the employee, email address, phone numbers and address can be modified here.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.973', 0, '2003-12-22 09:59:25.973', true);
+INSERT INTO help_contents VALUES (256, 15, 15, 'CompanyDirectory.do', 'Save', NULL, NULL, 'This page shows the details of the employee record, which can be modified or deleted.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.982', 0, '2003-12-22 09:59:25.982', true);
 INSERT INTO help_contents VALUES (257, 14, 14, 'Reports.do', 'ViewQueue', NULL, 'Overview', 'This is the home of the reports. 
 
-A list of customized reports can be viewed and the queue of the reports that are scheduled to be processed by the server are also displayed. Each report that is ready to be retrieved is displayed along with its details such as the subject of the report, the date when the report was generated, report status and finally the size of the report for the user to download.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.196', 0, '2003-12-22 09:08:05.196', true);
-INSERT INTO help_contents VALUES (258, 14, 14, 'Reports.do', 'RunReport', NULL, 'List of Modules', 'This shows the different modules present and displays the list of corresponding reports present in each module.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.261', 0, '2003-12-22 09:08:05.261', true);
-INSERT INTO help_contents VALUES (259, 14, 14, 'Reports.do ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.27', 0, '2003-12-22 09:08:05.27', true);
-INSERT INTO help_contents VALUES (260, 14, 14, 'Reports.do', 'CancelReport', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.275', 0, '2003-12-22 09:08:05.275', true);
-INSERT INTO help_contents VALUES (261, 14, 14, 'Reports.do', 'ParameterList', NULL, 'Parameters specification', 'This page takes the parameters that need to be specified to run the report.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.28', 0, '2003-12-22 09:08:05.28', true);
-INSERT INTO help_contents VALUES (262, 14, 14, 'Reports.do', 'ListReports', NULL, 'Lis of Reports', 'In this module, you can choose the report that you want to run from the list of the reports.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.293', 0, '2003-12-22 09:08:05.293', true);
-INSERT INTO help_contents VALUES (263, 14, 14, 'Reports.do', 'CriteriaList', NULL, 'Criteria List ', 'You can choose to base this report on previously saved criteria, or continue and create new criteria.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.301', 0, '2003-12-22 09:08:05.301', true);
-INSERT INTO help_contents VALUES (264, 14, 14, 'Reports.do', 'GenerateReport', NULL, 'Reports Added To Queue', 'This page shows that the requested report is added to the queue. Also lets you know the details about the report and queue status.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.31', 0, '2003-12-22 09:08:05.31', true);
+A list of customized reports can be viewed and the queue of the reports that are scheduled to be processed by the server are also displayed. Each report that is ready to be retrieved is displayed along with its details such as the subject of the report, the date when the report was generated, report status and finally the size of the report for the user to download.', NULL, NULL, NULL, 0, '2003-12-22 09:59:25.996', 0, '2003-12-22 09:59:25.996', true);
+INSERT INTO help_contents VALUES (258, 14, 14, 'Reports.do', 'RunReport', NULL, 'List of Modules', 'This shows the different modules present and displays the list of corresponding reports present in each module.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.054', 0, '2003-12-22 09:59:26.054', true);
+INSERT INTO help_contents VALUES (259, 14, 14, 'Reports.do ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.063', 0, '2003-12-22 09:59:26.063', true);
+INSERT INTO help_contents VALUES (260, 14, 14, 'Reports.do', 'CancelReport', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.068', 0, '2003-12-22 09:59:26.068', true);
+INSERT INTO help_contents VALUES (261, 14, 14, 'Reports.do', 'ParameterList', NULL, 'Parameters specification', 'This page takes the parameters that need to be specified to run the report.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.073', 0, '2003-12-22 09:59:26.073', true);
+INSERT INTO help_contents VALUES (262, 14, 14, 'Reports.do', 'ListReports', NULL, 'Lis of Reports', 'In this module, you can choose the report that you want to run from the list of the reports.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.085', 0, '2003-12-22 09:59:26.085', true);
+INSERT INTO help_contents VALUES (263, 14, 14, 'Reports.do', 'CriteriaList', NULL, 'Criteria List ', 'You can choose to base this report on previously saved criteria, or continue and create new criteria.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.094', 0, '2003-12-22 09:59:26.094', true);
+INSERT INTO help_contents VALUES (264, 14, 14, 'Reports.do', 'GenerateReport', NULL, 'Reports Added To Queue', 'This page shows that the requested report is added to the queue. Also lets you know the details about the report and queue status.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.104', 0, '2003-12-22 09:59:26.104', true);
 INSERT INTO help_contents VALUES (265, 14, 14, 'Reports.do', NULL, NULL, 'Overview', '
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.319', 0, '2003-12-22 09:08:05.319', true);
-INSERT INTO help_contents VALUES (266, 9, 9, 'Users.do', 'ListUsers', NULL, 'List of Users', 'This section allows the administrator to view and add users and manage user hierarchies. The users are typically employees in your company who interact with your clients or customers.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.34', 0, '2003-12-22 09:08:05.34', true);
-INSERT INTO help_contents VALUES (267, 9, 9, 'Users.do', 'InsertUserForm', NULL, 'Adding a New User', 'This form allows new users to be added to the system and records their contact information.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.413', 0, '2003-12-22 09:08:05.413', true);
-INSERT INTO help_contents VALUES (268, 9, 9, 'Users.do', 'ModifyUser', NULL, 'Modify User Details', 'This form provides the administrator with an editable view of the user information, and also allows the administrator to view the users login history and view points.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.443', 0, '2003-12-22 09:08:05.443', true);
-INSERT INTO help_contents VALUES (269, 9, 9, 'Users.do', 'ViewLog', NULL, 'User Login History', 'Provides a login history of the chosen user.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.464', 0, '2003-12-22 09:08:05.464', true);
-INSERT INTO help_contents VALUES (270, 9, 9, 'Viewpoints.do', 'ListViewpoints', NULL, 'Viewpoints of User', 'The page displays the viewpoints of the employees regarding a particular module in the system. Lets you add a new viewpoint. The details displayed are when the viewpoint was entered and whether it is enabled or not.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.477', 0, '2003-12-22 09:08:05.477', true);
-INSERT INTO help_contents VALUES (271, 9, 9, 'Viewpoints.do', 'InsertViewpointForm', NULL, 'Add Viewpoint', 'The contact name can be selected and the permissions /access for the modules can be given.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.493', 0, '2003-12-22 09:08:05.493', true);
-INSERT INTO help_contents VALUES (272, 9, 9, 'Viewpoints.do', 'ViewpointDetails', NULL, 'Update Viewpoint ', 'You can update a viewpoint and set the permissions to access different modules.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.508', 0, '2003-12-22 09:08:05.508', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.112', 0, '2003-12-22 09:59:26.112', true);
+INSERT INTO help_contents VALUES (266, 9, 9, 'Users.do', 'ListUsers', NULL, 'List of Users', 'This section allows the administrator to view and add users and manage user hierarchies. The users are typically employees in your company who interact with your clients or customers.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.176', 0, '2003-12-22 09:59:26.176', true);
+INSERT INTO help_contents VALUES (267, 9, 9, 'Users.do', 'InsertUserForm', NULL, 'Adding a New User', 'This form allows new users to be added to the system and records their contact information.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.207', 0, '2003-12-22 09:59:26.207', true);
+INSERT INTO help_contents VALUES (268, 9, 9, 'Users.do', 'ModifyUser', NULL, 'Modify User Details', 'This form provides the administrator with an editable view of the user information, and also allows the administrator to view the users login history and view points.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.238', 0, '2003-12-22 09:59:26.238', true);
+INSERT INTO help_contents VALUES (269, 9, 9, 'Users.do', 'ViewLog', NULL, 'User Login History', 'Provides a login history of the chosen user.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.258', 0, '2003-12-22 09:59:26.258', true);
+INSERT INTO help_contents VALUES (270, 9, 9, 'Viewpoints.do', 'ListViewpoints', NULL, 'Viewpoints of User', 'The page displays the viewpoints of the employees regarding a particular module in the system. Lets you add a new viewpoint. The details displayed are when the viewpoint was entered and whether it is enabled or not.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.271', 0, '2003-12-22 09:59:26.271', true);
+INSERT INTO help_contents VALUES (271, 9, 9, 'Viewpoints.do', 'InsertViewpointForm', NULL, 'Add Viewpoint', 'The contact name can be selected and the permissions /access for the modules can be given.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.287', 0, '2003-12-22 09:59:26.287', true);
+INSERT INTO help_contents VALUES (272, 9, 9, 'Viewpoints.do', 'ViewpointDetails', NULL, 'Update Viewpoint ', 'You can update a viewpoint and set the permissions to access different modules.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.303', 0, '2003-12-22 09:59:26.303', true);
 INSERT INTO help_contents VALUES (273, 9, 9, 'Roles.do', 'ListRoles', NULL, 'List of Roles', 'You are looking at roles. 
 
-This page lists the different roles present in the system, their role descriptions and the number of people present in the system who are assigned that role. New roles can be added at any time.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.525', 0, '2003-12-22 09:08:05.525', true);
-INSERT INTO help_contents VALUES (274, 9, 9, 'Roles.do', 'InsertRoleForm', NULL, 'Add a New Role', 'This page will let you Add/Update the roles in the system. Also lets you change the permissions. The permissions can be changed or set for each module separately depending on the role.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.54', 0, '2003-12-22 09:08:05.54', true);
-INSERT INTO help_contents VALUES (275, 9, 9, 'Roles.do', 'RoleDetails', NULL, 'Update Role ', 'This page will let you update the roles in the system. Also lets you change the permissions. The permissions can be changed or set for each module separately depending on the role.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.549', 0, '2003-12-22 09:08:05.549', true);
-INSERT INTO help_contents VALUES (276, 9, 9, 'Admin.do', 'Config', NULL, 'Configure Modules', 'This page lets you configure modules that meet the needs of your organization, including configuration of lookup lists and custom fields. Depending on permissions, each module that you can configure is listed and each module has a different number of configure options. The changes typically affect all users immediately.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.558', 0, '2003-12-22 09:08:05.558', true);
-INSERT INTO help_contents VALUES (277, 9, 9, 'Admin.do', 'ConfigDetails', NULL, 'Configuration Options ', 'You can configure different options in each module.The following are some of the configuration options that you might see in the modules. Some of these options are specific to the module so they might NOT be present in all the modules.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.572', 0, '2003-12-22 09:08:05.572', true);
-INSERT INTO help_contents VALUES (278, 9, 9, 'Admin.do', 'ModifyList', NULL, 'Edit Lookup List ', 'This page lets you edit and add to the list items.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.595', 0, '2003-12-22 09:08:05.595', true);
-INSERT INTO help_contents VALUES (279, 9, 9, 'AdminFieldsFolder.do', 'AddFolder', NULL, 'Adding a New Folder', 'Add/Update the existing folder here', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.608', 0, '2003-12-22 09:08:05.608', true);
-INSERT INTO help_contents VALUES (280, 9, 9, 'AdminFieldsFolder.do', 'ModifyFolder', NULL, 'Modify Existing Folder', 'Update the existing folder here', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.617', 0, '2003-12-22 09:08:05.617', true);
-INSERT INTO help_contents VALUES (281, 9, 9, 'AdminConfig.do', 'ListGlobalParams', NULL, 'Configure System', 'You can configure the system for the session idle timeout and set the time for the time out.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.629', 0, '2003-12-22 09:08:05.629', true);
+This page lists the different roles present in the system, their role descriptions and the number of people present in the system who are assigned that role. New roles can be added at any time.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.319', 0, '2003-12-22 09:59:26.319', true);
+INSERT INTO help_contents VALUES (274, 9, 9, 'Roles.do', 'InsertRoleForm', NULL, 'Add a New Role', 'This page will let you Add/Update the roles in the system. Also lets you change the permissions. The permissions can be changed or set for each module separately depending on the role.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.335', 0, '2003-12-22 09:59:26.335', true);
+INSERT INTO help_contents VALUES (275, 9, 9, 'Roles.do', 'RoleDetails', NULL, 'Update Role ', 'This page will let you update the roles in the system. Also lets you change the permissions. The permissions can be changed or set for each module separately depending on the role.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.344', 0, '2003-12-22 09:59:26.344', true);
+INSERT INTO help_contents VALUES (276, 9, 9, 'Admin.do', 'Config', NULL, 'Configure Modules', 'This page lets you configure modules that meet the needs of your organization, including configuration of lookup lists and custom fields. Depending on permissions, each module that you can configure is listed and each module has a different number of configure options. The changes typically affect all users immediately.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.353', 0, '2003-12-22 09:59:26.353', true);
+INSERT INTO help_contents VALUES (277, 9, 9, 'Admin.do', 'ConfigDetails', NULL, 'Configuration Options ', 'You can configure different options in each module.The following are some of the configuration options that you might see in the modules. Some of these options are specific to the module so they might NOT be present in all the modules.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.371', 0, '2003-12-22 09:59:26.371', true);
+INSERT INTO help_contents VALUES (278, 9, 9, 'Admin.do', 'ModifyList', NULL, 'Edit Lookup List ', 'This page lets you edit and add to the list items.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.399', 0, '2003-12-22 09:59:26.399', true);
+INSERT INTO help_contents VALUES (279, 9, 9, 'AdminFieldsFolder.do', 'AddFolder', NULL, 'Adding a New Folder', 'Add/Update the existing folder here', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.412', 0, '2003-12-22 09:59:26.412', true);
+INSERT INTO help_contents VALUES (280, 9, 9, 'AdminFieldsFolder.do', 'ModifyFolder', NULL, 'Modify Existing Folder', 'Update the existing folder here', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.42', 0, '2003-12-22 09:59:26.42', true);
+INSERT INTO help_contents VALUES (281, 9, 9, 'AdminConfig.do', 'ListGlobalParams', NULL, 'Configure System', 'You can configure the system for the session idle timeout and set the time for the time out.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.432', 0, '2003-12-22 09:59:26.432', true);
 INSERT INTO help_contents VALUES (282, 9, 9, 'AdminConfig.do', 'ModifyTimeout', NULL, 'Modify Timeout ', 'The session timeout is the time in which a user will automatically be logged out if the specified period of inactivity is reached.
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.639', 0, '2003-12-22 09:08:05.639', true);
-INSERT INTO help_contents VALUES (283, 9, 9, 'Admin.do', 'Usage', NULL, 'Resource Usage Details', 'Current System Usage and Billing Usage Information are displayed.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.647', 0, '2003-12-22 09:08:05.647', true);
-INSERT INTO help_contents VALUES (284, 9, 9, 'Admin.do ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.663', 0, '2003-12-22 09:08:05.663', true);
-INSERT INTO help_contents VALUES (285, 9, 9, 'Users.do', 'DisableUserConfirm', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.668', 0, '2003-12-22 09:08:05.668', true);
-INSERT INTO help_contents VALUES (286, 9, 9, 'AdminFieldsFolder.do', NULL, NULL, 'Custom Folders ', 'This page lists all the custom folders created in the General Contacts; let''s you edit them and also allow you to enable/disable the folders.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.673', 0, '2003-12-22 09:08:05.673', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.441', 0, '2003-12-22 09:59:26.441', true);
+INSERT INTO help_contents VALUES (283, 9, 9, 'Admin.do', 'Usage', NULL, 'Resource Usage Details', 'Current System Usage and Billing Usage Information are displayed.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.449', 0, '2003-12-22 09:59:26.449', true);
+INSERT INTO help_contents VALUES (284, 9, 9, 'Admin.do ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.465', 0, '2003-12-22 09:59:26.465', true);
+INSERT INTO help_contents VALUES (285, 9, 9, 'Users.do', 'DisableUserConfirm', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.47', 0, '2003-12-22 09:59:26.47', true);
+INSERT INTO help_contents VALUES (286, 9, 9, 'AdminFieldsFolder.do', NULL, NULL, 'Custom Folders ', 'This page lists all the custom folders created in the General Contacts; let''s you edit them and also allow you to enable/disable the folders.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.475', 0, '2003-12-22 09:59:26.475', true);
 INSERT INTO help_contents VALUES (287, 9, 9, 'AdminFieldsFolder.do', 'ListFolders', NULL, 'List of Custom Folders ', 'This page lists all the custom folders created in the General Contacts; let''s you edit them and also allow you to enable/disable the folders.
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.701', 0, '2003-12-22 09:08:05.701', true);
-INSERT INTO help_contents VALUES (288, 9, 9, 'AdminFields.do', 'ModifyField', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.725', 0, '2003-12-22 09:08:05.725', true);
-INSERT INTO help_contents VALUES (289, 9, 9, 'Admin.do', 'ListGlobalParams', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.73', 0, '2003-12-22 09:08:05.73', true);
-INSERT INTO help_contents VALUES (290, 9, 9, 'Admin.do', 'ModifyTimeout', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.735', 0, '2003-12-22 09:08:05.735', true);
-INSERT INTO help_contents VALUES (291, 9, 9, 'AdminObjectEvents.do', NULL, NULL, 'Object Events:', 'The list of Object Events are displayed along with the corresponding Triggered Processes. The number of components and whether that Object Event is available or not is also shown.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.74', 0, '2003-12-22 09:08:05.74', true);
-INSERT INTO help_contents VALUES (292, 9, 9, 'AdminFieldsGroup.do', 'AddGroup', NULL, NULL, 'Add a group', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.755', 0, '2003-12-22 09:08:05.755', true);
-INSERT INTO help_contents VALUES (293, 9, 9, 'AdminFields.do', 'AddField', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.766', 0, '2003-12-22 09:08:05.766', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.503', 0, '2003-12-22 09:59:26.503', true);
+INSERT INTO help_contents VALUES (288, 9, 9, 'AdminFields.do', 'ModifyField', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.526', 0, '2003-12-22 09:59:26.526', true);
+INSERT INTO help_contents VALUES (289, 9, 9, 'Admin.do', 'ListGlobalParams', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.531', 0, '2003-12-22 09:59:26.531', true);
+INSERT INTO help_contents VALUES (290, 9, 9, 'Admin.do', 'ModifyTimeout', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.536', 0, '2003-12-22 09:59:26.536', true);
+INSERT INTO help_contents VALUES (291, 9, 9, 'AdminObjectEvents.do', NULL, NULL, 'Object Events:', 'The list of Object Events are displayed along with the corresponding Triggered Processes. The number of components and whether that Object Event is available or not is also shown.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.541', 0, '2003-12-22 09:59:26.541', true);
+INSERT INTO help_contents VALUES (292, 9, 9, 'AdminFieldsGroup.do', 'AddGroup', NULL, NULL, 'Add a group', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.557', 0, '2003-12-22 09:59:26.557', true);
+INSERT INTO help_contents VALUES (293, 9, 9, 'AdminFields.do', 'AddField', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.566', 0, '2003-12-22 09:59:26.566', true);
 INSERT INTO help_contents VALUES (294, 9, 9, 'Admin.do', 'UpdateList', NULL, NULL, 'The Lookup List displays all the list names, which can be edited, the number of items can be known and the ones present can be previewed.
 
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.771', 0, '2003-12-22 09:08:05.771', true);
-INSERT INTO help_contents VALUES (295, 9, 9, 'AdminScheduledEvents.do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.783', 0, '2003-12-22 09:08:05.783', true);
-INSERT INTO help_contents VALUES (296, 9, 9, 'Admin.do', 'Config ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.788', 0, '2003-12-22 09:08:05.788', true);
-INSERT INTO help_contents VALUES (297, 9, 9, 'Admin.do', 'EditLists', NULL, 'Lookup Lists ', 'The Lookup List displays all the list names, which can be edited, the number of items is displayed and the ones present can be previewed.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.793', 0, '2003-12-22 09:08:05.793', true);
-INSERT INTO help_contents VALUES (298, 9, 9, 'AdminFieldsGroup.do', 'ListGroups', NULL, 'Folder Details', 'This page lists the folder details and the groups added to this folder. Each group can further have a custom field created or deleted. You can also place it in the desired position in the dropdown list.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.807', 0, '2003-12-22 09:08:05.807', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.571', 0, '2003-12-22 09:59:26.571', true);
+INSERT INTO help_contents VALUES (295, 9, 9, 'AdminScheduledEvents.do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.585', 0, '2003-12-22 09:59:26.585', true);
+INSERT INTO help_contents VALUES (296, 9, 9, 'Admin.do', 'Config ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.589', 0, '2003-12-22 09:59:26.589', true);
+INSERT INTO help_contents VALUES (297, 9, 9, 'Admin.do', 'EditLists', NULL, 'Lookup Lists ', 'The Lookup List displays all the list names, which can be edited, the number of items is displayed and the ones present can be previewed.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.595', 0, '2003-12-22 09:59:26.595', true);
+INSERT INTO help_contents VALUES (298, 9, 9, 'AdminFieldsGroup.do', 'ListGroups', NULL, 'Folder Details', 'This page lists the folder details and the groups added to this folder. Each group can further have a custom field created or deleted. You can also place it in the desired position in the dropdown list.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.608', 0, '2003-12-22 09:59:26.608', true);
 INSERT INTO help_contents VALUES (299, 9, 9, 'AdminCategories.do', 'ViewActive', NULL, 'Active Category Details', 'The four different levels for the "Active" and "Draft" categories are displayed. The level1 has the category name, which is further classified into sub directories/levels. The level1 has the sublevel called level2 which in turn has sublevel called level3 and so on.
 
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.839', 0, '2003-12-22 09:08:05.839', true);
-INSERT INTO help_contents VALUES (300, 9, 9, 'AdminCategories.do', 'View', NULL, 'Draft Category Details', 'The four different levels for the active and the draft categories are displayed. The level1 has the category name, which is further classified into sub directories/levels. The level1 has the sublevel called level2 which in turn has sublevel called level3 and so on. The draft categories can be edited and activated. The activated draft categories would be then reflected in the Active Categories list. The modified/updated draft category can also be reverted to its original state.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.851', 0, '2003-12-22 09:08:05.851', true);
-INSERT INTO help_contents VALUES (301, 9, 9, 'Users.do', 'InsertUserForm ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.875', 0, '2003-12-22 09:08:05.875', true);
-INSERT INTO help_contents VALUES (302, 9, 9, 'Users.do', 'UpdateUser', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.88', 0, '2003-12-22 09:08:05.88', true);
-INSERT INTO help_contents VALUES (303, 9, 9, 'Users.do', 'AddUser', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.885', 0, '2003-12-22 09:08:05.885', true);
-INSERT INTO help_contents VALUES (304, 9, 9, 'Users.do', 'UserDetails', NULL, 'User Details', 'This form provides the administrator with more information about the user, namely information pertaining to the users login history and view points.', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.89', 0, '2003-12-22 09:08:05.89', true);
-INSERT INTO help_contents VALUES (305, 9, 9, 'Roles.do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.91', 0, '2003-12-22 09:08:05.91', true);
-INSERT INTO help_contents VALUES (306, 9, 9, 'Roles.do', 'ListRoles ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.915', 0, '2003-12-22 09:08:05.915', true);
-INSERT INTO help_contents VALUES (307, 9, 9, 'Viewpoints.do', 'InsertViewpoint ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.92', 0, '2003-12-22 09:08:05.92', true);
-INSERT INTO help_contents VALUES (308, 9, 9, 'Viewpoints.do', 'InsertViewpoint', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:05.925', 0, '2003-12-22 09:08:05.925', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.64', 0, '2003-12-22 09:59:26.64', true);
+INSERT INTO help_contents VALUES (300, 9, 9, 'AdminCategories.do', 'View', NULL, 'Draft Category Details', 'The four different levels for the active and the draft categories are displayed. The level1 has the category name, which is further classified into sub directories/levels. The level1 has the sublevel called level2 which in turn has sublevel called level3 and so on. The draft categories can be edited and activated. The activated draft categories would be then reflected in the Active Categories list. The modified/updated draft category can also be reverted to its original state.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.653', 0, '2003-12-22 09:59:26.653', true);
+INSERT INTO help_contents VALUES (301, 9, 9, 'Users.do', 'InsertUserForm ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.676', 0, '2003-12-22 09:59:26.676', true);
+INSERT INTO help_contents VALUES (302, 9, 9, 'Users.do', 'UpdateUser', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.682', 0, '2003-12-22 09:59:26.682', true);
+INSERT INTO help_contents VALUES (303, 9, 9, 'Users.do', 'AddUser', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.687', 0, '2003-12-22 09:59:26.687', true);
+INSERT INTO help_contents VALUES (304, 9, 9, 'Users.do', 'UserDetails', NULL, 'User Details', 'This form provides the administrator with more information about the user, namely information pertaining to the users login history and view points.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.692', 0, '2003-12-22 09:59:26.692', true);
+INSERT INTO help_contents VALUES (305, 9, 9, 'Roles.do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.712', 0, '2003-12-22 09:59:26.712', true);
+INSERT INTO help_contents VALUES (306, 9, 9, 'Roles.do', 'ListRoles ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.717', 0, '2003-12-22 09:59:26.717', true);
+INSERT INTO help_contents VALUES (307, 9, 9, 'Viewpoints.do', 'InsertViewpoint ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.722', 0, '2003-12-22 09:59:26.722', true);
+INSERT INTO help_contents VALUES (308, 9, 9, 'Viewpoints.do', 'InsertViewpoint', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.727', 0, '2003-12-22 09:59:26.727', true);
 INSERT INTO help_contents VALUES (309, 9, 9, 'Admin.do', NULL, NULL, 'Overview', 'You are looking at the Admin module home page. Here you can manage the system by reviewing its usage, configuring specific modules and system parameters. 
-', NULL, NULL, NULL, 0, '2003-12-22 09:08:05.93', 0, '2003-12-22 09:08:05.93', true);
-INSERT INTO help_contents VALUES (310, 11, 11, 'Search.do', 'SiteSearch ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:08:06.101', 0, '2003-12-22 09:08:06.101', true);
-INSERT INTO help_contents VALUES (311, 11, 11, 'Search.do', 'SiteSearch', NULL, 'General Search', 'You can search the system for data associated with a particular key term. This can be done using the search data text box present on the left side of the window. The data associated with the corresponding key term is looked for in different modules for a match and the results are displayed per module. The search results are shown with detail description.', NULL, NULL, NULL, 0, '2003-12-22 09:08:06.107', 0, '2003-12-22 09:08:06.107', true);
+', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.732', 0, '2003-12-22 09:59:26.732', true);
+INSERT INTO help_contents VALUES (310, 11, 11, 'Search.do', 'SiteSearch ', NULL, NULL, NULL, NULL, NULL, NULL, 0, '2003-12-22 09:59:26.85', 0, '2003-12-22 09:59:26.85', true);
+INSERT INTO help_contents VALUES (311, 11, 11, 'Search.do', 'SiteSearch', NULL, 'General Search', 'You can search the system for data associated with a particular key term. This can be done using the search data text box present on the left side of the window. The data associated with the corresponding key term is looked for in different modules for a match and the results are displayed per module. The search results are shown with detail description.', NULL, NULL, NULL, 0, '2003-12-22 09:59:26.857', 0, '2003-12-22 09:59:26.857', true);
 
 
 --
--- Data for TOC entry 646 (OID 127709)
+-- Data for TOC entry 646 (OID 132833)
 -- Name: help_tableof_contents; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO help_tableof_contents VALUES (1, 'Modules', NULL, NULL, NULL, NULL, 1, 5, 0, '2003-12-22 09:08:06.137', 0, '2003-12-22 09:08:06.137', true);
-INSERT INTO help_tableof_contents VALUES (2, 'My Home Page', NULL, NULL, 1, 12, 2, 5, 0, '2003-12-22 09:08:06.199', 0, '2003-12-22 09:08:06.199', true);
-INSERT INTO help_tableof_contents VALUES (3, 'Overview', NULL, NULL, 2, 12, 3, 5, 0, '2003-12-22 09:08:06.207', 0, '2003-12-22 09:08:06.207', true);
-INSERT INTO help_tableof_contents VALUES (4, 'Mailbox', NULL, NULL, 2, 12, 3, 10, 0, '2003-12-22 09:08:06.225', 0, '2003-12-22 09:08:06.225', true);
-INSERT INTO help_tableof_contents VALUES (5, 'Message Details', NULL, NULL, 4, 12, 4, 15, 0, '2003-12-22 09:08:06.234', 0, '2003-12-22 09:08:06.234', true);
-INSERT INTO help_tableof_contents VALUES (6, 'New Message ', NULL, NULL, 4, 12, 4, 20, 0, '2003-12-22 09:08:06.246', 0, '2003-12-22 09:08:06.246', true);
-INSERT INTO help_tableof_contents VALUES (7, 'Reply Message', NULL, NULL, 4, 12, 4, 25, 0, '2003-12-22 09:08:06.255', 0, '2003-12-22 09:08:06.255', true);
-INSERT INTO help_tableof_contents VALUES (8, 'SendMessage', NULL, NULL, 4, 12, 4, 30, 0, '2003-12-22 09:08:06.264', 0, '2003-12-22 09:08:06.264', true);
-INSERT INTO help_tableof_contents VALUES (9, 'Forward message', NULL, NULL, 4, 12, 4, 35, 0, '2003-12-22 09:08:06.272', 0, '2003-12-22 09:08:06.272', true);
-INSERT INTO help_tableof_contents VALUES (10, 'Tasks', NULL, NULL, 2, 12, 3, 40, 0, '2003-12-22 09:08:06.28', 0, '2003-12-22 09:08:06.28', true);
-INSERT INTO help_tableof_contents VALUES (11, 'Advanced Task', NULL, NULL, 10, 12, 4, 45, 0, '2003-12-22 09:08:06.29', 0, '2003-12-22 09:08:06.29', true);
-INSERT INTO help_tableof_contents VALUES (12, 'Forwarding a Task ', NULL, NULL, 10, 12, 4, 50, 0, '2003-12-22 09:08:06.298', 0, '2003-12-22 09:08:06.298', true);
-INSERT INTO help_tableof_contents VALUES (13, 'Modify task', NULL, NULL, 10, 12, 4, 55, 0, '2003-12-22 09:08:06.307', 0, '2003-12-22 09:08:06.307', true);
-INSERT INTO help_tableof_contents VALUES (14, 'Action Lists', NULL, NULL, 2, 12, 3, 60, 0, '2003-12-22 09:08:06.315', 0, '2003-12-22 09:08:06.315', true);
-INSERT INTO help_tableof_contents VALUES (15, 'Action Contacts', NULL, NULL, 14, 12, 4, 65, 0, '2003-12-22 09:08:06.324', 0, '2003-12-22 09:08:06.324', true);
-INSERT INTO help_tableof_contents VALUES (16, 'Add Action List', NULL, NULL, 14, 12, 4, 70, 0, '2003-12-22 09:08:06.332', 0, '2003-12-22 09:08:06.332', true);
-INSERT INTO help_tableof_contents VALUES (17, 'Modify Action', NULL, NULL, 14, 12, 4, 75, 0, '2003-12-22 09:08:06.341', 0, '2003-12-22 09:08:06.341', true);
-INSERT INTO help_tableof_contents VALUES (18, 'Re-assignments', NULL, NULL, 2, 12, 3, 80, 0, '2003-12-22 09:08:06.349', 0, '2003-12-22 09:08:06.349', true);
-INSERT INTO help_tableof_contents VALUES (19, 'My Settings', NULL, NULL, 2, 12, 3, 85, 0, '2003-12-22 09:08:06.358', 0, '2003-12-22 09:08:06.358', true);
-INSERT INTO help_tableof_contents VALUES (20, 'Personal Information ', NULL, NULL, 19, 12, 4, 90, 0, '2003-12-22 09:08:06.367', 0, '2003-12-22 09:08:06.367', true);
-INSERT INTO help_tableof_contents VALUES (21, 'Location Settings', NULL, NULL, 19, 12, 4, 95, 0, '2003-12-22 09:08:06.375', 0, '2003-12-22 09:08:06.375', true);
-INSERT INTO help_tableof_contents VALUES (22, 'Update password', NULL, NULL, 19, 12, 4, 100, 0, '2003-12-22 09:08:06.384', 0, '2003-12-22 09:08:06.384', true);
-INSERT INTO help_tableof_contents VALUES (23, 'Contacts', NULL, NULL, 1, 2, 2, 10, 0, '2003-12-22 09:08:06.392', 0, '2003-12-22 09:08:06.392', true);
-INSERT INTO help_tableof_contents VALUES (24, 'Add a Contact', NULL, NULL, 23, 2, 3, 5, 0, '2003-12-22 09:08:06.397', 0, '2003-12-22 09:08:06.397', true);
-INSERT INTO help_tableof_contents VALUES (25, 'Search Contacts ', NULL, NULL, 23, 2, 3, 10, 0, '2003-12-22 09:08:06.405', 0, '2003-12-22 09:08:06.405', true);
-INSERT INTO help_tableof_contents VALUES (26, 'Export Data ', NULL, NULL, 23, 2, 3, 15, 0, '2003-12-22 09:08:06.414', 0, '2003-12-22 09:08:06.414', true);
-INSERT INTO help_tableof_contents VALUES (27, 'Exporting data', NULL, NULL, 23, 2, 3, 20, 0, '2003-12-22 09:08:06.424', 0, '2003-12-22 09:08:06.424', true);
-INSERT INTO help_tableof_contents VALUES (28, 'Pipeline', NULL, NULL, 1, 4, 2, 15, 0, '2003-12-22 09:08:06.432', 0, '2003-12-22 09:08:06.432', true);
-INSERT INTO help_tableof_contents VALUES (29, 'Overview', NULL, NULL, 28, 4, 3, 5, 0, '2003-12-22 09:08:06.437', 0, '2003-12-22 09:08:06.437', true);
-INSERT INTO help_tableof_contents VALUES (30, 'Add a Opportunity', NULL, NULL, 28, 4, 3, 10, 0, '2003-12-22 09:08:06.446', 0, '2003-12-22 09:08:06.446', true);
-INSERT INTO help_tableof_contents VALUES (31, 'Search Opportunities ', NULL, NULL, 28, 4, 3, 15, 0, '2003-12-22 09:08:06.457', 0, '2003-12-22 09:08:06.457', true);
-INSERT INTO help_tableof_contents VALUES (32, 'Export Data', NULL, NULL, 28, 4, 3, 20, 0, '2003-12-22 09:08:06.466', 0, '2003-12-22 09:08:06.466', true);
-INSERT INTO help_tableof_contents VALUES (33, 'Accounts', NULL, NULL, 1, 1, 2, 20, 0, '2003-12-22 09:08:06.475', 0, '2003-12-22 09:08:06.475', true);
-INSERT INTO help_tableof_contents VALUES (34, 'Overview', NULL, NULL, 33, 1, 3, 5, 0, '2003-12-22 09:08:06.479', 0, '2003-12-22 09:08:06.479', true);
-INSERT INTO help_tableof_contents VALUES (35, 'Add an Account', NULL, NULL, 33, 1, 3, 10, 0, '2003-12-22 09:08:06.489', 0, '2003-12-22 09:08:06.489', true);
-INSERT INTO help_tableof_contents VALUES (36, 'Modify Account', NULL, NULL, 33, 1, 3, 15, 0, '2003-12-22 09:08:06.497', 0, '2003-12-22 09:08:06.497', true);
-INSERT INTO help_tableof_contents VALUES (37, 'Contact Details', NULL, NULL, 36, 1, 4, 20, 0, '2003-12-22 09:08:06.506', 0, '2003-12-22 09:08:06.506', true);
-INSERT INTO help_tableof_contents VALUES (38, 'Folder Record Details', NULL, NULL, 36, 1, 4, 25, 0, '2003-12-22 09:08:06.514', 0, '2003-12-22 09:08:06.514', true);
-INSERT INTO help_tableof_contents VALUES (39, 'Opportunity Details', NULL, NULL, 36, 1, 4, 30, 0, '2003-12-22 09:08:06.523', 0, '2003-12-22 09:08:06.523', true);
-INSERT INTO help_tableof_contents VALUES (40, 'Revenue Details', NULL, NULL, 36, 1, 4, 35, 0, '2003-12-22 09:08:06.531', 0, '2003-12-22 09:08:06.531', true);
-INSERT INTO help_tableof_contents VALUES (41, 'Revenue Details', NULL, NULL, 40, 1, 5, 40, 0, '2003-12-22 09:08:06.539', 0, '2003-12-22 09:08:06.539', true);
-INSERT INTO help_tableof_contents VALUES (42, 'Add Revenue ', NULL, NULL, 40, 1, 5, 45, 0, '2003-12-22 09:08:06.548', 0, '2003-12-22 09:08:06.548', true);
-INSERT INTO help_tableof_contents VALUES (43, 'Modify Revenue ', NULL, NULL, 40, 1, 5, 50, 0, '2003-12-22 09:08:06.556', 0, '2003-12-22 09:08:06.556', true);
-INSERT INTO help_tableof_contents VALUES (44, 'Ticket Details', NULL, NULL, 36, 1, 4, 55, 0, '2003-12-22 09:08:06.565', 0, '2003-12-22 09:08:06.565', true);
-INSERT INTO help_tableof_contents VALUES (45, 'Document Details', NULL, NULL, 36, 1, 4, 60, 0, '2003-12-22 09:08:06.573', 0, '2003-12-22 09:08:06.573', true);
-INSERT INTO help_tableof_contents VALUES (46, 'Search Accounts ', NULL, NULL, 33, 1, 3, 65, 0, '2003-12-22 09:08:06.582', 0, '2003-12-22 09:08:06.582', true);
-INSERT INTO help_tableof_contents VALUES (47, 'Account Details', NULL, NULL, 33, 1, 3, 70, 0, '2003-12-22 09:08:06.59', 0, '2003-12-22 09:08:06.59', true);
-INSERT INTO help_tableof_contents VALUES (48, 'Revenue Dashboard ', NULL, NULL, 33, 1, 3, 75, 0, '2003-12-22 09:08:06.599', 0, '2003-12-22 09:08:06.599', true);
-INSERT INTO help_tableof_contents VALUES (49, 'Export Data ', NULL, NULL, 33, 1, 3, 80, 0, '2003-12-22 09:08:06.607', 0, '2003-12-22 09:08:06.607', true);
-INSERT INTO help_tableof_contents VALUES (50, 'Communications', NULL, NULL, 1, 6, 2, 25, 0, '2003-12-22 09:08:06.616', 0, '2003-12-22 09:08:06.616', true);
-INSERT INTO help_tableof_contents VALUES (51, 'Communications Dashboard ', NULL, NULL, 50, 6, 3, 5, 0, '2003-12-22 09:08:06.621', 0, '2003-12-22 09:08:06.621', true);
-INSERT INTO help_tableof_contents VALUES (52, 'Add a campaign', NULL, NULL, 50, 6, 3, 10, 0, '2003-12-22 09:08:06.63', 0, '2003-12-22 09:08:06.63', true);
-INSERT INTO help_tableof_contents VALUES (53, 'Campaign List ', NULL, NULL, 50, 6, 3, 15, 0, '2003-12-22 09:08:06.639', 0, '2003-12-22 09:08:06.639', true);
-INSERT INTO help_tableof_contents VALUES (54, 'View Groups ', NULL, NULL, 50, 6, 3, 20, 0, '2003-12-22 09:08:06.648', 0, '2003-12-22 09:08:06.648', true);
-INSERT INTO help_tableof_contents VALUES (55, 'Add a Group', NULL, NULL, 50, 6, 3, 25, 0, '2003-12-22 09:08:06.656', 0, '2003-12-22 09:08:06.656', true);
-INSERT INTO help_tableof_contents VALUES (56, 'Message List ', NULL, NULL, 50, 6, 3, 30, 0, '2003-12-22 09:08:06.665', 0, '2003-12-22 09:08:06.665', true);
-INSERT INTO help_tableof_contents VALUES (57, 'Adding a Message', NULL, NULL, 50, 6, 3, 35, 0, '2003-12-22 09:08:06.673', 0, '2003-12-22 09:08:06.673', true);
-INSERT INTO help_tableof_contents VALUES (58, 'Create Attachments ', NULL, NULL, 50, 6, 3, 40, 0, '2003-12-22 09:08:06.682', 0, '2003-12-22 09:08:06.682', true);
-INSERT INTO help_tableof_contents VALUES (59, 'Help Desk', NULL, NULL, 1, 8, 2, 30, 0, '2003-12-22 09:08:06.69', 0, '2003-12-22 09:08:06.69', true);
-INSERT INTO help_tableof_contents VALUES (60, 'Ticket Details ', NULL, NULL, 59, 8, 3, 5, 0, '2003-12-22 09:08:06.695', 0, '2003-12-22 09:08:06.695', true);
-INSERT INTO help_tableof_contents VALUES (61, 'Add a Ticket', NULL, NULL, 59, 8, 3, 10, 0, '2003-12-22 09:08:06.704', 0, '2003-12-22 09:08:06.704', true);
-INSERT INTO help_tableof_contents VALUES (62, 'Search Existing Tickets', NULL, NULL, 59, 8, 3, 15, 0, '2003-12-22 09:08:06.713', 0, '2003-12-22 09:08:06.713', true);
-INSERT INTO help_tableof_contents VALUES (63, 'Export Data ', NULL, NULL, 59, 8, 3, 20, 0, '2003-12-22 09:08:06.721', 0, '2003-12-22 09:08:06.721', true);
-INSERT INTO help_tableof_contents VALUES (64, 'Modify Ticket Details', NULL, NULL, 59, 8, 3, 25, 0, '2003-12-22 09:08:06.73', 0, '2003-12-22 09:08:06.73', true);
-INSERT INTO help_tableof_contents VALUES (65, 'Modify Ticket Details', NULL, NULL, 64, 8, 4, 30, 0, '2003-12-22 09:08:06.738', 0, '2003-12-22 09:08:06.738', true);
-INSERT INTO help_tableof_contents VALUES (66, 'List of Tasks', NULL, NULL, 64, 8, 4, 35, 0, '2003-12-22 09:08:06.746', 0, '2003-12-22 09:08:06.746', true);
-INSERT INTO help_tableof_contents VALUES (67, 'List of Documents ', NULL, NULL, 64, 8, 4, 40, 0, '2003-12-22 09:08:06.755', 0, '2003-12-22 09:08:06.755', true);
-INSERT INTO help_tableof_contents VALUES (68, 'List of Folder Records', NULL, NULL, 64, 8, 4, 45, 0, '2003-12-22 09:08:06.763', 0, '2003-12-22 09:08:06.763', true);
-INSERT INTO help_tableof_contents VALUES (69, 'Add Folder Record', NULL, NULL, 64, 8, 4, 50, 0, '2003-12-22 09:08:06.772', 0, '2003-12-22 09:08:06.772', true);
-INSERT INTO help_tableof_contents VALUES (70, 'Ticket Log History', NULL, NULL, 64, 8, 4, 55, 0, '2003-12-22 09:08:06.78', 0, '2003-12-22 09:08:06.78', true);
-INSERT INTO help_tableof_contents VALUES (71, 'Employees', NULL, NULL, 1, 15, 2, 35, 0, '2003-12-22 09:08:06.79', 0, '2003-12-22 09:08:06.79', true);
-INSERT INTO help_tableof_contents VALUES (72, 'Overview', NULL, NULL, 71, 15, 3, 5, 0, '2003-12-22 09:08:06.795', 0, '2003-12-22 09:08:06.795', true);
-INSERT INTO help_tableof_contents VALUES (73, 'Employee Details ', NULL, NULL, 71, 15, 3, 10, 0, '2003-12-22 09:08:06.803', 0, '2003-12-22 09:08:06.803', true);
-INSERT INTO help_tableof_contents VALUES (74, 'Add an Employee', NULL, NULL, 71, 15, 3, 15, 0, '2003-12-22 09:08:06.811', 0, '2003-12-22 09:08:06.811', true);
-INSERT INTO help_tableof_contents VALUES (75, 'Modify Employee Details ', NULL, NULL, 71, 15, 3, 20, 0, '2003-12-22 09:08:06.82', 0, '2003-12-22 09:08:06.82', true);
-INSERT INTO help_tableof_contents VALUES (76, 'Reports', NULL, NULL, 1, 14, 2, 40, 0, '2003-12-22 09:08:06.828', 0, '2003-12-22 09:08:06.828', true);
-INSERT INTO help_tableof_contents VALUES (77, 'Overview', NULL, NULL, 76, 14, 3, 5, 0, '2003-12-22 09:08:06.833', 0, '2003-12-22 09:08:06.833', true);
-INSERT INTO help_tableof_contents VALUES (78, 'List of Modules', NULL, NULL, 76, 14, 3, 10, 0, '2003-12-22 09:08:06.843', 0, '2003-12-22 09:08:06.843', true);
-INSERT INTO help_tableof_contents VALUES (79, 'Admin', NULL, NULL, 1, 9, 2, 45, 0, '2003-12-22 09:08:06.851', 0, '2003-12-22 09:08:06.851', true);
-INSERT INTO help_tableof_contents VALUES (80, 'List of Users', NULL, NULL, 79, 9, 3, 5, 0, '2003-12-22 09:08:06.857', 0, '2003-12-22 09:08:06.857', true);
-INSERT INTO help_tableof_contents VALUES (81, 'Adding a New User', NULL, NULL, 80, 9, 4, 10, 0, '2003-12-22 09:08:06.869', 0, '2003-12-22 09:08:06.869', true);
-INSERT INTO help_tableof_contents VALUES (82, 'Modify User Details', NULL, NULL, 80, 9, 4, 15, 0, '2003-12-22 09:08:06.877', 0, '2003-12-22 09:08:06.877', true);
-INSERT INTO help_tableof_contents VALUES (83, 'User Login History', NULL, NULL, 80, 9, 4, 20, 0, '2003-12-22 09:08:06.886', 0, '2003-12-22 09:08:06.886', true);
-INSERT INTO help_tableof_contents VALUES (84, 'Viewpoints of User', NULL, NULL, 80, 9, 4, 25, 0, '2003-12-22 09:08:06.896', 0, '2003-12-22 09:08:06.896', true);
-INSERT INTO help_tableof_contents VALUES (85, 'Add Viewpoint', NULL, NULL, 84, 9, 5, 30, 0, '2003-12-22 09:08:06.904', 0, '2003-12-22 09:08:06.904', true);
-INSERT INTO help_tableof_contents VALUES (86, 'Update Viewpoint ', NULL, NULL, 84, 9, 5, 35, 0, '2003-12-22 09:08:06.913', 0, '2003-12-22 09:08:06.913', true);
-INSERT INTO help_tableof_contents VALUES (87, 'List of Roles', NULL, NULL, 79, 9, 3, 40, 0, '2003-12-22 09:08:06.922', 0, '2003-12-22 09:08:06.922', true);
-INSERT INTO help_tableof_contents VALUES (88, 'Add a New Role', NULL, NULL, 87, 9, 4, 45, 0, '2003-12-22 09:08:06.93', 0, '2003-12-22 09:08:06.93', true);
-INSERT INTO help_tableof_contents VALUES (89, 'Update Role ', NULL, NULL, 87, 9, 4, 50, 0, '2003-12-22 09:08:06.939', 0, '2003-12-22 09:08:06.939', true);
-INSERT INTO help_tableof_contents VALUES (90, 'Configure Modules', NULL, NULL, 79, 9, 3, 55, 0, '2003-12-22 09:08:06.948', 0, '2003-12-22 09:08:06.948', true);
-INSERT INTO help_tableof_contents VALUES (91, 'Configuration Options ', NULL, NULL, 90, 9, 4, 60, 0, '2003-12-22 09:08:06.956', 0, '2003-12-22 09:08:06.956', true);
-INSERT INTO help_tableof_contents VALUES (92, 'Edit Lookup List ', NULL, NULL, 91, 9, 5, 65, 0, '2003-12-22 09:08:06.965', 0, '2003-12-22 09:08:06.965', true);
-INSERT INTO help_tableof_contents VALUES (93, 'Adding a New Folder', NULL, NULL, 91, 9, 5, 70, 0, '2003-12-22 09:08:06.974', 0, '2003-12-22 09:08:06.974', true);
-INSERT INTO help_tableof_contents VALUES (94, 'Modify Existing Folder', NULL, NULL, 91, 9, 5, 75, 0, '2003-12-22 09:08:06.982', 0, '2003-12-22 09:08:06.982', true);
-INSERT INTO help_tableof_contents VALUES (95, 'Configure System', NULL, NULL, 79, 9, 3, 80, 0, '2003-12-22 09:08:06.991', 0, '2003-12-22 09:08:06.991', true);
-INSERT INTO help_tableof_contents VALUES (96, 'Modify Timeout ', NULL, NULL, 95, 9, 4, 85, 0, '2003-12-22 09:08:07', 0, '2003-12-22 09:08:07', true);
-INSERT INTO help_tableof_contents VALUES (97, 'Resource Usage Details', NULL, NULL, 79, 9, 3, 90, 0, '2003-12-22 09:08:07.009', 0, '2003-12-22 09:08:07.009', true);
+INSERT INTO help_tableof_contents VALUES (1, 'Modules', NULL, NULL, NULL, NULL, 1, 5, 0, '2003-12-22 09:59:26.889', 0, '2003-12-22 09:59:26.889', true);
+INSERT INTO help_tableof_contents VALUES (2, 'My Home Page', NULL, NULL, 1, 12, 2, 5, 0, '2003-12-22 09:59:26.947', 0, '2003-12-22 09:59:26.947', true);
+INSERT INTO help_tableof_contents VALUES (3, 'Overview', NULL, NULL, 2, 12, 3, 5, 0, '2003-12-22 09:59:26.954', 0, '2003-12-22 09:59:26.954', true);
+INSERT INTO help_tableof_contents VALUES (4, 'Mailbox', NULL, NULL, 2, 12, 3, 10, 0, '2003-12-22 09:59:26.972', 0, '2003-12-22 09:59:26.972', true);
+INSERT INTO help_tableof_contents VALUES (5, 'Message Details', NULL, NULL, 4, 12, 4, 15, 0, '2003-12-22 09:59:26.981', 0, '2003-12-22 09:59:26.981', true);
+INSERT INTO help_tableof_contents VALUES (6, 'New Message ', NULL, NULL, 4, 12, 4, 20, 0, '2003-12-22 09:59:26.99', 0, '2003-12-22 09:59:26.99', true);
+INSERT INTO help_tableof_contents VALUES (7, 'Reply Message', NULL, NULL, 4, 12, 4, 25, 0, '2003-12-22 09:59:26.998', 0, '2003-12-22 09:59:26.998', true);
+INSERT INTO help_tableof_contents VALUES (8, 'SendMessage', NULL, NULL, 4, 12, 4, 30, 0, '2003-12-22 09:59:27.007', 0, '2003-12-22 09:59:27.007', true);
+INSERT INTO help_tableof_contents VALUES (9, 'Forward message', NULL, NULL, 4, 12, 4, 35, 0, '2003-12-22 09:59:27.015', 0, '2003-12-22 09:59:27.015', true);
+INSERT INTO help_tableof_contents VALUES (10, 'Tasks', NULL, NULL, 2, 12, 3, 40, 0, '2003-12-22 09:59:27.024', 0, '2003-12-22 09:59:27.024', true);
+INSERT INTO help_tableof_contents VALUES (11, 'Advanced Task', NULL, NULL, 10, 12, 4, 45, 0, '2003-12-22 09:59:27.032', 0, '2003-12-22 09:59:27.032', true);
+INSERT INTO help_tableof_contents VALUES (12, 'Forwarding a Task ', NULL, NULL, 10, 12, 4, 50, 0, '2003-12-22 09:59:27.041', 0, '2003-12-22 09:59:27.041', true);
+INSERT INTO help_tableof_contents VALUES (13, 'Modify task', NULL, NULL, 10, 12, 4, 55, 0, '2003-12-22 09:59:27.049', 0, '2003-12-22 09:59:27.049', true);
+INSERT INTO help_tableof_contents VALUES (14, 'Action Lists', NULL, NULL, 2, 12, 3, 60, 0, '2003-12-22 09:59:27.058', 0, '2003-12-22 09:59:27.058', true);
+INSERT INTO help_tableof_contents VALUES (15, 'Action Contacts', NULL, NULL, 14, 12, 4, 65, 0, '2003-12-22 09:59:27.067', 0, '2003-12-22 09:59:27.067', true);
+INSERT INTO help_tableof_contents VALUES (16, 'Add Action List', NULL, NULL, 14, 12, 4, 70, 0, '2003-12-22 09:59:27.075', 0, '2003-12-22 09:59:27.075', true);
+INSERT INTO help_tableof_contents VALUES (17, 'Modify Action', NULL, NULL, 14, 12, 4, 75, 0, '2003-12-22 09:59:27.084', 0, '2003-12-22 09:59:27.084', true);
+INSERT INTO help_tableof_contents VALUES (18, 'Re-assignments', NULL, NULL, 2, 12, 3, 80, 0, '2003-12-22 09:59:27.092', 0, '2003-12-22 09:59:27.092', true);
+INSERT INTO help_tableof_contents VALUES (19, 'My Settings', NULL, NULL, 2, 12, 3, 85, 0, '2003-12-22 09:59:27.101', 0, '2003-12-22 09:59:27.101', true);
+INSERT INTO help_tableof_contents VALUES (20, 'Personal Information ', NULL, NULL, 19, 12, 4, 90, 0, '2003-12-22 09:59:27.109', 0, '2003-12-22 09:59:27.109', true);
+INSERT INTO help_tableof_contents VALUES (21, 'Location Settings', NULL, NULL, 19, 12, 4, 95, 0, '2003-12-22 09:59:27.118', 0, '2003-12-22 09:59:27.118', true);
+INSERT INTO help_tableof_contents VALUES (22, 'Update password', NULL, NULL, 19, 12, 4, 100, 0, '2003-12-22 09:59:27.126', 0, '2003-12-22 09:59:27.126', true);
+INSERT INTO help_tableof_contents VALUES (23, 'Contacts', NULL, NULL, 1, 2, 2, 10, 0, '2003-12-22 09:59:27.134', 0, '2003-12-22 09:59:27.134', true);
+INSERT INTO help_tableof_contents VALUES (24, 'Add a Contact', NULL, NULL, 23, 2, 3, 5, 0, '2003-12-22 09:59:27.139', 0, '2003-12-22 09:59:27.139', true);
+INSERT INTO help_tableof_contents VALUES (25, 'Search Contacts ', NULL, NULL, 23, 2, 3, 10, 0, '2003-12-22 09:59:27.148', 0, '2003-12-22 09:59:27.148', true);
+INSERT INTO help_tableof_contents VALUES (26, 'Export Data ', NULL, NULL, 23, 2, 3, 15, 0, '2003-12-22 09:59:27.156', 0, '2003-12-22 09:59:27.156', true);
+INSERT INTO help_tableof_contents VALUES (27, 'Exporting data', NULL, NULL, 23, 2, 3, 20, 0, '2003-12-22 09:59:27.166', 0, '2003-12-22 09:59:27.166', true);
+INSERT INTO help_tableof_contents VALUES (28, 'Pipeline', NULL, NULL, 1, 4, 2, 15, 0, '2003-12-22 09:59:27.175', 0, '2003-12-22 09:59:27.175', true);
+INSERT INTO help_tableof_contents VALUES (29, 'Overview', NULL, NULL, 28, 4, 3, 5, 0, '2003-12-22 09:59:27.18', 0, '2003-12-22 09:59:27.18', true);
+INSERT INTO help_tableof_contents VALUES (30, 'Add a Opportunity', NULL, NULL, 28, 4, 3, 10, 0, '2003-12-22 09:59:27.19', 0, '2003-12-22 09:59:27.19', true);
+INSERT INTO help_tableof_contents VALUES (31, 'Search Opportunities ', NULL, NULL, 28, 4, 3, 15, 0, '2003-12-22 09:59:27.199', 0, '2003-12-22 09:59:27.199', true);
+INSERT INTO help_tableof_contents VALUES (32, 'Export Data', NULL, NULL, 28, 4, 3, 20, 0, '2003-12-22 09:59:27.209', 0, '2003-12-22 09:59:27.209', true);
+INSERT INTO help_tableof_contents VALUES (33, 'Accounts', NULL, NULL, 1, 1, 2, 20, 0, '2003-12-22 09:59:27.218', 0, '2003-12-22 09:59:27.218', true);
+INSERT INTO help_tableof_contents VALUES (34, 'Overview', NULL, NULL, 33, 1, 3, 5, 0, '2003-12-22 09:59:27.223', 0, '2003-12-22 09:59:27.223', true);
+INSERT INTO help_tableof_contents VALUES (35, 'Add an Account', NULL, NULL, 33, 1, 3, 10, 0, '2003-12-22 09:59:27.232', 0, '2003-12-22 09:59:27.232', true);
+INSERT INTO help_tableof_contents VALUES (36, 'Modify Account', NULL, NULL, 33, 1, 3, 15, 0, '2003-12-22 09:59:27.24', 0, '2003-12-22 09:59:27.24', true);
+INSERT INTO help_tableof_contents VALUES (37, 'Contact Details', NULL, NULL, 36, 1, 4, 20, 0, '2003-12-22 09:59:27.249', 0, '2003-12-22 09:59:27.249', true);
+INSERT INTO help_tableof_contents VALUES (38, 'Folder Record Details', NULL, NULL, 36, 1, 4, 25, 0, '2003-12-22 09:59:27.257', 0, '2003-12-22 09:59:27.257', true);
+INSERT INTO help_tableof_contents VALUES (39, 'Opportunity Details', NULL, NULL, 36, 1, 4, 30, 0, '2003-12-22 09:59:27.266', 0, '2003-12-22 09:59:27.266', true);
+INSERT INTO help_tableof_contents VALUES (40, 'Revenue Details', NULL, NULL, 36, 1, 4, 35, 0, '2003-12-22 09:59:27.274', 0, '2003-12-22 09:59:27.274', true);
+INSERT INTO help_tableof_contents VALUES (41, 'Revenue Details', NULL, NULL, 40, 1, 5, 40, 0, '2003-12-22 09:59:27.283', 0, '2003-12-22 09:59:27.283', true);
+INSERT INTO help_tableof_contents VALUES (42, 'Add Revenue ', NULL, NULL, 40, 1, 5, 45, 0, '2003-12-22 09:59:27.292', 0, '2003-12-22 09:59:27.292', true);
+INSERT INTO help_tableof_contents VALUES (43, 'Modify Revenue ', NULL, NULL, 40, 1, 5, 50, 0, '2003-12-22 09:59:27.30', 0, '2003-12-22 09:59:27.30', true);
+INSERT INTO help_tableof_contents VALUES (44, 'Ticket Details', NULL, NULL, 36, 1, 4, 55, 0, '2003-12-22 09:59:27.309', 0, '2003-12-22 09:59:27.309', true);
+INSERT INTO help_tableof_contents VALUES (45, 'Document Details', NULL, NULL, 36, 1, 4, 60, 0, '2003-12-22 09:59:27.318', 0, '2003-12-22 09:59:27.318', true);
+INSERT INTO help_tableof_contents VALUES (46, 'Search Accounts ', NULL, NULL, 33, 1, 3, 65, 0, '2003-12-22 09:59:27.327', 0, '2003-12-22 09:59:27.327', true);
+INSERT INTO help_tableof_contents VALUES (47, 'Account Details', NULL, NULL, 33, 1, 3, 70, 0, '2003-12-22 09:59:27.335', 0, '2003-12-22 09:59:27.335', true);
+INSERT INTO help_tableof_contents VALUES (48, 'Revenue Dashboard ', NULL, NULL, 33, 1, 3, 75, 0, '2003-12-22 09:59:27.343', 0, '2003-12-22 09:59:27.343', true);
+INSERT INTO help_tableof_contents VALUES (49, 'Export Data ', NULL, NULL, 33, 1, 3, 80, 0, '2003-12-22 09:59:27.352', 0, '2003-12-22 09:59:27.352', true);
+INSERT INTO help_tableof_contents VALUES (50, 'Communications', NULL, NULL, 1, 6, 2, 25, 0, '2003-12-22 09:59:27.36', 0, '2003-12-22 09:59:27.36', true);
+INSERT INTO help_tableof_contents VALUES (51, 'Communications Dashboard ', NULL, NULL, 50, 6, 3, 5, 0, '2003-12-22 09:59:27.365', 0, '2003-12-22 09:59:27.365', true);
+INSERT INTO help_tableof_contents VALUES (52, 'Add a campaign', NULL, NULL, 50, 6, 3, 10, 0, '2003-12-22 09:59:27.375', 0, '2003-12-22 09:59:27.375', true);
+INSERT INTO help_tableof_contents VALUES (53, 'Campaign List ', NULL, NULL, 50, 6, 3, 15, 0, '2003-12-22 09:59:27.383', 0, '2003-12-22 09:59:27.383', true);
+INSERT INTO help_tableof_contents VALUES (54, 'View Groups ', NULL, NULL, 50, 6, 3, 20, 0, '2003-12-22 09:59:27.398', 0, '2003-12-22 09:59:27.398', true);
+INSERT INTO help_tableof_contents VALUES (55, 'Add a Group', NULL, NULL, 50, 6, 3, 25, 0, '2003-12-22 09:59:27.406', 0, '2003-12-22 09:59:27.406', true);
+INSERT INTO help_tableof_contents VALUES (56, 'Message List ', NULL, NULL, 50, 6, 3, 30, 0, '2003-12-22 09:59:27.415', 0, '2003-12-22 09:59:27.415', true);
+INSERT INTO help_tableof_contents VALUES (57, 'Adding a Message', NULL, NULL, 50, 6, 3, 35, 0, '2003-12-22 09:59:27.423', 0, '2003-12-22 09:59:27.423', true);
+INSERT INTO help_tableof_contents VALUES (58, 'Create Attachments ', NULL, NULL, 50, 6, 3, 40, 0, '2003-12-22 09:59:27.432', 0, '2003-12-22 09:59:27.432', true);
+INSERT INTO help_tableof_contents VALUES (59, 'Help Desk', NULL, NULL, 1, 8, 2, 30, 0, '2003-12-22 09:59:27.44', 0, '2003-12-22 09:59:27.44', true);
+INSERT INTO help_tableof_contents VALUES (60, 'Ticket Details ', NULL, NULL, 59, 8, 3, 5, 0, '2003-12-22 09:59:27.445', 0, '2003-12-22 09:59:27.445', true);
+INSERT INTO help_tableof_contents VALUES (61, 'Add a Ticket', NULL, NULL, 59, 8, 3, 10, 0, '2003-12-22 09:59:27.454', 0, '2003-12-22 09:59:27.454', true);
+INSERT INTO help_tableof_contents VALUES (62, 'Search Existing Tickets', NULL, NULL, 59, 8, 3, 15, 0, '2003-12-22 09:59:27.463', 0, '2003-12-22 09:59:27.463', true);
+INSERT INTO help_tableof_contents VALUES (63, 'Export Data ', NULL, NULL, 59, 8, 3, 20, 0, '2003-12-22 09:59:27.471', 0, '2003-12-22 09:59:27.471', true);
+INSERT INTO help_tableof_contents VALUES (64, 'Modify Ticket Details', NULL, NULL, 59, 8, 3, 25, 0, '2003-12-22 09:59:27.479', 0, '2003-12-22 09:59:27.479', true);
+INSERT INTO help_tableof_contents VALUES (65, 'Modify Ticket Details', NULL, NULL, 64, 8, 4, 30, 0, '2003-12-22 09:59:27.488', 0, '2003-12-22 09:59:27.488', true);
+INSERT INTO help_tableof_contents VALUES (66, 'List of Tasks', NULL, NULL, 64, 8, 4, 35, 0, '2003-12-22 09:59:27.497', 0, '2003-12-22 09:59:27.497', true);
+INSERT INTO help_tableof_contents VALUES (67, 'List of Documents ', NULL, NULL, 64, 8, 4, 40, 0, '2003-12-22 09:59:27.506', 0, '2003-12-22 09:59:27.506', true);
+INSERT INTO help_tableof_contents VALUES (68, 'List of Folder Records', NULL, NULL, 64, 8, 4, 45, 0, '2003-12-22 09:59:27.514', 0, '2003-12-22 09:59:27.514', true);
+INSERT INTO help_tableof_contents VALUES (69, 'Add Folder Record', NULL, NULL, 64, 8, 4, 50, 0, '2003-12-22 09:59:27.523', 0, '2003-12-22 09:59:27.523', true);
+INSERT INTO help_tableof_contents VALUES (70, 'Ticket Log History', NULL, NULL, 64, 8, 4, 55, 0, '2003-12-22 09:59:27.531', 0, '2003-12-22 09:59:27.531', true);
+INSERT INTO help_tableof_contents VALUES (71, 'Employees', NULL, NULL, 1, 15, 2, 35, 0, '2003-12-22 09:59:27.54', 0, '2003-12-22 09:59:27.54', true);
+INSERT INTO help_tableof_contents VALUES (72, 'Overview', NULL, NULL, 71, 15, 3, 5, 0, '2003-12-22 09:59:27.545', 0, '2003-12-22 09:59:27.545', true);
+INSERT INTO help_tableof_contents VALUES (73, 'Employee Details ', NULL, NULL, 71, 15, 3, 10, 0, '2003-12-22 09:59:27.553', 0, '2003-12-22 09:59:27.553', true);
+INSERT INTO help_tableof_contents VALUES (74, 'Add an Employee', NULL, NULL, 71, 15, 3, 15, 0, '2003-12-22 09:59:27.561', 0, '2003-12-22 09:59:27.561', true);
+INSERT INTO help_tableof_contents VALUES (75, 'Modify Employee Details ', NULL, NULL, 71, 15, 3, 20, 0, '2003-12-22 09:59:27.57', 0, '2003-12-22 09:59:27.57', true);
+INSERT INTO help_tableof_contents VALUES (76, 'Reports', NULL, NULL, 1, 14, 2, 40, 0, '2003-12-22 09:59:27.578', 0, '2003-12-22 09:59:27.578', true);
+INSERT INTO help_tableof_contents VALUES (77, 'Overview', NULL, NULL, 76, 14, 3, 5, 0, '2003-12-22 09:59:27.583', 0, '2003-12-22 09:59:27.583', true);
+INSERT INTO help_tableof_contents VALUES (78, 'List of Modules', NULL, NULL, 76, 14, 3, 10, 0, '2003-12-22 09:59:27.592', 0, '2003-12-22 09:59:27.592', true);
+INSERT INTO help_tableof_contents VALUES (79, 'Admin', NULL, NULL, 1, 9, 2, 45, 0, '2003-12-22 09:59:27.601', 0, '2003-12-22 09:59:27.601', true);
+INSERT INTO help_tableof_contents VALUES (80, 'List of Users', NULL, NULL, 79, 9, 3, 5, 0, '2003-12-22 09:59:27.606', 0, '2003-12-22 09:59:27.606', true);
+INSERT INTO help_tableof_contents VALUES (81, 'Adding a New User', NULL, NULL, 80, 9, 4, 10, 0, '2003-12-22 09:59:27.618', 0, '2003-12-22 09:59:27.618', true);
+INSERT INTO help_tableof_contents VALUES (82, 'Modify User Details', NULL, NULL, 80, 9, 4, 15, 0, '2003-12-22 09:59:27.626', 0, '2003-12-22 09:59:27.626', true);
+INSERT INTO help_tableof_contents VALUES (83, 'User Login History', NULL, NULL, 80, 9, 4, 20, 0, '2003-12-22 09:59:27.634', 0, '2003-12-22 09:59:27.634', true);
+INSERT INTO help_tableof_contents VALUES (84, 'Viewpoints of User', NULL, NULL, 80, 9, 4, 25, 0, '2003-12-22 09:59:27.643', 0, '2003-12-22 09:59:27.643', true);
+INSERT INTO help_tableof_contents VALUES (85, 'Add Viewpoint', NULL, NULL, 84, 9, 5, 30, 0, '2003-12-22 09:59:27.653', 0, '2003-12-22 09:59:27.653', true);
+INSERT INTO help_tableof_contents VALUES (86, 'Update Viewpoint ', NULL, NULL, 84, 9, 5, 35, 0, '2003-12-22 09:59:27.662', 0, '2003-12-22 09:59:27.662', true);
+INSERT INTO help_tableof_contents VALUES (87, 'List of Roles', NULL, NULL, 79, 9, 3, 40, 0, '2003-12-22 09:59:27.67', 0, '2003-12-22 09:59:27.67', true);
+INSERT INTO help_tableof_contents VALUES (88, 'Add a New Role', NULL, NULL, 87, 9, 4, 45, 0, '2003-12-22 09:59:27.679', 0, '2003-12-22 09:59:27.679', true);
+INSERT INTO help_tableof_contents VALUES (89, 'Update Role ', NULL, NULL, 87, 9, 4, 50, 0, '2003-12-22 09:59:27.688', 0, '2003-12-22 09:59:27.688', true);
+INSERT INTO help_tableof_contents VALUES (90, 'Configure Modules', NULL, NULL, 79, 9, 3, 55, 0, '2003-12-22 09:59:27.696', 0, '2003-12-22 09:59:27.696', true);
+INSERT INTO help_tableof_contents VALUES (91, 'Configuration Options ', NULL, NULL, 90, 9, 4, 60, 0, '2003-12-22 09:59:27.705', 0, '2003-12-22 09:59:27.705', true);
+INSERT INTO help_tableof_contents VALUES (92, 'Edit Lookup List ', NULL, NULL, 91, 9, 5, 65, 0, '2003-12-22 09:59:27.713', 0, '2003-12-22 09:59:27.713', true);
+INSERT INTO help_tableof_contents VALUES (93, 'Adding a New Folder', NULL, NULL, 91, 9, 5, 70, 0, '2003-12-22 09:59:27.722', 0, '2003-12-22 09:59:27.722', true);
+INSERT INTO help_tableof_contents VALUES (94, 'Modify Existing Folder', NULL, NULL, 91, 9, 5, 75, 0, '2003-12-22 09:59:27.731', 0, '2003-12-22 09:59:27.731', true);
+INSERT INTO help_tableof_contents VALUES (95, 'Configure System', NULL, NULL, 79, 9, 3, 80, 0, '2003-12-22 09:59:27.742', 0, '2003-12-22 09:59:27.742', true);
+INSERT INTO help_tableof_contents VALUES (96, 'Modify Timeout ', NULL, NULL, 95, 9, 4, 85, 0, '2003-12-22 09:59:27.756', 0, '2003-12-22 09:59:27.756', true);
+INSERT INTO help_tableof_contents VALUES (97, 'Resource Usage Details', NULL, NULL, 79, 9, 3, 90, 0, '2003-12-22 09:59:27.764', 0, '2003-12-22 09:59:27.764', true);
 
 
 --
--- Data for TOC entry 647 (OID 127743)
+-- Data for TOC entry 647 (OID 132867)
 -- Name: help_tableofcontentitem_links; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO help_tableofcontentitem_links VALUES (1, 3, 1, 0, '2003-12-22 09:08:06.212', 0, '2003-12-22 09:08:06.212', true);
-INSERT INTO help_tableofcontentitem_links VALUES (2, 4, 2, 0, '2003-12-22 09:08:06.23', 0, '2003-12-22 09:08:06.23', true);
-INSERT INTO help_tableofcontentitem_links VALUES (3, 5, 3, 0, '2003-12-22 09:08:06.242', 0, '2003-12-22 09:08:06.242', true);
-INSERT INTO help_tableofcontentitem_links VALUES (4, 6, 4, 0, '2003-12-22 09:08:06.251', 0, '2003-12-22 09:08:06.251', true);
-INSERT INTO help_tableofcontentitem_links VALUES (5, 7, 5, 0, '2003-12-22 09:08:06.26', 0, '2003-12-22 09:08:06.26', true);
-INSERT INTO help_tableofcontentitem_links VALUES (6, 8, 6, 0, '2003-12-22 09:08:06.268', 0, '2003-12-22 09:08:06.268', true);
-INSERT INTO help_tableofcontentitem_links VALUES (7, 9, 7, 0, '2003-12-22 09:08:06.277', 0, '2003-12-22 09:08:06.277', true);
-INSERT INTO help_tableofcontentitem_links VALUES (8, 10, 8, 0, '2003-12-22 09:08:06.285', 0, '2003-12-22 09:08:06.285', true);
-INSERT INTO help_tableofcontentitem_links VALUES (9, 11, 9, 0, '2003-12-22 09:08:06.294', 0, '2003-12-22 09:08:06.294', true);
-INSERT INTO help_tableofcontentitem_links VALUES (10, 12, 10, 0, '2003-12-22 09:08:06.303', 0, '2003-12-22 09:08:06.303', true);
-INSERT INTO help_tableofcontentitem_links VALUES (11, 13, 11, 0, '2003-12-22 09:08:06.312', 0, '2003-12-22 09:08:06.312', true);
-INSERT INTO help_tableofcontentitem_links VALUES (12, 14, 12, 0, '2003-12-22 09:08:06.32', 0, '2003-12-22 09:08:06.32', true);
-INSERT INTO help_tableofcontentitem_links VALUES (13, 15, 13, 0, '2003-12-22 09:08:06.329', 0, '2003-12-22 09:08:06.329', true);
-INSERT INTO help_tableofcontentitem_links VALUES (14, 16, 14, 0, '2003-12-22 09:08:06.337', 0, '2003-12-22 09:08:06.337', true);
-INSERT INTO help_tableofcontentitem_links VALUES (15, 17, 15, 0, '2003-12-22 09:08:06.346', 0, '2003-12-22 09:08:06.346', true);
-INSERT INTO help_tableofcontentitem_links VALUES (16, 18, 16, 0, '2003-12-22 09:08:06.354', 0, '2003-12-22 09:08:06.354', true);
-INSERT INTO help_tableofcontentitem_links VALUES (17, 19, 17, 0, '2003-12-22 09:08:06.363', 0, '2003-12-22 09:08:06.363', true);
-INSERT INTO help_tableofcontentitem_links VALUES (18, 20, 18, 0, '2003-12-22 09:08:06.371', 0, '2003-12-22 09:08:06.371', true);
-INSERT INTO help_tableofcontentitem_links VALUES (19, 21, 19, 0, '2003-12-22 09:08:06.38', 0, '2003-12-22 09:08:06.38', true);
-INSERT INTO help_tableofcontentitem_links VALUES (20, 22, 20, 0, '2003-12-22 09:08:06.388', 0, '2003-12-22 09:08:06.388', true);
-INSERT INTO help_tableofcontentitem_links VALUES (21, 24, 34, 0, '2003-12-22 09:08:06.401', 0, '2003-12-22 09:08:06.401', true);
-INSERT INTO help_tableofcontentitem_links VALUES (22, 25, 35, 0, '2003-12-22 09:08:06.41', 0, '2003-12-22 09:08:06.41', true);
-INSERT INTO help_tableofcontentitem_links VALUES (23, 26, 36, 0, '2003-12-22 09:08:06.419', 0, '2003-12-22 09:08:06.419', true);
-INSERT INTO help_tableofcontentitem_links VALUES (24, 27, 37, 0, '2003-12-22 09:08:06.429', 0, '2003-12-22 09:08:06.429', true);
-INSERT INTO help_tableofcontentitem_links VALUES (25, 29, 78, 0, '2003-12-22 09:08:06.442', 0, '2003-12-22 09:08:06.442', true);
-INSERT INTO help_tableofcontentitem_links VALUES (26, 30, 79, 0, '2003-12-22 09:08:06.453', 0, '2003-12-22 09:08:06.453', true);
-INSERT INTO help_tableofcontentitem_links VALUES (27, 31, 80, 0, '2003-12-22 09:08:06.462', 0, '2003-12-22 09:08:06.462', true);
-INSERT INTO help_tableofcontentitem_links VALUES (28, 32, 81, 0, '2003-12-22 09:08:06.471', 0, '2003-12-22 09:08:06.471', true);
-INSERT INTO help_tableofcontentitem_links VALUES (29, 34, 111, 0, '2003-12-22 09:08:06.484', 0, '2003-12-22 09:08:06.484', true);
-INSERT INTO help_tableofcontentitem_links VALUES (30, 35, 112, 0, '2003-12-22 09:08:06.494', 0, '2003-12-22 09:08:06.494', true);
-INSERT INTO help_tableofcontentitem_links VALUES (31, 36, 113, 0, '2003-12-22 09:08:06.502', 0, '2003-12-22 09:08:06.502', true);
-INSERT INTO help_tableofcontentitem_links VALUES (32, 37, 114, 0, '2003-12-22 09:08:06.51', 0, '2003-12-22 09:08:06.51', true);
-INSERT INTO help_tableofcontentitem_links VALUES (33, 38, 115, 0, '2003-12-22 09:08:06.519', 0, '2003-12-22 09:08:06.519', true);
-INSERT INTO help_tableofcontentitem_links VALUES (34, 39, 116, 0, '2003-12-22 09:08:06.527', 0, '2003-12-22 09:08:06.527', true);
-INSERT INTO help_tableofcontentitem_links VALUES (35, 40, 117, 0, '2003-12-22 09:08:06.536', 0, '2003-12-22 09:08:06.536', true);
-INSERT INTO help_tableofcontentitem_links VALUES (36, 41, 118, 0, '2003-12-22 09:08:06.544', 0, '2003-12-22 09:08:06.544', true);
-INSERT INTO help_tableofcontentitem_links VALUES (37, 42, 119, 0, '2003-12-22 09:08:06.553', 0, '2003-12-22 09:08:06.553', true);
-INSERT INTO help_tableofcontentitem_links VALUES (38, 43, 120, 0, '2003-12-22 09:08:06.561', 0, '2003-12-22 09:08:06.561', true);
-INSERT INTO help_tableofcontentitem_links VALUES (39, 44, 121, 0, '2003-12-22 09:08:06.569', 0, '2003-12-22 09:08:06.569', true);
-INSERT INTO help_tableofcontentitem_links VALUES (40, 45, 122, 0, '2003-12-22 09:08:06.578', 0, '2003-12-22 09:08:06.578', true);
-INSERT INTO help_tableofcontentitem_links VALUES (41, 46, 123, 0, '2003-12-22 09:08:06.587', 0, '2003-12-22 09:08:06.587', true);
-INSERT INTO help_tableofcontentitem_links VALUES (42, 47, 124, 0, '2003-12-22 09:08:06.595', 0, '2003-12-22 09:08:06.595', true);
-INSERT INTO help_tableofcontentitem_links VALUES (43, 48, 125, 0, '2003-12-22 09:08:06.604', 0, '2003-12-22 09:08:06.604', true);
-INSERT INTO help_tableofcontentitem_links VALUES (44, 49, 126, 0, '2003-12-22 09:08:06.612', 0, '2003-12-22 09:08:06.612', true);
-INSERT INTO help_tableofcontentitem_links VALUES (45, 51, 175, 0, '2003-12-22 09:08:06.626', 0, '2003-12-22 09:08:06.626', true);
-INSERT INTO help_tableofcontentitem_links VALUES (46, 52, 176, 0, '2003-12-22 09:08:06.635', 0, '2003-12-22 09:08:06.635', true);
-INSERT INTO help_tableofcontentitem_links VALUES (47, 53, 177, 0, '2003-12-22 09:08:06.643', 0, '2003-12-22 09:08:06.643', true);
-INSERT INTO help_tableofcontentitem_links VALUES (48, 54, 178, 0, '2003-12-22 09:08:06.652', 0, '2003-12-22 09:08:06.652', true);
-INSERT INTO help_tableofcontentitem_links VALUES (49, 55, 179, 0, '2003-12-22 09:08:06.661', 0, '2003-12-22 09:08:06.661', true);
-INSERT INTO help_tableofcontentitem_links VALUES (50, 56, 180, 0, '2003-12-22 09:08:06.67', 0, '2003-12-22 09:08:06.67', true);
-INSERT INTO help_tableofcontentitem_links VALUES (51, 57, 181, 0, '2003-12-22 09:08:06.678', 0, '2003-12-22 09:08:06.678', true);
-INSERT INTO help_tableofcontentitem_links VALUES (52, 58, 182, 0, '2003-12-22 09:08:06.686', 0, '2003-12-22 09:08:06.686', true);
-INSERT INTO help_tableofcontentitem_links VALUES (53, 60, 225, 0, '2003-12-22 09:08:06.70', 0, '2003-12-22 09:08:06.70', true);
-INSERT INTO help_tableofcontentitem_links VALUES (54, 61, 226, 0, '2003-12-22 09:08:06.709', 0, '2003-12-22 09:08:06.709', true);
-INSERT INTO help_tableofcontentitem_links VALUES (55, 62, 227, 0, '2003-12-22 09:08:06.717', 0, '2003-12-22 09:08:06.717', true);
-INSERT INTO help_tableofcontentitem_links VALUES (56, 63, 228, 0, '2003-12-22 09:08:06.726', 0, '2003-12-22 09:08:06.726', true);
-INSERT INTO help_tableofcontentitem_links VALUES (57, 64, 229, 0, '2003-12-22 09:08:06.734', 0, '2003-12-22 09:08:06.734', true);
-INSERT INTO help_tableofcontentitem_links VALUES (58, 65, 230, 0, '2003-12-22 09:08:06.743', 0, '2003-12-22 09:08:06.743', true);
-INSERT INTO help_tableofcontentitem_links VALUES (59, 66, 231, 0, '2003-12-22 09:08:06.751', 0, '2003-12-22 09:08:06.751', true);
-INSERT INTO help_tableofcontentitem_links VALUES (60, 67, 232, 0, '2003-12-22 09:08:06.76', 0, '2003-12-22 09:08:06.76', true);
-INSERT INTO help_tableofcontentitem_links VALUES (61, 68, 233, 0, '2003-12-22 09:08:06.768', 0, '2003-12-22 09:08:06.768', true);
-INSERT INTO help_tableofcontentitem_links VALUES (62, 69, 234, 0, '2003-12-22 09:08:06.776', 0, '2003-12-22 09:08:06.776', true);
-INSERT INTO help_tableofcontentitem_links VALUES (63, 70, 235, 0, '2003-12-22 09:08:06.785', 0, '2003-12-22 09:08:06.785', true);
-INSERT INTO help_tableofcontentitem_links VALUES (64, 72, 252, 0, '2003-12-22 09:08:06.799', 0, '2003-12-22 09:08:06.799', true);
-INSERT INTO help_tableofcontentitem_links VALUES (65, 73, 253, 0, '2003-12-22 09:08:06.808', 0, '2003-12-22 09:08:06.808', true);
-INSERT INTO help_tableofcontentitem_links VALUES (66, 74, 254, 0, '2003-12-22 09:08:06.816', 0, '2003-12-22 09:08:06.816', true);
-INSERT INTO help_tableofcontentitem_links VALUES (67, 75, 255, 0, '2003-12-22 09:08:06.825', 0, '2003-12-22 09:08:06.825', true);
-INSERT INTO help_tableofcontentitem_links VALUES (68, 77, 257, 0, '2003-12-22 09:08:06.838', 0, '2003-12-22 09:08:06.838', true);
-INSERT INTO help_tableofcontentitem_links VALUES (69, 78, 258, 0, '2003-12-22 09:08:06.848', 0, '2003-12-22 09:08:06.848', true);
-INSERT INTO help_tableofcontentitem_links VALUES (70, 80, 266, 0, '2003-12-22 09:08:06.865', 0, '2003-12-22 09:08:06.865', true);
-INSERT INTO help_tableofcontentitem_links VALUES (71, 81, 267, 0, '2003-12-22 09:08:06.873', 0, '2003-12-22 09:08:06.873', true);
-INSERT INTO help_tableofcontentitem_links VALUES (72, 82, 268, 0, '2003-12-22 09:08:06.882', 0, '2003-12-22 09:08:06.882', true);
-INSERT INTO help_tableofcontentitem_links VALUES (73, 83, 269, 0, '2003-12-22 09:08:06.89', 0, '2003-12-22 09:08:06.89', true);
-INSERT INTO help_tableofcontentitem_links VALUES (74, 84, 270, 0, '2003-12-22 09:08:06.90', 0, '2003-12-22 09:08:06.90', true);
-INSERT INTO help_tableofcontentitem_links VALUES (75, 85, 271, 0, '2003-12-22 09:08:06.909', 0, '2003-12-22 09:08:06.909', true);
-INSERT INTO help_tableofcontentitem_links VALUES (76, 86, 272, 0, '2003-12-22 09:08:06.917', 0, '2003-12-22 09:08:06.917', true);
-INSERT INTO help_tableofcontentitem_links VALUES (77, 87, 273, 0, '2003-12-22 09:08:06.926', 0, '2003-12-22 09:08:06.926', true);
-INSERT INTO help_tableofcontentitem_links VALUES (78, 88, 274, 0, '2003-12-22 09:08:06.936', 0, '2003-12-22 09:08:06.936', true);
-INSERT INTO help_tableofcontentitem_links VALUES (79, 89, 275, 0, '2003-12-22 09:08:06.944', 0, '2003-12-22 09:08:06.944', true);
-INSERT INTO help_tableofcontentitem_links VALUES (80, 90, 276, 0, '2003-12-22 09:08:06.953', 0, '2003-12-22 09:08:06.953', true);
-INSERT INTO help_tableofcontentitem_links VALUES (81, 91, 277, 0, '2003-12-22 09:08:06.962', 0, '2003-12-22 09:08:06.962', true);
-INSERT INTO help_tableofcontentitem_links VALUES (82, 92, 278, 0, '2003-12-22 09:08:06.97', 0, '2003-12-22 09:08:06.97', true);
-INSERT INTO help_tableofcontentitem_links VALUES (83, 93, 279, 0, '2003-12-22 09:08:06.979', 0, '2003-12-22 09:08:06.979', true);
-INSERT INTO help_tableofcontentitem_links VALUES (84, 94, 280, 0, '2003-12-22 09:08:06.988', 0, '2003-12-22 09:08:06.988', true);
-INSERT INTO help_tableofcontentitem_links VALUES (85, 95, 281, 0, '2003-12-22 09:08:06.996', 0, '2003-12-22 09:08:06.996', true);
-INSERT INTO help_tableofcontentitem_links VALUES (86, 96, 282, 0, '2003-12-22 09:08:07.005', 0, '2003-12-22 09:08:07.005', true);
-INSERT INTO help_tableofcontentitem_links VALUES (87, 97, 283, 0, '2003-12-22 09:08:07.013', 0, '2003-12-22 09:08:07.013', true);
+INSERT INTO help_tableofcontentitem_links VALUES (1, 3, 1, 0, '2003-12-22 09:59:26.959', 0, '2003-12-22 09:59:26.959', true);
+INSERT INTO help_tableofcontentitem_links VALUES (2, 4, 2, 0, '2003-12-22 09:59:26.977', 0, '2003-12-22 09:59:26.977', true);
+INSERT INTO help_tableofcontentitem_links VALUES (3, 5, 3, 0, '2003-12-22 09:59:26.986', 0, '2003-12-22 09:59:26.986', true);
+INSERT INTO help_tableofcontentitem_links VALUES (4, 6, 4, 0, '2003-12-22 09:59:26.995', 0, '2003-12-22 09:59:26.995', true);
+INSERT INTO help_tableofcontentitem_links VALUES (5, 7, 5, 0, '2003-12-22 09:59:27.003', 0, '2003-12-22 09:59:27.003', true);
+INSERT INTO help_tableofcontentitem_links VALUES (6, 8, 6, 0, '2003-12-22 09:59:27.011', 0, '2003-12-22 09:59:27.011', true);
+INSERT INTO help_tableofcontentitem_links VALUES (7, 9, 7, 0, '2003-12-22 09:59:27.02', 0, '2003-12-22 09:59:27.02', true);
+INSERT INTO help_tableofcontentitem_links VALUES (8, 10, 8, 0, '2003-12-22 09:59:27.028', 0, '2003-12-22 09:59:27.028', true);
+INSERT INTO help_tableofcontentitem_links VALUES (9, 11, 9, 0, '2003-12-22 09:59:27.037', 0, '2003-12-22 09:59:27.037', true);
+INSERT INTO help_tableofcontentitem_links VALUES (10, 12, 10, 0, '2003-12-22 09:59:27.045', 0, '2003-12-22 09:59:27.045', true);
+INSERT INTO help_tableofcontentitem_links VALUES (11, 13, 11, 0, '2003-12-22 09:59:27.054', 0, '2003-12-22 09:59:27.054', true);
+INSERT INTO help_tableofcontentitem_links VALUES (12, 14, 12, 0, '2003-12-22 09:59:27.063', 0, '2003-12-22 09:59:27.063', true);
+INSERT INTO help_tableofcontentitem_links VALUES (13, 15, 13, 0, '2003-12-22 09:59:27.071', 0, '2003-12-22 09:59:27.071', true);
+INSERT INTO help_tableofcontentitem_links VALUES (14, 16, 14, 0, '2003-12-22 09:59:27.08', 0, '2003-12-22 09:59:27.08', true);
+INSERT INTO help_tableofcontentitem_links VALUES (15, 17, 15, 0, '2003-12-22 09:59:27.088', 0, '2003-12-22 09:59:27.088', true);
+INSERT INTO help_tableofcontentitem_links VALUES (16, 18, 16, 0, '2003-12-22 09:59:27.097', 0, '2003-12-22 09:59:27.097', true);
+INSERT INTO help_tableofcontentitem_links VALUES (17, 19, 17, 0, '2003-12-22 09:59:27.105', 0, '2003-12-22 09:59:27.105', true);
+INSERT INTO help_tableofcontentitem_links VALUES (18, 20, 18, 0, '2003-12-22 09:59:27.114', 0, '2003-12-22 09:59:27.114', true);
+INSERT INTO help_tableofcontentitem_links VALUES (19, 21, 19, 0, '2003-12-22 09:59:27.122', 0, '2003-12-22 09:59:27.122', true);
+INSERT INTO help_tableofcontentitem_links VALUES (20, 22, 20, 0, '2003-12-22 09:59:27.131', 0, '2003-12-22 09:59:27.131', true);
+INSERT INTO help_tableofcontentitem_links VALUES (21, 24, 34, 0, '2003-12-22 09:59:27.144', 0, '2003-12-22 09:59:27.144', true);
+INSERT INTO help_tableofcontentitem_links VALUES (22, 25, 35, 0, '2003-12-22 09:59:27.153', 0, '2003-12-22 09:59:27.153', true);
+INSERT INTO help_tableofcontentitem_links VALUES (23, 26, 36, 0, '2003-12-22 09:59:27.161', 0, '2003-12-22 09:59:27.161', true);
+INSERT INTO help_tableofcontentitem_links VALUES (24, 27, 37, 0, '2003-12-22 09:59:27.171', 0, '2003-12-22 09:59:27.171', true);
+INSERT INTO help_tableofcontentitem_links VALUES (25, 29, 78, 0, '2003-12-22 09:59:27.186', 0, '2003-12-22 09:59:27.186', true);
+INSERT INTO help_tableofcontentitem_links VALUES (26, 30, 79, 0, '2003-12-22 09:59:27.195', 0, '2003-12-22 09:59:27.195', true);
+INSERT INTO help_tableofcontentitem_links VALUES (27, 31, 80, 0, '2003-12-22 09:59:27.206', 0, '2003-12-22 09:59:27.206', true);
+INSERT INTO help_tableofcontentitem_links VALUES (28, 32, 81, 0, '2003-12-22 09:59:27.214', 0, '2003-12-22 09:59:27.214', true);
+INSERT INTO help_tableofcontentitem_links VALUES (29, 34, 111, 0, '2003-12-22 09:59:27.228', 0, '2003-12-22 09:59:27.228', true);
+INSERT INTO help_tableofcontentitem_links VALUES (30, 35, 112, 0, '2003-12-22 09:59:27.237', 0, '2003-12-22 09:59:27.237', true);
+INSERT INTO help_tableofcontentitem_links VALUES (31, 36, 113, 0, '2003-12-22 09:59:27.245', 0, '2003-12-22 09:59:27.245', true);
+INSERT INTO help_tableofcontentitem_links VALUES (32, 37, 114, 0, '2003-12-22 09:59:27.254', 0, '2003-12-22 09:59:27.254', true);
+INSERT INTO help_tableofcontentitem_links VALUES (33, 38, 115, 0, '2003-12-22 09:59:27.262', 0, '2003-12-22 09:59:27.262', true);
+INSERT INTO help_tableofcontentitem_links VALUES (34, 39, 116, 0, '2003-12-22 09:59:27.271', 0, '2003-12-22 09:59:27.271', true);
+INSERT INTO help_tableofcontentitem_links VALUES (35, 40, 117, 0, '2003-12-22 09:59:27.279', 0, '2003-12-22 09:59:27.279', true);
+INSERT INTO help_tableofcontentitem_links VALUES (36, 41, 118, 0, '2003-12-22 09:59:27.288', 0, '2003-12-22 09:59:27.288', true);
+INSERT INTO help_tableofcontentitem_links VALUES (37, 42, 119, 0, '2003-12-22 09:59:27.296', 0, '2003-12-22 09:59:27.296', true);
+INSERT INTO help_tableofcontentitem_links VALUES (38, 43, 120, 0, '2003-12-22 09:59:27.305', 0, '2003-12-22 09:59:27.305', true);
+INSERT INTO help_tableofcontentitem_links VALUES (39, 44, 121, 0, '2003-12-22 09:59:27.314', 0, '2003-12-22 09:59:27.314', true);
+INSERT INTO help_tableofcontentitem_links VALUES (40, 45, 122, 0, '2003-12-22 09:59:27.323', 0, '2003-12-22 09:59:27.323', true);
+INSERT INTO help_tableofcontentitem_links VALUES (41, 46, 123, 0, '2003-12-22 09:59:27.331', 0, '2003-12-22 09:59:27.331', true);
+INSERT INTO help_tableofcontentitem_links VALUES (42, 47, 124, 0, '2003-12-22 09:59:27.34', 0, '2003-12-22 09:59:27.34', true);
+INSERT INTO help_tableofcontentitem_links VALUES (43, 48, 125, 0, '2003-12-22 09:59:27.348', 0, '2003-12-22 09:59:27.348', true);
+INSERT INTO help_tableofcontentitem_links VALUES (44, 49, 126, 0, '2003-12-22 09:59:27.357', 0, '2003-12-22 09:59:27.357', true);
+INSERT INTO help_tableofcontentitem_links VALUES (45, 51, 175, 0, '2003-12-22 09:59:27.37', 0, '2003-12-22 09:59:27.37', true);
+INSERT INTO help_tableofcontentitem_links VALUES (46, 52, 176, 0, '2003-12-22 09:59:27.379', 0, '2003-12-22 09:59:27.379', true);
+INSERT INTO help_tableofcontentitem_links VALUES (47, 53, 177, 0, '2003-12-22 09:59:27.394', 0, '2003-12-22 09:59:27.394', true);
+INSERT INTO help_tableofcontentitem_links VALUES (48, 54, 178, 0, '2003-12-22 09:59:27.402', 0, '2003-12-22 09:59:27.402', true);
+INSERT INTO help_tableofcontentitem_links VALUES (49, 55, 179, 0, '2003-12-22 09:59:27.411', 0, '2003-12-22 09:59:27.411', true);
+INSERT INTO help_tableofcontentitem_links VALUES (50, 56, 180, 0, '2003-12-22 09:59:27.42', 0, '2003-12-22 09:59:27.42', true);
+INSERT INTO help_tableofcontentitem_links VALUES (51, 57, 181, 0, '2003-12-22 09:59:27.428', 0, '2003-12-22 09:59:27.428', true);
+INSERT INTO help_tableofcontentitem_links VALUES (52, 58, 182, 0, '2003-12-22 09:59:27.436', 0, '2003-12-22 09:59:27.436', true);
+INSERT INTO help_tableofcontentitem_links VALUES (53, 60, 225, 0, '2003-12-22 09:59:27.45', 0, '2003-12-22 09:59:27.45', true);
+INSERT INTO help_tableofcontentitem_links VALUES (54, 61, 226, 0, '2003-12-22 09:59:27.459', 0, '2003-12-22 09:59:27.459', true);
+INSERT INTO help_tableofcontentitem_links VALUES (55, 62, 227, 0, '2003-12-22 09:59:27.467', 0, '2003-12-22 09:59:27.467', true);
+INSERT INTO help_tableofcontentitem_links VALUES (56, 63, 228, 0, '2003-12-22 09:59:27.476', 0, '2003-12-22 09:59:27.476', true);
+INSERT INTO help_tableofcontentitem_links VALUES (57, 64, 229, 0, '2003-12-22 09:59:27.484', 0, '2003-12-22 09:59:27.484', true);
+INSERT INTO help_tableofcontentitem_links VALUES (58, 65, 230, 0, '2003-12-22 09:59:27.493', 0, '2003-12-22 09:59:27.493', true);
+INSERT INTO help_tableofcontentitem_links VALUES (59, 66, 231, 0, '2003-12-22 09:59:27.502', 0, '2003-12-22 09:59:27.502', true);
+INSERT INTO help_tableofcontentitem_links VALUES (60, 67, 232, 0, '2003-12-22 09:59:27.51', 0, '2003-12-22 09:59:27.51', true);
+INSERT INTO help_tableofcontentitem_links VALUES (61, 68, 233, 0, '2003-12-22 09:59:27.519', 0, '2003-12-22 09:59:27.519', true);
+INSERT INTO help_tableofcontentitem_links VALUES (62, 69, 234, 0, '2003-12-22 09:59:27.527', 0, '2003-12-22 09:59:27.527', true);
+INSERT INTO help_tableofcontentitem_links VALUES (63, 70, 235, 0, '2003-12-22 09:59:27.536', 0, '2003-12-22 09:59:27.536', true);
+INSERT INTO help_tableofcontentitem_links VALUES (64, 72, 252, 0, '2003-12-22 09:59:27.549', 0, '2003-12-22 09:59:27.549', true);
+INSERT INTO help_tableofcontentitem_links VALUES (65, 73, 253, 0, '2003-12-22 09:59:27.558', 0, '2003-12-22 09:59:27.558', true);
+INSERT INTO help_tableofcontentitem_links VALUES (66, 74, 254, 0, '2003-12-22 09:59:27.566', 0, '2003-12-22 09:59:27.566', true);
+INSERT INTO help_tableofcontentitem_links VALUES (67, 75, 255, 0, '2003-12-22 09:59:27.575', 0, '2003-12-22 09:59:27.575', true);
+INSERT INTO help_tableofcontentitem_links VALUES (68, 77, 257, 0, '2003-12-22 09:59:27.588', 0, '2003-12-22 09:59:27.588', true);
+INSERT INTO help_tableofcontentitem_links VALUES (69, 78, 258, 0, '2003-12-22 09:59:27.597', 0, '2003-12-22 09:59:27.597', true);
+INSERT INTO help_tableofcontentitem_links VALUES (70, 80, 266, 0, '2003-12-22 09:59:27.614', 0, '2003-12-22 09:59:27.614', true);
+INSERT INTO help_tableofcontentitem_links VALUES (71, 81, 267, 0, '2003-12-22 09:59:27.622', 0, '2003-12-22 09:59:27.622', true);
+INSERT INTO help_tableofcontentitem_links VALUES (72, 82, 268, 0, '2003-12-22 09:59:27.631', 0, '2003-12-22 09:59:27.631', true);
+INSERT INTO help_tableofcontentitem_links VALUES (73, 83, 269, 0, '2003-12-22 09:59:27.639', 0, '2003-12-22 09:59:27.639', true);
+INSERT INTO help_tableofcontentitem_links VALUES (74, 84, 270, 0, '2003-12-22 09:59:27.648', 0, '2003-12-22 09:59:27.648', true);
+INSERT INTO help_tableofcontentitem_links VALUES (75, 85, 271, 0, '2003-12-22 09:59:27.658', 0, '2003-12-22 09:59:27.658', true);
+INSERT INTO help_tableofcontentitem_links VALUES (76, 86, 272, 0, '2003-12-22 09:59:27.667', 0, '2003-12-22 09:59:27.667', true);
+INSERT INTO help_tableofcontentitem_links VALUES (77, 87, 273, 0, '2003-12-22 09:59:27.675', 0, '2003-12-22 09:59:27.675', true);
+INSERT INTO help_tableofcontentitem_links VALUES (78, 88, 274, 0, '2003-12-22 09:59:27.684', 0, '2003-12-22 09:59:27.684', true);
+INSERT INTO help_tableofcontentitem_links VALUES (79, 89, 275, 0, '2003-12-22 09:59:27.693', 0, '2003-12-22 09:59:27.693', true);
+INSERT INTO help_tableofcontentitem_links VALUES (80, 90, 276, 0, '2003-12-22 09:59:27.701', 0, '2003-12-22 09:59:27.701', true);
+INSERT INTO help_tableofcontentitem_links VALUES (81, 91, 277, 0, '2003-12-22 09:59:27.71', 0, '2003-12-22 09:59:27.71', true);
+INSERT INTO help_tableofcontentitem_links VALUES (82, 92, 278, 0, '2003-12-22 09:59:27.718', 0, '2003-12-22 09:59:27.718', true);
+INSERT INTO help_tableofcontentitem_links VALUES (83, 93, 279, 0, '2003-12-22 09:59:27.727', 0, '2003-12-22 09:59:27.727', true);
+INSERT INTO help_tableofcontentitem_links VALUES (84, 94, 280, 0, '2003-12-22 09:59:27.738', 0, '2003-12-22 09:59:27.738', true);
+INSERT INTO help_tableofcontentitem_links VALUES (85, 95, 281, 0, '2003-12-22 09:59:27.747', 0, '2003-12-22 09:59:27.747', true);
+INSERT INTO help_tableofcontentitem_links VALUES (86, 96, 282, 0, '2003-12-22 09:59:27.76', 0, '2003-12-22 09:59:27.76', true);
+INSERT INTO help_tableofcontentitem_links VALUES (87, 97, 283, 0, '2003-12-22 09:59:27.769', 0, '2003-12-22 09:59:27.769', true);
 
 
 --
--- Data for TOC entry 648 (OID 127769)
+-- Data for TOC entry 648 (OID 132893)
 -- Name: lookup_help_features; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 649 (OID 127782)
+-- Data for TOC entry 649 (OID 132906)
 -- Name: help_features; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO help_features VALUES (1, 1, NULL, 'You can view the accounts that need attention', 0, '2003-12-22 09:08:00.796', 0, '2003-12-22 09:08:00.796', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (2, 1, NULL, 'You can make calls with the contact information readily accessible', 0, '2003-12-22 09:08:00.807', 0, '2003-12-22 09:08:00.807', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (3, 1, NULL, 'You can view the tasks assigned to you', 0, '2003-12-22 09:08:00.811', 0, '2003-12-22 09:08:00.811', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (4, 1, NULL, 'You can view the tickets assigned to you', 0, '2003-12-22 09:08:00.815', 0, '2003-12-22 09:08:00.815', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (5, 2, NULL, 'The select button can be used to view the details, reply, forward or delete a particular message.', 0, '2003-12-22 09:08:00.849', 0, '2003-12-22 09:08:00.849', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (6, 2, NULL, 'You can add a new message', 0, '2003-12-22 09:08:00.853', 0, '2003-12-22 09:08:00.853', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (7, 2, NULL, 'Clicking on the message will show the details of the message', 0, '2003-12-22 09:08:00.871', 0, '2003-12-22 09:08:00.871', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (8, 2, NULL, 'The drop down can be used to select the messages present in the inbox, sent messages, or archived ones', 0, '2003-12-22 09:08:00.875', 0, '2003-12-22 09:08:00.875', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (9, 2, NULL, 'Sort on one of the column headers by clicking on the column of your choice', 0, '2003-12-22 09:08:00.879', 0, '2003-12-22 09:08:00.879', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (10, 3, NULL, 'You can reply, archive, forward or delete each message by clicking the corresponding button', 0, '2003-12-22 09:08:00.892', 0, '2003-12-22 09:08:00.892', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (11, 4, NULL, 'A new message can be composed either to the contacts or the employees present in the recipients list. The options field can be checked to send a copy to the employees task list apart from sending the employee an email.', 0, '2003-12-22 09:08:00.903', 0, '2003-12-22 09:08:00.903', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (12, 5, NULL, 'You can send the email by clicking the send button', 0, '2003-12-22 09:08:00.913', 0, '2003-12-22 09:08:00.913', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (13, 5, NULL, 'You can add to the list of recipients by using the link "Add Recipients"', 0, '2003-12-22 09:08:00.921', 0, '2003-12-22 09:08:00.921', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (14, 5, NULL, 'You can click the check box to send an Internet email to the recipients', 0, '2003-12-22 09:08:00.925', 0, '2003-12-22 09:08:00.925', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (15, 5, NULL, 'Type directly in the Body test field to modify the message', 0, '2003-12-22 09:08:00.929', 0, '2003-12-22 09:08:00.929', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (16, 7, NULL, 'You can add the list of recipients by using the link "Add Recipients" and also click the check box which would send an email to the recipients ', 0, '2003-12-22 09:08:00.945', 0, '2003-12-22 09:08:00.945', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (17, 7, NULL, 'You can send the email by clicking the send button ', 0, '2003-12-22 09:08:00.95', 0, '2003-12-22 09:08:00.95', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (18, 7, NULL, 'You can edit the message by typing directly in the Body text area', 0, '2003-12-22 09:08:00.955', 0, '2003-12-22 09:08:00.955', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (19, 8, NULL, 'You can add a quick task. This task would have just the description and whether the task is personal or not', 0, '2003-12-22 09:08:00.965', 0, '2003-12-22 09:08:00.965', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (20, 8, NULL, 'For each of the existing tasks, you can view, modify, forward or delete the tasks by clicking on the Action button, and making a selection.', 0, '2003-12-22 09:08:00.974', 0, '2003-12-22 09:08:00.974', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (21, 8, NULL, 'You can select to view your tasks or tasks assigned by you to others working under you. Each can be viewed in three different modes. i.e. the completed tasks, uncompleted tasks or both.', 0, '2003-12-22 09:08:00.978', 0, '2003-12-22 09:08:00.978', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (22, 8, NULL, 'You can add a detailed (advanced) task, where you can set up the priority, status, whether the task is shared or not, task assignment, give the estimated time and add some detailed notes for it.', 0, '2003-12-22 09:08:00.982', 0, '2003-12-22 09:08:00.982', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (23, 9, NULL, 'Link this task to a contact and when you look at the task list, there will be a link to the contact record next to the task, allowing you to go directly to the contact.', 0, '2003-12-22 09:08:00.992', 0, '2003-12-22 09:08:00.992', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (24, 9, NULL, 'Filling in a Due Date will make ths task show up on that date in the Home Page calendar.', 0, '2003-12-22 09:08:00.998', 0, '2003-12-22 09:08:00.998', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (25, 9, NULL, 'Making the task personal will hide it from your hierarchy.', 0, '2003-12-22 09:08:01.002', 0, '2003-12-22 09:08:01.002', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (26, 9, NULL, 'You can assign a task to people lower than you in your hierarchy.', 0, '2003-12-22 09:08:01.007', 0, '2003-12-22 09:08:01.007', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (27, 9, NULL, 'Marking a task as complete will document the task as having been done, and immediately remove it from the Task List.', 0, '2003-12-22 09:08:01.011', 0, '2003-12-22 09:08:01.011', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (28, 10, NULL, 'Allows you to forward a task to one or more users of the system. Checking the options fields check box indicates that if the recipient is a user of the system, then a copy of the task is send to the recipient''s Internet email.', 0, '2003-12-22 09:08:01.025', 0, '2003-12-22 09:08:01.025', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (29, 10, NULL, 'The Subject line is mandatory', 0, '2003-12-22 09:08:01.032', 0, '2003-12-22 09:08:01.032', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (30, 10, NULL, 'You can add more text to the body of the message by typing directly in the Body text area', 0, '2003-12-22 09:08:01.036', 0, '2003-12-22 09:08:01.036', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (31, 11, NULL, 'Due dates will show on the Home Page calendar', 0, '2003-12-22 09:08:01.048', 0, '2003-12-22 09:08:01.048', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (32, 11, NULL, 'Completing a task will remove it from the task list', 0, '2003-12-22 09:08:01.052', 0, '2003-12-22 09:08:01.052', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (33, 11, NULL, 'You can assign a task to someone lower than you in your heirarchy', 0, '2003-12-22 09:08:01.056', 0, '2003-12-22 09:08:01.056', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (34, 11, NULL, 'You can Add or Change the contact that this task is linked to. When viewing the task, you will be able to view the contact information with one click.', 0, '2003-12-22 09:08:01.06', 0, '2003-12-22 09:08:01.06', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (35, 12, NULL, 'You can also view all the in progress Action Lists, completed lists, or both together.', 0, '2003-12-22 09:08:01.07', 0, '2003-12-22 09:08:01.07', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (36, 12, NULL, 'You can also keep track of the progress of your contacts. The number of them Completed and the Total are shown in the Progress Columns.', 0, '2003-12-22 09:08:01.076', 0, '2003-12-22 09:08:01.076', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (37, 12, NULL, 'You can add a new Action List with a description and status. You can select the contacts for this new Action List. For each of the contacts in the Action List, you can select a corresponding action with the Action Button: view details, modify contact, add contacts or delete the Action List.', 0, '2003-12-22 09:08:01.08', 0, '2003-12-22 09:08:01.08', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (38, 13, NULL, 'Clicking on the contact name will give you a pop up with more details about the contact and also about the related folders, calls, messages and opportunities.', 0, '2003-12-22 09:08:01.092', 0, '2003-12-22 09:08:01.092', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (39, 13, NULL, 'You can add contacts to the list and also Modify the List using "Add Contacts to list" and "Modify List" respectively.', 0, '2003-12-22 09:08:01.096', 0, '2003-12-22 09:08:01.096', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (40, 13, NULL, 'For the Action List you can also view all the in progress contacts, completed contacts or both.', 0, '2003-12-22 09:08:01.10', 0, '2003-12-22 09:08:01.10', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (41, 13, NULL, 'For each of the contacts you can add a call, opportunity, ticket, task or send a message, which would correspondingly appear in their respective tabs. For example, adding a ticket to the contact would be reflected in the Ticket tab.', 0, '2003-12-22 09:08:01.104', 0, '2003-12-22 09:08:01.104', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (42, 14, NULL, 'Select where the contacts will come from (General Contact, Account Contacts) in the From dropdown.', 0, '2003-12-22 09:08:01.114', 0, '2003-12-22 09:08:01.114', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (43, 14, NULL, 'Enter some search text, depending on the Operator you chose.', 0, '2003-12-22 09:08:01.118', 0, '2003-12-22 09:08:01.118', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (44, 14, NULL, 'Choose an Operator based on the Field you chose.', 0, '2003-12-22 09:08:01.123', 0, '2003-12-22 09:08:01.123', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (45, 14, NULL, 'Choose one of the many Field Names on which to base your query.', 0, '2003-12-22 09:08:01.127', 0, '2003-12-22 09:08:01.127', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (46, 14, NULL, 'You can Add or Remove contacts manually with the Add/Remove Contacts link.', 0, '2003-12-22 09:08:01.132', 0, '2003-12-22 09:08:01.132', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (47, 14, NULL, 'Add your query with the Add button at the bottom of the query frame. You can have multipe queries that make up the criteria for a group. You will get the result of all the queries.', 0, '2003-12-22 09:08:01.137', 0, '2003-12-22 09:08:01.137', NULL, NULL, true, 6);
-INSERT INTO help_features VALUES (48, 14, NULL, 'Save the Action List and generate the list of contacts by clicking the Save button at the bottom or top of the page.', 0, '2003-12-22 09:08:01.141', 0, '2003-12-22 09:08:01.141', NULL, NULL, true, 7);
-INSERT INTO help_features VALUES (49, 15, NULL, 'You can check the status checkbox to indicate that the New Action List is complete.', 0, '2003-12-22 09:08:01.151', 0, '2003-12-22 09:08:01.151', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (50, 15, NULL, 'The details of the New Action List can be saved by clicking the save button.', 0, '2003-12-22 09:08:01.156', 0, '2003-12-22 09:08:01.156', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (51, 16, NULL, 'Click Update at the bottom of the page to save your reassignment, Cancel to quit the page without saving, and Reset to reset all the fields to their defaults and start over.', 0, '2003-12-22 09:08:01.174', 0, '2003-12-22 09:08:01.174', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (52, 16, NULL, 'Choose a User to reassign data from in the top dropdown. Only users below you in your hierarchy will be present here.', 0, '2003-12-22 09:08:01.183', 0, '2003-12-22 09:08:01.183', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (53, 16, NULL, 'Select one or more To Users in the To User column to reassign the various assets to. The number of each type of asset available to be reassigned is shown in parentheses after the asset in the first column.', 0, '2003-12-22 09:08:01.193', 0, '2003-12-22 09:08:01.193', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (54, 17, NULL, 'The location of the employee can be changed, i.e. the time zone can be changed by clicking on "Configure my location."', 0, '2003-12-22 09:08:01.206', 0, '2003-12-22 09:08:01.206', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (55, 17, NULL, 'You can update your personal information by clicking on "Update my personal information."', 0, '2003-12-22 09:08:01.211', 0, '2003-12-22 09:08:01.211', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (56, 17, NULL, 'You can change your password by clicking on "Change my password."', 0, '2003-12-22 09:08:01.22', 0, '2003-12-22 09:08:01.22', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (57, 18, NULL, 'Save your changes by clicking the Update button at the top or bottom of the page. The Cancel button forgets the changes and quits the page. The Reset button resets all fields to their original values so you can start over.', 0, '2003-12-22 09:08:01.25', 0, '2003-12-22 09:08:01.25', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (58, 18, NULL, 'The only required field is your last name, but you should fill in as much as you can to make the system as useful as possible. Email address is particularly useful.', 0, '2003-12-22 09:08:01.254', 0, '2003-12-22 09:08:01.254', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (59, 19, NULL, 'The location settings can be changed by selecting the time zone from the drop down list and clicking the update button to update the settings.', 0, '2003-12-22 09:08:01.266', 0, '2003-12-22 09:08:01.266', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (60, 20, NULL, 'You can update your password by clicking on the update button.', 0, '2003-12-22 09:08:01.276', 0, '2003-12-22 09:08:01.276', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (61, 21, NULL, 'For each of the existing tasks, you can view, modify, forward or delete the tasks by clicking on the Action button', 0, '2003-12-22 09:08:01.305', 0, '2003-12-22 09:08:01.305', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (62, 21, NULL, 'You can add a quick task. This task would have just the description and whether the task is personal or not', 0, '2003-12-22 09:08:01.312', 0, '2003-12-22 09:08:01.312', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (63, 21, NULL, 'You can add or update a detailed task called advanced task, wherein you can set up the priority, the status, whether the task is shared or not, also is the task assigned to self or someone working under the owner of the tasks, give the estimated time and add some detailed notes in it.', 0, '2003-12-22 09:08:01.326', 0, '2003-12-22 09:08:01.326', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (64, 21, NULL, 'Checking the existing task''s check box indicates that the particular task is completed.', 0, '2003-12-22 09:08:01.33', 0, '2003-12-22 09:08:01.33', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (65, 21, NULL, 'You can select to view your tasks or tasks assigned by you to others. Each task can be viewed in three different modes i.e. the completed tasks, uncompleted tasks or all the tasks.', 0, '2003-12-22 09:08:01.34', 0, '2003-12-22 09:08:01.34', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (66, 28, NULL, 'You can add the new Action List here. Along with description and the status you need to select the contacts you want in this Action List. You can populate the list in two ways. The first is to use the Add/Remove contacts.', 0, '2003-12-22 09:08:01.386', 0, '2003-12-22 09:08:01.386', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (67, 28, NULL, 'The second is to define the criteria to generate the list. Once it''s generated we can add them to the selected criteria and contacts by using the add feature present.', 0, '2003-12-22 09:08:01.39', 0, '2003-12-22 09:08:01.39', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (68, 31, NULL, 'Check new contacts to add them to your list, uncheck existing contacts to remove them from your list.', 0, '2003-12-22 09:08:01.425', 0, '2003-12-22 09:08:01.425', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (69, 31, NULL, 'Select All Contact, My Contacts or Account Contacts from the dropdown at the top.', 0, '2003-12-22 09:08:01.428', 0, '2003-12-22 09:08:01.428', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (70, 31, NULL, 'Finish by clicking Done at the bottom of the page.', 0, '2003-12-22 09:08:01.432', 0, '2003-12-22 09:08:01.432', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (71, 33, NULL, 'You can add or update a detailed task called advanced task, wherein you can set up a priority, status, whether the task is shared or not, also is the task assigned to you or someone working under the owner of the tasks, give the estimated time and add some detailed notes to it.', 0, '2003-12-22 09:08:01.446', 0, '2003-12-22 09:08:01.446', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (72, 34, NULL, 'You can select the contact category using the radio button and if the contact category is someone permanently associated with an account, then you can select the contact using the "select" next to it.', 0, '2003-12-22 09:08:01.461', 0, '2003-12-22 09:08:01.461', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (73, 34, NULL, 'You can save the details about the employee using the "Save" button.', 0, '2003-12-22 09:08:01.506', 0, '2003-12-22 09:08:01.506', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (74, 34, NULL, 'The "Save & New" button saves the details of the employee and also opens up a blank form start another contact.', 0, '2003-12-22 09:08:01.51', 0, '2003-12-22 09:08:01.51', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (75, 34, NULL, 'The only mandatory field is the Last Name, however, it is important to fill in as much as possible. These fields can be used for various types of queries later.', 0, '2003-12-22 09:08:01.514', 0, '2003-12-22 09:08:01.514', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (76, 34, NULL, 'The contact type can be selected using the "select" link next to the contact type.', 0, '2003-12-22 09:08:01.518', 0, '2003-12-22 09:08:01.518', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (77, 35, NULL, 'If the contact already exists in the system, you can search for that contact by name, company, title, contact type or source.', 0, '2003-12-22 09:08:01.527', 0, '2003-12-22 09:08:01.527', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (78, 36, NULL, 'New export data can be generated by choosing the "Generate new export" link at the top of the page', 0, '2003-12-22 09:08:01.538', 0, '2003-12-22 09:08:01.538', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (79, 36, NULL, 'Use the dropdown to choose which data to display: the list of all the exported data in the system or only your own.', 0, '2003-12-22 09:08:01.542', 0, '2003-12-22 09:08:01.542', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (80, 36, NULL, 'The exported data can be viewed in html format by clicking on the report name. The exported data can also be downloaded in CSV format or deleted by clicking the Select button in the action field.', 0, '2003-12-22 09:08:01.545', 0, '2003-12-22 09:08:01.545', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (81, 37, NULL, 'You can add all the fields or add / delete single fields from the report by using the buttons in the middle of the page. First highlight a field on the left to add or a field on the right to delete.', 0, '2003-12-22 09:08:01.555', 0, '2003-12-22 09:08:01.555', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (82, 37, NULL, 'Use the Up and Down buttons on the right to sort the fields.', 0, '2003-12-22 09:08:01.558', 0, '2003-12-22 09:08:01.558', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (83, 37, NULL, 'The Subject is mandatory. Select which set of contacts the export will come from with Criteria. Select the Primary sort with the Sorting dropdown.', 0, '2003-12-22 09:08:01.562', 0, '2003-12-22 09:08:01.562', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (84, 37, NULL, 'Click the Generate button when you are ready to generate the exported report.', 0, '2003-12-22 09:08:01.568', 0, '2003-12-22 09:08:01.568', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (85, 38, NULL, 'You can update, cancel or reset the details of the contact using the corresponding buttons.', 0, '2003-12-22 09:08:01.577', 0, '2003-12-22 09:08:01.577', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (86, 41, NULL, 'You can also click on the select button under the action field to view, modify, forward or delete a call.', 0, '2003-12-22 09:08:01.596', 0, '2003-12-22 09:08:01.596', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (87, 41, NULL, 'Clicking on the subject of the call will give complete details about the call.', 0, '2003-12-22 09:08:01.60', 0, '2003-12-22 09:08:01.60', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (88, 41, NULL, 'You can add a call associated with a contact.', 0, '2003-12-22 09:08:01.604', 0, '2003-12-22 09:08:01.604', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (89, 42, NULL, 'The save button lets you create a new call which is associated with the call.', 0, '2003-12-22 09:08:01.613', 0, '2003-12-22 09:08:01.613', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (90, 45, NULL, 'You can click the select button under the action column for viewing, modifying and deleting an opportunity.', 0, '2003-12-22 09:08:01.636', 0, '2003-12-22 09:08:01.636', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (91, 45, NULL, 'Clicking on the name of the opportunity will show a detailed description of the opportunity.', 0, '2003-12-22 09:08:01.641', 0, '2003-12-22 09:08:01.641', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (92, 45, NULL, 'Choosing the different types of opportunities from the drop down can filter the display.', 0, '2003-12-22 09:08:01.644', 0, '2003-12-22 09:08:01.644', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (93, 45, NULL, 'Add an opportunity associated with a contact.', 0, '2003-12-22 09:08:01.648', 0, '2003-12-22 09:08:01.648', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (94, 46, NULL, 'You can modify, delete or forward each call using the corresponding buttons.', 0, '2003-12-22 09:08:01.66', 0, '2003-12-22 09:08:01.66', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (95, 47, NULL, 'The component type can be selected using the "select" button.', 0, '2003-12-22 09:08:01.669', 0, '2003-12-22 09:08:01.669', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (96, 47, NULL, 'You can assign the component to any of the employees present using the dropdown list present.', 0, '2003-12-22 09:08:01.673', 0, '2003-12-22 09:08:01.673', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (97, 48, NULL, 'An opportunity can be renamed or deleted using the buttons present at the bottom of the page.', 0, '2003-12-22 09:08:01.682', 0, '2003-12-22 09:08:01.682', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (98, 48, NULL, 'Clicking on the select button lets you view, modify or delete the details about a component.', 0, '2003-12-22 09:08:01.686', 0, '2003-12-22 09:08:01.686', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (99, 48, NULL, 'Clicking on the name of the component shows the details about that component.', 0, '2003-12-22 09:08:01.689', 0, '2003-12-22 09:08:01.689', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (100, 48, NULL, 'Add a new component associated with the contact.', 0, '2003-12-22 09:08:01.693', 0, '2003-12-22 09:08:01.693', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (101, 49, NULL, 'You can modify or delete the opportunity using the modify or delete button.', 0, '2003-12-22 09:08:01.702', 0, '2003-12-22 09:08:01.702', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (102, 50, NULL, 'The type of the call can be selected using the drop down list and all the other details related to the call are updated using the update button.', 0, '2003-12-22 09:08:01.711', 0, '2003-12-22 09:08:01.711', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (103, 58, NULL, 'You can click the attachments or the surveys link present along with the message text.', 0, '2003-12-22 09:08:01.758', 0, '2003-12-22 09:08:01.758', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (104, 59, NULL, 'You can modify or delete the opportunity using the modify or the delete button.', 0, '2003-12-22 09:08:01.767', 0, '2003-12-22 09:08:01.767', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (105, 60, NULL, 'You can also click the select button under the action field to view, modify, clone or delete a contact.', 0, '2003-12-22 09:08:01.776', 0, '2003-12-22 09:08:01.776', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (106, 60, NULL, 'Clicking the name of the contact will display additional details about the contact.', 0, '2003-12-22 09:08:01.78', 0, '2003-12-22 09:08:01.78', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (107, 60, NULL, 'Add a contact using the link "Add a Contact" at the top of the page', 0, '2003-12-22 09:08:01.786', 0, '2003-12-22 09:08:01.786', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (108, 61, NULL, 'You can also choose to display the list of all the exported data in the system or the exported data created by you.', 0, '2003-12-22 09:08:01.795', 0, '2003-12-22 09:08:01.795', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (109, 61, NULL, 'The exported data can be viewed as a .csv file or in html format. The exported data can also be deleted when the select button in the action field is clicked.', 0, '2003-12-22 09:08:01.799', 0, '2003-12-22 09:08:01.799', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (110, 61, NULL, 'New export data can be generated, which lets you choose from the contacts list.', 0, '2003-12-22 09:08:01.803', 0, '2003-12-22 09:08:01.803', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (111, 62, NULL, 'You can modify, clone, or delete the details of the contact. ', 0, '2003-12-22 09:08:01.811', 0, '2003-12-22 09:08:01.811', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (112, 63, NULL, 'Clicking on the name of the message displays more details about the message.', 0, '2003-12-22 09:08:01.82', 0, '2003-12-22 09:08:01.82', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (113, 63, NULL, 'You can view the messages in two different views, i.e. all the messages present or the messages created/assigned by you.', 0, '2003-12-22 09:08:01.824', 0, '2003-12-22 09:08:01.824', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (114, 64, NULL, 'You can select the list of the recipients to whom you want to forward the particular call to by using the "Add Recipients" link.', 0, '2003-12-22 09:08:01.833', 0, '2003-12-22 09:08:01.833', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (115, 66, NULL, 'The component type can be selected using the "select" link.', 0, '2003-12-22 09:08:01.847', 0, '2003-12-22 09:08:01.847', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (116, 66, NULL, 'You can assign the component to any user using the dropdown list provided. ', 0, '2003-12-22 09:08:01.851', 0, '2003-12-22 09:08:01.851', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (117, 67, NULL, 'You can update or cancel the information changed using the "update" or "cancel" button.', 0, '2003-12-22 09:08:01.86', 0, '2003-12-22 09:08:01.86', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (118, 68, NULL, 'The folders can be selected using the drop down list.', 0, '2003-12-22 09:08:01.879', 0, '2003-12-22 09:08:01.879', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (119, 68, NULL, 'You can click on the record name, to view the folder record details. ', 0, '2003-12-22 09:08:01.882', 0, '2003-12-22 09:08:01.882', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (120, 68, NULL, 'You can view the details and modify them by clicking the select button under the action column.', 0, '2003-12-22 09:08:01.886', 0, '2003-12-22 09:08:01.886', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (121, 68, NULL, 'You can add a new record to a folder using the "Add a record to this folder" link.', 0, '2003-12-22 09:08:01.89', 0, '2003-12-22 09:08:01.89', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (122, 68, NULL, 'The folders can be selected using the drop down list.', 0, '2003-12-22 09:08:01.893', 0, '2003-12-22 09:08:01.893', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (123, 69, NULL, 'The changes made in the details of the folders can be updated or canceled using the "Update" or "Cancel" button.', 0, '2003-12-22 09:08:01.902', 0, '2003-12-22 09:08:01.902', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (124, 70, NULL, 'You can also click the select button under the action column for viewing, modifying and deleting an opportunity.', 0, '2003-12-22 09:08:01.911', 0, '2003-12-22 09:08:01.911', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (125, 70, NULL, 'Clicking on the name of the opportunity will display the details of the opportunity.', 0, '2003-12-22 09:08:01.915', 0, '2003-12-22 09:08:01.915', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (126, 70, NULL, 'Choosing the different types of opportunities from the drop down filters the display. ', 0, '2003-12-22 09:08:01.919', 0, '2003-12-22 09:08:01.919', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (127, 70, NULL, 'Add an opportunity associated with a contact.', 0, '2003-12-22 09:08:01.922', 0, '2003-12-22 09:08:01.922', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (128, 71, NULL, 'If the contact already exists in the system, you can search for that contact by name, company, title, contact type or source, by typing the search term in the appropriate field, and clicking the Search button.', 0, '2003-12-22 09:08:01.933', 0, '2003-12-22 09:08:01.933', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (129, 71, NULL, 'You can filter, export, and display data in different formats by clicking the Export link at the top of the page.', 0, '2003-12-22 09:08:01.937', 0, '2003-12-22 09:08:01.937', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (130, 71, NULL, 'Click Add to add a new contact into the system.', 0, '2003-12-22 09:08:01.941', 0, '2003-12-22 09:08:01.941', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (131, 72, NULL, 'You can filter the contact list in three different views. The views are all contacts, your contacts and Account contacts.', 0, '2003-12-22 09:08:01.95', 0, '2003-12-22 09:08:01.95', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (132, 72, NULL, 'Check any or all the contacts from the list you want to assign to your action List.', 0, '2003-12-22 09:08:01.956', 0, '2003-12-22 09:08:01.956', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (133, 74, NULL, 'You can also view, modify, clone or delete the contact by clicking the corresponding button.', 0, '2003-12-22 09:08:01.971', 0, '2003-12-22 09:08:01.971', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (134, 74, NULL, 'You can associate calls, messages and opportunities with each of the contacts already in the system.', 0, '2003-12-22 09:08:01.976', 0, '2003-12-22 09:08:01.976', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (135, 75, NULL, 'The contact type can be selected using the select link.', 0, '2003-12-22 09:08:01.989', 0, '2003-12-22 09:08:01.989', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (136, 75, NULL, 'The details can be updated using the update button.', 0, '2003-12-22 09:08:01.993', 0, '2003-12-22 09:08:01.993', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (137, 76, NULL, 'You can view all the messages related to the contact or only the messages owned by you. (My messages)', 0, '2003-12-22 09:08:02.002', 0, '2003-12-22 09:08:02.002', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (138, 77, NULL, 'This is for adding or updating a new detailed employee record into the system. The last name is the only mandatory field in creating an employee record, However it is important to add as much information as you can.', 0, '2003-12-22 09:08:02.011', 0, '2003-12-22 09:08:02.011', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (139, 78, NULL, 'You can view the progress chart in different views for all the employees working under the owner or creator of the opportunity. The views can be selected from the drop down box present under the chart. The mouse over or a click on the break point on the progress chart will give the date and exact value associated with that point.', 0, '2003-12-22 09:08:02.025', 0, '2003-12-22 09:08:02.025', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (140, 78, NULL, 'The opportunities created are also shown, with their names and the probable gross revenue associated with that opportunity. Clicking on the opportunities shows a details page for the opportunity.', 0, '2003-12-22 09:08:02.029', 0, '2003-12-22 09:08:02.029', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (141, 78, NULL, 'The list of employees reporting to a particular employee/supervisor is also shown below the progress chart. Clicking on an employee shows the Opportunity page from that person''s point of view. You can then work your way back up the chain by clicking the Up One Level link.', 0, '2003-12-22 09:08:02.033', 0, '2003-12-22 09:08:02.033', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (142, 79, NULL, 'The probability of Close, Estimated Close Date, Best Guess Estimate (what will the gross revenue be for this component?), and Estimated Term (over what time period?), are mandatory fields.', 0, '2003-12-22 09:08:02.084', 0, '2003-12-22 09:08:02.084', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (143, 79, NULL, 'You can assign the component to yourself or one of the users in your hierarchy.', 0, '2003-12-22 09:08:02.088', 0, '2003-12-22 09:08:02.088', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (144, 79, NULL, 'The Component Description is a mandatory field. Be descriptive as you will be using this to search on later.', 0, '2003-12-22 09:08:02.091', 0, '2003-12-22 09:08:02.091', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (145, 79, NULL, 'Use the Save button to save your changes and exit, Cancel to cancel your changes and exit, and Reset to cancel your changes and start over.', 0, '2003-12-22 09:08:02.095', 0, '2003-12-22 09:08:02.095', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (146, 79, NULL, 'Enter an Alert Description and Date to remind yourself to follow up on this component at a later date.', 0, '2003-12-22 09:08:02.099', 0, '2003-12-22 09:08:02.099', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (147, 79, NULL, 'You must associate the component with either a Contact or an Account. Choose one of the radio buttons, then one of the Select links.', 0, '2003-12-22 09:08:02.103', 0, '2003-12-22 09:08:02.103', NULL, NULL, true, 6);
-INSERT INTO help_features VALUES (148, 80, NULL, 'Existing opportunities can be searched using this feature. Opportunities can be searched on description, account name, or contact name with whom the opportunity is associated. It can also be searched by current progress / stage of the opportunity or the closing date range.', 0, '2003-12-22 09:08:02.118', 0, '2003-12-22 09:08:02.118', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (149, 81, NULL, 'The exported data can be viewed or downloaded as a .csv file or in html format. The exported data can also be deleted when the select button in the action column is clicked.', 0, '2003-12-22 09:08:02.127', 0, '2003-12-22 09:08:02.127', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (150, 81, NULL, 'You can also choose to display the list of all the exported data in the system or the exported data created by you.', 0, '2003-12-22 09:08:02.131', 0, '2003-12-22 09:08:02.131', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (151, 81, NULL, 'New export data can be generated by choosing from the contacts list. ', 0, '2003-12-22 09:08:02.135', 0, '2003-12-22 09:08:02.135', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (152, 84, NULL, 'Component Description is a mandatory field', 0, '2003-12-22 09:08:02.154', 0, '2003-12-22 09:08:02.154', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (153, 84, NULL, 'Use Update at the top or bottom to save your changes, Cancel to quit this page without saving, and Reset to reset all fields to default and start over.', 0, '2003-12-22 09:08:02.17', 0, '2003-12-22 09:08:02.17', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (154, 84, NULL, 'Add an Alert Description and Date to alert you via a CRM System Message to take a new action', 0, '2003-12-22 09:08:02.174', 0, '2003-12-22 09:08:02.174', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (155, 84, NULL, 'Probability of close, Estimated Close Date (when you will get the revenue), Best Guess Estimate (how much revenue you will get), and Estimated Term (what term the revenue will be realized over) are all the mandatory fields.', 0, '2003-12-22 09:08:02.178', 0, '2003-12-22 09:08:02.178', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (156, 84, NULL, 'You can select a Component Type from the dropdown. These component types are configurable by your System Administrator.', 0, '2003-12-22 09:08:02.182', 0, '2003-12-22 09:08:02.182', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (157, 84, NULL, 'You can assign the component to any User using the dropdown list present.', 0, '2003-12-22 09:08:02.189', 0, '2003-12-22 09:08:02.189', NULL, NULL, true, 6);
-INSERT INTO help_features VALUES (158, 85, NULL, 'The type of the call can be a phone, fax or in person. Some notes regarding the call can be noted. You can add an alert to remind you to follow up on this call.', 0, '2003-12-22 09:08:02.198', 0, '2003-12-22 09:08:02.198', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (159, 85, NULL, 'The Contact dropdown is automatically populated with the correct contacts for the company or account you are dealing with.', 0, '2003-12-22 09:08:02.202', 0, '2003-12-22 09:08:02.202', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (160, 86, NULL, 'You can update or cancel the information changed using the "update" or "cancel" button present.', 0, '2003-12-22 09:08:02.212', 0, '2003-12-22 09:08:02.212', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (161, 88, NULL, 'You can update the details of the documents using the update button.', 0, '2003-12-22 09:08:02.246', 0, '2003-12-22 09:08:02.246', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (162, 92, NULL, 'The component details are shown with additional options for modifying and deleting the component.', 0, '2003-12-22 09:08:02.271', 0, '2003-12-22 09:08:02.271', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (163, 93, NULL, 'The document can be uploaded using the upload button.', 0, '2003-12-22 09:08:02.28', 0, '2003-12-22 09:08:02.28', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (164, 93, NULL, 'The new version of the document can be selected from your local computer using the browse button.', 0, '2003-12-22 09:08:02.283', 0, '2003-12-22 09:08:02.283', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (165, 94, NULL, 'For each of the component you can view the details, modify the content or delete it completely using the select button in the Action column.', 0, '2003-12-22 09:08:02.292', 0, '2003-12-22 09:08:02.292', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (166, 94, NULL, 'You can add an opportunity here by giving complete details about the opportunity.', 0, '2003-12-22 09:08:02.296', 0, '2003-12-22 09:08:02.296', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (167, 94, NULL, 'The search results for existing opportunities are displayed here.', 0, '2003-12-22 09:08:02.30', 0, '2003-12-22 09:08:02.30', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (168, 94, NULL, 'There are different views of the opportunities you can choose from the drop down list and the corresponding types for the opportunities.', 0, '2003-12-22 09:08:02.304', 0, '2003-12-22 09:08:02.304', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (169, 95, NULL, 'In the Documents tab, documents associated with an opportunity can be added. This also displays the documents already linked with this opportunity and other details about the document. Details can be viewed, downloaded, modified or deleted by using the select button in the action column ', 0, '2003-12-22 09:08:02.313', 0, '2003-12-22 09:08:02.313', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (170, 95, NULL, 'In the Calls tab you can add a call associated with the opportunity. This also displays the calls already linked with this opportunity and other details about the call. The call details can be viewed, modified, forwarded or deleted by using the select button in the action column. ', 0, '2003-12-22 09:08:02.319', 0, '2003-12-22 09:08:02.319', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (171, 95, NULL, 'You can rename or delete the opportunity itself using the buttons below.', 0, '2003-12-22 09:08:02.322', 0, '2003-12-22 09:08:02.322', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (172, 95, NULL, 'You can modify, view and delete the details of any particular component by clicking the select button in the action column.', 0, '2003-12-22 09:08:02.326', 0, '2003-12-22 09:08:02.326', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (173, 95, NULL, 'In the Components tab, you can add a component. It also displays the status, amount and the date when the component will be closed. ', 0, '2003-12-22 09:08:02.33', 0, '2003-12-22 09:08:02.33', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (174, 95, NULL, 'There are three tabs in each opportunity i.e. components, calls and documents.', 0, '2003-12-22 09:08:02.333', 0, '2003-12-22 09:08:02.333', NULL, NULL, true, 6);
-INSERT INTO help_features VALUES (175, 95, NULL, 'You get the organization name or the contact name at the top, which on clicking will take you to the Account details. ', 0, '2003-12-22 09:08:02.337', 0, '2003-12-22 09:08:02.337', NULL, NULL, true, 7);
-INSERT INTO help_features VALUES (176, 96, NULL, 'You can select the list of the recipients to whom you want to forward a call to by using the "Add Recipients" link. This will bring up a window with all users, from which you can then choose using check boxes.', 0, '2003-12-22 09:08:02.346', 0, '2003-12-22 09:08:02.346', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (177, 96, NULL, 'You can email a copy of the call to a user''s Internet email by checking the Email check box.', 0, '2003-12-22 09:08:02.35', 0, '2003-12-22 09:08:02.35', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (178, 96, NULL, 'You can add to the message by simply typing in the Body text box.', 0, '2003-12-22 09:08:02.354', 0, '2003-12-22 09:08:02.354', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (179, 97, NULL, 'The version of the particular document can be modified using the add version link.', 0, '2003-12-22 09:08:02.363', 0, '2003-12-22 09:08:02.363', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (180, 97, NULL, 'A document can be viewed, downloaded, modified or deleted by using the select button in the action column.', 0, '2003-12-22 09:08:02.367', 0, '2003-12-22 09:08:02.367', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (181, 97, NULL, 'A click on the subject of the document will show all the versions present.', 0, '2003-12-22 09:08:02.371', 0, '2003-12-22 09:08:02.371', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (182, 98, NULL, 'The type of the call can be selected using the drop down list and all the other details related to the call are updated using the update button', 0, '2003-12-22 09:08:02.38', 0, '2003-12-22 09:08:02.38', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (183, 99, NULL, 'In the Calls tab you can add a call to the opportunity. This also displays the calls already linked with this opportunity and other details about the call. The call details can be viewed, modified, forwarded or deleted by using the select button in the action column', 0, '2003-12-22 09:08:02.389', 0, '2003-12-22 09:08:02.389', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (184, 99, NULL, 'In the Components tab, you can add a component. It also displays the status, amount and the date when the component will be closed.', 0, '2003-12-22 09:08:02.392', 0, '2003-12-22 09:08:02.392', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (185, 99, NULL, 'There are three tabs in each opportunity i.e. components, calls and documents.', 0, '2003-12-22 09:08:02.396', 0, '2003-12-22 09:08:02.396', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (186, 99, NULL, 'You can rename or delete the whole opportunity (not just one of these components) using the buttons at the bottom.', 0, '2003-12-22 09:08:02.40', 0, '2003-12-22 09:08:02.40', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (187, 99, NULL, 'The organization or contact name appears on top, above the Components Tab, which when clicked, will take you to the Account details.', 0, '2003-12-22 09:08:02.403', 0, '2003-12-22 09:08:02.403', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (188, 99, NULL, 'You can modify, view and delete the details of any component by clicking the select button in the Action column, on the far left.', 0, '2003-12-22 09:08:02.407', 0, '2003-12-22 09:08:02.407', NULL, NULL, true, 6);
-INSERT INTO help_features VALUES (189, 99, NULL, 'In the Documents tab, documents associated with the particular opportunity can be added. This also displays the documents already linked with this opportunity and other details about the document. Details can be viewed, downloaded, modified or deleted by using the select button in the action column', 0, '2003-12-22 09:08:02.411', 0, '2003-12-22 09:08:02.411', NULL, NULL, true, 7);
-INSERT INTO help_features VALUES (190, 100, NULL, 'In the Calls tab you can add a call associated with the opportunity. This also displays the calls already linked with this opportunity and other details about the call. The call details can be viewed, modified, forwarded or deleted by using the select button in the action column', 0, '2003-12-22 09:08:02.42', 0, '2003-12-22 09:08:02.42', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (191, 100, NULL, 'If the call subject is clicked then complete details about the call are displayed. ', 0, '2003-12-22 09:08:02.424', 0, '2003-12-22 09:08:02.424', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (192, 101, NULL, 'There are different views of the opportunities you can choose from the dropdown list and the corresponding types of the opportunities. ', 0, '2003-12-22 09:08:02.433', 0, '2003-12-22 09:08:02.433', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (193, 101, NULL, 'You can add an opportunity here by giving complete details about the opportunity.', 0, '2003-12-22 09:08:02.437', 0, '2003-12-22 09:08:02.437', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (194, 101, NULL, 'The search results for existing opportunities are displayed here.', 0, '2003-12-22 09:08:02.441', 0, '2003-12-22 09:08:02.441', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (195, 101, NULL, 'For each of the components you can view the details, modify the content or delete it completely using the select button in the Action column. You can click on any of the component names, which shows more details about the component, such as the calls and documents associated with it.', 0, '2003-12-22 09:08:02.444', 0, '2003-12-22 09:08:02.444', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (196, 102, NULL, 'The list of employees reporting to a particular employee/supervisor is also shown below the progress chart.', 0, '2003-12-22 09:08:02.456', 0, '2003-12-22 09:08:02.456', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (197, 102, NULL, 'Opportunities are displayed, with name and probable revemue. Clicking on the opportunities displays more details of the opportunity.', 0, '2003-12-22 09:08:02.46', 0, '2003-12-22 09:08:02.46', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (198, 102, NULL, 'You can view the progress chart in different views for all the employees working under the owner or creator of the opportunity. The views can be selected from the drop down box under the chart. The mouse over or a click on the break point on the progress chart will give the date and exact value associated with that point.', 0, '2003-12-22 09:08:02.464', 0, '2003-12-22 09:08:02.464', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (199, 103, NULL, 'The component details are shown with additional options for modifying and deleting the component.', 0, '2003-12-22 09:08:02.472', 0, '2003-12-22 09:08:02.472', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (200, 104, NULL, 'The component type can be selected using the "select" link.', 0, '2003-12-22 09:08:02.481', 0, '2003-12-22 09:08:02.481', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (201, 104, NULL, 'You can assign the component to any of the employee present using the dropdown list.', 0, '2003-12-22 09:08:02.485', 0, '2003-12-22 09:08:02.485', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (202, 105, NULL, 'In the Calls tab you can add a call associated with the opportunity. This also displays the calls already linked with this opportunity and other details about the call. Call details can be viewed, modified, forwarded or deleted by using the select button in the action column. ', 0, '2003-12-22 09:08:02.494', 0, '2003-12-22 09:08:02.494', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (203, 105, NULL, 'If the call subject is clicked then it will display complete details about the call.', 0, '2003-12-22 09:08:02.498', 0, '2003-12-22 09:08:02.498', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (204, 106, NULL, 'You can modify, delete and forward each of the calls.', 0, '2003-12-22 09:08:02.509', 0, '2003-12-22 09:08:02.509', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (205, 107, NULL, 'Clicking the Upload button will upload the selected document into the system.', 0, '2003-12-22 09:08:02.518', 0, '2003-12-22 09:08:02.518', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (206, 107, NULL, 'Clicking the Browse button opens a file browser on your own system. Simply navigate to the file on your drive that you want to upload and click Open. This will close the window and bring you back to the upload page.', 0, '2003-12-22 09:08:02.524', 0, '2003-12-22 09:08:02.524', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (207, 107, NULL, 'Add a very descriptive Subject for the file. This is a mandatory field.', 0, '2003-12-22 09:08:02.527', 0, '2003-12-22 09:08:02.527', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (208, 108, NULL, 'All the versions of the document can be downloaded from here. Simply select the version you want and click the Download link on the far left.', 0, '2003-12-22 09:08:02.536', 0, '2003-12-22 09:08:02.536', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (209, 109, NULL, 'The exported data can be viewed as a .csv file or in the html format. The exported data can also be deleted when the select button in the action field is clicked.', 0, '2003-12-22 09:08:02.545', 0, '2003-12-22 09:08:02.545', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (210, 109, NULL, 'You can also choose to display the list of all the exported data in the system or the exported data created by you.', 0, '2003-12-22 09:08:02.549', 0, '2003-12-22 09:08:02.549', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (211, 109, NULL, 'New export data can be generated, which lets you choose from the contacts list.', 0, '2003-12-22 09:08:02.553', 0, '2003-12-22 09:08:02.553', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (212, 109, NULL, 'Click on the subject of the new export, the data is displayed in html format', 0, '2003-12-22 09:08:02.557', 0, '2003-12-22 09:08:02.557', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (213, 110, NULL, 'Click the Generate button at top or bottom to generate the report from the fields you have included. Click cancel to quit and go back to the Export Data page.', 0, '2003-12-22 09:08:02.566', 0, '2003-12-22 09:08:02.566', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (214, 110, NULL, 'Highlight the fields you want to include in the left column and click the Add or All link. Highlight fields in the right column and click the Del link to remove them.', 0, '2003-12-22 09:08:02.57', 0, '2003-12-22 09:08:02.57', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (215, 110, NULL, 'Use the Sorting dropdown to sort the report by one of a variety of fields', 0, '2003-12-22 09:08:02.574', 0, '2003-12-22 09:08:02.574', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (216, 110, NULL, 'Use the Criteria dropdown to use opportunities from My or All Opportunities', 0, '2003-12-22 09:08:02.577', 0, '2003-12-22 09:08:02.577', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (217, 110, NULL, 'The Subject is a mandatory field.', 0, '2003-12-22 09:08:02.581', 0, '2003-12-22 09:08:02.581', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (218, 111, NULL, 'Clicking on the alert link will let you modify the details of the account owner.', 0, '2003-12-22 09:08:02.597', 0, '2003-12-22 09:08:02.597', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (219, 111, NULL, 'Accounts with contract end dates or other required actions will appear in the right hand window where you can take action on them.', 0, '2003-12-22 09:08:02.602', 0, '2003-12-22 09:08:02.602', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (220, 111, NULL, 'You can view the schedule, actions, alert dates and contract end dates for yourself or your employees by using the dropdown at the top of the page.', 0, '2003-12-22 09:08:02.648', 0, '2003-12-22 09:08:02.648', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (221, 111, NULL, 'You can modify the date range shown in the right hand window by clicking on a specific date on the calendar, or on one of the arrows to the left of each week on the calendar to give you a week''s view. Clicking on "Back To Next 7 Days View" at the top of the right window changes the view to the next seven days. The day or week you are currently viewing is highlighted in yellow. Today''s date is highlighted in blue. You can change the month and year using the dropdowns at the top of the calendar, and you can always return to today by using the Today link, also at the top of the calendar.', 0, '2003-12-22 09:08:02.652', 0, '2003-12-22 09:08:02.652', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (222, 112, NULL, 'Use the Insert button at top or bottom to save your changes, Cancel to quit without saving, and Reset to reset all the fields to their default values and start over.', 0, '2003-12-22 09:08:02.661', 0, '2003-12-22 09:08:02.661', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (223, 112, NULL, 'It''s a faily straightforward "fill in the blanks" exercise. There should be a "Primary" or "Business", or "Main" version of phone/fax numbers and addresses because other modules such as Communications Manager use these to perform other actions.', 0, '2003-12-22 09:08:02.665', 0, '2003-12-22 09:08:02.665', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (224, 112, NULL, 'Fill in as many fields as possible. Most of them can be used later as search terms and for queries in reports.', 0, '2003-12-22 09:08:02.669', 0, '2003-12-22 09:08:02.669', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (225, 112, NULL, 'Depending on whether you have chosen Organization or Individual, there are mandatory description fields to fill out about the account.', 0, '2003-12-22 09:08:02.673', 0, '2003-12-22 09:08:02.673', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (226, 112, NULL, 'Choose whether this account is an Organization or an Individual with the appropriate radio button.', 0, '2003-12-22 09:08:02.677', 0, '2003-12-22 09:08:02.677', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (227, 112, NULL, 'Clicking the Select link next to Account Type(s) will open a window with a variety of choices for Account Types. You cah choose and number by clicking the checkboxes to the left. It is important to use this feature as your choice(s) are used for searches and as the subject of querries in reports in other parts of the application.', 0, '2003-12-22 09:08:02.681', 0, '2003-12-22 09:08:02.681', NULL, NULL, true, 6);
-INSERT INTO help_features VALUES (228, 113, NULL, 'The account owner can also be changed using the drop down list', 0, '2003-12-22 09:08:02.69', 0, '2003-12-22 09:08:02.69', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (229, 113, NULL, 'The account type can be selected using the "Select" button', 0, '2003-12-22 09:08:02.693', 0, '2003-12-22 09:08:02.693', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (230, 113, NULL, 'This is for adding or updating account details. The last name or the organization name, based on the classification, is the only mandatory field in creating a new account. The type of account can be selected using the select option given next to the account type', 0, '2003-12-22 09:08:02.697', 0, '2003-12-22 09:08:02.697', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (231, 113, NULL, 'If the Account has a contract, you should enter a contract end date in the fields provided. This will generate an icon on the Home Page and an alert for the owner of the account that action must be taken at a prearranged time.', 0, '2003-12-22 09:08:02.701', 0, '2003-12-22 09:08:02.701', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (232, 114, NULL, 'You can also view, modify, clone and delete the contact by clicking the select button under the action column.', 0, '2003-12-22 09:08:02.71', 0, '2003-12-22 09:08:02.71', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (233, 114, NULL, 'When the name of the contact is clicked, it shows details of that contact, with the options to modify, clone and delete the contact details.', 0, '2003-12-22 09:08:02.714', 0, '2003-12-22 09:08:02.714', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (234, 114, NULL, 'You can add a contact, which is associated with the account.', 0, '2003-12-22 09:08:02.717', 0, '2003-12-22 09:08:02.717', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (235, 115, NULL, 'Using the select button in the action column you can view details and modify the record.', 0, '2003-12-22 09:08:02.727', 0, '2003-12-22 09:08:02.727', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (236, 115, NULL, 'You can click on the record type to view the folders details and modify them.', 0, '2003-12-22 09:08:02.731', 0, '2003-12-22 09:08:02.731', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (237, 115, NULL, 'A new record can be added to the folder.', 0, '2003-12-22 09:08:02.734', 0, '2003-12-22 09:08:02.734', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (238, 115, NULL, 'The folders can be populated by configuring the module in the admin tab.. The type of the folder can be changed using the drop down list shown.', 0, '2003-12-22 09:08:02.738', 0, '2003-12-22 09:08:02.738', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (239, 116, NULL, 'Opportunities associated with the contact, showing the best guess total and last modified date.', 0, '2003-12-22 09:08:02.747', 0, '2003-12-22 09:08:02.747', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (240, 116, NULL, 'You can add an opportunity.', 0, '2003-12-22 09:08:02.751', 0, '2003-12-22 09:08:02.751', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (241, 116, NULL, 'Three types of opportunities are present which can be selected from the drop down list.', 0, '2003-12-22 09:08:02.755', 0, '2003-12-22 09:08:02.755', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (242, 116, NULL, 'When the description of the opportunity is clicked, it will give you more details about the opportunity and the components present in it.', 0, '2003-12-22 09:08:02.759', 0, '2003-12-22 09:08:02.759', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (243, 117, NULL, 'By clicking on the description of the revenue you get the details about that revenue along with the options to modify and delete its details.', 0, '2003-12-22 09:08:02.77', 0, '2003-12-22 09:08:02.77', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (244, 117, NULL, 'You can view your revenue or all the revenues associated with the account using the drop down box.', 0, '2003-12-22 09:08:02.774', 0, '2003-12-22 09:08:02.774', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (245, 117, NULL, 'You can also view, modify and delete the details of the revenue by clicking the select button in the action column.', 0, '2003-12-22 09:08:02.777', 0, '2003-12-22 09:08:02.777', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (246, 117, NULL, 'Add / update a new revenue associated with the account.', 0, '2003-12-22 09:08:02.782', 0, '2003-12-22 09:08:02.782', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (247, 118, NULL, 'Clicking on the description of the revenue displays its details, along with options to modify and delete them.', 0, '2003-12-22 09:08:03.308', 0, '2003-12-22 09:08:03.308', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (248, 118, NULL, 'You can view your revenue or all the revenues associated with the account using the drop down box.', 0, '2003-12-22 09:08:03.313', 0, '2003-12-22 09:08:03.313', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (249, 118, NULL, 'You can also view, modify and delete the details of the revenue by clicking the select button in the action column.', 0, '2003-12-22 09:08:03.32', 0, '2003-12-22 09:08:03.32', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (250, 118, NULL, 'Add / update a new revenue associated with the account.', 0, '2003-12-22 09:08:03.33', 0, '2003-12-22 09:08:03.33', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (251, 119, NULL, 'Add new revenue to an account.', 0, '2003-12-22 09:08:03.338', 0, '2003-12-22 09:08:03.338', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (252, 120, NULL, 'Fill in the blanks and use "Update" to save your changes or "Reset" to return to the original values.', 0, '2003-12-22 09:08:03.36', 0, '2003-12-22 09:08:03.36', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (253, 121, NULL, 'You can also click the select button under the action column to view, modify or delete the ticket.', 0, '2003-12-22 09:08:03.371', 0, '2003-12-22 09:08:03.371', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (254, 121, NULL, 'Clicking on the ticket number will let you view the details, modify or delete the ticket.', 0, '2003-12-22 09:08:03.374', 0, '2003-12-22 09:08:03.374', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (255, 121, NULL, 'Add a new ticket.', 0, '2003-12-22 09:08:03.384', 0, '2003-12-22 09:08:03.384', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (256, 122, NULL, 'The details of the documents can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:08:03.41', 0, '2003-12-22 09:08:03.41', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (257, 122, NULL, 'Document versions can be updated by using the "add version" link. ', 0, '2003-12-22 09:08:03.419', 0, '2003-12-22 09:08:03.419', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (258, 122, NULL, 'A new document can be added which is associated with the account.', 0, '2003-12-22 09:08:03.425', 0, '2003-12-22 09:08:03.425', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (259, 122, NULL, 'You can view the details of, modify, download or delete the documents associated with the account.', 0, '2003-12-22 09:08:03.438', 0, '2003-12-22 09:08:03.438', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (260, 123, NULL, 'You can search for accounts in the system. The search can be based on the account name, phone number or the account type. Three types of accounts can be selected from the drop down list shown.', 0, '2003-12-22 09:08:03.448', 0, '2003-12-22 09:08:03.448', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (261, 124, NULL, 'Click Modify at the top or bottom of the page to modify these datails.', 0, '2003-12-22 09:08:03.459', 0, '2003-12-22 09:08:03.459', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (262, 125, NULL, 'The list of employees reporting to a particular employee/supervisor is also shown below the progress chart. ', 0, '2003-12-22 09:08:03.468', 0, '2003-12-22 09:08:03.468', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (263, 125, NULL, 'The Accounts present are also shown, with name and the amount of money associated with that Account. Clicking on the Account displays the details of the Account.', 0, '2003-12-22 09:08:03.472', 0, '2003-12-22 09:08:03.472', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (264, 125, NULL, 'You can view the progress chart in different views for all the employees working under the owner or creator of the Account. The views can be selected from the drop down box present under the chart. A mouse over or a click on the break point on the progress chart will give the date and exact value associated with that point. ', 0, '2003-12-22 09:08:03.476', 0, '2003-12-22 09:08:03.476', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (265, 126, NULL, 'The exported data can be viewed as a .csv file or in the html format. The exported data can also be deleted when the select button in the action field is clicked. ', 0, '2003-12-22 09:08:03.488', 0, '2003-12-22 09:08:03.488', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (266, 126, NULL, 'You can also choose to display the list of all the exported data in the system or the exported data created by you. ', 0, '2003-12-22 09:08:03.492', 0, '2003-12-22 09:08:03.492', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (267, 126, NULL, 'New export data can be generated using the "Generate new export" link.', 0, '2003-12-22 09:08:03.496', 0, '2003-12-22 09:08:03.496', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (268, 127, NULL, 'The details are updated by clicking the Update button.', 0, '2003-12-22 09:08:03.505', 0, '2003-12-22 09:08:03.505', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (269, 130, NULL, 'There are filters through which you can exactly select the data needed to generate the export data. Apart from selecting the type of accounts and the criteria, you can also select the fields required and then sort them.', 0, '2003-12-22 09:08:03.524', 0, '2003-12-22 09:08:03.524', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (270, 131, NULL, 'Using the select button under the action column you can view the details about the call, modify the call, forward the call or delete the call on the whole.', 0, '2003-12-22 09:08:03.532', 0, '2003-12-22 09:08:03.532', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (271, 131, NULL, 'Clicking on the subject of the call will show you the details about the call that was made to the contact.', 0, '2003-12-22 09:08:03.536', 0, '2003-12-22 09:08:03.536', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (272, 131, NULL, 'You can add a call associated with the contact using the "Add a call" link.', 0, '2003-12-22 09:08:03.54', 0, '2003-12-22 09:08:03.54', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (273, 132, NULL, 'Record details can be saved using the save button.', 0, '2003-12-22 09:08:03.549', 0, '2003-12-22 09:08:03.549', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (274, 133, NULL, 'The details of the new call can be saved using the save button.', 0, '2003-12-22 09:08:03.559', 0, '2003-12-22 09:08:03.559', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (275, 133, NULL, 'The call type can be selected from the dropdown box.', 0, '2003-12-22 09:08:03.562', 0, '2003-12-22 09:08:03.562', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (276, 134, NULL, 'You can browse your local system to select a new document to upload.', 0, '2003-12-22 09:08:03.572', 0, '2003-12-22 09:08:03.572', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (277, 137, NULL, 'You can upload a new version of an existing document.', 0, '2003-12-22 09:08:03.592', 0, '2003-12-22 09:08:03.592', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (278, 140, NULL, 'You can insert a new ticket, add the ticket source and also assign new contact.', 0, '2003-12-22 09:08:03.612', 0, '2003-12-22 09:08:03.612', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (279, 141, NULL, 'The details of the documents can be viewed or modified by clicking on the select button under the Action column ', 0, '2003-12-22 09:08:03.621', 0, '2003-12-22 09:08:03.621', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (280, 141, NULL, 'You can view the details, modify, download or delete the documents associated with the ticket', 0, '2003-12-22 09:08:03.624', 0, '2003-12-22 09:08:03.624', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (281, 141, NULL, 'A new document can be added which is associated with the ticket', 0, '2003-12-22 09:08:03.628', 0, '2003-12-22 09:08:03.628', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (282, 141, NULL, 'The document versions can be updated by using the "add version" link', 0, '2003-12-22 09:08:03.632', 0, '2003-12-22 09:08:03.632', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (283, 146, NULL, 'Clicking on the account name shows complete details about the account', 0, '2003-12-22 09:08:03.661', 0, '2003-12-22 09:08:03.661', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (284, 146, NULL, 'You can add a new account', 0, '2003-12-22 09:08:03.665', 0, '2003-12-22 09:08:03.665', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (285, 146, NULL, 'The select button in the Action column allows you to view, modify and archive the account. Archiving makes the account invisible, but it is still in the database.', 0, '2003-12-22 09:08:03.668', 0, '2003-12-22 09:08:03.668', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (286, 147, NULL, 'You can download all the versions of the documents', 0, '2003-12-22 09:08:03.677', 0, '2003-12-22 09:08:03.677', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (287, 148, NULL, 'You can modify / update the current document information, such as the subject and the filename', 0, '2003-12-22 09:08:03.686', 0, '2003-12-22 09:08:03.686', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (288, 149, NULL, 'The details of the account can be modified here. The details can be saved using the Modify button.', 0, '2003-12-22 09:08:03.697', 0, '2003-12-22 09:08:03.697', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (289, 150, NULL, 'You can modify, delete or forward the calls using the corresponding buttons.', 0, '2003-12-22 09:08:03.706', 0, '2003-12-22 09:08:03.706', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (290, 151, NULL, 'The details of the new call can be saved using the save button.', 0, '2003-12-22 09:08:03.715', 0, '2003-12-22 09:08:03.715', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (291, 151, NULL, 'The call type can be selected from the dropdown box.', 0, '2003-12-22 09:08:03.718', 0, '2003-12-22 09:08:03.718', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (292, 152, NULL, 'You can modify, delete or forward the calls using the corresponding buttons.', 0, '2003-12-22 09:08:03.728', 0, '2003-12-22 09:08:03.728', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (293, 153, NULL, 'You can select the list of the recipients to whom you want to forward the particular call to by using the "Add Recipients" link.', 0, '2003-12-22 09:08:03.737', 0, '2003-12-22 09:08:03.737', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (294, 154, NULL, 'You can also view, modify and delete the opportunity associated with the contact.', 0, '2003-12-22 09:08:03.746', 0, '2003-12-22 09:08:03.746', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (295, 154, NULL, 'When the description of the opportunity is clicked, it will display more details about the opportunity and its components.', 0, '2003-12-22 09:08:03.749', 0, '2003-12-22 09:08:03.749', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (296, 154, NULL, 'Add an opportunity.', 0, '2003-12-22 09:08:03.753', 0, '2003-12-22 09:08:03.753', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (297, 154, NULL, 'Select an opportunity type from the drop down list.', 0, '2003-12-22 09:08:03.759', 0, '2003-12-22 09:08:03.759', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (298, 155, NULL, 'You can rename or delete the opportunity itself using the buttons below.', 0, '2003-12-22 09:08:03.768', 0, '2003-12-22 09:08:03.768', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (299, 155, NULL, 'You can modify, view and delete the details of any particular component by clicking the select button in the action column. ', 0, '2003-12-22 09:08:03.771', 0, '2003-12-22 09:08:03.771', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (300, 155, NULL, 'You can add a new component associated with the account. It also displays the status, amount and the date when the component will be closed. ', 0, '2003-12-22 09:08:03.775', 0, '2003-12-22 09:08:03.775', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (301, 156, NULL, 'Lets you modify or delete the ticket information', 0, '2003-12-22 09:08:03.784', 0, '2003-12-22 09:08:03.784', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (302, 156, NULL, 'You can view the tasks and documents related to a ticket along with the history of that document by clicking on the corresponding links.', 0, '2003-12-22 09:08:03.788', 0, '2003-12-22 09:08:03.788', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (303, 157, NULL, 'You can also have tasks and documents related to a ticket along with the document history.', 0, '2003-12-22 09:08:03.799', 0, '2003-12-22 09:08:03.799', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (304, 157, NULL, 'Lets you modify / update the ticket information.', 0, '2003-12-22 09:08:03.803', 0, '2003-12-22 09:08:03.803', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (305, 158, NULL, 'The details of the task can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:08:03.813', 0, '2003-12-22 09:08:03.813', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (306, 158, NULL, 'You can update the task by clicking on the description of the task.', 0, '2003-12-22 09:08:03.817', 0, '2003-12-22 09:08:03.817', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (307, 158, NULL, 'You can add a task which is associated with the existing ticket.', 0, '2003-12-22 09:08:03.821', 0, '2003-12-22 09:08:03.821', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (308, 159, NULL, 'The document can be uploaded using the browse button.', 0, '2003-12-22 09:08:03.83', 0, '2003-12-22 09:08:03.83', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (309, 161, NULL, 'You can download all the different versions of the documents using the "Download" link in the Action column.', 0, '2003-12-22 09:08:03.844', 0, '2003-12-22 09:08:03.844', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (310, 162, NULL, 'The subject and the filename of the document can be modified.', 0, '2003-12-22 09:08:03.853', 0, '2003-12-22 09:08:03.853', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (311, 163, NULL, 'The subject and the file name can be changed. The version number is updated when an updated document is uploaded.', 0, '2003-12-22 09:08:03.862', 0, '2003-12-22 09:08:03.862', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (312, 164, NULL, 'The exported data can be viewed as a .csv file or in html format. The exported data can also be deleted when the select button in the action field is clicked. ', 0, '2003-12-22 09:08:03.871', 0, '2003-12-22 09:08:03.871', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (313, 164, NULL, 'You can also choose to display a list of all the exported data in the system or the exported data created by you.', 0, '2003-12-22 09:08:03.875', 0, '2003-12-22 09:08:03.875', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (314, 164, NULL, 'New export data can be generated using the "Generate new export" link.', 0, '2003-12-22 09:08:03.879', 0, '2003-12-22 09:08:03.879', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (315, 165, NULL, 'Revenue details along with the option to modify and delete revenue.', 0, '2003-12-22 09:08:03.888', 0, '2003-12-22 09:08:03.888', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (316, 167, NULL, 'You can add / update an opportunity here and assign it to an employee. The opportunity can be associated with an account or a contact. Each opportunity created requires the estimate or the probability of closing the deal, the duration and the best estimate of the person following up the lead.', 0, '2003-12-22 09:08:03.901', 0, '2003-12-22 09:08:03.901', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (317, 168, NULL, 'You can add / update an opportunity here and assign it to an employee. The opportunity can be associated with an account or a contact. Each opportunity created requires the estimate or the probability of closing the deal, the duration and the best estimate of the person following up the lead. ', 0, '2003-12-22 09:08:03.91', 0, '2003-12-22 09:08:03.91', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (318, 169, NULL, 'An opportunity can be renamed or deleted using the buttons present at the bottom of the page', 0, '2003-12-22 09:08:03.919', 0, '2003-12-22 09:08:03.919', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (319, 169, NULL, 'Clicking on the select button lets you view, modify or delete the details about the component ', 0, '2003-12-22 09:08:03.923', 0, '2003-12-22 09:08:03.923', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (320, 169, NULL, 'Clicking on the name of the component would show the details about the component ', 0, '2003-12-22 09:08:03.926', 0, '2003-12-22 09:08:03.926', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (321, 169, NULL, 'Add a new component which is associated with the account.', 0, '2003-12-22 09:08:03.931', 0, '2003-12-22 09:08:03.931', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (322, 170, NULL, 'The description of the opportunity can be changed using the update button.', 0, '2003-12-22 09:08:03.94', 0, '2003-12-22 09:08:03.94', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (323, 171, NULL, 'You can modify and delete the opportunity created using the modify and the delete buttons ', 0, '2003-12-22 09:08:03.949', 0, '2003-12-22 09:08:03.949', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (324, 172, NULL, 'The component type can be selected using the select  link', 0, '2003-12-22 09:08:03.957', 0, '2003-12-22 09:08:03.957', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (325, 172, NULL, 'You can assign the component to any of the employee present using the dropdown list present. ', 0, '2003-12-22 09:08:03.961', 0, '2003-12-22 09:08:03.961', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (326, 173, NULL, 'The component type can be selected using the select  link', 0, '2003-12-22 09:08:03.97', 0, '2003-12-22 09:08:03.97', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (327, 173, NULL, 'You can assign the component to any of the employee present using the dropdown list present. ', 0, '2003-12-22 09:08:03.974', 0, '2003-12-22 09:08:03.974', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (328, 173, NULL, 'Clicking the update button can save the changes made to the component', 0, '2003-12-22 09:08:04.003', 0, '2003-12-22 09:08:04.003', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (329, 174, NULL, 'You can modify and delete the opportunity created using the modify and the delete buttons ', 0, '2003-12-22 09:08:04.065', 0, '2003-12-22 09:08:04.065', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (330, 175, NULL, 'Clicking the select button under the action column gives you the option to view the details about the campaign, download the mail merge and also lets you to export it to Excel.', 0, '2003-12-22 09:08:04.17', 0, '2003-12-22 09:08:04.17', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (331, 175, NULL, 'Clicking on the campaign name gives you complete details about the campaign.', 0, '2003-12-22 09:08:04.174', 0, '2003-12-22 09:08:04.174', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (332, 175, NULL, 'You can display the campaigns created and their details using three different views by selecting from the drop down list.', 0, '2003-12-22 09:08:04.177', 0, '2003-12-22 09:08:04.177', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (333, 176, NULL, 'This creates a new Campaign. This takes in both the campaign and its description.', 0, '2003-12-22 09:08:04.186', 0, '2003-12-22 09:08:04.186', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (334, 177, NULL, 'You can view, modify and delete details by clicking the select button under the action column.', 0, '2003-12-22 09:08:04.198', 0, '2003-12-22 09:08:04.198', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (335, 177, NULL, 'For each of the campaign, the groups, message and delivery columns show whether they are complete or not. Clicking on these will help you choose the group, message and the delivery date.', 0, '2003-12-22 09:08:04.201', 0, '2003-12-22 09:08:04.201', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (336, 177, NULL, 'Clicking the name of the campaign shows you more details about the campaign and also shows the list of the things to be selected before a campaign can be activated', 0, '2003-12-22 09:08:04.211', 0, '2003-12-22 09:08:04.211', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (337, 177, NULL, 'You can view your incomplete campaigns or all the incomplete campaigns. You can select the view with the drop down list at the top.', 0, '2003-12-22 09:08:04.215', 0, '2003-12-22 09:08:04.215', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (338, 177, NULL, 'Add a campaign ', 0, '2003-12-22 09:08:04.218', 0, '2003-12-22 09:08:04.218', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (339, 178, NULL, 'You can also click the select button under the Action column for viewing, modifying or deleting the details.', 0, '2003-12-22 09:08:04.228', 0, '2003-12-22 09:08:04.228', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (340, 178, NULL, 'Clicking the group name will show the list of contacts present in the group.', 0, '2003-12-22 09:08:04.231', 0, '2003-12-22 09:08:04.231', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (341, 178, NULL, 'Add a contact group using the link "Add a Contact Group".', 0, '2003-12-22 09:08:04.235', 0, '2003-12-22 09:08:04.235', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (342, 178, NULL, 'You can filter the list of groups displayed by selecting from the drop down.', 0, '2003-12-22 09:08:04.239', 0, '2003-12-22 09:08:04.239', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (343, 179, NULL, 'You can preview the details of the group by clicking on the preview button.', 0, '2003-12-22 09:08:04.248', 0, '2003-12-22 09:08:04.248', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (344, 179, NULL, 'You can also select from the list of "Selected criteria and contacts" and remove them by clicking the remove button.', 0, '2003-12-22 09:08:04.252', 0, '2003-12-22 09:08:04.252', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (345, 179, NULL, 'You can define the criteria to generate the list by using the different filters present and then add them to the "Selected criteria and contacts".', 0, '2003-12-22 09:08:04.255', 0, '2003-12-22 09:08:04.255', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (346, 179, NULL, 'You can select the criteria for the group to be created. Clicking the "Add/Remove Contacts" can choose the specific contacts.', 0, '2003-12-22 09:08:04.259', 0, '2003-12-22 09:08:04.259', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (347, 180, NULL, 'You can view, modify, clone or delete each of the messages.', 0, '2003-12-22 09:08:04.268', 0, '2003-12-22 09:08:04.268', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (348, 180, NULL, 'The dropdown list acts as filters for displaying the messages that meet certain criteria.', 0, '2003-12-22 09:08:04.272', 0, '2003-12-22 09:08:04.272', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (349, 180, NULL, 'Clicking on the message name will show details about the message, which can be updated.', 0, '2003-12-22 09:08:04.275', 0, '2003-12-22 09:08:04.275', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (350, 180, NULL, 'Add a new message', 0, '2003-12-22 09:08:04.279', 0, '2003-12-22 09:08:04.279', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (351, 181, NULL, 'The new message can be saved by clicking the save message button.', 0, '2003-12-22 09:08:04.288', 0, '2003-12-22 09:08:04.288', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (352, 181, NULL, 'The permissions or the access type for the message can be chosen from drop down box.', 0, '2003-12-22 09:08:04.291', 0, '2003-12-22 09:08:04.291', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (353, 182, NULL, 'Clicking on the "surveys" will let you create new interactive surveys.', 0, '2003-12-22 09:08:04.30', 0, '2003-12-22 09:08:04.30', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (354, 183, NULL, 'You can use the preview button to view the details about the contacts in a group.', 0, '2003-12-22 09:08:04.309', 0, '2003-12-22 09:08:04.309', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (355, 183, NULL, 'You can modify or delete a group.', 0, '2003-12-22 09:08:04.313', 0, '2003-12-22 09:08:04.313', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (356, 184, NULL, 'You can change the version of the document when ever an updated document is uploaded.', 0, '2003-12-22 09:08:04.321', 0, '2003-12-22 09:08:04.321', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (357, 188, NULL, 'You can browse to select a new document to upload if its related to the campaign.', 0, '2003-12-22 09:08:04.348', 0, '2003-12-22 09:08:04.348', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (358, 190, NULL, 'You can also go back from the current detailed view to the group details criteria.', 0, '2003-12-22 09:08:04.361', 0, '2003-12-22 09:08:04.361', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (359, 191, NULL, 'You can download from the list of documents available by using the "download" link under the action column.', 0, '2003-12-22 09:08:04.373', 0, '2003-12-22 09:08:04.373', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (360, 193, NULL, 'The name of the survey is a mandatory field for creating a survey. A description, introduction and thank-you note can also be added.', 0, '2003-12-22 09:08:04.388', 0, '2003-12-22 09:08:04.388', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (361, 195, NULL, 'You can download the mail merge shown at the bottom of the details.', 0, '2003-12-22 09:08:04.401', 0, '2003-12-22 09:08:04.401', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (362, 196, NULL, 'Different versions of the document can be downloaded using the "download" link in the action column.', 0, '2003-12-22 09:08:04.41', 0, '2003-12-22 09:08:04.41', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (363, 201, NULL, 'You can update the campaign schedule by filling in the run date and the delivery method whether it''s an email, fax or letter or any other method.', 0, '2003-12-22 09:08:04.441', 0, '2003-12-22 09:08:04.441', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (364, 202, NULL, 'You can also generate a list of contacts be selecting from the filters and adding them to the "selected criteria and contacts" list.', 0, '2003-12-22 09:08:04.451', 0, '2003-12-22 09:08:04.451', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (365, 202, NULL, 'You can choose the contacts in the group using the "Add / Remove contacts" link present.', 0, '2003-12-22 09:08:04.454', 0, '2003-12-22 09:08:04.454', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (366, 202, NULL, 'You can update the name of the group ', 0, '2003-12-22 09:08:04.458', 0, '2003-12-22 09:08:04.458', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (367, 204, NULL, 'There can be multiple attachments to a single message. The attachment that needs to be downloaded has to be selected first and then downloaded.', 0, '2003-12-22 09:08:04.472', 0, '2003-12-22 09:08:04.472', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (368, 208, NULL, 'The details of the documents can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:08:04.515', 0, '2003-12-22 09:08:04.515', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (369, 208, NULL, 'You can view the details, modify, download or delete the documents associated with the account.', 0, '2003-12-22 09:08:04.518', 0, '2003-12-22 09:08:04.518', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (370, 208, NULL, 'A new document can be added to the account. ', 0, '2003-12-22 09:08:04.522', 0, '2003-12-22 09:08:04.522', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (371, 208, NULL, 'The document versions can be updated by using the "add version" link. ', 0, '2003-12-22 09:08:04.526', 0, '2003-12-22 09:08:04.526', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (372, 209, NULL, 'The name of the campaign can be changed or deleted by using the buttons at the bottom of the page.', 0, '2003-12-22 09:08:04.537', 0, '2003-12-22 09:08:04.537', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (373, 209, NULL, 'You can choose a group / groups, a message for the campaign, and a delivery date for the campaign to start. You can also add attachments to the messages you send to recipients.', 0, '2003-12-22 09:08:04.542', 0, '2003-12-22 09:08:04.542', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (374, 210, NULL, 'You can check the groups you want for the current campaign.', 0, '2003-12-22 09:08:04.551', 0, '2003-12-22 09:08:04.551', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (375, 210, NULL, 'You can also add attachments to the messages you send to recipients by clicking the preview recipient''s link next to each group.', 0, '2003-12-22 09:08:04.554', 0, '2003-12-22 09:08:04.554', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (376, 210, NULL, 'You can view all the groups present or the groups created by you just by choosing from the drop down box.', 0, '2003-12-22 09:08:04.558', 0, '2003-12-22 09:08:04.558', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (377, 211, NULL, 'You can select a message for this campaign from the dropdown list of all the messages or just your messages.', 0, '2003-12-22 09:08:04.567', 0, '2003-12-22 09:08:04.567', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (378, 211, NULL, 'The messages can be of multiple types, which can be used as filters and can be selected from the drop down list. For each type you have further classification.', 0, '2003-12-22 09:08:04.571', 0, '2003-12-22 09:08:04.571', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (379, 212, NULL, 'The attachments configured are the surveys or the file attachments. Using the links "change survey" and "change file attachments", you can change either of them.', 0, '2003-12-22 09:08:04.58', 0, '2003-12-22 09:08:04.58', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (380, 213, NULL, 'You can view and select from all, or only your own surveys.', 0, '2003-12-22 09:08:04.591', 0, '2003-12-22 09:08:04.591', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (381, 214, NULL, 'You can download or remove the file name. You can also upload files using the browse button.', 0, '2003-12-22 09:08:04.60', 0, '2003-12-22 09:08:04.60', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (382, 215, NULL, 'The name and the description of the campaign can be changed.', 0, '2003-12-22 09:08:04.608', 0, '2003-12-22 09:08:04.608', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (383, 216, NULL, 'You can modify, delete or clone the message details by clicking on corresponding buttons.', 0, '2003-12-22 09:08:04.617', 0, '2003-12-22 09:08:04.617', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (384, 217, NULL, 'You can select font properties for the text of the message along with the size and indentation.', 0, '2003-12-22 09:08:04.627', 0, '2003-12-22 09:08:04.627', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (385, 217, NULL, 'The name of the message and the access type can be given, which specifies who can view the message.', 0, '2003-12-22 09:08:04.63', 0, '2003-12-22 09:08:04.63', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (386, 218, NULL, 'You can modify, delete or clone the message details by clicking on corresponding buttons.', 0, '2003-12-22 09:08:04.639', 0, '2003-12-22 09:08:04.639', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (387, 219, NULL, 'You can select font properties for the text of the message along with the size and indentation. ', 0, '2003-12-22 09:08:04.648', 0, '2003-12-22 09:08:04.648', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (388, 219, NULL, 'The name of the message and the access type can be given, which specifies who can view the message.', 0, '2003-12-22 09:08:04.652', 0, '2003-12-22 09:08:04.652', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (389, 220, NULL, 'You can also view, modify and delete the details of a survey. ', 0, '2003-12-22 09:08:04.665', 0, '2003-12-22 09:08:04.665', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (390, 220, NULL, 'Clicking on the name of the survey shows its details.', 0, '2003-12-22 09:08:04.669', 0, '2003-12-22 09:08:04.669', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (391, 220, NULL, 'Add a new survey', 0, '2003-12-22 09:08:04.672', 0, '2003-12-22 09:08:04.672', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (392, 220, NULL, 'You can view all or your own surveys using the drop down list.', 0, '2003-12-22 09:08:04.676', 0, '2003-12-22 09:08:04.676', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (393, 221, NULL, 'The "Save & Add" button saves the current question and lets you add another one immediately.', 0, '2003-12-22 09:08:04.686', 0, '2003-12-22 09:08:04.686', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (394, 221, NULL, 'You can also specify whether the particular question is required or not by checking the checkbox.', 0, '2003-12-22 09:08:04.689', 0, '2003-12-22 09:08:04.689', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (395, 221, NULL, 'If the selected question type is "Item List", then an Edit button is enabled which helps in adding new elements to the existing list.', 0, '2003-12-22 09:08:04.693', 0, '2003-12-22 09:08:04.693', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (396, 221, NULL, 'A new question type can be selected through the drop down list.', 0, '2003-12-22 09:08:04.696', 0, '2003-12-22 09:08:04.696', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (397, 222, NULL, 'The preview button shows you the survey questions in a pop-up window.', 0, '2003-12-22 09:08:04.705', 0, '2003-12-22 09:08:04.705', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (398, 222, NULL, 'You can modify, delete, and preview the survey details using the buttons at the top of the page.', 0, '2003-12-22 09:08:04.709', 0, '2003-12-22 09:08:04.709', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (399, 222, NULL, 'You can view the survey introduction text, the questions and the thank-you text. ', 0, '2003-12-22 09:08:04.712', 0, '2003-12-22 09:08:04.712', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (400, 223, NULL, 'You can add questions to the survey here.', 0, '2003-12-22 09:08:04.721', 0, '2003-12-22 09:08:04.721', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (401, 223, NULL, 'Clicking the "Done" button can save the survey and you can also traverse back by clicking the "Back" button.', 0, '2003-12-22 09:08:04.725', 0, '2003-12-22 09:08:04.725', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (402, 223, NULL, 'The survey questions can be moved up or down using the "Up" or "Down" links present in the action field.', 0, '2003-12-22 09:08:04.728', 0, '2003-12-22 09:08:04.728', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (403, 223, NULL, 'You can edit or delete any of the survey questions using the "edit" or "del" link under the action field.', 0, '2003-12-22 09:08:04.732', 0, '2003-12-22 09:08:04.732', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (404, 223, NULL, 'You can add new survey questions here. ', 0, '2003-12-22 09:08:04.736', 0, '2003-12-22 09:08:04.736', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (405, 224, NULL, 'You can click on "Create Attachments" and include interactive items, like surveys, or provide additional materials like files.', 0, '2003-12-22 09:08:04.745', 0, '2003-12-22 09:08:04.745', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (406, 224, NULL, 'Clicking the "Create Message"  link lets you compose a message to reach your audience.', 0, '2003-12-22 09:08:04.748', 0, '2003-12-22 09:08:04.748', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (407, 224, NULL, 'You can click the "Build Groups" link to assemble dynamic distribution of groups. Each campaign needs at least one group to send a message to.', 0, '2003-12-22 09:08:04.752', 0, '2003-12-22 09:08:04.752', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (408, 224, NULL, 'The "Campaign Builder" can be clicked to select groups of contacts that you would like to send a message to, schedule a delivery date, etc.', 0, '2003-12-22 09:08:04.756', 0, '2003-12-22 09:08:04.756', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (409, 224, NULL, 'You can click on the "Dashboard" to view the sent messages and to drill down and view recipients and survey results.', 0, '2003-12-22 09:08:04.759', 0, '2003-12-22 09:08:04.759', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (410, 225, NULL, 'Lets you modify or delete ticket information ', 0, '2003-12-22 09:08:04.776', 0, '2003-12-22 09:08:04.776', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (411, 225, NULL, 'You can also store tasks and documents related to a ticket.', 0, '2003-12-22 09:08:04.78', 0, '2003-12-22 09:08:04.78', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (412, 226, NULL, 'For each new ticket you can select the organization, the contact and also the issue for which the ticket is being created. The assignment and the resolution of the ticket can also be entered.', 0, '2003-12-22 09:08:04.83', 0, '2003-12-22 09:08:04.83', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (413, 227, NULL, 'The search can be done based on different parameters like the ticket number, account associated, priority, employee whom the ticket is assigned etc.', 0, '2003-12-22 09:08:04.838', 0, '2003-12-22 09:08:04.838', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (414, 228, NULL, 'Clicking on the subject of the exported data shows you the details of the ticket like the ticket ID, the organization and its issue (why the particular ticket was generated).', 0, '2003-12-22 09:08:04.847', 0, '2003-12-22 09:08:04.847', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (415, 228, NULL, 'Clicking on the select button under the action column lets you view the data, download the data in .CSV format or delete the data.', 0, '2003-12-22 09:08:04.851', 0, '2003-12-22 09:08:04.851', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (416, 228, NULL, 'You can filter the exported date generated, by you or by all employees using the dropdown list.', 0, '2003-12-22 09:08:04.855', 0, '2003-12-22 09:08:04.855', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (417, 228, NULL, 'You can generate a new exported data by clicking the link "Generate new export".', 0, '2003-12-22 09:08:04.858', 0, '2003-12-22 09:08:04.858', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (418, 229, NULL, 'You can save the details of the modified ticket by clicking the "Update" button.', 0, '2003-12-22 09:08:04.867', 0, '2003-12-22 09:08:04.867', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (419, 230, NULL, 'You can save the details of the modified ticket by clicking the "Update" button.', 0, '2003-12-22 09:08:04.876', 0, '2003-12-22 09:08:04.876', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (420, 231, NULL, 'The details of the task can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:08:04.885', 0, '2003-12-22 09:08:04.885', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (421, 231, NULL, 'You can update the task by clicking on the description of the task. ', 0, '2003-12-22 09:08:04.889', 0, '2003-12-22 09:08:04.889', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (422, 231, NULL, 'You can add a task which is associated with the existing ticket. ', 0, '2003-12-22 09:08:04.892', 0, '2003-12-22 09:08:04.892', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (423, 232, NULL, 'The details of the documents can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:08:04.901', 0, '2003-12-22 09:08:04.901', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (424, 232, NULL, 'You can view the details, modify, download or delete the documents associated with the ticket. ', 0, '2003-12-22 09:08:04.905', 0, '2003-12-22 09:08:04.905', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (425, 232, NULL, 'A new document associated with the ticket can be added. ', 0, '2003-12-22 09:08:04.908', 0, '2003-12-22 09:08:04.908', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (426, 232, NULL, 'The document versions can be updated by using the "add version" link. ', 0, '2003-12-22 09:08:04.914', 0, '2003-12-22 09:08:04.914', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (427, 233, NULL, 'A new record is added into the folder using the link "Add a record to this folder". Multiple records can be added to this folder if the folder has the necessary settings.', 0, '2003-12-22 09:08:04.923', 0, '2003-12-22 09:08:04.923', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (428, 233, NULL, 'You can select the custom folder using the drop down list. ', 0, '2003-12-22 09:08:04.927', 0, '2003-12-22 09:08:04.927', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (429, 234, NULL, 'The details are saved by clicking the save button.', 0, '2003-12-22 09:08:04.935', 0, '2003-12-22 09:08:04.935', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (430, 235, NULL, 'A chronological history of all actions associated with a ticket is maintined.', 0, '2003-12-22 09:08:04.944', 0, '2003-12-22 09:08:04.944', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (431, 243, NULL, 'The changes can be saved using the "Update" button.', 0, '2003-12-22 09:08:04.989', 0, '2003-12-22 09:08:04.989', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (432, 244, NULL, 'You can modify the folder information along with the record details by clicking on the Modify button.', 0, '2003-12-22 09:08:05', 0, '2003-12-22 09:08:05', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (433, 247, NULL, 'The document can be uploaded using the browse button.', 0, '2003-12-22 09:08:05.018', 0, '2003-12-22 09:08:05.018', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (434, 248, NULL, 'You can download all the versions of a document.', 0, '2003-12-22 09:08:05.028', 0, '2003-12-22 09:08:05.028', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (435, 249, NULL, 'You can also have tasks and documents related to a ticket. ', 0, '2003-12-22 09:08:05.037', 0, '2003-12-22 09:08:05.037', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (436, 249, NULL, 'Lets you modify / update the ticket information. ', 0, '2003-12-22 09:08:05.041', 0, '2003-12-22 09:08:05.041', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (437, 250, NULL, 'A new version of a file can be uploaded using the browse button.', 0, '2003-12-22 09:08:05.05', 0, '2003-12-22 09:08:05.05', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (438, 251, NULL, 'You can delete a record by clicking on "Del" next to the record.', 0, '2003-12-22 09:08:05.059', 0, '2003-12-22 09:08:05.059', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (439, 251, NULL, 'You can add a record by clicking on "Add Ticket".', 0, '2003-12-22 09:08:05.062', 0, '2003-12-22 09:08:05.062', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (440, 251, NULL, 'You can view more records in a particular section by clicking "Show More".', 0, '2003-12-22 09:08:05.066', 0, '2003-12-22 09:08:05.066', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (441, 251, NULL, 'You can view more details by clicking on the record.', 0, '2003-12-22 09:08:05.07', 0, '2003-12-22 09:08:05.07', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (442, 251, NULL, 'You can update a record by clicking on "Edit" next to the record.', 0, '2003-12-22 09:08:05.073', 0, '2003-12-22 09:08:05.073', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (443, 252, NULL, 'A new detailed employee record can be added. ', 0, '2003-12-22 09:08:05.103', 0, '2003-12-22 09:08:05.103', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (444, 252, NULL, 'The details of each employee can be viewed, modified or deleted using the select button in the action column.', 0, '2003-12-22 09:08:05.148', 0, '2003-12-22 09:08:05.148', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (445, 253, NULL, 'You can modify or delete the employee details using the modify or delete buttons.', 0, '2003-12-22 09:08:05.156', 0, '2003-12-22 09:08:05.156', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (446, 254, NULL, 'The "Save" button saves the details of the employee entered. ', 0, '2003-12-22 09:08:05.166', 0, '2003-12-22 09:08:05.166', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (447, 254, NULL, 'The "Save & New" button lets you to save the details of one employee and enter another employee in one operation.', 0, '2003-12-22 09:08:05.169', 0, '2003-12-22 09:08:05.169', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (448, 255, NULL, 'Clicking on the update button saves the modified details of the employee.', 0, '2003-12-22 09:08:05.178', 0, '2003-12-22 09:08:05.178', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (449, 256, NULL, 'The employee record can be modified or deleted from the system completely.', 0, '2003-12-22 09:08:05.187', 0, '2003-12-22 09:08:05.187', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (450, 257, NULL, 'You can cancel the reports that are scheduled to be processed by the server by the clicking the select button.', 0, '2003-12-22 09:08:05.201', 0, '2003-12-22 09:08:05.201', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (451, 257, NULL, 'The generated reports can be deleted or viewed/downloaded in .pdf format by clicking the select button under the action column. ', 0, '2003-12-22 09:08:05.254', 0, '2003-12-22 09:08:05.254', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (452, 257, NULL, 'Add a new report', 0, '2003-12-22 09:08:05.257', 0, '2003-12-22 09:08:05.257', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (453, 258, NULL, 'There are four different modules and you can click on the module where you want to generate the report.', 0, '2003-12-22 09:08:05.266', 0, '2003-12-22 09:08:05.266', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (454, 261, NULL, 'You can use the "generate report" button to run the report.', 0, '2003-12-22 09:08:05.285', 0, '2003-12-22 09:08:05.285', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (455, 261, NULL, 'If the parameters exist, you can specify the name of the criteria for future reference and click the check box present at the bottom of the page.', 0, '2003-12-22 09:08:05.289', 0, '2003-12-22 09:08:05.289', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (456, 262, NULL, 'You can run the report by clicking on the title of the report.', 0, '2003-12-22 09:08:05.298', 0, '2003-12-22 09:08:05.298', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (457, 263, NULL, 'If the criteria are present, select the criteria, then continue to enter the parameters to run the report.', 0, '2003-12-22 09:08:05.306', 0, '2003-12-22 09:08:05.306', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (458, 264, NULL, 'You can view the queue either by using the link in the text or using the view queue button.', 0, '2003-12-22 09:08:05.315', 0, '2003-12-22 09:08:05.315', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (459, 265, NULL, 'You can cancel the report that is scheduled to be processed by the server by clicking the select button and selecting "Cancel".', 0, '2003-12-22 09:08:05.324', 0, '2003-12-22 09:08:05.324', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (460, 265, NULL, 'You can view the reports generated, download them or delete them by clicking on the select button under the action column.', 0, '2003-12-22 09:08:05.327', 0, '2003-12-22 09:08:05.327', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (461, 265, NULL, 'A new report can be generated by clicking on the link "Add a Report".', 0, '2003-12-22 09:08:05.331', 0, '2003-12-22 09:08:05.331', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (462, 266, NULL, 'The alphabetical slide rule allows users to be listed based on their last name. Simply click on the starting letter desired.', 0, '2003-12-22 09:08:05.346', 0, '2003-12-22 09:08:05.346', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (463, 266, NULL, 'The columns "Name", ''Username" and "Role" can be clicked to display the users in the ascending or descending order of the chosen criteria.', 0, '2003-12-22 09:08:05.349', 0, '2003-12-22 09:08:05.349', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (464, 266, NULL, 'The "Add New User" link opens a window that allows the administrator to add new users.', 0, '2003-12-22 09:08:05.353', 0, '2003-12-22 09:08:05.353', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (465, 266, NULL, 'The "select" buttons in the "Action" column alongside the name of each user opens a pop-up menu that provides the administrator with options to view more information, modify user information, or disable (or inactivate) the user.', 0, '2003-12-22 09:08:05.398', 0, '2003-12-22 09:08:05.398', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (466, 266, NULL, 'The list is displayed with 10 names per page by default. Additional items in the list may be viewed by clicking on the "Previous" and "Next" navigation links at the bottom of the table or by changing the number of items to be displayed per page.', 0, '2003-12-22 09:08:05.402', 0, '2003-12-22 09:08:05.402', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (467, 266, NULL, 'The users of the CRM system are listed in alphabetical order. Their user name, role and who they report to are also listed to provide a quick overview of information for each user.', 0, '2003-12-22 09:08:05.405', 0, '2003-12-22 09:08:05.405', NULL, NULL, true, 6);
-INSERT INTO help_features VALUES (468, 266, NULL, 'The drop list provides a filter to either view only the active or only the inactive users. Inactive users are those who do not have the privilege to use the system currently either because their user names have been disabled or they have expired. These users may be activated (enabled) at a later time.', 0, '2003-12-22 09:08:05.409', 0, '2003-12-22 09:08:05.409', NULL, NULL, true, 7);
-INSERT INTO help_features VALUES (469, 267, NULL, 'The ''Reports To" field allows the administrator to setup a user hierarchy. The drop list displays all the users of the system and allows one to be chosen.', 0, '2003-12-22 09:08:05.418', 0, '2003-12-22 09:08:05.418', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (470, 267, NULL, 'The "Role" drop list allows a role to be associated with a user. This association determines the privileges the user may have when he accesses the system.', 0, '2003-12-22 09:08:05.421', 0, '2003-12-22 09:08:05.421', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (471, 267, NULL, 'The "Password" fields allows the administrator to setup a password for the user. The password is used along with the Username to login to the system. Since the password is stored in encrypted form and cannot be interpreted, the administrator is asked to confirm the users password. The user may subsequently change his password according to personal preferences.', 0, '2003-12-22 09:08:05.428', 0, '2003-12-22 09:08:05.428', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (472, 267, NULL, 'The Username is the phrase that is used by the user to login to the system. It must be unique.', 0, '2003-12-22 09:08:05.431', 0, '2003-12-22 09:08:05.431', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (473, 267, NULL, 'An "Expire Date" may be set for each user after which the user is disabled. If this field is left blank the user is active indefinitely. This date can either be typed in the mm/dd/yyyy format or chosen from a calendar that can be accessed from the icon at the right of the field.', 0, '2003-12-22 09:08:05.435', 0, '2003-12-22 09:08:05.435', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (1, 1, NULL, 'You can view the accounts that need attention', 0, '2003-12-22 09:59:22.303', 0, '2003-12-22 09:59:22.303', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (2, 1, NULL, 'You can make calls with the contact information readily accessible', 0, '2003-12-22 09:59:22.315', 0, '2003-12-22 09:59:22.315', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (3, 1, NULL, 'You can view the tasks assigned to you', 0, '2003-12-22 09:59:22.321', 0, '2003-12-22 09:59:22.321', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (4, 1, NULL, 'You can view the tickets assigned to you', 0, '2003-12-22 09:59:22.325', 0, '2003-12-22 09:59:22.325', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (5, 2, NULL, 'The select button can be used to view the details, reply, forward or delete a particular message.', 0, '2003-12-22 09:59:22.362', 0, '2003-12-22 09:59:22.362', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (6, 2, NULL, 'You can add a new message', 0, '2003-12-22 09:59:22.366', 0, '2003-12-22 09:59:22.366', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (7, 2, NULL, 'Clicking on the message will show the details of the message', 0, '2003-12-22 09:59:22.384', 0, '2003-12-22 09:59:22.384', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (8, 2, NULL, 'The drop down can be used to select the messages present in the inbox, sent messages, or archived ones', 0, '2003-12-22 09:59:22.388', 0, '2003-12-22 09:59:22.388', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (9, 2, NULL, 'Sort on one of the column headers by clicking on the column of your choice', 0, '2003-12-22 09:59:22.392', 0, '2003-12-22 09:59:22.392', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (10, 3, NULL, 'You can reply, archive, forward or delete each message by clicking the corresponding button', 0, '2003-12-22 09:59:22.405', 0, '2003-12-22 09:59:22.405', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (11, 4, NULL, 'A new message can be composed either to the contacts or the employees present in the recipients list. The options field can be checked to send a copy to the employees task list apart from sending the employee an email.', 0, '2003-12-22 09:59:22.415', 0, '2003-12-22 09:59:22.415', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (12, 5, NULL, 'You can send the email by clicking the send button', 0, '2003-12-22 09:59:22.425', 0, '2003-12-22 09:59:22.425', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (13, 5, NULL, 'You can add to the list of recipients by using the link "Add Recipients"', 0, '2003-12-22 09:59:22.429', 0, '2003-12-22 09:59:22.429', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (14, 5, NULL, 'You can click the check box to send an Internet email to the recipients', 0, '2003-12-22 09:59:22.437', 0, '2003-12-22 09:59:22.437', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (15, 5, NULL, 'Type directly in the Body test field to modify the message', 0, '2003-12-22 09:59:22.441', 0, '2003-12-22 09:59:22.441', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (16, 7, NULL, 'You can add the list of recipients by using the link "Add Recipients" and also click the check box which would send an email to the recipients ', 0, '2003-12-22 09:59:22.457', 0, '2003-12-22 09:59:22.457', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (17, 7, NULL, 'You can send the email by clicking the send button ', 0, '2003-12-22 09:59:22.463', 0, '2003-12-22 09:59:22.463', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (18, 7, NULL, 'You can edit the message by typing directly in the Body text area', 0, '2003-12-22 09:59:22.467', 0, '2003-12-22 09:59:22.467', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (19, 8, NULL, 'You can add a quick task. This task would have just the description and whether the task is personal or not', 0, '2003-12-22 09:59:22.477', 0, '2003-12-22 09:59:22.477', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (20, 8, NULL, 'For each of the existing tasks, you can view, modify, forward or delete the tasks by clicking on the Action button, and making a selection.', 0, '2003-12-22 09:59:22.486', 0, '2003-12-22 09:59:22.486', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (21, 8, NULL, 'You can select to view your tasks or tasks assigned by you to others working under you. Each can be viewed in three different modes. i.e. the completed tasks, uncompleted tasks or both.', 0, '2003-12-22 09:59:22.49', 0, '2003-12-22 09:59:22.49', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (22, 8, NULL, 'You can add a detailed (advanced) task, where you can set up the priority, status, whether the task is shared or not, task assignment, give the estimated time and add some detailed notes for it.', 0, '2003-12-22 09:59:22.495', 0, '2003-12-22 09:59:22.495', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (23, 9, NULL, 'Link this task to a contact and when you look at the task list, there will be a link to the contact record next to the task, allowing you to go directly to the contact.', 0, '2003-12-22 09:59:22.505', 0, '2003-12-22 09:59:22.505', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (24, 9, NULL, 'Filling in a Due Date will make ths task show up on that date in the Home Page calendar.', 0, '2003-12-22 09:59:22.509', 0, '2003-12-22 09:59:22.509', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (25, 9, NULL, 'Making the task personal will hide it from your hierarchy.', 0, '2003-12-22 09:59:22.513', 0, '2003-12-22 09:59:22.513', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (26, 9, NULL, 'You can assign a task to people lower than you in your hierarchy.', 0, '2003-12-22 09:59:22.517', 0, '2003-12-22 09:59:22.517', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (27, 9, NULL, 'Marking a task as complete will document the task as having been done, and immediately remove it from the Task List.', 0, '2003-12-22 09:59:22.521', 0, '2003-12-22 09:59:22.521', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (28, 10, NULL, 'Allows you to forward a task to one or more users of the system. Checking the options fields check box indicates that if the recipient is a user of the system, then a copy of the task is send to the recipient''s Internet email.', 0, '2003-12-22 09:59:22.537', 0, '2003-12-22 09:59:22.537', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (29, 10, NULL, 'The Subject line is mandatory', 0, '2003-12-22 09:59:22.541', 0, '2003-12-22 09:59:22.541', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (30, 10, NULL, 'You can add more text to the body of the message by typing directly in the Body text area', 0, '2003-12-22 09:59:22.545', 0, '2003-12-22 09:59:22.545', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (31, 11, NULL, 'Due dates will show on the Home Page calendar', 0, '2003-12-22 09:59:22.558', 0, '2003-12-22 09:59:22.558', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (32, 11, NULL, 'Completing a task will remove it from the task list', 0, '2003-12-22 09:59:22.563', 0, '2003-12-22 09:59:22.563', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (33, 11, NULL, 'You can assign a task to someone lower than you in your heirarchy', 0, '2003-12-22 09:59:22.567', 0, '2003-12-22 09:59:22.567', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (34, 11, NULL, 'You can Add or Change the contact that this task is linked to. When viewing the task, you will be able to view the contact information with one click.', 0, '2003-12-22 09:59:22.571', 0, '2003-12-22 09:59:22.571', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (35, 12, NULL, 'You can also view all the in progress Action Lists, completed lists, or both together.', 0, '2003-12-22 09:59:22.581', 0, '2003-12-22 09:59:22.581', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (36, 12, NULL, 'You can also keep track of the progress of your contacts. The number of them Completed and the Total are shown in the Progress Columns.', 0, '2003-12-22 09:59:22.585', 0, '2003-12-22 09:59:22.585', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (37, 12, NULL, 'You can add a new Action List with a description and status. You can select the contacts for this new Action List. For each of the contacts in the Action List, you can select a corresponding action with the Action Button: view details, modify contact, add contacts or delete the Action List.', 0, '2003-12-22 09:59:22.589', 0, '2003-12-22 09:59:22.589', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (38, 13, NULL, 'Clicking on the contact name will give you a pop up with more details about the contact and also about the related folders, calls, messages and opportunities.', 0, '2003-12-22 09:59:22.60', 0, '2003-12-22 09:59:22.60', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (39, 13, NULL, 'You can add contacts to the list and also Modify the List using "Add Contacts to list" and "Modify List" respectively.', 0, '2003-12-22 09:59:22.605', 0, '2003-12-22 09:59:22.605', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (40, 13, NULL, 'For the Action List you can also view all the in progress contacts, completed contacts or both.', 0, '2003-12-22 09:59:22.609', 0, '2003-12-22 09:59:22.609', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (41, 13, NULL, 'For each of the contacts you can add a call, opportunity, ticket, task or send a message, which would correspondingly appear in their respective tabs. For example, adding a ticket to the contact would be reflected in the Ticket tab.', 0, '2003-12-22 09:59:22.613', 0, '2003-12-22 09:59:22.613', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (42, 14, NULL, 'Select where the contacts will come from (General Contact, Account Contacts) in the From dropdown.', 0, '2003-12-22 09:59:22.623', 0, '2003-12-22 09:59:22.623', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (43, 14, NULL, 'Enter some search text, depending on the Operator you chose.', 0, '2003-12-22 09:59:22.627', 0, '2003-12-22 09:59:22.627', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (44, 14, NULL, 'Choose an Operator based on the Field you chose.', 0, '2003-12-22 09:59:22.632', 0, '2003-12-22 09:59:22.632', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (45, 14, NULL, 'Choose one of the many Field Names on which to base your query.', 0, '2003-12-22 09:59:22.636', 0, '2003-12-22 09:59:22.636', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (46, 14, NULL, 'You can Add or Remove contacts manually with the Add/Remove Contacts link.', 0, '2003-12-22 09:59:22.641', 0, '2003-12-22 09:59:22.641', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (47, 14, NULL, 'Add your query with the Add button at the bottom of the query frame. You can have multipe queries that make up the criteria for a group. You will get the result of all the queries.', 0, '2003-12-22 09:59:22.645', 0, '2003-12-22 09:59:22.645', NULL, NULL, true, 6);
+INSERT INTO help_features VALUES (48, 14, NULL, 'Save the Action List and generate the list of contacts by clicking the Save button at the bottom or top of the page.', 0, '2003-12-22 09:59:22.649', 0, '2003-12-22 09:59:22.649', NULL, NULL, true, 7);
+INSERT INTO help_features VALUES (49, 15, NULL, 'You can check the status checkbox to indicate that the New Action List is complete.', 0, '2003-12-22 09:59:22.659', 0, '2003-12-22 09:59:22.659', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (50, 15, NULL, 'The details of the New Action List can be saved by clicking the save button.', 0, '2003-12-22 09:59:22.663', 0, '2003-12-22 09:59:22.663', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (51, 16, NULL, 'Click Update at the bottom of the page to save your reassignment, Cancel to quit the page without saving, and Reset to reset all the fields to their defaults and start over.', 0, '2003-12-22 09:59:22.676', 0, '2003-12-22 09:59:22.676', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (52, 16, NULL, 'Choose a User to reassign data from in the top dropdown. Only users below you in your hierarchy will be present here.', 0, '2003-12-22 09:59:22.682', 0, '2003-12-22 09:59:22.682', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (53, 16, NULL, 'Select one or more To Users in the To User column to reassign the various assets to. The number of each type of asset available to be reassigned is shown in parentheses after the asset in the first column.', 0, '2003-12-22 09:59:22.695', 0, '2003-12-22 09:59:22.695', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (54, 17, NULL, 'The location of the employee can be changed, i.e. the time zone can be changed by clicking on "Configure my location."', 0, '2003-12-22 09:59:22.707', 0, '2003-12-22 09:59:22.707', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (55, 17, NULL, 'You can update your personal information by clicking on "Update my personal information."', 0, '2003-12-22 09:59:22.713', 0, '2003-12-22 09:59:22.713', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (56, 17, NULL, 'You can change your password by clicking on "Change my password."', 0, '2003-12-22 09:59:22.722', 0, '2003-12-22 09:59:22.722', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (57, 18, NULL, 'Save your changes by clicking the Update button at the top or bottom of the page. The Cancel button forgets the changes and quits the page. The Reset button resets all fields to their original values so you can start over.', 0, '2003-12-22 09:59:22.734', 0, '2003-12-22 09:59:22.734', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (58, 18, NULL, 'The only required field is your last name, but you should fill in as much as you can to make the system as useful as possible. Email address is particularly useful.', 0, '2003-12-22 09:59:22.738', 0, '2003-12-22 09:59:22.738', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (59, 19, NULL, 'The location settings can be changed by selecting the time zone from the drop down list and clicking the update button to update the settings.', 0, '2003-12-22 09:59:22.748', 0, '2003-12-22 09:59:22.748', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (60, 20, NULL, 'You can update your password by clicking on the update button.', 0, '2003-12-22 09:59:22.76', 0, '2003-12-22 09:59:22.76', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (61, 21, NULL, 'For each of the existing tasks, you can view, modify, forward or delete the tasks by clicking on the Action button', 0, '2003-12-22 09:59:22.789', 0, '2003-12-22 09:59:22.789', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (62, 21, NULL, 'You can add a quick task. This task would have just the description and whether the task is personal or not', 0, '2003-12-22 09:59:22.796', 0, '2003-12-22 09:59:22.796', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (63, 21, NULL, 'You can add or update a detailed task called advanced task, wherein you can set up the priority, the status, whether the task is shared or not, also is the task assigned to self or someone working under the owner of the tasks, give the estimated time and add some detailed notes in it.', 0, '2003-12-22 09:59:22.80', 0, '2003-12-22 09:59:22.80', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (64, 21, NULL, 'Checking the existing task''s check box indicates that the particular task is completed.', 0, '2003-12-22 09:59:22.804', 0, '2003-12-22 09:59:22.804', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (65, 21, NULL, 'You can select to view your tasks or tasks assigned by you to others. Each task can be viewed in three different modes i.e. the completed tasks, uncompleted tasks or all the tasks.', 0, '2003-12-22 09:59:22.818', 0, '2003-12-22 09:59:22.818', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (66, 28, NULL, 'You can add the new Action List here. Along with description and the status you need to select the contacts you want in this Action List. You can populate the list in two ways. The first is to use the Add/Remove contacts.', 0, '2003-12-22 09:59:22.872', 0, '2003-12-22 09:59:22.872', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (67, 28, NULL, 'The second is to define the criteria to generate the list. Once it''s generated we can add them to the selected criteria and contacts by using the add feature present.', 0, '2003-12-22 09:59:22.876', 0, '2003-12-22 09:59:22.876', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (68, 31, NULL, 'Check new contacts to add them to your list, uncheck existing contacts to remove them from your list.', 0, '2003-12-22 09:59:22.913', 0, '2003-12-22 09:59:22.913', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (69, 31, NULL, 'Select All Contact, My Contacts or Account Contacts from the dropdown at the top.', 0, '2003-12-22 09:59:22.918', 0, '2003-12-22 09:59:22.918', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (70, 31, NULL, 'Finish by clicking Done at the bottom of the page.', 0, '2003-12-22 09:59:22.921', 0, '2003-12-22 09:59:22.921', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (71, 33, NULL, 'You can add or update a detailed task called advanced task, wherein you can set up a priority, status, whether the task is shared or not, also is the task assigned to you or someone working under the owner of the tasks, give the estimated time and add some detailed notes to it.', 0, '2003-12-22 09:59:22.936', 0, '2003-12-22 09:59:22.936', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (72, 34, NULL, 'You can select the contact category using the radio button and if the contact category is someone permanently associated with an account, then you can select the contact using the "select" next to it.', 0, '2003-12-22 09:59:22.95', 0, '2003-12-22 09:59:22.95', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (73, 34, NULL, 'You can save the details about the employee using the "Save" button.', 0, '2003-12-22 09:59:22.954', 0, '2003-12-22 09:59:22.954', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (74, 34, NULL, 'The "Save & New" button saves the details of the employee and also opens up a blank form start another contact.', 0, '2003-12-22 09:59:23.003', 0, '2003-12-22 09:59:23.003', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (75, 34, NULL, 'The only mandatory field is the Last Name, however, it is important to fill in as much as possible. These fields can be used for various types of queries later.', 0, '2003-12-22 09:59:23.007', 0, '2003-12-22 09:59:23.007', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (76, 34, NULL, 'The contact type can be selected using the "select" link next to the contact type.', 0, '2003-12-22 09:59:23.011', 0, '2003-12-22 09:59:23.011', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (77, 35, NULL, 'If the contact already exists in the system, you can search for that contact by name, company, title, contact type or source.', 0, '2003-12-22 09:59:23.02', 0, '2003-12-22 09:59:23.02', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (78, 36, NULL, 'New export data can be generated by choosing the "Generate new export" link at the top of the page', 0, '2003-12-22 09:59:23.03', 0, '2003-12-22 09:59:23.03', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (79, 36, NULL, 'Use the dropdown to choose which data to display: the list of all the exported data in the system or only your own.', 0, '2003-12-22 09:59:23.034', 0, '2003-12-22 09:59:23.034', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (80, 36, NULL, 'The exported data can be viewed in html format by clicking on the report name. The exported data can also be downloaded in CSV format or deleted by clicking the Select button in the action field.', 0, '2003-12-22 09:59:23.038', 0, '2003-12-22 09:59:23.038', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (81, 37, NULL, 'You can add all the fields or add / delete single fields from the report by using the buttons in the middle of the page. First highlight a field on the left to add or a field on the right to delete.', 0, '2003-12-22 09:59:23.046', 0, '2003-12-22 09:59:23.046', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (82, 37, NULL, 'Use the Up and Down buttons on the right to sort the fields.', 0, '2003-12-22 09:59:23.05', 0, '2003-12-22 09:59:23.05', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (83, 37, NULL, 'The Subject is mandatory. Select which set of contacts the export will come from with Criteria. Select the Primary sort with the Sorting dropdown.', 0, '2003-12-22 09:59:23.054', 0, '2003-12-22 09:59:23.054', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (84, 37, NULL, 'Click the Generate button when you are ready to generate the exported report.', 0, '2003-12-22 09:59:23.06', 0, '2003-12-22 09:59:23.06', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (85, 38, NULL, 'You can update, cancel or reset the details of the contact using the corresponding buttons.', 0, '2003-12-22 09:59:23.069', 0, '2003-12-22 09:59:23.069', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (86, 41, NULL, 'You can also click on the select button under the action field to view, modify, forward or delete a call.', 0, '2003-12-22 09:59:23.089', 0, '2003-12-22 09:59:23.089', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (87, 41, NULL, 'Clicking on the subject of the call will give complete details about the call.', 0, '2003-12-22 09:59:23.092', 0, '2003-12-22 09:59:23.092', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (88, 41, NULL, 'You can add a call associated with a contact.', 0, '2003-12-22 09:59:23.096', 0, '2003-12-22 09:59:23.096', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (89, 42, NULL, 'The save button lets you create a new call which is associated with the call.', 0, '2003-12-22 09:59:23.105', 0, '2003-12-22 09:59:23.105', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (90, 45, NULL, 'You can click the select button under the action column for viewing, modifying and deleting an opportunity.', 0, '2003-12-22 09:59:23.124', 0, '2003-12-22 09:59:23.124', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (91, 45, NULL, 'Clicking on the name of the opportunity will show a detailed description of the opportunity.', 0, '2003-12-22 09:59:23.128', 0, '2003-12-22 09:59:23.128', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (92, 45, NULL, 'Choosing the different types of opportunities from the drop down can filter the display.', 0, '2003-12-22 09:59:23.132', 0, '2003-12-22 09:59:23.132', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (93, 45, NULL, 'Add an opportunity associated with a contact.', 0, '2003-12-22 09:59:23.135', 0, '2003-12-22 09:59:23.135', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (94, 46, NULL, 'You can modify, delete or forward each call using the corresponding buttons.', 0, '2003-12-22 09:59:23.147', 0, '2003-12-22 09:59:23.147', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (95, 47, NULL, 'The component type can be selected using the "select" button.', 0, '2003-12-22 09:59:23.156', 0, '2003-12-22 09:59:23.156', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (96, 47, NULL, 'You can assign the component to any of the employees present using the dropdown list present.', 0, '2003-12-22 09:59:23.16', 0, '2003-12-22 09:59:23.16', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (97, 48, NULL, 'An opportunity can be renamed or deleted using the buttons present at the bottom of the page.', 0, '2003-12-22 09:59:23.168', 0, '2003-12-22 09:59:23.168', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (98, 48, NULL, 'Clicking on the select button lets you view, modify or delete the details about a component.', 0, '2003-12-22 09:59:23.172', 0, '2003-12-22 09:59:23.172', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (99, 48, NULL, 'Clicking on the name of the component shows the details about that component.', 0, '2003-12-22 09:59:23.176', 0, '2003-12-22 09:59:23.176', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (100, 48, NULL, 'Add a new component associated with the contact.', 0, '2003-12-22 09:59:23.18', 0, '2003-12-22 09:59:23.18', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (101, 49, NULL, 'You can modify or delete the opportunity using the modify or delete button.', 0, '2003-12-22 09:59:23.204', 0, '2003-12-22 09:59:23.204', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (102, 50, NULL, 'The type of the call can be selected using the drop down list and all the other details related to the call are updated using the update button.', 0, '2003-12-22 09:59:23.213', 0, '2003-12-22 09:59:23.213', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (103, 58, NULL, 'You can click the attachments or the surveys link present along with the message text.', 0, '2003-12-22 09:59:23.259', 0, '2003-12-22 09:59:23.259', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (104, 59, NULL, 'You can modify or delete the opportunity using the modify or the delete button.', 0, '2003-12-22 09:59:23.268', 0, '2003-12-22 09:59:23.268', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (105, 60, NULL, 'You can also click the select button under the action field to view, modify, clone or delete a contact.', 0, '2003-12-22 09:59:23.277', 0, '2003-12-22 09:59:23.277', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (106, 60, NULL, 'Clicking the name of the contact will display additional details about the contact.', 0, '2003-12-22 09:59:23.281', 0, '2003-12-22 09:59:23.281', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (107, 60, NULL, 'Add a contact using the link "Add a Contact" at the top of the page', 0, '2003-12-22 09:59:23.284', 0, '2003-12-22 09:59:23.284', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (108, 61, NULL, 'You can also choose to display the list of all the exported data in the system or the exported data created by you.', 0, '2003-12-22 09:59:23.297', 0, '2003-12-22 09:59:23.297', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (109, 61, NULL, 'The exported data can be viewed as a .csv file or in html format. The exported data can also be deleted when the select button in the action field is clicked.', 0, '2003-12-22 09:59:23.30', 0, '2003-12-22 09:59:23.30', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (110, 61, NULL, 'New export data can be generated, which lets you choose from the contacts list.', 0, '2003-12-22 09:59:23.304', 0, '2003-12-22 09:59:23.304', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (111, 62, NULL, 'You can modify, clone, or delete the details of the contact. ', 0, '2003-12-22 09:59:23.313', 0, '2003-12-22 09:59:23.313', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (112, 63, NULL, 'Clicking on the name of the message displays more details about the message.', 0, '2003-12-22 09:59:23.322', 0, '2003-12-22 09:59:23.322', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (113, 63, NULL, 'You can view the messages in two different views, i.e. all the messages present or the messages created/assigned by you.', 0, '2003-12-22 09:59:23.326', 0, '2003-12-22 09:59:23.326', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (114, 64, NULL, 'You can select the list of the recipients to whom you want to forward the particular call to by using the "Add Recipients" link.', 0, '2003-12-22 09:59:23.335', 0, '2003-12-22 09:59:23.335', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (115, 66, NULL, 'The component type can be selected using the "select" link.', 0, '2003-12-22 09:59:23.354', 0, '2003-12-22 09:59:23.354', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (116, 66, NULL, 'You can assign the component to any user using the dropdown list provided. ', 0, '2003-12-22 09:59:23.358', 0, '2003-12-22 09:59:23.358', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (117, 67, NULL, 'You can update or cancel the information changed using the "update" or "cancel" button.', 0, '2003-12-22 09:59:23.366', 0, '2003-12-22 09:59:23.366', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (118, 68, NULL, 'The folders can be selected using the drop down list.', 0, '2003-12-22 09:59:23.375', 0, '2003-12-22 09:59:23.375', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (119, 68, NULL, 'You can click on the record name, to view the folder record details. ', 0, '2003-12-22 09:59:23.379', 0, '2003-12-22 09:59:23.379', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (120, 68, NULL, 'You can view the details and modify them by clicking the select button under the action column.', 0, '2003-12-22 09:59:23.383', 0, '2003-12-22 09:59:23.383', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (121, 68, NULL, 'You can add a new record to a folder using the "Add a record to this folder" link.', 0, '2003-12-22 09:59:23.386', 0, '2003-12-22 09:59:23.386', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (122, 68, NULL, 'The folders can be selected using the drop down list.', 0, '2003-12-22 09:59:23.39', 0, '2003-12-22 09:59:23.39', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (123, 69, NULL, 'The changes made in the details of the folders can be updated or canceled using the "Update" or "Cancel" button.', 0, '2003-12-22 09:59:23.399', 0, '2003-12-22 09:59:23.399', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (124, 70, NULL, 'You can also click the select button under the action column for viewing, modifying and deleting an opportunity.', 0, '2003-12-22 09:59:23.408', 0, '2003-12-22 09:59:23.408', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (125, 70, NULL, 'Clicking on the name of the opportunity will display the details of the opportunity.', 0, '2003-12-22 09:59:23.412', 0, '2003-12-22 09:59:23.412', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (126, 70, NULL, 'Choosing the different types of opportunities from the drop down filters the display. ', 0, '2003-12-22 09:59:23.416', 0, '2003-12-22 09:59:23.416', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (127, 70, NULL, 'Add an opportunity associated with a contact.', 0, '2003-12-22 09:59:23.419', 0, '2003-12-22 09:59:23.419', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (128, 71, NULL, 'If the contact already exists in the system, you can search for that contact by name, company, title, contact type or source, by typing the search term in the appropriate field, and clicking the Search button.', 0, '2003-12-22 09:59:23.431', 0, '2003-12-22 09:59:23.431', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (129, 71, NULL, 'You can filter, export, and display data in different formats by clicking the Export link at the top of the page.', 0, '2003-12-22 09:59:23.434', 0, '2003-12-22 09:59:23.434', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (130, 71, NULL, 'Click Add to add a new contact into the system.', 0, '2003-12-22 09:59:23.438', 0, '2003-12-22 09:59:23.438', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (131, 72, NULL, 'You can filter the contact list in three different views. The views are all contacts, your contacts and Account contacts.', 0, '2003-12-22 09:59:23.447', 0, '2003-12-22 09:59:23.447', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (132, 72, NULL, 'Check any or all the contacts from the list you want to assign to your action List.', 0, '2003-12-22 09:59:23.453', 0, '2003-12-22 09:59:23.453', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (133, 74, NULL, 'You can also view, modify, clone or delete the contact by clicking the corresponding button.', 0, '2003-12-22 09:59:23.467', 0, '2003-12-22 09:59:23.467', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (134, 74, NULL, 'You can associate calls, messages and opportunities with each of the contacts already in the system.', 0, '2003-12-22 09:59:23.471', 0, '2003-12-22 09:59:23.471', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (135, 75, NULL, 'The contact type can be selected using the select link.', 0, '2003-12-22 09:59:23.483', 0, '2003-12-22 09:59:23.483', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (136, 75, NULL, 'The details can be updated using the update button.', 0, '2003-12-22 09:59:23.487', 0, '2003-12-22 09:59:23.487', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (137, 76, NULL, 'You can view all the messages related to the contact or only the messages owned by you. (My messages)', 0, '2003-12-22 09:59:23.495', 0, '2003-12-22 09:59:23.495', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (138, 77, NULL, 'This is for adding or updating a new detailed employee record into the system. The last name is the only mandatory field in creating an employee record, However it is important to add as much information as you can.', 0, '2003-12-22 09:59:23.504', 0, '2003-12-22 09:59:23.504', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (139, 78, NULL, 'You can view the progress chart in different views for all the employees working under the owner or creator of the opportunity. The views can be selected from the drop down box present under the chart. The mouse over or a click on the break point on the progress chart will give the date and exact value associated with that point.', 0, '2003-12-22 09:59:23.519', 0, '2003-12-22 09:59:23.519', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (140, 78, NULL, 'The opportunities created are also shown, with their names and the probable gross revenue associated with that opportunity. Clicking on the opportunities shows a details page for the opportunity.', 0, '2003-12-22 09:59:23.523', 0, '2003-12-22 09:59:23.523', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (141, 78, NULL, 'The list of employees reporting to a particular employee/supervisor is also shown below the progress chart. Clicking on an employee shows the Opportunity page from that person''s point of view. You can then work your way back up the chain by clicking the Up One Level link.', 0, '2003-12-22 09:59:23.573', 0, '2003-12-22 09:59:23.573', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (142, 79, NULL, 'The probability of Close, Estimated Close Date, Best Guess Estimate (what will the gross revenue be for this component?), and Estimated Term (over what time period?), are mandatory fields.', 0, '2003-12-22 09:59:23.583', 0, '2003-12-22 09:59:23.583', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (143, 79, NULL, 'You can assign the component to yourself or one of the users in your hierarchy.', 0, '2003-12-22 09:59:23.587', 0, '2003-12-22 09:59:23.587', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (144, 79, NULL, 'The Component Description is a mandatory field. Be descriptive as you will be using this to search on later.', 0, '2003-12-22 09:59:23.59', 0, '2003-12-22 09:59:23.59', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (145, 79, NULL, 'Use the Save button to save your changes and exit, Cancel to cancel your changes and exit, and Reset to cancel your changes and start over.', 0, '2003-12-22 09:59:23.594', 0, '2003-12-22 09:59:23.594', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (146, 79, NULL, 'Enter an Alert Description and Date to remind yourself to follow up on this component at a later date.', 0, '2003-12-22 09:59:23.598', 0, '2003-12-22 09:59:23.598', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (147, 79, NULL, 'You must associate the component with either a Contact or an Account. Choose one of the radio buttons, then one of the Select links.', 0, '2003-12-22 09:59:23.601', 0, '2003-12-22 09:59:23.601', NULL, NULL, true, 6);
+INSERT INTO help_features VALUES (148, 80, NULL, 'Existing opportunities can be searched using this feature. Opportunities can be searched on description, account name, or contact name with whom the opportunity is associated. It can also be searched by current progress / stage of the opportunity or the closing date range.', 0, '2003-12-22 09:59:23.61', 0, '2003-12-22 09:59:23.61', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (149, 81, NULL, 'The exported data can be viewed or downloaded as a .csv file or in html format. The exported data can also be deleted when the select button in the action column is clicked.', 0, '2003-12-22 09:59:23.619', 0, '2003-12-22 09:59:23.619', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (150, 81, NULL, 'You can also choose to display the list of all the exported data in the system or the exported data created by you.', 0, '2003-12-22 09:59:23.623', 0, '2003-12-22 09:59:23.623', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (151, 81, NULL, 'New export data can be generated by choosing from the contacts list. ', 0, '2003-12-22 09:59:23.627', 0, '2003-12-22 09:59:23.627', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (152, 84, NULL, 'Component Description is a mandatory field', 0, '2003-12-22 09:59:23.646', 0, '2003-12-22 09:59:23.646', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (153, 84, NULL, 'Use Update at the top or bottom to save your changes, Cancel to quit this page without saving, and Reset to reset all fields to default and start over.', 0, '2003-12-22 09:59:23.662', 0, '2003-12-22 09:59:23.662', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (154, 84, NULL, 'Add an Alert Description and Date to alert you via a CRM System Message to take a new action', 0, '2003-12-22 09:59:23.666', 0, '2003-12-22 09:59:23.666', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (155, 84, NULL, 'Probability of close, Estimated Close Date (when you will get the revenue), Best Guess Estimate (how much revenue you will get), and Estimated Term (what term the revenue will be realized over) are all the mandatory fields.', 0, '2003-12-22 09:59:23.67', 0, '2003-12-22 09:59:23.67', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (156, 84, NULL, 'You can select a Component Type from the dropdown. These component types are configurable by your System Administrator.', 0, '2003-12-22 09:59:23.674', 0, '2003-12-22 09:59:23.674', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (157, 84, NULL, 'You can assign the component to any User using the dropdown list present.', 0, '2003-12-22 09:59:23.677', 0, '2003-12-22 09:59:23.677', NULL, NULL, true, 6);
+INSERT INTO help_features VALUES (158, 85, NULL, 'The type of the call can be a phone, fax or in person. Some notes regarding the call can be noted. You can add an alert to remind you to follow up on this call.', 0, '2003-12-22 09:59:23.686', 0, '2003-12-22 09:59:23.686', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (159, 85, NULL, 'The Contact dropdown is automatically populated with the correct contacts for the company or account you are dealing with.', 0, '2003-12-22 09:59:23.69', 0, '2003-12-22 09:59:23.69', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (160, 86, NULL, 'You can update or cancel the information changed using the "update" or "cancel" button present.', 0, '2003-12-22 09:59:23.70', 0, '2003-12-22 09:59:23.70', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (161, 88, NULL, 'You can update the details of the documents using the update button.', 0, '2003-12-22 09:59:23.733', 0, '2003-12-22 09:59:23.733', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (162, 92, NULL, 'The component details are shown with additional options for modifying and deleting the component.', 0, '2003-12-22 09:59:23.759', 0, '2003-12-22 09:59:23.759', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (163, 93, NULL, 'The document can be uploaded using the upload button.', 0, '2003-12-22 09:59:23.768', 0, '2003-12-22 09:59:23.768', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (164, 93, NULL, 'The new version of the document can be selected from your local computer using the browse button.', 0, '2003-12-22 09:59:23.771', 0, '2003-12-22 09:59:23.771', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (165, 94, NULL, 'For each of the component you can view the details, modify the content or delete it completely using the select button in the Action column.', 0, '2003-12-22 09:59:23.78', 0, '2003-12-22 09:59:23.78', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (166, 94, NULL, 'You can add an opportunity here by giving complete details about the opportunity.', 0, '2003-12-22 09:59:23.784', 0, '2003-12-22 09:59:23.784', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (167, 94, NULL, 'The search results for existing opportunities are displayed here.', 0, '2003-12-22 09:59:23.788', 0, '2003-12-22 09:59:23.788', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (168, 94, NULL, 'There are different views of the opportunities you can choose from the drop down list and the corresponding types for the opportunities.', 0, '2003-12-22 09:59:23.792', 0, '2003-12-22 09:59:23.792', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (169, 95, NULL, 'In the Documents tab, documents associated with an opportunity can be added. This also displays the documents already linked with this opportunity and other details about the document. Details can be viewed, downloaded, modified or deleted by using the select button in the action column ', 0, '2003-12-22 09:59:23.801', 0, '2003-12-22 09:59:23.801', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (170, 95, NULL, 'In the Calls tab you can add a call associated with the opportunity. This also displays the calls already linked with this opportunity and other details about the call. The call details can be viewed, modified, forwarded or deleted by using the select button in the action column. ', 0, '2003-12-22 09:59:23.806', 0, '2003-12-22 09:59:23.806', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (171, 95, NULL, 'You can rename or delete the opportunity itself using the buttons below.', 0, '2003-12-22 09:59:23.811', 0, '2003-12-22 09:59:23.811', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (172, 95, NULL, 'You can modify, view and delete the details of any particular component by clicking the select button in the action column.', 0, '2003-12-22 09:59:23.814', 0, '2003-12-22 09:59:23.814', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (173, 95, NULL, 'In the Components tab, you can add a component. It also displays the status, amount and the date when the component will be closed. ', 0, '2003-12-22 09:59:23.818', 0, '2003-12-22 09:59:23.818', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (174, 95, NULL, 'There are three tabs in each opportunity i.e. components, calls and documents.', 0, '2003-12-22 09:59:23.822', 0, '2003-12-22 09:59:23.822', NULL, NULL, true, 6);
+INSERT INTO help_features VALUES (175, 95, NULL, 'You get the organization name or the contact name at the top, which on clicking will take you to the Account details. ', 0, '2003-12-22 09:59:23.826', 0, '2003-12-22 09:59:23.826', NULL, NULL, true, 7);
+INSERT INTO help_features VALUES (176, 96, NULL, 'You can select the list of the recipients to whom you want to forward a call to by using the "Add Recipients" link. This will bring up a window with all users, from which you can then choose using check boxes.', 0, '2003-12-22 09:59:23.835', 0, '2003-12-22 09:59:23.835', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (177, 96, NULL, 'You can email a copy of the call to a user''s Internet email by checking the Email check box.', 0, '2003-12-22 09:59:23.839', 0, '2003-12-22 09:59:23.839', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (178, 96, NULL, 'You can add to the message by simply typing in the Body text box.', 0, '2003-12-22 09:59:23.842', 0, '2003-12-22 09:59:23.842', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (179, 97, NULL, 'The version of the particular document can be modified using the add version link.', 0, '2003-12-22 09:59:23.856', 0, '2003-12-22 09:59:23.856', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (180, 97, NULL, 'A document can be viewed, downloaded, modified or deleted by using the select button in the action column.', 0, '2003-12-22 09:59:23.859', 0, '2003-12-22 09:59:23.859', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (181, 97, NULL, 'A click on the subject of the document will show all the versions present.', 0, '2003-12-22 09:59:23.863', 0, '2003-12-22 09:59:23.863', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (182, 98, NULL, 'The type of the call can be selected using the drop down list and all the other details related to the call are updated using the update button', 0, '2003-12-22 09:59:23.872', 0, '2003-12-22 09:59:23.872', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (183, 99, NULL, 'In the Calls tab you can add a call to the opportunity. This also displays the calls already linked with this opportunity and other details about the call. The call details can be viewed, modified, forwarded or deleted by using the select button in the action column', 0, '2003-12-22 09:59:23.881', 0, '2003-12-22 09:59:23.881', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (184, 99, NULL, 'In the Components tab, you can add a component. It also displays the status, amount and the date when the component will be closed.', 0, '2003-12-22 09:59:23.885', 0, '2003-12-22 09:59:23.885', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (185, 99, NULL, 'There are three tabs in each opportunity i.e. components, calls and documents.', 0, '2003-12-22 09:59:23.888', 0, '2003-12-22 09:59:23.888', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (186, 99, NULL, 'You can rename or delete the whole opportunity (not just one of these components) using the buttons at the bottom.', 0, '2003-12-22 09:59:23.892', 0, '2003-12-22 09:59:23.892', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (187, 99, NULL, 'The organization or contact name appears on top, above the Components Tab, which when clicked, will take you to the Account details.', 0, '2003-12-22 09:59:23.896', 0, '2003-12-22 09:59:23.896', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (188, 99, NULL, 'You can modify, view and delete the details of any component by clicking the select button in the Action column, on the far left.', 0, '2003-12-22 09:59:23.899', 0, '2003-12-22 09:59:23.899', NULL, NULL, true, 6);
+INSERT INTO help_features VALUES (189, 99, NULL, 'In the Documents tab, documents associated with the particular opportunity can be added. This also displays the documents already linked with this opportunity and other details about the document. Details can be viewed, downloaded, modified or deleted by using the select button in the action column', 0, '2003-12-22 09:59:23.903', 0, '2003-12-22 09:59:23.903', NULL, NULL, true, 7);
+INSERT INTO help_features VALUES (190, 100, NULL, 'In the Calls tab you can add a call associated with the opportunity. This also displays the calls already linked with this opportunity and other details about the call. The call details can be viewed, modified, forwarded or deleted by using the select button in the action column', 0, '2003-12-22 09:59:23.913', 0, '2003-12-22 09:59:23.913', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (191, 100, NULL, 'If the call subject is clicked then complete details about the call are displayed. ', 0, '2003-12-22 09:59:23.916', 0, '2003-12-22 09:59:23.916', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (192, 101, NULL, 'There are different views of the opportunities you can choose from the dropdown list and the corresponding types of the opportunities. ', 0, '2003-12-22 09:59:23.926', 0, '2003-12-22 09:59:23.926', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (193, 101, NULL, 'You can add an opportunity here by giving complete details about the opportunity.', 0, '2003-12-22 09:59:23.929', 0, '2003-12-22 09:59:23.929', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (194, 101, NULL, 'The search results for existing opportunities are displayed here.', 0, '2003-12-22 09:59:23.933', 0, '2003-12-22 09:59:23.933', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (195, 101, NULL, 'For each of the components you can view the details, modify the content or delete it completely using the select button in the Action column. You can click on any of the component names, which shows more details about the component, such as the calls and documents associated with it.', 0, '2003-12-22 09:59:23.938', 0, '2003-12-22 09:59:23.938', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (196, 102, NULL, 'The list of employees reporting to a particular employee/supervisor is also shown below the progress chart.', 0, '2003-12-22 09:59:23.949', 0, '2003-12-22 09:59:23.949', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (197, 102, NULL, 'Opportunities are displayed, with name and probable revemue. Clicking on the opportunities displays more details of the opportunity.', 0, '2003-12-22 09:59:23.953', 0, '2003-12-22 09:59:23.953', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (198, 102, NULL, 'You can view the progress chart in different views for all the employees working under the owner or creator of the opportunity. The views can be selected from the drop down box under the chart. The mouse over or a click on the break point on the progress chart will give the date and exact value associated with that point.', 0, '2003-12-22 09:59:23.956', 0, '2003-12-22 09:59:23.956', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (199, 103, NULL, 'The component details are shown with additional options for modifying and deleting the component.', 0, '2003-12-22 09:59:23.965', 0, '2003-12-22 09:59:23.965', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (200, 104, NULL, 'The component type can be selected using the "select" link.', 0, '2003-12-22 09:59:23.974', 0, '2003-12-22 09:59:23.974', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (201, 104, NULL, 'You can assign the component to any of the employee present using the dropdown list.', 0, '2003-12-22 09:59:23.978', 0, '2003-12-22 09:59:23.978', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (202, 105, NULL, 'In the Calls tab you can add a call associated with the opportunity. This also displays the calls already linked with this opportunity and other details about the call. Call details can be viewed, modified, forwarded or deleted by using the select button in the action column. ', 0, '2003-12-22 09:59:23.987', 0, '2003-12-22 09:59:23.987', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (203, 105, NULL, 'If the call subject is clicked then it will display complete details about the call.', 0, '2003-12-22 09:59:23.99', 0, '2003-12-22 09:59:23.99', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (204, 106, NULL, 'You can modify, delete and forward each of the calls.', 0, '2003-12-22 09:59:24.001', 0, '2003-12-22 09:59:24.001', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (205, 107, NULL, 'Clicking the Upload button will upload the selected document into the system.', 0, '2003-12-22 09:59:24.01', 0, '2003-12-22 09:59:24.01', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (206, 107, NULL, 'Clicking the Browse button opens a file browser on your own system. Simply navigate to the file on your drive that you want to upload and click Open. This will close the window and bring you back to the upload page.', 0, '2003-12-22 09:59:24.016', 0, '2003-12-22 09:59:24.016', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (207, 107, NULL, 'Add a very descriptive Subject for the file. This is a mandatory field.', 0, '2003-12-22 09:59:24.02', 0, '2003-12-22 09:59:24.02', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (208, 108, NULL, 'All the versions of the document can be downloaded from here. Simply select the version you want and click the Download link on the far left.', 0, '2003-12-22 09:59:24.029', 0, '2003-12-22 09:59:24.029', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (209, 109, NULL, 'The exported data can be viewed as a .csv file or in the html format. The exported data can also be deleted when the select button in the action field is clicked.', 0, '2003-12-22 09:59:24.038', 0, '2003-12-22 09:59:24.038', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (210, 109, NULL, 'You can also choose to display the list of all the exported data in the system or the exported data created by you.', 0, '2003-12-22 09:59:24.042', 0, '2003-12-22 09:59:24.042', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (211, 109, NULL, 'New export data can be generated, which lets you choose from the contacts list.', 0, '2003-12-22 09:59:24.046', 0, '2003-12-22 09:59:24.046', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (212, 109, NULL, 'Click on the subject of the new export, the data is displayed in html format', 0, '2003-12-22 09:59:24.049', 0, '2003-12-22 09:59:24.049', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (213, 110, NULL, 'Click the Generate button at top or bottom to generate the report from the fields you have included. Click cancel to quit and go back to the Export Data page.', 0, '2003-12-22 09:59:24.058', 0, '2003-12-22 09:59:24.058', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (214, 110, NULL, 'Highlight the fields you want to include in the left column and click the Add or All link. Highlight fields in the right column and click the Del link to remove them.', 0, '2003-12-22 09:59:24.062', 0, '2003-12-22 09:59:24.062', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (215, 110, NULL, 'Use the Sorting dropdown to sort the report by one of a variety of fields', 0, '2003-12-22 09:59:24.065', 0, '2003-12-22 09:59:24.065', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (216, 110, NULL, 'Use the Criteria dropdown to use opportunities from My or All Opportunities', 0, '2003-12-22 09:59:24.069', 0, '2003-12-22 09:59:24.069', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (217, 110, NULL, 'The Subject is a mandatory field.', 0, '2003-12-22 09:59:24.073', 0, '2003-12-22 09:59:24.073', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (218, 111, NULL, 'Clicking on the alert link will let you modify the details of the account owner.', 0, '2003-12-22 09:59:24.088', 0, '2003-12-22 09:59:24.088', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (219, 111, NULL, 'Accounts with contract end dates or other required actions will appear in the right hand window where you can take action on them.', 0, '2003-12-22 09:59:24.092', 0, '2003-12-22 09:59:24.092', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (220, 111, NULL, 'You can view the schedule, actions, alert dates and contract end dates for yourself or your employees by using the dropdown at the top of the page.', 0, '2003-12-22 09:59:24.142', 0, '2003-12-22 09:59:24.142', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (221, 111, NULL, 'You can modify the date range shown in the right hand window by clicking on a specific date on the calendar, or on one of the arrows to the left of each week on the calendar to give you a week''s view. Clicking on "Back To Next 7 Days View" at the top of the right window changes the view to the next seven days. The day or week you are currently viewing is highlighted in yellow. Today''s date is highlighted in blue. You can change the month and year using the dropdowns at the top of the calendar, and you can always return to today by using the Today link, also at the top of the calendar.', 0, '2003-12-22 09:59:24.146', 0, '2003-12-22 09:59:24.146', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (222, 112, NULL, 'Use the Insert button at top or bottom to save your changes, Cancel to quit without saving, and Reset to reset all the fields to their default values and start over.', 0, '2003-12-22 09:59:24.155', 0, '2003-12-22 09:59:24.155', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (223, 112, NULL, 'It''s a faily straightforward "fill in the blanks" exercise. There should be a "Primary" or "Business", or "Main" version of phone/fax numbers and addresses because other modules such as Communications Manager use these to perform other actions.', 0, '2003-12-22 09:59:24.159', 0, '2003-12-22 09:59:24.159', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (224, 112, NULL, 'Fill in as many fields as possible. Most of them can be used later as search terms and for queries in reports.', 0, '2003-12-22 09:59:24.163', 0, '2003-12-22 09:59:24.163', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (225, 112, NULL, 'Depending on whether you have chosen Organization or Individual, there are mandatory description fields to fill out about the account.', 0, '2003-12-22 09:59:24.166', 0, '2003-12-22 09:59:24.166', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (226, 112, NULL, 'Choose whether this account is an Organization or an Individual with the appropriate radio button.', 0, '2003-12-22 09:59:24.17', 0, '2003-12-22 09:59:24.17', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (227, 112, NULL, 'Clicking the Select link next to Account Type(s) will open a window with a variety of choices for Account Types. You cah choose and number by clicking the checkboxes to the left. It is important to use this feature as your choice(s) are used for searches and as the subject of querries in reports in other parts of the application.', 0, '2003-12-22 09:59:24.174', 0, '2003-12-22 09:59:24.174', NULL, NULL, true, 6);
+INSERT INTO help_features VALUES (228, 113, NULL, 'The account owner can also be changed using the drop down list', 0, '2003-12-22 09:59:24.183', 0, '2003-12-22 09:59:24.183', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (229, 113, NULL, 'The account type can be selected using the "Select" button', 0, '2003-12-22 09:59:24.186', 0, '2003-12-22 09:59:24.186', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (230, 113, NULL, 'This is for adding or updating account details. The last name or the organization name, based on the classification, is the only mandatory field in creating a new account. The type of account can be selected using the select option given next to the account type', 0, '2003-12-22 09:59:24.19', 0, '2003-12-22 09:59:24.19', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (231, 113, NULL, 'If the Account has a contract, you should enter a contract end date in the fields provided. This will generate an icon on the Home Page and an alert for the owner of the account that action must be taken at a prearranged time.', 0, '2003-12-22 09:59:24.194', 0, '2003-12-22 09:59:24.194', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (232, 114, NULL, 'You can also view, modify, clone and delete the contact by clicking the select button under the action column.', 0, '2003-12-22 09:59:24.203', 0, '2003-12-22 09:59:24.203', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (233, 114, NULL, 'When the name of the contact is clicked, it shows details of that contact, with the options to modify, clone and delete the contact details.', 0, '2003-12-22 09:59:24.207', 0, '2003-12-22 09:59:24.207', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (234, 114, NULL, 'You can add a contact, which is associated with the account.', 0, '2003-12-22 09:59:24.21', 0, '2003-12-22 09:59:24.21', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (235, 115, NULL, 'Using the select button in the action column you can view details and modify the record.', 0, '2003-12-22 09:59:24.219', 0, '2003-12-22 09:59:24.219', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (236, 115, NULL, 'You can click on the record type to view the folders details and modify them.', 0, '2003-12-22 09:59:24.223', 0, '2003-12-22 09:59:24.223', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (237, 115, NULL, 'A new record can be added to the folder.', 0, '2003-12-22 09:59:24.226', 0, '2003-12-22 09:59:24.226', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (238, 115, NULL, 'The folders can be populated by configuring the module in the admin tab.. The type of the folder can be changed using the drop down list shown.', 0, '2003-12-22 09:59:24.23', 0, '2003-12-22 09:59:24.23', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (239, 116, NULL, 'Opportunities associated with the contact, showing the best guess total and last modified date.', 0, '2003-12-22 09:59:24.239', 0, '2003-12-22 09:59:24.239', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (240, 116, NULL, 'You can add an opportunity.', 0, '2003-12-22 09:59:24.243', 0, '2003-12-22 09:59:24.243', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (241, 116, NULL, 'Three types of opportunities are present which can be selected from the drop down list.', 0, '2003-12-22 09:59:24.247', 0, '2003-12-22 09:59:24.247', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (242, 116, NULL, 'When the description of the opportunity is clicked, it will give you more details about the opportunity and the components present in it.', 0, '2003-12-22 09:59:24.251', 0, '2003-12-22 09:59:24.251', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (243, 117, NULL, 'By clicking on the description of the revenue you get the details about that revenue along with the options to modify and delete its details.', 0, '2003-12-22 09:59:24.262', 0, '2003-12-22 09:59:24.262', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (244, 117, NULL, 'You can view your revenue or all the revenues associated with the account using the drop down box.', 0, '2003-12-22 09:59:24.266', 0, '2003-12-22 09:59:24.266', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (245, 117, NULL, 'You can also view, modify and delete the details of the revenue by clicking the select button in the action column.', 0, '2003-12-22 09:59:24.27', 0, '2003-12-22 09:59:24.27', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (246, 117, NULL, 'Add / update a new revenue associated with the account.', 0, '2003-12-22 09:59:24.273', 0, '2003-12-22 09:59:24.273', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (247, 118, NULL, 'Clicking on the description of the revenue displays its details, along with options to modify and delete them.', 0, '2003-12-22 09:59:24.282', 0, '2003-12-22 09:59:24.282', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (248, 118, NULL, 'You can view your revenue or all the revenues associated with the account using the drop down box.', 0, '2003-12-22 09:59:24.286', 0, '2003-12-22 09:59:24.286', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (249, 118, NULL, 'You can also view, modify and delete the details of the revenue by clicking the select button in the action column.', 0, '2003-12-22 09:59:24.29', 0, '2003-12-22 09:59:24.29', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (250, 118, NULL, 'Add / update a new revenue associated with the account.', 0, '2003-12-22 09:59:24.293', 0, '2003-12-22 09:59:24.293', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (251, 119, NULL, 'Add new revenue to an account.', 0, '2003-12-22 09:59:24.302', 0, '2003-12-22 09:59:24.302', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (252, 120, NULL, 'Fill in the blanks and use "Update" to save your changes or "Reset" to return to the original values.', 0, '2003-12-22 09:59:24.316', 0, '2003-12-22 09:59:24.316', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (253, 121, NULL, 'You can also click the select button under the action column to view, modify or delete the ticket.', 0, '2003-12-22 09:59:24.325', 0, '2003-12-22 09:59:24.325', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (254, 121, NULL, 'Clicking on the ticket number will let you view the details, modify or delete the ticket.', 0, '2003-12-22 09:59:24.328', 0, '2003-12-22 09:59:24.328', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (255, 121, NULL, 'Add a new ticket.', 0, '2003-12-22 09:59:24.332', 0, '2003-12-22 09:59:24.332', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (256, 122, NULL, 'The details of the documents can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:59:24.341', 0, '2003-12-22 09:59:24.341', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (257, 122, NULL, 'Document versions can be updated by using the "add version" link. ', 0, '2003-12-22 09:59:24.345', 0, '2003-12-22 09:59:24.345', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (258, 122, NULL, 'A new document can be added which is associated with the account.', 0, '2003-12-22 09:59:24.348', 0, '2003-12-22 09:59:24.348', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (259, 122, NULL, 'You can view the details of, modify, download or delete the documents associated with the account.', 0, '2003-12-22 09:59:24.352', 0, '2003-12-22 09:59:24.352', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (260, 123, NULL, 'You can search for accounts in the system. The search can be based on the account name, phone number or the account type. Three types of accounts can be selected from the drop down list shown.', 0, '2003-12-22 09:59:24.366', 0, '2003-12-22 09:59:24.366', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (261, 124, NULL, 'Click Modify at the top or bottom of the page to modify these datails.', 0, '2003-12-22 09:59:24.375', 0, '2003-12-22 09:59:24.375', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (262, 125, NULL, 'The list of employees reporting to a particular employee/supervisor is also shown below the progress chart. ', 0, '2003-12-22 09:59:24.384', 0, '2003-12-22 09:59:24.384', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (263, 125, NULL, 'The Accounts present are also shown, with name and the amount of money associated with that Account. Clicking on the Account displays the details of the Account.', 0, '2003-12-22 09:59:24.388', 0, '2003-12-22 09:59:24.388', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (264, 125, NULL, 'You can view the progress chart in different views for all the employees working under the owner or creator of the Account. The views can be selected from the drop down box present under the chart. A mouse over or a click on the break point on the progress chart will give the date and exact value associated with that point. ', 0, '2003-12-22 09:59:24.391', 0, '2003-12-22 09:59:24.391', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (265, 126, NULL, 'The exported data can be viewed as a .csv file or in the html format. The exported data can also be deleted when the select button in the action field is clicked. ', 0, '2003-12-22 09:59:24.404', 0, '2003-12-22 09:59:24.404', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (266, 126, NULL, 'You can also choose to display the list of all the exported data in the system or the exported data created by you. ', 0, '2003-12-22 09:59:24.407', 0, '2003-12-22 09:59:24.407', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (267, 126, NULL, 'New export data can be generated using the "Generate new export" link.', 0, '2003-12-22 09:59:24.411', 0, '2003-12-22 09:59:24.411', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (268, 127, NULL, 'The details are updated by clicking the Update button.', 0, '2003-12-22 09:59:24.42', 0, '2003-12-22 09:59:24.42', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (269, 130, NULL, 'There are filters through which you can exactly select the data needed to generate the export data. Apart from selecting the type of accounts and the criteria, you can also select the fields required and then sort them.', 0, '2003-12-22 09:59:24.439', 0, '2003-12-22 09:59:24.439', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (270, 131, NULL, 'Using the select button under the action column you can view the details about the call, modify the call, forward the call or delete the call on the whole.', 0, '2003-12-22 09:59:24.448', 0, '2003-12-22 09:59:24.448', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (271, 131, NULL, 'Clicking on the subject of the call will show you the details about the call that was made to the contact.', 0, '2003-12-22 09:59:24.451', 0, '2003-12-22 09:59:24.451', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (272, 131, NULL, 'You can add a call associated with the contact using the "Add a call" link.', 0, '2003-12-22 09:59:24.455', 0, '2003-12-22 09:59:24.455', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (273, 132, NULL, 'Record details can be saved using the save button.', 0, '2003-12-22 09:59:24.464', 0, '2003-12-22 09:59:24.464', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (274, 133, NULL, 'The details of the new call can be saved using the save button.', 0, '2003-12-22 09:59:24.473', 0, '2003-12-22 09:59:24.473', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (275, 133, NULL, 'The call type can be selected from the dropdown box.', 0, '2003-12-22 09:59:24.477', 0, '2003-12-22 09:59:24.477', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (276, 134, NULL, 'You can browse your local system to select a new document to upload.', 0, '2003-12-22 09:59:24.487', 0, '2003-12-22 09:59:24.487', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (277, 137, NULL, 'You can upload a new version of an existing document.', 0, '2003-12-22 09:59:24.506', 0, '2003-12-22 09:59:24.506', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (278, 140, NULL, 'You can insert a new ticket, add the ticket source and also assign new contact.', 0, '2003-12-22 09:59:24.526', 0, '2003-12-22 09:59:24.526', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (279, 141, NULL, 'The details of the documents can be viewed or modified by clicking on the select button under the Action column ', 0, '2003-12-22 09:59:24.535', 0, '2003-12-22 09:59:24.535', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (280, 141, NULL, 'You can view the details, modify, download or delete the documents associated with the ticket', 0, '2003-12-22 09:59:24.539', 0, '2003-12-22 09:59:24.539', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (281, 141, NULL, 'A new document can be added which is associated with the ticket', 0, '2003-12-22 09:59:24.542', 0, '2003-12-22 09:59:24.542', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (282, 141, NULL, 'The document versions can be updated by using the "add version" link', 0, '2003-12-22 09:59:24.546', 0, '2003-12-22 09:59:24.546', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (283, 146, NULL, 'Clicking on the account name shows complete details about the account', 0, '2003-12-22 09:59:24.575', 0, '2003-12-22 09:59:24.575', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (284, 146, NULL, 'You can add a new account', 0, '2003-12-22 09:59:24.579', 0, '2003-12-22 09:59:24.579', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (285, 146, NULL, 'The select button in the Action column allows you to view, modify and archive the account. Archiving makes the account invisible, but it is still in the database.', 0, '2003-12-22 09:59:24.583', 0, '2003-12-22 09:59:24.583', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (286, 147, NULL, 'You can download all the versions of the documents', 0, '2003-12-22 09:59:24.592', 0, '2003-12-22 09:59:24.592', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (287, 148, NULL, 'You can modify / update the current document information, such as the subject and the filename', 0, '2003-12-22 09:59:24.601', 0, '2003-12-22 09:59:24.601', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (288, 149, NULL, 'The details of the account can be modified here. The details can be saved using the Modify button.', 0, '2003-12-22 09:59:24.612', 0, '2003-12-22 09:59:24.612', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (289, 150, NULL, 'You can modify, delete or forward the calls using the corresponding buttons.', 0, '2003-12-22 09:59:24.621', 0, '2003-12-22 09:59:24.621', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (290, 151, NULL, 'The details of the new call can be saved using the save button.', 0, '2003-12-22 09:59:24.629', 0, '2003-12-22 09:59:24.629', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (291, 151, NULL, 'The call type can be selected from the dropdown box.', 0, '2003-12-22 09:59:24.633', 0, '2003-12-22 09:59:24.633', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (292, 152, NULL, 'You can modify, delete or forward the calls using the corresponding buttons.', 0, '2003-12-22 09:59:24.642', 0, '2003-12-22 09:59:24.642', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (293, 153, NULL, 'You can select the list of the recipients to whom you want to forward the particular call to by using the "Add Recipients" link.', 0, '2003-12-22 09:59:24.651', 0, '2003-12-22 09:59:24.651', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (294, 154, NULL, 'You can also view, modify and delete the opportunity associated with the contact.', 0, '2003-12-22 09:59:24.659', 0, '2003-12-22 09:59:24.659', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (295, 154, NULL, 'When the description of the opportunity is clicked, it will display more details about the opportunity and its components.', 0, '2003-12-22 09:59:24.663', 0, '2003-12-22 09:59:24.663', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (296, 154, NULL, 'Add an opportunity.', 0, '2003-12-22 09:59:24.667', 0, '2003-12-22 09:59:24.667', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (297, 154, NULL, 'Select an opportunity type from the drop down list.', 0, '2003-12-22 09:59:24.67', 0, '2003-12-22 09:59:24.67', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (298, 155, NULL, 'You can rename or delete the opportunity itself using the buttons below.', 0, '2003-12-22 09:59:24.679', 0, '2003-12-22 09:59:24.679', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (299, 155, NULL, 'You can modify, view and delete the details of any particular component by clicking the select button in the action column. ', 0, '2003-12-22 09:59:24.683', 0, '2003-12-22 09:59:24.683', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (300, 155, NULL, 'You can add a new component associated with the account. It also displays the status, amount and the date when the component will be closed. ', 0, '2003-12-22 09:59:24.687', 0, '2003-12-22 09:59:24.687', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (301, 156, NULL, 'Lets you modify or delete the ticket information', 0, '2003-12-22 09:59:24.695', 0, '2003-12-22 09:59:24.695', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (302, 156, NULL, 'You can view the tasks and documents related to a ticket along with the history of that document by clicking on the corresponding links.', 0, '2003-12-22 09:59:24.699', 0, '2003-12-22 09:59:24.699', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (303, 157, NULL, 'You can also have tasks and documents related to a ticket along with the document history.', 0, '2003-12-22 09:59:24.711', 0, '2003-12-22 09:59:24.711', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (304, 157, NULL, 'Lets you modify / update the ticket information.', 0, '2003-12-22 09:59:24.715', 0, '2003-12-22 09:59:24.715', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (305, 158, NULL, 'The details of the task can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:59:24.724', 0, '2003-12-22 09:59:24.724', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (306, 158, NULL, 'You can update the task by clicking on the description of the task.', 0, '2003-12-22 09:59:24.728', 0, '2003-12-22 09:59:24.728', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (307, 158, NULL, 'You can add a task which is associated with the existing ticket.', 0, '2003-12-22 09:59:24.731', 0, '2003-12-22 09:59:24.731', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (308, 159, NULL, 'The document can be uploaded using the browse button.', 0, '2003-12-22 09:59:24.74', 0, '2003-12-22 09:59:24.74', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (309, 161, NULL, 'You can download all the different versions of the documents using the "Download" link in the Action column.', 0, '2003-12-22 09:59:24.755', 0, '2003-12-22 09:59:24.755', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (310, 162, NULL, 'The subject and the filename of the document can be modified.', 0, '2003-12-22 09:59:24.764', 0, '2003-12-22 09:59:24.764', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (311, 163, NULL, 'The subject and the file name can be changed. The version number is updated when an updated document is uploaded.', 0, '2003-12-22 09:59:24.773', 0, '2003-12-22 09:59:24.773', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (312, 164, NULL, 'The exported data can be viewed as a .csv file or in html format. The exported data can also be deleted when the select button in the action field is clicked. ', 0, '2003-12-22 09:59:24.782', 0, '2003-12-22 09:59:24.782', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (313, 164, NULL, 'You can also choose to display a list of all the exported data in the system or the exported data created by you.', 0, '2003-12-22 09:59:24.786', 0, '2003-12-22 09:59:24.786', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (314, 164, NULL, 'New export data can be generated using the "Generate new export" link.', 0, '2003-12-22 09:59:24.789', 0, '2003-12-22 09:59:24.789', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (315, 165, NULL, 'Revenue details along with the option to modify and delete revenue.', 0, '2003-12-22 09:59:24.798', 0, '2003-12-22 09:59:24.798', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (316, 167, NULL, 'You can add / update an opportunity here and assign it to an employee. The opportunity can be associated with an account or a contact. Each opportunity created requires the estimate or the probability of closing the deal, the duration and the best estimate of the person following up the lead.', 0, '2003-12-22 09:59:24.812', 0, '2003-12-22 09:59:24.812', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (317, 168, NULL, 'You can add / update an opportunity here and assign it to an employee. The opportunity can be associated with an account or a contact. Each opportunity created requires the estimate or the probability of closing the deal, the duration and the best estimate of the person following up the lead. ', 0, '2003-12-22 09:59:24.821', 0, '2003-12-22 09:59:24.821', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (318, 169, NULL, 'An opportunity can be renamed or deleted using the buttons present at the bottom of the page', 0, '2003-12-22 09:59:24.83', 0, '2003-12-22 09:59:24.83', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (319, 169, NULL, 'Clicking on the select button lets you view, modify or delete the details about the component ', 0, '2003-12-22 09:59:24.833', 0, '2003-12-22 09:59:24.833', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (320, 169, NULL, 'Clicking on the name of the component would show the details about the component ', 0, '2003-12-22 09:59:24.837', 0, '2003-12-22 09:59:24.837', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (321, 169, NULL, 'Add a new component which is associated with the account.', 0, '2003-12-22 09:59:24.842', 0, '2003-12-22 09:59:24.842', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (322, 170, NULL, 'The description of the opportunity can be changed using the update button.', 0, '2003-12-22 09:59:24.85', 0, '2003-12-22 09:59:24.85', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (323, 171, NULL, 'You can modify and delete the opportunity created using the modify and the delete buttons ', 0, '2003-12-22 09:59:24.859', 0, '2003-12-22 09:59:24.859', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (324, 172, NULL, 'The component type can be selected using the select  link', 0, '2003-12-22 09:59:24.87', 0, '2003-12-22 09:59:24.87', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (325, 172, NULL, 'You can assign the component to any of the employee present using the dropdown list present. ', 0, '2003-12-22 09:59:24.874', 0, '2003-12-22 09:59:24.874', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (326, 173, NULL, 'The component type can be selected using the select  link', 0, '2003-12-22 09:59:24.885', 0, '2003-12-22 09:59:24.885', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (327, 173, NULL, 'You can assign the component to any of the employee present using the dropdown list present. ', 0, '2003-12-22 09:59:24.889', 0, '2003-12-22 09:59:24.889', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (328, 173, NULL, 'Clicking the update button can save the changes made to the component', 0, '2003-12-22 09:59:24.893', 0, '2003-12-22 09:59:24.893', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (329, 174, NULL, 'You can modify and delete the opportunity created using the modify and the delete buttons ', 0, '2003-12-22 09:59:24.906', 0, '2003-12-22 09:59:24.906', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (330, 175, NULL, 'Clicking the select button under the action column gives you the option to view the details about the campaign, download the mail merge and also lets you to export it to Excel.', 0, '2003-12-22 09:59:24.922', 0, '2003-12-22 09:59:24.922', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (331, 175, NULL, 'Clicking on the campaign name gives you complete details about the campaign.', 0, '2003-12-22 09:59:24.971', 0, '2003-12-22 09:59:24.971', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (332, 175, NULL, 'You can display the campaigns created and their details using three different views by selecting from the drop down list.', 0, '2003-12-22 09:59:24.975', 0, '2003-12-22 09:59:24.975', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (333, 176, NULL, 'This creates a new Campaign. This takes in both the campaign and its description.', 0, '2003-12-22 09:59:24.984', 0, '2003-12-22 09:59:24.984', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (334, 177, NULL, 'You can view, modify and delete details by clicking the select button under the action column.', 0, '2003-12-22 09:59:24.995', 0, '2003-12-22 09:59:24.995', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (335, 177, NULL, 'For each of the campaign, the groups, message and delivery columns show whether they are complete or not. Clicking on these will help you choose the group, message and the delivery date.', 0, '2003-12-22 09:59:24.999', 0, '2003-12-22 09:59:24.999', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (336, 177, NULL, 'Clicking the name of the campaign shows you more details about the campaign and also shows the list of the things to be selected before a campaign can be activated', 0, '2003-12-22 09:59:25.002', 0, '2003-12-22 09:59:25.002', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (337, 177, NULL, 'You can view your incomplete campaigns or all the incomplete campaigns. You can select the view with the drop down list at the top.', 0, '2003-12-22 09:59:25.006', 0, '2003-12-22 09:59:25.006', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (338, 177, NULL, 'Add a campaign ', 0, '2003-12-22 09:59:25.01', 0, '2003-12-22 09:59:25.01', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (339, 178, NULL, 'You can also click the select button under the Action column for viewing, modifying or deleting the details.', 0, '2003-12-22 09:59:25.019', 0, '2003-12-22 09:59:25.019', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (340, 178, NULL, 'Clicking the group name will show the list of contacts present in the group.', 0, '2003-12-22 09:59:25.022', 0, '2003-12-22 09:59:25.022', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (341, 178, NULL, 'Add a contact group using the link "Add a Contact Group".', 0, '2003-12-22 09:59:25.026', 0, '2003-12-22 09:59:25.026', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (342, 178, NULL, 'You can filter the list of groups displayed by selecting from the drop down.', 0, '2003-12-22 09:59:25.03', 0, '2003-12-22 09:59:25.03', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (343, 179, NULL, 'You can preview the details of the group by clicking on the preview button.', 0, '2003-12-22 09:59:25.038', 0, '2003-12-22 09:59:25.038', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (344, 179, NULL, 'You can also select from the list of "Selected criteria and contacts" and remove them by clicking the remove button.', 0, '2003-12-22 09:59:25.042', 0, '2003-12-22 09:59:25.042', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (345, 179, NULL, 'You can define the criteria to generate the list by using the different filters present and then add them to the "Selected criteria and contacts".', 0, '2003-12-22 09:59:25.046', 0, '2003-12-22 09:59:25.046', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (346, 179, NULL, 'You can select the criteria for the group to be created. Clicking the "Add/Remove Contacts" can choose the specific contacts.', 0, '2003-12-22 09:59:25.049', 0, '2003-12-22 09:59:25.049', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (347, 180, NULL, 'You can view, modify, clone or delete each of the messages.', 0, '2003-12-22 09:59:25.059', 0, '2003-12-22 09:59:25.059', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (348, 180, NULL, 'The dropdown list acts as filters for displaying the messages that meet certain criteria.', 0, '2003-12-22 09:59:25.062', 0, '2003-12-22 09:59:25.062', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (349, 180, NULL, 'Clicking on the message name will show details about the message, which can be updated.', 0, '2003-12-22 09:59:25.066', 0, '2003-12-22 09:59:25.066', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (350, 180, NULL, 'Add a new message', 0, '2003-12-22 09:59:25.07', 0, '2003-12-22 09:59:25.07', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (351, 181, NULL, 'The new message can be saved by clicking the save message button.', 0, '2003-12-22 09:59:25.078', 0, '2003-12-22 09:59:25.078', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (352, 181, NULL, 'The permissions or the access type for the message can be chosen from drop down box.', 0, '2003-12-22 09:59:25.082', 0, '2003-12-22 09:59:25.082', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (353, 182, NULL, 'Clicking on the "surveys" will let you create new interactive surveys.', 0, '2003-12-22 09:59:25.091', 0, '2003-12-22 09:59:25.091', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (354, 183, NULL, 'You can use the preview button to view the details about the contacts in a group.', 0, '2003-12-22 09:59:25.10', 0, '2003-12-22 09:59:25.10', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (355, 183, NULL, 'You can modify or delete a group.', 0, '2003-12-22 09:59:25.103', 0, '2003-12-22 09:59:25.103', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (356, 184, NULL, 'You can change the version of the document when ever an updated document is uploaded.', 0, '2003-12-22 09:59:25.112', 0, '2003-12-22 09:59:25.112', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (357, 188, NULL, 'You can browse to select a new document to upload if its related to the campaign.', 0, '2003-12-22 09:59:25.136', 0, '2003-12-22 09:59:25.136', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (358, 190, NULL, 'You can also go back from the current detailed view to the group details criteria.', 0, '2003-12-22 09:59:25.15', 0, '2003-12-22 09:59:25.15', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (359, 191, NULL, 'You can download from the list of documents available by using the "download" link under the action column.', 0, '2003-12-22 09:59:25.162', 0, '2003-12-22 09:59:25.162', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (360, 193, NULL, 'The name of the survey is a mandatory field for creating a survey. A description, introduction and thank-you note can also be added.', 0, '2003-12-22 09:59:25.177', 0, '2003-12-22 09:59:25.177', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (361, 195, NULL, 'You can download the mail merge shown at the bottom of the details.', 0, '2003-12-22 09:59:25.191', 0, '2003-12-22 09:59:25.191', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (362, 196, NULL, 'Different versions of the document can be downloaded using the "download" link in the action column.', 0, '2003-12-22 09:59:25.20', 0, '2003-12-22 09:59:25.20', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (363, 201, NULL, 'You can update the campaign schedule by filling in the run date and the delivery method whether it''s an email, fax or letter or any other method.', 0, '2003-12-22 09:59:25.228', 0, '2003-12-22 09:59:25.228', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (364, 202, NULL, 'You can also generate a list of contacts be selecting from the filters and adding them to the "selected criteria and contacts" list.', 0, '2003-12-22 09:59:25.238', 0, '2003-12-22 09:59:25.238', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (365, 202, NULL, 'You can choose the contacts in the group using the "Add / Remove contacts" link present.', 0, '2003-12-22 09:59:25.242', 0, '2003-12-22 09:59:25.242', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (366, 202, NULL, 'You can update the name of the group ', 0, '2003-12-22 09:59:25.246', 0, '2003-12-22 09:59:25.246', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (367, 204, NULL, 'There can be multiple attachments to a single message. The attachment that needs to be downloaded has to be selected first and then downloaded.', 0, '2003-12-22 09:59:25.26', 0, '2003-12-22 09:59:25.26', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (368, 208, NULL, 'The details of the documents can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:59:25.303', 0, '2003-12-22 09:59:25.303', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (369, 208, NULL, 'You can view the details, modify, download or delete the documents associated with the account.', 0, '2003-12-22 09:59:25.306', 0, '2003-12-22 09:59:25.306', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (370, 208, NULL, 'A new document can be added to the account. ', 0, '2003-12-22 09:59:25.31', 0, '2003-12-22 09:59:25.31', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (371, 208, NULL, 'The document versions can be updated by using the "add version" link. ', 0, '2003-12-22 09:59:25.314', 0, '2003-12-22 09:59:25.314', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (372, 209, NULL, 'The name of the campaign can be changed or deleted by using the buttons at the bottom of the page.', 0, '2003-12-22 09:59:25.325', 0, '2003-12-22 09:59:25.325', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (373, 209, NULL, 'You can choose a group / groups, a message for the campaign, and a delivery date for the campaign to start. You can also add attachments to the messages you send to recipients.', 0, '2003-12-22 09:59:25.329', 0, '2003-12-22 09:59:25.329', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (374, 210, NULL, 'You can check the groups you want for the current campaign.', 0, '2003-12-22 09:59:25.34', 0, '2003-12-22 09:59:25.34', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (375, 210, NULL, 'You can also add attachments to the messages you send to recipients by clicking the preview recipient''s link next to each group.', 0, '2003-12-22 09:59:25.343', 0, '2003-12-22 09:59:25.343', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (376, 210, NULL, 'You can view all the groups present or the groups created by you just by choosing from the drop down box.', 0, '2003-12-22 09:59:25.347', 0, '2003-12-22 09:59:25.347', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (377, 211, NULL, 'You can select a message for this campaign from the dropdown list of all the messages or just your messages.', 0, '2003-12-22 09:59:25.357', 0, '2003-12-22 09:59:25.357', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (378, 211, NULL, 'The messages can be of multiple types, which can be used as filters and can be selected from the drop down list. For each type you have further classification.', 0, '2003-12-22 09:59:25.36', 0, '2003-12-22 09:59:25.36', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (379, 212, NULL, 'The attachments configured are the surveys or the file attachments. Using the links "change survey" and "change file attachments", you can change either of them.', 0, '2003-12-22 09:59:25.373', 0, '2003-12-22 09:59:25.373', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (380, 213, NULL, 'You can view and select from all, or only your own surveys.', 0, '2003-12-22 09:59:25.384', 0, '2003-12-22 09:59:25.384', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (381, 214, NULL, 'You can download or remove the file name. You can also upload files using the browse button.', 0, '2003-12-22 09:59:25.393', 0, '2003-12-22 09:59:25.393', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (382, 215, NULL, 'The name and the description of the campaign can be changed.', 0, '2003-12-22 09:59:25.402', 0, '2003-12-22 09:59:25.402', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (383, 216, NULL, 'You can modify, delete or clone the message details by clicking on corresponding buttons.', 0, '2003-12-22 09:59:25.41', 0, '2003-12-22 09:59:25.41', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (384, 217, NULL, 'You can select font properties for the text of the message along with the size and indentation.', 0, '2003-12-22 09:59:25.42', 0, '2003-12-22 09:59:25.42', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (385, 217, NULL, 'The name of the message and the access type can be given, which specifies who can view the message.', 0, '2003-12-22 09:59:25.424', 0, '2003-12-22 09:59:25.424', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (386, 218, NULL, 'You can modify, delete or clone the message details by clicking on corresponding buttons.', 0, '2003-12-22 09:59:25.433', 0, '2003-12-22 09:59:25.433', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (387, 219, NULL, 'You can select font properties for the text of the message along with the size and indentation. ', 0, '2003-12-22 09:59:25.442', 0, '2003-12-22 09:59:25.442', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (388, 219, NULL, 'The name of the message and the access type can be given, which specifies who can view the message.', 0, '2003-12-22 09:59:25.446', 0, '2003-12-22 09:59:25.446', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (389, 220, NULL, 'You can also view, modify and delete the details of a survey. ', 0, '2003-12-22 09:59:25.459', 0, '2003-12-22 09:59:25.459', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (390, 220, NULL, 'Clicking on the name of the survey shows its details.', 0, '2003-12-22 09:59:25.463', 0, '2003-12-22 09:59:25.463', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (391, 220, NULL, 'Add a new survey', 0, '2003-12-22 09:59:25.467', 0, '2003-12-22 09:59:25.467', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (392, 220, NULL, 'You can view all or your own surveys using the drop down list.', 0, '2003-12-22 09:59:25.47', 0, '2003-12-22 09:59:25.47', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (393, 221, NULL, 'The "Save & Add" button saves the current question and lets you add another one immediately.', 0, '2003-12-22 09:59:25.479', 0, '2003-12-22 09:59:25.479', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (394, 221, NULL, 'You can also specify whether the particular question is required or not by checking the checkbox.', 0, '2003-12-22 09:59:25.483', 0, '2003-12-22 09:59:25.483', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (395, 221, NULL, 'If the selected question type is "Item List", then an Edit button is enabled which helps in adding new elements to the existing list.', 0, '2003-12-22 09:59:25.486', 0, '2003-12-22 09:59:25.486', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (396, 221, NULL, 'A new question type can be selected through the drop down list.', 0, '2003-12-22 09:59:25.49', 0, '2003-12-22 09:59:25.49', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (397, 222, NULL, 'The preview button shows you the survey questions in a pop-up window.', 0, '2003-12-22 09:59:25.498', 0, '2003-12-22 09:59:25.498', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (398, 222, NULL, 'You can modify, delete, and preview the survey details using the buttons at the top of the page.', 0, '2003-12-22 09:59:25.502', 0, '2003-12-22 09:59:25.502', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (399, 222, NULL, 'You can view the survey introduction text, the questions and the thank-you text. ', 0, '2003-12-22 09:59:25.506', 0, '2003-12-22 09:59:25.506', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (400, 223, NULL, 'You can add questions to the survey here.', 0, '2003-12-22 09:59:25.515', 0, '2003-12-22 09:59:25.515', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (401, 223, NULL, 'Clicking the "Done" button can save the survey and you can also traverse back by clicking the "Back" button.', 0, '2003-12-22 09:59:25.518', 0, '2003-12-22 09:59:25.518', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (402, 223, NULL, 'The survey questions can be moved up or down using the "Up" or "Down" links present in the action field.', 0, '2003-12-22 09:59:25.522', 0, '2003-12-22 09:59:25.522', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (403, 223, NULL, 'You can edit or delete any of the survey questions using the "edit" or "del" link under the action field.', 0, '2003-12-22 09:59:25.526', 0, '2003-12-22 09:59:25.526', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (404, 223, NULL, 'You can add new survey questions here. ', 0, '2003-12-22 09:59:25.529', 0, '2003-12-22 09:59:25.529', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (405, 224, NULL, 'You can click on "Create Attachments" and include interactive items, like surveys, or provide additional materials like files.', 0, '2003-12-22 09:59:25.538', 0, '2003-12-22 09:59:25.538', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (406, 224, NULL, 'Clicking the "Create Message"  link lets you compose a message to reach your audience.', 0, '2003-12-22 09:59:25.542', 0, '2003-12-22 09:59:25.542', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (407, 224, NULL, 'You can click the "Build Groups" link to assemble dynamic distribution of groups. Each campaign needs at least one group to send a message to.', 0, '2003-12-22 09:59:25.546', 0, '2003-12-22 09:59:25.546', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (408, 224, NULL, 'The "Campaign Builder" can be clicked to select groups of contacts that you would like to send a message to, schedule a delivery date, etc.', 0, '2003-12-22 09:59:25.549', 0, '2003-12-22 09:59:25.549', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (409, 224, NULL, 'You can click on the "Dashboard" to view the sent messages and to drill down and view recipients and survey results.', 0, '2003-12-22 09:59:25.553', 0, '2003-12-22 09:59:25.553', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (410, 225, NULL, 'Lets you modify or delete ticket information ', 0, '2003-12-22 09:59:25.57', 0, '2003-12-22 09:59:25.57', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (411, 225, NULL, 'You can also store tasks and documents related to a ticket.', 0, '2003-12-22 09:59:25.573', 0, '2003-12-22 09:59:25.573', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (412, 226, NULL, 'For each new ticket you can select the organization, the contact and also the issue for which the ticket is being created. The assignment and the resolution of the ticket can also be entered.', 0, '2003-12-22 09:59:25.625', 0, '2003-12-22 09:59:25.625', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (413, 227, NULL, 'The search can be done based on different parameters like the ticket number, account associated, priority, employee whom the ticket is assigned etc.', 0, '2003-12-22 09:59:25.634', 0, '2003-12-22 09:59:25.634', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (414, 228, NULL, 'Clicking on the subject of the exported data shows you the details of the ticket like the ticket ID, the organization and its issue (why the particular ticket was generated).', 0, '2003-12-22 09:59:25.643', 0, '2003-12-22 09:59:25.643', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (415, 228, NULL, 'Clicking on the select button under the action column lets you view the data, download the data in .CSV format or delete the data.', 0, '2003-12-22 09:59:25.647', 0, '2003-12-22 09:59:25.647', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (416, 228, NULL, 'You can filter the exported date generated, by you or by all employees using the dropdown list.', 0, '2003-12-22 09:59:25.651', 0, '2003-12-22 09:59:25.651', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (417, 228, NULL, 'You can generate a new exported data by clicking the link "Generate new export".', 0, '2003-12-22 09:59:25.654', 0, '2003-12-22 09:59:25.654', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (418, 229, NULL, 'You can save the details of the modified ticket by clicking the "Update" button.', 0, '2003-12-22 09:59:25.663', 0, '2003-12-22 09:59:25.663', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (419, 230, NULL, 'You can save the details of the modified ticket by clicking the "Update" button.', 0, '2003-12-22 09:59:25.672', 0, '2003-12-22 09:59:25.672', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (420, 231, NULL, 'The details of the task can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:59:25.681', 0, '2003-12-22 09:59:25.681', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (421, 231, NULL, 'You can update the task by clicking on the description of the task. ', 0, '2003-12-22 09:59:25.685', 0, '2003-12-22 09:59:25.685', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (422, 231, NULL, 'You can add a task which is associated with the existing ticket. ', 0, '2003-12-22 09:59:25.688', 0, '2003-12-22 09:59:25.688', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (423, 232, NULL, 'The details of the documents can be viewed or modified by clicking on the select button under the Action column. ', 0, '2003-12-22 09:59:25.697', 0, '2003-12-22 09:59:25.697', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (424, 232, NULL, 'You can view the details, modify, download or delete the documents associated with the ticket. ', 0, '2003-12-22 09:59:25.701', 0, '2003-12-22 09:59:25.701', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (425, 232, NULL, 'A new document associated with the ticket can be added. ', 0, '2003-12-22 09:59:25.704', 0, '2003-12-22 09:59:25.704', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (426, 232, NULL, 'The document versions can be updated by using the "add version" link. ', 0, '2003-12-22 09:59:25.709', 0, '2003-12-22 09:59:25.709', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (427, 233, NULL, 'A new record is added into the folder using the link "Add a record to this folder". Multiple records can be added to this folder if the folder has the necessary settings.', 0, '2003-12-22 09:59:25.718', 0, '2003-12-22 09:59:25.718', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (428, 233, NULL, 'You can select the custom folder using the drop down list. ', 0, '2003-12-22 09:59:25.722', 0, '2003-12-22 09:59:25.722', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (429, 234, NULL, 'The details are saved by clicking the save button.', 0, '2003-12-22 09:59:25.731', 0, '2003-12-22 09:59:25.731', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (430, 235, NULL, 'A chronological history of all actions associated with a ticket is maintined.', 0, '2003-12-22 09:59:25.739', 0, '2003-12-22 09:59:25.739', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (431, 243, NULL, 'The changes can be saved using the "Update" button.', 0, '2003-12-22 09:59:25.785', 0, '2003-12-22 09:59:25.785', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (432, 244, NULL, 'You can modify the folder information along with the record details by clicking on the Modify button.', 0, '2003-12-22 09:59:25.795', 0, '2003-12-22 09:59:25.795', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (433, 247, NULL, 'The document can be uploaded using the browse button.', 0, '2003-12-22 09:59:25.815', 0, '2003-12-22 09:59:25.815', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (434, 248, NULL, 'You can download all the versions of a document.', 0, '2003-12-22 09:59:25.823', 0, '2003-12-22 09:59:25.823', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (435, 249, NULL, 'You can also have tasks and documents related to a ticket. ', 0, '2003-12-22 09:59:25.832', 0, '2003-12-22 09:59:25.832', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (436, 249, NULL, 'Lets you modify / update the ticket information. ', 0, '2003-12-22 09:59:25.836', 0, '2003-12-22 09:59:25.836', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (437, 250, NULL, 'A new version of a file can be uploaded using the browse button.', 0, '2003-12-22 09:59:25.844', 0, '2003-12-22 09:59:25.844', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (438, 251, NULL, 'You can delete a record by clicking on "Del" next to the record.', 0, '2003-12-22 09:59:25.853', 0, '2003-12-22 09:59:25.853', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (439, 251, NULL, 'You can add a record by clicking on "Add Ticket".', 0, '2003-12-22 09:59:25.859', 0, '2003-12-22 09:59:25.859', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (440, 251, NULL, 'You can view more records in a particular section by clicking "Show More".', 0, '2003-12-22 09:59:25.862', 0, '2003-12-22 09:59:25.862', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (441, 251, NULL, 'You can view more details by clicking on the record.', 0, '2003-12-22 09:59:25.866', 0, '2003-12-22 09:59:25.866', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (442, 251, NULL, 'You can update a record by clicking on "Edit" next to the record.', 0, '2003-12-22 09:59:25.869', 0, '2003-12-22 09:59:25.869', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (443, 252, NULL, 'A new detailed employee record can be added. ', 0, '2003-12-22 09:59:25.90', 0, '2003-12-22 09:59:25.90', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (444, 252, NULL, 'The details of each employee can be viewed, modified or deleted using the select button in the action column.', 0, '2003-12-22 09:59:25.903', 0, '2003-12-22 09:59:25.903', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (445, 253, NULL, 'You can modify or delete the employee details using the modify or delete buttons.', 0, '2003-12-22 09:59:25.956', 0, '2003-12-22 09:59:25.956', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (446, 254, NULL, 'The "Save" button saves the details of the employee entered. ', 0, '2003-12-22 09:59:25.966', 0, '2003-12-22 09:59:25.966', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (447, 254, NULL, 'The "Save & New" button lets you to save the details of one employee and enter another employee in one operation.', 0, '2003-12-22 09:59:25.969', 0, '2003-12-22 09:59:25.969', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (448, 255, NULL, 'Clicking on the update button saves the modified details of the employee.', 0, '2003-12-22 09:59:25.978', 0, '2003-12-22 09:59:25.978', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (449, 256, NULL, 'The employee record can be modified or deleted from the system completely.', 0, '2003-12-22 09:59:25.987', 0, '2003-12-22 09:59:25.987', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (450, 257, NULL, 'You can cancel the reports that are scheduled to be processed by the server by the clicking the select button.', 0, '2003-12-22 09:59:26.001', 0, '2003-12-22 09:59:26.001', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (451, 257, NULL, 'The generated reports can be deleted or viewed/downloaded in .pdf format by clicking the select button under the action column. ', 0, '2003-12-22 09:59:26.046', 0, '2003-12-22 09:59:26.046', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (452, 257, NULL, 'Add a new report', 0, '2003-12-22 09:59:26.05', 0, '2003-12-22 09:59:26.05', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (453, 258, NULL, 'There are four different modules and you can click on the module where you want to generate the report.', 0, '2003-12-22 09:59:26.059', 0, '2003-12-22 09:59:26.059', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (454, 261, NULL, 'You can use the "generate report" button to run the report.', 0, '2003-12-22 09:59:26.078', 0, '2003-12-22 09:59:26.078', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (455, 261, NULL, 'If the parameters exist, you can specify the name of the criteria for future reference and click the check box present at the bottom of the page.', 0, '2003-12-22 09:59:26.081', 0, '2003-12-22 09:59:26.081', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (456, 262, NULL, 'You can run the report by clicking on the title of the report.', 0, '2003-12-22 09:59:26.09', 0, '2003-12-22 09:59:26.09', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (457, 263, NULL, 'If the criteria are present, select the criteria, then continue to enter the parameters to run the report.', 0, '2003-12-22 09:59:26.10', 0, '2003-12-22 09:59:26.10', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (458, 264, NULL, 'You can view the queue either by using the link in the text or using the view queue button.', 0, '2003-12-22 09:59:26.109', 0, '2003-12-22 09:59:26.109', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (459, 265, NULL, 'You can cancel the report that is scheduled to be processed by the server by clicking the select button and selecting "Cancel".', 0, '2003-12-22 09:59:26.117', 0, '2003-12-22 09:59:26.117', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (460, 265, NULL, 'You can view the reports generated, download them or delete them by clicking on the select button under the action column.', 0, '2003-12-22 09:59:26.121', 0, '2003-12-22 09:59:26.121', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (461, 265, NULL, 'A new report can be generated by clicking on the link "Add a Report".', 0, '2003-12-22 09:59:26.124', 0, '2003-12-22 09:59:26.124', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (462, 266, NULL, 'The alphabetical slide rule allows users to be listed based on their last name. Simply click on the starting letter desired.', 0, '2003-12-22 09:59:26.181', 0, '2003-12-22 09:59:26.181', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (463, 266, NULL, 'The columns "Name", ''Username" and "Role" can be clicked to display the users in the ascending or descending order of the chosen criteria.', 0, '2003-12-22 09:59:26.185', 0, '2003-12-22 09:59:26.185', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (464, 266, NULL, 'The "Add New User" link opens a window that allows the administrator to add new users.', 0, '2003-12-22 09:59:26.189', 0, '2003-12-22 09:59:26.189', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (465, 266, NULL, 'The "select" buttons in the "Action" column alongside the name of each user opens a pop-up menu that provides the administrator with options to view more information, modify user information, or disable (or inactivate) the user.', 0, '2003-12-22 09:59:26.192', 0, '2003-12-22 09:59:26.192', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (466, 266, NULL, 'The list is displayed with 10 names per page by default. Additional items in the list may be viewed by clicking on the "Previous" and "Next" navigation links at the bottom of the table or by changing the number of items to be displayed per page.', 0, '2003-12-22 09:59:26.196', 0, '2003-12-22 09:59:26.196', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (467, 266, NULL, 'The users of the CRM system are listed in alphabetical order. Their user name, role and who they report to are also listed to provide a quick overview of information for each user.', 0, '2003-12-22 09:59:26.20', 0, '2003-12-22 09:59:26.20', NULL, NULL, true, 6);
+INSERT INTO help_features VALUES (468, 266, NULL, 'The drop list provides a filter to either view only the active or only the inactive users. Inactive users are those who do not have the privilege to use the system currently either because their user names have been disabled or they have expired. These users may be activated (enabled) at a later time.', 0, '2003-12-22 09:59:26.203', 0, '2003-12-22 09:59:26.203', NULL, NULL, true, 7);
+INSERT INTO help_features VALUES (469, 267, NULL, 'The ''Reports To" field allows the administrator to setup a user hierarchy. The drop list displays all the users of the system and allows one to be chosen.', 0, '2003-12-22 09:59:26.212', 0, '2003-12-22 09:59:26.212', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (470, 267, NULL, 'The "Role" drop list allows a role to be associated with a user. This association determines the privileges the user may have when he accesses the system.', 0, '2003-12-22 09:59:26.216', 0, '2003-12-22 09:59:26.216', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (471, 267, NULL, 'The "Password" fields allows the administrator to setup a password for the user. The password is used along with the Username to login to the system. Since the password is stored in encrypted form and cannot be interpreted, the administrator is asked to confirm the users password. The user may subsequently change his password according to personal preferences.', 0, '2003-12-22 09:59:26.223', 0, '2003-12-22 09:59:26.223', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (472, 267, NULL, 'The Username is the phrase that is used by the user to login to the system. It must be unique.', 0, '2003-12-22 09:59:26.226', 0, '2003-12-22 09:59:26.226', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (473, 267, NULL, 'An "Expire Date" may be set for each user after which the user is disabled. If this field is left blank the user is active indefinitely. This date can either be typed in the mm/dd/yyyy format or chosen from a calendar that can be accessed from the icon at the right of the field.', 0, '2003-12-22 09:59:26.23', 0, '2003-12-22 09:59:26.23', NULL, NULL, true, 5);
 INSERT INTO help_features VALUES (474, 267, NULL, 'The contact field allows the administrator to associate contact information with the user. The administrator may either create new contact information or choose one from the existing list of contacts. This information provides the administrator with the user''s e-mail, telephone and (or) fax number, postal address and any other information that may help the administrator or the system manager to contact the user.
-', 0, '2003-12-22 09:08:05.439', 0, '2003-12-22 09:08:05.439', NULL, NULL, true, 6);
-INSERT INTO help_features VALUES (475, 268, NULL, 'The "Cancel" button allows current and uncommitted changes to be undone.', 0, '2003-12-22 09:08:05.449', 0, '2003-12-22 09:08:05.449', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (476, 268, NULL, 'When the "Generate new password" field is checked, the system constructs a password for the user and uses the contact information to email the new password to the user.', 0, '2003-12-22 09:08:05.453', 0, '2003-12-22 09:08:05.453', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (477, 268, NULL, 'The "Disable" button provides a quick link to the administrator to disable the user.', 0, '2003-12-22 09:08:05.457', 0, '2003-12-22 09:08:05.457', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (478, 268, NULL, 'The "Username", "Role", "Reports To" and password of the user are editable. For more information about each of these fields see help on "Add user".', 0, '2003-12-22 09:08:05.46', 0, '2003-12-22 09:08:05.46', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (479, 269, NULL, 'The list is displayed by default with 10 items per page, additional items in the login history may be viewed by clicking on the "Previous" and "Next" navigation links at the bottom of the table or by changing the number of items to be displayed on a page.', 0, '2003-12-22 09:08:05.469', 0, '2003-12-22 09:08:05.469', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (480, 269, NULL, 'The login history of the user displays the IP address of the computer from which the user logged in, and the date/time when the user logged in.', 0, '2003-12-22 09:08:05.473', 0, '2003-12-22 09:08:05.473', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (481, 270, NULL, 'Clicking on the select button under the action column would let you to view the details about the viewpoint also modify them.', 0, '2003-12-22 09:08:05.482', 0, '2003-12-22 09:08:05.482', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (482, 270, NULL, 'You can click on the contact under the viewpoint column to know more details about that viewpoint and its permissions.', 0, '2003-12-22 09:08:05.485', 0, '2003-12-22 09:08:05.485', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (483, 270, NULL, 'You can add a new viewpoint using the link "Add New Viewpoint".', 0, '2003-12-22 09:08:05.489', 0, '2003-12-22 09:08:05.489', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (484, 271, NULL, 'You can add a new viewpoint by any employee by clicking the add button.', 0, '2003-12-22 09:08:05.498', 0, '2003-12-22 09:08:05.498', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (485, 271, NULL, 'The permissions for the different modules can be given by checking the Access checkbox.', 0, '2003-12-22 09:08:05.501', 0, '2003-12-22 09:08:05.501', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (486, 271, NULL, 'The contact can be selected and removed using the links "change contact" and "clear contact".', 0, '2003-12-22 09:08:05.505', 0, '2003-12-22 09:08:05.505', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (487, 272, NULL, 'The details can be updated using the update button.', 0, '2003-12-22 09:08:05.514', 0, '2003-12-22 09:08:05.514', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (488, 272, NULL, 'You can also set the permissions to access different modules by checking the check box under the Access column.', 0, '2003-12-22 09:08:05.517', 0, '2003-12-22 09:08:05.517', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (489, 272, NULL, 'You can enable the viewpoint by checking the "Enabled" checkbox.', 0, '2003-12-22 09:08:05.521', 0, '2003-12-22 09:08:05.521', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (490, 273, NULL, 'You can also click the select button under the action column to view or modify the details of roles.', 0, '2003-12-22 09:08:05.53', 0, '2003-12-22 09:08:05.53', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (491, 273, NULL, 'Clicking on the role name gives you details about the role and the permissions it provides. ', 0, '2003-12-22 09:08:05.533', 0, '2003-12-22 09:08:05.533', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (492, 273, NULL, 'You can add a new role into the system.', 0, '2003-12-22 09:08:05.537', 0, '2003-12-22 09:08:05.537', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (493, 274, NULL, 'Clicking the update button updates the role.', 0, '2003-12-22 09:08:05.546', 0, '2003-12-22 09:08:05.546', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (494, 275, NULL, 'The update of the role can be done by clicking the update button. ', 0, '2003-12-22 09:08:05.555', 0, '2003-12-22 09:08:05.555', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (495, 276, NULL, 'Clicking on the module name will display a list of module items that can be configured.', 0, '2003-12-22 09:08:05.568', 0, '2003-12-22 09:08:05.568', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (496, 277, NULL, 'Scheduled Events: A timer triggers a customizable workflow process.', 0, '2003-12-22 09:08:05.577', 0, '2003-12-22 09:08:05.577', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (497, 277, NULL, 'Object Events: An Action triggers customizable workflow process. For example, when an object is inserted, updated, deleted or selected, a process is triggered.', 0, '2003-12-22 09:08:05.581', 0, '2003-12-22 09:08:05.581', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (498, 277, NULL, 'Categories: This lets you create hierarchical categories for a specific feature in the module.', 0, '2003-12-22 09:08:05.585', 0, '2003-12-22 09:08:05.585', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (499, 277, NULL, 'Lookup Lists: You can view the drop-down lists used in the module and make changes.', 0, '2003-12-22 09:08:05.588', 0, '2003-12-22 09:08:05.588', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (500, 277, NULL, 'Custom Folders and Fields: Custom folders allows you to create forms that will be present within each module, essentially custom fields.', 0, '2003-12-22 09:08:05.592', 0, '2003-12-22 09:08:05.592', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (501, 278, NULL, 'You can create a new item type using the add button and add it to the existing list. You can position the item in the list using the up and down buttons, remove it using the remove button and also sort the list. The final changes can be saved using the "Save Changes" button.', 0, '2003-12-22 09:08:05.601', 0, '2003-12-22 09:08:05.601', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (502, 279, NULL, 'You can update the existing the folder, set the options for the records and the permissions for the users.', 0, '2003-12-22 09:08:05.613', 0, '2003-12-22 09:08:05.613', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (503, 280, NULL, 'You can update the existing the folder, set the options for the records and the permissions for the users.', 0, '2003-12-22 09:08:05.624', 0, '2003-12-22 09:08:05.624', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (504, 281, NULL, 'The "Edit" link will let you alter the time for which the users session ends.', 0, '2003-12-22 09:08:05.634', 0, '2003-12-22 09:08:05.634', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (505, 282, NULL, 'The time out can be set by selecting the time from the drop down and clicking the update button.', 0, '2003-12-22 09:08:05.644', 0, '2003-12-22 09:08:05.644', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (506, 283, NULL, 'The usage can be displayed for the current date or a custom date can be specified. This can be selected from the drop down of the date range.', 0, '2003-12-22 09:08:05.653', 0, '2003-12-22 09:08:05.653', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (507, 283, NULL, 'The start date and the end date can be specified if the date range is "custom date range". The update can be done using the update button.', 0, '2003-12-22 09:08:05.659', 0, '2003-12-22 09:08:05.659', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (508, 286, NULL, 'You can also enable or disable the custom folders by clicking "yes" or "no". ', 0, '2003-12-22 09:08:05.679', 0, '2003-12-22 09:08:05.679', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (509, 286, NULL, 'Clicking on the custom folder will give details about that folder and also lets you add groups.', 0, '2003-12-22 09:08:05.682', 0, '2003-12-22 09:08:05.682', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (510, 286, NULL, 'You can update an existing folder using the edit button under the action column.', 0, '2003-12-22 09:08:05.688', 0, '2003-12-22 09:08:05.688', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (511, 286, NULL, 'You can update an existing folder using the edit button under the action column.', 0, '2003-12-22 09:08:05.694', 0, '2003-12-22 09:08:05.694', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (512, 286, NULL, 'Add a folder to the general contacts module.', 0, '2003-12-22 09:08:05.697', 0, '2003-12-22 09:08:05.697', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (513, 287, NULL, 'You can also enable or disable the custom folders by clicking "yes" or "no". ', 0, '2003-12-22 09:08:05.706', 0, '2003-12-22 09:08:05.706', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (514, 287, NULL, 'You can update an existing folder using the edit button under the action column. ', 0, '2003-12-22 09:08:05.71', 0, '2003-12-22 09:08:05.71', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (515, 287, NULL, 'Clicking on the custom folder will give details about that folder and also lets you add groups.', 0, '2003-12-22 09:08:05.714', 0, '2003-12-22 09:08:05.714', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (516, 287, NULL, 'You can update an existing folder using the edit button under the action column. ', 0, '2003-12-22 09:08:05.717', 0, '2003-12-22 09:08:05.717', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (517, 287, NULL, 'Add a folder to the general contacts module. ', 0, '2003-12-22 09:08:05.721', 0, '2003-12-22 09:08:05.721', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (518, 291, NULL, 'You can view the process details by clicking on the select button under the Action column or by clicking on the name of the Triggered Process.', 0, '2003-12-22 09:08:05.745', 0, '2003-12-22 09:08:05.745', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (519, 291, NULL, 'You can view the process details by clicking on the select button under the Action column or by clicking on the name of the Triggered Process.', 0, '2003-12-22 09:08:05.748', 0, '2003-12-22 09:08:05.748', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (520, 292, NULL, 'You can add a group name and save it using the "save" button.', 0, '2003-12-22 09:08:05.76', 0, '2003-12-22 09:08:05.76', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (521, 294, NULL, 'You can click "Edit" in the Action column to update or delete a contact type.', 0, '2003-12-22 09:08:05.776', 0, '2003-12-22 09:08:05.776', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (522, 294, NULL, 'You can preview all the items present in a List name using the drop down in the preview column. ', 0, '2003-12-22 09:08:05.779', 0, '2003-12-22 09:08:05.779', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (523, 297, NULL, 'You can click "Edit" in the Action column to update or delete a contact type.', 0, '2003-12-22 09:08:05.799', 0, '2003-12-22 09:08:05.799', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (524, 297, NULL, 'You can preview all the items present in a List name using the drop down in the preview column.', 0, '2003-12-22 09:08:05.803', 0, '2003-12-22 09:08:05.803', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (525, 298, NULL, 'You can also delete the folder and all the fields using the "Delete this folder and all fields" at the bottom of the page.', 0, '2003-12-22 09:08:05.812', 0, '2003-12-22 09:08:05.812', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (526, 298, NULL, 'The groups can also be moved up or down using the "Up" and "Down". They can also be edited and deleted using the "Edit" and "Del" links.', 0, '2003-12-22 09:08:05.815', 0, '2003-12-22 09:08:05.815', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (527, 298, NULL, 'The custom field can also be edited and deleted using the corresponding links "Edit" and "Del".', 0, '2003-12-22 09:08:05.819', 0, '2003-12-22 09:08:05.819', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (528, 298, NULL, 'The custom field created can be moved up or down for the display using the corresponding links "Up" and "Down".', 0, '2003-12-22 09:08:05.823', 0, '2003-12-22 09:08:05.823', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (529, 298, NULL, 'You can add a custom field for the group using the "Add a custom field" link.', 0, '2003-12-22 09:08:05.827', 0, '2003-12-22 09:08:05.827', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (530, 298, NULL, 'Add a group to the folder selected', 0, '2003-12-22 09:08:05.831', 0, '2003-12-22 09:08:05.831', NULL, NULL, true, 6);
-INSERT INTO help_features VALUES (531, 298, NULL, 'You can select the folder by using the drop down box under the general contacts module.', 0, '2003-12-22 09:08:05.835', 0, '2003-12-22 09:08:05.835', NULL, NULL, true, 7);
-INSERT INTO help_features VALUES (532, 299, NULL, 'Clicking on the list of categories displayed in level1 shows you its sub levels or sub-directories present in level2 and clicking on these in turn shows its subdirectories in level3 and so on.', 0, '2003-12-22 09:08:05.844', 0, '2003-12-22 09:08:05.844', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (533, 299, NULL, 'You can select to display either the Active Categories or the Draft Categories by clicking on the tabs "Active Categories" and "Draft Categories" respectively.', 0, '2003-12-22 09:08:05.848', 0, '2003-12-22 09:08:05.848', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (534, 300, NULL, 'The activated list can be brought back / reverted to the active list by clicking the "Revert to Active List".', 0, '2003-12-22 09:08:05.857', 0, '2003-12-22 09:08:05.857', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (535, 300, NULL, 'You can activate each level by using the "Activate now" button.', 0, '2003-12-22 09:08:05.86', 0, '2003-12-22 09:08:05.86', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (536, 300, NULL, 'In the draft categories you can edit your category using the edit button present at the bottom of each level.', 0, '2003-12-22 09:08:05.864', 0, '2003-12-22 09:08:05.864', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (537, 300, NULL, 'You can select to display either the Active Categories or the Draft Categories by clicking on the tabs "Active Categories" and "Draft Categories" respectively.', 0, '2003-12-22 09:08:05.867', 0, '2003-12-22 09:08:05.867', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (538, 300, NULL, 'Clicking on the list of categories displayed in level1 shows you its sub-levels or sub-directories present in level2 and clicking on these in turn would shows their subdirectories in level3 and so on.', 0, '2003-12-22 09:08:05.871', 0, '2003-12-22 09:08:05.871', NULL, NULL, true, 5);
-INSERT INTO help_features VALUES (539, 304, NULL, 'The "Modify" button in the "Details" tab provides a quick link that allows the users information to be modified without having to browse back to the previous window.', 0, '2003-12-22 09:08:05.895', 0, '2003-12-22 09:08:05.895', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (540, 304, NULL, 'The "Employee Link" in the ''Primary Information" table header provides a quick link to view the user''s contact information.', 0, '2003-12-22 09:08:05.899', 0, '2003-12-22 09:08:05.899', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (541, 304, NULL, 'The "Details" tab displays the information about the user in a non-editable format.', 0, '2003-12-22 09:08:05.902', 0, '2003-12-22 09:08:05.902', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (542, 304, NULL, 'The "Disable" button provides a quick link to disable/inactivate the user.', 0, '2003-12-22 09:08:05.906', 0, '2003-12-22 09:08:05.906', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (543, 309, NULL, 'The user and module section allows the administrator to manage users, roles, role hierarchy and manage modules.', 0, '2003-12-22 09:08:05.935', 0, '2003-12-22 09:08:05.935', NULL, NULL, true, 1);
-INSERT INTO help_features VALUES (544, 309, NULL, 'The global parameters and server configuration module allows the administrator to set the session timeout parameter.', 0, '2003-12-22 09:08:05.939', 0, '2003-12-22 09:08:05.939', NULL, NULL, true, 2);
-INSERT INTO help_features VALUES (545, 309, NULL, 'The usage section allows the administrator to view the total number of users, memory used, and system usage parameters for various time intervals.', 0, '2003-12-22 09:08:05.942', 0, '2003-12-22 09:08:05.942', NULL, NULL, true, 3);
-INSERT INTO help_features VALUES (546, 309, NULL, 'The administration module is divided into distinct categories such as managing users, module configuration, setting global parameters, server configuration and monitoring system usage and resources.', 0, '2003-12-22 09:08:05.946', 0, '2003-12-22 09:08:05.946', NULL, NULL, true, 4);
-INSERT INTO help_features VALUES (547, 311, NULL, 'Clicking on the different links of the search results will direct you to the corresponding details in the modules. ', 0, '2003-12-22 09:08:06.112', 0, '2003-12-22 09:08:06.112', NULL, NULL, true, 1);
+', 0, '2003-12-22 09:59:26.234', 0, '2003-12-22 09:59:26.234', NULL, NULL, true, 6);
+INSERT INTO help_features VALUES (475, 268, NULL, 'The "Cancel" button allows current and uncommitted changes to be undone.', 0, '2003-12-22 09:59:26.243', 0, '2003-12-22 09:59:26.243', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (476, 268, NULL, 'When the "Generate new password" field is checked, the system constructs a password for the user and uses the contact information to email the new password to the user.', 0, '2003-12-22 09:59:26.247', 0, '2003-12-22 09:59:26.247', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (477, 268, NULL, 'The "Disable" button provides a quick link to the administrator to disable the user.', 0, '2003-12-22 09:59:26.251', 0, '2003-12-22 09:59:26.251', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (478, 268, NULL, 'The "Username", "Role", "Reports To" and password of the user are editable. For more information about each of these fields see help on "Add user".', 0, '2003-12-22 09:59:26.255', 0, '2003-12-22 09:59:26.255', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (479, 269, NULL, 'The list is displayed by default with 10 items per page, additional items in the login history may be viewed by clicking on the "Previous" and "Next" navigation links at the bottom of the table or by changing the number of items to be displayed on a page.', 0, '2003-12-22 09:59:26.263', 0, '2003-12-22 09:59:26.263', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (480, 269, NULL, 'The login history of the user displays the IP address of the computer from which the user logged in, and the date/time when the user logged in.', 0, '2003-12-22 09:59:26.267', 0, '2003-12-22 09:59:26.267', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (481, 270, NULL, 'Clicking on the select button under the action column would let you to view the details about the viewpoint also modify them.', 0, '2003-12-22 09:59:26.276', 0, '2003-12-22 09:59:26.276', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (482, 270, NULL, 'You can click on the contact under the viewpoint column to know more details about that viewpoint and its permissions.', 0, '2003-12-22 09:59:26.28', 0, '2003-12-22 09:59:26.28', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (483, 270, NULL, 'You can add a new viewpoint using the link "Add New Viewpoint".', 0, '2003-12-22 09:59:26.283', 0, '2003-12-22 09:59:26.283', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (484, 271, NULL, 'You can add a new viewpoint by any employee by clicking the add button.', 0, '2003-12-22 09:59:26.292', 0, '2003-12-22 09:59:26.292', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (485, 271, NULL, 'The permissions for the different modules can be given by checking the Access checkbox.', 0, '2003-12-22 09:59:26.296', 0, '2003-12-22 09:59:26.296', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (486, 271, NULL, 'The contact can be selected and removed using the links "change contact" and "clear contact".', 0, '2003-12-22 09:59:26.299', 0, '2003-12-22 09:59:26.299', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (487, 272, NULL, 'The details can be updated using the update button.', 0, '2003-12-22 09:59:26.308', 0, '2003-12-22 09:59:26.308', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (488, 272, NULL, 'You can also set the permissions to access different modules by checking the check box under the Access column.', 0, '2003-12-22 09:59:26.312', 0, '2003-12-22 09:59:26.312', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (489, 272, NULL, 'You can enable the viewpoint by checking the "Enabled" checkbox.', 0, '2003-12-22 09:59:26.316', 0, '2003-12-22 09:59:26.316', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (490, 273, NULL, 'You can also click the select button under the action column to view or modify the details of roles.', 0, '2003-12-22 09:59:26.325', 0, '2003-12-22 09:59:26.325', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (491, 273, NULL, 'Clicking on the role name gives you details about the role and the permissions it provides. ', 0, '2003-12-22 09:59:26.328', 0, '2003-12-22 09:59:26.328', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (492, 273, NULL, 'You can add a new role into the system.', 0, '2003-12-22 09:59:26.332', 0, '2003-12-22 09:59:26.332', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (493, 274, NULL, 'Clicking the update button updates the role.', 0, '2003-12-22 09:59:26.34', 0, '2003-12-22 09:59:26.34', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (494, 275, NULL, 'The update of the role can be done by clicking the update button. ', 0, '2003-12-22 09:59:26.349', 0, '2003-12-22 09:59:26.349', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (495, 276, NULL, 'Clicking on the module name will display a list of module items that can be configured.', 0, '2003-12-22 09:59:26.367', 0, '2003-12-22 09:59:26.367', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (496, 277, NULL, 'Scheduled Events: A timer triggers a customizable workflow process.', 0, '2003-12-22 09:59:26.38', 0, '2003-12-22 09:59:26.38', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (497, 277, NULL, 'Object Events: An Action triggers customizable workflow process. For example, when an object is inserted, updated, deleted or selected, a process is triggered.', 0, '2003-12-22 09:59:26.384', 0, '2003-12-22 09:59:26.384', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (498, 277, NULL, 'Categories: This lets you create hierarchical categories for a specific feature in the module.', 0, '2003-12-22 09:59:26.388', 0, '2003-12-22 09:59:26.388', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (499, 277, NULL, 'Lookup Lists: You can view the drop-down lists used in the module and make changes.', 0, '2003-12-22 09:59:26.391', 0, '2003-12-22 09:59:26.391', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (500, 277, NULL, 'Custom Folders and Fields: Custom folders allows you to create forms that will be present within each module, essentially custom fields.', 0, '2003-12-22 09:59:26.395', 0, '2003-12-22 09:59:26.395', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (501, 278, NULL, 'You can create a new item type using the add button and add it to the existing list. You can position the item in the list using the up and down buttons, remove it using the remove button and also sort the list. The final changes can be saved using the "Save Changes" button.', 0, '2003-12-22 09:59:26.404', 0, '2003-12-22 09:59:26.404', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (502, 279, NULL, 'You can update the existing the folder, set the options for the records and the permissions for the users.', 0, '2003-12-22 09:59:26.417', 0, '2003-12-22 09:59:26.417', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (503, 280, NULL, 'You can update the existing the folder, set the options for the records and the permissions for the users.', 0, '2003-12-22 09:59:26.426', 0, '2003-12-22 09:59:26.426', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (504, 281, NULL, 'The "Edit" link will let you alter the time for which the users session ends.', 0, '2003-12-22 09:59:26.437', 0, '2003-12-22 09:59:26.437', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (505, 282, NULL, 'The time out can be set by selecting the time from the drop down and clicking the update button.', 0, '2003-12-22 09:59:26.446', 0, '2003-12-22 09:59:26.446', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (506, 283, NULL, 'The usage can be displayed for the current date or a custom date can be specified. This can be selected from the drop down of the date range.', 0, '2003-12-22 09:59:26.455', 0, '2003-12-22 09:59:26.455', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (507, 283, NULL, 'The start date and the end date can be specified if the date range is "custom date range". The update can be done using the update button.', 0, '2003-12-22 09:59:26.461', 0, '2003-12-22 09:59:26.461', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (508, 286, NULL, 'You can also enable or disable the custom folders by clicking "yes" or "no". ', 0, '2003-12-22 09:59:26.48', 0, '2003-12-22 09:59:26.48', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (509, 286, NULL, 'Clicking on the custom folder will give details about that folder and also lets you add groups.', 0, '2003-12-22 09:59:26.484', 0, '2003-12-22 09:59:26.484', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (510, 286, NULL, 'You can update an existing folder using the edit button under the action column.', 0, '2003-12-22 09:59:26.489', 0, '2003-12-22 09:59:26.489', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (511, 286, NULL, 'You can update an existing folder using the edit button under the action column.', 0, '2003-12-22 09:59:26.495', 0, '2003-12-22 09:59:26.495', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (512, 286, NULL, 'Add a folder to the general contacts module.', 0, '2003-12-22 09:59:26.499', 0, '2003-12-22 09:59:26.499', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (513, 287, NULL, 'You can also enable or disable the custom folders by clicking "yes" or "no". ', 0, '2003-12-22 09:59:26.508', 0, '2003-12-22 09:59:26.508', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (514, 287, NULL, 'You can update an existing folder using the edit button under the action column. ', 0, '2003-12-22 09:59:26.511', 0, '2003-12-22 09:59:26.511', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (515, 287, NULL, 'Clicking on the custom folder will give details about that folder and also lets you add groups.', 0, '2003-12-22 09:59:26.516', 0, '2003-12-22 09:59:26.516', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (516, 287, NULL, 'You can update an existing folder using the edit button under the action column. ', 0, '2003-12-22 09:59:26.519', 0, '2003-12-22 09:59:26.519', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (517, 287, NULL, 'Add a folder to the general contacts module. ', 0, '2003-12-22 09:59:26.523', 0, '2003-12-22 09:59:26.523', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (518, 291, NULL, 'You can view the process details by clicking on the select button under the Action column or by clicking on the name of the Triggered Process.', 0, '2003-12-22 09:59:26.546', 0, '2003-12-22 09:59:26.546', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (519, 291, NULL, 'You can view the process details by clicking on the select button under the Action column or by clicking on the name of the Triggered Process.', 0, '2003-12-22 09:59:26.55', 0, '2003-12-22 09:59:26.55', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (520, 292, NULL, 'You can add a group name and save it using the "save" button.', 0, '2003-12-22 09:59:26.562', 0, '2003-12-22 09:59:26.562', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (521, 294, NULL, 'You can click "Edit" in the Action column to update or delete a contact type.', 0, '2003-12-22 09:59:26.577', 0, '2003-12-22 09:59:26.577', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (522, 294, NULL, 'You can preview all the items present in a List name using the drop down in the preview column. ', 0, '2003-12-22 09:59:26.58', 0, '2003-12-22 09:59:26.58', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (523, 297, NULL, 'You can click "Edit" in the Action column to update or delete a contact type.', 0, '2003-12-22 09:59:26.60', 0, '2003-12-22 09:59:26.60', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (524, 297, NULL, 'You can preview all the items present in a List name using the drop down in the preview column.', 0, '2003-12-22 09:59:26.604', 0, '2003-12-22 09:59:26.604', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (525, 298, NULL, 'You can also delete the folder and all the fields using the "Delete this folder and all fields" at the bottom of the page.', 0, '2003-12-22 09:59:26.613', 0, '2003-12-22 09:59:26.613', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (526, 298, NULL, 'The groups can also be moved up or down using the "Up" and "Down". They can also be edited and deleted using the "Edit" and "Del" links.', 0, '2003-12-22 09:59:26.617', 0, '2003-12-22 09:59:26.617', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (527, 298, NULL, 'The custom field can also be edited and deleted using the corresponding links "Edit" and "Del".', 0, '2003-12-22 09:59:26.621', 0, '2003-12-22 09:59:26.621', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (528, 298, NULL, 'The custom field created can be moved up or down for the display using the corresponding links "Up" and "Down".', 0, '2003-12-22 09:59:26.625', 0, '2003-12-22 09:59:26.625', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (529, 298, NULL, 'You can add a custom field for the group using the "Add a custom field" link.', 0, '2003-12-22 09:59:26.628', 0, '2003-12-22 09:59:26.628', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (530, 298, NULL, 'Add a group to the folder selected', 0, '2003-12-22 09:59:26.632', 0, '2003-12-22 09:59:26.632', NULL, NULL, true, 6);
+INSERT INTO help_features VALUES (531, 298, NULL, 'You can select the folder by using the drop down box under the general contacts module.', 0, '2003-12-22 09:59:26.636', 0, '2003-12-22 09:59:26.636', NULL, NULL, true, 7);
+INSERT INTO help_features VALUES (532, 299, NULL, 'Clicking on the list of categories displayed in level1 shows you its sub levels or sub-directories present in level2 and clicking on these in turn shows its subdirectories in level3 and so on.', 0, '2003-12-22 09:59:26.646', 0, '2003-12-22 09:59:26.646', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (533, 299, NULL, 'You can select to display either the Active Categories or the Draft Categories by clicking on the tabs "Active Categories" and "Draft Categories" respectively.', 0, '2003-12-22 09:59:26.649', 0, '2003-12-22 09:59:26.649', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (534, 300, NULL, 'The activated list can be brought back / reverted to the active list by clicking the "Revert to Active List".', 0, '2003-12-22 09:59:26.658', 0, '2003-12-22 09:59:26.658', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (535, 300, NULL, 'You can activate each level by using the "Activate now" button.', 0, '2003-12-22 09:59:26.662', 0, '2003-12-22 09:59:26.662', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (536, 300, NULL, 'In the draft categories you can edit your category using the edit button present at the bottom of each level.', 0, '2003-12-22 09:59:26.665', 0, '2003-12-22 09:59:26.665', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (537, 300, NULL, 'You can select to display either the Active Categories or the Draft Categories by clicking on the tabs "Active Categories" and "Draft Categories" respectively.', 0, '2003-12-22 09:59:26.669', 0, '2003-12-22 09:59:26.669', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (538, 300, NULL, 'Clicking on the list of categories displayed in level1 shows you its sub-levels or sub-directories present in level2 and clicking on these in turn would shows their subdirectories in level3 and so on.', 0, '2003-12-22 09:59:26.673', 0, '2003-12-22 09:59:26.673', NULL, NULL, true, 5);
+INSERT INTO help_features VALUES (539, 304, NULL, 'The "Modify" button in the "Details" tab provides a quick link that allows the users information to be modified without having to browse back to the previous window.', 0, '2003-12-22 09:59:26.697', 0, '2003-12-22 09:59:26.697', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (540, 304, NULL, 'The "Employee Link" in the ''Primary Information" table header provides a quick link to view the user''s contact information.', 0, '2003-12-22 09:59:26.701', 0, '2003-12-22 09:59:26.701', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (541, 304, NULL, 'The "Details" tab displays the information about the user in a non-editable format.', 0, '2003-12-22 09:59:26.705', 0, '2003-12-22 09:59:26.705', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (542, 304, NULL, 'The "Disable" button provides a quick link to disable/inactivate the user.', 0, '2003-12-22 09:59:26.708', 0, '2003-12-22 09:59:26.708', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (543, 309, NULL, 'The user and module section allows the administrator to manage users, roles, role hierarchy and manage modules.', 0, '2003-12-22 09:59:26.737', 0, '2003-12-22 09:59:26.737', NULL, NULL, true, 1);
+INSERT INTO help_features VALUES (544, 309, NULL, 'The global parameters and server configuration module allows the administrator to set the session timeout parameter.', 0, '2003-12-22 09:59:26.74', 0, '2003-12-22 09:59:26.74', NULL, NULL, true, 2);
+INSERT INTO help_features VALUES (545, 309, NULL, 'The usage section allows the administrator to view the total number of users, memory used, and system usage parameters for various time intervals.', 0, '2003-12-22 09:59:26.744', 0, '2003-12-22 09:59:26.744', NULL, NULL, true, 3);
+INSERT INTO help_features VALUES (546, 309, NULL, 'The administration module is divided into distinct categories such as managing users, module configuration, setting global parameters, server configuration and monitoring system usage and resources.', 0, '2003-12-22 09:59:26.748', 0, '2003-12-22 09:59:26.748', NULL, NULL, true, 4);
+INSERT INTO help_features VALUES (547, 311, NULL, 'Clicking on the different links of the search results will direct you to the corresponding details in the modules. ', 0, '2003-12-22 09:59:26.862', 0, '2003-12-22 09:59:26.862', NULL, NULL, true, 1);
 
 
 --
--- Data for TOC entry 650 (OID 127816)
+-- Data for TOC entry 650 (OID 132940)
 -- Name: help_related_links; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 651 (OID 127842)
+-- Data for TOC entry 651 (OID 132966)
 -- Name: help_faqs; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 652 (OID 127871)
+-- Data for TOC entry 652 (OID 132995)
 -- Name: help_business_rules; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO help_business_rules VALUES (1, 1, 'You can view your calendar and the calendars of those who work for you', 0, '2003-12-22 09:08:00.821', 0, '2003-12-22 09:08:00.821', NULL, NULL, true);
-INSERT INTO help_business_rules VALUES (2, 251, 'Other tickets in my Department: These are records that are assigned to anyone in your department, are unassigned in your department, and are open.', 0, '2003-12-22 09:08:05.077', 0, '2003-12-22 09:08:05.077', NULL, NULL, true);
-INSERT INTO help_business_rules VALUES (3, 251, 'Tickets assigned to me: These are records that are assigned to you and are open', 0, '2003-12-22 09:08:05.082', 0, '2003-12-22 09:08:05.082', NULL, NULL, true);
-INSERT INTO help_business_rules VALUES (4, 251, 'Tickets created by me: These are records that have been entered by you and are open', 0, '2003-12-22 09:08:05.085', 0, '2003-12-22 09:08:05.085', NULL, NULL, true);
-INSERT INTO help_business_rules VALUES (5, 291, 'BUG: HIGH Priority: page cannot be found. Error shown "The included page caused a problem. " ', 0, '2003-12-22 09:08:05.752', 0, '2003-12-22 09:08:05.752', NULL, NULL, true);
+INSERT INTO help_business_rules VALUES (1, 1, 'You can view your calendar and the calendars of those who work for you', 0, '2003-12-22 09:59:22.331', 0, '2003-12-22 09:59:22.331', NULL, NULL, true);
+INSERT INTO help_business_rules VALUES (2, 251, 'Other tickets in my Department: These are records that are assigned to anyone in your department, are unassigned in your department, and are open.', 0, '2003-12-22 09:59:25.873', 0, '2003-12-22 09:59:25.873', NULL, NULL, true);
+INSERT INTO help_business_rules VALUES (3, 251, 'Tickets assigned to me: These are records that are assigned to you and are open', 0, '2003-12-22 09:59:25.878', 0, '2003-12-22 09:59:25.878', NULL, NULL, true);
+INSERT INTO help_business_rules VALUES (4, 251, 'Tickets created by me: These are records that have been entered by you and are open', 0, '2003-12-22 09:59:25.882', 0, '2003-12-22 09:59:25.882', NULL, NULL, true);
+INSERT INTO help_business_rules VALUES (5, 291, 'BUG: HIGH Priority: page cannot be found. Error shown "The included page caused a problem. " ', 0, '2003-12-22 09:59:26.554', 0, '2003-12-22 09:59:26.554', NULL, NULL, true);
 
 
 --
--- Data for TOC entry 653 (OID 127900)
+-- Data for TOC entry 653 (OID 133024)
 -- Name: help_notes; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 654 (OID 127929)
+-- Data for TOC entry 654 (OID 133053)
 -- Name: help_tips; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO help_tips VALUES (1, 1, 'Assign due dates for tasks so that you can be alerted', 0, '2003-12-22 09:08:00.831', 0, '2003-12-22 09:08:00.831', true);
-INSERT INTO help_tips VALUES (2, 251, 'Make sure to resolve your tickets as soon as possible so they don''t appear here!', 0, '2003-12-22 09:08:05.089', 0, '2003-12-22 09:08:05.089', true);
+INSERT INTO help_tips VALUES (1, 1, 'Assign due dates for tasks so that you can be alerted', 0, '2003-12-22 09:59:22.344', 0, '2003-12-22 09:59:22.344', true);
+INSERT INTO help_tips VALUES (2, 251, 'Make sure to resolve your tickets as soon as possible so they don''t appear here!', 0, '2003-12-22 09:59:25.886', 0, '2003-12-22 09:59:25.886', true);
 
 
 --
--- Data for TOC entry 655 (OID 127954)
+-- Data for TOC entry 655 (OID 133078)
 -- Name: sync_client; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 656 (OID 127963)
+-- Data for TOC entry 656 (OID 133087)
 -- Name: sync_system; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -6502,337 +6502,337 @@ INSERT INTO sync_system VALUES (5, 'Fluency', true);
 
 
 --
--- Data for TOC entry 657 (OID 127971)
+-- Data for TOC entry 657 (OID 133095)
 -- Name: sync_table; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO sync_table VALUES (1, 1, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (2, 2, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 2, false, NULL);
-INSERT INTO sync_table VALUES (3, 2, 'user', 'org.aspcfs.modules.admin.base.User', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 4, false, NULL);
-INSERT INTO sync_table VALUES (4, 2, 'account', 'org.aspcfs.modules.accounts.base.Organization', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 5, false, NULL);
-INSERT INTO sync_table VALUES (5, 2, 'accountInventory', 'org.aspcfs.modules.media.autoguide.base.Inventory', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 6, false, NULL);
-INSERT INTO sync_table VALUES (6, 2, 'inventoryOption', 'org.aspcfs.modules.media.autoguide.base.InventoryOption', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 8, false, NULL);
-INSERT INTO sync_table VALUES (7, 2, 'adRun', 'org.aspcfs.modules.media.autoguide.base.AdRun', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 10, false, NULL);
-INSERT INTO sync_table VALUES (8, 2, 'tableList', 'org.aspcfs.modules.service.base.SyncTableList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 12, false, NULL);
-INSERT INTO sync_table VALUES (9, 2, 'status_master', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 14, false, NULL);
-INSERT INTO sync_table VALUES (10, 2, 'system', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 16, false, NULL);
-INSERT INTO sync_table VALUES (11, 2, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE users ( user_id              int NOT NULL, record_status_id     int NULL, user_name            nvarchar(20) NULL, pin                  nvarchar(20) NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 50, true, NULL);
-INSERT INTO sync_table VALUES (12, 2, 'XIF18users', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF18users ON users ( record_status_id )', 60, false, NULL);
-INSERT INTO sync_table VALUES (13, 2, 'makeList', 'org.aspcfs.modules.media.autoguide.base.MakeList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE make ( make_id              int NOT NULL, make_name            nvarchar(20) NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 70, true, NULL);
-INSERT INTO sync_table VALUES (14, 2, 'XIF2make', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF2make ON make ( record_status_id )', 80, false, NULL);
-INSERT INTO sync_table VALUES (15, 2, 'modelList', 'org.aspcfs.modules.media.autoguide.base.ModelList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE model ( model_id             int NOT NULL, make_id              int NULL, record_status_id     int NULL, model_name           nvarchar(40) NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 100, true, NULL);
-INSERT INTO sync_table VALUES (16, 2, 'XIF3model', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF3model ON model ( record_status_id )', 110, false, NULL);
-INSERT INTO sync_table VALUES (17, 2, 'XIF5model', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF5model ON model ( make_id )', 120, false, NULL);
-INSERT INTO sync_table VALUES (18, 2, 'vehicleList', 'org.aspcfs.modules.media.autoguide.base.VehicleList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE vehicle ( year                 nvarchar(4) NOT NULL, vehicle_id           int NOT NULL, model_id             int NULL, make_id              int NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (vehicle_id), FOREIGN KEY (model_id) REFERENCES model (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 130, true, NULL);
-INSERT INTO sync_table VALUES (19, 2, 'XIF30vehicle', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF30vehicle ON vehicle ( make_id )', 140, false, NULL);
-INSERT INTO sync_table VALUES (20, 2, 'XIF31vehicle', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF31vehicle ON vehicle ( model_id )', 150, false, NULL);
-INSERT INTO sync_table VALUES (21, 2, 'XIF4vehicle', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF4vehicle ON vehicle ( record_status_id )', 160, false, NULL);
-INSERT INTO sync_table VALUES (22, 2, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE account ( account_id           int NOT NULL, account_name         nvarchar(80) NULL, record_status_id     int NULL, address              nvarchar(80) NULL, modified             datetime NULL, city                 nvarchar(80) NULL, state                nvarchar(2) NULL, notes                nvarchar(255) NULL, zip                  nvarchar(11) NULL, phone                nvarchar(20) NULL, contact              nvarchar(20) NULL, dmv_number           nvarchar(20) NULL, owner_id             int NULL, entered              datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 170, true, NULL);
-INSERT INTO sync_table VALUES (23, 2, 'XIF16account', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF16account ON account ( record_status_id )', 180, false, NULL);
-INSERT INTO sync_table VALUES (24, 2, 'accountInventoryList', 'org.aspcfs.modules.media.autoguide.base.InventoryList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE account_inventory ( inventory_id         int NOT NULL, vin                  nvarchar(20) NULL, vehicle_id           int NULL, account_id           int NULL, mileage              nvarchar(20) NULL, enteredby            int NULL, new                  bit, condition            nvarchar(20) NULL, comments             nvarchar(255) NULL, stock_no             nvarchar(20) NULL, ext_color            nvarchar(20) NULL, int_color            nvarchar(20) NULL, style                nvarchar(40) NULL, invoice_price        money NULL, selling_price        money NULL, selling_price_text		nvarchar(100) NULL, modified             datetime NULL, sold                 int NULL, modifiedby           int NULL, record_status_id     int NULL, entered              datetime NULL, PRIMARY KEY (inventory_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 190, true, NULL);
-INSERT INTO sync_table VALUES (25, 2, 'XIF10account_inventory', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF10account_inventory ON account_inventory ( record_status_id )', 200, false, NULL);
-INSERT INTO sync_table VALUES (26, 2, 'XIF10account_inventory', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF11account_inventory ON account_inventory ( modifiedby )', 210, false, NULL);
-INSERT INTO sync_table VALUES (27, 2, 'XIF19account_inventory', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF19account_inventory ON account_inventory ( account_id )', 220, false, NULL);
-INSERT INTO sync_table VALUES (28, 2, 'XIF35account_inventory', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF35account_inventory ON account_inventory ( vehicle_id )', 230, false, NULL);
-INSERT INTO sync_table VALUES (29, 2, 'optionList', 'org.aspcfs.modules.media.autoguide.base.OptionList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE options ( option_id            int NOT NULL, option_name          nvarchar(20) NULL, record_status_id     int NULL, record_status_date   datetime NULL, PRIMARY KEY (option_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 330, true, NULL);
-INSERT INTO sync_table VALUES (30, 2, 'XIF24options', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF24options ON options ( record_status_id )', 340, false, NULL);
-INSERT INTO sync_table VALUES (31, 2, 'inventoryOptionList', 'org.aspcfs.modules.media.autoguide.base.InventoryOptionList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE inventory_options ( inventory_id         int NOT NULL, option_id            int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (option_id, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (option_id) REFERENCES options (option_id) )', 350, true, NULL);
-INSERT INTO sync_table VALUES (32, 2, 'XIF25inventory_options', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF25inventory_options ON inventory_options ( option_id )', 360, false, NULL);
-INSERT INTO sync_table VALUES (33, 2, 'XIF27inventory_options', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF27inventory_options ON inventory_options ( record_status_id )', 370, false, NULL);
-INSERT INTO sync_table VALUES (34, 2, 'XIF33inventory_options', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF33inventory_options ON inventory_options ( inventory_id )', 380, false, NULL);
-INSERT INTO sync_table VALUES (35, 2, 'adTypeList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE ad_type ( ad_type_id           int NOT NULL, ad_type_name         nvarchar(20) NULL, PRIMARY KEY (ad_type_id) )', 385, true, NULL);
-INSERT INTO sync_table VALUES (36, 2, 'adRunList', 'org.aspcfs.modules.media.autoguide.base.AdRunList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE ad_run ( ad_run_id            int NOT NULL, record_status_id     int NULL, inventory_id         int NULL, ad_type_id           int NULL, ad_run_date          datetime NULL, has_picture          int NULL, modified             datetime NULL, entered              datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (ad_run_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (ad_type_id) REFERENCES ad_type (ad_type_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 390, true, NULL);
-INSERT INTO sync_table VALUES (37, 2, 'XIF22ad_run', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF22ad_run ON ad_run ( record_status_id )', 400, false, NULL);
-INSERT INTO sync_table VALUES (38, 2, 'XIF36ad_run', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF36ad_run ON ad_run ( ad_type_id )', 402, false, NULL);
-INSERT INTO sync_table VALUES (39, 2, 'XIF37ad_run', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF37ad_run ON ad_run ( inventory_id )', 404, false, NULL);
-INSERT INTO sync_table VALUES (40, 2, 'inventory_picture', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE inventory_picture ( picture_name         nvarchar(20) NOT NULL, inventory_id         int NOT NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (picture_name, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 410, false, NULL);
-INSERT INTO sync_table VALUES (41, 2, 'XIF23inventory_picture', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF23inventory_picture ON inventory_picture ( record_status_id )', 420, false, NULL);
-INSERT INTO sync_table VALUES (42, 2, 'XIF32inventory_picture', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF32inventory_picture ON inventory_picture ( inventory_id )', 430, false, NULL);
-INSERT INTO sync_table VALUES (43, 2, 'preferences', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE preferences ( user_id              int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )', 440, false, NULL);
-INSERT INTO sync_table VALUES (44, 2, 'XIF29preferences', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF29preferences ON preferences ( record_status_id )', 450, false, NULL);
-INSERT INTO sync_table VALUES (45, 2, 'user_account', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE TABLE user_account ( user_id              int NOT NULL, account_id           int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id, account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )', 460, false, NULL);
-INSERT INTO sync_table VALUES (46, 2, 'XIF14user_account', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF14user_account ON user_account ( user_id )', 470, false, NULL);
-INSERT INTO sync_table VALUES (47, 2, 'XIF15user_account', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF15user_account ON user_account ( account_id )', 480, false, NULL);
-INSERT INTO sync_table VALUES (48, 2, 'XIF17user_account', NULL, '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', 'CREATE INDEX XIF17user_account ON user_account ( record_status_id )', 490, false, NULL);
-INSERT INTO sync_table VALUES (49, 2, 'deleteInventoryCache', 'org.aspcfs.modules.media.autoguide.actions.DeleteInventoryCache', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 500, false, NULL);
-INSERT INTO sync_table VALUES (50, 4, 'lookupIndustry', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (51, 4, 'lookupIndustryList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (52, 4, 'systemPrefs', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (53, 4, 'systemModules', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (54, 4, 'systemModulesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (55, 4, 'lookupContactTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (56, 4, 'lookupContactTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (57, 4, 'lookupAccountTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (58, 4, 'lookupAccountTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (59, 4, 'lookupDepartment', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (60, 4, 'lookupDepartmentList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (61, 4, 'lookupOrgAddressTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (62, 4, 'lookupOrgAddressTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (63, 4, 'lookupOrgEmailTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (64, 4, 'lookupOrgEmailTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (65, 4, 'lookupOrgPhoneTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (66, 4, 'lookupOrgPhoneTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (67, 4, 'lookupInstantMessengerTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (68, 4, 'lookupInstantMessengerTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (69, 4, 'lookupEmploymentTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (70, 4, 'lookupEmploymentTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (71, 4, 'lookupLocale', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (72, 4, 'lookupLocaleList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (73, 4, 'lookupContactAddressTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (74, 4, 'lookupContactAddressTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (75, 4, 'lookupContactEmailTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (76, 4, 'lookupContactEmailTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (77, 4, 'lookupContactPhoneTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (78, 4, 'lookupContactPhoneTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (79, 4, 'lookupStage', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (80, 4, 'lookupStageList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (81, 4, 'lookupDeliveryOptions', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (82, 4, 'lookupDeliveryOptionsList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (83, 4, 'lookupCallTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (84, 4, 'lookupCallTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (85, 4, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (86, 4, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (87, 4, 'ticketSeverity', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (88, 4, 'ticketSeverityList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (89, 4, 'lookupTicketSource', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (90, 4, 'lookupTicketSourceList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (91, 4, 'ticketPriority', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (92, 4, 'ticketPriorityList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (93, 4, 'lookupRevenueTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (94, 4, 'lookupRevenueTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (95, 4, 'lookupRevenueDetailTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (96, 4, 'lookupRevenueDetailTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (97, 4, 'lookupSurveyTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (98, 4, 'lookupSurveyTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (99, 4, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (100, 4, 'user', 'org.aspcfs.modules.admin.base.User', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (101, 4, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (102, 4, 'contact', 'org.aspcfs.modules.contacts.base.Contact', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (103, 4, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (104, 4, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (105, 4, 'ticketList', 'org.aspcfs.modules.troubletickets.base.TicketList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (106, 4, 'account', 'org.aspcfs.modules.accounts.base.Organization', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (107, 4, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (108, 4, 'role', 'org.aspcfs.modules.admin.base.Role', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (109, 4, 'roleList', 'org.aspcfs.modules.admin.base.RoleList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (110, 4, 'permissionCategory', 'org.aspcfs.modules.admin.base.PermissionCategory', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (111, 4, 'permissionCategoryList', 'org.aspcfs.modules.admin.base.PermissionCategoryList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (112, 4, 'permission', 'org.aspcfs.modules.admin.base.Permission', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (113, 4, 'permissionList', 'org.aspcfs.modules.admin.base.PermissionList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (114, 4, 'rolePermission', 'org.aspcfs.modules.admin.base.RolePermission', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (115, 4, 'rolePermissionList', 'org.aspcfs.modules.admin.base.RolePermissionList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (116, 4, 'opportunity', 'org.aspcfs.modules.pipeline.base.Opportunity', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (117, 4, 'opportunityList', 'org.aspcfs.modules.pipeline.base.OpportunityList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (118, 4, 'call', 'org.aspcfs.modules.contacts.base.Call', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (119, 4, 'callList', 'org.aspcfs.modules.contacts.base.CallList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (120, 4, 'customFieldCategory', 'org.aspcfs.modules.base.CustomFieldCategory', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (121, 4, 'customFieldCategoryList', 'org.aspcfs.modules.base.CustomFieldCategoryList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (122, 4, 'customFieldGroup', 'org.aspcfs.modules.base.CustomFieldGroup', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (123, 4, 'customFieldGroupList', 'org.aspcfs.modules.base.CustomFieldGroupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (124, 4, 'customField', 'org.aspcfs.modules.base.CustomField', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (125, 4, 'customFieldList', 'org.aspcfs.modules.base.CustomFieldList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (126, 4, 'customFieldLookup', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (127, 4, 'customFieldLookupList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (128, 4, 'customFieldRecord', 'org.aspcfs.modules.base.CustomFieldRecord', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (129, 4, 'customFieldRecordList', 'org.aspcfs.modules.base.CustomFieldRecordList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (130, 4, 'contactEmailAddress', 'org.aspcfs.modules.contacts.base.ContactEmailAddress', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (131, 4, 'contactEmailAddressList', 'org.aspcfs.modules.contacts.base.ContactEmailAddressList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (132, 4, 'customFieldData', 'org.aspcfs.modules.base.CustomFieldData', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (133, 4, 'lookupProjectActivity', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (134, 4, 'lookupProjectActivityList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (135, 4, 'lookupProjectIssues', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (136, 4, 'lookupProjectIssuesList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (137, 4, 'lookupProjectLoe', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (138, 4, 'lookupProjectLoeList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (139, 4, 'lookupProjectPriority', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (140, 4, 'lookupProjectPriorityList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (141, 4, 'lookupProjectStatus', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (142, 4, 'lookupProjectStatusList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (143, 4, 'project', 'com.zeroio.iteam.base.Project', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (144, 4, 'projectList', 'com.zeroio.iteam.base.ProjectList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (145, 4, 'requirement', 'com.zeroio.iteam.base.Requirement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (146, 4, 'requirementList', 'com.zeroio.iteam.base.RequirementList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (147, 4, 'assignment', 'com.zeroio.iteam.base.Assignment', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (148, 4, 'assignmentList', 'com.zeroio.iteam.base.AssignmentList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (149, 4, 'issue', 'com.zeroio.iteam.base.Issue', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (150, 4, 'issueList', 'com.zeroio.iteam.base.IssueList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (151, 4, 'issueReply', 'com.zeroio.iteam.base.IssueReply', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (152, 4, 'issueReplyList', 'com.zeroio.iteam.base.IssueReplyList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (153, 4, 'teamMember', 'com.zeroio.iteam.base.TeamMember', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (154, 4, 'fileItem', 'com.zeroio.iteam.base.FileItem', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (155, 4, 'fileItemList', 'com.zeroio.iteam.base.FileItemList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (156, 4, 'fileItemVersion', 'com.zeroio.iteam.base.FileItemVersion', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (157, 4, 'fileItemVersionList', 'com.zeroio.iteam.base.FileItemVersionList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (158, 4, 'fileDownloadLog', 'com.zeroio.iteam.base.FileDownloadLog', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (159, 4, 'contactAddress', 'org.aspcfs.modules.contacts.base.ContactAddress', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (160, 4, 'contactAddressList', 'org.aspcfs.modules.contacts.base.ContactAddressList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (161, 4, 'contactPhoneNumber', 'org.aspcfs.modules.contacts.base.ContactPhoneNumber', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (162, 4, 'contactPhoneNumberList', 'org.aspcfs.modules.contacts.base.ContactPhoneNumberList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (163, 4, 'organizationPhoneNumber', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumber', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (164, 4, 'organizationPhoneNumberList', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumberList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (165, 4, 'organizationEmailAddress', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddress', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (166, 4, 'organizationEmailAddressList', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddressList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (167, 4, 'organizationAddress', 'org.aspcfs.modules.accounts.base.OrganizationAddress', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (168, 4, 'organizationAddressList', 'org.aspcfs.modules.accounts.base.OrganizationAddressList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (169, 4, 'ticketLog', 'org.aspcfs.modules.troubletickets.base.TicketLog', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (170, 4, 'ticketLogList', 'org.aspcfs.modules.troubletickets.base.TicketLogList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (171, 4, 'message', 'org.aspcfs.modules.communications.base.Message', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (172, 4, 'messageList', 'org.aspcfs.modules.communications.base.MessageList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (173, 4, 'searchCriteriaElements', 'org.aspcfs.modules.communications.base.SearchCriteriaList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (174, 4, 'searchCriteriaElementsList', 'org.aspcfs.modules.communications.base.SearchCriteriaListList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (175, 4, 'savedCriteriaElement', 'org.aspcfs.modules.communications.base.SavedCriteriaElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (176, 4, 'searchFieldElement', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (177, 4, 'searchFieldElementList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (178, 4, 'revenue', 'org.aspcfs.modules.accounts.base.Revenue', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (179, 4, 'revenueList', 'org.aspcfs.modules.accounts.base.RevenueList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (180, 4, 'campaign', 'org.aspcfs.modules.communications.base.Campaign', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (181, 4, 'campaignList', 'org.aspcfs.modules.communications.base.CampaignList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (182, 4, 'scheduledRecipient', 'org.aspcfs.modules.communications.base.ScheduledRecipient', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (183, 4, 'scheduledRecipientList', 'org.aspcfs.modules.communications.base.ScheduledRecipientList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (184, 4, 'accessLog', 'org.aspcfs.modules.admin.base.AccessLog', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (185, 4, 'accessLogList', 'org.aspcfs.modules.admin.base.AccessLogList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (186, 4, 'accountTypeLevels', 'org.aspcfs.modules.accounts.base.AccountTypeLevel', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (187, 4, 'fieldTypes', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (188, 4, 'fieldTypesList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (189, 4, 'excludedRecipient', 'org.aspcfs.modules.communications.base.ExcludedRecipient', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (190, 4, 'campaignRun', 'org.aspcfs.modules.communications.base.CampaignRun', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (191, 4, 'campaignRunList', 'org.aspcfs.modules.communications.base.CampaignRunList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (192, 4, 'campaignListGroups', 'org.aspcfs.modules.communications.base.CampaignListGroup', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (193, 5, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (194, 5, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (195, 5, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (196, 5, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, 2, false, NULL);
-INSERT INTO sync_table VALUES (197, 5, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (198, 5, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (199, 5, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList', '2003-12-22 09:07:43.732', '2003-12-22 09:07:43.732', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (1, 1, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (2, 2, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 2, false, NULL);
+INSERT INTO sync_table VALUES (3, 2, 'user', 'org.aspcfs.modules.admin.base.User', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 4, false, NULL);
+INSERT INTO sync_table VALUES (4, 2, 'account', 'org.aspcfs.modules.accounts.base.Organization', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 5, false, NULL);
+INSERT INTO sync_table VALUES (5, 2, 'accountInventory', 'org.aspcfs.modules.media.autoguide.base.Inventory', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 6, false, NULL);
+INSERT INTO sync_table VALUES (6, 2, 'inventoryOption', 'org.aspcfs.modules.media.autoguide.base.InventoryOption', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 8, false, NULL);
+INSERT INTO sync_table VALUES (7, 2, 'adRun', 'org.aspcfs.modules.media.autoguide.base.AdRun', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 10, false, NULL);
+INSERT INTO sync_table VALUES (8, 2, 'tableList', 'org.aspcfs.modules.service.base.SyncTableList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 12, false, NULL);
+INSERT INTO sync_table VALUES (9, 2, 'status_master', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 14, false, NULL);
+INSERT INTO sync_table VALUES (10, 2, 'system', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 16, false, NULL);
+INSERT INTO sync_table VALUES (11, 2, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE users ( user_id              int NOT NULL, record_status_id     int NULL, user_name            nvarchar(20) NULL, pin                  nvarchar(20) NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 50, true, NULL);
+INSERT INTO sync_table VALUES (12, 2, 'XIF18users', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF18users ON users ( record_status_id )', 60, false, NULL);
+INSERT INTO sync_table VALUES (13, 2, 'makeList', 'org.aspcfs.modules.media.autoguide.base.MakeList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE make ( make_id              int NOT NULL, make_name            nvarchar(20) NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 70, true, NULL);
+INSERT INTO sync_table VALUES (14, 2, 'XIF2make', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF2make ON make ( record_status_id )', 80, false, NULL);
+INSERT INTO sync_table VALUES (15, 2, 'modelList', 'org.aspcfs.modules.media.autoguide.base.ModelList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE model ( model_id             int NOT NULL, make_id              int NULL, record_status_id     int NULL, model_name           nvarchar(40) NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 100, true, NULL);
+INSERT INTO sync_table VALUES (16, 2, 'XIF3model', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF3model ON model ( record_status_id )', 110, false, NULL);
+INSERT INTO sync_table VALUES (17, 2, 'XIF5model', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF5model ON model ( make_id )', 120, false, NULL);
+INSERT INTO sync_table VALUES (18, 2, 'vehicleList', 'org.aspcfs.modules.media.autoguide.base.VehicleList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE vehicle ( year                 nvarchar(4) NOT NULL, vehicle_id           int NOT NULL, model_id             int NULL, make_id              int NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (vehicle_id), FOREIGN KEY (model_id) REFERENCES model (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 130, true, NULL);
+INSERT INTO sync_table VALUES (19, 2, 'XIF30vehicle', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF30vehicle ON vehicle ( make_id )', 140, false, NULL);
+INSERT INTO sync_table VALUES (20, 2, 'XIF31vehicle', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF31vehicle ON vehicle ( model_id )', 150, false, NULL);
+INSERT INTO sync_table VALUES (21, 2, 'XIF4vehicle', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF4vehicle ON vehicle ( record_status_id )', 160, false, NULL);
+INSERT INTO sync_table VALUES (22, 2, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE account ( account_id           int NOT NULL, account_name         nvarchar(80) NULL, record_status_id     int NULL, address              nvarchar(80) NULL, modified             datetime NULL, city                 nvarchar(80) NULL, state                nvarchar(2) NULL, notes                nvarchar(255) NULL, zip                  nvarchar(11) NULL, phone                nvarchar(20) NULL, contact              nvarchar(20) NULL, dmv_number           nvarchar(20) NULL, owner_id             int NULL, entered              datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 170, true, NULL);
+INSERT INTO sync_table VALUES (23, 2, 'XIF16account', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF16account ON account ( record_status_id )', 180, false, NULL);
+INSERT INTO sync_table VALUES (24, 2, 'accountInventoryList', 'org.aspcfs.modules.media.autoguide.base.InventoryList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE account_inventory ( inventory_id         int NOT NULL, vin                  nvarchar(20) NULL, vehicle_id           int NULL, account_id           int NULL, mileage              nvarchar(20) NULL, enteredby            int NULL, new                  bit, condition            nvarchar(20) NULL, comments             nvarchar(255) NULL, stock_no             nvarchar(20) NULL, ext_color            nvarchar(20) NULL, int_color            nvarchar(20) NULL, style                nvarchar(40) NULL, invoice_price        money NULL, selling_price        money NULL, selling_price_text		nvarchar(100) NULL, modified             datetime NULL, sold                 int NULL, modifiedby           int NULL, record_status_id     int NULL, entered              datetime NULL, PRIMARY KEY (inventory_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 190, true, NULL);
+INSERT INTO sync_table VALUES (25, 2, 'XIF10account_inventory', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF10account_inventory ON account_inventory ( record_status_id )', 200, false, NULL);
+INSERT INTO sync_table VALUES (26, 2, 'XIF10account_inventory', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF11account_inventory ON account_inventory ( modifiedby )', 210, false, NULL);
+INSERT INTO sync_table VALUES (27, 2, 'XIF19account_inventory', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF19account_inventory ON account_inventory ( account_id )', 220, false, NULL);
+INSERT INTO sync_table VALUES (28, 2, 'XIF35account_inventory', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF35account_inventory ON account_inventory ( vehicle_id )', 230, false, NULL);
+INSERT INTO sync_table VALUES (29, 2, 'optionList', 'org.aspcfs.modules.media.autoguide.base.OptionList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE options ( option_id            int NOT NULL, option_name          nvarchar(20) NULL, record_status_id     int NULL, record_status_date   datetime NULL, PRIMARY KEY (option_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 330, true, NULL);
+INSERT INTO sync_table VALUES (30, 2, 'XIF24options', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF24options ON options ( record_status_id )', 340, false, NULL);
+INSERT INTO sync_table VALUES (31, 2, 'inventoryOptionList', 'org.aspcfs.modules.media.autoguide.base.InventoryOptionList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE inventory_options ( inventory_id         int NOT NULL, option_id            int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (option_id, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (option_id) REFERENCES options (option_id) )', 350, true, NULL);
+INSERT INTO sync_table VALUES (32, 2, 'XIF25inventory_options', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF25inventory_options ON inventory_options ( option_id )', 360, false, NULL);
+INSERT INTO sync_table VALUES (33, 2, 'XIF27inventory_options', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF27inventory_options ON inventory_options ( record_status_id )', 370, false, NULL);
+INSERT INTO sync_table VALUES (34, 2, 'XIF33inventory_options', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF33inventory_options ON inventory_options ( inventory_id )', 380, false, NULL);
+INSERT INTO sync_table VALUES (35, 2, 'adTypeList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE ad_type ( ad_type_id           int NOT NULL, ad_type_name         nvarchar(20) NULL, PRIMARY KEY (ad_type_id) )', 385, true, NULL);
+INSERT INTO sync_table VALUES (36, 2, 'adRunList', 'org.aspcfs.modules.media.autoguide.base.AdRunList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE ad_run ( ad_run_id            int NOT NULL, record_status_id     int NULL, inventory_id         int NULL, ad_type_id           int NULL, ad_run_date          datetime NULL, has_picture          int NULL, modified             datetime NULL, entered              datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (ad_run_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (ad_type_id) REFERENCES ad_type (ad_type_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 390, true, NULL);
+INSERT INTO sync_table VALUES (37, 2, 'XIF22ad_run', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF22ad_run ON ad_run ( record_status_id )', 400, false, NULL);
+INSERT INTO sync_table VALUES (38, 2, 'XIF36ad_run', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF36ad_run ON ad_run ( ad_type_id )', 402, false, NULL);
+INSERT INTO sync_table VALUES (39, 2, 'XIF37ad_run', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF37ad_run ON ad_run ( inventory_id )', 404, false, NULL);
+INSERT INTO sync_table VALUES (40, 2, 'inventory_picture', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE inventory_picture ( picture_name         nvarchar(20) NOT NULL, inventory_id         int NOT NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (picture_name, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 410, false, NULL);
+INSERT INTO sync_table VALUES (41, 2, 'XIF23inventory_picture', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF23inventory_picture ON inventory_picture ( record_status_id )', 420, false, NULL);
+INSERT INTO sync_table VALUES (42, 2, 'XIF32inventory_picture', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF32inventory_picture ON inventory_picture ( inventory_id )', 430, false, NULL);
+INSERT INTO sync_table VALUES (43, 2, 'preferences', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE preferences ( user_id              int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )', 440, false, NULL);
+INSERT INTO sync_table VALUES (44, 2, 'XIF29preferences', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF29preferences ON preferences ( record_status_id )', 450, false, NULL);
+INSERT INTO sync_table VALUES (45, 2, 'user_account', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE TABLE user_account ( user_id              int NOT NULL, account_id           int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id, account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )', 460, false, NULL);
+INSERT INTO sync_table VALUES (46, 2, 'XIF14user_account', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF14user_account ON user_account ( user_id )', 470, false, NULL);
+INSERT INTO sync_table VALUES (47, 2, 'XIF15user_account', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF15user_account ON user_account ( account_id )', 480, false, NULL);
+INSERT INTO sync_table VALUES (48, 2, 'XIF17user_account', NULL, '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', 'CREATE INDEX XIF17user_account ON user_account ( record_status_id )', 490, false, NULL);
+INSERT INTO sync_table VALUES (49, 2, 'deleteInventoryCache', 'org.aspcfs.modules.media.autoguide.actions.DeleteInventoryCache', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 500, false, NULL);
+INSERT INTO sync_table VALUES (50, 4, 'lookupIndustry', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (51, 4, 'lookupIndustryList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (52, 4, 'systemPrefs', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (53, 4, 'systemModules', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (54, 4, 'systemModulesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (55, 4, 'lookupContactTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (56, 4, 'lookupContactTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (57, 4, 'lookupAccountTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (58, 4, 'lookupAccountTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (59, 4, 'lookupDepartment', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (60, 4, 'lookupDepartmentList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (61, 4, 'lookupOrgAddressTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (62, 4, 'lookupOrgAddressTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (63, 4, 'lookupOrgEmailTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (64, 4, 'lookupOrgEmailTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (65, 4, 'lookupOrgPhoneTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (66, 4, 'lookupOrgPhoneTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (67, 4, 'lookupInstantMessengerTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (68, 4, 'lookupInstantMessengerTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (69, 4, 'lookupEmploymentTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (70, 4, 'lookupEmploymentTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (71, 4, 'lookupLocale', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (72, 4, 'lookupLocaleList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (73, 4, 'lookupContactAddressTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (74, 4, 'lookupContactAddressTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (75, 4, 'lookupContactEmailTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (76, 4, 'lookupContactEmailTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (77, 4, 'lookupContactPhoneTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (78, 4, 'lookupContactPhoneTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (79, 4, 'lookupStage', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (80, 4, 'lookupStageList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (81, 4, 'lookupDeliveryOptions', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (82, 4, 'lookupDeliveryOptionsList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (83, 4, 'lookupCallTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (84, 4, 'lookupCallTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (85, 4, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (86, 4, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (87, 4, 'ticketSeverity', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (88, 4, 'ticketSeverityList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (89, 4, 'lookupTicketSource', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (90, 4, 'lookupTicketSourceList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (91, 4, 'ticketPriority', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (92, 4, 'ticketPriorityList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (93, 4, 'lookupRevenueTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (94, 4, 'lookupRevenueTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (95, 4, 'lookupRevenueDetailTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (96, 4, 'lookupRevenueDetailTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (97, 4, 'lookupSurveyTypes', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (98, 4, 'lookupSurveyTypesList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (99, 4, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (100, 4, 'user', 'org.aspcfs.modules.admin.base.User', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (101, 4, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (102, 4, 'contact', 'org.aspcfs.modules.contacts.base.Contact', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (103, 4, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (104, 4, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (105, 4, 'ticketList', 'org.aspcfs.modules.troubletickets.base.TicketList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (106, 4, 'account', 'org.aspcfs.modules.accounts.base.Organization', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (107, 4, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (108, 4, 'role', 'org.aspcfs.modules.admin.base.Role', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (109, 4, 'roleList', 'org.aspcfs.modules.admin.base.RoleList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (110, 4, 'permissionCategory', 'org.aspcfs.modules.admin.base.PermissionCategory', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (111, 4, 'permissionCategoryList', 'org.aspcfs.modules.admin.base.PermissionCategoryList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (112, 4, 'permission', 'org.aspcfs.modules.admin.base.Permission', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (113, 4, 'permissionList', 'org.aspcfs.modules.admin.base.PermissionList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (114, 4, 'rolePermission', 'org.aspcfs.modules.admin.base.RolePermission', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (115, 4, 'rolePermissionList', 'org.aspcfs.modules.admin.base.RolePermissionList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (116, 4, 'opportunity', 'org.aspcfs.modules.pipeline.base.Opportunity', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (117, 4, 'opportunityList', 'org.aspcfs.modules.pipeline.base.OpportunityList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (118, 4, 'call', 'org.aspcfs.modules.contacts.base.Call', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (119, 4, 'callList', 'org.aspcfs.modules.contacts.base.CallList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (120, 4, 'customFieldCategory', 'org.aspcfs.modules.base.CustomFieldCategory', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (121, 4, 'customFieldCategoryList', 'org.aspcfs.modules.base.CustomFieldCategoryList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (122, 4, 'customFieldGroup', 'org.aspcfs.modules.base.CustomFieldGroup', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (123, 4, 'customFieldGroupList', 'org.aspcfs.modules.base.CustomFieldGroupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (124, 4, 'customField', 'org.aspcfs.modules.base.CustomField', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (125, 4, 'customFieldList', 'org.aspcfs.modules.base.CustomFieldList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (126, 4, 'customFieldLookup', 'org.aspcfs.utils.web.LookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (127, 4, 'customFieldLookupList', 'org.aspcfs.utils.web.LookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (128, 4, 'customFieldRecord', 'org.aspcfs.modules.base.CustomFieldRecord', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (129, 4, 'customFieldRecordList', 'org.aspcfs.modules.base.CustomFieldRecordList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (130, 4, 'contactEmailAddress', 'org.aspcfs.modules.contacts.base.ContactEmailAddress', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (131, 4, 'contactEmailAddressList', 'org.aspcfs.modules.contacts.base.ContactEmailAddressList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (132, 4, 'customFieldData', 'org.aspcfs.modules.base.CustomFieldData', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (133, 4, 'lookupProjectActivity', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (134, 4, 'lookupProjectActivityList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (135, 4, 'lookupProjectIssues', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (136, 4, 'lookupProjectIssuesList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (137, 4, 'lookupProjectLoe', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (138, 4, 'lookupProjectLoeList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (139, 4, 'lookupProjectPriority', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (140, 4, 'lookupProjectPriorityList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (141, 4, 'lookupProjectStatus', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (142, 4, 'lookupProjectStatusList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (143, 4, 'project', 'com.zeroio.iteam.base.Project', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (144, 4, 'projectList', 'com.zeroio.iteam.base.ProjectList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (145, 4, 'requirement', 'com.zeroio.iteam.base.Requirement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (146, 4, 'requirementList', 'com.zeroio.iteam.base.RequirementList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (147, 4, 'assignment', 'com.zeroio.iteam.base.Assignment', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (148, 4, 'assignmentList', 'com.zeroio.iteam.base.AssignmentList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (149, 4, 'issue', 'com.zeroio.iteam.base.Issue', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (150, 4, 'issueList', 'com.zeroio.iteam.base.IssueList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (151, 4, 'issueReply', 'com.zeroio.iteam.base.IssueReply', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (152, 4, 'issueReplyList', 'com.zeroio.iteam.base.IssueReplyList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (153, 4, 'teamMember', 'com.zeroio.iteam.base.TeamMember', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (154, 4, 'fileItem', 'com.zeroio.iteam.base.FileItem', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (155, 4, 'fileItemList', 'com.zeroio.iteam.base.FileItemList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (156, 4, 'fileItemVersion', 'com.zeroio.iteam.base.FileItemVersion', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (157, 4, 'fileItemVersionList', 'com.zeroio.iteam.base.FileItemVersionList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (158, 4, 'fileDownloadLog', 'com.zeroio.iteam.base.FileDownloadLog', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (159, 4, 'contactAddress', 'org.aspcfs.modules.contacts.base.ContactAddress', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (160, 4, 'contactAddressList', 'org.aspcfs.modules.contacts.base.ContactAddressList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (161, 4, 'contactPhoneNumber', 'org.aspcfs.modules.contacts.base.ContactPhoneNumber', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (162, 4, 'contactPhoneNumberList', 'org.aspcfs.modules.contacts.base.ContactPhoneNumberList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (163, 4, 'organizationPhoneNumber', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumber', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (164, 4, 'organizationPhoneNumberList', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumberList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (165, 4, 'organizationEmailAddress', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddress', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (166, 4, 'organizationEmailAddressList', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddressList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (167, 4, 'organizationAddress', 'org.aspcfs.modules.accounts.base.OrganizationAddress', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (168, 4, 'organizationAddressList', 'org.aspcfs.modules.accounts.base.OrganizationAddressList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (169, 4, 'ticketLog', 'org.aspcfs.modules.troubletickets.base.TicketLog', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (170, 4, 'ticketLogList', 'org.aspcfs.modules.troubletickets.base.TicketLogList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (171, 4, 'message', 'org.aspcfs.modules.communications.base.Message', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (172, 4, 'messageList', 'org.aspcfs.modules.communications.base.MessageList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (173, 4, 'searchCriteriaElements', 'org.aspcfs.modules.communications.base.SearchCriteriaList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (174, 4, 'searchCriteriaElementsList', 'org.aspcfs.modules.communications.base.SearchCriteriaListList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (175, 4, 'savedCriteriaElement', 'org.aspcfs.modules.communications.base.SavedCriteriaElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (176, 4, 'searchFieldElement', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (177, 4, 'searchFieldElementList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (178, 4, 'revenue', 'org.aspcfs.modules.accounts.base.Revenue', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (179, 4, 'revenueList', 'org.aspcfs.modules.accounts.base.RevenueList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (180, 4, 'campaign', 'org.aspcfs.modules.communications.base.Campaign', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (181, 4, 'campaignList', 'org.aspcfs.modules.communications.base.CampaignList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (182, 4, 'scheduledRecipient', 'org.aspcfs.modules.communications.base.ScheduledRecipient', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (183, 4, 'scheduledRecipientList', 'org.aspcfs.modules.communications.base.ScheduledRecipientList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (184, 4, 'accessLog', 'org.aspcfs.modules.admin.base.AccessLog', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (185, 4, 'accessLogList', 'org.aspcfs.modules.admin.base.AccessLogList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (186, 4, 'accountTypeLevels', 'org.aspcfs.modules.accounts.base.AccountTypeLevel', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (187, 4, 'fieldTypes', 'org.aspcfs.utils.web.CustomLookupElement', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (188, 4, 'fieldTypesList', 'org.aspcfs.utils.web.CustomLookupList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (189, 4, 'excludedRecipient', 'org.aspcfs.modules.communications.base.ExcludedRecipient', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (190, 4, 'campaignRun', 'org.aspcfs.modules.communications.base.CampaignRun', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (191, 4, 'campaignRunList', 'org.aspcfs.modules.communications.base.CampaignRunList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (192, 4, 'campaignListGroups', 'org.aspcfs.modules.communications.base.CampaignListGroup', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (193, 5, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (194, 5, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (195, 5, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (196, 5, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, 2, false, NULL);
+INSERT INTO sync_table VALUES (197, 5, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (198, 5, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (199, 5, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList', '2003-12-22 09:59:03.938', '2003-12-22 09:59:03.938', NULL, -1, false, NULL);
 
 
 --
--- Data for TOC entry 658 (OID 127987)
+-- Data for TOC entry 658 (OID 133111)
 -- Name: sync_map; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 659 (OID 127999)
+-- Data for TOC entry 659 (OID 133123)
 -- Name: sync_conflict_log; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 660 (OID 128012)
+-- Data for TOC entry 660 (OID 133136)
 -- Name: sync_log; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 661 (OID 128028)
+-- Data for TOC entry 661 (OID 133152)
 -- Name: sync_transaction_log; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 662 (OID 128042)
+-- Data for TOC entry 662 (OID 133166)
 -- Name: process_log; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 663 (OID 128265)
+-- Data for TOC entry 663 (OID 133389)
 -- Name: autoguide_make; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 664 (OID 128274)
+-- Data for TOC entry 664 (OID 133398)
 -- Name: autoguide_model; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 665 (OID 128287)
+-- Data for TOC entry 665 (OID 133411)
 -- Name: autoguide_vehicle; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 666 (OID 128304)
+-- Data for TOC entry 666 (OID 133428)
 -- Name: autoguide_inventory; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 667 (OID 128323)
+-- Data for TOC entry 667 (OID 133447)
 -- Name: autoguide_options; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO autoguide_options VALUES (1, 'A/T', false, 10, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (2, '4-CYL', false, 20, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (3, '6-CYL', false, 30, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (4, 'V-8', false, 40, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (5, 'CRUISE', false, 50, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (6, '5-SPD', false, 60, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (7, '4X4', false, 70, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (8, '2-DOOR', false, 80, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (9, '4-DOOR', false, 90, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (10, 'LEATHER', false, 100, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (11, 'P/DL', false, 110, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (12, 'T/W', false, 120, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (13, 'P/SEATS', false, 130, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (14, 'P/WIND', false, 140, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (15, 'P/S', false, 150, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (16, 'BEDLINE', false, 160, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (17, 'LOW MILES', false, 170, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (18, 'EX CLEAN', false, 180, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (19, 'LOADED', false, 190, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (20, 'A/C', false, 200, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (21, 'SUNROOF', false, 210, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (22, 'AM/FM ST', false, 220, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (23, 'CASS', false, 225, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (24, 'CD PLYR', false, 230, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (25, 'ABS', false, 240, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (26, 'ALARM', false, 250, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (27, 'SLD R. WIN', false, 260, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (28, 'AIRBAG', false, 270, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (29, '1 OWNER', false, 280, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_options VALUES (30, 'ALLOY WH', false, 290, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
+INSERT INTO autoguide_options VALUES (1, 'A/T', false, 10, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (2, '4-CYL', false, 20, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (3, '6-CYL', false, 30, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (4, 'V-8', false, 40, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (5, 'CRUISE', false, 50, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (6, '5-SPD', false, 60, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (7, '4X4', false, 70, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (8, '2-DOOR', false, 80, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (9, '4-DOOR', false, 90, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (10, 'LEATHER', false, 100, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (11, 'P/DL', false, 110, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (12, 'T/W', false, 120, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (13, 'P/SEATS', false, 130, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (14, 'P/WIND', false, 140, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (15, 'P/S', false, 150, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (16, 'BEDLINE', false, 160, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (17, 'LOW MILES', false, 170, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (18, 'EX CLEAN', false, 180, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (19, 'LOADED', false, 190, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (20, 'A/C', false, 200, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (21, 'SUNROOF', false, 210, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (22, 'AM/FM ST', false, 220, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (23, 'CASS', false, 225, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (24, 'CD PLYR', false, 230, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (25, 'ABS', false, 240, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (26, 'ALARM', false, 250, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (27, 'SLD R. WIN', false, 260, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (28, 'AIRBAG', false, 270, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (29, '1 OWNER', false, 280, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_options VALUES (30, 'ALLOY WH', false, 290, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
 
 
 --
--- Data for TOC entry 668 (OID 128333)
+-- Data for TOC entry 668 (OID 133457)
 -- Name: autoguide_inventory_options; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 669 (OID 128342)
+-- Data for TOC entry 669 (OID 133466)
 -- Name: autoguide_ad_run; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 670 (OID 128357)
+-- Data for TOC entry 670 (OID 133481)
 -- Name: autoguide_ad_run_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO autoguide_ad_run_types VALUES (1, 'In Column', false, 1, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_ad_run_types VALUES (2, 'Display', false, 2, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
-INSERT INTO autoguide_ad_run_types VALUES (3, 'Both', false, 3, true, '2003-12-22 09:07:45.613', '2003-12-22 09:07:45.613');
+INSERT INTO autoguide_ad_run_types VALUES (1, 'In Column', false, 1, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_ad_run_types VALUES (2, 'Display', false, 2, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
+INSERT INTO autoguide_ad_run_types VALUES (3, 'Both', false, 3, true, '2003-12-22 09:59:06.067', '2003-12-22 09:59:06.067');
 
 
 --
--- Data for TOC entry 671 (OID 128402)
+-- Data for TOC entry 671 (OID 133526)
 -- Name: lookup_revenue_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -6840,28 +6840,28 @@ INSERT INTO lookup_revenue_types VALUES (1, 'Technical', false, 0, true);
 
 
 --
--- Data for TOC entry 672 (OID 128412)
+-- Data for TOC entry 672 (OID 133536)
 -- Name: lookup_revenuedetail_types; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 673 (OID 128422)
+-- Data for TOC entry 673 (OID 133546)
 -- Name: revenue; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 674 (OID 128455)
+-- Data for TOC entry 674 (OID 133579)
 -- Name: revenue_detail; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 675 (OID 128486)
+-- Data for TOC entry 675 (OID 133610)
 -- Name: lookup_task_priority; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -6873,7 +6873,7 @@ INSERT INTO lookup_task_priority VALUES (5, '5', false, 5, true);
 
 
 --
--- Data for TOC entry 676 (OID 128496)
+-- Data for TOC entry 676 (OID 133620)
 -- Name: lookup_task_loe; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -6885,49 +6885,49 @@ INSERT INTO lookup_task_loe VALUES (5, 'Month(s)', false, 1, true);
 
 
 --
--- Data for TOC entry 677 (OID 128506)
+-- Data for TOC entry 677 (OID 133630)
 -- Name: lookup_task_category; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 678 (OID 128516)
+-- Data for TOC entry 678 (OID 133640)
 -- Name: task; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 679 (OID 128553)
+-- Data for TOC entry 679 (OID 133677)
 -- Name: tasklink_contact; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 680 (OID 128563)
+-- Data for TOC entry 680 (OID 133687)
 -- Name: tasklink_ticket; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 681 (OID 128573)
+-- Data for TOC entry 681 (OID 133697)
 -- Name: tasklink_project; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 682 (OID 128583)
+-- Data for TOC entry 682 (OID 133707)
 -- Name: taskcategory_project; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 683 (OID 128605)
+-- Data for TOC entry 683 (OID 133729)
 -- Name: business_process_component_library; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -6941,7 +6941,7 @@ INSERT INTO business_process_component_library VALUES (7, 'org.aspcfs.modules.tr
 
 
 --
--- Data for TOC entry 684 (OID 128616)
+-- Data for TOC entry 684 (OID 133740)
 -- Name: business_process_component_result_lookup; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -6951,7 +6951,7 @@ INSERT INTO business_process_component_result_lookup VALUES (3, 5, 1, 'Yes', 0, 
 
 
 --
--- Data for TOC entry 685 (OID 128629)
+-- Data for TOC entry 685 (OID 133753)
 -- Name: business_process_parameter_library; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -7022,16 +7022,16 @@ Comment: ${this.comment}
 
 
 --
--- Data for TOC entry 686 (OID 128640)
+-- Data for TOC entry 686 (OID 133764)
 -- Name: business_process; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO business_process VALUES (1, 'dhv.ticket.insert', 'Ticket change notification', 1, 8, 1, true, '2003-12-22 09:08:09.356');
-INSERT INTO business_process VALUES (2, 'dhv.report.ticketList.overdue', 'Overdue ticket notification', 2, 8, 7, true, '2003-12-22 09:08:09.356');
+INSERT INTO business_process VALUES (1, 'dhv.ticket.insert', 'Ticket change notification', 1, 8, 1, true, '2003-12-22 09:59:29.921');
+INSERT INTO business_process VALUES (2, 'dhv.report.ticketList.overdue', 'Overdue ticket notification', 2, 8, 7, true, '2003-12-22 09:59:29.921');
 
 
 --
--- Data for TOC entry 687 (OID 128658)
+-- Data for TOC entry 687 (OID 133782)
 -- Name: business_process_component; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -7046,14 +7046,14 @@ INSERT INTO business_process_component VALUES (8, 2, 7, 7, NULL, true);
 
 
 --
--- Data for TOC entry 688 (OID 128678)
+-- Data for TOC entry 688 (OID 133802)
 -- Name: business_process_parameter; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 689 (OID 128693)
+-- Data for TOC entry 689 (OID 133817)
 -- Name: business_process_component_parameter; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -7124,21 +7124,21 @@ Comment: ${this.comment}
 
 
 --
--- Data for TOC entry 690 (OID 128712)
+-- Data for TOC entry 690 (OID 133836)
 -- Name: business_process_events; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 691 (OID 128734)
+-- Data for TOC entry 691 (OID 133858)
 -- Name: business_process_log; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
 
 
 --
--- Data for TOC entry 692 (OID 128740)
+-- Data for TOC entry 692 (OID 133864)
 -- Name: business_process_hook_library; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -7146,7 +7146,7 @@ INSERT INTO business_process_hook_library VALUES (1, 8, 'org.aspcfs.modules.trou
 
 
 --
--- Data for TOC entry 693 (OID 128752)
+-- Data for TOC entry 693 (OID 133876)
 -- Name: business_process_hook_triggers; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -7155,7 +7155,7 @@ INSERT INTO business_process_hook_triggers VALUES (2, 1, 1, true);
 
 
 --
--- Data for TOC entry 694 (OID 128764)
+-- Data for TOC entry 694 (OID 133888)
 -- Name: business_process_hook; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
@@ -7164,7 +7164,7 @@ INSERT INTO business_process_hook VALUES (2, 2, 1, true);
 
 
 --
--- TOC entry 379 (OID 125590)
+-- TOC entry 379 (OID 130714)
 -- Name: orglist_name; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7172,7 +7172,7 @@ CREATE INDEX orglist_name ON organization USING btree (name);
 
 
 --
--- TOC entry 382 (OID 125645)
+-- TOC entry 382 (OID 130769)
 -- Name: contact_user_id_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7180,7 +7180,7 @@ CREATE INDEX contact_user_id_idx ON contact USING btree (user_id);
 
 
 --
--- TOC entry 384 (OID 125646)
+-- TOC entry 384 (OID 130770)
 -- Name: contactlist_namecompany; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7188,7 +7188,7 @@ CREATE INDEX contactlist_namecompany ON contact USING btree (namelast, namefirst
 
 
 --
--- TOC entry 383 (OID 125647)
+-- TOC entry 383 (OID 130771)
 -- Name: contactlist_company; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7196,7 +7196,7 @@ CREATE INDEX contactlist_company ON contact USING btree (company, namelast, name
 
 
 --
--- TOC entry 415 (OID 126412)
+-- TOC entry 415 (OID 131536)
 -- Name: oppcomplist_closedate; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7204,7 +7204,7 @@ CREATE INDEX oppcomplist_closedate ON opportunity_component USING btree (closeda
 
 
 --
--- TOC entry 416 (OID 126413)
+-- TOC entry 416 (OID 131537)
 -- Name: oppcomplist_description; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7212,7 +7212,7 @@ CREATE INDEX oppcomplist_description ON opportunity_component USING btree (descr
 
 
 --
--- TOC entry 418 (OID 126462)
+-- TOC entry 418 (OID 131586)
 -- Name: call_log_cidx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7220,7 +7220,7 @@ CREATE INDEX call_log_cidx ON call_log USING btree (alertdate, enteredby);
 
 
 --
--- TOC entry 430 (OID 126618)
+-- TOC entry 430 (OID 131742)
 -- Name: ticket_cidx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7228,7 +7228,7 @@ CREATE INDEX ticket_cidx ON ticket USING btree (assigned_to, closed);
 
 
 --
--- TOC entry 432 (OID 126619)
+-- TOC entry 432 (OID 131743)
 -- Name: ticketlist_entered; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7236,7 +7236,7 @@ CREATE INDEX ticketlist_entered ON ticket USING btree (entered);
 
 
 --
--- TOC entry 436 (OID 126719)
+-- TOC entry 436 (OID 131843)
 -- Name: custom_field_cat_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7244,7 +7244,7 @@ CREATE INDEX custom_field_cat_idx ON custom_field_category USING btree (module_i
 
 
 --
--- TOC entry 439 (OID 126738)
+-- TOC entry 439 (OID 131862)
 -- Name: custom_field_grp_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7252,7 +7252,7 @@ CREATE INDEX custom_field_grp_idx ON custom_field_group USING btree (category_id
 
 
 --
--- TOC entry 440 (OID 126759)
+-- TOC entry 440 (OID 131883)
 -- Name: custom_field_inf_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7260,7 +7260,7 @@ CREATE INDEX custom_field_inf_idx ON custom_field_info USING btree (group_id);
 
 
 --
--- TOC entry 443 (OID 126798)
+-- TOC entry 443 (OID 131922)
 -- Name: custom_field_rec_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7268,7 +7268,7 @@ CREATE INDEX custom_field_rec_idx ON custom_field_record USING btree (link_modul
 
 
 --
--- TOC entry 445 (OID 126813)
+-- TOC entry 445 (OID 131937)
 -- Name: custom_field_dat_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7276,7 +7276,7 @@ CREATE INDEX custom_field_dat_idx ON custom_field_data USING btree (record_id, f
 
 
 --
--- TOC entry 451 (OID 126893)
+-- TOC entry 451 (OID 132017)
 -- Name: projects_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7284,7 +7284,7 @@ CREATE INDEX projects_idx ON projects USING btree (group_id, project_id);
 
 
 --
--- TOC entry 455 (OID 126989)
+-- TOC entry 455 (OID 132113)
 -- Name: project_assignments_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7292,7 +7292,7 @@ CREATE INDEX project_assignments_idx ON project_assignments USING btree (activit
 
 
 --
--- TOC entry 454 (OID 126990)
+-- TOC entry 454 (OID 132114)
 -- Name: project_assignments_cidx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7300,7 +7300,7 @@ CREATE INDEX project_assignments_cidx ON project_assignments USING btree (comple
 
 
 --
--- TOC entry 459 (OID 127040)
+-- TOC entry 459 (OID 132164)
 -- Name: project_issues_limit_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7308,7 +7308,7 @@ CREATE INDEX project_issues_limit_idx ON project_issues USING btree (type_id, pr
 
 
 --
--- TOC entry 458 (OID 127041)
+-- TOC entry 458 (OID 132165)
 -- Name: project_issues_idx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7316,7 +7316,7 @@ CREATE INDEX project_issues_idx ON project_issues USING btree (issue_id);
 
 
 --
--- TOC entry 463 (OID 127105)
+-- TOC entry 463 (OID 132229)
 -- Name: project_files_cidx; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7324,7 +7324,7 @@ CREATE INDEX project_files_cidx ON project_files USING btree (link_module_id, li
 
 
 --
--- TOC entry 500 (OID 127998)
+-- TOC entry 500 (OID 133122)
 -- Name: idx_sync_map; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7332,7 +7332,7 @@ CREATE UNIQUE INDEX idx_sync_map ON sync_map USING btree (client_id, table_id, r
 
 
 --
--- TOC entry 509 (OID 128339)
+-- TOC entry 509 (OID 133463)
 -- Name: idx_autog_inv_opt; Type: INDEX; Schema: public; Owner: matt
 --
 
@@ -7340,7 +7340,7 @@ CREATE UNIQUE INDEX idx_autog_inv_opt ON autoguide_inventory_options USING btree
 
 
 --
--- TOC entry 360 (OID 125390)
+-- TOC entry 360 (OID 130514)
 -- Name: access_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7349,7 +7349,7 @@ ALTER TABLE ONLY "access"
 
 
 --
--- TOC entry 361 (OID 125400)
+-- TOC entry 361 (OID 130524)
 -- Name: lookup_industry_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7358,7 +7358,7 @@ ALTER TABLE ONLY lookup_industry
 
 
 --
--- TOC entry 362 (OID 125408)
+-- TOC entry 362 (OID 130532)
 -- Name: access_log_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7367,7 +7367,7 @@ ALTER TABLE ONLY access_log
 
 
 --
--- TOC entry 695 (OID 125410)
+-- TOC entry 695 (OID 130534)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7376,7 +7376,7 @@ ALTER TABLE ONLY access_log
 
 
 --
--- TOC entry 363 (OID 125420)
+-- TOC entry 363 (OID 130544)
 -- Name: usage_log_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7385,7 +7385,7 @@ ALTER TABLE ONLY usage_log
 
 
 --
--- TOC entry 364 (OID 125431)
+-- TOC entry 364 (OID 130555)
 -- Name: lookup_contact_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7394,7 +7394,7 @@ ALTER TABLE ONLY lookup_contact_types
 
 
 --
--- TOC entry 696 (OID 125433)
+-- TOC entry 696 (OID 130557)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7403,7 +7403,7 @@ ALTER TABLE ONLY lookup_contact_types
 
 
 --
--- TOC entry 365 (OID 125445)
+-- TOC entry 365 (OID 130569)
 -- Name: lookup_account_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7412,7 +7412,7 @@ ALTER TABLE ONLY lookup_account_types
 
 
 --
--- TOC entry 366 (OID 125449)
+-- TOC entry 366 (OID 130573)
 -- Name: state_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7421,7 +7421,7 @@ ALTER TABLE ONLY state
 
 
 --
--- TOC entry 367 (OID 125459)
+-- TOC entry 367 (OID 130583)
 -- Name: lookup_department_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7430,7 +7430,7 @@ ALTER TABLE ONLY lookup_department
 
 
 --
--- TOC entry 368 (OID 125469)
+-- TOC entry 368 (OID 130593)
 -- Name: lookup_orgaddress_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7439,7 +7439,7 @@ ALTER TABLE ONLY lookup_orgaddress_types
 
 
 --
--- TOC entry 369 (OID 125479)
+-- TOC entry 369 (OID 130603)
 -- Name: lookup_orgemail_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7448,7 +7448,7 @@ ALTER TABLE ONLY lookup_orgemail_types
 
 
 --
--- TOC entry 370 (OID 125489)
+-- TOC entry 370 (OID 130613)
 -- Name: lookup_orgphone_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7457,7 +7457,7 @@ ALTER TABLE ONLY lookup_orgphone_types
 
 
 --
--- TOC entry 371 (OID 125499)
+-- TOC entry 371 (OID 130623)
 -- Name: lookup_instantmessenger_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7466,7 +7466,7 @@ ALTER TABLE ONLY lookup_instantmessenger_types
 
 
 --
--- TOC entry 372 (OID 125509)
+-- TOC entry 372 (OID 130633)
 -- Name: lookup_employment_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7475,7 +7475,7 @@ ALTER TABLE ONLY lookup_employment_types
 
 
 --
--- TOC entry 373 (OID 125519)
+-- TOC entry 373 (OID 130643)
 -- Name: lookup_locale_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7484,7 +7484,7 @@ ALTER TABLE ONLY lookup_locale
 
 
 --
--- TOC entry 374 (OID 125529)
+-- TOC entry 374 (OID 130653)
 -- Name: lookup_contactaddress_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7493,7 +7493,7 @@ ALTER TABLE ONLY lookup_contactaddress_types
 
 
 --
--- TOC entry 375 (OID 125539)
+-- TOC entry 375 (OID 130663)
 -- Name: lookup_contactemail_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7502,7 +7502,7 @@ ALTER TABLE ONLY lookup_contactemail_types
 
 
 --
--- TOC entry 376 (OID 125549)
+-- TOC entry 376 (OID 130673)
 -- Name: lookup_contactphone_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7511,7 +7511,7 @@ ALTER TABLE ONLY lookup_contactphone_types
 
 
 --
--- TOC entry 377 (OID 125558)
+-- TOC entry 377 (OID 130682)
 -- Name: lookup_access_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7520,7 +7520,7 @@ ALTER TABLE ONLY lookup_access_types
 
 
 --
--- TOC entry 378 (OID 125576)
+-- TOC entry 378 (OID 130700)
 -- Name: organization_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7529,7 +7529,7 @@ ALTER TABLE ONLY organization
 
 
 --
--- TOC entry 697 (OID 125578)
+-- TOC entry 697 (OID 130702)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7538,7 +7538,7 @@ ALTER TABLE ONLY organization
 
 
 --
--- TOC entry 698 (OID 125582)
+-- TOC entry 698 (OID 130706)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7547,7 +7547,7 @@ ALTER TABLE ONLY organization
 
 
 --
--- TOC entry 699 (OID 125586)
+-- TOC entry 699 (OID 130710)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7556,7 +7556,7 @@ ALTER TABLE ONLY organization
 
 
 --
--- TOC entry 381 (OID 125605)
+-- TOC entry 381 (OID 130729)
 -- Name: contact_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7565,7 +7565,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 380 (OID 125607)
+-- TOC entry 380 (OID 130731)
 -- Name: contact_employee_id_key; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7574,7 +7574,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 700 (OID 125609)
+-- TOC entry 700 (OID 130733)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7583,7 +7583,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 701 (OID 125613)
+-- TOC entry 701 (OID 130737)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7592,7 +7592,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 702 (OID 125617)
+-- TOC entry 702 (OID 130741)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7601,7 +7601,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 703 (OID 125621)
+-- TOC entry 703 (OID 130745)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7610,7 +7610,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 704 (OID 125625)
+-- TOC entry 704 (OID 130749)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7619,7 +7619,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 705 (OID 125629)
+-- TOC entry 705 (OID 130753)
 -- Name: $6; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7628,7 +7628,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 706 (OID 125633)
+-- TOC entry 706 (OID 130757)
 -- Name: $7; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7637,7 +7637,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 707 (OID 125637)
+-- TOC entry 707 (OID 130761)
 -- Name: $8; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7646,7 +7646,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 708 (OID 125641)
+-- TOC entry 708 (OID 130765)
 -- Name: $9; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7655,7 +7655,7 @@ ALTER TABLE ONLY contact
 
 
 --
--- TOC entry 385 (OID 125657)
+-- TOC entry 385 (OID 130781)
 -- Name: role_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7664,7 +7664,7 @@ ALTER TABLE ONLY role
 
 
 --
--- TOC entry 709 (OID 125659)
+-- TOC entry 709 (OID 130783)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7673,7 +7673,7 @@ ALTER TABLE ONLY role
 
 
 --
--- TOC entry 710 (OID 125663)
+-- TOC entry 710 (OID 130787)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7682,7 +7682,7 @@ ALTER TABLE ONLY role
 
 
 --
--- TOC entry 386 (OID 125682)
+-- TOC entry 386 (OID 130806)
 -- Name: permission_category_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7691,7 +7691,7 @@ ALTER TABLE ONLY permission_category
 
 
 --
--- TOC entry 387 (OID 125698)
+-- TOC entry 387 (OID 130822)
 -- Name: permission_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7700,7 +7700,7 @@ ALTER TABLE ONLY permission
 
 
 --
--- TOC entry 711 (OID 125700)
+-- TOC entry 711 (OID 130824)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7709,7 +7709,7 @@ ALTER TABLE ONLY permission
 
 
 --
--- TOC entry 388 (OID 125713)
+-- TOC entry 388 (OID 130837)
 -- Name: role_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7718,7 +7718,7 @@ ALTER TABLE ONLY role_permission
 
 
 --
--- TOC entry 712 (OID 125715)
+-- TOC entry 712 (OID 130839)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7727,7 +7727,7 @@ ALTER TABLE ONLY role_permission
 
 
 --
--- TOC entry 713 (OID 125719)
+-- TOC entry 713 (OID 130843)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7736,7 +7736,7 @@ ALTER TABLE ONLY role_permission
 
 
 --
--- TOC entry 389 (OID 125731)
+-- TOC entry 389 (OID 130855)
 -- Name: lookup_stage_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7745,7 +7745,7 @@ ALTER TABLE ONLY lookup_stage
 
 
 --
--- TOC entry 390 (OID 125741)
+-- TOC entry 390 (OID 130865)
 -- Name: lookup_delivery_options_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7754,7 +7754,7 @@ ALTER TABLE ONLY lookup_delivery_options
 
 
 --
--- TOC entry 391 (OID 125752)
+-- TOC entry 391 (OID 130876)
 -- Name: news_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7763,7 +7763,7 @@ ALTER TABLE ONLY news
 
 
 --
--- TOC entry 714 (OID 125754)
+-- TOC entry 714 (OID 130878)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7772,7 +7772,7 @@ ALTER TABLE ONLY news
 
 
 --
--- TOC entry 392 (OID 125765)
+-- TOC entry 392 (OID 130889)
 -- Name: organization_address_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7781,7 +7781,7 @@ ALTER TABLE ONLY organization_address
 
 
 --
--- TOC entry 715 (OID 125767)
+-- TOC entry 715 (OID 130891)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7790,7 +7790,7 @@ ALTER TABLE ONLY organization_address
 
 
 --
--- TOC entry 716 (OID 125771)
+-- TOC entry 716 (OID 130895)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7799,7 +7799,7 @@ ALTER TABLE ONLY organization_address
 
 
 --
--- TOC entry 717 (OID 125775)
+-- TOC entry 717 (OID 130899)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7808,7 +7808,7 @@ ALTER TABLE ONLY organization_address
 
 
 --
--- TOC entry 718 (OID 125779)
+-- TOC entry 718 (OID 130903)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7817,7 +7817,7 @@ ALTER TABLE ONLY organization_address
 
 
 --
--- TOC entry 393 (OID 125790)
+-- TOC entry 393 (OID 130914)
 -- Name: organization_emailaddress_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7826,7 +7826,7 @@ ALTER TABLE ONLY organization_emailaddress
 
 
 --
--- TOC entry 719 (OID 125792)
+-- TOC entry 719 (OID 130916)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7835,7 +7835,7 @@ ALTER TABLE ONLY organization_emailaddress
 
 
 --
--- TOC entry 720 (OID 125796)
+-- TOC entry 720 (OID 130920)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7844,7 +7844,7 @@ ALTER TABLE ONLY organization_emailaddress
 
 
 --
--- TOC entry 721 (OID 125800)
+-- TOC entry 721 (OID 130924)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7853,7 +7853,7 @@ ALTER TABLE ONLY organization_emailaddress
 
 
 --
--- TOC entry 722 (OID 125804)
+-- TOC entry 722 (OID 130928)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7862,7 +7862,7 @@ ALTER TABLE ONLY organization_emailaddress
 
 
 --
--- TOC entry 394 (OID 125815)
+-- TOC entry 394 (OID 130939)
 -- Name: organization_phone_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7871,7 +7871,7 @@ ALTER TABLE ONLY organization_phone
 
 
 --
--- TOC entry 723 (OID 125817)
+-- TOC entry 723 (OID 130941)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7880,7 +7880,7 @@ ALTER TABLE ONLY organization_phone
 
 
 --
--- TOC entry 724 (OID 125821)
+-- TOC entry 724 (OID 130945)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7889,7 +7889,7 @@ ALTER TABLE ONLY organization_phone
 
 
 --
--- TOC entry 725 (OID 125825)
+-- TOC entry 725 (OID 130949)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7898,7 +7898,7 @@ ALTER TABLE ONLY organization_phone
 
 
 --
--- TOC entry 726 (OID 125829)
+-- TOC entry 726 (OID 130953)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7907,7 +7907,7 @@ ALTER TABLE ONLY organization_phone
 
 
 --
--- TOC entry 395 (OID 125840)
+-- TOC entry 395 (OID 130964)
 -- Name: contact_address_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7916,7 +7916,7 @@ ALTER TABLE ONLY contact_address
 
 
 --
--- TOC entry 727 (OID 125842)
+-- TOC entry 727 (OID 130966)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7925,7 +7925,7 @@ ALTER TABLE ONLY contact_address
 
 
 --
--- TOC entry 728 (OID 125846)
+-- TOC entry 728 (OID 130970)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7934,7 +7934,7 @@ ALTER TABLE ONLY contact_address
 
 
 --
--- TOC entry 729 (OID 125850)
+-- TOC entry 729 (OID 130974)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7943,7 +7943,7 @@ ALTER TABLE ONLY contact_address
 
 
 --
--- TOC entry 730 (OID 125854)
+-- TOC entry 730 (OID 130978)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7952,7 +7952,7 @@ ALTER TABLE ONLY contact_address
 
 
 --
--- TOC entry 396 (OID 125865)
+-- TOC entry 396 (OID 130989)
 -- Name: contact_emailaddress_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7961,7 +7961,7 @@ ALTER TABLE ONLY contact_emailaddress
 
 
 --
--- TOC entry 731 (OID 125867)
+-- TOC entry 731 (OID 130991)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7970,7 +7970,7 @@ ALTER TABLE ONLY contact_emailaddress
 
 
 --
--- TOC entry 732 (OID 125871)
+-- TOC entry 732 (OID 130995)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7979,7 +7979,7 @@ ALTER TABLE ONLY contact_emailaddress
 
 
 --
--- TOC entry 733 (OID 125875)
+-- TOC entry 733 (OID 130999)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7988,7 +7988,7 @@ ALTER TABLE ONLY contact_emailaddress
 
 
 --
--- TOC entry 734 (OID 125879)
+-- TOC entry 734 (OID 131003)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -7997,7 +7997,7 @@ ALTER TABLE ONLY contact_emailaddress
 
 
 --
--- TOC entry 397 (OID 125890)
+-- TOC entry 397 (OID 131014)
 -- Name: contact_phone_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8006,7 +8006,7 @@ ALTER TABLE ONLY contact_phone
 
 
 --
--- TOC entry 735 (OID 125892)
+-- TOC entry 735 (OID 131016)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8015,7 +8015,7 @@ ALTER TABLE ONLY contact_phone
 
 
 --
--- TOC entry 736 (OID 125896)
+-- TOC entry 736 (OID 131020)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8024,7 +8024,7 @@ ALTER TABLE ONLY contact_phone
 
 
 --
--- TOC entry 737 (OID 125900)
+-- TOC entry 737 (OID 131024)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8033,7 +8033,7 @@ ALTER TABLE ONLY contact_phone
 
 
 --
--- TOC entry 738 (OID 125904)
+-- TOC entry 738 (OID 131028)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8042,7 +8042,7 @@ ALTER TABLE ONLY contact_phone
 
 
 --
--- TOC entry 398 (OID 125918)
+-- TOC entry 398 (OID 131042)
 -- Name: notification_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8051,7 +8051,7 @@ ALTER TABLE ONLY notification
 
 
 --
--- TOC entry 399 (OID 125933)
+-- TOC entry 399 (OID 131057)
 -- Name: cfsinbox_message_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8060,7 +8060,7 @@ ALTER TABLE ONLY cfsinbox_message
 
 
 --
--- TOC entry 739 (OID 125935)
+-- TOC entry 739 (OID 131059)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8069,7 +8069,7 @@ ALTER TABLE ONLY cfsinbox_message
 
 
 --
--- TOC entry 740 (OID 125939)
+-- TOC entry 740 (OID 131063)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8078,7 +8078,7 @@ ALTER TABLE ONLY cfsinbox_message
 
 
 --
--- TOC entry 741 (OID 125947)
+-- TOC entry 741 (OID 131071)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8087,7 +8087,7 @@ ALTER TABLE ONLY cfsinbox_messagelink
 
 
 --
--- TOC entry 742 (OID 125951)
+-- TOC entry 742 (OID 131075)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8096,7 +8096,7 @@ ALTER TABLE ONLY cfsinbox_messagelink
 
 
 --
--- TOC entry 743 (OID 125955)
+-- TOC entry 743 (OID 131079)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8105,7 +8105,7 @@ ALTER TABLE ONLY cfsinbox_messagelink
 
 
 --
--- TOC entry 744 (OID 125963)
+-- TOC entry 744 (OID 131087)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8114,7 +8114,7 @@ ALTER TABLE ONLY account_type_levels
 
 
 --
--- TOC entry 745 (OID 125967)
+-- TOC entry 745 (OID 131091)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8123,7 +8123,7 @@ ALTER TABLE ONLY account_type_levels
 
 
 --
--- TOC entry 746 (OID 125975)
+-- TOC entry 746 (OID 131099)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8132,7 +8132,7 @@ ALTER TABLE ONLY contact_type_levels
 
 
 --
--- TOC entry 747 (OID 125979)
+-- TOC entry 747 (OID 131103)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8141,7 +8141,7 @@ ALTER TABLE ONLY contact_type_levels
 
 
 --
--- TOC entry 400 (OID 125993)
+-- TOC entry 400 (OID 131117)
 -- Name: lookup_lists_lookup_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8150,7 +8150,7 @@ ALTER TABLE ONLY lookup_lists_lookup
 
 
 --
--- TOC entry 748 (OID 125995)
+-- TOC entry 748 (OID 131119)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8159,7 +8159,7 @@ ALTER TABLE ONLY lookup_lists_lookup
 
 
 --
--- TOC entry 401 (OID 126007)
+-- TOC entry 401 (OID 131131)
 -- Name: viewpoint_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8168,7 +8168,7 @@ ALTER TABLE ONLY viewpoint
 
 
 --
--- TOC entry 749 (OID 126009)
+-- TOC entry 749 (OID 131133)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8177,7 +8177,7 @@ ALTER TABLE ONLY viewpoint
 
 
 --
--- TOC entry 750 (OID 126013)
+-- TOC entry 750 (OID 131137)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8186,7 +8186,7 @@ ALTER TABLE ONLY viewpoint
 
 
 --
--- TOC entry 751 (OID 126017)
+-- TOC entry 751 (OID 131141)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8195,7 +8195,7 @@ ALTER TABLE ONLY viewpoint
 
 
 --
--- TOC entry 752 (OID 126021)
+-- TOC entry 752 (OID 131145)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8204,7 +8204,7 @@ ALTER TABLE ONLY viewpoint
 
 
 --
--- TOC entry 402 (OID 126034)
+-- TOC entry 402 (OID 131158)
 -- Name: viewpoint_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8213,7 +8213,7 @@ ALTER TABLE ONLY viewpoint_permission
 
 
 --
--- TOC entry 753 (OID 126036)
+-- TOC entry 753 (OID 131160)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8222,7 +8222,7 @@ ALTER TABLE ONLY viewpoint_permission
 
 
 --
--- TOC entry 754 (OID 126040)
+-- TOC entry 754 (OID 131164)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8231,7 +8231,7 @@ ALTER TABLE ONLY viewpoint_permission
 
 
 --
--- TOC entry 403 (OID 126057)
+-- TOC entry 403 (OID 131181)
 -- Name: report_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8240,7 +8240,7 @@ ALTER TABLE ONLY report
 
 
 --
--- TOC entry 755 (OID 126059)
+-- TOC entry 755 (OID 131183)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8249,7 +8249,7 @@ ALTER TABLE ONLY report
 
 
 --
--- TOC entry 756 (OID 126063)
+-- TOC entry 756 (OID 131187)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8258,7 +8258,7 @@ ALTER TABLE ONLY report
 
 
 --
--- TOC entry 757 (OID 126067)
+-- TOC entry 757 (OID 131191)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8267,7 +8267,7 @@ ALTER TABLE ONLY report
 
 
 --
--- TOC entry 758 (OID 126071)
+-- TOC entry 758 (OID 131195)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8276,7 +8276,7 @@ ALTER TABLE ONLY report
 
 
 --
--- TOC entry 404 (OID 126083)
+-- TOC entry 404 (OID 131207)
 -- Name: report_criteria_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8285,7 +8285,7 @@ ALTER TABLE ONLY report_criteria
 
 
 --
--- TOC entry 759 (OID 126085)
+-- TOC entry 759 (OID 131209)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8294,7 +8294,7 @@ ALTER TABLE ONLY report_criteria
 
 
 --
--- TOC entry 760 (OID 126089)
+-- TOC entry 760 (OID 131213)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8303,7 +8303,7 @@ ALTER TABLE ONLY report_criteria
 
 
 --
--- TOC entry 761 (OID 126093)
+-- TOC entry 761 (OID 131217)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8312,7 +8312,7 @@ ALTER TABLE ONLY report_criteria
 
 
 --
--- TOC entry 762 (OID 126097)
+-- TOC entry 762 (OID 131221)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8321,7 +8321,7 @@ ALTER TABLE ONLY report_criteria
 
 
 --
--- TOC entry 405 (OID 126109)
+-- TOC entry 405 (OID 131233)
 -- Name: report_criteria_parameter_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8330,7 +8330,7 @@ ALTER TABLE ONLY report_criteria_parameter
 
 
 --
--- TOC entry 763 (OID 126111)
+-- TOC entry 763 (OID 131235)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8339,7 +8339,7 @@ ALTER TABLE ONLY report_criteria_parameter
 
 
 --
--- TOC entry 406 (OID 126124)
+-- TOC entry 406 (OID 131248)
 -- Name: report_queue_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8348,7 +8348,7 @@ ALTER TABLE ONLY report_queue
 
 
 --
--- TOC entry 764 (OID 126126)
+-- TOC entry 764 (OID 131250)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8357,7 +8357,7 @@ ALTER TABLE ONLY report_queue
 
 
 --
--- TOC entry 765 (OID 126130)
+-- TOC entry 765 (OID 131254)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8366,7 +8366,7 @@ ALTER TABLE ONLY report_queue
 
 
 --
--- TOC entry 407 (OID 126142)
+-- TOC entry 407 (OID 131266)
 -- Name: report_queue_criteria_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8375,7 +8375,7 @@ ALTER TABLE ONLY report_queue_criteria
 
 
 --
--- TOC entry 766 (OID 126144)
+-- TOC entry 766 (OID 131268)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8384,7 +8384,7 @@ ALTER TABLE ONLY report_queue_criteria
 
 
 --
--- TOC entry 408 (OID 126156)
+-- TOC entry 408 (OID 131280)
 -- Name: action_list_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8393,7 +8393,7 @@ ALTER TABLE ONLY action_list
 
 
 --
--- TOC entry 767 (OID 126158)
+-- TOC entry 767 (OID 131282)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8402,7 +8402,7 @@ ALTER TABLE ONLY action_list
 
 
 --
--- TOC entry 768 (OID 126162)
+-- TOC entry 768 (OID 131286)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8411,7 +8411,7 @@ ALTER TABLE ONLY action_list
 
 
 --
--- TOC entry 769 (OID 126166)
+-- TOC entry 769 (OID 131290)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8420,7 +8420,7 @@ ALTER TABLE ONLY action_list
 
 
 --
--- TOC entry 409 (OID 126178)
+-- TOC entry 409 (OID 131302)
 -- Name: action_item_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8429,7 +8429,7 @@ ALTER TABLE ONLY action_item
 
 
 --
--- TOC entry 770 (OID 126180)
+-- TOC entry 770 (OID 131304)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8438,7 +8438,7 @@ ALTER TABLE ONLY action_item
 
 
 --
--- TOC entry 771 (OID 126184)
+-- TOC entry 771 (OID 131308)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8447,7 +8447,7 @@ ALTER TABLE ONLY action_item
 
 
 --
--- TOC entry 772 (OID 126188)
+-- TOC entry 772 (OID 131312)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8456,7 +8456,7 @@ ALTER TABLE ONLY action_item
 
 
 --
--- TOC entry 410 (OID 126200)
+-- TOC entry 410 (OID 131324)
 -- Name: action_item_log_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8465,7 +8465,7 @@ ALTER TABLE ONLY action_item_log
 
 
 --
--- TOC entry 773 (OID 126202)
+-- TOC entry 773 (OID 131326)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8474,7 +8474,7 @@ ALTER TABLE ONLY action_item_log
 
 
 --
--- TOC entry 774 (OID 126206)
+-- TOC entry 774 (OID 131330)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8483,7 +8483,7 @@ ALTER TABLE ONLY action_item_log
 
 
 --
--- TOC entry 775 (OID 126210)
+-- TOC entry 775 (OID 131334)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8492,7 +8492,7 @@ ALTER TABLE ONLY action_item_log
 
 
 --
--- TOC entry 411 (OID 126220)
+-- TOC entry 411 (OID 131344)
 -- Name: database_version_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8501,7 +8501,7 @@ ALTER TABLE ONLY database_version
 
 
 --
--- TOC entry 412 (OID 126347)
+-- TOC entry 412 (OID 131471)
 -- Name: lookup_call_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8510,7 +8510,7 @@ ALTER TABLE ONLY lookup_call_types
 
 
 --
--- TOC entry 413 (OID 126357)
+-- TOC entry 413 (OID 131481)
 -- Name: lookup_opportunity_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8519,7 +8519,7 @@ ALTER TABLE ONLY lookup_opportunity_types
 
 
 --
--- TOC entry 414 (OID 126368)
+-- TOC entry 414 (OID 131492)
 -- Name: opportunity_header_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8528,7 +8528,7 @@ ALTER TABLE ONLY opportunity_header
 
 
 --
--- TOC entry 776 (OID 126370)
+-- TOC entry 776 (OID 131494)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8537,7 +8537,7 @@ ALTER TABLE ONLY opportunity_header
 
 
 --
--- TOC entry 777 (OID 126374)
+-- TOC entry 777 (OID 131498)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8546,7 +8546,7 @@ ALTER TABLE ONLY opportunity_header
 
 
 --
--- TOC entry 417 (OID 126390)
+-- TOC entry 417 (OID 131514)
 -- Name: opportunity_component_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8555,7 +8555,7 @@ ALTER TABLE ONLY opportunity_component
 
 
 --
--- TOC entry 778 (OID 126392)
+-- TOC entry 778 (OID 131516)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8564,7 +8564,7 @@ ALTER TABLE ONLY opportunity_component
 
 
 --
--- TOC entry 779 (OID 126396)
+-- TOC entry 779 (OID 131520)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8573,7 +8573,7 @@ ALTER TABLE ONLY opportunity_component
 
 
 --
--- TOC entry 780 (OID 126400)
+-- TOC entry 780 (OID 131524)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8582,7 +8582,7 @@ ALTER TABLE ONLY opportunity_component
 
 
 --
--- TOC entry 781 (OID 126404)
+-- TOC entry 781 (OID 131528)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8591,7 +8591,7 @@ ALTER TABLE ONLY opportunity_component
 
 
 --
--- TOC entry 782 (OID 126408)
+-- TOC entry 782 (OID 131532)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8600,7 +8600,7 @@ ALTER TABLE ONLY opportunity_component
 
 
 --
--- TOC entry 783 (OID 126418)
+-- TOC entry 783 (OID 131542)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8609,7 +8609,7 @@ ALTER TABLE ONLY opportunity_component_levels
 
 
 --
--- TOC entry 784 (OID 126422)
+-- TOC entry 784 (OID 131546)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8618,7 +8618,7 @@ ALTER TABLE ONLY opportunity_component_levels
 
 
 --
--- TOC entry 419 (OID 126436)
+-- TOC entry 419 (OID 131560)
 -- Name: call_log_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8627,7 +8627,7 @@ ALTER TABLE ONLY call_log
 
 
 --
--- TOC entry 785 (OID 126438)
+-- TOC entry 785 (OID 131562)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8636,7 +8636,7 @@ ALTER TABLE ONLY call_log
 
 
 --
--- TOC entry 786 (OID 126442)
+-- TOC entry 786 (OID 131566)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8645,7 +8645,7 @@ ALTER TABLE ONLY call_log
 
 
 --
--- TOC entry 787 (OID 126446)
+-- TOC entry 787 (OID 131570)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8654,7 +8654,7 @@ ALTER TABLE ONLY call_log
 
 
 --
--- TOC entry 788 (OID 126450)
+-- TOC entry 788 (OID 131574)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8663,7 +8663,7 @@ ALTER TABLE ONLY call_log
 
 
 --
--- TOC entry 789 (OID 126454)
+-- TOC entry 789 (OID 131578)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8672,7 +8672,7 @@ ALTER TABLE ONLY call_log
 
 
 --
--- TOC entry 790 (OID 126458)
+-- TOC entry 790 (OID 131582)
 -- Name: $6; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8681,7 +8681,7 @@ ALTER TABLE ONLY call_log
 
 
 --
--- TOC entry 421 (OID 126487)
+-- TOC entry 421 (OID 131611)
 -- Name: ticket_level_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8690,7 +8690,7 @@ ALTER TABLE ONLY ticket_level
 
 
 --
--- TOC entry 420 (OID 126489)
+-- TOC entry 420 (OID 131613)
 -- Name: ticket_level_description_key; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8699,7 +8699,7 @@ ALTER TABLE ONLY ticket_level
 
 
 --
--- TOC entry 423 (OID 126503)
+-- TOC entry 423 (OID 131627)
 -- Name: ticket_severity_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8708,7 +8708,7 @@ ALTER TABLE ONLY ticket_severity
 
 
 --
--- TOC entry 422 (OID 126505)
+-- TOC entry 422 (OID 131629)
 -- Name: ticket_severity_description_key; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8717,7 +8717,7 @@ ALTER TABLE ONLY ticket_severity
 
 
 --
--- TOC entry 425 (OID 126515)
+-- TOC entry 425 (OID 131639)
 -- Name: lookup_ticketsource_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8726,7 +8726,7 @@ ALTER TABLE ONLY lookup_ticketsource
 
 
 --
--- TOC entry 424 (OID 126517)
+-- TOC entry 424 (OID 131641)
 -- Name: lookup_ticketsource_description_key; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8735,7 +8735,7 @@ ALTER TABLE ONLY lookup_ticketsource
 
 
 --
--- TOC entry 427 (OID 126531)
+-- TOC entry 427 (OID 131655)
 -- Name: ticket_priority_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8744,7 +8744,7 @@ ALTER TABLE ONLY ticket_priority
 
 
 --
--- TOC entry 426 (OID 126533)
+-- TOC entry 426 (OID 131657)
 -- Name: ticket_priority_description_key; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8753,7 +8753,7 @@ ALTER TABLE ONLY ticket_priority
 
 
 --
--- TOC entry 428 (OID 126548)
+-- TOC entry 428 (OID 131672)
 -- Name: ticket_category_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8762,7 +8762,7 @@ ALTER TABLE ONLY ticket_category
 
 
 --
--- TOC entry 429 (OID 126564)
+-- TOC entry 429 (OID 131688)
 -- Name: ticket_category_draft_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8771,7 +8771,7 @@ ALTER TABLE ONLY ticket_category_draft
 
 
 --
--- TOC entry 431 (OID 126576)
+-- TOC entry 431 (OID 131700)
 -- Name: ticket_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8780,7 +8780,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 791 (OID 126578)
+-- TOC entry 791 (OID 131702)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8789,7 +8789,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 792 (OID 126582)
+-- TOC entry 792 (OID 131706)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8798,7 +8798,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 793 (OID 126586)
+-- TOC entry 793 (OID 131710)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8807,7 +8807,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 794 (OID 126590)
+-- TOC entry 794 (OID 131714)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8816,7 +8816,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 795 (OID 126594)
+-- TOC entry 795 (OID 131718)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8825,7 +8825,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 796 (OID 126598)
+-- TOC entry 796 (OID 131722)
 -- Name: $6; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8834,7 +8834,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 797 (OID 126602)
+-- TOC entry 797 (OID 131726)
 -- Name: $7; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8843,7 +8843,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 798 (OID 126606)
+-- TOC entry 798 (OID 131730)
 -- Name: $8; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8852,7 +8852,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 799 (OID 126610)
+-- TOC entry 799 (OID 131734)
 -- Name: $9; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8861,7 +8861,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 800 (OID 126614)
+-- TOC entry 800 (OID 131738)
 -- Name: $10; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8870,7 +8870,7 @@ ALTER TABLE ONLY ticket
 
 
 --
--- TOC entry 433 (OID 126630)
+-- TOC entry 433 (OID 131754)
 -- Name: ticketlog_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8879,7 +8879,7 @@ ALTER TABLE ONLY ticketlog
 
 
 --
--- TOC entry 801 (OID 126632)
+-- TOC entry 801 (OID 131756)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8888,7 +8888,7 @@ ALTER TABLE ONLY ticketlog
 
 
 --
--- TOC entry 802 (OID 126636)
+-- TOC entry 802 (OID 131760)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8897,7 +8897,7 @@ ALTER TABLE ONLY ticketlog
 
 
 --
--- TOC entry 803 (OID 126640)
+-- TOC entry 803 (OID 131764)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8906,7 +8906,7 @@ ALTER TABLE ONLY ticketlog
 
 
 --
--- TOC entry 804 (OID 126644)
+-- TOC entry 804 (OID 131768)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8915,7 +8915,7 @@ ALTER TABLE ONLY ticketlog
 
 
 --
--- TOC entry 805 (OID 126648)
+-- TOC entry 805 (OID 131772)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8924,7 +8924,7 @@ ALTER TABLE ONLY ticketlog
 
 
 --
--- TOC entry 806 (OID 126652)
+-- TOC entry 806 (OID 131776)
 -- Name: $6; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8933,7 +8933,7 @@ ALTER TABLE ONLY ticketlog
 
 
 --
--- TOC entry 807 (OID 126656)
+-- TOC entry 807 (OID 131780)
 -- Name: $7; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8942,7 +8942,7 @@ ALTER TABLE ONLY ticketlog
 
 
 --
--- TOC entry 435 (OID 126690)
+-- TOC entry 435 (OID 131814)
 -- Name: module_field_categorylink_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8951,7 +8951,7 @@ ALTER TABLE ONLY module_field_categorylink
 
 
 --
--- TOC entry 434 (OID 126692)
+-- TOC entry 434 (OID 131816)
 -- Name: module_field_categorylink_category_id_key; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8960,7 +8960,7 @@ ALTER TABLE ONLY module_field_categorylink
 
 
 --
--- TOC entry 808 (OID 126694)
+-- TOC entry 808 (OID 131818)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8969,7 +8969,7 @@ ALTER TABLE ONLY module_field_categorylink
 
 
 --
--- TOC entry 437 (OID 126713)
+-- TOC entry 437 (OID 131837)
 -- Name: custom_field_category_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8978,7 +8978,7 @@ ALTER TABLE ONLY custom_field_category
 
 
 --
--- TOC entry 809 (OID 126715)
+-- TOC entry 809 (OID 131839)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8987,7 +8987,7 @@ ALTER TABLE ONLY custom_field_category
 
 
 --
--- TOC entry 438 (OID 126732)
+-- TOC entry 438 (OID 131856)
 -- Name: custom_field_group_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -8996,7 +8996,7 @@ ALTER TABLE ONLY custom_field_group
 
 
 --
--- TOC entry 810 (OID 126734)
+-- TOC entry 810 (OID 131858)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9005,7 +9005,7 @@ ALTER TABLE ONLY custom_field_group
 
 
 --
--- TOC entry 441 (OID 126753)
+-- TOC entry 441 (OID 131877)
 -- Name: custom_field_info_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9014,7 +9014,7 @@ ALTER TABLE ONLY custom_field_info
 
 
 --
--- TOC entry 811 (OID 126755)
+-- TOC entry 811 (OID 131879)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9023,7 +9023,7 @@ ALTER TABLE ONLY custom_field_info
 
 
 --
--- TOC entry 442 (OID 126770)
+-- TOC entry 442 (OID 131894)
 -- Name: custom_field_lookup_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9032,7 +9032,7 @@ ALTER TABLE ONLY custom_field_lookup
 
 
 --
--- TOC entry 812 (OID 126772)
+-- TOC entry 812 (OID 131896)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9041,7 +9041,7 @@ ALTER TABLE ONLY custom_field_lookup
 
 
 --
--- TOC entry 444 (OID 126784)
+-- TOC entry 444 (OID 131908)
 -- Name: custom_field_record_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9050,7 +9050,7 @@ ALTER TABLE ONLY custom_field_record
 
 
 --
--- TOC entry 813 (OID 126786)
+-- TOC entry 813 (OID 131910)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9059,7 +9059,7 @@ ALTER TABLE ONLY custom_field_record
 
 
 --
--- TOC entry 814 (OID 126790)
+-- TOC entry 814 (OID 131914)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9068,7 +9068,7 @@ ALTER TABLE ONLY custom_field_record
 
 
 --
--- TOC entry 815 (OID 126794)
+-- TOC entry 815 (OID 131918)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9077,7 +9077,7 @@ ALTER TABLE ONLY custom_field_record
 
 
 --
--- TOC entry 816 (OID 126805)
+-- TOC entry 816 (OID 131929)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9086,7 +9086,7 @@ ALTER TABLE ONLY custom_field_data
 
 
 --
--- TOC entry 817 (OID 126809)
+-- TOC entry 817 (OID 131933)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9095,7 +9095,7 @@ ALTER TABLE ONLY custom_field_data
 
 
 --
--- TOC entry 446 (OID 126824)
+-- TOC entry 446 (OID 131948)
 -- Name: lookup_project_activity_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9104,7 +9104,7 @@ ALTER TABLE ONLY lookup_project_activity
 
 
 --
--- TOC entry 447 (OID 126835)
+-- TOC entry 447 (OID 131959)
 -- Name: lookup_project_priority_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9113,7 +9113,7 @@ ALTER TABLE ONLY lookup_project_priority
 
 
 --
--- TOC entry 448 (OID 126846)
+-- TOC entry 448 (OID 131970)
 -- Name: lookup_project_issues_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9122,7 +9122,7 @@ ALTER TABLE ONLY lookup_project_issues
 
 
 --
--- TOC entry 449 (OID 126857)
+-- TOC entry 449 (OID 131981)
 -- Name: lookup_project_status_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9131,7 +9131,7 @@ ALTER TABLE ONLY lookup_project_status
 
 
 --
--- TOC entry 450 (OID 126869)
+-- TOC entry 450 (OID 131993)
 -- Name: lookup_project_loe_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9140,7 +9140,7 @@ ALTER TABLE ONLY lookup_project_loe
 
 
 --
--- TOC entry 452 (OID 126879)
+-- TOC entry 452 (OID 132003)
 -- Name: projects_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9149,7 +9149,7 @@ ALTER TABLE ONLY projects
 
 
 --
--- TOC entry 818 (OID 126881)
+-- TOC entry 818 (OID 132005)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9158,7 +9158,7 @@ ALTER TABLE ONLY projects
 
 
 --
--- TOC entry 819 (OID 126885)
+-- TOC entry 819 (OID 132009)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9167,7 +9167,7 @@ ALTER TABLE ONLY projects
 
 
 --
--- TOC entry 820 (OID 126889)
+-- TOC entry 820 (OID 132013)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9176,7 +9176,7 @@ ALTER TABLE ONLY projects
 
 
 --
--- TOC entry 453 (OID 126904)
+-- TOC entry 453 (OID 132028)
 -- Name: project_requirements_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9185,7 +9185,7 @@ ALTER TABLE ONLY project_requirements
 
 
 --
--- TOC entry 821 (OID 126906)
+-- TOC entry 821 (OID 132030)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9194,7 +9194,7 @@ ALTER TABLE ONLY project_requirements
 
 
 --
--- TOC entry 822 (OID 126910)
+-- TOC entry 822 (OID 132034)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9203,7 +9203,7 @@ ALTER TABLE ONLY project_requirements
 
 
 --
--- TOC entry 823 (OID 126914)
+-- TOC entry 823 (OID 132038)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9212,7 +9212,7 @@ ALTER TABLE ONLY project_requirements
 
 
 --
--- TOC entry 824 (OID 126918)
+-- TOC entry 824 (OID 132042)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9221,7 +9221,7 @@ ALTER TABLE ONLY project_requirements
 
 
 --
--- TOC entry 825 (OID 126922)
+-- TOC entry 825 (OID 132046)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9230,7 +9230,7 @@ ALTER TABLE ONLY project_requirements
 
 
 --
--- TOC entry 826 (OID 126926)
+-- TOC entry 826 (OID 132050)
 -- Name: $6; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9239,7 +9239,7 @@ ALTER TABLE ONLY project_requirements
 
 
 --
--- TOC entry 827 (OID 126930)
+-- TOC entry 827 (OID 132054)
 -- Name: $7; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9248,7 +9248,7 @@ ALTER TABLE ONLY project_requirements
 
 
 --
--- TOC entry 456 (OID 126943)
+-- TOC entry 456 (OID 132067)
 -- Name: project_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9257,7 +9257,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 828 (OID 126945)
+-- TOC entry 828 (OID 132069)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9266,7 +9266,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 829 (OID 126949)
+-- TOC entry 829 (OID 132073)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9275,7 +9275,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 830 (OID 126953)
+-- TOC entry 830 (OID 132077)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9284,7 +9284,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 831 (OID 126957)
+-- TOC entry 831 (OID 132081)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9293,7 +9293,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 832 (OID 126961)
+-- TOC entry 832 (OID 132085)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9302,7 +9302,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 833 (OID 126965)
+-- TOC entry 833 (OID 132089)
 -- Name: $6; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9311,7 +9311,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 834 (OID 126969)
+-- TOC entry 834 (OID 132093)
 -- Name: $7; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9320,7 +9320,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 835 (OID 126973)
+-- TOC entry 835 (OID 132097)
 -- Name: $8; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9329,7 +9329,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 836 (OID 126977)
+-- TOC entry 836 (OID 132101)
 -- Name: $9; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9338,7 +9338,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 837 (OID 126981)
+-- TOC entry 837 (OID 132105)
 -- Name: $10; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9347,7 +9347,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 838 (OID 126985)
+-- TOC entry 838 (OID 132109)
 -- Name: $11; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9356,7 +9356,7 @@ ALTER TABLE ONLY project_assignments
 
 
 --
--- TOC entry 457 (OID 127000)
+-- TOC entry 457 (OID 132124)
 -- Name: project_assignments_status_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9365,7 +9365,7 @@ ALTER TABLE ONLY project_assignments_status
 
 
 --
--- TOC entry 839 (OID 127002)
+-- TOC entry 839 (OID 132126)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9374,7 +9374,7 @@ ALTER TABLE ONLY project_assignments_status
 
 
 --
--- TOC entry 840 (OID 127006)
+-- TOC entry 840 (OID 132130)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9383,7 +9383,7 @@ ALTER TABLE ONLY project_assignments_status
 
 
 --
--- TOC entry 460 (OID 127022)
+-- TOC entry 460 (OID 132146)
 -- Name: project_issues_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9392,7 +9392,7 @@ ALTER TABLE ONLY project_issues
 
 
 --
--- TOC entry 841 (OID 127024)
+-- TOC entry 841 (OID 132148)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9401,7 +9401,7 @@ ALTER TABLE ONLY project_issues
 
 
 --
--- TOC entry 842 (OID 127028)
+-- TOC entry 842 (OID 132152)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9410,7 +9410,7 @@ ALTER TABLE ONLY project_issues
 
 
 --
--- TOC entry 843 (OID 127032)
+-- TOC entry 843 (OID 132156)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9419,7 +9419,7 @@ ALTER TABLE ONLY project_issues
 
 
 --
--- TOC entry 844 (OID 127036)
+-- TOC entry 844 (OID 132160)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9428,7 +9428,7 @@ ALTER TABLE ONLY project_issues
 
 
 --
--- TOC entry 461 (OID 127053)
+-- TOC entry 461 (OID 132177)
 -- Name: project_issue_replies_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9437,7 +9437,7 @@ ALTER TABLE ONLY project_issue_replies
 
 
 --
--- TOC entry 845 (OID 127055)
+-- TOC entry 845 (OID 132179)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9446,7 +9446,7 @@ ALTER TABLE ONLY project_issue_replies
 
 
 --
--- TOC entry 846 (OID 127059)
+-- TOC entry 846 (OID 132183)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9455,7 +9455,7 @@ ALTER TABLE ONLY project_issue_replies
 
 
 --
--- TOC entry 847 (OID 127063)
+-- TOC entry 847 (OID 132187)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9464,7 +9464,7 @@ ALTER TABLE ONLY project_issue_replies
 
 
 --
--- TOC entry 462 (OID 127075)
+-- TOC entry 462 (OID 132199)
 -- Name: project_folders_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9473,7 +9473,7 @@ ALTER TABLE ONLY project_folders
 
 
 --
--- TOC entry 464 (OID 127091)
+-- TOC entry 464 (OID 132215)
 -- Name: project_files_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9482,7 +9482,7 @@ ALTER TABLE ONLY project_files
 
 
 --
--- TOC entry 848 (OID 127093)
+-- TOC entry 848 (OID 132217)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9491,7 +9491,7 @@ ALTER TABLE ONLY project_files
 
 
 --
--- TOC entry 849 (OID 127097)
+-- TOC entry 849 (OID 132221)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9500,7 +9500,7 @@ ALTER TABLE ONLY project_files
 
 
 --
--- TOC entry 850 (OID 127101)
+-- TOC entry 850 (OID 132225)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9509,7 +9509,7 @@ ALTER TABLE ONLY project_files
 
 
 --
--- TOC entry 851 (OID 127117)
+-- TOC entry 851 (OID 132241)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9518,7 +9518,7 @@ ALTER TABLE ONLY project_files_version
 
 
 --
--- TOC entry 852 (OID 127121)
+-- TOC entry 852 (OID 132245)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9527,7 +9527,7 @@ ALTER TABLE ONLY project_files_version
 
 
 --
--- TOC entry 853 (OID 127125)
+-- TOC entry 853 (OID 132249)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9536,7 +9536,7 @@ ALTER TABLE ONLY project_files_version
 
 
 --
--- TOC entry 854 (OID 127133)
+-- TOC entry 854 (OID 132257)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9545,7 +9545,7 @@ ALTER TABLE ONLY project_files_download
 
 
 --
--- TOC entry 855 (OID 127137)
+-- TOC entry 855 (OID 132261)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9554,7 +9554,7 @@ ALTER TABLE ONLY project_files_download
 
 
 --
--- TOC entry 856 (OID 127145)
+-- TOC entry 856 (OID 132269)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9563,7 +9563,7 @@ ALTER TABLE ONLY project_team
 
 
 --
--- TOC entry 857 (OID 127149)
+-- TOC entry 857 (OID 132273)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9572,7 +9572,7 @@ ALTER TABLE ONLY project_team
 
 
 --
--- TOC entry 858 (OID 127153)
+-- TOC entry 858 (OID 132277)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9581,7 +9581,7 @@ ALTER TABLE ONLY project_team
 
 
 --
--- TOC entry 859 (OID 127157)
+-- TOC entry 859 (OID 132281)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9590,7 +9590,7 @@ ALTER TABLE ONLY project_team
 
 
 --
--- TOC entry 465 (OID 127209)
+-- TOC entry 465 (OID 132333)
 -- Name: saved_criterialist_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9599,7 +9599,7 @@ ALTER TABLE ONLY saved_criterialist
 
 
 --
--- TOC entry 860 (OID 127211)
+-- TOC entry 860 (OID 132335)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9608,7 +9608,7 @@ ALTER TABLE ONLY saved_criterialist
 
 
 --
--- TOC entry 861 (OID 127215)
+-- TOC entry 861 (OID 132339)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9617,7 +9617,7 @@ ALTER TABLE ONLY saved_criterialist
 
 
 --
--- TOC entry 862 (OID 127219)
+-- TOC entry 862 (OID 132343)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9626,7 +9626,7 @@ ALTER TABLE ONLY saved_criterialist
 
 
 --
--- TOC entry 466 (OID 127239)
+-- TOC entry 466 (OID 132363)
 -- Name: campaign_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9635,7 +9635,7 @@ ALTER TABLE ONLY campaign
 
 
 --
--- TOC entry 863 (OID 127241)
+-- TOC entry 863 (OID 132365)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9644,7 +9644,7 @@ ALTER TABLE ONLY campaign
 
 
 --
--- TOC entry 864 (OID 127245)
+-- TOC entry 864 (OID 132369)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9653,7 +9653,7 @@ ALTER TABLE ONLY campaign
 
 
 --
--- TOC entry 865 (OID 127249)
+-- TOC entry 865 (OID 132373)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9662,7 +9662,7 @@ ALTER TABLE ONLY campaign
 
 
 --
--- TOC entry 467 (OID 127264)
+-- TOC entry 467 (OID 132388)
 -- Name: campaign_run_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9671,7 +9671,7 @@ ALTER TABLE ONLY campaign_run
 
 
 --
--- TOC entry 866 (OID 127266)
+-- TOC entry 866 (OID 132390)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9680,7 +9680,7 @@ ALTER TABLE ONLY campaign_run
 
 
 --
--- TOC entry 468 (OID 127275)
+-- TOC entry 468 (OID 132399)
 -- Name: excluded_recipient_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9689,7 +9689,7 @@ ALTER TABLE ONLY excluded_recipient
 
 
 --
--- TOC entry 867 (OID 127277)
+-- TOC entry 867 (OID 132401)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9698,7 +9698,7 @@ ALTER TABLE ONLY excluded_recipient
 
 
 --
--- TOC entry 868 (OID 127281)
+-- TOC entry 868 (OID 132405)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9707,7 +9707,7 @@ ALTER TABLE ONLY excluded_recipient
 
 
 --
--- TOC entry 869 (OID 127287)
+-- TOC entry 869 (OID 132411)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9716,7 +9716,7 @@ ALTER TABLE ONLY campaign_list_groups
 
 
 --
--- TOC entry 870 (OID 127291)
+-- TOC entry 870 (OID 132415)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9725,7 +9725,7 @@ ALTER TABLE ONLY campaign_list_groups
 
 
 --
--- TOC entry 469 (OID 127303)
+-- TOC entry 469 (OID 132427)
 -- Name: active_campaign_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9734,7 +9734,7 @@ ALTER TABLE ONLY active_campaign_groups
 
 
 --
--- TOC entry 871 (OID 127305)
+-- TOC entry 871 (OID 132429)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9743,7 +9743,7 @@ ALTER TABLE ONLY active_campaign_groups
 
 
 --
--- TOC entry 470 (OID 127318)
+-- TOC entry 470 (OID 132442)
 -- Name: scheduled_recipient_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9752,7 +9752,7 @@ ALTER TABLE ONLY scheduled_recipient
 
 
 --
--- TOC entry 872 (OID 127320)
+-- TOC entry 872 (OID 132444)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9761,7 +9761,7 @@ ALTER TABLE ONLY scheduled_recipient
 
 
 --
--- TOC entry 873 (OID 127324)
+-- TOC entry 873 (OID 132448)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9770,7 +9770,7 @@ ALTER TABLE ONLY scheduled_recipient
 
 
 --
--- TOC entry 471 (OID 127336)
+-- TOC entry 471 (OID 132460)
 -- Name: lookup_survey_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9779,7 +9779,7 @@ ALTER TABLE ONLY lookup_survey_types
 
 
 --
--- TOC entry 472 (OID 127352)
+-- TOC entry 472 (OID 132476)
 -- Name: survey_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9788,7 +9788,7 @@ ALTER TABLE ONLY survey
 
 
 --
--- TOC entry 874 (OID 127354)
+-- TOC entry 874 (OID 132478)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9797,7 +9797,7 @@ ALTER TABLE ONLY survey
 
 
 --
--- TOC entry 875 (OID 127358)
+-- TOC entry 875 (OID 132482)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9806,7 +9806,7 @@ ALTER TABLE ONLY survey
 
 
 --
--- TOC entry 876 (OID 127364)
+-- TOC entry 876 (OID 132488)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9815,7 +9815,7 @@ ALTER TABLE ONLY campaign_survey_link
 
 
 --
--- TOC entry 877 (OID 127368)
+-- TOC entry 877 (OID 132492)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9824,7 +9824,7 @@ ALTER TABLE ONLY campaign_survey_link
 
 
 --
--- TOC entry 473 (OID 127379)
+-- TOC entry 473 (OID 132503)
 -- Name: survey_questions_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9833,7 +9833,7 @@ ALTER TABLE ONLY survey_questions
 
 
 --
--- TOC entry 878 (OID 127381)
+-- TOC entry 878 (OID 132505)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9842,7 +9842,7 @@ ALTER TABLE ONLY survey_questions
 
 
 --
--- TOC entry 879 (OID 127385)
+-- TOC entry 879 (OID 132509)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9851,7 +9851,7 @@ ALTER TABLE ONLY survey_questions
 
 
 --
--- TOC entry 474 (OID 127395)
+-- TOC entry 474 (OID 132519)
 -- Name: survey_items_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9860,7 +9860,7 @@ ALTER TABLE ONLY survey_items
 
 
 --
--- TOC entry 880 (OID 127397)
+-- TOC entry 880 (OID 132521)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9869,7 +9869,7 @@ ALTER TABLE ONLY survey_items
 
 
 --
--- TOC entry 475 (OID 127413)
+-- TOC entry 475 (OID 132537)
 -- Name: active_survey_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9878,7 +9878,7 @@ ALTER TABLE ONLY active_survey
 
 
 --
--- TOC entry 881 (OID 127415)
+-- TOC entry 881 (OID 132539)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9887,7 +9887,7 @@ ALTER TABLE ONLY active_survey
 
 
 --
--- TOC entry 882 (OID 127419)
+-- TOC entry 882 (OID 132543)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9896,7 +9896,7 @@ ALTER TABLE ONLY active_survey
 
 
 --
--- TOC entry 883 (OID 127423)
+-- TOC entry 883 (OID 132547)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9905,7 +9905,7 @@ ALTER TABLE ONLY active_survey
 
 
 --
--- TOC entry 884 (OID 127427)
+-- TOC entry 884 (OID 132551)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9914,7 +9914,7 @@ ALTER TABLE ONLY active_survey
 
 
 --
--- TOC entry 476 (OID 127446)
+-- TOC entry 476 (OID 132570)
 -- Name: active_survey_questions_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9923,7 +9923,7 @@ ALTER TABLE ONLY active_survey_questions
 
 
 --
--- TOC entry 885 (OID 127448)
+-- TOC entry 885 (OID 132572)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9932,7 +9932,7 @@ ALTER TABLE ONLY active_survey_questions
 
 
 --
--- TOC entry 886 (OID 127452)
+-- TOC entry 886 (OID 132576)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9941,7 +9941,7 @@ ALTER TABLE ONLY active_survey_questions
 
 
 --
--- TOC entry 477 (OID 127462)
+-- TOC entry 477 (OID 132586)
 -- Name: active_survey_items_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9950,7 +9950,7 @@ ALTER TABLE ONLY active_survey_items
 
 
 --
--- TOC entry 887 (OID 127464)
+-- TOC entry 887 (OID 132588)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9959,7 +9959,7 @@ ALTER TABLE ONLY active_survey_items
 
 
 --
--- TOC entry 478 (OID 127475)
+-- TOC entry 478 (OID 132599)
 -- Name: active_survey_responses_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9968,7 +9968,7 @@ ALTER TABLE ONLY active_survey_responses
 
 
 --
--- TOC entry 888 (OID 127477)
+-- TOC entry 888 (OID 132601)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9977,7 +9977,7 @@ ALTER TABLE ONLY active_survey_responses
 
 
 --
--- TOC entry 479 (OID 127490)
+-- TOC entry 479 (OID 132614)
 -- Name: active_survey_answers_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9986,7 +9986,7 @@ ALTER TABLE ONLY active_survey_answers
 
 
 --
--- TOC entry 889 (OID 127492)
+-- TOC entry 889 (OID 132616)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -9995,7 +9995,7 @@ ALTER TABLE ONLY active_survey_answers
 
 
 --
--- TOC entry 890 (OID 127496)
+-- TOC entry 890 (OID 132620)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10004,7 +10004,7 @@ ALTER TABLE ONLY active_survey_answers
 
 
 --
--- TOC entry 480 (OID 127508)
+-- TOC entry 480 (OID 132632)
 -- Name: active_survey_answer_items_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10013,7 +10013,7 @@ ALTER TABLE ONLY active_survey_answer_items
 
 
 --
--- TOC entry 891 (OID 127510)
+-- TOC entry 891 (OID 132634)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10022,7 +10022,7 @@ ALTER TABLE ONLY active_survey_answer_items
 
 
 --
--- TOC entry 892 (OID 127514)
+-- TOC entry 892 (OID 132638)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10031,7 +10031,7 @@ ALTER TABLE ONLY active_survey_answer_items
 
 
 --
--- TOC entry 481 (OID 127524)
+-- TOC entry 481 (OID 132648)
 -- Name: active_survey_answer_avg_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10040,7 +10040,7 @@ ALTER TABLE ONLY active_survey_answer_avg
 
 
 --
--- TOC entry 893 (OID 127526)
+-- TOC entry 893 (OID 132650)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10049,7 +10049,7 @@ ALTER TABLE ONLY active_survey_answer_avg
 
 
 --
--- TOC entry 894 (OID 127530)
+-- TOC entry 894 (OID 132654)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10058,7 +10058,7 @@ ALTER TABLE ONLY active_survey_answer_avg
 
 
 --
--- TOC entry 482 (OID 127541)
+-- TOC entry 482 (OID 132665)
 -- Name: field_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10067,7 +10067,7 @@ ALTER TABLE ONLY field_types
 
 
 --
--- TOC entry 483 (OID 127551)
+-- TOC entry 483 (OID 132675)
 -- Name: search_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10076,7 +10076,7 @@ ALTER TABLE ONLY search_fields
 
 
 --
--- TOC entry 484 (OID 127564)
+-- TOC entry 484 (OID 132688)
 -- Name: message_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10085,7 +10085,7 @@ ALTER TABLE ONLY message
 
 
 --
--- TOC entry 895 (OID 127566)
+-- TOC entry 895 (OID 132690)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10094,7 +10094,7 @@ ALTER TABLE ONLY message
 
 
 --
--- TOC entry 896 (OID 127570)
+-- TOC entry 896 (OID 132694)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10103,7 +10103,7 @@ ALTER TABLE ONLY message
 
 
 --
--- TOC entry 897 (OID 127574)
+-- TOC entry 897 (OID 132698)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10112,7 +10112,7 @@ ALTER TABLE ONLY message
 
 
 --
--- TOC entry 485 (OID 127586)
+-- TOC entry 485 (OID 132710)
 -- Name: message_template_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10121,7 +10121,7 @@ ALTER TABLE ONLY message_template
 
 
 --
--- TOC entry 898 (OID 127588)
+-- TOC entry 898 (OID 132712)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10130,7 +10130,7 @@ ALTER TABLE ONLY message_template
 
 
 --
--- TOC entry 899 (OID 127592)
+-- TOC entry 899 (OID 132716)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10139,7 +10139,7 @@ ALTER TABLE ONLY message_template
 
 
 --
--- TOC entry 900 (OID 127599)
+-- TOC entry 900 (OID 132723)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10148,7 +10148,7 @@ ALTER TABLE ONLY saved_criteriaelement
 
 
 --
--- TOC entry 901 (OID 127603)
+-- TOC entry 901 (OID 132727)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10157,7 +10157,7 @@ ALTER TABLE ONLY saved_criteriaelement
 
 
 --
--- TOC entry 902 (OID 127607)
+-- TOC entry 902 (OID 132731)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10166,7 +10166,7 @@ ALTER TABLE ONLY saved_criteriaelement
 
 
 --
--- TOC entry 486 (OID 127660)
+-- TOC entry 486 (OID 132784)
 -- Name: help_module_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10175,7 +10175,7 @@ ALTER TABLE ONLY help_module
 
 
 --
--- TOC entry 903 (OID 127662)
+-- TOC entry 903 (OID 132786)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10184,7 +10184,7 @@ ALTER TABLE ONLY help_module
 
 
 --
--- TOC entry 487 (OID 127677)
+-- TOC entry 487 (OID 132801)
 -- Name: help_contents_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10193,7 +10193,7 @@ ALTER TABLE ONLY help_contents
 
 
 --
--- TOC entry 904 (OID 127679)
+-- TOC entry 904 (OID 132803)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10202,7 +10202,7 @@ ALTER TABLE ONLY help_contents
 
 
 --
--- TOC entry 905 (OID 127683)
+-- TOC entry 905 (OID 132807)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10211,7 +10211,7 @@ ALTER TABLE ONLY help_contents
 
 
 --
--- TOC entry 906 (OID 127687)
+-- TOC entry 906 (OID 132811)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10220,7 +10220,7 @@ ALTER TABLE ONLY help_contents
 
 
 --
--- TOC entry 907 (OID 127691)
+-- TOC entry 907 (OID 132815)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10229,7 +10229,7 @@ ALTER TABLE ONLY help_contents
 
 
 --
--- TOC entry 908 (OID 127695)
+-- TOC entry 908 (OID 132819)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10238,7 +10238,7 @@ ALTER TABLE ONLY help_contents
 
 
 --
--- TOC entry 909 (OID 127699)
+-- TOC entry 909 (OID 132823)
 -- Name: $6; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10247,7 +10247,7 @@ ALTER TABLE ONLY help_contents
 
 
 --
--- TOC entry 910 (OID 127703)
+-- TOC entry 910 (OID 132827)
 -- Name: $7; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10256,7 +10256,7 @@ ALTER TABLE ONLY help_contents
 
 
 --
--- TOC entry 488 (OID 127715)
+-- TOC entry 488 (OID 132839)
 -- Name: help_tableof_contents_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10265,7 +10265,7 @@ ALTER TABLE ONLY help_tableof_contents
 
 
 --
--- TOC entry 911 (OID 127717)
+-- TOC entry 911 (OID 132841)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10274,7 +10274,7 @@ ALTER TABLE ONLY help_tableof_contents
 
 
 --
--- TOC entry 912 (OID 127721)
+-- TOC entry 912 (OID 132845)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10283,7 +10283,7 @@ ALTER TABLE ONLY help_tableof_contents
 
 
 --
--- TOC entry 913 (OID 127725)
+-- TOC entry 913 (OID 132849)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10292,7 +10292,7 @@ ALTER TABLE ONLY help_tableof_contents
 
 
 --
--- TOC entry 914 (OID 127729)
+-- TOC entry 914 (OID 132853)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10301,7 +10301,7 @@ ALTER TABLE ONLY help_tableof_contents
 
 
 --
--- TOC entry 915 (OID 127733)
+-- TOC entry 915 (OID 132857)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10310,7 +10310,7 @@ ALTER TABLE ONLY help_tableof_contents
 
 
 --
--- TOC entry 916 (OID 127737)
+-- TOC entry 916 (OID 132861)
 -- Name: $6; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10319,7 +10319,7 @@ ALTER TABLE ONLY help_tableof_contents
 
 
 --
--- TOC entry 489 (OID 127749)
+-- TOC entry 489 (OID 132873)
 -- Name: help_tableofcontentitem_links_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10328,7 +10328,7 @@ ALTER TABLE ONLY help_tableofcontentitem_links
 
 
 --
--- TOC entry 917 (OID 127751)
+-- TOC entry 917 (OID 132875)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10337,7 +10337,7 @@ ALTER TABLE ONLY help_tableofcontentitem_links
 
 
 --
--- TOC entry 918 (OID 127755)
+-- TOC entry 918 (OID 132879)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10346,7 +10346,7 @@ ALTER TABLE ONLY help_tableofcontentitem_links
 
 
 --
--- TOC entry 919 (OID 127759)
+-- TOC entry 919 (OID 132883)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10355,7 +10355,7 @@ ALTER TABLE ONLY help_tableofcontentitem_links
 
 
 --
--- TOC entry 920 (OID 127763)
+-- TOC entry 920 (OID 132887)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10364,7 +10364,7 @@ ALTER TABLE ONLY help_tableofcontentitem_links
 
 
 --
--- TOC entry 490 (OID 127778)
+-- TOC entry 490 (OID 132902)
 -- Name: lookup_help_features_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10373,7 +10373,7 @@ ALTER TABLE ONLY lookup_help_features
 
 
 --
--- TOC entry 491 (OID 127792)
+-- TOC entry 491 (OID 132916)
 -- Name: help_features_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10382,7 +10382,7 @@ ALTER TABLE ONLY help_features
 
 
 --
--- TOC entry 921 (OID 127794)
+-- TOC entry 921 (OID 132918)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10391,7 +10391,7 @@ ALTER TABLE ONLY help_features
 
 
 --
--- TOC entry 922 (OID 127798)
+-- TOC entry 922 (OID 132922)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10400,7 +10400,7 @@ ALTER TABLE ONLY help_features
 
 
 --
--- TOC entry 923 (OID 127802)
+-- TOC entry 923 (OID 132926)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10409,7 +10409,7 @@ ALTER TABLE ONLY help_features
 
 
 --
--- TOC entry 924 (OID 127806)
+-- TOC entry 924 (OID 132930)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10418,7 +10418,7 @@ ALTER TABLE ONLY help_features
 
 
 --
--- TOC entry 925 (OID 127810)
+-- TOC entry 925 (OID 132934)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10427,7 +10427,7 @@ ALTER TABLE ONLY help_features
 
 
 --
--- TOC entry 492 (OID 127822)
+-- TOC entry 492 (OID 132946)
 -- Name: help_related_links_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10436,7 +10436,7 @@ ALTER TABLE ONLY help_related_links
 
 
 --
--- TOC entry 926 (OID 127824)
+-- TOC entry 926 (OID 132948)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10445,7 +10445,7 @@ ALTER TABLE ONLY help_related_links
 
 
 --
--- TOC entry 927 (OID 127828)
+-- TOC entry 927 (OID 132952)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10454,7 +10454,7 @@ ALTER TABLE ONLY help_related_links
 
 
 --
--- TOC entry 928 (OID 127832)
+-- TOC entry 928 (OID 132956)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10463,7 +10463,7 @@ ALTER TABLE ONLY help_related_links
 
 
 --
--- TOC entry 929 (OID 127836)
+-- TOC entry 929 (OID 132960)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10472,7 +10472,7 @@ ALTER TABLE ONLY help_related_links
 
 
 --
--- TOC entry 493 (OID 127851)
+-- TOC entry 493 (OID 132975)
 -- Name: help_faqs_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10481,7 +10481,7 @@ ALTER TABLE ONLY help_faqs
 
 
 --
--- TOC entry 930 (OID 127853)
+-- TOC entry 930 (OID 132977)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10490,7 +10490,7 @@ ALTER TABLE ONLY help_faqs
 
 
 --
--- TOC entry 931 (OID 127857)
+-- TOC entry 931 (OID 132981)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10499,7 +10499,7 @@ ALTER TABLE ONLY help_faqs
 
 
 --
--- TOC entry 932 (OID 127861)
+-- TOC entry 932 (OID 132985)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10508,7 +10508,7 @@ ALTER TABLE ONLY help_faqs
 
 
 --
--- TOC entry 933 (OID 127865)
+-- TOC entry 933 (OID 132989)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10517,7 +10517,7 @@ ALTER TABLE ONLY help_faqs
 
 
 --
--- TOC entry 494 (OID 127880)
+-- TOC entry 494 (OID 133004)
 -- Name: help_business_rules_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10526,7 +10526,7 @@ ALTER TABLE ONLY help_business_rules
 
 
 --
--- TOC entry 934 (OID 127882)
+-- TOC entry 934 (OID 133006)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10535,7 +10535,7 @@ ALTER TABLE ONLY help_business_rules
 
 
 --
--- TOC entry 935 (OID 127886)
+-- TOC entry 935 (OID 133010)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10544,7 +10544,7 @@ ALTER TABLE ONLY help_business_rules
 
 
 --
--- TOC entry 936 (OID 127890)
+-- TOC entry 936 (OID 133014)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10553,7 +10553,7 @@ ALTER TABLE ONLY help_business_rules
 
 
 --
--- TOC entry 937 (OID 127894)
+-- TOC entry 937 (OID 133018)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10562,7 +10562,7 @@ ALTER TABLE ONLY help_business_rules
 
 
 --
--- TOC entry 495 (OID 127909)
+-- TOC entry 495 (OID 133033)
 -- Name: help_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10571,7 +10571,7 @@ ALTER TABLE ONLY help_notes
 
 
 --
--- TOC entry 938 (OID 127911)
+-- TOC entry 938 (OID 133035)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10580,7 +10580,7 @@ ALTER TABLE ONLY help_notes
 
 
 --
--- TOC entry 939 (OID 127915)
+-- TOC entry 939 (OID 133039)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10589,7 +10589,7 @@ ALTER TABLE ONLY help_notes
 
 
 --
--- TOC entry 940 (OID 127919)
+-- TOC entry 940 (OID 133043)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10598,7 +10598,7 @@ ALTER TABLE ONLY help_notes
 
 
 --
--- TOC entry 941 (OID 127923)
+-- TOC entry 941 (OID 133047)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10607,7 +10607,7 @@ ALTER TABLE ONLY help_notes
 
 
 --
--- TOC entry 496 (OID 127938)
+-- TOC entry 496 (OID 133062)
 -- Name: help_tips_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10616,7 +10616,7 @@ ALTER TABLE ONLY help_tips
 
 
 --
--- TOC entry 942 (OID 127940)
+-- TOC entry 942 (OID 133064)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10625,7 +10625,7 @@ ALTER TABLE ONLY help_tips
 
 
 --
--- TOC entry 943 (OID 127944)
+-- TOC entry 943 (OID 133068)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10634,7 +10634,7 @@ ALTER TABLE ONLY help_tips
 
 
 --
--- TOC entry 944 (OID 127948)
+-- TOC entry 944 (OID 133072)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10643,7 +10643,7 @@ ALTER TABLE ONLY help_tips
 
 
 --
--- TOC entry 497 (OID 127959)
+-- TOC entry 497 (OID 133083)
 -- Name: sync_client_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10652,7 +10652,7 @@ ALTER TABLE ONLY sync_client
 
 
 --
--- TOC entry 498 (OID 127967)
+-- TOC entry 498 (OID 133091)
 -- Name: sync_system_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10661,7 +10661,7 @@ ALTER TABLE ONLY sync_system
 
 
 --
--- TOC entry 499 (OID 127981)
+-- TOC entry 499 (OID 133105)
 -- Name: sync_table_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10670,7 +10670,7 @@ ALTER TABLE ONLY sync_table
 
 
 --
--- TOC entry 945 (OID 127983)
+-- TOC entry 945 (OID 133107)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10679,7 +10679,7 @@ ALTER TABLE ONLY sync_table
 
 
 --
--- TOC entry 946 (OID 127990)
+-- TOC entry 946 (OID 133114)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10688,7 +10688,7 @@ ALTER TABLE ONLY sync_map
 
 
 --
--- TOC entry 947 (OID 127994)
+-- TOC entry 947 (OID 133118)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10697,7 +10697,7 @@ ALTER TABLE ONLY sync_map
 
 
 --
--- TOC entry 948 (OID 128002)
+-- TOC entry 948 (OID 133126)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10706,7 +10706,7 @@ ALTER TABLE ONLY sync_conflict_log
 
 
 --
--- TOC entry 949 (OID 128006)
+-- TOC entry 949 (OID 133130)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10715,7 +10715,7 @@ ALTER TABLE ONLY sync_conflict_log
 
 
 --
--- TOC entry 501 (OID 128016)
+-- TOC entry 501 (OID 133140)
 -- Name: sync_log_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10724,7 +10724,7 @@ ALTER TABLE ONLY sync_log
 
 
 --
--- TOC entry 950 (OID 128018)
+-- TOC entry 950 (OID 133142)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10733,7 +10733,7 @@ ALTER TABLE ONLY sync_log
 
 
 --
--- TOC entry 951 (OID 128022)
+-- TOC entry 951 (OID 133146)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10742,7 +10742,7 @@ ALTER TABLE ONLY sync_log
 
 
 --
--- TOC entry 502 (OID 128034)
+-- TOC entry 502 (OID 133158)
 -- Name: sync_transaction_log_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10751,7 +10751,7 @@ ALTER TABLE ONLY sync_transaction_log
 
 
 --
--- TOC entry 952 (OID 128036)
+-- TOC entry 952 (OID 133160)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10760,7 +10760,7 @@ ALTER TABLE ONLY sync_transaction_log
 
 
 --
--- TOC entry 503 (OID 128049)
+-- TOC entry 503 (OID 133173)
 -- Name: process_log_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10769,7 +10769,7 @@ ALTER TABLE ONLY process_log
 
 
 --
--- TOC entry 953 (OID 128051)
+-- TOC entry 953 (OID 133175)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10778,7 +10778,7 @@ ALTER TABLE ONLY process_log
 
 
 --
--- TOC entry 954 (OID 128055)
+-- TOC entry 954 (OID 133179)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10787,7 +10787,7 @@ ALTER TABLE ONLY process_log
 
 
 --
--- TOC entry 504 (OID 128270)
+-- TOC entry 504 (OID 133394)
 -- Name: autoguide_make_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10796,7 +10796,7 @@ ALTER TABLE ONLY autoguide_make
 
 
 --
--- TOC entry 505 (OID 128279)
+-- TOC entry 505 (OID 133403)
 -- Name: autoguide_model_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10805,7 +10805,7 @@ ALTER TABLE ONLY autoguide_model
 
 
 --
--- TOC entry 955 (OID 128281)
+-- TOC entry 955 (OID 133405)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10814,7 +10814,7 @@ ALTER TABLE ONLY autoguide_model
 
 
 --
--- TOC entry 506 (OID 128292)
+-- TOC entry 506 (OID 133416)
 -- Name: autoguide_vehicle_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10823,7 +10823,7 @@ ALTER TABLE ONLY autoguide_vehicle
 
 
 --
--- TOC entry 956 (OID 128294)
+-- TOC entry 956 (OID 133418)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10832,7 +10832,7 @@ ALTER TABLE ONLY autoguide_vehicle
 
 
 --
--- TOC entry 957 (OID 128298)
+-- TOC entry 957 (OID 133422)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10841,7 +10841,7 @@ ALTER TABLE ONLY autoguide_vehicle
 
 
 --
--- TOC entry 507 (OID 128311)
+-- TOC entry 507 (OID 133435)
 -- Name: autoguide_inventory_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10850,7 +10850,7 @@ ALTER TABLE ONLY autoguide_inventory
 
 
 --
--- TOC entry 958 (OID 128313)
+-- TOC entry 958 (OID 133437)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10859,7 +10859,7 @@ ALTER TABLE ONLY autoguide_inventory
 
 
 --
--- TOC entry 959 (OID 128317)
+-- TOC entry 959 (OID 133441)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10868,7 +10868,7 @@ ALTER TABLE ONLY autoguide_inventory
 
 
 --
--- TOC entry 508 (OID 128331)
+-- TOC entry 508 (OID 133455)
 -- Name: autoguide_options_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10877,7 +10877,7 @@ ALTER TABLE ONLY autoguide_options
 
 
 --
--- TOC entry 960 (OID 128335)
+-- TOC entry 960 (OID 133459)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10886,7 +10886,7 @@ ALTER TABLE ONLY autoguide_inventory_options
 
 
 --
--- TOC entry 510 (OID 128349)
+-- TOC entry 510 (OID 133473)
 -- Name: autoguide_ad_run_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10895,7 +10895,7 @@ ALTER TABLE ONLY autoguide_ad_run
 
 
 --
--- TOC entry 961 (OID 128351)
+-- TOC entry 961 (OID 133475)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10904,7 +10904,7 @@ ALTER TABLE ONLY autoguide_ad_run
 
 
 --
--- TOC entry 511 (OID 128365)
+-- TOC entry 511 (OID 133489)
 -- Name: autoguide_ad_run_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10913,7 +10913,7 @@ ALTER TABLE ONLY autoguide_ad_run_types
 
 
 --
--- TOC entry 512 (OID 128408)
+-- TOC entry 512 (OID 133532)
 -- Name: lookup_revenue_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10922,7 +10922,7 @@ ALTER TABLE ONLY lookup_revenue_types
 
 
 --
--- TOC entry 513 (OID 128418)
+-- TOC entry 513 (OID 133542)
 -- Name: lookup_revenuedetail_types_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10931,7 +10931,7 @@ ALTER TABLE ONLY lookup_revenuedetail_types
 
 
 --
--- TOC entry 514 (OID 128431)
+-- TOC entry 514 (OID 133555)
 -- Name: revenue_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10940,7 +10940,7 @@ ALTER TABLE ONLY revenue
 
 
 --
--- TOC entry 962 (OID 128433)
+-- TOC entry 962 (OID 133557)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10949,7 +10949,7 @@ ALTER TABLE ONLY revenue
 
 
 --
--- TOC entry 963 (OID 128437)
+-- TOC entry 963 (OID 133561)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10958,7 +10958,7 @@ ALTER TABLE ONLY revenue
 
 
 --
--- TOC entry 964 (OID 128441)
+-- TOC entry 964 (OID 133565)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10967,7 +10967,7 @@ ALTER TABLE ONLY revenue
 
 
 --
--- TOC entry 965 (OID 128445)
+-- TOC entry 965 (OID 133569)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10976,7 +10976,7 @@ ALTER TABLE ONLY revenue
 
 
 --
--- TOC entry 966 (OID 128449)
+-- TOC entry 966 (OID 133573)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10985,7 +10985,7 @@ ALTER TABLE ONLY revenue
 
 
 --
--- TOC entry 515 (OID 128461)
+-- TOC entry 515 (OID 133585)
 -- Name: revenue_detail_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -10994,7 +10994,7 @@ ALTER TABLE ONLY revenue_detail
 
 
 --
--- TOC entry 967 (OID 128463)
+-- TOC entry 967 (OID 133587)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11003,7 +11003,7 @@ ALTER TABLE ONLY revenue_detail
 
 
 --
--- TOC entry 968 (OID 128467)
+-- TOC entry 968 (OID 133591)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11012,7 +11012,7 @@ ALTER TABLE ONLY revenue_detail
 
 
 --
--- TOC entry 969 (OID 128471)
+-- TOC entry 969 (OID 133595)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11021,7 +11021,7 @@ ALTER TABLE ONLY revenue_detail
 
 
 --
--- TOC entry 970 (OID 128475)
+-- TOC entry 970 (OID 133599)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11030,7 +11030,7 @@ ALTER TABLE ONLY revenue_detail
 
 
 --
--- TOC entry 971 (OID 128479)
+-- TOC entry 971 (OID 133603)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11039,7 +11039,7 @@ ALTER TABLE ONLY revenue_detail
 
 
 --
--- TOC entry 516 (OID 128492)
+-- TOC entry 516 (OID 133616)
 -- Name: lookup_task_priority_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11048,7 +11048,7 @@ ALTER TABLE ONLY lookup_task_priority
 
 
 --
--- TOC entry 517 (OID 128502)
+-- TOC entry 517 (OID 133626)
 -- Name: lookup_task_loe_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11057,7 +11057,7 @@ ALTER TABLE ONLY lookup_task_loe
 
 
 --
--- TOC entry 518 (OID 128512)
+-- TOC entry 518 (OID 133636)
 -- Name: lookup_task_category_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11066,7 +11066,7 @@ ALTER TABLE ONLY lookup_task_category
 
 
 --
--- TOC entry 519 (OID 128527)
+-- TOC entry 519 (OID 133651)
 -- Name: task_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11075,7 +11075,7 @@ ALTER TABLE ONLY task
 
 
 --
--- TOC entry 972 (OID 128529)
+-- TOC entry 972 (OID 133653)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11084,7 +11084,7 @@ ALTER TABLE ONLY task
 
 
 --
--- TOC entry 973 (OID 128533)
+-- TOC entry 973 (OID 133657)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11093,7 +11093,7 @@ ALTER TABLE ONLY task
 
 
 --
--- TOC entry 974 (OID 128537)
+-- TOC entry 974 (OID 133661)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11102,7 +11102,7 @@ ALTER TABLE ONLY task
 
 
 --
--- TOC entry 975 (OID 128541)
+-- TOC entry 975 (OID 133665)
 -- Name: $4; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11111,7 +11111,7 @@ ALTER TABLE ONLY task
 
 
 --
--- TOC entry 976 (OID 128545)
+-- TOC entry 976 (OID 133669)
 -- Name: $5; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11120,7 +11120,7 @@ ALTER TABLE ONLY task
 
 
 --
--- TOC entry 977 (OID 128549)
+-- TOC entry 977 (OID 133673)
 -- Name: $6; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11129,7 +11129,7 @@ ALTER TABLE ONLY task
 
 
 --
--- TOC entry 978 (OID 128555)
+-- TOC entry 978 (OID 133679)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11138,7 +11138,7 @@ ALTER TABLE ONLY tasklink_contact
 
 
 --
--- TOC entry 979 (OID 128559)
+-- TOC entry 979 (OID 133683)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11147,7 +11147,7 @@ ALTER TABLE ONLY tasklink_contact
 
 
 --
--- TOC entry 980 (OID 128565)
+-- TOC entry 980 (OID 133689)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11156,7 +11156,7 @@ ALTER TABLE ONLY tasklink_ticket
 
 
 --
--- TOC entry 981 (OID 128569)
+-- TOC entry 981 (OID 133693)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11165,7 +11165,7 @@ ALTER TABLE ONLY tasklink_ticket
 
 
 --
--- TOC entry 982 (OID 128575)
+-- TOC entry 982 (OID 133699)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11174,7 +11174,7 @@ ALTER TABLE ONLY tasklink_project
 
 
 --
--- TOC entry 983 (OID 128579)
+-- TOC entry 983 (OID 133703)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11183,7 +11183,7 @@ ALTER TABLE ONLY tasklink_project
 
 
 --
--- TOC entry 984 (OID 128585)
+-- TOC entry 984 (OID 133709)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11192,7 +11192,7 @@ ALTER TABLE ONLY taskcategory_project
 
 
 --
--- TOC entry 985 (OID 128589)
+-- TOC entry 985 (OID 133713)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11201,7 +11201,7 @@ ALTER TABLE ONLY taskcategory_project
 
 
 --
--- TOC entry 520 (OID 128612)
+-- TOC entry 520 (OID 133736)
 -- Name: business_process_component_library_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11210,7 +11210,7 @@ ALTER TABLE ONLY business_process_component_library
 
 
 --
--- TOC entry 521 (OID 128621)
+-- TOC entry 521 (OID 133745)
 -- Name: business_process_component_result_lookup_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11219,7 +11219,7 @@ ALTER TABLE ONLY business_process_component_result_lookup
 
 
 --
--- TOC entry 986 (OID 128623)
+-- TOC entry 986 (OID 133747)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11228,7 +11228,7 @@ ALTER TABLE ONLY business_process_component_result_lookup
 
 
 --
--- TOC entry 522 (OID 128636)
+-- TOC entry 522 (OID 133760)
 -- Name: business_process_parameter_library_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11237,7 +11237,7 @@ ALTER TABLE ONLY business_process_parameter_library
 
 
 --
--- TOC entry 523 (OID 128648)
+-- TOC entry 523 (OID 133772)
 -- Name: business_process_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11246,7 +11246,7 @@ ALTER TABLE ONLY business_process
 
 
 --
--- TOC entry 524 (OID 128650)
+-- TOC entry 524 (OID 133774)
 -- Name: business_process_process_name_key; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11255,7 +11255,7 @@ ALTER TABLE ONLY business_process
 
 
 --
--- TOC entry 987 (OID 128652)
+-- TOC entry 987 (OID 133776)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11264,7 +11264,7 @@ ALTER TABLE ONLY business_process
 
 
 --
--- TOC entry 525 (OID 128662)
+-- TOC entry 525 (OID 133786)
 -- Name: business_process_component_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11273,7 +11273,7 @@ ALTER TABLE ONLY business_process_component
 
 
 --
--- TOC entry 988 (OID 128664)
+-- TOC entry 988 (OID 133788)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11282,7 +11282,7 @@ ALTER TABLE ONLY business_process_component
 
 
 --
--- TOC entry 989 (OID 128668)
+-- TOC entry 989 (OID 133792)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11291,7 +11291,7 @@ ALTER TABLE ONLY business_process_component
 
 
 --
--- TOC entry 990 (OID 128672)
+-- TOC entry 990 (OID 133796)
 -- Name: $3; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11300,7 +11300,7 @@ ALTER TABLE ONLY business_process_component
 
 
 --
--- TOC entry 526 (OID 128685)
+-- TOC entry 526 (OID 133809)
 -- Name: business_process_parameter_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11309,7 +11309,7 @@ ALTER TABLE ONLY business_process_parameter
 
 
 --
--- TOC entry 991 (OID 128687)
+-- TOC entry 991 (OID 133811)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11318,7 +11318,7 @@ ALTER TABLE ONLY business_process_parameter
 
 
 --
--- TOC entry 527 (OID 128700)
+-- TOC entry 527 (OID 133824)
 -- Name: business_process_component_parameter_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11327,7 +11327,7 @@ ALTER TABLE ONLY business_process_component_parameter
 
 
 --
--- TOC entry 992 (OID 128702)
+-- TOC entry 992 (OID 133826)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11336,7 +11336,7 @@ ALTER TABLE ONLY business_process_component_parameter
 
 
 --
--- TOC entry 993 (OID 128706)
+-- TOC entry 993 (OID 133830)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11345,7 +11345,7 @@ ALTER TABLE ONLY business_process_component_parameter
 
 
 --
--- TOC entry 528 (OID 128728)
+-- TOC entry 528 (OID 133852)
 -- Name: business_process_events_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11354,7 +11354,7 @@ ALTER TABLE ONLY business_process_events
 
 
 --
--- TOC entry 994 (OID 128730)
+-- TOC entry 994 (OID 133854)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11363,7 +11363,7 @@ ALTER TABLE ONLY business_process_events
 
 
 --
--- TOC entry 529 (OID 128736)
+-- TOC entry 529 (OID 133860)
 -- Name: business_process_log_process_name_key; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11372,7 +11372,7 @@ ALTER TABLE ONLY business_process_log
 
 
 --
--- TOC entry 530 (OID 128744)
+-- TOC entry 530 (OID 133868)
 -- Name: business_process_hook_library_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11381,7 +11381,7 @@ ALTER TABLE ONLY business_process_hook_library
 
 
 --
--- TOC entry 995 (OID 128746)
+-- TOC entry 995 (OID 133870)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11390,7 +11390,7 @@ ALTER TABLE ONLY business_process_hook_library
 
 
 --
--- TOC entry 531 (OID 128756)
+-- TOC entry 531 (OID 133880)
 -- Name: business_process_hook_triggers_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11399,7 +11399,7 @@ ALTER TABLE ONLY business_process_hook_triggers
 
 
 --
--- TOC entry 996 (OID 128758)
+-- TOC entry 996 (OID 133882)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11408,7 +11408,7 @@ ALTER TABLE ONLY business_process_hook_triggers
 
 
 --
--- TOC entry 532 (OID 128768)
+-- TOC entry 532 (OID 133892)
 -- Name: business_process_hook_pkey; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11417,7 +11417,7 @@ ALTER TABLE ONLY business_process_hook
 
 
 --
--- TOC entry 997 (OID 128770)
+-- TOC entry 997 (OID 133894)
 -- Name: $1; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11426,7 +11426,7 @@ ALTER TABLE ONLY business_process_hook
 
 
 --
--- TOC entry 998 (OID 128774)
+-- TOC entry 998 (OID 133898)
 -- Name: $2; Type: CONSTRAINT; Schema: public; Owner: matt
 --
 
@@ -11435,7 +11435,7 @@ ALTER TABLE ONLY business_process_hook
 
 
 --
--- TOC entry 3 (OID 125370)
+-- TOC entry 3 (OID 130494)
 -- Name: access_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11443,7 +11443,7 @@ SELECT pg_catalog.setval ('access_user_id_seq', 0, true);
 
 
 --
--- TOC entry 272 (OID 125392)
+-- TOC entry 272 (OID 130516)
 -- Name: lookup_industry_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11451,7 +11451,7 @@ SELECT pg_catalog.setval ('lookup_industry_code_seq', 20, true);
 
 
 --
--- TOC entry 273 (OID 125402)
+-- TOC entry 273 (OID 130526)
 -- Name: access_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11459,7 +11459,7 @@ SELECT pg_catalog.setval ('access_log_id_seq', 1, false);
 
 
 --
--- TOC entry 274 (OID 125414)
+-- TOC entry 274 (OID 130538)
 -- Name: usage_log_usage_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11467,7 +11467,7 @@ SELECT pg_catalog.setval ('usage_log_usage_id_seq', 1, false);
 
 
 --
--- TOC entry 275 (OID 125422)
+-- TOC entry 275 (OID 130546)
 -- Name: lookup_contact_types_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11475,7 +11475,7 @@ SELECT pg_catalog.setval ('lookup_contact_types_code_seq', 3, true);
 
 
 --
--- TOC entry 276 (OID 125437)
+-- TOC entry 276 (OID 130561)
 -- Name: lookup_account_types_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11483,7 +11483,7 @@ SELECT pg_catalog.setval ('lookup_account_types_code_seq', 6, true);
 
 
 --
--- TOC entry 277 (OID 125451)
+-- TOC entry 277 (OID 130575)
 -- Name: lookup_department_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11491,7 +11491,7 @@ SELECT pg_catalog.setval ('lookup_department_code_seq', 7, true);
 
 
 --
--- TOC entry 5 (OID 125461)
+-- TOC entry 5 (OID 130585)
 -- Name: lookup_orgaddress_type_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11499,7 +11499,7 @@ SELECT pg_catalog.setval ('lookup_orgaddress_type_code_seq', 4, true);
 
 
 --
--- TOC entry 278 (OID 125471)
+-- TOC entry 278 (OID 130595)
 -- Name: lookup_orgemail_types_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11507,7 +11507,7 @@ SELECT pg_catalog.setval ('lookup_orgemail_types_code_seq', 2, true);
 
 
 --
--- TOC entry 279 (OID 125481)
+-- TOC entry 279 (OID 130605)
 -- Name: lookup_orgphone_types_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11515,7 +11515,7 @@ SELECT pg_catalog.setval ('lookup_orgphone_types_code_seq', 2, true);
 
 
 --
--- TOC entry 7 (OID 125491)
+-- TOC entry 7 (OID 130615)
 -- Name: lookup_instantmessenge_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11523,7 +11523,7 @@ SELECT pg_catalog.setval ('lookup_instantmessenge_code_seq', 1, false);
 
 
 --
--- TOC entry 9 (OID 125501)
+-- TOC entry 9 (OID 130625)
 -- Name: lookup_employment_type_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11531,7 +11531,7 @@ SELECT pg_catalog.setval ('lookup_employment_type_code_seq', 1, false);
 
 
 --
--- TOC entry 280 (OID 125511)
+-- TOC entry 280 (OID 130635)
 -- Name: lookup_locale_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11539,7 +11539,7 @@ SELECT pg_catalog.setval ('lookup_locale_code_seq', 1, false);
 
 
 --
--- TOC entry 11 (OID 125521)
+-- TOC entry 11 (OID 130645)
 -- Name: lookup_contactaddress__code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11547,7 +11547,7 @@ SELECT pg_catalog.setval ('lookup_contactaddress__code_seq', 3, true);
 
 
 --
--- TOC entry 13 (OID 125531)
+-- TOC entry 13 (OID 130655)
 -- Name: lookup_contactemail_ty_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11555,7 +11555,7 @@ SELECT pg_catalog.setval ('lookup_contactemail_ty_code_seq', 3, true);
 
 
 --
--- TOC entry 15 (OID 125541)
+-- TOC entry 15 (OID 130665)
 -- Name: lookup_contactphone_ty_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11563,7 +11563,7 @@ SELECT pg_catalog.setval ('lookup_contactphone_ty_code_seq', 9, true);
 
 
 --
--- TOC entry 281 (OID 125551)
+-- TOC entry 281 (OID 130675)
 -- Name: lookup_access_types_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11571,7 +11571,7 @@ SELECT pg_catalog.setval ('lookup_access_types_code_seq', 8, true);
 
 
 --
--- TOC entry 17 (OID 125560)
+-- TOC entry 17 (OID 130684)
 -- Name: organization_org_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11579,7 +11579,7 @@ SELECT pg_catalog.setval ('organization_org_id_seq', 0, true);
 
 
 --
--- TOC entry 282 (OID 125591)
+-- TOC entry 282 (OID 130715)
 -- Name: contact_contact_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11587,7 +11587,7 @@ SELECT pg_catalog.setval ('contact_contact_id_seq', 1, false);
 
 
 --
--- TOC entry 283 (OID 125648)
+-- TOC entry 283 (OID 130772)
 -- Name: role_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11595,7 +11595,7 @@ SELECT pg_catalog.setval ('role_role_id_seq', 9, true);
 
 
 --
--- TOC entry 19 (OID 125667)
+-- TOC entry 19 (OID 130791)
 -- Name: permission_cate_category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11603,7 +11603,7 @@ SELECT pg_catalog.setval ('permission_cate_category_id_seq', 15, true);
 
 
 --
--- TOC entry 284 (OID 125684)
+-- TOC entry 284 (OID 130808)
 -- Name: permission_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11611,7 +11611,7 @@ SELECT pg_catalog.setval ('permission_permission_id_seq', 75, true);
 
 
 --
--- TOC entry 285 (OID 125704)
+-- TOC entry 285 (OID 130828)
 -- Name: role_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11619,7 +11619,7 @@ SELECT pg_catalog.setval ('role_permission_id_seq', 421, true);
 
 
 --
--- TOC entry 286 (OID 125723)
+-- TOC entry 286 (OID 130847)
 -- Name: lookup_stage_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11627,7 +11627,7 @@ SELECT pg_catalog.setval ('lookup_stage_code_seq', 9, true);
 
 
 --
--- TOC entry 21 (OID 125733)
+-- TOC entry 21 (OID 130857)
 -- Name: lookup_delivery_option_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11635,7 +11635,7 @@ SELECT pg_catalog.setval ('lookup_delivery_option_code_seq', 6, true);
 
 
 --
--- TOC entry 287 (OID 125743)
+-- TOC entry 287 (OID 130867)
 -- Name: news_rec_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11643,7 +11643,7 @@ SELECT pg_catalog.setval ('news_rec_id_seq', 1, false);
 
 
 --
--- TOC entry 23 (OID 125758)
+-- TOC entry 23 (OID 130882)
 -- Name: organization_add_address_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11651,7 +11651,7 @@ SELECT pg_catalog.setval ('organization_add_address_id_seq', 1, false);
 
 
 --
--- TOC entry 25 (OID 125783)
+-- TOC entry 25 (OID 130907)
 -- Name: organization__emailaddress__seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11659,7 +11659,7 @@ SELECT pg_catalog.setval ('organization__emailaddress__seq', 1, false);
 
 
 --
--- TOC entry 27 (OID 125808)
+-- TOC entry 27 (OID 130932)
 -- Name: organization_phone_phone_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11667,7 +11667,7 @@ SELECT pg_catalog.setval ('organization_phone_phone_id_seq', 1, false);
 
 
 --
--- TOC entry 288 (OID 125833)
+-- TOC entry 288 (OID 130957)
 -- Name: contact_address_address_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11675,7 +11675,7 @@ SELECT pg_catalog.setval ('contact_address_address_id_seq', 1, false);
 
 
 --
--- TOC entry 29 (OID 125858)
+-- TOC entry 29 (OID 130982)
 -- Name: contact_email_emailaddress__seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11683,7 +11683,7 @@ SELECT pg_catalog.setval ('contact_email_emailaddress__seq', 1, false);
 
 
 --
--- TOC entry 289 (OID 125883)
+-- TOC entry 289 (OID 131007)
 -- Name: contact_phone_phone_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11691,7 +11691,7 @@ SELECT pg_catalog.setval ('contact_phone_phone_id_seq', 1, false);
 
 
 --
--- TOC entry 31 (OID 125908)
+-- TOC entry 31 (OID 131032)
 -- Name: notification_notification_i_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11699,7 +11699,7 @@ SELECT pg_catalog.setval ('notification_notification_i_seq', 1, false);
 
 
 --
--- TOC entry 290 (OID 125920)
+-- TOC entry 290 (OID 131044)
 -- Name: cfsinbox_message_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11707,7 +11707,7 @@ SELECT pg_catalog.setval ('cfsinbox_message_id_seq', 1, false);
 
 
 --
--- TOC entry 291 (OID 125983)
+-- TOC entry 291 (OID 131107)
 -- Name: lookup_lists_lookup_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11715,7 +11715,7 @@ SELECT pg_catalog.setval ('lookup_lists_lookup_id_seq', 13, true);
 
 
 --
--- TOC entry 292 (OID 125999)
+-- TOC entry 292 (OID 131123)
 -- Name: viewpoint_viewpoint_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11723,7 +11723,7 @@ SELECT pg_catalog.setval ('viewpoint_viewpoint_id_seq', 1, false);
 
 
 --
--- TOC entry 33 (OID 126025)
+-- TOC entry 33 (OID 131149)
 -- Name: viewpoint_per_vp_permission_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11731,7 +11731,7 @@ SELECT pg_catalog.setval ('viewpoint_per_vp_permission_seq', 1, false);
 
 
 --
--- TOC entry 293 (OID 126044)
+-- TOC entry 293 (OID 131168)
 -- Name: report_report_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11739,7 +11739,7 @@ SELECT pg_catalog.setval ('report_report_id_seq', 19, true);
 
 
 --
--- TOC entry 294 (OID 126075)
+-- TOC entry 294 (OID 131199)
 -- Name: report_criteria_criteria_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11747,7 +11747,7 @@ SELECT pg_catalog.setval ('report_criteria_criteria_id_seq', 1, false);
 
 
 --
--- TOC entry 295 (OID 126101)
+-- TOC entry 295 (OID 131225)
 -- Name: report_criteria_parameter_parameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11755,7 +11755,7 @@ SELECT pg_catalog.setval ('report_criteria_parameter_parameter_id_seq', 1, false
 
 
 --
--- TOC entry 296 (OID 126115)
+-- TOC entry 296 (OID 131239)
 -- Name: report_queue_queue_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11763,7 +11763,7 @@ SELECT pg_catalog.setval ('report_queue_queue_id_seq', 1, false);
 
 
 --
--- TOC entry 297 (OID 126134)
+-- TOC entry 297 (OID 131258)
 -- Name: report_queue_criteria_criteria_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11771,7 +11771,7 @@ SELECT pg_catalog.setval ('report_queue_criteria_criteria_id_seq', 1, false);
 
 
 --
--- TOC entry 35 (OID 126148)
+-- TOC entry 35 (OID 131272)
 -- Name: action_list_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11779,7 +11779,7 @@ SELECT pg_catalog.setval ('action_list_code_seq', 1, false);
 
 
 --
--- TOC entry 37 (OID 126170)
+-- TOC entry 37 (OID 131294)
 -- Name: action_item_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11787,7 +11787,7 @@ SELECT pg_catalog.setval ('action_item_code_seq', 1, false);
 
 
 --
--- TOC entry 39 (OID 126192)
+-- TOC entry 39 (OID 131316)
 -- Name: action_item_log_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11795,7 +11795,7 @@ SELECT pg_catalog.setval ('action_item_log_code_seq', 1, false);
 
 
 --
--- TOC entry 298 (OID 126214)
+-- TOC entry 298 (OID 131338)
 -- Name: database_version_version_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11803,7 +11803,7 @@ SELECT pg_catalog.setval ('database_version_version_id_seq', 1, true);
 
 
 --
--- TOC entry 299 (OID 126339)
+-- TOC entry 299 (OID 131463)
 -- Name: lookup_call_types_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11811,7 +11811,7 @@ SELECT pg_catalog.setval ('lookup_call_types_code_seq', 3, true);
 
 
 --
--- TOC entry 41 (OID 126349)
+-- TOC entry 41 (OID 131473)
 -- Name: lookup_opportunity_typ_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11819,7 +11819,7 @@ SELECT pg_catalog.setval ('lookup_opportunity_typ_code_seq', 4, true);
 
 
 --
--- TOC entry 300 (OID 126359)
+-- TOC entry 300 (OID 131483)
 -- Name: opportunity_header_opp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11827,7 +11827,7 @@ SELECT pg_catalog.setval ('opportunity_header_opp_id_seq', 1, false);
 
 
 --
--- TOC entry 301 (OID 126378)
+-- TOC entry 301 (OID 131502)
 -- Name: opportunity_component_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11835,7 +11835,7 @@ SELECT pg_catalog.setval ('opportunity_component_id_seq', 1, false);
 
 
 --
--- TOC entry 302 (OID 126426)
+-- TOC entry 302 (OID 131550)
 -- Name: call_log_call_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11843,7 +11843,7 @@ SELECT pg_catalog.setval ('call_log_call_id_seq', 1, false);
 
 
 --
--- TOC entry 303 (OID 126479)
+-- TOC entry 303 (OID 131603)
 -- Name: ticket_level_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11851,7 +11851,7 @@ SELECT pg_catalog.setval ('ticket_level_code_seq', 5, true);
 
 
 --
--- TOC entry 304 (OID 126491)
+-- TOC entry 304 (OID 131615)
 -- Name: ticket_severity_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11859,7 +11859,7 @@ SELECT pg_catalog.setval ('ticket_severity_code_seq', 3, true);
 
 
 --
--- TOC entry 305 (OID 126507)
+-- TOC entry 305 (OID 131631)
 -- Name: lookup_ticketsource_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11867,7 +11867,7 @@ SELECT pg_catalog.setval ('lookup_ticketsource_code_seq', 4, true);
 
 
 --
--- TOC entry 306 (OID 126519)
+-- TOC entry 306 (OID 131643)
 -- Name: ticket_priority_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11875,7 +11875,7 @@ SELECT pg_catalog.setval ('ticket_priority_code_seq', 3, true);
 
 
 --
--- TOC entry 307 (OID 126535)
+-- TOC entry 307 (OID 131659)
 -- Name: ticket_category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11883,7 +11883,7 @@ SELECT pg_catalog.setval ('ticket_category_id_seq', 5, true);
 
 
 --
--- TOC entry 308 (OID 126550)
+-- TOC entry 308 (OID 131674)
 -- Name: ticket_category_draft_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11891,7 +11891,7 @@ SELECT pg_catalog.setval ('ticket_category_draft_id_seq', 1, false);
 
 
 --
--- TOC entry 309 (OID 126566)
+-- TOC entry 309 (OID 131690)
 -- Name: ticket_ticketid_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11899,7 +11899,7 @@ SELECT pg_catalog.setval ('ticket_ticketid_seq', 1, false);
 
 
 --
--- TOC entry 310 (OID 126620)
+-- TOC entry 310 (OID 131744)
 -- Name: ticketlog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11907,7 +11907,7 @@ SELECT pg_catalog.setval ('ticketlog_id_seq', 1, false);
 
 
 --
--- TOC entry 43 (OID 126680)
+-- TOC entry 43 (OID 131804)
 -- Name: module_field_categorylin_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11915,7 +11915,7 @@ SELECT pg_catalog.setval ('module_field_categorylin_id_seq', 3, true);
 
 
 --
--- TOC entry 45 (OID 126698)
+-- TOC entry 45 (OID 131822)
 -- Name: custom_field_ca_category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11923,7 +11923,7 @@ SELECT pg_catalog.setval ('custom_field_ca_category_id_seq', 1, false);
 
 
 --
--- TOC entry 47 (OID 126720)
+-- TOC entry 47 (OID 131844)
 -- Name: custom_field_group_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11931,7 +11931,7 @@ SELECT pg_catalog.setval ('custom_field_group_group_id_seq', 1, false);
 
 
 --
--- TOC entry 311 (OID 126739)
+-- TOC entry 311 (OID 131863)
 -- Name: custom_field_info_field_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11939,7 +11939,7 @@ SELECT pg_catalog.setval ('custom_field_info_field_id_seq', 1, false);
 
 
 --
--- TOC entry 312 (OID 126760)
+-- TOC entry 312 (OID 131884)
 -- Name: custom_field_lookup_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11947,7 +11947,7 @@ SELECT pg_catalog.setval ('custom_field_lookup_code_seq', 1, false);
 
 
 --
--- TOC entry 49 (OID 126776)
+-- TOC entry 49 (OID 131900)
 -- Name: custom_field_reco_record_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11955,7 +11955,7 @@ SELECT pg_catalog.setval ('custom_field_reco_record_id_seq', 1, false);
 
 
 --
--- TOC entry 51 (OID 126814)
+-- TOC entry 51 (OID 131938)
 -- Name: lookup_project_activit_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11963,7 +11963,7 @@ SELECT pg_catalog.setval ('lookup_project_activit_code_seq', 10, true);
 
 
 --
--- TOC entry 53 (OID 126826)
+-- TOC entry 53 (OID 131950)
 -- Name: lookup_project_priorit_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11971,7 +11971,7 @@ SELECT pg_catalog.setval ('lookup_project_priorit_code_seq', 3, true);
 
 
 --
--- TOC entry 313 (OID 126837)
+-- TOC entry 313 (OID 131961)
 -- Name: lookup_project_issues_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11979,7 +11979,7 @@ SELECT pg_catalog.setval ('lookup_project_issues_code_seq', 15, true);
 
 
 --
--- TOC entry 314 (OID 126848)
+-- TOC entry 314 (OID 131972)
 -- Name: lookup_project_status_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11987,7 +11987,7 @@ SELECT pg_catalog.setval ('lookup_project_status_code_seq', 6, true);
 
 
 --
--- TOC entry 315 (OID 126859)
+-- TOC entry 315 (OID 131983)
 -- Name: lookup_project_loe_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -11995,7 +11995,7 @@ SELECT pg_catalog.setval ('lookup_project_loe_code_seq', 5, true);
 
 
 --
--- TOC entry 316 (OID 126871)
+-- TOC entry 316 (OID 131995)
 -- Name: projects_project_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12003,7 +12003,7 @@ SELECT pg_catalog.setval ('projects_project_id_seq', 1, false);
 
 
 --
--- TOC entry 55 (OID 126894)
+-- TOC entry 55 (OID 132018)
 -- Name: project_requi_requirement_i_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12011,7 +12011,7 @@ SELECT pg_catalog.setval ('project_requi_requirement_i_seq', 1, false);
 
 
 --
--- TOC entry 57 (OID 126934)
+-- TOC entry 57 (OID 132058)
 -- Name: project_assig_assignment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12019,7 +12019,7 @@ SELECT pg_catalog.setval ('project_assig_assignment_id_seq', 1, false);
 
 
 --
--- TOC entry 59 (OID 126991)
+-- TOC entry 59 (OID 132115)
 -- Name: project_assignmen_status_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12027,7 +12027,7 @@ SELECT pg_catalog.setval ('project_assignmen_status_id_seq', 1, false);
 
 
 --
--- TOC entry 317 (OID 127010)
+-- TOC entry 317 (OID 132134)
 -- Name: project_issues_issue_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12035,7 +12035,7 @@ SELECT pg_catalog.setval ('project_issues_issue_id_seq', 1, false);
 
 
 --
--- TOC entry 61 (OID 127042)
+-- TOC entry 61 (OID 132166)
 -- Name: project_issue_repl_reply_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12043,7 +12043,7 @@ SELECT pg_catalog.setval ('project_issue_repl_reply_id_seq', 1, false);
 
 
 --
--- TOC entry 318 (OID 127067)
+-- TOC entry 318 (OID 132191)
 -- Name: project_folders_folder_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12051,7 +12051,7 @@ SELECT pg_catalog.setval ('project_folders_folder_id_seq', 1, false);
 
 
 --
--- TOC entry 319 (OID 127077)
+-- TOC entry 319 (OID 132201)
 -- Name: project_files_item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12059,7 +12059,7 @@ SELECT pg_catalog.setval ('project_files_item_id_seq', 1, false);
 
 
 --
--- TOC entry 320 (OID 127200)
+-- TOC entry 320 (OID 132324)
 -- Name: saved_criterialist_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12067,7 +12067,7 @@ SELECT pg_catalog.setval ('saved_criterialist_id_seq', 1, false);
 
 
 --
--- TOC entry 321 (OID 127223)
+-- TOC entry 321 (OID 132347)
 -- Name: campaign_campaign_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12075,7 +12075,7 @@ SELECT pg_catalog.setval ('campaign_campaign_id_seq', 1, false);
 
 
 --
--- TOC entry 322 (OID 127253)
+-- TOC entry 322 (OID 132377)
 -- Name: campaign_run_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12083,7 +12083,7 @@ SELECT pg_catalog.setval ('campaign_run_id_seq', 1, false);
 
 
 --
--- TOC entry 323 (OID 127270)
+-- TOC entry 323 (OID 132394)
 -- Name: excluded_recipient_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12091,7 +12091,7 @@ SELECT pg_catalog.setval ('excluded_recipient_id_seq', 1, false);
 
 
 --
--- TOC entry 324 (OID 127295)
+-- TOC entry 324 (OID 132419)
 -- Name: active_campaign_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12099,7 +12099,7 @@ SELECT pg_catalog.setval ('active_campaign_groups_id_seq', 1, false);
 
 
 --
--- TOC entry 325 (OID 127309)
+-- TOC entry 325 (OID 132433)
 -- Name: scheduled_recipient_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12107,7 +12107,7 @@ SELECT pg_catalog.setval ('scheduled_recipient_id_seq', 1, false);
 
 
 --
--- TOC entry 326 (OID 127328)
+-- TOC entry 326 (OID 132452)
 -- Name: lookup_survey_types_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12115,7 +12115,7 @@ SELECT pg_catalog.setval ('lookup_survey_types_code_seq', 4, true);
 
 
 --
--- TOC entry 327 (OID 127338)
+-- TOC entry 327 (OID 132462)
 -- Name: survey_survey_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12123,7 +12123,7 @@ SELECT pg_catalog.setval ('survey_survey_id_seq', 1, false);
 
 
 --
--- TOC entry 63 (OID 127372)
+-- TOC entry 63 (OID 132496)
 -- Name: survey_question_question_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12131,7 +12131,7 @@ SELECT pg_catalog.setval ('survey_question_question_id_seq', 1, false);
 
 
 --
--- TOC entry 328 (OID 127389)
+-- TOC entry 328 (OID 132513)
 -- Name: survey_items_item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12139,7 +12139,7 @@ SELECT pg_catalog.setval ('survey_items_item_id_seq', 1, false);
 
 
 --
--- TOC entry 65 (OID 127401)
+-- TOC entry 65 (OID 132525)
 -- Name: active_survey_active_survey_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12147,7 +12147,7 @@ SELECT pg_catalog.setval ('active_survey_active_survey_seq', 1, false);
 
 
 --
--- TOC entry 67 (OID 127431)
+-- TOC entry 67 (OID 132555)
 -- Name: active_survey_q_question_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12155,7 +12155,7 @@ SELECT pg_catalog.setval ('active_survey_q_question_id_seq', 1, false);
 
 
 --
--- TOC entry 69 (OID 127456)
+-- TOC entry 69 (OID 132580)
 -- Name: active_survey_items_item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12163,7 +12163,7 @@ SELECT pg_catalog.setval ('active_survey_items_item_id_seq', 1, false);
 
 
 --
--- TOC entry 71 (OID 127468)
+-- TOC entry 71 (OID 132592)
 -- Name: active_survey_r_response_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12171,7 +12171,7 @@ SELECT pg_catalog.setval ('active_survey_r_response_id_seq', 1, false);
 
 
 --
--- TOC entry 73 (OID 127481)
+-- TOC entry 73 (OID 132605)
 -- Name: active_survey_ans_answer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12179,7 +12179,7 @@ SELECT pg_catalog.setval ('active_survey_ans_answer_id_seq', 1, false);
 
 
 --
--- TOC entry 75 (OID 127500)
+-- TOC entry 75 (OID 132624)
 -- Name: active_survey_answer_ite_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12187,7 +12187,7 @@ SELECT pg_catalog.setval ('active_survey_answer_ite_id_seq', 1, false);
 
 
 --
--- TOC entry 77 (OID 127518)
+-- TOC entry 77 (OID 132642)
 -- Name: active_survey_answer_avg_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12195,7 +12195,7 @@ SELECT pg_catalog.setval ('active_survey_answer_avg_id_seq', 1, false);
 
 
 --
--- TOC entry 329 (OID 127534)
+-- TOC entry 329 (OID 132658)
 -- Name: field_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12203,7 +12203,7 @@ SELECT pg_catalog.setval ('field_types_id_seq', 18, true);
 
 
 --
--- TOC entry 330 (OID 127543)
+-- TOC entry 330 (OID 132667)
 -- Name: search_fields_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12211,7 +12211,7 @@ SELECT pg_catalog.setval ('search_fields_id_seq', 11, true);
 
 
 --
--- TOC entry 331 (OID 127553)
+-- TOC entry 331 (OID 132677)
 -- Name: message_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12219,7 +12219,7 @@ SELECT pg_catalog.setval ('message_id_seq', 1, false);
 
 
 --
--- TOC entry 332 (OID 127578)
+-- TOC entry 332 (OID 132702)
 -- Name: message_template_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12227,7 +12227,7 @@ SELECT pg_catalog.setval ('message_template_id_seq', 1, false);
 
 
 --
--- TOC entry 333 (OID 127652)
+-- TOC entry 333 (OID 132776)
 -- Name: help_module_module_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12235,7 +12235,7 @@ SELECT pg_catalog.setval ('help_module_module_id_seq', 1, false);
 
 
 --
--- TOC entry 334 (OID 127666)
+-- TOC entry 334 (OID 132790)
 -- Name: help_contents_help_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12243,7 +12243,7 @@ SELECT pg_catalog.setval ('help_contents_help_id_seq', 311, true);
 
 
 --
--- TOC entry 335 (OID 127707)
+-- TOC entry 335 (OID 132831)
 -- Name: help_tableof_contents_content_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12251,7 +12251,7 @@ SELECT pg_catalog.setval ('help_tableof_contents_content_id_seq', 97, true);
 
 
 --
--- TOC entry 336 (OID 127741)
+-- TOC entry 336 (OID 132865)
 -- Name: help_tableofcontentitem_links_link_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12259,7 +12259,7 @@ SELECT pg_catalog.setval ('help_tableofcontentitem_links_link_id_seq', 87, true)
 
 
 --
--- TOC entry 337 (OID 127767)
+-- TOC entry 337 (OID 132891)
 -- Name: lookup_help_features_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12267,7 +12267,7 @@ SELECT pg_catalog.setval ('lookup_help_features_code_seq', 1, false);
 
 
 --
--- TOC entry 338 (OID 127780)
+-- TOC entry 338 (OID 132904)
 -- Name: help_features_feature_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12275,7 +12275,7 @@ SELECT pg_catalog.setval ('help_features_feature_id_seq', 547, true);
 
 
 --
--- TOC entry 339 (OID 127814)
+-- TOC entry 339 (OID 132938)
 -- Name: help_related_links_relatedlink_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12283,7 +12283,7 @@ SELECT pg_catalog.setval ('help_related_links_relatedlink_id_seq', 1, false);
 
 
 --
--- TOC entry 340 (OID 127840)
+-- TOC entry 340 (OID 132964)
 -- Name: help_faqs_faq_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12291,7 +12291,7 @@ SELECT pg_catalog.setval ('help_faqs_faq_id_seq', 1, false);
 
 
 --
--- TOC entry 341 (OID 127869)
+-- TOC entry 341 (OID 132993)
 -- Name: help_business_rules_rule_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12299,7 +12299,7 @@ SELECT pg_catalog.setval ('help_business_rules_rule_id_seq', 5, true);
 
 
 --
--- TOC entry 342 (OID 127898)
+-- TOC entry 342 (OID 133022)
 -- Name: help_notes_note_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12307,7 +12307,7 @@ SELECT pg_catalog.setval ('help_notes_note_id_seq', 1, false);
 
 
 --
--- TOC entry 343 (OID 127927)
+-- TOC entry 343 (OID 133051)
 -- Name: help_tips_tip_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12315,7 +12315,7 @@ SELECT pg_catalog.setval ('help_tips_tip_id_seq', 2, true);
 
 
 --
--- TOC entry 344 (OID 127952)
+-- TOC entry 344 (OID 133076)
 -- Name: sync_client_client_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12323,7 +12323,7 @@ SELECT pg_catalog.setval ('sync_client_client_id_seq', 1, false);
 
 
 --
--- TOC entry 345 (OID 127961)
+-- TOC entry 345 (OID 133085)
 -- Name: sync_system_system_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12331,7 +12331,7 @@ SELECT pg_catalog.setval ('sync_system_system_id_seq', 5, true);
 
 
 --
--- TOC entry 346 (OID 127969)
+-- TOC entry 346 (OID 133093)
 -- Name: sync_table_table_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12339,7 +12339,7 @@ SELECT pg_catalog.setval ('sync_table_table_id_seq', 199, true);
 
 
 --
--- TOC entry 347 (OID 128010)
+-- TOC entry 347 (OID 133134)
 -- Name: sync_log_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12347,7 +12347,7 @@ SELECT pg_catalog.setval ('sync_log_log_id_seq', 1, false);
 
 
 --
--- TOC entry 79 (OID 128026)
+-- TOC entry 79 (OID 133150)
 -- Name: sync_transact_transaction_i_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12355,7 +12355,7 @@ SELECT pg_catalog.setval ('sync_transact_transaction_i_seq', 1, false);
 
 
 --
--- TOC entry 348 (OID 128040)
+-- TOC entry 348 (OID 133164)
 -- Name: process_log_process_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12363,7 +12363,7 @@ SELECT pg_catalog.setval ('process_log_process_id_seq', 1, false);
 
 
 --
--- TOC entry 349 (OID 128263)
+-- TOC entry 349 (OID 133387)
 -- Name: autoguide_make_make_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12371,7 +12371,7 @@ SELECT pg_catalog.setval ('autoguide_make_make_id_seq', 1, false);
 
 
 --
--- TOC entry 350 (OID 128272)
+-- TOC entry 350 (OID 133396)
 -- Name: autoguide_model_model_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12379,7 +12379,7 @@ SELECT pg_catalog.setval ('autoguide_model_model_id_seq', 1, false);
 
 
 --
--- TOC entry 81 (OID 128285)
+-- TOC entry 81 (OID 133409)
 -- Name: autoguide_vehicl_vehicle_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12387,7 +12387,7 @@ SELECT pg_catalog.setval ('autoguide_vehicl_vehicle_id_seq', 1, false);
 
 
 --
--- TOC entry 83 (OID 128302)
+-- TOC entry 83 (OID 133426)
 -- Name: autoguide_inve_inventory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12395,7 +12395,7 @@ SELECT pg_catalog.setval ('autoguide_inve_inventory_id_seq', 1, false);
 
 
 --
--- TOC entry 85 (OID 128321)
+-- TOC entry 85 (OID 133445)
 -- Name: autoguide_options_option_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12403,7 +12403,7 @@ SELECT pg_catalog.setval ('autoguide_options_option_id_seq', 30, true);
 
 
 --
--- TOC entry 351 (OID 128340)
+-- TOC entry 351 (OID 133464)
 -- Name: autoguide_ad_run_ad_run_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12411,7 +12411,7 @@ SELECT pg_catalog.setval ('autoguide_ad_run_ad_run_id_seq', 1, false);
 
 
 --
--- TOC entry 87 (OID 128355)
+-- TOC entry 87 (OID 133479)
 -- Name: autoguide_ad_run_types_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12419,7 +12419,7 @@ SELECT pg_catalog.setval ('autoguide_ad_run_types_code_seq', 3, true);
 
 
 --
--- TOC entry 352 (OID 128400)
+-- TOC entry 352 (OID 133524)
 -- Name: lookup_revenue_types_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12427,7 +12427,7 @@ SELECT pg_catalog.setval ('lookup_revenue_types_code_seq', 1, true);
 
 
 --
--- TOC entry 89 (OID 128410)
+-- TOC entry 89 (OID 133534)
 -- Name: lookup_revenuedetail_t_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12435,7 +12435,7 @@ SELECT pg_catalog.setval ('lookup_revenuedetail_t_code_seq', 1, false);
 
 
 --
--- TOC entry 353 (OID 128420)
+-- TOC entry 353 (OID 133544)
 -- Name: revenue_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12443,7 +12443,7 @@ SELECT pg_catalog.setval ('revenue_id_seq', 1, false);
 
 
 --
--- TOC entry 354 (OID 128453)
+-- TOC entry 354 (OID 133577)
 -- Name: revenue_detail_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12451,7 +12451,7 @@ SELECT pg_catalog.setval ('revenue_detail_id_seq', 1, false);
 
 
 --
--- TOC entry 355 (OID 128484)
+-- TOC entry 355 (OID 133608)
 -- Name: lookup_task_priority_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12459,7 +12459,7 @@ SELECT pg_catalog.setval ('lookup_task_priority_code_seq', 5, true);
 
 
 --
--- TOC entry 356 (OID 128494)
+-- TOC entry 356 (OID 133618)
 -- Name: lookup_task_loe_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12467,7 +12467,7 @@ SELECT pg_catalog.setval ('lookup_task_loe_code_seq', 5, true);
 
 
 --
--- TOC entry 357 (OID 128504)
+-- TOC entry 357 (OID 133628)
 -- Name: lookup_task_category_code_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12475,7 +12475,7 @@ SELECT pg_catalog.setval ('lookup_task_category_code_seq', 1, false);
 
 
 --
--- TOC entry 358 (OID 128514)
+-- TOC entry 358 (OID 133638)
 -- Name: task_task_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12483,7 +12483,7 @@ SELECT pg_catalog.setval ('task_task_id_seq', 1, false);
 
 
 --
--- TOC entry 91 (OID 128603)
+-- TOC entry 91 (OID 133727)
 -- Name: business_process_com_lb_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12491,7 +12491,7 @@ SELECT pg_catalog.setval ('business_process_com_lb_id_seq', 7, true);
 
 
 --
--- TOC entry 93 (OID 128614)
+-- TOC entry 93 (OID 133738)
 -- Name: business_process_comp_re_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12499,7 +12499,7 @@ SELECT pg_catalog.setval ('business_process_comp_re_id_seq', 3, true);
 
 
 --
--- TOC entry 95 (OID 128627)
+-- TOC entry 95 (OID 133751)
 -- Name: business_process_pa_lib_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12507,7 +12507,7 @@ SELECT pg_catalog.setval ('business_process_pa_lib_id_seq', 23, true);
 
 
 --
--- TOC entry 359 (OID 128638)
+-- TOC entry 359 (OID 133762)
 -- Name: business_process_process_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12515,7 +12515,7 @@ SELECT pg_catalog.setval ('business_process_process_id_seq', 2, true);
 
 
 --
--- TOC entry 97 (OID 128656)
+-- TOC entry 97 (OID 133780)
 -- Name: business_process_compone_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12523,7 +12523,7 @@ SELECT pg_catalog.setval ('business_process_compone_id_seq', 8, true);
 
 
 --
--- TOC entry 99 (OID 128676)
+-- TOC entry 99 (OID 133800)
 -- Name: business_process_param_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12531,7 +12531,7 @@ SELECT pg_catalog.setval ('business_process_param_id_seq', 1, false);
 
 
 --
--- TOC entry 101 (OID 128691)
+-- TOC entry 101 (OID 133815)
 -- Name: business_process_comp_pa_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12539,7 +12539,7 @@ SELECT pg_catalog.setval ('business_process_comp_pa_id_seq', 23, true);
 
 
 --
--- TOC entry 103 (OID 128710)
+-- TOC entry 103 (OID 133834)
 -- Name: business_process_e_event_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12547,7 +12547,7 @@ SELECT pg_catalog.setval ('business_process_e_event_id_seq', 1, false);
 
 
 --
--- TOC entry 105 (OID 128738)
+-- TOC entry 105 (OID 133862)
 -- Name: business_process_hl_hook_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12555,7 +12555,7 @@ SELECT pg_catalog.setval ('business_process_hl_hook_id_seq', 1, true);
 
 
 --
--- TOC entry 107 (OID 128750)
+-- TOC entry 107 (OID 133874)
 -- Name: business_process_ho_trig_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
@@ -12563,7 +12563,7 @@ SELECT pg_catalog.setval ('business_process_ho_trig_id_seq', 2, true);
 
 
 --
--- TOC entry 109 (OID 128762)
+-- TOC entry 109 (OID 133886)
 -- Name: business_process_ho_hook_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matt
 --
 
