@@ -19,6 +19,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Timeout" class="java.lang.String" scope="request"/>
 <jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
+<jsp:useBean id="countrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectTimeZone" %>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectLanguage" %>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectCurrency" %>
@@ -97,7 +98,7 @@ Configure System
         <a href="AdminConfig.do?command=Modify&param=WEBSERVER.URL">Edit</a>
       </td>
       <td>
-         Dark Horse CRM URL
+         Centric CRM URL
       </td>
       <td>
          <%= toHtml(getPref(getServletContext(), "WEBSERVER.URL")) %>
@@ -145,6 +146,17 @@ Configure System
       </td>
       <td>
          <%= HtmlSelectLanguage.getSelect("language", getPref(getServletContext(), "SYSTEM.LANGUAGE")).getValueFromId(getPref(getServletContext(), "SYSTEM.LANGUAGE")) %>
+      </td>
+    </tr>
+    <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
+      <td align="center">
+        <a href="AdminConfig.do?command=Modify&param=SYSTEM.COUNTRY">Edit</a>
+      </td>
+      <td>
+         Default country for system
+      </td>
+      <td>
+         <%= countrySelect.getValueFromId(getPref(getServletContext(), "SYSTEM.COUNTRY")) %>
       </td>
     </tr>
 </dhv:evaluate>
