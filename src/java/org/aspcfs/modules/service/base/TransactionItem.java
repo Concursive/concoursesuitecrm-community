@@ -392,6 +392,8 @@ public class TransactionItem {
         if (action == DELETE) {
           //Set the object's id to be deleted, based on the client guid
           this.setObjectId(db);
+          syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
+          syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
         }
 
         if (action == UPDATE) {
