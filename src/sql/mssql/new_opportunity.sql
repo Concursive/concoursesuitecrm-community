@@ -27,8 +27,8 @@ CREATE TABLE lookup_opportunity_types (
 CREATE TABLE opportunity_header (
   opp_id INT IDENTITY PRIMARY KEY,
   description VARCHAR(80),
-  acctlink INT default -1,
-  contactlink INT default -1,
+  acctlink INT REFERENCES organization(org_id),
+  contactlink INT REFERENCES contact(contact_id),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
