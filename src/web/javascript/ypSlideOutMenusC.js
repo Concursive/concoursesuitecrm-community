@@ -3,6 +3,7 @@
 * create menus for ns4, ns6, mozilla, opera, ie4, ie5 
 * modified to handle dynamic menus, but had to turn off
 * sliding effect, now appear under mouse
+* $Id$
 *****************************************************/
 ypSlideOutMenu.Registry = []
 ypSlideOutMenu.aniLen = 250
@@ -47,17 +48,6 @@ this.gRef = "ypSlideOutMenu_"+id
 eval(this.gRef+"=this")
 ypSlideOutMenu.Registry[id] = this
 var d = document
-// d.write('<style type="text/css">')
-// d.write('#' + this.id + 'Container { visibility:hidden; ')
-// d.write('left:' + left + 'px; ')
-// d.write('top:' + top + 'px; ')
-// d.write('overflow:hidden; }')
-// d.write('#' + this.id + 'Container, #' + this.id + 'Content { position:absolute; ')
-// d.write('width:' + width + 'px; ')
-// d.write('height:' + height + 'px; ')
-// d.write('clip:rect(0 ' + width + ' ' + height + ' 0); ')
-// d.write('}')
-// d.write('</style>')
 this.load()
 }
 }
@@ -104,8 +94,8 @@ ypSlideOutMenu.hideMenu = function(id)
 {
 var obj = ypSlideOutMenu.Registry[id]
 if (obj.container) {
+ypSlideOutMenu.hide(id)
 if (obj.hideTimer) window.clearTimeout(obj.hideTimer)
-obj.hideTimer = window.setTimeout("ypSlideOutMenu.hide('" + id + "')", ypSlideOutMenu.hideDelay);
 }
 }
 ypSlideOutMenu.hideAll = function()
