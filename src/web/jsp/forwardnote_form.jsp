@@ -13,6 +13,22 @@
     window.frames['server_commands'].location.href=url;
   }
   
+  function selectAllOptions(obj) {
+  var size = obj.options.length;
+  var i = 0;
+  
+  if (size == 0) {
+    alert ("You must have at least one item in this list.");
+    return false;
+  }
+  
+  for (i=0;i<size;i++) {
+    obj.options[i].selected = true;
+  }
+  
+  return true;
+}
+  
   function switchList(form, thisAction) {
     var index;
     var copyValue;
@@ -72,7 +88,7 @@
   }
 
 </script>
-<form name="ForwardForm" action="/ForwardNote.do?command=Forward&auto-populate=true" method=POST>
+<form name="ForwardForm" action="/ForwardNote.do?command=Forward&auto-populate=true" method=POST onsubmit="selectAllOptions(document.ForwardForm.selectedList)">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -109,7 +125,7 @@
 	    </td>
 	    
 	    <td width="33%" align="center"><font size="2">
-		<select size='10' name='selectedList' onChange="switchList(this.form, 'remove')">
+		<select multiple size='10' name='selectedList' onChange="switchList(this.form, 'remove')">
 		<option value="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
 		</select>
 		</font>
@@ -118,14 +134,7 @@
 	</table>
 	
     </td>
-    
-    <!--td>
-      <% if (request.getParameter("sentTo") == null) { %>
-      <%= UserList.getHtmlSelect("sentTo") %>
-      <%} else {%>
-      <%= UserList.getHtmlSelect("sentTo", Integer.parseInt(request.getParameter("sentTo"))) %>
-      <%}%>
-    </td-->
+
   </tr>
   
     <tr class="containerBody">

@@ -105,73 +105,79 @@ public final class ForwardNote extends CFSModule {
 	public String executeCommandForward(ActionContext context) {
 		Exception errorMessage = null;
 		boolean recordInserted = false;
-	
-		CFSNote thisNote = (CFSNote)context.getFormBean();
-		thisNote.setEnteredBy(getUserId(context));
-		thisNote.setModifiedBy(getUserId(context));
-		thisNote.setReplyId(getUserId(context));
-		thisNote.setType(CFSNote.CALL);
+		int k=0;
 		
 		UserList list = new UserList();
 		list.setEnabled(UserList.TRUE);
 		list.setBuildContact(false);
 		list.setBuildHierarchy(false);
 		list.setBuildPermissions(false);
-	
+		
+		CFSNote thisNote = (CFSNote)context.getFormBean();
+		thisNote.setEnteredBy(getUserId(context));
+		thisNote.setModifiedBy(getUserId(context));
+		thisNote.setReplyId(getUserId(context));
+		thisNote.setType(CFSNote.CALL);
+		
 		Connection db = null;
+		
 		try {
 			db = this.getConnection(context);
-			recordInserted = thisNote.insert(db);
-			context.getRequest().setAttribute("NoteDetails", thisNote);
 			list.buildList(db);
+			context.getRequest().setAttribute("NoteDetails", thisNote);
+		
+			String[] params = context.getRequest().getParameterValues("selectedList");
+			for (k=0; k<params.length; k++) {
+				thisNote.setSentTo(Integer.parseInt(params[k]));
+				recordInserted = thisNote.insert(db);
 	
-			if (!recordInserted) {
-				processErrors(context, thisNote.getErrors());
-			} else if (recordInserted && context.getRequest().getParameter("email1") != null) {
-				String replyAddr = ((UserBean)context.getSession().getAttribute("User")).getUserRecord().getContact().getEmailAddress("Business");
-				User tempUser = new User(db, thisNote.getSentTo());
-				tempUser.setBuildContact(true);
-				tempUser.buildResources(db);
+				if (!recordInserted) {
+					processErrors(context, thisNote.getErrors());
+				} else if (recordInserted && context.getRequest().getParameter("email1") != null) {
+					String replyAddr = ((UserBean)context.getSession().getAttribute("User")).getUserRecord().getContact().getEmailAddress("Business");
+					User tempUser = new User(db, thisNote.getSentTo());
+					tempUser.setBuildContact(true);
+					tempUser.buildResources(db);
 				
-				CFSNote tempNote = new CFSNote(db, thisNote.getId());
+					CFSNote tempNote = new CFSNote(db, thisNote.getId());
+					
+					SMTPMessage mail = new SMTPMessage();
+					mail.setHost("127.0.0.1");
 				
-				SMTPMessage mail = new SMTPMessage();
-				mail.setHost("127.0.0.1");
+					mail.setFrom("cfs-root@darkhorseventures.com");
 				
-				mail.setFrom("cfs-root@darkhorseventures.com");
+					mail.setType("text/html");
+					mail.setTo(tempUser.getContact().getEmailAddress("Business"));
 				
-				mail.setType("text/html");
-				mail.setTo(tempUser.getContact().getEmailAddress("Business"));
+					mail.setSubject(tempNote.getSubject());
+					mail.setBody("The following message was sent to your CFS Inbox by " + tempNote.getSentName() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + toHtml(tempNote.getBody()));
 				
-				mail.setSubject(tempNote.getSubject());
-				mail.setBody("The following message was sent to your CFS Inbox by " + tempNote.getSentName() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + toHtml(tempNote.getBody()));
-				
-				if (mail.send() == 2) {
-					System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
-					System.err.println(mail.getErrorMsg());
-				} else {
-					System.out.println("Sending message to " + tempUser.getContact().getEmailAddress("Business"));
+					if (mail.send() == 2) {
+						System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
+						System.err.println(mail.getErrorMsg());
+					} else {
+						System.out.println("Sending message to " + tempUser.getContact().getEmailAddress("Business"));
+					}
 				}
 			}
 				
-				
-		} catch (SQLException e) {
-			errorMessage = e;
-		} finally {
-			this.freeConnection(context, db);
-		}
-	
-		if (errorMessage == null) {
-			context.getRequest().setAttribute("UserList", list);
-		if (!recordInserted) {
-			return ("PopupOK");
-		} else {
-			return ("PopupCloseOK");
-		}
-		} else {
-			context.getRequest().setAttribute("Error", errorMessage);
-			return ("SystemError");
-		}
+			} catch (SQLException e) {
+				errorMessage = e;
+			} finally {
+				this.freeConnection(context, db);
+			}
+		
+			if (errorMessage == null) {
+				context.getRequest().setAttribute("UserList", list);
+			if (!recordInserted) {
+				return ("PopupOK");
+			} else {
+				return ("PopupCloseOK");
+			}
+			} else {
+				context.getRequest().setAttribute("Error", errorMessage);
+				return ("SystemError");
+			}
 	}
 	
 	  public static String toHtml(String s) {
