@@ -469,18 +469,26 @@ public class Notifier extends ReportBuilder {
           if (HTTPUtils.convertUrlToPostscriptFile(url, baseFilename) == 1) {
             continue;
           }
-          if (ImageUtils.convertPostscriptToTiffFile(baseFilename) == 1) {
+          if (ImageUtils.convertPostscriptToTiffG3File(baseFilename) == 1) {
             continue;
           }
           File psFile = new File(baseFilename + ".ps");
           psFile.delete();
           
+          //TODO: Create a wrapper class for HylaFax to simplify and reuse this
+          
+          //Info for log file which can be parsed later and queried against HylaFax
+          out.println("echo \"### SendFax Script, transcript in .log file\"");
+          out.println("echo \"# database:" + databaseName + "\"");
+          out.println("echo \"# campaignId:" + recordId + "\"");
+          out.println("echo \"# enteredBy:" + enteredBy + "\"");
+          out.println("echo \"# contactId:" + contactId + "\"");
           //Fax command -- only removes file if sendfax is successful
           out.println(
             "sendfax -n " +
             "-h " + (String) config.get("FaxServer") + " " +
             "-d " + faxNumber + " " + 
-            baseFilename + ".tiff " +
+            baseFilename + ".tiff > " + baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".log " + 
             "&& rm " + baseFilename + ".tiff ");
 
           //Track usage
@@ -507,7 +515,7 @@ public class Notifier extends ReportBuilder {
 
     try {
       java.lang.Process process = java.lang.Runtime.getRuntime().exec(
-        "/bin/sh " + baseDirectory + "cfsfax" + uniqueScript + ".sh");
+        "/bin/sh " + baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".sh");
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
