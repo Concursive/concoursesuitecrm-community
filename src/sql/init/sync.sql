@@ -31,8 +31,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'accountInventory', 'org.aspcfs.modules.media.autoguide.base.Inventory', 6);
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'inventoryOption', 'org.aspcfs.modules.media.autoguide.base
-.InventoryOption', 8);
+ VALUES (2, 'inventoryOption', 'org.aspcfs.modules.media.autoguide.base.InventoryOption', 8);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'adRun', 'org.aspcfs.modules.media.autoguide.base.AdRun', 10);
