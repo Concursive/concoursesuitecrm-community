@@ -56,7 +56,11 @@ public class OpportunityListScheduledActions extends OpportunityList implements 
       Iterator n = this.iterator();
       while (n.hasNext()) {
         Opportunity thisOpp = (Opportunity) n.next();
-        companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "", thisOpp.getDescription() + ": " + thisOpp.getAlertText(), "Opportunity", thisOpp.getId());
+        companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "",
+          thisOpp.getAccountName() + ": " +
+          thisOpp.getDescription()  + 
+          " (" + thisOpp.getAlertText() + ")", 
+          "Opportunity", thisOpp.getId());
       }
     } catch (SQLException e) {
      throw new SQLException("Error Building Opportunity Calendar Alerts");
