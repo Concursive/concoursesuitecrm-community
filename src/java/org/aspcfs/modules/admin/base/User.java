@@ -1556,22 +1556,6 @@ public void setRevenueLock(boolean revenueLock) {
 
 
   /**
-   *  Updates the current user record
-   *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
-   */
-  public int update(Connection db, ActionContext context) throws SQLException {
-    int i = -1;
-    i = this.update(db, context, false);
-    return i;
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
@@ -1929,8 +1913,9 @@ public void setRevenueLock(boolean revenueLock) {
         "SELECT * " +
         "FROM access " +
         "WHERE lower(username) = lower(?) " +
-        "AND enabled = " + DatabaseUtils.getTrue(db) + " ");
+        "AND enabled = ? ");
     pst.setString(1, getUsername());
+    pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       duplicate = true;
@@ -1981,6 +1966,24 @@ public void setRevenueLock(boolean revenueLock) {
     childUsers = new UserList(db, this, true);
   }
 
+  /**
+   *  Updates the current user record
+   *
+   *@param  db                Description of Parameter
+   *@param  context           Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   *@since                    1.1
+   */
+  public int update(Connection db, ActionContext context) throws SQLException {
+    int i = -1;
+    i = this.update(db, context, false);
+    return i;
+  }
+  
+  public int update(Connection db) throws SQLException {
+    return update(db, null, true);
+  }
 
   /**
    *  Updates the current user record, this method is used internally
@@ -1995,23 +1998,33 @@ public void setRevenueLock(boolean revenueLock) {
   private int update(Connection db, ActionContext context, boolean override) throws SQLException {
     int resultCount = 0;
     int defaultManager = -1;
-
-    if (!isValidNoPass(db, context)) {
+    if (context != null && !isValidNoPass(db, context)) {
       return -1;
     }
-
     if (this.getId() == -1) {
       throw new SQLException("User ID was not specified");
     }
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE access " +
-        "SET username = ?, manager_id = ?, role_id = ?, expires = ?, alias = ?  ");
+        "SET username = ?, manager_id = ?, role_id = ?, expires = ?, ");
     if (password1 != null) {
       sql.append("password = ?, ");
     }
+    if (enteredBy > -1) {
+      sql.append("enteredby = ?, ");
+    }
+    if (modifiedBy > -1) {
+      sql.append("modifiedby = ?, ");
+    }
+    if (contactId > -1) {
+      sql.append("contact_id = ?, ");
+    }
+    if (assistant > -1) {
+      sql.append("assistant = ?, ");
+    }
+    sql.append("alias = ? ");
     sql.append("WHERE user_id = ? ");
 
     int i = 0;
@@ -2022,23 +2035,29 @@ public void setRevenueLock(boolean revenueLock) {
     } else {
       pst.setInt(++i, this.getManagerId());
     }
-
     pst.setInt(++i, roleId);
-
     if (expires == null) {
       pst.setNull(++i, java.sql.Types.DATE);
     } else {
       pst.setDate(++i, this.getExpires());
     }
-
-    pst.setInt(++i, alias);
-
     if (password1 != null) {
       pst.setString(++i, encryptPassword(password1));
     }
-
+    if (enteredBy > -1) {
+      pst.setInt(++i, enteredBy);
+    }
+    if (modifiedBy > -1) {
+      pst.setInt(++i, modifiedBy);
+    }
+    if (contactId > -1) {
+      pst.setInt(++i, contactId);
+    }
+    if (assistant > -1) {
+      pst.setInt(++i, assistant);
+    }
+    pst.setInt(++i, alias);
     pst.setInt(++i, getId());
-
     resultCount = pst.executeUpdate();
     pst.close();
 

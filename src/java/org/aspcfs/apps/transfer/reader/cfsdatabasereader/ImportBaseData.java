@@ -56,9 +56,6 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       return false;
     }
     
-    
-    //TODO: update all user managers, update all user contact_ids
-
     //Copy Accounts
     logger.info("ImportBaseData-> Inserting accounts");
     writer.setAutoCommit(false);
@@ -151,7 +148,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     processOK = writer.commit();
     if (!processOK) {
       return false;
-    }    
+    }
     
     return true;
   }

@@ -48,6 +48,14 @@ public class ImportRoles implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    //Update the user records now that they all exist
+    UserList finalUserList = new UserList();
+    finalUserList.buildList(db);
+    processOK = mappings.saveList(writer, finalUserList, "update");
+    if (!processOK) {
+      return false;
+    }
+    
     return true;
   }
   
