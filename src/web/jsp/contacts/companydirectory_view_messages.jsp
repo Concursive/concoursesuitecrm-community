@@ -4,11 +4,13 @@
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Messages<br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -17,8 +19,9 @@ Messages<br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="messages" param="<%= param1 %>" />
+      <% String param1 = "id=" + contactDetails.getId(); 
+          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+      <dhv:container name="contacts" selected="messages" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>
   </tr>
   <tr>
@@ -37,6 +40,7 @@ Messages<br>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactMessageListInfo"/>
     </td>
+    <%= addHiddenParams(request, "popup|popupType|actionId") %>
     </form>
   </tr>
 </table>
@@ -46,11 +50,11 @@ Messages<br>
       <strong>Action</strong>
     </td>
     <td width="65%" nowrap>
-      <a href="ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%= ContactDetails.getId() %>"><strong>Name</strong></a>
+      <a href="ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong>Name</strong></a>
       <%= ContactMessageListInfo.getSortIcon("c.name") %>
     </td>  
     <td width="20%" nowrap>
-      <a href="ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %>"><strong>Run Date</strong></a>
+      <a href="ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong>Run Date</strong></a>
       <%= ContactMessageListInfo.getSortIcon("active_date") %>
     </td> 
     <td width="15%">
@@ -69,7 +73,7 @@ Messages<br>
       <%= (campaign.hasRun()?"&nbsp;":"<font color=\"#787878\">Cancel</font>") %>
     </td>
     <td class="row<%= rowid %>">
-      <a href="ExternalContacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%>"><%= toHtml(campaign.getMessageName()) %></a>
+      <a href="ExternalContacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(campaign.getMessageName()) %></a>
       <%= (("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))?" <font color=\"red\">(Cancelled)</font>":"") %>
     </td>
     <td valign="top" align="left" nowrap class="row<%= rowid %>">

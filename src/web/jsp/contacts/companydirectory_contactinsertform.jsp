@@ -59,23 +59,17 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<%
-  boolean popUp = false;
-  if(request.getParameter("popup")!=null){
-    popUp = true;
-  }
-%>
-  <form name="addContact" action="ExternalContacts.do?command=Save&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
-  <dhv:evaluate exp="<%= !popUp %>">
+  <form name="addContact" action="ExternalContacts.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+  <dhv:evaluate exp="<%= !isPopup(request)  || isInLinePopup(request) %>">
   <a href="ExternalContacts.do">General Contacts</a> > 
     Add Contact<br>
     <hr color="#BFBFBB" noshade>
   </dhv:evaluate>
   <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-  <dhv:evaluate exp="<%= !popUp %>">
+  <dhv:evaluate exp="<%= !isPopup(request) %>">
   <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   </dhv:evaluate>
-  <input type="submit" value="Cancel" onClick="<%= popUp ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';" %>">
+  <input type="submit" value="Cancel" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';" %>">
 <input type=reset value="Reset">
 <br>
 <%= showError(request, "actionError") %>
@@ -194,21 +188,20 @@
     </td>
   </tr>
 </table>
-&nbsp;<br>  
-
+&nbsp;<br>
 <%--  include basic contact form --%>
-<%@ include file="../contacts/contact_form.jsp" %>
-
+<%@ include file="contact_form.jsp" %>
 <br>
   <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-  <dhv:evaluate exp="<%= !popUp %>">
+  <dhv:evaluate exp="<%= !isPopup(request) %>">
   <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   <input type="hidden" name="saveAndNew" value="">
   <input type="hidden" name="dosubmit" value="true">
   </dhv:evaluate>
-  <input type="submit" value="Cancel" onClick="<%= popUp ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';" %>">
+  <input type="submit" value="Cancel" onClick="<%= (isPopup(request)  && !isInLinePopup(request)) ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';" %>">
   <input type="hidden" name="dosubmit" value="true">
   <input type="reset" value="Reset">
 <input type="hidden" name="source" value="<%= toHtmlValue(request.getParameter("source")) %>">
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
 </form>
 </body>

@@ -7,11 +7,13 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
+<dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 List of Folder Records<br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -20,8 +22,9 @@ List of Folder Records<br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="folders" param="<%= param1 %>" />
+      <% String param1 = "id=" + contactDetails.getId(); 
+          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+      <dhv:container name="contacts" selected="folders" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>
   </tr>
   <tr>
@@ -34,7 +37,7 @@ List of Folder Records<br>
     &nbsp;<br>
     This folder can have multiple records...<br>
     &nbsp;<br>
-    <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="contacts-external_contacts-folders-add"><a href="ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
+    <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="contacts-external_contacts-folders-add"><a href="ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %><%= addLinkParams(request, "popup|popupType|actionId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr class="title">
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
@@ -69,12 +72,12 @@ List of Folder Records<br>
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="contacts-external_contacts-folders-edit"><a href="ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-folders-delete"><a href="javascript:confirmDelete('ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
+          <dhv:permission name="contacts-external_contacts-folders-edit"><a href="ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-folders-delete"><a href="javascript:confirmDelete('ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');">Del</a></dhv:permission>
           </td>
         </dhv:permission>
         </dhv:evaluate>
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
-          <a href="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData() != null ? thisRecord.getFieldData().getValueHtml(false) : "&nbsp;" %></a>
+          <a href="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= thisRecord.getFieldData() != null ? thisRecord.getFieldData().getValueHtml(false) : "&nbsp;" %></a>
         </td>
         <td nowrap class="row<%= rowid %>">
           <%= toHtml(thisRecord.getEnteredString()) %>
@@ -107,4 +110,5 @@ List of Folder Records<br>
   </table>
 </td></tr>
 </table>
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
 </form>

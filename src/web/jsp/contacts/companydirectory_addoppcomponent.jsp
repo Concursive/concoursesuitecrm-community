@@ -53,6 +53,7 @@
   }
 </script>
 <form name="opportunityForm" action="ExternalContactsOppComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
@@ -60,6 +61,7 @@
 <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
 Add Component<br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -93,10 +95,12 @@ Add Component<br>
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="headerId" value="<%= OpportunityHeader.getId() %>">
+<input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
 <%-- End container contents --%>
     </td>
   </tr>
 </table>
 <%-- End container --%>
+
 </form>
 </body>

@@ -7,6 +7,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
+<dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
@@ -25,6 +26,7 @@ Folder Record Details
 
 <br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -49,7 +51,7 @@ Folder Record Details
 <% } %>
 <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
 <dhv:permission name="contacts-external_contacts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
 <br>&nbsp;<br>
 </dhv:permission>
@@ -120,8 +122,9 @@ Folder Record Details
 <br>
 <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
 <dhv:permission name="contacts-external_contacts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
 </dhv:evaluate>
 </td></tr>
 </table>
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
 </form>

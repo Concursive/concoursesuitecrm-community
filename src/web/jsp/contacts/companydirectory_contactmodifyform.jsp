@@ -77,6 +77,7 @@
   }
 %> 
   <form name="addContact" action="ExternalContacts.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+  <dhv:evaluate exp="<%= !popUp %>">
   <a href="ExternalContacts.do">General Contacts</a> > 
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
@@ -88,6 +89,7 @@
   <%}%>
   Modify Contact<br>
   <hr color="#BFBFBB" noshade>
+  </dhv:evaluate>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -96,8 +98,9 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="details" param="<%= param1 %>" />
+      <% String param1 = "id=" + contactDetails.getId(); 
+          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+      <dhv:container name="contacts" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>
   </tr>
   <tr>
@@ -240,11 +243,9 @@
     </td>
   </tr>
 </table>
-&nbsp;<br>  
-
+&nbsp;<br>
 <%--  include basic contact form --%>
 <%@ include file="../contacts/contact_form.jsp" %>
-
 <br>
   <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
   <% if (request.getParameter("return") != null) {%>
@@ -265,7 +266,7 @@
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="primaryContact" value="<%= ContactDetails.getPrimaryContact() %>">
 <% if (request.getParameter("return") != null) {%>
-<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 <% } %>
 </form>
 </body>	

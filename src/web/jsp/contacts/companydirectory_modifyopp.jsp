@@ -4,6 +4,7 @@
 <jsp:useBean id="headerDetails" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="modifyOpp" action="ExternalContactsOpps.do?command=UpdateOpp&contactId=<%= contactDetails.getId() %>&auto-populate=true" method="post">
+<dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= contactDetails.getId() %>">Contact Details</a> >
@@ -17,6 +18,7 @@
 <%}%>
 Modify Opportunity<br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -25,8 +27,9 @@ Modify Opportunity<br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + contactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" />
+      <% String param1 = "id=" + contactDetails.getId(); 
+          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+      <dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>
   </tr>
   <tr>
@@ -73,6 +76,7 @@ Modify Opportunity<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="hidden" name="dosubmit" value="true">
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
   </td>
   </tr>
   </table>

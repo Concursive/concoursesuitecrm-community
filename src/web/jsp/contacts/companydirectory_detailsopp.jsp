@@ -6,12 +6,14 @@
 <jsp:useBean id="ComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= contactDetails.getId() %>">Contact Details</a> >
 <a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>">Opportunities</a> >
 Opportunity Details<br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -20,15 +22,16 @@ Opportunity Details<br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + contactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" />
+      <% String param1 = "id=" + contactDetails.getId(); 
+          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+      <dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
 <form name="oppdet" action="ExternalContactsOpps.do?command=ModifyOpp&id=<%= headerDetails.getId() %>&orgId=<%= headerDetails.getAccountLink() %>&contactId=<%= headerDetails.getContactLink() %>" method="post">
 <dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= headerDetails.getContactLink() %>';submit();"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= contactDetails.getId() %>&headerId=<%= headerDetails.getId() %>&popup=true','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= contactDetails.getId() %>&headerId=<%= headerDetails.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=Prepare&headerId=<%= headerDetails.getId() %>&contactId=<%= headerDetails.getContactLink() %>';submit();"></dhv:permission>
 <br>&nbsp;
@@ -57,6 +60,8 @@ Opportunity Details<br>
     </td>
   </tr>    
 </table>
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
+<input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
 </form>
 <br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ComponentListInfo"/>
@@ -68,23 +73,23 @@ Opportunity Details<br>
     </td>
     </dhv:permission>
     <td nowrap>
-      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.description">Component</a></strong>
+      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.description<%= addLinkParams(request, "popup|popupType|actionId") %>">Component</a></strong>
       <%= ComponentListInfo.getSortIcon("oc.description") %>
     </td>
     <td nowrap>
-      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.closed">Status</a></strong>
+      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.closed<%= addLinkParams(request, "popup|popupType|actionId") %>">Status</a></strong>
       <%= ComponentListInfo.getSortIcon("oc.closed") %>
     </td>
     <td nowrap>
-      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.guessvalue">Guess Amount</a></strong>
+      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.guessvalue<%= addLinkParams(request, "popup|popupType|actionId") %>">Guess Amount</a></strong>
       <%= ComponentListInfo.getSortIcon("oc.guessvalue") %>
     </td>
     <td nowrap>
-      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.closedate">Close Date</a></strong>
+      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.closedate<%= addLinkParams(request, "popup|popupType|actionId") %>">Close Date</a></strong>
       <%= ComponentListInfo.getSortIcon("oc.closedate") %>
     </td>
     <td nowrap>
-      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=stagename">Current Stage</a></strong>
+      <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=stagename<%= addLinkParams(request, "popup|popupType|actionId") %>">Current Stage</a></strong>
       <%= ComponentListInfo.getSortIcon("stagename") %>
     </td>  
   </tr>
@@ -99,11 +104,11 @@ Opportunity Details<br>
   <tr class="containerBody">
     <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
     <td width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOppComponents.do?command=ModifyComponent&headerId=<%= oppComponent.getHeaderId() %>&id=<%= oppComponent.getId() %>&contactId=<%= contactDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= contactDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOppComponents.do?command=ModifyComponent&headerId=<%= oppComponent.getHeaderId() %>&id=<%= oppComponent.getId() %>&contactId=<%= contactDetails.getId() %>&return=list&actionSource=ExternalContactsOppComponents<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= contactDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
     <td width="100%" valign="top" class="row<%= rowid %>">
-      <a href="ExternalContactsOppComponents.do?command=DetailsComponent&contactId=<%= contactDetails.getId() %>&id=<%= oppComponent.getId() %>">
+      <a href="ExternalContactsOppComponents.do?command=DetailsComponent&contactId=<%= contactDetails.getId() %>&id=<%= oppComponent.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
       <%= toHtml(oppComponent.getDescription()) %></a>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">

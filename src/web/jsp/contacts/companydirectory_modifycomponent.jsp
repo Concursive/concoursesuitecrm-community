@@ -51,13 +51,8 @@ function checkForm(form) {
   }
 }
 </SCRIPT>
-<%
-    boolean popUp = false;
-   if(request.getParameter("popup")!=null){
-     popUp = true;
-   }
-%>
 <form name="opportunityForm" action="ExternalContactsOppComponents.do?command=SaveComponent&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
@@ -72,6 +67,7 @@ function checkForm(form) {
 <%}%>
 Modify Component<br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -80,8 +76,9 @@ Modify Component<br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" />
+      <% String param1 = "id=" + contactDetails.getId(); 
+          String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+      <dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" appendToUrl="<%= param2 %>"/>
     </td>
   </tr>
   <tr>
@@ -94,14 +91,9 @@ Modify Component<br>
  <% }else{ %>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
  <% } %>
-<input type="hidden" name="id" value="<%= ComponentDetails.getId() %>">
-<input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
-<input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
-<dhv:evaluate if="<%= request.getParameter("return") != null %>">
-  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
-</dhv:evaluate>
+
   <input type="reset" value="Reset">
-<dhv:evaluate exp="<%= popUp %>">
+<dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
 <br>
@@ -122,16 +114,24 @@ Modify Component<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
-<dhv:evaluate exp="<%= popUp %>">
+<dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
 <input type="hidden" name="dosubmit" value="true">
 <%-- End container contents --%>
-<dhv:evaluate if="<%= !popUp %>">
+<dhv:evaluate exp="<%= !isPopup(request)  || isInLinePopup(request) %>">
     </td>
   </tr>
 </table>
 </dhv:evaluate>
 <%-- End container --%>
+<input type="hidden" name="id" value="<%= ComponentDetails.getId() %>">
+<input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
+<input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
+<input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
+<dhv:evaluate if="<%= request.getParameter("return") != null %>">
+  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
+</dhv:evaluate>
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
 </form>
 
