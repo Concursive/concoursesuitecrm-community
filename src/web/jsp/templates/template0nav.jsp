@@ -104,7 +104,7 @@
 <br>
 <center><%= request.getAttribute("MainMenuSmall") %></center>
 <br>
-<center>(C) 2000-2002 Dark Horse Ventures</center>
+<center>(C) 2000-2003 Dark Horse Ventures</center>
 </body>
 
 </html>
