@@ -65,73 +65,53 @@ public class PagedListStatusHandler extends TagSupport {
 
       if (pagedListInfo != null) {
         JspWriter out = this.pageContext.getOut();
-        //out.write("<SCRIPT LANGUAGE=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"/javascript/pageListInfo.js\"></SCRIPT>");
         
+        //Draw the header of the PagedList table
         out.write("<table align=\"center\" width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\">");
         out.write("<tr>");
-        
-        out.write("<td width=\"50%\" rowspan=\"2\" valign=\"top\" " +
+        //Display the title
+        out.write("<td width=\"50%\" valign=\"bottom\" " +
             "align=\"left\"" +
             ((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
             ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
             ">");
-            
-        out.write("<font size=\"-1\">" + title + "</font>");
+        out.write(title);
+        
+        //Display expansion link
+        if (showExpandLink) {
+          out.write(" (" +pagedListInfo.getExpandLink("Show more", "Return to multiple list") + ")");
+        }
         out.write("</td>");
         
-        out.write("<td>");
-        
-        out.write("<table align=\"right\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
-        out.write("<tr>");
-        
-        out.write("<td colspan=\"2\" valign=\"top\" " +
-            "align=\"right\"" +
-            ((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
-            ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
-            ">");
+        //The status cell on the right
+        out.write("<td valign=\"top\" align=\"right\">");
         out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
         out.write("<input type=\"hidden\" name=\"pagedListInfoId\" value=\"" + object + "\">");
-
-        out.write("Displaying records " + (pagedListInfo.getCurrentOffset()+1) + " to ");
-        if ((pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()) < pagedListInfo.getMaxRecords()) {
-          out.write(""+(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));
-        } else {
-        out.write(""+pagedListInfo.getMaxRecords());
-        }
         
-        out.write(" of " + pagedListInfo.getMaxRecords() + " total");
-        out.write("</td></tr>");
-        
-        out.write("<tr>");
-        
-        out.write("</td>");
-        
-        
-        out.write("<td valign=\"center\" ");
-        out.write("align=\"right\"");
-        out.write(((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
-            ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
-            ">");
-        
+        //Display next/previous buttons
         if (pagedListInfo.getExpandedSelection() || !showExpandLink) {
-            out.write("[" +
-                pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
-                "|" +
-                pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
-                "] ");          
-        } else {
-          out.write("&nbsp;");
+          out.write(" [" +
+            pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
+            "|" +
+            pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
+            "] ");
+          out.write("<br>");
         }
         
-        if (showExpandLink) {
-            //out.write(pagedListInfo.getExpandLink("<font class='underline'>Expand</font>", "Expand", "<font class='underline'>Collapse</font>"));
-            out.write(pagedListInfo.getExpandLink("<img border=0 src=\"images/green-1.gif\">", "Expand", "<img border=0 src=\"images/red-1.gif\">"));
-        }        
+        //Display record count
+        if (pagedListInfo.getMaxRecords() > 0) {
+          out.write("Records " + (pagedListInfo.getCurrentOffset()+1) + " to ");
+          if ((pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()) < pagedListInfo.getMaxRecords()) {
+            out.write(""+(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));
+          } else {
+            out.write(""+pagedListInfo.getMaxRecords());
+          }
+          out.write(" of " + pagedListInfo.getMaxRecords() + " total");
+        } else {
+          out.write("No records to display");
+        }
         
-        
-        out.write("</tr>");
-        out.write("</table>");
-        
+        //Close the cell
         out.write("</td></tr>");
         out.write("</table>");
       } else {

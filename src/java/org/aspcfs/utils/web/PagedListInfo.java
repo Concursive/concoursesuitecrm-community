@@ -24,12 +24,12 @@ import java.util.Iterator;
  */
 public class PagedListInfo {
   public final String[] lettersArray = {"0", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-
+  public static final int DEFAULT_ITEMS_PER_PAGE = 10;
   String link = "";
   String id = null;
   String columnToSortBy = null;
   String sortOrder = null;
-  int itemsPerPage = 10;
+  int itemsPerPage = DEFAULT_ITEMS_PER_PAGE;
   int maxRecords = 0;
   String currentLetter = "";
   int currentOffset = 0;
@@ -114,7 +114,7 @@ public class PagedListInfo {
   }
   public void setExpandedSelection(boolean expandedSelection) {
     this.expandedSelection = expandedSelection;
-    this.setItemsPerPage(10);
+    this.setItemsPerPage(DEFAULT_ITEMS_PER_PAGE);
   }
 
   /**
@@ -847,6 +847,14 @@ public class PagedListInfo {
       return linkOff;
     } else {
       return "<a href='" + link + "&resetList=true&pagedListInfoId=" + this.getId() + "'>" + collapseLink + "</a>";
+    }
+  }
+  
+  public String getExpandLink(String expandLink, String collapseLink) {
+    if (!expandedSelection) {
+      return "<a href=\"" + link + "&pagedListInfoId=" + this.getId() + "&pagedListSectionId=" + this.getId() + "\">" + expandLink + "</a>";
+    } else {
+      return "<a href=\"" + link + "&resetList=true&pagedListInfoId=" + this.getId() + "\">" + collapseLink + "</a>";
     }
   }
 
