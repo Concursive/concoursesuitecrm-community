@@ -1,0 +1,18 @@
+Work flow management uses:
+
+    * Document management
+    * Content Management
+    * Order processing and management
+    * Customer Relationship Management (CRM)
+    * Telecom Operations System Support
+    * Software Defect Tracking and problem management
+    * Procurement
+    * Business to Business (B2B) coordination
+    * Supply chain management
+    * Electronic commerce
+    * Insurance claims processing
+    * Software development process automation
+    * Project Management
+    * Expense Approval
+    * Trouble ticketing
+    * Sales force automation 
