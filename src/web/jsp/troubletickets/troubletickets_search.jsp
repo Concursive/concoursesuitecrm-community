@@ -1,8 +1,8 @@
-<jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
-<jsp:useBean id="PriorityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="SeverityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="TicketTypeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SeverityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="TicketTypeSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].searchcodeId.focus();">
 <form name="searchTicket" action="/TroubleTickets.do?command=SearchTickets&auto-populate=true" method="post">
 <a href="/TroubleTickets.do">Tickets</a> > 

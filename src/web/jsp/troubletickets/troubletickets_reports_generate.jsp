@@ -1,4 +1,4 @@
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/reportSelect.js"></script>
 <script language="JavaScript">
 	function checkForm(form) {
