@@ -45,8 +45,9 @@ public class PagedListInfo {
   //specifically for modules using the contactsList
   String parentFieldType = "";
   String parentFormName = "";
-
-
+  
+  boolean expandedSelection = false;
+  
   /**
    *  Constructor for the PagedListInfo object
    *
@@ -108,6 +109,13 @@ public class PagedListInfo {
     this.resetList = resetList;
   }
 
+  public boolean getExpandedSelection() {
+    return expandedSelection;
+  }
+  public void setExpandedSelection(boolean expandedSelection) {
+    this.expandedSelection = expandedSelection;
+    this.setItemsPerPage(10);
+  }
 
   /**
    *  Sets the ItemsPerPage attribute of the PagedListInfo object
@@ -152,7 +160,6 @@ public class PagedListInfo {
   public void setParentFieldType(String parentFieldType) {
     this.parentFieldType = parentFieldType;
   }
-
 
   /**
    *  Gets the id attribute of the PagedListInfo object
@@ -610,6 +617,10 @@ public class PagedListInfo {
    */
   public String getListPropertiesHeader(String id) {
     if (showForm) {
+      if (expandedSelection) {
+        link += "&pagedListSectionId=" + id;
+      }
+      
       return ("<form name=\"" + id + "\" action=\"" + link + "\" method=\"post\">");
     } else {
       return "";
@@ -747,13 +758,25 @@ public class PagedListInfo {
    *@since           1.8
    */
   public String getPreviousPageLink(String linkOn, String linkOff) {
+    
+    StringBuffer result = new StringBuffer();
+    
     if (currentOffset > 0) {
       int newOffset = currentOffset - itemsPerPage;
 
       if (!getEnableJavaScript()) {
-        return "<a href='" + link + "&pagedListInfoId=" + this.getId() + "&offset=" + (newOffset > 0 ? newOffset : 0) + "'>" + linkOn + "</a>";
+        result.append("<a href='" + link + "&pagedListInfoId=" + this.getId());
+        
+        if (getExpandedSelection()) {
+          result.append("&pagedListSectionId=" + this.getId());
+        }        
+        
+        result.append("&offset=" + (newOffset > 0 ? newOffset : 0) + "'>" + linkOn + "</a>");
+        
+        return result.toString();
       } else {
-        return "<a href=\"javascript:offsetsubmit('" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>";
+        result.append("<a href=\"javascript:offsetsubmit('" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>");
+        return result.toString();
       }
     } else {
       return linkOff;
@@ -794,14 +817,36 @@ public class PagedListInfo {
    *@since           1.8
    */
   public String getNextPageLink(String linkOn, String linkOff) {
+    
+    StringBuffer result = new StringBuffer();
+    
     if ((currentOffset + itemsPerPage) < maxRecords) {
       if (!getEnableJavaScript()) {
-        return "<a href='" + link + "&pagedListInfoId=" + this.getId() + "&offset=" + (currentOffset + itemsPerPage) + "'>" + linkOn + "</a>";
+        result.append("<a href='" + link + "&pagedListInfoId=" + this.getId());
+        
+        if (getExpandedSelection()) {
+          result.append("&pagedListSectionId=" + this.getId());
+        }
+        
+        result.append("&offset=" + (currentOffset + itemsPerPage) + "'>" + linkOn + "</a>");
+        
+        return result.toString();
       } else {
-        return "<a href=\"javascript:offsetsubmit('" + (currentOffset + itemsPerPage) + "');\">" + linkOn + "</a>";
+        result.append("<a href=\"javascript:offsetsubmit('" + (currentOffset + itemsPerPage) + "');\">" + linkOn + "</a>");
+        return result.toString();
       }
     } else {
       return linkOff;
+    }
+  }
+  
+  public String getExpandLink(String linkOn, String linkOff, String collapseLink) {
+    if ((currentOffset + itemsPerPage) < maxRecords && !expandedSelection) {
+      return "<a href='" + link + "&pagedListInfoId=" + this.getId() + "&pagedListSectionId=" + this.getId() + "'>" + linkOn + "</a>";
+    } else if ((currentOffset + itemsPerPage) >= maxRecords && !expandedSelection) {
+      return linkOff;
+    } else {
+      return "<a href='" + link + "&resetList=true&pagedListInfoId=" + this.getId() + "'>" + collapseLink + "</a>";
     }
   }
 
