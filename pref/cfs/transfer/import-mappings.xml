@@ -46,7 +46,7 @@
     </map>
     <map class="org.aspcfs.modules.contacts.base.Contact" id="contact">
       <property alias="guid">id</property>
-      <property>orgId</property>
+      <property lookup="account">orgId</property>
       <property>title</property>
       <property>department</property>
       <property>company</property>
@@ -88,7 +88,7 @@
       <property>revenue</property>
       <property>ticker</property>
       <property>accountNumber</property>
-      <property lookup="user">owner</property>
+      <property>owner</property>
       <property>entered</property>
       <property>modified</property>
     </map>
