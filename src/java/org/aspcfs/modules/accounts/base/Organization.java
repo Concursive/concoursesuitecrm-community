@@ -8,6 +8,7 @@ import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.zeroio.iteam.base.FileItemList;
 
 /**
  *@author     chris
@@ -1279,37 +1280,62 @@ public class Organization extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  public boolean delete(Connection db) throws SQLException {
+  public boolean delete(Connection db, String baseFilePath) throws SQLException {
     if (this.getOrgId() == -1) {
       throw new SQLException("Organization ID not specified.");
     }
 
     Statement st = db.createStatement();
 
-    if (hasRelatedRecords(db)) {
-      errors.put("actionError", "Contact disabled from view, since it has a related user account");
-      st.executeUpdate(
-          "UPDATE organization " +
-          "SET enabled = false " +
-          "WHERE org_id = " + this.getOrgId());
+    try {
+      db.setAutoCommit(false);
+      
+      ContactList contactList = new ContactList();
+      contactList.setOrgId(this.getOrgId());
+      contactList.buildList(db);
+      contactList.delete(db);
+      contactList = null;
+      
+      OpportunityList opportunityList = new OpportunityList();
+      opportunityList.setOrgId(this.getOrgId());
+      opportunityList.buildList(db);
+      opportunityList.delete(db);
+      opportunityList = null;
+      
+      TicketList ticketList = new TicketList();
+      ticketList.setOrgId(this.getOrgId());
+      ticketList.buildList(db);
+      ticketList.delete(db);
+      ticketList = null;
+      
+      FileItemList fileList = new FileItemList();
+      fileList.setLinkModuleId(Constants.ACCOUNTS);
+      fileList.setLinkItemId(this.getOrgId());
+      fileList.buildList(db);
+      fileList.delete(db, baseFilePath);
+      fileList = null;
+      
+      CustomFieldRecordList folderList = new CustomFieldRecordList();
+      folderList.setLinkModuleId(Constants.ACCOUNTS);
+      folderList.setLinkItemId(this.getOrgId());
+      folderList.buildList(db);
+      folderList.delete(db);
+      folderList = null;
+      
+      st.executeUpdate("DELETE FROM organization_phone WHERE org_id = " + this.getOrgId());
+      st.executeUpdate("DELETE FROM organization_emailaddress WHERE org_id = " + this.getOrgId());
+      st.executeUpdate("DELETE FROM organization_address WHERE org_id = " + this.getOrgId());
+      st.executeUpdate("DELETE FROM organization WHERE org_id = " + this.getOrgId());
+      
+      db.commit();
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+      db.rollback();
+    } finally {
+      db.setAutoCommit(true);
       st.close();
-      return true;
-    } else {
-      try {
-        db.setAutoCommit(false);
-        st.executeUpdate("DELETE FROM organization_phone WHERE org_id = " + this.getOrgId());
-        st.executeUpdate("DELETE FROM organization_emailaddress WHERE org_id = " + this.getOrgId());
-        st.executeUpdate("DELETE FROM organization_address WHERE org_id = " + this.getOrgId());
-        st.executeUpdate("DELETE FROM organization WHERE org_id = " + this.getOrgId());
-        db.commit();
-      } catch (SQLException e) {
-        db.rollback();
-      } finally {
-        db.setAutoCommit(true);
-        st.close();
-      }
-      return true;
     }
+    return true;
   }
 
 

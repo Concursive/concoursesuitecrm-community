@@ -71,16 +71,14 @@ public class CustomFieldRecordList extends Vector {
         "SELECT * " +
         "FROM custom_field_record cfr " +
         "WHERE cfr.link_module_id = " + linkModuleId + " " +
-        "AND cfr.link_item_id = " + linkItemId + " " +
-        "AND cfr.category_id = " + categoryId + " ");
-
+        "AND cfr.link_item_id = " + linkItemId + " ");
+        
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
         "FROM custom_field_record cfr " +
         "WHERE cfr.module_id = " + linkModuleId + " " +
-        "AND cfr.item_id = " + linkItemId + " " +
-        "AND cfr.category_id = " + categoryId + " ");
+        "AND cfr.item_id = " + linkItemId + " ");
 
     createFilter(sqlFilter);
 
@@ -138,12 +136,29 @@ public class CustomFieldRecordList extends Vector {
     } else if (includeEnabled == FALSE) {
       sqlFilter.append("AND cfr.enabled = false ");
     }
+    
+    if (categoryId > -1) {
+      sqlFilter.append("AND cfr.category_id = ? ");
+    }
   }
 
 
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    
+    if (categoryId > -1) {
+      pst.setInt(++i, categoryId);
+    }
+    
     return i;
+  }
+  
+  public void delete(Connection db) throws SQLException {
+    Iterator customRecords = this.iterator();
+    while (customRecords.hasNext()) {
+      CustomFieldRecord thisRecord = (CustomFieldRecord)customRecords.next();
+      thisRecord.delete(db);
+    }
   }
 }
 

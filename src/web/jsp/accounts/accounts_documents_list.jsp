@@ -77,7 +77,7 @@
   </table>
 <%} else {%>
     <tr class="containerBody">
-      <td colspan="6" valign="center">
+      <td colspan="7" valign="center">
         No documents found.
       </td>
     </tr>

@@ -53,7 +53,7 @@ public final class CampaignManagerGroup extends CFSModule {
 
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
+      submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "ManageGroups";
@@ -93,12 +93,12 @@ public final class CampaignManagerGroup extends CFSModule {
     // building the search field and operator lists
     try {
       db = this.getConnection(context);
-      
-      		ContactTypeList typeList = new ContactTypeList(db);
-		LookupList ctl = typeList.getLookupList("typeId",0);
-		ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
-		context.getRequest().setAttribute("ContactTypeList", ctl);
-	
+
+      ContactTypeList typeList = new ContactTypeList(db);
+      LookupList ctl = typeList.getLookupList("typeId", 0);
+      ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
+      context.getRequest().setAttribute("ContactTypeList", ctl);
+
       searchFieldList.buildFieldList(db);
       stringOperatorList.buildOperatorList(db, 0);
       dateOperatorList.buildOperatorList(db, 1);
@@ -116,7 +116,7 @@ public final class CampaignManagerGroup extends CFSModule {
 
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
+      submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "ManageGroups";
@@ -125,7 +125,7 @@ public final class CampaignManagerGroup extends CFSModule {
     addModuleBean(context, submenu, "Build New Group");
 
     if (errorMessage == null) {
-      
+
       context.getRequest().setAttribute("SearchFieldList", searchFieldList);
       context.getRequest().setAttribute("StringOperatorList", stringOperatorList);
       context.getRequest().setAttribute("DateOperatorList", dateOperatorList);
@@ -192,7 +192,7 @@ public final class CampaignManagerGroup extends CFSModule {
     boolean recordInserted = false;
 
     //SearchFormBean thisSearchForm = (SearchFormBean)context.getRequest().getAttribute("SearchForm");
-    SearchFormBean thisSearchForm = (SearchFormBean)context.getFormBean();
+    SearchFormBean thisSearchForm = (SearchFormBean) context.getFormBean();
     SearchCriteriaList thisSCL = thisSearchForm.getSearchCriteriaList();
 
     try {
@@ -202,25 +202,25 @@ public final class CampaignManagerGroup extends CFSModule {
       thisSCL.setModifiedBy(getUserId(context));
       thisSCL.setOwner(getUserId(context));
       recordInserted = thisSCL.insert(db);
-      
-	if (!recordInserted) {
-		processErrors(context, thisSCL.getErrors());
-	} else {
-      
-	      context.getRequest().setAttribute("id", "" + thisSCL.getId());
-	      
-	      context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
-	      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
-	      pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
-	
-	      ContactList contacts = new ContactList();
-	      contacts.setScl(thisSCL);
-	      contacts.setPagedListInfo(pagedListInfo);
-	      contacts.setOwner(this.getUserId(context));
-	      contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-	      contacts.buildList(db);
-	      context.getRequest().setAttribute("ContactList", contacts);
-       }
+
+      if (!recordInserted) {
+        processErrors(context, thisSCL.getErrors());
+      } else {
+
+        context.getRequest().setAttribute("id", "" + thisSCL.getId());
+
+        context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
+        PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
+        pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
+
+        ContactList contacts = new ContactList();
+        contacts.setScl(thisSCL);
+        contacts.setPagedListInfo(pagedListInfo);
+        contacts.setOwner(this.getUserId(context));
+        contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        contacts.buildList(db);
+        context.getRequest().setAttribute("ContactList", contacts);
+      }
 
     } catch (Exception e) {
       errorMessage = e;
@@ -229,12 +229,12 @@ public final class CampaignManagerGroup extends CFSModule {
     }
 
     if (errorMessage == null) {
-        if (recordInserted) {
-		addModuleBean(context, "ManageGroups", "Preview");
-		return ("InsertOK");
-	} else {
-		return (executeCommandAdd(context));
-	}
+      if (recordInserted) {
+        addModuleBean(context, "ManageGroups", "Preview");
+        return ("InsertOK");
+      } else {
+        return (executeCommandAdd(context));
+      }
 
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -264,12 +264,12 @@ public final class CampaignManagerGroup extends CFSModule {
     // building the search field and operator lists
     try {
       db = this.getConnection(context);
-      
-            	ContactTypeList typeList = new ContactTypeList(db);
-		LookupList ctl = typeList.getLookupList("typeId",0);
-		ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
-		context.getRequest().setAttribute("ContactTypeList", ctl);
-      
+
+      ContactTypeList typeList = new ContactTypeList(db);
+      LookupList ctl = typeList.getLookupList("typeId", 0);
+      ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
+      context.getRequest().setAttribute("ContactTypeList", ctl);
+
       searchFieldList.buildFieldList(db);
       stringOperatorList.buildOperatorList(db, 0);
       dateOperatorList.buildOperatorList(db, 1);
@@ -287,7 +287,7 @@ public final class CampaignManagerGroup extends CFSModule {
 
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
+      submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "ManageGroups";
@@ -320,9 +320,9 @@ public final class CampaignManagerGroup extends CFSModule {
     Connection db = null;
     int resultCount = 0;
 
-    SearchFormBean thisSearchForm = (SearchFormBean)context.getRequest().getAttribute("SearchForm");
+    SearchFormBean thisSearchForm = (SearchFormBean) context.getRequest().getAttribute("SearchForm");
     SearchCriteriaList thisSCL = thisSearchForm.getSearchCriteriaList();
-    
+
     try {
       db = this.getConnection(context);
       thisSCL.setId(Integer.parseInt(context.getRequest().getParameter("id")));
@@ -330,25 +330,25 @@ public final class CampaignManagerGroup extends CFSModule {
       thisSCL.setOwner(thisSearchForm.getOwner());
       thisSCL.setModifiedBy(getUserId(context));
       resultCount = thisSCL.update(db);
-      
-      	if (resultCount == -1) {
-		processErrors(context, thisSCL.getErrors());
-	} else {
-      
-	      context.getRequest().setAttribute("id", "" + thisSCL.getId());
-	
-	      context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
-	      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
-	      pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
-	
-	      ContactList contacts = new ContactList();
-	      contacts.setScl(thisSCL);
-	      contacts.setPagedListInfo(pagedListInfo);
-	      contacts.setOwner(this.getUserId(context));
-	      contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-	      contacts.buildList(db);
-	      context.getRequest().setAttribute("ContactList", contacts);
-       }
+
+      if (resultCount == -1) {
+        processErrors(context, thisSCL.getErrors());
+      } else {
+
+        context.getRequest().setAttribute("id", "" + thisSCL.getId());
+
+        context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
+        PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
+        pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
+
+        ContactList contacts = new ContactList();
+        contacts.setScl(thisSCL);
+        contacts.setPagedListInfo(pagedListInfo);
+        contacts.setOwner(this.getUserId(context));
+        contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        contacts.buildList(db);
+        context.getRequest().setAttribute("ContactList", contacts);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {

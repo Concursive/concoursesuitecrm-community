@@ -62,6 +62,9 @@ public class OpportunityList extends Vector {
 		this.orgId = Integer.parseInt(tmp);
 	}
 
+  public void setOrgId(int tmp) {
+    this.orgId = tmp;
+  }
 
 	/**
 	 *  Sets the TypeId attribute of the ContactList object
@@ -479,6 +482,14 @@ public class OpportunityList extends Vector {
 
 		return i;
 	}
+  
+  public void delete(Connection db) throws SQLException {
+    Iterator opportunities = this.iterator();
+    while (opportunities.hasNext()) {
+      Opportunity thisOpportunity = (Opportunity)opportunities.next();
+      thisOpportunity.delete(db);
+    }
+  }
 
 }
 

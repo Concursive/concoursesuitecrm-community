@@ -402,6 +402,14 @@ public void setOnlyClosed(boolean onlyClosed) {
 		
 		return i;
 	}
+  
+  public void delete(Connection db) throws SQLException {
+    Iterator tickets = this.iterator();
+    while (tickets.hasNext()) {
+      Ticket thisTicket = (Ticket)tickets.next();
+      thisTicket.delete(db);
+    }
+  }
 
 }
 

@@ -36,62 +36,76 @@ public final class Accounts extends CFSModule {
     addModuleBean(context, module, module);
     return ("IncludeOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandReports(ActionContext context) {
-	Exception errorMessage = null;
-	Connection db = null;
-	
-	FileItemList files = new FileItemList();
-	files.setLinkModuleId(Constants.ACCOUNTS_REPORTS);
-	files.setLinkItemId(-1);
-	
-	PagedListInfo rptListInfo = this.getPagedListInfo(context, "RptListInfo");
-	rptListInfo.setLink("/Accounts.do?command=Reports");
-	  
-	try {
-		db = this.getConnection(context);
-		files.setPagedListInfo(rptListInfo);
-		
-		if ("all".equals(rptListInfo.getListView())) {
-			files.setOwnerIdRange(this.getUserRange(context));
-		} else {
-			files.setOwner(this.getUserId(context));
-		}
-		
-		files.buildList(db);
-		
-		Iterator i = files.iterator();
-		while (i.hasNext()) {
-			FileItem thisItem = (FileItem)i.next();
-			Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
-			Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
-			thisItem.setEnteredByString(enteredBy.getNameFirstLast());
-			thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
-		}
-	
-	} catch (Exception e) {
-		errorMessage = e;
-	} finally {
-		this.freeConnection(context, db);
-	}
-	
-	if (errorMessage == null) {
-		addModuleBean(context, "Reports", "ViewReports");
-		context.getRequest().setAttribute("FileList", files);
-		return("ReportsOK");
-	} else {
-		context.getRequest().setAttribute("Error", errorMessage);
-		return ("SystemError");
-	}
+    Exception errorMessage = null;
+    Connection db = null;
+
+    FileItemList files = new FileItemList();
+    files.setLinkModuleId(Constants.ACCOUNTS_REPORTS);
+    files.setLinkItemId(-1);
+
+    PagedListInfo rptListInfo = this.getPagedListInfo(context, "RptListInfo");
+    rptListInfo.setLink("/Accounts.do?command=Reports");
+
+    try {
+      db = this.getConnection(context);
+      files.setPagedListInfo(rptListInfo);
+
+      if ("all".equals(rptListInfo.getListView())) {
+        files.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        files.setOwner(this.getUserId(context));
+      }
+
+      files.buildList(db);
+
+      Iterator i = files.iterator();
+      while (i.hasNext()) {
+        FileItem thisItem = (FileItem) i.next();
+        Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
+        Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
+        thisItem.setEnteredByString(enteredBy.getNameFirstLast());
+        thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
+      }
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "Reports", "ViewReports");
+      context.getRequest().setAttribute("FileList", files);
+      return ("ReportsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
 
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandDownloadCSVReport(ActionContext context) {
     Exception errorMessage = null;
 
-    String itemId = (String)context.getRequest().getParameter("fid");
+    String itemId = (String) context.getRequest().getParameter("fid");
     FileItem thisItem = null;
-    
+
     Connection db = null;
     try {
       db = getConnection(context);
@@ -106,10 +120,10 @@ public final class Accounts extends CFSModule {
     try {
       FileItem itemToDownload = null;
       itemToDownload = thisItem;
-      
+
       //itemToDownload.setEnteredBy(this.getUserId(context));
       String filePath = this.getPath(context, "account-reports") + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename() + ".csv";
-      
+
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -129,7 +143,7 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     if (errorMessage == null) {
       return ("-none-");
     } else {
@@ -137,205 +151,180 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandShowReportHtml(ActionContext context) {
-	Exception errorMessage = null;
-	
-	String projectId = (String)context.getRequest().getParameter("pid");
-	String itemId = (String)context.getRequest().getParameter("fid");
-	
-	Connection db = null;
-	
-	try {
-		db = getConnection(context);
-	
-		//-1 is the project ID for non-projects
-		FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-	
-		String filePath = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
-		String textToShow = this.includeFile(filePath);
-		context.getRequest().setAttribute("ReportText", textToShow);
-	} catch (Exception e) {
-		errorMessage = e;
-	} finally {
-		this.freeConnection(context, db);
-	}
-	
-	return ("ReportHtmlOK");
-  }
-  
-  public String executeCommandGenerateForm(ActionContext context) {
-	Exception errorMessage = null;
-	Connection db = null;
-	  
-	CustomFieldCategoryList thisList = new CustomFieldCategoryList();
-	thisList.setLinkModuleId(Constants.ACCOUNTS);
-	thisList.setIncludeEnabled(Constants.TRUE);
-	thisList.setIncludeScheduled(Constants.TRUE);
-	thisList.setAllSelectOption(true);
-	thisList.setBuildResources(false);
-	
-	try {
-		db = getConnection(context);
-		thisList.buildList(db);
-		context.getRequest().setAttribute("CategoryList", thisList);
-	} catch (Exception e) {
-		errorMessage = e;
-	} finally {
-		this.freeConnection(context, db);
-	}
-      
-	addModuleBean(context, "Reports", "Generate new");
-	return("GenerateFormOK");
-  }
-  
-  public String executeCommandExportReport(ActionContext context) {
-	Exception errorMessage = null;
-	boolean recordInserted = false;
-	Connection db = null;
-	
-	String subject = context.getRequest().getParameter("subject");
-	String type = context.getRequest().getParameter("type");
-	String ownerCriteria = context.getRequest().getParameter("criteria1");
-	int folderId = Integer.parseInt(context.getRequest().getParameter("catId"));
-	
-	//String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
-	
-	String filePath = this.getPath(context, "account-reports");
-	SimpleDateFormat formatter1 = new SimpleDateFormat ("yyyy");
-	String datePathToUse1 = formatter1.format(new java.util.Date());
-	SimpleDateFormat formatter2 = new SimpleDateFormat ("MMdd");
-	String datePathToUse2 = formatter2.format(new java.util.Date());
-	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
-	
-	//new
-	OrganizationReport orgReport = new OrganizationReport();
-	orgReport.setCriteria(context.getRequest().getParameterValues("fields"));
-	orgReport.setFilePath(filePath);
-	orgReport.setEnteredBy(getUserId(context));
-	orgReport.setModifiedBy(getUserId(context));
-	orgReport.setSubject(subject);
-	orgReport.setMinerOnly(false);
-	
-	if (ownerCriteria.equals("my")) {
-		orgReport.setOwnerId(this.getUserId(context));
-	} else if (ownerCriteria.equals("all")) {
-		orgReport.setOwnerIdRange(this.getUserRange(context));
-	}
-	
-	try {
-		db = this.getConnection(context);
-		
-		//Accounts with opportunities report
-		if (type.equals("5")) {
-			OpportunityReport oppReport = new OpportunityReport();
-			oppReport.setHeader("CFS Accounts");
-			oppReport.setFilePath(filePath);
-			oppReport.setEnteredBy(getUserId(context));
-			oppReport.setModifiedBy(getUserId(context));
-			oppReport.setSubject(subject);
-			
-			oppReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
-			
-			if (ownerCriteria.equals("my")) {
-				oppReport.setOwner(this.getUserId(context));
-			} else if (ownerCriteria.equals("all")) {
-				oppReport.setOwnerIdRange(this.getUserRange(context));
-			}
-			
-			oppReport.setJoinOrgs(true);
-			oppReport.buildReportFull(db);
-			oppReport.saveAndInsert(db);
-		} else if (type.equals("2")) {
-			ContactReport contactReport = new ContactReport();
-			contactReport.setFilePath(filePath);
-			contactReport.setEnteredBy(getUserId(context));
-			contactReport.setModifiedBy(getUserId(context));
-			contactReport.setSubject(subject);
-			contactReport.setHeader("CFS Accounts");
-			contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-			contactReport.setPersonalId(this.getUserId(context));
-			
-			contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
-			
-			if (ownerCriteria.equals("my")) {
-				contactReport.setOwner(this.getUserId(context));
-			} else if (ownerCriteria.equals("all")) {
-				contactReport.setOwnerIdRange(this.getUserRange(context));
-			}
-			
-			contactReport.setJoinOrgs(true);
-			contactReport.buildReportFull(db);
-			contactReport.saveAndInsert(db);
-		} else if (type.equals("3")) {
-			TicketReport ticReport = new TicketReport();
-			ticReport.setFilePath(filePath);
-			ticReport.setEnteredBy(getUserId(context));
-			ticReport.setModifiedBy(getUserId(context));
-			ticReport.setSubject(subject);
-			ticReport.setHeader("CFS Accounts");
-			ticReport.setJoinOrgs(true);
-			
-			ticReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
-			
-			ticReport.buildReportFull(db);
-			ticReport.saveAndInsert(db);
-		} else {
-		
-			if (type.equals("4") && folderId == 0) {
-				orgReport.setIncludeFolders(true);
-			} else if (type.equals("4") && folderId > 0) {
-				orgReport.setFolderId(folderId);
-			}
-			
-			orgReport.buildReportFull(db);
-			orgReport.saveAndInsert(db);
-		}	
-
-	} catch (Exception e) {
-		errorMessage = e;
-	} finally {
-		this.freeConnection(context, db);
-	}
-
-	
-	if (errorMessage == null) {
-		return executeCommandReports(context);
-	} else {
-		context.getRequest().setAttribute("Error", errorMessage);
-		return ("SystemError");
-	}
-  }
-  
-  public String executeCommandDeleteReport(ActionContext context) {
     Exception errorMessage = null;
-    boolean recordDeleted = false;
 
-    String projectId = (String)context.getRequest().getParameter("pid");
-    String itemId = (String)context.getRequest().getParameter("fid");
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String itemId = (String) context.getRequest().getParameter("fid");
 
     Connection db = null;
+
     try {
       db = getConnection(context);
-      
+
       //-1 is the project ID for non-projects
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-      
-      if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "account-reports"));
-	
-	String filePath1 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
-	java.io.File fileToDelete1 = new java.io.File(filePath1);
-	if (!fileToDelete1.delete()) {
-		System.err.println("FileItem-> Tried to delete file: " + filePath1);
-	}
-	
-	String filePath2 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
-	java.io.File fileToDelete2 = new java.io.File(filePath2);
-	if (!fileToDelete2.delete()) {
-		System.err.println("FileItem-> Tried to delete file: " + filePath2);
-	}
-	
+
+      String filePath = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+      String textToShow = this.includeFile(filePath);
+      context.getRequest().setAttribute("ReportText", textToShow);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    return ("ReportHtmlOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandGenerateForm(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+
+    CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+    thisList.setLinkModuleId(Constants.ACCOUNTS);
+    thisList.setIncludeEnabled(Constants.TRUE);
+    thisList.setIncludeScheduled(Constants.TRUE);
+    thisList.setAllSelectOption(true);
+    thisList.setBuildResources(false);
+
+    try {
+      db = getConnection(context);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "Reports", "Generate new");
+    return ("GenerateFormOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandExportReport(ActionContext context) {
+    Exception errorMessage = null;
+    boolean recordInserted = false;
+    Connection db = null;
+
+    String subject = context.getRequest().getParameter("subject");
+    String type = context.getRequest().getParameter("type");
+    String ownerCriteria = context.getRequest().getParameter("criteria1");
+    int folderId = Integer.parseInt(context.getRequest().getParameter("catId"));
+
+    //String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
+
+    String filePath = this.getPath(context, "account-reports");
+    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
+    String datePathToUse1 = formatter1.format(new java.util.Date());
+    SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
+    String datePathToUse2 = formatter2.format(new java.util.Date());
+    filePath += datePathToUse1 + fs + datePathToUse2 + fs;
+
+    //new
+    OrganizationReport orgReport = new OrganizationReport();
+    orgReport.setCriteria(context.getRequest().getParameterValues("fields"));
+    orgReport.setFilePath(filePath);
+    orgReport.setEnteredBy(getUserId(context));
+    orgReport.setModifiedBy(getUserId(context));
+    orgReport.setSubject(subject);
+    orgReport.setMinerOnly(false);
+
+    if (ownerCriteria.equals("my")) {
+      orgReport.setOwnerId(this.getUserId(context));
+    } else if (ownerCriteria.equals("all")) {
+      orgReport.setOwnerIdRange(this.getUserRange(context));
+    }
+
+    try {
+      db = this.getConnection(context);
+
+      //Accounts with opportunities report
+      if (type.equals("5")) {
+        OpportunityReport oppReport = new OpportunityReport();
+        oppReport.setHeader("CFS Accounts");
+        oppReport.setFilePath(filePath);
+        oppReport.setEnteredBy(getUserId(context));
+        oppReport.setModifiedBy(getUserId(context));
+        oppReport.setSubject(subject);
+
+        oppReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
+
+        if (ownerCriteria.equals("my")) {
+          oppReport.setOwner(this.getUserId(context));
+        } else if (ownerCriteria.equals("all")) {
+          oppReport.setOwnerIdRange(this.getUserRange(context));
+        }
+
+        oppReport.setJoinOrgs(true);
+        oppReport.buildReportFull(db);
+        oppReport.saveAndInsert(db);
+      } else if (type.equals("2")) {
+        ContactReport contactReport = new ContactReport();
+        contactReport.setFilePath(filePath);
+        contactReport.setEnteredBy(getUserId(context));
+        contactReport.setModifiedBy(getUserId(context));
+        contactReport.setSubject(subject);
+        contactReport.setHeader("CFS Accounts");
+        contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        contactReport.setPersonalId(this.getUserId(context));
+
+        contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
+
+        if (ownerCriteria.equals("my")) {
+          contactReport.setOwner(this.getUserId(context));
+        } else if (ownerCriteria.equals("all")) {
+          contactReport.setOwnerIdRange(this.getUserRange(context));
+        }
+
+        contactReport.setJoinOrgs(true);
+        contactReport.buildReportFull(db);
+        contactReport.saveAndInsert(db);
+      } else if (type.equals("3")) {
+        TicketReport ticReport = new TicketReport();
+        ticReport.setFilePath(filePath);
+        ticReport.setEnteredBy(getUserId(context));
+        ticReport.setModifiedBy(getUserId(context));
+        ticReport.setSubject(subject);
+        ticReport.setHeader("CFS Accounts");
+        ticReport.setJoinOrgs(true);
+
+        ticReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
+
+        ticReport.buildReportFull(db);
+        ticReport.saveAndInsert(db);
+      } else {
+
+        if (type.equals("4") && folderId == 0) {
+          orgReport.setIncludeFolders(true);
+        } else if (type.equals("4") && folderId > 0) {
+          orgReport.setFolderId(folderId);
+        }
+
+        orgReport.buildReportFull(db);
+        orgReport.saveAndInsert(db);
       }
 
     } catch (Exception e) {
@@ -343,9 +332,59 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
+    if (errorMessage == null) {
+      return executeCommandReports(context);
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandDeleteReport(ActionContext context) {
+    Exception errorMessage = null;
+    boolean recordDeleted = false;
+
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String itemId = (String) context.getRequest().getParameter("fid");
+
+    Connection db = null;
+    try {
+      db = getConnection(context);
+
+      //-1 is the project ID for non-projects
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+
+      if (thisItem.getEnteredBy() == this.getUserId(context)) {
+        recordDeleted = thisItem.delete(db, this.getPath(context, "account-reports"));
+
+        String filePath1 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
+        java.io.File fileToDelete1 = new java.io.File(filePath1);
+        if (!fileToDelete1.delete()) {
+          System.err.println("FileItem-> Tried to delete file: " + filePath1);
+        }
+
+        String filePath2 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+        java.io.File fileToDelete2 = new java.io.File(filePath2);
+        if (!fileToDelete2.delete()) {
+          System.err.println("FileItem-> Tried to delete file: " + filePath2);
+        }
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
     addModuleBean(context, "Reports", "Reports del");
-    
+
     if (errorMessage == null) {
       if (recordDeleted) {
         return ("DeleteReportOK");
@@ -367,12 +406,12 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandSearch(ActionContext context) {
-	PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
-	orgListInfo.setCurrentLetter("");
-	orgListInfo.setCurrentOffset(0);
-	
-	addModuleBean(context, "Search Accounts", "Accounts Search");
-	return ("SearchOK");
+    PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
+    orgListInfo.setCurrentLetter("");
+    orgListInfo.setCurrentOffset(0);
+
+    addModuleBean(context, "Search Accounts", "Accounts Search");
+    return ("SearchOK");
   }
 
 
@@ -393,16 +432,16 @@ public final class Accounts extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      
+
       LookupList industrySelect = new LookupList(db, "lookup_industry");
       context.getRequest().setAttribute("IndustryList", industrySelect);
-      
+
       LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
       context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
-      
+
       LookupList addrTypeList = new LookupList(db, "lookup_orgaddress_types");
       context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
-      
+
       LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
 
@@ -465,84 +504,87 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
-   public String executeCommandDashboard(ActionContext context) {
-	addModuleBean(context, "Dashboard", "Dashboard");
-	
-	UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
-	
-	int alertsDD = getUserId(context);
-	
-	if (context.getRequest().getParameter("userId") != null) {
-		alertsDD = Integer.parseInt(context.getRequest().getParameter("userId"));
-	}
-	
-	//this is how we get the multiple-level heirarchy...recursive function.
-	
-	User thisRec = thisUser.getUserRecord();
-	
-	UserList shortChildList = thisRec.getShortChildList();
-	UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
-	
-	newUserList.setMyId(getUserId(context));
-	newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
-	newUserList.setIncludeMe(true);
-	
-	newUserList.setJsEvent("onChange = javascript:document.forms[0].action='/Accounts.do?command=Dashboard';document.forms[0].submit()");
-	
-	
-	CalendarView companyCalendar = new CalendarView(context.getRequest());
-	
-	PagedListInfo orgAlertPaged = new PagedListInfo();
-	orgAlertPaged.setMaxRecords(20);
-	orgAlertPaged.setColumnToSortBy("alertdate");
-	
-	OrganizationList alertOrgs = new OrganizationList();
-	alertOrgs.setPagedListInfo(orgAlertPaged);
-	alertOrgs.setEnteredBy(alertsDD);
-	alertOrgs.setHasAlertDate(true);
-	
-	OrganizationList expireOrgs = new OrganizationList();
-	expireOrgs.setPagedListInfo(orgAlertPaged);
-	expireOrgs.setEnteredBy(alertsDD);
-	expireOrgs.setHasExpireDate(true);
-	
-	Connection db = null;
-	Exception errorMessage = null;
 
-	try {
-		db = this.getConnection(context);
-		alertOrgs.buildList(db);
-		expireOrgs.buildList(db);
-	} catch (SQLException e) {
-		errorMessage = e;
-	}
-	finally {
-		this.freeConnection(context, db);
-	}
-	
-	Iterator n = alertOrgs.iterator();
-	while (n.hasNext()) {
-		Organization thisOrg = (Organization) n.next();
-		companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), "Account", thisOrg.getOrgId());
-	}
-	
-	Iterator m = expireOrgs.iterator();
-	while (m.hasNext()) {
-		Organization thatOrg = (Organization) m.next();
-		companyCalendar.addEvent(thatOrg.getContractEndDateStringLongYear(), "", thatOrg.getName() + ": " + "Contract Expiration", "Account", thatOrg.getOrgId());
-	}
-	
-	if (errorMessage == null) {
-		context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
-		context.getRequest().setAttribute("NewUserList", newUserList);
-		return ("DashboardOK");
-	}
-	else {
-		context.getRequest().setAttribute("Error", errorMessage);
-		return ("SystemError");
-	}
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandDashboard(ActionContext context) {
+    addModuleBean(context, "Dashboard", "Dashboard");
+
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+
+    int alertsDD = getUserId(context);
+
+    if (context.getRequest().getParameter("userId") != null) {
+      alertsDD = Integer.parseInt(context.getRequest().getParameter("userId"));
+    }
+
+    //this is how we get the multiple-level heirarchy...recursive function.
+
+    User thisRec = thisUser.getUserRecord();
+
+    UserList shortChildList = thisRec.getShortChildList();
+    UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
+
+    newUserList.setMyId(getUserId(context));
+    newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+    newUserList.setIncludeMe(true);
+
+    newUserList.setJsEvent("onChange = javascript:document.forms[0].action='/Accounts.do?command=Dashboard';document.forms[0].submit()");
+
+    CalendarView companyCalendar = new CalendarView(context.getRequest());
+
+    PagedListInfo orgAlertPaged = new PagedListInfo();
+    orgAlertPaged.setMaxRecords(20);
+    orgAlertPaged.setColumnToSortBy("alertdate");
+
+    OrganizationList alertOrgs = new OrganizationList();
+    alertOrgs.setPagedListInfo(orgAlertPaged);
+    alertOrgs.setEnteredBy(alertsDD);
+    alertOrgs.setHasAlertDate(true);
+
+    OrganizationList expireOrgs = new OrganizationList();
+    expireOrgs.setPagedListInfo(orgAlertPaged);
+    expireOrgs.setEnteredBy(alertsDD);
+    expireOrgs.setHasExpireDate(true);
+
+    Connection db = null;
+    Exception errorMessage = null;
+
+    try {
+      db = this.getConnection(context);
+      alertOrgs.buildList(db);
+      expireOrgs.buildList(db);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    Iterator n = alertOrgs.iterator();
+    while (n.hasNext()) {
+      Organization thisOrg = (Organization) n.next();
+      companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), "Account", thisOrg.getOrgId());
+    }
+
+    Iterator m = expireOrgs.iterator();
+    while (m.hasNext()) {
+      Organization thatOrg = (Organization) m.next();
+      companyCalendar.addEvent(thatOrg.getContractEndDateStringLongYear(), "", thatOrg.getName() + ": " + "Contract Expiration", "Account", thatOrg.getOrgId());
+    }
+
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
+      context.getRequest().setAttribute("NewUserList", newUserList);
+      return ("DashboardOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
 
   }
 
@@ -577,11 +619,11 @@ public final class Accounts extends CFSModule {
       db = this.getConnection(context);
       organizationList.setPagedListInfo(orgListInfo);
       organizationList.setMinerOnly(false);
-      
+
       if ("my".equals(orgListInfo.getListView())) {
         organizationList.setOwnerId(this.getUserId(context));
-      } 
-      
+      }
+
       organizationList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -598,7 +640,14 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandViewTickets(ActionContext context) {
     Exception errorMessage = null;
 
@@ -645,9 +694,9 @@ public final class Accounts extends CFSModule {
     int resultCount = 0;
     boolean recordInserted = false;
 
-    Organization newOrg = (Organization)context.getFormBean();
+    Organization newOrg = (Organization) context.getFormBean();
     Organization insertedOrg = null;
-    
+
     newOrg.setEnteredBy(getUserId(context));
     newOrg.setRequestItems(context.getRequest());
     newOrg.setModifiedBy(getUserId(context));
@@ -656,14 +705,14 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       recordInserted = newOrg.insert(db);
-      
-		if (recordInserted) {
-			insertedOrg = new Organization(db, newOrg.getOrgId());
-			context.getRequest().setAttribute("OrgDetails", insertedOrg);
-			addRecentItem(context, newOrg);
-		} else {
-			processErrors(context, newOrg.getErrors());
-		}
+
+      if (recordInserted) {
+        insertedOrg = new Organization(db, newOrg.getOrgId());
+        context.getRequest().setAttribute("OrgDetails", insertedOrg);
+        addRecentItem(context, newOrg);
+      } else {
+        processErrors(context, newOrg.getErrors());
+      }
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -671,12 +720,12 @@ public final class Accounts extends CFSModule {
     }
 
     if (errorMessage == null) {
-	addModuleBean(context, "View Accounts", "Accounts Insert ok");
-	if (recordInserted) {
-		return ("InsertOK");
-	} else {
-		return (executeCommandAdd(context));
-	}
+      addModuleBean(context, "View Accounts", "Accounts Insert ok");
+      if (recordInserted) {
+        return ("InsertOK");
+      } else {
+        return (executeCommandAdd(context));
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -695,22 +744,21 @@ public final class Accounts extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-    
-    Organization newOrg = (Organization)context.getFormBean();
+
+    Organization newOrg = (Organization) context.getFormBean();
     newOrg.setRequestItems(context.getRequest());
 
     try {
       String orgId = context.getRequest().getParameter("orgId");
       int tempid = Integer.parseInt(orgId);
       db = this.getConnection(context);
-      
+
       newOrg.setModifiedBy(getUserId(context));
       resultCount = newOrg.update(db);
-      
-	if (resultCount == -1) {
-		processErrors(context, newOrg.getErrors());
-	}
-			
+
+      if (resultCount == -1) {
+        processErrors(context, newOrg.getErrors());
+      }
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -719,11 +767,11 @@ public final class Accounts extends CFSModule {
 
     addModuleBean(context, "View Accounts", "Modify Account");
     if (errorMessage == null) {
-	if (resultCount == -1) {
-		return (executeCommandModify(context));
-	} else if (resultCount == 1) {
-		return ("UpdateOK");
-    } else {
+      if (resultCount == -1) {
+        return (executeCommandModify(context));
+      } else if (resultCount == 1) {
+        return ("UpdateOK");
+      } else {
         context.getRequest().setAttribute("Error",
             "<b>This record could not be updated because someone else updated it first.</b><p>" +
             "You can hit the back button to review the changes that could not be committed, " +
@@ -753,7 +801,7 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisOrganization = new Organization(db, Integer.parseInt(context.getRequest().getParameter("orgId")));
-      recordDeleted = thisOrganization.delete(db);
+      recordDeleted = thisOrganization.delete(db, this.getPath(context, "accounts", thisOrganization.getOrgId()));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -792,13 +840,13 @@ public final class Accounts extends CFSModule {
     String orgid = context.getRequest().getParameter("orgId");
     context.getRequest().setAttribute("orgId", orgid);
     int tempid = Integer.parseInt(orgid);
-    
-    UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
-	
+
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+
     //this is how we get the multiple-level heirarchy...recursive function.
-	
+
     User thisRec = thisUser.getUserRecord();
-	
+
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
     userList.setMyId(getUserId(context));
@@ -812,16 +860,16 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, tempid);
-      
+
       LookupList industrySelect = new LookupList(db, "lookup_industry");
       context.getRequest().setAttribute("IndustryList", industrySelect);
 
       LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
       context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
-      
+
       LookupList addrTypeList = new LookupList(db, "lookup_orgaddress_types");
       context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
-      
+
       LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
 
@@ -842,19 +890,26 @@ public final class Accounts extends CFSModule {
 
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandFields(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrganization = null;
 
     String recordId = null;
-    
+
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
       thisList.setLinkModuleId(Constants.ACCOUNTS);
       thisList.setIncludeEnabled(Constants.TRUE);
@@ -862,18 +917,18 @@ public final class Accounts extends CFSModule {
       thisList.setBuildResources(false);
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
-      
-      String selectedCatId = (String)context.getRequest().getParameter("catId");
+
+      String selectedCatId = (String) context.getRequest().getParameter("catId");
       if (selectedCatId == null) {
-        selectedCatId = (String)context.getRequest().getAttribute("catId");
+        selectedCatId = (String) context.getRequest().getAttribute("catId");
       }
       if (selectedCatId == null) {
         selectedCatId = "" + thisList.getDefaultCategoryId();
       }
       context.getRequest().setAttribute("catId", selectedCatId);
-      
+
       recordId = context.getRequest().getParameter("recId");
-      
+
       if (recordId == null) {
         CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
         //thisCategory.setLinkModuleId(Constants.ACCOUNTS);
@@ -884,7 +939,7 @@ public final class Accounts extends CFSModule {
         //thisCategory.setBuildResources(true);
         //thisCategory.buildResources(db);
         context.getRequest().setAttribute("Category", thisCategory);
-        
+
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(Constants.ACCOUNTS);
         recordList.setLinkItemId(thisOrganization.getOrgId());
@@ -902,7 +957,7 @@ public final class Accounts extends CFSModule {
         thisCategory.buildResources(db);
         context.getRequest().setAttribute("Category", thisCategory);
       }
-      
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -921,7 +976,14 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandAddFolderRecord(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -933,9 +995,9 @@ public final class Accounts extends CFSModule {
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
-      String selectedCatId = (String)context.getRequest().getParameter("catId");
-      CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
-        Integer.parseInt(selectedCatId));
+      String selectedCatId = (String) context.getRequest().getParameter("catId");
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+          Integer.parseInt(selectedCatId));
       thisCategory.setLinkModuleId(Constants.ACCOUNTS);
       thisCategory.setLinkItemId(thisOrganization.getOrgId());
       thisCategory.setIncludeEnabled(Constants.TRUE);
@@ -943,7 +1005,7 @@ public final class Accounts extends CFSModule {
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
-      
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -958,7 +1020,14 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandModifyFields(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -970,11 +1039,11 @@ public final class Accounts extends CFSModule {
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
-      String selectedCatId = (String)context.getRequest().getParameter("catId");
-      String recordId = (String)context.getRequest().getParameter("recId");
-      
-      CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
-        Integer.parseInt(selectedCatId));
+      String selectedCatId = (String) context.getRequest().getParameter("catId");
+      String recordId = (String) context.getRequest().getParameter("recId");
+
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+          Integer.parseInt(selectedCatId));
       thisCategory.setLinkModuleId(Constants.ACCOUNTS);
       thisCategory.setLinkItemId(thisOrganization.getOrgId());
       thisCategory.setRecordId(Integer.parseInt(recordId));
@@ -983,7 +1052,7 @@ public final class Accounts extends CFSModule {
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
-      
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -998,7 +1067,14 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandUpdateFields(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -1010,7 +1086,7 @@ public final class Accounts extends CFSModule {
       db = this.getConnection(context);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
       thisList.setLinkModuleId(Constants.ACCOUNTS);
       thisList.setIncludeEnabled(Constants.TRUE);
@@ -1019,12 +1095,12 @@ public final class Accounts extends CFSModule {
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
 
-      String selectedCatId = (String)context.getRequest().getParameter("catId");
-      String recordId = (String)context.getRequest().getParameter("recId");
-      
+      String selectedCatId = (String) context.getRequest().getParameter("catId");
+      String recordId = (String) context.getRequest().getParameter("recId");
+
       context.getRequest().setAttribute("catId", selectedCatId);
-      CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
-        Integer.parseInt(selectedCatId));
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+          Integer.parseInt(selectedCatId));
       thisCategory.setLinkModuleId(Constants.ACCOUNTS);
       thisCategory.setLinkItemId(thisOrganization.getOrgId());
       thisCategory.setRecordId(Integer.parseInt(recordId));
@@ -1036,12 +1112,14 @@ public final class Accounts extends CFSModule {
       thisCategory.setModifiedBy(this.getUserId(context));
       resultCount = thisCategory.update(db);
       if (resultCount == -1) {
-        if (System.getProperty("DEBUG") != null) System.out.println("Accounts-> ModifyField validation error");
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Accounts-> ModifyField validation error");
+        }
       } else {
         thisCategory.buildResources(db);
       }
       context.getRequest().setAttribute("Category", thisCategory);
-      
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1065,7 +1143,14 @@ public final class Accounts extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandInsertFields(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -1077,7 +1162,7 @@ public final class Accounts extends CFSModule {
       db = this.getConnection(context);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
       thisList.setLinkModuleId(Constants.ACCOUNTS);
       thisList.setIncludeEnabled(Constants.TRUE);
@@ -1086,10 +1171,10 @@ public final class Accounts extends CFSModule {
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
 
-      String selectedCatId = (String)context.getRequest().getParameter("catId");
+      String selectedCatId = (String) context.getRequest().getParameter("catId");
       context.getRequest().setAttribute("catId", selectedCatId);
-      CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
-        Integer.parseInt(selectedCatId));
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+          Integer.parseInt(selectedCatId));
       thisCategory.setLinkModuleId(Constants.ACCOUNTS);
       thisCategory.setLinkItemId(thisOrganization.getOrgId());
       thisCategory.setIncludeEnabled(Constants.TRUE);
@@ -1101,10 +1186,12 @@ public final class Accounts extends CFSModule {
       thisCategory.setModifiedBy(this.getUserId(context));
       resultCode = thisCategory.insert(db);
       if (resultCode == -1) {
-        if (System.getProperty("DEBUG") != null) System.out.println("Accounts-> InsertField validation error");
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Accounts-> InsertField validation error");
+        }
       }
       context.getRequest().setAttribute("Category", thisCategory);
-      
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
