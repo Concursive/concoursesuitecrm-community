@@ -343,6 +343,14 @@ public final class TroubleTickets extends CFSModule {
       LookupList sourceList = new LookupList(db, "lookup_ticketsource");
       sourceList.addItem(0, "-- None --");
       context.getRequest().setAttribute("SourceList", sourceList);
+      
+      if (this.getDbName(context).equals("cdb_voice") || this.getDbName(context).equals("cdb_ds21")) {
+        CampaignList campaignList = new CampaignList();
+        campaignList.setEnabled(Constants.TRUE);
+        campaignList.setCompleteOnly(true);
+        campaignList.buildList(db);
+        context.getRequest().setAttribute("CampaignList", campaignList);
+      }
 
       TicketCategoryList categoryList = new TicketCategoryList();
       categoryList.setCatLevel(0);
@@ -422,7 +430,7 @@ public final class TroubleTickets extends CFSModule {
       if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(context.getRequest().getParameter("refresh")) == 3)) {
         newTic.setSubCat3(0);
       }
-
+      
       context.getRequest().setAttribute("TicketDetails", newTic);
       addRecentItem(context, newTic);
 
