@@ -14,9 +14,8 @@ public class SSLHandler extends TagSupport {
   }
 
   public final int doStartTag() throws JspException {
-    String scheme = (String)pageContext.getRequest().getScheme();
     
-    if ("true".equals((String)pageContext.getAttribute("ForceSSL")) && scheme.equals("http")) {
+    if ("true".equals((String)pageContext.getAttribute("ForceSSL"))) {
             result = true;
     }
     
