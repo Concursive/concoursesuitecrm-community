@@ -391,7 +391,6 @@ public final class ProcessEditData extends CFSModule {
 
         while (secondIterator.hasNext()) {
           String anotherKey = (String) secondIterator.next();
-          //System.out.println("Date: " + anotherKey);
 
           CustomFieldCategory thisCat = new CustomFieldCategory(db, OFFICE_TRANSACTION_CATEGORY);
           thisCat.setLinkModuleId(Constants.ACCOUNTS);

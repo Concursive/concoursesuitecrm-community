@@ -67,9 +67,6 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       while (m.hasNext()) {
         Call thisCall = (Call) m.next();
         CalendarEvent thisEvent = null;
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("CallListScheduledActions --> Added Alert " + thisCall.getAlertText() + " on " + thisCall.getAlertDateStringLongYear());
-        }
         if (thisCall.getOppHeaderId() == -1 && thisCall.getContactId() > -1) {
           thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getContactName() + ": " + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[5], thisCall.getContactId(), thisCall.getId());
         } else {
@@ -105,9 +102,6 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       while (i.hasNext()) {
         String thisDay = (String) i.next();
         companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[5], thisDay, dayEvents.get(thisDay));
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("CallListScheduledActions --> Added Calls for day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
-        }
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Call Calendar Alert Counts");
