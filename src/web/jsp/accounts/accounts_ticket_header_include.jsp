@@ -18,7 +18,9 @@
       <% if (thisTicket.getClosed() == null){ %>
             Open
       <%}else{%>
-            <font color="red">Closed on <%= toHtml(thisTicket.getClosedString()) %></font>
+            <font color="red">Closed on
+            <dhv:tz timestamp="<%= thisTicket.getClosed() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+            </font>
       <%}%>
           </td>
         </tr>
