@@ -247,6 +247,26 @@
         <exclude name="web.xml"/>
       </fileset>
     </copy>
+    <!-- Copy preference files -->
+    <mkdir dir="${CFS_HOME}/WEB-INF/bin"/>
+    <copy file="${bin.dir}/notifier.sh" todir="${CFS_HOME}/WEB-INF/bin"/>
+    <copy file="${pref.dir}/cfs/notifier/notifier.xml" todir="${CFS_HOME}/WEB-INF"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@FILELIBRARY@" value="${CFS_HOME}/WEB-INF/fileLibrary"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@GATEKEEPER.DRIVER@" value="${GATEKEEPER.DRIVER}"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@GATEKEEPER.URL@" value="${GATEKEEPER.URL}"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@GATEKEEPER.USER@" value="${GATEKEEPER.USER}"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@GATEKEEPER.PASSWORD@" value="${GATEKEEPER.PASSWORD}"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@MAILSERVER@" value="${MAILSERVER}"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@FORCESSL@" value="${FORCESSL}"/>
+    <!-- Copy this build file -->
+    <copy file="${base.dir}/build.xml" todir="${CFS_HOME}/WEB-INF"/>
   </target>
   
   <!-- See if there is an updated file to merge -->
@@ -589,32 +609,27 @@
     </java>
   </target>
   
+  <!-- Make sure the file exists, copied during deployment -->
+  <target name="run.notifier.init">
+    <available file="${env.CFS_HOME}/WEB-INF/notifier.xml" property="notifier.present"/>
+  </target>
+  
   <!-- Run the CFS Notifier -->
-  <target name="run.notifier" depends="init">
-    <record name="${CFS_HOME}/WEB-INF/notifier.log" append="no"/>
-    <copy file="${pref.dir}/cfs/notifier/notifier.xml" todir="${CFS_HOME}/WEB-INF"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@FILELIBRARY@" value="${CFS_HOME}/WEB-INF/fileLibrary"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GATEKEEPER.DRIVER@" value="${GATEKEEPER.DRIVER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GATEKEEPER.URL@" value="${GATEKEEPER.URL}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GATEKEEPER.USER@" value="${GATEKEEPER.USER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GATEKEEPER.PASSWORD@" value="${GATEKEEPER.PASSWORD}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@MAILSERVER@" value="${MAILSERVER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@FORCESSL@" value="${FORCESSL}"/>
+  <target name="run.notifier" depends="run.notifier.init" if="notifier.present">
+    <path id="cfs2.classpath">
+      <fileset dir="${env.CATALINA_HOME}/common/lib">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+    <record name="${env.CFS_HOME}/WEB-INF/notifier.log" append="no"/>
     <java classname="org.aspcfs.apps.notifier.Notifier" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
-        <fileset dir="${CFS_HOME}/WEB-INF/lib">
+        <fileset dir="${env.CFS_HOME}/WEB-INF/lib">
           <include name="**/*.jar"/>
         </fileset>
       </classpath>
-      <arg value="${CFS_HOME}${fs}WEB-INF${fs}notifier.xml"/>
+      <arg value="${env.CFS_HOME}${fs}WEB-INF${fs}notifier.xml"/>
     </java>
   </target>
   
