@@ -13,12 +13,18 @@ import com.darkhorseventures.utils.DatabaseUtils;
 
 public class RevenueList extends Vector {
 
-  private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
   private int type = 0;
   private String ownerIdRange = null;
   private int owner = -1;
   private int year = -1;
+  
+  public final static String tableName = "revenue";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  private PagedListInfo pagedListInfo = null;
 
   public RevenueList() { }
 
@@ -136,7 +142,15 @@ public class RevenueList extends Vector {
       thisRevenue.delete(db);
     }
   }
-    
+    public String getTableName() { return tableName; }
+public String getUniqueField() { return uniqueField; }
+public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
+public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
+public int getSyncType() { return syncType; }
+public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+public void setSyncType(int tmp) { this.syncType = tmp; }
+
   public int getOrgId() {
 	return orgId;
 }

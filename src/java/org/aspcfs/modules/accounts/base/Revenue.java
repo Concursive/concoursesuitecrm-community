@@ -12,6 +12,7 @@ import javax.servlet.http.*;
 import org.theseus.actions.*;
 import com.darkhorseventures.controller.*;
 import com.darkhorseventures.utils.*;
+import com.darkhorseventures.utils.DateUtils;
 
 public class Revenue extends GenericBean {
 
@@ -46,6 +47,14 @@ public class Revenue extends GenericBean {
   }
  
   public Revenue(Connection db, String revenueId) throws SQLException {
+          queryRecord(db, Integer.parseInt(revenueId));
+  }
+  
+  public Revenue(Connection db, int revenueId) throws SQLException {
+          queryRecord(db, revenueId);
+  }  
+          
+  public void queryRecord(Connection db, int revenueId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
 
@@ -62,7 +71,7 @@ public class Revenue extends GenericBean {
 	"LEFT JOIN lookup_revenue_types rt ON (r.type = rt.code) " +
         "WHERE r.id > -1 ");
 
-    if (revenueId != null && !revenueId.equals("")) {
+    if (revenueId > -1) {
       sql.append("AND r.id = " + revenueId + " ");
     } else {
       throw new SQLException("Revenue ID not specified.");
@@ -215,6 +224,9 @@ public String getMonthName() {
 public void setDescription(String tmp) { this.description = tmp; }
 public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
 public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
+public void setEnteredBy(String tmp) { this.enteredBy = Integer.parseInt(tmp); }
+public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
+
 public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
 public void setEnteredByName(String tmp) { this.enteredByName = tmp; }
@@ -230,6 +242,25 @@ public void setOwnerNameFirst(String tmp) { this.ownerNameFirst = tmp; }
 public void setOwnerNameLast(String tmp) { this.ownerNameLast = tmp; }
 public String getOwnerNameFirst() { return ownerNameFirst; }
 public String getOwnerNameLast() { return ownerNameLast; }
+
+  /**
+   *  Sets the entered attribute of the Ticket object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Ticket object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
+  }
 
 public String getOwnerName() {
 	return (Contact.getNameLastFirst(this.getOwnerNameLast(), this.getOwnerNameFirst()));
@@ -299,7 +330,11 @@ public String getOwnerNameAbbr() {
 			pst.setInt(++i, month);
 			pst.setInt(++i, year);
 			pst.setDouble(++i, amount);
-			pst.setInt(++i, type);
+			if (type > -1) {
+	      pst.setInt(++i, this.getType());
+      } else {
+	      pst.setNull(++i, java.sql.Types.INTEGER);
+      }
 			pst.setInt(++i, owner);
 			pst.setString(++i, description);
 			pst.setInt(++i, enteredBy);
@@ -368,7 +403,11 @@ public String getOwnerNameAbbr() {
     pst.setDouble(++i, this.getAmount());
     pst.setInt(++i, this.getOwner());
     pst.setString(++i, this.getDescription());
-    pst.setInt(++i, this.getType());
+       if (type > -1) {
+	      pst.setInt(++i, this.getType());
+      } else {
+	      pst.setNull(++i, java.sql.Types.INTEGER);
+      }
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
 
@@ -407,6 +446,9 @@ public String getOwnerNameAbbr() {
 	year = rs.getInt("year");
 	amount = rs.getDouble("amount");
 	type = rs.getInt("type");
+  if (rs.wasNull()) {
+          type = -1;
+  }
 	owner = rs.getInt("owner");
 	description = rs.getString("description");
 	

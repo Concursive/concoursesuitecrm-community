@@ -10,6 +10,8 @@
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCalls</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportFolders</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRevenue</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunityReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportAccountReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRevenue</module>
@@ -476,6 +478,19 @@
       <property field="operator"/>
       <property field="operatorid"/>
       <property field="value"/>
+      </map>
+    <map class="com.darkhorseventures.cfsbase.Revenue" id="revenue">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property>transactionId</property>
+      <property>month</property>
+      <property>yeat</property>
+      <property>amount</property>
+      <property lookup="lookupRevenueTypes">type</property>
+      <property lookup="user">owner</property>
+      <property>description</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
     </map>
   </mappings>
 </CFSDatabaseReader>
