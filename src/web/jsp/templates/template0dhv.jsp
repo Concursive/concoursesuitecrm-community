@@ -1,4 +1,11 @@
-<%-- (C) 2001-2004 Dark Horse Ventures --%>
+<%-- 
+  - Copyright Notice: (C) 2000-2004 Dark Horse Ventures, All Rights Reserved.
+  - License: This source code cannot be modified, distributed or used without
+  -          written permission from Dark Horse Ventures. This notice must
+  -          remain in place.
+  - Version: $Id$
+  - Description: 
+  --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>

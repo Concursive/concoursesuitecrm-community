@@ -819,6 +819,7 @@ public class Setup extends CFSModule {
       return "ConfigureUserERROR";
     }
     Connection db = null;
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     try {
       //Get a database connection
       db = getDbConnection(context);
@@ -859,6 +860,9 @@ public class Setup extends CFSModule {
         thisUser.setRoleId(1);
         thisUser.setEnteredBy(0);
         thisUser.setModifiedBy(0);
+        thisUser.setTimeZone(prefs.get("SYSTEM.TIMEZONE"));
+        thisUser.setCurrency(prefs.get("SYSTEM.CURRENCY"));
+        thisUser.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
         thisUser.insert(db);
         db.commit();
       }

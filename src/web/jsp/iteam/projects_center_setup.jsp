@@ -1,10 +1,12 @@
-<%--
- Copyright 2000-2004 Matt Rajkowski
- matt.rajkowski@teamelements.com
- http://www.teamelements.com
- This source code cannot be modified, distributed or used without
- permission from Matt Rajkowski
---%>
+<%-- 
+  - Copyright Notice: (C) 2000-2004 Team Elements, All Rights Reserved.
+  - License: This source code cannot be modified, distributed or used without
+  -          written permission from Team Elements. This notice must remain in
+  -          place.
+  - Author(s): Matt Rajkowski
+  - Version: $Id$
+  - Description: 
+  --%>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>

@@ -1,3 +1,11 @@
+<%-- 
+  - Copyright Notice: (C) 2000-2004 Dark Horse Ventures, All Rights Reserved.
+  - License: This source code cannot be modified, distributed or used without
+  -          written permission from Dark Horse Ventures. This notice must
+  -          remain in place.
+  - Version: $Id$
+  - Description: 
+  --%>
 <%-- reusable contact form --%>
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>

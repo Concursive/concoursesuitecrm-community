@@ -284,6 +284,10 @@
       <permission name="globalitems-search" attributes="v---"/>
       <permission name="globalitems-myitems" attributes="v---"/>
       <permission name="globalitems-recentitems" attributes="v---"/>
+      <permission name="projects" attributes="v---" />
+      <permission name="projects-personal" attributes="v---" />
+      <permission name="projects-enterprise" attributes="v---" />
+      <permission name="projects-projects" attributes="vaed" />
     </role>
     <role name="Operations Manager" description="Manages operations">
        <permission name="myhomepage" attributes="v---"/>
@@ -352,6 +356,10 @@
        <permission name="globalitems-search" attributes="v---"/>
        <permission name="globalitems-myitems" attributes="v---"/>
        <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---" />
+       <permission name="projects-personal" attributes="v---" />
+       <permission name="projects-enterprise" attributes="v---" />
+       <permission name="projects-projects" attributes="vaed" />
     </role>
     <role name="Sales Manager" description="Manages all accounts and opportunities">
        <permission name="myhomepage" attributes="v---"/>
@@ -421,6 +429,10 @@
        <permission name="globalitems-search" attributes="v---"/>
        <permission name="globalitems-myitems" attributes="v---"/>
        <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---" />
+       <permission name="projects-personal" attributes="v---" />
+       <permission name="projects-enterprise" attributes="v---" />
+       <permission name="projects-projects" attributes="vaed" />
     </role>
     <role name="Salesperson" description="Manages own accounts and opportunities">
        <permission name="myhomepage" attributes="v---"/>
@@ -488,6 +500,10 @@
        <permission name="globalitems-search" attributes="v---"/>
        <permission name="globalitems-myitems" attributes="v---"/>
        <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---" />
+       <permission name="projects-personal" attributes="v---" />
+       <permission name="projects-enterprise" attributes="v---" />
+       <permission name="projects-projects" attributes="vaed" />
     </role>
     <role name="Customer Service Manager" description="Manages all tickets">
        <permission name="myhomepage" attributes="v---"/>
@@ -538,6 +554,10 @@
        <permission name="globalitems-search" attributes="v---"/>
        <permission name="globalitems-myitems" attributes="v---"/>
        <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---" />
+       <permission name="projects-personal" attributes="v---" />
+       <permission name="projects-enterprise" attributes="v---" />
+       <permission name="projects-projects" attributes="vaed" />
     </role>
     <role name="Customer Service Representative" description="Manages own tickets">
        <permission name="myhomepage" attributes="v---"/>
@@ -587,6 +607,10 @@
        <permission name="globalitems-search" attributes="v---"/>
        <permission name="globalitems-myitems" attributes="v---"/>
        <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---" />
+       <permission name="projects-personal" attributes="v---" />
+       <permission name="projects-enterprise" attributes="v---" />
+       <permission name="projects-projects" attributes="vaed" />
     </role>
     <role name="Marketing Manager" description="Manages communications">
        <permission name="myhomepage" attributes="v---"/>
@@ -655,6 +679,10 @@
        <permission name="globalitems-search" attributes="v---"/>
        <permission name="globalitems-myitems" attributes="v---"/>
        <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---" />
+       <permission name="projects-personal" attributes="v---" />
+       <permission name="projects-enterprise" attributes="v---" />
+       <permission name="projects-projects" attributes="vaed" />
     </role>
     <role name="Accounting Manager" description="Reviews revenue and opportunities">
        <permission name="myhomepage" attributes="v---"/>
@@ -720,6 +748,10 @@
        <permission name="globalitems-search" attributes="v---"/>
        <permission name="globalitems-myitems" attributes="v---"/>
        <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---" />
+       <permission name="projects-personal" attributes="v---" />
+       <permission name="projects-enterprise" attributes="v---" />
+       <permission name="projects-projects" attributes="vaed" />
     </role>
     <role name="HR Representative" description="Manages employee information">
        <permission name="myhomepage" attributes="v---"/>
@@ -746,6 +778,10 @@
        <permission name="globalitems-search" attributes="v---"/>
        <permission name="globalitems-myitems" attributes="v---"/>
        <permission name="globalitems-recentitems" attributes="v---"/>
+       <permission name="projects" attributes="v---" />
+       <permission name="projects-personal" attributes="v---" />
+       <permission name="projects-enterprise" attributes="v---" />
+       <permission name="projects-projects" attributes="vaed" />
     </role>
     <role name="Customer" description="Customer portal user" type="1">
        <permission name="accounts" attributes="v---"/>

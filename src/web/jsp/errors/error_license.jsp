@@ -1,3 +1,11 @@
+<%--
+  - Copyright Notice: (C) 2000-2004 Dark Horse Ventures, All Rights Reserved.
+  - License: This source code cannot be modified, distributed or used without
+  -          written permission from Dark Horse Ventures. This notice must
+  -          remain in place.
+  - Version: $Id$
+  - Description:
+  --%>
 <jsp:useBean id="APP_SIZE" class="java.lang.String" scope="application"/>
 <img src="images/error.gif" border="0" align="absmiddle"/>
 <font color="red">The requested action could not be completed</font>

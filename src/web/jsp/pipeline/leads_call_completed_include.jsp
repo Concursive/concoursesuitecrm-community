@@ -1,3 +1,11 @@
+<%-- 
+  - Copyright Notice: (C) 2000-2004 Dark Horse Ventures, All Rights Reserved.
+  - License: This source code cannot be modified, distributed or used without
+  -          written permission from Dark Horse Ventures. This notice must
+  -          remain in place.
+  - Version: $Id$
+  - Description: 
+  --%>
 <%@ page import="org.aspcfs.utils.web.HtmlSelect,org.aspcfs.utils.StringUtils,org.aspcfs.utils.web.LookupList" %>
 <dhv:evaluate if="<%= PreviousCallDetails.getId() > 0 %>">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

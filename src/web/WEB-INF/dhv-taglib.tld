@@ -533,4 +533,16 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  <tag>
+    <name>formMessage</name> 
+    <tag-class>org.aspcfs.taglib.FormMessageHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays an error or warning
+    </display-name>
+    <attribute>
+      <name>showSpace</name>
+      <required>no</required>
+    </attribute>
+  </tag>
 </taglib>
