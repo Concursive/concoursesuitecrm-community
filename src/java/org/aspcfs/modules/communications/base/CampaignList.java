@@ -33,6 +33,10 @@ public class CampaignList extends Vector {
   private String idRange = null;
   private int ready = -1;
   private int contactId = -1;
+  private java.sql.Timestamp activeRangeStart = null;
+  private java.sql.Timestamp activeRangeEnd = null;
+  private java.sql.Timestamp runRangeStart = null;
+  private java.sql.Timestamp runRangeEnd = null;
   
   public static final String tableName = "campaign";
   public static final String uniqueField = "id";
@@ -179,6 +183,11 @@ public class CampaignList extends Vector {
     this.idRange = idRange;
   }
   
+  public void setActiveRangeStart(java.sql.Timestamp tmp) { this.activeRangeStart = tmp; }
+  public void setActiveRangeEnd(java.sql.Timestamp tmp) { this.activeRangeEnd = tmp; }
+  public void setRunRangeStart(java.sql.Timestamp tmp) { this.runRangeStart = tmp; }
+  public void setRunRangeEnd(java.sql.Timestamp tmp) { this.runRangeEnd = tmp; }
+
 public String getTableName() { return tableName; }
 public String getUniqueField() { return uniqueField; }
 public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
@@ -418,7 +427,7 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
       }
       ++count;
       Campaign thisCamp = new Campaign(rs);
-      this.addElement(thisCamp);
+      this.add(thisCamp);
     }
     rs.close();
     pst.close();
@@ -437,45 +446,47 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
     if (activeDate != null) {
       sqlFilter.append("AND c.active_date = ? ");
     }
-
     if (enabled == FALSE || enabled == TRUE) {
       sqlFilter.append("AND c.enabled = ? ");
     }
-
     if (active == FALSE || active == TRUE) {
       sqlFilter.append("AND c.active = ? ");
     }
-
     if (incompleteOnly) {
       sqlFilter.append("AND ( c.message_id < 1 OR c.campaign_id NOT IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) OR active_date IS NULL OR active = ?) ");
     }
-
     if (completeOnly) {
       sqlFilter.append("AND ( c.message_id > 0 AND c.campaign_id IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) AND active_date IS NOT NULL AND active = ?) ");
     }
-
     if (owner > -1) {
       sqlFilter.append("AND c.enteredby = ? ");
     }
-
     if (ownerIdRange != null) {
       sqlFilter.append("AND c.enteredBy IN (" + ownerIdRange + ") ");
     }
-
     if (idRange != null) {
       sqlFilter.append("AND c.campaign_id IN (" + idRange + ") ");
     }
-
     if (ready == TRUE) {
       sqlFilter.append("AND c.status_id IN (" + Campaign.QUEUE + ", " + Campaign.STARTED + ") ");
     }
-    
     if (contactId > -1) {
       sqlFilter.append("AND c.campaign_id IN (SELECT campaign_id FROM scheduled_recipient WHERE contact_id = ?) ");
+    }
+    if (activeRangeStart != null) {
+      sqlFilter.append("AND active_date >= ? ");
+    }
+    if (activeRangeEnd != null) {
+      sqlFilter.append("AND active_date <= ? ");
+    }
+    if (runRangeStart != null) {
+      sqlFilter.append("AND c.campaign_id IN (SELECT campaign_id FROM campaign_run WHERE run_date >= ?) ");
+    }
+    if (runRangeEnd != null) {
+      sqlFilter.append("AND c.campaign_id IN (SELECT campaign_id FROM campaign_run WHERE run_date <= ?) ");
     }
   }
 
@@ -490,39 +501,43 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
     if (activeDate != null) {
       pst.setDate(++i, activeDate);
     }
-    
     if (enabled == FALSE) {
       pst.setBoolean(++i, false);
     } else if (enabled == TRUE) {
       pst.setBoolean(++i, true);
     }
-    
     if (active == FALSE) {
       pst.setBoolean(++i, false);
     } else if (active == TRUE) {
       pst.setBoolean(++i, true);
     }
-    
     if (incompleteOnly) {
       pst.setBoolean(++i, false);
     }
-    
     if (completeOnly) {
       pst.setBoolean(++i, true);
     }
-    
     if (owner > -1) {
       pst.setInt(++i, owner);
     }
-    
     if (contactId > -1) {
       pst.setInt(++i, contactId);
     }
-
+    if (activeRangeStart != null) {
+      pst.setTimestamp(++i, activeRangeStart);
+    }
+    if (activeRangeEnd != null) {
+      pst.setTimestamp(++i, activeRangeEnd);
+    }
+    if (runRangeStart != null) {
+      pst.setTimestamp(++i, runRangeStart);
+    }
+    if (runRangeEnd != null) {
+      pst.setTimestamp(++i, runRangeEnd);
+    }
     return i;
   }
 
@@ -544,5 +559,23 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     }
   }
 
+  public int queryRecordCount(Connection db) throws SQLException {
+    int recordCount = 0;
+    StringBuffer sqlFilter = new StringBuffer();
+    String sqlCount =
+      "SELECT COUNT(*) AS recordcount " +
+      "FROM campaign c " +
+      "WHERE c.campaign_id > -1 ";
+    createFilter(sqlFilter);
+    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    int items = prepareFilter(pst);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordCount = DatabaseUtils.getInt(rs, "recordcount", 0);
+    }
+    pst.close();
+    rs.close();
+    return recordCount;
+  }
 }
 
