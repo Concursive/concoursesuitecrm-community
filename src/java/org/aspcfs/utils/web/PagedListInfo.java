@@ -1,6 +1,7 @@
 package com.darkhorseventures.webutils;
 
 import org.theseus.actions.*;
+import java.util.Hashtable;
 
 /**
  *  Allows information to be stored in an object for the pagedlist. <p>
@@ -25,6 +26,7 @@ public class PagedListInfo {
   String currentLetter = "";
   int currentOffset = 0;
   String listView = null;
+	Hashtable listFilters = new Hashtable();
 
 
   /**
@@ -207,6 +209,17 @@ public class PagedListInfo {
       }
       this.setListView(tmpListView);
     }
+		
+		int filter = 0;
+		while (context.getRequest().getParameter("listFilter" + (++filter)) != null) {
+			String tmpListFilter = context.getRequest().getParameter("listFilter" + filter);
+			String currentSetting = (String)listFilters.get(tmpListFilter);
+			if (currentSetting != null && !currentSetting.equals(tmpListFilter)) {
+				this.setCurrentLetter("");
+				this.setCurrentOffset(0);
+			}
+			listFilters.put("listFilter" + filter, tmpListFilter);
+		}
   }
 
 
@@ -444,6 +457,18 @@ public class PagedListInfo {
   public String getOptionValue(String tmp) {
     return ("value=\"" + tmp + "\"" + (tmp.equals(listView) ? " selected" : ""));
   }
+	
+	public String getFilterValue(String tmp) {
+		return (String)listFilters.get(tmp);
+	}
+	
+	public int getFilterKey(String tmp) {
+		try {
+			return Integer.parseInt((String)listFilters.get(tmp));
+		} catch (Exception e) {
+			return -1;
+		}
+	}
 
 
   /**

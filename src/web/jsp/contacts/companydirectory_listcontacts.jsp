@@ -1,5 +1,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
+<jsp:useBean id="ContactTypeList" class="com.darkhorseventures.cfsbase.ContactTypeList" scope="request"/>
 <jsp:useBean id="ExternalContactsInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
@@ -15,6 +16,8 @@
         <option <%= ExternalContactsInfo.getOptionValue("my") %>>My Contacts </option>
         <option <%= ExternalContactsInfo.getOptionValue("all") %>>All Contacts</option>
       </select>
+			<% ContactTypeList.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+			<%= ContactTypeList.getHtmlSelect("listFilter1", ExternalContactsInfo.getFilterKey("listFilter1")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
   </tr>

@@ -34,7 +34,7 @@ public final class ExternalContacts extends CFSModule {
     
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
     externalContactsInfo.setLink("/ExternalContacts.do?command=ListContacts");
-    
+		
     String passedFirst = context.getRequest().getParameter("firstname");
     String passedMiddle = context.getRequest().getParameter("middlename");
     String passedLast = context.getRequest().getParameter("lastname");
@@ -72,10 +72,17 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       context.getSession().removeAttribute("ContactMessageListInfo");
+			
+			ContactTypeList contactTypeList = new ContactTypeList();
+			contactTypeList.setShowPersonal(true);
+			contactTypeList.buildList(db);
+			contactTypeList.addItem(-1, "All");
+			context.getRequest().setAttribute("ContactTypeList", contactTypeList);
 
       contactList.setPagedListInfo(externalContactsInfo);
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contactList.setPersonalId(this.getUserId(context));
+			contactList.setTypeId(externalContactsInfo.getFilterKey("listFilter1"));
       
       if ("all".equals(externalContactsInfo.getListView())) {
         contactList.setOwnerIdRange(this.getUserRange(context));
