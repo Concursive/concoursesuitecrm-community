@@ -457,5 +457,13 @@
       <property>sendMethodId</property>
       <property>surveyId</property>
       </map>
+      <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" 
+         table="saved_criteriaelement" uniqueField="id">
+      <property field="id" alias="guid"/>
+      <property field="field"/>
+      <property field="operator"/>
+      <property field="operatorid"/>
+      <property field="value"/>
+    </map>
   </mappings>
 </CFSDatabaseReader>

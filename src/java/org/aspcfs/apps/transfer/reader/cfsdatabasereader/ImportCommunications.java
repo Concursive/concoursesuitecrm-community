@@ -45,6 +45,11 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
+    if (!processOK) {
+      return false;
+    }
+    
     logger.info("ImportCommunications-> Inserting Campaign Records");
     CampaignList campaigns = new CampaignList();
     campaigns.buildList(db);
