@@ -94,18 +94,7 @@ Modify Contact<br>
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
-            <dhv:evaluate exp="<%=ContactDetails.getTypes().isEmpty()%>">
-              <option value="-1">None Selected</option>
-            </dhv:evaluate>
-            <dhv:evaluate exp="<%=!(ContactDetails.getTypes().isEmpty())%>">
-             <%
-              Iterator i = ContactDetails.getTypes().iterator();
-              while (i.hasNext()) {
-                LookupElement thisElt = (LookupElement)i.next();
-            %>
-              <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
-            <%}%>
-            </dhv:evaluate>
+              <dhv:lookupHtml listName="TypeList" lookupName="ContactTypeList" lookupElementClass="org.aspcfs.modules.contacts.base.ContactTypeList"/>
             </select>
             <input type="hidden" name="previousSelection" value="">
             <input type="hidden" name="category" value="<%= request.getParameter("category") %>">

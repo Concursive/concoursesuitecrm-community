@@ -115,16 +115,7 @@ Add Contact<br>
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
-              <%if(ContactDetails.getTypes().isEmpty()) {%>
-                <option value="-1">None Selected</option>
-              <%}else{
-                  Iterator i = ContactDetails.getTypes().iterator();
-                  while (i.hasNext()) {
-                    LookupElement thisElt = (LookupElement)i.next();
-              %>
-                     <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
-                  <%}%>
-               <%}%>
+              <dhv:lookupHtml listName="TypeList" lookupName="ContactTypeList" lookupElementClass="org.aspcfs.modules.contacts.base.ContactTypeList"/>
             </select>
             <input type="hidden" name="previousSelection" value="">
           </td>
