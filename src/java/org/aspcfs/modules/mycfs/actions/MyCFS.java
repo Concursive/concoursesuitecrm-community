@@ -188,6 +188,11 @@ public final class MyCFS extends CFSModule {
 		addModuleBean(context, "Home", "");
 		int headlines = 0;
 		Exception errorMessage = null;
+		int alertsDD = getUserId(context);
+		
+		if ( context.getRequest().getParameter("userId") != null ) {
+			alertsDD = Integer.parseInt(context.getRequest().getParameter("userId"));
+		}
 
 		String whereClause = new String();
 		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
@@ -206,7 +211,7 @@ public final class MyCFS extends CFSModule {
 		newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
 		newUserList.setIncludeMe(true);
 		
-		System.out.println("new userlist size = " + newUserList.size());
+		newUserList.setJsEvent("onChange = javascript:document.forms[0].action='/MyCFS.do?command=Home';document.forms[0].submit()");
 
 		//	
 		//	Alerts Selection
@@ -310,7 +315,7 @@ public final class MyCFS extends CFSModule {
 
       OpportunityList alertOpps = new OpportunityList();
 			alertOpps.setPagedListInfo(alertPaged);
-			alertOpps.setEnteredBy(getUserId(context));
+			alertOpps.setEnteredBy(alertsDD);
 			alertOpps.setHasAlertDate(true);
 			alertOpps.buildList(db);
 			Iterator n = alertOpps.iterator();
@@ -321,7 +326,7 @@ public final class MyCFS extends CFSModule {
 			
       CallList alertCalls = new CallList();
 			alertCalls.setPagedListInfo(alertPaged);
-			alertCalls.setEnteredBy(getUserId(context));
+			alertCalls.setEnteredBy(alertsDD);
 			alertCalls.setHasAlertDate(true);
 			alertCalls.buildList(db);
 			Iterator m = alertCalls.iterator();
@@ -334,9 +339,9 @@ public final class MyCFS extends CFSModule {
 			projects.setGroupId(-1);
       projects.setOpenProjectsOnly(true);
       projects.setProjectsWithAssignmentsOnly(true);
-      projects.setProjectsForUser(getUserId(context));
+      projects.setProjectsForUser(alertsDD);
       projects.setBuildAssignments(true);
-      projects.setAssignmentsForUser(getUserId(context));
+      projects.setAssignmentsForUser(alertsDD);
       projects.setOpenAssignmentsOnly(true);
       projects.setBuildIssues(false);
       projects.buildList(db);

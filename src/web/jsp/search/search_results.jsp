@@ -8,7 +8,9 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <!--b>Search Results</b-->
-Your search for <b><%= request.getParameter("search") %></b> returned <strong><%=ContactList.size()%></strong> result(s) in <strong>External Contacts</strong>.
+Your search for <b><%= request.getParameter("search") %></b> returned:
+<br>&nbsp;<br> 
+<strong><%=ContactList.size()%></strong> result(s) in <strong>External Contacts</strong>.
 
 <%
 Iterator i = ContactList.iterator();
@@ -67,7 +69,7 @@ if (i.hasNext()) {
 	<br>&nbsp;<br>
 <%}%>
 
-Your search for <b><%= request.getParameter("search") %></b> returned <strong><%=EmployeeList.size()%></strong> result(s) in <strong>Employees</strong>.
+<strong><%=EmployeeList.size()%></strong> result(s) in <strong>Employees</strong>.
 
 <% Iterator j = EmployeeList.iterator();
 	
@@ -132,7 +134,7 @@ Your search for <b><%= request.getParameter("search") %></b> returned <strong><%
 
 
 
-Your search for <b><%= request.getParameter("search") %></b> returned <strong><%=OrganizationList.size()%></strong> result(s) in <strong>Accounts</strong>.
+<strong><%=OrganizationList.size()%></strong> result(s) in <strong>Accounts</strong>.
 
 <% Iterator k = OrganizationList.iterator();
 	
@@ -183,7 +185,7 @@ Your search for <b><%= request.getParameter("search") %></b> returned <strong><%
 	<br>&nbsp;<br>  
 <%}%>
 
-Your search for <b><%= request.getParameter("search") %></b> returned <strong><%=OpportunityList.size()%></strong> result(s) in <strong>Opportunities</strong>.
+<strong><%=OpportunityList.size()%></strong> result(s) in <strong>Opportunities</strong>.
 
 <% Iterator m = OpportunityList.iterator();
 	
@@ -266,7 +268,7 @@ Your search for <b><%= request.getParameter("search") %></b> returned <strong><%
   <br>&nbsp;<br> 
 <%}%>
 
-Your search for <b><%= request.getParameter("search") %></b> returned <strong><%=TicketList.size()%></strong> result(s) in <strong>Tickets</strong>.
+<strong><%=TicketList.size()%></strong> result(s) in <strong>Tickets</strong>.
 
 <% Iterator n = TicketList.iterator();
 	

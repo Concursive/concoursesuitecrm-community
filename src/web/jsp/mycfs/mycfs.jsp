@@ -22,7 +22,7 @@
   %>
       <%= CompanyCalendar.getHtml() %>
     </td>
-  </form>
+  
   <td "bgcolor=white" valign="top" height="100%" width="100%">
     <table bgcolor="white" height="100%" width="100%" border="1" cellpadding="1" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr bgcolor="#DEE0FA">
@@ -33,7 +33,12 @@
                 <strong>Alerts</strong>
               </td>
               <td valign=center align=right>
-                <%= NewUserList.getHtmlSelect("userId",0) %>
+		<% if (request.getParameter("userId") == null || request.getParameter("userId").equals("")) { %>
+			<%= NewUserList.getHtmlSelect("userId",0) %>
+		<% } else { %>
+			<%=NewUserList.getHtmlSelect("userId",Integer.parseInt(request.getParameter("userId")))%>
+		<%}%>
+                
               </td>
             </tr>
           </table>
@@ -83,7 +88,7 @@
       </td>
     </tr>
   </table>
-
+</form>
 <!-- End Table:Alerts -->
 </td>
 <!-- end ZZ:row one -->
