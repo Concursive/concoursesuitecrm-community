@@ -121,8 +121,6 @@ public class TicketList extends Vector {
 
 public String getTableName() { return tableName; }
 public String getUniqueField() { return uniqueField; }
-public void setTableName(String tmp) { this.tableName = tmp; }
-public void setUniqueField(String tmp) { this.uniqueField = tmp; }
 
   /**
    *  Sets the priority attribute of the TicketList object
