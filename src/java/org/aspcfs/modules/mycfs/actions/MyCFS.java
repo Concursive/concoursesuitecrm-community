@@ -59,8 +59,6 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     inboxInfo.setLink("MyCFSInbox.do?command=Inbox");
 
@@ -86,20 +84,15 @@ public final class MyCFS extends CFSModule {
       }
 
       noteList.buildList(db);
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("CFSNoteList", noteList);
-      addModuleBean(context, "MyInbox", "Inbox Home");
-      return ("InboxOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("CFSNoteList", noteList);
+    addModuleBean(context, "MyInbox", "Inbox Home");
+    return ("InboxOK");
   }
 
 
@@ -112,20 +105,12 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandDeleteHeadline(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-miner-delete"))) {
       return ("PermissionError");
     }
-
-    /*
-     *  Process all parameters
-     */
     Enumeration parameters = context.getRequest().getParameterNames();
-    Exception errorMessage = null;
-
     int orgId = -1;
     Connection db = null;
-
     try {
       db = this.getConnection(context);
       while (parameters.hasMoreElements()) {
@@ -141,19 +126,14 @@ public final class MyCFS extends CFSModule {
           }
         }
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "", "Headline Delete OK");
-      return ("DeleteOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "", "Headline Delete OK");
+    return ("DeleteOK");
   }
 
 
@@ -167,9 +147,7 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
-
     Connection db = null;
-    Exception errorMessage = null;
     int myId = -1;
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     try {
@@ -189,19 +167,14 @@ public final class MyCFS extends CFSModule {
       }
       newNote.setCurrentView(inboxInfo.getListView());
       newNote.delete(db, myId);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "MyInbox", "Inbox Home");
-      return (executeCommandInbox(context));
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "MyInbox", "Inbox Home");
+    return (executeCommandInbox(context));
   }
 
 
@@ -217,15 +190,11 @@ public final class MyCFS extends CFSModule {
     }
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     Connection db = null;
-    Exception errorMessage = null;
     int myId = -1;
-
     try {
       db = this.getConnection(context);
       int noteId = Integer.parseInt(context.getRequest().getParameter("id"));
-      /*
-       *  For a sent message myId is a user_id else its a contactId
-       */
+      //For a sent message myId is a user_id else its a contactId
       if (inboxInfo.getListView().equals("sent")) {
         myId = getUserId(context);
       } else {
@@ -246,19 +215,14 @@ public final class MyCFS extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("MyCFS-> Status after: " + newNote.getStatus());
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "MyInbox", "Inbox Home");
-      return (executeCommandInbox(context));
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "MyInbox", "Inbox Home");
+    return (executeCommandInbox(context));
   }
 
 
@@ -271,39 +235,28 @@ public final class MyCFS extends CFSModule {
    *@since           1.1
    */
   public String executeCommandHeadline(ActionContext context) {
-
-    if (!(hasPermission(context, "myhomepage-miner-view"))) {
+    if (!hasPermission(context, "myhomepage-miner-view")) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "Customize Headlines", "Customize Headlines");
-    Exception errorMessage = null;
-
     PagedListInfo orgListInfo = this.getPagedListInfo(context, "HeadlineListInfo");
     orgListInfo.setLink("MyCFS.do?command=Headline");
-
     Connection db = null;
     OrganizationList organizationList = new OrganizationList();
-
     try {
       db = this.getConnection(context);
       organizationList.setPagedListInfo(orgListInfo);
       organizationList.setMinerOnly(true);
       organizationList.setEnteredBy(getUserId(context));
       organizationList.buildList(db);
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("OrgList", organizationList);
-      return ("HeadlineOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("OrgList", organizationList);
+    return ("HeadlineOK");
   }
 
 
@@ -315,23 +268,16 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandInsertHeadline(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-miner-add"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "Customize Headlines", "");
     int headlines = 0;
-    Exception errorMessage = null;
     boolean existsAlready = false;
-
     Connection db = null;
-
     String name = context.getRequest().getParameter("name");
     String sym = context.getRequest().getParameter("stockSymbol");
-
     Organization newOrg = (Organization) new Organization();
-
     newOrg.setName(name);
     newOrg.setTicker(sym);
     newOrg.setIndustry("1");
@@ -339,24 +285,18 @@ public final class MyCFS extends CFSModule {
     newOrg.setModifiedBy(getUserId(context));
     newOrg.setOwner(-1);
     newOrg.setMiner_only(true);
-
     try {
       db = this.getConnection(context);
       existsAlready = newOrg.checkIfExists(db, name);
       newOrg.insert(db);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("OrgDetails", newOrg);
-      return (executeCommandHeadline(context));
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("OrgDetails", newOrg);
+    return (executeCommandHeadline(context));
   }
 
 
@@ -370,18 +310,14 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
-
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
-    Exception errorMessage = null;
     Connection db = null;
     int myId = -1;
     CFSNote newNote = null;
     try {
       int msgId = Integer.parseInt(context.getRequest().getParameter("id"));
       db = this.getConnection(context);
-      /*
-       *  For a sent message myId is a user_id else its a contactId
-       */
+      //For a sent message myId is a user_id else its a contactId
       if (inboxInfo.getListView().equals("sent")) {
         myId = getUserId(context);
       } else {
@@ -397,20 +333,15 @@ public final class MyCFS extends CFSModule {
           newNote.updateStatus(db);
         }
       }
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "MyInbox", "Inbox Details");
-      context.getRequest().setAttribute("NoteDetails", newNote);
-      return ("CFSNoteDetailsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "MyInbox", "Inbox Details");
+    context.getRequest().setAttribute("NoteDetails", newNote);
+    return ("CFSNoteDetailsOK");
   }
 
 
@@ -424,9 +355,7 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
-
     try {
       db = this.getConnection(context);
       CFSNote newNote = new CFSNote();
@@ -448,8 +377,9 @@ public final class MyCFS extends CFSModule {
       context.getSession().removeAttribute("selectedContacts");
       context.getSession().removeAttribute("finalContacts");
       context.getSession().removeAttribute("contactListInfo");
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
@@ -466,7 +396,6 @@ public final class MyCFS extends CFSModule {
    */
 
   public String executeCommandSendMessage(ActionContext context) {
-    Exception errorMessage = null;
     boolean recordInserted = false;
     Connection db = null;
     boolean savecopy = false;
@@ -581,8 +510,9 @@ public final class MyCFS extends CFSModule {
       }
       context.getSession().removeAttribute("DepartmentList");
       context.getSession().removeAttribute("ProjectListSelect");
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
@@ -594,16 +524,10 @@ public final class MyCFS extends CFSModule {
     } else if (context.getAction().getActionName().equals("MyTasksForward")) {
       addModuleBean(context, "My Tasks", "");
     }
-
-    if (errorMessage == null) {
-      if (errors != null) {
-        processErrors(context, errors);
-      }
-      return ("SendMessageOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (errors != null) {
+      processErrors(context, errors);
     }
+    return ("SendMessageOK");
   }
 
 
@@ -615,7 +539,6 @@ public final class MyCFS extends CFSModule {
    */
   public String executeCommandForwardMessage(ActionContext context) {
     Connection db = null;
-    Exception errorMessage = null;
     int myId = -1;
     CFSNote newNote = null;
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
@@ -670,26 +593,21 @@ public final class MyCFS extends CFSModule {
             "Due Date: " + thisTask.getDueDateString() + "\n" +
             ("".equals(thisTask.getNotes()) ? "" : "Relevant Notes: " + StringUtils.toString(thisTask.getNotes())) + "\n\n");
       }
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (context.getAction().getActionName().equals("MyCFSInbox")) {
-        addModuleBean(context, "My Inbox", "");
-      } else if (context.getAction().getActionName().equals("LeadsCallsForward")) {
-        addModuleBean(context, "View Opportunities", "Opportunity Calls");
-      } else {
-        addModuleBean(context, "My Tasks", "Forward Message");
-      }
-      context.getRequest().setAttribute("Note", newNote);
-      return ("ForwardMessageOK");
+    if (context.getAction().getActionName().equals("MyCFSInbox")) {
+      addModuleBean(context, "My Inbox", "");
+    } else if (context.getAction().getActionName().equals("LeadsCallsForward")) {
+      addModuleBean(context, "View Opportunities", "Opportunity Calls");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      addModuleBean(context, "My Tasks", "Forward Message");
     }
+    context.getRequest().setAttribute("Note", newNote);
+    return ("ForwardMessageOK");
   }
 
 
@@ -701,15 +619,12 @@ public final class MyCFS extends CFSModule {
    */
   public String executeCommandReplyToMessage(ActionContext context) {
     Connection db = null;
-    Exception errorMessage = null;
     CFSNote newNote = null;
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
-
     try {
-
       String msgId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       int myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
@@ -753,21 +668,17 @@ public final class MyCFS extends CFSModule {
         HashMap tmp = (HashMap) context.getSession().getAttribute("selectedContacts");
         tmp.clear();
       }
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (context.getAction().getActionName().equals("MyCFSInbox")) {
-        addModuleBean(context, "My Inbox", "");
-      }
-      context.getRequest().setAttribute("Note", newNote);
-      return this.getReturn(context, "ReplyMessage");
+    if (context.getAction().getActionName().equals("MyCFSInbox")) {
+      addModuleBean(context, "My Inbox", "");
     }
-    context.getRequest().setAttribute("Error", errorMessage);
-    return ("SystemError");
+    context.getRequest().setAttribute("Note", newNote);
+    return this.getReturn(context, "ReplyMessage");
   }
 
 
@@ -780,19 +691,14 @@ public final class MyCFS extends CFSModule {
    *@since           1.1
    */
   public String executeCommandHome(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-dashboard-view"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "Home", "");
-    Exception errorMessage = null;
     NewsArticleList newsList = null;
     Connection db = null;
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-
     //this is how we get the multiple-level heirarchy...recursive function.
-
     User thisRec = thisUser.getUserRecord();
 
     UserList shortChildList = thisRec.getShortChildList();
@@ -863,22 +769,15 @@ public final class MyCFS extends CFSModule {
       } else if (industryCheck == null || industryCheck.equals("0")) {
         newsList.setMinerOnly(false);
       }
-
       newsList.buildList(db);
-
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return "SystemError";
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("NewsList", newsList);
-      return "HomeOK";
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return "SystemError";
-    }
+    context.getRequest().setAttribute("NewsList", newsList);
+    return "HomeOK";
   }
 
 
@@ -892,8 +791,6 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     addModuleBean(context, "Home", "");
     CalendarBean calendarInfo = null;
@@ -937,18 +834,14 @@ public final class MyCFS extends CFSModule {
           }
         }
       }
-    } catch (SQLException e) {
-      errorMessage = e;
-    } catch (Exception e) {
-      System.out.println(e.toString());
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return "SystemError";
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
-      return "CalendarDetailsOK";
-    }
-    return "SystemError";
+    context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
+    return "CalendarDetailsOK";
   }
 
 
@@ -962,7 +855,6 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     CalendarBean calendarInfo = null;
     CalendarView companyCalendar = null;
@@ -1005,19 +897,14 @@ public final class MyCFS extends CFSModule {
         method = Class.forName(thisAlert.getClassName()).getMethod("buildAlertCount", new Class[]{Class.forName(param1), Class.forName(param2)});
         method.invoke(thisInstance, new Object[]{companyCalendar, db});
       }
-    } catch (SQLException e) {
-      errorMessage = e;
-    } catch (Exception e) {
-      System.out.println(e.toString());
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return "SystemError";
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
-      return "CalendarOK";
-    }
-    return "SystemError";
+    context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
+    return "CalendarOK";
   }
 
 
@@ -1032,18 +919,17 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     CalendarBean calendarInfo = null;
     addModuleBean(context, "Home", "");
-
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
     try {
       db = this.getConnection(context);
       calendarInfo.update(db, context);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return "SystemError";
     } finally {
       this.freeConnection(context, db);
     }
@@ -1061,11 +947,9 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandWeekView(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     addModuleBean(context, "Home", "");
     CalendarBean calendarInfo = null;
@@ -1075,8 +959,9 @@ public final class MyCFS extends CFSModule {
     try {
       db = this.getConnection(context);
       calendarInfo.update(db, context);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return "SystemError";
     } finally {
       this.freeConnection(context, db);
     }
@@ -1094,22 +979,20 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAgendaView(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     addModuleBean(context, "Home", "");
     CalendarBean calendarInfo = null;
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
-
     try {
       db = this.getConnection(context);
       calendarInfo.update(db, context);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return "SystemError";
     } finally {
       this.freeConnection(context, db);
     }
@@ -1128,11 +1011,9 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyProfile(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "MyProfile", "");
     return ("MyProfileOK");
   }
@@ -1149,7 +1030,6 @@ public final class MyCFS extends CFSModule {
     if (!hasPermission(context, "myhomepage-profile-personal-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -1160,9 +1040,9 @@ public final class MyCFS extends CFSModule {
       thisUser.buildResources(db);
       context.getRequest().setAttribute("User", thisUser);
       context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
-    } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return "SystemError";
     }
     this.freeConnection(context, db);
     addModuleBean(context, "MyProfile", "");
@@ -1182,7 +1062,6 @@ public final class MyCFS extends CFSModule {
       return ("PermissionError");
     }
     //Prepare the action
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     //Process the request
@@ -1201,23 +1080,19 @@ public final class MyCFS extends CFSModule {
         thisContact.checkUserAccount(db);
         this.updateUserContact(db, context, thisContact.getUserId());
       }
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return (executeCommandMyCFSProfile(context));
-      } else if (resultCount == 1) {
-        return ("UpdateProfileOK");
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
+    if (resultCount == -1) {
+      return (executeCommandMyCFSProfile(context));
+    } else if (resultCount == 1) {
+      return ("UpdateProfileOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
@@ -1233,7 +1108,6 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -1241,9 +1115,9 @@ public final class MyCFS extends CFSModule {
       thisUser.setBuildContact(false);
       thisUser.buildResources(db);
       context.getRequest().setAttribute("User", thisUser);
-    } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     }
     this.freeConnection(context, db);
     addModuleBean(context, "MyProfile", "");
@@ -1262,7 +1136,6 @@ public final class MyCFS extends CFSModule {
     if (!hasPermission(context, "myhomepage-profile-password-edit")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     User tempUser = (User) context.getFormBean();
@@ -1272,8 +1145,9 @@ public final class MyCFS extends CFSModule {
       thisUser.setBuildContact(false);
       thisUser.buildResources(db);
       resultCount = tempUser.updatePassword(db, context, thisUser.getPassword());
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
@@ -1281,20 +1155,14 @@ public final class MyCFS extends CFSModule {
       processErrors(context, tempUser.getErrors());
       context.getRequest().setAttribute("NewUser", tempUser);
     }
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return (executeCommandMyCFSPassword(context));
-      } else if (resultCount == 1) {
-        return ("UpdatePasswordOK");
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
+    if (resultCount == -1) {
+      return (executeCommandMyCFSPassword(context));
+    } else if (resultCount == 1) {
+      return ("UpdatePasswordOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
-
   }
 
 
@@ -1309,7 +1177,6 @@ public final class MyCFS extends CFSModule {
     if (!hasPermission(context, "myhomepage-profile-settings-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -1318,9 +1185,9 @@ public final class MyCFS extends CFSModule {
       thisUser.buildResources(db);
       context.getRequest().setAttribute("User", thisUser);
       context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
-    } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     }
     this.freeConnection(context, db);
     addModuleBean(context, "MyProfile", "");
@@ -1336,11 +1203,9 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandUpdateSettings(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-profile-settings-edit"))) {
       return ("PermissionError");
     }
-
     return ("UpdateSettingsOK");
   }
 

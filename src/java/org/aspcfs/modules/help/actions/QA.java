@@ -117,12 +117,9 @@ public final class QA extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      
       LookupList generalFeatures = new LookupList(db, "lookup_help_features");
       context.getRequest().setAttribute("GeneralFeatures", generalFeatures);
-      
-    } catch (SQLException e) {
-      e.printStackTrace(System.out);
+    } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {

@@ -137,9 +137,7 @@ public final class LeadsCalls extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-calls-add")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     boolean recordInserted = false;
-
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
 
@@ -148,7 +146,6 @@ public final class LeadsCalls extends CFSModule {
     thisCall.setModifiedBy(getUserId(context));
 
     Connection db = null;
-
     try {
       db = this.getConnection(context);
       recordInserted = thisCall.insert(db, context);
@@ -157,17 +154,13 @@ public final class LeadsCalls extends CFSModule {
       } else {
         processErrors(context, thisCall.getErrors());
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      return (executeCommandView(context));
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return (executeCommandView(context));
   }
 
 
@@ -327,12 +320,10 @@ public final class LeadsCalls extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-calls-edit")) {
       return ("PermissionError");
     }
-
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
 
-    Exception errorMessage = null;
     Call thisCall = (Call) context.getFormBean();
     String headerId = context.getRequest().getParameter("headerId");
     Connection db = null;
@@ -353,32 +344,28 @@ public final class LeadsCalls extends CFSModule {
         callTypeList.addItem(0, "--None--");
         context.getRequest().setAttribute("CallTypeList", callTypeList);
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return "SystemError";
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        processErrors(context, thisCall.getErrors());
-        context.getRequest().setAttribute("CallDetails", thisCall);
-        return "ModifyOK";
-      } else if (resultCount == 1) {
-        if ("list".equals(context.getRequest().getParameter("return"))) {
-          context.getRequest().removeAttribute("CallDetails");
-          return (executeCommandView(context));
-        } else if ("true".equals(context.getRequest().getParameter("popup"))) {
-          return "PopupCloseOK";
-        } else {
-          return "UpdateOK";
-        }
+    if (resultCount == -1) {
+      processErrors(context, thisCall.getErrors());
+      context.getRequest().setAttribute("CallDetails", thisCall);
+      return "ModifyOK";
+    } else if (resultCount == 1) {
+      if ("list".equals(context.getRequest().getParameter("return"))) {
+        context.getRequest().removeAttribute("CallDetails");
+        return (executeCommandView(context));
+      } else if ("true".equals(context.getRequest().getParameter("popup"))) {
+        return "PopupCloseOK";
       } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return "UserError";
+        return "UpdateOK";
       }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return "SystemError";
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return "UserError";
     }
   }
 }

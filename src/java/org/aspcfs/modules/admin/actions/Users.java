@@ -582,7 +582,6 @@ public final class Users extends CFSModule {
     if (!hasPermission(context, "admin-users-edit")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     User newUser = (User) context.getFormBean();
     Connection db = null;
     int resultCount = 0;
@@ -614,29 +613,25 @@ public final class Users extends CFSModule {
         //cached and are no longer part of the user object
         //updateSystemPermissionCheck(db, context);
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        processErrors(context, newUser.getErrors());
-        return ("UserModifyOK");
-      } else if (resultCount == 1) {
-        context.getRequest().setAttribute("id", context.getRequest().getParameter("id"));
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandListUsers(context));
-        } else {
-          return ("UserUpdateOK");
-        }
+    if (resultCount == -1) {
+      processErrors(context, newUser.getErrors());
+      return ("UserModifyOK");
+    } else if (resultCount == 1) {
+      context.getRequest().setAttribute("id", context.getRequest().getParameter("id"));
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+        return (executeCommandListUsers(context));
       } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
+        return ("UserUpdateOK");
       }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 }

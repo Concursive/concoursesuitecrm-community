@@ -27,7 +27,6 @@ public final class OpportunityForm extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     OpportunityComponent thisComponent = null;
     //Get opportunity object from the request (bean is not accessible here)
@@ -52,27 +51,23 @@ public final class OpportunityForm extends CFSModule {
       db = this.getConnection(context);
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
-      if ((thisOpp != null && thisOpp.getHeader().getId() > 0) || (thisComponent != null && thisComponent.getId() > 0)) {
-        if (popup) {
-          return "PrepareModifyOppPopupOK";
-        }
-        return "PrepareModifyOppOK";
-      } else {
-        if (popup) {
-          return "PrepareAddOppPopupOK";
-        }
-        return "PrepareAddOppOK";
+    boolean popup = "true".equals(context.getRequest().getParameter("popup"));
+    if ((thisOpp != null && thisOpp.getHeader().getId() > 0) || (thisComponent != null && thisComponent.getId() > 0)) {
+      if (popup) {
+        return "PrepareModifyOppPopupOK";
       }
+      return "PrepareModifyOppOK";
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      if (popup) {
+        return "PrepareAddOppPopupOK";
+      }
+      return "PrepareAddOppOK";
     }
   }
 }

@@ -67,7 +67,7 @@ public final class AccountTickets extends CFSModule {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
       }
-    } catch (SQLException errorMessage) {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
@@ -184,7 +184,7 @@ public final class AccountTickets extends CFSModule {
       } else {
         return (executeCommandAddTicket(context));
       }
-    } catch (SQLException errorMessage) {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
@@ -502,7 +502,7 @@ public final class AccountTickets extends CFSModule {
       newTic.setModifiedBy(getUserId(context));
       resultCount = newTic.update(db);
 
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
@@ -635,13 +635,11 @@ public final class AccountTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandCategoryJSList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       String catCode = context.getRequest().getParameter("catCode");
       String subCat1 = context.getRequest().getParameter("subCat1");
       String subCat2 = context.getRequest().getParameter("subCat2");
-
       db = this.getConnection(context);
       if (catCode != null) {
         TicketCategoryList subList1 = new TicketCategoryList();
@@ -662,8 +660,8 @@ public final class AccountTickets extends CFSModule {
         subList3.buildList(db);
         context.getRequest().setAttribute("SubList3", subList3);
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      
     } finally {
       this.freeConnection(context, db);
     }
@@ -678,7 +676,6 @@ public final class AccountTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDepartmentJSList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       String departmentCode = context.getRequest().getParameter("departmentCode");
@@ -692,8 +689,8 @@ public final class AccountTickets extends CFSModule {
         userList.buildList(db);
       }
       context.getRequest().setAttribute("UserList", userList);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      
     } finally {
       this.freeConnection(context, db);
     }
@@ -747,7 +744,6 @@ public final class AccountTickets extends CFSModule {
    *@deprecated      Replaced combobox with a pop-up
    */
   public String executeCommandOrganizationJSList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       String orgId = context.getRequest().getParameter("orgId");
@@ -761,8 +757,8 @@ public final class AccountTickets extends CFSModule {
         contactList.buildList(db);
       }
       context.getRequest().setAttribute("ContactList", contactList);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      
     } finally {
       this.freeConnection(context, db);
     }

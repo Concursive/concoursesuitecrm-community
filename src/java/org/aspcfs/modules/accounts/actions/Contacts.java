@@ -34,9 +34,7 @@ public final class Contacts extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
-
     String orgId = context.getRequest().getParameter("orgId");
     Organization thisOrganization = null;
     Contact thisContact = (Contact) context.getFormBean();
@@ -46,7 +44,6 @@ public final class Contacts extends CFSModule {
       }
       addModuleBean(context, "View Accounts", "Add Contact to Account");
     }
-
     try {
       db = this.getConnection(context);
       //prepare org
@@ -61,18 +58,13 @@ public final class Contacts extends CFSModule {
       ctl.buildList(db);
       ctl.addItem(0, "--None--");
       context.getRequest().setAttribute("ContactTypeList", ctl);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      return ("PrepareOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("PrepareOK");
   }
 
 
@@ -86,31 +78,22 @@ public final class Contacts extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "View Accounts", "Clone Account Contact");
-    Exception errorMessage = null;
     Connection db = null;
-
     String contactId = context.getRequest().getParameter("id");
     Contact cloneContact = null;
-
     try {
       db = this.getConnection(context);
       cloneContact = new Contact(db, contactId);
       cloneContact.resetBaseInfo();
       context.getRequest().setAttribute("ContactDetails", cloneContact);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      return executeCommandPrepare(context);
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return executeCommandPrepare(context);
   }
 
 
@@ -121,7 +104,6 @@ public final class Contacts extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    Exception errorMessage = null;
     boolean recordInserted = false;
     int resultCount = 0;
     String permission = "accounts-accounts-contacts-add";
@@ -170,37 +152,32 @@ public final class Contacts extends CFSModule {
       if (!recordInserted && resultCount < 1) {
         processErrors(context, thisContact.getErrors());
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("orgId", "" + thisContact.getOrgId());
-      if (recordInserted) {
-        if ("true".equals(context.getRequest().getParameter("saveAndClone"))) {
-          thisContact.resetBaseInfo();
-          context.getRequest().setAttribute("ContactDetails", thisContact);
-          return (executeCommandPrepare(context));
-        }
-        if (context.getRequest().getParameter("popup") != null) {
-          return ("CloseAddPopup");
-        }
-        return ("DetailsOK");
-      } else if (resultCount == 1) {
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandView(context));
-        } else {
-          return ("UpdateOK");
-        }
-      } else {
-        context.getRequest().setAttribute("TypeList", thisContact.getTypeList());
+    context.getRequest().setAttribute("orgId", "" + thisContact.getOrgId());
+    if (recordInserted) {
+      if ("true".equals(context.getRequest().getParameter("saveAndClone"))) {
+        thisContact.resetBaseInfo();
+        context.getRequest().setAttribute("ContactDetails", thisContact);
         return (executeCommandPrepare(context));
       }
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("CloseAddPopup");
+      }
+      return ("DetailsOK");
+    } else if (resultCount == 1) {
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+        return (executeCommandView(context));
+      } else {
+        return ("UpdateOK");
+      }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("TypeList", thisContact.getTypeList());
+      return (executeCommandPrepare(context));
     }
   }
 
@@ -212,25 +189,20 @@ public final class Contacts extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     Contact thisContact = null;
     HtmlDialog htmlDialog = new HtmlDialog();
     String id = null;
     String orgId = null;
-
     if (!(hasPermission(context, "accounts-accounts-contacts-delete"))) {
       return ("PermissionError");
     }
-
     if (context.getRequest().getParameter("id") != null) {
       id = context.getRequest().getParameter("id");
     }
-
     if (context.getRequest().getParameter("orgId") != null) {
       orgId = context.getRequest().getParameter("orgId");
     }
-
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, id);
@@ -256,19 +228,14 @@ public final class Contacts extends CFSModule {
         htmlDialog.setHeader("This contact cannot be deleted because it is associated with a User account.");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }
-
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getSession().setAttribute("Dialog", htmlDialog);
-      return ("ConfirmDeleteOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getSession().setAttribute("Dialog", htmlDialog);
+    return ("ConfirmDeleteOK");
   }
 
 
@@ -284,31 +251,23 @@ public final class Contacts extends CFSModule {
       return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "View Contact Details");
-    Exception errorMessage = null;
-
     String contactId = context.getRequest().getParameter("id");
-
     Connection db = null;
     Contact newContact = null;
     Organization thisOrganization = null;
-
     try {
       db = this.getConnection(context);
       newContact = new Contact(db, contactId);
       thisOrganization = new Organization(db, newContact.getOrgId());
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("ContactDetails", newContact);
-      context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      return ("DetailsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("ContactDetails", newContact);
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    return ("DetailsOK");
   }
 
 
@@ -323,9 +282,7 @@ public final class Contacts extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-contacts-delete")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     boolean recordDeleted = false;
-
     Contact thisContact = null;
     Organization thisOrganization = null;
     String orgId = null;
@@ -339,25 +296,21 @@ public final class Contacts extends CFSModule {
       recordDeleted = thisContact.delete(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "View Accounts", "Delete Contact");
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("orgId", orgId);
-      if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl", "Contacts.do?command=View&orgId=" + orgId);
-        deleteRecentItem(context, thisContact);
-        return ("DeleteOK");
-      } else {
-        processErrors(context, thisContact.getErrors());
-        return (executeCommandView(context));
-      }
+    context.getRequest().setAttribute("orgId", orgId);
+    if (recordDeleted) {
+      context.getRequest().setAttribute("refreshUrl", "Contacts.do?command=View&orgId=" + orgId);
+      deleteRecentItem(context, thisContact);
+      return ("DeleteOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      processErrors(context, thisContact.getErrors());
+      return (executeCommandView(context));
     }
   }
 
@@ -373,7 +326,6 @@ public final class Contacts extends CFSModule {
       return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "Modify Contact");
-    Exception errorMessage = null;
     String passedId = context.getRequest().getParameter("id");
     Connection db = null;
     Contact newContact = null;
@@ -381,17 +333,13 @@ public final class Contacts extends CFSModule {
       db = this.getConnection(context);
       newContact = (Contact) context.getFormBean();
       newContact.queryRecord(db, Integer.parseInt(passedId));
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      return executeCommandPrepare(context);
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return executeCommandPrepare(context);
   }
 
 
@@ -407,18 +355,13 @@ public final class Contacts extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-view"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "View Accounts", "View Contact Details");
-    Exception errorMessage = null;
-
     String orgid = context.getRequest().getParameter("orgId");
     if (orgid == null) {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
-
     PagedListInfo companyDirectoryInfo = this.getPagedListInfo(context, "ContactListInfo");
     companyDirectoryInfo.setLink("Contacts.do?command=View&orgId=" + orgid);
-
     Connection db = null;
     ContactList contactList = new ContactList();
     Organization thisOrganization = null;
@@ -431,20 +374,15 @@ public final class Contacts extends CFSModule {
       contactList.setBuildTypes(false);
       contactList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("ContactList", contactList);
-      context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      return ("ListOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("ContactList", contactList);
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    return ("ListOK");
   }
 
 

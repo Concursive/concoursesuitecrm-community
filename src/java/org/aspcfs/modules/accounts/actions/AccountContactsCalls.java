@@ -112,31 +112,25 @@ public final class AccountContactsCalls extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-contacts-calls-add"))) {
       return ("PermissionError");
     }
-
     String contactId = context.getRequest().getParameter("contactId");
     addModuleBean(context, "View Accounts", "Add a Call");
-
     Connection db = null;
     try {
       db = this.getConnection(context);
-
       //add account and contact to the request
       addFormElements(context, db);
-
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     //if a different module reuses this action then do a explicit return
     if (context.getRequest().getParameter("actionSource") != null) {
       return this.getReturn(context, "AddCall");
@@ -190,7 +184,7 @@ public final class AccountContactsCalls extends CFSModule {
         callTypeList.addItem(0, "--None--");
         context.getRequest().setAttribute("CallTypeList", callTypeList);
       }
-    } catch (SQLException e) {
+    } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {

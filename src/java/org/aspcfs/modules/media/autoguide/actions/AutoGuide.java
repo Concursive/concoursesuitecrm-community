@@ -300,8 +300,6 @@ public final class AutoGuide extends CFSModule {
     if (!(hasPermission(context, "accounts-autoguide-inventory-add"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
-
     int orgId = Integer.parseInt(context.getRequest().getParameter("orgId"));
     Connection db = null;
     try {
@@ -312,20 +310,14 @@ public final class AutoGuide extends CFSModule {
       populateModelSelect(context, db, null);
       populateOptionList(context, db);
       populateAdRunTypeSelect(context, db);
-
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "View Accounts", "Add Vehicle");
-      return ("AddOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "View Accounts", "Add Vehicle");
+    return ("AddOK");
   }
 
 
@@ -387,7 +379,6 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandUpdateMakeList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       String year = context.getRequest().getParameter("year");
@@ -398,8 +389,8 @@ public final class AutoGuide extends CFSModule {
       }
       makeList.buildList(db);
       context.getRequest().setAttribute("MakeList", makeList);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      
     } finally {
       this.freeConnection(context, db);
     }
@@ -415,7 +406,6 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandUpdateModelList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       int makeId = Integer.parseInt(context.getRequest().getParameter("makeId"));
@@ -430,8 +420,8 @@ public final class AutoGuide extends CFSModule {
         modelList.buildList(db);
       }
       context.getRequest().setAttribute("ModelList", modelList);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      
     } finally {
       this.freeConnection(context, db);
     }

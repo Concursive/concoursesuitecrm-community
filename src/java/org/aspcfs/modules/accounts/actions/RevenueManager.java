@@ -287,7 +287,7 @@ public final class RevenueManager extends CFSModule {
       buildFormElements(context, db);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
@@ -436,7 +436,7 @@ public final class RevenueManager extends CFSModule {
       } else {
         processErrors(context, thisRevenue.getErrors());
       }
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
@@ -597,7 +597,7 @@ public final class RevenueManager extends CFSModule {
         buildFormElements(context, db);
         thisOrganization = new Organization(db, Integer.parseInt(orgid));
       }
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);

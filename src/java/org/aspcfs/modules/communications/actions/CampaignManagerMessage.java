@@ -139,7 +139,6 @@ public final class CampaignManagerMessage extends CFSModule {
       return ("PermissionError");
     }
     addModuleBean(context, "ManageMessages", "Message Details");
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     String id = (String) context.getRequest().getParameter("id");
@@ -160,29 +159,25 @@ public final class CampaignManagerMessage extends CFSModule {
       if (resultCount == -1) {
         processErrors(context, newMessage.getErrors());
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        context.getRequest().setAttribute("MessageDetails", newMessage);
-        return ("ModifyOK");
-      } else if (resultCount == 1) {
-        context.getRequest().setAttribute("MessageDetails", newMessage);
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandView(context));
-        } else {
-          return ("UpdateOK");
-        }
+    if (resultCount == -1) {
+      context.getRequest().setAttribute("MessageDetails", newMessage);
+      return ("ModifyOK");
+    } else if (resultCount == 1) {
+      context.getRequest().setAttribute("MessageDetails", newMessage);
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+        return (executeCommandView(context));
       } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
+        return ("UpdateOK");
       }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
@@ -197,35 +192,24 @@ public final class CampaignManagerMessage extends CFSModule {
     if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "ManageMessages", "View Message Details");
-    Exception errorMessage = null;
-
     String messageId = context.getRequest().getParameter("id");
-
     Connection db = null;
     Message newMessage = null;
-
     try {
       db = this.getConnection(context);
       newMessage = new Message(db, messageId);
       if (!hasAuthority(db, context, newMessage)) {
         return ("PermissionError");
       }
-
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("MessageDetails", newMessage);
-      return ("DetailsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("MessageDetails", newMessage);
+    return ("DetailsOK");
   }
 
 
@@ -287,7 +271,6 @@ public final class CampaignManagerMessage extends CFSModule {
       return ("PermissionError");
     }
     addModuleBean(context, "BuildNew", "Add New Message");
-    Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
     Message newMessage = (Message) context.getFormBean();
@@ -307,20 +290,16 @@ public final class CampaignManagerMessage extends CFSModule {
       } else {
         processErrors(context, newMessage.getErrors());
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("InsertOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
+    if (recordInserted) {
+      return ("InsertOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (executeCommandAdd(context));
     }
   }
 

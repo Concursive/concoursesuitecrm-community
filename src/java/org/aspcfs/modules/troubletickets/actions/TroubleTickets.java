@@ -745,35 +745,27 @@ public final class TroubleTickets extends CFSModule {
       return ("PermissionError");
     }
     int resultCount = -1;
-    Exception errorMessage = null;
     Connection db = null;
     Ticket thisTicket = null;
-
     try {
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(context.getRequest().getParameter("id")));
       thisTicket.setModifiedBy(getUserId(context));
       resultCount = thisTicket.reopen(db);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return (executeCommandDetails(context));
-      } else if (resultCount == 1) {
-        return (executeCommandDetails(context));
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
+    if (resultCount == -1) {
+      return (executeCommandDetails(context));
+    } else if (resultCount == 1) {
+      return (executeCommandDetails(context));
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
-
   }
 
 
@@ -923,29 +915,21 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandUpdate(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-edit"))) {
+    if (!hasPermission(context, "tickets-tickets-edit")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-
     int catCount = 0;
     TicketCategory thisCat = null;
     boolean catInserted = false;
     boolean smartCommentsResult = true;
-
     Ticket newTic = (Ticket) context.getFormBean();
-
     try {
       db = this.getConnection(context);
-
       for (catCount = 0; catCount < 4; catCount++) {
         if ((context.getRequest().getParameter("newCat" + catCount + "chk") != null && context.getRequest().getParameter("newCat" + catCount + "chk").equals("on") && context.getRequest().getParameter("newCat" + catCount) != null && !(context.getRequest().getParameter("newCat" + catCount).equals("")))) {
           thisCat = new TicketCategory();
-
           if (catCount == 0) {
             thisCat.setParentCode(0);
           } else if (catCount == 1) {
@@ -955,12 +939,10 @@ public final class TroubleTickets extends CFSModule {
           } else {
             thisCat.setParentCode(newTic.getSubCat2());
           }
-
           thisCat.setDescription(context.getRequest().getParameter("newCat" + catCount));
           thisCat.setCategoryLevel(catCount);
           thisCat.setLevel(catCount);
           catInserted = thisCat.insert(db);
-
           if (catInserted == true) {
             if (catCount == 0) {
               newTic.setCatCode(thisCat.getId());
@@ -974,41 +956,33 @@ public final class TroubleTickets extends CFSModule {
           }
         }
       }
-
       newTic.setModifiedBy(getUserId(context));
-
       //Get the previousTicket, update the ticket, then send both to a hook
       Ticket previousTicket = new Ticket(db, newTic.getId());
       resultCount = newTic.update(db);
       if (resultCount == 1) {
         processUpdateHook(context, previousTicket, newTic);
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     if (resultCount == -1) {
       processErrors(context, newTic.getErrors());
     }
-
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return (executeCommandModify(context));
-      } else if (resultCount == 1) {
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandHome(context));
-        } else {
-          return ("UpdateOK");
-        }
+    if (resultCount == -1) {
+      return (executeCommandModify(context));
+    } else if (resultCount == 1) {
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+        return (executeCommandHome(context));
       } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
+        return ("UpdateOK");
       }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
@@ -1200,7 +1174,6 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandCategoryJSList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       String catCode = context.getRequest().getParameter("catCode");
@@ -1227,8 +1200,8 @@ public final class TroubleTickets extends CFSModule {
         subList3.buildList(db);
         context.getRequest().setAttribute("SubList3", subList3);
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      
     } finally {
       this.freeConnection(context, db);
     }
@@ -1243,7 +1216,6 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDepartmentJSList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       String departmentCode = context.getRequest().getParameter("departmentCode");
@@ -1258,8 +1230,8 @@ public final class TroubleTickets extends CFSModule {
         userList.buildList(db);
       }
       context.getRequest().setAttribute("UserList", userList);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      
     } finally {
       this.freeConnection(context, db);
     }
@@ -1286,7 +1258,8 @@ public final class TroubleTickets extends CFSModule {
         contactList.buildList(db);
       }
       context.getRequest().setAttribute("ContactList", contactList);
-    } catch (SQLException errorMessage) {
+    } catch (Exception errorMessage) {
+      
     } finally {
       this.freeConnection(context, db);
     }

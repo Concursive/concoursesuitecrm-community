@@ -453,16 +453,12 @@ public final class CampaignManagerSurvey extends CFSModule {
     if (!(hasPermission(context, "campaign-campaigns-surveys-add") || hasPermission(context, "campaign-campaigns-surveys-edit"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     boolean recordInserted = false;
     int recordsModified = 0;
     Connection db = null;
-
     try {
       Survey newSurvey = (Survey) context.getFormBean();
       int surveyId = -1;
-
       if (context.getRequest().getParameter("id") != null && !(context.getRequest().getParameter("id").equals(""))) {
         surveyId = Integer.parseInt(context.getRequest().getParameter("id"));
       }
@@ -471,14 +467,12 @@ public final class CampaignManagerSurvey extends CFSModule {
       }
       newSurvey.setModifiedBy(getUserId(context));
       newSurvey.setRequestItems(context.getRequest());
-
       db = this.getConnection(context);
       if (surveyId == -1) {
         recordInserted = newSurvey.insert(db);
       } else {
         recordsModified = newSurvey.update(db);
       }
-
       if (recordInserted || recordsModified > 0) {
         context.getRequest().setAttribute("SurveyDetails", newSurvey);
       } else {
@@ -487,24 +481,19 @@ public final class CampaignManagerSurvey extends CFSModule {
         }
         processErrors(context, newSurvey.getErrors());
       }
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (recordInserted || recordsModified > 0) {
-        return ("InsertOK");
-      } else if (recordsModified == 0) {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      } else {
-        return (executeCommandAdd(context));
-      }
+    if (recordInserted || recordsModified > 0) {
+      return ("InsertOK");
+    } else if (recordsModified == 0) {
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (executeCommandAdd(context));
     }
   }
 
