@@ -581,8 +581,9 @@
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
-        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
-        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+        <fileset dir="${CFS_HOME}/WEB-INF/lib">
+          <include name="**/*.jar"/>
+        </fileset>
       </classpath>
       <arg value="${bin.dir}${fs}netDesc-loadAccounts.xml"/>
     </java>
@@ -607,8 +608,9 @@
     <java classname="org.aspcfs.apps.notifier.Notifier" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
-        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
-        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+        <fileset dir="${CFS_HOME}/WEB-INF/lib">
+          <include name="**/*.jar"/>
+        </fileset>
       </classpath>
       <arg value="${CFS_HOME}${fs}WEB-INF${fs}notifier.xml"/>
     </java>
