@@ -246,7 +246,13 @@ function removeValues(){
 				}
 		}
 		delete searchCriteria;
-		searchCriteria = new Array();
+    
+    for (j=0; j<searchCriteria.length; j++) {
+      alert(j+"::"+searchCriteria.length);
+      searchCriteria[j] = null;
+    }
+    
+		//searchCriteria = new Array();
     alert("four " + tempArray.length);
 		for (i=0; i < tempArray.length; i++){
 			if (tempArray[i] != null) {
