@@ -481,6 +481,7 @@ public final class MyCFS extends CFSModule {
         Set s = selectedList.keySet();
         Iterator i = s.iterator();
         while (i.hasNext()) {
+          this.renewConnection(context,db);
           count++;
           Integer hashKey = (Integer) i.next();
           contactId = hashKey.intValue();
