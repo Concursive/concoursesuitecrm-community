@@ -390,9 +390,6 @@ public class CallList extends Vector {
     rs = pst.executeQuery();
     while (rs.next()) {
       String alertdate = Call.getAlertDateStringLongYear(rs.getDate("alertdate"));
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("CallList --> Added Days Calls " + alertdate + ":" + rs.getInt("count"));
-      }
       events.put(alertdate, new Integer(rs.getInt("count")));
     }
     rs.close();
@@ -519,7 +516,9 @@ public class CallList extends Vector {
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    System.out.println("CallList --> Building List " + pst.toString());
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CallList --> " + pst.toString());
+    }
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {
