@@ -35,7 +35,11 @@ public class ContactPhoneNumber extends PhoneNumber {
     isContact = true;
     buildRecord(rs);
   }
-
+  
+  
+  public ContactPhoneNumber(Connection db, int phoneNumberId) throws SQLException {
+          queryRecord(db, phoneNumberId);
+  }
 
   /**
    *  Constructor for the ContactPhoneNumber object
@@ -46,9 +50,13 @@ public class ContactPhoneNumber extends PhoneNumber {
    *@since
    */
   public ContactPhoneNumber(Connection db, String phoneNumberId) throws SQLException {
+          queryRecord(db, Integer.parseInt(phoneNumberId));
+  }
+          
+  public void queryRecord(Connection db, int phoneNumberId) throws SQLException {
     isContact = true;
-    if (phoneNumberId == null) {
-      throw new SQLException("Phone Number ID not specified.");
+    if (phoneNumberId <= 0) {
+      throw new SQLException("Invalid Phone Number ID specified.");
     }
 
     Statement st = null;
@@ -106,6 +114,11 @@ public class ContactPhoneNumber extends PhoneNumber {
    *@exception  SQLException  Description of Exception
    *@since
    */
+   
+   public void insert(Connection db) throws SQLException {
+           insert(db, this.getContactId(), this.getEnteredBy());
+   }
+   
   public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO contact_phone " +
@@ -113,8 +126,16 @@ public class ContactPhoneNumber extends PhoneNumber {
         "VALUES " +
         "(?, ?, ?, ?, ?, ?) ");
     int i = 0;
-    pst.setInt(++i, contactId);
-    pst.setInt(++i, this.getType());
+    if (contactId > -1) {
+      pst.setInt(++i, this.getContactId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
     pst.setInt(++i, enteredBy);
@@ -141,7 +162,11 @@ public class ContactPhoneNumber extends PhoneNumber {
         "modified = CURRENT_TIMESTAMP " +
         "WHERE phone_id = ? ");
     int i = 0;
-    pst.setInt(++i, this.getType());
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
     pst.setInt(++i, modifiedBy);

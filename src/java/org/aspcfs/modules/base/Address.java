@@ -5,6 +5,7 @@ package com.darkhorseventures.cfsbase;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Represents a mailing address to be used as a base class.
@@ -30,6 +31,8 @@ public class Address {
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private boolean enabled = true;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
 
 
   /**
@@ -42,7 +45,10 @@ public class Address {
     this.id = tmp;
   }
 
-
+  public void setEnabled(String tmp) {
+    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+  }
+  
   /**
    *  Sets the Id attribute of the Address object
    *
@@ -398,7 +404,17 @@ public int getContactId() {
     return enteredBy;
   }
 
+public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
+  
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
+  }
+  
   /**
    *  Gets the ModifiedBy attribute of the Address object
    *
@@ -480,11 +496,12 @@ public int getContactId() {
     this.setState(rs.getString("state"));
     this.setZip(rs.getString("postalcode"));
     this.setCountry(rs.getString("country"));
+    this.setEntered(rs.getTimestamp("entered"));
     this.setEnteredBy(rs.getInt("enteredby"));
     if (this.getEnteredBy() == -1) {
             this.setEnteredBy(0);
     }
-    
+    this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
     if (this.getModifiedBy() == -1) {
             this.setModifiedBy(0);

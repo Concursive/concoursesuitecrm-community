@@ -318,17 +318,20 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
     }
     this.setTypeName(rs.getString("description"));
     this.setEmail(rs.getString("email"));
+    this.setEntered(rs.getTimestamp("entered"));
     this.setEnteredBy(rs.getInt("enteredby"));
     
     if (enteredBy == -1) {
             this.setEnteredBy(0);
     }
     
+    this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
     
     if (modifiedBy == -1) {
             this.setModifiedBy(0);
     }
+    
   }
 
 

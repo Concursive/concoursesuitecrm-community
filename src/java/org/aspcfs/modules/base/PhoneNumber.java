@@ -5,6 +5,7 @@ package com.darkhorseventures.cfsbase;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Represents a phone number.
@@ -26,6 +27,8 @@ public class PhoneNumber {
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private boolean enabled = true;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
 
 
   /**
@@ -60,6 +63,9 @@ public class PhoneNumber {
     this.orgId = tmp;
   }
 
+  public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the ContactId attribute of the PhoneNumber object
@@ -71,6 +77,9 @@ public class PhoneNumber {
     this.contactId = tmp;
   }
 
+  public void setContactId(String tmp) {
+    this.contactId = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the Type attribute of the PhoneNumber object
@@ -136,6 +145,10 @@ public class PhoneNumber {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
+  
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -147,7 +160,14 @@ public class PhoneNumber {
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
+  
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
 
+public int getContactId() {
+	return contactId;
+}
 
   /**
    *  Sets the Enabled attribute of the PhoneNumber object
@@ -157,6 +177,10 @@ public class PhoneNumber {
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
+  }
+  
+  public void setEnabled(String tmp) {
+    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -258,6 +282,18 @@ public class PhoneNumber {
     return modifiedBy;
   }
 
+  public java.sql.Timestamp getEntered() { return entered; }
+public java.sql.Timestamp getModified() { return modified; }
+public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
+
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
+  
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
+  }
 
   /**
    *  Returns the phone number and an extension if it has one
@@ -349,16 +385,33 @@ public class PhoneNumber {
 
     if (!isContact) {
       this.setOrgId(rs.getInt("org_id"));
+      if (rs.wasNull()) {
+              this.setOrgId(-1);
+      }
     } else {
       this.setContactId(rs.getInt("contact_id"));
+      if (rs.wasNull()) {
+              this.setContactId(-1);
+      }
     }
 
     this.setType(rs.getInt("phone_type"));
+    if (rs.wasNull()) {
+            this.setType(-1);
+    }
     this.setTypeName(rs.getString("description"));
     this.setNumber(rs.getString("number"));
     this.setExtension(rs.getString("extension"));
+    this.setEntered(rs.getTimestamp("entered"));
     this.setEnteredBy(rs.getInt("enteredby"));
+    if (enteredBy == -1) {
+            this.setEnteredBy(0);
+    }
+    this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
+    if (modifiedBy == -1) {
+            this.setModifiedBy(0);
+    }
   }
 
 

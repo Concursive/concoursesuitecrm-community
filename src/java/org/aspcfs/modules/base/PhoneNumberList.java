@@ -23,7 +23,7 @@ public class PhoneNumberList extends Vector {
   protected PagedListInfo pagedListInfo = null;
   protected int orgId = -1;
   protected int type = -1;
-  protected int contactId = -1;
+  private int contactId = -1;
 
 
   /**
@@ -54,7 +54,7 @@ public class PhoneNumberList extends Vector {
    *@param  tmp  The new ContactId value
    *@since
    */
-  protected void setContactId(int tmp) {
+  public void setContactId(int tmp) {
     this.contactId = tmp;
   }
 
