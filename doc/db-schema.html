@@ -2,7 +2,7 @@
    "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-    <title>ASPCFS Database Schema</title>
+    <title>CFS Database Schema</title>
     <style type="text/css">
 	BODY {
 		color:	#000000; 
@@ -107,10 +107,10 @@
     <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
   </head>
   <body>
-  <center>
-  <p><h1>Dark Horse Ventures<br>ASPCFS Database Schema<br>Release 2002-11-27</h1></p>
-  </center>
-<a name="index"><h1>Index of database</h1><ul><li><a name="group_public">public</a></li><ul><li><a href="#table_access">access</a></li><li><a href="#table_access_log">access_log</a></li><li><a href="#table_account_type_levels">account_type_levels</a></li><li><a href="#table_active_campaign_groups">active_campaign_groups</a></li><li><a href="#table_active_survey">active_survey</a></li><li><a href="#table_active_survey_answer_items">active_survey_answer_items</a></li><li><a href="#table_active_survey_answers">active_survey_answers</a></li><li><a href="#table_active_survey_items">active_survey_items</a></li><li><a href="#table_active_survey_questions">active_survey_questions</a></li><li><a href="#table_active_survey_responses">active_survey_responses</a></li><li><a href="#table_call_log">call_log</a></li><li><a href="#table_campaign">campaign</a></li><li><a href="#table_campaign_list_groups">campaign_list_groups</a></li><li><a href="#table_campaign_run">campaign_run</a></li><li><a href="#table_campaign_survey_link">campaign_survey_link</a></li><li><a href="#table_cfsinbox_message">cfsinbox_message</a></li><li><a href="#table_cfsinbox_messagelink">cfsinbox_messagelink</a></li><li><a href="#table_contact">contact</a></li><li><a href="#table_contact_address">contact_address</a></li><li><a href="#table_contact_emailaddress">contact_emailaddress</a></li><li><a href="#table_contact_phone">contact_phone</a></li><li><a href="#table_custom_field_category">custom_field_category</a></li><li><a href="#table_custom_field_data">custom_field_data</a></li><li><a href="#table_custom_field_group">custom_field_group</a></li><li><a href="#table_custom_field_info">custom_field_info</a></li><li><a href="#table_custom_field_lookup">custom_field_lookup</a></li><li><a href="#table_custom_field_record">custom_field_record</a></li><li><a href="#table_excluded_recipient">excluded_recipient</a></li><li><a href="#table_field_types">field_types</a></li><li><a href="#table_help_contents">help_contents</a></li><li><a href="#table_lookup_account_types">lookup_account_types</a></li><li><a href="#table_lookup_call_types">lookup_call_types</a></li><li><a href="#table_lookup_contact_types">lookup_contact_types</a></li><li><a href="#table_lookup_contactaddress_types">lookup_contactaddress_types</a></li><li><a href="#table_lookup_contactemail_types">lookup_contactemail_types</a></li><li><a href="#table_lookup_contactphone_types">lookup_contactphone_types</a></li><li><a href="#table_lookup_delivery_options">lookup_delivery_options</a></li><li><a href="#table_lookup_department">lookup_department</a></li><li><a href="#table_lookup_employment_types">lookup_employment_types</a></li><li><a href="#table_lookup_industry">lookup_industry</a></li><li><a href="#table_lookup_instantmessenger_types">lookup_instantmessenger_types</a></li><li><a href="#table_lookup_locale">lookup_locale</a></li><li><a href="#table_lookup_opportunity_types">lookup_opportunity_types</a></li><li><a href="#table_lookup_orgaddress_types">lookup_orgaddress_types</a></li><li><a href="#table_lookup_orgemail_types">lookup_orgemail_types</a></li><li><a href="#table_lookup_orgphone_types">lookup_orgphone_types</a></li><li><a href="#table_lookup_project_activity">lookup_project_activity</a></li><li><a href="#table_lookup_project_issues">lookup_project_issues</a></li><li><a href="#table_lookup_project_loe">lookup_project_loe</a></li><li><a href="#table_lookup_project_priority">lookup_project_priority</a></li><li><a href="#table_lookup_project_status">lookup_project_status</a></li><li><a href="#table_lookup_revenue_types">lookup_revenue_types</a></li><li><a href="#table_lookup_revenuedetail_types">lookup_revenuedetail_types</a></li><li><a href="#table_lookup_stage">lookup_stage</a></li><li><a href="#table_lookup_survey_types">lookup_survey_types</a></li><li><a href="#table_lookup_task_category">lookup_task_category</a></li><li><a href="#table_lookup_task_loe">lookup_task_loe</a></li><li><a href="#table_lookup_task_priority">lookup_task_priority</a></li><li><a href="#table_lookup_ticketsource">lookup_ticketsource</a></li><li><a href="#table_message">message</a></li><li><a href="#table_message_template">message_template</a></li><li><a href="#table_mod_log">mod_log</a></li><li><a href="#table_news">news</a></li><li><a href="#table_notification">notification</a></li><li><a href="#table_opportunity">opportunity</a></li><li><a href="#table_organization">organization</a></li><li><a href="#table_organization_address">organization_address</a></li><li><a href="#table_organization_emailaddress">organization_emailaddress</a></li><li><a href="#table_organization_phone">organization_phone</a></li><li><a href="#table_permission">permission</a></li><li><a href="#table_permission_category">permission_category</a></li><li><a href="#table_process_log">process_log</a></li><li><a href="#table_project_assignments">project_assignments</a></li><li><a href="#table_project_assignments_status">project_assignments_status</a></li><li><a href="#table_project_files">project_files</a></li><li><a href="#table_project_files_download">project_files_download</a></li><li><a href="#table_project_files_version">project_files_version</a></li><li><a href="#table_project_folders">project_folders</a></li><li><a href="#table_project_issue_replies">project_issue_replies</a></li><li><a href="#table_project_issues">project_issues</a></li><li><a href="#table_project_requirements">project_requirements</a></li><li><a href="#table_project_team">project_team</a></li><li><a href="#table_projects">projects</a></li><li><a href="#table_revenue">revenue</a></li><li><a href="#table_revenue_detail">revenue_detail</a></li><li><a href="#table_role">role</a></li><li><a href="#table_role_permission">role_permission</a></li><li><a href="#table_saved_criteriaelement">saved_criteriaelement</a></li><li><a href="#table_saved_criterialist">saved_criterialist</a></li><li><a href="#table_scheduled_recipient">scheduled_recipient</a></li><li><a href="#table_search_fields">search_fields</a></li><li><a href="#table_state">state</a></li><li><a href="#table_survey">survey</a></li><li><a href="#table_survey_items">survey_items</a></li><li><a href="#table_survey_questions">survey_questions</a></li><li><a href="#table_sync_client">sync_client</a></li><li><a href="#table_sync_conflict_log">sync_conflict_log</a></li><li><a href="#table_sync_log">sync_log</a></li><li><a href="#table_sync_map">sync_map</a></li><li><a href="#table_sync_system">sync_system</a></li><li><a href="#table_sync_table">sync_table</a></li><li><a href="#table_sync_transaction_log">sync_transaction_log</a></li><li><a href="#table_system_prefs">system_prefs</a></li><li><a href="#table_task">task</a></li><li><a href="#table_taskcategory_project">taskcategory_project</a></li><li><a href="#table_tasklink_contact">tasklink_contact</a></li><li><a href="#table_tasklink_project">tasklink_project</a></li><li><a href="#table_tasklink_ticket">tasklink_ticket</a></li><li><a href="#table_ticket">ticket</a></li><li><a href="#table_ticket_category">ticket_category</a></li><li><a href="#table_ticket_level">ticket_level</a></li><li><a href="#table_ticket_priority">ticket_priority</a></li><li><a href="#table_ticket_severity">ticket_severity</a></li><li><a href="#table_ticketlog">ticketlog</a></li></ul></ul><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_access">access</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+<center>
+<p><h1>Dark Horse Ventures<br>CFS Database Schema<br>release 2003-04-15</h1></p>
+</center>
+<a name="index"><h1>Index of database</h1><ul><li><a name="group_public">public</a></li><ul><li><a href="#table_access">access</a></li><li><a href="#table_access_log">access_log</a></li><li><a href="#table_account_type_levels">account_type_levels</a></li><li><a href="#table_active_campaign_groups">active_campaign_groups</a></li><li><a href="#table_active_survey">active_survey</a></li><li><a href="#table_active_survey_answer_avg">active_survey_answer_avg</a></li><li><a href="#table_active_survey_answer_items">active_survey_answer_items</a></li><li><a href="#table_active_survey_answers">active_survey_answers</a></li><li><a href="#table_active_survey_items">active_survey_items</a></li><li><a href="#table_active_survey_questions">active_survey_questions</a></li><li><a href="#table_active_survey_responses">active_survey_responses</a></li><li><a href="#table_call_log">call_log</a></li><li><a href="#table_campaign">campaign</a></li><li><a href="#table_campaign_list_groups">campaign_list_groups</a></li><li><a href="#table_campaign_run">campaign_run</a></li><li><a href="#table_campaign_survey_link">campaign_survey_link</a></li><li><a href="#table_cfsinbox_message">cfsinbox_message</a></li><li><a href="#table_cfsinbox_messagelink">cfsinbox_messagelink</a></li><li><a href="#table_contact">contact</a></li><li><a href="#table_contact_address">contact_address</a></li><li><a href="#table_contact_emailaddress">contact_emailaddress</a></li><li><a href="#table_contact_phone">contact_phone</a></li><li><a href="#table_contact_type_levels">contact_type_levels</a></li><li><a href="#table_custom_field_category">custom_field_category</a></li><li><a href="#table_custom_field_data">custom_field_data</a></li><li><a href="#table_custom_field_group">custom_field_group</a></li><li><a href="#table_custom_field_info">custom_field_info</a></li><li><a href="#table_custom_field_lookup">custom_field_lookup</a></li><li><a href="#table_custom_field_record">custom_field_record</a></li><li><a href="#table_excluded_recipient">excluded_recipient</a></li><li><a href="#table_field_types">field_types</a></li><li><a href="#table_help_contents">help_contents</a></li><li><a href="#table_lookup_account_types">lookup_account_types</a></li><li><a href="#table_lookup_call_types">lookup_call_types</a></li><li><a href="#table_lookup_contact_types">lookup_contact_types</a></li><li><a href="#table_lookup_contactaddress_types">lookup_contactaddress_types</a></li><li><a href="#table_lookup_contactemail_types">lookup_contactemail_types</a></li><li><a href="#table_lookup_contactphone_types">lookup_contactphone_types</a></li><li><a href="#table_lookup_delivery_options">lookup_delivery_options</a></li><li><a href="#table_lookup_department">lookup_department</a></li><li><a href="#table_lookup_employment_types">lookup_employment_types</a></li><li><a href="#table_lookup_industry">lookup_industry</a></li><li><a href="#table_lookup_instantmessenger_types">lookup_instantmessenger_types</a></li><li><a href="#table_lookup_lists_lookup">lookup_lists_lookup</a></li><li><a href="#table_lookup_locale">lookup_locale</a></li><li><a href="#table_lookup_opportunity_types">lookup_opportunity_types</a></li><li><a href="#table_lookup_orgaddress_types">lookup_orgaddress_types</a></li><li><a href="#table_lookup_orgemail_types">lookup_orgemail_types</a></li><li><a href="#table_lookup_orgphone_types">lookup_orgphone_types</a></li><li><a href="#table_lookup_project_activity">lookup_project_activity</a></li><li><a href="#table_lookup_project_issues">lookup_project_issues</a></li><li><a href="#table_lookup_project_loe">lookup_project_loe</a></li><li><a href="#table_lookup_project_priority">lookup_project_priority</a></li><li><a href="#table_lookup_project_status">lookup_project_status</a></li><li><a href="#table_lookup_revenue_types">lookup_revenue_types</a></li><li><a href="#table_lookup_revenuedetail_types">lookup_revenuedetail_types</a></li><li><a href="#table_lookup_stage">lookup_stage</a></li><li><a href="#table_lookup_survey_types">lookup_survey_types</a></li><li><a href="#table_lookup_task_category">lookup_task_category</a></li><li><a href="#table_lookup_task_loe">lookup_task_loe</a></li><li><a href="#table_lookup_task_priority">lookup_task_priority</a></li><li><a href="#table_lookup_ticketsource">lookup_ticketsource</a></li><li><a href="#table_message">message</a></li><li><a href="#table_message_template">message_template</a></li><li><a href="#table_module_field_categorylink">module_field_categorylink</a></li><li><a href="#table_news">news</a></li><li><a href="#table_notification">notification</a></li><li><a href="#table_opportunity_component">opportunity_component</a></li><li><a href="#table_opportunity_component_levels">opportunity_component_levels</a></li><li><a href="#table_opportunity_header">opportunity_header</a></li><li><a href="#table_opportunity_type_levels">opportunity_type_levels</a></li><li><a href="#table_organization">organization</a></li><li><a href="#table_organization_address">organization_address</a></li><li><a href="#table_organization_emailaddress">organization_emailaddress</a></li><li><a href="#table_organization_phone">organization_phone</a></li><li><a href="#table_permission">permission</a></li><li><a href="#table_permission_category">permission_category</a></li><li><a href="#table_process_log">process_log</a></li><li><a href="#table_project_assignments">project_assignments</a></li><li><a href="#table_project_assignments_status">project_assignments_status</a></li><li><a href="#table_project_files">project_files</a></li><li><a href="#table_project_files_download">project_files_download</a></li><li><a href="#table_project_files_version">project_files_version</a></li><li><a href="#table_project_folders">project_folders</a></li><li><a href="#table_project_issue_replies">project_issue_replies</a></li><li><a href="#table_project_issues">project_issues</a></li><li><a href="#table_project_requirements">project_requirements</a></li><li><a href="#table_project_team">project_team</a></li><li><a href="#table_projects">projects</a></li><li><a href="#table_revenue">revenue</a></li><li><a href="#table_revenue_detail">revenue_detail</a></li><li><a href="#table_role">role</a></li><li><a href="#table_role_permission">role_permission</a></li><li><a href="#table_saved_criteriaelement">saved_criteriaelement</a></li><li><a href="#table_saved_criterialist">saved_criterialist</a></li><li><a href="#table_scheduled_recipient">scheduled_recipient</a></li><li><a href="#table_search_fields">search_fields</a></li><li><a href="#table_state">state</a></li><li><a href="#table_survey">survey</a></li><li><a href="#table_survey_items">survey_items</a></li><li><a href="#table_survey_questions">survey_questions</a></li><li><a href="#table_sync_client">sync_client</a></li><li><a href="#table_sync_conflict_log">sync_conflict_log</a></li><li><a href="#table_sync_log">sync_log</a></li><li><a href="#table_sync_map">sync_map</a></li><li><a href="#table_sync_system">sync_system</a></li><li><a href="#table_sync_table">sync_table</a></li><li><a href="#table_sync_transaction_log">sync_transaction_log</a></li><li><a href="#table_system_modules">system_modules</a></li><li><a href="#table_task">task</a></li><li><a href="#table_taskcategory_project">taskcategory_project</a></li><li><a href="#table_tasklink_contact">tasklink_contact</a></li><li><a href="#table_tasklink_project">tasklink_project</a></li><li><a href="#table_tasklink_ticket">tasklink_ticket</a></li><li><a href="#table_ticket">ticket</a></li><li><a href="#table_ticket_category">ticket_category</a></li><li><a href="#table_ticket_level">ticket_level</a></li><li><a href="#table_ticket_priority">ticket_priority</a></li><li><a href="#table_ticket_severity">ticket_severity</a></li><li><a href="#table_ticketlog">ticketlog</a></li><li><a href="#table_usage_log">usage_log</a></li><li><a href="#table_viewpoint">viewpoint</a></li><li><a href="#table_viewpoint_permission">viewpoint_permission</a></li></ul></ul><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_access">access</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.access Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -137,7 +137,7 @@
                   <td>date</td><td></td></tr><tr class="tr1"><td></td><td>alias</td>
                   <td>integer</td><td><i>default -1</i></td></tr><tr class="tr0"><td></td><td>assistant</td>
                   <td>integer</td><td><i>default -1</i></td></tr><tr class="tr1"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_access_log">public.access_log</a></li><li><a href="#table_active_survey">public.active_survey</a></li><li><a href="#table_active_survey">public.active_survey</a></li><li><a href="#table_call_log">public.call_log</a></li><li><a href="#table_call_log">public.call_log</a></li><li><a href="#table_campaign">public.campaign</a></li><li><a href="#table_campaign">public.campaign</a></li><li><a href="#table_campaign">public.campaign</a></li><li><a href="#table_cfsinbox_message">public.cfsinbox_message</a></li><li><a href="#table_cfsinbox_message">public.cfsinbox_message</a></li><li><a href="#table_cfsinbox_messagelink">public.cfsinbox_messagelink</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact_address">public.contact_address</a></li><li><a href="#table_contact_address">public.contact_address</a></li><li><a href="#table_contact_emailaddress">public.contact_emailaddress</a></li><li><a href="#table_contact_emailaddress">public.contact_emailaddress</a></li><li><a href="#table_contact_phone">public.contact_phone</a></li><li><a href="#table_contact_phone">public.contact_phone</a></li><li><a href="#table_custom_field_record">public.custom_field_record</a></li><li><a href="#table_custom_field_record">public.custom_field_record</a></li><li><a href="#table_help_contents">public.help_contents</a></li><li><a href="#table_help_contents">public.help_contents</a></li><li><a href="#table_message">public.message</a></li><li><a href="#table_message">public.message</a></li><li><a href="#table_message_template">public.message_template</a></li><li><a href="#table_message_template">public.message_template</a></li><li><a href="#table_opportunity">public.opportunity</a></li><li><a href="#table_opportunity">public.opportunity</a></li><li><a href="#table_opportunity">public.opportunity</a></li><li><a href="#table_organization">public.organization</a></li><li><a href="#table_organization">public.organization</a></li><li><a href="#table_organization">public.organization</a></li><li><a href="#table_organization_address">public.organization_address</a></li><li><a href="#table_organization_address">public.organization_address</a></li><li><a href="#table_organization_emailaddress">public.organization_emailaddress</a></li><li><a href="#table_organization_emailaddress">public.organization_emailaddress</a></li><li><a href="#table_organization_phone">public.organization_phone</a></li><li><a href="#table_organization_phone">public.organization_phone</a></li><li><a href="#table_project_assignments">public.project_assignments</a></li><li><a href="#table_project_assignments">public.project_assignments</a></li><li><a href="#table_project_assignments">public.project_assignments</a></li><li><a href="#table_project_assignments">public.project_assignments</a></li><li><a href="#table_project_assignments_status">public.project_assignments_status</a></li><li><a href="#table_project_files">public.project_files</a></li><li><a href="#table_project_files">public.project_files</a></li><li><a href="#table_project_files_download">public.project_files_download</a></li><li><a href="#table_project_files_version">public.project_files_version</a></li><li><a href="#table_project_files_version">public.project_files_version</a></li><li><a href="#table_project_issue_replies">public.project_issue_replies</a></li><li><a href="#table_project_issue_replies">public.project_issue_replies</a></li><li><a href="#table_project_issues">public.project_issues</a></li><li><a href="#table_project_issues">public.project_issues</a></li><li><a href="#table_project_requirements">public.project_requirements</a></li><li><a href="#table_project_requirements">public.project_requirements</a></li><li><a href="#table_project_requirements">public.project_requirements</a></li><li><a href="#table_project_requirements">public.project_requirements</a></li><li><a href="#table_project_team">public.project_team</a></li><li><a href="#table_project_team">public.project_team</a></li><li><a href="#table_project_team">public.project_team</a></li><li><a href="#table_projects">public.projects</a></li><li><a href="#table_projects">public.projects</a></li><li><a href="#table_revenue">public.revenue</a></li><li><a href="#table_revenue">public.revenue</a></li><li><a href="#table_revenue">public.revenue</a></li><li><a href="#table_revenue_detail">public.revenue_detail</a></li><li><a href="#table_revenue_detail">public.revenue_detail</a></li><li><a href="#table_revenue_detail">public.revenue_detail</a></li><li><a href="#table_role">public.role</a></li><li><a href="#table_role">public.role</a></li><li><a href="#table_saved_criterialist">public.saved_criterialist</a></li><li><a href="#table_saved_criterialist">public.saved_criterialist</a></li><li><a href="#table_saved_criterialist">public.saved_criterialist</a></li><li><a href="#table_survey">public.survey</a></li><li><a href="#table_survey">public.survey</a></li><li><a href="#table_system_prefs">public.system_prefs</a></li><li><a href="#table_system_prefs">public.system_prefs</a></li><li><a href="#table_task">public.task</a></li><li><a href="#table_task">public.task</a></li><li><a href="#table_ticket">public.ticket</a></li><li><a href="#table_ticket">public.ticket</a></li><li><a href="#table_ticket">public.ticket</a></li><li><a href="#table_ticketlog">public.ticketlog</a></li><li><a href="#table_ticketlog">public.ticketlog</a></li><li><a href="#table_ticketlog">public.ticketlog</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_access_log">access_log</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_access_log">public.access_log</a></li><li><a href="#table_active_survey">public.active_survey</a></li><li><a href="#table_active_survey">public.active_survey</a></li><li><a href="#table_call_log">public.call_log</a></li><li><a href="#table_call_log">public.call_log</a></li><li><a href="#table_campaign">public.campaign</a></li><li><a href="#table_campaign">public.campaign</a></li><li><a href="#table_campaign">public.campaign</a></li><li><a href="#table_cfsinbox_message">public.cfsinbox_message</a></li><li><a href="#table_cfsinbox_message">public.cfsinbox_message</a></li><li><a href="#table_cfsinbox_messagelink">public.cfsinbox_messagelink</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact_address">public.contact_address</a></li><li><a href="#table_contact_address">public.contact_address</a></li><li><a href="#table_contact_emailaddress">public.contact_emailaddress</a></li><li><a href="#table_contact_emailaddress">public.contact_emailaddress</a></li><li><a href="#table_contact_phone">public.contact_phone</a></li><li><a href="#table_contact_phone">public.contact_phone</a></li><li><a href="#table_custom_field_record">public.custom_field_record</a></li><li><a href="#table_custom_field_record">public.custom_field_record</a></li><li><a href="#table_help_contents">public.help_contents</a></li><li><a href="#table_help_contents">public.help_contents</a></li><li><a href="#table_lookup_contact_types">public.lookup_contact_types</a></li><li><a href="#table_message">public.message</a></li><li><a href="#table_message">public.message</a></li><li><a href="#table_message_template">public.message_template</a></li><li><a href="#table_message_template">public.message_template</a></li><li><a href="#table_opportunity_component">public.opportunity_component</a></li><li><a href="#table_opportunity_component">public.opportunity_component</a></li><li><a href="#table_opportunity_component">public.opportunity_component</a></li><li><a href="#table_opportunity_header">public.opportunity_header</a></li><li><a href="#table_opportunity_header">public.opportunity_header</a></li><li><a href="#table_organization">public.organization</a></li><li><a href="#table_organization">public.organization</a></li><li><a href="#table_organization">public.organization</a></li><li><a href="#table_organization_address">public.organization_address</a></li><li><a href="#table_organization_address">public.organization_address</a></li><li><a href="#table_organization_emailaddress">public.organization_emailaddress</a></li><li><a href="#table_organization_emailaddress">public.organization_emailaddress</a></li><li><a href="#table_organization_phone">public.organization_phone</a></li><li><a href="#table_organization_phone">public.organization_phone</a></li><li><a href="#table_project_assignments">public.project_assignments</a></li><li><a href="#table_project_assignments">public.project_assignments</a></li><li><a href="#table_project_assignments">public.project_assignments</a></li><li><a href="#table_project_assignments">public.project_assignments</a></li><li><a href="#table_project_assignments_status">public.project_assignments_status</a></li><li><a href="#table_project_files">public.project_files</a></li><li><a href="#table_project_files">public.project_files</a></li><li><a href="#table_project_files_download">public.project_files_download</a></li><li><a href="#table_project_files_version">public.project_files_version</a></li><li><a href="#table_project_files_version">public.project_files_version</a></li><li><a href="#table_project_issue_replies">public.project_issue_replies</a></li><li><a href="#table_project_issue_replies">public.project_issue_replies</a></li><li><a href="#table_project_issues">public.project_issues</a></li><li><a href="#table_project_issues">public.project_issues</a></li><li><a href="#table_project_requirements">public.project_requirements</a></li><li><a href="#table_project_requirements">public.project_requirements</a></li><li><a href="#table_project_requirements">public.project_requirements</a></li><li><a href="#table_project_requirements">public.project_requirements</a></li><li><a href="#table_project_team">public.project_team</a></li><li><a href="#table_project_team">public.project_team</a></li><li><a href="#table_project_team">public.project_team</a></li><li><a href="#table_projects">public.projects</a></li><li><a href="#table_projects">public.projects</a></li><li><a href="#table_revenue">public.revenue</a></li><li><a href="#table_revenue">public.revenue</a></li><li><a href="#table_revenue">public.revenue</a></li><li><a href="#table_revenue_detail">public.revenue_detail</a></li><li><a href="#table_revenue_detail">public.revenue_detail</a></li><li><a href="#table_revenue_detail">public.revenue_detail</a></li><li><a href="#table_role">public.role</a></li><li><a href="#table_role">public.role</a></li><li><a href="#table_saved_criterialist">public.saved_criterialist</a></li><li><a href="#table_saved_criterialist">public.saved_criterialist</a></li><li><a href="#table_saved_criterialist">public.saved_criterialist</a></li><li><a href="#table_survey">public.survey</a></li><li><a href="#table_survey">public.survey</a></li><li><a href="#table_task">public.task</a></li><li><a href="#table_task">public.task</a></li><li><a href="#table_task">public.task</a></li><li><a href="#table_ticket">public.ticket</a></li><li><a href="#table_ticket">public.ticket</a></li><li><a href="#table_ticket">public.ticket</a></li><li><a href="#table_ticketlog">public.ticketlog</a></li><li><a href="#table_ticketlog">public.ticketlog</a></li><li><a href="#table_ticketlog">public.ticketlog</a></li><li><a href="#table_viewpoint">public.viewpoint</a></li><li><a href="#table_viewpoint">public.viewpoint</a></li><li><a href="#table_viewpoint">public.viewpoint</a></li><li><a href="#table_viewpoint">public.viewpoint</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_access_log">access_log</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.access_log Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -201,7 +201,19 @@
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>modified</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
                   </td><td>modifiedby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_active_survey_questions">public.active_survey_questions</a></li><li><a href="#table_active_survey_responses">public.active_survey_responses</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_active_survey_answer_items">active_survey_answer_items</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_active_survey_answer_avg">active_survey_answer_avg</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.active_survey_answer_avg Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr><tr class="tr0"><td></td><td>id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>question_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td><a href="#table_active_survey_items">public -> active_survey_items</a>
+                  </td><td>item_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>total</td>
+                  <td>integer</td><td><i>NOT NULL default 0</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_active_survey_answer_items">active_survey_answer_items</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.active_survey_answer_items Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -224,8 +236,7 @@
                 </tr><tr class="tr0"><td></td><td>answer_id</td>
                   <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_active_survey_responses">public -> active_survey_responses</a>
                   </td><td>response_id</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td><a href="#table_active_survey_questions">public -> active_survey_questions</a>
-                  </td><td>question_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>question_id</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>comments</td>
                   <td>text</td><td></td></tr><tr class="tr0"><td></td><td>quant_ans</td>
                   <td>integer</td><td><i>default -1</i></td></tr><tr class="tr1"><td></td><td>text_ans</td>
@@ -237,11 +248,10 @@
                 <th>Type</th>
                 <th>Description</th>
                 </tr><tr class="tr0"><td></td><td>item_id</td>
-                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_active_survey_questions">public -> active_survey_questions</a>
-                  </td><td>question_id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>question_id</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>type</td>
                   <td>integer</td><td><i>default -1</i></td></tr><tr class="tr1"><td></td><td>description</td>
-                  <td>character varying(255)</td><td></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_active_survey_answer_items">public.active_survey_answer_items</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_active_survey_questions">active_survey_questions</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>character varying(255)</td><td></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_active_survey_answer_avg">public.active_survey_answer_avg</a></li><li><a href="#table_active_survey_answer_items">public.active_survey_answer_items</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_active_survey_questions">active_survey_questions</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.active_survey_questions Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -249,8 +259,7 @@
                 <th>Type</th>
                 <th>Description</th>
                 </tr><tr class="tr0"><td></td><td>question_id</td>
-                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_active_survey">public -> active_survey</a>
-                  </td><td>active_survey_id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>active_survey_id</td>
                   <td>integer</td><td></td></tr><tr class="tr0"><td><a href="#table_lookup_survey_types">public -> lookup_survey_types</a>
                   </td><td>type</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>description</td>
@@ -264,7 +273,7 @@
                   <td>integer</td><td><i>default 0</i></td></tr><tr class="tr1"><td></td><td>total5</td>
                   <td>integer</td><td><i>default 0</i></td></tr><tr class="tr0"><td></td><td>total6</td>
                   <td>integer</td><td><i>default 0</i></td></tr><tr class="tr1"><td></td><td>total7</td>
-                  <td>integer</td><td><i>default 0</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_active_survey_answers">public.active_survey_answers</a></li><li><a href="#table_active_survey_items">public.active_survey_items</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_active_survey_responses">active_survey_responses</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>integer</td><td><i>default 0</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_active_survey_responses">active_survey_responses</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.active_survey_responses Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -272,8 +281,7 @@
                 <th>Type</th>
                 <th>Description</th>
                 </tr><tr class="tr0"><td></td><td>response_id</td>
-                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_active_survey">public -> active_survey</a>
-                  </td><td>active_survey_id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>active_survey_id</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>contact_id</td>
                   <td>integer</td><td><i>NOT NULL default -1</i></td></tr><tr class="tr1"><td></td><td>unique_code</td>
                   <td>character varying(255)</td><td></td></tr><tr class="tr0"><td></td><td>ip_address</td>
@@ -290,7 +298,7 @@
                   </td><td>org_id</td>
                   <td>integer</td><td></td></tr><tr class="tr0"><td><a href="#table_contact">public -> contact</a>
                   </td><td>contact_id</td>
-                  <td>integer</td><td></td></tr><tr class="tr1"><td><a href="#table_opportunity">public -> opportunity</a>
+                  <td>integer</td><td></td></tr><tr class="tr1"><td><a href="#table_opportunity_header">public -> opportunity_header</a>
                   </td><td>opp_id</td>
                   <td>integer</td><td></td></tr><tr class="tr0"><td><a href="#table_lookup_call_types">public -> lookup_call_types</a>
                   </td><td>call_type_id</td>
@@ -359,7 +367,7 @@
                 </tr><tr class="tr0"><td></td><td>id</td>
                   <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_campaign">public -> campaign</a>
                   </td><td>campaign_id</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>status</td>
+                  <td>integer</td><td><i>NOT NULL default -1</i></td></tr><tr class="tr0"><td></td><td>status</td>
                   <td>integer</td><td><i>NOT NULL default 0</i></td></tr><tr class="tr1"><td></td><td>run_date</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td></td><td>total_contacts</td>
                   <td>integer</td><td><i>default 0</i></td></tr><tr class="tr1"><td></td><td>total_sent</td>
@@ -374,8 +382,7 @@
                 <th>Description</th>
                 </tr><tr class="tr0"><td><a href="#table_campaign">public -> campaign</a>
                   </td><td>campaign_id</td>
-                  <td>integer</td><td></td></tr><tr class="tr1"><td><a href="#table_survey">public -> survey</a>
-                  </td><td>survey_id</td>
+                  <td>integer</td><td></td></tr><tr class="tr1"><td></td><td>survey_id</td>
                   <td>integer</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_cfsinbox_message">cfsinbox_message</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.cfsinbox_message Structure</caption>
                 <tr>
@@ -462,7 +469,10 @@
                   <td>integer</td><td><i>default -1</i></td></tr><tr class="tr1"><td></td><td>custom2</td>
                   <td>integer</td><td><i>default -1</i></td></tr><tr class="tr0"><td></td><td>custom_data</td>
                   <td>text</td><td></td></tr><tr class="tr1"><td></td><td>url</td>
-                  <td>character varying(100)</td><td></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_call_log">public.call_log</a></li><li><a href="#table_cfsinbox_messagelink">public.cfsinbox_messagelink</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact_address">public.contact_address</a></li><li><a href="#table_contact_emailaddress">public.contact_emailaddress</a></li><li><a href="#table_contact_phone">public.contact_phone</a></li><li><a href="#table_excluded_recipient">public.excluded_recipient</a></li><li><a href="#table_scheduled_recipient">public.scheduled_recipient</a></li><li><a href="#table_task">public.task</a></li><li><a href="#table_tasklink_contact">public.tasklink_contact</a></li><li><a href="#table_ticket">public.ticket</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_contact_address">contact_address</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>character varying(100)</td><td></td></tr><tr class="tr0"><td></td><td>primary_contact</td>
+                  <td>boolean</td><td><i>default &apos;f&apos;</i></td></tr><tr class="tr1"><td></td><td>employee</td>
+                  <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr><tr class="tr0"><td></td><td>personal</td>
+                  <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_call_log">public.call_log</a></li><li><a href="#table_cfsinbox_messagelink">public.cfsinbox_messagelink</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact_address">public.contact_address</a></li><li><a href="#table_contact_emailaddress">public.contact_emailaddress</a></li><li><a href="#table_contact_phone">public.contact_phone</a></li><li><a href="#table_contact_type_levels">public.contact_type_levels</a></li><li><a href="#table_excluded_recipient">public.excluded_recipient</a></li><li><a href="#table_scheduled_recipient">public.scheduled_recipient</a></li><li><a href="#table_tasklink_contact">public.tasklink_contact</a></li><li><a href="#table_ticket">public.ticket</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_contact_address">contact_address</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.contact_address Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -486,7 +496,8 @@
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>modified</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
                   </td><td>modifiedby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_contact_emailaddress">contact_emailaddress</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>addrline3</td>
+                  <td>character varying(80)</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_contact_emailaddress">contact_emailaddress</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.contact_emailaddress Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -525,14 +536,28 @@
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>modified</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
                   </td><td>modifiedby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_custom_field_category">custom_field_category</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_contact_type_levels">contact_type_levels</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.contact_type_levels Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr><tr class="tr0"><td><a href="#table_contact">public -> contact</a>
+                  </td><td>contact_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td><a href="#table_lookup_contact_types">public -> lookup_contact_types</a>
+                  </td><td>type_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>level</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>entered</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td></td><td>modified</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_custom_field_category">custom_field_category</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.custom_field_category Structure</caption>
                 <tr>
                 <th>F-Key</th>
                 <th>Name</th>
                 <th>Type</th>
                 <th>Description</th>
-                </tr><tr class="tr0"><td><a href="#table_permission_category">public -> permission_category</a>
+                </tr><tr class="tr0"><td><a href="#table_system_modules">public -> system_modules</a>
                   </td><td>module_id</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>category_id</td>
                   <td>serial</td><td><i>NOT NULL UNIQUE </i></td></tr><tr class="tr0"><td></td><td>category_name</td>
@@ -644,7 +669,7 @@
                 </tr><tr class="tr0"><td></td><td>id</td>
                   <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_campaign">public -> campaign</a>
                   </td><td>campaign_id</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td><a href="#table_contact">public -> contact</a>
+                  <td>integer</td><td><i>NOT NULL default -1</i></td></tr><tr class="tr0"><td><a href="#table_contact">public -> contact</a>
                   </td><td>contact_id</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_field_types">field_types</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.field_types Structure</caption>
@@ -659,7 +684,7 @@
                   <td>character varying(20)</td><td></td></tr><tr class="tr1"><td></td><td>operator</td>
                   <td>character varying(50)</td><td></td></tr><tr class="tr0"><td></td><td>display_text</td>
                   <td>character varying(50)</td><td></td></tr><tr class="tr1"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_saved_criteriaelement">public.saved_criteriaelement</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_help_contents">help_contents</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>boolean</td><td><i>default &apos;t&apos;</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_saved_criteriaelement">public.saved_criteriaelement</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_help_contents">help_contents</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.help_contents Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -723,7 +748,16 @@
                   <td>character varying(50)</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>default_item</td>
                   <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>level</td>
                   <td>integer</td><td><i>default 0</i></td></tr><tr class="tr0"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_contact">public.contact</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_lookup_contactaddress_types">lookup_contactaddress_types</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
+                  </td><td>user_id</td>
+                  <td>integer</td><td></td></tr><tr class="tr0"><td></td><td>category</td>
+                  <td>integer</td><td><i>default 0</i></td></tr></table><p>&nbsp;</p><table width="100%" cellspacing="0" cellpadding="3">
+                    <caption>public.lookup_contact_types Constraints</caption>
+                    <tr>
+                    <th>Name</th>
+                    <th>Constraint</th>
+                    </tr><tr class="tr0"><td>category_not_null</td>
+                      <td>CHECK category IS NOT NULL</td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_contact">public.contact</a></li><li><a href="#table_contact_type_levels">public.contact_type_levels</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_lookup_contactaddress_types">lookup_contactaddress_types</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.lookup_contactaddress_types Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -820,7 +854,30 @@
                   <td>character varying(50)</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>default_item</td>
                   <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>level</td>
                   <td>integer</td><td><i>default 0</i></td></tr><tr class="tr0"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_lookup_locale">lookup_locale</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_lookup_lists_lookup">lookup_lists_lookup</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.lookup_lists_lookup Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr><tr class="tr0"><td></td><td>id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_permission_category">public -> permission_category</a>
+                  </td><td>module_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>lookup_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>class_name</td>
+                  <td>character varying(20)</td><td></td></tr><tr class="tr0"><td></td><td>table_name</td>
+                  <td>character varying(60)</td><td></td></tr><tr class="tr1"><td></td><td>level</td>
+                  <td>integer</td><td><i>default 0</i></td></tr><tr class="tr0"><td></td><td>description</td>
+                  <td>text</td><td></td></tr><tr class="tr1"><td></td><td>entered</td>
+                  <td>timestamp(3) with time zone</td><td><i>default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td></td><td>category_id</td>
+                  <td>integer</td><td></td></tr></table><p>&nbsp;</p><table width="100%" cellspacing="0" cellpadding="3">
+                    <caption>public.lookup_lists_lookup Constraints</caption>
+                    <tr>
+                    <th>Name</th>
+                    <th>Constraint</th>
+                    </tr><tr class="tr0"><td>notnullchk</td>
+                      <td>CHECK category_id IS NOT NULL</td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_lookup_locale">lookup_locale</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.lookup_locale Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -845,7 +902,7 @@
                   <td>character varying(50)</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>default_item</td>
                   <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr><tr class="tr0"><td></td><td>level</td>
                   <td>integer</td><td><i>default 0</i></td></tr><tr class="tr1"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_lookup_orgaddress_types">lookup_orgaddress_types</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_opportunity_component_levels">public.opportunity_component_levels</a></li><li><a href="#table_opportunity_type_levels">public.opportunity_type_levels</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_lookup_orgaddress_types">lookup_orgaddress_types</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.lookup_orgaddress_types Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -989,7 +1046,7 @@
                   <td>character varying(50)</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>default_item</td>
                   <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr><tr class="tr0"><td></td><td>level</td>
                   <td>integer</td><td><i>default 0</i></td></tr><tr class="tr1"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_opportunity">public.opportunity</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_lookup_survey_types">lookup_survey_types</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_opportunity_component">public.opportunity_component</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_lookup_survey_types">lookup_survey_types</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.lookup_survey_types Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1064,9 +1121,9 @@
                   <td>character varying(255)</td><td></td></tr><tr class="tr1"><td></td><td>body</td>
                   <td>text</td><td></td></tr><tr class="tr0"><td></td><td>reply_addr</td>
                   <td>character varying(100)</td><td></td></tr><tr class="tr1"><td></td><td>url</td>
-                  <td>character varying(255)</td><td></td></tr><tr class="tr0"><td></td><td>img</td>
+                  <td>character varying(100)</td><td></td></tr><tr class="tr0"><td></td><td>img</td>
                   <td>character varying(80)</td><td></td></tr><tr class="tr1"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr><tr class="tr0"><td></td><td>entered</td>
+                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;</i></td></tr><tr class="tr0"><td></td><td>entered</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
                   </td><td>enteredby</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>modified</td>
@@ -1086,25 +1143,27 @@
                   <td>character varying(80)</td><td></td></tr><tr class="tr0"><td></td><td>num_imgs</td>
                   <td>integer</td><td></td></tr><tr class="tr1"><td></td><td>num_urls</td>
                   <td>integer</td><td></td></tr><tr class="tr0"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>entered</td>
+                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;</i></td></tr><tr class="tr1"><td></td><td>entered</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
                   </td><td>enteredby</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>modified</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
                   </td><td>modifiedby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_mod_log">mod_log</a></h2><table width="100%" cellspacing="0" cellpadding="3">
-                <caption>public.mod_log Structure</caption>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_module_field_categorylink">module_field_categorylink</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.module_field_categorylink Structure</caption>
                 <tr>
                 <th>F-Key</th>
                 <th>Name</th>
                 <th>Type</th>
                 <th>Description</th>
-                </tr><tr class="tr0"><td></td><td>datetime</td>
-                  <td>timestamp with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr1"><td></td><td>username</td>
-                  <td>character varying(80)</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>tablename</td>
-                  <td>character varying(80)</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>action</td>
-                  <td>text</td><td></td></tr><tr class="tr0"><td></td><td>record_id</td>
-                  <td>text</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_news">news</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                </tr><tr class="tr0"><td></td><td>id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_permission_category">public -> permission_category</a>
+                  </td><td>module_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>category_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>level</td>
+                  <td>integer</td><td><i>default 0</i></td></tr><tr class="tr0"><td></td><td>description</td>
+                  <td>text</td><td></td></tr><tr class="tr1"><td></td><td>entered</td>
+                  <td>timestamp(3) with time zone</td><td><i>default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_news">news</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.news Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1139,46 +1198,87 @@
                   <td>text</td><td></td></tr><tr class="tr0"><td></td><td>message</td>
                   <td>text</td><td></td></tr><tr class="tr1"><td></td><td>result</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>errormessage</td>
-                  <td>text</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_opportunity">opportunity</a></h2><table width="100%" cellspacing="0" cellpadding="3">
-                <caption>public.opportunity Structure</caption>
+                  <td>text</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_opportunity_component">opportunity_component</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.opportunity_component Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr><tr class="tr0"><td></td><td>id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_opportunity_header">public -> opportunity_header</a>
+                  </td><td>opp_id</td>
+                  <td>integer</td><td></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
+                  </td><td>owner</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>description</td>
+                  <td>character varying(80)</td><td></td></tr><tr class="tr0"><td></td><td>closedate</td>
+                  <td>date</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>closeprob</td>
+                  <td>double precision</td><td></td></tr><tr class="tr0"><td></td><td>terms</td>
+                  <td>double precision</td><td></td></tr><tr class="tr1"><td></td><td>units</td>
+                  <td>character(1)</td><td></td></tr><tr class="tr0"><td></td><td>lowvalue</td>
+                  <td>double precision</td><td></td></tr><tr class="tr1"><td></td><td>guessvalue</td>
+                  <td>double precision</td><td></td></tr><tr class="tr0"><td></td><td>highvalue</td>
+                  <td>double precision</td><td></td></tr><tr class="tr1"><td><a href="#table_lookup_stage">public -> lookup_stage</a>
+                  </td><td>stage</td>
+                  <td>integer</td><td></td></tr><tr class="tr0"><td></td><td>stagedate</td>
+                  <td>date</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr1"><td></td><td>commission</td>
+                  <td>double precision</td><td></td></tr><tr class="tr0"><td></td><td>type</td>
+                  <td>character(1)</td><td></td></tr><tr class="tr1"><td></td><td>alertdate</td>
+                  <td>date</td><td></td></tr><tr class="tr0"><td></td><td>entered</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
+                  </td><td>enteredby</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>modified</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
+                  </td><td>modifiedby</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>closed</td>
+                  <td>timestamp with time zone</td><td></td></tr><tr class="tr1"><td></td><td>alert</td>
+                  <td>character varying(100)</td><td></td></tr><tr class="tr0"><td></td><td>enabled</td>
+                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>notes</td>
+                  <td>text</td><td></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_opportunity_component_levels">public.opportunity_component_levels</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_opportunity_component_levels">opportunity_component_levels</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.opportunity_component_levels Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr><tr class="tr0"><td><a href="#table_opportunity_component">public -> opportunity_component</a>
+                  </td><td>opp_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td><a href="#table_lookup_opportunity_types">public -> lookup_opportunity_types</a>
+                  </td><td>type_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>level</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>entered</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td></td><td>modified</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_opportunity_header">opportunity_header</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.opportunity_header Structure</caption>
                 <tr>
                 <th>F-Key</th>
                 <th>Name</th>
                 <th>Type</th>
                 <th>Description</th>
                 </tr><tr class="tr0"><td></td><td>opp_id</td>
-                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
-                  </td><td>owner</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>description</td>
-                  <td>character varying(80)</td><td></td></tr><tr class="tr1"><td></td><td>acctlink</td>
-                  <td>integer</td><td><i>default -1</i></td></tr><tr class="tr0"><td></td><td>contactlink</td>
-                  <td>integer</td><td><i>default -1</i></td></tr><tr class="tr1"><td></td><td>closedate</td>
-                  <td>date</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>closeprob</td>
-                  <td>double precision</td><td></td></tr><tr class="tr1"><td></td><td>terms</td>
-                  <td>double precision</td><td></td></tr><tr class="tr0"><td></td><td>units</td>
-                  <td>character(1)</td><td></td></tr><tr class="tr1"><td></td><td>lowvalue</td>
-                  <td>double precision</td><td></td></tr><tr class="tr0"><td></td><td>guessvalue</td>
-                  <td>double precision</td><td></td></tr><tr class="tr1"><td></td><td>highvalue</td>
-                  <td>double precision</td><td></td></tr><tr class="tr0"><td><a href="#table_lookup_stage">public -> lookup_stage</a>
-                  </td><td>stage</td>
-                  <td>integer</td><td></td></tr><tr class="tr1"><td></td><td>stagedate</td>
-                  <td>date</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td></td><td>commission</td>
-                  <td>double precision</td><td></td></tr><tr class="tr1"><td></td><td>type</td>
-                  <td>character(1)</td><td></td></tr><tr class="tr0"><td></td><td>alertdate</td>
-                  <td>date</td><td></td></tr><tr class="tr1"><td></td><td>entered</td>
-                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>description</td>
+                  <td>character varying(80)</td><td></td></tr><tr class="tr0"><td></td><td>acctlink</td>
+                  <td>integer</td><td><i>default -1</i></td></tr><tr class="tr1"><td></td><td>contactlink</td>
+                  <td>integer</td><td><i>default -1</i></td></tr><tr class="tr0"><td></td><td>entered</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
                   </td><td>enteredby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>modified</td>
-                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>modified</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
                   </td><td>modifiedby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>custom1</td>
-                  <td>integer</td><td><i>default -1</i></td></tr><tr class="tr0"><td></td><td>custom2</td>
-                  <td>integer</td><td><i>default -1</i></td></tr><tr class="tr1"><td></td><td>closed</td>
-                  <td>timestamp with time zone</td><td></td></tr><tr class="tr0"><td></td><td>custom_data</td>
-                  <td>text</td><td></td></tr><tr class="tr1"><td></td><td>alert</td>
-                  <td>character varying(100)</td><td></td></tr><tr class="tr0"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>notes</td>
-                  <td>text</td><td></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_call_log">public.call_log</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_organization">organization</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_call_log">public.call_log</a></li><li><a href="#table_opportunity_component">public.opportunity_component</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_opportunity_type_levels">opportunity_type_levels</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.opportunity_type_levels Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr><tr class="tr0"><td></td><td>opp_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td><a href="#table_lookup_opportunity_types">public -> lookup_opportunity_types</a>
+                  </td><td>type_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>level</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>entered</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td></td><td>modified</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_organization">organization</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.organization Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1218,7 +1318,12 @@
                   <td>date</td><td></td></tr><tr class="tr1"><td></td><td>alertdate</td>
                   <td>date</td><td></td></tr><tr class="tr0"><td></td><td>alert</td>
                   <td>character varying(100)</td><td></td></tr><tr class="tr1"><td></td><td>custom_data</td>
-                  <td>text</td><td></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_account_type_levels">public.account_type_levels</a></li><li><a href="#table_call_log">public.call_log</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_news">public.news</a></li><li><a href="#table_organization_address">public.organization_address</a></li><li><a href="#table_organization_emailaddress">public.organization_emailaddress</a></li><li><a href="#table_organization_phone">public.organization_phone</a></li><li><a href="#table_revenue">public.revenue</a></li><li><a href="#table_ticket">public.ticket</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_organization_address">organization_address</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>text</td><td></td></tr><tr class="tr0"><td></td><td>namesalutation</td>
+                  <td>character varying(80)</td><td></td></tr><tr class="tr1"><td></td><td>namelast</td>
+                  <td>character varying(80)</td><td></td></tr><tr class="tr0"><td></td><td>namefirst</td>
+                  <td>character varying(80)</td><td></td></tr><tr class="tr1"><td></td><td>namemiddle</td>
+                  <td>character varying(80)</td><td></td></tr><tr class="tr0"><td></td><td>namesuffix</td>
+                  <td>character varying(80)</td><td></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_account_type_levels">public.account_type_levels</a></li><li><a href="#table_call_log">public.call_log</a></li><li><a href="#table_contact">public.contact</a></li><li><a href="#table_news">public.news</a></li><li><a href="#table_organization_address">public.organization_address</a></li><li><a href="#table_organization_emailaddress">public.organization_emailaddress</a></li><li><a href="#table_organization_phone">public.organization_phone</a></li><li><a href="#table_revenue">public.revenue</a></li><li><a href="#table_ticket">public.ticket</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_organization_address">organization_address</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.organization_address Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1242,7 +1347,8 @@
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>modified</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
                   </td><td>modifiedby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_organization_emailaddress">organization_emailaddress</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>addrline3</td>
+                  <td>character varying(80)</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_organization_emailaddress">organization_emailaddress</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.organization_emailaddress Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1300,7 +1406,8 @@
                   <td>character varying(255)</td><td><i>NOT NULL default &apos;&apos;</i></td></tr><tr class="tr0"><td></td><td>level</td>
                   <td>integer</td><td><i>NOT NULL default 0</i></td></tr><tr class="tr1"><td></td><td>enabled</td>
                   <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr><tr class="tr0"><td></td><td>active</td>
-                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_role_permission">public.role_permission</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_permission_category">permission_category</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>viewpoints</td>
+                  <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_role_permission">public.role_permission</a></li><li><a href="#table_viewpoint_permission">public.viewpoint_permission</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_permission_category">permission_category</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.permission_category Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1315,7 +1422,8 @@
                   <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>active</td>
                   <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr><tr class="tr0"><td></td><td>folders</td>
                   <td>boolean</td><td><i>NOT NULL default &apos;f&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>lookups</td>
-                  <td>boolean</td><td><i>NOT NULL default &apos;f&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_custom_field_category">public.custom_field_category</a></li><li><a href="#table_permission">public.permission</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_process_log">process_log</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>boolean</td><td><i>NOT NULL default &apos;f&apos;::bool</i></td></tr><tr class="tr0"><td></td><td>viewpoints</td>
+                  <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_lookup_lists_lookup">public.lookup_lists_lookup</a></li><li><a href="#table_module_field_categorylink">public.module_field_categorylink</a></li><li><a href="#table_permission">public.permission</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_process_log">process_log</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.process_log Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1678,7 +1786,7 @@
                   </td><td>operatorid</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>value</td>
                   <td>character varying(80)</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>source</td>
-                  <td>integer</td><td><i>NOT NULL default -1</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_saved_criterialist">saved_criterialist</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>integer</td><td><i>default -1</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_saved_criterialist">saved_criterialist</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.saved_criterialist Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1763,7 +1871,7 @@
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>modified</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
                   </td><td>modifiedby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_campaign_survey_link">public.campaign_survey_link</a></li><li><a href="#table_survey_questions">public.survey_questions</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_survey_items">survey_items</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_survey_items">survey_items</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.survey_items Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1771,8 +1879,7 @@
                 <th>Type</th>
                 <th>Description</th>
                 </tr><tr class="tr0"><td></td><td>item_id</td>
-                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_survey_questions">public -> survey_questions</a>
-                  </td><td>question_id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>question_id</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>type</td>
                   <td>integer</td><td><i>default -1</i></td></tr><tr class="tr1"><td></td><td>description</td>
                   <td>character varying(255)</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_survey_questions">survey_questions</a></h2><table width="100%" cellspacing="0" cellpadding="3">
@@ -1783,14 +1890,13 @@
                 <th>Type</th>
                 <th>Description</th>
                 </tr><tr class="tr0"><td></td><td>question_id</td>
-                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_survey">public -> survey</a>
-                  </td><td>survey_id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>survey_id</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td><a href="#table_lookup_survey_types">public -> lookup_survey_types</a>
                   </td><td>type</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>description</td>
                   <td>character varying(255)</td><td></td></tr><tr class="tr0"><td></td><td>required</td>
                   <td>boolean</td><td><i>NOT NULL default &apos;f&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>position</td>
-                  <td>integer</td><td><i>NOT NULL default 0</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_survey_items">public.survey_items</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_sync_client">sync_client</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>integer</td><td><i>NOT NULL default 0</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_sync_client">sync_client</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.sync_client Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1847,7 +1953,7 @@
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>cuid</td>
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>complete</td>
                   <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>status_date</td>
-                  <td>timestamp(3) with time zone</td><td></td></tr></table><p>&nbsp;</p><table width="100%" cellspacing="0" cellpadding="3">
+                  <td>timestamp with time zone</td><td></td></tr></table><p>&nbsp;</p><table width="100%" cellspacing="0" cellpadding="3">
                     <caption>public.sync_map Constraints</caption>
                     <tr>
                     <th>Name</th>
@@ -1897,24 +2003,19 @@
                   <td>integer</td><td></td></tr><tr class="tr0"><td></td><td>status_code</td>
                   <td>integer</td><td></td></tr><tr class="tr1"><td></td><td>record_count</td>
                   <td>integer</td><td></td></tr><tr class="tr0"><td></td><td>message</td>
-                  <td>text</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_system_prefs">system_prefs</a></h2><table width="100%" cellspacing="0" cellpadding="3">
-                <caption>public.system_prefs Structure</caption>
+                  <td>text</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_system_modules">system_modules</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.system_modules Structure</caption>
                 <tr>
                 <th>F-Key</th>
                 <th>Name</th>
                 <th>Type</th>
                 <th>Description</th>
-                </tr><tr class="tr0"><td></td><td>pref_id</td>
-                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>category</td>
-                  <td>character varying(255)</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>data</td>
-                  <td>text</td><td><i>NOT NULL default &apos;&apos;</i></td></tr><tr class="tr1"><td></td><td>entered</td>
-                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
-                  </td><td>enteredby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>modified</td>
-                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
-                  </td><td>modifiedby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>enabled</td>
-                  <td>boolean</td><td><i>NOT NULL default &apos;t&apos;::bool</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_task">task</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                </tr><tr class="tr0"><td></td><td>code</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>description</td>
+                  <td>character varying(255)</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>default_item</td>
+                  <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>level</td>
+                  <td>integer</td><td><i>default 0</i></td></tr><tr class="tr0"><td></td><td>enabled</td>
+                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_custom_field_category">public.custom_field_category</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_task">task</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.task Structure</caption>
                 <tr>
                 <th>F-Key</th>
@@ -1940,7 +2041,7 @@
                   <td>integer</td><td></td></tr><tr class="tr1"><td></td><td>estimatedloe</td>
                   <td>double precision</td><td></td></tr><tr class="tr0"><td><a href="#table_lookup_task_loe">public -> lookup_task_loe</a>
                   </td><td>estimatedloetype</td>
-                  <td>integer</td><td></td></tr><tr class="tr1"><td><a href="#table_contact">public -> contact</a>
+                  <td>integer</td><td></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
                   </td><td>owner</td>
                   <td>integer</td><td></td></tr><tr class="tr0"><td></td><td>completedate</td>
                   <td>timestamp(3) with time zone</td><td></td></tr><tr class="tr1"><td><a href="#table_lookup_task_category">public -> lookup_task_category</a>
@@ -2056,7 +2157,8 @@
                 </tr><tr class="tr0"><td></td><td>code</td>
                   <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>description</td>
                   <td>character varying(300)</td><td><i>NOT NULL UNIQUE </i></td></tr><tr class="tr0"><td></td><td>default_item</td>
-                  <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>enabled</td>
+                  <td>boolean</td><td><i>default &apos;f&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>level</td>
+                  <td>integer</td><td><i>default 0</i></td></tr><tr class="tr0"><td></td><td>enabled</td>
                   <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_ticket">public.ticket</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_ticket_priority">ticket_priority</a></h2><table width="100%" cellspacing="0" cellpadding="3">
                 <caption>public.ticket_priority Structure</caption>
                 <tr>
@@ -2111,4 +2213,52 @@
                   <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>modified</td>
                   <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
                   </td><td>modifiedby</td>
-                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><p class="w3ref"><a href="http://validator.w3.org/check/referer">W3C HTML 4.01 Strict</a></p></body></html>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_usage_log">usage_log</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.usage_log Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr><tr class="tr0"><td></td><td>usage_id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td></td><td>entered</td>
+                  <td>timestamp(6) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td></td><td>enteredby</td>
+                  <td>integer</td><td></td></tr><tr class="tr1"><td></td><td>action</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td></td><td>record_id</td>
+                  <td>integer</td><td></td></tr><tr class="tr1"><td></td><td>record_size</td>
+                  <td>integer</td><td></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_viewpoint">viewpoint</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.viewpoint Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr><tr class="tr0"><td></td><td>viewpoint_id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_access">public -> access</a>
+                  </td><td>user_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
+                  </td><td>vp_user_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>entered</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
+                  </td><td>enteredby</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>modified</td>
+                  <td>timestamp(3) with time zone</td><td><i>NOT NULL default (&apos;now&apos;::text)::timestamp(6) with time zone</i></td></tr><tr class="tr0"><td><a href="#table_access">public -> access</a>
+                  </td><td>modifiedby</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>enabled</td>
+                  <td>boolean</td><td><i>default &apos;t&apos;::bool</i></td></tr></table><p>Tables referencing this one via Foreign Key Constraints:</p><ul><li><a href="#table_viewpoint_permission">public.viewpoint_permission</a></li></ul><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><hr><h2>Table: <a href="#group_public">public</a>.<a name="table_viewpoint_permission">viewpoint_permission</a></h2><table width="100%" cellspacing="0" cellpadding="3">
+                <caption>public.viewpoint_permission Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr><tr class="tr0"><td></td><td>vp_permission_id</td>
+                  <td>serial</td><td><i>NOT NULL PRIMARY KEY </i></td></tr><tr class="tr1"><td><a href="#table_viewpoint">public -> viewpoint</a>
+                  </td><td>viewpoint_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr0"><td><a href="#table_permission">public -> permission</a>
+                  </td><td>permission_id</td>
+                  <td>integer</td><td><i>NOT NULL</i></td></tr><tr class="tr1"><td></td><td>viewpoint_view</td>
+                  <td>boolean</td><td><i>NOT NULL default &apos;f&apos;::bool</i></td></tr><tr class="tr0"><td></td><td>viewpoint_add</td>
+                  <td>boolean</td><td><i>NOT NULL default &apos;f&apos;::bool</i></td></tr><tr class="tr1"><td></td><td>viewpoint_edit</td>
+                  <td>boolean</td><td><i>NOT NULL default &apos;f&apos;::bool</i></td></tr><tr class="tr0"><td></td><td>viewpoint_delete</td>
+                  <td>boolean</td><td><i>NOT NULL default &apos;f&apos;::bool</i></td></tr></table><p><a href="#index">Index</a> - <a href="#group_public">Schema public</a></p><p class="w3ref"><a href="http://validator.w3.org/check/referer">W3C HTML 4.01 Strict</a></p></body></html>
