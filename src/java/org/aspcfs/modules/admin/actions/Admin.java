@@ -9,6 +9,8 @@ import java.util.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
+import com.zeroio.iteam.base.*;
+import java.text.*;
 
 /**
  *  Administrative commands executor.
@@ -60,13 +62,130 @@ public final class Admin extends CFSModule {
 		return ("HomeOK");
 	}
 
+  public String executeCommandManage(ActionContext context) {
+		if (!(hasPermission(context, "admin-sysconfig-view"))) {
+		    return ("PermissionError");
+		}
+    addModuleBean(context, "Configuration", "Management");
+    return "ManagementOK";
+  }
+  
+  public String executeCommandUsage(ActionContext context) {
+		if (!(hasPermission(context, "admin-sysconfig-view"))) {
+		    return ("PermissionError");
+		}
+    addModuleBean(context, "Configuration", "Usage");
+    Connection db = null;
+    Exception errorMessage = null;
+    ArrayList usageList = new ArrayList();
+    ArrayList usageList2 = new ArrayList();
+    try {
+      Calendar cal = Calendar.getInstance();
+      cal.set(Calendar.HOUR, 0);
+      cal.set(Calendar.MINUTE, 0);
+      cal.set(Calendar.SECOND, 0);
+      cal.set(Calendar.MILLISECOND, 0);
+      long startRange = cal.getTimeInMillis();
+      cal.set(Calendar.HOUR, 23);
+      cal.set(Calendar.MINUTE, 59);
+      cal.set(Calendar.SECOND, 59);
+      cal.set(Calendar.MILLISECOND, 0);
+      long endRange = cal.getTimeInMillis();
+      
+      NumberFormat nf = NumberFormat.getInstance();
+      
+      db = this.getConnection(context);
+      
+      //Users enabled as of date range
+      UserList userList = new UserList();
+      userList.setEnabled(Constants.TRUE);
+      //userList.setEnteredRangeStart(new java.sql.Timestamp(startRange));
+      //userList.setEnteredRangeEnd(new java.sql.Timestamp(endRange));
+      int userListCount = userList.queryRecordCount(db);
+      //System.out.println("Total users enabled as of today: " + userListCount);
+      usageList.add(nf.format(userListCount) + " user" + StringUtils.addS(userListCount) + " enabled");
+      
+      //File count: x size: x
+      FileItemVersionList fileList = new FileItemVersionList();
+      int fileCount = fileList.queryRecordCount(db);
+      long fileSize = fileList.queryFileSize(db);
+      usageList.add(nf.format(fileCount) + " file" + StringUtils.addS(fileCount) + " stored in document library using " + nf.format(fileSize) + " byte" + StringUtils.addS(fileSize) + " of storage");
+      
+      //Logins today
+      AccessLogList accessLog = new AccessLogList();
+      accessLog.setEnteredRangeStart(new java.sql.Timestamp(startRange));
+      accessLog.setEnteredRangeEnd(new java.sql.Timestamp(endRange));
+      int logins = accessLog.queryRecordCount(db);
+      usageList2.add(nf.format(logins) + " login" + StringUtils.addS(logins) + " today");
+      
+      //Upstream bw: x, the specific files uploaded on date x size
+      fileList.setEnteredRangeStart(new java.sql.Timestamp(startRange));
+      fileList.setEnteredRangeEnd(new java.sql.Timestamp(endRange));
+      int fileUploadCount = fileList.queryRecordCount(db);
+      long fileUploadSize = fileList.queryFileSize(db);
+      usageList2.add(nf.format(fileUploadCount) + " file" + StringUtils.addS(fileUploadCount) + " uploaded today, using " + nf.format(fileUploadSize) + " byte" + StringUtils.addS(fileUploadSize) + " of bandwidth");
+      
+      //Downstream bw: x
+      int fileDownloadCount = fileList.queryDownloadCount(db);
+      long fileDownloadSize = fileList.queryDownloadSize(db);
+      usageList2.add(nf.format(fileDownloadCount) + " file" + StringUtils.addS(fileDownloadCount) + " downloaded today, using " + nf.format(fileDownloadSize) + " byte" + StringUtils.addS(fileDownloadSize) + " of bandwidth");
+      
+      //TODO: Get a list of the date's campaign runs...
+      //Then get the size of the message and attachments...
+      //Then get the count of email and fax messages...
+      CampaignList campaignList = new CampaignList();
+      campaignList.setCompleteOnly(true);
+      campaignList.setRunRangeStart(new java.sql.Timestamp(startRange));
+      campaignList.setRunRangeEnd(new java.sql.Timestamp(endRange));
+      campaignList.buildList(db);
+      //TODO: Iterate the campaigns
+      int emailRecipientCount = 0;
+      long emailSize = 0;
+      int faxRecipientCount = 0;
+      long faxSize = 0;
+      Iterator campaigns = campaignList.iterator();
+      while (campaigns.hasNext()) {
+        Campaign thisCampaign = (Campaign)campaigns.next();
+        //Campaign has a message and subject
+        long campaignSize = thisCampaign.getMessage().length() + thisCampaign.getSubject().length();
+        //Campaign has attachments
+        FileItemList attachmentList = new FileItemList();
+        attachmentList.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
+        attachmentList.setLinkItemId(thisCampaign.getId());
+        long attachmentSize = attachmentList.queryFileSize(db);
+        //Campaign has e-mail recipients
+        RecipientList recipientList = new RecipientList();
+        recipientList.setCampaignId(thisCampaign.getId());
+        //Add em all up
+        recipientList.setStatus("Email Sent");
+        emailRecipientCount = recipientList.queryRecordCount(db);
+        emailSize += ((campaignSize * emailRecipientCount) + (attachmentSize * emailRecipientCount));
+        
+        //Campaign has fax recipients
+        //TODO: Get the actual size of the tiff being sent...
+        recipientList.setStatus("Fax Queued");
+        faxRecipientCount = recipientList.queryRecordCount(db);
+        faxSize += (campaignSize * faxRecipientCount);
+      }
+      usageList2.add(nf.format(emailRecipientCount) + " email" + StringUtils.addS(emailRecipientCount) + " sent today, consisting of " + nf.format(emailSize) + " byte" + StringUtils.addS(emailSize));
+      usageList2.add(nf.format(faxRecipientCount) + " fax" + StringUtils.addES(faxRecipientCount) + " sent today, consisting of  " + nf.format(faxSize) + " byte" + StringUtils.addS(faxSize));
+      
+      context.getRequest().setAttribute("usageList", usageList);
+      context.getRequest().setAttribute("usageList2", usageList2);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    return "UsageOK";
+  }
 
 	/**
 	 *  Description of the Method
 	 *
 	 *@param  context  Description of Parameter
 	 *@return          Description of the Returned Value
-	 *@since
 	 */
 	public String executeCommandConfig(ActionContext context) {
 		
