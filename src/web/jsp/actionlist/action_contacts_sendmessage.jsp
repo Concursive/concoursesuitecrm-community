@@ -10,7 +10,6 @@
     document.forms['sendMessage'].action = 'CampaignManager.do?command=MessageJSList&actionSource=MyActionContacts<%= addLinkParams(request, "popup|popupType|actionId")%>';
     document.forms['sendMessage'].submit();
   }
-  
   function updateMessage(){
     document.forms['sendMessage'].action = 'MyActionContacts.do?command=PrepareMessage<%= addLinkParams(request, "popup|popupType|actionId") %>';
     document.forms['sendMessage'].submit();
@@ -29,10 +28,10 @@
 <body onLoad="document.forms[0].name.focus();">
 <%}%>
 <form name="sendMessage" action="MyActionContacts.do?command=SendMessage&auto-populate=true&actionSource=MyActionContacts" method="post">
-<br>
-<input type="submit" value="Send Message">
-<input type="button" value="Cancel" onClick="javascript:window.close();">
-<input type="reset" value="Reset"><br><br>
+<dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
+<%= showError(request, "actionError") %>
+</dhv:evaluate>
+Start by choosing an existing message or create a new one:<br>
 <SELECT SIZE="1" name="listView" onChange="javascript:updateMessageList();">
   <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>My Messages</OPTION>
   <OPTION VALUE="all"<dhv:evaluate if="<%= "all".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>All Messages</OPTION>
@@ -49,12 +48,8 @@
     <option value="0">--None--</option>
   </select>  
 <% } %>
-
-<%= showError(request, "actionError") %>
-
 <%-- include the message form from create messages --%>
 <%@ include file="../communications/message_form.jsp" %>
-
 <br>
 <input type="submit" value="Send Message">
 <input type="button" value="Cancel" onClick="javascript:window.close();">

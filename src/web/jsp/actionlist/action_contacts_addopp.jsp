@@ -58,16 +58,11 @@ function checkForm(form) {
 }
 </script>
 <form name="opportunityForm" action="ExternalContactsOpps.do?command=Save&contactId=<%= ContactDetails.getId() %>&actionSource=MyActionContacts&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:window.close();">
-<input type="reset" value="Reset">
-<br>
+<dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
 <%= showError(request, "actionError") %>
-
+</dhv:evaluate>
 <%--  include basic opportunity form --%>
 <%@ include file="../pipeline/opportunity_form.jsp" %>
-
-&nbsp;
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:window.close();">
