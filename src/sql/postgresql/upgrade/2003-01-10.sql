@@ -14,3 +14,9 @@ ALTER TABLE  cfsinbox_message ALTER COLUMN delete_flag SET DEFAULT false;
 
 /*8/12/2002*/
 alter table opportunity add column alert varchar(100) default null;
+
+/*8/16/2002*/
+UPDATE cfsinbox_messagelink
+        SET    sent_to = contact.contact_id
+        FROM   contact
+        WHERE  cfsinbox_messagelink.sent_to = contact.user_id; 
