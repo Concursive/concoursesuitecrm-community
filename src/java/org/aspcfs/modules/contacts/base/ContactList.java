@@ -672,27 +672,31 @@ public class ContactList extends Vector {
 
 				//only if we have string data to deal with
 				if (check == null || thisElement.getDataType().equals("date")) {
-					int month = 0;
-					int day = 0;
-					int year = 0;
-					
-					StringTokenizer st = new StringTokenizer(readyToGo, "/");
-					
-						if (st.hasMoreTokens()) {
-							month = Integer.parseInt(st.nextToken());
-							day = Integer.parseInt(st.nextToken());
-							year = Integer.parseInt(st.nextToken());
+					if (thisElement.getDataType().equals("date")) {
+						int month = 0;
+						int day = 0;
+						int year = 0;
+						
+						StringTokenizer st = new StringTokenizer(readyToGo, "/");
+						
+							if (st.hasMoreTokens()) {
+								month = Integer.parseInt(st.nextToken());
+								day = Integer.parseInt(st.nextToken());
+								year = Integer.parseInt(st.nextToken());
+							}
+							
+						Calendar tmpCal = new GregorianCalendar(year, (month-1), day);
+						
+						//fix it if "on or before" or "after" is selected.
+						if (thisElement.getOperatorId() == 8 || thisElement.getOperatorId() == 10) {
+							tmpCal.add(java.util.Calendar.DATE, +1);
 						}
 						
-					Calendar tmpCal = new GregorianCalendar(year, (month-1), day);
-					
-					//fix it if "on or before" or "after" is selected.
-					if (thisElement.getOperatorId() == 8 || thisElement.getOperatorId() == 10) {
-						tmpCal.add(java.util.Calendar.DATE, +1);
+						String backToString = (tmpCal.get(Calendar.MONTH)+1) + "/" + tmpCal.get(Calendar.DAY_OF_MONTH) + "/" + tmpCal.get(Calendar.YEAR);
+						outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), ("'" + backToString + "'"));
+					} else {
+						outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), ("'" + readyToGo + "'"));
 					}
-					
-					String backToString = (tmpCal.get(Calendar.MONTH)+1) + "/" + tmpCal.get(Calendar.DAY_OF_MONTH) + "/" + tmpCal.get(Calendar.YEAR);
-					outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), ("'" + backToString + "'"));
 				}
 				else {
 					check = check + ", '" + readyToGo + "'";
