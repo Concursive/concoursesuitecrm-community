@@ -7,7 +7,7 @@
 <script type="text/javascript" src="/javascript/coolbuttons.js"></script>
 <script>
   function save() {
-	<dhv:browser id="ie" minVersion="5.5" include="true">
+	<dhv:browser id="ie" minVersion="5.0" include="true">
     var edit = document.all.edit;
     document.all.messageText.value = edit.getHTML();
     edit.focus();
@@ -83,11 +83,11 @@ Modify Message
       Subject: <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
 			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %><br>
       &nbsp;<br>
-		<dhv:browser id="ie" minVersion="5.5" include="false">
+		<dhv:browser id="ie" minVersion="5.0" include="false">
 		  HTML tags are allowed in text entry<br>
       <textarea name="messageText" rows="10" cols="75" wrap="physical"><%= StringUtils.toHtmlTextValue(Message.getMessageText()) %></textarea>
     </dhv:browser>
-		<dhv:browser id="ie" minVersion="5.5" include="true">
+		<dhv:browser id="ie" minVersion="5.0" include="true">
 		  <input type="hidden" name="messageText" value="">
       <table cellspacing="0" id="toolBar" class="coolBar">
         <tr>
@@ -108,7 +108,7 @@ Modify Message
           </td>
         </tr>
       </table>
-      <iframe id="edit" frameborder="0" class="richEdit" style="border: 1px solid #cccccc; width: 100%; height: 100%;" onblur="return false">
+      <iframe id="edit" frameborder="0" class="richEdit" style="border: 1px solid #cccccc; width: 100%; height: 250;" onblur="return false">
          <body style="color: black; background: white;font: 8pt verdana;">
            <%= Message.getMessageText() %>
          </body>
