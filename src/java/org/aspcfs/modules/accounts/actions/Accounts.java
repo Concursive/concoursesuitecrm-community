@@ -824,12 +824,13 @@ public final class Accounts extends CFSModule {
       } else {
         //if this is an individual account, populate and update the primary contact
         if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
-          updatedOrg.updatePrimaryContact();
-          ((Contact) updatedOrg.getPrimaryContact()).setRequestItems(context.getRequest());
-          ((Contact) updatedOrg.getPrimaryContact()).update(db);
+          newOrg.populatePrimaryContact(db);
+          newOrg.updatePrimaryContact();
+          ((Contact) newOrg.getPrimaryContact()).setRequestItems(context.getRequest());
+          ((Contact) newOrg.getPrimaryContact()).update(db);
         }
         //update all contacts which are associated with this organization
-        ContactList.updateOrgName(db, updatedOrg);
+        ContactList.updateOrgName(db, newOrg);
       }
     } catch (SQLException e) {
       errorMessage = e;
