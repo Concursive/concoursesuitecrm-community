@@ -19,6 +19,7 @@ public class AdRun {
   private String adTypeName = null;
   private boolean includePhoto = false;
   private java.sql.Date completeDate = null;
+  private int completedBy = -1;
   private java.sql.Timestamp entered = null;
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
@@ -173,6 +174,9 @@ public class AdRun {
       completeDate = null;
     }
   }
+
+  public void setCompletedBy(int tmp) { this.completedBy = tmp; }
+  public int getCompletedBy() { return completedBy; }
 
 
   /**
@@ -426,6 +430,20 @@ public class AdRun {
       pst.execute();
       pst.close();
     }
+  }
+  
+  public void markComplete(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "UPDATE autoguide_ad_run " +
+        "SET complete_date = CURRENT_TIMESTAMP, completedby = ? " +
+        "WHERE ad_run_id = ? ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setInt(++i, completedBy);
+    pst.setInt(++i, id);
+    pst.execute();
+    pst.close();
   }
 
 

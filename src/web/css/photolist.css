@@ -40,3 +40,9 @@
 	border-left: #597ccc 1px solid;
 	border-bottom: #597ccc 1px solid;
 }
+.rowUnderline
+{
+	font-size: x-small;
+	vertical-align: baseline;
+	border-bottom: #ffd98d 1px solid;
+}

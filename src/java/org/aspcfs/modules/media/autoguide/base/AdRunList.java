@@ -204,6 +204,17 @@ public class AdRunList extends ArrayList {
       return null;
     }
   }
+  
+  public AdRun getAdRun(int adId) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      AdRun thisAdRun = (AdRun)i.next();
+      if (thisAdRun.getId() == adId) {
+        return thisAdRun;
+      }
+    }
+    return null;
+  }
 
 
   /**

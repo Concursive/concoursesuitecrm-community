@@ -95,18 +95,38 @@
 </dhv:evaluate>
 <dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">Ad Run Dates</td>
+    <td nowrap class="formLabel" valign="top">Ad Runs</td>
     <td>
+      <table cellpadding="4" cellspacing="0" border="0" width="100%">
 <%
       Iterator adruns = InventoryItem.getAdRuns().iterator();
       while (adruns.hasNext()) {
         AdRun thisAdRun = (AdRun)adruns.next();
 %>
-      <img border="0" src="<%= (thisAdRun.isComplete()?"images/box-checked.gif":"images/box.gif") %>" alt="" align="absmiddle"><%= toDateString(thisAdRun.getRunDate()) %>
-      (<%= toHtml(thisAdRun.getAdTypeName()) %> - with<%= (thisAdRun.getIncludePhoto()?"":"out") %> photo)<%= (adruns.hasNext()?"<br>":"") %>
+  <tr>
+    <td class="rowUnderline" width="10" nowrap align="left">
+      <img border="0" src="<%= (thisAdRun.isComplete()?"images/box-checked.gif":"images/box.gif") %>" alt="" align="absmiddle">
+    </td>
+    <td class="rowUnderline" width="10%" nowrap align="center">
+      <%= toDateString(thisAdRun.getRunDate()) %>
+    </td>
+    <td class="rowUnderline" width="10%" nowrap align="center">
+      <%= toHtml(thisAdRun.getAdTypeName()) %>
+    </td>
+    <td class="rowUnderline" width="10%" nowrap align="center">
+      <%= (thisAdRun.getIncludePhoto()?"Include Photo":"No Photo") %>
+    </td>
+    <td class="rowUnderline" width="10%" nowrap align="left">
+      &nbsp;
+    </td>
+    <td class="rowUnderline" width="90%" nowrap>
+      &nbsp;
+    </td>
+  </tr>
 <%
       }
 %>
+      </table>
     </td>
   </tr>
 </dhv:evaluate>
@@ -127,9 +147,15 @@
     </td>
     <td class="PhotoDetail">
       <span>
-        <img src="<%= (InventoryItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + InventoryItem.getId() + "&fid=" + InventoryItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/>
+<dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">
+        <a href="javascript:popURL('autoguide_popup_photo.jsp?id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>&ver=1.0','Photo','760','550','yes','yes');"><img src="AutoGuide.do?command=ShowImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>" border="0"/></a>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= !InventoryItem.hasPictureId() %>">
+        <img src="images/vehicle_unavailable.gif" border="0"/>
+</dhv:evaluate>
         <br>
       </span>
+      <br>
       <a href="javascript:popURLReturn('AutoGuide.do?command=UploadForm&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>', 'AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= InventoryItem.getId() %>', 'Photo Upload','500','300','no','no');">Upload Photo</a>
     </td>
   </tr>

@@ -1124,20 +1124,39 @@ public class Inventory {
   public String toString() {
     String lf = System.getProperty("line.separator");
     StringBuffer sb = new StringBuffer();
-    sb.append("AUTO GUIDE VEHICLE OUTPUT: " + StringUtils.toDateTimeString(new java.util.Date()) + lf + lf);
-    
+    sb.append("AUTO GUIDE VEHICLE OUTPUT: " + StringUtils.toDateTimeString(new java.util.Date()) + lf);
+    sb.append(lf);
+    sb.append(StringUtils.toString(organization.getName()));
+    sb.append(" (" + StringUtils.toString(organization.getAccountNumber()) + ")" + lf);
+    sb.append(organization.getPhoneNumber("Main") + lf);
+    sb.append(lf);
     if (this.hasAdRuns()) {
-      
-      
+      sb.append("Ad Runs:" + lf);
+      int displayCount = 0;
+      Iterator irun = adRuns.iterator();
+      while (irun.hasNext()) {
+        ++displayCount;
+        AdRun thisAdRun = (AdRun)irun.next();
+        sb.append(displayCount + ". ");
+        if (adRuns.size() > 9 && displayCount < 10) {
+          sb.append(" ");
+        }
+        sb.append(StringUtils.toDateString(thisAdRun.getRunDate()) + " ");
+        sb.append(thisAdRun.getAdTypeName());
+        sb.append(" - with");
+        if (!thisAdRun.getIncludePhoto()) {
+          sb.append("out");
+        }
+        sb.append(" photo");
+        sb.append(lf);
+      }
     } else {
-      
-      
-    
+      sb.append("Ad Runs: none specified" + lf);
     }
-    sb.append("Year: ");
-    sb.append("Make: "); 
-    sb.append("Model: "); 
-    
+    sb.append(lf);
+    sb.append("Year: " + vehicle.getYear() + lf);
+    sb.append("Make: " + StringUtils.toString(vehicle.getMake().getName()) + lf);
+    sb.append("Model: " + StringUtils.toString(vehicle.getModel().getName()) + lf);
     sb.append("Stock No: " + StringUtils.toString(stockNo) + lf);
     sb.append("Mileage: " + StringUtils.toString(this.getMileageString()) + lf);
     sb.append("VIN: " + StringUtils.toString(this.getVin()) + lf);

@@ -195,6 +195,7 @@
     <forward name="ModelListOK" resource="/autoguide_modellist.jsp"/>
     <forward name="UploadFormOK" resource="/autoguide_photo_upload.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+    <forward name="MarkComplete" resource="/AutoGuide.do?command=Details"/>
   </action>
   
   <!-- Pipeline Management Module -->

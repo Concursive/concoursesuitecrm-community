@@ -3,6 +3,7 @@
 <jsp:useBean id="InventoryItem" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <a href="AutoGuide.do?command=List">Back to Vehicle List</a><p>
 <form action='/AutoGuide.do?command=Details&id=<%= InventoryItem.getId() %>&action=modify' method='post'>
@@ -23,7 +24,10 @@
   </tr>
   <tr>
     <td nowrap class="formLabel">Organization</td>
-    <td width="100%"><%= toHtml(InventoryItem.getOrganization().getName()) %>&nbsp;</td>
+    <td width="100%">
+      <%= toHtml(InventoryItem.getOrganization().getName()) %>
+      (<%= toHtml(InventoryItem.getOrganization().getAccountNumber()) %>)
+    </td>
   </tr>
 <dhv:evaluate exp="<%= hasText(InventoryItem.getStockNo()) %>">
   <tr>
@@ -85,18 +89,41 @@
 </dhv:evaluate>
 <dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
   <tr>
-    <td nowrap class="formLabel" valign="top">Ad Run Dates</td>
+    <td nowrap class="formLabel" valign="top">Ad Runs</td>
     <td>
+      <table cellpadding="4" cellspacing="0" border="0" width="100%">
 <%
       Iterator adruns = InventoryItem.getAdRuns().iterator();
       while (adruns.hasNext()) {
         AdRun thisAdRun = (AdRun)adruns.next();
 %>
-      <img border="0" src="<%= (thisAdRun.isComplete()?"images/box-checked.gif":"images/box.gif") %>" alt="" align="absmiddle"><%= toDateString(thisAdRun.getRunDate()) %>
-      (<%= toHtml(thisAdRun.getAdTypeName()) %> - with<%= (thisAdRun.getIncludePhoto()?"":"out") %> photo)<%= (adruns.hasNext()?"<br>":"") %>
+  <tr>
+    <td class="rowUnderline" width="10" nowrap align="left">
+      <img border="0" src="<%= (thisAdRun.isComplete()?"images/box-checked.gif":"images/box.gif") %>" alt="" align="absmiddle">
+    </td>
+    <td class="rowUnderline" width="10%" nowrap align="center">
+      <%= toDateString(thisAdRun.getRunDate()) %>
+    </td>
+    <td class="rowUnderline" width="10%" nowrap align="center">
+      <%= toHtml(thisAdRun.getAdTypeName()) %>
+    </td>
+    <td class="rowUnderline" width="10%" nowrap align="center">
+      <%= (thisAdRun.getIncludePhoto()?"Include Photo":"No Photo") %>
+    </td>
+    <td class="rowUnderline" width="90%" nowrap>
+      &nbsp;
+    </td>
+    <td class="rowUnderline" width="10%" nowrap align="right">
+<dhv:evaluate exp="<%= !thisAdRun.isComplete() %>">
+      <a href="javascript:confirmForward('AutoGuide.do?command=MarkComplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');">Set this item as completed</a>
+</dhv:evaluate>
+      &nbsp;
+    </td>
+  </tr>
 <%
       }
 %>
+      </table>
     </td>
   </tr>
 </dhv:evaluate>
@@ -128,7 +155,7 @@
 <dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">   
       <br><a href="AutoGuide.do?command=DownloadImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>">D/L Hi-Res</a> (<%= InventoryItem.getPicture().getVersion(1.0d).getRelativeSize() %>k)<br>
 </dhv:evaluate>
-      <br><a href="#">D/L Text</a>
+      <br><a href="AutoGuide.do?command=DownloadText&id=<%= InventoryItem.getId() %>">D/L Text</a>
     </td>
   </tr>
 </table>

@@ -80,6 +80,7 @@ CREATE TABLE autoguide_ad_run (
   ad_type VARCHAR(20) NULL,
   include_photo BIT DEFAULT 0,
   complete_date DATETIME NULL,
+  completedby INT NOT NULL,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

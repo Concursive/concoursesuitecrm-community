@@ -13,6 +13,9 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    }
     formTest = true;
     message = "";
     if (form.stockNo.value == "") { 
@@ -63,11 +66,12 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>'">
+<input type="submit" value="Update" name="Save" onClick="javascript:this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="id" value="<%= InventoryDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= InventoryDetails.getModified() %>">
+<input type="hidden" name="dosubmit" value="false">
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -82,7 +86,7 @@
     </td>
     <td width="100%">
       <input type="text" size="15" name="stockNo" value="<%= toHtmlValue(InventoryDetails.getStockNo()) %>">
-      <%= showAttribute(request, "stockNoError") %>
+      <font color=red>*</font> <%= showAttribute(request, "stockNoError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -282,8 +286,8 @@
 </table>
 &nbsp;
 <br>
-<input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>'">
+<input type="submit" value="Update" name="Save" onClick="javascript:this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
     </td>
   </tr>

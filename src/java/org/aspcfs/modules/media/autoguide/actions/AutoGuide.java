@@ -127,6 +127,36 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandMarkComplete(ActionContext context) {
+    if (!(hasPermission(context, "autoguide-inventory-edit"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      int id = Integer.parseInt((String) context.getRequest().getParameter("id"));
+      int adId = Integer.parseInt(context.getRequest().getParameter("adId"));
+      db = this.getConnection(context);
+      Inventory inventoryItem = new Inventory(db, id);
+      AdRun thisAdRun = inventoryItem.getAdRuns().getAdRun(adId);
+      thisAdRun.setCompletedBy(getUserId(context));
+      thisAdRun.markComplete(db);
+      addModuleBean(context, "Auto Guide", "Details");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("MarkCompleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 
 
   /**

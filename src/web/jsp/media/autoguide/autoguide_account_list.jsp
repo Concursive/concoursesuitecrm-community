@@ -117,8 +117,11 @@
           <%= (thisItem.hasPictureId()?"yes":"&nbsp;") %>
         </td>
         <td class="row<%= rowid %>" nowrap>
+          <%= (thisItem.getSold()?"yes":"no") %>
+<%--          
           <input type="hidden" name="vehicle<%= itemCount %>id" value="<%= thisItem.getId() %>">
           <input type="checkbox" name="vehicle<%= thisItem.getId() %>sold"<%= (thisItem.getSold()?" checked":"") %>>
+--%>
         </td>
       </tr>
 <%

@@ -27,11 +27,13 @@
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
+<%--
     <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete">
     <td valign="center" align="left" class="title">
       <strong>Action</strong>
     </td>
     </dhv:permission>
+--%>
     <td>
       <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Account</a></strong>
     </td>
@@ -67,11 +69,13 @@
 		Inventory thisItem = (Inventory)i.next();
 %>
       <tr>
+<%--
         <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <dhv:permission name="autoguide-inventory-edit"><a href="AutoGuide.do?command=Details&id=<%= thisItem.getId()%>&action=modify&return=list">Edit</a></dhv:permission><dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete" all="true">|</dhv:permission><dhv:permission name="autoguide-inventory-delete"><a href="javascript:confirmDelete('AutoGuide.do?command=Delete&id=<%= thisItem.getId() %>');">Del</a></dhv:permission>
         </td>
         </dhv:permission>
+--%>
         <td class="row<%= rowid %>" nowrap>
           <a href="AutoGuide.do?command=Details&id=<%= thisItem.getId() %>"><%= toHtml(thisItem.getOrganization().getName()) %></a>
         </td>
@@ -102,7 +106,7 @@
     }
   } else {%>  
   <tr>
-    <td class="row2" valign="center" colspan="7">
+    <td class="row2" valign="center" colspan="6">
       No vehicles found.
     </td>
   </tr>
