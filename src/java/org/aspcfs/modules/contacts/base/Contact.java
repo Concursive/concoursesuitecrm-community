@@ -1855,11 +1855,7 @@ public class Contact extends GenericBean {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO contact " +
-          "(user_id, namefirst, namelast, owner, primary_contact, ");
-
-      if (orgName != null) {
-        sql.append("org_name, ");
-      }
+          "(user_id, namefirst, namelast, owner, primary_contact, org_name, ");
 
       if (entered != null) {
         sql.append("entered, ");
@@ -1868,11 +1864,8 @@ public class Contact extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ");
-      
-      if (orgName != null) {
-        sql.append("?, ");
-      }
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1887,8 +1880,10 @@ public class Contact extends GenericBean {
       pst.setString(++i, this.getNameLast());
       DatabaseUtils.setInt(pst, ++i, this.getOwner());
       pst.setBoolean(++i, this.getPrimaryContact());
-      if (orgName != null) {
+      if (orgId > 0) {
         pst.setString(++i, orgName);
+      }else{
+        pst.setString(++i, company);
       }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
@@ -2353,11 +2348,8 @@ public class Contact extends GenericBean {
         "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
         "namefirst = ?, namelast = ?, " +
         "namemiddle = ?, namesuffix = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
-        "org_id = ?, primary_contact = ?, ");
+        "org_id = ?, primary_contact = ?, org_name = ?, ");
 
-    if (orgName != null) {
-      sql.append("org_name = ?, ");
-    }
     if (imService > -1) {
       sql.append("imservice = ?, ");
     }
@@ -2398,8 +2390,10 @@ public class Contact extends GenericBean {
     pst.setString(++i, this.getUrl());
     DatabaseUtils.setInt(pst, ++i, orgId);
     pst.setBoolean(++i, this.getPrimaryContact());
-    if (orgName != null) {
+    if (orgId > 0) {
       pst.setString(++i, orgName);
+    }else{
+      pst.setString(++i, company);
     }
     if (imService > -1) {
       pst.setInt(++i, this.getImService());
@@ -2731,5 +2725,6 @@ public class Contact extends GenericBean {
     pst.executeUpdate();
     pst.close();
   }
+
 }
 
