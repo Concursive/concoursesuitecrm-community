@@ -396,9 +396,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
   public String getCoreAttributes() {
     StringBuffer tmpString = new StringBuffer();
     tmpString.append(id != null ? " id=\"" + id + "\" " : "");
-    tmpString.append(title != null ? " title = \"" + title + "\" " : "");
-    tmpString.append(style != null ? " style = \"" + style + "\" " : "");
-    tmpString.append(elementClass != null ? " class = \"" + elementClass + "\" " : "");
+    tmpString.append(title != null ? " title=\"" + title + "\" " : "");
+    tmpString.append(style != null ? " style=\"" + style + "\" " : "");
+    tmpString.append(elementClass != null ? " class=\"" + elementClass + "\" " : "");
     return tmpString.toString();
   }
 
@@ -411,12 +411,12 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
   public String getCustomAttributes() {
     StringBuffer tmpString = new StringBuffer();
     tmpString.append(align != null ? " align=\"" + align + "\" " : "");
-    tmpString.append(valign != null ? " valign = \"" + valign + "\" " : "");
-    tmpString.append(bgColor != null ? " bgcolor = \"" + bgColor + "\" " : "");
-    tmpString.append(colspan != null ? " colspan = \"" + colspan + "\" " : "");
-    tmpString.append(rowspan != null ? " rowspan = \"" + rowspan + "\" " : "");
-    tmpString.append(height != null ? " height = \"" + height + "\" " : "");
-    tmpString.append(width != null ? " width = \"" + width + "\" " : "");
+    tmpString.append(valign != null ? " valign=\"" + valign + "\" " : "");
+    tmpString.append(bgColor != null ? " bgcolor=\"" + bgColor + "\" " : "");
+    tmpString.append(colspan != null ? " colspan=\"" + colspan + "\" " : "");
+    tmpString.append(rowspan != null ? " rowspan=\"" + rowspan + "\" " : "");
+    tmpString.append(height != null ? " height=\"" + height + "\" " : "");
+    tmpString.append(width != null ? " width=\"" + width + "\" " : "");
     return tmpString.toString();
   }
 
@@ -433,6 +433,9 @@ public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
     if (nnm != null) {
       for (int i = 0; i < nnm.getLength(); i++) {
         ObjectUtils.setParam(this, nnm.item(i).getNodeName().trim(), nnm.item(i).getNodeValue().trim());
+      }
+      if (column.getAttribute("class") != null && !"".equals(column.getAttribute("class"))) {
+        this.elementClass = column.getAttribute("class");
       }
     }
   }
