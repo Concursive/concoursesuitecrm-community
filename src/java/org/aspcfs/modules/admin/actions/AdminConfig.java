@@ -213,9 +213,23 @@ public final class AdminConfig extends CFSModule {
           return "LicenseCheckERROR";
         }
         //Response is good so save the new license
-        
-        
-        
+        RecordList recordList = thisStatus.getRecordList();
+        if (recordList != null && recordList.getName().equals("license") && !recordList.isEmpty()) {
+          Record record = (Record) recordList.get(0);
+          if (record != null && record.getAction().equals("update")) {
+            String updatedLicense = (String) record.get("license");
+            //Validate and save it
+            XMLUtils xml2 = new XMLUtils(PrivateString.decrypt(key, updatedLicense));
+            String entered = XMLUtils.getNodeText(xml2.getFirstChild("entered"));
+            if (entered == null) {
+              return "LicenseCheckERROR";
+            }
+            StringUtils.saveText(context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt", updatedLicense);
+            //TODO: Reset the APP_TEXT
+            
+            return "LicenseUpdatedOK";
+          }
+        }
       }
       //If manual input, then allow user to input the license code
       if ("manual".equals(process)) {

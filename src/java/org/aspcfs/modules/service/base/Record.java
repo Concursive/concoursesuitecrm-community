@@ -1,6 +1,8 @@
 package org.aspcfs.modules.service.base;
 
 import java.util.*;
+import org.w3c.dom.*;
+import org.aspcfs.utils.XMLUtils;
 
 /**
  *  Represents a database record, with fields, used in the XML API.
@@ -28,6 +30,25 @@ public class Record extends LinkedHashMap {
    */
   public Record(String thisAction) {
     action = thisAction;
+  }
+
+
+  /**
+   *  Constructor for the Record object
+   *
+   *@param  recordNode  Description of the Parameter
+   */
+  public Record(Element recordNode) {
+    //Attributes that a record might have
+    this.setAction(recordNode.getAttribute("action"));
+    //Process each property in the record
+    ArrayList propertyElements = new ArrayList();
+    XMLUtils.getAllChildren(recordNode, propertyElements);
+    Iterator i = propertyElements.iterator();
+    while (i.hasNext()) {
+      Element property = (Element) i.next();
+      this.put(property.getNodeName(), XMLUtils.getNodeText(property));
+    }
   }
 
 
@@ -99,7 +120,14 @@ public class Record extends LinkedHashMap {
   public boolean hasAction() {
     return (action != null);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  name   Description of the Parameter
+   *@param  value  Description of the Parameter
+   */
   public void put(String name, int value) {
     this.put(name, String.valueOf(value));
   }

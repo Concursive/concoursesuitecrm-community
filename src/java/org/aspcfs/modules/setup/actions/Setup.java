@@ -421,16 +421,11 @@ public class Setup extends CFSModule {
     try {
       File destPath = new File(userFileLibrary + "init" + fs);
       destPath.mkdirs();
-      if (!inputFileDest.exists()) {
-        //Copy input.txt to target directory
-        FileUtils.copyFile(inputFile, inputFileDest, true);
-      }
-      if (!zlibFileDest.exists()) {
-        //Copy zlib.jar to target directory
-        FileUtils.copyFile(zlibFile, zlibFileDest, true);
-      }
-      //Add fileLibrary pref to registry so that this page can be skipped in
-      //the future
+      //Copy input.txt to target directory (always do this, since user may have re-registered)
+      FileUtils.copyFile(inputFile, inputFileDest, true);
+      //Copy zlib.jar to target directory (always do this, since user may have re-registered)
+      FileUtils.copyFile(zlibFile, zlibFileDest, true);
+      //Add fileLibrary pref to registry so that this page can be skipped in the future
       Prefs.savePref("cfs.fileLibrary", userFileLibrary);
     } catch (Exception e) {
       context.getRequest().setAttribute("actionError",

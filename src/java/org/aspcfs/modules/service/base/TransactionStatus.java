@@ -66,9 +66,11 @@ public class TransactionStatus {
     this.setId(responseNode.getAttribute("id"));
     this.setStatusCode(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "status")));
     this.setMessage(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "errorText")));
-    //TODO: Process the record list if there is one
-    
-
+    //Process the record list if there is one
+    Element recordListNode = XMLUtils.getFirstChild(responseNode, "recordSet");
+    if (recordListNode != null) {
+      recordList = new RecordList(recordListNode);
+    }
   }
 
 
