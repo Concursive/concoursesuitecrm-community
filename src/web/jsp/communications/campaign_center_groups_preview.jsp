@@ -20,19 +20,22 @@
       </ul>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="4">
+    <td colspan="5">
       <strong>Contacts in this group</strong>
     </td>     
   </tr>
   <tr class="title">
-    <td width="8" align="right" nowrap>
+    <td align="right">
       Count
     </td>
-    <td width="50%" nowrap>
+    <td width="33%">
       Name
     </td>
-    <td width="50%" nowrap>
+    <td width="33%">
       Company
+    </td>
+    <td width="34%">
+      Email
     </td>
     <td align="center">
       Included
@@ -52,14 +55,17 @@
     <td align="right" nowrap>
       <%= count %>
     </td>
-    <td nowrap>
+    <td>
       <%= toHtml(thisContact.getNameLastFirst()) %>
     </td>
-    <td nowrap>
+    <td>
       <%= toHtml(thisContact.getAffiliation()) %>
     </td>
+    <td nowrap>
+      <%= toHtml(thisContact.getEmailAddress("Business")) %>
+    </td>
     <td align="center" nowrap>
-      <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=ToggleRecipient&scl=<%=SCL.getId()%>&id=<%= Campaign.getId() %>&contactId=<%= thisContact.getId()%>"></dhv:permission><%= (thisContact.excludedFromCampaign()? "No" : "Yes") %><dhv:permission name="campaign-campaigns-edit"></a></dhv:permission>
+      <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=ToggleRecipient&scl=<%=SCL.getId()%>&id=<%= Campaign.getId() %>&contactId=<%= thisContact.getId()%>&popup=true"></dhv:permission><%= (thisContact.excludedFromCampaign()? "No" : "Yes") %><dhv:permission name="campaign-campaigns-edit"></a></dhv:permission>
     </td>
   </tr>
   <input type="hidden" name="id" value="<%= Campaign.getId() %>">
@@ -70,7 +76,7 @@
 <dhv:pagedListControl object="CampaignCenterPreviewInfo"/>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="4">
+    <td colspan="5">
       No contacts matched query.
     </td>
   </tr>
