@@ -143,7 +143,7 @@ Add Ticket<br>
             <input type="hidden" name="orgId" id="orgId" value="<%=  TicketDetails.getOrgId() %>">
             &nbsp;<font color="red">*</font>
             <%= showAttribute(request, "orgIdError") %>
-            [<a href="javascript:popAccountsListSingle('orgId','changeaccount', 'filters=all|my|disabled');">Select</a>]
+            [<a href="javascript:popAccountsListSingle('orgId','changeaccount', 'showMyCompany=true&filters=all|my|disabled');">Select</a>]
           </td>
         </tr>
       </table>
