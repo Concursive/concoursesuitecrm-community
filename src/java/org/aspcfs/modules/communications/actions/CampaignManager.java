@@ -13,7 +13,6 @@ import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
 
-
 /**
  *  Actions for dealing with Campaigns in the Communications Module, including
  *  the dashboard and campaign center.
@@ -253,7 +252,7 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-      
+
       FileItemList files = new FileItemList();
       files.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       files.setLinkItemId(campaign.getId());
@@ -527,15 +526,12 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, campaignId);
-      Message thisMessage = new Message(db, campaign.getMessageId());
       FileItemList documents = new FileItemList();
       documents.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       documents.setLinkItemId(Integer.parseInt(campaignId));
       documents.buildList(db);
       context.getRequest().setAttribute("FileItemList", documents);
       context.getRequest().setAttribute("Campaign", campaign);
-      context.getRequest().setAttribute("Message", thisMessage);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -567,14 +563,13 @@ public final class CampaignManager extends CFSModule {
 
     String itemId = (String) context.getRequest().getParameter("fid");
     String version = (String) context.getRequest().getParameter("ver");
-    String campaignId = context.getRequest().getParameter("id");
     FileItem thisItem = null;
 
     Connection db = null;
-    int id = -1;
+    int id = Integer.parseInt(context.getRequest().getParameter("id"));
     try {
       db = getConnection(context);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_DOCUMENTS);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -589,7 +584,7 @@ public final class CampaignManager extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "campaign", id) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "communications", id) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -602,7 +597,7 @@ public final class CampaignManager extends CFSModule {
           db = null;
           System.err.println("CampaignDocuments-> Trying to send a file that does not exist");
           context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
-          return (executeCommandView(context));
+          return (executeCommandPreviewMessage(context));
         }
       } else {
         FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
@@ -618,9 +613,9 @@ public final class CampaignManager extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
+          System.err.println("CampaignMessage Documents -> Trying to send a file that does not exist");
           context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
-          return (executeCommandView(context));
+          return (executeCommandPreviewMessage(context));
         }
       }
     } catch (java.net.SocketException se) {
@@ -636,6 +631,7 @@ public final class CampaignManager extends CFSModule {
         this.freeConnection(context, db);
       }
     }
+
     if (errorMessage == null) {
       return ("-none-");
     } else {
@@ -1680,7 +1676,8 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Builds comments for a SurveyQuestion Question could be either a Open Ended
+   *  or Quantitative with comments
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -1688,11 +1685,15 @@ public final class CampaignManager extends CFSModule {
   public String executeCommandShowComments(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
-
+    String questionId = context.getRequest().getParameter("questionId");
+    String type = context.getRequest().getParameter("type");
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CommentListInfo");
+    pagedListInfo.setLink("/CampaignManager.do?command=ShowComments&questionId=" + questionId + "&type=" + type);
     try {
       SurveyAnswerList answerList = new SurveyAnswerList();
-      answerList.setQuestionId(Integer.parseInt(context.getRequest().getParameter("questionId")));
+      answerList.setQuestionId(Integer.parseInt(questionId));
       answerList.setHasComments(Constants.TRUE);
+      answerList.setPagedListInfo(pagedListInfo);
       db = getConnection(context);
       answerList.buildList(db);
       context.getRequest().setAttribute("SurveyAnswerList", answerList);
@@ -1725,7 +1726,14 @@ public final class CampaignManager extends CFSModule {
       }
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandViewAttachmentsOverview(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-view"))) {
@@ -1746,13 +1754,13 @@ public final class CampaignManager extends CFSModule {
         Survey survey = new Survey(db, campaign.getSurveyId());
         context.getRequest().setAttribute("Survey", survey);
       }
-      
+
       FileItemList files = new FileItemList();
       files.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       files.setLinkItemId(campaign.getId());
       files.buildList(db);
       context.getRequest().setAttribute("fileItemList", files);
-      
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1766,7 +1774,14 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandManageFileAttachments(ActionContext context) {
 
     if (!(hasPermission(context, "campaign-campaigns-view"))) {
@@ -1789,7 +1804,7 @@ public final class CampaignManager extends CFSModule {
       files.setLinkItemId(campaign.getId());
       files.buildList(db);
       context.getRequest().setAttribute("fileItemList", files);
-      
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1803,7 +1818,14 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUploadFile(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
       return ("PermissionError");
@@ -1873,7 +1895,14 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandRemoveFile(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
       return ("PermissionError");
@@ -1900,7 +1929,14 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDownloadFile(ActionContext context) {
     if (!(hasPermission(context, "campaign-campaigns-view"))) {
       return ("PermissionError");
@@ -1919,7 +1955,7 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     //Start the download
     try {
       FileItem itemToDownload = thisItem;
