@@ -71,7 +71,7 @@ public final class ProjectManagementTickets extends CFSModule {
       //Prepare the form
       Ticket thisTicket = (Ticket) context.getFormBean();
       thisTicket.setOrgId(0);
-      thisTicket.setContactId(this.getUserId(context));
+      thisTicket.setContactId(this.getUser(context, this.getUserId(context)).getContactId());
       if (thisTicket.getId() > 0) {
         thisTicket.buildHistory(db);
       }

@@ -26,8 +26,8 @@ import org.aspcfs.controller.ApplicationPrefs;
  *      Exp $
  */
 public class ApplicationVersion {
-  public final static String VERSION = "2.9 (2004-10-29)";
-  public final static String APP_VERSION = "2004-10-29";
+  public final static String VERSION = "2.9.1 (2004-11-03)";
+  public final static String APP_VERSION = "2004-11-03";
   public final static String DB_VERSION = "2004-10-03";
 
 
