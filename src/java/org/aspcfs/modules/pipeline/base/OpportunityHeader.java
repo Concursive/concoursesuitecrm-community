@@ -769,9 +769,12 @@ public class OpportunityHeader extends GenericBean {
    *@return                   The Valid value
    *@exception  SQLException  Description of Exception
    */
-  public boolean isValid(Connection db) throws SQLException {
+  public boolean isValid() throws SQLException {
     if (description == null || description.trim().equals("")) {
       errors.put("descriptionError", "Description cannot be left blank");
+    }
+    if (contactLink == -1 && accountLink == -1) {
+      errors.put("acctContactError", "An Account or a Contact needs to be selected");
     }
     if (hasErrors()) {
       if (System.getProperty("DEBUG") != null) {
@@ -792,7 +795,7 @@ public class OpportunityHeader extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
+    if (!isValid()) {
       return false;
     }
     if (this.getAccountLink() == -1 && this.getContactLink() == -1) {
@@ -868,7 +871,7 @@ public class OpportunityHeader extends GenericBean {
     if (id == -1) {
       throw new SQLException("Opportunity Header ID was not specified");
     }
-    if (!isValid(db)) {
+    if (!isValid()) {
       return -1;
     }
     try {
