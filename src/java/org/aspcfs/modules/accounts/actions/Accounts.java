@@ -395,7 +395,7 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    *@since
    */
-  public String executeCommandSearch(ActionContext context) {
+  public String executeCommandSearchForm(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-view"))) {
       return ("PermissionError");
@@ -628,11 +628,11 @@ public final class Accounts extends CFSModule {
       organizationList.setPagedListInfo(orgListInfo);
       organizationList.setMinerOnly(false);
       organizationList.setTypeId(orgListInfo.getFilterKey("listFilter1"));
-      orgListInfo.setSearchCriteria(organizationList);
       if ("my".equals(orgListInfo.getListView())) {
         organizationList.setOwnerId(this.getUserId(context));
-      }
-      if ("disabled".equals(orgListInfo.getListView())) {
+      }else if ("search".equals(orgListInfo.getListView())) {
+        return executeCommandSearch(context);
+      }else if ("disabled".equals(orgListInfo.getListView())) {
         organizationList.setIncludeEnabled(0);
       }
       organizationList.buildList(db);
@@ -647,6 +647,62 @@ public final class Accounts extends CFSModule {
       this.freeConnection(context, db);
     }
   }
+
+
+  /**
+   *  Search Accounts
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSearch(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-view")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    OrganizationList organizationList = new OrganizationList();
+    //Prepare pagedListInfo
+    PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
+    orgListInfo.setLink("Accounts.do?command=View");
+    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SearchAccountsListInfo");
+
+    //Need to reset any sub PagedListInfos since this is a new account
+    this.resetPagedListInfo(context);
+    try {
+      db = this.getConnection(context);
+      //Account type lookup
+      LookupList typeSelect = new LookupList(db, "lookup_account_types");
+      typeSelect.addItem(0, "All Types");
+      context.getRequest().setAttribute("TypeSelect", typeSelect);
+
+      //Build the organization list
+      organizationList.setPagedListInfo(searchListInfo);
+      organizationList.setMinerOnly(false);
+      organizationList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
+      orgListInfo.setSearchCriteria(organizationList);
+      if ("my".equals(searchListInfo.getListView())) {
+        organizationList.setOwnerId(this.getUserId(context));
+      }
+      if ("disabled".equals(searchListInfo.getListView())) {
+        organizationList.setIncludeEnabled(0);
+      }
+      organizationList.buildList(db);
+
+      //set the view to search
+      orgListInfo.setListView("search");
+
+      context.getRequest().setAttribute("OrgList", organizationList);
+      addModuleBean(context, "View Accounts", "Accounts View");
+      return ("ListOK");
+    } catch (Exception errorMessage) {
+      //Go through the SystemError process
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+  }
+
 
 
   /**
