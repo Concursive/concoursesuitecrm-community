@@ -77,7 +77,7 @@ Add Account<br>
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Acct. Number
+      Account Number
     </td>
     <td>
       <input type=text size=50 name="accountNumber" maxlength=50>

@@ -36,6 +36,7 @@ public class OrganizationList extends Vector {
   private String ownerIdRange = null;
   private boolean hasAlertDate = false;
   private boolean hasExpireDate = false;
+  private String accountNumber = "";
   
   private int revenueType = 0;
   private int revenueYear = -1;
@@ -132,6 +133,12 @@ public int getRevenueYear() { return revenueYear; }
     this.HtmlJsEvent = HtmlJsEvent;
   }
 
+public String getAccountNumber() {
+	return accountNumber;
+}
+public void setAccountNumber(String accountNumber) {
+	this.accountNumber = accountNumber;
+}
 
   /**
    *  Sets the EnteredBy attribute of the OrganizationList object to limit
@@ -521,6 +528,14 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     if (revenueOwnerId > -1) {
       sqlFilter.append("AND o.org_id in (SELECT org_id from revenue WHERE owner = ?) ");
     }
+    
+    if (accountNumber != null) {
+      if (accountNumber.indexOf("%") >= 0) {
+        sqlFilter.append("AND lower(o.account_number) like lower(?) ");
+      } else {
+        sqlFilter.append("AND lower(o.account_number) = lower(?) ");
+      }
+    }
   }
 
 
@@ -583,6 +598,10 @@ public void setRevenueOwnerId(int revenueOwnerId) {
 
     if (revenueOwnerId > -1) {
       pst.setInt(++i, revenueOwnerId);
+    }
+    
+    if (accountNumber != null) {
+      pst.setString(++i, accountNumber);
     }
     
     return i;

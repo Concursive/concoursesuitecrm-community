@@ -17,11 +17,21 @@ Search Accounts<br>
 </td>     
 </tr>
 
-<tr><td width="125" class="formLabel">
+<tr>
+<td width="125" class="formLabel">
 Name
 </td>
 <td colspan=1 valign=center>
 <input type=text size=35 name="searchName">
+</td>
+</tr>
+
+<tr>
+<td width="125" class="formLabel">
+Account Number
+</td>
+<td colspan=1 valign=center>
+<input type=text size=35 name="searchAccountNumber">
 </td>
 </tr>
 

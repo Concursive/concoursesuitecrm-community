@@ -694,11 +694,18 @@ public final class Accounts extends CFSModule {
 
     Connection db = null;
     OrganizationList organizationList = new OrganizationList();
+    
     String passedName = context.getRequest().getParameter("searchName");
+    String passedNumber = context.getRequest().getParameter("searchAccountNumber");
 
     if (passedName != null && !(passedName.trim()).equals("")) {
       passedName = "%" + passedName + "%";
       organizationList.setName(passedName);
+    }
+    
+    if (passedNumber != null && !(passedNumber.trim()).equals("")) {
+      passedNumber = "%" + passedNumber + "%";
+      organizationList.setAccountNumber(passedNumber);
     }
 
     try {

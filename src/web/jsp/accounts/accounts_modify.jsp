@@ -124,7 +124,7 @@ Modify Account<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Acct. Number
+      Account Number
     </td>
     <td>
       <input type=text size=50 name="accountNumber" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">

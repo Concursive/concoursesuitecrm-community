@@ -45,7 +45,7 @@ Account Details<br>
 <dhv:evaluate exp="<%= hasText(OrgDetails.getTypes().valuesAsString()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Acct. Type(s)
+      Account Type(s)
     </td>
     <td>  
       <%= toHtml(OrgDetails.getTypes().valuesAsString()) %>
@@ -55,7 +55,7 @@ Account Details<br>
 <dhv:evaluate exp="<%= hasText(OrgDetails.getAccountNumber()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Acct. Number
+      Account Number
     </td>
     <td width=100%>
        <%= toHtml(OrgDetails.getAccountNumber()) %>&nbsp;
