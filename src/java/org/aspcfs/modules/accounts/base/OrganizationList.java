@@ -10,8 +10,6 @@ import org.aspcfs.utils.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.base.Constants;
 
-
-
 /**
  *  Contains a list of organizations... currently used to build the list from
  *  the database with any of the parameters to limit the results.
@@ -590,23 +588,20 @@ public class OrganizationList extends Vector {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
 
+    String sqlDate = ((hasAlertDate ? "alertdate " : "") + (hasExpireDate ? "contract_end " : ""));
     createFilter(sqlFilter);
 
     sqlSelect.append(
-        "SELECT alertdate, count(*) " +
+        "SELECT " + sqlDate + ", count(*) " +
         "FROM organization o " +
         "WHERE o.org_id >= 0 ");
 
-    sqlFilter.append("AND alertdate IS NOT NULL ");
-    sqlTail.append("GROUP BY alertdate ");
+    sqlTail.append("GROUP BY " + sqlDate);
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertdate = Organization.getAlertDateStringLongYear(rs.getDate("alertdate"));
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("OrgList --> Added Event " + alertdate + ":" + rs.getInt("count"));
-      }
+      String alertdate = Organization.getAlertDateStringLongYear(rs.getDate(sqlDate.trim()));
       events.put(alertdate, new Integer(rs.getInt("count")));
     }
     rs.close();
@@ -632,7 +627,7 @@ public class OrganizationList extends Vector {
     createFilter(sqlFilter);
 
     sqlSelect.append(
-        "SELECT o.org_id, o.name, o.alertdate, o.alert " +
+        "SELECT o.org_id, o.name, o.alertdate, o.alert, o.contract_end " +
         "FROM organization o " +
         "WHERE o.org_id >= 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
@@ -644,6 +639,7 @@ public class OrganizationList extends Vector {
       thisOrg.setName(rs.getString("name"));
       thisOrg.setAlertDate(rs.getDate("alertdate"));
       thisOrg.setAlertText(rs.getString("alert"));
+      thisOrg.setContractEndDate(rs.getDate("contract_end"));
       this.add(thisOrg);
     }
     rs.close();
@@ -841,10 +837,24 @@ public class OrganizationList extends Vector {
 
     if (hasAlertDate == true) {
       sqlFilter.append("AND o.alertdate is not null ");
+      if (alertRangeStart != null) {
+        sqlFilter.append("AND o.alertdate >= ? ");
+      }
+
+      if (alertRangeEnd != null) {
+        sqlFilter.append("AND o.alertdate <= ? ");
+      }
     }
 
     if (hasExpireDate == true) {
       sqlFilter.append("AND o.contract_end is not null ");
+      if (alertRangeStart != null) {
+        sqlFilter.append("AND o.contract_end >= ? ");
+      }
+
+      if (alertRangeEnd != null) {
+        sqlFilter.append("AND o.contract_end <= ? ");
+      }
     }
 
     if (syncType == Constants.SYNC_INSERTS) {
@@ -949,6 +959,23 @@ public class OrganizationList extends Vector {
       pst.setBoolean(++i, false);
     }
 
+    if (hasAlertDate == true) {
+      if (alertRangeStart != null) {
+        pst.setDate(++i, alertRangeStart);
+      }
+      if (alertRangeEnd != null) {
+        pst.setDate(++i, alertRangeEnd);
+      }
+    }
+
+    if (hasExpireDate == true) {
+      if (alertRangeStart != null) {
+        pst.setDate(++i, alertRangeStart);
+      }
+      if (alertRangeEnd != null) {
+        pst.setDate(++i, alertRangeEnd);
+      }
+    }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         pst.setTimestamp(++i, lastAnchor);
