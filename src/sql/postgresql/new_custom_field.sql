@@ -63,11 +63,6 @@ CREATE TABLE custom_field_lookup (
   enabled BOOLEAN DEFAULT true
 );
 
-INSERT INTO custom_field_lookup (field_id, description, level, default_item) VALUES (1, '-- None --', 1, true);
-INSERT INTO custom_field_lookup (field_id, description, level) VALUES (1, 'Cash', 2);
-INSERT INTO custom_field_lookup (field_id, description, level) VALUES (1, 'Credit Card', 3);
-INSERT INTO custom_field_lookup (field_id, description, level) VALUES (1, 'Check', 4);
-
 /* The saved records in a folder associated with each category_id */
 CREATE TABLE custom_field_record (
   link_module_id INTEGER NOT NULL,
