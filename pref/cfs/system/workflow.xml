@@ -86,30 +86,34 @@ Comment: ${this.comment}
             <parameter name="ticketList.onlyAssigned" value="true" enabled="false"/>
             <parameter name="ticketList.onlyUnassigned" value="true" enabled="true"/>
             <parameter name="ticketList.ageInMinutes" value="10"/>
+            <parameter name="ticketList.lastAnchor" value="${process.lastAnchor}" enabled="true"/>
+            <parameter name="ticketList.nextAnchor" value="${process.nextAnchor}" enabled="true"/>
           </parameters>
         </component>
         <component id="2" parent="1" class="org.aspcfs.modules.troubletickets.components.SendTicketListReport" enabled="true">
           <parameters>
-            <parameter name="notification.to" value="mrajkowski@darkhorseventures.com"/>
-            <parameter name="notification.users.to" value="${this.assignedTo}"/>
+            <parameter name="notification.to" value="mrajkowski@darkhorseventures.com" enabled="false"/>
+            <parameter name="notification.users.to" value="${this.enteredBy}"/>
             <parameter name="notification.contacts.to" value="${this.contactId}" enabled="false"/>
+            <!-- not implemented
             <parameter name="notification.departments.to" value="${this.departmentCode}" enabled="false"/>
-            <parameter name="notification.subject">CFS Unassigned Ticket Report</parameter>
-            <parameter name="notification.body">
-<![CDATA[** This is an automated message **
+            -->
+            <parameter name="notification.subject">CFS Unassigned Ticket Report (${objects.size})</parameter>
+            <parameter name="notification.body"><![CDATA[** This is an automated message **
 
 The following tickets in CFS are unassigned and need attention:
 
 ]]></parameter>
-            <parameter name="report.ticket.content">
-<![CDATA[--- Ticket Details ---
+            <parameter name="report.ticket.content"><![CDATA[----- Ticket Details -----
 Ticket # ${this.paddedId}
-Priority: $1{ticketPriorityLookup.description}
-Severity: $1{ticketSeverityLookup.description}
+Organization: ${ticketOrganization.name}
+Priority: ${ticketPriorityLookup.description}
+Severity: ${ticketSeverityLookup.description}
 Issue: ${this.problem}
 
-Assigned By: $1{ticketModifiedByContact.nameFirstLast}
+Assigned By: ${ticketModifiedByContact.nameFirstLast}
 Comment: ${this.comment}
+
 
 ]]></parameter>
           </parameters>
