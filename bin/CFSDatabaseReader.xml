@@ -578,11 +578,11 @@
       <property>modified</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
-      <property lookup="searchCriteriaElements" field="id"/>
-      <property lookup="searchFieldElement" field="field"/>
-      <property field="operator"/>
-      <property lookup="fieldTypes" field="operatorid"/>
-      <property field="value"/>
+      <property lookup="searchCriteriaElements" field="id">savedCriteriaListId</property>
+      <property lookup="searchFieldElement" field="field">fieldId</property>
+      <property field="operator">operator</property>
+      <property lookup="fieldTypes" field="operatorid">operatorId</property>
+      <property field="value">value</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
       <property alias="guid" field="id"/>
@@ -636,7 +636,7 @@
       <property alias="guid" field="id">id</property>
       <property lookup="campaign" field="campaign_id">campaignId</property>
       <property lookup="contact" field="contact_id">contactId</property>
-      <property field="run_id">runId</property>
+      <property lookup="campaignRun" field="run_id">runId</property>
       <property field="status_id">statusId</property>
       <property field="status">status</property>
       <property field="status_date">statusDate</property>
@@ -671,6 +671,7 @@
       <property lookup="campaign" field="campaign_id">campaignId</property>
       <property lookup="contact" field="contact_id">contactId</property>
     </map>
+<!--
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="recipientList" table="recipient_list" uniqueField="id">
       <property alias="guid" field="id"/>
       <property field="name"/>
@@ -680,7 +681,8 @@
       <property field="enabled"/>
       <property lookup="user" field="enteredby"/>
       <property lookup="user" field="modifiedby"/>
-    </map>   
+    </map>
+-->
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaignRun" table="campaign_run" uniqueField="id">
       <property alias="guid" field="id">id</property>
       <property lookup="campaign" field="campaign_id">campaignId</property>

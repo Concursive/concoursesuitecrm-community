@@ -692,7 +692,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'customFieldRecordList', 'com.darkhorseventures.cfsbase.CustomFieldRecordList');
  
- INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactEmailAddress', 'com.darkhorseventures.cfsbase.ContactEmailAddress');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactEmailAddressList', 'com.darkhorseventures.cfsbase.ContactEmailAddressList');
@@ -771,17 +771,17 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactAddressList', 'com.darkhorseventures.cfsbase.ContactAddressList');
  
- INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactPhoneNumber', 'com.darkhorseventures.cfsbase.ContactPhoneNumber');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactPhoneNumberList', 'com.darkhorseventures.cfsbase.ContactPhoneNumberList');
  
-  INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'organizationPhoneNumber', 'com.darkhorseventures.cfsbase.OrganizationPhoneNumber');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'organizationPhoneNumberList', 'com.darkhorseventures.cfsbase.OrganizationPhoneNumberList');
  
-   INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'organizationEmailAddress', 'com.darkhorseventures.cfsbase.OrganizationEmailAddress');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'organizationEmailAddressList', 'com.darkhorseventures.cfsbase.OrganizationEmailAddressList');
@@ -805,11 +805,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'searchCriteriaElements', 'com.darkhorseventures.cfsbase.SearchCriteriaList');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'searchCriteriaElementsList', 'com.darkhorseventures.cfsbase.SearchCriteriaListList');
- 
+
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'savedCriteriaElement', 'com.darkhorseventures.webutils.CustomLookupElement');
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'savedCriteriaElementList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'savedCriteriaElement', 'com.darkhorseventures.cfsbase.SavedCriteriaElement');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'searchFieldElement', 'com.darkhorseventures.webutils.CustomLookupElement');
@@ -826,12 +824,12 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaignList', 'com.darkhorseventures.cfsbase.CampaignList');
  
- INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'scheduledRecipient', 'com.darkhorseventures.cfsbase.ScheduledRecipient');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'scheduledRecipientList', 'com.darkhorseventures.cfsbase.ScheduledRecipientList');
  
- INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'accessLog', 'com.darkhorseventures.cfsbase.AccessLog');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'accessLogList', 'com.darkhorseventures.cfsbase.AccessLogList');
@@ -839,18 +837,13 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'accountTypeLevels', 'com.darkhorseventures.cfsbase.AccountTypeLevel');
 
-   INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'fieldTypes', 'com.darkhorseventures.webutils.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'fieldTypesList', 'com.darkhorseventures.webutils.CustomLookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'excludedRecipient', 'com.darkhorseventures.cfsbase.ExcludedRecipient');
- 
-    INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'recipientList', 'com.darkhorseventures.webutils.CustomLookupElement');
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'recipientListList', 'com.darkhorseventures.webutils.CustomLookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaignRun', 'com.darkhorseventures.cfsbase.CampaignRun');
