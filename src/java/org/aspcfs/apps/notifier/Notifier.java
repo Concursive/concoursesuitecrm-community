@@ -10,7 +10,6 @@ import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.cfsmodule.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 import com.zeroio.iteam.base.*;
 import java.util.*;
 import java.util.zip.*;
