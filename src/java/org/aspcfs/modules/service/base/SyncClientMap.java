@@ -253,17 +253,24 @@ public class SyncClientMap {
    */
   public int lookupClientId(SyncClientManager clientManager, int referenceTable, String serverId) {
     int resultId = -1;
+    
+    if (clientManager == null) {
+      System.out.println("SyncClientMap-> clientManager is null (needs to be initialized first)");
+    }
+    
     if (clientManager.containsKey(new Integer(clientId)) && serverId != null) {
       Hashtable clientLookup = (Hashtable) clientManager.get(new Integer(clientId));
-      Hashtable tableLookup = (Hashtable) clientLookup.get(new Integer(referenceTable));
-      Integer serverNum = new Integer(serverId);
-      if (tableLookup.containsKey(serverNum)) {
-        Integer value = (Integer)tableLookup.get(serverNum);
-        if (value != null) {
-          resultId = ((Integer)value).intValue();
-        } else {
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("SyncClientMap-> lookupClientId: Null value for table " + referenceTable + " record " + serverId);
+      if (clientLookup.containsKey(new Integer(referenceTable))) {
+        Hashtable tableLookup = (Hashtable) clientLookup.get(new Integer(referenceTable));
+        Integer serverNum = new Integer(serverId);
+        if (tableLookup.containsKey(serverNum)) {
+          Integer value = (Integer)tableLookup.get(serverNum);
+          if (value != null) {
+            resultId = ((Integer)value).intValue();
+          } else {
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("SyncClientMap-> lookupClientId: Null value for table " + referenceTable + " record " + serverId);
+            }
           }
         }
       }

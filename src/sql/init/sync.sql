@@ -16,6 +16,49 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 
 /* AUTO GUIDE */
 
+/* 
+  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 0, false,
+'CREATE TABLE sync_table (
+       table_id             int NOT NULL,
+       table_name           nvarchar(20) NULL,
+       order_id             int NULL,
+       create_statement     nvarchar(255) NULL,
+       sync_item            int NULL,
+       PRIMARY KEY (table_id)
+)'
+);
+*/
+
+/* 
+  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'status_master', null, 0,
+'CREATE TABLE status_master (
+       record_status_id     int NOT NULL,
+       record_status_name   nchar varying(20) NULL,
+       PRIMARY KEY (record_status_id)
+)'
+);
+*/
+
+/* 
+  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'system', null, 70,
+'CREATE TABLE system (
+       pda_id               int NOT NULL,
+       version              datetime NULL,
+       state                int NULL,
+       sync_anchor          datetime NULL,
+       PRIMARY KEY (pda_id)
+)'
+);
+*/
+
+
+
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient', 2);
  
@@ -32,40 +75,38 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'adRun', 'com.darkhorseventures.autoguide.base.AdRun', 10);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item)
- VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30, false);
+ VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 12, false);
  
-/* 
-  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 30, false,
-'CREATE TABLE sync_table (
-       table_id             int NOT NULL,
-       table_name           nvarchar(20) NULL,
-       order_id             int NULL,
-       create_statement     nvarchar(255) NULL,
-       sync_item            int NULL,
-       PRIMARY KEY (table_id)
-)'
-);
-*/
-
-/* 
-  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'status_master', null, 40,
-'CREATE TABLE status_master (
-       record_status_id     int NOT NULL,
-       record_status_name   nchar varying(20) NULL,
-       PRIMARY KEY (record_status_id)
-)'
-);
-*/
-
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'status_master', null, 40);
+ VALUES (2, 'status_master', null, 14);
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
+ VALUES (2, 'system', null, 16);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'makeList', 'com.darkhorseventures.autoguide.base.MakeList', 50, true, 
+ VALUES (2, 'userList', 'com.darkhorseventures.cfsbase.UserList', 50, true, 
+'CREATE TABLE users (
+       user_id              int NOT NULL,
+       record_status_id     int NULL,
+       user_name            nvarchar(20) NULL,
+       pin                  nvarchar(20) NULL,
+       modified             datetime NULL,
+       PRIMARY KEY (user_id), 
+       FOREIGN KEY (record_status_id)
+                             REFERENCES status_master (record_status_id)
+)'
+);
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'XIF18users', null, 60,
+'CREATE INDEX XIF18users ON users
+(
+       record_status_id
+)'
+);
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
+ VALUES (2, 'makeList', 'com.darkhorseventures.autoguide.base.MakeList', 70, true, 
 'CREATE TABLE make (
        make_id              int NOT NULL,
        make_name            nvarchar(20) NULL,
@@ -81,32 +122,16 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF2make', null, 60,
+ VALUES (2, 'XIF2make', null, 80,
 'CREATE INDEX XIF2make ON make
 (
        record_status_id
 )'
 );
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'system', null, 70);
-
-/* 
-  THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'system', null, 70,
-'CREATE TABLE system (
-       pda_id               int NOT NULL,
-       version              datetime NULL,
-       state                int NULL,
-       sync_anchor          datetime NULL,
-       PRIMARY KEY (pda_id)
-)'
-);
-*/
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'modelList', 'com.darkhorseventures.autoguide.base.ModelList', 80, true, 
+ VALUES (2, 'modelList', 'com.darkhorseventures.autoguide.base.ModelList', 100, true, 
 'CREATE TABLE model (
        model_id             int NOT NULL,
        make_id              int NULL,
@@ -125,7 +150,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF3model', null, 90,
+ VALUES (2, 'XIF3model', null, 110,
 'CREATE INDEX XIF3model ON model
 (
        record_status_id
@@ -133,7 +158,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF5model', null, 100,
+ VALUES (2, 'XIF5model', null, 120,
 'CREATE INDEX XIF5model ON model
 (
        make_id
@@ -141,7 +166,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'vehicleList', 'com.darkhorseventures.autoguide.base.VehicleList', 110, true, 
+ VALUES (2, 'vehicleList', 'com.darkhorseventures.autoguide.base.VehicleList', 130, true, 
 'CREATE TABLE vehicle (
        year                 nvarchar(4) NOT NULL,
        vehicle_id           int NOT NULL,
@@ -163,7 +188,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF30vehicle', null, 120,
+ VALUES (2, 'XIF30vehicle', null, 140,
 'CREATE INDEX XIF30vehicle ON vehicle
 (
        make_id
@@ -171,7 +196,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF31vehicle', null, 130,
+ VALUES (2, 'XIF31vehicle', null, 150,
 'CREATE INDEX XIF31vehicle ON vehicle
 (
        model_id
@@ -179,30 +204,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF4vehicle', null, 140,
+ VALUES (2, 'XIF4vehicle', null, 160,
 'CREATE INDEX XIF4vehicle ON vehicle
-(
-       record_status_id
-)'
-);
-
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'userList', 'com.darkhorseventures.cfsbase.UserList', 150, true, 
-'CREATE TABLE users (
-       user_id              int NOT NULL,
-       record_status_id     int NULL,
-       user_name            nvarchar(20) NULL,
-       pin                  nvarchar(20) NULL,
-       modified             datetime NULL,
-       PRIMARY KEY (user_id), 
-       FOREIGN KEY (record_status_id)
-                             REFERENCES status_master (record_status_id)
-)'
-);
-
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF18users', null, 160,
-'CREATE INDEX XIF18users ON users
 (
        record_status_id
 )'

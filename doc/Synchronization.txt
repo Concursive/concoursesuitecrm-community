@@ -219,20 +219,17 @@ Client #1 Ends Synchronization
 
 <app>
   <authentication>
-    <id>ds21.darkhorseventures.com</id> 
-    <code>BZTST27A</code> 
+    <id>ds21.darkhorseventures.com</id>
+    <code>BZTST27A</code>
     <systemId>2</systemId>
-    <clientId>*PUT YOUR ID HERE*</clientId>
+    <clientId>*PUT CLIENT ID HERE*</clientId>
+    <lastAnchor/>
+    <nextAnchor>*INSERT NEXT ANCHOR HERE*</nextAnchor>
   </authentication>
-  <transaction id="14">
-    <syncClient action="update">
-      <id>*PUT YOUR ID HERE*</id>
-      <anchor>*PUT ANCHOR TO STORE ON SERVER (the nextAnchor that was used) *</anchor>
-    </syncClient>
+  <transaction id="4">
+    <syncClient action="syncEnd"/>
   </transaction>
 </app>
-
-
 
 
 ** Object Properties **
