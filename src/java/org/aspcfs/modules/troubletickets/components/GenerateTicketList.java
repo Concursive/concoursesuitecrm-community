@@ -7,13 +7,15 @@ import org.aspcfs.apps.workFlowManager.*;
 import org.aspcfs.controller.objectHookManager.*;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import java.sql.*;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Generates a list of tickets based on specified parameters
  *
  *@author     matt rajkowski
  *@created    May 8, 2003
- *@version    $Id$
+ *@version    $Id: GenerateTicketList.java,v 1.1 2003/05/16 18:55:58 mrajkowski
+ *      Exp $
  */
 public class GenerateTicketList extends ObjectHookComponent implements ComponentInterface {
 
@@ -21,6 +23,9 @@ public class GenerateTicketList extends ObjectHookComponent implements Component
   public final static String ONLY_ASSIGNED = "ticketList.onlyAssigned";
   public final static String ONLY_UNASSIGNED = "ticketList.onlyUnassigned";
   public final static String AGE_IN_MINUTES = "ticketList.ageInMinutes";
+  public final static String LAST_ANCHOR = "ticketList.lastAnchor";
+  public final static String NEXT_ANCHOR = "ticketList.nextAnchor";
+
 
   /**
    *  Gets the description attribute of the GenerateTicketList object
@@ -28,7 +33,7 @@ public class GenerateTicketList extends ObjectHookComponent implements Component
    *@return    The description value
    */
   public String getDescription() {
-    return "Generate a list of tickets based on specified parameters";
+    return "Generate a list of tickets based on specified parameters.  Are there any tickets matching the parameters?";
   }
 
 
@@ -49,13 +54,21 @@ public class GenerateTicketList extends ObjectHookComponent implements Component
     if (context.hasParameter(GenerateTicketList.ONLY_UNASSIGNED)) {
       tickets.setOnlyUnassigned(context.getParameterAsBoolean(GenerateTicketList.ONLY_UNASSIGNED));
     }
+    if (context.hasParameter(GenerateTicketList.LAST_ANCHOR) || context.hasParameter(GenerateTicketList.NEXT_ANCHOR)) {
+      //Tell ticketList to get a recent list only, eliminating previously reported tickets
+      tickets.setSyncType(Constants.SYNC_QUERY);
+      tickets.setLastAnchor(context.getParameter(GenerateTicketList.LAST_ANCHOR));
+      tickets.setNextAnchor(context.getParameter(GenerateTicketList.NEXT_ANCHOR));
+    }
     //tickets.setAgeInMinutes(context.getParameterAsInt(GenerateTicketList.AGE_IN_MINUTES));
     Connection db = null;
     try {
       db = this.getConnection(context);
       tickets.buildList(db);
       context.setObjects(tickets);
-      result = true;
+      if (tickets.size() > 0) {
+        result = true;
+      }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
     } finally {
