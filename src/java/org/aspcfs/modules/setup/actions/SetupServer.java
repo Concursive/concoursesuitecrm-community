@@ -49,6 +49,9 @@ public class SetupServer extends CFSModule {
           //get a database connection using the vhost context info
           AuthenticationItem auth = new AuthenticationItem();
           db = auth.getConnection(context, false);
+          if (db == null && System.getProperty("DEBUG") != null) {
+            System.out.println("SetupServer-> FATAL: db IS NULL!!!");
+          }
           //locate a previous registration to send back
           db.setAutoCommit(false);
           Registration previousRegistration = RegistrationList.locate(db, license.getEmail(), license.getProfile(), true);
@@ -89,6 +92,7 @@ public class SetupServer extends CFSModule {
           status.appendChild(document.createTextNode("1"));
           errorText.appendChild(document.createTextNode("FAILURE"));
           db.rollback();
+          e.printStackTrace(System.out);
         } finally {
           if (db != null) {
             db.setAutoCommit(true);

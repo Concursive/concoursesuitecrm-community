@@ -6,6 +6,7 @@ import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.PrivateString;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.SMTPMessage;
+import org.aspcfs.utils.StringUtils;
 import java.io.*;
 import java.security.*;
 import com.sun.crypto.provider.*;
@@ -409,35 +410,35 @@ public class Zlib {
     document.appendChild(rootElement);
     //First name
     Element nameFirstElement = document.createElement("nameFirst");
-    nameFirstElement.appendChild(document.createTextNode(nameFirst));
+    nameFirstElement.appendChild(document.createTextNode(StringUtils.toString(nameFirst)));
     rootElement.appendChild(nameFirstElement);
     //Last name
     Element nameLastElement = document.createElement("nameLast");
-    nameLastElement.appendChild(document.createTextNode(nameLast));
+    nameLastElement.appendChild(document.createTextNode(StringUtils.toString(nameLast)));
     rootElement.appendChild(nameLastElement);
     //Company name
     Element companyElement = document.createElement("company");
-    companyElement.appendChild(document.createTextNode(company));
+    companyElement.appendChild(document.createTextNode(StringUtils.toString(company)));
     rootElement.appendChild(companyElement);
     //Email address
     Element emailElement = document.createElement("email");
-    emailElement.appendChild(document.createTextNode(email));
+    emailElement.appendChild(document.createTextNode(StringUtils.toString(email)));
     rootElement.appendChild(emailElement);
     //Profile
     Element profileElement = document.createElement("profile");
-    profileElement.appendChild(document.createTextNode(profile));
+    profileElement.appendChild(document.createTextNode(StringUtils.toString(profile)));
     rootElement.appendChild(profileElement);
     //License
     Element licenseElement = document.createElement("license");
-    licenseElement.appendChild(document.createTextNode(text));
+    licenseElement.appendChild(document.createTextNode(StringUtils.toString(text)));
     rootElement.appendChild(licenseElement);
     //License name
     Element editionElement = document.createElement("edition");
-    editionElement.appendChild(document.createTextNode(edition));
+    editionElement.appendChild(document.createTextNode(StringUtils.toString(edition)));
     rootElement.appendChild(editionElement);
     //crc
     Element crcElement = document.createElement("text2");
-    crcElement.appendChild(document.createTextNode(text2));
+    crcElement.appendChild(document.createTextNode(StringUtils.toString(text2)));
     rootElement.appendChild(crcElement);
     //Date and time approved
     Element dateTimeElement = document.createElement("entered");

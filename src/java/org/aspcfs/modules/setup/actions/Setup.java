@@ -126,12 +126,12 @@ public class Setup extends CFSModule {
     if (context.getParameter("ssl") == null) {
       bean.setSsl(false);
     }
+    context.getRequest().setAttribute("server",
+        HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
+        HTTPUtils.getServerUrl(context.getRequest())));
     try {
       if (!bean.isValid()) {
         processErrors(context, bean.getErrors());
-        context.getRequest().setAttribute("server",
-            HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
-            HTTPUtils.getServerUrl(context.getRequest())));
         return "SendRegERROR";
       }
       String response = null;
@@ -368,7 +368,6 @@ public class Setup extends CFSModule {
       prefs.save();
       return "ConfigureDirectoryOK";
     } catch (Exception e) {
-      e.printStackTrace(System.out);
       context.getRequest().setAttribute("actionError",
           "An error occurred while trying to create the directory, the " +
           "following error was provided: " + e.getMessage());

@@ -230,8 +230,26 @@ public class HTTPUtils {
    */
   public static String getServerName(String address) {
     try {
+      //The default factory requires a trusted certificate
+      //Accept any certificate using the custom TrustManager
+      X509TrustManager xtm = new HttpsTrustManager();
+      TrustManager mytm[] = {xtm};
+      SSLContext ctx = SSLContext.getInstance("SSL");
+      ctx.init(null, mytm, null);
+      SSLSocketFactory factory = ctx.getSocketFactory();
+      //Get a connection
       URL url = new URL(address);
       URLConnection conn = url.openConnection();
+      //Override the default certificates
+      if (conn instanceof HttpsURLConnection) {
+        ((HttpsURLConnection) conn).setSSLSocketFactory(factory);
+        ((HttpsURLConnection) conn).setHostnameVerifier(new HttpsHostnameVerifier());
+      }
+      //Backwards compatible if something sets the old system property
+      if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(factory);
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(new HttpsHostnameVerifierDeprecated());
+      }
       if (conn instanceof HttpURLConnection) {
         HttpURLConnection httpConnection = (HttpURLConnection) conn;
         httpConnection.setRequestMethod("HEAD");

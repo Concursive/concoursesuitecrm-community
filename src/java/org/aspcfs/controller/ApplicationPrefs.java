@@ -268,14 +268,25 @@ public class ApplicationPrefs {
     }
     //Verify the license
     if (this.has("FILELIBRARY")) {
-      System.out.println("ApplicationPrefs-> VERIFYING THE LICENSE FOR THIS APPLICATION");
+      String edition = null;
       try {
-        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
-        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(this.get("FILELIBRARY") + "init" + fs + "input.txt")));
-        String edition = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("edition"));
-        context.setAttribute("APP_TEXT", edition);
-        //String gdot = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+        File zlib = new File(this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
+        File input = new File(this.get("FILELIBRARY") + "init" + fs + "input.txt");
+        if (zlib.exists() && input.exists()) {
+          //If key and license exists, read in and parse
+          java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
+          org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(this.get("FILELIBRARY") + "init" + fs + "input.txt")));
+          edition = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("edition"));
+          if (edition != null) {
+            context.setAttribute("APP_TEXT", edition);
+          }
+          //String gdot = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+        }
       } catch (Exception e) {
+        //Could not read in key and process license
+      }
+      //Set the edition text
+      if (edition == null) {
         if ("true".equals(this.get("WEBSERVER.ASPMODE"))) {
           context.setAttribute("APP_TEXT", "Enterprise Edition");
         } else {
@@ -283,7 +294,6 @@ public class ApplicationPrefs {
         }
       }
     }
-    
     //Start the cron last
     if ("true".equals(this.get("CRON.ENABLED"))) {
       try {

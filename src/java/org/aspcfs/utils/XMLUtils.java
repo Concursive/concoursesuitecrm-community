@@ -249,7 +249,9 @@ public class XMLUtils {
    *@return          The nodeText value
    */
   public static String getNodeText(Node element) {
-    //String nodeText = null;
+    if (element == null) {
+      return null;
+    }
     NodeList nodeList = element.getChildNodes();
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node thisNode = nodeList.item(i);
