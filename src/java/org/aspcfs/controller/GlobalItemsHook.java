@@ -190,7 +190,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
         //Tasks Items
         if (systemStatus.hasPermission(userId, "myhomepage-tasks-view")) {
-          int taskCount = TaskList.queryPendingCount(db, contactId);
+          int taskCount = TaskList.queryPendingCount(db, userId);
           items.append("<a href='MyTasks.do?command=ListTasks' class='s'>Tasks</a> (" + paint(taskCount) + " incomplete)<br>");
           ++myItems;
         }
