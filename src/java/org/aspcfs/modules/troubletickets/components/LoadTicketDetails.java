@@ -28,6 +28,7 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
   public boolean execute(ComponentContext context) {
     boolean result = false;
     Ticket thisTicket = (Ticket)context.getThisObject();
+    Ticket previousTicket = (Ticket)context.getPreviousObject();
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -69,7 +70,12 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
         context.setAttribute(MODIFIED_BY_CONTACT, contact);
       }
       if (thisTicket.getEnteredBy() > 0) {
-        User user = new User(db, thisTicket.getEnteredBy());
+        User user = null;
+        if (previousTicket != null) {
+          user = new User(db, previousTicket.getEnteredBy());
+        } else {
+          user = new User(db, thisTicket.getEnteredBy());
+        }
         Contact contact = new Contact(db, user.getContactId());
         context.setAttribute(ENTERED_BY_CONTACT, contact);
       }
