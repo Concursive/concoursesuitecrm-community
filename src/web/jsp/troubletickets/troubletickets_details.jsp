@@ -314,7 +314,11 @@
       Assignment Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" timeZone="<%= TicketDetails.getAssignedDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if (!User.getTimeZone().equals(TicketDetails.getAssignedDateTimeZone())) { %>
+      <br />
+      <zeroio:tz timestamp="<%= TicketDetails.getAssignedDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -369,7 +373,11 @@
       <dhv:label name="ticket.resolutionDate">Resolution Date</dhv:label>
     </td>
     <td>
-      <zeroio:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" timeZone="<%= TicketDetails.getResolutionDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if (!User.getTimeZone().equals(TicketDetails.getResolutionDateTimeZone())) { %>
+      <br />
+      <zeroio:tz timestamp="<%= TicketDetails.getResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <dhv:include name="ticket.resolution" none="true">

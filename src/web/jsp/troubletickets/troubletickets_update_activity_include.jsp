@@ -12,6 +12,7 @@
     var i = 1;
     var fields = form.elements;
     var activityDates = Array(5);
+    var activityDatesTimeZones = Array(5);
     var travelMinutes = Array(5);
     var travelHours = Array(5);
     var laborMinutes = Array(5);
@@ -24,7 +25,8 @@
     var laborHoursCount = 1;
     var descriptionCount = 1;
     for (i=0; i < fields.length ; i++){
-      if (fields[i].name.substring(0,12).match("activityDate")){
+      if ((fields[i].name.substring(0,12).match("activityDate")) &&
+          ("".match(fields[i].name.substring(13,21)))){
         activityDates[dateCount] = fields[i]; 
         dateCount++;
       }
@@ -51,7 +53,7 @@
       }
     }
       
-    for (i=1;i<=5;i++){ 
+    for (i=1;i<=5;i++){
       if ((!activityDates[i].value == "") && (descriptions[i].value=="")){
         message += "- Check that all items in row "+ i +" are filled in\r\n";
         formTest = false;
@@ -117,7 +119,7 @@
       <td width="15%" align="left">
       <b>Activity Date</b>
       </td>
-      <td width="17%">
+      <td width="17%" nowrap>
         <b>Travel Time</b> <br />
         <b>[Towards Contract</b>
         <% if (activityDetails.getTravelTowardsServiceContract()) { %>
@@ -127,7 +129,7 @@
          <%}%>
          <b>]</b>
       </td>
-      <td width="17%">
+      <td width="17%" nowrap>
         <b>Labor Time</b><br />
         <b>[Towards Contract</b>
         <% if (activityDetails.getLaborTowardsServiceContract()) { %>
@@ -161,12 +163,14 @@
           <%
             String activityDate = "activityDate" + icount ;
             String activityDateError = "activityDate" + icount + "Error";
+            String activityDateTimeZone = activityDate + "TimeZone";
           %>
           <zeroio:dateSelect form="details" field="<%=activityDate%>" timestamp="<%=thisDayDescription.getActivityDate()%>" />
+          <br /><%=TimeZoneSelect.getSelect(activityDateTimeZone,thisDayDescription.getActivityDateTimeZone()).getHtml() %>
           <%= showAttribute(request, activityDateError) %>
           <br />
         </td >
-        <td>
+        <td nowrap>
           <zeroio:durationSelect baseName="travel" count="<%=icount%>" hours="<%=thisDayDescription.getTravelHours()%>" minutes="<%=thisDayDescription.getTravelMinutes()%>" />
         </td>
         <td >
@@ -188,8 +192,10 @@
           <%
             String activityDate = "activityDate" + icount ;
             String activityDateError = "activityDate" + icount + "Error";
+            String activityDateTimeZone = activityDate + "TimeZone";
           %>
           <zeroio:dateSelect form="details" field="<%=activityDate%>" />
+          <br /><%=TimeZoneSelect.getSelect(activityDateTimeZone,User.getUserRecord().getTimeZone()).getHtml() %>
           <%= showAttribute(request, activityDateError) %>
           <br />
         </td >
@@ -214,7 +220,7 @@
   %>
   <% if (noneSelected == true){ 
   int count = 0;
-  while (count <=5){
+  while (count < 5){
   count++;
   %>
   <tr valign="top" class="containerBody">
@@ -222,8 +228,10 @@
       <%
         String activityDate = "activityDate" + count ;
         String activityDateError = "activityDate" + count + "Error";
+        String activityDateTimeZone = activityDate + "TimeZone";
       %>
       <zeroio:dateSelect form="details" field="<%=activityDate%>" />
+      <br /><%=TimeZoneSelect.getSelect(activityDateTimeZone,User.getUserRecord().getTimeZone()).getHtml() %>
       <%= showAttribute(request, activityDateError) %>
       <br />
     </td>
@@ -265,7 +273,7 @@
       Alert Date
     </td>
     <td>
-      <zeroio:dateSelect form="details" field="alertDate" timestamp="<%=activityDetails.getAlertDate()%>" />
+      <zeroio:dateSelect form="details" field="alertDate" timestamp="<%=activityDetails.getAlertDate()%>" timeZone="<%=activityDetails.getAlertDateTimeZone()%>" showTimeZone="yes" />
       <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>

@@ -73,9 +73,8 @@
       <zeroio:dateSelect form="inputForm" field="requestDate" timestamp="<%= Project.getRequestDate() %>" />
       at
 <zeroio:debug value="Start Date: Time"/>
-      <zeroio:timeSelect baseName="requestDate" value="<%= Project.getRequestDate() %>" timeZone="<%= User.getTimeZone() %>"/>
+      <zeroio:timeSelect baseName="requestDate" value="<%= Project.getRequestDate() %>" timeZone="<%= Project.getRequestDateTimeZone() %>" showTimeZone="yes" />
 <zeroio:debug value="Start Date: AMPM"/>
-      <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
       <font color="red">*</font>
       <%= showAttribute(request, "requestDateError") %>
     </td>
@@ -86,8 +85,7 @@
     <td>
       <zeroio:dateSelect form="inputForm" field="estimatedCloseDate" timestamp="<%= Project.getEstimatedCloseDate() %>" />
       at
-      <zeroio:timeSelect baseName="estimatedCloseDate" value="<%= Project.getEstimatedCloseDate() %>" timeZone="<%= User.getTimeZone() %>"/>
-      <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
+      <zeroio:timeSelect baseName="estimatedCloseDate" value="<%= Project.getEstimatedCloseDate() %>" timeZone="<%= Project.getEstimatedCloseDateTimeZone() %>" showTimeZone="yes" />
       <%= showAttribute(request, "estimatedCloseDateError") %><%= showWarningAttribute(request, "estimatedCloseDateWarning") %>
     </td>
   </tr>

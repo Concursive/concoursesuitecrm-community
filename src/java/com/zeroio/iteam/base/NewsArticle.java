@@ -56,6 +56,8 @@ public class NewsArticle extends GenericBean {
   private double avgRating = 0;
   private int readCount = 0;
   private int status = -1;
+  private String startDateTimeZone = null;
+  private String endDateTimeZone = null;
 
 
   /**
@@ -484,6 +486,46 @@ public class NewsArticle extends GenericBean {
 
 
   /**
+   *  Sets the startDateTimeZone attribute of the NewsArticle object
+   *
+   *@param  tmp  The new startDateTimeZone value
+   */
+  public void setStartDateTimeZone(String tmp) {
+    this.startDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the endDateTimeZone attribute of the NewsArticle object
+   *
+   *@param  tmp  The new endDateTimeZone value
+   */
+  public void setEndDateTimeZone(String tmp) {
+    this.endDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the startDateTimeZone attribute of the NewsArticle object
+   *
+   *@return    The startDateTimeZone value
+   */
+  public String getStartDateTimeZone() {
+    return startDateTimeZone;
+  }
+
+
+  /**
+   *  Gets the endDateTimeZone attribute of the NewsArticle object
+   *
+   *@return    The endDateTimeZone value
+   */
+  public String getEndDateTimeZone() {
+    return endDateTimeZone;
+  }
+
+
+  /**
    *  Gets the id attribute of the NewsArticle object
    *
    *@return    The id value
@@ -798,6 +840,8 @@ public class NewsArticle extends GenericBean {
     readCount = rs.getInt("read_count");
     enabled = rs.getBoolean("enabled");
     status = DatabaseUtils.getInt(rs, "status");
+    startDateTimeZone = rs.getString("start_date_timezone");
+    endDateTimeZone = rs.getString("end_date_timezone");
   }
 
 
@@ -836,12 +880,13 @@ public class NewsArticle extends GenericBean {
     }
   }
 
+
   /**
-   *  Generates warnings that need to be reviewed before the 
-   *  form can be submitted.
+   *  Generates warnings that need to be reviewed before the form can be
+   *  submitted.
    */
   protected void checkWarnings() {
-    if ((errors.get("endDateError") == null) && 
+    if ((errors.get("endDateError") == null) &&
         (endDate != null) &&
         (startDate != null)) {
       if (endDate.before(startDate)) {
@@ -850,7 +895,7 @@ public class NewsArticle extends GenericBean {
     }
   }
 
-  
+
   /**
    *  Inserts a news article in the database
    *
@@ -874,7 +919,8 @@ public class NewsArticle extends GenericBean {
     }
     sql.append(
         "enteredBy, modifiedBy, " +
-        "start_date, end_date, allow_replies, allow_rating, rating_count, avg_rating, priority_id, read_count) ");
+        "start_date, start_date_timezone, end_date, end_date_timezone, allow_replies, " +
+        "allow_rating, rating_count, avg_rating, priority_id, read_count) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
@@ -882,7 +928,7 @@ public class NewsArticle extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+    sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     //Insert the topic
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -902,7 +948,9 @@ public class NewsArticle extends GenericBean {
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, modifiedBy);
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    pst.setString(++i, this.startDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
+    pst.setString(++i, this.endDateTimeZone);
     pst.setBoolean(++i, allowReplies);
     pst.setBoolean(++i, allowRatings);
     pst.setInt(++i, ratingCount);
@@ -936,7 +984,8 @@ public class NewsArticle extends GenericBean {
         "UPDATE project_news " +
         "SET subject = ?, intro = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP, " +
-        "start_date = ?, end_date = ?, allow_replies = ?, allow_rating = ?, " +
+        "start_date = ?, start_date_timezone = ?, end_date = ?, " +
+        "end_date_timezone = ?, allow_replies = ?, allow_rating = ?, " +
         "priority_id = ?, enabled = ?, status = ? " +
         "WHERE news_id = ? " +
         "AND modified = ? ");
@@ -944,7 +993,9 @@ public class NewsArticle extends GenericBean {
     pst.setString(++i, intro);
     pst.setInt(++i, this.getModifiedBy());
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    pst.setString(++i, this.startDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, endDate);
+    pst.setString(++i, this.endDateTimeZone);
     pst.setBoolean(++i, allowReplies);
     pst.setBoolean(++i, allowRatings);
     DatabaseUtils.setInt(pst, ++i, priorityId);
@@ -1032,7 +1083,7 @@ public class NewsArticle extends GenericBean {
     pst.close();
     return true;
   }
-  
+
 
   /**
    *  The following fields depend on a timezone preference

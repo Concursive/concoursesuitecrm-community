@@ -127,7 +127,7 @@ public final class CompanyDirectory extends CFSModule {
     if (errorMessage == null) {
       //If user is going to the detail screen
       addModuleBean(context, "Internal Contacts", "View Employee Details");
-      return ("EmployeeDetailsOK");
+      return this.getReturn(context, "EmployeeDetails");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

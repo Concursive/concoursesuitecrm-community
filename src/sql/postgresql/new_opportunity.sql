@@ -89,7 +89,8 @@ CREATE TABLE opportunity_component (
   alert VARCHAR(100) DEFAULT NULL,
   enabled BOOLEAN NOT NULL DEFAULT true,
   notes TEXT,
-  alertdate_timezone VARCHAR(255)
+  alertdate_timezone VARCHAR(255),
+  closedate_timezone VARCHAR(255)
 );
 
 CREATE INDEX "oppcomplist_closedate" ON "opportunity_component" (closedate);
@@ -133,7 +134,7 @@ CREATE TABLE call_log (
   status_id INT NOT NULL DEFAULT 1,
   reminder_value INT NULL,
   reminder_type_id INT NULL REFERENCES lookup_call_reminder(code),
-  alertdate_timezone VARCHAR(255) DEFAULT 'America/New_York'
+  alertdate_timezone VARCHAR(255)
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" USING btree ("alertdate", "enteredby");

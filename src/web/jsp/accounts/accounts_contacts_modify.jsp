@@ -135,7 +135,7 @@ Modify Contact
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Add a New Contact</strong>
+      <strong>Modify Contact</strong>
     </th>     
   </tr>
   <tr class="containerBody">

@@ -384,10 +384,20 @@ public class GenericBean implements Serializable {
       UserBean userBean = (UserBean) request.getSession().getAttribute("User");
       User user = userBean.getUserRecord();
       param = param.substring(0, 1).toUpperCase() + param.substring(1);
+      String timeZone = user.getTimeZone();
 
-      Timestamp tmp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(user.getTimeZone()), DateFormat.SHORT, DateFormat.LONG, value, user.getLocale());
-      Class[] argTypes = new Class[]{tmp.getClass()};
-      Method method = this.getClass().getMethod("set" + param, argTypes);
+      Class[] argTypes = null;
+      Method method = null;
+      Timestamp tmp = null;
+      try {
+        method = this.getClass().getMethod("get" + param + "TimeZone", argTypes);
+        timeZone = (String) method.invoke(this, null);
+      } catch (NoSuchMethodException nme) {
+      }
+
+      tmp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(timeZone), DateFormat.SHORT, DateFormat.LONG, value, user.getLocale());
+      argTypes = new Class[]{tmp.getClass()};
+      method = this.getClass().getMethod("set" + param, argTypes);
       method.invoke(this, new Object[]{tmp});
     } catch (Exception e) {
       throw new java.text.ParseException("invalid date", 1);

@@ -317,7 +317,7 @@ function resetAssignedDate(){
         Assignment Date
       </td>
       <td>
-        <zeroio:dateSelect form="details" field="assignedDate" timestamp="<%= TicketDetails.getAssignedDate() %>" />
+        <zeroio:dateSelect form="details" field="assignedDate" timestamp="<%= TicketDetails.getAssignedDate() %>"  timeZone="<%= TicketDetails.getAssignedDateTimeZone() %>" showTimeZone="yes" />
         <%= showAttribute(request, "assignedDateError") %>
       </td>
     </tr>
@@ -326,8 +326,7 @@ function resetAssignedDate(){
         <dhv:label name="ticket.estimatedResolutionDate">Estimated Resolution Date</dhv:label>
       </td>
       <td>
-        <zeroio:dateSelect form="details" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" timeZone="<%= TicketDetails.getEstimatedResolutionDateTimeZone() %>" />
-        <%= TimeZoneSelect.getSelect("estimatedResolutionDateTimeZone", TicketDetails.getEstimatedResolutionDateTimeZone()).getHtml() %>
+        <zeroio:dateSelect form="details" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" timeZone="<%= TicketDetails.getEstimatedResolutionDateTimeZone() %>"  showTimeZone="yes" />
         <%= showAttribute(request, "estimatedResolutionDateError") %>
       </td>
     </tr>
@@ -405,7 +404,7 @@ function resetAssignedDate(){
         <dhv:label name="ticket.resolutionDate">Resolution Date</dhv:label>
       </td>
       <td>
-        <zeroio:dateSelect form="details" field="resolutionDate" timestamp="<%= TicketDetails.getResolutionDate() %>" />
+        <zeroio:dateSelect form="details" field="resolutionDate" timestamp="<%= TicketDetails.getResolutionDate() %>"  timeZone="<%= TicketDetails.getResolutionDateTimeZone() %>"  showTimeZone="yes" />
         <%= showAttribute(request, "resolutionDateError") %>
       </td>
     </tr>

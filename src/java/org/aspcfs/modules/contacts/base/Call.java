@@ -59,7 +59,7 @@ public class Call extends GenericBean {
   private String alertCallType = "";
   private String priorityString = "";
   private String orgName = null;
-  private String alertDateTimeZone = "America/New_York";
+  private String alertDateTimeZone = null;
 
   private java.sql.Timestamp alertDate = null;
   private java.sql.Timestamp entered = null;

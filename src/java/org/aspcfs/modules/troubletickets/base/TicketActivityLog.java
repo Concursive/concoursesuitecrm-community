@@ -26,6 +26,7 @@ public class TicketActivityLog extends GenericBean {
   private String phoneResponseTime = null;
   private String engineerResponseTime = null;
   private java.sql.Timestamp alertDate = null;
+  private String alertDateTimeZone = null;
   private boolean followUpRequired = false;
   private String followUpDescription = null;
   private TicketPerDayDescriptionList ticketPerDayDescriptionList = null;
@@ -147,6 +148,16 @@ public class TicketActivityLog extends GenericBean {
    */
   public void setAlertDate(String tmp) {
     alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the alertDateTimeZone attribute of the TicketActivityLog object
+   *
+   *@param  tmp  The new alertDateTimeZone value
+   */
+  public void setAlertDateTimeZone(String tmp) {
+    this.alertDateTimeZone = tmp;
   }
 
 
@@ -531,6 +542,16 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
+   *  Gets the alertDateTimeZone attribute of the TicketActivityLog object
+   *
+   *@return    The alertDateTimeZone value
+   */
+  public String getAlertDateTimeZone() {
+    return alertDateTimeZone;
+  }
+
+
+  /**
    *  Gets the followUpRequired attribute of the TicketCSSTMMaintenanc object
    *
    *@return    The followUpRequired value
@@ -729,12 +750,13 @@ public class TicketActivityLog extends GenericBean {
         "enabled, " +
         "travel_towards_sc, " +
         "labor_towards_sc, " +
+        "alert_date_timezone,  " +
         "min(activity_date) as firstdate, " +
         "max(activity_date) as lastdate " +
         "FROM ticket_csstm_form " +
         "LEFT JOIN  ticket_activity_item on (link_form_id = form_id) " +
         "WHERE form_id = ? " +
-        "GROUP BY form_id,link_ticket_id,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc ");
+        "GROUP BY form_id,link_ticket_id,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc, alert_date_timezone ");
 
     pst.setInt(1, tmpId);
     rs = pst.executeQuery();
@@ -853,9 +875,10 @@ public class TicketActivityLog extends GenericBean {
     }
   }
 
+
   /**
-   *  Generates warnings that need to be reviewed before the 
-   *  form can be submitted.
+   *  Generates warnings that need to be reviewed before the form can be
+   *  submitted.
    */
   protected void checkWarnings() {
     if ((errors.get("alertDateError") == null) && (alertDate != null)) {
@@ -865,7 +888,7 @@ public class TicketActivityLog extends GenericBean {
     }
   }
 
-  
+
   /**
    *  Description of the Method
    *
@@ -893,6 +916,7 @@ public class TicketActivityLog extends GenericBean {
           "follow_up_required = ? , " +
           "follow_up_description = ? , " +
           "alert_date = ? , " +
+          "alert_date_timezone = ? , " +
           "travel_towards_sc = ? , " +
           "labor_towards_sc = ? ");
 
@@ -911,6 +935,7 @@ public class TicketActivityLog extends GenericBean {
       pst.setBoolean(++i, followUpRequired);
       pst.setString(++i, followUpDescription);
       pst.setTimestamp(++i, alertDate);
+      pst.setString(++i, alertDateTimeZone);
       pst.setBoolean(++i, travelTowardsServiceContract);
       pst.setBoolean(++i, laborTowardsServiceContract);
       if (!override) {
@@ -1054,11 +1079,12 @@ public class TicketActivityLog extends GenericBean {
           "follow_up_required, " +
           "follow_up_description, " +
           "alert_date, " +
+          "alert_date_timezone, " +
           "enteredby, " +
           "modifiedby, " +
           "travel_towards_sc, " +
           "labor_towards_sc) " +
-          "VALUES (?,?,?,?,?,?,?,?,?,?)");
+          "VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 
       int i = 0;
       pst.setInt(++i, linkTicketId);
@@ -1067,6 +1093,7 @@ public class TicketActivityLog extends GenericBean {
       pst.setBoolean(++i, followUpRequired);
       pst.setString(++i, followUpDescription);
       pst.setTimestamp(++i, alertDate);
+      pst.setString(++i, alertDateTimeZone);
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, modifiedBy);
       pst.setBoolean(++i, travelTowardsServiceContract);
@@ -1140,6 +1167,7 @@ public class TicketActivityLog extends GenericBean {
     enabled = rs.getBoolean("enabled");
     travelTowardsServiceContract = rs.getBoolean("travel_towards_sc");
     laborTowardsServiceContract = rs.getBoolean("labor_towards_sc");
+    alertDateTimeZone = rs.getString("alert_date_timezone");
 
     firstActivityDate = rs.getTimestamp("firstdate");
     lastActivityDate = rs.getTimestamp("lastdate");

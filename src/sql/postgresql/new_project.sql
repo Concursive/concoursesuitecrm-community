@@ -109,7 +109,9 @@ CREATE TABLE projects (
   documents_label VARCHAR(50) NULL,
   est_closedate TIMESTAMP(3),
   budget FLOAT,
-  budget_currency VARCHAR(5)
+  budget_currency VARCHAR(5),
+  requestDate_timezone VARCHAR(255),
+  est_closedate_timezone VARCHAR(255)
 );
 
 CREATE INDEX "projects_idx"
@@ -139,7 +141,10 @@ CREATE TABLE project_requirements (
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
-  startdate TIMESTAMP(3) NULL
+  startdate TIMESTAMP(3) NULL,
+  startdate_timezone VARCHAR(255),
+  deadline_timezone VARCHAR(255),
+  due_date_timezone VARCHAR(255)
 );
 
 CREATE SEQUENCE project_assignmen_folder_id_seq;
@@ -348,7 +353,9 @@ CREATE TABLE project_news (
   read_count INTEGER NOT NULL DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   status INTEGER DEFAULT NULL,
-  html BOOLEAN NOT NULL DEFAULT true
+  html BOOLEAN NOT NULL DEFAULT true,
+  start_date_timezone VARCHAR(255),
+  end_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE project_requirements_map (

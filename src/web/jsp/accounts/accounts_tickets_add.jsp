@@ -393,7 +393,7 @@ Add Ticket
       Assignment Date
     </td>
     <td>
-      <zeroio:dateSelect form="addticket" field="assignedDate" timestamp="<%= TicketDetails.getAssignedDate() %>" />
+      <zeroio:dateSelect form="addticket" field="assignedDate" timestamp="<%= TicketDetails.getAssignedDate() %>"  timeZone="<%= TicketDetails.getAssignedDateTimeZone() %>" showTimeZone="yes" />
       <%= showAttribute(request, "assignedDateError") %>
     </td>
   </tr>
@@ -402,8 +402,7 @@ Add Ticket
       Estimated Resolution Date
     </td>
     <td>
-        <zeroio:dateSelect form="details" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" timeZone="<%= TicketDetails.getEstimatedResolutionDateTimeZone() %>" />
-        <%= TimeZoneSelect.getSelect("estimatedResolutionDateTimeZone", TicketDetails.getEstimatedResolutionDateTimeZone()).getHtml() %>
+        <zeroio:dateSelect form="details" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" timeZone="<%= TicketDetails.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes" />
         <%= showAttribute(request, "estimatedResolutionDateError") %>
     </td>
   </tr>
@@ -449,7 +448,7 @@ Add Ticket
       Resolution Date
     </td>
     <td>
-      <zeroio:dateSelect form="addticket" field="resolutionDate" timestamp="<%= TicketDetails.getResolutionDate() %>" />
+      <zeroio:dateSelect form="addticket" field="resolutionDate" timestamp="<%= TicketDetails.getResolutionDate() %>"  timeZone="<%= TicketDetails.getResolutionDateTimeZone() %>"  showTimeZone="yes" />
       <%= showAttribute(request, "resolutionDateError") %>
     </td>
   </tr>

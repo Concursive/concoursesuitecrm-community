@@ -15,6 +15,7 @@ import org.aspcfs.utils.web.HtmlSelectHours;
 import org.aspcfs.utils.web.HtmlSelectHours24;
 import org.aspcfs.utils.web.HtmlSelectMinutesFives;
 import org.aspcfs.utils.web.HtmlSelectAMPM;
+import org.aspcfs.utils.web.HtmlSelectTimeZone;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import org.aspcfs.modules.login.beans.UserBean;
@@ -33,6 +34,7 @@ public class HtmlSelectTime extends TagSupport {
   private Timestamp value = null;
   private String timeZone = null;
   private boolean hidden = false;
+  private boolean showTimeZone = false;
 
 
   /**
@@ -96,6 +98,26 @@ public class HtmlSelectTime extends TagSupport {
 
 
   /**
+   *  Sets the showTimeZone attribute of the HtmlSelectTime object
+   *
+   *@param  tmp  The new showTimeZone value
+   */
+  public void setShowTimeZone(boolean tmp) {
+    this.showTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the showTimeZone attribute of the HtmlSelectTime object
+   *
+   *@param  tmp  The new showTimeZone value
+   */
+  public void setShowTimeZone(String tmp) {
+    this.showTimeZone = "yes".equals(tmp);
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@return                   Description of the Return Value
@@ -118,9 +140,11 @@ public class HtmlSelectTime extends TagSupport {
       int minute = -1;
       int AMPM = -1;
       Calendar cal = Calendar.getInstance();
-      if (timeZone != null) {
-        cal.setTimeZone(TimeZone.getTimeZone(timeZone));
+      if (timeZone == null) {
+          timeZone = thisUser.getUserRecord().getTimeZone();
       }
+      cal.setTimeZone(TimeZone.getTimeZone(timeZone));
+      
       try {
         cal.setTimeInMillis(value.getTime());
       } catch (Exception e) {
@@ -148,7 +172,7 @@ public class HtmlSelectTime extends TagSupport {
         } else {
           // Show 12 hour selector
           this.pageContext.getOut().write(
-              HtmlSelectHours.getSelect(baseName + "Hour",(hour < 10 ? String.valueOf("0" + hour) : String.valueOf(hour))).toString());
+              HtmlSelectHours.getSelect(baseName + "Hour", (hour < 10 ? String.valueOf("0" + hour) : String.valueOf(hour))).toString());
         }
         this.pageContext.getOut().write(":");
         this.pageContext.getOut().write(
@@ -172,6 +196,10 @@ public class HtmlSelectTime extends TagSupport {
             "<input type=\"hidden\" name=\"" + baseName + "Minute" + "\" value=\"" + String.valueOf(minute) + "\" />");
         this.pageContext.getOut().write(
             "<input type=\"hidden\" name=\"" + baseName + "AMPM" + "\" value=\"" + String.valueOf(AMPM) + "\" />");
+      }
+
+      if (showTimeZone) {
+        this.pageContext.getOut().write(HtmlSelectTimeZone.getSelect(baseName + "TimeZone", timeZone).getHtml());
       }
     } catch (Exception e) {
       throw new JspException("HtmlSelectTime Error: " + e.getMessage());

@@ -205,6 +205,7 @@ public class TicketActivityLogList extends ArrayList {
         "enabled, " +
         "travel_towards_sc, " +
         "labor_towards_sc, " +
+        "alert_date_timezone,  " +
         "min(activity_date) as firstdate, " +
         "max(activity_date) as lastdate " +
         "FROM ticket_csstm_form " +
@@ -212,7 +213,7 @@ public class TicketActivityLogList extends ArrayList {
         "WHERE form_id > -1 "
         );
 
-    sqlGroup.append("GROUP BY form_id,link_ticket_id,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc ");
+    sqlGroup.append("GROUP BY form_id,link_ticket_id,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc, alert_date_timezone ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlGroup.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

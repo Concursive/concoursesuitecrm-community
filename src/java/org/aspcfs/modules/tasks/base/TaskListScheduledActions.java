@@ -101,6 +101,7 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       int taskCount = 0;
       while (taskList.hasNext()) {
         Task thisTask = (Task) taskList.next();
+        thisTask.buildResources(db);
         String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisTask.getDueDate());
         companyCalendar.addEvent(alertDate, CalendarEventList.EVENT_TYPES[0], thisTask);
       }

@@ -11,6 +11,7 @@
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="newsList" class="com.zeroio.iteam.base.NewsArticleList" scope="request"/>
 <jsp:useBean id="projectNewsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
@@ -90,7 +91,11 @@
             By <dhv:username id="<%= thisArticle.getEnteredBy() %>"/>
             -
             Posted on
-            <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>"/>
+            <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" dateOnly="true" timeZone="<%= thisArticle.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% if(!User.getTimeZone().equals(thisArticle.getStartDateTimeZone())){%>
+            <br />
+            <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% } %>
           </td>
           <td align="right" nowrap valign="top">
             <zeroio:permission name="project-news-edit">

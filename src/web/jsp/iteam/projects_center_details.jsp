@@ -71,13 +71,21 @@
   <tr class="containerBody">
     <td nowrap class="formLabel">Start Date</td>
     <td>
-      <zeroio:tz timestamp="<%= Project.getRequestDate() %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Project.getRequestDate() %>" dateOnly="true" timeZone="<%= Project.getRequestDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(Project.getRequestDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= Project.getRequestDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">Estimated Close Date</td>
     <td>
-      <zeroio:tz timestamp="<%= Project.getEstimatedCloseDate() %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= Project.getEstimatedCloseDate() %>" dateOnly="true" timeZone="<%= Project.getEstimatedCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(Project.getEstimatedCloseDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= Project.getEstimatedCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">

@@ -28,6 +28,7 @@ public class TicketPerDayDescription extends GenericBean {
   private int travelMinutes = -1;
   private int laborHours = -1;
   private int laborMinutes = -1;
+  private String activityDateTimeZone = null;
 
 
   /**
@@ -199,6 +200,28 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
+   *  Sets the activityDateTimeZone attribute of the TicketPerDayDescription
+   *  object
+   *
+   *@param  tmp  The new activityDateTimeZone value
+   */
+  public void setActivityDateTimeZone(String tmp) {
+    this.activityDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the activityDateTimeZone attribute of the TicketPerDayDescription
+   *  object
+   *
+   *@return    The activityDateTimeZone value
+   */
+  public String getActivityDateTimeZone() {
+    return activityDateTimeZone;
+  }
+
+
+  /**
    *  Gets the id attribute of the TicketPerDayDescription object
    *
    *@return    The id value
@@ -304,16 +327,18 @@ public class TicketPerDayDescription extends GenericBean {
         "INSERT INTO  ticket_activity_item " +
         "(link_form_id, " +
         "activity_date, " +
+        "activity_date_timezone, " +
         "description, " +
         "travel_hours, " +
         "travel_minutes, " +
         "labor_hours, " +
         "labor_minutes) " +
-        "VALUES (?,?,?,?,?,?,?)");
+        "VALUES (?,?,?,?,?,?,?,?)");
 
     int i = 0;
     pst.setInt(++i, linkFormId);
     pst.setTimestamp(++i, activityDate);
+    pst.setString(++i, this.activityDateTimeZone);
     pst.setString(++i, descriptionOfService);
     pst.setInt(++i, travelHours);
     pst.setInt(++i, travelMinutes);
@@ -358,6 +383,7 @@ public class TicketPerDayDescription extends GenericBean {
     this.setTravelMinutes(request.getParameter("travelMinutes" + parseItem));
     this.setLaborHours(request.getParameter("laborHours" + parseItem));
     this.setLaborMinutes(request.getParameter("laborMinutes" + parseItem));
+    this.setActivityDateTimeZone(request.getParameter("activityDate" + parseItem + "TimeZone"));
     sanitizeDate(request, request.getParameter("activityDate" + parseItem), "ActivityDate");
   }
 
@@ -377,6 +403,7 @@ public class TicketPerDayDescription extends GenericBean {
     travelMinutes = rs.getInt("travel_minutes");
     laborHours = rs.getInt("labor_hours");
     laborMinutes = rs.getInt("labor_minutes");
+    activityDateTimeZone = rs.getString("activity_date_timezone");
   }
 }
 

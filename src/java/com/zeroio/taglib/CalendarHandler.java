@@ -15,6 +15,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import java.text.*;
 import java.util.Locale;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.utils.web.HtmlSelectTimeZone; 
 
 /**
  *  This Class outs a calendar field based on the user's locale information for
@@ -33,6 +34,7 @@ public class CalendarHandler extends TagSupport {
   private Timestamp timestamp = null;
   private boolean hidden = false;
   private String timeZone = null;
+  private boolean showTimeZone = false;
 
 
   /**
@@ -116,6 +118,26 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
+   *  Sets the showTimeZone attribute of the CalendarHandler object
+   *
+   *@param  tmp  The new showTimeZone value
+   */
+  public void setShowTimeZone(boolean tmp) {
+    this.showTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the showTimeZone attribute of the CalendarHandler object
+   *
+   *@param  tmp  The new showTimeZone value
+   */
+  public void setShowTimeZone(String tmp) {
+    this.showTimeZone = "yes".equals(tmp);
+  }
+
+
+  /**
    *  Sets the hidden attribute of the CalendarHandler object
    *
    *@param  tmp  The new hidden value
@@ -175,10 +197,14 @@ public class CalendarHandler extends TagSupport {
       }
       if (!hidden) {
         // TODO: Add onChange="checkDate(this.value)"
-        this.pageContext.getOut().write(
-            "<input type=\"text\" name=\"" + field + "\" size=\"10\" value=\"" + dateString + "\" />" +
+        String toWriteOut = "<input type=\"text\" name=\"" + field + "\" size=\"10\" value=\"" + dateString + "\" />" +
             "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
-            "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>");
+            "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>";
+        
+        if (showTimeZone){
+          toWriteOut = toWriteOut + HtmlSelectTimeZone.getSelect(field +"TimeZone", timeZone).getHtml();
+        }
+        this.pageContext.getOut().write(toWriteOut);
       } else {
         this.pageContext.getOut().write(
             "<input type=\"hidden\" name=\"" + field + "\" value=\"" + dateString + "\" />");

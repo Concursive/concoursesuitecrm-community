@@ -5,6 +5,7 @@
 <jsp:useBean id="FaxEnabled" class="java.lang.String" scope="application"/>
 <jsp:useBean id="DeliveryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.activeDate.focus();">
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
@@ -72,6 +73,7 @@ Delivery
       <input type="text" size="10" name="activeDate" value="<zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" />">
       <dhv:permission name="campaign-campaigns-edit">
       <a href="javascript:popCalendar('inputForm', 'activeDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <%= TimeZoneSelect.getSelect("activeDateTimeZone", Campaign.getActiveDateTimeZone()).getHtml() %>
       </dhv:permission>
       <%=showAttribute(request,"activeDateError")%>
     </td>

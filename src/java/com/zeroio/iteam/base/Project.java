@@ -52,6 +52,8 @@ public class Project extends GenericBean {
   private int enteredBy = -1;
   private Timestamp modified = null;
   private int modifiedBy = -1;
+  private String requestDateTimeZone = null;
+  private String estimatedCloseDateTimeZone = null;
 
   private int assignmentsForUser = -1;
   private int lastIssues = -1;
@@ -552,7 +554,7 @@ public class Project extends GenericBean {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
   }
 
-  
+
   /**
    *  Sets the modified attribute of the Project object
    *
@@ -1016,6 +1018,46 @@ public class Project extends GenericBean {
    */
   public void setLabelDocuments(String tmp) {
     this.labelDocuments = tmp;
+  }
+
+
+  /**
+   *  Sets the requestDateTimeZone attribute of the Project object
+   *
+   *@param  tmp  The new requestDateTimeZone value
+   */
+  public void setRequestDateTimeZone(String tmp) {
+    this.requestDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the estimatedCloseDate attribute of the Project object
+   *
+   *@param  tmp  The new estimatedCloseDate value
+   */
+  public void setEstimatedCloseDateTimeZone(String tmp) {
+    this.estimatedCloseDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the requestDateTimeZone attribute of the Project object
+   *
+   *@return    The requestDateTimeZone value
+   */
+  public String getRequestDateTimeZone() {
+    return requestDateTimeZone;
+  }
+
+
+  /**
+   *  Gets the estimatedCloseDate attribute of the Project object
+   *
+   *@return    The estimatedCloseDate value
+   */
+  public String getEstimatedCloseDateTimeZone() {
+    return estimatedCloseDateTimeZone;
   }
 
 
@@ -1821,11 +1863,11 @@ public class Project extends GenericBean {
       if (modified != null) {
         sql.append("modified, ");
       }
-      sql.append("title, shortDescription, requestedBy, requestedDept, requestDate, ");
-      sql.append("allow_guests, news_enabled, details_enabled, " +
+      sql.append("title, shortDescription, requestedBy, requestedDept, requestDate, requestDate_timezone " +
+          "allow_guests, news_enabled, details_enabled, " +
           "team_enabled, plan_enabled, lists_enabled, discussion_enabled, " +
-          "tickets_enabled, documents_enabled, ");
-      sql.append("approvalDate, closedate, est_closedate, budget, budget_currency) ");
+          "tickets_enabled, documents_enabled, " +
+          "approvalDate, closedate, est_closedate, est_closedate_timezone, budget, budget_currency) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
@@ -1833,7 +1875,7 @@ public class Project extends GenericBean {
       if (modified != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1859,6 +1901,7 @@ public class Project extends GenericBean {
       } else {
         pst.setTimestamp(++i, requestDate);
       }
+      pst.setString(++i, this.requestDateTimeZone);
       pst.setBoolean(++i, allowGuests);
       pst.setBoolean(++i, showNews);
       pst.setBoolean(++i, showDetails);
@@ -1885,6 +1928,7 @@ public class Project extends GenericBean {
       }
       DatabaseUtils.setTimestamp(pst, ++i, closeDate);
       DatabaseUtils.setTimestamp(pst, ++i, estimatedCloseDate);
+      pst.setString(++i, this.estimatedCloseDateTimeZone);
       DatabaseUtils.setDouble(pst, ++i, budget);
       pst.setString(++i, budgetCurrency);
       pst.execute();
@@ -2074,8 +2118,8 @@ public class Project extends GenericBean {
     pst = db.prepareStatement(
         "UPDATE projects " +
         "SET department_id = ?, category_id = ?, title = ?, shortDescription = ?, requestedBy = ?, " +
-        "requestedDept = ?, requestDate = ?, " +
-        "approvalDate = ?, closedate = ?, owner = ?, est_closedate = ?, budget = ?, " +
+        "requestedDept = ?, requestDate = ?, requestDate_timezone = ?, " +
+        "approvalDate = ?, closedate = ?, owner = ?, est_closedate = ?, est_closedate_timezone = ?, budget = ?, " +
         "budget_currency = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE project_id = ? " +
@@ -2088,6 +2132,7 @@ public class Project extends GenericBean {
     pst.setString(++i, requestedBy);
     pst.setString(++i, requestedByDept);
     DatabaseUtils.setTimestamp(pst, ++i, requestDate);
+    pst.setString(++i, this.requestDateTimeZone);
     if (previouslyApproved && approved) {
       pst.setTimestamp(++i, previousApprovalDate);
     } else if (!previouslyApproved && approved) {
@@ -2110,6 +2155,7 @@ public class Project extends GenericBean {
     }
     DatabaseUtils.setInt(pst, ++i, owner);
     DatabaseUtils.setTimestamp(pst, ++i, estimatedCloseDate);
+    pst.setString(++i, this.estimatedCloseDateTimeZone);
     DatabaseUtils.setDouble(pst, ++i, budget);
     pst.setString(++i, budgetCurrency);
     pst.setInt(++i, this.getModifiedBy());
@@ -2226,12 +2272,13 @@ public class Project extends GenericBean {
     }
   }
 
+
   /**
-   *  Generates warnings that need to be reviewed before the 
-   *  form can be submitted.
+   *  Generates warnings that need to be reviewed before the form can be
+   *  submitted.
    */
   protected void checkWarnings() {
-    if ((errors.get("estimatedCloseDateError") == null) && 
+    if ((errors.get("estimatedCloseDateError") == null) &&
         (estimatedCloseDate != null) &&
         (requestDate != null)) {
       if (estimatedCloseDate.before(requestDate)) {
@@ -2293,6 +2340,9 @@ public class Project extends GenericBean {
     estimatedCloseDate = rs.getTimestamp("est_closedate");
     budget = DatabaseUtils.getDouble(rs, "budget");
     budgetCurrency = rs.getString("budget_currency");
+    this.requestDateTimeZone = rs.getString("requestDate_timezone");
+    this.estimatedCloseDateTimeZone = rs.getString("est_closedate_timezone");
+
     //Set the related objects
     requirements.setProject(this);
     requirements.setProjectId(this.getId());
@@ -2381,8 +2431,8 @@ public class Project extends GenericBean {
     pst.executeUpdate();
     pst.close();
   }
-  
-  
+
+
   /**
    *  The following fields depend on a timezone preference
    *

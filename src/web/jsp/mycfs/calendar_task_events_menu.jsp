@@ -3,11 +3,13 @@
   var thisTaskId = -1;
   var thisTypeId = -1;
   var thisContactId = -1;
+  var isEmployee = 'yes';
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayTaskMenu(loc, id, typeId, taskId, contactId) {
+  function displayTaskMenu(loc, id, typeId, taskId, contactId, isE) {
     thisTaskId = taskId;
     thisTypeId = typeId;
+    isEmployee = isE;
     thisContactId = contactId;
     updateTaskMenu();
     if (!menu_init) {
@@ -36,7 +38,11 @@
   
   //Menu link functions
   function contactDetailsTask() {
-  popURL('ExternalContacts.do?command=ContactDetails&id=' + thisContactId + '&popup=true&popupType=inline','Details','650','500','yes','yes');
+   if (isEmployee=='yes') {
+     popURL('CompanyDirectory.do?command=EmployeeDetails&empid=' + thisContactId + '&popup=true','Details','650','500','yes','yes');
+   } else {
+     popURL('ExternalContacts.do?command=ContactDetails&id=' + thisContactId + '&popup=true&popupType=inline','Details','650','500','yes','yes');
+   }
   }
   
 </script>

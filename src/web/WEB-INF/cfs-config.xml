@@ -362,6 +362,7 @@
     <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
     <forward name="ListEmployeesOK" resource="/contacts/companydirectory_listemployees.jsp" layout="nav"/>
     <forward name="EmployeeDetailsOK" resource="/contacts/companydirectory_employeedetails.jsp" layout="nav"/>
+    <forward name="EmployeeDetailsPopupOK" resource="/contacts/companydirectory_employeedetails.jsp" layout="style"/>
     <forward name="EmployeeDetailsUpdateOK" resource="/CompanyDirectory.do?command=EmployeeDetails"/>
     <forward name="PrepareOK" resource="/ContactForm.do?command=Prepare&amp;actionSource=CompanyDirectory"/>
     <forward name="PrepareAddOK" resource="/contacts/companydirectory_employeeinsertform.jsp" layout="nav"/>

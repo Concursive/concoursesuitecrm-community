@@ -9,6 +9,7 @@
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="Requirement" class="com.zeroio.iteam.base.Requirement" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -43,7 +44,12 @@
             Start:
           </td>
           <td>
-            &nbsp;<zeroio:tz timestamp="<%= Requirement.getStartDate() %>" dateOnly="true" default="--"/>
+            &nbsp;
+            <zeroio:tz timestamp="<%= Requirement.getStartDate() %>" dateOnly="true" timeZone="<%= Requirement.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% if(!User.getTimeZone().equals(Requirement.getStartDateTimeZone())){%>
+            <br />
+            <zeroio:tz timestamp="<%= Requirement.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="--"/>
+            <% } %>
           </td>
         </tr>
         <tr>
@@ -51,7 +57,11 @@
             Finish:
           </td>
           <td>
-            &nbsp;<zeroio:tz timestamp="<%= Requirement.getDeadline() %>" dateOnly="true" default="--"/>
+            &nbsp;<zeroio:tz timestamp="<%= Requirement.getDeadline() %>" dateOnly="true" timeZone="<%= Requirement.getDeadlineTimeZone() %>" showTimeZone="yes" default="--"/>
+            <% if(!User.getTimeZone().equals(Requirement.getDeadlineTimeZone())){%>
+            <br />
+            <zeroio:tz timestamp="<%= Requirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="--"/>
+            <% } %>
           </td>
         </tr>
       </table>

@@ -116,6 +116,36 @@ public final class MyTasks extends CFSModule {
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
+  public String executeCommandDetails(ActionContext context) {
+    if (!hasPermission(context, "tickets-tickets-tasks-view")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Task thisTask = null;
+    String id = context.getRequest().getParameter("id");
+    try {
+      db = this.getConnection(context);
+      thisTask = new Task(db, Integer.parseInt(id));
+      context.getRequest().setAttribute("Task", thisTask);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (hasAuthority(context, thisTask.getOwner())) {
+      return this.getReturn(context, "TaskDetails");
+    }
+    return ("PermissionError");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;

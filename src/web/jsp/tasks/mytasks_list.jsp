@@ -175,7 +175,7 @@ Tasks
 %>
         </td>
         <td valign="top">
-          <a href="MyTasks.do?command=Modify&id=<%= thisTask.getId() %>"><%= thisTask.getDescription()!=null?thisTask.getDescription():"" %></a>&nbsp; 
+          <a href="MyTasks.do?command=Details&id=<%= thisTask.getId() %>"><%= thisTask.getDescription()!=null?thisTask.getDescription():"" %></a>&nbsp; 
           <dhv:evaluate if="<%= thisTask.getContact() != null%>">
           <% if(!thisTask.getContact().getEmployee()){ %>
             [<a href="ExternalContacts.do?command=ContactDetails&id=<%= thisTask.getContact().getId() %>" title="<%=  thisTask.getContact().getValidName() %>"><font color="green">Contact</font></a>]

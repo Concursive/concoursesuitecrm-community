@@ -65,6 +65,7 @@ public class Campaign extends GenericBean {
   private String message = null;
   private int sendMethodId = -1;
   private int type = GENERAL;
+  private String activeDateTimeZone = null;
 
   private int files = 0;
   private String deliveryName = null;
@@ -101,6 +102,26 @@ public class Campaign extends GenericBean {
    */
   public Campaign(ResultSet rs) throws SQLException {
     buildRecord(rs);
+  }
+
+
+  /**
+   *  Sets the activeDateTimeZone attribute of the Campaign object
+   *
+   *@param  tmp  The new activeDateTimeZone value
+   */
+  public void setActiveDateTimeZone(String tmp) {
+    this.activeDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the activeDateTimeZone attribute of the Campaign object
+   *
+   *@return    The activeDateTimeZone value
+   */
+  public String getActiveDateTimeZone() {
+    return activeDateTimeZone;
   }
 
 
@@ -2348,13 +2369,14 @@ public class Campaign extends GenericBean {
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET message_id = ?, " +
-        "active_date = ?, " +
+        "active_date = ?, active_date_timezone = ?, " +
         "send_method_id = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE campaign_id = " + id);
     //"WHERE id = " + id);
     pst.setInt(++i, messageId);
     pst.setTimestamp(++i, activeDate);
+    pst.setString(++i, activeDateTimeZone);
     pst.setInt(++i, sendMethodId);
     resultCount = pst.executeUpdate();
     pst.close();
@@ -2414,7 +2436,7 @@ public class Campaign extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE campaign " +
-        "SET description = ?, active_date = ?, " +
+        "SET description = ?, active_date = ?, active_date_timezone = ?, " +
         "enabled = ?, ");
     if (override && modified != null) {
       sql.append("modified = ?, ");
@@ -2428,6 +2450,7 @@ public class Campaign extends GenericBean {
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getDescription());
     DatabaseUtils.setTimestamp(pst, ++i, this.getActiveDate());
+    pst.setString(++i, this.getActiveDateTimeZone());
     pst.setBoolean(++i, this.getEnabled());
     if (override && modified != null) {
       pst.setTimestamp(++i, modified);
@@ -2478,6 +2501,7 @@ public class Campaign extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    activeDateTimeZone = rs.getString("active_date_timezone");
     //message table
     messageName = rs.getString("messageName");
     messageSubject = rs.getString("messageSubject");

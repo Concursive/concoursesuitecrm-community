@@ -47,7 +47,7 @@ public class OpportunityComponent extends GenericBean {
   protected double commission = 0;
   protected String type = null;
   protected java.sql.Timestamp alertDate = null;
-  protected String alertDateTimeZone = "America/New_York";
+  protected String alertDateTimeZone = null;
   protected String alertText = null;
   protected String notes = null;
   protected java.sql.Timestamp entered = null;
@@ -55,6 +55,7 @@ public class OpportunityComponent extends GenericBean {
   protected int enteredBy = -1;
   protected int modifiedBy = -1;
   protected boolean enabled = true;
+  protected String closeDateTimeZone = null;
 
   protected boolean stageChange = false;
   protected boolean closeIt = false;
@@ -489,6 +490,26 @@ public class OpportunityComponent extends GenericBean {
    */
   public void setDescription(String description) {
     this.description = description;
+  }
+
+
+  /**
+   *  Sets the closeDateTimeZone attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new closeDateTimeZone value
+   */
+  public void setCloseDateTimeZone(String tmp) {
+    this.closeDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the closeDateTimeZone attribute of the OpportunityComponent object
+   *
+   *@return    The closeDateTimeZone value
+   */
+  public String getCloseDateTimeZone() {
+    return closeDateTimeZone;
   }
 
 
@@ -1478,7 +1499,7 @@ public class OpportunityComponent extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "INSERT INTO opportunity_component " +
-          "(owner, closedate, stage, description, opp_id, ");
+          "(owner, closedate, closedate_timezone, stage, description, opp_id, ");
       if (stageDate != null) {
         sql.append("stagedate, ");
       }
@@ -1489,7 +1510,7 @@ public class OpportunityComponent extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
       if (stageDate != null) {
         sql.append("?, ");
       }
@@ -1505,6 +1526,7 @@ public class OpportunityComponent extends GenericBean {
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getOwner());
       pst.setTimestamp(++i, this.getCloseDate());
+      pst.setString(++i, this.getCloseDateTimeZone());
       pst.setInt(++i, this.getStage());
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getHeaderId());
@@ -1887,6 +1909,7 @@ public class OpportunityComponent extends GenericBean {
     enabled = rs.getBoolean("enabled");
     notes = rs.getString("notes");
     alertDateTimeZone = rs.getString("alertdate_timezone");
+    closeDateTimeZone = rs.getString("closedate_timezone");
     //table
     stageName = rs.getString("stagename");
   }
@@ -1943,7 +1966,7 @@ public class OpportunityComponent extends GenericBean {
       sql.append("stagedate = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("type = ?, stage = ?, description = ?, " +
-        "closedate = ?, alertdate = ?, alert = ?, alertdate_timezone = ?, terms = ?, units = ?, owner = ?, notes = ?, ");
+        "closedate = ?, closedate_timezone = ?, alertdate = ?, alert = ?, alertdate_timezone = ?, terms = ?, units = ?, owner = ?, notes = ?, ");
     if (override == false) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
@@ -1970,6 +1993,7 @@ public class OpportunityComponent extends GenericBean {
     pst.setInt(++i, this.getStage());
     pst.setString(++i, this.getDescription());
     DatabaseUtils.setTimestamp(pst, ++i, this.getCloseDate());
+    pst.setString(++i, this.getCloseDateTimeZone());
     DatabaseUtils.setTimestamp(pst, ++i, this.getAlertDate());
     pst.setString(++i, this.getAlertText());
     pst.setString(++i, this.getAlertDateTimeZone());

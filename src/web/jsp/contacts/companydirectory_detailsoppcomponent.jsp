@@ -92,7 +92,11 @@ Component Details
       Est. Close Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getCloseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(oppComponentDetails.getCloseDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">

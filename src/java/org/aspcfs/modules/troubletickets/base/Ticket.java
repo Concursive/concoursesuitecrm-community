@@ -60,7 +60,7 @@ public class Ticket extends GenericBean {
   private String location = null;
   private String comment = "";
   private java.sql.Timestamp estimatedResolutionDate = null;
-  private String estimatedResolutionDateTimeZone = "America/New_York";
+  private String estimatedResolutionDateTimeZone = null;
   private String cause = null;
   private String solution = "";
   private int priorityCode = -1;
@@ -84,6 +84,8 @@ public class Ticket extends GenericBean {
   private int expectation = -1;
   private String productSku = null;
   private String productName = null;
+  private String assignedDateTimeZone = null;
+  private String resolutionDateTimeZone = null;
   //Related descriptions
   private String companyName = "";
   private String categoryName = "";
@@ -422,6 +424,46 @@ public class Ticket extends GenericBean {
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the assignedDateTimeZone attribute of the Ticket object
+   *
+   * @param  tmp  The new assignedDateTimeZone value
+   */
+  public void setAssignedDateTimeZone(String tmp) {
+    this.assignedDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the resolutionDateTimeZone attribute of the Ticket object
+   *
+   * @param  tmp  The new resolutionDateTimeZone value
+   */
+  public void setResolutionDateTimeZone(String tmp) {
+    this.resolutionDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the assignedDateTimeZone attribute of the Ticket object
+   *
+   * @return    The assignedDateTimeZone value
+   */
+  public String getAssignedDateTimeZone() {
+    return assignedDateTimeZone;
+  }
+
+
+  /**
+   *  Gets the resolutionDateTimeZone attribute of the Ticket object
+   *
+   * @return    The resolutionDateTimeZone value
+   */
+  public String getResolutionDateTimeZone() {
+    return resolutionDateTimeZone;
   }
 
 
@@ -2507,8 +2549,9 @@ public class Ticket extends GenericBean {
     if (orgId != -1) {
       sql.append(" org_id = ?, ");
     }
-    sql.append("solution = ?, location = ?, assigned_date = ?, " +
-        "est_resolution_date = ?, est_resolution_date_timezone = ?, resolution_date = ?, cause = ?, expectation = ?, product_id = ?, customer_product_id = ? " +
+    sql.append("solution = ?, location = ?, assigned_date = ?, assigned_date_timezone = ?, " +
+        " est_resolution_date = ?, est_resolution_date_timezone = ?, resolution_date = ?, resolution_date_timezone = ?, " +
+        " cause = ?, expectation = ?, product_id = ?, customer_product_id = ? " +
         "WHERE ticketid = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -2578,9 +2621,11 @@ public class Ticket extends GenericBean {
     pst.setString(++i, this.getSolution());
     pst.setString(++i, location);
     DatabaseUtils.setTimestamp(pst, ++i, assignedDate);
+    pst.setString(++i, this.assignedDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, estimatedResolutionDate);
     pst.setString(++i, estimatedResolutionDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, resolutionDate);
+    pst.setString(++i, this.resolutionDateTimeZone);
     pst.setString(++i, cause);
     DatabaseUtils.setInt(pst, ++i, expectation);
     DatabaseUtils.setInt(pst, ++i, productId);
@@ -3011,6 +3056,8 @@ public class Ticket extends GenericBean {
     expectation = DatabaseUtils.getInt(rs, "expectation");
     projectTicketCount = rs.getInt("key_count");
     estimatedResolutionDateTimeZone = rs.getString("est_resolution_date_timezone");
+    assignedDateTimeZone = rs.getString("assigned_date_timezone");
+    resolutionDateTimeZone = rs.getString("resolution_date_timezone");
     // TODO: Add when field is added
     //statusId = rs.getInt("status_id");
     //organization table

@@ -160,7 +160,8 @@ CREATE TABLE ticket_csstm_form(
   modifiedby INT NOT NULL REFERENCES access(user_id),
   enabled BOOLEAN DEFAULT true,
   travel_towards_sc BOOLEAN DEFAULT true,
-  labor_towards_sc BOOLEAN DEFAULT true
+  labor_towards_sc BOOLEAN DEFAULT true,
+  alert_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE ticket_activity_item(
@@ -171,7 +172,8 @@ CREATE TABLE ticket_activity_item(
   travel_hours INT,
   travel_minutes INT,
   labor_hours INT,
-  labor_minutes INT
+  labor_minutes INT,
+  activity_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE ticket_sun_form(

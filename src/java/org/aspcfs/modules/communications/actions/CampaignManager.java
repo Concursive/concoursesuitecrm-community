@@ -1057,6 +1057,7 @@ public final class CampaignManager extends CFSModule {
 
     String campaignId = context.getRequest().getParameter("id");
     String activeDate = context.getRequest().getParameter("activeDate");
+    String activeDateTimeZone = context.getRequest().getParameter("activeDateTimeZone");
 
     try {
       db = this.getConnection(context);
@@ -1064,8 +1065,9 @@ public final class CampaignManager extends CFSModule {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
       }
+      campaign.setActiveDateTimeZone(activeDateTimeZone);
       campaign.setTimeZoneForDateFields(context.getRequest(), activeDate, "activeDate");
-      
+
       if (context.getRequest().getParameter("active") != null) {
         campaign.setActive(context.getRequest().getParameter("active"));
       }
@@ -1073,8 +1075,8 @@ public final class CampaignManager extends CFSModule {
       campaign.setModifiedBy(this.getUserId(context));
       campaign.setSendMethodId(Integer.parseInt(context.getRequest().getParameter("sendMethodId")));
       resultCount = campaign.updateSchedule(db);
-      if (resultCount == 0){
-       processErrors(context,campaign.getErrors()); 
+      if (resultCount == 0) {
+        processErrors(context, campaign.getErrors());
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -1318,6 +1320,7 @@ public final class CampaignManager extends CFSModule {
         ActiveSurvey thisSurvey = new ActiveSurvey(db, surveyId);
         context.getRequest().setAttribute("ActiveSurvey", thisSurvey);
       }
+      context.getRequest().setAttribute("User", this.getUser(context, this.getUserId(context)));
     } catch (Exception e) {
       errorMessage = e;
     } finally {

@@ -55,6 +55,8 @@ public class Requirement extends GenericBean {
 
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
+  private String startDateTimeZone = null;
+  private String deadlineTimeZone = null;
   //Helpers
   private AssignmentList assignments = new AssignmentList();
   private boolean treeOpen = false;
@@ -178,6 +180,8 @@ public class Requirement extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedBy");
     startDate = rs.getTimestamp("startdate");
+    this.startDateTimeZone = rs.getString("startdate_timezone");
+    this.deadlineTimeZone = rs.getString("deadline_timezone");
 
     //lookup_project_loe table
     estimatedLoeType = rs.getString("loe_estimated_type");
@@ -685,6 +689,46 @@ public class Requirement extends GenericBean {
    */
   public void setPlanClosedCount(int tmp) {
     this.planClosedCount = tmp;
+  }
+
+
+  /**
+   *  Sets the startDateTimeZone attribute of the Requirement object
+   *
+   *@param  tmp  The new startDateTimeZone value
+   */
+  public void setStartDateTimeZone(String tmp) {
+    this.startDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the deadlineTimeZone attribute of the Requirement object
+   *
+   *@param  tmp  The new deadlineTimeZone value
+   */
+  public void setDeadlineTimeZone(String tmp) {
+    this.deadlineTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the startDateTimeZone attribute of the Requirement object
+   *
+   *@return    The startDateTimeZone value
+   */
+  public String getStartDateTimeZone() {
+    return startDateTimeZone;
+  }
+
+
+  /**
+   *  Gets the deadlineTimeZone attribute of the Requirement object
+   *
+   *@return    The deadlineTimeZone value
+   */
+  public String getDeadlineTimeZone() {
+    return deadlineTimeZone;
   }
 
 
@@ -1353,10 +1397,11 @@ public class Requirement extends GenericBean {
     }
 
     StringBuffer sql = new StringBuffer();
-    sql.append("INSERT INTO project_requirements ");
-    sql.append("(project_id, submittedBy, departmentBy, shortDescription, description, ");
-    sql.append("dateReceived, estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, ");
-    sql.append("startdate, deadline, approvedBy, approvalDate, closedBy, closeDate, ");
+    sql.append(
+        "INSERT INTO project_requirements " +
+        "(project_id, submittedBy, departmentBy, shortDescription, description, " +
+        "dateReceived, estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
+        "startdate, startdate_timezone, deadline, deadline_timezone, approvedBy, approvalDate, closedBy, closeDate, ");
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -1364,7 +1409,7 @@ public class Requirement extends GenericBean {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,");
     if (entered != null) {
       sql.append("?, ");
     }
@@ -1390,7 +1435,9 @@ public class Requirement extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, actualLoe);
     DatabaseUtils.setInt(pst, ++i, actualLoeTypeId);
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    pst.setString(++i, this.startDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, deadline);
+    pst.setString(++i, this.deadlineTimeZone);
 
     if (approved) {
       if (approvalDate == null) {
@@ -1533,7 +1580,8 @@ public class Requirement extends GenericBean {
         "UPDATE project_requirements " +
         "SET submittedBy = ?, departmentBy = ?, shortDescription = ?, description = ?, " +
         " dateReceived = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, actual_loetype = ?, " +
-        " startdate = ?, deadline = ?, approvedBy = ?, approvalDate = ?, closedBy = ?, closeDate = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
+        " startdate = ?, startdate_timezone = ?, deadline = ?, deadline_timezone = ?,  approvedBy = ?, " +
+        " approvalDate = ?, closedBy = ?, closeDate = ?, modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE requirement_id = ? " +
         "AND project_id = ? " +
         "AND modified = ? ");
@@ -1552,7 +1600,9 @@ public class Requirement extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, actualLoe);
     DatabaseUtils.setInt(pst, ++i, actualLoeTypeId);
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
+    pst.setString(++i, this.startDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, deadline);
+    pst.setString(++i, this.deadlineTimeZone);
     if (previousState.getApproved() && approved) {
       DatabaseUtils.setInt(pst, ++i, previousState.getApprovedBy());
       pst.setTimestamp(++i, previousState.getApprovalDate());
@@ -1792,8 +1842,8 @@ public class Requirement extends GenericBean {
     }
     return 0;
   }
-  
-  
+
+
   /**
    *  The following fields depend on a timezone preference
    *

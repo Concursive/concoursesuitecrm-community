@@ -41,7 +41,8 @@ CREATE TABLE campaign (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
-  type INT DEFAULT 1
+  type INT DEFAULT 1,
+  active_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE campaign_run (

@@ -142,7 +142,7 @@
     <td>
       <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getContractEndDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(OrgDetails.getContractEndDateTimeZone())){%>
-      <br>
+      <br />
       <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
       <% } %>
     </td>
@@ -168,7 +168,7 @@
     <td>
       <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getAlertDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(OrgDetails.getAlertDateTimeZone())){%>
-      <br>
+      <br />
       <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
       <% } %>
     </td>

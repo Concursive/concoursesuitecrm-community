@@ -81,7 +81,11 @@
       Initial Contract Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%=serviceContract.getInitialStartDate()%>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=serviceContract.getInitialStartDate()%>" dateOnly="true" timeZone="<%=serviceContract.getInitialStartDateTimeZone()%>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(serviceContract.getInitialStartDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= serviceContract.getInitialStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -89,7 +93,11 @@
       Current Contract Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%=serviceContract.getCurrentStartDate()%>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=serviceContract.getCurrentStartDate()%>" dateOnly="true" timeZone="<%=serviceContract.getCurrentStartDateTimeZone()%>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(serviceContract.getCurrentStartDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= serviceContract.getCurrentStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -97,7 +105,11 @@
       Current End Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" dateOnly="true" timeZone="<%=serviceContract.getCurrentEndDateTimeZone()%>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(serviceContract.getCurrentEndDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">

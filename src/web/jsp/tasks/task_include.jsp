@@ -27,8 +27,7 @@
       Due Date
     </td>
     <td>
-      <zeroio:dateSelect form="addTask" field="dueDate" timestamp="<%= Task.getDueDate() %>" />
-      <%= TimeZoneSelect.getSelect("dueDateTimeZone", Task.getDueDateTimeZone()).getHtml() %>
+      <zeroio:dateSelect form="addTask" field="dueDate" timestamp="<%= Task.getDueDate() %>" timeZone="<%= Task.getDueDateTimeZone() %>" showTimeZone="yes" />
       <%= showAttribute(request, "dueDateError") %>
     </td>
   </tr>

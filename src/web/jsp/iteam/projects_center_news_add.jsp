@@ -110,8 +110,7 @@
       <td valign="top">
         <zeroio:dateSelect form="inputForm" field="startDate" timestamp="<%= newsArticle.getStartDate() %>" />
         at
-        <zeroio:timeSelect baseName="startDate" value="<%= newsArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>"/>
-        <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
+        <zeroio:timeSelect baseName="startDate" value="<%= newsArticle.getStartDate() %>" timeZone="<%= newsArticle.getStartDateTimeZone() %>" showTimeZone="yes" />
         <%=showAttribute(request,"startDateError")%>
       </td>
     </tr>
@@ -122,8 +121,7 @@
       <td valign="top">
         <zeroio:dateSelect form="inputForm" field="endDate" timestamp="<%= newsArticle.getEndDate() %>" />
         at
-        <zeroio:timeSelect baseName="endDate" value="<%= newsArticle.getEndDate() %>" timeZone="<%= User.getTimeZone() %>"/>
-        <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
+        <zeroio:timeSelect baseName="endDate" value="<%= newsArticle.getEndDate() %>" timeZone="<%= newsArticle.getEndDateTimeZone() %>" showTimeZone="yes" />
         <%=showAttribute(request,"endDateError")%><%= showWarningAttribute(request, "endDateWarning") %>
       </td>
     </tr>

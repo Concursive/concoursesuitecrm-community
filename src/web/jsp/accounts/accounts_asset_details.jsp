@@ -104,7 +104,11 @@
       Date Listed
     </td>
     <td>
-    <zeroio:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" timeZone="<%= asset.getDateListedTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(asset.getDateListedTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= asset.getDateListed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -251,7 +255,11 @@
       Expiration Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" timeZone="<%= asset.getExpirationDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(asset.getExpirationDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -283,7 +291,11 @@
       Purchase Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%=asset.getPurchaseDate()%>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%=asset.getPurchaseDate()%>" dateOnly="true" timeZone="<%= asset.getPurchaseDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(asset.getPurchaseDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= asset.getPurchaseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">

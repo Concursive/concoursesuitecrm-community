@@ -212,6 +212,10 @@
       <rtexprvalue>yes</rtexprvalue>
     </attribute>
     <attribute>
+      <name>showTimeZone</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
       <name>hidden</name>
       <required>no</required>
       <rtexprvalue>yes</rtexprvalue>
@@ -413,6 +417,11 @@
     </attribute>
     <attribute>
       <name>timeZone</name>
+      <required>no</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>showTimeZone</name>
       <required>no</required>
       <rtexprvalue>yes</rtexprvalue>
     </attribute>

@@ -86,7 +86,11 @@
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td class="row<%= rowid %>" valign="top" nowrap>
-      <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" dateOnly="true" default="&nbsp;" />
+      <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" dateOnly="true" timeZone="<%= thisRequirement.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisRequirement.getStartDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
     <td class="row<%= rowid %>" valign="top">
       <%-- <%= thisRequirement.getAssignmentTag("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() + "&" + (thisRequirement.isTreeOpen()?"contract":"expand") + "=" + thisRequirement.getId()) %> --%>
@@ -132,7 +136,11 @@
       </dhv:evaluate>
     </td>
     <td class="row<%= rowid %>" valign="top" nowrap>
-      Due: <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" dateOnly="true"/><br />
+      Due: <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" dateOnly="true" timeZone="<%= thisRequirement.getDeadlineTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisRequirement.getDeadlineTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %><br />
       LOE: <%= thisRequirement.getEstimatedLoeString() %>
     </td>
   </tr>

@@ -54,6 +54,9 @@ public class ServiceContract extends GenericBean {
   private String serviceModelNotes = null;
   private ArrayList productList = null;
   private ServiceContractProductList serviceContractProductList = null;
+  private String initialStartDateTimeZone = null;
+  private String currentStartDateTimeZone = null;
+  private String currentEndDateTimeZone = null;
   //special case as -1 is also valid
   private double adjustmentHours = 0;
   private int adjustmentReason = -1;
@@ -568,6 +571,66 @@ public class ServiceContract extends GenericBean {
       productList = new ArrayList();
     }
     productList.add(productId);
+  }
+
+
+  /**
+   *  Sets the initialStartDateTimeZone attribute of the ServiceContract object
+   *
+   *@param  tmp  The new initialStartDateTimeZone value
+   */
+  public void setInitialStartDateTimeZone(String tmp) {
+    this.initialStartDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the currentStartDateTimeZone attribute of the ServiceContract object
+   *
+   *@param  tmp  The new currentStartDateTimeZone value
+   */
+  public void setCurrentStartDateTimeZone(String tmp) {
+    this.currentStartDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the currentEndDateTimeZone attribute of the ServiceContract object
+   *
+   *@param  tmp  The new currentEndDateTimeZone value
+   */
+  public void setCurrentEndDateTimeZone(String tmp) {
+    this.currentEndDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the initialStartDateTimeZone attribute of the ServiceContract object
+   *
+   *@return    The initialStartDateTimeZone value
+   */
+  public String getInitialStartDateTimeZone() {
+    return initialStartDateTimeZone;
+  }
+
+
+  /**
+   *  Gets the currentStartDateTimeZone attribute of the ServiceContract object
+   *
+   *@return    The currentStartDateTimeZone value
+   */
+  public String getCurrentStartDateTimeZone() {
+    return currentStartDateTimeZone;
+  }
+
+
+  /**
+   *  Gets the currentEndDateTimeZone attribute of the ServiceContract object
+   *
+   *@return    The currentEndDateTimeZone value
+   */
+  public String getCurrentEndDateTimeZone() {
+    return currentEndDateTimeZone;
   }
 
 
@@ -1106,8 +1169,11 @@ public class ServiceContract extends GenericBean {
         "account_id = ? , " +
         "contract_value = ? , " +
         "initial_start_date = ? , " +
+        "initial_start_date_timezone = ? , " +
         "current_start_date = ? , " +
+        "current_start_date_timezone = ? , " +
         "current_end_date = ? , " +
+        "current_end_date_timezone = ? , " +
         "category = ? , " +
         "type = ? , " +
         "contact_id = ? , " +
@@ -1134,12 +1200,15 @@ public class ServiceContract extends GenericBean {
     pst.setInt(++i, orgId);
     DatabaseUtils.setDouble(pst, ++i, contractValue);
     pst.setTimestamp(++i, initialStartDate);
+    pst.setString(++i, this.initialStartDateTimeZone);
     if (currentStartDate == null) {
       pst.setTimestamp(++i, initialStartDate);
     } else {
       pst.setTimestamp(++i, currentStartDate);
     }
+    pst.setString(++i, this.currentStartDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, currentEndDate);
+    pst.setString(++i, this.currentEndDateTimeZone);
     DatabaseUtils.setInt(pst, ++i, category);
     DatabaseUtils.setInt(pst, ++i, type);
     DatabaseUtils.setInt(pst, ++i, contactId);
@@ -1347,8 +1416,11 @@ public class ServiceContract extends GenericBean {
         "account_id , " +
         "contract_value , " +
         "initial_start_date , " +
+        "initial_start_date_timezone, " +
         "current_start_date , " +
+        "current_start_date_timezone, " +
         "current_end_date , " +
+        "current_end_date_timezone , " +
         "category , " +
         "type , " +
         "contact_id , " +
@@ -1362,18 +1434,21 @@ public class ServiceContract extends GenericBean {
         "service_model_notes , " +
         "enteredby , " +
         "modifiedby ) " +
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     int i = 0;
     pst.setString(++i, serviceContractNumber);
     pst.setInt(++i, orgId);
     DatabaseUtils.setDouble(pst, ++i, contractValue);
     pst.setTimestamp(++i, initialStartDate);
+    pst.setString(++i, this.initialStartDateTimeZone);
     if (currentStartDate == null) {
       pst.setTimestamp(++i, initialStartDate);
     } else {
       pst.setTimestamp(++i, currentStartDate);
     }
+    pst.setString(++i, this.currentStartDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, currentEndDate);
+    pst.setString(++i, this.currentEndDateTimeZone);
     DatabaseUtils.setInt(pst, ++i, category);
     DatabaseUtils.setInt(pst, ++i, type);
     DatabaseUtils.setInt(pst, ++i, contactId);
@@ -1466,6 +1541,9 @@ public class ServiceContract extends GenericBean {
     contractValue = DatabaseUtils.getDouble(rs, "contract_value");
     totalHoursRemaining = rs.getDouble("total_hours_remaining");
     serviceModelNotes = rs.getString("service_model_notes");
+    initialStartDateTimeZone = rs.getString("initial_start_date_timezone");
+    currentStartDateTimeZone = rs.getString("current_start_date_timezone");
+    currentEndDateTimeZone = rs.getString("current_end_date_timezone");
   }
 }
 

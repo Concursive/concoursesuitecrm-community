@@ -16,9 +16,13 @@
   
   //Menu link functions
   function details() {
-    window.location.href='MyTasks.do?command=Modify&id=' + thisTaskId;
+    window.location.href='MyTasks.do?command=Details&id=' + thisTaskId;
   }
   
+  function modify() {
+    window.location.href='MyTasks.do?command=Modify&id=' + thisTaskId;
+  }
+
   function forward() {
   window.location.href='MyTasksForward.do?command=ForwardMessage&forwardType=' + thisTypeId + '&id=' + thisTaskId;
   }
@@ -41,7 +45,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="myhomepage-tasks-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

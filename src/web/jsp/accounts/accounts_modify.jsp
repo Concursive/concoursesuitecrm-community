@@ -462,8 +462,7 @@
       Contract End Date
     </td>
     <td>
-      <zeroio:dateSelect form="addAccount" field="contractEndDate" timestamp="<%= OrgDetails.getContractEndDate() %>" />
-      <%= TimeZoneSelect.getSelect("contractEndDateTimeZone", OrgDetails.getContractEndDateTimeZone()).getHtml() %>
+      <zeroio:dateSelect form="addAccount" field="contractEndDate" timestamp="<%= OrgDetails.getContractEndDate() %>" timeZone="<%= OrgDetails.getContractEndDateTimeZone() %>" showTimeZone="yes" />
       <%= showAttribute(request, "contractEndDateError") %>
     </td>
   </tr>
@@ -482,8 +481,7 @@
       Alert Date
     </td>
     <td>
-      <zeroio:dateSelect form="addAccount" field="alertDate" timestamp="<%= OrgDetails.getAlertDate() %>" />
-      <%= TimeZoneSelect.getSelect("alertDateTimeZone", OrgDetails.getAlertDateTimeZone()).getHtml() %>
+      <zeroio:dateSelect form="addAccount" field="alertDate" timestamp="<%= OrgDetails.getAlertDate() %>" timeZone="<%= OrgDetails.getAlertDateTimeZone() %>" showTimeZone="yes" />
       <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>

@@ -10,6 +10,7 @@
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="newsArticle" class="com.zeroio.iteam.base.NewsArticle" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <dhv:evaluate if="<%= !isPopup(request) %>">
@@ -39,7 +40,11 @@
             By <dhv:username id="<%= newsArticle.getEnteredBy() %>"/>
             -
             Posted on
-            <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>"/>
+            <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" dateOnly="true" timeZone="<%= newsArticle.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% if(!User.getTimeZone().equals(newsArticle.getStartDateTimeZone())){%>
+            <br />
+            <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+            <% } %>
           </td>
           <td align="right" valign="top" nowrap>
             <dhv:evaluate if="<%= !isPopup(request) %>">

@@ -121,7 +121,7 @@
               Start:
             </td>
             <td>
-              <zeroio:dateSelect form="inputForm" field="startDate" timestamp="<%= Requirement.getStartDate() %>" />
+              <zeroio:dateSelect form="inputForm" field="startDate" timestamp="<%= Requirement.getStartDate() %>" timeZone="<%= Requirement.getStartDateTimeZone() %>" showTimeZone="yes" />
               <%=showAttribute(request,"startDateError")%>
             </td>
           </tr>
@@ -130,7 +130,7 @@
               Finish:
             </td>
             <td>
-              <zeroio:dateSelect form="inputForm" field="deadline" timestamp="<%= Requirement.getDeadline() %>" />
+              <zeroio:dateSelect form="inputForm" field="deadline" timestamp="<%= Requirement.getDeadline() %>" timeZone="<%= Requirement.getDeadlineTimeZone() %>" showTimeZone="yes" />
               <%=showAttribute(request,"deadlineError")%>
             </td>
           </tr>

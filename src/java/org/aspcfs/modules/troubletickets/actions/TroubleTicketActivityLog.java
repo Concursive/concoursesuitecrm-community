@@ -175,6 +175,7 @@ public final class TroubleTicketActivityLog extends CFSModule {
       thisMaintenance.setLaborTowardsServiceContract((String) context.getRequest().getParameter("laborTowardsServiceContract"));
       thisMaintenance.setPhoneResponseTime((String) context.getRequest().getParameter("phoneResponseTime"));
       thisMaintenance.setEngineerResponseTime((String) context.getRequest().getParameter("engineerResponseTime"));
+      thisMaintenance.setAlertDateTimeZone((String) context.getRequest().getParameter("alertDateTimeZone"));
       thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
@@ -230,6 +231,7 @@ public final class TroubleTicketActivityLog extends CFSModule {
       thisMaintenance.setLaborTowardsServiceContract((String) context.getRequest().getParameter("laborTowardsServiceContract"));
       thisMaintenance.setPhoneResponseTime((String) context.getRequest().getParameter("phoneResponseTime"));
       thisMaintenance.setEngineerResponseTime((String) context.getRequest().getParameter("engineerResponseTime"));
+      thisMaintenance.setAlertDateTimeZone((String) context.getRequest().getParameter("alertDateTimeZone"));
       thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));

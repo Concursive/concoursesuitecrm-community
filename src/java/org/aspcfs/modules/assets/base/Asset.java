@@ -58,6 +58,9 @@ public class Asset extends GenericBean {
   private int modifiedBy = -1;
   private boolean enabled = true;
   private boolean override = false;
+  private String dateListedTimeZone = null;
+  private String expirationDateTimeZone = null;
+  private String purchaseDateTimeZone = null;
 
 
   /**
@@ -664,6 +667,66 @@ public class Asset extends GenericBean {
 
 
   /**
+   *  Sets the dateListedTimeZone attribute of the Asset object
+   *
+   *@param  tmp  The new dateListedTimeZone value
+   */
+  public void setDateListedTimeZone(String tmp) {
+    this.dateListedTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the expirationDateTimeZone attribute of the Asset object
+   *
+   *@param  tmp  The new expirationDateTimeZone value
+   */
+  public void setExpirationDateTimeZone(String tmp) {
+    this.expirationDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the purchaseDateTimeZone attribute of the Asset object
+   *
+   *@param  tmp  The new purchaseDateTimeZone value
+   */
+  public void setPurchaseDateTimeZone(String tmp) {
+    this.purchaseDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the dateListedTimeZone attribute of the Asset object
+   *
+   *@return    The dateListedTimeZone value
+   */
+  public String getDateListedTimeZone() {
+    return dateListedTimeZone;
+  }
+
+
+  /**
+   *  Gets the expirationDateTimeZone attribute of the Asset object
+   *
+   *@return    The expirationDateTimeZone value
+   */
+  public String getExpirationDateTimeZone() {
+    return expirationDateTimeZone;
+  }
+
+
+  /**
+   *  Gets the purchaseDateTimeZone attribute of the Asset object
+   *
+   *@return    The purchaseDateTimeZone value
+   */
+  public String getPurchaseDateTimeZone() {
+    return purchaseDateTimeZone;
+  }
+
+
+  /**
    *  Gets the id attribute of the Asset object
    *
    *@return    The id value
@@ -1097,6 +1160,7 @@ public class Asset extends GenericBean {
         "(account_id," +
         "contract_id," +
         "date_listed," +
+        "date_listed_timezone," +
         "asset_tag," +
         "status," +
         "location," +
@@ -1109,9 +1173,11 @@ public class Asset extends GenericBean {
         "model_version," +
         "description," +
         "expiration_date," +
+        "expiration_date_timezone," +
         "inclusions," +
         "exclusions," +
         "purchase_date," +
+        "purchase_date_timezone," +
         "purchase_cost," +
         "po_number," +
         "purchased_from," +
@@ -1123,12 +1189,13 @@ public class Asset extends GenericBean {
         "email_service_model," +
         "enteredby," +
         "modifiedby)" +
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
     int i = 0;
     pst.setInt(++i, orgId);
     DatabaseUtils.setInt(pst, ++i, contractId);
     DatabaseUtils.setTimestamp(pst, ++i, dateListed);
+    pst.setString(++i, this.getDateListedTimeZone());
     pst.setString(++i, assetTag);
     DatabaseUtils.setInt(pst, ++i, status);
     pst.setString(++i, location);
@@ -1141,9 +1208,11 @@ public class Asset extends GenericBean {
     pst.setString(++i, modelVersion);
     pst.setString(++i, description);
     DatabaseUtils.setTimestamp(pst, ++i, expirationDate);
+    pst.setString(++i, this.expirationDateTimeZone);
     pst.setString(++i, inclusions);
     pst.setString(++i, exclusions);
     DatabaseUtils.setTimestamp(pst, ++i, purchaseDate);
+    pst.setString(++i, this.purchaseDateTimeZone);
     pst.setDouble(++i, purchaseCost);
     pst.setString(++i, poNumber);
     pst.setString(++i, purchasedFrom);
@@ -1182,6 +1251,7 @@ public class Asset extends GenericBean {
         "UPDATE asset SET " +
         "contract_id = ? , " +
         "date_listed = ? , " +
+        "date_listed_timezone = ? , " +
         "asset_tag = ? , " +
         "status = ? , " +
         "location = ? , " +
@@ -1194,9 +1264,11 @@ public class Asset extends GenericBean {
         "model_version = ? , " +
         "description = ? , " +
         "expiration_date = ? , " +
+        "expiration_date_timezone = ? , " +
         "inclusions = ? , " +
         "exclusions = ? , " +
         "purchase_date = ? , " +
+        "purchase_date_timezone = ? , " +
         "purchase_cost = ? , " +
         "po_number = ? , " +
         "purchased_from = ? , " +
@@ -1219,6 +1291,7 @@ public class Asset extends GenericBean {
     int i = 0;
     DatabaseUtils.setInt(pst, ++i, contractId);
     DatabaseUtils.setTimestamp(pst, ++i, dateListed);
+    pst.setString(++i, this.dateListedTimeZone);
     pst.setString(++i, assetTag);
     DatabaseUtils.setInt(pst, ++i, status);
     pst.setString(++i, location);
@@ -1231,9 +1304,11 @@ public class Asset extends GenericBean {
     pst.setString(++i, modelVersion);
     pst.setString(++i, description);
     DatabaseUtils.setTimestamp(pst, ++i, expirationDate);
+    pst.setString(++i, this.expirationDateTimeZone);
     pst.setString(++i, inclusions);
     pst.setString(++i, exclusions);
     DatabaseUtils.setTimestamp(pst, ++i, purchaseDate);
+    pst.setString(++i, this.purchaseDateTimeZone);
     pst.setDouble(++i, purchaseCost);
     pst.setString(++i, poNumber);
     pst.setString(++i, purchasedFrom);
@@ -1374,6 +1449,9 @@ public class Asset extends GenericBean {
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
     purchaseCost = rs.getDouble("purchase_cost");
+    this.dateListedTimeZone = rs.getString("date_listed_timezone");
+    this.expirationDateTimeZone = rs.getString("expiration_date_timezone");
+    this.purchaseDateTimeZone = rs.getString("purchase_date_timezone");
     // service contract table
     serviceContractNumber = rs.getString("service_contract_number");
   }

@@ -65,6 +65,7 @@ public class Assignment extends GenericBean {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
+  private String dueDateTimeZone = null;
 //Tree variables -- move into new object
   private int displayLevel = 0;
   private boolean levelOpen = false;
@@ -189,6 +190,7 @@ public class Assignment extends GenericBean {
     modifiedBy = rs.getInt("modifiedBy");
     folderId = DatabaseUtils.getInt(rs, "folder_id");
     percentComplete = DatabaseUtils.getInt(rs, "percent_complete");
+    this.dueDateTimeZone = rs.getString("due_date_timezone");
 
     //lookup_project_status table
     status = rs.getString("status");
@@ -826,6 +828,26 @@ public class Assignment extends GenericBean {
    */
   public void setPrevMapId(String tmp) {
     this.prevMapId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the dueDateTimeZone attribute of the Assignment object
+   *
+   *@param  tmp  The new dueDateTimeZone value
+   */
+  public void setDueDateTimeZone(String tmp) {
+    this.dueDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the dueDateTimeZone attribute of the Assignment object
+   *
+   *@return    The dueDateTimeZone value
+   */
+  public String getDueDateTimeZone() {
+    return dueDateTimeZone;
   }
 
 
@@ -1528,7 +1550,7 @@ public class Assignment extends GenericBean {
         "(project_id, requirement_id, assignedBy, user_assign_id, technology, " +
         "role, estimated_loevalue, estimated_loetype, actual_loevalue, actual_loetype, " +
         "priority_id, assign_date, est_start_date, start_date, " +
-        "due_date, status_id, status_date, percent_complete, complete_date, ");
+        "due_date, due_date_timezone, status_id, status_date, percent_complete, complete_date, ");
     if (entered != null) {
       sql.append("entered, ");
     }
@@ -1536,7 +1558,7 @@ public class Assignment extends GenericBean {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy, folder_id ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
     }
@@ -1577,6 +1599,7 @@ public class Assignment extends GenericBean {
     }
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, dueDate);
+    pst.setString(++i, this.dueDateTimeZone);
     DatabaseUtils.setInt(pst, ++i, statusId);
     //Status Date
     if (statusId > -1 && statusDate == null) {
@@ -1716,7 +1739,7 @@ public class Assignment extends GenericBean {
         "SET requirement_id = ?, assignedBy = ?, user_assign_id = ?, technology = ?, " +
         "role = ?, estimated_loevalue = ?, estimated_loetype = ?, actual_loevalue = ?, " +
         "actual_loetype = ?, priority_id = ?, assign_date = ?, est_start_date = ?, start_date = ?, " +
-        "due_date = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
+        "due_date = ?, due_date_timezone = ?, status_id = ?, status_date = ?, percent_complete = ?, complete_date = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP, folder_id = ? " +
         "WHERE assignment_id = ? " +
         "AND modified = ? ");
@@ -1762,6 +1785,7 @@ public class Assignment extends GenericBean {
     }
     DatabaseUtils.setTimestamp(pst, ++i, startDate);
     DatabaseUtils.setTimestamp(pst, ++i, dueDate);
+    pst.setString(++i, this.dueDateTimeZone);
     DatabaseUtils.setInt(pst, ++i, statusId);
     //Handle assignment status date
     if (previousState.getStatusId() != statusId ||
@@ -1835,7 +1859,7 @@ public class Assignment extends GenericBean {
     }
     String sql =
         "UPDATE project_assignments " +
-        "SET due_date = ? " +
+        "SET due_date = ?, due_date_timezone = ?, " +
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE assignment_id = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
@@ -1845,6 +1869,7 @@ public class Assignment extends GenericBean {
     } else {
       pst.setTimestamp(++i, dueDate);
     }
+    pst.setString(++i, this.dueDateTimeZone);
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
     int resultCount = pst.executeUpdate();

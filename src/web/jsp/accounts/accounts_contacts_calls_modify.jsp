@@ -251,31 +251,32 @@ Update Activity
     </td>
   </tr>
 </table>
-<input type="hidden" name="dosubmit" value="true">
-<input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
-<input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
-<input type="hidden" name="id" value="<%= CallDetails.getId() %>">
-<input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>">
-<input type="hidden" name="statusId" value="<%= CallDetails.getStatusId() %>">
+<input type="hidden" name="dosubmit" value="true" />
+<input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>" />
+<input type="hidden" name="modified" value="<%= CallDetails.getModified() %>" />
+<input type="hidden" name="id" value="<%= CallDetails.getId() %>" />
+<input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>" />
+<input type="hidden" name="statusId" value="<%= CallDetails.getStatusId() %>" />
 <%= addHiddenParams(request, "return|view|trailSource") %>
 <% if("pending".equals(request.getParameter("view"))){ %>
   <%-- include completed activity values --%>
-  <input type="hidden" name="callTypeId" value="<%= CallDetails.getCallTypeId() %>">
-  <input type="hidden" name="length" value="<%= CallDetails.getLength() %>">
-  <input type="hidden" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>">
-  <input type="hidden" name="notes" value="<%= toString(CallDetails.getNotes()) %>">
-  <input type="hidden" name="resultId" value="<%= CallDetails.getResultId() %>">
+  <input type="hidden" name="callTypeId" value="<%= CallDetails.getCallTypeId() %>" />
+  <input type="hidden" name="length" value="<%= CallDetails.getLength() %>" />
+  <input type="hidden" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>" />
+  <input type="hidden" name="notes" value="<%= toString(CallDetails.getNotes()) %>" />
+  <input type="hidden" name="resultId" value="<%= CallDetails.getResultId() %>" />
 <% }else if(!(CallDetails.getStatusId() == Call.COMPLETE && CallDetails.getAlertDate() == null)&& (request.getAttribute("alertDateWarning") == null)){ %>
   <%-- include pending activity values --%>
-  <input type="hidden" name="alertText" value="<%= toHtmlValue(CallDetails.getAlertText()) %>">
-  <input type="hidden" name="alertCallTypeId" value="<%= CallDetails.getAlertCallTypeId() %>">
+  <input type="hidden" name="alertText" value="<%= toHtmlValue(CallDetails.getAlertText()) %>" />
+  <input type="hidden" name="alertCallTypeId" value="<%= CallDetails.getAlertCallTypeId() %>" />
   <zeroio:dateSelect field="alertDate" timestamp="<%= CallDetails.getAlertDate() %>" hidden="true" />
-  <zeroio:timeSelect baseName="alertDate" value="<%= CallDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" hidden="true"/>
-  <input type="hidden" name="owner" value="<%= CallDetails.getOwner() %>">
-  <input type="hidden" name="reminderId" value="<%= CallDetails.getReminderId() %>">
-  <input type="hidden" name="reminderTypeId" value="<%= CallDetails.getReminderTypeId() %>">
-  <input type="hidden" name="followupNotes" value="<%= toString(CallDetails.getFollowupNotes()) %>">
-  <input type="hidden" name="priorityId" value="<%= CallDetails.getPriorityId() %>">
+  <zeroio:timeSelect baseName="alertDate" value="<%= CallDetails.getAlertDate() %>" timeZone="<%= CallDetails.getAlertDateTimeZone()%>" hidden="true" />
+  <input type="hidden" name="alertDateTimeZone" value="<%= CallDetails.getAlertDateTimeZone() %>" />
+  <input type="hidden" name="owner" value="<%= CallDetails.getOwner() %>" />
+  <input type="hidden" name="reminderId" value="<%= CallDetails.getReminderId() %>" />
+  <input type="hidden" name="reminderTypeId" value="<%= CallDetails.getReminderTypeId() %>" />
+  <input type="hidden" name="followupNotes" value="<%= toString(CallDetails.getFollowupNotes()) %>" />
+  <input type="hidden" name="priorityId" value="<%= CallDetails.getPriorityId() %>" />
 <% } %>
 </form>
 </body>

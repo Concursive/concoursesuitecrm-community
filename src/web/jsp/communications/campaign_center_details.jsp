@@ -3,6 +3,7 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <form name="modForm" action="CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>" method="post">
@@ -108,7 +109,13 @@ Campaign Details
               <tr class="containerBody">
                 <td style="text-align: center;">
                   <% if(Campaign.hasDetails()){ %>
-                    <font color='green'>Scheduled for <br> <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/> <%= toHtml(Campaign.getDeliveryName()) %></font><br>
+                    <font color='green'>Scheduled for 
+                    <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+                    <% if (!User.getTimeZone().equals(Campaign.getActiveDateTimeZone())) { %>
+                    <br />
+                    <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+                    <% } %>
+                    <%= toHtml(Campaign.getDeliveryName()) %></font><br>
                   <% }else{ %>
                     <font color='red'>Not Scheduled</font><br>&nbsp;<br>
                   <% } %>

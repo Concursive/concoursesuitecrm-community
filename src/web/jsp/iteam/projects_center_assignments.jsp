@@ -101,10 +101,18 @@
       <%= thisRequirement.getEstimatedLoeString() %>
     </td>
     <td valign="top" align="center" width="8%" nowrap>
-      <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" dateOnly="true"/>
+      <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" dateOnly="true" timeZone="<%= thisRequirement.getStartDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisRequirement.getStartDateTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="--"/>
+      <% } %>
     </td>
     <td valign="top" align="center" width="8%" nowrap>
-      <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" dateOnly="true"/>
+      <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" dateOnly="true" timeZone="<%= thisRequirement.getDeadlineTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(thisRequirement.getDeadlineTimeZone())){%>
+      <br />
+      <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="--"/>
+      <% } %>
     </td>
   </tr>
 <%
