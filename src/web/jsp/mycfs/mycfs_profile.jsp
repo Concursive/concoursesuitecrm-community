@@ -51,5 +51,5 @@ Settings
   </dhv:permission>
 </table>
 <br>
-The time is currently <zeroio:tz timestamp="<%= new java.util.Date() %>"/>
+<%--The time is currently <zeroio:tz timestamp="<%= new java.util.Date() %>"/> --%>
 
