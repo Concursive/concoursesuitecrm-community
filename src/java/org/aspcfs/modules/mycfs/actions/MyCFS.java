@@ -13,6 +13,7 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.mycfs.beans.CalendarBean;
 import org.aspcfs.modules.tasks.base.Task;
 import org.aspcfs.modules.base.Constants;
@@ -838,10 +839,8 @@ public final class MyCFS extends CFSModule {
             "Subject: " + StringUtils.toString(newNote.getSubject()) +
             "\n\n" +
             StringUtils.toString(newNote.getBody()) + "\n\n");
-      } else if (noteType == Constants.CONTACTS_CALLS) {
+      } else if (noteType == Constants.CONTACTS_CALLS || noteType == Constants.PIPELINE_CALLS) {
         Call thisCall = new Call(db, msgId);
-        //add Contact Info for trails
-        context.getRequest().setAttribute("ContactDetails", new Contact(db, thisCall.getContactId()));
         newNote.setBody(
             "Contact Name: " + StringUtils.toString(thisCall.getContactName()) + "\n" +
             "Type: " + StringUtils.toString(thisCall.getCallType()) + "\n" +
@@ -873,6 +872,8 @@ public final class MyCFS extends CFSModule {
         addModuleBean(context, "External Contacts", "");
       } else if (context.getAction().getActionName().equals("MyCFSInbox")) {
         addModuleBean(context, "My Inbox", "");
+      }else if (context.getAction().getActionName().equals("LeadsCallsForward")) {
+        addModuleBean(context, "View Opportunities", "Opportunity Calls");
       } else {
         addModuleBean(context, "My Tasks", "");
       }
