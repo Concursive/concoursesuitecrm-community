@@ -133,7 +133,6 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-
     Exception errorMessage = null;
     Connection db = null;
     Task thisTask = null;
@@ -145,18 +144,16 @@ public final class MyTasks extends CFSModule {
     if (context.getRequest().getParameter("id") != null) {
       id = Integer.parseInt(context.getRequest().getParameter("id"));
     }
+    int ownerUserId = -1;
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, id);
-
       if (thisTask.getOwner() > -1) {
-        thisTask.checkEnabledOwnerAccount(db);
+        ownerUserId = thisTask.checkEnabledOwnerAccount(db);
       }
-
       if (thisTask.getContactId() > -1) {
         thisTask.checkEnabledLinkAccount(db);
       }
-
       //build loe types
       LookupList estimatedLOETypeList = new LookupList(db, "lookup_task_loe");
       context.getRequest().setAttribute("EstimatedLOETypeList", estimatedLOETypeList);
@@ -171,8 +168,7 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
-
-      if (!hasAuthority(context, thisTask.getOwner())) {
+      if (!hasAuthority(context, ownerUserId)) {
         return ("PermissionError");
       }
 
