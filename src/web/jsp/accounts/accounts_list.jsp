@@ -26,6 +26,7 @@ Search Results
 </table>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= (User.getRoleType() > 0) %>" >
+<br />
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
