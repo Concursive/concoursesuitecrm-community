@@ -553,6 +553,10 @@ public String executeCommandReports(ActionContext context) {
    *@since           1.2
    */
   public String executeCommandSearchContactsForm(ActionContext context) {
+    PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
+    externalContactsInfo.setCurrentOffset(0);
+    externalContactsInfo.setCurrentLetter("");
+    
     addModuleBean(context, "Search Contacts", "Contacts Search");
     return ("SearchContactsFormOK");
   }

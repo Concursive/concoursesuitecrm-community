@@ -367,8 +367,12 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandSearch(ActionContext context) {
-    addModuleBean(context, "Search Accounts", "Accounts Search");
-    return ("SearchOK");
+	PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
+	orgListInfo.setCurrentLetter("");
+	orgListInfo.setCurrentOffset(0);
+	
+	addModuleBean(context, "Search Accounts", "Accounts Search");
+	return ("SearchOK");
   }
 
 
