@@ -150,5 +150,47 @@
       <property lookup="user">modifiedBy</property>
       <property>closed</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.CustomFieldCategory" id="category">
+      <property alias="guid">id</property>
+      <property lookup="systemModules">moduleId</property>
+      <property>name</property>
+      <property>description</property>
+      <property>level</property>
+      <property>startDate</property>
+      <property>endDate</property>
+      <property>defaultItem</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+      <property>allowMultipleRecords</property>
+      <property>readOnly</property>
+    </map>
+    <map class="com.darkhorseventures.cfsbase.CustomFieldGroup" id="group">
+      <property alias="guid">id</property>
+      <property lookup="category">categoryId</property>
+      <property>name</property>
+      <property>description</property>
+      <property>level</property>
+      <property>startDate</property>
+      <property>endDate</property>
+      <property>entered</property>
+      <property>enabled</property>
+    </map>
+    <map class="com.darkhorseventures.cfsbase.CustomField" id="field">
+      <property alias="guid">id</property>
+      <property lookup="group">groupId</property>
+      <property>name</property>
+      <property>additionalText</property>
+      <property>level</property>
+      <property>type</property>
+      <property>validationType</property>
+      <property>required</property>
+      <property>startDate</property>
+      <property>endDate</property>
+      <property>entered</property>
+      <property>enabled</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

@@ -40,14 +40,21 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     writer.commit();
     userList = null;
     baseUser = null;
+    
+    //TODO: update all user managers
+    
 
     //Copy Accounts
     logger.info("ImportBaseData-> Inserting accounts");
     writer.setAutoCommit(false);
     OrganizationList accounts = new OrganizationList();
+    accounts.setShowMyCompany(true);
+    accounts.setIncludeEnabled(-1);
     accounts.buildList(db);
     mappings.saveList(writer, accounts, "insert");
     writer.commit();
+    
+    //Iterate and get emails, addresses
     
     //Copy Contacts
     logger.info("ImportBaseData-> Inserting contacts");
@@ -58,13 +65,6 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     contacts.buildList(db);
     mappings.saveList(writer, contacts, "insert");
     writer.commit();
-    
-    //Save this user's role first
-    //Get all accounts user entered
-    //Get all contacts user entered
-    //Get all users user entered
-
-    //Afterwards... update all owners
     writer.setAutoCommit(true);
     return true;
   }

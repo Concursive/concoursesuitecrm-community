@@ -15,8 +15,7 @@ import org.theseus.beans.*;
 import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.ObjectUtils;
+import com.darkhorseventures.utils.*;
 import java.util.*;
 import java.text.*;
 
@@ -359,6 +358,10 @@ public class CustomField extends GenericBean {
   public void setLevel(int tmp) {
     this.level = tmp;
   }
+  
+  public void setLevel(String tmp) {
+    this.level = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -414,6 +417,10 @@ public class CustomField extends GenericBean {
   public void setValidationType(int tmp) {
     this.validationType = tmp;
   }
+  
+  public void setValidationType(String tmp) {
+    this.validationType = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -447,6 +454,10 @@ public class CustomField extends GenericBean {
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
   }
+  
+  public void setStartDate(String tmp) {
+    this.startDate = DateUtils.parseTimestampString(tmp);
+  }
 
 
   /**
@@ -457,6 +468,10 @@ public class CustomField extends GenericBean {
    */
   public void setEndDate(java.sql.Timestamp tmp) {
     this.endDate = tmp;
+  }
+  
+  public void setEndDate(String tmp) {
+    this.endDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -469,6 +484,10 @@ public class CustomField extends GenericBean {
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
   }
+  
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
 
 
   /**
@@ -479,6 +498,10 @@ public class CustomField extends GenericBean {
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
+  }
+  
+  public void setEnabled(String tmp) {
+    this.enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 

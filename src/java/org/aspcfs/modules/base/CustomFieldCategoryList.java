@@ -306,7 +306,7 @@ public class CustomFieldCategoryList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
         "FROM custom_field_category cfc " +
-        "WHERE cfc.module_id = " + linkModuleId + " ");
+        "WHERE cfc.module_id = ? ");
 
     createFilter(sqlFilter);
 
@@ -338,7 +338,7 @@ public class CustomFieldCategoryList extends ArrayList {
     sqlSelect.append(
       "* " +
       "FROM custom_field_category cfc " +
-      "WHERE cfc.module_id = " + linkModuleId + " ");
+      "WHERE cfc.module_id = ? ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -408,6 +408,8 @@ public class CustomFieldCategoryList extends ArrayList {
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
 
+    pst.setInt(++i, linkModuleId);
+    
     if (includeEnabled == Constants.TRUE) {
       pst.setBoolean(++i, true);
     } else if (includeEnabled == Constants.FALSE) {

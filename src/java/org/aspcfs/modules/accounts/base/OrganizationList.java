@@ -23,7 +23,7 @@ public class OrganizationList extends Vector {
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;
-  private int includeEnabled = 1;
+  private int includeEnabled = TRUE;
 
   public final static String tableName = "organization";
   public final static String uniqueField = "org_id";

@@ -8,6 +8,7 @@ import java.util.*;
 import java.sql.*;
 import java.text.*;
 import org.theseus.actions.*;
+import com.darkhorseventures.utils.*;
 
 /**
  *  When a user goes to the "Folders" section of a module, there are several 
@@ -102,6 +103,10 @@ public class CustomFieldCategory extends ArrayList {
   public void setId(int tmp) {
     this.id = tmp;
   }
+  
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -169,6 +174,9 @@ public class CustomFieldCategory extends ArrayList {
     this.level = tmp;
   }
 
+  public void setLevel(String tmp) {
+    this.level = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the StartDate attribute of the CustomFieldCategory object
@@ -178,6 +186,10 @@ public class CustomFieldCategory extends ArrayList {
    */
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
+  }
+  
+  public void setStartDate(String tmp) {
+    this.startDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -190,6 +202,10 @@ public class CustomFieldCategory extends ArrayList {
   public void setEndDate(java.sql.Timestamp tmp) {
     this.endDate = tmp;
   }
+  
+  public void setEndDate(String tmp) {
+    this.endDate = DateUtils.parseTimestampString(tmp);
+  }
 
 
   /**
@@ -200,6 +216,10 @@ public class CustomFieldCategory extends ArrayList {
    */
   public void setDefaultItem(boolean tmp) {
     this.defaultItem = tmp;
+  }
+  
+  public void setDefaultItem(String tmp) {
+    this.defaultItem = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -223,6 +243,10 @@ public class CustomFieldCategory extends ArrayList {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
+  
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -245,6 +269,10 @@ public class CustomFieldCategory extends ArrayList {
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
+  
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -256,16 +284,9 @@ public class CustomFieldCategory extends ArrayList {
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
   }
-
-
-  /**
-   *  Sets the Enabled attribute of the CustomFieldCategory object
-   *
-   *@param  tmp  The new Enabled value
-   *@since
-   */
+  
   public void setEnabled(String tmp) {
-    this.enabled = ("ON").equalsIgnoreCase(tmp);
+    this.enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -375,7 +396,7 @@ public class CustomFieldCategory extends ArrayList {
     this.allowMultipleRecords = tmp; 
   }
   public void setAllowMultipleRecords(String tmp) { 
-    this.allowMultipleRecords = ("ON").equalsIgnoreCase(tmp);
+    this.allowMultipleRecords = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
   public boolean getAllowMultipleRecords() { 
     return allowMultipleRecords; 
@@ -385,7 +406,7 @@ public class CustomFieldCategory extends ArrayList {
     this.readOnly = readOnly;
   }
   public void setReadOnly(String tmp) {
-    this.readOnly = ("ON").equalsIgnoreCase(tmp);
+    this.readOnly = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
   public boolean getReadOnly() {
     return readOnly;

@@ -5,6 +5,7 @@ package com.darkhorseventures.cfsbase;
 import org.theseus.actions.*;
 import java.util.*;
 import java.sql.*;
+import com.darkhorseventures.utils.*;
 
 /**
  *  Represents a group of CustomField records
@@ -67,6 +68,10 @@ public class CustomFieldGroup extends ArrayList {
    */
   public void setId(int tmp) {
     this.id = tmp;
+  }
+  
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
   }
 
 
@@ -134,6 +139,10 @@ public class CustomFieldGroup extends ArrayList {
   public void setLevel(int tmp) {
     this.level = tmp;
   }
+  
+  public void setLevel(String tmp) {
+    this.level = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -144,6 +153,10 @@ public class CustomFieldGroup extends ArrayList {
    */
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
+  }
+   
+  public void setStartDate(String tmp) {
+    this.startDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -156,6 +169,10 @@ public class CustomFieldGroup extends ArrayList {
   public void setEndDate(java.sql.Timestamp tmp) {
     this.endDate = tmp;
   }
+  
+  public void setEndDate(String tmp) {
+    this.endDate = DateUtils.parseTimestampString(tmp);
+  }
 
 
   /**
@@ -167,6 +184,10 @@ public class CustomFieldGroup extends ArrayList {
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
   }
+  
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
+  }
 
 
   /**
@@ -177,6 +198,10 @@ public class CustomFieldGroup extends ArrayList {
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
+  }
+  
+  public void setEnabled(String tmp) {
+    this.enabled = ("on".equalsIgnoreCase(tmp) || "false".equalsIgnoreCase(tmp));
   }
 
 
