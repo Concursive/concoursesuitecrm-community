@@ -1657,6 +1657,7 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       itemDetails = new ActiveSurveyAnswerItemList();
       itemDetails.setItemId(itemId);
+      itemDetails.setPagedListInfo(pagedListInfo);
       itemDetails.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
