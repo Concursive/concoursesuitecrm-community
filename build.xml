@@ -16,6 +16,7 @@
   
   <!-- computed properties -->
   <property name="fs" value="${file.separator}"/>
+  <property name="lf" value="${line.separator}"/>
   <property name="base.dir" value="${basedir}"/>
   <property name="bin.dir" value="${base.dir}${fs}bin"/>
   <property name="lib.dir" value="${base.dir}${fs}lib"/>
@@ -58,9 +59,9 @@
     <tstamp><format property="date.long" pattern="yyyy-MM-dd hh:mm:ss aa"/></tstamp>
     <!-- log the build -->
     <record name="${base.dir}/build.log" append="no"/>
-    <fail unless="env.CATALINA_HOME">Initialization aborted, environment variable CATALINA_HOME is not defined.</fail>
+    <fail unless="env.CATALINA_HOME">Initialization aborted ${lf}${lf}Environment variable CATALINA_HOME is not defined.</fail>
     <property name="CATALINA_HOME" value="${env.CATALINA_HOME}"/>
-    <fail unless="env.CFS_HOME">Initialization aborted, environment variable CFS_HOME is not defined and should point to a Tomcat CFS web folder.</fail>
+    <fail unless="env.CFS_HOME">Initialization aborted ${lf}${lf}Environment variable CFS_HOME is not defined and should point to a Tomcat CFS web folder.</fail>
     <property name="CFS_HOME" value="${env.CFS_HOME}"/>
   </target>
   
@@ -83,7 +84,7 @@
     <uptodate property="build.config.uptodate"
             srcfile="${base.dir}/build.properties"
             targetfile="${CFS_HOME}/WEB-INF/build.properties"/>
-    <fail unless="build.config.uptodate">Initialization aborted, update ${CFS_HOME}${fs}WEB-INF${fs}build.properties with any new changes from ${base.dir}${fs}build.properties.</fail>
+    <fail unless="build.config.uptodate">Initialization aborted${lf}${lf}The build.properties file might be out of date.  Compare and update the site copy with the source template, making any necessary changes.${lf}${lf}Site File: ${CFS_HOME}${fs}WEB-INF${fs}build.properties${lf}Source Template: ${base.dir}${fs}build.properties</fail>
     <loadproperties srcFile="${CFS_HOME}/WEB-INF/build.properties">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
@@ -91,8 +92,8 @@
         </filterreader>
       </filterchain>
     </loadproperties>
-    <fail unless="build.config.present">Initialization aborted, build properties file not found at ${CFS_HOME}${fs}WEB-INF${fs}build.properties</fail>
-    <fail unless="CONTROL">Initialization aborted, edit the properties file at ${CFS_HOME}${fs}WEB-INF${fs}build.properties</fail>
+    <fail unless="build.config.present">Initialization aborted ${lf}${lf}The build properties file not found at ${CFS_HOME}${fs}WEB-INF${fs}build.properties</fail>
+    <fail unless="CONTROL">Initialization aborted ${lf}${lf}Edit the properties file at ${CFS_HOME}${fs}WEB-INF${fs}build.properties, make sure to uncomment the control parameter</fail>
   </target>
   
   <!-- Copy the common jars -->
