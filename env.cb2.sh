@@ -4,4 +4,4 @@
 #
 # Common shell environment settings
 #
-export CLASSPATH=.:${TOMCAT_HOME}/common/lib/servlet.jar:${TOMCAT_HOME}/common/lib/mail.jar:${TOMCAT_HOME}/common/lib/activation.jar:${TOMCAT_HOME}/common/lib/pgjdbc2.jar:/home/cfs/html/WEB-INF/lib/darkhorseventures.jar:/home/cfs/html/WEB-INF/lib/theseus.jar
+export CLASSPATH=.:${TOMCAT_HOME}/common/lib/servlet.jar:${TOMCAT_HOME}/common/lib/mail.jar:${TOMCAT_HOME}/common/lib/activation.jar:${TOMCAT_HOME}/common/lib/pgjdbc2.jar:/home/cfs/html/WEB-INF/lib/darkhorseventures.jar:/home/cfs/html/WEB-INF/lib/theseus.jar:/home/cfs/html/WEB-INF/lib/zeroio-iteam.jar
