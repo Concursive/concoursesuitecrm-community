@@ -3,8 +3,8 @@
 <jsp:useBean id="ItemDetailsListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="ItemDetails" class="org.aspcfs.modules.communications.base.ActiveSurveyAnswerItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-
-<a href="CampaignManager.do?command=ShowItems&questionId=<%= request.getParameter("questionId") %>"></a> > Back to View Items<br>
+<br>
+<a href="CampaignManager.do?command=ShowItems&questionId=<%= request.getParameter("questionId") %>"> View Items </a>> Item Details <br>
 <hr color="#BFBFBB" noshade>
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
