@@ -4,7 +4,10 @@
   </description>
   <reader class="com.darkhorseventures.apps.dataimport.reader.autoguide.PilotOnlineReader">
     <driver>com.microsoft.jdbc.sqlserver.SQLServerDriver</driver>
+    <!--
     <url>jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor</url>
+    -->
+    <url>jdbc:microsoft:sqlserver://216.54.81.105:1433;DatabaseName=cdb_cfs;SelectMethod=cursor</url>
     <user>dhv_appuser</user>
     <password>@pus3r</password>
     <pictureSourcePath>c:\tomcat\webapps\cfs\WEB-INF\fileLibrary\cdb_cfs\autoguide</pictureSourcePath>
@@ -12,10 +15,16 @@
 <!--
     <ftpData>ftp://auto_guide:autoguide@ftp2.hamptonroads.com:./</ftpData>
     <ftpPictures>ftp://auto_guide:autoguide@ftp1.hamptonroads.com:./auto_guide</ftpPictures>
+    <logUrl>http://dhv.aspcfs.com/ProcessPacket.do</logUrl>
+    <logId>dhv.aspcfs.com</logId>
 -->
     <ftpData>ftp://anonymous:guest@127.0.0.1:./</ftpData>
     <ftpPictures>ftp://anonymous:guest@127.0.0.1:./pix</ftpPictures>
-    <processConfigFile/>
+    <logUrl>http://127.0.0.1/ProcessPacket.do</logUrl>
+    <logId>127.0.0.1</logId>
+    <logCode>BZTST27A</logCode>
+    <logSystemId>5</logSystemId>
+    <logClientId>4</logClientId>
   </reader>
   <writer class="com.darkhorseventures.apps.dataimport.writer.TextWriter">
     <filename>autoguide-vehicles.txt</filename>
