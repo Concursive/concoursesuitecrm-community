@@ -7,8 +7,7 @@
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -32,9 +31,8 @@
       }
     }
 </script>
-
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<form action='CompanyDirectory.do?command=InsertEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
+<form action="CompanyDirectory.do?command=InsertEmployee&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 Add Employee<br>
 <hr color="#BFBFBB" noshade>
@@ -87,56 +85,62 @@ Add Employee<br>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left>
+    <td colspan="2">
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
   <tr>
+    <td class="formLabel">
+      Email 1
+    </td>
     <td>
       <%= ContactEmailTypeList.getHtmlSelect("email1type", ((EmployeeBean.getEmailAddressTypeId(1)==-1)?1:EmployeeBean.getEmailAddressTypeId(1))) %>
-      <input type=text size=40 name="email1address" maxlength=255 value="<%= toHtmlValue(EmployeeBean.getEmailAddress(1)) %>">
+      <input type="text" size="40" name="email1address" maxlength="255" value="<%= toHtmlValue(EmployeeBean.getEmailAddress(1)) %>">
     </td>
   </tr>
   <tr>
+    <td class="formLabel">
+      Email 2
+    </td>
     <td>
       <%= ContactEmailTypeList.getHtmlSelect("email2type", ((EmployeeBean.getEmailAddressTypeId(2)==-1)?2:EmployeeBean.getEmailAddressTypeId(2))) %>
-      <input type=text size=40 name="email2address" maxlength=255 value="<%= toHtmlValue(EmployeeBean.getEmailAddress(2)) %>">
+      <input type="text" size="40" name="email2address" maxlength="255" value="<%= toHtmlValue(EmployeeBean.getEmailAddress(2)) %>">
     </td>
   </tr>
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left>
+    <td colspan="2">
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
   <tr>
+    <td class="formLabel">
+      Phone 1
+    </td>
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone1type", "Business") %>
-      <!--input type=text size=3 name="phone1ac" maxlength=3>-
-      <input type=text size=3 name="phone1pre" maxlength=3>-
-      <input type=text size=4 name="phone1number" maxlength=4>ext. -->
-      <input type=text size=20 name="phone1number">&nbsp;ext.
-      <input type=text size=5 name="phone1ext" maxlength=10>
+      <input type="text" size="20" name="phone1number">&nbsp;ext.
+      <input type="text" size="5" name="phone1ext" maxlength="10">
     </td>
   </tr>
   <tr>
+    <td class="formLabel">
+      Phone 2
+    </td>
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone2type", "Home") %>
-      <!--input type=text size=3 name="phone2ac" maxlength=3>-
-      <input type=text size=3 name="phone2pre" maxlength=3>-
-      <input type=text size=4 name="phone2number" maxlength=4>ext. -->
       <input type=text size=20 name="phone2number">&nbsp;ext.
       <input type=text size=5 name="phone2ext" maxlength=10>
     </td>
   </tr>
   <tr>
+    <td class="formLabel">
+      Phone 3
+    </td>
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone3type", "Mobile") %>
-      <!--input type=text size=3 name="phone3ac" maxlength=3>-
-      <input type=text size=3 name="phone3pre" maxlength=3>-
-      <input type=text size=4 name="phone3number" maxlength=4>ext. -->
       <input type=text size=20 name="phone3number">&nbsp;ext.
       <input type=text size=5 name="phone3ext" maxlength=10>
     </td>
@@ -145,13 +149,13 @@ Add Employee<br>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left colspan="2">
+    <td colspan="2">
       <strong>Addresses</strong>
     </td>
   </tr>
   <tr>
-    <td>
-      &nbsp;
+    <td class="formLabel">
+      Type
     </td>
     <td>
       <%= ContactAddressTypeList.getHtmlSelect("address1type", "Business") %>
@@ -203,14 +207,14 @@ Add Employee<br>
       Country
     </td>
     <td>
-      <%=CountrySelect.getHtml("address1country")%>
+      <%= CountrySelect.getHtml("address1country") %>
       <!--input type=text size=28 name="address1country" maxlength=80-->
     </td>
   </tr>
   <tr><td colspan="2">&nbsp;</td></tr>
   <tr>
-    <td>
-      &nbsp;
+    <td class="formLabel">
+      Type
     </td>
     <td>
       <%= ContactAddressTypeList.getHtmlSelect("address2type", "Home") %>
@@ -237,7 +241,7 @@ Add Employee<br>
       City
     </td>
     <td>
-      <input type=text size=28 name="address2city" maxlength=80>
+      <input type="text" size="28" name="address2city" maxlength="80">
     </td>
   </tr>
   <tr>
@@ -245,7 +249,7 @@ Add Employee<br>
       State/Province
     </td>
     <td>
-      <%=StateSelect.getHtml("address2state")%>
+      <%= StateSelect.getHtml("address2state") %>
       <!--input type=text size=12 name="address2state" maxlength=80-->
     </td>
   </tr>
@@ -254,7 +258,7 @@ Add Employee<br>
       Zip/Postal Code
     </td>
     <td>
-      <input type=text size=28 name="address2zip" maxlength=12>
+      <input type="text" size="28" name="address2zip" maxlength="12">
     </td>
   </tr>
   <tr>
@@ -262,7 +266,7 @@ Add Employee<br>
       Country
     </td>
     <td>
-      <%=CountrySelect.getHtml("address2country")%>
+      <%= CountrySelect.getHtml("address2country") %>
       <!--input type=text size=28 name="address2country" maxlength=80-->
     </td>
   </tr>
@@ -270,13 +274,13 @@ Add Employee<br>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2" valign="center" align="left">
 	    <strong>Additional Details</strong>
 	  </td>
   </tr>
   <tr>
     <td nowrap class="formLabel" valign="top">Notes</td>
-    <td><TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(EmployeeBean.getNotes()) %></TEXTAREA></td>
+    <td><TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(EmployeeBean.getNotes()) %></TEXTAREA></td>
   </tr>
 </table>
 <br>

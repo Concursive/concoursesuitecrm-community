@@ -8,9 +8,7 @@
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
-
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -20,32 +18,28 @@
     }
   }
   function checkForm(form) {
-      formTest = true;
-      message = "";
-      
-      <%
-      		for (int i=1; i<=(EmployeeBean.getPhoneNumberList().size()+1); i++) {
-      %>
+    formTest = true;
+    message = "";
+<%
+    for (int i=1; i<=(EmployeeBean.getPhoneNumberList().size()+1); i++) {
+%>
 		<dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
 			message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
 			formTest = false;
 		}
-      
-      <%}%>
-      
-      if (formTest == false) {
-        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-        return false;
-      } else {
-        return true;
-      }
+<%
     }
+%>
+    if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    } else {
+      return true;
+    }
+  }
 </script>
-
-<form action='CompanyDirectory.do?command=UpdateEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
-
+<form action="CompanyDirectory.do?command=UpdateEmployee&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
-
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
@@ -54,42 +48,43 @@
 <a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
 <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%=EmployeeBean.getId()%>">Employee Details</a> >
 <%}%>
-
-
 Modify Employee<br>
 <hr color="#BFBFBB" noshade>
-
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
-    <% if (request.getParameter("return") != null) {%>
+<% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 	<%}%>
-    <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
-    <%}%>
-    
+<%} else {%>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
+<%}%>
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <% if (request.getParameter("return") != null) {%>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
-
 <input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="modified" value="<%= EmployeeBean.getModified()%>">
 <input type="hidden" name="orgId" value="<%= EmployeeBean.getOrgId() %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Modify <%= toHtml(EmployeeBean.getNameFirstLast()) %></strong>
       <dhv:evaluate exp="<%=!(EmployeeBean.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          
     </td>
   </tr>
-  <tr><td nowrap class="formLabel">First Name</td><td><input type="text" name="nameFirst" value="<%= toHtmlValue(EmployeeBean.getNameFirst()) %>"></td></tr>
-  <tr><td nowrap class="formLabel">Middle Name</td><td><input type="text" name="nameMiddle" value="<%= toHtmlValue(EmployeeBean.getNameMiddle()) %>"></td></tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>First Name</td>
+    <td><input type="text" name="nameFirst" value="<%= toHtmlValue(EmployeeBean.getNameFirst()) %>"></td>
+  </tr>
+  <tr>
+    <td class="formLabel" nowrap>Middle Name</td>
+    <td><input type="text" name="nameMiddle" value="<%= toHtmlValue(EmployeeBean.getNameMiddle()) %>"></td>
+  </tr>
+  <tr>
+    <td class="formLabel" nowrap>
       Last Name
     </td>
     <td>
@@ -97,50 +92,62 @@ Modify Employee<br>
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
-  <tr><td nowrap class="formLabel">Department</td><td><%= DepartmentList.getHtmlSelect("department", EmployeeBean.getDepartment()) %></td></tr>
-  <tr><td nowrap class="formLabel">Title</td><td><input type="text" name="title" value="<%= toHtmlValue(EmployeeBean.getTitle()) %>"></td></tr>
+  <tr>
+    <td class="formLabel" nowrap>Department</td>
+    <td><%= DepartmentList.getHtmlSelect("department", EmployeeBean.getDepartment()) %></td>
+  </tr>
+  <tr>
+    <td class="formLabel" nowrap>Title</td>
+    <td><input type="text" name="title" value="<%= toHtmlValue(EmployeeBean.getTitle()) %>"></td>
+  </tr>
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left>
+    <td colspan="2">
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
-  <tr>
-<%  
+<%
   int ecount = 0;
   Iterator enumber = EmployeeBean.getEmailAddressList().iterator();
   while (enumber.hasNext()) {
     ++ecount;
-    ContactEmailAddress thisEmailAddress = (ContactEmailAddress)enumber.next();
+    ContactEmailAddress thisEmailAddress = (ContactEmailAddress) enumber.next();
 %>    
   <tr>
+    <td class="formLabel" nowrap>
+      Email <%= ecount %>
+    </td>
     <td>
       <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
       <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", thisEmailAddress.getType()) %>
-      <input type=text size=40 name="email<%= ecount %>address" maxlength=255 value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255" value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
       <input type="checkbox" name="email<%= ecount %>delete" value="on">mark to remove
     </td>
   </tr>
 <%    
   }
+  ++ecount;
 %>
   <tr>
+    <td class="formLabel" nowrap>
+      Email <%= ecount %>
+    </td>
     <td>
-      <%= ContactEmailTypeList.getHtmlSelect("email" + (++ecount) + "type", "Business") %>
-      <input type=text size=40 name="email<%= ecount %>address" maxlength=255>
+      <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", "Business") %>
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255">
     </td>
   </tr>
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left>
+    <td colspan="2">
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
-<%  
+<%
   int icount = 0;
   Iterator inumber = EmployeeBean.getPhoneNumberList().iterator();
   while (inumber.hasNext()) {
@@ -148,35 +155,36 @@ Modify Employee<br>
     ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
 %>    
   <tr>
+    <td class="formLabel" nowrap>
+      Phone <%= icount %>
+    </td>
     <td>
       <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
       <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
-      <!--input type=text size=3 name="phone<%= icount %>ac" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getAreaCode()) %>">-
-      <input type=text size=3 name="phone<%= icount %>pre" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getPrefix()) %>">-
-      <input type=text size=4 name="phone<%= icount %>number" maxlength=4 value="<%= toHtmlValue(thisPhoneNumber.getPostfix()) %>">ext. -->
-      <input type=text size=20 name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
+      <input type="text" size="20" name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
       <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
       <input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove
     </td>
   </tr>    
 <%    
   }
+  ++icount;
 %>
   <tr>
+    <td class="formLabel" nowrap>
+      Phone <%= icount %>
+    </td>
     <td>
-      <%= ContactPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Business") %>
-      <!--input type=text size=3 name="phone<%= icount %>ac" maxlength=3>-
-      <input type=text size=3 name="phone<%= icount %>pre" maxlength=3>-
-      <input type=text size=4 name="phone<%= icount %>number" maxlength=4>ext. -->
-      <input type=text size=20 name="phone<%= icount %>number">&nbsp;ext.
-      <input type=text size=5 name="phone<%= icount %>ext" maxlength=10>
+      <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", "Business") %>
+      <input type="text" size="20" name="phone<%= icount %>number">&nbsp;ext.
+      <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10">
     </td>
   </tr>
 </table>
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left colspan="2">
+    <td colspan="2">
       <strong>Addresses</strong>
     </td>
   </tr>
@@ -189,8 +197,8 @@ Modify Employee<br>
 %>    
   <tr>
     <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
-    <td>
-      &nbsp;
+    <td class="formLabel">
+      Type
     </td>
     <td>
       <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
@@ -198,37 +206,36 @@ Modify Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Address Line 1
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line1" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Address Line 2
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line2" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       City
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>city" maxlength=80 value="<%= toHtmlValue(thisAddress.getCity()) %>">
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80" value="<%= toHtmlValue(thisAddress.getCity()) %>">
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       State/Province
     </td>
     <td>
-      <%=StateSelect.getHtml("address" + acount + "state", thisAddress.getState())%>
+      <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
       <% StateSelect = new StateSelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>state" maxlength=80 value="<%= toHtmlValue(thisAddress.getState()) %>"-->
     </td>
   </tr>
   <tr>
@@ -236,7 +243,7 @@ Modify Employee<br>
       Zip/Postal Code
     </td>
     <td>
-      <input type=text size=10 name="address<%= acount %>zip" maxlength=12 value="<%= toHtmlValue(thisAddress.getZip()) %>">
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12" value="<%= toHtmlValue(thisAddress.getZip()) %>">
     </td>
   </tr>
   <tr>
@@ -244,55 +251,56 @@ Modify Employee<br>
       Country
     </td>
     <td>
-      <%=CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry())%>
+      <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
       <% CountrySelect = new CountrySelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80 value="<%= toHtmlValue(thisAddress.getCountry()) %>"-->
     </td>
   </tr>
-  <tr><td colspan="2">&nbsp;</td></tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
 <%    
   }
+  ++acount;
 %>
   <tr>
-    <td>
-      &nbsp;
+    <td class="formLabel">
+      Type
     </td>
     <td>
-      <%= ContactAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Business") %>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", "Business") %>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Address Line 1
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line1" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80">
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Address Line 2
     </td>
     <td>
-      <input type=text size=40 name="address<%= acount %>line2" maxlength=80>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80">
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       City
     </td>
     <td>
-      <input type=text size=28 name="address<%= acount %>city" maxlength=80>
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80">
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       State/Province
     </td>
     <td>
-      <%=StateSelect.getHtml("address" + acount + "state")%>
+      <%= StateSelect.getHtml("address" + acount + "state") %>
       <% StateSelect = new StateSelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>state" maxlength=80-->
     </td>
   </tr>
   <tr>
@@ -300,7 +308,7 @@ Modify Employee<br>
       Zip/Postal Code
     </td>
     <td>
-      <input type=text size=10 name="address<%= acount %>zip" maxlength=12>
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12">
     </td>
   </tr>
   <tr>
@@ -308,16 +316,15 @@ Modify Employee<br>
       Country
     </td>
     <td>
-      <%=CountrySelect.getHtml("address" + acount + "country")%>
+      <%= CountrySelect.getHtml("address" + acount + "country") %>
       <% CountrySelect = new CountrySelect(); %>
-      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80-->
     </td>
   </tr>
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left colspan="2">
+    <td colspan="2">
       <strong>Additional Details</strong>
     </td>
   </tr>  
@@ -326,19 +333,19 @@ Modify Employee<br>
       Notes
     </td>
     <td>
-      <TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(EmployeeBean.getNotes()) %></TEXTAREA>
+      <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(EmployeeBean.getNotes()) %></TEXTAREA>
     </td>
   </tr>
 </table>
 <br>
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
-    <% if (request.getParameter("return") != null) {%>
+<% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 	<%}%>
-    <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
-    <%}%>
-    <input type="reset" value="Reset">
-    <input type="hidden" name="dosubmit" value="true">
+<%} else {%>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
+<%}%>
+<input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
 </form>

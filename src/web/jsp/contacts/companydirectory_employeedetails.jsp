@@ -11,27 +11,26 @@ Employee Details<br>
 <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify';submit();"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteEmployee&empid=<%=EmployeeBean.getId() %>';confirmSubmit(document.details);"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br>&nbsp;</dhv:permission>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong><%= toHtml(EmployeeBean.getNameFull()) %></strong>
       <dhv:evaluate exp="<%=!(EmployeeBean.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          
 	  </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">Department</td>
-    <td width="100%"><%= toHtml(EmployeeBean.getDepartmentName()) %> &nbsp;</td>
+    <td class="formLabel" nowrap>Department</td>
+    <td><%= toHtml(EmployeeBean.getDepartmentName()) %>&nbsp;</td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">Title</td>
-    <td><%= toHtml(EmployeeBean.getTitle()) %> &nbsp;</td>
+    <td class="formLabel" nowrap>Title</td>
+    <td><%= toHtml(EmployeeBean.getTitle()) %>&nbsp;</td>
   </tr>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
@@ -43,21 +42,21 @@ Employee Details<br>
 %>    
   <tr>
     <td nowrap class="formLabel"><%= toHtml(thisEmailAddress.getTypeName()) %></td>
-    <td width="100%"><a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a></td>
+    <td><a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a></td>
   </tr>
 <%    
     }
   } else {
 %>
   <tr>
-    <td><font color="#9E9E9E">No email addresses entered.</font></td>
+    <td colspan="2"><font color="#9E9E9E">No email addresses entered.</font></td>
   </tr>
 <%}%>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
@@ -68,22 +67,22 @@ Employee Details<br>
       ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
 %>    
   <tr>
-    <td nowrap class="formLabel"><%= toHtml(thisPhoneNumber.getTypeName()) %></td>
-    <td width="100%"><%= toHtml(thisPhoneNumber.getPhoneNumber()) %></td>
+    <td class="formLabel" nowrap><%= toHtml(thisPhoneNumber.getTypeName()) %></td>
+    <td><%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;</td>
   </tr>
 <%
     }
   } else {
 %>
   <tr>
-    <td><font color="#9E9E9E">No phone numbers entered.</font></td>
+    <td colspan="2"><font color="#9E9E9E">No phone numbers entered.</font></td>
   </tr>
 <%}%>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Addresses</strong>
 	  </td>
   </tr>
@@ -94,28 +93,28 @@ Employee Details<br>
       ContactAddress thisAddress = (ContactAddress)iaddress.next();
 %>    
     <tr>
-      <td nowrap class="formLabel"><%= toHtml(thisAddress.getTypeName()) %></td>
-      <td width="100%"><%= toHtml(thisAddress.toString()) %></td>
+      <td class="formLabel" valign="top" nowrap><%= toHtml(thisAddress.getTypeName()) %></td>
+      <td><%= toHtml(thisAddress.toString()) %>&nbsp;</td>
     </tr>
 <%    
     }
   } else {
 %>
   <tr>
-    <td><font color="#9E9E9E">No addresses entered.</font></td>
+    <td colspan="2"><font color="#9E9E9E">No addresses entered.</font></td>
   </tr>
 <%}%>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Additional Details</strong>
 	  </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">Notes</td>
-    <td width="100%"><%= toHtml(EmployeeBean.getNotes()) %>&nbsp;</td>
+    <td class="formLabel" nowrap>Notes</td>
+    <td><%= toHtml(EmployeeBean.getNotes()) %>&nbsp;</td>
   </tr>
 </table>
 <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br></dhv:permission>
