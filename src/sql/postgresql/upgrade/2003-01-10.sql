@@ -21,6 +21,6 @@ UPDATE cfsinbox_messagelink
         FROM   contact
         WHERE  cfsinbox_messagelink.sent_to = contact.user_id; 
 /*8/19/2002*/
-alter table  opportunity add column enabled BOOLEAN NOT NULL;
+alter table  opportunity add column enabled BOOLEAN;
 ALTER TABLE  opportunity ALTER COLUMN enabled SET DEFAULT true;
 update opportunity set enabled = 't';
