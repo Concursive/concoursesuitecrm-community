@@ -1,4 +1,4 @@
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.admin.base.*" %>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <html>
 <head>
