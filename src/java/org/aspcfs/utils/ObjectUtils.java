@@ -3,6 +3,7 @@ package org.aspcfs.utils;
 import java.lang.reflect.*;
 import java.text.SimpleDateFormat;
 import java.sql.*;
+import java.io.*;
 
 /**
  *  Reflective utilities for working with objects
@@ -217,6 +218,40 @@ public class ObjectUtils {
       }
       return null;
     }
+  }
+
+
+  /**
+   *  Serialize an object to a byte array
+   *
+   *@param  object         Description of the Parameter
+   *@return                Description of the Return Value
+   *@exception  Exception  Description of the Exception
+   */
+  public static byte[] toByteArray(Object object) throws Exception {
+    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+    ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
+    objOut.writeObject(object);
+    objOut.flush();
+    byte[] tmpArray = byteOut.toByteArray();
+    objOut.close();
+    return tmpArray;
+  }
+
+
+  /**
+   *  Reconstruct on object from a byte array
+   *
+   *@param  byteArray      Description of the Parameter
+   *@return                Description of the Return Value
+   *@exception  Exception  Description of the Exception
+   */
+  public static Object toObject(byte[] byteArray) throws Exception {
+    ByteArrayInputStream byteIn = new ByteArrayInputStream(byteArray);
+    ObjectInputStream objIn = new ObjectInputStream(byteIn);
+    Object tmpObj = objIn.readObject();
+    objIn.close();
+    return tmpObj;
   }
 }
 
