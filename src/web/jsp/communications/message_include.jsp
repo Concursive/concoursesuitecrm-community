@@ -29,6 +29,7 @@ function highlight() {
       <strong>New Message</strong>
     </td>
   </tr>
+  <dhv:evaluate if="<%= request.getParameter("actionId") == null %>">
   <tr>
     <td class="formLabel">
       Name
@@ -38,6 +39,7 @@ function highlight() {
       <font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
+  </dhv:evaluate>
   <tr>
     <td valign="top" class="formLabel">
       Internal Description
