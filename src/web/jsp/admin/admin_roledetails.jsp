@@ -5,7 +5,7 @@
 <a href="/Roles.do?command=ListRoles">Back to list</a><p>
 <form action='Roles.do?command=UpdateRole&auto-populate=true' method='post'>
 <input type="hidden" name="id" value="<%= Role.getId() %>">
-<input type="hidden" name="modified" value="<%= Role.getModified() %>">
+<input type="hidden" name="modified" value="<%= Role.getModifiedString() %>">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
 <input type="reset" value="Reset">
