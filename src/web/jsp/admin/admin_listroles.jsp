@@ -6,7 +6,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <dhv:permission name="admin-roles-add"><a href="/Roles.do?command=InsertRoleForm">Add New Role</a></dhv:permission>
 <center><%= RoleListInfo.getAlphabeticalPageLinks() %></center>
-<%= showAttribute(request, "actionError") %>
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RoleListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <dhv:permission name="admin-roles-edit,admin-roles-delete">

@@ -43,7 +43,7 @@
 
 <form name="taskListView" method="post" action="/MyTasks.do?command=ListTasks">
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
-<table width="20%" border="0">
+<table width="100%" border="0">
   <tr>
     <td align="left">
       <select size="1" name="listFilter1" onChange="javascript:document.taskListView.submit();">
@@ -51,17 +51,18 @@
         <option value="tasksbyme" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("tasksbyme")?" selected":""%>>Tasks Assigned By Me</option>
         <option value="all" <%=TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")?" selected":""%>>All Tasks</option>
       </select>
-     </td>
      <%if(!TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("all")){%>
-     <td>
        <select size="1" name="listFilter2" onChange="javascript:document.taskListView.submit();">
         <option value="false" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("false")?" selected":""%>>Incomplete Tasks</option>
         <option value="true" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("true")?" selected":""%>>Completed Tasks</option>
         <option value="all" <%=TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("all")?" selected":""%>>Any Status</option>
       </select>
-      </td>
       <%}%>
-    </tr>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="TaskListInfo"/>
+    </td>
+  </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
    <tr class="title">

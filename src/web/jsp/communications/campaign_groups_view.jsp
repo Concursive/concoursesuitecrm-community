@@ -18,7 +18,9 @@ Group List
         <option <%= CampaignGroupListInfo.getOptionValue("my") %>>My Groups</option>
         <option <%= CampaignGroupListInfo.getOptionValue("all") %>>All Groups</option>
       </select>
-      <%= showError(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CampaignGroupListInfo"/>
     </td>
     </form>
   </tr>

@@ -5,17 +5,19 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <dhv:permission name="admin-users-add"><a href="/Users.do?command=InsertUserForm">Add New User</a></dhv:permission>
-<center><%= UserListInfo.getAlphabeticalPageLinks() %><br>&nbsp;</center>
+<center><%= UserListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="/Users.do?command=ListUsers">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= UserListInfo.getOptionValue("enabled") %>>Active Users</option>
-	<option <%= UserListInfo.getOptionValue("aliases") %>>Aliased Users</option>
+        <option <%= UserListInfo.getOptionValue("aliases") %>>Aliased Users</option>
         <option <%= UserListInfo.getOptionValue("disabled") %>>Inactive Users</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="UserListInfo"/>
     </td>
     </form>
   </tr>

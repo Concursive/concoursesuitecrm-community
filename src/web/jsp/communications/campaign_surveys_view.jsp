@@ -19,7 +19,9 @@ Surveys
         <option <%= CampaignSurveyListInfo.getOptionValue("my") %>>My Surveys</option>
         <option <%= CampaignSurveyListInfo.getOptionValue("all") %>>All Surveys</option>
       </select>
-      <%= showError(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CampaignSurveyListInfo"/>
     </td>
     </form>
   </tr>

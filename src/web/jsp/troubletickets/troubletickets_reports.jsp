@@ -12,7 +12,6 @@ Reports<br>
 <dhv:permission name="tickets-tickets-reports-add"><a href="/TroubleTickets.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:permission name="tickets-tickets-reports-add" none="true"><br></dhv:permission>
 <center><%= TicketRptListInfo.getAlphabeticalPageLinks() %></center>
-
 <table width="100%" border="0">
   <tr>
     <td align="left">
@@ -20,7 +19,9 @@ Reports<br>
         <option <%= TicketRptListInfo.getOptionValue("my") %>>My Reports</option>
         <option <%= TicketRptListInfo.getOptionValue("all") %>>All Reports</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="TicketRptListInfo"/>
     </td>
   </tr>
 </table>

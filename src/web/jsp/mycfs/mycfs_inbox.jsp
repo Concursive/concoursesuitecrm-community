@@ -10,7 +10,6 @@
 <a href='javascript:window.location.href="MyCFSInbox.do?command=NewMessage&sendUrl="+escape("/MyCFSInbox.do?command=SendMessage")+"&return="+escape("MyCFSInbox.do?command=Inbox");'>New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
-
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="/MyCFSInbox.do?command=Inbox">
@@ -20,7 +19,9 @@
         <option <%= InboxInfo.getOptionValue("old") %>>Archive</option>
         <option <%= InboxInfo.getOptionValue("sent") %>>Sent(Outbox)</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="InboxInfo"/>
     </td>
     </form>
   </tr>

@@ -11,11 +11,7 @@ Reports<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="pipeline-reports-add"><a href="/Leads.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:permission name="pipeline-reports-add" none="true"><br></dhv:permission>
-
-
-
 <center><%= LeadRptListInfo.getAlphabeticalPageLinks() %></center>
-
 <table width="100%" border="0">
   <tr>
     <td align="left">
@@ -23,7 +19,9 @@ Reports<br>
         <option <%= LeadRptListInfo.getOptionValue("my") %>>My Reports</option>
         <option <%= LeadRptListInfo.getOptionValue("all") %>>All Reports</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadRptListInfo"/>
     </td>
   </tr>
 </table>

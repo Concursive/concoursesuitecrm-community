@@ -16,7 +16,9 @@ Dashboard
         <option <%= CampaignDashboardListInfo.getOptionValue("my") %>>My Running Campaigns</option>
         <option <%= CampaignDashboardListInfo.getOptionValue("all") %>>All Running Campaigns</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CampaignDashboardListInfo"/>
     </td>
     </form>
   </tr>

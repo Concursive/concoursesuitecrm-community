@@ -21,7 +21,9 @@ Campaign List
         <option <%= CampaignListInfo.getOptionValue("my") %>>My Incomplete Campaigns</option>
         <option <%= CampaignListInfo.getOptionValue("all") %>>All Incomplete Campaigns</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CampaignListInfo"/>
     </td>
     </form>
   </tr>

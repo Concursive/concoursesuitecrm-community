@@ -17,7 +17,9 @@ Message List
         <option <%= CampaignMessageListInfo.getOptionValue("my") %>>My Messages</option>
         <option <%= CampaignMessageListInfo.getOptionValue("all") %>>All Messages</option>
       </select>
-      <%= showError(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CampaignMessageListInfo"/>
     </td>
     </form>
   </tr>

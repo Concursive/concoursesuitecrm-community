@@ -9,7 +9,6 @@
 View Opportunities<br>
 <hr color="#BFBFBB" noshade>
 <center><%= OpportunityListInfo.getAlphabeticalPageLinks() %></center>
-
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="/Leads.do?command=ViewOpp">
@@ -17,13 +16,13 @@ View Opportunities<br>
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= OpportunityListInfo.getOptionValue("my") %>>My Opportunities</option>
         <option <%= OpportunityListInfo.getOptionValue("all") %>>All Opportunities</option>
-	
-	<% if (!(OpportunityListInfo.getSavedCriteria().isEmpty())) { %>
-		<option <%= OpportunityListInfo.getOptionValue("search") %>>Search Results</option>
-	<%}%>
-	
+	      <dhv:evaluate if="<%= (!OpportunityListInfo.getSavedCriteria().isEmpty()) %>">
+          <option <%= OpportunityListInfo.getOptionValue("search") %>>Search Results</option>
+        </dhv:evaluate>
       </select>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityListInfo"/>
     </td>
     </form>
   </tr>
