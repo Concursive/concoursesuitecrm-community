@@ -2420,11 +2420,11 @@ public class Campaign extends GenericBean {
 
 
   /**
-   *  This method is called when the notifier begins processing a campaign.
-   *  If lockProcess returns a 1, then it was successful and this instance
-   *  of the notifier can execute the campaign.  If lockProcess is not successful
-   *  then the notifier should skip this campaign because another instance may
-   *  have processed this one already.
+   *  This method is called when the notifier begins processing a campaign. If
+   *  lockProcess returns a 1, then it was successful and this instance of the
+   *  notifier can execute the campaign. If lockProcess is not successful then
+   *  the notifier should skip this campaign because another instance may have
+   *  processed this one already.
    *
    *@param  db                Description of the Parameter
    *@return                   1 if successfully locked
@@ -2442,6 +2442,32 @@ public class Campaign extends GenericBean {
     int count = pst.executeUpdate();
     pst.close();
     return count;
+  }
+
+
+  /**
+   *  Returns the user who entered a campaign, useful for checking the authority
+   *  of a campaign record
+   *
+   *@param  db                Description of the Parameter
+   *@param  campaignId        Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public final static int queryEnteredBy(Connection db, int campaignId) throws SQLException {
+    int enteredBy = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT enteredby " +
+        "FROM campaign " +
+        "WHERE campaign_id = ? ");
+    pst.setInt(1, campaignId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      enteredBy = rs.getInt("enteredby");
+    }
+    rs.close();
+    pst.close();
+    return enteredBy;
   }
 }
 
