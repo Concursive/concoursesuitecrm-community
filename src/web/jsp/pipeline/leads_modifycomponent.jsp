@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -80,22 +80,12 @@ Modify Component<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>&nbsp;
-      <dhv:evaluate exp="<%= (OpportunityHeader.getAccountEnabled() && OpportunityHeader.getAccountLink() > -1) %>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= OpportunityHeader.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
-      </dhv:evaluate>
-      <dhv:evaluate exp="<%= OpportunityHeader.getContactLink() > -1 %>">
-        <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= OpportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
-        <% FileItem thisFile = new FileItem(); %>
-        <%= thisFile.getImageTag()%>
-      </dhv:evaluate>
+      <%@ include file="leads_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + OpportunityHeader.getId(); %>      
+      <% String param1 = "id=" + opportunityHeader.getId(); %>      
       <dhv:container name="opportunities" selected="details" param="<%= param1 %>" />
     </td>
   </tr>

@@ -39,7 +39,7 @@ Modify Document<br>
   <form method="post" name="inputForm" action="AccountsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
+      <%@ include file="accounts_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">

@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.pipeline.base.OpportunityComponent,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
-<jsp:useBean id="HeaderDetails" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="ComponentList" class="org.aspcfs.modules.pipeline.base.OpportunityComponentList" scope="request"/>
 <jsp:useBean id="AccountsComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -16,7 +16,7 @@ Opportunity Details<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
+      <%@ include file="accounts_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -26,18 +26,18 @@ Opportunity Details<br>
     </td>
   </tr>
   <tr>
-    <form name="oppdet" action="Opportunities.do?command=ModifyOpp&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
+    <form name="oppdet" action="Opportunities.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %>&orgId=<%= opportunityHeader.getAccountLink() %>&contactId=<%= opportunityHeader.getContactLink() %>" method="post">
     <td class="containerBack">
-<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='Opportunities.do?command=Modify&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= HeaderDetails.getId() %>&popup=true','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=Prepare&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='Opportunities.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&orgId=<%= opportunityHeader.getAccountLink() %>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>&popup=true','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&orgId=<%= opportunityHeader.getAccountLink() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
       <% FileItem thisFile = new FileItem(); %>
-      <strong><%= toHtml(HeaderDetails.getDescription()) %></strong>
-      <dhv:evaluate if="<%= HeaderDetails.hasFiles() %>">
+      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
         <%= thisFile.getImageTag() %>
       </dhv:evaluate>
     </td>
@@ -47,7 +47,9 @@ Opportunity Details<br>
       Entered
     </td>
     <td>
-      <%= HeaderDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= HeaderDetails.getEnteredString() %>
+      <dhv:username id="<%= opportunityHeader.getEnteredBy() %>"/>
+      -
+      <%= opportunityHeader.getEnteredString() %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -55,7 +57,9 @@ Opportunity Details<br>
       Modified
     </td>
     <td>
-      <%= HeaderDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= HeaderDetails.getModifiedString() %>
+      <dhv:username id="<%= opportunityHeader.getModifiedBy() %>"/>
+      -
+      <%= opportunityHeader.getModifiedString() %>
     </td>
     </form>
   </tr>    
@@ -70,23 +74,23 @@ Opportunity Details<br>
     </td>
     </dhv:permission>
     <td nowrap>
-      <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.description">Component</a></strong>
+      <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.description">Component</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.description") %>
     </td>
     <td nowrap>
-      <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.closed">Status</a></strong>
+      <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.closed">Status</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.closed") %>
     </td>
     <td nowrap>
-      <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.guessvalue">Guess Amount</a></strong>
+      <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.guessvalue">Guess Amount</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.guessvalue") %>
     </td>
     <td nowrap>
-      <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%=OrgDetails.getId()%>&column=oc.closedate">Close Date</a></strong>
+      <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=oc.closedate">Close Date</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.closedate") %>
     </td>
     <td nowrap>
-      <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%=OrgDetails.getId()%>&column=stagename">Current Stage</a></strong>
+      <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%=OrgDetails.getId()%>&column=stagename">Current Stage</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("stagename") %>
     </td>  
   </tr>

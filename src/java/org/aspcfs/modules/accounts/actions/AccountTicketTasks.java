@@ -16,6 +16,7 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.accounts.base.*;
 
 /**
  *  Represents an Accounts Ticket Tasks
@@ -27,41 +28,37 @@ import org.aspcfs.modules.login.beans.UserBean;
 public final class AccountTicketTasks extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  Lists the tasks for the specified ticket
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
+    if (!hasPermission(context, "accounts-accounts-tickets-view")) {
       return ("DefaultError");
     }
-
-    Exception errorMessage = null;
     String ticketId = context.getRequest().getParameter("ticketId");
     Connection db = null;
     TaskList taskList = new TaskList();
     try {
       db = this.getConnection(context);
+      //Load the task list
       taskList.setTicketId(Integer.parseInt(ticketId));
       taskList.buildList(db);
-      
-      //get the ticket
+      context.getRequest().setAttribute("TaskList", taskList);
+      //Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("TicketDetails", thisTicket);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("TaskList", taskList);
+      //Load the organization
+      Organization thisOrganization = new Organization(db, thisTicket.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
       addModuleBean(context, "View Accounts", "List Tasks");
       return this.getReturn(context, "ListTasks");
-    } else {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 

@@ -73,10 +73,7 @@ public final class Leads extends CFSModule {
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-
-    Exception errorMessage = null;
-    Connection db = null;
-    String id = context.getRequest().getParameter("headerId");
+    //Generate user list
     User thisRec = this.getUser(context, userId);
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
@@ -85,35 +82,33 @@ public final class Leads extends CFSModule {
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
+    //Parameters
+    String id = context.getRequest().getParameter("headerId");
     if (id != null && !"-1".equals(id)) {
       if (!hasPermission(context, "pipeline-opportunities-add")) {
         return ("PermissionError");
       }
     }
+    Connection db = null;
     try {
       db = this.getConnection(context);
       //check if a header needs to be built.
       if (id != null && !"-1".equals(id)) {
-        //Build the container itemS
+        //Build the container items
         OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(id));
-        context.getRequest().setAttribute("OpportunityHeader", oppHeader);
+        context.getRequest().setAttribute("opportunityHeader", oppHeader);
       }
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
       if ("list".equals(context.getRequest().getParameter("source"))) {
         addModuleBean(context, "View Opportunities", "Add Opportunity");
       } else {
         addModuleBean(context, "Add Opportunity", "Add Opportunity");
       }
       return "PrepareOK";
-    } else {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 
@@ -298,54 +293,47 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     int headerId = -1;
+    OpportunityHeader thisHeader = null;
+    OpportunityComponentList componentList = null;
     addModuleBean(context, "View Opportunities", "View Opportunity Details");
-
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-
+    //Check parameters
     if (context.getRequest().getParameter("headerId") != null) {
       headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
     } else {
       headerId = Integer.parseInt((String) context.getRequest().getAttribute("headerId"));
     }
     Connection db = null;
-    OpportunityHeader thisHeader = null;
-    OpportunityComponentList componentList = null;
-
+    //Configure the paged list info
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("LeadsComponentListInfo");
     }
-
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "LeadsComponentListInfo");
     componentListInfo.setLink("Leads.do?command=DetailsOpp&headerId=" + headerId);
     try {
       db = this.getConnection(context);
+      //Generate the opportunity header
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, headerId);
-      context.getRequest().setAttribute("HeaderDetails", thisHeader);
-
+      context.getRequest().setAttribute("opportunityHeader", thisHeader);
+      //Generate the list of components
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
       componentList.setOwnerIdRange(this.getUserRange(context, userId));
       componentList.setHeaderId(thisHeader.getId());
       componentList.buildList(db);
       context.getRequest().setAttribute("ComponentList", componentList);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
       addRecentItem(context, thisHeader);
       return ("OppDetailsOK");
-    } else {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 
@@ -852,7 +840,7 @@ public final class Leads extends CFSModule {
       component = new OpportunityComponent(db, componentId);
       //Build the container item
       OpportunityHeader oppHeader = new OpportunityHeader(db, component.getHeaderId());
-      context.getRequest().setAttribute("OpportunityHeader", oppHeader);
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
       if (!hasViewpointAuthority(db, context, "pipeline", component.getOwner(), userId)) {
         return "PermissionError";
       }
@@ -886,35 +874,31 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     addModuleBean(context, "View Opportunities", "Modify Opportunity");
-    int headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
     Connection db = null;
     OpportunityHeader thisHeader = null;
+    //Parameters
+    int headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
     try {
       db = this.getConnection(context);
+      //Generate the header
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, headerId);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("HeaderDetails", thisHeader);
+      context.getRequest().setAttribute("opportunityHeader", thisHeader);
       addRecentItem(context, thisHeader);
       return ("ModifyOppOK");
-    } else {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 
 
   /**
-   *  Description of the Method
+   *  Action to prepare a list of opportunities
    *
    * @param  context  Description of Parameter
    * @return          Description of the Returned Value
@@ -923,13 +907,14 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
+    //Request parameters
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("OpportunityListInfo");
     }
+    //Prepare the paged list
     PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
     oppListInfo.setLink("Leads.do?command=ViewOpp");
-
+    //Prepare viewpoints
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int vpUserId = viewpointInfo.getVpUserId(this.getUserId(context));
     int userId = this.getUserId(context);
@@ -939,12 +924,12 @@ public final class Leads extends CFSModule {
     Connection db = null;
     OpportunityList oppList = new OpportunityList();
     try {
-
       db = this.getConnection(context);
+      //Opportunity types drop-down menu
       LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
       typeSelect.addItem(0, "All Types");
       context.getRequest().setAttribute("TypeSelect", typeSelect);
-
+      //The list of opportunities, according to drop-down filter
       oppList.setPagedListInfo(oppListInfo);
       oppListInfo.setSearchCriteria(oppList);
       if ("all".equals(oppListInfo.getListView())) {
@@ -959,19 +944,14 @@ public final class Leads extends CFSModule {
       }
       oppList.setTypeId(oppListInfo.getFilterKey("listFilter1"));
       oppList.buildList(db);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
       context.getRequest().setAttribute("OpportunityList", oppList);
       addModuleBean(context, "View Opportunities", "Opportunities Add");
       return ("OppListOK");
-    } else {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 
@@ -1192,7 +1172,7 @@ public final class Leads extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      oppReport.buildReportFull(db);
+      oppReport.buildReportFull(db, context);
       oppReport.setEnteredBy(getUserId(context));
       oppReport.setModifiedBy(getUserId(context));
       oppReport.saveAndInsert(db);
@@ -1361,7 +1341,7 @@ public final class Leads extends CFSModule {
       thisComponent.checkEnabledOwnerAccount(db);
       //Build the container item
       OpportunityHeader oppHeader = new OpportunityHeader(db, thisComponent.getHeaderId());
-      context.getRequest().setAttribute("OpportunityHeader", oppHeader);
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
     } catch (Exception e) {
       errorMessage = e;
     } finally {

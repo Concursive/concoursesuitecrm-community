@@ -8,6 +8,6 @@
 Contact Details<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<%@ include file="contact_details.jsp" %>
+<%@ include file="contact_details_include.jsp" %>
 <input type="hidden" name="command" value="">
 </form>

@@ -16,7 +16,7 @@ Component Details
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
+      <%@ include file="accounts_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -45,7 +45,7 @@ Component Details
       Owner
     </td>
     <td>
-      <%= OppComponentDetails.getOwnerName() %>
+      <dhv:username id="<%= OppComponentDetails.getOwner() %>"/>
       <dhv:evaluate exp="<%= !(OppComponentDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
@@ -167,7 +167,9 @@ Component Details
       Entered
     </td>
     <td>
-      <%= OppComponentDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= OppComponentDetails.getEnteredString() %>
+      <dhv:username id="<%= OppComponentDetails.getEnteredBy() %>"/>
+      -
+      <%= OppComponentDetails.getEnteredString() %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -175,7 +177,9 @@ Component Details
       Modified
     </td>
     <td>
-      <%= OppComponentDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= OppComponentDetails.getModifiedString() %>
+      <dhv:username id="<%= OppComponentDetails.getModifiedBy() %>"/>
+      -
+      <%= OppComponentDetails.getModifiedString() %>
     </td>
   </tr>  
 </table>  

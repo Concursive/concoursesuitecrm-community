@@ -48,10 +48,6 @@ View Opportunities<br>
     </td>
     </dhv:permission>
     <td valign="center" nowrap>
-      <strong><a href="Leads.do?command=ViewOpp&column=acct_name">Organization</a></strong>
-      <%= OpportunityListInfo.getSortIcon("acct_name") %>
-    </td>    
-    <td valign="center" nowrap>
       <strong><a href="Leads.do?command=ViewOpp&column=x.description">Component</a></strong>
       <%= OpportunityListInfo.getSortIcon("x.description") %>
     </td>
@@ -71,6 +67,13 @@ View Opportunities<br>
       <strong><a href="Leads.do?command=ViewOpp&column=terms">Term</a></strong>
       <%= OpportunityListInfo.getSortIcon("terms") %>
     </td>
+    <td valign="center" nowrap>
+      <strong>Organization</strong>
+    </td>
+    <td valign="center" nowrap>
+      <strong><a href="Leads.do?command=ViewOpp&column=ct.namelast">Contact</a></strong>
+      <%= OpportunityListInfo.getSortIcon("ct.namelast") %>
+    </td>
   </tr>
 <%
 	Iterator j = OpportunityList.iterator();
@@ -87,17 +90,7 @@ View Opportunities<br>
       <dhv:permission name="pipeline-opportunities-edit"><a href="LeadsComponents.do?command=ModifyComponent&id=<%= thisOpp.getComponent().getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-delete"><a href="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= thisOpp.getComponent().getId() %>&return=list&popup=true','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
 	</dhv:permission>
-    <td width="50%" valign="top" class="row<%= rowid %>">
-      <dhv:evaluate exp="<%= thisOpp.getHeader().getAccountEnabled() && thisOpp.getHeader().getAccountLink() > -1 %>">
-        <a href="Opportunities.do?command=View&orgId=<%= thisOpp.getHeader().getAccountLink() %>">
-      </dhv:evaluate>
-      <%= toHtml(thisOpp.getHeader().getAccountName()) %>
-      <dhv:evaluate exp="<%= !thisOpp.getHeader().getAccountEnabled() && thisOpp.getHeader().getAccountLink() > -1 %>"><font color="red">*</font></dhv:evaluate>
-      <dhv:evaluate exp="<%= thisOpp.getHeader().getAccountEnabled() && thisOpp.getHeader().getAccountLink() > -1 %>">
-        </a>
-      </dhv:evaluate>
-    </td>  
-    <td width="50%" valign="top" class="row<%= rowid %>">
+    <td width="33%" valign="top" class="row<%= rowid %>">
       <a href="Leads.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>&reset=true">
       <%= toHtml(thisOpp.getComponent().getDescription()) %></a>
       <dhv:evaluate if="<%= thisOpp.getHeader().hasFiles() %>">
@@ -115,7 +108,28 @@ View Opportunities<br>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(thisOpp.getComponent().getTermsString()) %>
-    </td>      
+    </td>
+    <td width="33%" valign="top" class="row<%= rowid %>">
+      <dhv:evaluate if="<%= thisOpp.getHeader().getAccountLink() > -1 %>">
+        <a href="Opportunities.do?command=View&orgId=<%= thisOpp.getHeader().getAccountLink() %>">
+          <%= toHtml(thisOpp.getHeader().getAccountName()) %>
+        </a>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= thisOpp.getHeader().getContactLink() > -1 && hasText(thisOpp.getHeader().getContactCompanyName()) %>">
+        <a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= thisOpp.getHeader().getContactLink() %>">
+          <%= toHtml(thisOpp.getHeader().getContactCompanyName()) %>
+        </a>
+      </dhv:evaluate>
+      &nbsp;
+    </td>
+    <td width="33%" valign="top" class="row<%= rowid %>">
+      <dhv:evaluate if="<%= thisOpp.getHeader().getContactLink() > -1 %>">
+        <a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= thisOpp.getHeader().getContactLink() %>">
+          <%= toHtml(thisOpp.getHeader().getContactName()) %>
+        </a>
+      </dhv:evaluate>
+      &nbsp;
+    </td>
   </tr>
 <%
     }

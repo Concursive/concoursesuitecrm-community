@@ -127,7 +127,8 @@ Dashboard<br>
 %>    
 				<tr>
           <td width="100%" class="row<%= rowid %>" valign=center>
-            <a href="Leads.do?command=DetailsOpp&headerId=<%= thisHeader.getId() %>&return=dashboard&reset=true"><%= toHtml(thisHeader.getAccountName()) %>:&nbsp;<%= toHtml(thisHeader.getDescription()) %></a>
+            <a href="Leads.do?command=DetailsOpp&headerId=<%= thisHeader.getId() %>&return=dashboard&reset=true"><%= toHtml(thisHeader.getDisplayName()) %>:
+            <%= toHtml(thisHeader.getDescription()) %></a>
             (<%= thisHeader.getComponentCount() %>)
             <dhv:evaluate if="<%= thisHeader.hasFiles() %>">
               <%= thisFile.getImageTag() %>

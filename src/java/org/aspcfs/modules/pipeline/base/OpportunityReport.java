@@ -16,9 +16,12 @@ import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.io.*;
 import java.text.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.admin.base.UserList;
 
 /**
- *  Description of the Class
+ *  Takes a list of opportunities and formats them for output using the
+ *  specified parameters.
  *
  *@author     chris
  *@created    March 7, 2002
@@ -40,7 +43,7 @@ public class OpportunityReport extends OpportunityList {
   protected int enteredBy = -1;
   protected int modifiedBy = -1;
   protected ArrayList criteria = null;
-  protected String[] params = new String[]{"id", "type", "description", "contact", "owner", "amount1", "amount2", "amount3", "stageName", "stageDate", "probability", "revenueStart", "terms", "alertDate", "commission", "entered", "enteredBy", "modified", "modifiedBy"};
+  protected String[] params = new String[]{"id", "type", "description", "organization", "contact", "owner", "amount1", "amount2", "amount3", "stageName", "stageDate", "probability", "revenueStart", "terms", "alertDate", "commission", "entered", "enteredBy", "modified", "modifiedBy"};
 
   protected OrganizationReport orgReportJoin = new OrganizationReport();
   protected boolean joinOrgs = false;
@@ -387,8 +390,11 @@ public class OpportunityReport extends OpportunityList {
       if (param.equals("description")) {
         rep.addColumn("Description");
       }
+      if (param.equals("organization")) {
+        rep.addColumn("Organization");
+      }
       if (param.equals("contact")) {
-        rep.addColumn("Contact/Organization");
+        rep.addColumn("Contact");
       }
       if (param.equals("owner")) {
         rep.addColumn("Owner");
@@ -443,9 +449,10 @@ public class OpportunityReport extends OpportunityList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void buildReportData(Connection db) throws SQLException {
+  public void buildReportData(Connection db, ActionContext context) throws SQLException {
     this.buildList(db);
     boolean writeOut = false;
     Organization tempOrg = null;
@@ -479,11 +486,18 @@ public class OpportunityReport extends OpportunityList {
           if (param.equals("description")) {
             thisRow.addCell(oppBean.getComponent().getDescription());
           }
+          if (param.equals("organization")) {
+            if (oppBean.getHeader().getContactLink() > -1) {
+              thisRow.addCell(oppBean.getHeader().getContactCompanyName());
+            } else {
+              thisRow.addCell(oppBean.getHeader().getAccountName());
+            }
+          }
           if (param.equals("contact")) {
-            thisRow.addCell(oppBean.getHeader().getAccountName());
+            thisRow.addCell(oppBean.getHeader().getContactName());
           }
           if (param.equals("owner")) {
-            thisRow.addCell(oppBean.getComponent().getOwnerName());
+            thisRow.addCell(UserList.retrieveUserContact(context, oppBean.getComponent().getOwner()).getNameLastFirst());
           }
           if (param.equals("amount1")) {
             thisRow.addCell(String.valueOf(oppBean.getComponent().getLow()));
@@ -519,13 +533,13 @@ public class OpportunityReport extends OpportunityList {
             thisRow.addCell(oppBean.getComponent().getEnteredString());
           }
           if (param.equals("enteredBy")) {
-            thisRow.addCell(oppBean.getComponent().getEnteredByName());
+            thisRow.addCell(UserList.retrieveUserContact(context, oppBean.getComponent().getEnteredBy()).getNameLastFirst());
           }
           if (param.equals("modified")) {
             thisRow.addCell(oppBean.getComponent().getModifiedString());
           }
           if (param.equals("modifiedBy")) {
-            thisRow.addCell(oppBean.getComponent().getModifiedByName());
+            thisRow.addCell(UserList.retrieveUserContact(context, oppBean.getComponent().getModifiedBy()).getNameLastFirst());
           }
         }
         rep.addRow(thisRow);
@@ -539,12 +553,13 @@ public class OpportunityReport extends OpportunityList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void buildReportFull(Connection db) throws SQLException {
+  public void buildReportFull(Connection db, ActionContext context) throws SQLException {
     buildReportBaseInfo();
     buildReportHeaders();
-    buildReportData(db);
+    buildReportData(db, context);
   }
 
 
@@ -571,7 +586,6 @@ public class OpportunityReport extends OpportunityList {
     } else {
       thisItem.setLinkModuleId(Constants.DOCUMENTS_LEADS_REPORTS);
     }
-
     thisItem.setLinkItemId(0);
     thisItem.setProjectId(-1);
     thisItem.setEnteredBy(enteredBy);
@@ -581,7 +595,6 @@ public class OpportunityReport extends OpportunityList {
     thisItem.setFilename(filenameToUse);
     thisItem.setSize((int) fileLink.length());
     thisItem.insert(db);
-
     return true;
   }
 }

@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.*, org.aspcfs.modules.tasks.base.*,org.aspcfs.modules.base.EmailAddress, org.aspcfs.modules.base.Constants" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="TaskList" class="org.aspcfs.modules.tasks.base.TaskList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -18,7 +19,7 @@ Tasks<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%=toHtml(TicketDetails.getCompanyName())%></strong>
+      <%@ include file="accounts_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -31,18 +32,16 @@ Tasks<br>
   <tr>
   	<td class="containerBack">
         <% String param2 = "id=" + TicketDetails.getId(); %>
-        <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>&nbsp;[ <dhv:container name="accountstickets" selected="tasks" param="<%= param2 %>"/> ]
+        <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>
+        [ <dhv:container name="accountstickets" selected="tasks" param="<%= param2 %>"/> ]
         <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-        <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
+          <br><font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
         </dhv:evaluate>
         <br><br>
         <%-- display all tasks --%>
+        <a  href="javascript:popURL('AccountTicketTasks.do?command=Add&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a><br>
+        &nbsp;<br>
         <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-         <tr class="title">
-         <td  colspan="7">
-            <strong>Tasks created for the Ticket</strong> [<a  href="javascript:popURL('AccountTicketTasks.do?command=Add&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a>]
-         </td>
-         </tr>
          <tr class="title">
           <td align="center" nowrap>
             <strong>Action</strong>

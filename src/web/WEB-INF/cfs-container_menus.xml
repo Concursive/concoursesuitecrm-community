@@ -96,7 +96,7 @@
     <long_css on="containerOn" off="containerOff"/>
     <short_css on="containerOn" off="containerOff"/>
     <submenu name="details">
-      <long_html value="Details"/>
+      <long_html value="Components"/>
       <permission value=""/>
       <link value="Leads.do?command=DetailsOpp&amp;headerId=${id}"/>
     </submenu>

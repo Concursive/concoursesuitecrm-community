@@ -673,6 +673,7 @@ public class PagedListInfo implements Serializable {
     itemSelect.addItem("30");
     itemSelect.addItem("50");
     itemSelect.addItem("100");
+    itemSelect.setJsEvent("onChange='submit();'");
     return (itemSelect.getHtml("items", itemsPerPage));
     //return("Items per page <input type=\"text\" name=\"items\" value=\"" + itemsPerPage + "\" size=\"3\">");
   }

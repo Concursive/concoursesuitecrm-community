@@ -68,7 +68,7 @@ Modify Ticket<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(TicketDetails.getCompanyName()) %></strong>
+      <%@ include file="accounts_details_header_include.jsp" %>
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </td>
   </tr>
@@ -88,9 +88,10 @@ Modify Ticket<br>
   <tr>
     <td class="containerBack">
           <% String param2 = "id=" + TicketDetails.getId(); %>
-          <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>&nbsp;[ <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/> ]
+          <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>
+          [ <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/> ]
           <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-          <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
+            <br><font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
           </dhv:evaluate>
           <br><br>
         <form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" onSubmit="return checkForm(this);" method="post">    

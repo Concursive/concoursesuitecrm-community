@@ -14,17 +14,8 @@ Employee Details<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
-	    <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
-      <dhv:evaluate exp="<%=!(ContactDetails.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          
+	    <%@ include file="contact_details_header_include.jsp" %>
 	  </td>
-  </tr>
-  <tr>
-    <td class="formLabel" nowrap>Department</td>
-    <td><%= toHtml(ContactDetails.getDepartmentName()) %>&nbsp;</td>
-  </tr>
-  <tr>
-    <td class="formLabel" nowrap>Title</td>
-    <td><%= toHtml(ContactDetails.getTitle()) %>&nbsp;</td>
   </tr>
 </table>
 &nbsp;

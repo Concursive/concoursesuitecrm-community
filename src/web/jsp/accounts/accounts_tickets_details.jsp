@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.*, org.aspcfs.modules.base.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
@@ -13,7 +14,7 @@ Ticket Details<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%=toHtml(TicketDetails.getCompanyName())%></strong>
+      <%@ include file="accounts_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -25,9 +26,10 @@ Ticket Details<br>
   <tr>
   	<td class="containerBack">
         <% String param2 = "id=" + TicketDetails.getId(); %>
-        <strong>Ticket # <%=TicketDetails.getPaddedId()%>:</strong>&nbsp;[ <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/> ]
+        <strong>Ticket # <%= TicketDetails.getPaddedId() %>:</strong>
+        [ <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/> ]
         <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-        <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
+          <br><font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
         </dhv:evaluate>
       <br><br>
        <% if (TicketDetails.getClosed() != null) { %>

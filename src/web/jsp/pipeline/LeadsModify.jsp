@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="HeaderDetails" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -15,7 +15,7 @@
   <a href="Leads.do">Pipeline Management</a> > 
   <% if (request.getParameter("return") == null) { %>
 	  <a href="Leads.do?command=ViewOpp">View Opportunities</a> >
-    <a href="Leads.do?command=DetailsOpp&headerId=<%= HeaderDetails.getId() %>">Opportunity Details</a> >
+    <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
     <%} else {%>
     <% if (request.getParameter("return").equals("list")) { %>
 		<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
@@ -33,21 +33,13 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(HeaderDetails.getDescription()) %></strong>&nbsp;
-      <dhv:evaluate exp="<%= !popUp %>">
-        <dhv:evaluate exp="<%= (HeaderDetails.getAccountEnabled() && HeaderDetails.getAccountLink() > -1) %>">
-          <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= HeaderDetails.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
-        </dhv:evaluate>
-        <dhv:evaluate exp="<%= (HeaderDetails.getContactLink() > -1) %>">
-          <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= HeaderDetails.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
-        </dhv:evaluate>
-      </dhv:evaluate>
+      <%@ include file="leads_details_header_include.jsp" %>
     </td>
   </tr>
   <dhv:evaluate exp="<%= !popUp %>">
     <tr class="containerMenu">
      <td>
-      <% String param1 = "id=" + HeaderDetails.getId(); %>      
+      <% String param1 = "id=" + opportunityHeader.getId(); %>      
       <dhv:container name="opportunities" selected="details" param="<%= param1 %>" />
       </td>
     </tr>
@@ -57,15 +49,15 @@
 <% if (request.getParameter("return") != null) {%>
       <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
-      <input type="hidden" name="headerId" value="<%= HeaderDetails.getId() %>">
-      <input type="hidden" name="modified" value="<%= HeaderDetails.getModified() %>">
+      <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
+      <input type="hidden" name="modified" value="<%= opportunityHeader.getModified() %>">
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
   <% if (request.getParameter("return").equals("list")) {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= HeaderDetails.getId() %>';this.form.dosubmit.value='false';">
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
       <input type="reset" value="Reset">
       <dhv:evaluate exp="<%= popUp %>">
@@ -78,7 +70,7 @@
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td colspan="2">
-            <strong><%= HeaderDetails.getDescription() %></strong>
+            <strong><%= opportunityHeader.getDescription() %></strong>
           </td>
         </tr>
         <tr class="containerBody">
@@ -86,7 +78,7 @@
             Description
           </td>
           <td>
-            <input type="text" size="50" name="description" value="<%= toHtmlValue(HeaderDetails.getDescription()) %>">
+            <input type="text" size="50" name="description" value="<%= toHtmlValue(opportunityHeader.getDescription()) %>">
             <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
           </td>
         </tr>
@@ -99,7 +91,7 @@
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= HeaderDetails.getId() %>';this.form.dosubmit.value='false';">
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
       <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">

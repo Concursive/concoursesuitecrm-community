@@ -14,7 +14,7 @@
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="javascript/popAccounts.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></SCRIPT>
 <%
-  OpportunityHeader OpportunityHeader = OppDetails.getHeader();
+  OpportunityHeader opportunityHeader = OppDetails.getHeader();
 	OpportunityComponent ComponentDetails = OppDetails.getComponent();
 %>
 <SCRIPT LANGUAGE="JavaScript">
@@ -69,7 +69,7 @@ Add Opportunity<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
+      <%@ include file="accounts_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">

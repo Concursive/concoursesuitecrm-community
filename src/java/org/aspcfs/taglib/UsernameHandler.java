@@ -6,7 +6,6 @@ import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.controller.SystemStatus;
 import com.darkhorseventures.database.ConnectionElement;
-
 import java.util.*;
 
 /**

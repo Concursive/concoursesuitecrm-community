@@ -610,23 +610,13 @@ public class OpportunityList extends ArrayList {
         "x.modified AS header_modified, " +
         "x.modifiedby AS header_modifiedby, " +
         "org.name AS acct_name, org.enabled AS accountenabled, " +
-        "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
-        "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
         "ct.namelast AS last_name, ct.namefirst AS first_name, " +
         "ct.company AS ctcompany, " +
-        "oc.*, y.description AS stagename, " +
-        "ct_comp_owner.namelast AS comp_o_namelast, ct_comp_owner.namefirst AS comp_o_namefirst, " +
-        "ct_comp_eb.namelast AS comp_eb_namelast, ct_comp_eb.namefirst AS comp_eb_namefirst, " +
-        "ct_comp_mb.namelast AS comp_mb_namelast, ct_comp_mb.namefirst AS comp_mb_namefirst " +
+        "oc.*, y.description AS stagename " +
         "FROM opportunity_header x " +
         "LEFT JOIN opportunity_component oc ON (x.opp_id = oc.opp_id) " +
         "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
-        "LEFT JOIN contact ct_eb ON (x.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (x.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id) " +
-        "LEFT JOIN contact ct_comp_owner ON (oc.owner = ct_comp_owner.user_id) " +
-        "LEFT JOIN contact ct_comp_eb ON (oc.enteredby = ct_comp_eb.user_id) " +
-        "LEFT JOIN contact ct_comp_mb ON (oc.modifiedby = ct_comp_mb.user_id), " +
+        "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
         "lookup_stage y " +
         "WHERE y.code = oc.stage " +
         "AND x.opp_id > 0 ");

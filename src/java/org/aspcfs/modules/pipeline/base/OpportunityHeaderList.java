@@ -511,14 +511,10 @@ public class OpportunityHeaderList extends ArrayList {
         "x.modified AS header_modified, " +
         "x.modifiedby AS header_modifiedby, " +
         "org.name as acct_name, org.enabled as accountenabled, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
         "ct.namelast as last_name, ct.namefirst as first_name, " +
         "ct.company as ctcompany " +
         "FROM opportunity_header x " +
         "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
-        "LEFT JOIN contact ct_eb ON (x.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (x.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id) " +
         "WHERE x.opp_id > -1 ");
     pst = db.prepareStatement(

@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
@@ -57,13 +57,13 @@
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
 <a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Opportunities</a> >
-<a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>">Opportunity Details</a> >
+<a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>">Opportunity Details</a> >
 Add Component<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
+      <%@ include file="accounts_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -75,7 +75,7 @@ Add Component<br>
   <tr>
     <td class="containerBack">
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>  
@@ -87,11 +87,11 @@ Add Component<br>
 <br>
 
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
 <input type="hidden" name="orgId" value="<%=request.getParameter("orgId")%>">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
-<input type="hidden" name="headerId" value="<%= OpportunityHeader.getId() %>">
+<input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
 <%-- End container contents --%>
     </td>
   </tr>

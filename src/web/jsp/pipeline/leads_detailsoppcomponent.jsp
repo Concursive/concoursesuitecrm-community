@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="LeadsComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -20,22 +20,12 @@ Component Details<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>&nbsp;
-      <dhv:evaluate exp="<%= (OpportunityHeader.getAccountEnabled() && OpportunityHeader.getAccountLink() > -1) %>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= OpportunityHeader.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
-      </dhv:evaluate>
-      <dhv:evaluate exp="<%= OpportunityHeader.getContactLink() > -1 %>">
-        <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= OpportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
-        <% FileItem thisFile = new FileItem(); %>
-        <%= thisFile.getImageTag()%>
-      </dhv:evaluate>
+      <%@ include file="leads_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + OpportunityHeader.getId(); %>      
+      <% String param1 = "id=" + opportunityHeader.getId(); %>      
       <dhv:container name="opportunities" selected="details" param="<%= param1 %>" />
     </td>
   </tr>
@@ -56,7 +46,7 @@ Component Details<br>
       Owner
     </td>
     <td>
-      <%= LeadsComponentDetails.getOwnerName() %>
+      <dhv:username id="<%= LeadsComponentDetails.getOwner() %>"/>
       <dhv:evaluate exp="<%= !(LeadsComponentDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
@@ -173,7 +163,9 @@ Component Details<br>
       Entered
     </td>
     <td>
-      <%= LeadsComponentDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= LeadsComponentDetails.getEnteredString() %>
+      <dhv:username id="<%= LeadsComponentDetails.getEnteredBy() %>"/>
+      -
+      <%= LeadsComponentDetails.getEnteredString() %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -181,7 +173,9 @@ Component Details<br>
       Modified
     </td>
     <td>
-      <%= LeadsComponentDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= LeadsComponentDetails.getModifiedString() %>
+      <dhv:username id="<%= LeadsComponentDetails.getModifiedBy() %>"/>
+      -
+      <%= LeadsComponentDetails.getModifiedString() %>
     </td>
   </tr>  
 </table>

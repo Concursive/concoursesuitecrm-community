@@ -285,18 +285,15 @@ public final class Accounts extends CFSModule {
         oppReport.setEnteredBy(getUserId(context));
         oppReport.setModifiedBy(getUserId(context));
         oppReport.setSubject(subject);
-
         if (ownerCriteria.equals("my")) {
           oppReport.setLimitId(this.getUserId(context));
         } else if (ownerCriteria.equals("levels")) {
           oppReport.setAccountOwnerIdRange(this.getUserRange(context));
         }
-
         oppReport.setCriteria(null);
         oppReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
-
         oppReport.setJoinOrgs(true);
-        oppReport.buildReportFull(db);
+        oppReport.buildReportFull(db, context);
         orgReport.setEnteredBy(getUserId(context));
         orgReport.setModifiedBy(getUserId(context));
         oppReport.saveAndInsert(db);

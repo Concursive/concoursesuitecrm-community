@@ -11,8 +11,15 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.pipeline.beans.*;
 import org.aspcfs.modules.pipeline.base.*;
 
-
+/**
+ *  Description of the Class
+ *
+ *@author     matt rajkowski
+ *@created    June 27, 2003
+ *@version    $Id$
+ */
 public final class OpportunityForm extends CFSModule {
+  
   /**
    *  Prepares supporting form data required for any Opportunity object.
    *
@@ -25,22 +32,21 @@ public final class OpportunityForm extends CFSModule {
     OpportunityComponent thisComponent = null;
     //Get opportunity object from the request (bean is not accessible here)
     OpportunityBean thisOpp = (OpportunityBean) context.getRequest().getAttribute("OppDetails");
-    if(thisOpp == null){
-	thisComponent = (OpportunityComponent) context.getRequest().getAttribute("ComponentDetails");
+    if (thisOpp == null) {
+      thisComponent = (OpportunityComponent) context.getRequest().getAttribute("ComponentDetails");
     }
-    
+    //Business type list
     HtmlSelect busTypeSelect = new HtmlSelect();
     busTypeSelect.setSelectName("type");
     busTypeSelect.addItem("N", "New");
     busTypeSelect.addItem("E", "Existing");
     busTypeSelect.build();
-
+    context.getRequest().setAttribute("BusTypeList", busTypeSelect);
+    //Opporunity units list
     HtmlSelect unitSelect = new HtmlSelect();
     unitSelect.setSelectName("units");
     unitSelect.addItem("M", "Months");
     unitSelect.build();
-
-    context.getRequest().setAttribute("BusTypeList", busTypeSelect);
     context.getRequest().setAttribute("UnitTypeList", unitSelect);
     try {
       db = this.getConnection(context);
@@ -53,7 +59,7 @@ public final class OpportunityForm extends CFSModule {
     }
     if (errorMessage == null) {
       boolean popup = "true".equals(context.getRequest().getParameter("popup"));
-      if ((thisOpp != null && thisOpp.getHeader().getId() > 0) || (thisComponent !=null && thisComponent.getId() >0)) {
+      if ((thisOpp != null && thisOpp.getHeader().getId() > 0) || (thisComponent != null && thisComponent.getId() > 0)) {
         if (popup) {
           return "PrepareModifyOppPopupOK";
         }

@@ -14,7 +14,7 @@
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="javascript/popAccounts.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></SCRIPT>
 <%
-  OpportunityHeader OpportunityHeader = OppDetails.getHeader();
+  OpportunityHeader opportunityHeader = OppDetails.getHeader();
 	OpportunityComponent ComponentDetails = OppDetails.getComponent();
 %>
 <SCRIPT LANGUAGE="JavaScript">

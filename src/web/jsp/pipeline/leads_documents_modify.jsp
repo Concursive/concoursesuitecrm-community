@@ -45,17 +45,7 @@ Modify Document<br>
   <form method="post" name="inputForm" action="LeadsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>&nbsp;
-      <dhv:evaluate exp="<%= (opportunityHeader.getAccountEnabled() && opportunityHeader.getAccountLink() > -1) %>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= opportunityHeader.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
-      </dhv:evaluate>
-      <dhv:evaluate exp="<%= (opportunityHeader.getContactLink() > -1) %>">
-        <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= opportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
-        <% FileItem thisFile = new FileItem(); %>
-        <%= thisFile.getImageTag()%>
-      </dhv:evaluate>
+      <%@ include file="leads_details_header_include.jsp" %>
     </td>
   </tr>
   <tr class="containerMenu">

@@ -60,9 +60,6 @@ public class OpportunityComponent extends GenericBean {
   protected boolean closeIt = false;
   protected boolean openIt = false;
   protected String closed = null;
-  protected String ownerName = null;
-  protected String enteredByName = null;
-  protected String modifiedByName = null;
   protected String accountName = null;
 
   protected boolean hasEnabledOwnerAccount = true;
@@ -108,16 +105,6 @@ public class OpportunityComponent extends GenericBean {
    */
   public OpportunityComponent(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
-  }
-
-
-  /**
-   *  Sets the EnteredByName attribute of the OpportunityComponent object
-   *
-   *@param  enteredByName  The new EnteredByName value
-   */
-  public void setEnteredByName(String enteredByName) {
-    this.enteredByName = enteredByName;
   }
 
 
@@ -476,17 +463,6 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Sets the OwnerName attribute of the Opportunity object
-   *
-   *@param  ownerName  The new OwnerName value
-   *@since
-   */
-  public void setOwnerName(String ownerName) {
-    this.ownerName = ownerName;
-  }
-
-
-  /**
    *  Sets the Description attribute of the Opportunity object
    *
    *@param  description  The new Description value
@@ -540,17 +516,6 @@ public class OpportunityComponent extends GenericBean {
     high = StringUtils.replace(high, "$", "");
 
     this.high = Double.parseDouble(high);
-  }
-
-
-  /**
-   *  Sets the ModifiedByName attribute of the Opportunity object
-   *
-   *@param  modifiedByName  The new ModifiedByName value
-   *@since
-   */
-  public void setModifiedByName(String modifiedByName) {
-    this.modifiedByName = modifiedByName;
   }
 
 
@@ -902,39 +867,6 @@ public class OpportunityComponent extends GenericBean {
    */
   public boolean getStageChange() {
     return stageChange;
-  }
-
-
-  /**
-   *  Gets the ModifiedByName attribute of the Opportunity object
-   *
-   *@return    The ModifiedByName value
-   *@since
-   */
-  public String getModifiedByName() {
-    return modifiedByName;
-  }
-
-
-  /**
-   *  Gets the EnteredByName attribute of the Opportunity object
-   *
-   *@return    The EnteredByName value
-   *@since
-   */
-  public String getEnteredByName() {
-    return enteredByName;
-  }
-
-
-  /**
-   *  Gets the OwnerName attribute of the Opportunity object
-   *
-   *@return    The OwnerName value
-   *@since
-   */
-  public String getOwnerName() {
-    return ownerName;
   }
 
 
@@ -1359,14 +1291,8 @@ public class OpportunityComponent extends GenericBean {
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT " +
-        "oc.*, y.description as stagename, " +
-        "ct_comp_owner.namelast AS comp_o_namelast, ct_comp_owner.namefirst AS comp_o_namefirst, " +
-        "ct_comp_eb.namelast AS comp_eb_namelast, ct_comp_eb.namefirst AS comp_eb_namefirst, " +
-        "ct_comp_mb.namelast AS comp_mb_namelast, ct_comp_mb.namefirst AS comp_mb_namefirst " +
-        "FROM opportunity_component oc " +
-        "LEFT JOIN contact ct_comp_owner ON (oc.owner = ct_comp_owner.user_id) " +
-        "LEFT JOIN contact ct_comp_eb ON (oc.enteredby = ct_comp_eb.user_id) " +
-        "LEFT JOIN contact ct_comp_mb ON (oc.modifiedby = ct_comp_mb.user_id), " +
+        "oc.*, y.description as stagename " +
+        "FROM opportunity_component oc, " +
         "lookup_stage y " +
         "WHERE y.code = oc.stage " +
         "AND id = ? ");
@@ -1441,16 +1367,17 @@ public class OpportunityComponent extends GenericBean {
    */
   public int update(Connection db, ActionContext context) throws SQLException {
     int oldId = -1;
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT owner " +
         "FROM opportunity_component " +
-        "WHERE id = " + this.getId());
+        "WHERE id = ?");
+    pst.setInt(1, this.getId());
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       oldId = rs.getInt("owner");
     }
     rs.close();
-    st.close();
+    pst.close();
     int result = update(db);
     if (result == 1) {
       invalidateUserData(context);
@@ -1988,11 +1915,6 @@ public class OpportunityComponent extends GenericBean {
 
     //table
     stageName = rs.getString("stagename");
-
-    //contact table
-    ownerName = Contact.getNameLastFirst(rs.getString("comp_o_namelast"), rs.getString("comp_o_namefirst"));
-    enteredByName = Contact.getNameLastFirst(rs.getString("comp_eb_namelast"), rs.getString("comp_eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("comp_mb_namelast"), rs.getString("comp_mb_namefirst"));
   }
 
 

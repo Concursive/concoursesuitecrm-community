@@ -374,23 +374,18 @@ public class OpportunityComponentList extends ArrayList {
    *@exception  SQLException  Description of the Exception
    */
   public void buildShortList(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
-
     createFilter(sqlFilter);
-
     sqlSelect.append(
-        "SELECT oc.id, oc.opp_id, oc.description, org.name as acct_name, oc.alertdate, oc.alert " +
+        "SELECT oc.opp_id, oc.id, oc.description, org.name as acct_name, oc.alertdate, oc.alert " +
         "FROM opportunity_component oc  " +
         "LEFT JOIN opportunity_header oh ON (oc.opp_id = oh.opp_id) " +
         "LEFT JOIN organization org ON (oh.acctlink = org.org_id) " +
         "WHERE oc.opp_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
+    PreparedStatement pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
     prepareFilter(pst);
-    rs = pst.executeQuery();
+    ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       OpportunityComponent thisOpp = new OpportunityComponent();
       thisOpp.setHeaderId(rs.getInt("opp_id"));
@@ -476,14 +471,8 @@ public class OpportunityComponentList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "oc.*, y.description as stagename, " +
-        "ct_comp_owner.namelast AS comp_o_namelast, ct_comp_owner.namefirst AS comp_o_namefirst, " +
-        "ct_comp_eb.namelast AS comp_eb_namelast, ct_comp_eb.namefirst AS comp_eb_namefirst, " +
-        "ct_comp_mb.namelast AS comp_mb_namelast, ct_comp_mb.namefirst AS comp_mb_namefirst " +
-        "FROM opportunity_component oc " +
-        "LEFT JOIN contact ct_comp_owner ON (oc.owner = ct_comp_owner.user_id) " +
-        "LEFT JOIN contact ct_comp_eb ON (oc.enteredby = ct_comp_eb.user_id) " +
-        "LEFT JOIN contact ct_comp_mb ON (oc.modifiedby = ct_comp_mb.user_id), " +
+        "oc.*, y.description as stagename " +
+        "FROM opportunity_component oc, " +
         "lookup_stage y " +
         "WHERE y.code = oc.stage " +
         "AND oc.opp_id > -1 ");

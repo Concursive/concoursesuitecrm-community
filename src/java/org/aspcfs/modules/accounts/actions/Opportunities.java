@@ -228,7 +228,7 @@ public final class Opportunities extends CFSModule {
       //get the header info
       if (headerId != null && !"-1".equals(headerId)) {
         OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
-        context.getRequest().setAttribute("OpportunityHeader", oppHeader);
+        context.getRequest().setAttribute("opportunityHeader", oppHeader);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -417,7 +417,7 @@ public final class Opportunities extends CFSModule {
       if (!(hasAuthority(context, thisHeader.getEnteredBy()) || thisHeader.isComponentOwner(db, headerId, this.getUserId(context)))) {
         return "PermissionError";
       }
-      context.getRequest().setAttribute("HeaderDetails", thisHeader);
+      context.getRequest().setAttribute("opportunityHeader", thisHeader);
 
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
@@ -600,7 +600,7 @@ public final class Opportunities extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      context.getRequest().setAttribute("HeaderDetails", thisHeader);
+      context.getRequest().setAttribute("opportunityHeader", thisHeader);
       if (!hasAuthority(context, thisHeader.getEnteredBy())) {
         return "PermissionError";
       }

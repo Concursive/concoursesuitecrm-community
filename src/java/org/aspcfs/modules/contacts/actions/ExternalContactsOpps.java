@@ -68,7 +68,7 @@ public final class ExternalContactsOpps extends CFSModule {
       }
       oppList.buildList(db);
       thisContact = new Contact(db, contactId);
-      context.getRequest().setAttribute("contactDetails", thisContact);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -130,7 +130,7 @@ public final class ExternalContactsOpps extends CFSModule {
       if (id != null && !"-1".equals(id)) {
         //Build the container item
         OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(id));
-        context.getRequest().setAttribute("OpportunityHeader", oppHeader);
+        context.getRequest().setAttribute("opportunityHeader", oppHeader);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -386,12 +386,12 @@ public final class ExternalContactsOpps extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      context.getRequest().setAttribute("contactDetails", thisContact);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
 
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, headerId);
-      context.getRequest().setAttribute("headerDetails", thisHeader);
+      context.getRequest().setAttribute("opportunityHeader", thisHeader);
 
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
@@ -448,7 +448,7 @@ public final class ExternalContactsOpps extends CFSModule {
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, headerId);
-      context.getRequest().setAttribute("contactDetails", thisContact);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -456,7 +456,7 @@ public final class ExternalContactsOpps extends CFSModule {
     }
     if (errorMessage == null) {
       boolean popup = "true".equals(context.getRequest().getParameter("popup"));
-      context.getRequest().setAttribute("headerDetails", thisHeader);
+      context.getRequest().setAttribute("opportunityHeader", thisHeader);
       addRecentItem(context, thisHeader);
       if(popup){
         return ("ModifyOppPopupOK");
@@ -494,7 +494,7 @@ public final class ExternalContactsOpps extends CFSModule {
         return "PermissionError";
       }
       thisComponent.checkEnabledOwnerAccount(db);
-      context.getRequest().setAttribute("contactDetails", thisContact);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
