@@ -443,39 +443,25 @@ public final class Leads extends CFSModule {
 
 
   /**
-   *  Action method to generate dashboard graphs, opportunities, and
-   *  hierarchy gross pipeline.
+   *  Action method to generate dashboard graphs, opportunities, and hierarchy
+   *  gross pipeline.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandDashboard(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-dashboard-view"))) {
-      if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+    if (!hasPermission(context, "pipeline-dashboard-view")) {
+      if (!hasPermission(context, "pipeline-opportunities-view")) {
         return ("PermissionError");
       }
       return (executeCommandViewOpp(context));
     }
     addModuleBean(context, "Dashboard", "Dashboard");
-
     int errorCode = 0;
-    int idToUse = 0;
-    java.util.Date d = new java.util.Date();
     String errorMessage = "";
-    String graphString = new String();
-    String fileName = "";
-    String checkFileName = "";
-
-    //Build the html graph combo box
-    HtmlSelect graphTypeSelect = new HtmlSelect();
-    graphTypeSelect.setSelectName("whichGraph");
-    graphTypeSelect.setJsEvent("onChange=\"document.forms[0].submit();\"");
-    graphTypeSelect.addItem("gmr", "Gross Monthly Revenue");
-    graphTypeSelect.addItem("ramr", "Risk Adjusted Monthly Revenue");
-    graphTypeSelect.addItem("cgmr", "Commission Gross Monthly Revenue");
-    graphTypeSelect.addItem("cramr", "Commission Risk Adj. Monthly Revenue");
 
     //Prepare the user id to base all data on
+    int idToUse = 0;
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = null;
     //Check if a specific user was selected
@@ -490,17 +476,16 @@ public final class Leads extends CFSModule {
     //Determine the user whose data is being shown, by default it's the current user
     if (overrideId > -1) {
       if (overrideId == getUserId(context)) {
-        //TODO: Can these just be removed?
-        context.getSession().setAttribute("leadsoverride", null);
-        context.getSession().setAttribute("leadsothername", null);
-        context.getSession().setAttribute("leadspreviousId", null);
+        context.getSession().removeAttribute("leadsoverride");
+        context.getSession().removeAttribute("leadsothername");
+        context.getSession().removeAttribute("leadspreviousId");
       }
     } else if (context.getSession().getAttribute("leadsoverride") != null) {
       overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("leadsoverride"), -1);
     } else {
       overrideId = thisUser.getUserId();
     }
-    
+
     //Check that the user hasAuthority for this oid
     if (hasAuthority(context, overrideId)) {
       idToUse = overrideId;
@@ -508,7 +493,7 @@ public final class Leads extends CFSModule {
       idToUse = thisUser.getUserId();
     }
     thisRec = this.getUser(context, idToUse);
-    
+
     //Track the id in the request and the session
     if (idToUse > -1 && idToUse != getUserId(context)) {
       context.getRequest().setAttribute("override", String.valueOf(idToUse));
@@ -518,81 +503,20 @@ public final class Leads extends CFSModule {
       context.getSession().setAttribute("leadsothername", thisRec.getContact().getNameFull());
       context.getSession().setAttribute("leadspreviousId", String.valueOf(thisRec.getManagerId()));
     }
-    
-    
-    UserList shortChildList = new UserList();
-    UserList fullChildList = new UserList();
-    UserList tempUserList = new UserList();
-    UserList linesToDraw = new UserList();
 
-    OpportunityList fullOppList = new OpportunityList();
-    OpportunityList tempOppList = new OpportunityList();
-    OpportunityList realFullOppList = new OpportunityList();
-
-    XYDataset categoryData = null;
-
+    //Determine the graph type to generate
+    String graphString = null;
     if (context.getRequest().getParameter("whichGraph") != null) {
       graphString = context.getRequest().getParameter("whichGraph");
+      context.getSession().setAttribute("whichGraph", graphString);
     } else if ((String) context.getRequest().getSession().getAttribute("whichGraph") != null) {
       graphString = (String) context.getRequest().getSession().getAttribute("whichGraph");
     } else {
       graphString = "gmr";
     }
-
-    graphTypeSelect.setDefaultKey(graphString);
-    graphTypeSelect.build();
-
-    if (context.getRequest().getParameter("whichGraph") != null) {
-      context.getSession().setAttribute("whichGraph", context.getRequest().getParameter("whichGraph"));
-    }
-
-    Connection db = null;
-    try {
-      db = this.getConnection(context);
-
-      shortChildList = thisRec.getShortChildList();
-      shortChildList.buildPipelineValues(db);
-
-      context.getRequest().setAttribute("ShortChildList", shortChildList);
-
-      fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
-
-      //get the opportunities that were entered by anyone in the full list
-      String range = fullChildList.getUserListIds(idToUse);
-
-      realFullOppList.setUnits("M");
-      realFullOppList.setOwnerIdRange(range);
-      realFullOppList.buildList(db);
-
-      //Generate the opportunities list for the idToUse
-      PagedListInfo dashboardListInfo = this.getPagedListInfo(context, "DashboardListInfo");
-      dashboardListInfo.setLink("Leads.do?command=Dashboard");
-      dashboardListInfo.setColumnToSortBy("x.description");
-      OpportunityList oppList = new OpportunityList();
-      oppList.setPagedListInfo(dashboardListInfo);
-      oppList.setOwner(idToUse);
-      oppList.setBuildComponentInfo(true);
-      oppList.buildList(db);
-      context.getRequest().setAttribute("OppList", oppList);
-
-      //filter out my opportunities for displaying on page
-      Iterator z = realFullOppList.iterator();
-
-      while (z.hasNext()) {
-        Opportunity tempOpp = (Opportunity) (z.next());
-        //try it out
-        //tempOppList is MY (or user drilled-to) Opps
-        if (tempOpp.getOwner() == idToUse) {
-          tempOppList.addElement(tempOpp);
-        }
-      }
-    } catch (Exception e) {
-      errorCode = 1;
-      errorMessage = e.toString();
-    } finally {
-      this.freeConnection(context, db);
-    }
-
+    
+    //Check the cache and see if the current graph exists and is valid
+    String checkFileName = null;
     if (thisRec.getIsValid() == true) {
       if (graphString.equals("gmr")) {
         checkFileName = thisRec.getGmr().getLastFileName();
@@ -605,85 +529,149 @@ public final class Leads extends CFSModule {
       }
     }
 
-    if (checkFileName.equals("")) {
+    //Build the html graph combo box
+    HtmlSelect graphTypeSelect = new HtmlSelect();
+    graphTypeSelect.setSelectName("whichGraph");
+    graphTypeSelect.setJsEvent("onChange=\"document.forms[0].submit();\"");
+    graphTypeSelect.addItem("gmr", "Gross Monthly Revenue");
+    graphTypeSelect.addItem("ramr", "Risk Adjusted Monthly Revenue");
+    graphTypeSelect.addItem("cgmr", "Commission Gross Monthly Revenue");
+    graphTypeSelect.addItem("cramr", "Commission Risk Adj. Monthly Revenue");
+    graphTypeSelect.setDefaultKey(graphString);
+
+    UserList fullChildList = new UserList();
+    UserList shortChildList = new UserList();
+    shortChildList = thisRec.getShortChildList();
+    OpportunityList realFullOppList = new OpportunityList();
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      
+      //Generate the opportunities pagedList for the idToUse, right of graph
+      PagedListInfo dashboardListInfo = this.getPagedListInfo(context, "DashboardListInfo");
+      dashboardListInfo.setLink("Leads.do?command=Dashboard");
+      dashboardListInfo.setColumnToSortBy("x.description");
+      OpportunityList oppList = new OpportunityList();
+      oppList.setPagedListInfo(dashboardListInfo);
+      oppList.setOwner(idToUse);
+      oppList.setBuildComponentInfo(true);
+      oppList.buildList(db);
+      context.getRequest().setAttribute("OppList", oppList);
+
+      //FullChildList is the complete user hierarchy for the selected user and
+      //is needed for the graph
+      if (checkFileName == null) {
+        fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
+        String range = fullChildList.getUserListIds(idToUse);
+  
+        //All of the opportunities that make up this graph calculation
+        realFullOppList.setUnits("M");
+        realFullOppList.setOwnerIdRange(range);
+        realFullOppList.buildList(db);
+      }
+      
+      //ShortChildList is used for showing user list, under graph
+      shortChildList.buildPipelineValues(db);
+    } catch (Exception e) {
+      errorCode = 1;
+      errorMessage = e.toString();
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    //Determine if a graph has to be generated
+    if (checkFileName != null) {
+      //Existing graph is good
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Leads-> Using cached chart");
+      }
+      context.getRequest().setAttribute("GraphFileName", checkFileName);
+    } else {
+      //Need to generate a new graph
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Leads-> Preparing the chart");
       }
-
-      //add up all stuff for children
+      //Filter out the selected user for graph
+      OpportunityList tempOppList = new OpportunityList();
+      Iterator z = realFullOppList.iterator();
+      while (z.hasNext()) {
+        Opportunity tempOpp = (Opportunity) (z.next());
+        if (tempOpp.getOwner() == idToUse) {
+          tempOppList.addElement(tempOpp);
+        }
+      }
+      //add up all opportunities for children
+      UserList tempUserList = new UserList();
       Iterator n = fullChildList.iterator();
       while (n.hasNext()) {
         User thisRecord = (User) n.next();
         tempUserList = prepareLines(thisRecord, realFullOppList, tempUserList);
       }
-
+      UserList linesToDraw = new UserList();
       linesToDraw = calculateLine(tempUserList, linesToDraw);
-
       //set my own
       tempUserList = prepareLines(thisRec, tempOppList, tempUserList);
-
       //add me up -- keep this
       linesToDraw = calculateLine(thisRec, linesToDraw);
-
-      categoryData = createCategoryDataset(linesToDraw, graphString);
-
+      XYDataset categoryData = createCategoryDataset(linesToDraw, graphString);
+      //Prepare the chart
       JFreeChart chart = ChartFactory.createXYChart("", "", "", categoryData, false);
-
       chart.setBackgroundPaint(Color.white);
-
       XYPlot bPlot = chart.getXYPlot();
-
-      VerticalNumberAxis vnAxis = (VerticalNumberAxis) chart.getXYPlot().getVerticalAxis();
+      //Vertical Axis characteristics
+      VerticalNumberAxis vnAxis = (VerticalNumberAxis) bPlot.getVerticalAxis();
       vnAxis.setAutoRangeIncludesZero(true);
       vnAxis.setTickMarksVisible(true);
       bPlot.setRangeAxis(vnAxis);
-
-      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) chart.getXYPlot().getHorizontalAxis();
-
+      //Horizontal Axis characteristics
+      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) bPlot.getHorizontalAxis();
       hnAxis.setAutoRangeIncludesZero(false);
       hnAxis.setAutoTickUnitSelection(false);
       hnAxis.setAutoRange(false);
-
+      //Grid characteristics
       Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
       Paint gridPaint = Color.gray;
-
+      //Horizontal Axis labels
+      Calendar cal = Calendar.getInstance();
       ValueAxis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
           hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
           hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
-          true, new Integer(0), new Range((d.getYear() + 1900), (d.getYear() + 1901)), false, new DateUnit(Calendar.MONTH, 1),
+          true, new Integer(0),
+          new Range(cal.get(Calendar.YEAR), (cal.get(Calendar.YEAR) + 1)), false,
+          new DateUnit(Calendar.MONTH, 1),
           new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint, false, null, null, null);
-
       myHorizontalDateAxis.setTickMarksVisible(true);
-
       try {
         bPlot.setDomainAxis(myHorizontalDateAxis);
       } catch (AxisNotCompatibleException err1) {
         System.out.println("AxisNotCompatibleException error!");
       }
-
-      //define the chart
-      int width = 275;
-      int height = 200;
-
+      //Draw the chart and save to file
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Leads-> Drawing the chart");
       }
+      int width = 275;
+      int height = 200;
       BufferedImage img = draw(chart, width, height);
 
       //Output the chart
       try {
-        String fs = System.getProperty("file.separator");
-
         String realPath = context.getServletContext().getRealPath("/");
         String filePath = realPath + "graphs" + fs;
 
         java.util.Date testDate = new java.util.Date();
-        java.util.Calendar testCal = java.util.Calendar.getInstance();
-        testCal.setTime(testDate);
-        testCal.add(java.util.Calendar.MONTH, +1);
-
-        fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
-
+        String fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
+        FileOutputStream foutstream = new FileOutputStream(filePath + fileName);
+        JPEGImageEncoder encoder =
+            JPEGCodec.createJPEGEncoder(foutstream);
+        JPEGEncodeParam param =
+            encoder.getDefaultJPEGEncodeParam(img);
+        param.setQuality(1.0f, true);
+        encoder.encode(img, param);
+        foutstream.close();
+        
+        //Update the cached filename
         if (graphString.equals("gmr")) {
           thisRec.getGmr().setLastFileName(fileName);
         } else if (graphString.equals("ramr")) {
@@ -693,33 +681,15 @@ public final class Leads extends CFSModule {
         } else if (graphString.equals("cramr")) {
           thisRec.getCramr().setLastFileName(fileName);
         }
-
         context.getRequest().setAttribute("GraphFileName", fileName);
-        FileOutputStream foutstream = new FileOutputStream(filePath + fileName);
-
-        JPEGImageEncoder encoder =
-            JPEGCodec.createJPEGEncoder(foutstream);
-        JPEGEncodeParam param =
-            encoder.getDefaultJPEGEncodeParam(img);
-        param.setQuality(1.0f, true);
-        encoder.encode(img, param);
-        foutstream.close();
       } catch (IOException e) {
+        e.printStackTrace(System.out);
       }
-
-    } else {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("This file is valid, and cached: " + checkFileName);
-      }
-      context.getRequest().setAttribute("GraphFileName", checkFileName);
     }
 
     if (errorCode == 0) {
-      context.getRequest().setAttribute("UserInfo", thisRec);
-      context.getRequest().setAttribute("FullChildList", fullChildList);
-      context.getRequest().setAttribute("FullOppList", fullOppList);
+      context.getRequest().setAttribute("ShortChildList", shortChildList);
       context.getRequest().setAttribute("GraphTypeList", graphTypeSelect);
-
       return ("DashboardOK");
     } else {
       //A System Error occurred
@@ -1430,12 +1400,9 @@ public final class Leads extends CFSModule {
    */
   protected BufferedImage draw(JFreeChart chart, int width, int height) {
     BufferedImage img =
-        new BufferedImage(width, height,
-        BufferedImage.TYPE_INT_RGB);
+        new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     Graphics2D g2 = img.createGraphics();
-
     chart.draw(g2, new Rectangle2D.Double((-21), 0, width + 21, height));
-
     g2.dispose();
     return img;
   }
@@ -1450,7 +1417,6 @@ public final class Leads extends CFSModule {
    *@return               Description of the Returned Value
    */
   private UserList prepareLines(User pertainsTo, OpportunityList oppList, UserList usersToGraph) {
-
     java.util.Date myDate = null;
     java.util.Calendar readDate = java.util.Calendar.getInstance();
     java.util.Calendar readDateAdjusted = java.util.Calendar.getInstance();
@@ -1503,11 +1469,8 @@ public final class Leads extends CFSModule {
 
           Iterator oppIterator = oppList.iterator();
           while (oppIterator.hasNext()) {
-
             Opportunity tempOpp = (Opportunity) oppIterator.next();
-
             if (tempOpp.getOwner() == pertainsTo.getId()) {
-
               myDate = tempOpp.getCloseDate();
               readDate.setTime(myDate);
 
@@ -1529,11 +1492,9 @@ public final class Leads extends CFSModule {
                   roundedMonth = 0;
                   roundedYear = passedYear + 1;
                 }
-
                 adjustTerms = true;
               }
-
-              valKey = ("" + roundedYear) + ("" + roundedMonth);
+              valKey = String.valueOf(roundedYear) + String.valueOf(roundedMonth);
 
               //get the individual graph values
               gmrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()));
@@ -1553,23 +1514,20 @@ public final class Leads extends CFSModule {
 
               //more terms
               if ((java.lang.Math.round(tempOpp.getTerms())) > 1) {
-
                 for (x = 1; x < (java.lang.Math.round(tempOpp.getTerms())); x++) {
                   readDate.add(java.util.Calendar.MONTH, +1);
                   if (((rightNow.before(readDate) || rightNowAdjusted.before(readDate)) && twelveMonths.after(readDate)) || rightNow.equals(readDate) || twelveMonths.equals(readDate)) {
-                    valKey = ("" + readDate.get(java.util.Calendar.YEAR)) + ("" + readDate.get(java.util.Calendar.MONTH));
-
+                    valKey = String.valueOf(readDate.get(java.util.Calendar.YEAR)) +
+                        String.valueOf(readDate.get(java.util.Calendar.MONTH));
                     if (!(adjustTerms)) {
                       pertainsTo.setGraphValues(valKey, gmrAddTerm, ramrAddTerm, cgmrAddTerm, cramrAddTerm);
                     }
                   }
-
                   adjustTerms = false;
                 }
               }
             }
           }
-
           pertainsTo.setIsValid(true, true);
         } catch (Exception e) {
           System.err.println("Leads-> Unwanted exception occurred: " + e.toString());
@@ -1580,9 +1538,7 @@ public final class Leads extends CFSModule {
         pertainsTo.doOpportunityUnlock();
       }
     }
-
     usersToGraph.addElement(pertainsTo);
-
     if (oppList.size() == 0) {
       return new UserList();
     } else {
@@ -1618,7 +1574,6 @@ public final class Leads extends CFSModule {
       String[] valKeys = thisUser.getGmr().getRange(12);
 
       iteratorDate.setTime(d);
-      //iteratorDate.add(java.util.Calendar.MONTH, +1);
       for (count = 0; count < 12; count++) {
         data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), iteratorDate.get(java.util.Calendar.MONTH), 0);
 
