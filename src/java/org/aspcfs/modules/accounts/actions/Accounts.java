@@ -14,7 +14,7 @@ import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 
 /**
- *  Description of the Class
+ *  Actions for the Accounts module
  *
  *@author     chris
  *@created    August 15, 2001
@@ -23,7 +23,7 @@ import com.zeroio.webutils.*;
 public final class Accounts extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  Default: not used
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -39,7 +39,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Reports: Displays a list of previously generated reports with view/delete/download options.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -49,6 +49,7 @@ public final class Accounts extends CFSModule {
     Connection db = null;
 
     FileItemList files = new FileItemList();
+    //want to show accounts reports only
     files.setLinkModuleId(Constants.ACCOUNTS_REPORTS);
     files.setLinkItemId(-1);
 
@@ -95,7 +96,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  DownloadCSVReport: Sends a copy of the CSV report to the user's local machine
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -154,7 +155,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  ShowReportHtml: Displays a preview of the selected report in HTML format
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -187,7 +188,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  GenerateForm: Displays the form that allows the user to select criteria and specify information for a new Accounts report
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -219,7 +220,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  ExportReport:  Creates both an HTML version (for preview) and a CSV version of the report
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -233,8 +234,6 @@ public final class Accounts extends CFSModule {
     String type = context.getRequest().getParameter("type");
     String ownerCriteria = context.getRequest().getParameter("criteria1");
     int folderId = Integer.parseInt(context.getRequest().getParameter("catId"));
-
-    //String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
 
     String filePath = this.getPath(context, "account-reports");
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
@@ -277,14 +276,6 @@ public final class Accounts extends CFSModule {
 	}
 
         oppReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
-
-	/**
-        if (ownerCriteria.equals("my")) {
-          oppReport.setOwner(this.getUserId(context));
-        } else if (ownerCriteria.equals("all")) {
-          oppReport.setOwnerIdRange(this.getUserRange(context));
-        }
-	*/
 
         oppReport.setJoinOrgs(true);
         oppReport.buildReportFull(db);
@@ -357,7 +348,8 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  DeleteReport:  Deletes previously generated report files (HTML and CSV) 
+   *  from server and all related file information from the project_files table.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -413,13 +405,14 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Search: Displays the Account search form
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    *@since
    */
   public String executeCommandSearch(ActionContext context) {
+    //reset the offset and current letter of the paged list in order to make sure we search ALL accounts
     PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
     orgListInfo.setCurrentLetter("");
     orgListInfo.setCurrentOffset(0);
@@ -430,7 +423,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Add: Displays the form used for adding a new Account to CFS
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -478,7 +471,8 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Details: Displays all details relating to the selected Account.  The user can also goto a modify page from this
+   *  form or delete the Account entirely from the database
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -521,7 +515,8 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Dashboard: The introductory page for the Accounts module.  Displays a calendar that maps out upcoming
+   *  events related to Accounts (contract end dates, alerts, etc.)
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -604,7 +599,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  View: Lists Accounts that are in the system.  Can be limited based on criteria selection
    *
    *@param  context  Description of Paramet47hu *@return Description of the
    *      Returned Value
@@ -657,7 +652,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  ViewTickets: Displays Ticket history (open and closed) for a particular Account.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -696,7 +691,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Insert: Inserts a new Account into the CFS database.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -748,7 +743,8 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Update:  Updates the Organization table to reflect user-entered changes/modifications to the currently
+   *  selected Account
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -800,7 +796,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Delete: Deletes an Account from the Organization table
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -838,7 +834,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Modify:  Displays the form used for modifying the information of the currently selected Account
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -906,7 +902,8 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Fields: Shows a list of custom field records that are located "within" the selected Custom Folder.
+   *  Also shows the details of a particular Custom Field Record when it is selected (details page)
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -993,7 +990,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  AddFolderRecord: Displays the form for inserting a new custom field record for the selected Account.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -1037,7 +1034,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  ModifyFields: Displays the modify form for the selected Custom Field Record.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -1084,7 +1081,8 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  UpdateFields:  Performs the actual update of the selected Custom Field Record based on user-submitted
+   *  information from the modify form.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -1160,7 +1158,7 @@ public final class Accounts extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  InsertFields:  Performs the actual insert of a new Custom Field Record.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
