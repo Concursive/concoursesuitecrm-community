@@ -124,9 +124,9 @@ public class Contact extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   private void queryRecord(Connection db, int contactId) throws SQLException {
-    Statement st = null;
-    ResultSet rs = null;
-
+    if (contactId < 0) {
+      throw new SQLException("Contact ID not specified.");
+    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT c.*, d.description as departmentname, t.description as type_name, " +
@@ -141,25 +141,19 @@ public class Contact extends GenericBean {
         "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
-        "WHERE c.contact_id > -1 ");
-
-    if (contactId > -1) {
-      sql.append("AND c.contact_id = " + contactId + " ");
-    } else {
-      throw new SQLException("Contact ID not specified.");
-    }
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+        "WHERE c.contact_id = ? ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(1, contactId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     } else {
       rs.close();
-      st.close();
+      pst.close();
       throw new SQLException("Contact record not found.");
     }
     rs.close();
-    st.close();
+    pst.close();
 
     phoneNumberList.setContactId(this.getId());
     phoneNumberList.buildList(db);
@@ -2029,35 +2023,25 @@ public class Contact extends GenericBean {
    *@return                   The contactType value
    *@exception  SQLException  Description of the Exception
    */
-  public static int getContactType(Connection db, int id) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
+  public static int getContactType(Connection db, int contactId) throws SQLException {
     int typeId = -1;
 
     try {
-      if (id == -1) {
+      if (contactId == -1) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Contact -> Invalid Contact ID");
         }
       }
 
-      StringBuffer sql = new StringBuffer();
       db.setAutoCommit(false);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Contact-> Retrieving contact");
-      }
-
-      sql.append(
-          "SELECT user_id,type_id " +
-          "FROM contact " +
-          "where contact_id =" + id + " ");
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Contact -> GetContactType Query --\n\t" + sql.toString());
-      }
       int i = 0;
-      Statement st = db.createStatement();
-      pst = db.prepareStatement(sql.toString());
-      rs = pst.executeQuery();
+    
+      PreparedStatement pst = db.prepareStatement(
+        "SELECT user_id, type_id " +
+        "FROM contact " +
+        "where contact_id = ? ");
+      pst.setInt(1, contactId);
+      ResultSet rs = pst.executeQuery();
       if (rs.next()) {
         typeId = rs.getInt("type_id");
         if (rs.wasNull()) {
@@ -2067,9 +2051,8 @@ public class Contact extends GenericBean {
 
       pst.close();
       rs.close();
-      st.close();
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("Contact -> ContactID: " + id);
+        System.out.println("Contact -> ContactID: " + contactId);
         System.out.println("Contact -> Type id is " + typeId);
       }
       db.commit();
@@ -2093,16 +2076,18 @@ public class Contact extends GenericBean {
    *@since                    1.30?
    */
   private boolean hasRelatedRecords(Connection db) throws SQLException {
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT count(*) as count " +
-        "FROM opportunity " +
-        "WHERE contactlink = " + this.getId());
-    rs.next();
-    int recordCount = rs.getInt("count");
+    int recordCount = -1;
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT count(*) as count " +
+      "FROM opportunity " +
+      "WHERE contactlink = ? ");
+    pst.setInt(1, this.getId());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordCount = rs.getInt("count");
+    }
     rs.close();
-    st.close();
-
+    pst.close();
     return (recordCount > 0);
   }
 
