@@ -35,4 +35,85 @@
       <link value="AccountsDocuments.do?command=View&amp;orgId=$orgId"/>
     </submenu>
   </container>
+  
+  <!-- Submenu used in the Contacts module -->
+  <container name="contacts">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="ExternalContacts.do?command=ContactDetails&amp;id=$id"/>
+    </submenu>
+    <submenu name="folders">
+      <long_html value="Folders"/>
+      <permission value="contacts-external_contacts-folders-view"/>
+      <link value="ExternalContacts.do?command=Fields&amp;contactId=$id"/>
+    </submenu>
+    <submenu name="calls">
+      <long_html value="Calls"/>
+      <permission value="contacts-external_contacts-calls-view"/>
+      <link value="ExternalContactsCalls.do?command=View&amp;contactId=$id"/>
+    </submenu>
+    <submenu name="messages">
+      <long_html value="Messages"/>
+      <permission value="contacts-external_contacts-messages-view"/>
+      <link value="ExternalContacts.do?command=ViewMessages&amp;contactId=$id"/>
+    </submenu>
+    <submenu name="opportunities">
+      <long_html value="Opportunities"/>
+      <permission value="contacts-external_contacts-opportunities-view"/>
+      <link value="ExternalContactsOpps.do?command=ViewOpps&amp;contactId=$id"/>
+    </submenu>
+  </container>
+  
+  <!-- Submenu used in the Opportunities (Pipeline) module -->
+  <container name="opportunities">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="Leads.do?command=DetailsOpp&amp;id=$id"/>
+    </submenu>
+    <submenu name="calls">
+      <long_html value="Calls"/>
+      <permission value="pipeline-opportunities-calls-view"/>
+      <link value="LeadsCalls.do?command=View&amp;oppId=$id"/>
+    </submenu>
+    <submenu name="documents">
+      <long_html value="Documents"/>
+      <permission value="pipeline-opportunities-documents-view"/>
+      <link value="LeadsDocuments.do?command=View&amp;oppId=$id"/>
+    </submenu>
+  </container>
+  
+  <!-- Submenu used in the Communications module -->
+  <container name="communications">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="CampaignManager.do?command=ViewDetails&amp;id=$id"/>
+    </submenu>
+    <submenu name="groups">
+      <long_html value="Groups"/>
+      <permission value="campaign-campaigns-groups-view"/>
+      <link value="CampaignManager.do?command=ViewGroups&amp;id=$id"/>
+    </submenu>
+    <submenu name="message">
+      <long_html value="Message"/>
+      <permission value="campaign-campaigns-messages-view"/>
+      <link value="CampaignManager.do?command=ViewMessage&amp;id=$id"/>
+    </submenu>
+    <submenu name="schedule">
+      <long_html value="Schedule"/>
+      <permission value="campaign-campaigns-view"/>
+      <link value="CampaignManager.do?command=ViewSchedule&amp;id=$id"/>
+    </submenu>
+  </container>
 </application>

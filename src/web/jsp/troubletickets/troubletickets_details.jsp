@@ -25,9 +25,9 @@
 		<td colspan=2 bgColor="white">
 		
 		<% if (TicketDetails.getClosed() != null) { %>
-		        <dhv:permission name="tickets-tickets-edit"><input type=button value="Reopen"></dhv:permission>
+		        <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen"></dhv:permission>
 		<%} else {%>
-		<dhv:permission name="tickets-tickets-edit"><input type=submit value="Modfiy"></dhv:permission>
+		<dhv:permission name="tickets-tickets-edit"><input type="submit" value="Modify"></dhv:permission>
 		<dhv:permission name="tickets-tickets-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/TroubleTickets.do?command=Delete&id=<%= TicketDetails.getId()%>'"></dhv:permission>
 		<%}%>
 		

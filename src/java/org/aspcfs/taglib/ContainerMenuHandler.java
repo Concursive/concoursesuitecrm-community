@@ -1,3 +1,4 @@
+//http://java.oreilly.com/news/javaintl_0701.html#ex1
 package com.darkhorseventures.taglib;
 
 import javax.servlet.jsp.*;
@@ -19,17 +20,21 @@ public class ContainerMenuHandler extends TagSupport {
   public void setName(String tmp) { this.name = tmp; }
   public void setSelected(String tmp) { this.selected = tmp; }
   public void setParam(String tmp) {
+    String param = tmp.substring(0, tmp.indexOf("="));
+    String value = tmp.substring(tmp.indexOf("=") + 1);
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("ContainerMenuHandler: Input-> " + tmp);
+      System.out.println("ContainerMenuHandler: Param-> " + param);
+      System.out.println("ContainerMenuHandler: Value-> " + value);
     }
-    StringTokenizer st = new StringTokenizer(tmp, "=");
+    params.put("$" + param, value);
+/*     StringTokenizer st = new StringTokenizer(tmp, "=");
     if (st.hasMoreTokens()) {
       String param = "$" + st.nextToken();
       if (st.hasMoreTokens()) {
         String value = st.nextToken();
         params.put(param, value);
       }
-    }
+    } */
   }
 
   public final int doStartTag() throws JspException {

@@ -2,7 +2,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="details" action="/AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
+<form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
 <a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>">Back to Ticket List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -11,21 +11,17 @@
     </td>
   </tr>
   <tr class="containerMenu">
-      <td>
-      <a href="/Accounts.do?command=Details&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Details</font></a><dhv:permission name="accounts-accounts-folders-view"> | 
-      <a href="/Accounts.do?command=Fields&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Folders</font></a></dhv:permission><dhv:permission name="accounts-accounts-contacts-view"> |
-      <a href="Contacts.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Contacts</font></a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-view"> | 
-      <a href="Opportunities.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Opportunities</font></a></dhv:permission><dhv:permission name="accounts-accounts-tickets-view"> | 
-      <a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>"><font color="#0000FF">Tickets</font></a></dhv:permission><dhv:permission name="accounts-accounts-documents-view"> |
-      <a href="AccountsDocuments.do?command=View&orgId=<%= TicketDetails.getOrgId() %>"><font color="#000000">Documents</font></a></dhv:permission>
+    <td>
+      <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
+      <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" />
     </td>
   </tr>
   <tr>
   	<td class="containerBack">
 <% if (TicketDetails.getClosed() != null) { %>
-      <dhv:permission name="accounts-accounts-tickets-edit"><input type=button value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font></dhv:permission>
 <%} else {%>
-      <dhv:permission name="accounts-accounts-tickets-edit"><input type=submit value="Modfiy"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type="submit" value="Modify"></dhv:permission>
       <dhv:permission name="accounts-accounts-tickets-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>'"></dhv:permission>
 <%}%>
 <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br>&nbsp;</dhv:permission>
@@ -215,9 +211,9 @@
 </table>
 <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br></dhv:permission>
 <% if (TicketDetails.getClosed() != null) { %>
-      <dhv:permission name="accounts-accounts-tickets-edit"><input type=button value="Reopen"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Reopen"></dhv:permission>
 <%} else {%>
-      <dhv:permission name="accounts-accounts-tickets-edit"><input type=submit value="Modfiy"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-edit"><input type="submit" value="Modify"></dhv:permission>
       <dhv:permission name="accounts-accounts-tickets-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>'"></dhv:permission>
 <%}%>
 

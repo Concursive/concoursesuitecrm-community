@@ -46,9 +46,8 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Details</font></a> | 
-      <a href="/LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Calls</font></a> |
-      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Documents</font></a>
+      <% String param1 = "id=" + OpportunityDetails.getId(); %>      
+      <dhv:container name="opportunities" selected="details" param="<%= param1 %>" />
     </td>
   </tr>
   <tr>

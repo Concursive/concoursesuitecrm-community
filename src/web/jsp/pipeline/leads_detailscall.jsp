@@ -22,9 +22,8 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#000000">Details</font></a><dhv:permission name="pipeline-opportunities-calls-view"> | 
-      <a href="LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Calls</font></a></dhv:permission><dhv:permission name="pipeline-opportunities-documents-view"> |
-      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Documents</font></a></dhv:permission>
+      <% String param1 = "id=" + OpportunityDetails.getId(); %>      
+      <dhv:container name="opportunities" selected="calls" param="<%= param1 %>" />
     </td>
   </tr>
   <tr>

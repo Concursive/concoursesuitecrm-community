@@ -306,7 +306,7 @@
     <page title="Communications Manager"/>
     <permission value="campaign-view"/>
     <long_html value="Communications Manager"/>
-    <short_html value="Communications Manager"/>
+    <short_html value="Communications"/>
     <link value="/CampaignManager.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-comm-on.gif" off="menu-comm-off.gif" rollover=""/>
     

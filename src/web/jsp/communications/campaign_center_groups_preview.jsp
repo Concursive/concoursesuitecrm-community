@@ -15,10 +15,8 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><font color="#000000">Details</font></a><dhv:permission name="campaign-campaigns-groups-view"> |
-      <a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>"><font color="#0000FF">Groups</font></a></dhv:permission><dhv:permission name="campaign-campaigns-messages-view"> | 
-      <a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>"><font color="#000000">Message</font></a></dhv:permission><dhv:permission name="campaign-campaigns-view"> | 
-      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><font color="#000000">Schedule</font></a></dhv:permission>
+      <% String param1 = "id=" + Campaign.getId(); %>      
+      <dhv:container name="communications" selected="message" param="<%= param1 %>" />
     </td>
   </tr>
   <tr>

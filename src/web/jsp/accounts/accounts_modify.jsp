@@ -48,13 +48,8 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><font color="#0000FF">Details</font></a> | 
-      <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Folders</font></a> |
-      <font color="#787878">Activities</font> | 
-      <a href = "Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Contacts</font></a> | 
-      <a href = "Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Opportunities</font></a> | 
-      <a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>"><font color="#000000">Tickets</font></a> |
-      <a href="AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><font color="#000000">Documents</font></a>
+      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+      <dhv:container name="accounts" selected="details" param="<%= param1 %>" />
     </td>
   </tr>
   <tr>

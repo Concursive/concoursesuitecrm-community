@@ -13,11 +13,8 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><font color="#000000">Details</font></a> |
-      <a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>"><font color="#000000">Groups</font></a> | 
-      <a href="/CampaignManager.do?command=ViewRecipients&id=<%= Campaign.getId() %>"><font color="#0000FF">Recipients</font></a> | 
-      <a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>"><font color="#000000">Message</font></a> | 
-      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><font color="#000000">Schedule</font></a>
+      <% String param1 = "id=" + Campaign.getId(); %>      
+      <dhv:container name="communications" selected="recipients" param="<%= param1 %>" />
     </td>
   </tr>
   <tr>
