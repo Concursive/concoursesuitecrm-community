@@ -1,4 +1,4 @@
-package org.aspcfs.modules.contacts.actions;
+package org.aspcfs.modules.accounts.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.database.ConnectionElement;
@@ -15,18 +15,19 @@ import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.apps.transfer.reader.mapreader.*;
 
 /**
- *  Web Actions for Contacts -> Imports
+ *  Web Actions for Accounts -> Imports
  *
  *@author     Mathur
- *@created    March 30, 2004
+ *@created    June 21, 2004
  *@version    $id:exp$
  */
-public final class ExternalContactsImports extends CFSModule {
+public final class AccountContactsImports extends CFSModule {
 
   /**
    *  Default Action: View Imports
@@ -46,12 +47,12 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-view"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
       return ("PermissionError");
     }
     Connection db = null;
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ExternalContactsImportListInfo");
-    pagedListInfo.setLink("ExternalContactsImports.do?command=View");
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "AccountContactsImportListInfo");
+    pagedListInfo.setLink("AccountContactsImports.do?command=View");
     try {
       db = this.getConnection(context);
 
@@ -64,7 +65,7 @@ public final class ExternalContactsImports extends CFSModule {
 
       //build list
       ImportList thisList = new ImportList();
-      thisList.setType(Constants.IMPORT_CONTACTS);
+      thisList.setType(Constants.IMPORT_ACCOUNT_CONTACTS);
       thisList.setPagedListInfo(pagedListInfo);
       if ("my".equals(pagedListInfo.getListView())) {
         thisList.setEnteredIdRange(this.getUserRange(context));
@@ -95,7 +96,7 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandNew(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-add"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
       return ("PermissionError");
     }
 
@@ -110,19 +111,19 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-add"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
       return ("PermissionError");
     }
 
     Connection db = null;
     boolean contactRecordInserted = false;
     boolean fileRecordInserted = false;
-    
+
     ContactImport thisImport = (ContactImport) context.getFormBean();
     try {
       db = getConnection(context);
 
-      String filePath = this.getPath(context, "contacts");
+      String filePath = this.getPath(context, "accounts");
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
@@ -136,7 +137,7 @@ public final class ExternalContactsImports extends CFSModule {
       //set import properties
       thisImport.setEnteredBy(this.getUserId(context));
       thisImport.setModifiedBy(this.getUserId(context));
-      thisImport.setType(Constants.IMPORT_CONTACTS);
+      thisImport.setType(Constants.IMPORT_ACCOUNT_CONTACTS);
       thisImport.setName(subject);
       thisImport.setDescription(description);
       contactRecordInserted = thisImport.insert(db);
@@ -147,7 +148,7 @@ public final class ExternalContactsImports extends CFSModule {
           FileInfo newFileInfo = (FileInfo) parts.get("id");
           //Insert a file description record into the database
           FileItem thisItem = new FileItem();
-          thisItem.setLinkModuleId(Constants.IMPORT_CONTACTS);
+          thisItem.setLinkModuleId(Constants.IMPORT_ACCOUNT_CONTACTS);
           thisItem.setLinkItemId(thisImport.getId());
           thisItem.setEnteredBy(getUserId(context));
           thisItem.setModifiedBy(getUserId(context));
@@ -172,8 +173,8 @@ public final class ExternalContactsImports extends CFSModule {
         thisImport = new ContactImport(db, thisImport.getId());
         thisImport.buildFileDetails(db);
       } else if (contactRecordInserted) {
-          thisImport.delete(db);
-          thisImport.setId(-1);
+        thisImport.delete(db);
+        thisImport.setId(-1);
       }
 
       context.getRequest().setAttribute("ImportDetails", thisImport);
@@ -198,7 +199,7 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-view"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -243,7 +244,7 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInitValidate(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-add"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
       return ("PermissionError");
     }
 
@@ -258,14 +259,14 @@ public final class ExternalContactsImports extends CFSModule {
 
       //load the property map
       String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty("file.separator") + "cfs-import-properties.xml";
-      PropertyMap thisMap = new PropertyMap(propertyFile, "generalContact");
+      PropertyMap thisMap = new PropertyMap(propertyFile, "accountContact");
 
       //load the file item
       FileItem importFile = thisImport.getFile();
       context.getRequest().setAttribute("FileItem", importFile);
 
       //get path to import file
-      String filePath = this.getPath(context, "contacts") + getDatePath(importFile.getModified()) + importFile.getFilename();
+      String filePath = this.getPath(context, "accounts") + getDatePath(importFile.getModified()) + importFile.getFilename();
 
       if (FileUtils.fileExists(filePath)) {
         //Run the validator(only maps fields to properties in this iteration)
@@ -298,7 +299,7 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandValidate(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-add"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
       return ("PermissionError");
     }
 
@@ -314,13 +315,13 @@ public final class ExternalContactsImports extends CFSModule {
 
       //load the property map
       String propertyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + System.getProperty("file.separator") + "cfs-import-properties.xml";
-      PropertyMap thisMap = new PropertyMap(propertyFile, "generalContact");
+      PropertyMap thisMap = new PropertyMap(propertyFile, "accountContact");
 
       //load the file item
       FileItem importFile = thisImport.getFile();
       context.getRequest().setAttribute("FileItem", importFile);
 
-      String filePath = this.getPath(context, "contacts") + getDatePath(importFile.getModified()) + importFile.getFilename();
+      String filePath = this.getPath(context, "accounts") + getDatePath(importFile.getModified()) + importFile.getFilename();
 
       if (FileUtils.fileExists(filePath)) {
         //Run the validator(only maps fields to properties in this iteration)
@@ -374,6 +375,7 @@ public final class ExternalContactsImports extends CFSModule {
       if (activeImport == null) {
         //run
         thisImport.setPropertyMap(validator.getPropertyMap());
+        thisImport.setLookupAccount(true);
         thisImport.setFilePath(validator.getFilePath());
         thisImport.setUserId(this.getUserId(context));
         thisImport.setConnectionElement(ce);
@@ -398,7 +400,7 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandCancel(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-add"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
       return ("PermissionError");
     }
 
@@ -436,7 +438,7 @@ public final class ExternalContactsImports extends CFSModule {
     Connection db = null;
     HtmlDialog htmlDialog = new HtmlDialog();
 
-    if (!(hasPermission(context, "contacts-external_contacts-imports-delete"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-delete"))) {
       return ("PermissionError");
     }
 
@@ -450,11 +452,11 @@ public final class ExternalContactsImports extends CFSModule {
       if (dependencies.size() == 0) {
         htmlDialog.setTitle("Confirm");
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsImports.do?command=Delete&importId=" + importId + "'");
+        htmlDialog.setDeleteUrl("javascript:window.location.href='AccountContactsImports.do?command=Delete&importId=" + importId + "'");
       } else {
         htmlDialog.setTitle("Confirm");
         htmlDialog.setHeader("Are you sure you want to delete this item:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContactsImports.do?command=Delete&importId=" + importId + "'");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountContactsImports.do?command=Delete&importId=" + importId + "'");
         htmlDialog.addButton("No", "javascript:parent.window.close()");
       }
     } catch (Exception e) {
@@ -476,7 +478,7 @@ public final class ExternalContactsImports extends CFSModule {
    */
   public String executeCommandDelete(ActionContext context) {
     Connection db = null;
-    if (!(hasPermission(context, "contacts-external_contacts-imports-delete"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-delete"))) {
       return ("PermissionError");
     }
 
@@ -488,8 +490,8 @@ public final class ExternalContactsImports extends CFSModule {
 
       if (recordDeleted > 0) {
         //delete the files
-        FileItem importFile = new FileItem(db, thisImport.getId(), Constants.IMPORT_CONTACTS);
-        importFile.delete(db, this.getPath(context, "contacts"));
+        FileItem importFile = new FileItem(db, thisImport.getId(), Constants.IMPORT_ACCOUNT_CONTACTS);
+        importFile.delete(db, this.getPath(context, "accounts"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -497,7 +499,7 @@ public final class ExternalContactsImports extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "ExternalContactsImports.do?command=View");
+    context.getRequest().setAttribute("refreshUrl", "AccountContactsImports.do?command=View");
     return this.getReturn(context, "Delete");
   }
 
@@ -510,7 +512,7 @@ public final class ExternalContactsImports extends CFSModule {
    */
   public String executeCommandDownload(ActionContext context) {
 
-    if (!(hasPermission(context, "contacts-external_contacts-imports-view"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
       return ("PermissionError");
     }
 
@@ -527,7 +529,7 @@ public final class ExternalContactsImports extends CFSModule {
     try {
       db = getConnection(context);
       thisImport = new ContactImport(db, Integer.parseInt(importId));
-      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(importId), Constants.IMPORT_CONTACTS);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(importId), Constants.IMPORT_ACCOUNT_CONTACTS);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -543,7 +545,7 @@ public final class ExternalContactsImports extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "contacts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "accounts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -558,7 +560,7 @@ public final class ExternalContactsImports extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("ExternalContactsImports-> Trying to send a file that does not exist");
+          System.err.println("AccountContactsImports-> Trying to send a file that does not exist");
           context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
           context.getRequest().setAttribute("ImportDetails", thisImport);
           context.getRequest().setAttribute("FileItem", itemToDownload);
@@ -567,7 +569,7 @@ public final class ExternalContactsImports extends CFSModule {
       } else {
         FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "contacts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "accounts") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -578,7 +580,7 @@ public final class ExternalContactsImports extends CFSModule {
           itemToDownload.updateCounter(db);
         } else {
           db = null;
-          System.err.println("ExternalContactsImports-> Trying to send a file that does not exist");
+          System.err.println("AccountContactsImports-> Trying to send a file that does not exist");
           context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
           return (executeCommandView(context));
         }
@@ -608,7 +610,7 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandApprove(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-edit"))) {
       return ("PermissionError");
     }
 
@@ -641,14 +643,14 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandViewResults(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-view"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
       return ("PermissionError");
     }
 
     Connection db = null;
     String importId = context.getRequest().getParameter("importId");
-    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ExternalContactsImportResultsInfo");
-    pagedListInfo.setLink("ExternalContactsImports.do?command=ViewResults&importId=" + importId);
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "AccountContactsImportResultsInfo");
+    pagedListInfo.setLink("AccountContactsImports.do?command=ViewResults&importId=" + importId);
 
     try {
       db = this.getConnection(context);
@@ -679,7 +681,7 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandContactDetails(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-view"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
       return ("PermissionError");
     }
 
@@ -710,7 +712,7 @@ public final class ExternalContactsImports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDeleteContact(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-imports-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-imports-edit"))) {
       return ("PermissionError");
     }
 
@@ -723,6 +725,10 @@ public final class ExternalContactsImports extends CFSModule {
       Contact thisContact = new Contact(db, Integer.parseInt(contactId));
       if (thisContact.getStatusId() != Import.PROCESSED_APPROVED) {
         recordDeleted = thisContact.delete(db);
+        Organization thisOrg = new Organization(db, thisContact.getOrgId());
+        if(thisOrg.getImportId() > 0 && !thisOrg.hasContacts(db)){
+          thisOrg.delete(db, this.getPath(context, "accounts"));
+        }
         if (!recordDeleted) {
           context.getRequest().setAttribute("ContactDetails", thisContact);
         }

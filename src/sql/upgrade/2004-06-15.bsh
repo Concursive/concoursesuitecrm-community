@@ -119,6 +119,20 @@ permission.setActive(false);
 permission.setViewpoints(false);
 permission.insert(db);
 
+Permission permission = new Permission();
+permission.setCategoryId(category.getId());
+permission.setName("accounts-accounts-contacts-imports");
+permission.setDescription("Import Accounts/Contacts");
+permission.setView(true);
+permission.setAdd(true);
+permission.setEdit(true);
+permission.setDelete(true);
+permission.setPermissionLevel(260);
+permission.setEnabled(true);
+permission.setActive(true);
+permission.setViewpoints(false);
+permission.insert(db);
+
 // Contacts
 PermissionCategory category = new PermissionCategory(db, PermissionCategory.lookupId(db, "Contacts"));
 

@@ -55,6 +55,7 @@ public class Organization extends GenericBean {
   private int owner = -1;
   private int duplicateId = -1;
   private int importId = -1;
+  private int statusId = -1;
 
   private OrganizationAddressList addressList = new OrganizationAddressList();
   private OrganizationPhoneNumberList phoneNumberList = new OrganizationPhoneNumberList();
@@ -234,6 +235,36 @@ public class Organization extends GenericBean {
    */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the Organization object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(int tmp) {
+    this.statusId = tmp;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the Organization object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(String tmp) {
+    this.statusId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the statusId attribute of the Organization object
+   *
+   *@return    The statusId value
+   */
+  public int getStatusId() {
+    return statusId;
   }
 
 
@@ -1901,20 +1932,24 @@ public class Organization extends GenericBean {
    *
    *@param  db                Description of the Parameter
    *@param  lookupName        Description of the Parameter
+   *@param  importId          Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public static int lookupAccount(Connection db, String lookupName) throws SQLException {
+  public static int lookupAccount(Connection db, String lookupName, int importId) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int lookupId = -1;
     String sqlSelect =
         "SELECT org_id " +
-        "FROM organization " +
-        "WHERE lower(organization.name) = ? ";
+        "FROM organization o " +
+        "WHERE lower(o.name) = ? AND (o.status_id IS NULL OR o.status_id = ? OR (o.status_id = ? AND o.import_id = ?) ) ";
     int i = 0;
     pst = db.prepareStatement(sqlSelect);
     pst.setString(++i, lookupName.toLowerCase());
+    pst.setInt(++i, Import.PROCESSED_APPROVED);
+    pst.setInt(++i, Import.PROCESSED_UNAPPROVED);
+    pst.setInt(++i, importId);
     rs = pst.executeQuery();
     if (rs.next()) {
       lookupId = rs.getInt("org_id");
@@ -1948,12 +1983,24 @@ public class Organization extends GenericBean {
       if (entered != null) {
         sql.append("entered, ");
       }
+      if (statusId > -1) {
+        sql.append("status_id, ");
+      }
+      if (importId > -1) {
+        sql.append("import_id, ");
+      }
       if (modified != null) {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
+        sql.append("?, ");
+      }
+      if (statusId > -1) {
+        sql.append("?, ");
+      }
+      if (importId > -1) {
         sql.append("?, ");
       }
       if (modified != null) {
@@ -1979,6 +2026,12 @@ public class Organization extends GenericBean {
 
       if (entered != null) {
         pst.setTimestamp(++i, entered);
+      }
+      if (statusId > -1) {
+        pst.setInt(++i, this.getStatusId());
+      }
+      if (importId > -1) {
+        pst.setInt(++i, this.getImportId());
       }
       if (modified != null) {
         pst.setTimestamp(++i, modified);
@@ -2408,6 +2461,50 @@ public class Organization extends GenericBean {
 
 
   /**
+   *  Approves all records for a specific import
+   *
+   *@param  db                Description of the Parameter
+   *@param  importId          Description of the Parameter
+   *@param  status            Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int updateImportStatus(Connection db, int importId, int status) throws SQLException {
+    int count = 0;
+    boolean commit = true;
+
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      String sql = "UPDATE organization " +
+          "SET status_id = ? " +
+          "WHERE import_id = ? ";
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, status);
+      pst.setInt(++i, importId);
+      count = pst.executeUpdate();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return count;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -2463,6 +2560,33 @@ public class Organization extends GenericBean {
       }
     }
     return true;
+  }
+
+
+  /**
+   *  Checks to see if the this account has any associated contacts
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean hasContacts(Connection db) throws SQLException {
+    int recordCount = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) as recordcount " +
+        "FROM contact " +
+        "WHERE org_id = ? ");
+    pst.setInt(1, this.getOrgId());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordCount = rs.getInt("recordCount");
+    }
+    rs.close();
+    pst.close();
+    if(recordCount > 0){
+      return true;
+    }
+    return false;
   }
 
 
@@ -2543,7 +2667,8 @@ public class Organization extends GenericBean {
     nameSuffix = rs.getString("nameSuffix");
 
     //import information
-    importId = rs.getInt("import_id");
+    importId = DatabaseUtils.getInt(rs, "import_id");
+    statusId = DatabaseUtils.getInt(rs, "status_id");
 
     //contact table
     ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));

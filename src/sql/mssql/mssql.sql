@@ -1198,7 +1198,8 @@ CREATE TABLE [organization] (
 	[namefirst] [varchar] (80) NULL ,
 	[namemiddle] [varchar] (80) NULL ,
 	[namesuffix] [varchar] (80) NULL ,
-	[import_id] [int] NULL 
+	[import_id] [int] NULL ,
+	[status_id] [int] NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 

@@ -6,7 +6,6 @@
         <property>id</property>
         <property aliases="accesstype,access_type" displayName="Access Type">accessType</property>
         <property aliases="title,author,title_id" displayName="Title">title</property>
-        <property aliases="department" displayName="Department">department</property>
         <property aliases="company,company name,company_name,account name" displayName="Company">company</property>
         <property aliases="salutation" displayName="Salutation">nameSalutation</property>
         <property aliases="first name,first_name,firstname" displayName="First Name">nameFirst</property>
@@ -22,7 +21,49 @@
         <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>
         <property aliases="enabled" displayName="Enabled">enabled</property>
         <property aliases="owner,owned_by" displayName="Owner">owner</property>
-        <property aliases="custom" displayName="Custom">custom1</property>
+        <property aliases="url" displayName="Url">url</property>
+        <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered">entered</property>
+        <property aliases="modified,modified_date,date_modified" displayName="Modified">modified</property>
+        <property aliases="listsalutation,list_salutation" displayName="List Salutation">listSalutation</property>
+        <property aliases="contact_source,contactsource,nameContactSource" displayName="Contact Source">nameContactSource</property>
+     </properties>
+     <dependencies>
+      <dependency id="contactEmail">
+        <properties>email,type</properties>
+        <displayName>Email</displayName>
+      </dependency>
+      <dependency id="contactPhone">
+        <properties>number,extension,type</properties>
+        <enableGroups>true</enableGroups>
+        <displayName>Phone</displayName>
+      </dependency>
+      <dependency id="contactAddress">
+        <properties>streetAddressLine1,streetAddressLine2,streetAddressLine3,city,state,zip,country,type</properties>
+        <enableGroups>true</enableGroups>
+        <displayName>Address</displayName>
+      </dependency>
+     </dependencies>
+    </map>
+    <map class="org.aspcfs.modules.contacts.base.Contact" id="accountContact" displayName="Contact">
+      <properties>
+        <property>id</property>
+        <property aliases="accesstype,access_type" displayName="Access Type">accessType</property>
+        <property aliases="title,author,title_id" displayName="Title">title</property>
+        <property aliases="company,company name,company_name,account name" displayName="Company" required="true">company</property>
+        <property aliases="salutation" displayName="Salutation">nameSalutation</property>
+        <property aliases="first name,first_name,firstname" displayName="First Name">nameFirst</property>
+        <property aliases="middle name,middlename,middle_name" displayName="Middle Name">nameMiddle</property>
+        <property aliases="last name,lastname,last_name" displayName="Last Name" required="true">nameLast</property>
+        <property aliases="suffix name,suffixname,suffix_name" displayName="Suffix">nameSuffix</property>
+        <property aliases="type_id,typeid,contact_type" multiple="true" tokenizer="," displayName="Type">typeId</property>
+        <property aliases="site" displayName="Site">site</property>
+        <property aliases="siteid,site_id" displayName="Site Id">siteId</property>
+        <property aliases="notes" displayName="Notes">notes</property>
+        <property aliases="locale" displayName="Locale">locale</property>
+        <property aliases="enteredby,entered_by" displayName="Entered By">enteredBy</property>
+        <property aliases="modified,modified_by" displayName="Modified By">modifiedBy</property>
+        <property aliases="enabled" displayName="Enabled">enabled</property>
+        <property aliases="owner,owned_by" displayName="Owner">owner</property>
         <property aliases="url" displayName="Url">url</property>
         <property aliases="entered,date_created,creation_date,entered_date,date_entered" displayName="Entered">entered</property>
         <property aliases="modified,modified_date,date_modified" displayName="Modified">modified</property>

@@ -9,6 +9,7 @@ import java.lang.reflect.*;
 import org.aspcfs.utils.*;
 import com.zeroio.iteam.base.FileItem;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.controller.ImportManager;
 
 /**
@@ -28,7 +29,7 @@ public class Import extends GenericBean {
   public final static int PROCESSED_UNAPPROVED = 6;
   public final static int PROCESSED_APPROVED = 7;
   public final static int DELETED = 8;
-  
+
   public final static int CUSTOM = 7;
   public final static int EXCEL_CSV = 8;
   public final static int ACT = 9;
@@ -61,13 +62,13 @@ public class Import extends GenericBean {
 
 
   /**
-   *Constructor for the Import object
+   *  Constructor for the Import object
    */
   public Import() { }
 
 
   /**
-   *Constructor for the Import object
+   *  Constructor for the Import object
    *
    *@param  db                Description of the Parameter
    *@param  importId          Description of the Parameter
@@ -105,7 +106,7 @@ public class Import extends GenericBean {
 
 
   /**
-   *Constructor for the Import object
+   *  Constructor for the Import object
    *
    *@param  rs                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -808,8 +809,11 @@ public class Import extends GenericBean {
       }
 
       if (previousStatus == PROCESSED_UNAPPROVED && status == PROCESSED_APPROVED) {
-        if (type == Constants.IMPORT_CONTACTS) {
+        if (type == Constants.IMPORT_CONTACTS || type == Constants.IMPORT_ACCOUNT_CONTACTS) {
           Contact.updateImportStatus(db, this.getId(), PROCESSED_APPROVED);
+          if (type == Constants.IMPORT_ACCOUNT_CONTACTS) {
+            Organization.updateImportStatus(db, this.getId(), PROCESSED_APPROVED);
+          }
         }
       }
     } catch (SQLException e) {

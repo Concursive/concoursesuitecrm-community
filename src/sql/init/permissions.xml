@@ -95,6 +95,7 @@
       <permission name="accounts-quotes" attributes="vaed" description="Quotes" enabled="false"/>
       <permission name="accounts-orders" attributes="vaed" description="Orders" enabled="false"/>
       <permission name="accounts-products" attributes="vaed" description="Products and Services" enabled="false"/>
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" description="Import Accounts/Contacts"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
@@ -244,6 +245,7 @@
       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>
       <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
       <permission name="portal-user" attributes="vaed" />
+      <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
       <permission name="product-catalog" attributes="v---"/>
       <permission name="product-catalog-product" attributes="vaed"/>
       <permission name="campaign" attributes="v---"/>
@@ -321,6 +323,7 @@
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="vae-"/>
        <permission name="portal-user" attributes="vaed" />
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
@@ -389,6 +392,7 @@
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
        <permission name="portal-user" attributes="v---" />
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
@@ -455,6 +459,7 @@
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
        <permission name="portal-user" attributes="v---" />
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
@@ -504,6 +509,7 @@
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
        <permission name="portal-user" attributes="vaed" />
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
@@ -620,6 +626,7 @@
        <permission name="accounts-assets" attributes="v---" />
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
@@ -684,6 +691,7 @@
        <permission name="accounts-assets" attributes="v---" />
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="accounts-accounts-contacts-imports" attributes="vaed" />
        <permission name="product-catalog" attributes="v---"/>
        <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>

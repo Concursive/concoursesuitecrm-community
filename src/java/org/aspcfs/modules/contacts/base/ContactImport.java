@@ -444,6 +444,8 @@ public class ContactImport extends Import implements Runnable {
             thisContact.setNameMiddle(this.getValue(thisRecord, propertyMap.getProperty("nameMiddle")));
             thisContact.setNameSuffix(this.getValue(thisRecord, propertyMap.getProperty("nameSuffix")));
             thisContact.setTitle(this.getValue(thisRecord, propertyMap.getProperty("title")));
+            thisContact.setNotes(this.getValue(thisRecord, propertyMap.getProperty("notes")));
+            thisContact.setUrl(this.getValue(thisRecord, propertyMap.getProperty("url")));
 
             //entered by
             String propertyValue = this.getValue(thisRecord, propertyMap.getProperty("enteredBy"));
@@ -482,10 +484,11 @@ public class ContactImport extends Import implements Runnable {
             propertyValue = this.getValue(thisRecord, companyProperty);
             if (!"".equals(StringUtils.toString(propertyValue))) {
               thisContact.setCompany(propertyValue);
-
-              //check if user wants to lookup the account
-              if (lookupAccount) {
-                int orgId = Organization.lookupAccount(db, propertyValue);
+            }
+            //check if user wants to lookup the account
+            if (lookupAccount) {
+              if (!"".equals(StringUtils.toString(propertyValue))) {
+                int orgId = Organization.lookupAccount(db, propertyValue, this.getId());
 
                 if (orgId < 0) {
                   //add a new account
@@ -495,13 +498,19 @@ public class ContactImport extends Import implements Runnable {
                   thisOrg.setModifiedBy(userId);
                   thisOrg.setModifiedBy(userId);
                   thisOrg.setOwner(owner);
+                  thisOrg.setImportId(this.getId());
+                  thisOrg.setStatusId(Import.PROCESSED_UNAPPROVED);
                   recordInserted = thisOrg.insert(db);
                   if (!recordInserted) {
-                    error.append("; Error adding acocunt");
+                    error.append("; Error adding account");
+                  } else {
+                    orgId = thisOrg.getOrgId();
                   }
                 }
                 thisContact.setOrgId(orgId);
                 thisContact.setOrgName(propertyValue);
+              } else {
+                error.append("; Invalid Account Name");
               }
             }
 
@@ -547,7 +556,8 @@ public class ContactImport extends Import implements Runnable {
                   phoneNumber.setType(type);
                 }
                 if (phoneNumber.isValid()) {
-                  phoneNumber.convertToFormattedNumber(phone);
+                  String convertedNumber = phoneNumber.convertToFormattedNumber(phone);
+                  phoneNumber.setNumber(convertedNumber);
                   //check if number is still valid
                   if (phoneNumber.isValid()) {
                     thisContact.getPhoneNumberList().add(phoneNumber);
@@ -762,14 +772,28 @@ public class ContactImport extends Import implements Runnable {
   /**
    *  Description of the Method
    *
+   *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public DependencyList processDependencies() throws SQLException {
+  public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
+    int i = 0;
+    int recordCount = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) as recordcount " +
+        "FROM contact " +
+        "WHERE import_id = ? ");
+    pst.setInt(++i, this.getId());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordCount = rs.getInt("recordCount");
+    }
+    rs.close();
+    pst.close();
     Dependency thisDependency = new Dependency();
     thisDependency.setName("Contacts");
-    thisDependency.setCount(this.getTotalImportedRecords());
+    thisDependency.setCount(recordCount);
     thisDependency.setCanDelete(true);
     dependencyList.add(thisDependency);
     return dependencyList;
@@ -788,7 +812,7 @@ public class ContactImport extends Import implements Runnable {
       db.setAutoCommit(false);
 
       //delete all imported records
-      if(this.getStatusId() != UNPROCESSED || this.getStatusId() != QUEUED){
+      if (this.getStatusId() != UNPROCESSED || this.getStatusId() != QUEUED) {
         deleteImportedRecords(db, this.getId());
       }
 

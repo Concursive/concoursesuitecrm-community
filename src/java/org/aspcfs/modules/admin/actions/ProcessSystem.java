@@ -262,13 +262,13 @@ public final class ProcessSystem extends CFSModule {
           }
           rs.close();
           pst.close();
-          
+
           Iterator j = imports.iterator();
           while (j.hasNext()) {
-          int thisImportId = Integer.parseInt((String) j.next());
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("ProcessSystem-> Deleting import " + thisImportId);
-          }
+            int thisImportId = Integer.parseInt((String) j.next());
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("ProcessSystem-> Deleting import " + thisImportId);
+            }
             pst = db.prepareStatement(
                 "DELETE FROM contact_emailaddress " +
                 "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_emailaddress.contact_id AND import_id = ?) ");
@@ -296,7 +296,15 @@ public final class ProcessSystem extends CFSModule {
             pst.setInt(1, thisImportId);
             pst.executeUpdate();
             pst.close();
-            
+
+            //check if there are any accounts to be deleted(delete account only if a new account was created while importing contacts)
+            pst = db.prepareStatement(
+                "DELETE FROM organization " +
+                "WHERE import_id = ?");
+            pst.setInt(1, thisImportId);
+            pst.executeUpdate();
+            pst.close();
+
             pst = db.prepareStatement(
                 "DELETE FROM import " +
                 "WHERE import_id = ?");
@@ -316,7 +324,7 @@ public final class ProcessSystem extends CFSModule {
           sqlDriver.free(db);
         }
       }
-    } 
+    }
     return true;
   }
 }

@@ -218,7 +218,8 @@ CREATE TABLE organization (
   namefirst varchar(80),
   namemiddle varchar(80),
   namesuffix varchar(80),
-  import_id INT
+  import_id INT,
+  status_id INT
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);

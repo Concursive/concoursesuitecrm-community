@@ -391,7 +391,8 @@ CREATE TABLE organization (
     namefirst character varying(80),
     namemiddle character varying(80),
     namesuffix character varying(80),
-    import_id integer
+    import_id integer,
+    status_id integer
 );
 
 
@@ -4043,7 +4044,7 @@ INSERT INTO lookup_access_types VALUES (8, 707031028, 'Personal', false, 3, true
 
 
 
-INSERT INTO organization VALUES (0, 'My Company', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, false, NULL, NULL, '2004-06-15 08:40:06.429', 0, '2004-06-15 08:40:06.429', 0, true, NULL, 0, -1, -1, -1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO organization VALUES (0, 'My Company', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, false, NULL, NULL, '2004-06-15 08:40:06.429', 0, '2004-06-15 08:40:06.429', 0, true, NULL, 0, -1, -1, -1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 

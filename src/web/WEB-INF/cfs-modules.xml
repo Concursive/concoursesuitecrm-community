@@ -128,6 +128,13 @@
       <link value="ExternalContacts.do?command=SearchContactsForm"/>
     </submenu>
 
+    <submenu name="Imports">
+      <permission value="contacts-external_contacts-imports-view"/>
+      <long_html value="Import"/>
+      <short_html value="Import"/>
+      <link value="ExternalContactsImports.do?command=View"/>
+    </submenu>
+
     <submenu name="Reports">
       <permission value="contacts-external_contacts-reports-view"/>
       <long_html value="Export"/>
@@ -135,12 +142,6 @@
       <link value="ExternalContacts.do?command=Reports"/>
     </submenu>
     
-    <submenu name="Imports">
-      <permission value="contacts-external_contacts-imports-view"/>
-      <long_html value="Import"/>
-      <short_html value="Import"/>
-      <link value="ExternalContactsImports.do?command=View"/>
-    </submenu>
   </menu>
   
   <menu>
@@ -192,6 +193,7 @@
     <action name="Accounts"/>
     <action name="Contacts"/>
     <action name="ContactsPortal"/>
+    <action name="AccountContactsImports"/>
     <action name="Opportunities"/>
     <action name="OpportunitiesComponents"/>
     <action name="AccountOrders"/>
@@ -249,12 +251,20 @@
       <link value="RevenueManager.do?command=Dashboard"/>
     </submenu>
     
+    <submenu name="Imports">
+      <permission value="accounts-accounts-contacts-imports-view"/>
+      <long_html value="Import"/>
+      <short_html value="Import"/>
+      <link value="AccountContactsImports.do?command=View"/>
+    </submenu>
+
     <submenu name="Reports">
       <permission value="accounts-accounts-reports-view"/>
       <long_html value="Export"/>
       <short_html value="Export"/>
       <link value="Accounts.do?command=Reports"/>
     </submenu>
+    
   </menu>
   
 <!--

@@ -11,6 +11,7 @@ import org.aspcfs.utils.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.modules.base.Import;
 
 /**
  *  Contains a list of organizations... currently used to build the list from
@@ -54,6 +55,11 @@ public class OrganizationList extends Vector implements SyncableList {
   protected java.sql.Timestamp alertRangeEnd = null;
 
   protected int typeId = 0;
+  
+  //import filters
+  private int importId = -1;
+  private int statusId = -1;
+  private boolean excludeUnapprovedAccounts = true;
 
 
   /**
@@ -221,6 +227,96 @@ public class OrganizationList extends Vector implements SyncableList {
   }
 
 
+  /**
+   *  Sets the importId attribute of the OrganizationList object
+   *
+   *@param  tmp  The new importId value
+   */
+  public void setImportId(int tmp) {
+    this.importId = tmp;
+  }
+
+
+  /**
+   *  Sets the excludeUnapprovedAccounts attribute of the OrganizationList object
+   *
+   *@param  tmp  The new excludeUnapprovedAccounts value
+   */
+  public void setExcludeUnapprovedAccounts(boolean tmp) {
+    this.excludeUnapprovedAccounts = tmp;
+  }
+
+
+  /**
+   *  Sets the excludeUnapprovedAccounts attribute of the OrganizationList object
+   *
+   *@param  tmp  The new excludeUnapprovedAccounts value
+   */
+  public void setExcludeUnapprovedAccounts(String tmp) {
+    this.excludeUnapprovedAccounts = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the excludeUnapprovedAccounts attribute of the OrganizationList object
+   *
+   *@return    The excludeUnapprovedAccounts value
+   */
+  public boolean getExcludeUnapprovedAccounts() {
+    return excludeUnapprovedAccounts;
+  }
+
+
+  /**
+   *  Sets the importId attribute of the OrganizationList object
+   *
+   *@param  tmp  The new importId value
+   */
+  public void setImportId(String tmp) {
+    this.importId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the OrganizationList object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(int tmp) {
+    this.statusId = tmp;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the OrganizationList object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(String tmp) {
+    this.statusId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the importId attribute of the OrganizationList object
+   *
+   *@return    The importId value
+   */
+  public int getImportId() {
+    return importId;
+  }
+
+
+  /**
+   *  Gets the statusId attribute of the OrganizationList object
+   *
+   *@return    The statusId value
+   */
+  public int getStatusId() {
+    return statusId;
+  }
+  
+  
   /**
    *  Gets the revenueType attribute of the OrganizationList object
    *
@@ -912,6 +1008,18 @@ public class OrganizationList extends Vector implements SyncableList {
       }
     }
 
+    if (importId != -1) {
+      sqlFilter.append("AND o.import_id = ? ");
+    }
+
+    if (statusId != -1) {
+      sqlFilter.append("AND o.status_id = ? ");
+    }
+
+    if (excludeUnapprovedAccounts) {
+      sqlFilter.append("AND (o.status_id IS NULL OR o.status_id = ?) ");
+    }
+    
     if (typeId > 0) {
       sqlFilter.append("AND o.org_id IN (select atl.org_id from account_type_levels atl where atl.type_id = ?) ");
     }
@@ -1035,6 +1143,18 @@ public class OrganizationList extends Vector implements SyncableList {
       pst.setString(++i, accountNumber);
     }
 
+    if (importId != -1) {
+      pst.setInt(++i, importId);
+    }
+
+    if (statusId != -1) {
+      pst.setInt(++i, statusId);
+    }
+
+    if (excludeUnapprovedAccounts) {
+      pst.setInt(++i, Import.PROCESSED_APPROVED);
+    }
+    
     if (typeId > 0) {
       pst.setInt(++i, typeId);
     }

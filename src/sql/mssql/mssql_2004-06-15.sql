@@ -2,6 +2,7 @@
 -- Database upgrade v2.8 (2004-06-15)
 
 ALTER TABLE organization ADD [import_id] [int] NULL;
+ALTER TABLE organization ADD [status_id] [int] NULL;
 
 ALTER TABLE contact ADD [status_id] [int] NULL;
 ALTER TABLE contact ADD [import_id] [int] NULL;

@@ -181,13 +181,12 @@ public class CFSFileReader {
       //does the column data have quotes around it?
       boolean quoteBegin = false;
       //trick is to set beginning of a column based on end of previous column
-      boolean beginColumn = false;
+      boolean beginColumn = true;
       StringBuffer buffer = new StringBuffer();
       String line = null;
       record = new Record();
       record.data = new ArrayList();
       boolean done = false;
-      boolean firstColumn = true;
       while (!done) {
         if (((line = in.readLine()) != null) && !"".equals(line)) {
           record.line += line;
@@ -196,8 +195,7 @@ public class CFSFileReader {
             char thisChar = line.charAt(i);
 
             //check if it is starting of column
-            if (firstColumn || beginColumn) {
-              firstColumn = false;
+            if (beginColumn) {
               quoteBegin = false;
               if (thisChar == '\"') {
                 quoteBegin = true;
@@ -207,7 +205,7 @@ public class CFSFileReader {
               }
 
               //check for empty columns
-              if (beginColumn && thisChar == ',') {
+              if (thisChar == ',') {
                 record.data.add("");
                 buffer = buffer.delete(0, buffer.length());
               } else {

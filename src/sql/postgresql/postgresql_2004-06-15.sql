@@ -2,6 +2,7 @@
 -- Database upgrade v2.8 (2004-06-15)
 
 ALTER TABLE organization ADD COLUMN import_id integer;
+ALTER TABLE organization ADD COLUMN status_id integer;
 
 ALTER TABLE contact ADD COLUMN status_id integer;
 ALTER TABLE contact ADD COLUMN import_id integer;
