@@ -10,15 +10,22 @@ public class PropertyMapList extends HashMap {
     if (this.containsKey(object.getClass().getName())) {
       PropertyMap thisMap = (PropertyMap)this.get(object.getClass().getName());
       DataRecord record = new DataRecord();
+      record.setName(thisMap.getId());
       record.setAction(action);
       
       Iterator properties = thisMap.iterator();
       while (properties.hasNext()) {
         Property thisProperty = (Property)properties.next();
+        
+        String propertyName = thisProperty.getName();
+        if (thisProperty.hasAlias()) {
+          propertyName = thisProperty.getAlias();
+        }
+        
         if (thisProperty.hasLookupValue()) {
-          record.addField(thisProperty.getName(), ObjectUtils.getParam(object, thisProperty.getName()), thisProperty.getLookupValue());
+          record.addField(propertyName, ObjectUtils.getParam(object, thisProperty.getName()), thisProperty.getLookupValue());
         } else {
-          record.addField(thisProperty.getName(), ObjectUtils.getParam(object, thisProperty.getName()));
+          record.addField(propertyName, ObjectUtils.getParam(object, thisProperty.getName()));
         }
         
       }

@@ -106,11 +106,19 @@ public class CFSDatabaseReader implements DataReader {
           if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals("property")) {
             String nodeText = XMLUtils.getNodeText((Element) n);
             if (nodeText != null) {
-              String lookupValue = ((Element) n).getAttribute("lookup");
               Property thisProperty = new Property(nodeText);
+              
+              
+              String lookupValue = ((Element) n).getAttribute("lookup");
               if (lookupValue != null && !"".equals(lookupValue)) {
                 thisProperty.setLookupValue(lookupValue);
               }
+              
+              String alias = ((Element) n).getAttribute("alias");
+              if (alias != null && !"".equals(alias)) {
+                thisProperty.setAlias(alias);
+              }
+              
               mapProperties.add(thisProperty);
             }
           }

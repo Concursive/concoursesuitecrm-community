@@ -28,6 +28,8 @@ public class CFSHttpXMLWriter implements DataWriter {
 
   private ArrayList transaction = new ArrayList();
   private boolean autoCommit = true;
+  private int transactionCount = 0;
+  private String lastResponse = null;
   
   /**
    *  Sets the url attribute of the CFSHttpXMLWriter object
@@ -164,6 +166,10 @@ public class CFSHttpXMLWriter implements DataWriter {
   public String getDescription() {
     return "Writes data to ASPCFS using the XML HTTP Web API";
   }
+  
+  public String getLastResponse() {
+    return lastResponse;
+  }
 
 
   /**
@@ -173,6 +179,24 @@ public class CFSHttpXMLWriter implements DataWriter {
    */
   public boolean isConfigured() {
     if (url == null || id == null || code == null || systemId == -1) {
+      return false;
+    }
+    
+    //Setup a new client id for this data transfer session
+    DataRecord clientRecord = new DataRecord();
+    clientRecord.setName("syncClient");
+    clientRecord.setAction("insert");
+    clientRecord.addField("type", "Java CFS Http XML Writer");
+    clientRecord.addField("version", String.valueOf(this.getVersion()));
+    this.save(clientRecord);
+    
+    try {
+      logger.info(lastResponse);
+      XMLUtils responseXML = new XMLUtils(lastResponse, true);
+      clientId = Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstChild("id")));
+      logger.info("CFSHttpXMLWriter-> Client ID: " + clientId);
+    } catch (Exception e) {
+      e.printStackTrace(System.err);
       return false;
     }
     return true;
@@ -230,6 +254,7 @@ public class CFSHttpXMLWriter implements DataWriter {
         DataRecord record = (DataRecord)dataRecordItems.next();
         
         Element transaction = document.createElement("transaction");
+        transaction.setAttribute("id", String.valueOf(++transactionCount));
         app.appendChild(transaction);
         
         Element object = document.createElement(record.getName());
@@ -248,7 +273,7 @@ public class CFSHttpXMLWriter implements DataWriter {
         }
       }
       
-      String response = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
+      lastResponse = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
       this.transaction.clear();
       this.setAutoCommit(true);
       //System.out.println(response);
@@ -263,6 +288,5 @@ public class CFSHttpXMLWriter implements DataWriter {
     transaction.clear();
     return true;
   }
-  
 }
 

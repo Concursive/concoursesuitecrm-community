@@ -59,7 +59,7 @@
       <property lookup="">owner</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.User" id="user">
-      <property>id</property>
+      <property alias="guid">id</property>
       <property>username</property>
       <property>password</property>
       <property lookup="contact">contactId</property>
@@ -72,7 +72,7 @@
       <property lookup="user">assistant</property>
       <property lookup="user">alias</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.User" id="role">
+    <map class="com.darkhorseventures.cfsbase.Role" id="role">
       <property>id</property>
       <property>role</property>
       <property>description</property>

@@ -15,6 +15,7 @@ import java.util.HashMap;
  */
 public interface DataWriter extends DataImportHandler {
   boolean autoCommit = true;
+  String lastReponse = null;
 
 
   /**
@@ -48,5 +49,13 @@ public interface DataWriter extends DataImportHandler {
    *@return    Description of the Return Value
    */
   boolean rollback();
+
+
+  /**
+   *  Gets the lastResponse attribute of the DataWriter object
+   *
+   *@return    The lastResponse value
+   */
+  String getLastResponse();
 }
 

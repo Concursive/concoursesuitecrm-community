@@ -7,6 +7,7 @@
     <url>jdbc:postgresql://127.0.0.1:5432/cdb_matt</url>
     <user>postgres</user>
     <password/>
+    <processConfigFile/>
   </reader>
   <writer class="com.darkhorseventures.apps.dataimport.cfshttpxmlwriter.CFSHttpXMLWriter">
     <url>http://127.0.0.1/ProcessPacket.do</url>
