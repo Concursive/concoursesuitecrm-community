@@ -59,7 +59,7 @@ public final class AutoGuide extends CFSModule {
     try {
       db = this.getConnection(context);
       populateListFilters(context, autoGuideDirectoryInfo);
-      //inventoryList.setPagedListInfo(autoGuideDirectoryInfo);
+      inventoryList.setPagedListInfo(autoGuideDirectoryInfo);
       inventoryList.setBuildOrganizationInfo(true);
       inventoryList.setBuildPictureId(true);
       inventoryList.setShowSold(autoGuideDirectoryInfo.getFilterKey("listFilter1"));
@@ -208,17 +208,18 @@ public final class AutoGuide extends CFSModule {
     }
 
     Exception errorMessage = null;
-    PagedListInfo autoGuideAccountInfo = this.getPagedListInfo(context, "AutoGuideAccountInfo");
-    autoGuideAccountInfo.setLink("AccountsAutoGuide.do?command=AccountList");
-
     int orgId = Integer.parseInt(context.getRequest().getParameter("orgId"));
+    
+    PagedListInfo autoGuideAccountInfo = this.getPagedListInfo(context, "AutoGuideAccountInfo");
+    autoGuideAccountInfo.setLink("AccountsAutoGuide.do?command=AccountList&orgId=" + orgId);
+
     Connection db = null;
     InventoryList inventoryList = new InventoryList();
     try {
       db = this.getConnection(context);
       populateOrganization(context, db, orgId);
       populateListFilters(context, autoGuideAccountInfo);
-      //inventoryList.setPagedListInfo(autoGuideAccountInfo);
+      inventoryList.setPagedListInfo(autoGuideAccountInfo);
       inventoryList.setOrgId(orgId);
       inventoryList.setBuildOrganizationInfo(false);
       inventoryList.setBuildPictureId(true);

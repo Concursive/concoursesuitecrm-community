@@ -26,7 +26,8 @@
     <td nowrap class="formLabel">Organization</td>
     <td width="100%">
       <%= toHtml(InventoryItem.getOrganization().getName()) %>
-      (<%= toHtml(InventoryItem.getOrganization().getAccountNumber()) %>)
+      (<%= toHtml(InventoryItem.getOrganization().getAccountNumber()) %>)<br>
+      <%= toHtml(InventoryItem.getOrganization().getPhoneNumber("Main")) %>
     </td>
   </tr>
 <dhv:evaluate exp="<%= hasText(InventoryItem.getStockNo()) %>">
