@@ -1,0 +1,124 @@
+_ SQL: Update records in access_log
+_ DB: [access_log] allow nulls on user_id, remove default -1
+_ DB: [access_log] create relationship from user_id to [access]
+
+_ DB: [org_type] drop table
+
+_ DB: [lookup_department] description no longer is UNIQUE
+
+_ DB: [config] drop table
+
+_ DB: [note] drop table
+
+_ DB: [organization] 
+  remove columns: type, industry_desc, ins_type, cust_status, area, 
+                  industry_code, duplicate
+_ DB: [organization] allow nulls on owner
+_ DB: [organization] create relationship for enteredby, modifiedby, owner
+
+_ SQL: [contact] UPDATE contact SET type_id = null WHERE type_id = 0
+_ SQL: [contact] UPDATE contact SET department = null WHERE department = -1 or 0
+_ DB: [contact] allow nulls on owner
+_ DB: [contact] remove default of 0 for type_id
+_ DB: [contact] create relationship for user_id, department (lookup_department),
+                type_id (lookup_contact_types), enteredby, modifiedby
+
+_ DB: [organization_address] create relationships for 
+                             address_type (lookup_orgaddress_types),
+                             enteredby, modifiedby
+
+_ DB: [organization_emailaddress] create relationships for
+                                  emailaddress_type (lookup_orgemail_types),
+                                  enteredby, modifiedby
+
+_ DB: [organization_phone] create relationships for
+                           phone_type (lookup_orgphone_types),
+                           enteredby, modifiedby
+
+_ DB: [contact_address] create relationships for
+                        address_type (lookup_contactaddress_types),
+                        enteredby, modifiedby
+
+_ DB: [contact_emailaddress] create relationships for
+                             emailaddress_type (lookup_contactemail_types),
+                             enteredby, modifiedby
+
+_ DB: [contact_phone] create relationships for
+                      phone_type (lookup_contactphone_types),
+                      enteredby, modifiedby
+
+_ DB: [cfsinbox_message] create relationships for
+                         enteredby, modifiedby
+
+_ DB: [cfsinbox_messagelink] create relationships for
+                             id (cfsinbox_message)
+                             sent_to (contact)
+                             sent_from (access)
+
+_ DB: [account_type_levels] rename column id to org_id
+                            create relationships for
+                            org_id (organization), 
+                            type_id (lookup_account_types)
+
+
+
+_ SQL: [custom_field_category] DROP table and CREATE table
+_ SQL: [custom_field_group] DROP table and CREATE table
+_ SQL: [custom_field_info] DROP table and CREATE table
+_ SQL: [custom_field_lookup] DROP table and CREATE table
+_ SQL: [custom_field_record] DROP table and CREATE table
+_ SQL: [custom_field_data] DROP table and CREATE table
+
+_ SQL: [motd] DROP table motd
+
+_ SQL: [opportunity] DROP table and CREATE table
+_ SQL: [call_log] DROP table and CREATE table
+
+_ SQL: [lookup_project_templates] DROP TABLE
+_ SQL: [groups] DROP TABLE
+_ SQL: [users] DROP TABLE
+_ SQL: [user_groups] DROP TABLE
+_ SQL: [departments] DROP TABLE
+_ SQL: [project_inbox] DROP TABLE
+_ SQL: [project_inbox_items] DROP TABLE
+_ SQL: [project_timesheet] DROP TABLE
+
+_ SQL: [projects] DROP table and CREATE table
+_ SQL: [project_requirements] DROP table and CREATE table
+_ SQL: [project_assignments] DROP table and CREATE table
+_ SQL: [project_assignments_status] DROP table and CREATE table
+_ SQL: [project_issues] DROP table and CREATE table
+_ SQL: [project_issues_replies] DROP table and CREATE table
+_ SQL: [project_team] DROP table and CREATE table
+
+_ DB: [project_folders] parent column should be INT NULL
+_ DB: [project_files] project_id should be INT NULL
+                      folder_id should be INT NULL
+                      folder_id REFERENCES project_folders
+                      references for enteredby, modifiedby
+_ DB: [project_files_version] item_id REFERENCES project_files(item_id)
+                              references for enteredby, modifiedby
+
+_ DB: [project_files_download] change item_id to NOT NULL
+                               change user_download_id to NULL
+                               item_id REFERENCES project_files(item_id)
+
+
+_ DB: [sync_table] system_id REFERENCES sync_system(system_id)
+_ DB: [sync_map] client_id REFERENCES sync_client(client_id),
+                 table_id REFERENCES sync_table(table_id)
+_ DB: [sync_conflict_log] client_id REFERENCES sync_client(client_id)
+                          table_id REFERENCES sync_table(table_id)
+
+_ SQL: [ticket_level] DROP table and CREATE table
+_ SQL: [ticket_source] DROP table
+_ SQL: [ticket] DROP table and CREATE table
+_ SQL: [ticketlog] DROP table and CREATE table
+
+_ SQL: ALL campaign tables... DROP table and CREATE table
+_ SQL: campaign.init
+
+_ SQL: All revenue tables
+_ SQL: All task tables
+
+
