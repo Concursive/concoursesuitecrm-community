@@ -32,7 +32,10 @@ public class ObjectHookList extends HashMap {
     PreparedStatement pst = db.prepareStatement(
         "SELECT data " +
         "FROM system_prefs " +
-        "WHERE category = 'hooks' ");
+        "WHERE category = ? " +
+        "AND enabled = ? ");
+    pst.setString(1, "system.objects.hooks");
+    pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       hookData = rs.getString("data");

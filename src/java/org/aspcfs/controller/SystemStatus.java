@@ -214,15 +214,17 @@ public class SystemStatus {
     String hookData = null;
     PreparedStatement pst = db.prepareStatement(
         "SELECT category, data " +
-        "FROM system_prefs ");
+        "FROM system_prefs " +
+        "WHERE enabled = ? ");
+    pst.setBoolean(1, true);
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       String category = rs.getString("category");
-      if ("ignore fields".equals(category)) {
+      if ("system.fields.ignore".equals(category)) {
         fieldsToIgnore = rs.getString("data");
-      } else if ("field labels".equals(category)) {
+      } else if ("system.fields.labels".equals(category)) {
         labelsToUse = rs.getString("data");
-      } else if ("hooks".equals(category)) {
+      } else if ("system.objects.hooks".equals(category)) {
         hookData = rs.getString("data");
       } else {
         String tmp = rs.getString("data");
@@ -235,7 +237,7 @@ public class SystemStatus {
     if (fieldsToIgnore != null) {
       try {
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("SystemStatus-> Adding ignored fields (temporary solution)");
+          System.out.println("SystemStatus-> Adding ignored fields");
         }
         XMLUtils xml = new XMLUtils(fieldsToIgnore);
         xml.getAllChildrenText(xml.getDocumentElement(), "ignore", ignoredFields);
@@ -247,9 +249,6 @@ public class SystemStatus {
     fieldLabels.clear();
     if (labelsToUse != null) {
       try {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("SystemStatus-> Adding field labels (temporary solution)");
-        }
         XMLUtils xml = new XMLUtils(labelsToUse);
         ArrayList fieldElements = new ArrayList();
         xml.getAllChildren(xml.getDocumentElement(), "label", fieldElements);
@@ -346,7 +345,7 @@ public class SystemStatus {
    *@param  ce              Description of the Parameter
    */
   public void processUpdateHook(Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
-    hooks.processUpdate(object, previousObject, sqlDriver, ce);
+    hooks.processUpdate(previousObject, object, sqlDriver, ce);
   }
 
 

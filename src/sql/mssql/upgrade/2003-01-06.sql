@@ -1,5 +1,22 @@
 /* October 3, 2002: Need to manually modify relationships also */
 
+DROP TABLE system_prefs
+
+GO
+
+CREATE TABLE system_prefs (
+  pref_id INT IDENTITY PRIMARY KEY,
+  category VARCHAR(255) NOT NULL,
+  data TEXT DEFAULT '' NOT NULL,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL references access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL references access(user_id),
+  enabled BIT NOT NULL DEFAULT 1
+)
+
+GO
+
 UPDATE access_log
 SET user_id = a.user_id 
 FROM access a 

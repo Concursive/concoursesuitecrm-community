@@ -1,7 +1,6 @@
-INSERT INTO system_prefs (category, data) VALUES ('graphic', '/images/logo.gif');
-INSERT INTO system_prefs (category, data) VALUES ('template', 'template0');
-INSERT INTO system_prefs (category, data) VALUES ('css', 'template0');
-INSERT INTO system_prefs (category, data) VALUES ('license', 'fdb61e1f82a9e32b89263c81db0115d5');
+INSERT INTO system_prefs (category, data, enteredby, modifiedby, enabled) VALUES ('system.objects.hooks', '<config><hook id="com.darkhorseventures.cfsbase.Ticket" class="com.darkhorseventures.cfs.troubletickets.hook.TicketHook"/></config>', 0, 0, true);
+INSERT INTO system_prefs (category, data, enteredby, modifiedby, enabled) VALUES ('system.fields.labels', '<config><label><replace>logo</replace><with>&lt;img border=&quot;0&quot; src=&quot;images/dev21.jpg&quot;&gt;</with></label><label><replace>tickets-problem</replace><with>Message</with></label></config>', 0, 0, false);
+INSERT INTO system_prefs (category, data, enteredby, modifiedby, enabled) VALUES ('system.fields.ignore', '<config><ignore>tickets-code</ignore><ignore>tickets-subcat1</ignore><ignore>tickets-subcat2</ignore><ignore>tickets-subcat3</ignore><ignore>tickets-severity</ignore><ignore>tickets-priority</ignore></config>', 0, 0, false);
 
 INSERT INTO system_modules (description) VALUES ('Account Management');
 INSERT INTO system_modules (description) VALUES ('Contacts & Resources');

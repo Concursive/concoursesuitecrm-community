@@ -53,8 +53,14 @@ CREATE TABLE access_log (
 
 
 CREATE TABLE system_prefs (
-  category VARCHAR(255) UNIQUE NOT NULL,
-  data TEXT DEFAULT '' NOT NULL
+  pref_id SERIAL PRIMARY KEY,
+  category VARCHAR(255) NOT NULL,
+  data TEXT DEFAULT '' NOT NULL,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL references access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL references access(user_id),
+  enabled BOOLEAN NOT NULL DEFAULT true
 );
 
 CREATE TABLE system_modules (

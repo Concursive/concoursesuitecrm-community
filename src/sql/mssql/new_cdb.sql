@@ -53,8 +53,14 @@ CREATE TABLE access_log (
 
  
 CREATE TABLE system_prefs (
-  category VARCHAR(255) UNIQUE NOT NULL,
-  data TEXT DEFAULT '' NOT NULL
+  pref_id INT IDENTITY PRIMARY KEY,
+  category VARCHAR(255) NOT NULL,
+  data TEXT DEFAULT '' NOT NULL,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL references access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL references access(user_id),
+  enabled BIT NOT NULL DEFAULT 1
 );
 
 CREATE TABLE system_modules (

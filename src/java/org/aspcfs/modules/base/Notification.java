@@ -68,7 +68,11 @@ public class Notification extends Thread {
    *
    *@since
    */
-  public Notification() { }
+  public Notification() { 
+    if (System.getProperty("MailServer") != null) {
+      host = (String)System.getProperty("MailServer");
+    }
+  }
   
   public Notification(int thisType) {
     this.setType(thisType);

@@ -104,6 +104,7 @@ public class InitHook implements ControllerInitHook {
     if (config.getInitParameter("MailServer") != null) {
       config.getServletContext().setAttribute("MailServer", 
         config.getInitParameter("MailServer"));
+      System.setProperty("MailServer", String.valueOf(config.getInitParameter("MailServer")));
     }
     
     //All virtual hosts will have an entry in SystemStatus

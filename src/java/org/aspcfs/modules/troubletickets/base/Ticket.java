@@ -99,6 +99,10 @@ public class Ticket extends GenericBean {
    *@since
    */
   public Ticket(Connection db, int id) throws SQLException {
+    queryRecord(db, id);
+  }
+    
+  public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
       throw new SQLException("Invalid Ticket Number");
     }
@@ -1520,7 +1524,7 @@ public class Ticket extends GenericBean {
         "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, source_code = ?, contact_id = ?, problem = ? ");
 
     if (override == false) {
-      sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
+      sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? ");
     }
 
     if (this.getCloseIt() == true) {
@@ -1593,6 +1597,10 @@ public class Ticket extends GenericBean {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
     pst.setString(++i, this.getProblem());
+    
+    if (override == false) {
+      pst.setInt(++i, this.getModifiedBy());
+    }
 
     if (this.getCloseIt() == true) {
       pst.setString(++i, this.getSolution());
@@ -1662,7 +1670,7 @@ public class Ticket extends GenericBean {
       i = this.update(db, false);
 
       //insert a new entry into the ticket log only if there is a comment entered
-      //this should only happen upon initial ticket entry.
+      //TODO: OR when a ticket is being re-assigned
       if (this.getComment() != null && !(this.getComment().equals(""))) {
         TicketLog thisEntry = new TicketLog();
         thisEntry.setEnteredBy(this.getModifiedBy());
