@@ -10,13 +10,13 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
-<% if (request.getParameter("return") == null) { %>
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
+<% if (request.getParameter("return") == null || (request.getParameter("return") != null && "list".equals(request.getParameter("return")))) { %>
 <a href="Accounts.do?command=Search">Search Results</a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
 <a href="Accounts.do?command=Dashboard">Dashboard</a> >
 <%}%>
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <% if("accounts".equals(trailSource)){ %>
 <a href="AccountsCalls.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Activities</a> >
 <% }else{ %>
@@ -35,11 +35,7 @@ Forward Activity
 </dhv:evaluate>
 <%-- include the accounts menu --%>
 <%@ include file="accounts_details_header_include.jsp" %>
-<% if("accounts".equals(trailSource)){ %>
-<dhv:container name="accounts" selected="activities" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs" appendToUrl="&trailSource=accounts"/>
-<% }else{ %>
 <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<% } %>
 <form name="newMessageForm" action="AccountContactsCalls.do?command=SendCall&contactId=<%= ContactDetails.getId() %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>

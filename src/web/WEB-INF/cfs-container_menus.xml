@@ -75,11 +75,11 @@
       <link value="AccountsDocuments.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
 <!--
-    <submenu name="relationships">
-      <long_html value="Relationships"/>
-      <permission value="demo-view"/>
-      <link value="AccountsPrototype.do?module=Accounts&amp;include=accounts_relationships_view.jsp&amp;orgId=${orgId}"/>
-    </submenu>
+  <submenu name="relationships">
+    <long_html value="Relationships"/>
+    <permission value="accounts-accounts-relationships-view"/>
+    <link value="AccountRelationships.do?command=View&amp;orgId=${orgId}"/>
+  </submenu>
 -->
   </container>
   
@@ -116,7 +116,7 @@
     <submenu name="relationships">
       <long_html value="Relationships"/>
       <permission value="demo-view"/>
-      <link value="ExternalContactsPrototype.do?module=ExternalContacts&amp;include=companydirectory_relationships_view.jsp&amp;contactId=${id}"/>
+      <link value="ExternalContactsPrototype.do?module=ExternalContacts&amp;include=contacts/companydirectory_relationships_view.jsp&amp;contactId=${id}"/>
     </submenu>
   </container>
   

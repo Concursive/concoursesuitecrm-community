@@ -1315,16 +1315,6 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the modified attribute of the Project object
-   *
-   *@return    The modified value
-   */
-  public String getModifiedString() {
-    return (modified.toString());
-  }
-
-
-  /**
    *  Gets the modifiedBy attribute of the Project object
    *
    *@return    The modifiedBy value
@@ -2217,9 +2207,36 @@ public class Project extends GenericBean {
       errors.put("requestDate", "Request date is required");
     }
     if (hasErrors()) {
+      //Check warnings
+      checkWarnings();
+      onlyWarnings = false;
       return false;
     } else {
+      //Do not check for warnings if it was found that only warnings existed
+      // in the previous call to isValid for the same form.
+      if (!onlyWarnings) {
+        //Check for warnings if there are no errors
+        checkWarnings();
+        if (hasWarnings()) {
+          onlyWarnings = true;
+          return false;
+        }
+      }
       return true;
+    }
+  }
+
+  /**
+   *  Generates warnings that need to be reviewed before the 
+   *  form can be submitted.
+   */
+  protected void checkWarnings() {
+    if ((errors.get("estimatedCloseDateError") == null) && 
+        (estimatedCloseDate != null) &&
+        (requestDate != null)) {
+      if (estimatedCloseDate.before(requestDate)) {
+        warnings.put("estimatedCloseDateWarning", "Close date is earlier than start date");
+      }
     }
   }
 

@@ -6,7 +6,7 @@
 <table width="100%" border="0">
   <tr>
     <td width="33%" valign="top" nowrap>
-      <strong>Ticket #</strong> <%= thisTicket.getPaddedId() %>
+      <strong><dhv:label name="accounts.tickets.symbol.number">Ticket #</dhv:label></strong> <%= thisTicket.getPaddedId() %>
     </td>
     <td width="33%" align="center" valign="top" nowrap>
       <table border="0">
@@ -38,7 +38,7 @@
     </td>
     <td width="33%" align="right" valign="top" nowrap>
       <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-      <a href="TroubleTickets.do?command=PrintReport&id=<%= thisTicket.getId() %>">Printable Ticket Form</a>
+      <a href="TroubleTickets.do?command=PrintReport&id=<%= thisTicket.getId() %>"><dhv:label name="accounts.tickets.print">Printable Ticket Form</dhv:label></a>
     </td>
   </tr>
 </table>

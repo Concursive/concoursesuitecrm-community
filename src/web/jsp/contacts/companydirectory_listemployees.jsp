@@ -17,13 +17,13 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CompanyDirectory.do?command=ListEmployees">Employees</a> >
-View Employees
+<a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.employees">Employees</dhv:label></a> >
+<dhv:label name="employees.view">View Employees</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="contacts-internal_contacts-add"><a href="CompanyDirectory.do?command=Prepare">Add an Employee</a></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-add"><a href="CompanyDirectory.do?command=Prepare"><dhv:label name="employees.add">Add an Employee</dhv:label></a></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-add" none="true"><br></dhv:permission>
 <center><%= CompanyDirectoryInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CompanyDirectoryInfo"/>
@@ -90,7 +90,7 @@ View Employees
 %>
   <tr>
     <td class="containerBody" colspan="5">
-      No Employees found.
+      <dhv:label name="employees.search.notFound">No Employees found.</dhv:label>
     </td>
   </tr>
 <%  

@@ -27,7 +27,8 @@ import javax.servlet.ServletContext;
  *
  *@author     mrajkowski
  *@created    October 10, 2001
- *@version    $Id$
+ *@version    $Id: SystemStatus.java,v 1.40.10.1 2004/08/27 18:33:59 mrajkowski
+ *      Exp $
  */
 public class SystemStatus {
   //Unique to this system
@@ -285,6 +286,18 @@ public class SystemStatus {
    */
   public String getLabel(String thisLabel) {
     return this.getValue("system.fields.label", thisLabel);
+  }
+
+
+  /**
+   *  Gets the title attribute of the SystemStatus object
+   *
+   *@param  item          Description of the Parameter
+   *@param  thisProperty  Description of the Parameter
+   *@return               The title value
+   */
+  public String getMenuProperty(String item, String thisProperty) {
+    return this.getValue("system.modules.label", item, thisProperty);
   }
 
 
@@ -779,6 +792,26 @@ public class SystemStatus {
       Node param = (Node) prefGroup.get(parameter);
       if (param != null) {
         return XMLUtils.getNodeText(XMLUtils.getFirstChild((Element) param, "value"));
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   *  Gets the value attribute of the SystemStatus object
+   *
+   *@param  section    Description of the Parameter
+   *@param  parameter  Description of the Parameter
+   *@param  tagName    Description of the Parameter
+   *@return            The value value
+   */
+  public String getValue(String section, String parameter, String tagName) {
+    Map prefGroup = (Map) preferences.get(section);
+    if (prefGroup != null) {
+      Node param = (Node) prefGroup.get(parameter);
+      if (param != null) {
+        return XMLUtils.getNodeText(XMLUtils.getFirstChild((Element) param, tagName));
       }
     }
     return null;

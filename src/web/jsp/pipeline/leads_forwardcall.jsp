@@ -17,9 +17,9 @@
 <a href="Leads.do?command=DetailsOpp&headerId=<%= request.getParameter("headerId") %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
 <a href="LeadsCalls.do?command=View&headerId=<%= request.getParameter("headerId") %><%= addLinkParams(request, "viewSource") %>">Activities</a> >
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
-<a href="LeadsCalls.do?command=Details&headerId=<%= request.getParameter("headerId") %>&id=<%= request.getParameter("id") %><%= addLinkParams(request, "viewSource") %>">Call Details</a> >
+<a href="LeadsCalls.do?command=Details&headerId=<%= request.getParameter("headerId") %>&id=<%= request.getParameter("id") %><%= addLinkParams(request, "viewSource") %>">Activity Details</a> >
 </dhv:evaluate>
-Call Forward
+Forward Activity
 </td>
 </tr>
 </table>

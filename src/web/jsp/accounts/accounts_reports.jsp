@@ -18,7 +18,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> >
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
 Export Data
 </td>
 </tr>

@@ -53,7 +53,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     tomorrow.add(Calendar.DAY_OF_MONTH, 1);
 
     StringBuffer items = new StringBuffer();
-    
+
     //Site Search
     if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
       items.append(
@@ -72,48 +72,50 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           "</form>" +
           "</table>");
     }
-    
-    //Quick Items
-    if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
-      items.append(
-          "<!-- Quick Action -->" +
-          "<script language='javascript' type='text/javascript' src='javascript/popURL.js'></script>" +
-          "<script language='javascript' type='text/javascript' src='javascript/quickAction.js'></script>" +
-          "<table class='globalItem'>" +
-          "<tr><th>Quick Actions</th></tr>" +
-          "<tr>" +
-          "<td nowrap align='center'>" +
-          "<img src=\"images/icons/stock_hyperlink-target-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
-          "<select name='quickAction' onChange='javascript:quickAction(this.options[this.selectedIndex].value);this.selectedIndex = 0'>");
 
-      items.append("<option value='0'>Select...</option>");
-      /*
-       *  if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
-       *  items.append("<option value='call'>Add a Call</option>");
-       *  }
-       */
-      /*
-       *  if (systemStatus.hasPermission(userId, "pipeline-opportunities-add")) {
-       *  items.append("<option value='opportunity'>Add an Opportunity</option>");
-       *  }
-       */
-      if (systemStatus.hasPermission(userId, "myhomepage-tasks-add")) {
-        items.append("<option value='task'>Add a Task</option>");
-      }
-      if (systemStatus.hasPermission(userId, "tickets-tickets-add")) {
+    //Quick Items
+    if (!systemStatus.hasField("global.quickactions")) {
+      if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
+        items.append(
+            "<!-- Quick Action -->" +
+            "<script language='javascript' type='text/javascript' src='javascript/popURL.js'></script>" +
+            "<script language='javascript' type='text/javascript' src='javascript/quickAction.js'></script>" +
+            "<table class='globalItem'>" +
+            "<tr><th>Quick Actions</th></tr>" +
+            "<tr>" +
+            "<td nowrap align='center'>" +
+            "<img src=\"images/icons/stock_hyperlink-target-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
+            "<select name='quickAction' onChange='javascript:quickAction(this.options[this.selectedIndex].value);this.selectedIndex = 0'>");
+
+        items.append("<option value='0'>Select...</option>");
+        /*
+         *  if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
+         *  items.append("<option value='call'>Add a Call</option>");
+         *  }
+         */
+        /*
+         *  if (systemStatus.hasPermission(userId, "pipeline-opportunities-add")) {
+         *  items.append("<option value='opportunity'>Add an Opportunity</option>");
+         *  }
+         */
+        if (systemStatus.hasPermission(userId, "myhomepage-tasks-add")) {
+          items.append("<option value='task'>Add a Task</option>");
+        }
+        if (systemStatus.hasPermission(userId, "tickets-tickets-add")) {
         items.append("<option value='ticket'>Add a Ticket</option>");
+        }
+        /*
+         *  if (systemStatus.hasPermission(userId, "myhomepage-inbox-add")) {
+         *  items.append("<option value='message'>Send a Message</option>");
+         *  }
+         */
+        items.append(
+            "</select>" +
+            "</td>" +
+            "</tr>" +
+            "</form>" +
+            "</table>");
       }
-      /*
-       *  if (systemStatus.hasPermission(userId, "myhomepage-inbox-add")) {
-       *  items.append("<option value='message'>Send a Message</option>");
-       *  }
-       */
-      items.append(
-          "</select>" +
-          "</td>" +
-          "</tr>" +
-          "</form>" +
-          "</table>");
     }
 
     //My Items

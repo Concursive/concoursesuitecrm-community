@@ -60,6 +60,7 @@ public class Ticket extends GenericBean {
   private String location = null;
   private String comment = "";
   private java.sql.Timestamp estimatedResolutionDate = null;
+  private String estimatedResolutionDateTimeZone = "America/New_York";
   private String cause = null;
   private String solution = "";
   private int priorityCode = -1;
@@ -78,6 +79,7 @@ public class Ticket extends GenericBean {
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp closed = null;
   private int productId = -1;
+  private int statusId = -1;
   private int customerProductId = -1;
   private int expectation = -1;
   private String productSku = null;
@@ -400,6 +402,36 @@ public class Ticket extends GenericBean {
    */
   public void setActionId(String actionId) {
     this.actionId = Integer.parseInt(actionId);
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the Ticket object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(int tmp) {
+    this.statusId = tmp;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the Ticket object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(String tmp) {
+    this.statusId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the statusId attribute of the Ticket object
+   *
+   *@return    The statusId value
+   */
+  public int getStatusId() {
+    return statusId;
   }
 
 
@@ -1252,6 +1284,16 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Sets the estimatedResolutionDateTimeZone attribute of the Ticket object
+   *
+   *@param  tmp  The new estimatedResolutionDateTimeZone value
+   */
+  public void setEstimatedResolutionDateTimeZone(String tmp) {
+    this.estimatedResolutionDateTimeZone = tmp;
+  }
+
+
+  /**
    *  Sets the cause attribute of the Ticket object
    *
    *@param  tmp  The new cause value
@@ -1722,7 +1764,7 @@ public class Ticket extends GenericBean {
   /**
    *  Gets the assignedDateString attribute of the Ticket object
    *
-   * @return    The assignedDateString value
+   *@return    The assignedDateString value
    */
   public String getAssignedDateString() {
     String tmp = "";
@@ -2103,7 +2145,7 @@ public class Ticket extends GenericBean {
   /**
    *  Gets the estimatedResolutionDateString attribute of the Ticket object
    *
-   * @return    The estimatedResolutionDateString value
+   *@return    The estimatedResolutionDateString value
    */
   public String getEstimatedResolutionDateString() {
     String tmp = "";
@@ -2112,6 +2154,16 @@ public class Ticket extends GenericBean {
     } catch (NullPointerException e) {
     }
     return tmp;
+  }
+
+
+  /**
+   *  Gets the estimatedResolutionDateTimeZone attribute of the Ticket object
+   *
+   *@return    The estimatedResolutionDateTimeZone value
+   */
+  public String getEstimatedResolutionDateTimeZone() {
+    return estimatedResolutionDateTimeZone;
   }
 
 
@@ -2215,7 +2267,7 @@ public class Ticket extends GenericBean {
   /**
    *  Gets the resolutionDateString attribute of the Ticket object
    *
-   * @return    The resolutionDateString value
+   *@return    The resolutionDateString value
    */
   public String getResolutionDateString() {
     String tmp = "";
@@ -2300,6 +2352,8 @@ public class Ticket extends GenericBean {
           "INSERT INTO ticket (contact_id, problem, pri_code, " +
           "department_code, cat_code, scode, org_id, link_contract_id, link_asset_id, expectation, product_id, ");
       sql.append("customer_product_id, key_count, ");
+      // TODO: Add when field is added
+      //sql.append("status_id, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -2307,8 +2361,9 @@ public class Ticket extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
-      sql.append("?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      // TODO: Add when field is added
+      //sql.append("?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -2347,6 +2402,8 @@ public class Ticket extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, productId);
       DatabaseUtils.setInt(pst, ++i, customerProductId);
       DatabaseUtils.setInt(pst, ++i, projectTicketCount);
+      // TODO: Add when field is added
+      //DatabaseUtils.setInt(pst, ++i, statusId);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -2436,6 +2493,7 @@ public class Ticket extends GenericBean {
         "cat_code = ?, assigned_to = ?, " +
         "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, " +
         "source_code = ?, contact_id = ?, problem = ?, ");
+    //sql.append("status_id = ?, ");
     if (!override) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ?, ");
     }
@@ -2446,8 +2504,11 @@ public class Ticket extends GenericBean {
         sql.append("closed = ?, ");
       }
     }
+    if (orgId != -1) {
+      sql.append(" org_id = ?, ");
+    }
     sql.append("solution = ?, location = ?, assigned_date = ?, " +
-        "est_resolution_date = ?, resolution_date = ?, cause = ?, expectation = ?, product_id = ?, customer_product_id = ? " +
+        "est_resolution_date = ?, est_resolution_date_timezone = ?, resolution_date = ?, cause = ?, expectation = ?, product_id = ?, customer_product_id = ? " +
         "WHERE ticketid = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -2503,16 +2564,22 @@ public class Ticket extends GenericBean {
     }
     DatabaseUtils.setInt(pst, ++i, this.getContactId());
     pst.setString(++i, this.getProblem());
+    // TODO: Add when field is added
+    //DatabaseUtils.setInt(pst, ++i, this.getStatusId());
     if (override == false) {
       pst.setInt(++i, this.getModifiedBy());
     }
     if (!this.getCloseIt() && closed != null) {
       pst.setTimestamp(++i, closed);
     }
+    if (orgId != -1) {
+      DatabaseUtils.setInt(pst, ++i, orgId);
+    }
     pst.setString(++i, this.getSolution());
     pst.setString(++i, location);
     DatabaseUtils.setTimestamp(pst, ++i, assignedDate);
     DatabaseUtils.setTimestamp(pst, ++i, estimatedResolutionDate);
+    pst.setString(++i, estimatedResolutionDateTimeZone);
     DatabaseUtils.setTimestamp(pst, ++i, resolutionDate);
     pst.setString(++i, cause);
     DatabaseUtils.setInt(pst, ++i, expectation);
@@ -2887,7 +2954,7 @@ public class Ticket extends GenericBean {
       errors.put("problemError", "An issue is required");
     }
     if (closeIt == true && (solution == null || solution.trim().equals(""))) {
-      errors.put("closedError", "A solution is required when closing a ticket");
+      errors.put("closedError", "A solution is required when closing");
     }
     if (contactId == -1) {
       errors.put("contactIdError", "You must associate a Contact with a Ticket");
@@ -2943,6 +3010,9 @@ public class Ticket extends GenericBean {
     customerProductId = DatabaseUtils.getInt(rs, "customer_product_id");
     expectation = DatabaseUtils.getInt(rs, "expectation");
     projectTicketCount = rs.getInt("key_count");
+    estimatedResolutionDateTimeZone = rs.getString("est_resolution_date_timezone");
+    // TODO: Add when field is added
+    //statusId = rs.getInt("status_id");
     //organization table
     companyName = rs.getString("orgname");
     companyEnabled = rs.getBoolean("orgenabled");
@@ -2958,7 +3028,6 @@ public class Ticket extends GenericBean {
 
     //ticket_category table
     categoryName = rs.getString("catname");
-
     //lookup_ticket_source table
     sourceName = rs.getString("sourcename");
 
@@ -3049,8 +3118,8 @@ public class Ticket extends GenericBean {
     pst.execute();
     pst.close();
   }
-  
-  
+
+
   /**
    *  Each ticket in a project has its own unique count
    *

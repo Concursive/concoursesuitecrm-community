@@ -4,6 +4,10 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.*;
+import org.aspcfs.controller.*;
+import com.darkhorseventures.database.*;
+import java.util.*;
 
 /**
  *  Displays the status of the PagedListInfo specified with record counts, next
@@ -31,6 +35,7 @@ public class PagedListStatusHandler extends TagSupport {
   private boolean showControlOnly = false;
   private boolean scrollReload = false;
   private boolean enableJScript = false;
+  private String type = null;
 
 
   /**
@@ -43,7 +48,7 @@ public class PagedListStatusHandler extends TagSupport {
   }
 
 
-/**
+  /**
    *  Sets the label attribute of the PagedListStatusHandler object
    *
    *@param  tmp  The new label value
@@ -60,6 +65,26 @@ public class PagedListStatusHandler extends TagSupport {
    */
   public final void setObject(String tmp) {
     object = tmp;
+  }
+
+
+  /**
+   *  Sets the type attribute of the PagedListStatusHandler object
+   *
+   *@param  tmp  The new type value
+   */
+  public void setType(String tmp) {
+    this.type = tmp;
+  }
+
+
+  /**
+   *  Gets the type attribute of the PagedListStatusHandler object
+   *
+   *@return    The type value
+   */
+  public String getType() {
+    return type;
   }
 
 
@@ -132,11 +157,18 @@ public class PagedListStatusHandler extends TagSupport {
     tdClass = tmp;
   }
 
+
+  /**
+   *  Sets the tableClass attribute of the PagedListStatusHandler object
+   *
+   *@param  tmp  The new tableClass value
+   */
   public final void setTableClass(String tmp) {
     tableClass = tmp;
   }
-  
-/**
+
+
+  /**
    *  Sets the showForm attribute of the PagedListStatusHandler object
    *
    *@param  tmp  The new showForm value
@@ -144,8 +176,8 @@ public class PagedListStatusHandler extends TagSupport {
   public void setShowForm(String tmp) {
     this.showForm = DatabaseUtils.parseBoolean(tmp);
   }
-  
-  
+
+
   /**
    *  Sets the showHiddenParams attribute of the PagedListStatusHandler object
    *
@@ -235,7 +267,7 @@ public class PagedListStatusHandler extends TagSupport {
     this.scrollReload = DatabaseUtils.parseBoolean(tmp);
   }
 
-  
+
   /**
    *  Sets the enableJScript attribute of the PagedListStatusHandler object
    *
@@ -290,7 +322,25 @@ public class PagedListStatusHandler extends TagSupport {
               ((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
               ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
               ">");
-          out.write(title);
+          String newLabel = null;
+          if (type != null && !"".equals(type)) {
+            ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+            if (ce == null) {
+              System.out.println("PagedListStatusHandler-> ConnectionElement is null");
+            }
+            SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+            if (systemStatus == null) {
+              System.out.println("PagedListStatusHandler-> SystemStatus is null");
+            }
+            if (systemStatus != null) {
+              newLabel = systemStatus.getLabel(type);
+            }
+          }
+          if (newLabel == null) {
+            out.write(title);
+          } else {
+            out.write(newLabel);
+          }
           //show hidden values only if showform is false
           if (showHiddenParams) {
             out.write("<input type=\"hidden\" name=\"offset\" value=\"\" />");
@@ -314,7 +364,7 @@ public class PagedListStatusHandler extends TagSupport {
         //The status cell on the right
         out.write("<td valign=\"bottom\" align=\"" + (showControlOnly ? "center" : "right") + "\" nowrap>");
         //Display record count
-         if (pagedListInfo.getMaxRecords() > 0) {
+        if (pagedListInfo.getMaxRecords() > 0) {
           if (pagedListInfo.getItemsPerPage() == 1) {
             //1 of 20 [Previous|Next]
             out.write(String.valueOf(pagedListInfo.getCurrentOffset() + 1));
@@ -324,28 +374,28 @@ public class PagedListStatusHandler extends TagSupport {
             if (pagedListInfo.getItemsPerPage() <= 0) {
               out.write(String.valueOf(pagedListInfo.getMaxRecords()));
             } else if ((pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()) < pagedListInfo.getMaxRecords()) {
-            out.write(String.valueOf(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));
-          } else {
-            out.write(String.valueOf(pagedListInfo.getMaxRecords()));
-           }
+              out.write(String.valueOf(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));
+            } else {
+              out.write(String.valueOf(pagedListInfo.getMaxRecords()));
+            }
           }
           out.write(" of " + pagedListInfo.getMaxRecords());
           if (pagedListInfo.getItemsPerPage() != 1) {
             out.write(" total");
           }
         } else {
-        out.write("No " + label.toLowerCase() + " to display");
+          out.write("No " + label.toLowerCase() + " to display");
         }
         //Display next/previous buttons
         if (pagedListInfo.getItemsPerPage() > 0) {
-        if (pagedListInfo.getExpandedSelection() || !showExpandLink) {
-          pagedListInfo.setScrollReload(scrollReload);
-          out.write(" [" +
-              pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
-              "|" +
-              pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
-              "]");
-          out.write(" ");
+          if (pagedListInfo.getExpandedSelection() || !showExpandLink) {
+            pagedListInfo.setScrollReload(scrollReload);
+            out.write(" [" +
+                pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
+                "|" +
+                pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
+                "]");
+            out.write(" ");
           }
         }
         //Display refresh icon

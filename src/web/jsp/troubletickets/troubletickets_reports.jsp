@@ -19,7 +19,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do">Help Desk</a> > 
+<a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 Export Data
 </td>
 </tr>

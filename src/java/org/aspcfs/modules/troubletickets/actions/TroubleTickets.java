@@ -74,8 +74,7 @@ public final class TroubleTickets extends CFSModule {
       buildFormElements(context, db, newTic);
 
       //getting current date in mm/dd/yyyy format
-      Calendar calendar = Calendar.getInstance();
-      String currentDate = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR);
+      String currentDate = this.getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -469,8 +468,7 @@ public final class TroubleTickets extends CFSModule {
       addRecentItem(context, newTic);
 
       //getting current date in mm/dd/yyyy format
-      Calendar calendar = Calendar.getInstance();
-      String currentDate = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR);
+      String currentDate = this.getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
 
     } catch (Exception errorMessage) {

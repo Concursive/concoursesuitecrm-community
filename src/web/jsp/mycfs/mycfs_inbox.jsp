@@ -62,7 +62,7 @@ Mailbox
       <%= InboxInfo.getSortIcon("sent_namelast") %>
     </th>
     <th width="30%" nowrap>
-      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.sent">Received</a></strong>
+      <strong>Received</strong>
   <%} else {%>
     <th width="30%" nowrap>
       <strong>To</strong>
@@ -70,8 +70,8 @@ Mailbox
     </th>
     <th width="30%"  nowrap>
       <strong><a href="MyCFSInbox.do?command=Inbox&column=m.sent">Sent</a></strong>
-  <%}%>
       <%= InboxInfo.getSortIcon("m.sent") %>
+  <%}%>
     </th>
   </tr>
 <%

@@ -252,7 +252,7 @@
     <dhv:evaluate if="<%= ticketList.isEmpty() %>">
     <tr>
       <td>
-        No Tickets found.
+        <dhv:label name="accounts.tickets.search.notFound">No Tickets found.</dhv:label>
       </td>
     </tr>
     </dhv:evaluate>

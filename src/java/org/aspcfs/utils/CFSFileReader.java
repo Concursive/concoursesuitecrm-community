@@ -20,7 +20,7 @@ public class CFSFileReader {
 
 
   /**
-   *Constructor for the CFSFileReader object
+   *  Constructor for the CFSFileReader object
    *
    *@param  filePath                   Description of the Parameter
    *@param  fileType                   Description of the Parameter
@@ -188,7 +188,10 @@ public class CFSFileReader {
       record.data = new ArrayList();
       boolean done = false;
       while (!done) {
-        if (((line = in.readLine()) != null) && !"".equals(line)) {
+        if (((line = in.readLine()) != null)) {
+          if ("".equals(line.trim())) {
+            continue;
+          }
           record.line += line;
 
           for (int i = 0; i < line.length(); i++) {
@@ -300,7 +303,8 @@ public class CFSFileReader {
 
 
   /**
-   *  Pads the line with default column delimiters after the last column data in the line
+   *  Pads the line with default column delimiters after the last column data in
+   *  the line
    *
    *@param  line      Description of the Parameter
    *@param  padCount  Number of columns to be padded
@@ -379,7 +383,7 @@ public class CFSFileReader {
    */
   public static class Record {
     /**
-     *Constructor for the record object
+     *  Constructor for the record object
      */
     public Record() { }
 

@@ -38,10 +38,6 @@ function checkForm(form) {
       message += "- Commission entered is invalid\r\n";
       formTest = false;
     }
-  if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      alertMessage += "Alert Date is before today's date\r\n";
-  }
-      
   if (formTest == false) {
     alert("Form could not be saved, please check the following:\r\n\r\n" + message);
     return false;
@@ -124,8 +120,8 @@ Modify Component
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <%--  include basic opportunity form --%>
 <%@ include file="opportunity_include.jsp" %>
 &nbsp;

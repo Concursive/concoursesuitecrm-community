@@ -3,16 +3,16 @@
   var thisTaskId = -1;
   var thisTypeId = -1;
   var thisContactId = -1;
-  var menu_init_task = false;
+  var menu_init = false;
   //Set the action parameters for clicked item
   function displayTaskMenu(loc, id, typeId, taskId, contactId) {
     thisTaskId = taskId;
     thisTypeId = typeId;
     thisContactId = contactId;
     updateTaskMenu();
-    if (!menu_init_task) {
-      menu_init_task = true;
-      new ypSlideOutMenu("menuTask", "down", 0, 0, 170, getHeight("menuTaskTable"));
+    if (!menu_init) {
+      menu_init = true;
+      initialize_menus();
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }

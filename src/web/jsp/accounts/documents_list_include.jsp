@@ -89,8 +89,8 @@
       --
     </td>
     <td class="row<%= rowid %>" align="center" nowrap>
+      <zeroio:tz timestamp="<%= thisFolder.getModified() %>"/><br />
       <dhv:username id="<%= thisFolder.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= thisFolder.getModified() %>"/>
     </td>
   </tr>
 <%

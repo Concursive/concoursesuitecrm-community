@@ -27,7 +27,6 @@ Messages
   <tr>
     <td class="containerBack">
 <br>
-<center><%= ContactMessageListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">
@@ -46,10 +45,11 @@ Messages
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <th width="65%" nowrap>
+    <th width="20%" nowrap>
       <a href="ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong>Name</strong></a>
       <%= ContactMessageListInfo.getSortIcon("c.name") %>
     </th>
+    <th width="45%" ><strong>Message Subject</strong></th>
     <th width="20%" nowrap>
       <a href="ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong>Run Date</strong></a>
       <%= ContactMessageListInfo.getSortIcon("active_date") %>
@@ -68,9 +68,10 @@ Messages
 %>
   <tr class="containerBody">
     <td class="row<%= rowid %>">
-      <a href="ExternalContacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(campaign.getMessageName()) %></a>
+      <a href="ExternalContacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(campaign.getMessageName() != null && !"".equals(campaign.getMessageName()) ? campaign.getMessageName() : "\"No name available\"") %></a>
       <%= (("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))?" <font color=\"red\">(Canceled)</font>":"") %>
     </td>
+    <td class="row<%= rowid %>"><%= toHtml(campaign.getMessageSubject()) %></td>
     <td valign="top" align="left" nowrap class="row<%= rowid %>">
       <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
@@ -81,7 +82,7 @@ Messages
 	<%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="3">
+    <td colspan="4">
       No messages found.
     </td>
   </tr>

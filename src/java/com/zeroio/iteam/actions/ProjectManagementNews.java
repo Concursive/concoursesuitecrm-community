@@ -99,6 +99,7 @@ public final class ProjectManagementNews extends CFSModule {
       }
       if (!recordInserted && resultCount <= 0) {
         processErrors(context, thisArticle.getErrors());
+        processWarnings(context, thisArticle.getWarnings());
       }
       if (recordInserted || resultCount == 1) {
         indexAddItem(context, thisArticle);

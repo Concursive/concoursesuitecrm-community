@@ -112,7 +112,7 @@
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="contacts-external_contacts-completed-calls-edit">
+      <dhv:permission name="contacts-external_contacts-calls-edit">
       <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -133,10 +133,10 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-calls-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="forward()">
-        <td>
+      <tr id="menuForward" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="forward()">
+        <th>
           <img src="images/icons/stock_forward_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
           Forward
         </td>

@@ -15,9 +15,9 @@ Configure Modules
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>Setup Dark Horse CRM to meet the specific needs of your organization, 
+    <td>Setup the system to meet the specific needs of your organization, 
     including configuration of lookup lists and custom fields.  Choose
-    a Dark Horse CRM module to proceed.</td></tr>
+    a module to proceed.</td></tr>
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>

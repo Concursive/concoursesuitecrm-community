@@ -5,7 +5,7 @@
  This source code cannot be modified, distributed or used without
  permission from Matt Rajkowski
 --%>
-<%@ page import="java.util.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,org.aspcfs.utils.web.*,org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="departments" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <html>
 <head>
@@ -20,7 +20,10 @@ function page_init() {
   while (i.hasNext()) {
     LookupElement element = (LookupElement) i.next();
 %>
-  	list.options[list.length] = new Option("<%= element.getDescription() %>", "<%= element.getId() %>");
+    var newOpt = parent.document.createElement("OPTION");
+    newOpt.text='<%= StringUtils.jsStringEscape(element.getDescription()) %>';
+    newOpt.value='<%= element.getId() %>';
+    list.options[list.length] = newOpt;
 <%
   }
 %>

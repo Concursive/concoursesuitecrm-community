@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.base.*" %>
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
@@ -6,20 +7,28 @@
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Records" class="org.aspcfs.modules.base.CustomFieldRecordList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="troubletickets_fields_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <form name="details" action="TroubleTicketsFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do">Help Desk</a> > 
+<a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
   <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
   <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
 <%}else{%> 
-  <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+  <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
-<a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
+<a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
 List of Folder Records
 </td>
 </tr>
@@ -65,31 +74,33 @@ List of Folder Records
 <%
     if (Records.size() > 0) {
       int rowid = 0;
+      int i = 0;
       Iterator records = Records.iterator();
       while (records.hasNext()) {
+        i++;
         rowid = (rowid != 1 ? 1 : 2);
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
       <tr class="containerBody">
-        <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-        <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-folders-edit"><a href="TroubleTicketsFolders.do?command=ModifyFields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-folders-delete"><a href="javascript:confirmDelete('TroubleTicketsFolders.do?command=DeleteFields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
+          <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+           <a href="javascript:displayMenu('select<%= i %>','menuFolders', '<%= TicketDetails.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
+           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFolders');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+          </dhv:evaluate>
         </td>
-        </dhv:permission>
-        </dhv:evaluate>
-      
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
           <a href="TroubleTicketsFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
         </td>
         <td nowrap class="row<%= rowid %>">
-          <%= toHtml(thisRecord.getEnteredString()) %>
+          <zeroio:tz timestamp="<%= thisRecord.getEntered() %>" />
         </td>
         <td nowrap class="row<%= rowid %>">
           <dhv:username id="<%= thisRecord.getModifiedBy() %>" />
         </td>
         <td nowrap class="row<%= rowid %>">
-          <%= toHtml(thisRecord.getModifiedDateTimeString()) %>
+          <zeroio:tz timestamp="<%= thisRecord.getModified() %>" />
         </td>
       </tr>
 <%    

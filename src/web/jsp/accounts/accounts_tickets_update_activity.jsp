@@ -19,11 +19,11 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=ticketDetails.getOrgId()%>">Account Details</a> >
-<a href="Accounts.do?command=ViewTickets&orgId=<%=ticketDetails.getOrgId()%>">Tickets</a> >
-<a href="AccountTickets.do?command=TicketDetails&id=<%=ticketDetails.getId()%>">Ticket Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
+<a href="Accounts.do?command=ViewTickets&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
+<a href="AccountTickets.do?command=TicketDetails&id=<%=ticketDetails.getId()%>"><dhv:label name="accounts.tickets.details">Ticket Details</dhv:label></a> >
 <a href="AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>">Activity Log</a> >
 Modify Activity Log
 </td>
@@ -46,7 +46,7 @@ Modify Activity Log
         <input type="button" value="Cancel" onClick="window.location.href='AccountTicketActivityLog.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%=activityDetails.getId()%>';this.form.dosubmit.value='false';" />
       <%}%>
       <br />
-      <%= showError(request, "actionError") %>
+      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%@ include file="../troubletickets/troubletickets_update_activity_include.jsp" %>
       <br />
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />

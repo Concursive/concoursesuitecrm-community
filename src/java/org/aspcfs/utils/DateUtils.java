@@ -147,7 +147,7 @@ public class DateUtils {
       }
       DateFormat serverFormatter = DateFormat.getDateTimeInstance(dateFormat, timeFormat);
       //convertedDate = serverFormatter.format(localeFormatter.parse(date));
-      convertedDate = serverFormatter.format(new java.util.Date(localeFormatter.parse(date).getTime() + 1000 * 60 * 60 * 12));
+      convertedDate = serverFormatter.format(new java.util.Date(localeFormatter.parse(date).getTime()));
     } catch (Exception e) {
       System.err.println("EXCEPTION: DateUtils-> Timestamp " + e);
     }
@@ -167,7 +167,7 @@ public class DateUtils {
    */
   public static Timestamp getUserToServerDateTime(TimeZone timeZone, int dateFormat, int timeFormat, String date, Locale locale) {
     try {
-      DateFormat localeFormatter = DateFormat.getDateInstance(dateFormat,locale);
+      DateFormat localeFormatter = DateFormat.getDateInstance(dateFormat, locale);
       if (timeZone != null) {
         localeFormatter.setTimeZone(timeZone);
       }
@@ -368,5 +368,29 @@ public class DateUtils {
     }
     return days;
   }
+
+
+  /**
+   *  Gets the dateAsString attribute of the DateUtils class
+   *
+   *@param  tmpTimestamp  Description of the Parameter
+   *@return               The dateAsString value
+   */
+  public static String getDateAsString(Timestamp tmpTimestamp) {
+    String dateAsString = "";
+    try {
+      String language = System.getProperty("LANGUAGE");
+      String country = System.getProperty("COUNTRY");
+      Locale locale = new Locale(language, country);
+
+      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+          DateFormat.SHORT, locale);
+      formatter.applyPattern(formatter.toPattern() + "yy");
+      dateAsString = formatter.format(tmpTimestamp);
+    } catch (Exception e) {
+    }
+    return dateAsString;
+  }
+
 }
 

@@ -271,6 +271,7 @@ public final class AccountContactsCalls extends CFSModule {
     int resultCount = -1;
     Call parentCall = null;
     Call previousCall = null;
+    int tmpStatusId = -1;
     addModuleBean(context, "View Accounts", "Save an Activity");
     //Process the parameters
     String contactId = context.getRequest().getParameter("contactId");
@@ -291,7 +292,11 @@ public final class AccountContactsCalls extends CFSModule {
       if (parentId != null && Integer.parseInt(parentId) > -1) {
         parentCall = new Call(db, Integer.parseInt(parentId));
       }
-
+      //Store current status id to reset the object upon server error or warning
+      tmpStatusId = thisCall.getStatusId();
+      if ((tmpStatusId == Call.COMPLETE_FOLLOWUP_PENDING) && (!"pending".equals(context.getRequest().getParameter("view")))){
+        thisCall.setCheckAlertDate(false);
+      }
       //update or insert the call
       if (thisCall.getId() > 0) {
         if (thisCall.getStatusId() == Call.COMPLETE) {
@@ -323,6 +328,8 @@ public final class AccountContactsCalls extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       if (!recordInserted && resultCount == -1) {
         processErrors(context, thisCall.getErrors());
+        processWarnings(context, thisCall.getWarnings());
+        thisCall.setStatusId(tmpStatusId);
         if (thisCall.getId() > 0) {
           addModifyFormElements(db, context, thisCall);
         }
@@ -700,7 +707,7 @@ public final class AccountContactsCalls extends CFSModule {
     LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
     callTypeList.addItem(0, "--None--");
     context.getRequest().setAttribute("CallTypeList", callTypeList);
-    if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && thisCall.getAlertDate() == null)) {
+    if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && (thisCall.getAlertDate() == null || context.getRequest().getAttribute("alertDateWarning") != null))) {
       //Reminder Type Lookup
       LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
       context.getRequest().setAttribute("ReminderTypeList", reminderList);

@@ -15,7 +15,7 @@
   <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
   <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
 <%}else{%> 
-  <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+  <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 Activity Log
 </td>

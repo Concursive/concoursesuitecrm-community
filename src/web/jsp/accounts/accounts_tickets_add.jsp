@@ -15,6 +15,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -127,10 +128,10 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
+<a href="Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
 Add Ticket
 </td>
 </tr>
@@ -151,13 +152,13 @@ Add Ticket
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 	<tr>
     <th colspan="2">
-      <strong>Add a new Ticket</strong>
+      <strong><dhv:label name="accounts.tickets.add">Add a new Ticket</dhv:label></strong>
     </th>
 	</tr>
 <dhv:evaluate if="<%= (User.getRoleType() == 0) %>" >
 	<tr class="containerBody">
     <td class="formLabel">
-      Ticket Source
+      <dhv:label name="accounts.tickets.source">Ticket Source</dhv:label>
     </td>
     <td>
       <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
@@ -393,8 +394,9 @@ Add Ticket
       Estimated Resolution Date
     </td>
     <td>
-      <zeroio:dateSelect form="addticket" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" />
-      <%= showAttribute(request, "estimatedResolutionDateError") %>
+        <zeroio:dateSelect form="details" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" timeZone="<%= TicketDetails.getEstimatedResolutionDateTimeZone() %>" />
+        <%= TimeZoneSelect.getSelect("estimatedResolutionDateTimeZone", TicketDetails.getEstimatedResolutionDateTimeZone()).getHtml() %>
+        <%= showAttribute(request, "estimatedResolutionDateError") %>
     </td>
   </tr>
 	<tr class="containerBody">
@@ -427,7 +429,7 @@ Add Ticket
     </td>
     <td>
       <textarea name="solution" cols="55" rows="8"><%= toString(TicketDetails.getSolution()) %></textarea><br />
-      <input type="checkbox" name="closeNow" value="true" <%= TicketDetails.getCloseIt() ? " checked" : ""%>>Close ticket
+      <input type="checkbox" name="closeNow" value="true" <%= TicketDetails.getCloseIt() ? " checked" : ""%>><dhv:label name="accounts.tickets.ticket.close">Close ticket</dhv:label>
       <%--
       <br>
       <input type="checkbox" name="kbase" value="true">Add this solution to Knowledge Base

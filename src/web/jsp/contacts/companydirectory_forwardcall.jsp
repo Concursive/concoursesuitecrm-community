@@ -7,11 +7,11 @@
 <a href="ExternalContacts.do">Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
-<a href="ExternalContactsCalls.do?command=View&contactId=<%=ContactDetails.getId() %>">Calls</a> >
+<a href="ExternalContactsCalls.do?command=View&contactId=<%=ContactDetails.getId() %>">Activities</a> >
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
-  <a href="ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>&id=<%= request.getParameter("id") %>">Call Details</a> >
+  <a href="ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>&id=<%= request.getParameter("id") %>">Activity Details</a> >
 </dhv:evaluate>
-Forward Call
+Forward Activity
 </td>
 </tr>
 </table>

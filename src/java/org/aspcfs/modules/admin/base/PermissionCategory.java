@@ -39,14 +39,19 @@ public class PermissionCategory extends GenericBean {
 
   //Constants for working with lookup lists
   //NOTE: currently all editable lookup lists need to be defined here
+  //Leads
   public final static int PERMISSION_CAT_LEADS = 4;
   public final static int LOOKUP_LEADS_STAGE = 1;
   public final static int LOOKUP_LEADS_TYPE = 2;
 
+  //Accounts
   public final static int PERMISSION_CAT_ACCOUNTS = 1;
   public final static int LOOKUP_ACCOUNTS_TYPE = 1;
   public final static int LOOKUP_ACCOUNTS_REVENUE_TYPE = 2;
   public final static int LOOKUP_ACCOUNTS_CONTACTS_TYPE = 3;
+  public final static int LOOKUP_ACCOUNTS_EMAIL = 819041648;
+  public final static int LOOKUP_ACCOUNTS_ADDRESS = 819041649;
+  public final static int LOOKUP_ACCOUNTS_PHONE = 819041650;
 
   // Service Contracts
   public final static int PERMISSION_CAT_SERVICE_CONTRACTS = 130041100;
@@ -63,15 +68,18 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_ASSET_STATUS = 130041304;
   public final static int MULTIPLE_CATEGORY_ASSET = 202041400;
 
+  //Contacts
   public final static int PERMISSION_CAT_CONTACTS = 2;
   public final static int LOOKUP_CONTACTS_TYPE = 1;
   public final static int LOOKUP_CONTACTS_EMAIL = 2;
   public final static int LOOKUP_CONTACTS_ADDRESS = 3;
   public final static int LOOKUP_CONTACTS_PHONE = 4;
 
+  //Employees
   public final static int PERMISSION_CAT_EMPLOYEES = 1111031131;
   public final static int LOOKUP_CONTACTS_DEPT = 1111031132;
 
+  //Tickets
   public final static int PERMISSION_CAT_TICKETS = 8;
   public final static int LOOKUP_TICKETS_SOURCE = 1;
   public final static int LOOKUP_TICKETS_SEVERITY = 2;

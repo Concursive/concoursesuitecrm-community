@@ -46,7 +46,7 @@ Documents
         String documentModule = "Pipeline";
         String specialID = ""+opportunityHeader.getId();
       %>
-      <%@ include file="../accounts/documents_list.jsp" %>&nbsp;
+      <%@ include file="../accounts/documents_list_include.jsp" %>&nbsp;
     </td>
   </tr>
 </table>

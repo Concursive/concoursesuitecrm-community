@@ -5,6 +5,7 @@
 <jsp:useBean id="product" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
 <jsp:useBean id="customerProduct" class="org.aspcfs.modules.products.base.CustomerProduct" scope="request"/>
 <jsp:useBean id="quoteList" class="org.aspcfs.modules.quotes.base.QuoteList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="TroubleTickets.do?command=Modify&auto-populate=true" method="post">
@@ -12,14 +13,14 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do">Help Desk</a> >
+<a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> >
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
   <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
   <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
 <%}else{%> 
-  <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+  <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
-Ticket Details
+<dhv:label name="tickets.details">Ticket Details</dhv:label>
 </td>
 </tr>
 </table>
@@ -100,17 +101,18 @@ Ticket Details
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Ticket Information</strong>
+      <strong><dhv:label name="tickets.information">Ticket Information</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
 		<td nowrap class="formLabel">
-      Ticket Source
+      <dhv:label name="tickets.source">Ticket Source</dhv:label>
 		</td>
 		<td>
       <%= toHtml(TicketDetails.getSourceName()) %>
 		</td>
   </tr>
+  <dhv:include name="ticket.contractNumber" none="true">
   <tr class="containerBody">
 		<td nowrap class="formLabel">
       Service Contract Number
@@ -119,6 +121,8 @@ Ticket Details
       <%= toHtml(TicketDetails.getServiceContractNumber()) %>
 		</td>
   </tr>
+  </dhv:include>
+  <dhv:include name="ticket.asset" none="true">
   <tr class="containerBody">
 		<td nowrap class="formLabel">
       Asset Serial Number
@@ -127,6 +131,8 @@ Ticket Details
       <%= toHtml(TicketDetails.getAssetSerialNumber()) %>
 		</td>
   </tr>
+  </dhv:include>
+  <dhv:include name="ticket.labor" none="true">
 <dhv:evaluate if="<%= TicketDetails.getProductId() != -1 %>">
   <tr class="containerBody">
 		<td nowrap class="formLabel">
@@ -145,6 +151,7 @@ Ticket Details
 		</td>
   </tr>
 </dhv:evaluate>
+</dhv:include>
 <dhv:evaluate if="<%= TicketDetails.getCustomerProductId() != -1 %>">
   <tr class="containerBody">
 		<td nowrap class="formLabel">
@@ -218,6 +225,7 @@ Ticket Details
       <input type="hidden" name="id" value="<%=TicketDetails.getId()%>">
     </td>
   </tr>
+  <dhv:include name="ticket.location" none="true">
   <tr class="containerBody">
 		<td class="formLabel">
       Location
@@ -226,6 +234,7 @@ Ticket Details
       <%= toHtml(TicketDetails.getLocation()) %>
 		</td>
   </tr>
+  </dhv:include>
 <dhv:include name="ticket.catCode" none="true">
   <tr class="containerBody">
 		<td class="formLabel">
@@ -247,7 +256,7 @@ Ticket Details
   </tr>
 </dhv:include>
   <tr class="containerBody">
-		<td class="formLabel">
+    <td class="formLabel">
       Entered
     </td>
 		<td>
@@ -310,18 +319,22 @@ Ticket Details
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Estimated Resolution Date
+      <dhv:label name="ticket.estimatedResolutionDate">Estimated Resolution Date</dhv:label>
     </td>
     <td>
-      <zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= TicketDetails.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes"  default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(TicketDetails.getEstimatedResolutionDateTimeZone())){%>
+      <br>
+      <zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"  default="&nbsp;" />
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Issue Notes
+      <dhv:label name="ticket.issueNotes">Issue Notes</dhv:label>
     </td>
     <td>
-      <font color="red">Previous notes for this ticket are listed in the "Ticket Log History" section of the history tab.</font>
+      <font color="red"><dhv:label name="accounts.tickets.ticket.previousTicket">(Previous notes for this ticket are listed under the history tab.)</dhv:label></font>
     </td>
   </tr>
 </table>
@@ -333,6 +346,7 @@ Ticket Details
       <strong>Resolution</strong>
     </th>
   </tr>
+  <dhv:include name="ticket.cause" none="true">
   <tr class="containerBody">
 		<td class="formLabel" valign="top">
       Cause
@@ -341,9 +355,10 @@ Ticket Details
       <%= toHtml(TicketDetails.getCause()) %>
 		</td>
   </tr>
+  </dhv:include>
   <tr class="containerBody">
 		<td class="formLabel" valign="top">
-      Resolution
+      <dhv:label name="ticket.resolution">Resolution</dhv:label>
 		</td>
 		<td>
       <%= toHtml(TicketDetails.getSolution()) %>
@@ -351,12 +366,13 @@ Ticket Details
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Resolution Date
+      <dhv:label name="ticket.resolutionDate">Resolution Date</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
   </tr>
+  <dhv:include name="ticket.resolution" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Have our services met or exceeded your expectations?
@@ -373,6 +389,7 @@ Ticket Details
       </dhv:evaluate>
     </td>
   </tr>
+  </dhv:include>
 </table>
 &nbsp;
 <br />

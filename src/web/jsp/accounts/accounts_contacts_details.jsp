@@ -13,9 +13,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 Contact Details
 </td>
@@ -90,7 +90,7 @@ Contact Details
     </td>
     <td>
       <dhv:evaluate exp="<%= hasText(thisEmailAddress.getEmail()) %>">
-      <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
+      <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>&nbsp;<%= (thisEmailAddress.getPrimaryEmail()) ? "(Primary)" : "" %>
       </dhv:evaluate>
       &nbsp;
     </td>
@@ -124,7 +124,7 @@ Contact Details
       <%= toHtml(thisPhoneNumber.getTypeName()) %>
     </td>
     <td>
-      <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
+      <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;<%= (thisPhoneNumber.getPrimaryNumber()) ? "(Primary)" : "" %>
     </td>
   </tr>
 <%    
@@ -156,7 +156,7 @@ Contact Details
       <%= toHtml(thisAddress.getTypeName()) %>
     </td>
     <td>
-      <%= toHtml(thisAddress.toString()) %>
+      <%= toHtml(thisAddress.toString()) %>&nbsp;<%= (thisAddress.getPrimaryAddress()) ? "(Primary)" : "" %>
     </td>
   </tr>
 <%    

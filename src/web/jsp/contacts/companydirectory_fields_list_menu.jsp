@@ -17,7 +17,7 @@
   }
   
   //Menu link functions
-  function details() {
+  function folderDetails() {
     window.location.href = 'ExternalContacts.do?command=Fields&contactId=' + thisContactId + '&catId=' + thisCatId + '&recId=' + thisRecId + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
@@ -26,7 +26,7 @@
   }
   
   function deleteField() {
-    
+    window.location.href = 'ExternalContacts.do?command=DeleteFields&contactId=' + thisContactId + '&catId=' + thisCatId + '&recId=' + thisRecId + '&return=list';
   }
   
 </script>
@@ -34,7 +34,7 @@
   <div id="menuFieldContent">
     <table id="menuFieldTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="contacts-external_contacts-folders-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="folderDetails()">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
@@ -54,7 +54,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="contacts-external_contacts-folders-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteContact()">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteField()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

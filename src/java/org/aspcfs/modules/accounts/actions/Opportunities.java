@@ -147,6 +147,7 @@ public final class Opportunities extends CFSModule {
 
       if (("insert".equals(action) && !recordInserted) || ("modify".equals(action) && resultCount == -1)) {
         processErrors(context, newComponent.getErrors());
+        processWarnings(context, newComponent.getWarnings());
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);
         context.getRequest().setAttribute("TypeList", newComponent.getTypeList());
@@ -307,6 +308,7 @@ public final class Opportunities extends CFSModule {
         if (!recordInserted) {
           processErrors(context, newOpp.getHeader().getErrors());
           processErrors(context, newOpp.getComponent().getErrors());
+          processWarnings(context, newOpp.getComponent().getWarnings());
           LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
           context.getRequest().setAttribute("TypeSelect", typeSelect);
           context.getRequest().setAttribute("TypeList", newOpp.getComponent().getTypeList());

@@ -12,9 +12,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-  <a href="Accounts.do">Accounts</a> > 
+  <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
   <a href="Accounts.do?command=Search">Search Results</a> >
-  <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
+  <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
   <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>">Assets</a> >
   Asset History
 </td>
@@ -33,7 +33,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th width="12%">
-      <strong>Ticket Number</strong>
+      <strong><dhv:label name="accounts.tickets.number">Ticket Number</dhv:label></strong>
     </th>
     <th width="12%">
       <b><a href="AccountsAssets.do?command=History&id=<%=asset.getId()%>&column=t.entered">Date Entered</a></b>

@@ -51,6 +51,7 @@ Message List
       <a href="CampaignManagerMessage.do?command=View&column=name"><strong>Name</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("name") %>
     </th>
+    <th><strong>Subject</strong></th>
     <th width="60%" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=description"><strong>Description</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("description") %>
@@ -80,10 +81,12 @@ Message List
       <a href="javascript:displayMenu('select<%= count %>','menuMsg', '<%= thisMessage.getId() %>');"
       onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuMsg');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
-		<td width="40%" valign="center" class="row<%= rowid %>">
-      <a href="CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>"><%= toHtml(thisMessage.getName()) %></a>
+		<td width="20%" valign="center" class="row<%= rowid %>">
+      <a href="CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>">
+      <%= toHtml(thisMessage.getName() != null && !"".equals(thisMessage.getName()) ? thisMessage.getName() : "\"No name available\"") %></a>
 		</td>
-		<td width="60%" valign="center" class="row<%= rowid %>">
+    <td width="30%" valign="center" class="row<%= rowid %>"><%= toHtml( thisMessage.getMessageSubject() ) %></td>
+		<td width="50%" valign="center" class="row<%= rowid %>">
       <%= toHtml(thisMessage.getDescription()) %>
     </td>
     <td valign="center" class="row<%= rowid %>" nowrap>

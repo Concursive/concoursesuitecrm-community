@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.StringTokenizer;
 import java.util.Locale;
 import java.text.NumberFormat;
+import javax.servlet.ServletContext;
 
 /**
  *  Helper methods for dealing with file operations
@@ -48,6 +49,7 @@ public class FileUtils {
     if (sourceFile.equals(destinationFile)) {
       return false;
     }
+    //Skip if overwrite is false
     if (!overwrite) {
       if (destinationFile.exists()) {
         return true;
@@ -77,6 +79,54 @@ public class FileUtils {
       if (source != null) {
         try {
           source.close();
+        } catch (IOException io) {
+        }
+      }
+    }
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context          Description of the Parameter
+   *@param  filename         Description of the Parameter
+   *@param  destinationFile  Description of the Parameter
+   *@param  overwrite        Description of the Parameter
+   *@return                  Description of the Return Value
+   *@exception  IOException  Description of the Exception
+   */
+  public static boolean copyFile(ServletContext context, String filename, File destinationFile, boolean overwrite) throws IOException {
+    //If destination is a directory then set it as a file
+    String fs = System.getProperty("file.separator");
+    if (destinationFile.isDirectory()) {
+      File sourceFile = new File(filename);
+      destinationFile = new File(destinationFile.getPath() + fs + sourceFile.getName());
+    }
+    //Skip if overwrite is false
+    if (!overwrite) {
+      if (destinationFile.exists()) {
+        return true;
+      }
+    }
+    //Copy the file
+    InputStream source = context.getResourceAsStream(filename);
+    FileOutputStream destination = null;
+    try {
+      destination = new FileOutputStream(destinationFile);
+      byte[] buffer = new byte[4096];
+      int read = -1;
+      while ((read = source.read(buffer)) != -1) {
+        destination.write(buffer, 0, read);
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return false;
+    } finally {
+      if (destination != null) {
+        try {
+          destination.close();
         } catch (IOException io) {
         }
       }

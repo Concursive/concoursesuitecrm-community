@@ -33,10 +33,6 @@
     }
     
     if(form.hasFollowup != null && form.hasFollowup.checked){
-    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;

@@ -48,6 +48,7 @@ public class Task extends GenericBean {
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp completeDate = null;
+  private String dueDateTimeZone = null;
 
   //other
   private int contactId = -1;
@@ -87,7 +88,7 @@ public class Task extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
-        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
+        "t.duedate, t.duedate_timezone, t.notes, t.sharing, t.complete, t.estimatedloe, " +
         "t.estimatedloetype, t.type, t.owner, t.completedate, t.modified, " +
         "t.modifiedby, t.category_id " +
         "FROM task t " +
@@ -168,6 +169,26 @@ public class Task extends GenericBean {
    */
   public void setType(String type) {
     this.type = Integer.parseInt(type);
+  }
+
+
+  /**
+   *  Sets the dueDateTimeZone attribute of the Task object
+   *
+   *@param  tmp  The new dueDateTimeZone value
+   */
+  public void setDueDateTimeZone(String tmp) {
+    this.dueDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the dueDateTimeZone attribute of the Task object
+   *
+   *@return    The dueDateTimeZone value
+   */
+  public String getDueDateTimeZone() {
+    return dueDateTimeZone;
   }
 
 
@@ -1084,11 +1105,11 @@ public class Task extends GenericBean {
         db.setAutoCommit(false);
       }
       sql = "INSERT INTO task " +
-          "(enteredby, modifiedby, priority, description, notes, sharing, owner, duedate, estimatedloe, " +
+          "(enteredby, modifiedby, priority, description, notes, sharing, owner, duedate, duedate_timezone, estimatedloe, " +
           (estimatedLOEType == -1 ? "" : "estimatedLOEType, ") +
           (type == -1 ? "" : "type, ") +
           "complete, completedate, category_id) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
           (estimatedLOEType == -1 ? "" : "?, ") +
           (type == -1 ? "" : "?, ") +
           "?, ?, ? ) ";
@@ -1102,6 +1123,7 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getSharing());
       DatabaseUtils.setInt(pst, ++i, this.getOwner());
       pst.setTimestamp(++i, this.getDueDate());
+      pst.setString(++i, this.getDueDateTimeZone());
       pst.setDouble(++i, this.getEstimatedLOE());
       if (this.getEstimatedLOEType() != -1) {
         pst.setInt(++i, this.getEstimatedLOEType());
@@ -1202,7 +1224,7 @@ public class Task extends GenericBean {
       Task previousTask = new Task(db, id);
       sql = "UPDATE task " +
           "SET modifiedby = ?, priority = ?, description = ?, notes = ?, " +
-          "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " +
+          "sharing = ?, owner = ?, duedate = ?, duedate_timezone = ?, estimatedloe = ?, " +
           (estimatedLOEType == -1 ? "" : "estimatedloetype = ?, ") +
           "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ?, category_id = ? " +
           "WHERE task_id = ? AND modified = ? ";
@@ -1215,6 +1237,7 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getSharing());
       DatabaseUtils.setInt(pst, ++i, this.getOwner());
       pst.setTimestamp(++i, this.getDueDate());
+      pst.setString(++i, this.getDueDateTimeZone());
       pst.setDouble(++i, this.getEstimatedLOE());
       if (this.getEstimatedLOEType() != -1) {
         pst.setInt(++i, this.getEstimatedLOEType());
@@ -1568,6 +1591,7 @@ public class Task extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     categoryId = DatabaseUtils.getInt(rs, "category_id");
+    dueDateTimeZone = rs.getString("duedate_timezone");
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
       age = java.lang.Math.round(ageCheck);

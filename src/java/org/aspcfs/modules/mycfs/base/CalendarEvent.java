@@ -334,13 +334,15 @@ public class CalendarEvent implements Comparable {
       return "<img border=0 src=\"images/alertopp.gif\" align=texttop title=\"Opportunities\">";
     } else if (thisCategory.equalsIgnoreCase("Calls") || thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
       return "<img border=0 src=\"images/alertcall.gif\" align=texttop title=\"Calls\">";
+    } else if (thisCategory.equalsIgnoreCase("Pending Calls")) {
+      return "<img border=0 src=\"images/box-hold.gif\" align=texttop title=\"Pending Calls\">";
     } else if (thisCategory.equalsIgnoreCase("Assignments")) {
       return "<img border=0 src=\"images/alertassignment.gif\" align=texttop title=\"Assignments\">";
     } else if (thisCategory.equalsIgnoreCase("Account Alerts") || thisCategory.equalsIgnoreCase("Account Contract Alerts")){
       return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" align=texttop title=\"Accounts\">";
     } else if (thisCategory.equalsIgnoreCase("Tasks")) {
       return "<img src=\"images/box.gif\" border=0 align=texttop width=\"14\" height=\"14\" title=\"Tasks\">";
-    } else if (thisCategory.equalsIgnoreCase("Open Tickets")) {
+    } else if (thisCategory.equalsIgnoreCase("Ticket Requests")) {
       return "<img src=\"images/tree0.gif\" border=0 align=texttop title=\"Tickets\">";
     }
     return "";

@@ -6,8 +6,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do">Help Desk</a> > 
-Add Ticket
+<a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
+<dhv:label name="tickets.add">Add Ticket</dhv:label>
 </td>
 </tr>
 </table>

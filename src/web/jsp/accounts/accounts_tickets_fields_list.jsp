@@ -7,17 +7,25 @@
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Records" class="org.aspcfs.modules.base.CustomFieldRecordList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_tickets_fields_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <form name="details" action="AccountTicketFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%= TicketDetails.getOrgId() %>">Account Details</a> >
-<a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>">Tickets</a> >
-<a href="AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%= TicketDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
+<a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
+<a href="AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>"><dhv:label name="accounts.tickets.details">Ticket Details</dhv:label></a> >
 List of Folder Records
 </td>
 </tr>
@@ -64,20 +72,22 @@ List of Folder Records
 <%
     if (Records.size() > 0) {
       int rowid = 0;
+      int i = 0;
       Iterator records = Records.iterator();
       while (records.hasNext()) {
+        i++;
         rowid = (rowid != 1 ? 1 : 2);
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
       <tr class="containerBody">
-        <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-        <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-folders-edit"><a href="AccountTicketFolders.do?command=ModifyFields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-folders-delete"><a href="javascript:confirmDelete('AccountTicketFolders.do?command=DeleteFields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
+          <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+           <a href="javascript:displayMenu('select<%= i %>','menuFolders', '<%= TicketDetails.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
+           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFolders');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+          </dhv:evaluate>
         </td>
-        </dhv:permission>
-        </dhv:evaluate>
-      
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
           <a href="AccountTicketFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
         </td>

@@ -17,9 +17,9 @@ import org.aspcfs.utils.DatabaseUtils;
 /**
  *  Represents a file system folder in which files can be organized within
  *
- * @author     matt rajkowski
- * @created    April 9, 2003
- * @version    $Id: FileFolder.java,v 1.1.4.1 2004/07/07 15:12:07 mrajkowski Exp
+ *@author     matt rajkowski
+ *@created    April 9, 2003
+ *@version    $Id: FileFolder.java,v 1.1.4.1 2004/07/07 15:12:07 mrajkowski Exp
  *      $
  */
 public class FileFolder extends GenericBean {
@@ -55,9 +55,9 @@ public class FileFolder extends GenericBean {
   /**
    *  Constructor for the FileFolder object
    *
-   * @param  db                Description of the Parameter
-   * @param  folderId          Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  folderId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public FileFolder(Connection db, int folderId) throws SQLException {
     queryRecord(db, folderId);
@@ -67,11 +67,11 @@ public class FileFolder extends GenericBean {
   /**
    *  Constructor for the FileFolder object
    *
-   * @param  db                Description of the Parameter
-   * @param  folderId          Description of the Parameter
-   * @param  moduleItemId      Description of the Parameter
-   * @param  moduleId          Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  folderId          Description of the Parameter
+   *@param  moduleItemId      Description of the Parameter
+   *@param  moduleId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public FileFolder(Connection db, int folderId, int moduleItemId, int moduleId) throws SQLException {
     this.linkModuleId = moduleId;
@@ -83,9 +83,9 @@ public class FileFolder extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  folderId          Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  folderId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int folderId) throws SQLException {
     if (folderId == -1) {
@@ -131,8 +131,8 @@ public class FileFolder extends GenericBean {
   /**
    *  Constructor for the FileFolder object
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public FileFolder(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -142,7 +142,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the linkModuleId attribute of the FileFolder object
    *
-   * @param  tmp  The new linkModuleId value
+   *@param  tmp  The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     linkModuleId = tmp;
@@ -152,7 +152,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the linkModuleId attribute of the FileFolder object
    *
-   * @param  tmp  The new linkModuleId value
+   *@param  tmp  The new linkModuleId value
    */
   public void setLinkModuleId(String tmp) {
     linkModuleId = Integer.parseInt(tmp);
@@ -162,7 +162,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the linkItemId attribute of the FileFolder object
    *
-   * @param  tmp  The new linkItemId value
+   *@param  tmp  The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     linkItemId = tmp;
@@ -172,7 +172,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the linkItemId attribute of the FileFolder object
    *
-   * @param  tmp  The new linkItemId value
+   *@param  tmp  The new linkItemId value
    */
   public void setLinkItemId(String tmp) {
     linkItemId = Integer.parseInt(tmp);
@@ -182,7 +182,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the id attribute of the FileFolder object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -192,7 +192,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the id attribute of the FileFolder object
    *
-   * @param  tmp  The new id value
+   *@param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
@@ -202,7 +202,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the parentId attribute of the FileFolder object
    *
-   * @param  tmp  The new parentId value
+   *@param  tmp  The new parentId value
    */
   public void setParentId(int tmp) {
     this.parentId = tmp;
@@ -212,7 +212,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the parentId attribute of the FileFolder object
    *
-   * @param  tmp  The new parentId value
+   *@param  tmp  The new parentId value
    */
   public void setParentId(String tmp) {
     this.parentId = Integer.parseInt(tmp);
@@ -222,7 +222,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the subject attribute of the FileFolder object
    *
-   * @param  tmp  The new subject value
+   *@param  tmp  The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -232,7 +232,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the description attribute of the FileFolder object
    *
-   * @param  tmp  The new description value
+   *@param  tmp  The new description value
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -242,7 +242,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the entered attribute of the FileFolder object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
@@ -252,7 +252,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the entered attribute of the FileFolder object
    *
-   * @param  tmp  The new entered value
+   *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
@@ -262,7 +262,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the FileFolder object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -272,7 +272,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the enteredBy attribute of the FileFolder object
    *
-   * @param  tmp  The new enteredBy value
+   *@param  tmp  The new enteredBy value
    */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
@@ -282,7 +282,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the modified attribute of the FileFolder object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
@@ -292,7 +292,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the modified attribute of the FileFolder object
    *
-   * @param  tmp  The new modified value
+   *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DatabaseUtils.parseTimestamp(tmp);
@@ -302,7 +302,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the FileFolder object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -312,7 +312,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the modifiedBy attribute of the FileFolder object
    *
-   * @param  tmp  The new modifiedBy value
+   *@param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
@@ -322,7 +322,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the itemCount attribute of the FileFolder object
    *
-   * @param  tmp  The new itemCount value
+   *@param  tmp  The new itemCount value
    */
   public void setItemCount(int tmp) {
     this.itemCount = tmp;
@@ -332,7 +332,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the subFolders attribute of the FileFolder object
    *
-   * @param  tmp  The new subFolders value
+   *@param  tmp  The new subFolders value
    */
   public void setSubFolders(FileFolderList tmp) {
     this.subFolders = tmp;
@@ -342,7 +342,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the display attribute of the FileFolder object
    *
-   * @param  tmp  The new display value
+   *@param  tmp  The new display value
    */
   public void setDisplay(int tmp) {
     this.display = tmp;
@@ -352,7 +352,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the display attribute of the FileFolder object
    *
-   * @param  tmp  The new display value
+   *@param  tmp  The new display value
    */
   public void setDisplay(String tmp) {
     this.display = Integer.parseInt(tmp);
@@ -362,7 +362,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the level attribute of the FileFolder object
    *
-   * @param  tmp  The new level value
+   *@param  tmp  The new level value
    */
   public void setLevel(int tmp) {
     this.level = tmp;
@@ -372,7 +372,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Sets the level attribute of the FileFolder object
    *
-   * @param  tmp  The new level value
+   *@param  tmp  The new level value
    */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
@@ -382,7 +382,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the level attribute of the FileFolder object
    *
-   * @return    The level value
+   *@return    The level value
    */
   public int getLevel() {
     return level;
@@ -392,7 +392,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the linkModuleId attribute of the FileFolder object
    *
-   * @return    The linkModuleId value
+   *@return    The linkModuleId value
    */
   public int getLinkModuleId() {
     return linkModuleId;
@@ -402,7 +402,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the linkItemId attribute of the FileFolder object
    *
-   * @return    The linkItemId value
+   *@return    The linkItemId value
    */
   public int getLinkItemId() {
     return linkItemId;
@@ -412,7 +412,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the id attribute of the FileFolder object
    *
-   * @return    The id value
+   *@return    The id value
    */
   public int getId() {
     return id;
@@ -422,7 +422,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the parentId attribute of the FileFolder object
    *
-   * @return    The parentId value
+   *@return    The parentId value
    */
   public int getParentId() {
     return parentId;
@@ -432,7 +432,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the subject attribute of the FileFolder object
    *
-   * @return    The subject value
+   *@return    The subject value
    */
   public String getSubject() {
     return subject;
@@ -442,7 +442,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the description attribute of the FileFolder object
    *
-   * @return    The description value
+   *@return    The description value
    */
   public String getDescription() {
     return description;
@@ -452,7 +452,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the entered attribute of the FileFolder object
    *
-   * @return    The entered value
+   *@return    The entered value
    */
   public java.sql.Timestamp getEntered() {
     return entered;
@@ -462,7 +462,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the enteredString attribute of the FileFolder object
    *
-   * @return    The enteredString value
+   *@return    The enteredString value
    */
   public String getEnteredString() {
     try {
@@ -476,7 +476,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the enteredDateTimeString attribute of the FileFolder object
    *
-   * @return    The enteredDateTimeString value
+   *@return    The enteredDateTimeString value
    */
   public String getEnteredDateTimeString() {
     try {
@@ -490,7 +490,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the enteredBy attribute of the FileFolder object
    *
-   * @return    The enteredBy value
+   *@return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -500,7 +500,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the modified attribute of the FileFolder object
    *
-   * @return    The modified value
+   *@return    The modified value
    */
   public java.sql.Timestamp getModified() {
     return modified;
@@ -510,7 +510,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the modifiedString attribute of the FileFolder object
    *
-   * @return    The modifiedString value
+   *@return    The modifiedString value
    */
   public String getModifiedString() {
     if (modified != null) {
@@ -524,7 +524,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the modifiedDateTimeString attribute of the FileFolder object
    *
-   * @return    The modifiedDateTimeString value
+   *@return    The modifiedDateTimeString value
    */
   public String getModifiedDateTimeString() {
     try {
@@ -538,7 +538,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the modifiedBy attribute of the FileFolder object
    *
-   * @return    The modifiedBy value
+   *@return    The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -548,7 +548,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the itemCount attribute of the FileFolder object
    *
-   * @return    The itemCount value
+   *@return    The itemCount value
    */
   public int getItemCount() {
     return itemCount;
@@ -558,7 +558,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the subFolders attribute of the FileFolder object
    *
-   * @return    The subFolders value
+   *@return    The subFolders value
    */
   public FileFolderList getSubFolders() {
     return subFolders;
@@ -568,7 +568,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the display attribute of the FileFolder object
    *
-   * @return    The display value
+   *@return    The display value
    */
   public int getDisplay() {
     return display;
@@ -578,9 +578,9 @@ public class FileFolder extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     if (!isValid()) {
@@ -631,9 +631,9 @@ public class FileFolder extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
@@ -661,9 +661,9 @@ public class FileFolder extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
     if (id == -1) {
@@ -722,7 +722,7 @@ public class FileFolder extends GenericBean {
   /**
    *  Gets the valid attribute of the FileFolder object
    *
-   * @return    The valid value
+   *@return    The valid value
    */
   private boolean isValid() {
     if (linkModuleId == -1 || linkItemId == -1) {
@@ -742,8 +742,8 @@ public class FileFolder extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  rs                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   private void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("folder_id");
@@ -763,8 +763,8 @@ public class FileFolder extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildItemCount(Connection db) throws SQLException {
     itemCount = 0;
@@ -798,10 +798,10 @@ public class FileFolder extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  hierarchy         Description of the Parameter
-   * @param  currentId         Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  hierarchy         Description of the Parameter
+   *@param  currentId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public static void buildHierarchy(Connection db, Map hierarchy, int currentId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -830,9 +830,9 @@ public class FileFolder extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  newParentId       Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  newParentId       Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void updateParentId(Connection db, int newParentId) throws SQLException {
     if (id == -1) {
@@ -861,8 +861,8 @@ public class FileFolder extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildSubFolders(Connection db) throws SQLException {
     if (id == -1) {

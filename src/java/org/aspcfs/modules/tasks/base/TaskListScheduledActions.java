@@ -95,6 +95,7 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
       // Add Tasks to calendar details
       this.setOwner(userId);
+      this.setComplete(Constants.FALSE);
       this.buildShortList(db);
       Iterator taskList = this.iterator();
       int taskCount = 0;
@@ -131,6 +132,7 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
       // Add Task count to calendar
       this.setOwner(userId);
+      this.setComplete(Constants.FALSE);
       HashMap dayEvents = this.queryRecordCount(db, timeZone);
       Set s = dayEvents.keySet();
       Iterator i = s.iterator();

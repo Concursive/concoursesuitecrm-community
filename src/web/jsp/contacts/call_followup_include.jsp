@@ -6,7 +6,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong><%= CallDetails.getAlertDate() == null ? "Follow-up Activity Reminder" : "Modify Activity"%></strong>
+      <strong><%= ((CallDetails.getAlertDate() == null) || (request.getAttribute("alertDateWarning") != null)) ? "Follow-up Activity Reminder" : "Modify Activity"%></strong>
     </th>
   </tr>
   <tr class="containerBody">
@@ -23,11 +23,11 @@
     </td>
     <td>
       <%-- TODO: If no time set, default to 8:30 AM, or user's daily start time --%>
-      <zeroio:dateSelect form="addCall" field="alertDate" timestamp="<%= CallDetails.getAlertDate() %>" />
+      <zeroio:dateSelect form="addCall" field="alertDate" timestamp="<%= CallDetails.getAlertDate() %>" timeZone="<%= CallDetails.getAlertDateTimeZone() %>"/>
       at
-      <zeroio:timeSelect baseName="alertDate" value="<%= CallDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>"/>
-      <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
-      <font color="red">*</font><%= showAttribute(request, "alertDateError") %>
+      <zeroio:timeSelect baseName="alertDate" value="<%= CallDetails.getAlertDate() %>" timeZone="<%= CallDetails.getAlertDateTimeZone() %>"/>
+      <%= TimeZoneSelect.getSelect("alertDateTimeZone", CallDetails.getAlertDateTimeZone()).getHtml() %>
+      <font color="red">*</font><%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -90,3 +90,4 @@
     </td>
   </tr>
 </table>
+<input type="hidden" name="onlyWarnings" value="<%=(CallDetails.getOnlyWarnings()?"on":"off")%>" />

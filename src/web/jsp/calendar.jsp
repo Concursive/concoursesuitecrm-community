@@ -94,6 +94,7 @@
       CompanyCalendar.setShowSubject(false);
 %>
 <%= CompanyCalendar.getHtml() %>
+<dhv:include name="calendar.legend" none="true">
 <table bgcolor="#FFFFFF" width="98%" border="0" cellpadding="4" cellspacing="0">
   <tr>
     <td>
@@ -103,7 +104,7 @@
           <img border='0' src='images/accounts.gif'> -- Accounts
         </td>
         <td nowrap>
-          <img border='0' src='images/alertcall.gif'> -- Calls
+          <img border='0' src='images/alertcall.gif'><img border='0' src='images/box-hold.gif' align="ABSBOTTOM"> -- Calls
         </td>
         <td nowrap>
           <img border='0' src='images/event-holiday.gif'> -- Holidays
@@ -117,13 +118,19 @@
           <img border='0' src='images/box.gif'> -- Tasks
         </td>
         <td>
-          <img border='0' src='images/tree0.gif'> -- Tickets
+          <img border='0' src='images/tree0.gif'> -- <dhv:label name="tickets.tickets">Tickets</dhv:label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <img border='0' src='images/box-checked.gif'> -- Complete <dhv:label name="tickets.tickets">Tickets</dhv:label>
         </td>
       </tr>
     </table>
     </td>
   </tr>
 </table>
+</dhv:include>
 </form>
 <dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendarDetails")) %>">
 </body>

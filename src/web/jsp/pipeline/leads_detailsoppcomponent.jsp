@@ -161,7 +161,11 @@ Component Details
       Alert Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= LeadsComponentDetails.getAlertDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= LeadsComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= LeadsComponentDetails.getAlertDateTimeZone() %>" showTimeZone="yes"  default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(LeadsComponentDetails.getAlertDateTimeZone())){%>
+      <br>
+      <zeroio:tz timestamp="<%= LeadsComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"  default="&nbsp;" />
+      <% } %>
     </td>
   </tr>
 </dhv:evaluate>  

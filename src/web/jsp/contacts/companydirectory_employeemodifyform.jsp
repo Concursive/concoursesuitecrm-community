@@ -81,16 +81,16 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-  <a href="CompanyDirectory.do?command=ListEmployees">Employees</a> >
+  <a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.employees">Employees</dhv:label></a> >
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
-    <a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
+    <a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.view">View Employees</dhv:label></a> >
     <%}%>
   <% }else{ %>
-  <a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
-  <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%=ContactDetails.getId()%>">Employee Details</a> >
+  <a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.view">View Employees</dhv:label></a> >
+  <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%=ContactDetails.getId()%>"><dhv:label name="employees.details">Employee Details</dhv:label></a> >
   <% } %>
-  Modify Employee
+  <dhv:label name="employees.modify">Modify Employee</dhv:label>
 </td>
 </tr>
 </table>
@@ -115,7 +115,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong><%= ContactDetails.getId() > 0 ? "Update" : "Add" %> an Employee Record</strong>
+      <strong><%= ContactDetails.getId() > 0 ? "Update" : "Add" %> <dhv:label name="employees.employee">Employee</dhv:label> Record</strong>
     </th>
   </tr>
   <tr class="containerBody">

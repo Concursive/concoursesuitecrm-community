@@ -233,6 +233,24 @@ public class FileDownload {
    *  Description of the Method
    *
    *@param  context        Description of the Parameter
+   *@param  bytes          Description of the Parameter
+   *@param  contentType    Description of the Parameter
+   *@exception  Exception  Description of the Exception
+   */
+  public void streamFile(ActionContext context, byte[] bytes, String contentType) throws Exception {
+    context.getResponse().setContentType(contentType);
+    ServletOutputStream outputStream = context.getResponse().getOutputStream();
+
+    outputStream.write(bytes, 0, bytes.length);
+    outputStream.flush();
+    outputStream.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context        Description of the Parameter
    *@exception  Exception  Description of the Exception
    */
   private void send(ActionContext context) throws Exception {

@@ -9,7 +9,7 @@
 <dhv:evaluate if="<%= ticketEventList.getOpenProductTickets().size() > 0 %>">
 <table border="0">
   <tr>
-    <td colspan="6">
+    <td colspan="6" nowrap>
       <%-- event name --%>
       <img border="0" src="images/box.gif" align="texttop" title="Tickets"><a href="javascript:changeImages('productticketsimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('productticketsdetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="productticketsimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Requests you have made that are in progress</a>&nbsp;(<%= ticketEventList.getOpenProductTickets().size() %>)
     </td>
@@ -43,8 +43,8 @@
     <tr>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayTicketMenu('selectTicket<%= menuCount %>','menuTicket','<%=  thisTicket.getId() %>', '<%= thisTicket.getContactId() %>');"
-       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTicket');"><img src="images/select.gif" name="selectTicket<%= menuCount %>" id="selectTicket<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayTicketMenu('select<%= menuCount %>','menuTicket','<%=  thisTicket.getId() %>', '<%= thisTicket.getContactId() %>');"
+       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTicket');"><img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>
        <%= thisTicket.getId() %>

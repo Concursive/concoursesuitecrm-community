@@ -1,13 +1,13 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisOrgId = -1;
-  var menu_init_account = false;
+  var menu_init = false;
   //Set the action parameters for clicked item
   function displayAccountMenu(loc, id, orgId) {
     thisOrgId = orgId;
-    if (!menu_init_account) {
-      menu_init_account = true;
-      new ypSlideOutMenu("menuAccount", "down", 0, 0, 170, getHeight("menuAccountTable"));
+    if (!menu_init) {
+      menu_init = true;
+      initialize_menus();
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }

@@ -1211,6 +1211,17 @@ public class FileItem extends GenericBean {
     pst.execute();
     pst.close();
 
+    this.buildVersionList(db);
+    Iterator iterator = (Iterator) this.versionList.iterator();
+    while (iterator.hasNext()) {
+      FileItemVersion latestVersion = (FileItemVersion) iterator.next();
+      if (Double.toString(this.version).equals(Double.toString(latestVersion.getVersion()))) {
+        latestVersion.setClientFilename(this.getClientFilename());
+        latestVersion.setSubject(this.getSubject());
+        latestVersion.update(db);
+        break;
+      }
+    }
     return true;
   }
 

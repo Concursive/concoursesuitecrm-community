@@ -90,5 +90,27 @@ public class CurrencyFormat {
     }
     return buf.toString();
   }
+
+
+  /**
+   *  Gets the currencyString attribute of the CurrencyFormat class
+   *
+   *@param  value  Description of the Parameter
+   *@return        The currencyString value
+   */
+  public static String getCurrencyString(Double value) {
+    String currencyAsString = "";
+    try {
+      String language = System.getProperty("LANGUAGE");
+      String country = System.getProperty("COUNTRY");
+      Locale locale = new Locale(language, country);
+
+      NumberFormat nf = NumberFormat.getInstance(locale);
+      currencyAsString = nf.format(value);
+    } catch (Exception e) {
+    }
+    return currencyAsString;
+  }
+
 }
 

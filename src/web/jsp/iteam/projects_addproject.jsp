@@ -45,7 +45,7 @@
 </script>
 <body onLoad="document.inputForm.title.focus()">
 <form method="post" name="inputForm" action="ProjectManagement.do?command=InsertProject&auto-populate=true" onSubmit="return checkForm(this);">
-<%= showError(request, "actionError", false) %>
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2">
@@ -88,7 +88,7 @@
       at
       <zeroio:timeSelect baseName="estimatedCloseDate" value="<%= Project.getEstimatedCloseDate() %>" timeZone="<%= User.getTimeZone() %>"/>
       <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
-      <%= showAttribute(request, "estimatedCloseDateError") %>
+      <%= showAttribute(request, "estimatedCloseDateError") %><%= showWarningAttribute(request, "estimatedCloseDateWarning") %>
     </td>
   </tr>
 <zeroio:debug value="Requested By"/>
@@ -111,6 +111,7 @@
       <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
       <input type="hidden" name="budgetCurrency" value="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" />
       <input type="text" name="budget" size="15" value="<zeroio:number value="<%= Project.getBudget() %>" locale="<%= User.getLocale() %>" />">
+      <%=showAttribute(request,"budgetError")%>
     </td>
   </tr>
   <%--
@@ -147,6 +148,7 @@
   --%>
 </table>
 <br />
+<input type="hidden" name="onlyWarnings" value="<%=(Project.getOnlyWarnings()?"on":"off")%>" />
 <input type="hidden" name="showNews" value="true">
 <input type="hidden" name="showDetails" value="true">
 <input type="hidden" name="showTeam" value="true">

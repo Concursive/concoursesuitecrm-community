@@ -17,12 +17,12 @@
 		String acctNumber = request.getParameter("acctNumber");
 		if (acctName == null || "".equals(acctName.trim())){
 	%>
-			document.acctListView.acctName.value = "Account Name";
+			document.acctListView.acctName.value = "<dhv:label name="organization.name">Account Name</dhv:label>";
 	<%
 		}
 		if (acctNumber == null || "".equals(acctNumber.trim())){
 	%>
-		  document.acctListView.acctNumber.value = "Account Number";
+		  document.acctListView.acctNumber.value = "<dhv:label name="organization.accountNumber">Account Number</dhv:label>";
 	<%
 		}
 	%>		
@@ -31,11 +31,11 @@
 	function clearSearchFields(clear, field) {
 		if (clear) {
 			// Clear the search fields since clear button was clicked
-			document.acctListView.acctName.value = "Account Name";
-			document.acctListView.acctNumber.value = "Account Number";
+			document.acctListView.acctName.value = "<dhv:label name="organization.accountNumber">Account Name</dhv:label>";
+			document.acctListView.acctNumber.value = "<dhv:label name="organization.accountNumber">Account Number</dhv:label>";
 		} else {
 			// The search fields recieved focus
-			if (field.value == "Account Name" || field.value == "Account Number") {
+			if (field.value == "<dhv:label name="organization.name">Account Name</dhv:label>" || field.value == "<dhv:label name="organization.accountNumber">Account Number</dhv:label>") {
 				field.value = "" ;
 			}
 		}

@@ -711,7 +711,9 @@ public final class ExternalContacts extends CFSModule {
         return ("PermissionError");
       }
       //check whether or not the owner is an active User
-      thisContact.checkEnabledOwnerAccount(db);
+      if (!thisContact.getEmployee()) {
+        thisContact.checkEnabledOwnerAccount(db);
+      }
       context.getRequest().setAttribute("ContactDetails", thisContact);
       addRecentItem(context, thisContact);
     } catch (Exception errorMessage) {
@@ -760,7 +762,9 @@ public final class ExternalContacts extends CFSModule {
       context.getRequest().setAttribute("AccessTypeList", accessTypeList);
 
       //check whether or not the owner is an active User
-      thisContact.checkEnabledOwnerAccount(db);
+      if (! thisContact.getEmployee()) {
+        thisContact.checkEnabledOwnerAccount(db);
+      }
       addRecentItem(context, thisContact);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -931,7 +935,6 @@ public final class ExternalContacts extends CFSModule {
         thisOrg = new Organization(db, thisContact.getOrgId());
         thisContact.setOrgName(thisOrg.getName());
       }
-
       if (thisContact.getId() > 0) {
         addModuleBean(context, "External Contacts", "Update Contact");
         Contact oldContact = new Contact(db, id);

@@ -7,6 +7,7 @@ import java.sql.*;
 import java.text.*;
 import java.util.*;
 import java.io.*;
+import javax.servlet.ServletContext;
 
 /**
  *  Useful methods for working with multiple databases and database fields
@@ -95,6 +96,10 @@ public class DatabaseUtils {
     String databaseName = db.getClass().getName();
     if (databaseName.indexOf("postgresql") > -1) {
       return POSTGRESQL;
+    } else if ("net.sourceforge.jtds.jdbc.ConnectionJDBC3".equals(databaseName)) {
+      return MSSQL;
+    } else if ("net.sourceforge.jtds.jdbc.TdsConnectionJDBC3".equals(databaseName)) {
+      return MSSQL;
     } else if (databaseName.indexOf("sqlserver") > -1) {
       return MSSQL;
     } else if ("net.sourceforge.jtds.jdbc.TdsConnection".equals(databaseName)) {
@@ -102,27 +107,31 @@ public class DatabaseUtils {
     } else if (databaseName.indexOf("oracle") > -1) {
       return ORACLE;
     } else {
+      System.out.println("DatabaseUtils-> Driver: " + databaseName);
       return -1;
     }
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db    Description of the Parameter
+   *@param  date  Description of the Parameter
+   *@return       Description of the Return Value
+   */
   public static String castDateTimeToDate(Connection db, String date) {
-    String tmpDate = "";
     switch (DatabaseUtils.getType(db)) {
         case DatabaseUtils.POSTGRESQL:
-          tmpDate = date + "::date";
-          break;
+          return (date + "::date");
         case DatabaseUtils.MSSQL:
-          tmpDate += "CONVERT(char(10), " + date + ", 101)";
-          break;
+          return ("CONVERT(char(10), " + date + ", 101)");
         default:
-          break;
+          return "";
     }
-    return tmpDate;
   }
-  
-  
+
+
   /**
    *  Gets the currVal attribute of the DatabaseUtils class
    *
@@ -155,8 +164,8 @@ public class DatabaseUtils {
 
 
   /**
-   *  Useful when generating a SQL order by clause to sort by year for the
-   *  given timestamp field
+   *  Useful when generating a SQL order by clause to sort by year for the given
+   *  timestamp field
    *
    *@param  db         Description of the Parameter
    *@param  fieldname  Description of the Parameter
@@ -246,7 +255,7 @@ public class DatabaseUtils {
     return ("ON".equalsIgnoreCase(tmp) ||
         "TRUE".equalsIgnoreCase(tmp) ||
         "1".equals(tmp) ||
-        "Y".equals(tmp));
+        "Y".equalsIgnoreCase(tmp));
   }
 
 
@@ -521,7 +530,8 @@ public class DatabaseUtils {
 
 
   /**
-   *  Reads in a text file of SQL statements and executes them
+   *  Reads in a text file of SQL statements from the filesystem, and executes
+   *  them
    *
    *@param  db                Description of the Parameter
    *@param  filename          Description of the Parameter
@@ -529,9 +539,41 @@ public class DatabaseUtils {
    *@exception  IOException   Description of the Exception
    */
   public static void executeSQL(Connection db, String filename) throws SQLException, IOException {
+    BufferedReader in = new BufferedReader(new FileReader(filename));
+    executeSQL(db, in);
+    in.close();
+  }
+
+
+  /**
+   *  Reads in a text file of SQL statements from the servlet context, and
+   *  executes them
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@param  filename          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   *@exception  IOException   Description of the Exception
+   */
+  public static void executeSQL(Connection db, ServletContext context, String filename) throws SQLException, IOException {
+    InputStream source = context.getResourceAsStream(filename);
+    BufferedReader in = new BufferedReader(new InputStreamReader(source));
+    executeSQL(db, in);
+    in.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  in                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   *@exception  IOException   Description of the Exception
+   */
+  public static void executeSQL(Connection db, BufferedReader in) throws SQLException, IOException {
     // Read the file and execute each statement
     StringBuffer sql = new StringBuffer();
-    BufferedReader in = new BufferedReader(new FileReader(filename));
     String line = null;
     Statement st = db.createStatement();
     int tCount = 0;
@@ -567,7 +609,6 @@ public class DatabaseUtils {
       st.execute(sql.toString());
     }
     st.close();
-    in.close();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Executed " + tCount + " total statements");
     }

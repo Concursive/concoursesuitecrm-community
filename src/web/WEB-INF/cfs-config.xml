@@ -207,8 +207,9 @@
     <forward name="ViewPopupOK" resource="/mycfs/calendar_calls_list.jsp" layout="style"/>
     <forward name="ModifyPopupOK" resource="/mycfs/calendar_calls_modify.jsp" layout="style"/>
     <forward name="SuggestCallPopupOK" resource="/contacts/companydirectory_calls_suggest.jsp" layout="style"/>
-    <forward name="InsertPopupOK" resource="/closepopupandreload.jsp" layout="style"/>
-    <forward name="UpdatePopupOK" resource="/closepopupandreload.jsp" layout="style"/>
+    <forward name="InsertPopupOK" resource="/closepopupandreload.jsp" />
+    <forward name="UpdatePopupOK" resource="/closepopupandreload.jsp" />
+    <forward name="InsertCallPopupOK" resource="/closepopupandreload.jsp" />
   </action>
   <action name="CalendarTasks" class="org.aspcfs.modules.tasks.actions.MyTasks">
     <bean name="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request" />
@@ -251,7 +252,7 @@
     <forward name="DoReassignOK" resource="/Reassignments.do?command=Reassign"/>
   </action>
   
-  <action name="ContactsList" class="org.aspcfs.modules.actions.ContactsList">
+	<action name="ContactsList" class="org.aspcfs.modules.actions.ContactsList">
     <forward name="CFSContactListOK" resource="/mycfs/mycfs_contactslist.jsp" layout="style"/>
    </action>
   
@@ -482,7 +483,7 @@
     <forward name="SendMessageOK" resource="/contacts/companydirectory_confirmsend.jsp" layout="nav"/>
     <forward name="ForwardCallOK" resource="/contacts/companydirectory_forwardcall.jsp" layout="nav"/>
    </action>
-   <action name="ExternalContactsPrototype" class="org.aspcfs.prototype.actions.Prototype">
+   <action name="ExternalContactsPrototype" class="org.aspcfs.modules.prototype.actions.Prototype">
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="IncludeStyleContainerOK" resource="/includepage.jsp" layout="styleContainer"/>
   </action>
@@ -691,6 +692,9 @@
     <forward name="ViewMessagesOK" resource="/accounts/accounts_contacts_messages_view.jsp" layout="nav"/>
     <forward name="MessageDetailsOK" resource="/accounts/accounts_contacts_messages_details.jsp" layout="nav"/>
     <forward name="AddPortalOK" resource="/ContactsPortal.do?command=Add" />
+    <forward name="AddCommunicationsPreferenceOK" resource="/accounts/accounts_contacts_communication_preference_add.jsp" layout="style" />
+    <forward name="SaveCommunicationsPreferenceOK" resource="/products/product_set_opener.jsp" layout="style"/>
+    <forward name="DeleteCommunicationsPreferenceOK" resource="/Contacts.do?command=ViewMessages" />
   </action>
   <action name="ContactForm" class="org.aspcfs.modules.contacts.actions.ContactForm">
     <forward name="PrepareAddOK" resource="noresource"/>
@@ -710,6 +714,7 @@
     <forward name="DetailsOK" resource="/accounts/accounts_contacts_calls_details.jsp" layout="nav"/>
     <forward name="AddOK" resource="/accounts/accounts_contacts_calls_add.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/AccountContactsCalls.do?command=View"/>
+    <forward name="InsertCallPopupOK" resource="/closepopupandreload.jsp" />
     <forward name="UpdateOK" resource="/AccountContactsCalls.do?command=Details"/>
     <forward name="UpdateListOK" resource="/AccountContactsCalls.do?command=View"/>
     <forward name="ModifyOK" resource="/accounts/accounts_contacts_calls_modify.jsp" layout="nav"/>
@@ -788,6 +793,16 @@
     <forward name="DeleteContactFailedDetailsOK" resource="/accounts/accounts_importcontact_details.jsp" layout="nav"/>
   </action>
   
+  <action name="AccountRelationships" class="org.aspcfs.modules.accounts.actions.AccountRelationships">
+    <bean name="Relationship" class="org.aspcfs.modules.relationships.base.Relationship" scope="request"/>
+    <forward name="ViewOK" resource="/accounts/accounts_relationships_view.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/accounts/accounts_relationships_add.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/accounts/accounts_relationships_modify.jsp" layout="nav"/>
+    <forward name="SaveOK" resource="/AccountRelationships.do?command=View"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/AccountRelationships.do?command=View"/>
+  </action>
+  
   <action name="RevenueManager" class="org.aspcfs.modules.accounts.actions.RevenueManager">
     <bean name="Revenue" class="org.aspcfs.modules.accounts.base.Revenue" scope="request"/>
     <forward name="AddOK" resource="/accounts/accounts_revenue_add.jsp" layout="nav"/>
@@ -858,6 +873,7 @@
     <forward name="PermissionError" resource="/accounts/accounts_tickets_form_permission_error.jsp" layout="nav"/>
   </action>
   <action name="AccountTicketActivityLog" class="org.aspcfs.modules.accounts.actions.AccountTicketActivityLog">
+    <bean name="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request" />
     <forward name="ListOK" resource="/accounts/accounts_tickets_activity_log.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/accounts/accounts_tickets_view_activity.jsp" layout="nav"/>
     <forward name="AddOK" resource="/accounts/accounts_tickets_add_activity.jsp" layout="nav"/>
@@ -1236,6 +1252,7 @@
     <forward name="InsertOK" resource="/troubletickets/troubletickets_details.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/troubletickets/TroubleTickets.do?command=Details"/>
     <forward name="UpdatePopupOK" resource="/closepopupandreload.jsp"/>
+    <forward name="ReopenPopupOK" resource="/closepopupandreload.jsp"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="CategoryJSListOK" resource="/troubletickets/troubletickets_js_categorylist.jsp"/>

@@ -57,6 +57,8 @@ public class OpportunityList extends ArrayList {
   private boolean buildComponentInfo = false;
   private int typeId = 0;
 
+  protected HashMap errors = new HashMap();
+
 
   /**
    *  Constructor for the ContactList object
@@ -553,6 +555,26 @@ public class OpportunityList extends ArrayList {
 
 
   /**
+   *  Gets the errors attribute of the OpportunityList object
+   *
+   *@return    The errors value
+   */
+  public HashMap getErrors() {
+    return errors;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasErrors() {
+    return (errors.size() > 0);
+  }
+
+
+  /**
    *  Builds a list of contacts based on several parameters. The parameters are
    *  set after this object is constructed, then the buildList method is called
    *  to generate the list.
@@ -561,11 +583,14 @@ public class OpportunityList extends ArrayList {
    *@exception  SQLException  Description of Exception
    *@since                    1.1
    */
-  public void buildList(Connection db) throws SQLException {
+  public boolean buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
 
+    if (!isValid()){
+     return false; 
+    }
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
@@ -675,6 +700,21 @@ public class OpportunityList extends ArrayList {
         oppBean.getHeader().retrieveComponentCount(db);
         oppBean.getHeader().buildTotal(db);
       }
+    }
+    return true;
+  }
+
+
+  /**
+   *  Gets the valid attribute of the OpportunityList object
+   *
+   *@return    The valid value
+   */
+  private boolean isValid() {
+    if (errors.size() > 0) {
+      return false;
+    } else {
+      return true;
     }
   }
 

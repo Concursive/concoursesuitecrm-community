@@ -695,7 +695,7 @@ public class CallList extends ArrayList {
         "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
         "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
         "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
-        "c.alert_call_type_id, c.alert, c.followup_notes, t.*, talert.description as alertType, " +
+        "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, t.*, talert.description as alertType, " +
         "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.company as ctcompany, p.description as priority " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +

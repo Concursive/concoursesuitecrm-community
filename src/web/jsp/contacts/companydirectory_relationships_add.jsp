@@ -12,7 +12,7 @@
 <a href="ExternalContacts.do">Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
-<a href="ExternalContactsPrototype.do?module=ExternalContacts&include=companydirectory_relationships_view.jsp&contactId=<%=ContactDetails.getId()%>">Relationships</a> >
+<a href="ExternalContactsPrototype.do?module=ExternalContacts&include=contacts/companydirectory_relationships_view.jsp&contactId=<%=ContactDetails.getId()%>">Relationships</a> >
 Build Relationship
 </td>
 </tr>
@@ -34,8 +34,8 @@ Build Relationship
       <iframe src="ExternalContactsPrototype.do?include=companydirectory_relationships_viewopportunities.jsp&inline=true" frameborder="0" <dhv:browser id="ie" include="false">width="100%" height="150"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 200;"</dhv:browser>>
         browser doesn't support this view
       </iframe>
-      <input type="BUTTON" value="Save" onclick="window.location.href='ExternalContactsPrototype.do?module=ExternalContacts&include=companydirectory_relationships_view.jsp&contactId=<%= ContactDetails.getId() %>'">
-      <input type="BUTTON" value="Cancel" onclick="window.location.href='ExternalContactsPrototype.do?module=ExternalContacts&include=companydirectory_relationships_view.jsp&contactId=<%= ContactDetails.getId() %>'">
+      <input type="BUTTON" value="Save" onclick="window.location.href='ExternalContactsPrototype.do?module=ExternalContacts&include=contacts/companydirectory_relationships_view.jsp&contactId=<%= ContactDetails.getId() %>'">
+      <input type="BUTTON" value="Cancel" onclick="window.location.href='ExternalContactsPrototype.do?module=ExternalContacts&include=contacts/companydirectory_relationships_view.jsp&contactId=<%= ContactDetails.getId() %>'">
     </td>
   </tr>
 </table>

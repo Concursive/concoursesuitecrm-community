@@ -174,7 +174,7 @@ Re-assignments
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      Tickets (Open) (<%= SourceOpenTickets.size() %>)
+      <dhv:label name="tickets.tickets">Tickets</dhv:label> (Open) (<%= SourceOpenTickets.size() %>)
 		</td>
     <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>

@@ -27,7 +27,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do">Help Desk</a> > 
+<a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <a href="TroubleTickets.do?command=Reports">Export Data</a> >
 New Export
 </td>
@@ -68,9 +68,9 @@ New Export
     </td>
     <td colspan="4">
       <select name="criteria1">
-        <option value="assignedToMe">Tickets Assigned to Me</option>
+        <option value="assignedToMe"><dhv:label name="tickets.assigned.to.me">Tickets Assigned to Me</dhv:label></option>
         <option value="unassigned">Open/Unassigned</option>
-        <option value="createdByMe">Tickets Created by Me</option>
+        <option value="createdByMe"><dhv:label name="tickets.created.by.me">Tickets Created by Me</dhv:label></option>
       </select>
     </td>
   </tr>
@@ -100,7 +100,7 @@ New Export
         <option value="priority" >Priority</option>
         <option value="severity" >Severity</option>
         <option value="department" >Department</option>
-        <option value="source" >Ticket Source</option>
+        <option value="source" ><dhv:label name="tickets.source">Ticket Source</dhv:label></option>
         <option value="solution" >Resolution</option>
         <option value="assignedTo" >Resource Assigned</option>
         <option value="category" >Category</option>

@@ -156,6 +156,7 @@ public final class AccountContactsOpps extends CFSModule {
       if (!recordInserted) {
         processErrors(context, newOpp.getHeader().getErrors());
         processErrors(context, newOpp.getComponent().getErrors());
+        processWarnings(context,newOpp.getComponent().getWarnings());
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);
         context.getRequest().setAttribute("TypeList", newOpp.getComponent().getTypeList());
@@ -279,6 +280,7 @@ public final class AccountContactsOpps extends CFSModule {
         newComponent.queryRecord(db, newComponent.getId());
       } else {
         processErrors(context, newComponent.getErrors());
+        processWarnings(context,newComponent.getWarnings());
         //rebuild the form
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);

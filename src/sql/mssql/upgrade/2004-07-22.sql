@@ -13,9 +13,9 @@ CREATE TABLE lookup_call_priority (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BIT DEFAULT 0,
-  level INT DEFAULT 0,
-  enabled BOOLEAN DEFAULT true,
-  weight INT NOT NULL
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  weight INTEGER NOT NULL
 );
 
 CREATE TABLE lookup_call_reminder (
@@ -23,14 +23,14 @@ CREATE TABLE lookup_call_reminder (
   description VARCHAR(50) NOT NULL,
   base_value INTEGER DEFAULT 0 NOT NULL,
   default_item BIT DEFAULT 0,
-  level INT DEFAULT 0,
+  level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1
 );
 
 CREATE TABLE lookup_call_result (
   result_id INT IDENTITY PRIMARY KEY,
   description VARCHAR(100) NOT NULL,
-  level INT DEFAULT 0,
+  level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1,
   next_required BIT NOT NULL DEFAULT 0,
   next_days INT NOT NULL DEFAULT 0,
@@ -85,6 +85,8 @@ ALTER TABLE call_log ADD CONSTRAINT call_status_not_null_CHECK(status_id NOT NUL
 ALTER TABLE call_log ALTER status_id SET DEFAULT 1;
 ALTER TABLE call_log ADD reminder_value INT NULL;
 ALTER TABLE call_log ADD reminder_type_id INT NULL REFERENCES lookup_call_reminder(code);
+UPDATE call_log SET result_id = 1;
+UPDATE call_log SET status_id = 2;
 
 /* Activity Indexes */
 CREATE INDEX "call_log_entered_idx" ON "call_log" (entered);

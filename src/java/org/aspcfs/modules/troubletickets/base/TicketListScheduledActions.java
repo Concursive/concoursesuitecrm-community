@@ -86,8 +86,7 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
       Timestamp todayTimestamp = new Timestamp(System.currentTimeMillis());
       String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, todayTimestamp);
-      
-      // List 1
+      // List 1//currently non-functional
       // NOTE: any filters set here must be unset in next list
       this.setOrgId(thisUser.getContact().getOrgId());
       this.setOnlyOpen(true);
@@ -114,14 +113,9 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
       while (m.hasNext()) {
         Ticket thisTicket = (Ticket) m.next();
         thisTicket.buildContactInformation(db);
-        
         alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisTicket.getEstimatedResolutionDate());
-        
-        TicketEventList thisList = (TicketEventList) companyCalendar.getEventList(alertDate, CalendarEventList.EVENT_TYPES[13]);
+        TicketEventList thisList = (TicketEventList) companyCalendar.getEventList(alertDate, CalendarEventList.EVENT_TYPES[12]);
         thisList.getOpenTickets().add(thisTicket);
-        
-        //thisEvent = companyCalendar.addEvent(alertDate, "",
-        //    "Ticket# " + thisTicket.getPaddedId() + " (" + thisTicket.getCompanyName() + (thisTicket.getThisContact().getValidName() != null && !"".equals(thisTicket.getThisContact().getValidName()) ? ": " + thisTicket.getThisContact().getValidName() + ")" : ")"), CalendarEventList.EVENT_TYPES[13], thisTicket.getId());
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Ticket Calendar Alerts 2");
@@ -140,7 +134,7 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
     if (System.getProperty("DEBUG") != null) {
       System.out.println("TicketListScheduledActions --> Building Alert Counts ");
     }
-    // List 1
+    // List 1//currently non-functional
     try {
       //get User
       User thisUser = module.getUser(context, module.getUserId(context));
@@ -154,19 +148,23 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
       Iterator i = dayEvents.keySet().iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[11], thisDay, dayEvents.get(thisDay));
+        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[11], dayEvents.get(thisDay));
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Ticket Calendar Alert Counts 1");
     }
-    
     // List 2
     try {
+      //clear the search criteria for the first list
+      this.clear();
+      this.setOrgId(-1);
+      this.setOnlyWithProducts(false);
+
       //get the userId
       int userId = module.getUserId(context);
-      
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
+
+      //set the search criteria for the first list
       this.setAssignedTo(this.getUserId());
       this.setOnlyAssigned(true);
       this.setHasEstimatedResolutionDate(true);
@@ -175,11 +173,10 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
       Iterator i = dayEvents.keySet().iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[13], thisDay, dayEvents.get(thisDay));
+        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[12], dayEvents.get(thisDay));
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Ticket Calendar Alert Counts 2");
     }
   }
-  
 }

@@ -1064,9 +1064,8 @@ public final class CampaignManager extends CFSModule {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
       }
-      TimeZone userTimeZone = this.getUserTimeZone(context);
-      campaign.setActiveDate(DateUtils.getUserToServerDateTimeString(userTimeZone, DateFormat.SHORT, DateFormat.LONG, activeDate));
-
+      campaign.setTimeZoneForDateFields(context.getRequest(), activeDate, "activeDate");
+      
       if (context.getRequest().getParameter("active") != null) {
         campaign.setActive(context.getRequest().getParameter("active"));
       }
@@ -1074,6 +1073,9 @@ public final class CampaignManager extends CFSModule {
       campaign.setModifiedBy(this.getUserId(context));
       campaign.setSendMethodId(Integer.parseInt(context.getRequest().getParameter("sendMethodId")));
       resultCount = campaign.updateSchedule(db);
+      if (resultCount == 0){
+       processErrors(context,campaign.getErrors()); 
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {

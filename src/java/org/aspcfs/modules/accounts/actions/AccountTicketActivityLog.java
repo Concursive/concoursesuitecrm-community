@@ -127,7 +127,7 @@ public final class AccountTicketActivityLog extends CFSModule {
     // Begin with data needed for all forms
     try {
       thisTicket = (Ticket)context.getFormBean();
-      if (thisTicket  == null){
+      if (thisTicket.getId() == -1){
         String ticketId = context.getRequest().getParameter("id");
         String formId = context.getRequest().getParameter("formId");
         db = this.getConnection(context);
@@ -188,6 +188,7 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
+      thisMaintenance.setOnlyWarnings(context.getRequest().getParameter("onlyWarnings"));
       //Saves each activity item (description of work done for the day)
       thisMaintenance.setRequestItems(context.getRequest());
       thisMaintenance.setRequest(context.getRequest());
@@ -197,6 +198,7 @@ public final class AccountTicketActivityLog extends CFSModule {
         context.getRequest().setAttribute("ticketDetails", thisTicket);
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
         processErrors(context, thisMaintenance.getErrors());
+        processWarnings(context, thisMaintenance.getWarnings());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -244,7 +246,7 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
-
+      thisMaintenance.setOnlyWarnings(context.getRequest().getParameter("onlyWarnings"));
       //Saves each activity item (description of work done for the day)
       thisMaintenance.setRequestItems(context.getRequest());
       String modified = context.getRequest().getParameter("modified");
@@ -256,6 +258,7 @@ public final class AccountTicketActivityLog extends CFSModule {
         context.getRequest().setAttribute("ticketDetails", thisTicket);
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
         processErrors(context, thisMaintenance.getErrors());
+        processWarnings(context, thisMaintenance.getWarnings());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

@@ -13,9 +13,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Opportunities</a> >
 <a href="Opportunities.do?command=Details&headerId=<%= OppComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">Opportunity Details</a> >
 Component Details
@@ -172,8 +172,14 @@ Component Details
       Alert Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= OppComponentDetails.getAlertDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OppComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= OppComponentDetails.getAlertDateTimeZone() %>" showTimeZone="yes"  default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(OppComponentDetails.getAlertDateTimeZone())){%>
+      <br>
+      <zeroio:tz timestamp="<%= OppComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"  default="&nbsp;" />
+      <% } %>
     </td>
+
+     </td>
   </tr>
 </dhv:evaluate>  
   <tr class="containerBody">

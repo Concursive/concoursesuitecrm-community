@@ -5,6 +5,7 @@
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="PreviousCallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript">
@@ -22,16 +23,14 @@
       <%-- include call add form --%>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="button" value="Cancel" onClick="javascript:window.close();">
-      <input type="reset" value="Reset">&nbsp;
       [<a href="javascript:showHistory();">View Contact History</a>]
       <br>
-      <%= showError(request, "actionError") %>
+      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%@ include file="../contacts/call_include.jsp" %>
       &nbsp;
       <br>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="button" value="Cancel" onClick="javascript:window.close();">
-      <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
       <dhv:evaluate if="<%= PreviousCallDetails.getId() > -1 %>">

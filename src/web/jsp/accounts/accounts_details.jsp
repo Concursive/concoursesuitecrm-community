@@ -10,13 +10,13 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <% if (request.getParameter("return") == null) { %>
 <a href="Accounts.do?command=Search">Search Results</a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
 <a href="Accounts.do?command=Dashboard">Dashboard</a> >
 <%}%>
-Account Details
+<dhv:label name="accounts.details">Account Details</dhv:label>
 </td>
 </tr>
 </table>
@@ -132,7 +132,11 @@ Account Details
       Contract End Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getContractEndDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(OrgDetails.getContractEndDateTimeZone())){%>
+      <br>
+      <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
 </dhv:evaluate>
@@ -154,7 +158,11 @@ Account Details
       Alert Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getAlertDateTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(OrgDetails.getAlertDateTimeZone())){%>
+      <br>
+      <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+      <% } %>
     </td>
   </tr>
 </dhv:evaluate>

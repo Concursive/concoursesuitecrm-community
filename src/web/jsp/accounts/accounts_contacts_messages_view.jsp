@@ -10,13 +10,13 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <% if (request.getParameter("return") == null) { %>
 <a href="Accounts.do?command=Search">Search Results</a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
 <a href="Accounts.do?command=Dashboard">Dashboard</a> >
 <%}%>
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 <a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Messages
@@ -52,13 +52,11 @@ Messages
       </table>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
-          <th width="8">
-            <strong>Action</strong>
-          </th>
-          <th width="65%" nowrap>
+          <th width="20%" nowrap>
             <a href="Contacts.do?command=ViewMessages&column=c.name&contactId=<%= ContactDetails.getId() %>"><strong>Name</strong></a>
             <%= AccountContactMessageListInfo.getSortIcon("c.name") %>
           </th>
+          <th width="45%" ><strong>Message Subject</strong></th>
           <th width="20%" nowrap>
             <a href="Contacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %>"><strong>Run Date</strong></a>
             <%= AccountContactMessageListInfo.getSortIcon("active_date") %>
@@ -76,13 +74,12 @@ Messages
         Campaign campaign = (Campaign)j.next();
   %>
         <tr class="containerBody">
-          <td width="8" valign="top" nowrap class="row<%= rowid %>">
-            <%= (campaign.hasRun()?"&nbsp;":"<font color=\"#787878\">Cancel</font>") %>
-          </td>
           <td class="row<%= rowid %>">
-            <a href="Contacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%>"><%= toHtml(campaign.getMessageName()) %></a>
+            <a href="Contacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%>">
+            <%= toHtml(campaign.getMessageName() != null && !"".equals(campaign.getMessageName()) ? campaign.getMessageName() : "\"No name available\"") %></a>
             <%= (("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))?" <font color=\"red\">(Canceled)</font>":"") %>
           </td>
+          <td class="row<%= rowid %>"><%= toHtml(campaign.getMessageSubject()) %></td>
           <td valign="top" align="left" nowrap class="row<%= rowid %>">
             <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
           </td>
@@ -93,7 +90,7 @@ Messages
 	<%}%>
  <%} else {%>
   <tr class="containerBody">
-    <td colspan="7">
+    <td colspan="4">
       No messages found.
     </td>
   </tr>

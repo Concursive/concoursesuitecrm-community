@@ -315,8 +315,16 @@ public class ApplicationPrefs {
     if (!this.has("SYSTEM.CURRENCY")) {
       this.add("SYSTEM.CURRENCY", "USD");
     }
+    System.setProperty("CURRENCY",this.get("SYSTEM.CURRENCY"));
     if (!this.has("SYSTEM.LANGUAGE")) {
       this.add("SYSTEM.LANGUAGE", "en_US");
+    }
+    String[] locale = this.get("SYSTEM.LANGUAGE").split("_");
+    if (locale[0] != null){
+      System.setProperty("LANGUAGE",locale[0]);
+    }
+    if (locale[1] != null){
+      System.setProperty("COUNTRY",locale[1]);
     }
     //Define whether the app requires SSL for browser clients
     addParameter(context, "ForceSSL", this.get("FORCESSL"), "false");

@@ -14,6 +14,7 @@
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%@ include file="../initPageIsManagerOf.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
@@ -203,11 +204,6 @@
       formTest = false;
     }
   </dhv:include>
-  <dhv:include name="organization.alert" none="true">
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      alertMessage += "Alert Date is before today's date\r\n";
-    }
-  </dhv:include>
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -245,7 +241,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<a href="Accounts.do?command=Search">Search Results</a> >
@@ -254,9 +250,9 @@
 	<%}%>
 <%} else {%>
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <%}%>
-Modify Account
+<dhv:label name="accounts.modify">Modify Account</dhv:label>
 </td>
 </tr>
 </table>
@@ -285,8 +281,8 @@ Modify Account
 <dhv:evaluate exp="<%= popUp %>">
       <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -306,7 +302,7 @@ Modify Account
 <dhv:include name="organization.types" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
-      Account Type(s)
+      <dhv:label name="accounts.account.types">Account Type(s)</dhv:label> 
     </td>
   	<td>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
@@ -336,6 +332,7 @@ Modify Account
     </td>
   </tr>
 </dhv:include>
+<dhv:include name="organization.classification" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Classification
@@ -343,14 +340,19 @@ Modify Account
     <td>
       <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() != null) %>">
         Individual
-        <input type="hidden" name="form_type" value="individual">
       </dhv:evaluate>
       <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() == null) %>">
         Organization
-        <input type="hidden" name="form_type" value="organization">
-      </dhv:evaluate>        
+      </dhv:evaluate>
     </td>
   </tr>
+</dhv:include>
+  <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() != null) %>">
+    <input type="hidden" name="form_type" value="individual">
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() == null) %>">
+    <input type="hidden" name="form_type" value="organization">
+  </dhv:evaluate>        
   <dhv:evaluate if="<%= OrgDetails.getPrimaryContact() == null %>">
   <tr class="containerBody">
     <td nowrap class="formLabel" name="orgname1" id="orgname1">
@@ -453,6 +455,7 @@ Modify Account
     </td>
     <td>
       <zeroio:dateSelect form="addAccount" field="contractEndDate" timestamp="<%= OrgDetails.getContractEndDate() %>" />
+      <%= TimeZoneSelect.getSelect("contractEndDateTimeZone", OrgDetails.getContractEndDateTimeZone()).getHtml() %>
       <%= showAttribute(request, "contractEndDateError") %>
     </td>
   </tr>
@@ -472,7 +475,8 @@ Modify Account
     </td>
     <td>
       <zeroio:dateSelect form="addAccount" field="alertDate" timestamp="<%= OrgDetails.getAlertDate() %>" />
-      <%= showAttribute(request, "alertDateError") %>
+      <%= TimeZoneSelect.getSelect("alertDateTimeZone", OrgDetails.getAlertDateTimeZone()).getHtml() %>
+      <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>
   </dhv:include>
@@ -995,6 +999,7 @@ Modify Account
   </tr>
 </table>
 <br />
+<input type="hidden" name="onlyWarnings" value=<%=(OrgDetails.getOnlyWarnings()?"on":"off")%> />
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>

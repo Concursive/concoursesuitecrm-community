@@ -446,7 +446,6 @@ public final class MyCFS extends CFSModule {
     if (context.getRequest().getParameter("savecopy") != null) {
       savecopy = true;
     }
-
     if (context.getRequest().getParameter("mailrecipients") != null) {
       copyrecipients = true;
     }
@@ -460,10 +459,6 @@ public final class MyCFS extends CFSModule {
       thisRecord.buildResources(db);
       if (selectedList.size() != 0) {
         String replyAddr = thisRecord.getContact().getEmailAddress("Business");
-        recordInserted = thisNote.insert(db);
-        if (!recordInserted) {
-          processErrors(context, thisNote.getErrors());
-        }
         int count = -1;
         int contactId = -1;
         boolean firstTime = true;
@@ -487,10 +482,6 @@ public final class MyCFS extends CFSModule {
           thisContact.build(db);
           thisContact.checkUserAccount(db);
           thisNote.setSentTo(contactId);
-          recordInserted = thisNote.insertLink(db, thisContact.hasAccount());
-          if (!recordInserted) {
-            processErrors(context, thisNote.getErrors());
-          }
 
           if ((!email.startsWith("P:")) && (copyrecipients || !thisContact.hasAccount())) {
             SMTPMessage mail = new SMTPMessage();
@@ -518,6 +509,15 @@ public final class MyCFS extends CFSModule {
             } else {
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("MyCFS-> Sending message to " + email);
+              }
+              //Message is sent. Insert the note
+              recordInserted = thisNote.insert(db);
+              if (!recordInserted) {
+                processErrors(context, thisNote.getErrors());
+              }
+              recordInserted = thisNote.insertLink(db, thisContact.hasAccount());
+              if (!recordInserted) {
+                processErrors(context, thisNote.getErrors());
               }
             }
           } else if (email.startsWith("P:") && !thisContact.hasAccount()) {
@@ -689,7 +689,8 @@ public final class MyCFS extends CFSModule {
         thisList = new HashMap();
         context.getSession().setAttribute("finalContacts", thisList);
       }
-      thisList.put(new Integer(sender.getContactId()), "");
+      String recipientEmail = recipient.getEmailAddress("Business");
+      thisList.put(new Integer(sender.getContactId()), recipientEmail);
       if (context.getSession().getAttribute("selectedContacts") != null) {
         HashMap tmp = (HashMap) context.getSession().getAttribute("selectedContacts");
         tmp.clear();

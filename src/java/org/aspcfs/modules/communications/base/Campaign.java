@@ -81,6 +81,7 @@ public class Campaign extends GenericBean {
   private java.sql.Timestamp approvalDate = null;
   private LinkedHashMap groups = null;
   private java.sql.Timestamp lastResponse = null;
+  private String messageSubject = null;
 
 
   /**
@@ -198,6 +199,26 @@ public class Campaign extends GenericBean {
 
 
   /**
+   *  Sets the messageSubject attribute of the Campaign object
+   *
+   *@param  tmp  The new messageSubject value
+   */
+  public void setMessageSubject(String tmp) {
+    this.messageSubject = tmp;
+  }
+
+
+  /**
+   *  Gets the messageSubject attribute of the Campaign object
+   *
+   *@return    The messageSubject value
+   */
+  public String getMessageSubject() {
+    return messageSubject;
+  }
+
+
+  /**
    *  Gets the type attribute of the Campaign object
    *
    *@return    The type value
@@ -292,7 +313,7 @@ public class Campaign extends GenericBean {
     ResultSet rs = null;
 
     String sql =
-        "SELECT c.*, msg.name as messageName, dt.description as delivery " +
+        "SELECT c.*, msg.name as messageName, dt.description as delivery, msg.subject as messageSubject " +
         "FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
@@ -1845,6 +1866,7 @@ public class Campaign extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@param  baseFilePath      Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    *@since                    1.5
@@ -1894,7 +1916,7 @@ public class Campaign extends GenericBean {
         ActiveSurvey thisSurvey = new ActiveSurvey(db, activeSurveyId);
         thisSurvey.delete(db);
       }
-      
+
       //Delete any attached documents
       FileItemList fileList = new FileItemList();
       fileList.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
@@ -1902,7 +1924,7 @@ public class Campaign extends GenericBean {
       fileList.buildList(db);
       fileList.delete(db, baseFilePath + "communications" + Constants.fs);
       fileList = null;
-      
+
       //Delete any dashboard documents, included exported recipients
       FileItemList docList = new FileItemList();
       docList.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
@@ -1910,7 +1932,7 @@ public class Campaign extends GenericBean {
       docList.buildList(db);
       docList.delete(db, baseFilePath + "campaign" + Constants.fs);
       docList = null;
-      
+
       pst = db.prepareStatement(
           "DELETE FROM campaign WHERE campaign_id = ? ");
       //"DELETE FROM campaign WHERE id = ? ");
@@ -2039,7 +2061,7 @@ public class Campaign extends GenericBean {
           "modifiedby = ?, " +
           "modified = CURRENT_TIMESTAMP " +
           "WHERE campaign_id = ? " +
-          //"WHERE id = ? " +
+      //"WHERE id = ? " +
           "AND modified = ? " +
           "AND active = ? ");
       int i = 0;
@@ -2315,11 +2337,12 @@ public class Campaign extends GenericBean {
    */
   public int updateSchedule(Connection db) throws SQLException {
     int resultCount = 0;
-
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-
+    if (!isValid(db)) {
+      return resultCount;
+    }
     PreparedStatement pst = null;
     int i = 0;
     pst = db.prepareStatement(
@@ -2349,7 +2372,6 @@ public class Campaign extends GenericBean {
    *@since                    1.15
    */
   protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
 
     if (name == null || name.trim().equals("")) {
       errors.put("nameError", "Campaign name is required");
@@ -2458,6 +2480,7 @@ public class Campaign extends GenericBean {
     modifiedBy = rs.getInt("modifiedby");
     //message table
     messageName = rs.getString("messageName");
+    messageSubject = rs.getString("messageSubject");
     //lookup_delivery_options table
     deliveryName = rs.getString("delivery");
   }
@@ -2513,9 +2536,9 @@ public class Campaign extends GenericBean {
     pst.close();
     return enteredBy;
   }
-  
-  
-    /**
+
+
+  /**
    *  Gets the properties that are TimeZone sensitive for a Call
    *
    *@return    The timeZoneParams value

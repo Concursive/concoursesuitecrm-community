@@ -5,6 +5,7 @@
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="product" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
 <jsp:useBean id="customerProduct" class="org.aspcfs.modules.products.base.CustomerProduct" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
@@ -12,11 +13,11 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
-<a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Tickets</a> >
-Ticket Details
+<a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
+<a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
+<dhv:label name="accounts.tickets.details">Ticket Details</dhv:label>
 </td>
 </tr>
 </table>
@@ -95,12 +96,12 @@ Ticket Details
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
           <tr>
             <th colspan="2">
-              <strong>Ticket Information</strong>
+              <strong><dhv:label name="accounts.tickets.information">Ticket Information</dhv:label></strong>
             </th>     
           </tr>
           <tr class="containerBody">
             <td class="formLabel">
-              Ticket Source
+              <dhv:label name="accounts.tickets.source">Ticket Source</dhv:label>
             </td>
             <td>
               <%= toHtml(TicketDetails.getSourceName()) %>
@@ -255,7 +256,11 @@ Ticket Details
               Estimated Resolution Date
             </td>
             <td>
-              <zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" default="&nbsp;"/>
+              <zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" timeZone="<%= TicketDetails.getEstimatedResolutionDateTimeZone() %>" showTimeZone="yes"  default="&nbsp;"/>
+              <% if(!User.getTimeZone().equals(TicketDetails.getEstimatedResolutionDateTimeZone())){%>
+              <br>
+              <zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"  default="&nbsp;" />
+              <% } %>
             </td>
           </tr>
           <tr class="containerBody">
@@ -263,7 +268,7 @@ Ticket Details
               Issue Notes
             </td>
             <td>
-              <font color="red">Previous notes for this ticket are listed in the "Ticket Log History" section of the history tab.</font>
+              <font color="red"><dhv:label name="accounts.tickets.ticket.previousTicket">(Previous notes for this ticket are listed under the history tab.)</dhv:label></font>
             </td>
           </tr>
         </table>

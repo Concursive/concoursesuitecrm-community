@@ -219,6 +219,7 @@
     <action name="AccountOrdersProducts"/>
     <action name="AccountOrdersPayments"/>
     <action name="AccountContactsCalls"/>
+    <action name="AccountRelationships"/>
     <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>

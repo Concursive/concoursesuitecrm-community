@@ -99,7 +99,11 @@
       Date Listed
     </td>
     <td>
+    <%if ((asset.getDateListed() == null) && (request.getAttribute("dateListedError") == null)){%>
+      <zeroio:dateSelect form="addAccountAsset" field="dateListed" />
+    <%}else{%>
       <zeroio:dateSelect form="addAccountAsset" field="dateListed" timestamp="<%= asset.getDateListed() %>" />
+    <%}%>
       <%= showAttribute(request, "dateListedError") %>
       <font color="red">*</font>
     </td>

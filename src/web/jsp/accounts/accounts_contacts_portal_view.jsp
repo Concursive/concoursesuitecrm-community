@@ -12,9 +12,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 Contact Details
 </td>
@@ -90,7 +90,7 @@ Contact Details
       <%if (portalUserDetails.getEnabled()){%>
       <zeroio:tz timestamp="<%= portalUserDetails.getExpires() %>" dateOnly="true" default="&nbsp;"/>
       <%}else{%>
-       Portal access has been disbled for this account contact.
+       <dhv:label name="accounts.portalAccessDisabled">Portal access has been disbled for this account contact.</dhv:label>
       <%}%>
     </td>
   </tr>

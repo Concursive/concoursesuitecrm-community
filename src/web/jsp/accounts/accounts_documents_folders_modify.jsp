@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.base.accounts.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.accounts.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="FileFolder" class="com.zeroio.iteam.base.FileFolder" scope="request"/>
 <jsp:useBean id="folderHierarchy" class="com.zeroio.iteam.base.FileFolderHierarchy" scope="request"/>

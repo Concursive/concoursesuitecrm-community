@@ -47,6 +47,7 @@ public class OpportunityComponent extends GenericBean {
   protected double commission = 0;
   protected String type = null;
   protected java.sql.Timestamp alertDate = null;
+  protected String alertDateTimeZone = "America/New_York";
   protected String alertText = null;
   protected String notes = null;
   protected java.sql.Timestamp entered = null;
@@ -212,6 +213,16 @@ public class OpportunityComponent extends GenericBean {
    */
   public void setAlertDate(String tmp) {
     this.alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the alertDateTimeZone attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new alertDateTimeZone value
+   */
+  public void setAlertDateTimeZone(String tmp) {
+    this.alertDateTimeZone = tmp;
   }
 
 
@@ -760,6 +771,16 @@ public class OpportunityComponent extends GenericBean {
    */
   public java.sql.Timestamp getAlertDate() {
     return alertDate;
+  }
+
+
+  /**
+   *  Gets the alertDateTimeZone attribute of the OpportunityComponent object
+   *
+   *@return    The alertDateTimeZone value
+   */
+  public String getAlertDateTimeZone() {
+    return alertDateTimeZone;
   }
 
 
@@ -1661,7 +1682,7 @@ public class OpportunityComponent extends GenericBean {
     if (low > high) {
       errors.put("lowHighError", "Low Estimate cannot be higher than the High Estimate");
     }
-    if (closeDate == null || getCloseDateString().trim().equals("")) {
+    if ((closeDate == null || getCloseDateString().trim().equals("")) && (errors.get("closeDateError") == null)) {
       errors.put("closeDateError", "Close Date cannot be left blank");
     }
 
@@ -1685,9 +1706,35 @@ public class OpportunityComponent extends GenericBean {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Opportunity Component-> Cannot insert: object is not valid");
       }
+      //Check warnings
+      checkWarnings();
+      onlyWarnings = false;
       return false;
     } else {
+      //Do not check for warnings if it was found that only warnings existed
+      // in the previous call to isValid for the same form.
+      if (!onlyWarnings) {
+        //Check for warnings if there are no errors
+        checkWarnings();
+        if (hasWarnings()) {
+          onlyWarnings = true;
+          return false;
+        }
+      }
       return true;
+    }
+  }
+
+
+  /**
+   *  Generates warnings that need to be reviewed before the form can be
+   *  submitted.
+   */
+  protected void checkWarnings() {
+    if ((errors.get("alertDateError") == null) && (alertDate != null)) {
+      if (alertDate.before(new java.util.Date())) {
+        warnings.put("alertDateWarning", "Alert date is earlier than current date or set to current date");
+      }
     }
   }
 
@@ -1839,7 +1886,7 @@ public class OpportunityComponent extends GenericBean {
     alertText = rs.getString("alert");
     enabled = rs.getBoolean("enabled");
     notes = rs.getString("notes");
-
+    alertDateTimeZone = rs.getString("alertdate_timezone");
     //table
     stageName = rs.getString("stagename");
   }
@@ -1896,7 +1943,7 @@ public class OpportunityComponent extends GenericBean {
       sql.append("stagedate = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
     sql.append("type = ?, stage = ?, description = ?, " +
-        "closedate = ?, alertdate = ?, alert = ?, terms = ?, units = ?, owner = ?, notes = ?, ");
+        "closedate = ?, alertdate = ?, alert = ?, alertdate_timezone = ?, terms = ?, units = ?, owner = ?, notes = ?, ");
     if (override == false) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
@@ -1925,6 +1972,7 @@ public class OpportunityComponent extends GenericBean {
     DatabaseUtils.setTimestamp(pst, ++i, this.getCloseDate());
     DatabaseUtils.setTimestamp(pst, ++i, this.getAlertDate());
     pst.setString(++i, this.getAlertText());
+    pst.setString(++i, this.getAlertDateTimeZone());
     pst.setDouble(++i, this.getTerms());
     pst.setString(++i, this.getUnits());
     pst.setInt(++i, this.getOwner());
@@ -1992,8 +2040,12 @@ public class OpportunityComponent extends GenericBean {
     return thisList;
   }
 
+
   /**
-   *  sets the items in the type list to the the lookup list 'types' Organization object
+   *  sets the items in the type list to the the lookup list 'types'
+   *
+   *@param  db                The new typeListToTypes value
+   *@exception  SQLException  Description of the Exception
    */
   public void setTypeListToTypes(Connection db) throws SQLException {
     Iterator itr = typeList.iterator();

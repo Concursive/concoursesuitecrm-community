@@ -16,7 +16,7 @@
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
-  function details() {
+  function folderDetails() {
     window.location.href='Accounts.do?command=Fields&orgId=' + thisOrgId + '&catId=' + thisCatId + '&recId=' + thisRecId;
   }
   
@@ -32,7 +32,7 @@
   <div id="menuFoldersContent">
     <table id="menuFoldersTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="accounts-accounts-folders-view">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="folderDetails()">
         <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

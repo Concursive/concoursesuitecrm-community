@@ -42,6 +42,7 @@ public class Message extends GenericBean {
   private boolean enabled = true;
   private boolean formatLineFeeds = true;
   private int accessType = -1;
+  private boolean disableNameValidation = false;
 
   /**
    *  Description of the Field
@@ -175,6 +176,36 @@ public class Message extends GenericBean {
    */
   public void setAccessType(String accessType) {
     this.accessType = Integer.parseInt(accessType);
+  }
+
+
+  /**
+   *  Sets the disableNameValidation attribute of the Message object
+   *
+   *@param  tmp  The new disableNameValidation value
+   */
+  public void setDisableNameValidation(boolean tmp) {
+    this.disableNameValidation = tmp;
+  }
+
+
+  /**
+   *  Sets the disableNameValidation attribute of the Message object
+   *
+   *@param  tmp  The new disableNameValidation value
+   */
+  public void setDisableNameValidation(String tmp) {
+    this.disableNameValidation = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the disableNameValidation attribute of the Message object
+   *
+   *@return    The disableNameValidation value
+   */
+  public boolean getDisableNameValidation() {
+    return disableNameValidation;
   }
 
 
@@ -647,7 +678,8 @@ public class Message extends GenericBean {
 
 
   /**
-   *  Returns the owner for the message(for a message owner is the person who entered the message)
+   *  Returns the owner for the message(for a message owner is the person who
+   *  entered the message)
    *
    *@return    The ownerString value
    */
@@ -695,7 +727,6 @@ public class Message extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-
     if (!isValid()) {
       return false;
     }
@@ -746,6 +777,7 @@ public class Message extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
+      e.printStackTrace();
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -902,7 +934,7 @@ public class Message extends GenericBean {
   public boolean isValid() throws SQLException {
     errors.clear();
 
-    if (name == null || name.trim().equals("")) {
+    if ((name == null || name.trim().equals("")) && !disableNameValidation) {
       errors.put("nameError", "Message name is required");
     }
 

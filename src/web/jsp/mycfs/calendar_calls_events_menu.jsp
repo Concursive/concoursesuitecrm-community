@@ -4,7 +4,7 @@
   var thisContactId = -1;
   var thisCallId = -1;
   var thisView = "";
-  var menu_init_call = false;
+  var menu_init = false;
   //Set the action parameters for clicked item
   function displayCallMenu(loc, id, accountId, contactId, callId, view) {
     thisAccountId = accountId;
@@ -12,9 +12,9 @@
     thisCallId = callId;
     thisView = view;
     updateCallMenu();
-    if (!menu_init_call) {
-      menu_init_call = true;
-      new ypSlideOutMenu("menuCall", "down", 0, 0, 170, getHeight("menuCallTable"));
+    if (!menu_init) {
+      menu_init = true;
+      initialize_menus();
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }

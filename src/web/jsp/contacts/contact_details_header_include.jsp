@@ -39,7 +39,7 @@
         <i>Account Contact</i>
       </dhv:evaluate>
       <dhv:evaluate if="<%= ContactDetails.getOrgId() == 0 %>">
-        <i>Employee</i>
+        <i><dhv:label name="employees.employee">Employee</dhv:label></i>
       </dhv:evaluate>
       <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
         <i>General Contact</i>

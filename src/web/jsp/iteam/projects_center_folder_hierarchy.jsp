@@ -1,10 +1,12 @@
-<%--
- Copyright 2000-2004 Matt Rajkowski
- matt.rajkowski@teamelements.com
- http://www.teamelements.com
- This source code cannot be modified, distributed or used without
- permission from Matt Rajkowski
---%>
+<%-- 
+  - Copyright Notice: (C) 2000-2004 Team Elements, All Rights Reserved.
+  - License: This source code cannot be modified, distributed or used without
+  -          written permission from Team Elements. This notice must remain in
+  -          place.
+  - Author(s): Matt Rajkowski
+  - Version: $Id$
+  - Description: 
+  --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
@@ -20,7 +22,7 @@
   </td>
 </tr>
 </table>
-&nbsp;<br>
+<br />
 <table cellpadding="0" cellspacing="0" width="100%" border="1" rules="cols">
   <tr class="section">
     <td valign="top" width="100%">
@@ -44,15 +46,13 @@
 %>    
   <tr class="row<%= rowid %>">
     <td valign="top">
-      <% for(int j=1;j<thisFolder.getLevel();j++){ %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%}%>
-      <img border="0" src="images/treespace.gif" align="absmiddle" height="16" width="19">
+      <% for(int j=1;j<thisFolder.getLevel();j++){ %><img border="0" src="images/treespace.gif" align="absmiddle" height="16" width="19">&nbsp;<%}%><img border="0" src="images/treespace.gif" align="absmiddle" height="16" width="19">
       <img alt="" src="images/tree7o.gif" border="0" align="absmiddle" height="16" width="19"/>
       <img border="0" src="images/icons/stock_open-16-19.gif" align="absmiddle">
-    <% if(FileFolder.getParentId() != thisFolder.getId() && (FileFolder.getId() != thisFolder.getId())){  %>
+    <% if(FileFolder.getParentId() != thisFolder.getId() && FileFolder.getId() != thisFolder.getId()) {  %>
       <a href="ProjectManagementFileFolders.do?command=SaveMove&pid=<%= Project.getId() %>&id=<%= FileFolder.getId() %>&popup=true&folderId=<%= thisFolder.getId() %>&return=ProjectFiles&param=<%= Project.getId() %>&param2=<%= FileFolder.getParentId() %>"><%= toHtml(thisFolder.getSubject()) %></a>
     <% } else if(FileFolder.getId() == thisFolder.getId()) { %>
         <%= toHtml(thisFolder.getSubject()) %>
-        (selected folder)
     <% } else {%>
       <%= toHtml(thisFolder.getSubject()) %>
       (current folder)

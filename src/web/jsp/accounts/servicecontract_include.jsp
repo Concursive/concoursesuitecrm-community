@@ -28,22 +28,6 @@
       message += "- Initial Contract Date is required\r\n";
       formTest = false;
     }
-    
-    if (!form.currentEndDate.value == ""){
-      if ((!form.initialStartDate.value == "") && (form.currentStartDate.value == "")) {
-        if (compareDates(form.currentEndDate.value,form.initialStartDate.value) == -1){ 
-          message += "- Current End Date should be greater than Initial Contract Date\r\n";
-          formTest = false;
-        }
-      }
-      if (!form.currentStartDate.value == ""){ 
-        if (compareDates(form.currentEndDate.value,form.currentStartDate.value) == -1){ 
-          message += "- Current End Date should be greater than Current Contract Date\r\n";
-          formTest = false;
-        }
-      }
-    }
-
     if (form.responseTime.value < 1){ 
       message += "- Response Time is required\r\n";
       formTest = false;

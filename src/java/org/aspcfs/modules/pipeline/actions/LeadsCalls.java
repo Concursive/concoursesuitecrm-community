@@ -239,19 +239,14 @@ public final class LeadsCalls extends CFSModule {
     Contact thisContact = null;
     Call parentCall = null;
     Call previousCall = null;
-
+    int tmpStatusId = -1;
+    addModuleBean(context, "View Opportunities", "Opportunity Activities");
     //Process the parameters
     String parentId = context.getRequest().getParameter("parentId");
     String action = context.getRequest().getParameter("action");
-
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-
-    String headerId = context.getRequest().getParameter("headerId");
-
-    addModuleBean(context, "View Opportunities", "Opportunity Activities");
-
     //Save the current call
     Call thisCall = (Call) context.getFormBean();
     thisCall.setModifiedBy(getUserId(context));
@@ -262,10 +257,13 @@ public final class LeadsCalls extends CFSModule {
     if (!(hasPermission(context, permission))) {
       return ("PermissionError");
     }
-
     Connection db = null;
     try {
       db = this.getConnection(context);
+      String headerId = context.getRequest().getParameter("headerId");
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
+
       if (thisCall.getId() > 0) {
         previousCall = new Call(db, thisCall.getId());
         if (!hasViewpointAuthority(db, context, "pipeline", previousCall.getEnteredBy(), userId)) {
@@ -274,6 +272,11 @@ public final class LeadsCalls extends CFSModule {
       }
       if (parentId != null && Integer.parseInt(parentId) > -1) {
         parentCall = new Call(db, Integer.parseInt(parentId));
+      }
+      //Store current status id to reset the object upon server error or warning
+      tmpStatusId = thisCall.getStatusId();
+      if ((tmpStatusId == Call.COMPLETE_FOLLOWUP_PENDING) && (!"pending".equals(context.getRequest().getParameter("view")))){
+        thisCall.setCheckAlertDate(false);
       }
       //update or insert the call
       if (thisCall.getId() > 0) {
@@ -297,11 +300,13 @@ public final class LeadsCalls extends CFSModule {
           }
         }
         thisCall.setEnteredBy(getUserId(context));
-      recordInserted = thisCall.insert(db, context);
+        recordInserted = thisCall.insert(db, context);
       }
 
       if (!recordInserted && resultCount == -1) {
         processErrors(context, thisCall.getErrors());
+        processWarnings(context, thisCall.getWarnings());
+        thisCall.setStatusId(tmpStatusId);
         if (thisCall.getId() > 0) {
           addModifyFormElements(db, context, thisCall);
         }
@@ -461,7 +466,10 @@ public final class LeadsCalls extends CFSModule {
     Call thisCall = null;
     try {
       db = this.getConnection(context);
+      thisCall = (Call) context.getFormBean();
+      if (thisCall.getId() == -1 ){
         thisCall = new Call(db, callId);
+      }
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
@@ -744,7 +752,7 @@ public final class LeadsCalls extends CFSModule {
     LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
     callTypeList.addItem(0, "--None--");
     context.getRequest().setAttribute("CallTypeList", callTypeList);
-    if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && thisCall.getAlertDate() == null)) {
+    if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && (thisCall.getAlertDate() == null || context.getRequest().getAttribute("alertDateWarning") != null))) {
       //Reminder Type Lookup
       LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
       context.getRequest().setAttribute("ReminderTypeList", reminderList);

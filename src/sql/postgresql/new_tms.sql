@@ -35,6 +35,14 @@ CREATE TABLE lookup_ticketsource (
   ,enabled BOOLEAN DEFAULT true
 );
 
+--CREATE TABLE lookup_ticket_status (
+--  code serial PRIMARY KEY
+--  ,description VARCHAR(300) NOT NULL UNIQUE
+--  ,default_item BOOLEAN DEFAULT false
+--  ,level INTEGER DEFAULT 0
+--  ,enabled BOOLEAN DEFAULT true
+--);
+
 
 CREATE TABLE ticket_priority (
   code SERIAL PRIMARY KEY

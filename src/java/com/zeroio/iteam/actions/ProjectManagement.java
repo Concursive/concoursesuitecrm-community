@@ -27,6 +27,7 @@ import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.tasks.base.TaskCategoryList;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DateUtils;
 
 /**
  *  Project Management module for CFS
@@ -268,8 +269,10 @@ public final class ProjectManagement extends CFSModule {
     assignmentList.setForProjectUser(getUserId(context));
     assignmentList.setAssignmentsForUser(getUserId(context));
     assignmentList.setIncompleteOnly(true);
+    assignmentList.setOnlyIfRequirementOpen(true);
     newsList.setForUser(getUserId(context));
     newsList.setAlertRangeStart(alertRangeStart);
+    newsList.setCurrentNews(Constants.TRUE);
     issueList.setForUser(getUserId(context));
     issueList.setAlertRangeStart(alertRangeStart);
     fileItemList.setLinkModuleId(Constants.PROJECTS_FILES);
@@ -395,6 +398,10 @@ public final class ProjectManagement extends CFSModule {
     }
     Connection db = null;
     try {
+      Project thisProject = (Project) context.getFormBean();
+      if (thisProject.getRequestDate() == null) {
+        thisProject.setRequestDate(DateUtils.roundUpToNextFive(System.currentTimeMillis()));
+      }
       db = getConnection(context);
       //Category List
       LookupList categoryList = new LookupList(db, "lookup_project_category");
@@ -445,6 +452,7 @@ public final class ProjectManagement extends CFSModule {
       //}
       if (thisProject.insert(db, context)) {
         updateProjectCache(context, thisProject.getId(), thisProject.getTitle());
+        indexAddItem(context, thisProject);
         //Add the current user to the team TODO: Put in a transaction
         TeamMember thisMember = new TeamMember();
         thisMember.setProjectId(thisProject.getId());
@@ -458,6 +466,7 @@ public final class ProjectManagement extends CFSModule {
         return (executeCommandProjectCenter(context));
       } else {
         this.processErrors(context, thisProject.getErrors());
+        this.processWarnings(context, thisProject.getWarnings());
         return (executeCommandAddProject(context));
       }
     } catch (Exception errorMessage) {
@@ -623,11 +632,12 @@ public final class ProjectManagement extends CFSModule {
       resultCount = thisProject.update(db, context);
       if (resultCount == -1) {
         this.processErrors(context, thisProject.getErrors());
+        this.processWarnings(context, thisProject.getWarnings());
         //Category List
         LookupList categoryList = new LookupList(db, "lookup_project_category");
         categoryList.addItem(-1, "--None--");
         context.getRequest().setAttribute("categoryList", categoryList);
-      } else {
+      } else if (resultCount == 1) {
         updateProjectCache(context, thisProject.getId(), thisProject.getTitle());
         indexAddItem(context, thisProject);
       }

@@ -16,8 +16,8 @@
   <tr>
     <td>
      <h3>
-	    When a supported form type is found, this page shows the ticket activity log or 
-      the asset maintenance notes.
+	    <dhv:label name="tickets.invalidForm">When a supported form type is found, this page shows the ticket activity log or 
+      the asset maintenance notes.</dhv:label>
      <h3>
     </td>
   </tr>

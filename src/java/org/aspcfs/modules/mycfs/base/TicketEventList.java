@@ -28,7 +28,6 @@ public class TicketEventList {
 
 
 
-
   /**
    *  Gets the size attribute of the TicketEventList object
    *
@@ -57,12 +56,28 @@ public class TicketEventList {
   public TicketList getOpenProductTickets() {
     return openProductTickets;
   }
-  
-  
-  public TicketList getOpenTickets() { return openTickets; }
-  public void setOpenTickets(TicketList tmp) { this.openTickets = tmp; }
-  
-  
+
+
+  /**
+   *  Gets the openTickets attribute of the TicketEventList object
+   *
+   *@return    The openTickets value
+   */
+  public TicketList getOpenTickets() {
+    return openTickets;
+  }
+
+
+  /**
+   *  Sets the openTickets attribute of the TicketEventList object
+   *
+   *@param  tmp  The new openTickets value
+   */
+  public void setOpenTickets(TicketList tmp) {
+    this.openTickets = tmp;
+  }
+
+
   /**
    *  Gets the sizeString attribute of the TaskEventList object
    *

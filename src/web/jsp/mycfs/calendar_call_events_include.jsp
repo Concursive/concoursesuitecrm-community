@@ -10,7 +10,7 @@
 <dhv:evaluate if="<%= callEventList.getPendingCalls().size() > 0 %>">
 <table border="0">
   <tr>
-    <td colspan="6">
+    <td colspan="6" nowrap>
       <%-- event name --%>
       <img border="0" src="images/box-hold.gif" align="texttop" title="Activities"><a href="javascript:changeImages('pendingcallsimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('pendingcalldetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="pendingcallsimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Pending Activities</a>&nbsp;(<%= callEventList.getPendingCalls().size() %>)
     </td>
@@ -30,7 +30,7 @@
         <strong>Due</strong>
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Account</strong>
+        <strong><dhv:label name="accounts.account">Account</dhv:label></strong>
       </th>
       <th class="weekSelector" nowrap>
         <strong>Contact</strong>
@@ -53,10 +53,10 @@
     <tr <%= toString(pendingCall.getPriorityString()).startsWith("H") ? "class=\"highlightRow\"" : ""%>>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayCallMenu('selectCall<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getContactId() %>', '<%= pendingCall.getId() %>','pending');" 
-          onMouseOver="over(0, <%= menuCount %>)" 
-          onmouseout="out(0, <%= menuCount %>);hideMenu('menuCall');"><img 
-          src="images/select.gif" name="selectCall<%= menuCount %>" id="selectCall<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayCallMenu('select<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getContactId() %>', '<%= pendingCall.getId() %>','pending');" 
+          onMouseOver="over(0, <%= menuCount %>);" 
+          onmouseout="out(0, <%= menuCount %>);hideMenu('menuCall');">
+          <img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>
        <zeroio:tz timestamp="<%= pendingCall.getAlertDate() %>" timeOnly="true"/>
@@ -93,7 +93,7 @@
 <dhv:evaluate if="<%= callEventList.getCompletedCalls().size() > 0 %>">
 <table border="0">
   <tr>
-    <td colspan="6">
+    <td colspan="6" nowrap>
       <%-- event name --%>
       <img border="0" src="images/alertcall.gif" align="texttop" title="Activities"><a href="javascript:changeImages('completedcallsimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('completedcalldetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="completedcallsimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Completed Activities</a>&nbsp;(<%= callEventList.getCompletedCalls().size() %>)
     </td>
@@ -113,7 +113,7 @@
         <strong>Time</strong>
       </th>
       <td class="weekSelector" nowrap>
-       <strong>Account</strong>
+       <strong><dhv:label name="accounts.account">Account</dhv:label></strong>
      </td>
      <th class="weekSelector" nowrap>
         <strong>Contact</strong>
@@ -130,10 +130,10 @@
   <tr>
    <td>
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-     <a href="javascript:displayCallMenu('selectCall<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
+     <a href="javascript:displayCallMenu('select<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
         onMouseOver="over(0, <%= menuCount %>)" 
-        onmouseout="out(0, <%= menuCount %>);hideMenu('menuCall')"><img 
-        src="images/select.gif" name="selectCall<%= menuCount %>" id="selectCall<%= menuCount %>" align="absmiddle" border="0"></a>
+        onMouseOut="out(0, <%= menuCount %>);hideMenu('menuCall');"><img 
+        src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
    </td>
    <td nowrap>
      <zeroio:tz timestamp="<%= completedCall.getCompleteDate() %>" timeOnly="true"/>

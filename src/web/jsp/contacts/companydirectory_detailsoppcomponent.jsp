@@ -167,7 +167,11 @@ Component Details
       Alert Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" dateOnly="true" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getAlertDateTimeZone() %>" showTimeZone="yes"  default="&nbsp;"/>
+      <% if(!User.getTimeZone().equals(oppComponentDetails.getAlertDateTimeZone())){%>
+      <br>
+      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"  default="&nbsp;" />
+      <% } %>
     </td>
   </tr>
 </dhv:evaluate>  

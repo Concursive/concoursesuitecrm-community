@@ -301,6 +301,15 @@
       <name>pattern</name>
       <required>no</required>
     </attribute>
+    <attribute>
+      <name>timeZone</name>
+      <required>no</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>showTimeZone</name>
+      <required>no</required>
+    </attribute>
   </tag>
   
   <tag>
@@ -399,6 +408,11 @@
     </attribute>
     <attribute>
       <name>hidden</name>
+      <required>no</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>timeZone</name>
       <required>no</required>
       <rtexprvalue>yes</rtexprvalue>
     </attribute>

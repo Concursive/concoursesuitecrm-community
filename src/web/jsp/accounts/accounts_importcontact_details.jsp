@@ -15,7 +15,7 @@
 <table class="trails" cellspacing="0">
 <tr>
   <td>
-    <a href="Accounts.do">Accounts</a> >
+    <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
     <a href="AccountContactsImports.do?command=View">View Imports</a> >
     <a href="AccountContactsImports.do?command=Details&importId=<%= ImportDetails.getId() %>">Import Details</a> >
     <a href="AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>">View Results</a> >

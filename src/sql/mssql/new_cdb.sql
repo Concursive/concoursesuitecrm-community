@@ -215,7 +215,9 @@ CREATE TABLE organization (
   namemiddle varchar(80),
   namesuffix varchar(80),
   import_id INT,
-  status_id INT
+  status_id INT,
+  alertdate_timezone VARCHAR(255),
+  contract_end_timezone VARCHAR(255)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);

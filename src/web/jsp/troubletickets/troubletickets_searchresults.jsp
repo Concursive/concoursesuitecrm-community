@@ -16,7 +16,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do">Help Desk</a> > 
+<a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
 Search Results
 </td>
@@ -101,7 +101,7 @@ Search Results
 	<%} else {%>
 		<tr class="containerBody">
       <td colspan="7">
-        No tickets found.
+        <dhv:label name="tickets.search.notFound">No tickets found.</dhv:label>
       </td>
     </tr>
   </table>

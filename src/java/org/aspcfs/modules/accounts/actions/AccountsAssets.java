@@ -56,9 +56,9 @@ public class AccountsAssets extends CFSModule {
     }
     AssetList assetList = new AssetList();
     String orgId = context.getRequest().getParameter("orgId");
-    
+
     //find record permissions for portal users
-    if (!isRecordAccessPermitted(context,Integer.parseInt(orgId))){
+    if (!isRecordAccessPermitted(context, Integer.parseInt(orgId))) {
       return ("PermissionError");
     }
     //Prepare pagedListInfo
@@ -111,8 +111,7 @@ public class AccountsAssets extends CFSModule {
       contactList.setEmptyHtmlSelectRecord("-- None --");
       context.getRequest().setAttribute("contactList", contactList);
 
-      Calendar calendar = Calendar.getInstance();
-      String currentDate = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR);
+      String currentDate = this.getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
 
       return ("AccountsAssetsAddOK");
@@ -149,7 +148,7 @@ public class AccountsAssets extends CFSModule {
       thisAsset.setModifiedBy(getUserId(context));
       inserted = thisAsset.insert(db);
 
-      if(!inserted){
+      if (!inserted) {
         processErrors(context, thisAsset.getErrors());
       }
     } catch (Exception errorMessage) {
@@ -188,13 +187,13 @@ public class AccountsAssets extends CFSModule {
 
       int assetId = Integer.parseInt((context.getRequest().getParameter("id")));
       Asset thisAsset = (Asset) context.getFormBean();
-      if (thisAsset.getId() == -1){
+      if (thisAsset.getId() == -1) {
         thisAsset.queryRecord(db, assetId);
       }
       buildFormElements(context, db);
       buildCategories(context, db, thisAsset);
       context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
-      
+
       ContactList contactList = new ContactList();
       contactList.setOrgId(Integer.parseInt(context.getRequest().getParameter("orgId")));
       contactList.buildList(db);
@@ -232,7 +231,7 @@ public class AccountsAssets extends CFSModule {
       Asset thisAsset = (Asset) context.getFormBean();
       thisAsset.setModifiedBy(getUserId(context));
       resultCount = thisAsset.update(db);
-      if (resultCount == -1){
+      if (resultCount == -1) {
         processErrors(context, thisAsset.getErrors());
       }
     } catch (Exception errorMessage) {
@@ -243,15 +242,15 @@ public class AccountsAssets extends CFSModule {
       //Always free the database connection
       this.freeConnection(context, db);
     }
-    if (resultCount == -1){
+    if (resultCount == -1) {
       return (executeCommandModify(context));
-    }else if (resultCount == 1){
+    } else if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
         return executeCommandList(context);
       } else {
         return executeCommandView(context);
       }
-    }else{
+    } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
     }
@@ -283,11 +282,11 @@ public class AccountsAssets extends CFSModule {
       htmlDialog.setTitle("Dark Horse CRM: Account Management - Asset");
       DependencyList dependencies = thisAsset.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
-      if (dependencies.canDelete()){
+      if (dependencies.canDelete()) {
         htmlDialog.setHeader("The asset you are requesting to delete has the following dependencies within Dark Horse CRM:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountsAssets.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
-      }else{
+      } else {
         htmlDialog.setHeader("The asset cannot be deleted because it has the following dependencies within Dark Horse CRM:");
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       }
@@ -385,10 +384,9 @@ public class AccountsAssets extends CFSModule {
       ServiceContract thisContract = new ServiceContract();
       thisContract.queryRecord(db, thisAsset.getContractId());
 
-      
       //find record permissions for portal users
-      if (!isRecordAccessPermitted(context,thisAsset.getOrgId())){
-         return ("PermissionError");
+      if (!isRecordAccessPermitted(context, thisAsset.getOrgId())) {
+        return ("PermissionError");
       }
 
       if (thisAsset.getContactId() > -1) {
@@ -443,7 +441,7 @@ public class AccountsAssets extends CFSModule {
       ticketList.setAssetId(thisAsset.getId());
       ticketList.buildList(db);
       context.getRequest().setAttribute("ticketList", ticketList);
-      
+
       context.getRequest().setAttribute("asset", thisAsset);
       return ("AccountsAssetsHistoryOK");
     } catch (Exception errorMessage) {
@@ -455,9 +453,9 @@ public class AccountsAssets extends CFSModule {
       this.freeConnection(context, db);
     }
   }
-  
-  
-  
+
+
+
   /**
    *  Loads related data for use in an HTML Form
    *
@@ -577,3 +575,4 @@ public class AccountsAssets extends CFSModule {
     return ("CategoryJSListOK");
   }
 }
+

@@ -6,6 +6,7 @@ import java.util.*;
 import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  A collection of Report objects
@@ -19,6 +20,7 @@ public class ReportList extends ArrayList {
 
   protected PagedListInfo pagedListInfo = null;
   protected int categoryId = -1;
+  protected int enabled = Constants.UNDEFINED;
 
 
   /**
@@ -74,6 +76,36 @@ public class ReportList extends ArrayList {
    */
   public int getCategoryId() {
     return categoryId;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the ReportList object
+   *
+   *@return    The enabled value
+   */
+  public int getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the ReportList object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(int tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the ReportList object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = Integer.parseInt(tmp);
   }
 
 
@@ -161,6 +193,9 @@ public class ReportList extends ArrayList {
     if (categoryId != -1) {
       sqlFilter.append("AND r.category_id = ? ");
     }
+    if (enabled != Constants.UNDEFINED) {
+      sqlFilter.append("AND r.enabled = ? ");
+    }
   }
 
 
@@ -176,6 +211,9 @@ public class ReportList extends ArrayList {
     int i = 0;
     if (categoryId != -1) {
       pst.setInt(++i, categoryId);
+    }
+    if (enabled != Constants.UNDEFINED) {
+      pst.setBoolean(++i, enabled == Constants.TRUE);
     }
     return i;
   }

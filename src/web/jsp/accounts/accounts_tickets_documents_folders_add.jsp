@@ -30,11 +30,11 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
-<a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Tickets</a> >
-<a href="AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getId()%>">Ticket Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
+<a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
+<a href="AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getId()%>"><dhv:label name="accounts.tickets.details">Ticket Details</dhv:label></a> >
 <a href="AccountTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
 Modify Folder Name
 </td>
@@ -55,7 +55,11 @@ Modify Folder Name
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
-      <zeroio:folderHierarchy/>
+<%
+String documentFolderList = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId();
+String documentModule = "AccountTickets";
+%>
+      <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
     </td>
   </tr>
 </table>

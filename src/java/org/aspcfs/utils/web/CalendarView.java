@@ -1324,7 +1324,7 @@ public class CalendarView {
     //Add the event to the list
     dailyEvents.addEvent(eventType, event);
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("CalendarEventList-> Event Type: " + eventType + " added on " + eventDate);
+      System.out.println("CalendarView-> Event Type: " + eventType + " added on " + eventDate);
     }
     //Add the events to the eventList
     this.eventList.put(eventDate, dailyEvents);

@@ -128,7 +128,7 @@ public final class Search extends CFSModule {
     //setMaximized(context);
     SearchBean search = (SearchBean) context.getFormBean();
     PagedListInfo searchBeanInfo = this.getPagedListInfo(context, "searchBeanInfo");
-    searchBeanInfo.setLink("Search.do?command=Default");
+    searchBeanInfo.setLink("ProjectManagementSearch.do?command=Default");
     Connection db = null;
     try {
       search.parseQuery();

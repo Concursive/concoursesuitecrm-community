@@ -152,7 +152,7 @@
         }else{
           thisLookupList = callResultList.getCompletedLookupList(CallDetails.getResultId());
         }
-       if((CallDetails.getStatusId() != Call.CANCELED && !"cancel".equals(request.getParameter("action"))) && (CallDetails.getId() == -1 || (CallDetails.getId() > 0 && CallDetails.getAlertDate() == null))){ 
+       if((CallDetails.getStatusId() != Call.CANCELED && !"cancel".equals(request.getParameter("action"))) && (CallDetails.getId() == -1 || (CallDetails.getId() > 0 && ((CallDetails.getAlertDate() == null) || (request.getAttribute("alertDateWarning") != null))  ))){ 
         HtmlSelect resultSelect = thisLookupList.getHtmlSelectObj(PreviousCallDetails.getId() > 0 ? -1 : CallDetails.getResultId());
         resultSelect.addAttribute("onChange", "javascript:makeSuggestion();");
         resultSelect.addAttribute("id", "resultId");

@@ -1,13 +1,13 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisCompId = -1;
-  var menu_init_opp = false;
+  var menu_init = false;
   //Set the action parameters for clicked item
   function displayOppMenu(loc, id, compId) {
     thisCompId = compId;
-    if (!menu_init_opp) {
-      menu_init_opp = true;
-      new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
+    if (!menu_init) {
+      menu_init = true;
+      initialize_menus();
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }

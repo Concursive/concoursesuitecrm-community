@@ -1,10 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="PreviousCallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%
   String trailSource = request.getParameter("trailSource");
@@ -16,13 +18,13 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <% if (request.getParameter("return") == null) { %>
 <a href="Accounts.do?command=Search">Search Results</a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
 <a href="Accounts.do?command=Dashboard">Dashboard</a> >
 <%}%>
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <% if("accounts".equals(trailSource)){ %>
 <a href="AccountsCalls.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Activities</a> >
 <% }else{ %>
@@ -49,11 +51,7 @@ Add Activity
 <%-- End Trails --%>
 </dhv:evaluate>
 <%@ include file="accounts_details_header_include.jsp" %>
-<% if("accounts".equals(trailSource)){ %>
-<dhv:container name="accounts" selected="activities" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs" appendToUrl="&trailSource=accounts"/>
-<% }else{ %>
 <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<% } %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
@@ -71,9 +69,8 @@ Add Activity
       <% }else{ %>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';"> 
       <%}%>
-      <input type="reset" value="Reset">
-      <br>
-      <%= showError(request, "actionError") %>
+      <br />
+      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%@ include file="../contacts/call_include.jsp" %>
       &nbsp;
       <br>
@@ -83,7 +80,6 @@ Add Activity
       <% }else{ %>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsCalls.do?command=Details&id=<%= PreviousCallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';"> 
       <%}%>
-      <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
       <dhv:evaluate if="<%= PreviousCallDetails.getId() > -1 %>">

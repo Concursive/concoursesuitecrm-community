@@ -6,6 +6,7 @@
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="ReminderTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="CallResult" class="org.aspcfs.modules.contacts.base.CallResult" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <form name="addCall" action="AccountContactsCalls.do?command=Modify&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>" method="post">
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
@@ -18,13 +19,13 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <% if (request.getParameter("return") == null) { %>
 <a href="Accounts.do?command=Search">Search Results</a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
 <a href="Accounts.do?command=Dashboard">Dashboard</a> >
 <%}%>
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <% if("accounts".equals(trailSource)){ %>
 <a href="AccountsCalls.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Activities</a> >
 <% }else{ %>
@@ -39,11 +40,7 @@ Activity Details
 <%-- End Trails --%>
 </dhv:evaluate>
 <%@ include file="accounts_details_header_include.jsp" %>
-<% if("accounts".equals(trailSource)){ %>
-<dhv:container name="accounts" selected="activities" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"  appendToUrl="&trailSource=accounts"/>
-<% }else{ %>
 <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<% } %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
@@ -95,12 +92,12 @@ Activity Details
           </th>
         </tr>
         <tr class="containerBody">
-          <td class="formLabel" nowrap>
+          <td class="formLabel" valign="top" nowrap>
             Entered
           </td>
           <td>
             <dhv:username id="<%= CallDetails.getEnteredBy() %>"/>
-            <zeroio:tz timestamp="<%= CallDetails.getEntered() %>" />
+            <zeroio:tz timestamp="<%= CallDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -109,7 +106,7 @@ Activity Details
           </td>
           <td>
             <dhv:username id="<%= CallDetails.getModifiedBy() %>"/>
-            <zeroio:tz timestamp="<%= CallDetails.getModified() %>" />
+            <zeroio:tz timestamp="<%= CallDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>"/>
           </td>
         </tr>
       </table>

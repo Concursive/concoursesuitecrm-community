@@ -35,8 +35,12 @@ function page_init() {
   }
  }
 %>
+<dhv:include name="ticket.subCat2" none="true">
   resetList(parent.document.forms[0].elements['subCat2']);
+</dhv:include>
+<dhv:include name="ticket.subCat3" none="true">
   resetList(parent.document.forms[0].elements['subCat3']);
+</dhv:include>
 </dhv:evaluate>
   
 <dhv:evaluate exp="<%= ((SubList2.size() > 0) || (subCat1 != null)) %>">
@@ -55,7 +59,9 @@ function page_init() {
   }
  }
 %>
+<dhv:include name="ticket.subCat3" none="true">
   resetList(parent.document.forms[0].elements['subCat3']);
+</dhv:include>
 </dhv:evaluate>
   
 <dhv:evaluate exp="<%= ((SubList3.size() > 0) || (subCat2 != null)) %>">

@@ -41,7 +41,11 @@
       Due Date
     </td>
     <td>
-      <zeroio:tz timestamp="<%= CallDetails.getAlertDate() %>" default="&nbsp;"/>
+      <zeroio:tz timestamp="<%= CallDetails.getAlertDate() %>" default="&nbsp;" timeZone="<%= CallDetails.getAlertDateTimeZone() %>" showTimeZone="yes" default="&nbsp;" />
+      <% if(!User.getTimeZone().equals(CallDetails.getAlertDateTimeZone())){%>
+      <br>
+      <zeroio:tz timestamp="<%= CallDetails.getAlertDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes"  default="&nbsp;" />
+      <% } %>
     </td>
   </tr>
   <tr class="containerBody">

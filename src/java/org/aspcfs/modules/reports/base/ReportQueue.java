@@ -37,6 +37,7 @@ public class ReportQueue extends GenericBean {
   //Resources
   private int position = -1;
   private Report report = null;
+  private boolean throwNotFoundException = true;
 
 
   /**
@@ -69,6 +70,20 @@ public class ReportQueue extends GenericBean {
 
 
   /**
+   *  Constructor for the ReportQueue object
+   *
+   *@param  db                Description of the Parameter
+   *@param  queueId           Description of the Parameter
+   *@param  throwException    Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public ReportQueue(Connection db, int queueId, boolean throwException) throws SQLException {
+    throwNotFoundException = throwException;
+    queryRecord(db, queueId);
+  }
+
+
+  /**
    *  Loads the specified ReportQueue
    *
    *@param  db                Description of the Parameter
@@ -87,7 +102,7 @@ public class ReportQueue extends GenericBean {
     }
     rs.close();
     pst.close();
-    if (id == -1) {
+    if ((id == -1) && (throwNotFoundException)) {
       throw new SQLException("Queue record not found.");
     }
   }
@@ -284,6 +299,26 @@ public class ReportQueue extends GenericBean {
 
 
   /**
+   *  Sets the throwNotFoundException attribute of the ReportQueue object
+   *
+   *@param  tmp  The new throwNotFoundException value
+   */
+  public void setThrowNotFoundException(boolean tmp) {
+    this.throwNotFoundException = tmp;
+  }
+
+
+  /**
+   *  Sets the throwNotFoundException attribute of the ReportQueue object
+   *
+   *@param  tmp  The new throwNotFoundException value
+   */
+  public void setThrowNotFoundException(String tmp) {
+    this.throwNotFoundException = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Gets the id attribute of the ReportQueue object
    *
    *@return    The id value
@@ -391,6 +426,16 @@ public class ReportQueue extends GenericBean {
    */
   public Report getReport() {
     return report;
+  }
+
+
+  /**
+   *  Gets the throwNotFoundException attribute of the ReportQueue object
+   *
+   *@return    The throwNotFoundException value
+   */
+  public boolean getThrowNotFoundException() {
+    return throwNotFoundException;
   }
 
 

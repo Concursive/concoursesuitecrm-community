@@ -24,7 +24,7 @@
     window.location.href='AccountTicketsDocuments.do?command=View&tId=' + thisTicId + '&folderId=' + thisFolderId;
   }
   function editFolder() {
-    window.location.href='AccountTicketsDocumentsFolders.do?command=Modify&tId=' + thisTicId + '&folderId=' + thisFolderId + '&id=' + thisFolderId + '&parentId='+thisFolderId;
+    window.location.href='AccountTicketsDocumentsFolders.do?command=Modify&tId=' + thisTicId + '&folderId=' + thisFileId + '&id=' + thisFolderId + '&parentId='+thisFileId;
   }
   function moveFolder() {
     popURL('AccountTicketsDocumentsFolders.do?command=Move&tId=' + thisTicId + '&id=' + thisFolderId + '&popup=true&return=AccountTicketsDocuments&param='+ thisTicId +'&param2='+ thisFolderId ,'Files','400','375','yes','yes');

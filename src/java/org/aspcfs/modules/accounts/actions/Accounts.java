@@ -787,6 +787,7 @@ public final class Accounts extends CFSModule {
         addRecentItem(context, newOrg);
       } else {
         processErrors(context, newOrg.getErrors());
+        processWarnings(context,newOrg.getWarnings());
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -842,6 +843,7 @@ public final class Accounts extends CFSModule {
       resultCount = newOrg.update(db);
       if (resultCount == -1) {
         processErrors(context, newOrg.getErrors());
+        processWarnings(context,newOrg.getWarnings());
       } else {
         //if this is an individual account, populate and update the primary contact
         if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {

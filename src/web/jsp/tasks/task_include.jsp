@@ -2,6 +2,7 @@
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="EstimatedLOETypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -27,6 +28,7 @@
     </td>
     <td>
       <zeroio:dateSelect form="addTask" field="dueDate" timestamp="<%= Task.getDueDate() %>" />
+      <%= TimeZoneSelect.getSelect("dueDateTimeZone", Task.getDueDateTimeZone()).getHtml() %>
       <%= showAttribute(request, "dueDateError") %>
     </td>
   </tr>

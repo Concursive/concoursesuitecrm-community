@@ -13,10 +13,12 @@ import java.util.*;
  *
  *@author     Matt Rajkowski
  *@created    February 25, 2002
- *@version    $Id$
+ *@version    $Id: LabelHandler.java,v 1.3.180.2 2004/08/30 14:13:43 mrajkowski
+ *      Exp $
  */
 public class LabelHandler extends TagSupport {
   private String labelName = null;
+  private HashMap params = null;
 
 
   /**
@@ -27,6 +29,27 @@ public class LabelHandler extends TagSupport {
    */
   public final void setName(String tmp) {
     labelName = tmp;
+  }
+
+
+  /**
+   *  Sets the param attribute of the LabelHandler object
+   *
+   *@param  tmp  The new params value
+   */
+  public void setParam(String tmp) {
+    params = new HashMap();
+    StringTokenizer tokens = new StringTokenizer(tmp, "|");
+    while (tokens.hasMoreTokens()) {
+      String pair = tokens.nextToken();
+      String param = pair.substring(0, pair.indexOf("="));
+      String value = pair.substring(pair.indexOf("=") + 1);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("LabelHandler: Param-> " + param);
+        System.out.println("LabelHandler: Value-> " + value);
+      }
+      params.put("${" + param + "}", value);
+    }
   }
 
 
@@ -50,10 +73,17 @@ public class LabelHandler extends TagSupport {
     if (systemStatus == null) {
       System.out.println("FieldHandler-> SystemStatus is null");
     }
+    // Look up the label key in system status to get the value
     if (systemStatus != null) {
       newLabel = systemStatus.getLabel(labelName);
+      // If there are any parameters to substitute then do so
+      if (newLabel != null && params != null) {
+        Template labelText = new Template(newLabel);
+        labelText.setParseElements(params);
+        newLabel = labelText.getParsedText();
+      }
     }
-
+    // Output the label value, else output the body of the tag
     if (newLabel != null) {
       try {
         this.pageContext.getOut().write(newLabel);

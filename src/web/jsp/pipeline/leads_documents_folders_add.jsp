@@ -59,7 +59,11 @@ Add Document Folder
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td>
-      <zeroio:folderHierarchy/>
+<%
+String documentFolderList = "LeadsDocuments.do?command=View&headerId="+ opportunityHeader.getId();
+String documentModule = "Pipeline";
+%>
+      <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
     </td>
   </tr>
 </table>

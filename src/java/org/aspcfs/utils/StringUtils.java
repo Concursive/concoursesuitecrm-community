@@ -667,6 +667,24 @@ public class StringUtils {
   
   
   /**
+   *  Used to escape special symbols within a JavaScript quoted block
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
+  public static String jsStringEscape(String s) {
+    if (s != null) {
+      String jsReady = s.trim();
+      jsReady = replace(jsReady, "'", "\\'");
+      jsReady = replace(jsReady, "\"", "\\\"");
+      return (jsReady);
+    } else {
+      return ("");
+    }
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  inString  Description of the Parameter

@@ -10,6 +10,7 @@
 <jsp:useBean id="CallResult" class="org.aspcfs.modules.contacts.base.CallResult" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -26,14 +27,6 @@
     formTest = true;
     message = "";
 <% if("pending".equals(request.getParameter("view"))){ %>
-  if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is on or after today's date\r\n";
-      formTest = false;
-    }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -63,14 +56,6 @@
     }
     
     if(form.hasFollowup != null && form.hasFollowup.checked){
-    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is on or after today's date\r\n";
-      formTest = false;
-    }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -202,9 +187,8 @@ Modify Activity
     <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
     <input type="button" value="Cancel" onclick="javascript:window.close();"> 
     </dhv:evaluate>
-    <input type="reset" value="Reset">
-<br>
-<%= showError(request, "actionError") %>
+<br />
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <% if("pending".equals(request.getParameter("view"))){ %>
         <%-- include pending activity form --%>
         <%@ include file="call_followup_include.jsp" %>
@@ -220,7 +204,7 @@ Modify Activity
         <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
         <% } %>
         &nbsp;
-        <% if(CallDetails.getAlertDate() != null && request.getParameter("hasFollowup") == null){ %>
+        <% if((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null){ %>
           <%-- include followup activity details --%>
           <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
         <% }else{ %>
@@ -248,7 +232,6 @@ Modify Activity
     <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
     <input type="button" value="Cancel" onclick="javascript:window.close();"> 
     </dhv:evaluate>
-    <input type="reset" value="Reset">
 </td>
 </tr>
 </table>
@@ -266,7 +249,7 @@ Modify Activity
   <input type="hidden" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>">
   <input type="hidden" name="notes" value="<%= toString(CallDetails.getNotes()) %>">
   <input type="hidden" name="resultId" value="<%= CallDetails.getResultId() %>">
-<% }else if(!(CallDetails.getStatusId() == Call.COMPLETE && CallDetails.getAlertDate() == null)){ %>
+<% }else if(!(CallDetails.getStatusId() == Call.COMPLETE && CallDetails.getAlertDate() == null)&& (request.getAttribute("alertDateWarning") == null)){ %>
   <%-- include pending activity values --%>
   <input type="hidden" name="alertText" value="<%= toHtmlValue(CallDetails.getAlertText()) %>">
   <input type="hidden" name="alertCallTypeId" value="<%= CallDetails.getAlertCallTypeId() %>">

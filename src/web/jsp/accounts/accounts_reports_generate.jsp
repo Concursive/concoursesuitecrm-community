@@ -37,7 +37,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Reports">Export Data</a> >
 New Export
 </td>
@@ -62,18 +62,18 @@ New Export
       <select name="type" onchange="javascript:update()">
         <option value="1">All Accounts</option>
 <dhv:permission name="accounts-accounts-contacts-view">      
-        <option value="2">Accounts w/Contacts</option>
+        <option value="2"><dhv:label name="accounts.accounts.with.contacts"><dhv:label name="accounts.accounts.with.contacts">Accounts w/Contacts</dhv:label></dhv:label></option>
 </dhv:permission>
 <dhv:permission name="accounts-accounts-tickets-view">      
-        <option value="3">Accounts w/Tickets</option>
+        <option value="3"><dhv:label name="accounts.accounts.with.contacts">Accounts w/Tickets</dhv:label></option>
 </dhv:permission>
 <dhv:permission name="accounts-accounts-documents-view">
 <% if (CategoryList.size() > 0) {%>      
-        <option value="4">Accounts w/Folders</option>
+        <option value="4"><dhv:label name="accounts.accounts.with.folders">Accounts w/Folders</dhv:label></option>
 <% } %>
 </dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-view">
-        <option value="5">Accounts w/Opportunities</option>
+        <option value="5"><dhv:label name="accounts.accounts.with.opportunities">Accounts w/Opportunities</dhv:label></option>
 </dhv:permission>
       </select>
       <span name="new0" ID="new0" style="display:none">
@@ -97,7 +97,7 @@ New Export
     <td colspan="4">
       <select name="criteria1">
       <option value="all">All Accounts</option>
-      <option value="my">My Accounts</option>
+      <option value="my"><dhv:label name="accounts.my.accounts">My Accounts</dhv:label></option>
       <option value="levels">My Account Hierarchy</option>
       </select>
     </td>
@@ -150,7 +150,7 @@ New Export
     <td align="right" width="50%">
       <select size="5" name="selectedList" multiple>
         <option value="id" >Account ID</option>
-        <option value="accountName" >Account Name</option>
+        <option value="accountName" ><dhv:label name="organization.name">Account Name</dhv:label></option>
       </select>
     </td>
     <td width="25">

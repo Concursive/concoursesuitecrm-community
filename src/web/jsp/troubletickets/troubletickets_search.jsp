@@ -40,7 +40,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do">Help Desk</a> > 
+<a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 Search Form
 </td>
 </tr>
@@ -49,12 +49,12 @@ Search Form
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Search Tickets</strong>
+      <strong><dhv:label name="tickets.search">Search Tickets</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <td class="formLabel">
-      Ticket Number
+      <dhv:label name="tickets.number">Ticket Number</dhv:label>
     </td>
     <td>
       <input type="text" size="10" name="searchcodeId" value="<%= TicListInfo.getSearchOptionValue("searchcodeId") %>">
@@ -70,7 +70,7 @@ Search Form
   </tr>
   <tr>
     <td class="formLabel">
-      Account(s)
+      <dhv:label name="accounts.accounts">Account(s)</dhv:label>
     </td>
     <td>
       <table cellspacing="0" cellpadding="0" border="0" class="empty">

@@ -59,6 +59,7 @@ public class Call extends GenericBean {
   private String alertCallType = "";
   private String priorityString = "";
   private String orgName = null;
+  private String alertDateTimeZone = "America/New_York";
 
   private java.sql.Timestamp alertDate = null;
   private java.sql.Timestamp entered = null;
@@ -71,8 +72,10 @@ public class Call extends GenericBean {
 
   //action list properties
   private int actionId = -1;
+  private boolean checkAlertDate = true;
 
   Contact contact = new Contact();
+
 
   /**
    *  Constructor for the Call object
@@ -133,7 +136,7 @@ public class Call extends GenericBean {
         "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
         "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
         "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
-        "c.alert_call_type_id, c.alert, c.followup_notes, t.*, talert.description as alertType, " +
+        "c.alert_call_type_id, c.alert, c.followup_notes, c.alertdate_timezone, t.*, talert.description as alertType, " +
         "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.company as ctcompany, p.description as priority " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
@@ -550,6 +553,26 @@ public class Call extends GenericBean {
 
 
   /**
+   *  Sets the checkAlertDate attribute of the Call object
+   *
+   *@param  tmp  The new checkAlertDate value
+   */
+  public void setCheckAlertDate(boolean tmp) {
+    this.checkAlertDate = tmp;
+  }
+
+
+  /**
+   *  Sets the checkAlertDate attribute of the Call object
+   *
+   *@param  tmp  The new checkAlertDate value
+   */
+  public void setCheckAlertDate(String tmp) {
+    this.checkAlertDate = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Sets the contactOrgId attribute of the Call object
    *
    *@param  contactOrgId  The new contactOrgId value
@@ -576,6 +599,26 @@ public class Call extends GenericBean {
    */
   public void setContact(Contact contact) {
     this.contact = contact;
+  }
+
+
+  /**
+   *  Sets the alertDateTimeZone attribute of the Call object
+   *
+   *@param  tmp  The new alertDateTimeZone value
+   */
+  public void setAlertDateTimeZone(String tmp) {
+    this.alertDateTimeZone = tmp;
+  }
+
+
+  /**
+   *  Gets the alertDateTimeZone attribute of the Call object
+   *
+   *@return    The alertDateTimeZone value
+   */
+  public String getAlertDateTimeZone() {
+    return alertDateTimeZone;
   }
 
 
@@ -609,7 +652,8 @@ public class Call extends GenericBean {
   public String getModifiedName() {
     return modifiedName;
   }
-  
+
+
   /**
    *  Gets the orgName attribute of the Call object
    *
@@ -980,6 +1024,16 @@ public class Call extends GenericBean {
 
 
   /**
+   *  Gets the checkAlertDate attribute of the Call object
+   *
+   *@return    The checkAlertDate value
+   */
+  public boolean getCheckAlertDate() {
+    return checkAlertDate;
+  }
+
+
+  /**
    *  Gets the oppHeaderId attribute of the Call object
    *
    *@return    The oppHeaderId value
@@ -1326,7 +1380,7 @@ public class Call extends GenericBean {
           "INSERT INTO call_log " +
           "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, " +
           "alertdate, alert, alert_call_type_id, result_id, parent_id, owner, followup_notes, status_id, " +
-          "reminder_value, reminder_type_id, priority_id, followup_date, ");
+          "reminder_value, reminder_type_id, priority_id, followup_date, alertdate_timezone, ");
 
       if (entered != null) {
         sql.append("entered, ");
@@ -1335,7 +1389,7 @@ public class Call extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
 
       if (entered != null) {
         sql.append("?, ");
@@ -1351,7 +1405,7 @@ public class Call extends GenericBean {
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-      
+
       if (this.getContactId() > 0) {
         pst.setInt(++i, this.getContactId());
       } else {
@@ -1382,6 +1436,7 @@ public class Call extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, reminderTypeId);
       DatabaseUtils.setInt(pst, ++i, priorityId);
       DatabaseUtils.setTimestamp(pst, ++i, followupDate);
+      pst.setString(++i, alertDateTimeZone);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1523,7 +1578,7 @@ public class Call extends GenericBean {
         "UPDATE call_log " +
         "SET call_type_id = ?, length = ?, subject = ?, notes = ?, " +
         "modifiedby = ?, alertdate = ?, alert = ?, alert_call_type_id = ?, followup_notes = ?, status_id = ?, " +
-        "result_id = ?, owner = ?, reminder_value = ?, reminder_type_id = ?, priority_id = ?, followup_date = ?, " +
+        "result_id = ?, owner = ?, reminder_value = ?, reminder_type_id = ?, priority_id = ?, followup_date = ?, alertdate_timezone = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE call_id = ? " +
         "AND modified = ? ");
@@ -1553,6 +1608,7 @@ public class Call extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, reminderTypeId);
     DatabaseUtils.setInt(pst, ++i, priorityId);
     DatabaseUtils.setTimestamp(pst, ++i, followupDate);
+    pst.setString(++i, alertDateTimeZone);
     pst.setInt(++i, this.getId());
     pst.setTimestamp(++i, this.getModified());
     resultCount = pst.executeUpdate();
@@ -1635,7 +1691,7 @@ public class Call extends GenericBean {
    */
   protected boolean isValid(Connection db) throws SQLException {
 
-    if (subject == null || subject.trim().equals("")) {
+    if (subject == null || "".equals(subject)) {
       errors.put("subjectError", "Cannot insert a blank record");
     }
 
@@ -1678,9 +1734,35 @@ public class Call extends GenericBean {
     }
 
     if (hasErrors()) {
+      //Check warnings
+      checkWarnings();
+      onlyWarnings = false;
       return false;
     } else {
+      //Do not check for warnings if it was found that only warnings existed
+      // in the previous call to isValid for the same form.
+      if (!onlyWarnings) {
+        //Check for warnings if there are no errors
+        checkWarnings();
+        if (hasWarnings()) {
+          onlyWarnings = true;
+          return false;
+        }
+      }
       return true;
+    }
+  }
+
+
+  /**
+   *  Generates warnings that need to be reviewed before the form can be
+   *  submitted.
+   */
+  protected void checkWarnings() {
+    if (checkAlertDate && (errors.get("alertDateError") == null) && (alertDate != null)) {
+      if (alertDate.before(new java.util.Date())) {
+        warnings.put("alertDateWarning", "Alert date is earlier than current date or set to current date");
+      }
     }
   }
 
@@ -1723,6 +1805,7 @@ public class Call extends GenericBean {
     alertText = rs.getString("alert");
     followupNotes = rs.getString("followup_notes");
     resultId = DatabaseUtils.getInt(rs, "result_id");
+    alertDateTimeZone = rs.getString("alertdate_timezone");
     //lookup_call_types table
     callTypeId = DatabaseUtils.getInt(rs, "code");
     callType = rs.getString("description");

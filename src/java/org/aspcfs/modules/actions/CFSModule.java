@@ -593,6 +593,31 @@ public class CFSModule {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  context   Description of the Parameter
+   *@param  warnings  Description of the Parameter
+   */
+  protected void processWarnings(ActionContext context, HashMap warnings) {
+    Iterator i = warnings.keySet().iterator();
+    while (i.hasNext()) {
+      String warningKey = (String) i.next();
+      String warningMsg = (String) warnings.get(warningKey);
+      context.getRequest().setAttribute(warningKey, warningMsg);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(" Object Validation Warning-> " + warningKey + "=" + warningMsg);
+      }
+    }
+    context.getRequest().setAttribute("warnings", warnings);
+    if (warnings.size() > 0) {
+      if (context.getRequest().getAttribute("actionWarning") == null) {
+        context.getRequest().setAttribute("actionWarning", "Please review the warnings in the form.");
+      }
+    }
+  }
+
+
+  /**
    *  Call whenever any module modifies anything to do with permissions, for
    *  example, if a role's permissions are modified.
    *
@@ -1448,5 +1473,28 @@ public class CFSModule {
     }
   }
 
+
+  /**
+   *  Gets the currentDateAsString attribute of the CFSModule class Fetches the
+   *  current date in based on timezone and locale as string
+   *
+   *@param  context  Description of the Parameter
+   *@return          The currentDateAsString value
+   */
+  public static String getCurrentDateAsString(ActionContext context) {
+    String currentDateAsString = "";
+    try {
+      UserBean userBean = (UserBean) context.getSession().getAttribute("User");
+      User user = userBean.getUserRecord();
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTimeZone(java.util.TimeZone.getTimeZone(user.getTimeZone()));
+      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+          DateFormat.SHORT, user.getLocale());
+      formatter.applyPattern(formatter.toPattern() + "yy");
+      currentDateAsString = formatter.format(calendar.getTime());
+    } catch (Exception e) {
+    }
+    return currentDateAsString;
+  }
 }
 

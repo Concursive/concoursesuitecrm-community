@@ -268,7 +268,7 @@ public class MessageList extends ArrayList {
       Message thisMessage = (Message) i.next();
       messageListSelect.addItem(
           thisMessage.getId(),
-          thisMessage.getName());
+          (thisMessage.getName()!= null && !"".equals(thisMessage.getName()))?thisMessage.getName():"\"Unnamed Message\"");
     }
     return messageListSelect.getHtml(selectName, defaultKey);
   }

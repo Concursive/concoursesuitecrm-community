@@ -16,7 +16,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 Revenue Dashboard
 </td>
 </tr>
@@ -120,7 +120,7 @@ Revenue Dashboard
     <td valign="top" width="100%">
       <table cellpadding="3" cellspacing="0" width="100%" class="details">
         <tr>
-          <th>Account Name</th>
+          <th><dhv:label name="organization.name">Account Name</dhv:label></th>
           <th>YTD</th>
         </tr>
 <%
@@ -143,7 +143,7 @@ Revenue Dashboard
 	  } else {
 %>
         <tr>
-          <td valign="center" colspan="7">No accounts found with revenue.</td>
+          <td valign="center" colspan="7"><dhv:label name="accounts.revenue.dashboard.notFound">No account found with revenue.</dhv:label></td>
         </tr>
 <%}%>
       </table>

@@ -164,25 +164,42 @@ public class AssignmentImporter {
               }
             }
             if (gotOne) {
+              // Priority
+              if (priorityColumn > -1) {
+                HSSFCell cell = currentRow.getCell(priorityColumn);
+                if (cell != null) {
+                  assignment.setPriorityId(getValue(cell));
+                }
+              }
               // Effort
               if (effortColumn > -1) {
                 HSSFCell cell = currentRow.getCell(effortColumn);
                 if (cell != null) {
-                  assignment.setEstimatedLoe(cell.getStringCellValue());
+                  assignment.setEstimatedLoe(getValue(cell));
+                  if (assignment.getEstimatedLoeTypeId() == -1) {
+                    assignment.setEstimatedLoeTypeId(2);
+                  }
+                }
+              }
+              // Assigned To
+              if (assignedToColumn > -1) {
+                HSSFCell cell = currentRow.getCell(assignedToColumn);
+                if (cell != null) {
+                  assignment.setUserAssignedId(getValue(cell));
                 }
               }
               // Start Date
               if (startColumn > -1) {
                 HSSFCell cell = currentRow.getCell(effortColumn);
                 if (cell != null) {
-                  assignment.setEstStartDate(cell.getStringCellValue());
+                  assignment.setEstStartDate(getValue(cell));
                 }
               }
               // Due Date
               if (endColumn > -1) {
                 HSSFCell cell = currentRow.getCell(effortColumn);
                 if (cell != null) {
-                  assignment.setDueDate(cell.getStringCellValue());
+                  assignment.setDueDate(getValue(cell));
                 }
               }
               assignment.setEnteredBy(requirement.getEnteredBy());
@@ -197,7 +214,6 @@ public class AssignmentImporter {
           }
         }
       }
-
       db.commit();
     } catch (Exception e) {
       db.rollback();
@@ -210,6 +226,25 @@ public class AssignmentImporter {
   }
 
 
+  /**
+   *  Gets the value attribute of the AssignmentImporter class
+   *
+   *@param  cell  Description of the Parameter
+   *@return       The value value
+   */
+  private static String getValue(HSSFCell cell) {
+    try {
+      return cell.getStringCellValue();
+    } catch (Exception e) {
+    }
+    try {
+      return String.valueOf(cell.getNumericCellValue());
+    } catch (Exception e) {
+    }
+    return null;
+  }
+  
+  
   /**
    *  Description of the Method
    *

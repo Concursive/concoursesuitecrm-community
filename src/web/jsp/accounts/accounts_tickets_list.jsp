@@ -18,9 +18,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 Tickets
 </td>
 </tr>
@@ -32,7 +32,7 @@ Tickets
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-<dhv:permission name="accounts-accounts-tickets-add"><a href="AccountTickets.do?command=AddTicket&orgId=<%= OrgDetails.getOrgId() %>">Add New Ticket</a>
+<dhv:permission name="accounts-accounts-tickets-add"><a href="AccountTickets.do?command=AddTicket&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.tickets.add">Add New Ticket</dhv:label></a>
 <input type=hidden name="orgId" value="<%= OrgDetails.getOrgId() %>">
 <br>
 </dhv:permission>
@@ -128,7 +128,7 @@ Tickets
 <%} else {%>
   <tr class="containerBody">
     <td colspan="7">
-      No tickets found.
+      <dhv:label name="accounts.tickets.search.notFound">No tickets found.</dhv:label>
     </td>
   </tr>
 <%}%>

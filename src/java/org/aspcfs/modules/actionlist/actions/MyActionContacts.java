@@ -9,6 +9,7 @@ import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.utils.*;
+import org.aspcfs.controller.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.DependencyList;
@@ -461,7 +462,7 @@ public final class MyActionContacts extends CFSModule {
     if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
       return ("PermissionError");
     }
-    String msgId = context.getRequest().getParameter("messageId");
+    String msgId = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
     String actionId = context.getRequest().getParameter("actionId");
     String actionListId = context.getRequest().getParameter("actionListId");
@@ -478,6 +479,19 @@ public final class MyActionContacts extends CFSModule {
       
       //check if message if valid
       if (actionCampaign.isValid(thisMessage)) {
+        //insert the message if it is not inserted yet
+        if (msgId != null && !"".equals(msgId)) {
+          thisMessage.setModifiedBy(this.getUserId(context));
+          thisMessage.update(db);
+        } else {
+          SystemStatus systemStatus = this.getSystemStatus(context);
+          LookupList list = systemStatus.getLookupList(db, "lookup_access_types");
+          thisMessage.setAccessType(list.getIdFromValue("Public"));
+          thisMessage.setDisableNameValidation(true);
+          thisMessage.setModifiedBy(this.getUserId(context));
+          thisMessage.setEnteredBy(this.getUserId(context));
+          thisMessage.insert(db);
+        }
         //create an instant campaign and activate it
         actionCampaign.setName(actionList.getDescription());
         actionCampaign.setEnteredBy(this.getUserId(context));

@@ -23,15 +23,15 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do">Help Desk</a> > 
-View Tickets
+<a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
+<dhv:label name="tickets.view">View Tickets</dhv:label> 
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <% int count = 0;
 if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
-<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Assigned to Me" type="tickets.assigned.to.me" object="AssignedToMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th valign="center" align="left">
@@ -114,7 +114,7 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 <%} else {%>
   <tr class="containerBody">
     <td colspan="7">
-      No tickets found.
+      <dhv:label name="tickets.search.notFound">No tickets found</dhv:label>
     </td>
   </tr>
 </table>
@@ -122,7 +122,7 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 <br>
 <%}%>
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
-<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Other Tickets in My Department" object="OpenInfo"/>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Other Tickets in My Department" type="tickets.other" object="OpenInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th valign="center" align="left">
@@ -211,15 +211,16 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 	<%} else {%>
 		<tr class="containerBody">
       <td colspan="7">
-        No tickets found.
+        <dhv:label name="tickets.search.notFound">No tickets found</dhv:label>
       </td>
     </tr>
   </table>
 	<%}%>
 <br>
 <%}%>
+<dhv:include name="ticketList.ticketsCreatedByMe" none="true">
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || CreatedByMeInfo.getExpandedSelection()) { %>
-<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Created by Me" object="CreatedByMeInfo"/>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Created by Me" type="tickets.created.by.me" object="CreatedByMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th valign="center" align="left">
@@ -308,15 +309,17 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 	<%} else {%>
 		<tr class="containerBody">
       <td colspan="7">
-        No tickets found.
+        <dhv:label name="tickets.search.notFound">No tickets found</dhv:label>
       </td>
     </tr>
   </table>
 	<%}%>
   <br />
 <%}%>
+</dhv:include>
+<dhv:include name="ticketList.allTickets" none="true">
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AllTicketsInfo.getExpandedSelection()) { %>
-<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="All Tickets" object="AllTicketsInfo"/>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="All Tickets" type="tickets.all" object="AllTicketsInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th valign="center" align="left">
@@ -405,10 +408,11 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 	<%} else {%>
 		<tr class="containerBody">
       <td colspan="7">
-        No tickets found.
+        <dhv:label name="tickets.search.notFound">No tickets found</dhv:label>
       </td>
     </tr>
   </table>
 	<%}%>
 <%}%>
+</dhv:include>
 

@@ -32,6 +32,7 @@ public class CalendarHandler extends TagSupport {
   private String field = null;
   private Timestamp timestamp = null;
   private boolean hidden = false;
+  private String timeZone = null;
 
 
   /**
@@ -71,6 +72,16 @@ public class CalendarHandler extends TagSupport {
    */
   public void setField(String tmp) {
     this.field = tmp;
+  }
+
+
+  /**
+   *  Sets the timeZone attribute of the CalendarHandler object
+   *
+   *@param  tmp  The new timeZone value
+   */
+  public void setTimeZone(String tmp) {
+    timeZone = tmp;
   }
 
 
@@ -125,26 +136,26 @@ public class CalendarHandler extends TagSupport {
     String language = "en";
     String country = "US";
     try {
-      if (timestamp != null) {
-        String timeZone = null;
-        Locale locale = null;
-        // Retrieve the user's timezone from their session
-        UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
-        if (thisUser != null) {
+      Locale locale = null;
+      // Retrieve the user's timezone from their session
+      UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
+      if (thisUser != null) {
+        if (timeZone == null) {
           timeZone = thisUser.getUserRecord().getTimeZone();
-          locale = thisUser.getUserRecord().getLocale();
         }
-        if (locale == null) {
-          locale = Locale.getDefault();
-        }
-        language = locale.getLanguage();
-        country = locale.getCountry();
-
+        locale = thisUser.getUserRecord().getLocale();
+      }
+      if (locale == null) {
+        locale = Locale.getDefault();
+      }
+      language = locale.getLanguage();
+      country = locale.getCountry();
+      if (timestamp != null) {
         //Format the specified value with the retrieved timezone
         SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
             dateFormat, locale);
         formatter.applyPattern(formatter.toPattern() + "yy");
-            
+
         //set the timezone
         if (timeZone != null) {
           java.util.TimeZone tz = java.util.TimeZone.getTimeZone(timeZone);
@@ -156,18 +167,18 @@ public class CalendarHandler extends TagSupport {
     }
     // Output the result based on the retrieved info (if any)
     try {
-      if (pageContext.getRequest().getAttribute(field + "Error") != null){
-        dateString = pageContext.getRequest().getParameter(field); 
+      if (pageContext.getRequest().getAttribute(field + "Error") != null) {
+        dateString = pageContext.getRequest().getParameter(field);
       }
-      if ( dateString == null){
+      if (dateString == null) {
         dateString = "";
       }
       if (!hidden) {
-      // TODO: Add onChange="checkDate(this.value)"
-      this.pageContext.getOut().write(
+        // TODO: Add onChange="checkDate(this.value)"
+        this.pageContext.getOut().write(
             "<input type=\"text\" name=\"" + field + "\" size=\"10\" value=\"" + dateString + "\" />" +
-          "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
-          "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>");
+            "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
+            "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>");
       } else {
         this.pageContext.getOut().write(
             "<input type=\"hidden\" name=\"" + field + "\" value=\"" + dateString + "\" />");

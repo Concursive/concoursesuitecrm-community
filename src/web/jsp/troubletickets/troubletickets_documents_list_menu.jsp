@@ -24,7 +24,7 @@
     window.location.href='TroubleTicketsDocuments.do?command=View&tId=' + thisTicId + '&folderId=' + thisFolderId;
   }
   function editFolder() {
-    window.location.href='TroubleTicketsDocumentsFolders.do?command=Modify&tId=' + thisTicId + '&folderId=' + thisFolderId + '&id=' + thisFolderId + '&parentId='+thisFolderId;
+    window.location.href='TroubleTicketsDocumentsFolders.do?command=Modify&tId=' + thisTicId + '&folderId=' + thisFileId + '&id=' + thisFolderId + '&parentId='+thisFileId;
   }
   function moveFolder() {
     popURL('TroubleTicketsDocumentsFolders.do?command=Move&tId=' + thisTicId + '&id=' + thisFolderId + '&popup=true&return=TroubleTicketsDocuments&param='+ thisTicId +'&param2='+ thisFolderId ,'Files','400','375','yes','yes');

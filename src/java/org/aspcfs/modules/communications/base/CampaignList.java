@@ -538,7 +538,7 @@ public class CampaignList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.*, msg.name as messageName, dt.description as delivery " +
+        "c.*, msg.name as messageName, dt.description as delivery, msg.subject as messageSubject " +
         "FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +

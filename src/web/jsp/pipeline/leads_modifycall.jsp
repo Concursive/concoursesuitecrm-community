@@ -12,6 +12,7 @@
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkInt.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
@@ -30,14 +31,6 @@
     formTest = true;
     message = "";
 <% if("pending".equals(request.getParameter("view"))){ %>
-  if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is on or after today's date\r\n";
-      formTest = false;
-    }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -72,14 +65,6 @@
     }
     
     if(form.hasFollowup != null && form.hasFollowup.checked){
-    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is on or after today's date\r\n";
-      formTest = false;
-    }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -226,11 +211,11 @@ Modify Activity
 <dhv:evaluate exp="<%= popUp %>">
       <input type="button" value="Cancel" onClick="javascript:window.close();">
 </dhv:evaluate>
-      <br>
-      <%= showError(request, "actionError") %>
+      <br />
+      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <% if("pending".equals(request.getParameter("view"))){ %>
         <%-- include pending activity form --%>
-        <%@ include file="leads_call_followup_include.jsp" %>
+        <%@ include file="../contacts/call_followup_include.jsp" %>
         &nbsp;
         <%-- include completed activity details --%>
         <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
@@ -243,14 +228,14 @@ Modify Activity
         <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
         <% } %>
         &nbsp;
-        <% if(CallDetails.getAlertDate() != null && request.getParameter("hasFollowup") == null){ %>
+        <% if((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null){ %>
           <%-- include followup activity details --%>
           <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
         <% }else{ %>
           <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
           <br>
           <%-- include pending activity form --%>
-          <%@ include file="leads_call_followup_include.jsp" %>
+          <%@ include file="../contacts/call_followup_include.jsp" %>
           </span>
       <% 
           }
@@ -279,7 +264,8 @@ Modify Activity
 <input type="hidden" name="id" value="<%= CallDetails.getId() %>">
 <input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>">
 <input type="hidden" name="statusId" value="<%= CallDetails.getStatusId() %>">
-<%= addHiddenParams(request, "viewSource|return") %>
+<input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>" >
+<%= addHiddenParams(request, "viewSource|view|return|actionId") %>
 <% if("pending".equals(request.getParameter("view"))){ %>
     <%-- include completed activity values --%>
     <input type="hidden" name="callTypeId" value="<%= CallDetails.getCallTypeId() %>">
@@ -288,7 +274,7 @@ Modify Activity
     <input type="hidden" name="notes" value="<%= toString(CallDetails.getNotes()) %>">
     <input type="hidden" name="resultId" value="<%= CallDetails.getResultId() %>">
     <input type="hidden" name="contactId" value="<%= CallDetails.getContactId() %>">
-  <% }else if(!(CallDetails.getStatusId() == Call.COMPLETE && CallDetails.getAlertDate() == null)){ %>
+<% }else if(!(CallDetails.getStatusId() == Call.COMPLETE && CallDetails.getAlertDate() == null)&& (request.getAttribute("alertDateWarning") == null)){ %>
     <%-- include pending activity values --%>
     <input type="hidden" name="alertText" value="<%= toHtmlValue(CallDetails.getAlertText()) %>">
     <input type="hidden" name="alertCallTypeId" value="<%= CallDetails.getAlertCallTypeId() %>">

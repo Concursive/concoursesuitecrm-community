@@ -5,7 +5,7 @@
  This source code cannot be modified, distributed or used without
  permission from Matt Rajkowski
 --%>
-<%@ page import="java.util.*,org.aspcfs.modules.admin.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.admin.base.*,org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <html>
@@ -22,7 +22,10 @@ function page_init() {
     User thisUser = (User)i.next();
 %>
   if ( !(inArray(parent.document.forms['projectMemberForm'].elements['selProjectList'], <%= thisUser.getId() %>)) ) {
-    list.options[list.length] = new Option("<%= thisUser.getContact().getNameFirstLast() %>", "<%= thisUser.getId() %>");
+    var newOpt = parent.document.createElement("OPTION");
+    newOpt.text='<%= StringUtils.jsStringEscape(thisUser.getContact().getNameFirstLast()) %>';
+    newOpt.value='<%= thisUser.getId() %>';
+    list.options[list.length] = newOpt;
   }
   parent.initList(<%= thisUser.getId() %>);
 <%

@@ -11,6 +11,7 @@
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
@@ -62,11 +63,6 @@
     if (!checkURL(form.url.value)) { 
       message += "- URL entered is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
-    }
-  </dhv:include>
-  <dhv:include name="organization.alert" none="true">
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      alertMessage += "Alert Date is before today's date\r\n";
     }
   </dhv:include>
     if (formTest == false) {
@@ -210,8 +206,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td width="100%">
-<a href="Accounts.do">Accounts</a> > 
-Add Account
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
+<dhv:label name="accounts.add">Add Account</dhv:label>
 </td>
 </tr>
 </table>
@@ -219,7 +215,7 @@ Add Account
 <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';">
 <br>
-<%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -229,7 +225,7 @@ Add Account
   <dhv:include name="organization.types" none="true">
   <tr>
     <td nowrap class="formLabel" valign="top">
-      Account Type(s)
+      <dhv:label name="accounts.account.types">Account Type(s)</dhv:label> 
     </td>
     <td>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
@@ -366,6 +362,7 @@ Add Account
     </td>
     <td>
       <zeroio:dateSelect form="addAccount" field="contractEndDate" timestamp="<%= OrgDetails.getContractEndDate() %>" />
+      <%= TimeZoneSelect.getSelect("contractEndDateTimeZone", OrgDetails.getContractEndDateTimeZone()).getHtml() %>
       <%= showAttribute(request, "contractEndDateError") %>
     </td>
   </tr>
@@ -385,7 +382,8 @@ Add Account
     </td>
     <td>
       <zeroio:dateSelect form="addAccount" field="alertDate" timestamp="<%= OrgDetails.getAlertDate() %>" />
-      <%= showAttribute(request, "alertDateError") %>
+      <%= TimeZoneSelect.getSelect("alertDateTimeZone", OrgDetails.getAlertDateTimeZone()).getHtml() %>
+      <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>
   </dhv:include>
@@ -1126,11 +1124,11 @@ Add Account
   </tr>
 </table>
 <br />
-Where do you want to go after this action is complete?<br />
-<input type="radio" name="target" value="return" <%= request.getParameter("target") == null || "return".equals(request.getParameter("target")) ? " checked" : "" %> /> View this account's details<br />
-<%--<input type="radio" name="target" value="loop" <%= "loop".equals(request.getParameter("target")) ? " checked" : "" %> /> Add another account&nbsp;<br />--%>
-<input type="radio" name="target" value="add_contact" <%= "add_contact".equals(request.getParameter("target")) ? " checked" : "" %> /> Add a contact to this account<br />
+<dhv:label name="accounts.radio.header">Where do you want to go after this action is complete?</dhv:label><br />
+<input type="radio" name="target" value="return" <%= request.getParameter("target") == null || "return".equals(request.getParameter("target")) ? " checked" : "" %> /> <dhv:label name="accounts.radio.details">View this account's details</dhv:label><br />
+<input type="radio" name="target" value="add_contact" <%= "add_contact".equals(request.getParameter("target")) ? " checked" : "" %> /> <dhv:label name="accounts.radio.addContact">Add a contact to this account</dhv:label><br />
 <br />
+<input type="hidden" name="onlyWarnings" value="<%=(OrgDetails.getOnlyWarnings()?"on":"off")%>" />
 <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';" />
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';" />
 <input type="hidden" name="dosubmit" value="true" />

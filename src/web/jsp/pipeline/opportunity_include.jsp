@@ -6,6 +6,7 @@
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%
     String entity = "pipeline";
     if("contact".equals(request.getParameter("entity"))){
@@ -178,7 +179,7 @@
     <td>
       <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
       <input type="text" name="<%= opportunityHeader.getId() > 0 ? "low" : "component_low" %>" size="15" value="<zeroio:number value="<%= ComponentDetails.getLow() %>" locale="<%= User.getLocale() %>" />">
-      <%= showAttribute(request, "lowHighError") %>
+      <%= showAttribute(request, "lowError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -244,10 +245,13 @@
       Alert Date
     </td>
     <td>
-      <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" timestamp="<%= ComponentDetails.getAlertDate() %>" />
+      <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" timestamp="<%= ComponentDetails.getAlertDate() %>" timeZone="<%= ComponentDetails.getAlertDateTimeZone() %>" />
+      <%= TimeZoneSelect.getSelect("alertDateTimeZone", ComponentDetails.getAlertDateTimeZone()).getHtml() %>
       <font color="red">*</font>
-      <%= showAttribute(request, "alertDateError") %>
+      <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>
 </table>
+
+<input type="hidden" name="<%= opportunityHeader.getId() > 0 ? "onlyWarnings" : "component_onlyWarnings" %>" value="<%=(ComponentDetails.getOnlyWarnings()?"on":"off")%>" />
 <%= addHiddenParams(request, "popup|popupType|actionId") %>

@@ -70,6 +70,9 @@
       <lookup constantId="1" class="lookupList" table="lookup_account_types" description="Account Types"/>
       <lookup constantId="2" class="lookupList" table="lookup_revenue_types" description="Revenue Types"/>
       <lookup constantId="3" class="contactType" table="lookup_contact_types" description="Contact Types"/>
+      <lookup constantId="819041648" class="lookupList" table="lookup_orgemail_types" description="Email Types"/>
+      <lookup constantId="819041649" class="lookupList" table="lookup_orgaddress_types" description="Address Types"/>
+      <lookup constantId="819041650" class="lookupList" table="lookup_orgphone_types" description="Phone Types"/>
       <permission name="accounts" attributes="v---" description="Access to Accounts module"/>
       <permission name="accounts-accounts" attributes="vaed" description="Account Records"/>
       <permission name="accounts-accounts-folders" attributes="vaed" description="Folders"/>
@@ -97,6 +100,9 @@
       <permission name="accounts-orders" attributes="vaed" description="Orders" enabled="false"/>
       <permission name="accounts-products" attributes="vaed" description="Products and Services" enabled="false"/>
       <permission name="accounts-accounts-contacts-imports" attributes="vaed" description="Import Accounts/Contacts"/>
+      <!-- next version
+      <permission name="accounts-accounts-relationships" attributes="vaed" description="Relationships"/>
+      -->
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>

@@ -20,8 +20,10 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<!--b>Search Results</b-->
-Your search for <b><%= request.getParameter("search") %></b> returned:
+<%
+  String paramSearchText = "searchText=" + toHtml(request.getParameter("search"));
+%>
+<dhv:label name="search.results.searchString" param="<%= paramSearchText %>">Your search for <b><%= toHtml(request.getParameter("search")) %></b> returned:</dhv:label>
 <br>&nbsp;<br> 
 <dhv:permission name="contacts-external_contacts-view,accounts-accounts-contacts-view">
 <% if(ContactList.size() < SearchSiteContactInfo.getMaxRecords()){ %>
@@ -64,7 +66,7 @@ if (i.hasNext()) {
           <a href="Contacts.do?command=Details&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
           <%}%>
           <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
-          <%= ((thisContact.getOrgId() > 0)?"<a href=\"Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[Account]</a>":"") %>
+          <%= ((thisContact.getOrgId() > 0)?"<a href=\"Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[<dhv:label name=\"accounts.account\" type=\"trails\">Account</dhv:label>]</a>":"") %>
         </td>
         <td>
           <%= toHtml(thisContact.getCompany()) %>
@@ -104,9 +106,9 @@ if (i.hasNext()) {
 </dhv:permission>
 <dhv:permission name="contacts-internal_contacts-view">
 <% if(EmployeeList.size() < SearchSiteEmployeeInfo.getMaxRecords()){ %>
-Showing <strong><%= EmployeeList.size() %></strong> result(s) of <%= SearchSiteEmployeeInfo.getMaxRecords() %> in <strong>Employees</strong>.
+Showing <strong><%= EmployeeList.size() %></strong> result(s) of <%= SearchSiteEmployeeInfo.getMaxRecords() %> in <strong><dhv:label name="employees.employees">Employees</dhv:label></strong>.
 <% }else{ %>
-  <strong><%= EmployeeList.size() %></strong> result(s) in <strong>Employees</strong>.
+  <strong><%= EmployeeList.size() %></strong> result(s) in <strong><dhv:label name="employees.employees">Employees</dhv:label></strong>.
 <% }
   Iterator j = EmployeeList.iterator();
   if (j.hasNext()) {
@@ -159,9 +161,9 @@ Showing <strong><%= EmployeeList.size() %></strong> result(s) of <%= SearchSiteE
 </dhv:permission>
 <dhv:permission name="accounts-accounts-view">
 <% if(OrganizationList.size() < SearchSiteAccountInfo.getMaxRecords()){ %>
-Showing <strong><%= OrganizationList.size() %></strong> result(s) of <%= SearchSiteAccountInfo.getMaxRecords() %> in <strong>Accounts</strong>.
+Showing <strong><%= OrganizationList.size() %></strong> result(s) of <%= SearchSiteAccountInfo.getMaxRecords() %> in <strong><dhv:label name="accounts.accounts">Accounts</dhv:label></strong>.
 <% }else{ %>
-<strong><%= OrganizationList.size() %></strong> result(s) in <strong>Accounts</strong>.
+<strong><%= OrganizationList.size() %></strong> result(s) in <strong><dhv:label name="accounts.accounts">Accounts</dhv:label></strong>.
 <% }
 
   Iterator k = OrganizationList.iterator();
@@ -171,7 +173,7 @@ Showing <strong><%= OrganizationList.size() %></strong> result(s) of <%= SearchS
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="100%">
-      <strong>Account Name</strong>
+      <strong><dhv:label name="accounts.account">Account</dhv:label> Name</strong>
     </th>
     <dhv:include name="sitesearch-account-email" none="true">
     <th width="175">
@@ -292,10 +294,13 @@ Showing <strong><%= OpportunityList.size() %></strong> result(s) of <%= SearchSi
 <%}%>
 </dhv:permission>
 <dhv:permission name="tickets-tickets-view">
-<% if(TicketList.size() < SearchSiteTicketInfo.getMaxRecords()){ %>
-Showing <strong><%= TicketList.size() %></strong> result(s) of <%= SearchSiteTicketInfo.getMaxRecords() %> in <strong>Tickets</strong>.
+<%
+  String paramTicketCount = "ticketList.count=" + TicketList.size();
+  String paramTicketMaxRecords = "ticketListInfo.maxRecords=" + SearchSiteTicketInfo.getMaxRecords();
+  if (TicketList.size() < SearchSiteTicketInfo.getMaxRecords()) { %>
+<dhv:label name="search.results.tickets.multiPagecount" param="<%= paramTicketCount + "|" + paramTicketMaxRecords %>" >Showing <strong><%= TicketList.size() %></strong> result(s) of <%= SearchSiteTicketInfo.getMaxRecords() %> in <strong>Tickets</strong>.</dhv:label>
 <% }else{ %>
-<strong><%= TicketList.size() %></strong> result(s) in <strong>Tickets</strong>.
+<dhv:label name="search.results.tickets.count" param="<%= paramTicketCount %>"><strong><%= TicketList.size() %></strong> result(s) in <strong>Tickets</strong>.</dhv:label>
 <% }
   Iterator n = TicketList.iterator();
   if (n.hasNext()) {

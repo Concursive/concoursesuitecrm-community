@@ -30,14 +30,6 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
-  if ((!form.component_closeDate.value == "") && (!checkDate(form.component_closeDate.value))) { 
-    message += "- Check that Est. Close Date is entered correctly\r\n";
-    formTest = false;
-  }
-  if ((!form.component_alertDate.value == "") && (!checkDate(form.component_alertDate.value))) { 
-    message += "- Check that Alert Date is entered correctly\r\n";
-    formTest = false;
-  }
   if ((!form.component_alertText.value == "") && (form.component_alertDate.value == "")) { 
     message += "- Please specify an alert date\r\n";
     formTest = false;

@@ -22,13 +22,15 @@ import org.aspcfs.modules.login.beans.UserBean;
  *
  *@author     mrajkowski
  *@created    July 12, 2001
- *@version    $Id$
+ *@version    $Id: MainMenuHook.java,v 1.15.90.1 2004/08/05 21:23:18 ananth Exp
+ *      $
  */
 public class MainMenuHook implements ControllerMainMenuHook {
 
   private ArrayList menuItems;
   private File file;
   private ServletContext context;
+
 
   /**
    *  Called only once by the servlet controller during initialization,
@@ -119,16 +121,38 @@ public class MainMenuHook implements ControllerMainMenuHook {
     while (menuItemsList.hasNext()) {
       MainMenuItem thisMenu = (MainMenuItem) menuItemsList.next();
       if ("".equals(thisMenu.getPermission()) || (systemStatus != null && systemStatus.hasPermission(thisUser.getUserId(), thisMenu.getPermission()))) {
+        //Check if the system status has a preference for this menu
+        String pageTitle = null;
+        String shortHtml = null;
+        String longHtml = null;
+        if (systemStatus != null) {
+          pageTitle = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "page_title");
+          shortHtml = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "short_html");
+          longHtml = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "long_html");
+        }
+
         if ((thisModule.getMenuKey() != null && thisMenu.hasActionName(thisModule.getMenuKey())) ||
             (thisModule.getMenuKey() == null && thisMenu.hasActionName(actionPath))) {
           //The user is on this link/module
-          thisModule.setName(thisMenu.getPageTitle());
+          if (pageTitle != null) {
+            thisModule.setName(pageTitle);
+          } else {
+            thisModule.setName(thisMenu.getPageTitle());
+          }
           //Set the on state of the menu
           menu.append("<th nowrap onClick=\"javascript:window.location.href='" + thisMenu.getLink() + "'\">");
-          menu.append(thisMenu.getShortHtml());
+          if (shortHtml != null) {
+            menu.append(shortHtml);
+          } else {
+            menu.append(thisMenu.getShortHtml());
+          }
           menu.append("</th>");
           graphicMenu.append("<a href='" + thisMenu.getLink() + "'><img border='0' src='images/" + thisMenu.getGraphicOn() + "' width='" + thisMenu.getGraphicWidth() + "' height='" + thisMenu.getGraphicHeight() + "'></a>");
-          smallMenuList.add("<a " + addSelectedClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
+          if (longHtml != null) {
+            smallMenuList.add("<a " + addSelectedClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + longHtml + "</a>");
+          } else {
+            smallMenuList.add("<a " + addSelectedClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
+          }
           //Build the submenu
           Iterator j = thisMenu.getSubmenuItems().iterator();
           while (j.hasNext()) {
@@ -149,12 +173,20 @@ public class MainMenuHook implements ControllerMainMenuHook {
             menu.append(" onmouseover=\"swapClass(this,'menutabUnselectedLinkOn')\" onmouseout=\"swapClass(this,'menutabUnselectedLinkOff')\"");
           }
           menu.append(" onClick=\"javascript:window.location.href='" + thisMenu.getLink() + "'\">");
-          menu.append(thisMenu.getShortHtml());
+          if (shortHtml != null) {
+            menu.append(shortHtml);
+          } else {
+            menu.append(thisMenu.getShortHtml());
+          }
           menu.append("</td>");
 
           graphicMenu.append("<a href='" + thisMenu.getLink() + "'");
           if (thisMenu.hasGraphicRollover()) {
-            graphicMenu.append(" onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + thisMenu.getShortHtml() + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
+            if (shortHtml != null) {
+              graphicMenu.append(" onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + shortHtml + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
+            } else {
+              graphicMenu.append(" onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + thisMenu.getShortHtml() + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
+            }
           }
           graphicMenu.append(">");
           graphicMenu.append("<img ");
@@ -165,7 +197,11 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
           graphicMenu.append(">");
           graphicMenu.append("</a>");
-          smallMenuList.add("<a " + addNormalClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
+          if (pageTitle != null) {
+            smallMenuList.add("<a " + addNormalClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + pageTitle + "</a>");
+          } else {
+            smallMenuList.add("<a " + addNormalClass(thisMenu) + "href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
+          }
         }
         menuWidth += Integer.parseInt(thisMenu.getGraphicWidth());
       }

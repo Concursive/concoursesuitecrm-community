@@ -2865,7 +2865,7 @@ public class Contact extends GenericBean {
       rs = pst.executeQuery();
       if (rs.next()) {
         Dependency thisDependency = new Dependency();
-        thisDependency.setName("Calls");
+        thisDependency.setName("Activities");
         thisDependency.setCount(rs.getInt("callcount"));
         thisDependency.setCanDelete(true);
         dependencyList.add(thisDependency);

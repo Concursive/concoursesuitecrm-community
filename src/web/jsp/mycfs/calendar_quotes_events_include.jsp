@@ -9,7 +9,7 @@
 <dhv:evaluate if="<%= quoteEventList.getTodaysQuotes().size() > 0 %>">
 <table border="0">
   <tr>
-    <td colspan="6">
+    <td colspan="6" nowrap>
       <%-- event name --%>
       <img border="0" src="images/box.gif" align="texttop" title="Quotes"><a href="javascript:changeImages('todaysquotesimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('todaysquotesdetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="todaysquotesimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Quotes pending your approval</a>&nbsp;(<%= quoteEventList.getTodaysQuotes().size() %>)
     </td>
@@ -43,8 +43,8 @@
     <tr>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayQuoteMenu('selectQuote<%= menuCount %>','menuQuote', '<%=  thisQuote.getId() %>', '<%= thisQuote.getContactId() %>');"
-       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuQuote');"><img src="images/select.gif" name="selectQuote<%= menuCount %>" id="selectQuote<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayQuoteMenu('select<%= menuCount %>','menuQuote', '<%=  thisQuote.getId() %>', '<%= thisQuote.getContactId() %>');"
+       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuQuote');"><img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>
        <%= thisQuote.getId() %>

@@ -165,7 +165,27 @@ public static String replace(String str, String o, String n) {
     public static String showError(HttpServletRequest request, String errorEntry) {
       return showError(request, errorEntry, true);
     }
-  
+
+    public static String showWarning(HttpServletRequest request, String warningEntry) {
+      if (request.getAttribute(warningEntry) != null) {
+        return "&nbsp;<br /><img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\"/><font color='#FF9933'>" + toHtml((String)request.getAttribute(warningEntry)) + "</font><br>";
+      }else if(request.getParameter(warningEntry) != null){
+        return "&nbsp;<br /><img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\"/><font color='#FF9933'>" + toHtml((String)request.getParameter(warningEntry)) + "</font><br>";
+      }else{
+        return "&nbsp;";
+      }
+    }
+
+    public static String showWarningAttribute(HttpServletRequest request, String warningEntry) {
+      if (request.getAttribute(warningEntry) != null) {
+        return "<font color='#FF9933'>" + toHtml((String)request.getAttribute(warningEntry)) + "</font>";
+      }else if(request.getParameter(warningEntry) != null){
+        return "<font color='#FF9933'>" + toHtml((String)request.getParameter(warningEntry)) + "</font>";
+      }else{
+        return "";
+      }
+    }
+    
     public static String showError(HttpServletRequest request, String errorEntry, boolean showSpace) {
       if (request.getAttribute(errorEntry) != null) {
         return (showSpace ? "&nbsp;<br>" : "") + "<img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font><br>&nbsp;<br>";

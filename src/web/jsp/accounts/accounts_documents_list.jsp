@@ -7,9 +7,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 Documents
 </td>
 </tr>
@@ -34,7 +34,7 @@ Documents
         String documentModule = "Accounts";
         String specialID = ""+OrgDetails.getId();
       %>
-      <%@ include file="documents_list.jsp" %>&nbsp;
+      <%@ include file="documents_list_include.jsp" %>&nbsp;
     </td>
   </tr>
 </table>

@@ -4,6 +4,7 @@
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="ConstantId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
@@ -163,7 +164,7 @@ Folder
   &nbsp;<br>
 <%}%>
   <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="moduleId" value="<%= ModId %>">
+  <input type="hidden" name="moduleId" value="<%= ConstantId %>">
   <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
   <dhv:permission name="admin-sysconfig-folders-delete">
     <input type='submit' value='Delete this folder and all fields' onClick="javascript:this.form.dosubmit.value='true';">

@@ -7,7 +7,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="team" class="com.zeroio.iteam.base.TeamMemberList" scope="request"/>
 <html>
 <head>
@@ -23,7 +23,10 @@ function page_init() {
     TeamMember member = (TeamMember) i.next();
 %>
   if ( !(inArray(parent.document.forms['projectMemberForm'].elements['selProjectList'], <%= member.getUserId() %>)) ) {
-  	list.options[list.length] = new Option("<dhv:username id="<%= member.getUserId() %>"/>", "<%= member.getUserId() %>");
+    var newOpt = parent.document.createElement("OPTION");
+    newOpt.text='<dhv:username id="<%= member.getUserId() %>"/>';
+    newOpt.value='<%= member.getUserId() %>';
+    list.options[list.length] = newOpt;
   }
   parent.initList(<%= member.getUserId() %>);
 <%

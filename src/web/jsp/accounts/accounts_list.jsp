@@ -19,7 +19,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 Search Results
 </td>
 </tr>
@@ -29,11 +29,11 @@ Search Results
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>Select an account to manage.</td>
+    <td><dhv:label name="accounts.manage">Select an account to manage.</dhv:label></td>
   </tr>
 </table>
 </dhv:evaluate>
-<dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add">Add an Account</a></dhv:permission>
+<dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add"><dhv:label name="accounts.add">Add an Account</dhv:label></a></dhv:permission>
 <center><%= SearchOrgListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOrgListInfo"/>
 <% int columnCount = 0; %>
@@ -43,23 +43,23 @@ Search Results
       <strong>Action</strong>
     </th>
     <th nowrap <% ++columnCount; %>>
-      <strong><a href="Accounts.do?command=Search&column=o.name">Account Name</a></strong>
+      <strong><a href="Accounts.do?command=Search&column=o.name"><dhv:label name="organization.name">Account Name</dhv:label></a></strong>
       <%= SearchOrgListInfo.getSortIcon("o.name") %>
     </th>
     <dhv:include name="organization.phoneNumbers" none="true">
-      <th nowrap <% ++columnCount; %>>
+    <th nowrap <% ++columnCount; %>>
         <strong>Phone</strong>
-      </th>
+		</th>
     </dhv:include>
     <dhv:include name="organization.phoneNumbers" none="true">
-      <th nowrap <% ++columnCount; %>>
+    <th nowrap <% ++columnCount; %>>
         <strong>Fax</strong>
-      </th>
+		</th>
     </dhv:include>
     <dhv:include name="organization.emailAddresses" none="true">
-      <th nowrap <% ++columnCount; %>>
+    <th nowrap <% ++columnCount; %>>
         <strong>Email</strong>
-      </th>
+		</th>
     </dhv:include>
   </tr>
 <%
@@ -84,44 +84,44 @@ Search Results
       <a href="Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>
 		</td>
     <dhv:include name="organization.phoneNumbers" none="true">
-      <td valign="center" class="row<%= rowid %>" nowrap>
-      <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
+		<td valign="center" class="row<%= rowid %>" nowrap>
+		<dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
         <%= toHtml(thisOrg.getPhoneNumber("Main")) %>
-      </dhv:evaluate>    
-      <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() != null)%>">
+		</dhv:evaluate>    
+		<dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() != null)%>">
         <%= toHtml(thisOrg.getPrimaryContact().getPhoneNumber("Business")) %>
-      </dhv:evaluate>
-      </td>
+		</dhv:evaluate>
+		</td>
     </dhv:include>
     <dhv:include name="organization.phoneNumbers" none="true">
-      <td valign="center" class="row<%= rowid %>" nowrap>
+		<td valign="center" class="row<%= rowid %>" nowrap>
         <%= toHtml(thisOrg.getPhoneNumber("Fax")) %>
-      </td>
+		</td>
     </dhv:include>
     <dhv:include name="organization.emailAddresses" none="true">
-      <td valign="center" class="row<%= rowid %>" nowrap>
-      <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
+		<td valign="center" class="row<%= rowid %>" nowrap>
+		<dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
       <% if ( (thisOrg.getEmailAddress("Primary")).length() > 0 ) { %>
         <a href="mailto:<%= toHtml(thisOrg.getEmailAddress("Primary")) %>"><%= toHtml(thisOrg.getEmailAddress("Primary")) %></a>
       <%} else {%>
         &nbsp;
       <%}%>
-      </dhv:evaluate>
-      <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() != null)%>">
+		</dhv:evaluate>    
+		<dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() != null)%>">
       <% if ( (thisOrg.getPrimaryContact().getEmailAddress("Business")).length() > 0 ) { %>
         <a href="mailto:<%= toHtml(thisOrg.getPrimaryContact().getEmailAddress("Business")) %>"><%= toHtml(thisOrg.getPrimaryContact().getEmailAddress("Business")) %></a>
       <%} else {%>
         &nbsp;
       <%}%>    
-      </dhv:evaluate>
-      </td>
+		</dhv:evaluate>
+		</td>
     </dhv:include>
   </tr>
 <%}%>
 <%} else {%>
   <tr class="containerBody">
     <td colspan="<%= columnCount %>">
-      No accounts found with the specified search parameters.<br />
+      <dhv:label name="accounts.search.notFound">No accounts found with the specified search parameters.</dhv:label><br />
       <a href="Accounts.do?command=SearchForm">Modify Search</a>.
     </td>
   </tr>

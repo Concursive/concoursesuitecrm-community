@@ -7,6 +7,7 @@
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].callTypeId.focus();">
 <form name="addCall" action="LeadsCalls.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
@@ -55,11 +56,11 @@ Add Activity
 <%-- Begin the container contents --%>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
-      <br>
-      <%= showError(request, "actionError") %>
+      <br />
+      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%@ include file="leads_call_include.jsp" %>
       &nbsp;
-      <br>
+      <br />
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
       <input type="hidden" name="dosubmit" value="true">

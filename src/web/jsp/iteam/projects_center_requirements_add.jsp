@@ -48,12 +48,6 @@
       }
     }
     
-    //Check date fields
-    if ((form.deadline.value != "") && (!checkDate(form.deadline.value))) {
-      messageText += "- Outline due date was not properly entered\r\n";
-      formTest = false;
-    }
-  
     if (formTest == false) {
       messageText = "The outline form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       form.dosubmit.value = "true";
@@ -128,6 +122,7 @@
             </td>
             <td>
               <zeroio:dateSelect form="inputForm" field="startDate" timestamp="<%= Requirement.getStartDate() %>" />
+              <%=showAttribute(request,"startDateError")%>
             </td>
           </tr>
           <tr>
@@ -136,6 +131,7 @@
             </td>
             <td>
               <zeroio:dateSelect form="inputForm" field="deadline" timestamp="<%= Requirement.getDeadline() %>" />
+              <%=showAttribute(request,"deadlineError")%>
             </td>
           </tr>
         </table>

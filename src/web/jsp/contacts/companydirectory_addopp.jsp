@@ -31,16 +31,8 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
-  if ((!form.component_closeDate.value == "") && (!checkDate(form.component_closeDate.value))) { 
-    message += "- Check that Est. Close Date is entered correctly\r\n";
-    formTest = false;
-  }
   if (form.component_low.value != "" && form.component_low.value != "" && (parseInt(form.component_low.value) > parseInt(form.component_high.value))) { 
     message += "- Low Estimate cannot be higher than High Estimate\r\n";
-    formTest = false;
-  }
-  if ((!form.component_alertDate.value == "") && (!checkDate(form.component_alertDate.value))) { 
-    message += "- Check that Alert Date is entered correctly\r\n";
     formTest = false;
   }
   if ((!form.component_alertText.value == "") && (form.component_alertDate.value == "")) { 
@@ -98,7 +90,7 @@ Add Opportunity
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>';this.form.dosubmit.value='false';">
 <br>
-<%= showError(request, "actionError") %>
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
 <%--  include basic opportunity form --%>
 <%@ include file="../pipeline/opportunity_include.jsp" %>
 &nbsp;

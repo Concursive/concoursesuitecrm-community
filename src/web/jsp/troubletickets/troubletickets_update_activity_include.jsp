@@ -266,7 +266,7 @@
     </td>
     <td>
       <zeroio:dateSelect form="details" field="alertDate" timestamp="<%=activityDetails.getAlertDate()%>" />
-      <%= showAttribute(request, "alertDateError") %>
+      <%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -294,6 +294,7 @@
     </td>
   </tr>
 </table>
+<input type="hidden" name="onlyWarnings" value=<%=(activityDetails.getOnlyWarnings()?"on":"off")%> />
 <input type="hidden" name="modified" value="<%=activityDetails.getModified()%>">
 <input type="hidden" name="prevTotalTravelMinutes" value="<%=activityDetails.getTotalTravelMinutes()%>" />
 <input type="hidden" name="prevTotalTravelHours" value="<%=activityDetails.getTotalTravelHours()%>" />

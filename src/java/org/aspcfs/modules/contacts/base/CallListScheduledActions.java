@@ -149,12 +149,23 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       this.setOwner(userId);
       this.setOnlyPending(true);
       HashMap pendingEvents = this.queryRecordCount(db, timeZone);
-
-      //add completed activities count
       Iterator j = pendingEvents.keySet().iterator();
       while (j.hasNext()) {
         String thisDay = (String) j.next();
-        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[1], pendingEvents.get(thisDay));
+        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[13], pendingEvents.get(thisDay));
+      }
+
+      //add completed activities count
+      this.clear();
+      this.setOnlyPending(false);
+      this.setOnlyCompleted(true);
+      this.setOwner(-1);
+      this.setEnteredBy(userId);
+      HashMap completedEvents = this.queryRecordCount(db, timeZone);
+      Iterator comp = completedEvents.keySet().iterator();
+      while (comp.hasNext()) {
+        String thisDay = (String) comp.next();
+        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[1], completedEvents.get(thisDay));
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Call Calendar Alert Counts");

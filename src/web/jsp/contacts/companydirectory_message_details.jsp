@@ -50,10 +50,18 @@ Message Details
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
+            Message Name
+          </td>
+          <td>
+            <%= toHtml(Campaign.getMessageName() != null && !"".equals(Campaign.getMessageName()) ? Campaign.getMessageName() : "\"No name available\"") %>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
             Message Subject
           </td>
           <td>
-            <%=toHtml(Campaign.getMessageName())%>
+            <%=toHtml(Campaign.getMessageSubject())%>
           </td>
         </tr>
         <tr class="containerBody">

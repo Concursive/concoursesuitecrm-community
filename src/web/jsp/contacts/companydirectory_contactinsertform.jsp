@@ -122,7 +122,7 @@
     </td>
     <td>
       <% if("adduser".equals(request.getParameter("source"))){ %>
-      	<input type="radio" name="contactcategory" value="3" onChange="javascript:updateCategoryInfo('employee');" <%= ContactDetails.getOrgId() == -1 ? " checked" : ""%>>Employee<br>
+      	<input type="radio" name="contactcategory" value="3" onChange="javascript:updateCategoryInfo('employee');" <%= ContactDetails.getOrgId() == -1 ? " checked" : ""%>><dhv:label name="employees.employee">Employee</dhv:label><br>
 	<input type="hidden" name="source" value="<%= request.getParameter("source") %>">
       <% }else{ %>
         <input type="radio" name="contactcategory" value="1" onChange="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>

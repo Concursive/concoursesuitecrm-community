@@ -34,6 +34,8 @@ public class DateTimeHandler extends TagSupport {
   private int dateFormat = DateFormat.SHORT;
   private String pattern = null;
   private String defaultValue = "";
+  private String timeZone = null;
+  private boolean showTimeZone = false;
 
 
   /**
@@ -73,6 +75,16 @@ public class DateTimeHandler extends TagSupport {
    */
   public void setTimestamp(java.util.Calendar tmp) {
     this.timestamp = new java.sql.Timestamp(tmp.getTimeInMillis());
+  }
+
+
+  /**
+   *  Sets the timeZone attribute of the DateTimeHandler object
+   *
+   *@param  tmp  The new timeZone value
+   */
+  public void setTimeZone(String tmp) {
+    timeZone = tmp;
   }
 
 
@@ -187,6 +199,26 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
+   *  Sets the showTimeZone attribute of the DateTimeHandler object
+   *
+   *@param  tmp  The new showTimeZone value
+   */
+  public void setShowTimeZone(boolean tmp) {
+    this.showTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the showTimeZone attribute of the DateTimeHandler object
+   *
+   *@param  tmp  The new showTimeZone value
+   */
+  public void setShowTimeZone(String tmp) {
+    this.showTimeZone = ("yes".equals(tmp) ? true : false);
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@return                   Description of the Return Value
@@ -195,12 +227,13 @@ public class DateTimeHandler extends TagSupport {
   public int doStartTag() throws JspException {
     try {
       if (timestamp != null && !"".equals(timestamp)) {
-        String timeZone = null;
         Locale locale = null;
         // Retrieve the user's timezone from their session
         UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
         if (thisUser != null) {
-          timeZone = thisUser.getUserRecord().getTimeZone();
+          if (timeZone == null) {
+            timeZone = thisUser.getUserRecord().getTimeZone();
+          }
           locale = thisUser.getUserRecord().getLocale();
         }
         if (locale == null) {
@@ -224,17 +257,25 @@ public class DateTimeHandler extends TagSupport {
         if (pattern != null) {
           formatter.applyPattern(pattern);
         } else {
-          if (dateOnly){
-            formatter.applyPattern(formatter.toPattern() + "yy");
-          }else{
+          if (dateOnly) {
+            if ((showTimeZone) && (timeZone != null)) {
+              formatter.applyPattern(formatter.toPattern() + "yy z");
+            } else {
+              formatter.applyPattern(formatter.toPattern() + "yy");
+            }
+          } else {
             SimpleDateFormat dateFormatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
-                        dateFormat, locale);
+                dateFormat, locale);
             dateFormatter.applyPattern(dateFormatter.toPattern() + "yy");
-            
+
             SimpleDateFormat timeFormatter = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(
-                        timeFormat, locale);
-                        
-            formatter.applyPattern(dateFormatter.toPattern() + " " + timeFormatter.toPattern());
+                timeFormat, locale);
+
+            if ((showTimeZone) && (timeZone != null)) {
+              formatter.applyPattern(dateFormatter.toPattern() + " " + timeFormatter.toPattern() + " z");
+            } else {
+              formatter.applyPattern(dateFormatter.toPattern() + " " + timeFormatter.toPattern());
+            }
           }
         }
         //set the timezone

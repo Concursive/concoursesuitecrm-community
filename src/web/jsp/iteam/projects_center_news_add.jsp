@@ -42,15 +42,6 @@
       messageText += "- Intro is a required field\r\n";
       formTest = false;
     }
-    //Check date field
-    if ((document.inputForm.startDate.value != "") && (!checkDate(document.inputForm.startDate.value))) {
-      messageText += "- Start date was not properly entered\r\n";
-      formTest = false;
-    }
-    if ((document.inputForm.endDate.value != "") && (!checkDate(document.inputForm.endDate.value))) {
-      messageText += "- End date was not properly entered\r\n";
-      formTest = false;
-    }
     if (formTest == false) {
       messageText = "The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       alert(messageText);
@@ -79,7 +70,7 @@
     <input type="submit" value="Save and Modify Next Page" onClick="javascript:this.form.newPage.value='true'" />
   </dhv:evaluate>
   <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>';"><br>
-  <%= showError(request, "actionError") %>
+  <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2" align="left">
@@ -121,6 +112,7 @@
         at
         <zeroio:timeSelect baseName="startDate" value="<%= newsArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>"/>
         <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
+        <%=showAttribute(request,"startDateError")%>
       </td>
     </tr>
     <tr class="containerBody">
@@ -132,6 +124,7 @@
         at
         <zeroio:timeSelect baseName="endDate" value="<%= newsArticle.getEndDate() %>" timeZone="<%= User.getTimeZone() %>"/>
         <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
+        <%=showAttribute(request,"endDateError")%><%= showWarningAttribute(request, "endDateWarning") %>
       </td>
     </tr>
     <tr class="containerBody">
@@ -217,6 +210,7 @@
     <input type="submit" value="Save and Modify Next Page" onClick="javascript:this.form.newPage.value='true'" />
   </dhv:evaluate>
   <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>';" /><br>
+  <input type="hidden" name="onlyWarnings" value="<%=(newsArticle.getOnlyWarnings()?"on":"off")%>" />
   <input type="hidden" name="projectId" value="<%= Project.getId() %>" />
   <input type="hidden" name="id" value="<%= newsArticle.getId() %>" />
   <input type="hidden" name="modified" value="<%= newsArticle.getModified() %>" />

@@ -5,7 +5,7 @@
  This source code cannot be modified, distributed or used without
  permission from Matt Rajkowski
 --%>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="projectList" class="com.zeroio.iteam.base.ProjectList" scope="request"/>
 <html>
 <head>
@@ -19,9 +19,11 @@ function page_init() {
   Iterator i = projectList.iterator();
   while (i.hasNext()) {
     Project thisProject = (Project) i.next();
-    //TODO: Use toJavascript() for this option stuff...
 %>
-  	list.options[list.length] = new Option("<%= thisProject.getTitle() %>", "<%= thisProject.getId() %>");
+    var newOpt = parent.document.createElement("OPTION");
+    newOpt.text='<%= StringUtils.jsStringEscape(thisProject.getTitle()) %>';
+    newOpt.value='<%= thisProject.getId() %>';
+    list.options[list.length] = newOpt;
 <%
   }
 %>

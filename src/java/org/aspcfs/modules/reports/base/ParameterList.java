@@ -5,12 +5,13 @@ package org.aspcfs.modules.reports.base;
 import java.util.*;
 import java.sql.*;
 import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.UserUtils;
-import org.aspcfs.utils.Template;
+import org.aspcfs.utils.*;
 import dori.jasper.engine.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
+import java.text.*;
+import org.aspcfs.modules.login.beans.*;
+import org.aspcfs.modules.admin.base.*;
 
 /**
  *  A collection of Parameter objects.
@@ -161,11 +162,25 @@ public class ParameterList extends ArrayList {
           }
           addParam(param.getName(), param.getValue());
         }
+        if (param.getName().startsWith("date_")) {
+          Timestamp tmpTimestamp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), DateFormat.SHORT, DateFormat.LONG, param.getValue(), UserUtils.getUserLocale(request));
+          Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(UserUtils.getUserTimeZone(request)), UserUtils.getUserLocale(request));
+          cal.setTime(tmpTimestamp);
+          String month = String.valueOf(cal.get(Calendar.MONTH) + 1);
+          String day = String.valueOf(cal.get(Calendar.DATE));
+          String date = (month.length() == 1 ? ("0" + month) : month) + "/" +
+              (day.length() == 1 ? ("0" + day) : day) + "/" +
+              String.valueOf(cal.get(Calendar.YEAR));
+          param.setValue(date);
+        }
       }
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ParameterList-> " + param.getName() + "=" + param.getValue());
       }
     }
+    this.addParam("currency", UserUtils.getUserCurrency(request));
+    this.addParam("country", UserUtils.getUserLocale(request).getCountry());
+    this.addParam("language", UserUtils.getUserLocale(request).getLanguage());
     this.addParam("userid", String.valueOf(UserUtils.getUserId(request)));
   }
 
@@ -396,7 +411,14 @@ public class ParameterList extends ArrayList {
     }
     return null;
   }
-  
+
+
+  /**
+   *  Gets the parameter attribute of the ParameterList object
+   *
+   *@param  param  Description of the Parameter
+   *@return        The parameter value
+   */
   public Parameter getParameter(String param) {
     Iterator i = this.iterator();
     while (i.hasNext()) {

@@ -2,7 +2,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%
   //NOTE: The entries of this array should exactly match the entries of the EVENT_TYPES array in CalendarEventList object, the display is based on the order specified in this jsp's array
-  String[] EVENT_TYPES = {"Tasks", "Calls", "Opportunities", "Account Alerts", "Account Contract Alerts", "Contact Calls", "Opportunity Calls", "Holiday", "Assignments", "System Alerts", "Quotes", "Tickets"};
+  String[] EVENT_TYPES = {"Tasks", "Calls", "Opportunities", "Account Alerts", "Account Contract Alerts", "Contact Calls", "Opportunity Calls", "Holiday", "Assignments", "System Alerts", "Quotes", "Tickets","Ticket Requests","Pending Calls"};
 %>
 
 <table>
@@ -30,7 +30,9 @@
         } else if (category.equals("Quotes")) { %>
        <%@ include file="calendar_quotes_events_include.jsp" %>
     <%  }else if(category.equals("Tickets")){ %>
-    <%@ include file="calendar_ticket_events_include.jsp" %>
+      <%@ include file="calendar_ticket_events_include.jsp" %>
+    <%  }else if(category.equals("Ticket Requests")){ %>
+      <%@ include file="calendar_ticket_events_due_today_include.jsp" %>
     <%  }else if (category.equals("Holiday")) {
         ArrayList tmpList = (ArrayList) thisDay.get(category);
         CalendarEvent thisEvent = (CalendarEvent) tmpList.get(0);

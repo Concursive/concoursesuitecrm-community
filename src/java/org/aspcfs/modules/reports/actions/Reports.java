@@ -133,6 +133,7 @@ public final class Reports extends CFSModule {
       //Load the report list
       ReportList reports = new ReportList();
       reports.setCategoryId(Integer.parseInt(categoryId));
+      reports.setEnabled(Constants.TRUE);
       reports.buildList(db);
       context.getRequest().setAttribute("reports", reports);
     } catch (Exception e) {
@@ -248,7 +249,7 @@ public final class Reports extends CFSModule {
       ParameterList params = new ParameterList();
       params.setParameters(jasperReport);
       //Load the criteria if the user selected to base on existing criteria
-      if (criteriaId != null && !criteriaId.equals("-1") &&!"".equals(criteriaId)) {
+      if (criteriaId != null && !criteriaId.equals("-1") && !"".equals(criteriaId)) {
         Criteria criteria = new Criteria(db, Integer.parseInt(criteriaId));
         criteria.buildResources(db);
         params.setParameters(criteria);
@@ -450,11 +451,13 @@ public final class Reports extends CFSModule {
     try {
       db = getConnection(context);
       //Load the queued report
-      ReportQueue queue = new ReportQueue(db, Integer.parseInt(id));
-      if (queue.getProcessed() != null) {
-        queue.delete(db, this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
-      } else {
-        context.getRequest().setAttribute("actionError", "Report could not be deleted because it has not been processed");
+      ReportQueue queue = new ReportQueue(db, Integer.parseInt(id), false);
+      if (queue.getId() != -1) {
+        if (queue.getProcessed() != null) {
+          queue.delete(db, this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
+        } else {
+          context.getRequest().setAttribute("actionError", "Report could not be deleted because it has not been processed");
+        }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -483,11 +486,13 @@ public final class Reports extends CFSModule {
     try {
       db = getConnection(context);
       //Load the queued report
-      ReportQueue queue = new ReportQueue(db, Integer.parseInt(id));
-      if (queue.getProcessed() == null) {
-        queue.delete(db, this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
-      } else {
-        context.getRequest().setAttribute("actionError", "Report could not be canceled because processing has already started");
+      ReportQueue queue = new ReportQueue(db, Integer.parseInt(id), false);
+      if (queue.getId() != -1) {
+        if (queue.getProcessed() == null) {
+          queue.delete(db, this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
+        } else {
+          context.getRequest().setAttribute("actionError", "Report could not be canceled because processing has already started");
+        }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

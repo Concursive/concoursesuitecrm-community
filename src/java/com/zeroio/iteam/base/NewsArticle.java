@@ -817,13 +817,40 @@ public class NewsArticle extends GenericBean {
       errors.put("introError", "Required field");
     }
     if (hasErrors()) {
+      //Check warnings
+      checkWarnings();
+      onlyWarnings = false;
       return false;
     } else {
+      //Do not check for warnings if it was found that only warnings existed
+      // in the previous call to isValid for the same form.
+      if (!onlyWarnings) {
+        //Check for warnings if there are no errors
+        checkWarnings();
+        if (hasWarnings()) {
+          onlyWarnings = true;
+          return false;
+        }
+      }
       return true;
     }
   }
 
+  /**
+   *  Generates warnings that need to be reviewed before the 
+   *  form can be submitted.
+   */
+  protected void checkWarnings() {
+    if ((errors.get("endDateError") == null) && 
+        (endDate != null) &&
+        (startDate != null)) {
+      if (endDate.before(startDate)) {
+        warnings.put("endDateWarning", "Archive date is earlier than start date");
+      }
+    }
+  }
 
+  
   /**
    *  Inserts a news article in the database
    *

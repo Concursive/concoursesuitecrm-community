@@ -1,3 +1,5 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
@@ -15,12 +17,14 @@ function updateSubList2() {
   var url = "TroubleTickets.do?command=CategoryJSList&subCat1=" + escape(value);
   window.frames['server_commands'].location.href=url;
 }
+<dhv:include name="ticket.subCat2" none="true">
 function updateSubList3() {
   var sel = document.forms['details'].elements['subCat2'];
   var value = sel.options[sel.selectedIndex].value;
   var url = "TroubleTickets.do?command=CategoryJSList&subCat2=" + escape(value);
   window.frames['server_commands'].location.href=url;
 }
+</dhv:include>
 function updateUserList() {
   var sel = document.forms['details'].elements['departmentCode'];
   var value = sel.options[sel.selectedIndex].value;
@@ -49,11 +53,24 @@ function resetNumericFieldValue(fieldId){
   document.getElementById(fieldId).value = -1;
 }
 function checkForm(form) {
-  if (form.closeNow.checked && form.solution.value == "") { 
-   alert("Resolution needs to be filled in when closing a ticket");
-   return false;
+  formTest = true;
+  message = "";
+  if (form.problem.value == "") { 
+    message += "- <dhv:label name="ticket.issue">Issue</dhv:label> is required\r\n";
+    formTest = false;
   }
-  return true;
+  <dhv:include name="ticket.resolution" none="true">
+  if (form.closeNow.checked && form.solution.value == "") { 
+    message += "- Resolution needs to be filled in when closing a ticket\r\n";
+    formTest = false;
+  }
+  </dhv:include>
+  if (formTest == false) {
+    alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+    return false;
+  } else {
+    return true;
+  }
 }
 
 function setAssignedDate(){
@@ -70,20 +87,20 @@ function resetAssignedDate(){
 </SCRIPT>
 
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
-		<tr>
+	<tr>
       <th colspan="2">
-        <strong>Ticket Information</strong>
+        <strong><dhv:label name="tickets.information">Ticket Information</dhv:label></strong>
       </th>
 		</tr>
 		<tr class="containerBody">
       <td class="formLabel">
-        Ticket Source
+      <dhv:label name="tickets.source">Ticket Source</dhv:label>
       </td>
       <td>
         <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
       </td>
 		</tr>
-		<tr class="containerBody">
+    <tr class="containerBody">
       <td class="formLabel">
         Contact
       </td>
@@ -96,7 +113,8 @@ function resetAssignedDate(){
         <font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
       </td>
 		</tr>
-    <tr class="containerBody">
+  <dhv:include name="ticket.contractNumber" none="true">
+  <tr class="containerBody">
     <td class="formLabel">
       Service Contract Number
     </td>
@@ -118,6 +136,8 @@ function resetAssignedDate(){
     </table>
    </td>
   </tr>
+  </dhv:include>
+  <dhv:include name="ticket.asset" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Asset
@@ -140,6 +160,8 @@ function resetAssignedDate(){
     </table>
    </td>
   </tr>
+  </dhv:include>
+  <dhv:include name="ticket.laborCategory" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Labor Category
@@ -162,6 +184,7 @@ function resetAssignedDate(){
     </table>
    </td>
   </tr>
+  </dhv:include>
   </table>
   <br />
   <a name="categories"></a> 
@@ -196,7 +219,7 @@ function resetAssignedDate(){
 		<%}%>
       </td>
 		</tr>
-    <tr class="containerBody">
+		 <tr class="containerBody">
       <td valign="top" class="formLabel">
         Location
       </td>
@@ -300,16 +323,17 @@ function resetAssignedDate(){
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Estimated Resolution Date
+        <dhv:label name="ticket.estimatedResolutionDate">Estimated Resolution Date</dhv:label>
       </td>
       <td>
-        <zeroio:dateSelect form="details" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" />
+        <zeroio:dateSelect form="details" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" timeZone="<%= TicketDetails.getEstimatedResolutionDateTimeZone() %>" />
+        <%= TimeZoneSelect.getSelect("estimatedResolutionDateTimeZone", TicketDetails.getEstimatedResolutionDateTimeZone()).getHtml() %>
         <%= showAttribute(request, "estimatedResolutionDateError") %>
       </td>
     </tr>
 		<tr class="containerBody">
       <td valign="top" class="formLabel">
-        Issue Notes
+        <dhv:label name="ticket.issueNotes">Issue Notes</dhv:label>
       </td>
       <td>
         <table border="0" cellspacing="0" cellpadding="0" class="empty">
@@ -318,7 +342,7 @@ function resetAssignedDate(){
               <textarea name="comment" cols="55" rows="5"><%= toString(TicketDetails.getComment()) %></textarea>
             </td>
             <td valign="top">
-              (This note is added to the ticket history. Previous notes for this ticket are listed under the history tab.)
+              (This note is added to the <dhv:label name="tickets.ticket.lowercase">ticket</dhv:label>history. Previous notes for this <dhv:label name="tickets.ticket.lowercase">ticket</dhv:label>are listed under the history tab.)
             </td>
           </tr>
         </table>
@@ -332,6 +356,7 @@ function resetAssignedDate(){
         <strong>Resolution</strong>
       </th>
 		</tr>
+    <dhv:include name="ticket.cause" none="true">
     <tr class="containerBody">
       <td valign="top" class="formLabel">
         Cause
@@ -340,13 +365,15 @@ function resetAssignedDate(){
         <textarea name="cause" cols="55" rows="8"><%= toString(TicketDetails.getCause()) %></textarea>
       </td>
 		</tr>
+    </dhv:include>
 		<tr class="containerBody">
       <td valign="top" class="formLabel">
-        Resolution
+        <dhv:label name="ticket.resolution">Resolution</dhv:label>
       </td>
       <td>
-        <textarea name="solution" cols="55" rows="8"><%= toString(TicketDetails.getSolution()) %></textarea><br>
-        <input type="checkbox" name="closeNow" value="true">Close ticket
+        <dhv:include name="ticket.resolution" none="true">
+        <textarea name="solution" cols="55" rows="8"><%= toString(TicketDetails.getSolution()) %></textarea><br></dhv:include>
+        <input type="checkbox" name="closeNow" value="true"><dhv:label name="tickets.ticket.close">Close ticket</dhv:label>
         <%--
         <br>
         <input type="checkbox" name="kbase" value="true">Add this solution to Knowledge Base
@@ -372,15 +399,18 @@ function resetAssignedDate(){
 <%-- End voice demo --%>
       </td>
 		</tr>
+    <dhv:include name="ticket.resolution.date" none="true">
     <tr class="containerBody">
       <td class="formLabel">
-        Resolution Date
+        <dhv:label name="ticket.resolutionDate">Resolution Date</dhv:label>
       </td>
       <td>
         <zeroio:dateSelect form="details" field="resolutionDate" timestamp="<%= TicketDetails.getResolutionDate() %>" />
         <%= showAttribute(request, "resolutionDateError") %>
       </td>
     </tr>
+  </dhv:include>
+  <dhv:include name="ticket.feedback" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Have our services met or exceeded your expectations?
@@ -391,6 +421,7 @@ function resetAssignedDate(){
       <input type="radio" name="expectation" value="-1" <%= (TicketDetails.getExpectation() == -1) ? " checked" : "" %>>Undecided
     </td>
   </tr>
+  </dhv:include>
 	</table>
 &nbsp;<br>
 <input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />

@@ -220,7 +220,7 @@ public class DateTimeHandler extends TagSupport {
           //default pattern for a date :9/21/2003
           if (dateOnly) {
             formatter.applyPattern("M/d/yyyy");
-          }else if(timeOnly){
+          } else if (timeOnly) {
             formatter.applyPattern("h:mm a");
           }
         }

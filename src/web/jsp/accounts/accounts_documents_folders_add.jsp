@@ -29,9 +29,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="AccountsDocuments.do?command=List&orgId=<%=OrgDetails.getOrgId()%>">Documents</a> >
 Modify Folder
 </td>
@@ -48,7 +48,11 @@ Modify Folder
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
-      <zeroio:folderHierarchy/>
+<%
+String documentFolderList = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId();
+String documentModule = "Accounts";
+%>
+      <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
     </td>
   </tr>
 </table>

@@ -1001,14 +1001,14 @@ public class TicketList extends ArrayList implements SyncableList {
         if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
           sqlFilter.append(
               "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) LIKE LOWER(?)) ");
-        }else{
+        } else {
           sqlFilter.append("AND lower(t.problem) like lower(?) ");
         }
       } else {
         if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
           sqlFilter.append(
               "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) = LOWER(?)) ");
-        }else{
+        } else {
           sqlFilter.append("AND lower(t.problem) = lower(?) ");
         }
       }
@@ -1075,6 +1075,10 @@ public class TicketList extends ArrayList implements SyncableList {
       sqlFilter.append("AND t.ticketid IN (SELECT ticket_id FROM ticketlink_project WHERE project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
           "AND status IS NULL)) ");
     }
+    if ((projectId == -1) && (forProjectUser == -1)){
+      sqlFilter.append("AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) ");
+    }
+    
     //Sync API
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
@@ -1266,8 +1270,8 @@ public class TicketList extends ArrayList implements SyncableList {
     pst.close();
     return count;
   }
-  
-  
+
+
   /**
    *  Each ticket in a project has its own unique count
    *
@@ -1286,6 +1290,16 @@ public class TicketList extends ArrayList implements SyncableList {
     pst.close();
   }
 
+
+  /**
+   *  Creates a hashmap of the number of tickets based
+   *  on the estimated resolution date
+   *
+   *@param  db                Description of the Parameter
+   *@param  timeZone          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
 
     PreparedStatement pst = null;
@@ -1296,7 +1310,7 @@ public class TicketList extends ArrayList implements SyncableList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
 
-    createFilter(sqlFilter,db);
+    createFilter(sqlFilter, db);
 
     sqlSelect.append(
         "SELECT est_resolution_date, count(*) as nocols " +
@@ -1305,18 +1319,22 @@ public class TicketList extends ArrayList implements SyncableList {
 
     sqlTail.append("GROUP BY est_resolution_date ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
-    prepareFilter(pst);    
+    prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
       String estResolutionDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("est_resolution_date"));
-      int tempcount=rs.getInt("nocols"); 
-      events.put(estResolutionDate, new Integer(tempcount));
+      int thisCount = rs.getInt("nocols");
+      if (events.containsKey(estResolutionDate)) {
+        int tmpCount = ((Integer) events.get(estResolutionDate)).intValue();
+        thisCount += tmpCount;
+      }
+      events.put(estResolutionDate, new Integer(thisCount));
     }
     rs.close();
     pst.close();
     return events;
   }
-  
+
 
   /**
    *  Each ticket in a project has its own unique count

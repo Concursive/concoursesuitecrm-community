@@ -25,7 +25,7 @@
   }
 
   function editFolder() {
-    window.location.href='LeadsDocumentsFolders.do?command=Modify&headerId=' + thisHeaderId + '&folderId=' + thisFolderId + '&id=' + thisFolderId + '&parentId='+thisFolderId;
+    window.location.href='LeadsDocumentsFolders.do?command=Modify&headerId=' + thisHeaderId + '&folderId=' + thisFileId + '&id=' + thisFolderId + '&parentId='+thisFileId;
   }
   function moveFolder() {
     popURL('LeadsDocumentsFolders.do?command=Move&headerId=' + thisHeaderId + '&id=' + thisFolderId + '&popup=true&return=LeadsDocuments&param='+ thisHeaderId +'&param2='+ thisFolderId ,'Files','400','375','yes','yes');

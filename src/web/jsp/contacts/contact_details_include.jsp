@@ -33,7 +33,7 @@
         <%= toHtml(thisEmailAddress.getTypeName()) %>
       </td>
       <td>
-        <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
+        <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>&nbsp;<%= (thisEmailAddress.getPrimaryEmail()) ? "(Primary)" : "" %>
       </td>
     </tr>
 <%
@@ -65,7 +65,7 @@
         <%= toHtml(thisPhoneNumber.getTypeName()) %>
       </td>
       <td>
-        <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
+        <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;<%= (thisPhoneNumber.getPrimaryNumber()) ? "(Primary)" : "" %>
       </td>
     </tr>
 <%
@@ -97,7 +97,7 @@
         <%= toHtml(thisAddress.getTypeName()) %>
       </td>
       <td>
-        <%= toHtml(thisAddress.toString()) %>&nbsp;
+        <%= toHtml(thisAddress.toString()) %>&nbsp;<%= (thisAddress.getPrimaryAddress()) ? "(Primary)" : "" %>
       </td>
     </tr>
 <%

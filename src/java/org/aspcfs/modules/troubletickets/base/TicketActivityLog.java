@@ -834,13 +834,38 @@ public class TicketActivityLog extends GenericBean {
    */
   protected boolean isValid() throws SQLException {
     if (hasErrors()) {
+      //Check warnings
+      checkWarnings();
+      onlyWarnings = false;
       return false;
     } else {
+      //Do not check for warnings if it was found that only warnings existed
+      // in the previous call to isValid for the same form.
+      if (!onlyWarnings) {
+        //Check for warnings if there are no errors
+        checkWarnings();
+        if (hasWarnings()) {
+          onlyWarnings = true;
+          return false;
+        }
+      }
       return true;
     }
   }
 
+  /**
+   *  Generates warnings that need to be reviewed before the 
+   *  form can be submitted.
+   */
+  protected void checkWarnings() {
+    if ((errors.get("alertDateError") == null) && (alertDate != null)) {
+      if (alertDate.before(new java.util.Date())) {
+        warnings.put("alertDateWarning", "Alert date is earlier than current date or set to current date");
+      }
+    }
+  }
 
+  
   /**
    *  Description of the Method
    *

@@ -15,15 +15,22 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].vendor.focus();" >
+<script language="JavaScript">
+  function setDefaultDateListedField(){
+    <%if ((asset.getDateListed() == null) && (request.getAttribute("dateListedError") == null)){%>
+      document.forms['addAccountAsset'].dateListed.value= document.forms['addAccountAsset'].currentDate.value;
+    <%}%>
+  }
+</script>
+<body onLoad="javascript:document.forms[0].vendor.focus();setDefaultDateListedField()" >
 <form name="addAccountAsset" action="AccountsAssets.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td width="100%">
-  <a href="Accounts.do">Accounts</a> > 
+  <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
   <a href="Accounts.do?command=Search">Search Results</a> >
-  <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
+  <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
   <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>">Assets</a> >
   Add Asset
 </td>
@@ -41,6 +48,7 @@
       <br />
 <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <%@ include file="accountasset_include.jsp" %>
+<input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
 <br />
   <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
   <input type="button" value="Cancel" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />

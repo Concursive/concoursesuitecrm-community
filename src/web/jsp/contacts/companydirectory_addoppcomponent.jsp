@@ -26,16 +26,8 @@
     formTest = true;
     message = "";
     alertMessage = "";
-    if ((!form.closeDate.value == "") && (!checkDate(form.closeDate.value))) { 
-      message += "- Check that Est. Close Date is entered correctly\r\n";
-      formTest = false;
-    }
     if (form.low.value != "" && form.low.value != "" && (parseInt(form.low.value) > parseInt(form.high.value))) { 
       message += "- Low Estimate cannot be higher than High Estimate\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
       formTest = false;
     }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
@@ -105,7 +97,7 @@ Add Component
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
       <br>
-      <%= showError(request, "actionError") %>  
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
 <%--  include basic opportunity form --%>
 <%@ include file="../pipeline/opportunity_include.jsp" %>
 &nbsp;

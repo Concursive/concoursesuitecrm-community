@@ -56,9 +56,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CompanyDirectory.do?command=ListEmployees">Employees</a> >
-<a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
-Add Employee
+<a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.employees">Employees</dhv:label></a> >
+<a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.view">View Employees</dhv:label></a> >
+<dhv:label name="employees.add">Add Employee</dhv:label>
 </td>
 </tr>
 </table>
@@ -77,7 +77,7 @@ Add Employee
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Add an Employee Record</strong>
+      <strong><dhv:label name="employees.add">Add an Employee</dhv:label> Record</strong>
     </th>
   </tr>
   <tr class="containerBody">

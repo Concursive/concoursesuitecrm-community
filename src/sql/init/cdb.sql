@@ -66,6 +66,7 @@ INSERT INTO lookup_delivery_options (description,level) VALUES ('Letter only',3)
 INSERT INTO lookup_delivery_options (description,level) VALUES ('Email then Fax',4);
 INSERT INTO lookup_delivery_options (description,level) VALUES ('Email then Letter',5);
 INSERT INTO lookup_delivery_options (description,level) VALUES ('Email, Fax, then Letter',6);
+--INSERT INTO lookup_delivery_options (description,level) VALUES ('By Communication Preference',7);
                                                         
 INSERT INTO lookup_industry (description) VALUES ('Automotive');
 INSERT INTO lookup_industry (description) VALUES ('Biotechnology');
@@ -87,4 +88,7 @@ INSERT INTO lookup_industry (description) VALUES ('Real Estate');
 INSERT INTO lookup_industry (description) VALUES ('Retail');
 INSERT INTO lookup_industry (description) VALUES ('Telecommunications');
 INSERT INTO lookup_industry (description) VALUES ('Transportation');
-                                          
+
+--INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'is a member of', 'member is', 10);
+--INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'employee of', 'employer of', 20);
+--INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'refers to', 'receives referals from', 30);

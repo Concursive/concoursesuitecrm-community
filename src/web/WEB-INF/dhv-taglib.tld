@@ -173,6 +173,11 @@
       <name>name</name>
       <required>yes</required>
     </attribute>
+    <attribute>
+      <name>param</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
   </tag>
   
   <tag>
@@ -274,7 +279,7 @@
   </tag>
   
   <tag>
-    <name>pagedListStatus</name> 
+    <name>pagedListStatus</name>
     <tag-class>org.aspcfs.taglib.PagedListStatusHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -335,6 +340,10 @@
     </attribute>
     <attribute>
       <name>enableJScript</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>type</name>
       <required>no</required>
     </attribute>
     <attribute>

@@ -178,6 +178,7 @@ public final class TroubleTicketActivityLog extends CFSModule {
       thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
+      thisMaintenance.setOnlyWarnings(context.getRequest().getParameter("onlyWarnings"));
       thisMaintenance.setRequestItems(context.getRequest());
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
@@ -186,6 +187,7 @@ public final class TroubleTicketActivityLog extends CFSModule {
         context.getRequest().setAttribute("ticketDetails", thisTicket);
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
         processErrors(context, thisMaintenance.getErrors());
+        processWarnings(context, thisMaintenance.getWarnings());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -231,6 +233,7 @@ public final class TroubleTicketActivityLog extends CFSModule {
       thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
+      thisMaintenance.setOnlyWarnings(context.getRequest().getParameter("onlyWarnings"));
       thisMaintenance.setRequestItems(context.getRequest());
       String modified = context.getRequest().getParameter("modified");
       thisMaintenance.setModified(modified);
@@ -241,6 +244,7 @@ public final class TroubleTicketActivityLog extends CFSModule {
         context.getRequest().setAttribute("ticketDetails", thisTicket);
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
         processErrors(context, thisMaintenance.getErrors());
+        processWarnings(context, thisMaintenance.getWarnings());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

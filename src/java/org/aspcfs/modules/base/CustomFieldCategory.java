@@ -452,6 +452,26 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
+   *  Gets the linkModuleId attribute of the CustomFieldCategory object
+   *
+   *@return    The linkModuleId value
+   */
+  public int getLinkModuleId() {
+    return linkModuleId;
+  }
+
+
+  /**
+   *  Gets the linkItemId attribute of the CustomFieldCategory object
+   *
+   *@return    The linkItemId value
+   */
+  public int getLinkItemId() {
+    return linkItemId;
+  }
+
+
+  /**
    *  Gets the Id attribute of the CustomFieldCategory object
    *
    *@return    The Id value
@@ -1003,9 +1023,9 @@ public class CustomFieldCategory extends ArrayList {
     } finally {
       db.setAutoCommit(true);
     }
-	if (this.getRecordId() != -1) {
-	    update(db);
-	}
+    if (this.getRecordId() != -1) {
+      update(db);
+    }
     return resultId;
   }
 
@@ -1286,7 +1306,8 @@ public class CustomFieldCategory extends ArrayList {
 
 
   /**
-   *  Gets the category_id provided the category_name attribute of the CustomFieldCategory class
+   *  Gets the category_id provided the category_name attribute of the
+   *  CustomFieldCategory class
    *
    *@param  db                Description of the Parameter
    *@param  moduleId          Description of the Parameter

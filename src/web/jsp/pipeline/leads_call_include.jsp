@@ -27,16 +27,17 @@
       formTest = false;
     }
     
+    if (form.contactId.value == "-1") { 
+      message += "- Please specify a contact\r\n";
+      formTest = false;
+    }
+
     if (form.callTypeId.value == "0") { 
       message += "- Please specify a type\r\n";
       formTest = false;
     }
     
     if(form.hasFollowup != null && form.hasFollowup.checked){
-    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -48,9 +49,6 @@
     if (form.alertCallTypeId.value == "0") { 
       message += "- Please specify an alert type\r\n";
       formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      alertMessage += "Alert Date is before today's date\r\n";
     }
     if (form.reminder[1].checked && !checkNumber(form.reminderId.value)) { 
       message += "- Check that the reminder is entered correctly\r\n";
@@ -131,7 +129,7 @@
 <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
 <br>
 <%-- include pending activity form --%>
-<%@ include file="leads_call_followup_include.jsp" %>
+<%@ include file="../contacts/call_followup_include.jsp" %>
 </span>
 </dhv:evaluate>
 <%= addHiddenParams(request, "viewSource") %>

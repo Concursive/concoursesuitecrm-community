@@ -1050,9 +1050,32 @@ public class ServiceContract extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid() throws SQLException {
+    boolean initialStartDateExists = true;
+    boolean currentStartDateExists = true;
+    boolean currentEndDateExists = true;
     if (initialStartDate == null) {
       errors.put("initialStartDateError", "Initial contract date is required");
+      initialStartDateExists = false;
     }
+    if (currentStartDate == null) {
+      currentStartDateExists = false;
+    }
+    if (currentEndDate == null) {
+      currentEndDateExists = false;
+    }
+
+    if (currentEndDateExists) {
+      if ((currentStartDateExists) &&
+          (currentEndDate.before(currentStartDate))) {
+        errors.put("currentEndDateError", "Current End Date should be greater than Current Contract Date");
+      }
+      if ((initialStartDateExists) &&
+          (!currentStartDateExists) &&
+          (currentEndDate.before(initialStartDate))) {
+        errors.put("currentEndDateError", "Current End Date should be greater than Initial Contract Date");
+      }
+    }
+
     if (hasErrors()) {
       return false;
     } else {

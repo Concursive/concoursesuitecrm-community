@@ -16,8 +16,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
-Search Accounts
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
+<dhv:label name="accounts.search">Search Accounts</dhv:label>
 </td>
 </tr>
 </table>
@@ -25,12 +25,12 @@ Search Accounts
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Search Accounts</strong>
+      <strong><dhv:label name="accounts.search">Search Accounts</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <td class="formLabel">
-      Account Name
+      <dhv:label name="organization.name">Account Name</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="searchName" value="<%= SearchOrgListInfo.getSearchOptionValue("searchName") %>">
@@ -46,7 +46,7 @@ Search Accounts
   </tr>
   <tr>
     <td class="formLabel">
-      Account Type
+      <dhv:label name="accounts.type">Account Type</dhv:label>
     </td>
     <td>
       <%= TypeSelect.getHtmlSelect("listFilter1", SearchOrgListInfo.getFilterKey("listFilter1")) %>
@@ -58,9 +58,9 @@ Search Accounts
     </td>
     <td align="left" valign="bottom">
       <select size="1" name="listView">
-        <option <%= SearchOrgListInfo.getOptionValue("all") %>>All Accounts</option>
-        <option <%= SearchOrgListInfo.getOptionValue("my") %>>My Accounts </option>
-        <option <%= SearchOrgListInfo.getOptionValue("disabled") %>>Disabled Accounts </option>
+        <option <%= SearchOrgListInfo.getOptionValue("all") %>><dhv:label name="accounts.all.accounts">All Accounts</dhv:label></option>
+        <option <%= SearchOrgListInfo.getOptionValue("my") %>><dhv:label name="accounts.my.accounts">My Accounts</dhv:label></option>
+        <option <%= SearchOrgListInfo.getOptionValue("disabled") %>><dhv:label name="accounts.disabled.accounts">Inactive Accounts</dhv:label></option>
       </select>
     </td>
   </tr>

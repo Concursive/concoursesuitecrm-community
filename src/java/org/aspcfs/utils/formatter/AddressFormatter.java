@@ -35,7 +35,7 @@ public class AddressFormatter {
   public void format(Address thisAddress) {
     String country = thisAddress.getCountry();
     //Add a default country or else state cannot be retrieved
-    if (country == null || country.trim().length() == 0) { 
+    if (country == null || country.trim().length() == 0) {
       country = "UNITED STATES";
     }
     //Format the country
@@ -53,8 +53,17 @@ public class AddressFormatter {
     //Add a 0 to the zip code when it was stripped by a number parser
     String zipCode = thisAddress.getZip();
     if (zipCode != null) {
-      if (zipCode.trim().length() == 4 && "UNITED STATES".equals(thisAddress.getCountry())) {
-        thisAddress.setZip("0" + zipCode.trim());
+      if ("UNITED STATES".equals(thisAddress.getCountry())) {
+        if (zipCode.trim().length() == 4) {
+          thisAddress.setZip("0" + zipCode.trim());
+        } else if (zipCode.trim().length() == 8) {
+          thisAddress.setZip("0" + zipCode.trim());
+        }
+
+        //Split zip code and PO Box No i.e 234569088 ==> 23456-9088
+        if (zipCode.trim().length() == 9 && zipCode.indexOf("-") == -1) {
+          thisAddress.setZip(zipCode.trim().substring(0, 5) + "-" + zipCode.substring(5));
+        }
       }
     }
   }

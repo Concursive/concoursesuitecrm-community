@@ -86,7 +86,6 @@ public final class ProjectManagementFiles extends CFSModule {
    *@since
    */
   public String executeCommandUpload(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
     try {
@@ -103,8 +102,6 @@ public final class ProjectManagementFiles extends CFSModule {
       String folderId = (String) parts.get("folderId");
       String itemId = (String) parts.get("fid");
       String versionId = (String) parts.get("versionId");
-      //Update the database with the resulting file
-      FileInfo newFileInfo = (FileInfo) parts.get("id" + projectId);
       db = getConnection(context);
       Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       thisProject.buildPermissionList(db);
@@ -114,64 +111,64 @@ public final class ProjectManagementFiles extends CFSModule {
       }
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("file_library").toLowerCase());
+      //Update the database with the resulting file
+      if ((Object) parts.get("id" + projectId) instanceof FileInfo) {
+        FileInfo newFileInfo = (FileInfo) parts.get("id" + projectId);
 
-      FileItem thisItem = new FileItem();
-      thisItem.setLinkModuleId(Constants.PROJECTS_FILES);
-      thisItem.setLinkItemId(thisProject.getId());
-      thisItem.setEnteredBy(getUserId(context));
-      thisItem.setModifiedBy(getUserId(context));
-      thisItem.setFolderId(Integer.parseInt(folderId));
-      thisItem.setSubject(subject);
-      thisItem.setClientFilename(newFileInfo.getClientFileName());
-      thisItem.setFilename(newFileInfo.getRealFilename());
-      thisItem.setSize(newFileInfo.getSize());
-      if (itemId == null || "-1".equals(itemId)) {
-        thisItem.setVersion(1.0);
-        recordInserted = thisItem.insert(db);
-        thisItem.setDirectory(filePath);
-        indexAddItem(context, thisItem);
-      } else {
-        thisItem.setId(Integer.parseInt(itemId));
-        thisItem.setVersion(Double.parseDouble(versionId));
-        recordInserted = thisItem.insertVersion(db);
-        thisItem.setDirectory(filePath);
-        indexAddItem(context, thisItem);
-      }
-      if (!recordInserted) {
-        processErrors(context, thisItem.getErrors());
-      } else {
-        if (thisItem.isImageFormat()) {
-          //Create a thumbnail if this is an image
-          File thumbnailFile = new File(newFileInfo.getLocalFile().getPath() + "TH");
-          ImageUtils.saveThumbnail(newFileInfo.getLocalFile(), thumbnailFile, 133d, -1d);
-          //Store thumbnail in database
-          Thumbnail thumbnail = new Thumbnail();
-          thumbnail.setId(thisItem.getId());
-          thumbnail.setFilename(newFileInfo.getRealFilename() + "TH");
-          thumbnail.setVersion(thisItem.getVersion());
-          thumbnail.setSize((int) thumbnailFile.length());
-          thumbnail.setEnteredBy(thisItem.getEnteredBy());
-          thumbnail.setModifiedBy(thisItem.getModifiedBy());
-          recordInserted = thumbnail.insert(db);
+        FileItem thisItem = new FileItem();
+        thisItem.setLinkModuleId(Constants.PROJECTS_FILES);
+        thisItem.setLinkItemId(thisProject.getId());
+        thisItem.setEnteredBy(getUserId(context));
+        thisItem.setModifiedBy(getUserId(context));
+        thisItem.setFolderId(Integer.parseInt(folderId));
+        thisItem.setSubject(subject);
+        thisItem.setClientFilename(newFileInfo.getClientFileName());
+        thisItem.setFilename(newFileInfo.getRealFilename());
+        thisItem.setSize(newFileInfo.getSize());
+        if (itemId == null || "-1".equals(itemId)) {
+          thisItem.setVersion(1.0);
+          recordInserted = thisItem.insert(db);
+          thisItem.setDirectory(filePath);
+          indexAddItem(context, thisItem);
+        } else {
+          thisItem.setId(Integer.parseInt(itemId));
+          thisItem.setVersion(Double.parseDouble(versionId));
+          recordInserted = thisItem.insertVersion(db);
+          thisItem.setDirectory(filePath);
+          indexAddItem(context, thisItem);
+        }
+        if (!recordInserted) {
+          processErrors(context, thisItem.getErrors());
+        } else {
+          if (thisItem.isImageFormat()) {
+            //Create a thumbnail if this is an image
+            File thumbnailFile = new File(newFileInfo.getLocalFile().getPath() + "TH");
+            ImageUtils.saveThumbnail(newFileInfo.getLocalFile(), thumbnailFile, 133d, -1d);
+            //Store thumbnail in database
+            Thumbnail thumbnail = new Thumbnail();
+            thumbnail.setId(thisItem.getId());
+            thumbnail.setFilename(newFileInfo.getRealFilename() + "TH");
+            thumbnail.setVersion(thisItem.getVersion());
+            thumbnail.setSize((int) thumbnailFile.length());
+            thumbnail.setEnteredBy(thisItem.getEnteredBy());
+            thumbnail.setModifiedBy(thisItem.getModifiedBy());
+            recordInserted = thumbnail.insert(db);
+          }
         }
       }
       context.getRequest().setAttribute("pid", projectId);
       context.getRequest().setAttribute("folderId", folderId);
       context.getRequest().setAttribute("fid", itemId);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("AddOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
+    if (recordInserted) {
+      return ("AddOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (executeCommandAdd(context));
     }
   }
 

@@ -14,6 +14,7 @@
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAssets.js"></script>
@@ -33,12 +34,14 @@
     var url = "TroubleTickets.do?command=CategoryJSList&subCat1=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
+<dhv:include name="ticket.subCat2" none="true">
   function updateSubList3() {
     var sel = document.forms['addticket'].elements['subCat2'];
     var value = sel.options[sel.selectedIndex].value;
     var url = "TroubleTickets.do?command=CategoryJSList&subCat2=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
+</dhv:include>
   function updateUserList() {
     var sel = document.forms['addticket'].elements['departmentCode'];
     var value = sel.options[sel.selectedIndex].value;
@@ -46,27 +49,32 @@
     window.frames['server_commands'].location.href=url;
   }
   function updateContactList() {
+  <dhv:include name="ticket.contact" none="true">
     var sel = document.forms['addticket'].elements['orgId'];
     var value = document.forms['addticket'].orgId.value;
     var url = "TroubleTickets.do?command=OrganizationJSList&orgId=" + escape(value);
     window.frames['server_commands'].location.href=url;
+  </dhv:include>
   }
   function checkForm(form){
     formTest = true;
     message = "";
-    
+    <dhv:include name="ticket.contact" none="true">
     if (form.contactId.value == "-1") { 
       message += "- Check that a Contact is selected\r\n";
       formTest = false;
     }
+    </dhv:include>
     if (form.problem.value == "") { 
       message += "- <dhv:label name="ticket.issue">Issue</dhv:label> is required\r\n";
       formTest = false;
     }
+    <dhv:include name="ticket.resolution" none="true">
     if (form.closeNow.checked && form.solution.value == "") { 
       message += "- Resolution needs to be filled in when closing a ticket\r\n";
       formTest = false;
     }
+    </dhv:include>
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -98,17 +106,25 @@
       divToChange.innerHTML = divContents;
     }
     //when the content of any of the select items changes, do something here
+    <dhv:include name="ticket.contact" none="true">
     if(document.forms['addticket'].orgId.value != '-1'){
       updateContactList();
     }
+    </dhv:include>
     //reset the sc and asset
     if (divName == 'changeaccount') {
+      <dhv:include name="ticket.contractNumber" none="true">
       changeDivContent('addServiceContract','None Selected');
       resetNumericFieldValue('contractId');
+      </dhv:include>
+      <dhv:include name="ticket.contractNumber" none="true">
       changeDivContent('addAsset','None Selected');
       resetNumericFieldValue('assetId');
+      </dhv:include>
+      <dhv:include name="ticket.laborCategory" none="true">
       changeDivContent('addLaborCategory','None Selected');
       resetNumericFieldValue('productId');
+      </dhv:include>
     }
   }
   
@@ -127,7 +143,7 @@
     </dhv:permission>
     var orgId = document.forms['addticket'].orgId.value;
     if(orgId == -1){
-      alert('You have to select an Account first');
+      alert('<dhv:label name="accounts.alert.invalidAccount">You have to select an Account first</dhv:label>');
       return;
     }
     if(orgId == '0'){
@@ -160,17 +176,17 @@
 
  function resetAssignedDate(){
     document.forms['addticket'].assignedDate.value = '';
- }  
+ }
 </script>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
 	<tr>
     <th colspan="2">
-      <strong>Add a new Ticket</strong>
+      <strong><dhv:label name="tickets.add">Add a new Ticket</dhv:label></strong>
     </th>
 	</tr>
 	<tr>
     <td class="formLabel">
-      Ticket Source
+      <dhv:label name="tickets.source">Ticket Source</dhv:label>
     </td>
     <td>
       <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
@@ -179,7 +195,7 @@
 	<% if(!"true".equals(request.getParameter("contactSet"))){ %>
   <tr>
     <td class="formLabel">
-      Organization
+      <dhv:label name="ticket.organizationLink">Organization</dhv:label>
     </td>
     <td>
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
@@ -196,8 +212,9 @@
         </tr>
       </table>
     </td>
-	</tr>	
-	<tr>
+  </tr>	
+  <dhv:include name="ticket.contact" none="true">
+  <tr>
     <td class="formLabel">
       Contact
     </td>
@@ -211,6 +228,8 @@
       [<a href="javascript:addNewContact();">Create New Contact</a>] 
     </td>
 	</tr>
+  </dhv:include>
+  <dhv:include name="ticket.contractNumber" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Service Contract Number
@@ -233,6 +252,8 @@
     </table>
    </td>
   </tr>
+  </dhv:include>
+  <dhv:include name="ticket.asset" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Asset
@@ -255,6 +276,8 @@
     </table>
    </td>
   </tr>
+  </dhv:include>
+  <dhv:include name="ticket.laborCategory" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Labor Category
@@ -277,6 +300,7 @@
     </table>
    </td>
   </tr>
+  </dhv:include>
   <% }else{ %>
     <input type="hidden" name="orgId" value="<%= toHtmlValue(request.getParameter("orgId")) %>">
     <input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>">
@@ -309,6 +333,7 @@
       </table>
     </td>
 	</tr>
+  <dhv:include name="ticket.location" none="true">
   <tr class="containerBody">
     <td valign="top" class="formLabel">
       Location
@@ -317,6 +342,7 @@
       <input type="text" name="location" value="<%= toHtmlValue(TicketDetails.getLocation()) %>" size="50" maxlength="256" />
     </td>
   </tr>
+  </dhv:include>
 <dhv:include name="ticket.catCode" none="true">
 	<tr>
     <td class="formLabel">
@@ -413,16 +439,17 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Estimated Resolution Date
+      <dhv:label name="ticket.estimatedResolutionDate">Estimated Resolution Date</dhv:label>
     </td>
     <td>
-      <zeroio:dateSelect form="addticket" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" />
+      <zeroio:dateSelect form="addticket" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" timeZone="<%= TicketDetails.getEstimatedResolutionDateTimeZone() %>" />
+      <%= TimeZoneSelect.getSelect("estimatedResolutionDateTimeZone", TicketDetails.getEstimatedResolutionDateTimeZone()).getHtml() %>
       <%= showAttribute(request, "estimatedResolutionDateError") %>
     </td>
   </tr>
 	<tr>
     <td valign="top" class="formLabel">
-      Issue Notes
+      <dhv:label name="ticket.issueNotes">Issue Notes</dhv:label>
     </td>
     <td>
       <textarea name="comment" cols="55" rows="5"><%= toString(TicketDetails.getComment()) %></textarea>
@@ -436,6 +463,7 @@
       <strong>Resolution</strong>
     </th>
 	</tr>
+  <dhv:include name="ticket.cause" none="true">
   <tr class="containerBody">
     <td valign="top" class="formLabel">
       Cause
@@ -444,19 +472,23 @@
       <textarea name="cause" cols="55" rows="8"><%= toString(TicketDetails.getCause()) %></textarea>
     </td>
   </tr>
+  </dhv:include>
 	<tr>
     <td valign="top" class="formLabel">
-      Resolution
+      <dhv:label name="ticket.resolution">Resolution</dhv:label>
     </td>
     <td>
+      <dhv:include name="ticket.resolution" none="true">
       <textarea name="solution" cols="55" rows="8"><%= toString(TicketDetails.getSolution()) %></textarea><br />
-      <input type="checkbox" name="closeNow" value="true" <%= TicketDetails.getCloseIt() ? " checked" : ""%>>Close ticket
+      </dhv:include>
+      <input type="checkbox" name="closeNow" value="true" <%= TicketDetails.getCloseIt() ? " checked" : ""%>><dhv:label name="tickets.ticket.close">Close ticket</dhv:label>
       <%--
       <br>
       <input type="checkbox" name="kbase" value="true">Add this solution to Knowledge Base
       --%>
     </td>
 	</tr>
+  <dhv:include name="ticket.resolution.date" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Resolution Date
@@ -466,6 +498,8 @@
       <%= showAttribute(request, "resolutionDateError") %>
     </td>
   </tr>
+  </dhv:include>
+  <dhv:include name="ticket.feedback" none="true">
   <tr class="containerBody">
     <td class="formLabel">
       Have our services met or exceeded your expectations?
@@ -476,6 +510,7 @@
       <input type="radio" name="expectation" value="-1" <%= (TicketDetails.getExpectation() == -1) ? " checked" : "" %>>Undecided
     </td>
   </tr>
+  </dhv:include>
 </table>
 <input type="hidden" name="modified" value="<%=  TicketDetails.getModified() %>" />
 <input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />

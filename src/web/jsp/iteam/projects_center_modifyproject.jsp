@@ -57,9 +57,10 @@
 <input type="submit" value=" Update ">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Details&pid=<%= Project.getId() %>'"><br />
 &nbsp;
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <input type="hidden" name="id" value="<%= Project.getId() %>">
-  <input type="hidden" name="modified" value="<%= Project.getModifiedString() %>">
+  <input type="hidden" name="modified" value="<%= Project.getModified() %>">
   <tr>
     <th colspan="2" valign="center">
       <strong>Update Project Information</strong>
@@ -115,7 +116,7 @@
       at
       <zeroio:timeSelect baseName="estimatedCloseDate" value="<%= Project.getEstimatedCloseDate() %>" timeZone="<%= User.getTimeZone() %>"/>
       <zeroio:tz timestamp="<%= new java.util.Date() %>" pattern="z"/>
-      <%= showAttribute(request, "estimatedCloseDateError") %>
+      <%= showAttribute(request, "estimatedCloseDateError") %><%= showWarningAttribute(request, "estimatedCloseDateWarning") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -136,6 +137,7 @@
       <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
       <input type="hidden" name="budgetCurrency" value="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" />
       <input type="text" name="budget" size="15" value="<zeroio:number value="<%= Project.getBudget() %>" locale="<%= User.getLocale() %>" />">
+      <%=showAttribute(request,"budgetError")%>
     </td>
   </tr>
   <%--
@@ -149,6 +151,7 @@
   --%>
 </table>
 <br />
+<input type="hidden" name="onlyWarnings" value="<%=(Project.getOnlyWarnings()?"on":"off")%>" />
 <input type="hidden" name="portal" value="<%= Project.getPortal() %>">
 <input type="hidden" name="allowGuests" value="<%= Project.getAllowGuests() %>">
 <input type="hidden" name="showNews" value="<%= Project.getShowNews() %>">

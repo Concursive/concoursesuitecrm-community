@@ -6,7 +6,7 @@
 <table class="trails" cellspacing="0">
 <tr>
   <td>
-    <a href="Accounts.do">Accounts</a> >
+    <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
     <a href="AccountContactsImports.do?command=View">Import</a> >
     <a href="AccountContactsImports.do?command=New">New Import</a> >
     Upload Complete

@@ -7,6 +7,7 @@ import java.util.*;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.Template;
+import org.aspcfs.utils.StringUtils;
 import com.darkhorseventures.database.ConnectionElement;
 import org.aspcfs.controller.SubmenuItem;
 import org.aspcfs.controller.SystemStatus;
@@ -242,12 +243,24 @@ public class ContainerMenuHandler extends TagSupport {
     LinkedList menuItems = new LinkedList();
     LinkedList menuList = new LinkedList();
     XMLUtils.getAllChildren(container, "submenu", menuList);
+
+    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = null;
+    if (ce != null) {
+      systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    }
+
     Iterator list = menuList.iterator();
     while (list.hasNext()) {
       Element submenu = (Element) list.next();
       SubmenuItem thisSubmenu = new SubmenuItem();
       thisSubmenu.setName(submenu.getAttribute("name"));
-      thisSubmenu.setLongHtml(XMLUtils.getFirstChild(submenu, "long_html").getAttribute("value"));
+
+      //check if custom value is defined in preferences
+      String containerName = container.getAttribute("name");
+      String labelValue = systemStatus.getValue("system.container.menu.label", containerName + "." + submenu.getAttribute("name") + ".long_html");
+
+      thisSubmenu.setLongHtml(!"".equals(StringUtils.toString(labelValue)) ? labelValue : (XMLUtils.getFirstChild(submenu, "long_html").getAttribute("value")));
       //thisSubmenu.setShortHtml();
       //thisSubmenu.setAlternateName();
       thisSubmenu.setLink(XMLUtils.getFirstChild(submenu, "link").getAttribute("value"));

@@ -144,11 +144,11 @@ public class HtmlSelectTime extends TagSupport {
         if (is24Hour) {
           // Show 24 hour selector
           this.pageContext.getOut().write(
-              HtmlSelectHours24.getSelect(baseName + "Hour", String.valueOf(hour)).toString());
+              HtmlSelectHours24.getSelect(baseName + "Hour", (hour < 10 ? String.valueOf("0" + hour) : String.valueOf(hour))).toString());
         } else {
           // Show 12 hour selector
           this.pageContext.getOut().write(
-              HtmlSelectHours.getSelect(baseName + "Hour", String.valueOf(hour)).toString());
+              HtmlSelectHours.getSelect(baseName + "Hour",(hour < 10 ? String.valueOf("0" + hour) : String.valueOf(hour))).toString());
         }
         this.pageContext.getOut().write(":");
         this.pageContext.getOut().write(

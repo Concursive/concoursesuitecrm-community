@@ -176,6 +176,36 @@ public class AssignmentList extends ArrayList {
 
 
   /**
+   *  Gets the onlyIfRequirementOpen attribute of the AssignmentList object
+   *
+   *@return    The onlyIfRequirementOpen value
+   */
+  public boolean getOnlyIfRequirementOpen() {
+    return onlyIfRequirementOpen;
+  }
+
+
+  /**
+   *  Sets the onlyIfRequirementOpen attribute of the AssignmentList object
+   *
+   *@param  tmp  The new onlyIfRequirementOpen value
+   */
+  public void setOnlyIfRequirementOpen(boolean tmp) {
+    this.onlyIfRequirementOpen = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyIfRequirementOpen attribute of the AssignmentList object
+   *
+   *@param  tmp  The new onlyIfRequirementOpen value
+   */
+  public void setOnlyIfRequirementOpen(String tmp) {
+    this.onlyIfRequirementOpen = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Sets the folderId attribute of the AssignmentList object
    *
    *@param  tmp  The new folderId value

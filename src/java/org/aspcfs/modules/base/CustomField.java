@@ -62,6 +62,7 @@ public class CustomField extends GenericBean implements Cloneable {
   public final static int LOOKUP_USERID = 21;
 
   public final static int HTMLAREA = 22;
+  public final static int STATE_SELECT = 23;
 
   //Properties for a Field
   private int id = -1;
@@ -531,6 +532,8 @@ public class CustomField extends GenericBean implements Cloneable {
         this.type = LABEL;
       } else if (tmp.equalsIgnoreCase("link")) {
         this.type = LINK;
+      } else if (tmp.equalsIgnoreCase("stateselect")) {
+        this.type = STATE_SELECT;
       }
     }
   }
@@ -1328,8 +1331,11 @@ public class CustomField extends GenericBean implements Cloneable {
         case CURRENCY:
           try {
             double thisAmount = Double.parseDouble(enteredValue);
-            NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-            return ("$" + numberFormatter.format(thisAmount));
+            Locale locale = new Locale(System.getProperty("LANGUAGE"),System.getProperty("COUNTRY"));
+            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+            Currency currency = Currency.getInstance(System.getProperty("CURRENCY"));
+            currencyFormatter.setCurrency(currency);
+            return (currencyFormatter.format(thisAmount));
           } catch (Exception e) {
             return ("$" + StringUtils.toHtml(enteredValue));
           }
@@ -1399,6 +1405,10 @@ public class CustomField extends GenericBean implements Cloneable {
       //Not tested
       elementName = name;
     }
+
+    String language = System.getProperty("LANGUAGE");
+    String country = System.getProperty("COUNTRY");
+
     switch (type) {
         case TEXTAREA:
           return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.toString(enteredValue) + "</textarea>");
@@ -1417,7 +1427,9 @@ public class CustomField extends GenericBean implements Cloneable {
           return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
         case DATE:
           return ("<input type=\"text\" name=\"" + elementName + "\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " +
-              "<a href=\"javascript:popCalendar('forms[0]', '" + elementName + "');\">Date</a> (mm/dd/yyyy)");
+              "<a href=\"javascript:popCalendar('forms[0]', '" + elementName + "','" + language + "','" + country + "');\">" + 
+              "<img src=\"images/icons/stock_form-date-field-16.gif\" " +
+              "border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/></a>");
         case PERCENT:
           return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " + "%");
         case HIDDEN:
@@ -1428,6 +1440,9 @@ public class CustomField extends GenericBean implements Cloneable {
           return this.getDisplayHtml();
         case LINK:
           return ("<a href=\"" + jsEvent + "\" >" + display + "</a>");
+        case STATE_SELECT:
+          StateSelect stateSelect = new StateSelect();
+          return (stateSelect.getHtml(elementName, StringUtils.toHtmlValue(enteredValue)));
         default:
           String maxlength = this.getParameter("maxlength");
           String size = "";
@@ -1482,6 +1497,7 @@ public class CustomField extends GenericBean implements Cloneable {
     dataTypes.addItem(EMAIL, getTypeString(EMAIL, false));
     dataTypes.addItem(URL, getTypeString(URL, false));
     dataTypes.addItem(PHONE, getTypeString(PHONE, false));
+    dataTypes.addItem(STATE_SELECT, getTypeString(STATE_SELECT, false));
     if (type == -1) {
       type = TEXT;
     }
@@ -1528,6 +1544,8 @@ public class CustomField extends GenericBean implements Cloneable {
           return "URL";
         case PHONE:
           return "Phone Number";
+        case STATE_SELECT:
+          return "US State List";
         default:
           return "";
     }
@@ -1922,24 +1940,22 @@ public class CustomField extends GenericBean implements Cloneable {
 
       if (type == CURRENCY) {
         try {
-          String testString = StringUtils.replace(this.getEnteredValue(), ",", "");
-          testString = StringUtils.replace(testString, "$", "");
-          double testNumber = Double.parseDouble(testString);
-          this.setEnteredValue(testString);
-          enteredDouble = testNumber;
+          Locale locale = new Locale(System.getProperty("LANGUAGE"),System.getProperty("COUNTRY"));
+          NumberFormat nf = NumberFormat.getInstance(locale);
+          enteredDouble = nf.parse(this.getEnteredValue()).doubleValue();
+          Double tmpDouble = new Double(enteredDouble);
+          this.setEnteredValue(tmpDouble.toString()); 
         } catch (Exception e) {
           error = "Value should be a number";
         }
       }
 
       if (type == DATE) {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy");
-        formatter.setLenient(false);
-        java.util.Date testDate = new java.util.Date();
         try {
-          testDate = formatter.parse(this.getEnteredValue());
-          SimpleDateFormat formatter2 = new SimpleDateFormat("MM/dd/yyyy");
-          this.setEnteredValue(formatter2.format(testDate));
+          Locale locale = new Locale(System.getProperty("LANGUAGE"),System.getProperty("COUNTRY"));
+          DateFormat localeFormatter = DateFormat.getDateInstance(DateFormat.SHORT,locale);
+          localeFormatter.setLenient(false);
+          localeFormatter.parse(this.getEnteredValue());
         } catch (java.text.ParseException e) {
           error = "Value should be a valid date";
         }

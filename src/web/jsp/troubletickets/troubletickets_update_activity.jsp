@@ -17,14 +17,14 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do?">Help Desk</a> > 
+<a href="TroubleTickets.do?"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
   <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
   <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
 <%}else{%> 
-  <a href="TroubleTickets.do?command=Home">View Tickets</a> >
+  <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
-<a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>">Ticket Details</a> >
+<a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
 <a href="TroubleTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>">Activity Log</a> >
 Modify Activity Log
 </td>
@@ -45,7 +45,7 @@ Modify Activity Log
         <input type="button" value="Cancel" onClick="window.location.href='TroubleTicketActivityLog.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%=activityDetails.getId()%>';this.form.dosubmit.value='false';" />
       <%}%>
       <br />
-      <%= showError(request, "actionError") %>
+      <%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%@ include file="troubletickets_update_activity_include.jsp" %>
       <br />
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />

@@ -6,13 +6,24 @@
 <script language="JavaScript" type="text/javascript" src="javascript/trackMouse.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
-<%@ include file="../initPopupMenu.jsp" %>
-<%@ include file="../initPage.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+function initialize_menus(){
+  new ypSlideOutMenu("menuAccount", "down", 0, 0, 170, getHeight("menuAccountTable"));
+  new ypSlideOutMenu("menuCall", "down", 0, 0, 170, getHeight("menuCallTable"));
+  new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
+  new ypSlideOutMenu("menuTask", "down", 0, 0, 170, getHeight("menuTaskTable"));
+  new ypSlideOutMenu("menuTicket", "down", 0, 0, 170, getHeight("menuTicketTable"));
+}
+</SCRIPT>
+<%@ include file="initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="initPopupMenu.jsp" %>
 <%-- include the select menu jsp's for all events --%>
 <%@ include file="mycfs/calendar_task_events_menu.jsp" %>
 <%@ include file="mycfs/calendar_calls_events_menu.jsp" %>
 <%@ include file="mycfs/calendar_account_events_menu.jsp" %>
 <%@ include file="mycfs/calendar_opportunity_events_menu.jsp" %>
+<%@ include file="mycfs/calendar_ticket_events_menu.jsp" %>
 <% 
    String returnPage = request.getParameter("return");
    CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage!=null?returnPage + "CalendarInfo" :"CalendarInfo");
@@ -21,9 +32,10 @@
     timeZone = TimeZone.getTimeZone(User.getUserRecord().getTimeZone());
    }
 %>
-<script type="text/javascript">
 <%-- Preload image rollovers for drop-down menu --%>
+<script type="text/javascript">
 loadImages('select');
+
 function changeUserName(id){
   alert(window.parent.getElementById(id).innerHtml);
   userName = window.parent.getElementById(id).innerHtml;

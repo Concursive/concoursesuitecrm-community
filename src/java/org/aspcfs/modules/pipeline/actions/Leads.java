@@ -175,6 +175,7 @@ public final class Leads extends CFSModule {
         context.getRequest().setAttribute("TypeList", newComponent.getTypeList());
       } else if ("insert".equals(action) && !recordInserted) {
         processErrors(context, newComponent.getErrors());
+        processWarnings(context, newComponent.getWarnings());
         //rebuild the form
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);
@@ -196,6 +197,7 @@ public final class Leads extends CFSModule {
       } else {
         if (resultCount == -1) {
           processErrors(context, newComponent.getErrors());
+          processWarnings(context, newComponent.getWarnings());
           return (executeCommandPrepare(context));
         } else if (resultCount == 1) {
           if ("list".equals(context.getRequest().getParameter("return"))) {
@@ -255,6 +257,7 @@ public final class Leads extends CFSModule {
       if (!recordInserted) {
         processErrors(context, newOpp.getHeader().getErrors());
         processErrors(context, newOpp.getComponent().getErrors());
+        processWarnings(context, newOpp.getComponent().getWarnings());
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);
         context.getRequest().setAttribute("TypeList", newOpp.getComponent().getTypeList());
@@ -951,6 +954,7 @@ public final class Leads extends CFSModule {
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int vpUserId = viewpointInfo.getVpUserId(this.getUserId(context));
     int userId = this.getUserId(context);
+    boolean fetchedList = false;
     if (vpUserId != -1 && vpUserId != userId) {
       userId = vpUserId;
     }
@@ -984,7 +988,7 @@ public final class Leads extends CFSModule {
         oppList.setQueryOpenOnly(true);
       }
       oppList.setTypeId(searchOppListInfo.getFilterKey("listFilter1"));
-      oppList.buildList(db);
+      fetchedList = oppList.buildList(db);
       context.getRequest().setAttribute("OpportunityList", oppList);
 
       //Generate user list
@@ -997,7 +1001,12 @@ public final class Leads extends CFSModule {
       userList.setExcludeDisabledIfUnselected(true);
       context.getRequest().setAttribute("UserList", userList);
       addModuleBean(context, "View Opportunities", "Opportunities Add");
-      return ("OppListOK");
+      if (fetchedList){
+        return ("OppListOK");
+      }else{
+        processErrors(context,oppList.getErrors());
+        return executeCommandSearchForm(context);
+      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

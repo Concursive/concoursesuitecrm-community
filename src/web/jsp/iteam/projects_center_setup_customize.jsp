@@ -28,7 +28,7 @@
 &nbsp;
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <input type="hidden" name="id" value="<%= Project.getId() %>">
-  <input type="hidden" name="modified" value="<%= Project.getModifiedString() %>">
+  <input type="hidden" name="modified" value="<%= Project.getModified().toString() %>">
   <tr>
     <th colspan="2" valign="center">
       <strong>Update Project Features</strong>

@@ -180,11 +180,12 @@ public class TaskList extends ArrayList {
     StringBuffer sqlTail = new StringBuffer();
     createFilter(sqlFilter);
     sqlSelect.append(
-        "SELECT " + DatabaseUtils.castDateTimeToDate(db, "duedate") + ", count(*) AS nocols " +
+        "SELECT duedate, count(*) AS nocols " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
     sqlFilter.append("AND duedate IS NOT NULL ");
-    sqlTail.append("GROUP BY " + DatabaseUtils.castDateTimeToDate(db, "duedate"));
+    sqlFilter.append("AND t.complete = false ");
+    sqlTail.append("GROUP BY duedate");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
@@ -299,7 +300,7 @@ public class TaskList extends ArrayList {
     }
     sqlSelect.append(
         "t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
-        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
+        "t.duedate, t.duedate_timezone, t.notes, t.sharing, t.complete, t.estimatedloe, " +
         "t.estimatedloetype, t.type, t.owner, t.completedate, t.modified, " +
         "t.modifiedby, t.category_id " +
         "FROM task t " +

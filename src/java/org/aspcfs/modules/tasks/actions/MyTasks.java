@@ -170,7 +170,7 @@ public final class MyTasks extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     int id = -1;
-    boolean done = false;
+    boolean inserted = false;
     if (!(hasPermission(context, "myhomepage-tasks-add"))) {
       return ("PermissionError");
     }
@@ -184,7 +184,8 @@ public final class MyTasks extends CFSModule {
       Task newTask = (Task) context.getFormBean();
       newTask.setEnteredBy(getUserId(context));
       newTask.setModifiedBy(getUserId(context));
-      if (!newTask.insert(db)) {
+      inserted = newTask.insert(db);
+      if (!inserted) {
         processErrors(context, newTask.getErrors());
       }
     } catch (Exception e) {
@@ -194,7 +195,11 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (inserted) {
         return this.getReturn(context, "InsertTask");
+      } else {
+        return executeCommandNew(context);
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -214,7 +219,7 @@ public final class MyTasks extends CFSModule {
     if (!(hasPermission(context, "myhomepage-tasks-edit"))) {
       return ("PermissionError");
     }
-
+    int count = -1;
     String id = context.getRequest().getParameter("id");
 
     try {
@@ -225,7 +230,7 @@ public final class MyTasks extends CFSModule {
       if (!hasAuthority(context, oldTask.getOwner())) {
         return ("PermissionError");
       }
-      int count = thisTask.update(db);
+      count = thisTask.update(db);
       if (count == -1) {
         processErrors(context, thisTask.getErrors());
       }
@@ -236,7 +241,11 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (count == -1) {
+        return executeCommandModify(context);
+      } else {
         return this.getReturn(context, "InsertTask");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

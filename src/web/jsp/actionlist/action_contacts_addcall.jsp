@@ -4,6 +4,7 @@
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="PreviousCallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].subject.focus();">
 <% if(ContactDetails.getOrgId() == -1){ %>
@@ -11,9 +12,7 @@
 <% }else{ %>
 <form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=MyActionContacts" onSubmit="return doCheck(this);" method="post">
 <% } %>
-<dhv:evaluate if="<%= hasText((String) request.getAttribute("actionError")) %>">
-<%= showError(request, "actionError") %>
-</dhv:evaluate>
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <%@ include file="../contacts/call_include.jsp" %>
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">

@@ -139,8 +139,9 @@ Search Opportunities
     </td>
     <td>
       <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateStart" timestamp="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateStart") %>" />
-      &nbsp;and<br>
+      &nbsp;and <%=showAttribute(request,"searchdateCloseDateStartError")%><br>
       <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateEnd" timestamp="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateEnd") %>" />
+      &nbsp;<%=showAttribute(request,"searchdateCloseDateEndError")%>
     </td>
   </tr>
   <tr>

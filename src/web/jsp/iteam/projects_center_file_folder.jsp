@@ -63,8 +63,10 @@
         Icon Layout
         <select size="1" name="display">
           <option value="-1" <%= fileFolder.getDisplay() == -1 ? "selected" : "" %>>List View</option>
+<%--
           <option value="1" <%= fileFolder.getDisplay() == 1 ? "selected" : "" %>>Image View</option>
           <option value="2" <%= fileFolder.getDisplay() == 2 ? "selected" : "" %>>Slideshow View</option>
+--%>
         </select>
       </td>
     </tr>

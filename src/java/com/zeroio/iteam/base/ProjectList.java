@@ -46,6 +46,7 @@ public class ProjectList extends ArrayList {
   private boolean projectsWithAssignmentsOnly = false;
   private boolean invitationPendingOnly = false;
   private boolean invitationAcceptedOnly = false;
+  private int daysLastAccessed = -1;
   // filters that go into sub-objects
   private boolean openAssignmentsOnly = false;
   private int withAssignmentDaysComplete = -1;
@@ -196,6 +197,36 @@ public class ProjectList extends ArrayList {
    */
   public boolean getInvitationAcceptedOnly() {
     return invitationAcceptedOnly;
+  }
+
+
+  /**
+   *  Gets the daysLastAccessed attribute of the ProjectList object
+   *
+   *@return    The daysLastAccessed value
+   */
+  public int getDaysLastAccessed() {
+    return daysLastAccessed;
+  }
+
+
+  /**
+   *  Sets the daysLastAccessed attribute of the ProjectList object
+   *
+   *@param  tmp  The new daysLastAccessed value
+   */
+  public void setDaysLastAccessed(int tmp) {
+    this.daysLastAccessed = tmp;
+  }
+
+
+  /**
+   *  Sets the daysLastAccessed attribute of the ProjectList object
+   *
+   *@param  tmp  The new daysLastAccessed value
+   */
+  public void setDaysLastAccessed(String tmp) {
+    this.daysLastAccessed = Integer.parseInt(tmp);
   }
 
 
@@ -585,7 +616,9 @@ public class ProjectList extends ArrayList {
     }
     if (projectsForUser > -1) {
       sqlFilter.append("AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
-          (invitationAcceptedOnly ? "AND status IS NULL " : "") + (invitationPendingOnly ? "AND status = ? " : "") + ")) ");
+          (invitationAcceptedOnly ? "AND status IS NULL " : "") + 
+          (invitationPendingOnly ? "AND status = ? " : "") +
+          (daysLastAccessed > -1 ? "AND last_accessed > ? " : "") + ")) ");
     }
     if (userRange != null) {
       sqlFilter.append("AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id IN (" + userRange + ")) " +
@@ -636,6 +669,11 @@ public class ProjectList extends ArrayList {
       pst.setInt(++i, projectsForUser);
       if (invitationPendingOnly) {
         pst.setInt(++i, TeamMember.STATUS_PENDING);
+      }
+      if (daysLastAccessed > -1) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -daysLastAccessed);
+        pst.setTimestamp(++i, new java.sql.Timestamp(cal.getTimeInMillis()));
       }
     }
     if (enteredByUser > -1) {

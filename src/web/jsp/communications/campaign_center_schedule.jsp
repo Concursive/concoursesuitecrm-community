@@ -14,10 +14,6 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    if ((!form.activeDate.value == "") && (!checkDate(form.activeDate.value))) { 
-      message += "- Check that the Run Date is entered correctly\r\n";
-      formTest = false;
-    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -60,7 +56,8 @@ Delivery
 <input type="submit" name="Save" value="Update Campaign Schedule">
 </dhv:permission>
 <input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'"><br>
-&nbsp;<br>
+&nbsp;<br />
+<%=showError(request,"actionError")%>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -76,6 +73,7 @@ Delivery
       <dhv:permission name="campaign-campaigns-edit">
       <a href="javascript:popCalendar('inputForm', 'activeDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
       </dhv:permission>
+      <%=showAttribute(request,"activeDateError")%>
     </td>
   </tr>
   <tr class="containerBody">

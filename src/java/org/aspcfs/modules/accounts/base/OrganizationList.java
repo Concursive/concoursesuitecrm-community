@@ -719,7 +719,7 @@ public class OrganizationList extends Vector implements SyncableList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
 
-    String sqlDate = ((hasAlertDate ? DatabaseUtils.castDateTimeToDate(db, "alertdate") : "") + (hasExpireDate ? DatabaseUtils.castDateTimeToDate(db, "contract_end") : ""));
+    String sqlDate = ((hasAlertDate ? "alertdate" : "") + (hasExpireDate ? "contract_end" : ""));
 
     createFilter(sqlFilter);
 

@@ -1,3 +1,4 @@
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="CallResult" class="org.aspcfs.modules.contacts.base.CallResult" scope="request"/>
 <%@ page import="java.util.*,java.text.*" %>
 <script language="JavaScript">
@@ -7,10 +8,14 @@
         try{
         Calendar today = Calendar.getInstance();
         today.add(Calendar.DAY_OF_MONTH, CallResult.getNextDays());
-        tmpDate = DateFormat.getDateInstance(3).format(today.getTime());
+
+        SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+                                                          DateFormat.SHORT, User.getUserRecord().getLocale());
+        formatter.applyPattern(formatter.toPattern() + "yy");
+        tmpDate = formatter.format(today.getTime());
         }catch(Exception e){}
     %>
-      window.parent.addFollowup('<%= tmpDate %>','<%= CallResult.getNextCallTypeId() %>');
+      window.parent.addFollowup('<%=tmpDate%>','<%= CallResult.getNextCallTypeId() %>');
     <% } %>
   }
 </script>

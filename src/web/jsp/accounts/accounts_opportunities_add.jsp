@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="org.aspcfs.modules.pipeline.base.*" %>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -32,16 +33,8 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
-  if ((!form.component_closeDate.value == "") && (!checkDate(form.component_closeDate.value))) { 
-    message += "- Check that Est. Close Date is entered correctly\r\n";
-    formTest = false;
-  }
   if (form.component_low.value != "" && form.component_low.value != "" && (parseInt(form.component_low.value) > parseInt(form.component_high.value))) { 
     message += "- Low Estimate cannot be higher than High Estimate\r\n";
-    formTest = false;
-  }
-  if ((!form.component_alertDate.value == "") && (!checkDate(form.component_alertDate.value))) { 
-    message += "- Check that Alert Date is entered correctly\r\n";
     formTest = false;
   }
   if ((!form.component_alertText.value == "") && (form.component_alertDate.value == "")) { 
@@ -57,10 +50,6 @@ function checkForm(form) {
       formTest = false;
   }
   
-  if ((!form.component_alertDate.value == "") && (!checkAlertDate(form.component_alertDate.value))) { 
-      alertMessage += "Alert Date is before today's date\r\n";
-  }
-    
   if (formTest == false) {
     alert("Form could not be saved, please check the following:\r\n\r\n" + message);
     return false;
@@ -81,9 +70,9 @@ function checkForm(form) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
 Add Opportunity
 </td>
@@ -99,7 +88,7 @@ Add Opportunity
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <br>
-<%= showError(request, "actionError") %>
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
 <%--  include basic opportunity form --%>
 <%@ include file="../pipeline/opportunity_include.jsp" %>
 &nbsp;

@@ -221,7 +221,9 @@ CREATE TABLE organization (
   namemiddle varchar(80),
   namesuffix varchar(80),
   import_id INT,
-  status_id INT
+  status_id INT,
+  alertdate_timezone VARCHAR(255),
+  contract_end_timezone VARCHAR(255)
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);
@@ -685,3 +687,27 @@ CREATE TABLE database_version (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- relationships
+--CREATE TABLE lookup_relationship_types (
+--  type_id SERIAL PRIMARY KEY,
+--  category_id_maps_from INT NOT NULL,
+--  category_id_maps_to INT NOT NULL,
+--  reciprocal_name_1 VARCHAR(512),
+--  reciprocal_name_2 VARCHAR(512),
+--  level INTEGER DEFAULT 0,
+--  default_item BOOLEAN DEFAULT false,
+--  enabled BOOLEAN DEFAULT true
+--);
+
+--CREATE TABLE relationship (
+--  relationship_id SERIAL PRIMARY KEY,
+--  type_id INT REFERENCES lookup_relationship_types(type_id),
+--  object_id_maps_from INT NOT NULL,
+--  category_id_maps_from INT NOT NULL,
+--  object_id_maps_to INT NOT NULL,
+--  category_id_maps_to INT NOT NULL,
+--  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--  enteredby INT NOT NULL,
+--  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--  modifiedby INT NOT NULL
+--);

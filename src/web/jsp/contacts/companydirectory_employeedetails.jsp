@@ -10,9 +10,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CompanyDirectory.do?command=ListEmployees">Employees</a> >
-<a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
-Employee Details
+<a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.employees">Employees</dhv:label></a> >
+<a href="CompanyDirectory.do?command=ListEmployees"><dhv:label name="employees.view">View Employees</dhv:label></a> >
+<dhv:label name="employees.details">Employee Details</dhv:label>
 </td>
 </tr>
 </table>
@@ -40,7 +40,9 @@ Employee Details
 %>    
   <tr class="containerBody">
     <td nowrap class="formLabel"><%= toHtml(thisEmailAddress.getTypeName()) %></td>
-    <td><a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a></td>
+    <td>
+      <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>&nbsp;<%= (thisEmailAddress.getPrimaryEmail()) ? "(Primary)" : "" %>
+    </td>
   </tr>
 <%    
     }
@@ -66,7 +68,9 @@ Employee Details
 %>    
   <tr class="containerBody">
     <td class="formLabel" nowrap><%= toHtml(thisPhoneNumber.getTypeName()) %></td>
-    <td><%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;</td>
+    <td>
+      <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;<%= (thisPhoneNumber.getPrimaryNumber()) ? "(Primary)" : "" %>
+    </td>
   </tr>
 <%
     }
@@ -92,7 +96,9 @@ Employee Details
 %>    
     <tr class="containerBody">
       <td class="formLabel" valign="top" nowrap><%= toHtml(thisAddress.getTypeName()) %></td>
-      <td><%= toHtml(thisAddress.toString()) %>&nbsp;</td>
+      <td>
+        <%= toHtml(thisAddress.toString()) %>&nbsp;<%= (thisAddress.getPrimaryAddress()) ? "(Primary)" : "" %>
+      </td>
     </tr>
 <%    
     }

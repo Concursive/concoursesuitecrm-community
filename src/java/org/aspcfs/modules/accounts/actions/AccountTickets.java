@@ -115,8 +115,7 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("OrgDetails", newOrg);
 
       //getting current date in mm/dd/yyyy format
-      Calendar calendar = Calendar.getInstance();
-      String currentDate = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR);
+      String currentDate = this.getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
       return ("AddTicketOK");
     } catch (Exception errorMessage) {
@@ -501,8 +500,7 @@ public final class AccountTickets extends CFSModule {
       addModuleBean(context, "View Accounts", "View Tickets");
 
       //getting current date in mm/dd/yyyy format
-      Calendar calendar = Calendar.getInstance();
-      String currentDate = (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" + calendar.get(Calendar.YEAR);
+      String currentDate = this.getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
 
       return ("ModifyTicketOK");

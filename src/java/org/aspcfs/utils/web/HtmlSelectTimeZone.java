@@ -51,6 +51,7 @@ public class HtmlSelectTimeZone {
     select.addItem("Canada/Atlantic", "GMT-4 Atlantic");
     select.addItem("America/La_Paz", "GMT-4 La Paz");
     select.addItem("America/Santiago", "GMT-4 Santiago");
+    select.addItem("America/Virgin", "GMT-4 Virgin Islands");
     select.addItem("Canada/Newfoundland", "GMT-3 Newfoundland");
     select.addItem("America/Maceio", "GMT-3 Brasilia");
     select.addItem("America/Buenos_Aires", "GMT-3 Buenos Aires");

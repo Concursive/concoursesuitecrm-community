@@ -26,16 +26,8 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
-  if ((!form.closeDate.value == "") && (!checkDate(form.closeDate.value))) { 
-    message += "- Check that Est. Close Date is entered correctly\r\n";
-    formTest = false;
-  }
   if (form.low.value != "" && form.low.value != "" && (parseInt(form.low.value) > parseInt(form.high.value))) { 
     message += "- Low Estimate cannot be higher than High Estimate\r\n";
-    formTest = false;
-  }
-  if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-    message += "- Check that Alert Date is entered correctly\r\n";
     formTest = false;
   }
   if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
@@ -50,10 +42,6 @@ function checkForm(form) {
       message += "- Commission entered is invalid\r\n";
       formTest = false;
     }
-  if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      alertMessage += "Alert Date is before today's date\r\n";
-    }
-    
   if (formTest == false) {
     alert("Form could not be saved, please check the following:\r\n\r\n" + message);
     return false;
@@ -80,9 +68,9 @@ function checkForm(form) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Accounts.do">Accounts</a> > 
+<a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -127,9 +115,9 @@ Modify Component
 <dhv:evaluate if="<%= request.getParameter("return") != null %>">
   <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </dhv:evaluate>
-<br>
-<%= showError(request, "actionError") %>
-
+<br />
+<%= !"&nbsp;".equals(showError(request, "actionError").trim())? showError(request, "actionError"):showWarning(request, "actionWarning")%>
+<br />
 <%--  include basic opportunity form --%>
 <%@ include file="../pipeline/opportunity_include.jsp" %>
 

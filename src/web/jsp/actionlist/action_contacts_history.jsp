@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.actionlist.base.*, org.aspcfs.modules.base.Constants"%>
 <jsp:useBean id="History" class="org.aspcfs.modules.actionlist.base.ActionItemLogList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -15,7 +16,7 @@
 %>
     <tr class="row<%= rowid %>">
     <td>
-      <%= toHtml(thisLog.getTypeString()) %>: <a href="javascript:parent.location.href='<%= thisLog.getItemLink( Integer.parseInt(request.getParameter("contactId"))) %>';"  onMouseOver="this.style.color='blue';window.status='View Details';return true;"  onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisLog.getDescription()) %></a> &nbsp;[<%= toDateTimeString(thisLog.getEntered()) %>]
+      <%= toHtml(thisLog.getTypeString()) %>: <a href="javascript:parent.location.href='<%= thisLog.getItemLink( Integer.parseInt(request.getParameter("contactId"))) %>';"  onMouseOver="this.style.color='blue';window.status='View Details';return true;"  onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisLog.getDescription()) %></a> &nbsp;[<zeroio:tz timestamp="<%= thisLog.getEntered() %>" />]
     </td>
     </tr>
 <% }

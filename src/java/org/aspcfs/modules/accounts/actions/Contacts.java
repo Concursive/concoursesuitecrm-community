@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.*;
 import java.sql.*;
 import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.modules.actions.CFSModule;
@@ -19,23 +19,25 @@ import org.aspcfs.modules.admin.base.Role;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.communications.base.Campaign;
 import org.aspcfs.modules.communications.base.CampaignList;
+import org.aspcfs.modules.communications.base.CommunicationsPreference;
+import org.aspcfs.modules.communications.base.CommunicationsPreferenceList;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.utils.web.*;
 
 /**
  *  Web actions for the Accounts->Contacts module
  *
- *@author     chris
- *@created    August 29, 2001
- *@version    $Id$
+ * @author     chris
+ * @created    August 29, 2001
+ * @version    $Id$
  */
 public final class Contacts extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
     Connection db = null;
@@ -85,8 +87,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandClone(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
@@ -114,8 +116,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     boolean recordInserted = false;
@@ -182,7 +184,7 @@ public final class Contacts extends CFSModule {
       if (context.getRequest().getParameter("popup") != null) {
         return ("CloseAddPopup");
       }
-      if ("true".equals(context.getRequest().getParameter("providePortalAccess"))){
+      if ("true".equals(context.getRequest().getParameter("providePortalAccess"))) {
         return ("AddPortalOK");
       }
       return ("DetailsOK");
@@ -202,8 +204,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Connection db = null;
@@ -259,9 +261,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-view")) {
@@ -278,7 +280,7 @@ public final class Contacts extends CFSModule {
       thisOrganization = new Organization(db, newContact.getOrgId());
 
       //find record permissions for portal users
-      if (!isRecordAccessPermitted(context,newContact.getOrgId())){
+      if (!isRecordAccessPermitted(context, newContact.getOrgId())) {
         return ("PermissionError");
       }
     } catch (Exception errorMessage) {
@@ -296,9 +298,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-delete")) {
@@ -340,8 +342,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
@@ -368,8 +370,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
@@ -406,9 +408,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since
    */
 
   public String executeCommandView(ActionContext context) {
@@ -421,8 +423,8 @@ public final class Contacts extends CFSModule {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
 
-    //find record permissions for portal users    
-    if (!isRecordAccessPermitted(context,Integer.parseInt(orgid))){
+    //find record permissions for portal users
+    if (!isRecordAccessPermitted(context, Integer.parseInt(orgid))) {
       return ("PermissionError");
     }
 
@@ -455,8 +457,8 @@ public final class Contacts extends CFSModule {
   /**
    *  View Message Details of an Account Contact
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandMessageDetails(ActionContext context) {
 
@@ -501,8 +503,8 @@ public final class Contacts extends CFSModule {
   /**
    *  View Account Contact Messages
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandViewMessages(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
@@ -539,7 +541,17 @@ public final class Contacts extends CFSModule {
 
       campaignList.buildList(db);
       context.getRequest().setAttribute("CampaignList", campaignList);
+      //TODO: Database not implemented in this version so skip this code
+/*
+      CommunicationsPreferenceList commPrefList = new CommunicationsPreferenceList();
+      commPrefList.setContactId(contactId);
+      commPrefList.buildList(db);
+      context.getRequest().setAttribute("communicationsList", commPrefList);
 
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_communication_type");
+      context.getRequest().setAttribute("typeSelect", list);
+*/
       thisOrganization = new Organization(db, thisContact.getOrgId());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -556,12 +568,163 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandAddCommunicationsPreference(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Organization thisOrganization = null;
+    Contact thisContact = null;
+    // Process the request
+    String contactId = context.getRequest().getParameter("contactId");
+    if ("true".equals(context.getRequest().getParameter("contactId"))) {
+      context.getSession().removeAttribute("AccountContactMessageListInfo");
+    }
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!hasAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_communication_type");
+      context.getRequest().setAttribute("typeSelect", list);
+      System.out.println("Contacts::AddCommunicationsPreference the lookup_communication_type is "+ list.valuesAsString());
+      context.getRequest().setAttribute("User", this.getUser(context, this.getUserId(context)));
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Accounts", "Add Contact Communication Preference");
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    return "AddCommunicationsPreferenceOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandSaveCommunicationsPreference(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Organization thisOrganization = null;
+    Contact thisContact = null;
+    // Process the request
+    String contactId = context.getRequest().getParameter("contactId");
+    if ("true".equals(context.getRequest().getParameter("contactId"))) {
+      context.getSession().removeAttribute("AccountContactMessageListInfo");
+    }
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!hasAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_communication_type");
+
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+      CommunicationsPreference commPref = new CommunicationsPreference();
+      commPref.setStartDay((String) context.getRequest().getParameter("startDay"));
+      commPref.setEndDay((String) context.getRequest().getParameter("endDay"));
+      commPref.setStartTimeHour((String) context.getRequest().getParameter("startTimeHour"), (String) context.getRequest().getParameter("startTimeAMPM"));
+      commPref.setEndTimeHour((String) context.getRequest().getParameter("endTimeHour"), (String) context.getRequest().getParameter("endTimeAMPM"));
+      commPref.setStartTimeMinute((String) context.getRequest().getParameter("startTimeMinute"));
+      commPref.setEndTimeMinute((String) context.getRequest().getParameter("endTimeMinute"));
+      commPref.setTimeZone((String) context.getRequest().getParameter("timeZone"));
+      commPref.setTypeId((String) context.getRequest().getParameter("typeId"));
+      commPref.setLevel((String) context.getRequest().getParameter("level"));
+      commPref.setContactId(contactId);
+      commPref.setEnteredBy(this.getUserId(context));
+      commPref.setModifiedBy(this.getUserId(context));
+      commPref.insert(db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Accounts", "Add Contact Communication Preference");
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    return "SaveCommunicationsPreferenceOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandDeleteCommunicationsPreference(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Organization thisOrganization = null;
+    Contact thisContact = null;
+    // Process the request
+    String contactId = context.getRequest().getParameter("contactId");
+    if ("true".equals(context.getRequest().getParameter("contactId"))) {
+      context.getSession().removeAttribute("AccountContactMessageListInfo");
+    }
+    String preferenceId = (String) context.getRequest().getParameter("preferenceId");
+    if (preferenceId == null) {
+      preferenceId = (String) context.getRequest().getAttribute("preferenceId");
+    }
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!hasAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_communication_type");
+
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+
+      CommunicationsPreference commPref = new CommunicationsPreference();
+      commPref.queryRecord(db, Integer.parseInt(preferenceId));
+      commPref.delete(db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Accounts", "Add Contact Communication Preference");
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    return "DeleteCommunicationsPreferenceOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "AccountContactCallsListInfo");
     this.deletePagedListInfo(context, "AccountContactOppsPagedListInfo");
     this.deletePagedListInfo(context, "AccountContactMessageListInfo");
+    this.deletePagedListInfo(context, "AccountContactCommunicationsListInfo");
   }
 }
 

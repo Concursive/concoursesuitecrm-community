@@ -11,7 +11,7 @@
 <dhv:evaluate if="<%= oppEventList.getAlertOpps().size() > 0 %>">
 <table border="0">
   <tr>
-    <td colspan="6">
+    <td colspan="6" nowrap>
       <%-- event name --%>
       <img border="0" src="images/alertopp.gif" align="texttop" title="Opportunities"><a href="javascript:changeImages('alertoppsimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertoppdetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="alertoppsimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Opportunities</a>&nbsp;(<%= oppEventList.getAlertOpps().size() %>)
     </td>
@@ -48,8 +48,8 @@
     <tr>
      <td>
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayOppMenu('selectOpp<%= menuCount %>','menuOpp', '<%= alertOpp.getId() %>');"
-       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuOpp');"><img src="images/select.gif" name="selectOpp<%= menuCount %>" id="selectOpp<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayOppMenu('select<%= menuCount %>','menuOpp', '<%= alertOpp.getId() %>');"
+       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
      <td nowrap>
        <%= toHtml(alertOpp.getAlertText()) %>
