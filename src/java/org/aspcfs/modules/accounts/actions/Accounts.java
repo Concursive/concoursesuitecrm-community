@@ -873,6 +873,7 @@ public final class Accounts extends CFSModule {
     
     newOrg.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOrg.setModifiedBy(getUserId(context));
+    newOrg.setEnteredBy(getUserId(context));
     
     //set the name to namelastfirstmiddle if individual
     if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
