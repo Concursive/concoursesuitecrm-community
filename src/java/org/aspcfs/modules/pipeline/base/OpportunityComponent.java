@@ -18,12 +18,11 @@ import org.aspcfs.controller.SystemStatus;
 import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.contacts.base.*;
- 
 
 /**
- *  An OpportunityComponent makes up 1 or more elements of an Opportunity.
- *  An OpportunityHeader is a top level description for all of the components
- *  that make up the Opportunity.
+ *  An OpportunityComponent makes up 1 or more elements of an Opportunity. An
+ *  OpportunityHeader is a top level description for all of the components that
+ *  make up the Opportunity.
  *
  *@author     chris
  *@created    December, 2002
@@ -690,8 +689,19 @@ public class OpportunityComponent extends GenericBean {
    *  Gets the OppId attribute of the OpportunityComponent object
    *
    *@return    The OppId value
+   *@deprecated Too confusing, an opportunity header is the parent now
    */
   public int getOppId() {
+    return oppId;
+  }
+
+
+  /**
+   *  Gets the headerId attribute of the OpportunityComponent object
+   *
+   *@return    The headerId value
+   */
+  public int getHeaderId() {
     return oppId;
   }
 
@@ -1549,7 +1559,7 @@ public class OpportunityComponent extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public int updateHeaderModified(Connection db) throws SQLException {
-    if (this.getOppId() == -1) {
+    if (this.getHeaderId() == -1) {
       throw new SQLException("Opportunity Header ID not specified");
     }
 
@@ -1564,7 +1574,7 @@ public class OpportunityComponent extends GenericBean {
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getModifiedBy());
-    pst.setInt(++i, this.getOppId());
+    pst.setInt(++i, this.getHeaderId());
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
@@ -1605,7 +1615,7 @@ public class OpportunityComponent extends GenericBean {
     if (!isValid(db)) {
       return false;
     }
-    if (this.getOppId() == -1) {
+    if (this.getHeaderId() == -1) {
       throw new SQLException("You must associate an opportunity component with an opportunity.");
     }
 
@@ -1643,7 +1653,7 @@ public class OpportunityComponent extends GenericBean {
       pst.setDate(++i, this.getCloseDate());
       pst.setInt(++i, this.getStage());
       pst.setString(++i, this.getDescription());
-      pst.setInt(++i, this.getOppId());
+      pst.setInt(++i, this.getHeaderId());
       if (stageDate != null) {
         pst.setDate(++i, stageDate);
       }
