@@ -78,6 +78,22 @@ public static String replace(String str, String o, String n) {
     return "";
   }
   
+  public static String toLongDateString(java.util.Date inDate) {
+    try {
+      return java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG).format(inDate);
+    } catch (NullPointerException e) {
+    }
+    return "";
+  }
+  
+  public static String toFullDateString(java.util.Date inDate) {
+    try {
+      return java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL).format(inDate);
+    } catch (NullPointerException e) {
+    }
+    return "";
+  }
+  
   public static String sqlReplace(String s) {
     //s = replace(s, "<br>", "\r");
     

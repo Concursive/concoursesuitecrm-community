@@ -158,16 +158,6 @@ public class CalendarEvent implements Comparable {
 	 */
 	public void setCategory(String tmp) {
 		category = tmp;
-		if (category.equals("event")) {
-			icon = "<img border=0 src=\"/images/event-timed.gif\" align=texttop width=12 height=12>";
-		}
-		else if (category.equals("holiday")) {
-			icon = "<img border=0 src=\"/images/event-holiday.gif\" align=texttop width=12 height=12>";
-		} else if (category.equals("Opportunity")) {
-			icon = "<img border=0 src=\"images/alertcall.gif\" alt=\"Opportunity\" align=texttop>";
-		} else if (category.equals("Call")) {
-			icon = "<img border=0 src=\"images/alertopp.gif\" alt=\"Call\" align=texttop>";
-		}
 	}
 
 
@@ -222,6 +212,17 @@ public class CalendarEvent implements Comparable {
 	 *@since
 	 */
 	public String getIcon() {
+    if (category.equals("event")) {
+			return "<img border=0 src=\"/images/event-timed.gif\" alt=\"Event:" + this.getSubject() + "\" align=texttop width=12 height=12>";
+		}
+		else if (category.equalsIgnoreCase("holiday")) {
+			return "<img border=0 src=\"/images/event-holiday.gif\" alt=\"Holiday:" + this.getSubject() + "\" align=texttop width=12 height=12>";
+		} else if (category.equalsIgnoreCase("Opportunity")) {
+			return "<img border=0 src=\"images/alertcall.gif\" alt=\"Opp:" + this.getSubject() + "\" align=texttop>";
+		} else if (category.equalsIgnoreCase("Call")) {
+			return "<img border=0 src=\"images/alertopp.gif\" alt=\"Call:" + this.getSubject() + "\" align=texttop>";
+		}
+    
 		return icon;
 	}
 
@@ -235,6 +236,10 @@ public class CalendarEvent implements Comparable {
 	public String getDateTimeString() {
 		return (year + "-" + month + "-" + day + " " + time);
 	}
+  
+  public boolean isHoliday() {
+    return ("holiday").equalsIgnoreCase(this.category);
+  }
 
 
 	/**
@@ -258,8 +263,7 @@ public class CalendarEvent implements Comparable {
 	public int compareTo(Object object) {
 		return (eventComparator.compare(this, object));
 	}
-
-
+  
 	/**
 	 *  Description of the Method
 	 *
@@ -292,6 +296,7 @@ public class CalendarEvent implements Comparable {
 		public int compare(Object left, Object right) {
 			return (((CalendarEvent) left).getDateTimeString().compareTo(((CalendarEvent) right).getDateTimeString()));
 		}
+    
 	}
 }
 

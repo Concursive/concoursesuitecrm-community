@@ -4,42 +4,79 @@
 <jsp:useBean id="CompanyCalendar" class="com.darkhorseventures.utils.CalendarView" scope="request"/>
 <jsp:useBean id="NewUserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="alertPaged" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<%@ include file="initPage.jsp" %>
 <table bgcolor=white border=0 width="100%">
-
-	<tr>
-	<td valign=top bgcolor=white width=300>
-	
-  <%  
+<tr>
+  <td valign=top bgcolor=white width=300>
+<%  
     CompanyCalendar.setBorderSize(1);
     CompanyCalendar.setCellPadding(4);
     CompanyCalendar.setCellSpacing(0);
-  %>
-	<%= CompanyCalendar.getHtml() %>
-	
-	</td>
-
-    <td bgcolor=white valign=top width=100%>
-    <table bgcolor=white width=100% border=1 cellpadding=4 cellspacing=0 bordercolorlight="#000000" bordercolor="#FFFFFF">
-    
-    <tr bgcolor="#DEE0FA"><td valign=center>
-    <table bgcolor="#DEE0FA" width=100% cellspacing="0" cellpadding="0" border="0">
-    
-    <tr bgcolor="#DEE0FA">
-    <td width=60% valign=center>
-    <strong>Alerts</strong>
-    </td>
-    <td valign=center align=right>
-    <%= NewUserList.getHtmlSelect("userId",0) %>
-    </td>
+    CompanyCalendar.setSortEvents(true);
+    CompanyCalendar.addHolidays();
+%>
+    <%= CompanyCalendar.getHtml() %>
+  </td>
+  <td "bgcolor=white" valign="top" height="100%" width="100%">
+    <table bgcolor="white" height="100%" width="100%" border="1" cellpadding="1" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <tr bgcolor="#DEE0FA">
+        <td width="100%">
+          <table width=100% cellspacing="0" cellpadding="0" border="0">
+            <tr bgcolor="#DEE0FA">
+              <td width=60% valign=center>
+                <strong>Alerts</strong>
+              </td>
+              <td valign=center align=right>
+                <%= NewUserList.getHtmlSelect("userId",0) %>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td height="100%" width="100%" valign="top">
+<%    
+   Iterator days = (CompanyCalendar.getEvents(5)).iterator();
+   if (days.hasNext()) {
+%>
+     <table width="100%" cellspacing="1" cellpadding="0" border="0">
+<%
+     while (days.hasNext()) {
+       CalendarEventList thisDay = (CalendarEventList)days.next();
+%>
+       <tr>
+         <td colspan="2">
+           <strong><%= toFullDateString(thisDay.getDate()) %></strong>
+         </td>
+       </tr>
+<%
+       Iterator eventList = thisDay.iterator();
+       while (eventList.hasNext()) {
+         CalendarEvent thisEvent = (CalendarEvent)eventList.next();
+%>
+       <tr>
+         <td valign="top" nowrap>
+           <%= thisEvent.getIcon() %>&nbsp;
+         </td>
+         <td width="100%" valign="top">
+           <%= thisEvent.getSubject() %><%= ((!eventList.hasNext() && days.hasNext())?"<br>&nbsp;":"") %>
+         </td>
+       </tr>
+<%
+       }
+     }
+%>
+     </table>
+<%     
+   } else {
+%>
+       No alerts found.
+<%
+   }   
+%>
+      </td>
     </tr>
-    
-    </table>
-    </td></tr>
-
-	<tr><td>
-	<%=CompanyCalendar.displayEvents(5).toString()%>
-    
-    </table>
+  </table>
 
 <!-- End Table:Alerts -->
 </td>
