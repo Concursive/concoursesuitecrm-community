@@ -900,6 +900,7 @@ public class ContactList extends Vector {
         "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
         "WHERE c.contact_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    System.out.println(pst.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     
@@ -1264,10 +1265,10 @@ public class ContactList extends Vector {
         //Entered Dates
         if (dateHash != null && dateHash.size() > 0) {
           Iterator outer = dateHash.keySet().iterator();
+          termsProcessed = 0;
+          String previousKey = null;
           
           while(outer.hasNext()) {
-            
-            termsProcessed = 0;
             String key1 = (String)outer.next();
             HashMap innerHash = (HashMap)dateHash.get(key1);
             
@@ -1278,10 +1279,19 @@ public class ContactList extends Vector {
                   int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
                   
                   if (elementType == y && (key1.equals("<") || key1.equals(">") || key1.equals("<=") || key1.equals(">="))) {
-                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
-                     if (termsProcessed == 0) {
+                    
+                    if (termsProcessed > 0 && !(previousKey.equals(key1))) {
+                        //we want to get an 'AND' term if we have switched between operators here
+                        //for example, enteredDate less than x AND enteredDate greater than y
+                        newTerm = processElementHeader(sqlFilter, newTerm, 0);
+                    } else {
+                        newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                    }
+                    
+                    if (termsProcessed == 0) {
                       sqlFilter.append("(");
                     }
+                    
                     if (key1.equals("<")) {
                       sqlFilter.append(" (c.entered < '" + key2 + "') ");
                     } else if (key1.equals(">")) {
@@ -1292,6 +1302,7 @@ public class ContactList extends Vector {
                       sqlFilter.append(" (c.entered >= '" + key2 + "') ");
                     }
                     
+                    previousKey = key1;
                     processElementType(sqlFilter, elementType);
                     termsProcessed++;
                   }
