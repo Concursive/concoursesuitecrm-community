@@ -27,18 +27,22 @@ import java.io.*;
 public final class ProcessImage extends CFSModule {
 
   /**
-   *  Receives a request for a customer's image and processes it.<p>
+   *  Receives a request for a customer's image and processes it.<br>
+   *  Images are stored in the fileLibrary using the cryptic datetime filename
+   *  without an extension<p>
    *
-   *  The format should be:<br>
+   *  The url format should be any of the following 3:<br>
    *  <img src="http://ds21.darkhorseventures.com/ProcessImage.do?id=sitecode|filename|imagetype">
-   *  <br>
+   *  <img src="http://sitecode.darkhorseventures.com/ProcessImage.do?id=filename|imagetype">
+   *  <img src="http://sitecode.darkhorseventures.com/ProcessImage.do?id=filename.imagetype">
+   *  <p>
+   *
    *  Where sitecode = ds21 or similar (leave out the cdb_)<br>
    *  filename is the date generated filename<br>
    *  imagetype should be gif or jpeg
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
@@ -47,10 +51,35 @@ public final class ProcessImage extends CFSModule {
 
     //Start the download
     try {
+      String dbName = null;
+      String fileName = null;
+      String imageType = null;
+      //Url can be: 
       StringTokenizer st = new StringTokenizer(id, "|");
-      String dbName = st.nextToken();
-      String fileName = st.nextToken();
-      String imageType = st.nextToken();
+      String item1 = st.nextToken();
+      if (st.hasMoreTokens()) {
+        String item2 = st.nextToken();
+        if (st.hasMoreTokens()) {
+          //sitecode.url.com/ProcessImage.do?id=sitecode|imagename|imagetype
+          String item3 = st.nextToken();
+          dbName = item1;
+          fileName = item2;
+          imageType = item3;
+        } else {
+          //sitecode.url.com/ProcessImage.do?id=imagename|imagetype
+          String serverName = context.getRequest().getServerName();
+          dbName = serverName.substring(0, serverName.indexOf("."));
+          fileName = item1;
+          imageType = item2;
+        }
+      } else {
+        //sitecode.url.com/ProcessImage.do?id=imagename.imagetype
+        String serverName = context.getRequest().getServerName();
+        dbName = serverName.substring(0, serverName.indexOf("."));
+        fileName = item1.substring(0, item1.indexOf("."));
+        imageType = item1.substring(item1.indexOf(".") + 1);
+      }
+      //Decode the path to the file based on the fileName
       String year = fileName.substring(0, 4);
       String monthday = fileName.substring(4, 8);
       String filePath = this.getPath(context) + "cdb_" + dbName + fs + "images" + fs + year + fs + monthday + fs + fileName;
