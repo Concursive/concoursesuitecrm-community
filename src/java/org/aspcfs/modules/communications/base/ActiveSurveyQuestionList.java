@@ -237,7 +237,7 @@ public class ActiveSurveyQuestionList extends ArrayList {
         itemList.buildList(db);
         thisQuestion.setItemList(itemList);
       }else if (type == SurveyQuestion.QUANT_COMMENTS || type == SurveyQuestion.OPEN_ENDED) {
-        thisQuestion.buildComments(db,5);
+        thisQuestion.buildComments(db);
       }
     }
   }
