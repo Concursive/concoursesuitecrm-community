@@ -387,31 +387,27 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandPreviewGroups(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+    if (!hasPermission(context, "campaign-campaigns-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     Campaign campaign = null;
-
     try {
       db = this.getConnection(context);
-
+      //Show the campaign name
       campaign = new Campaign(db, context.getRequest().getParameter("id"));
       context.getRequest().setAttribute("Campaign", campaign);
-
+      //Load the criteria for the contacts query
       SearchCriteriaList thisSCL = new SearchCriteriaList(db, context.getRequest().getParameter("scl"));
       context.getRequest().setAttribute("SCL", thisSCL);
-
+      //Reset the pagedList if this is the first time being opened
       if ("true".equals(context.getRequest().getParameter("reset"))) {
         context.getSession().removeAttribute("CampaignCenterPreviewInfo");
       }
-      this.deletePagedListInfo(context, "CampaignCenterPreviewInfo");
       PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignCenterPreviewInfo");
-      pagedListInfo.setLink("CampaignManager.do?command=PreviewGroups&id=" + campaign.getId() + "&scl=" + thisSCL.getId());
-
+      pagedListInfo.setLink("CampaignManager.do?command=PreviewGroups&id=" + campaign.getId() + "&scl=" + thisSCL.getId() + "&popup=true");
+      //Generate the contacts for this page
       ContactList contacts = new ContactList();
       contacts.setScl(thisSCL, campaign.getEnteredBy(), this.getUserRange(context, campaign.getEnteredBy()));
       contacts.setPagedListInfo(pagedListInfo);
@@ -425,17 +421,6 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
-    String submenu = context.getRequest().getParameter("submenu");
-    if (submenu == null) {
-      submenu = (String) context.getRequest().getAttribute("submenu");
-    }
-    if (submenu == null) {
-      submenu = "ManageCampaigns";
-    }
-    context.getRequest().setAttribute("submenu", submenu);
-    addModuleBean(context, submenu, "Preview");
-
     if (errorMessage == null) {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
@@ -455,23 +440,17 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandToggleRecipient(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     boolean result = true;
-
-    Campaign newCamp = (Campaign) context.getFormBean();
-
     String campaignId = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
-
     try {
       db = this.getConnection(context);
-      Contact thisContact = new Contact(db, contactId);
+      Contact thisContact = new Contact(db, Integer.parseInt(contactId));
       thisContact.checkExcludedFromCampaign(db, Integer.parseInt(campaignId));
       thisContact.toggleExcluded(db, Integer.parseInt(campaignId));
     } catch (Exception e) {
@@ -480,8 +459,6 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
-    context.getRequest().setAttribute("Campaign", newCamp);
     return ("ToggleOK");
   }
 
