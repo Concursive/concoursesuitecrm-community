@@ -41,6 +41,9 @@ public class ObjectHookManager {
     this.fileLibraryPath = tmp;
   }
 
+  public BusinessProcessList getProcessList() {
+    return processList;
+  }
 
   /**
    *  Description of the Method
