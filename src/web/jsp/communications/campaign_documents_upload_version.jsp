@@ -43,6 +43,7 @@ Upload New Version<br>
 <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
 <% String param1 = "id=" + Campaign.getId(); %>
 <dhv:container name="communications" selected="documents" param="<%= param1 %>" style="tabs"/>
+<form method="post" name="inputForm" action="CampaignDocuments.do?command=UploadVersion" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <table cellpadding="4" cellspacing="0" width="100%">
   <tr>
     <td class="containerBack">
@@ -96,6 +97,6 @@ Upload New Version<br>
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
 </td>
 </tr>
-</form>
 </table>
+</form>
 </body>
