@@ -2533,10 +2533,14 @@ public class Contact extends GenericBean {
   public boolean isValid(Connection db) throws SQLException {
     errors.clear();
     //A contact must have at least a last name
-    if (company == null || company.trim().equals("")) {
-      if (nameLast == null || nameLast.trim().equals("")) {
+    if (nameLast == null || nameLast.trim().equals("")) {
+      if (this.getOrgId() == -1) {
+        if (company == null || company.trim().equals("")) {
+          errors.put("nameLastError", "Last Name is required");
+          errors.put("lastcompanyError", "Last Name or Company Name is required");
+        }
+      } else {
         errors.put("nameLastError", "Last Name is required");
-        errors.put("lastcompanyError", "Last Name or Company Name is required");
       }
     }
 
