@@ -43,22 +43,22 @@
     </dhv:permission>
 --%>
     <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Account</a></strong>
+      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Account</a></strong>
     </td>
     <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Stock No</a></strong>
+      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Stock No</a></strong>
     </td>
     <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Year</a></strong>
+      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Year</a></strong>
     </td>
     <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Make</a></strong>
+      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Make</a></strong>
     </td>
     <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Model</a></strong>
+      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Model</a></strong>
     </td>
     <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Next Incomplete Ad</a></strong>
+      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Next Incomplete Ad</a></strong>
     </td>
   </tr>
 <%    
