@@ -267,6 +267,8 @@ determined user is ${USER}
     <replace file="${DEST_BIN}/notifier.xml"
              token="@FILELIBRARY@" value="${DEST_DOCROOT}/WEB-INF/fileLibrary"/>
     <replace file="${DEST_BIN}/notifier.xml"
+             token="@GKDRIVER@" value="${GKDRIVER}"/>
+    <replace file="${DEST_BIN}/notifier.xml"
              token="@GKHOST@" value="${GKHOST}"/>
     <replace file="${DEST_BIN}/notifier.xml"
              token="@GKUSER@" value="${GKUSER}"/>

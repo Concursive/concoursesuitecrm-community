@@ -1339,20 +1339,17 @@ public void setCompanyEnabled(boolean companyEnabled) {
     if (!isValid(db)) {
       return false;
     }
-
     StringBuffer sql = new StringBuffer();
 
     try {
-
       db.setAutoCommit(false);
-
       sql.append(
-          "INSERT INTO TICKET (org_id, problem, enteredby, modifiedby, pri_code, department_code, cat_code, scode ) " +
-          "VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ");
-
+          "INSERT INTO TICKET (org_id, contact_id, problem, enteredby, modifiedby, pri_code, department_code, cat_code, scode ) " +
+          "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,? ) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getOrgId());
+      pst.setInt(++i, this.getContactId());
       pst.setString(++i, this.getProblem());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
