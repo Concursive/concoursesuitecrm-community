@@ -17,36 +17,38 @@ import org.aspcfs.utils.web.*;
 /**
  *  Description of the Class
  *
- *@author     chris
- *@created    August 29, 2001
- *@version    $Id$
+ * @author     chris
+ * @created    August 29, 2001
+ * @version    $Id$
  */
 public final class Contacts extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-contacts-view"))) {
-      return ("PermissionError");
-    }
-
-    addModuleBean(context, "View Accounts", "Add Contact to Account");
     Exception errorMessage = null;
     Connection db = null;
 
     String orgId = context.getRequest().getParameter("orgId");
     Organization thisOrganization = null;
+    Contact thisContact = (Contact) context.getFormBean();
+    if (thisContact.getId() == -1) {
+      if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
+        return ("PermissionError");
+      }
+      addModuleBean(context, "View Accounts", "Add Contact to Account");
+    }
 
     try {
       db = this.getConnection(context);
       //prepare org
-      if(context.getRequest().getAttribute("OrgDetails") == null){
-       thisOrganization = new Organization(db, Integer.parseInt(orgId));
-       context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      if (context.getRequest().getAttribute("OrgDetails") == null) {
+        thisOrganization = new Organization(db, Integer.parseInt(orgId));
+        context.getRequest().setAttribute("OrgDetails", thisOrganization);
       }
       //prepare contact type list
       ContactTypeList ctl = new ContactTypeList();
@@ -73,8 +75,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandClone(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
@@ -111,20 +113,22 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
-      return ("PermissionError");
-    }
-
-    addModuleBean(context, "View Accounts", "Save Contact to Account");
     Exception errorMessage = null;
     boolean recordInserted = false;
     int resultCount = 0;
-
+    String permission = "accounts-accounts-contacts-add";
     Contact thisContact = (Contact) context.getFormBean();
+    if (thisContact.getId() >  0) {
+      permission = "accounts-accounts-contacts-edit";
+    }
+    if (!hasPermission(context, permission)) {
+      return ("PermissionError");
+    }
+    addModuleBean(context, "View Accounts", "Save Contact to Account");
     Organization thisOrganization = null;
     Connection db = null;
     try {
@@ -151,7 +155,7 @@ public final class Contacts extends CFSModule {
           thisContact.checkUserAccount(db);
           this.updateUserContact(db, context, thisContact.getUserId());
         }
-	thisOrganization = new Organization(db, thisContact.getOrgId());
+        thisOrganization = new Organization(db, thisContact.getOrgId());
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
       }
       if (!recordInserted && resultCount < 1) {
@@ -195,8 +199,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -262,9 +266,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-view")) {
@@ -302,9 +306,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-delete")) {
@@ -352,8 +356,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
@@ -385,9 +389,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
+   * @since
    */
 
   public String executeCommandView(ActionContext context) {

@@ -1,4 +1,4 @@
-	package org.aspcfs.modules.pipeline.actions;
+package org.aspcfs.modules.pipeline.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -32,19 +32,19 @@ import com.zeroio.webutils.*;
 /**
  *  Description of the Class
  *
- *@author     chris
- *@created    October 17, 2001
- *@version    $Id$
+ * @author     chris
+ * @created    October 17, 2001
+ * @version    $Id$
  */
 public final class Leads extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   *@param  y  Description of Parameter
-   *@param  m  Description of Parameter
-   *@param  d  Description of Parameter
-   *@return    Description of the Returned Value
+   * @param  y  Description of Parameter
+   * @param  m  Description of Parameter
+   * @param  d  Description of Parameter
+   * @return    Description of the Returned Value
    */
   public static java.util.Date createDate(int y, int m, int d) {
     GregorianCalendar calendar = new GregorianCalendar(y, m, d, 0, 0, 0);
@@ -55,22 +55,25 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandDashboard(context);
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
   public String executeCommandPrepare(ActionContext context) {
-    if (!hasPermission(context, "pipeline-opportunities-add")) {
-      return ("PermissionError");
-    }
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+
     Exception errorMessage = null;
     Connection db = null;
     String id = context.getRequest().getParameter("headerId");
@@ -82,25 +85,29 @@ public final class Leads extends CFSModule {
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
-    
+    if (id != null && !"-1".equals(id)) {
+      if (!hasPermission(context, "pipeline-opportunities-add")) {
+        return ("PermissionError");
+      }
+    }
     try {
       db = this.getConnection(context);
       //check if a header needs to be built.
-    if(id != null && !"-1".equals(id)){
-	//Build the container itemS	
+      if (id != null && !"-1".equals(id)) {
+        //Build the container itemS
         OpportunityHeader oppHeader = new OpportunityHeader(db, Integer.parseInt(id));
         context.getRequest().setAttribute("OpportunityHeader", oppHeader);
-    }
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     if (errorMessage == null) {
-      if("list".equals(context.getRequest().getParameter("source"))){
+      if ("list".equals(context.getRequest().getParameter("source"))) {
         addModuleBean(context, "View Opportunities", "Add Opportunity");
-      }else{
+      } else {
         addModuleBean(context, "Add Opportunity", "Add Opportunity");
       }
       return "PrepareOK";
@@ -109,52 +116,56 @@ public final class Leads extends CFSModule {
       return ("SystemError");
     }
   }
-    
-    
+
+
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandSaveComponent(ActionContext context) {
-    if (!hasPermission(context, "pipeline-opportunities-add")) {
-      return ("PermissionError");
-    }
     Exception errorMessage = null;
     boolean recordInserted = false;
     int resultCount = 0;
     OpportunityHeader header = null;
     String componentId = context.getRequest().getParameter("id");
-    
+    String permission = "pipeline-opportunities-add";
+
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+
     OpportunityComponent newComponent = (OpportunityComponent) context.getFormBean();
     newComponent.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newComponent.setEnteredBy(getUserId(context));
     newComponent.setModifiedBy(getUserId(context));
     String action = (newComponent.getId() > 0 ? "modify" : "insert");
     Connection db = null;
+    if ("modify".equals(action)) {
+      permission = "pipeline-opportunities-edit";
+    }
+    if (!hasPermission(context, permission)) {
+      return ("PermissionError");
+    }
     try {
       db = this.getConnection(context);
-      if(newComponent.getId()  > 0 ){
-	      OpportunityComponent oldComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
-	      if (!hasViewpointAuthority(db, context, "pipeline", oldComponent.getOwner(), userId)) {
-		return "PermissionError";
-	      }
-	      newComponent.setModifiedBy(getUserId(context));
-	      resultCount = newComponent.update(db, context);
-	      if (resultCount == 1) {
-		newComponent.queryRecord(db, newComponent.getId());
-	      }
-      }else{
-      recordInserted = newComponent.insert(db, context);
+      if (newComponent.getId() > 0) {
+        OpportunityComponent oldComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
+        if (!hasViewpointAuthority(db, context, "pipeline", oldComponent.getOwner(), userId)) {
+          return "PermissionError";
+        }
+        newComponent.setModifiedBy(getUserId(context));
+        resultCount = newComponent.update(db, context);
+        if (resultCount == 1) {
+          newComponent.queryRecord(db, newComponent.getId());
+        }
+      } else {
+        recordInserted = newComponent.insert(db, context);
       }
       if (recordInserted) {
         addRecentItem(context, newComponent);
-      }else if ("modify".equals(action) && resultCount == -1) {
+      } else if ("modify".equals(action) && resultCount == -1) {
         UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
         User thisRec = thisUser.getUserRecord();
         UserList shortChildList = thisRec.getShortChildList();
@@ -174,7 +185,7 @@ public final class Leads extends CFSModule {
         context.getRequest().setAttribute("TypeSelect", typeSelect);
         context.getRequest().setAttribute("TypeList", newComponent.getTypeList());
       }
-      
+
       context.getRequest().setAttribute("ComponentDetails", newComponent);
     } catch (Exception e) {
       errorMessage = e;
@@ -182,37 +193,37 @@ public final class Leads extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      if ("insert".equals(action)){
-      if (recordInserted) {
-        return (executeCommandDetailsOpp(context));
-      }
+      if ("insert".equals(action)) {
+        if (recordInserted) {
+          return (executeCommandDetailsOpp(context));
+        }
         return (executeCommandPrepare(context));
-      }else{
-	      if (resultCount == -1) {
-        processErrors(context, newComponent.getErrors());
-        return (executeCommandPrepare(context));
-      } else if (resultCount == 1) {
-        if ("list".equals(context.getRequest().getParameter("return"))) {
-          return (executeCommandViewOpp(context));
-        } else if ("details".equals(context.getRequest().getParameter("return"))) {
-          return (executeCommandDetailsComponent(context));
-        } else if (context.getRequest().getParameter("popup") != null) {
-          return "PopupCloseOK";
-        } 
+      } else {
+        if (resultCount == -1) {
+          processErrors(context, newComponent.getErrors());
+          return (executeCommandPrepare(context));
+        } else if (resultCount == 1) {
+          if ("list".equals(context.getRequest().getParameter("return"))) {
+            return (executeCommandViewOpp(context));
+          } else if ("details".equals(context.getRequest().getParameter("return"))) {
+            return (executeCommandDetailsComponent(context));
+          } else if (context.getRequest().getParameter("popup") != null) {
+            return "PopupCloseOK";
+          }
           return ("DetailsComponentOK");
+        }
       }
-      }
-    } 
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    }
+    context.getRequest().setAttribute("Error", errorMessage);
+    return ("SystemError");
   }
 
 
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-add")) {
@@ -223,7 +234,7 @@ public final class Leads extends CFSModule {
     OpportunityBean newOpp = (OpportunityBean) context.getRequest().getAttribute("OppDetails");
     String association = context.getRequest().getParameter("opp_type");
     Contact linkedContact = null;
-    
+
     //set types
     newOpp.getComponent().setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOpp.getComponent().setEnteredBy(getUserId(context));
@@ -252,7 +263,7 @@ public final class Leads extends CFSModule {
         LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
         context.getRequest().setAttribute("TypeSelect", typeSelect);
         context.getRequest().setAttribute("TypeList", newOpp.getComponent().getTypeList());
-        if(newOpp.getHeader().getAccountLink() > -1){
+        if (newOpp.getHeader().getAccountLink() > -1) {
           Organization thisOrg = new Organization(db, newOpp.getHeader().getAccountLink());
           newOpp.getHeader().setAccountName(thisOrg.getName());
         }
@@ -280,8 +291,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDetailsOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
@@ -290,12 +301,11 @@ public final class Leads extends CFSModule {
     Exception errorMessage = null;
     int headerId = -1;
     addModuleBean(context, "View Opportunities", "View Opportunity Details");
-    
+
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
-    
+
     if (context.getRequest().getParameter("headerId") != null) {
       headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
     } else {
@@ -317,7 +327,7 @@ public final class Leads extends CFSModule {
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, headerId);
       context.getRequest().setAttribute("HeaderDetails", thisHeader);
-      
+
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
       componentList.setOwnerIdRange(this.getUserRange(context, userId));
@@ -343,8 +353,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandSearchOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
@@ -384,8 +394,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -430,8 +440,8 @@ public final class Leads extends CFSModule {
    *  Action method to generate dashboard graphs, opportunities, and hierarchy
    *  gross pipeline.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDashboard(ActionContext context) {
     if (!hasPermission(context, "pipeline-dashboard-view")) {
@@ -464,12 +474,12 @@ public final class Leads extends CFSModule {
     }
 
     //Determine the user whose data is being shown, by default it's the current user
-    if(overrideId < 0){
-    if (context.getSession().getAttribute("leadsoverride") != null) {
-      overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("leadsoverride"), -1);
-    } else {
-      overrideId = userId;
-    }
+    if (overrideId < 0) {
+      if (context.getSession().getAttribute("leadsoverride") != null) {
+        overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("leadsoverride"), -1);
+      } else {
+        overrideId = userId;
+      }
     }
     String checkFileName = null;
     Connection db = null;
@@ -496,7 +506,7 @@ public final class Leads extends CFSModule {
       //Add Viewpoints
       UserList vpUserList = this.addViewpoints(db, context, "pipeline");
       viewpointInfo.setVpUserName(vpUserList);
-      
+
       //Check that the user hasAuthority for this oid
       if (hasViewpointAuthority(db, context, "pipeline", overrideId, userId)) {
         idToUse = overrideId;
@@ -507,7 +517,7 @@ public final class Leads extends CFSModule {
       shortChildList = thisRec.getShortChildList();
 
       //Track the id in the request and the session
-        if (context.getRequest().getParameter("oid") != null && !"true".equals((String)context.getRequest().getParameter("reset"))) {
+      if (context.getRequest().getParameter("oid") != null && !"true".equals((String) context.getRequest().getParameter("reset"))) {
         context.getRequest().setAttribute("override", String.valueOf(idToUse));
         context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
         context.getRequest().setAttribute("previousId", String.valueOf(thisRec.getManagerId()));
@@ -678,8 +688,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDeleteOpp(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
@@ -689,7 +699,7 @@ public final class Leads extends CFSModule {
     //get viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
     OpportunityHeader newOpp = null;
@@ -728,18 +738,18 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDeleteComponent(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-delete")) {
       return ("PermissionError");
     }
-    
+
     //Get viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
     OpportunityComponent component = null;
@@ -781,8 +791,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandConfirmComponentDelete(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-delete")) {
@@ -792,7 +802,7 @@ public final class Leads extends CFSModule {
     OpportunityComponent thisComponent = null;
     HtmlDialog htmlDialog = new HtmlDialog();
     String id = context.getRequest().getParameter("id");
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -819,8 +829,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandModifyComponent(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
@@ -836,7 +846,7 @@ public final class Leads extends CFSModule {
     addModuleBean(context, "View Opportunities", "Opportunities");
 
     String componentId = context.getRequest().getParameter("id");
-    
+
     try {
       db = this.getConnection(context);
       component = new OpportunityComponent(db, componentId);
@@ -869,14 +879,14 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandModifyOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
-    
+
     Exception errorMessage = null;
     addModuleBean(context, "View Opportunities", "Modify Opportunity");
     int headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
@@ -906,8 +916,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandViewOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
@@ -919,17 +929,17 @@ public final class Leads extends CFSModule {
     }
     PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
     oppListInfo.setLink("Leads.do?command=ViewOpp");
-    
+
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int vpUserId = viewpointInfo.getVpUserId(this.getUserId(context));
     int userId = this.getUserId(context);
-    if(vpUserId != -1 && vpUserId != userId){
+    if (vpUserId != -1 && vpUserId != userId) {
       userId = vpUserId;
     }
     Connection db = null;
     OpportunityList oppList = new OpportunityList();
     try {
-      
+
       db = this.getConnection(context);
       LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
       typeSelect.addItem(0, "All Types");
@@ -969,8 +979,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandGenerateForm(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-add")) {
@@ -984,8 +994,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-delete")) {
@@ -994,7 +1004,7 @@ public final class Leads extends CFSModule {
     //Get viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -1045,8 +1055,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandDownloadCSVReport(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-view")) {
@@ -1107,8 +1117,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-view")) {
@@ -1143,8 +1153,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandExportReport(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-add")) {
@@ -1204,18 +1214,18 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandReports(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-view")) {
       return ("PermissionError");
     }
-    
+
     //Get viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+
     Exception errorMessage = null;
     Connection db = null;
 
@@ -1268,8 +1278,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
+   * @param  context  Description of Parameter
+   * @return          Description of the Returned Value
    */
   public String executeCommandUpdateOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
@@ -1278,7 +1288,7 @@ public final class Leads extends CFSModule {
     //Get viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int userId = viewpointInfo.getVpUserId(this.getUserId(context));
-    
+
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -1325,8 +1335,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDetailsComponent(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
@@ -1371,10 +1381,10 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  pertainsTo    Description of Parameter
-   *@param  oppList       Description of Parameter
-   *@param  usersToGraph  Description of Parameter
-   *@return               Description of the Returned Value
+   * @param  pertainsTo    Description of Parameter
+   * @param  oppList       Description of Parameter
+   * @param  usersToGraph  Description of Parameter
+   * @return               Description of the Returned Value
    */
   private UserList prepareLines(User pertainsTo, OpportunityList oppList, UserList usersToGraph) {
     java.util.Date myDate = null;
@@ -1498,9 +1508,9 @@ public final class Leads extends CFSModule {
    *  is pulled out by date range and put in an XYSeries, and then the XYSeries
    *  is added to an XYSeriesCollection.
    *
-   *@param  linesToDraw  Description of Parameter
-   *@param  whichGraph   Description of Parameter
-   *@return              Description of the Returned Value
+   * @param  linesToDraw  Description of Parameter
+   * @param  whichGraph   Description of Parameter
+   * @return              Description of the Returned Value
    */
   private XYSeriesCollection createCategoryDataset(UserList linesToDraw, String whichGraph) {
     XYSeriesCollection xyDataset = new XYSeriesCollection();
@@ -1543,9 +1553,9 @@ public final class Leads extends CFSModule {
    *  beginning of this month are stored under a new single User object (hmph)
    *  for drawing a line on the graph to show cumulative data.
    *
-   *@param  primaryNode   Description of Parameter
-   *@param  currentLines  Description of Parameter
-   *@return               Description of the Returned Value
+   * @param  primaryNode   Description of Parameter
+   * @param  currentLines  Description of Parameter
+   * @return               Description of the Returned Value
    */
   private UserList calculateLine(User primaryNode, UserList currentLines) {
     if (currentLines.size() == 0) {
@@ -1573,9 +1583,9 @@ public final class Leads extends CFSModule {
    *  together for each user and stored under a new single User object (hmph)
    *  for drawing a line on the graph.
    *
-   *@param  toRollUp      Description of Parameter
-   *@param  currentLines  Description of Parameter
-   *@return               Description of the Returned Value
+   * @param  toRollUp      Description of Parameter
+   * @param  currentLines  Description of Parameter
+   * @return               Description of the Returned Value
    */
   private UserList calculateLine(UserList toRollUp, UserList currentLines) {
     if (toRollUp.size() == 0) {

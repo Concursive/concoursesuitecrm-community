@@ -196,9 +196,6 @@ public final class Opportunities extends CFSModule {
    * @return          Description of the Returned Value
    */
   public String executeCommandPrepare(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-opportunities-add")) {
-      return ("PermissionError");
-    }
     Exception errorMessage = null;
     String orgId = context.getRequest().getParameter("orgId");
     String headerId = context.getRequest().getParameter("headerId");
@@ -215,6 +212,12 @@ public final class Opportunities extends CFSModule {
       userList.setIncludeMe(true);
       userList.setExcludeDisabledIfUnselected(true);
       context.getRequest().setAttribute("UserList", userList);
+    }
+    if (headerId != null && !"-1".equals(headerId)) {
+      if (!hasPermission(context, "accounts-accounts-opportunities-add")) {
+        return ("PermissionError");
+      }
+      addModuleBean(context, "View Accounts", "Add Opportunity");
     }
     try {
       db = this.getConnection(context);
@@ -233,9 +236,6 @@ public final class Opportunities extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      if (headerId == null) {
-        addModuleBean(context, "View Accounts", "Add Opportunity");
-      }
       return ("PrepareOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
