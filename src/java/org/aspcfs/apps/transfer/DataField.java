@@ -32,7 +32,7 @@ public class DataField {
    */
   public DataField(String thisName, String thisValue) {
     this.name = thisName;
-    this.value = thisValue;
+    this.setValue(thisValue);
   }
 
 
@@ -46,7 +46,7 @@ public class DataField {
    */
   public DataField(String thisName, String thisValue, String thisValueLookup, String thisAlias) {
     this.name = thisName;
-    this.value = thisValue;
+    this.setValue(thisValue);
     this.valueLookup = thisValueLookup;
     this.alias = thisAlias;
   }
@@ -78,7 +78,11 @@ public class DataField {
    *@param  tmp  The new value value
    */
   public void setValue(String tmp) {
-    this.value = tmp;
+    if (tmp != null) {
+      this.value = tmp.trim();
+    } else {
+      this.value = "";
+    }
   }
 
 
