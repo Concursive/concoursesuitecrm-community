@@ -202,6 +202,11 @@ public class ObjectHookManager {
       context.setAttribute("ConnectionElement", ce);
       context.setAttribute("ClientSSLKeystore", servletContext.getAttribute("ClientSSLKeystore"));
       context.setAttribute("ClientSSLKeystorePassword", servletContext.getAttribute("ClientSSLKeystorePassword"));
+      ApplicationPrefs prefs = (ApplicationPrefs) servletContext.getAttribute("applicationPrefs");
+      if (prefs != null) {
+        context.setAttribute("MAILSERVER", prefs.get("MAILSERVER"));
+        context.setAttribute("EMAILADDRESS", prefs.get("EMAILADDRESS"));
+      }
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ObjectHookList-> Hook thread start for process: " + processName);
       }
