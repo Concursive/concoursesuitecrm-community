@@ -245,6 +245,20 @@ Client #1 Ends Synchronization
     <nextAnchor>2002-5-2 20:12:26</nextAnchor>
   </authentication>
   
+  <transaction id="0">
+    <meta>
+      <property>id</property>
+      <property>name</property>
+      <property>orderId</property>
+      <property>syncItem</property>
+      <property>createStatement</property>
+    </meta>
+    <tableList action="select">
+      <systemId>2</systemId>
+      <buildCreateStatementsOnly>true</buildCreateStatementsOnly>
+    </tableList>
+  </transaction>
+  
   <transaction id="1">
     <meta>
       <property>id</property>
