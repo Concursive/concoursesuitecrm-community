@@ -9,6 +9,7 @@ INSERT INTO sync_system (application_name) VALUES ('Vport Telemarketing');
 INSERT INTO sync_system (application_name) VALUES ('Land Mark: Auto Guide PocketPC');
 INSERT INTO sync_system (application_name) VALUES ('Street Smart Speakers: Web Portal');
 INSERT INTO sync_system (application_name) VALUES ('CFSHttpXMLWriter');
+INSERT INTO sync_system (application_name) VALUES ('Fluency');
 
 /* VPORT */
 
@@ -852,4 +853,18 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaignListGroups', 'com.darkhorseventures.cfsbase.CampaignListGroup');
+ 
+/* Fluency */
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (5, 'ticket', 'com.darkhorseventures.cfsbase.Ticket');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (5, 'ticketCategory', 'com.darkhorseventures.cfsbase.TicketCategory');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (5, 'ticketCategoryList', 'com.darkhorseventures.cfsbase.TicketCategoryList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
+ VALUES (5, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient', 2);
+ 
  
