@@ -47,7 +47,7 @@ Message
       Preview
     </td>
     <td width="100%" valign="center">
-      <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 100%;"</dhv:browser> onblur="return false" src="/CampaignManagerMessage.do?command=PreviewMessage&id=<%= Campaign.getMessageId() %>">
+      <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 200;"</dhv:browser> onblur="return false" src="/CampaignManagerMessage.do?command=PreviewMessage&id=<%= Campaign.getMessageId() %>">
         <%= Message.getMessageText() %>
       </iframe>
     </td>
