@@ -578,9 +578,9 @@
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
       <property lookup="searchCriteriaList" field="id"/>
-      <property field="field"/>
+      <property lookup="searchFieldElement" field="field"/>
       <property field="operator"/>
-      <property field="operatorid"/>
+      <property lookup="fieldTypes" field="operatorid"/>
       <property field="value"/>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">

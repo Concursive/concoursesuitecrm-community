@@ -20,9 +20,9 @@ CREATE TABLE saved_criterialist (
 
 CREATE TABLE saved_criteriaelement (
   id INTEGER NOT NULL REFERENCES saved_criterialist(id),
-  field INTEGER NOT NULL DEFAULT -1,
+  field INTEGER NOT NULL references search_fields(id),
   operator VARCHAR(50) NOT NULL,
-  operatorid INTEGER NOT NULL DEFAULT -1,
+  operatorid INTEGER NOT NULL references field_types(id)
   value VARCHAR(80) NOT NULL
 );
 
