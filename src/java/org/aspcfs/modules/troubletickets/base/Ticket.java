@@ -1592,27 +1592,26 @@ public void setCompanyEnabled(boolean companyEnabled) {
       db.setAutoCommit(false);
       i = this.update(db, false);
 
-      //if (this.getNewticketlogentry() != null && !(this.getNewticketlogentry().equals(""))) {
-      TicketLog thisEntry = new TicketLog();
-      thisEntry.setEnteredBy(this.getModifiedBy());
-      thisEntry.setDepartmentCode(this.getDepartmentCode());
-      thisEntry.setAssignedTo(this.getAssignedTo());
-
+      //insert a new entry into the ticket log only if there is a comment entered
+      //this should only happen upon initial ticket entry.
       if (this.getComment() != null && !(this.getComment().equals(""))) {
-        thisEntry.setEntryText(this.getComment());
+              TicketLog thisEntry = new TicketLog();
+              thisEntry.setEnteredBy(this.getModifiedBy());
+              thisEntry.setDepartmentCode(this.getDepartmentCode());
+              thisEntry.setAssignedTo(this.getAssignedTo());
+              thisEntry.setEntryText(this.getComment());
+        
+              thisEntry.setTicketId(this.getId());
+              thisEntry.setPriorityCode(this.getPriorityCode());
+              thisEntry.setSeverityCode(this.getSeverityCode());
+        
+              if (this.getCloseIt() == true) {
+                thisEntry.setClosed(true);
+              }
+        
+              history.addElement(thisEntry);
       }
-
-      thisEntry.setTicketId(this.getId());
-      thisEntry.setPriorityCode(this.getPriorityCode());
-      thisEntry.setSeverityCode(this.getSeverityCode());
-
-      if (this.getCloseIt() == true) {
-        thisEntry.setClosed(true);
-      }
-
-      history.addElement(thisEntry);
-      //}
-
+      
       Iterator hist = history.iterator();
       while (hist.hasNext()) {
         TicketLog thisLog = (TicketLog) hist.next();
