@@ -23,6 +23,9 @@
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression><![CDATA["/home/ananth/source/cfs2/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
+  <parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[SELECT
 o.org_id,o.name,o.account_number,o.employees,o.ticker_symbol,
 o.owner,o.contract_end,o.namelast,o.namefirst,o.namemiddle,o.enabled,
@@ -31,7 +34,7 @@ FROM organization o
 LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id)
 WHERE o.org_id > 0
 AND o.owner = $P{userid}
-AND o.enabled = true]]></queryString>
+AND o.enabled = $P{TRUE}]]></queryString>
 	<field name="name" class="java.lang.String"/>
 	<field name="account_number" class="java.lang.String"/>
 	<field name="namelast" class="java.lang.String"/>

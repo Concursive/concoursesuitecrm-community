@@ -36,7 +36,7 @@
 		<defaultValueExpression><![CDATA["AND t.completedate IS NULL"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT t.task_id as task_id, 
-t.description as desc, 
+t.description as descri, 
 t.duedate as duedate,
 tt.ticket_id AS ticketid,
 cc.namefirst AS ofname,
@@ -60,7 +60,7 @@ AND t.owner IN ($P!{userid_range})
 $P!{boolean_completed_where}
 ORDER BY t.duedate, priority;]]></queryString>
 	<field name="task_id" class="java.lang.Integer"/>
-	<field name="desc" class="java.lang.String"/>
+	<field name="descri" class="java.lang.String"/>
 	<field name="duedate" class="java.sql.Timestamp"/>
 	<field name="complete" class="java.sql.Timestamp"/>
 	<field name="ticketid" class="java.lang.Integer"/>
@@ -380,7 +380,7 @@ ORDER BY t.duedate, priority;]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{desc}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{descri}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"

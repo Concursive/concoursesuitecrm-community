@@ -29,7 +29,12 @@
 		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT
-o.*,
+o.org_id AS org_id, 
+o.name AS name,
+o.account_number AS account_number,
+o.entered AS entered,
+o.owner AS owner,
+o.contract_end AS contract_end,
 ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst,
 i.description as industry_name, lat.description as type_desc  
 FROM organization o
@@ -42,16 +47,16 @@ AND o.entered >= $P{date_start}
 AND o.entered < $P{date_end}
 AND o.owner = $P{userid}
 ORDER BY o.entered, lat.level]]></queryString>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="name" class="java.lang.String"/>
 	<field name="account_number" class="java.lang.String"/>
+	<field name="entered" class="java.util.Date"/>
 	<field name="owner" class="java.lang.Integer"/>
 	<field name="contract_end" class="java.util.Date"/>
-	<field name="industry_name" class="java.lang.String"/>
 	<field name="o_namelast" class="java.lang.String"/>
 	<field name="o_namefirst" class="java.lang.String"/>
-	<field name="entered" class="java.util.Date"/>
-	<field name="name" class="java.lang.String"/>
+	<field name="industry_name" class="java.lang.String"/>
 	<field name="type_desc" class="java.lang.String"/>
-	<field name="org_id" class="java.lang.Integer"/>
 	<variable name="acct_type" class="java.lang.String" resetType="Group" resetGroup="name" calculation="Nothing">
 		<variableExpression><![CDATA[$V{acct_type} != null ?
 $V{acct_type} + ($V{acct_type}.length() > 0 ? ", " : "") + ($F{type_desc} != null ? $F{type_desc} : "") :

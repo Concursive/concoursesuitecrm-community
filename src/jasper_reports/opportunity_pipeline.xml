@@ -56,15 +56,16 @@
 x.description AS header_description, 
 x.acctlink AS header_acctlink, 
 x.contactlink AS header_contactlink, 
-x.entered AS header_entered, 
-x.enteredby AS header_enteredby, 
-x.modified AS header_modified, 
-x.modifiedby AS header_modifiedby,
-org.name AS acct_name, org.enabled AS accountenabled,
+org.name AS acct_name, 
 ct.namelast AS last_name, ct.namefirst AS first_name,
-ct.company AS ctcompany,
 ow.namefirst AS owner_first_name, ow.namelast AS owner_last_name,
-oc.*, y.description AS stagename
+oc.description AS description, 
+oc.terms AS terms,
+oc.commission AS commission,
+oc.guessvalue AS guessvalue,
+oc.closeprob AS closeprob,
+oc.closedate AS closedate,
+y.description AS stagename
 FROM opportunity_header x
 LEFT JOIN opportunity_component oc ON (x.opp_id = oc.opp_id)
 LEFT JOIN organization org ON (x.acctlink = org.org_id)
@@ -83,22 +84,22 @@ ORDER BY y.level,
 org.name,
 ct.namelast, ct.namefirst,
 x.description, oc.closedate]]></queryString>
-	<field name="stagename" class="java.lang.String"/>
+	<field name="header_opp_id" class="java.lang.String"/>
+	<field name="header_description" class="java.lang.String"/>
+	<field name="header_acctlink" class="java.lang.Integer"/>
+	<field name="header_contactlink" class="java.lang.Integer"/>
+	<field name="acct_name" class="java.lang.String"/>
 	<field name="last_name" class="java.lang.String"/>
 	<field name="first_name" class="java.lang.String"/>
-	<field name="header_contactlink" class="java.lang.Integer"/>
-	<field name="header_description" class="java.lang.String"/>
-	<field name="acct_name" class="java.lang.String"/>
-	<field name="header_acctlink" class="java.lang.Integer"/>
+	<field name="owner_first_name" class="java.lang.String"/>
+	<field name="owner_last_name" class="java.lang.String"/>
 	<field name="description" class="java.lang.String"/>
-	<field name="header_opp_id" class="java.lang.String"/>
 	<field name="terms" class="java.lang.Double"/>
 	<field name="commission" class="java.lang.Double"/>
 	<field name="guessvalue" class="java.lang.Double"/>
 	<field name="closeprob" class="java.lang.Double"/>
-	<field name="owner_first_name" class="java.lang.String"/>
-	<field name="owner_last_name" class="java.lang.String"/>
 	<field name="closedate" class="java.util.Date"/>
+	<field name="stagename" class="java.lang.String"/>
 	<variable name="groupcount" class="java.lang.Integer" resetType="Group" resetGroup="stagename" calculation="Nothing">
 		<variableExpression><![CDATA[($V{groupcount} != null ? 
 new Integer( ($V{groupcount}.intValue() + 1) ) :

@@ -33,8 +33,14 @@
 		<parameterDescription><![CDATA[AND t.department_code = $P{lookup_department}]]></parameterDescription>
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<queryString><![CDATA[SELECT t.*, 
-o.name AS orgname, o.enabled AS orgenabled, 
+	<queryString><![CDATA[SELECT 
+	t.ticketid AS ticketid,
+t.problem AS problem,
+t.entered AS entered,
+t.enteredby AS enteredby,
+t.closed AS closed,
+t.department_code AS department_code, 
+o.name AS orgname,
 ld.description AS dept, 
 tp.description AS ticpri,
 ts.description AS ticsev,
@@ -58,6 +64,8 @@ ORDER BY dept,t.entered]]></queryString>
 	<field name="ticketid" class="java.lang.Integer"/>
 	<field name="problem" class="java.lang.String"/>
 	<field name="entered" class="java.sql.Timestamp"/>
+	<field name="enteredby" class="java.lang.Integer"/>
+	<field name="closed" class="java.sql.Timestamp"/>
 	<field name="department_code" class="java.lang.Integer"/>
 	<field name="orgname" class="java.lang.String"/>
 	<field name="dept" class="java.lang.String"/>
@@ -65,8 +73,6 @@ ORDER BY dept,t.entered]]></queryString>
 	<field name="ticsev" class="java.lang.String"/>
 	<field name="catname" class="java.lang.String"/>
 	<field name="sourcename" class="java.lang.String"/>
-	<field name="closed" class="java.sql.Timestamp"/>
-	<field name="enteredby" class="java.lang.Integer"/>
 	<field name="fname" class="java.lang.String"/>
 	<field name="lname" class="java.lang.String"/>
 	<variable name="count" class="java.lang.Integer" resetType="Group" resetGroup="department" calculation="Nothing">

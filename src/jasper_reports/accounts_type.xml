@@ -29,7 +29,10 @@
 		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT
-o.*, o.entered as org_entered,
+o.name AS name,
+o.account_number AS account_number,
+o.contract_end AS contract_end,
+o.entered as org_entered,
 ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst,
 i.description as industry_name, lat.description as type_desc  
 FROM organization o
@@ -44,10 +47,10 @@ ORDER BY type_desc, o.name]]></queryString>
 	<field name="name" class="java.lang.String"/>
 	<field name="account_number" class="java.lang.String"/>
 	<field name="contract_end" class="java.util.Date"/>
-	<field name="industry_name" class="java.lang.String"/>
+	<field name="org_entered" class="java.util.Date"/>
 	<field name="o_namelast" class="java.lang.String"/>
 	<field name="o_namefirst" class="java.lang.String"/>
-	<field name="org_entered" class="java.util.Date"/>
+	<field name="industry_name" class="java.lang.String"/>
 	<field name="type_desc" class="java.lang.String"/>
 	<variable name="namecount" class="java.lang.Integer" resetType="Group" resetGroup="type_desc" calculation="Nothing">
 		<variableExpression><![CDATA[($V{namecount} != null ? 
