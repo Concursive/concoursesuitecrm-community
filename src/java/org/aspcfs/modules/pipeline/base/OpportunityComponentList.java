@@ -479,10 +479,11 @@ public class OpportunityComponentList extends Vector {
         pst.close();
       }
 
-      pagedListInfo.setDefaultSort("oc.description", null);
+      //pagedListInfo.setDefaultSort("oc.description", null);
+      pagedListInfo.setDefaultSort("oc.closed", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY oc.entered");
+      sqlOrder.append("ORDER BY oc.closed");
     }
 
     //Need to build a base SQL statement for returning records
