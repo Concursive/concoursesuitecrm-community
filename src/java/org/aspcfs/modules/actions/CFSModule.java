@@ -49,13 +49,29 @@ public class CFSModule {
    *@since            1.1
    */
   protected PagedListInfo getPagedListInfo(ActionContext context, String viewName) {
+    return getPagedListInfo(context, viewName, true);
+  }
+
+
+  /**
+   *  Retrieves the specified PagedList object and creates it if it does not exist<br>
+   *  Optionally sets parameters from the request based on "setParams" parameter
+   *
+   *@param  context    Description of the Parameter
+   *@param  viewName   Description of the Parameter
+   *@param  setParams  Description of the Parameter
+   *@return            The pagedListInfo value
+   */
+  protected PagedListInfo getPagedListInfo(ActionContext context, String viewName, boolean setParams) {
     PagedListInfo tmpInfo = (PagedListInfo) context.getSession().getAttribute(viewName);
     if (tmpInfo == null) {
       tmpInfo = new PagedListInfo();
       tmpInfo.setId(viewName);
       context.getSession().setAttribute(viewName, tmpInfo);
     }
-    tmpInfo.setParameters(context);
+    if (setParams) {
+      tmpInfo.setParameters(context);
+    }
     return tmpInfo;
   }
 
@@ -916,22 +932,22 @@ public class CFSModule {
       Method method = thisElt.getClass().getMethod("getAccessTypeString", null);
       Object result = method.invoke(thisElt, null);
       int accessType = Integer.parseInt((String) result);
-      
+
       //check if record is public
       if (accessList.getCode(AccessType.PUBLIC) == accessType) {
         return true;
       }
-      
+
       //get the owner
       method = thisElt.getClass().getMethod("getOwnerString", null);
       result = method.invoke(thisElt, null);
       int owner = Integer.parseInt((String) result);
-      
+
       //check if user has authority by virtue of the hierarchy
-      if(!hasAuthority(context, owner)){
+      if (!hasAuthority(context, owner)) {
         return false;
       }
-      
+
       //make sure that it is not personal although record is owned by someone in the hierarchy
       if (accessList.getCode(AccessType.PERSONAL) == accessType && owner != this.getUserId(context)) {
         return false;
