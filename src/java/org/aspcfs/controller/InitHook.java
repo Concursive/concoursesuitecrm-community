@@ -8,7 +8,7 @@ import org.aspcfs.utils.web.CustomFormList;
 import java.sql.*;
 import java.util.Hashtable;
 import java.util.Properties;
-import org.jcrontab.Crontab;
+import org.jcrontab.*;
 import org.aspcfs.utils.StringUtils;
 
 /**
@@ -78,11 +78,9 @@ public class InitHook implements ControllerInitHook {
     if ("true".equals(config.getInitParameter("CRON.ENABLED"))) {
       try {
         System.out.println("InitHook-> Starting CRON");
-        Class cl = Class.forName("org.aspcfs.apps.notifier.Notifier");
         Crontab crontab = Crontab.getInstance();
         Properties jcronProperties = new Properties();
-        //jcron settings
-        jcronProperties.setProperty("org.jcrontab.Crontab.refreshFrequency", "1");
+        jcronProperties.setProperty("org.jcrontab.Crontab.refreshFrequency", "3");
 /*
         //jcron datasource for cron entries
         jcronProperties.setProperty("org.jcrontab.data.datasource", "org.jcrontab.data.FileSource");
