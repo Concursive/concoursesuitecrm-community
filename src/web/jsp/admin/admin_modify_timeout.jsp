@@ -4,6 +4,7 @@
 <a href="Admin.do?command=ListGlobalParams"> Global Parameters</a> >
 Modify Timeout<br>
 <hr color="#BFBFBB" noshade>
+The session timeout is the time in which a user will automatically be logged out if the specified period of inactivity is reached.<br>
 &nbsp;<br>
 <form name="modifyTimeout" action="Admin.do?command=UpdateTimeout" method="post"> 
 <dhv:permission name="admin-sysconfig-view">
@@ -23,9 +24,9 @@ Modify Timeout<br>
       <td align="left">
          <select size="1" name="timeout">
           <% for(int i = 0 ; i < timeouts.length; i++){ %>
-            <option value="<%=timeouts[i]%>" <%=currentTimeout.equalsIgnoreCase(timeouts[i])?" selected":""%>><%=timeouts[i]%></option>
+            <option value="<%=timeouts[i]%>" <%=currentTimeout.equals(timeouts[i])?" selected":""%>><%=timeouts[i]%></option>
           <%}%>
-         </select> (mts)
+         </select> minutes
       </td>
     </tr>
   </table>

@@ -4,7 +4,6 @@
 <a href="Admin.do">Setup</a> >
 Global Parameters<br>
 <hr color="#BFBFBB" noshade>
-&nbsp;<br>
 
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -16,7 +15,7 @@ Global Parameters<br>
         <strong>Parameter</strong>
       </td>
       <td align="left">
-        <strong>Value</strong>
+        <strong>Current Value</strong>
       </td>
     </tr>
     <tr class="containerBody">
@@ -27,7 +26,7 @@ Global Parameters<br>
          Session Timeout
       </td>
       <td align="left">
-         <%= Timeout %>(mts)
+         <%= Timeout %> minutes
       </td>
     </tr>
   </table>
