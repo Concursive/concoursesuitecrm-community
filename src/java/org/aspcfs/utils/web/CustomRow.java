@@ -352,9 +352,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
   public String getCoreAttributes() {
     StringBuffer tmpString = new StringBuffer();
     tmpString.append(id != null ? " id=\"" + id + "\" " : "");
-    tmpString.append(title != null ? " title = \"" + title + "\" " : "");
-    tmpString.append(style != null ? " style = \"" + style + "\" " : "");
-    tmpString.append(elementClass != null ? " class = \"" + elementClass + "\" " : "");
+    tmpString.append(title != null ? " title=\"" + title + "\" " : "");
+    tmpString.append(style != null ? " style=\"" + style + "\" " : "");
+    tmpString.append(elementClass != null ? " class=\"" + elementClass + "\" " : "");
     return tmpString.toString();
   }
 
@@ -367,8 +367,8 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
   public String getCustomAttributes() {
     StringBuffer tmpString = new StringBuffer();
     tmpString.append(align != null ? " align=\"" + align + "\" " : "");
-    tmpString.append(valign != null ? " valign = \"" + valign + "\" " : "");
-    tmpString.append(bgColor != null ? " bgcolor = \"" + bgColor + "\" " : "");
+    tmpString.append(valign != null ? " valign=\"" + valign + "\" " : "");
+    tmpString.append(bgColor != null ? " bgcolor=\"" + bgColor + "\" " : "");
     return tmpString.toString();
   }
 
@@ -384,6 +384,9 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
     if (nnm != null) {
       for (int i = 0; i < nnm.getLength(); i++) {
         ObjectUtils.setParam(this, nnm.item(i).getNodeName().trim(), nnm.item(i).getNodeValue().trim());
+      }
+      if (row.getAttribute("class") != null && !"".equals(row.getAttribute("class"))) {
+        this.elementClass = row.getAttribute("class");
       }
     }
   }
