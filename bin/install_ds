@@ -68,8 +68,8 @@ su - ${CFSDBA} -c "createdb ${DB}" >>${LOG} 2>&1
 if [ -n "`grep -i ERROR ${LOG}`" ] ; then echo "Database error"; exit 2; fi
 
 (
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cfs2.sql " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cdb.sql "
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cfs2.sql " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_opportunity.sql "  
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_tms.sql " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_custom_field.sql "
