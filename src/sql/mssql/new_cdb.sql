@@ -579,7 +579,8 @@ CREATE TABLE cfsinbox_message (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   type int not null default -1,
-  modifiedby INT NOT NULL
+  modifiedby INT NOT NULL,
+  delete_flag BIT default 0
 );
 
 CREATE TABLE cfsinbox_messagelink (
