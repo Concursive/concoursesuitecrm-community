@@ -88,9 +88,13 @@ ALTER TABLE projects ADD COLUMN documents_label VARCHAR(50) NULL;
 ALTER TABLE projects ADD COLUMN est_closedate TIMESTAMP(3);
 ALTER TABLE projects ADD COLUMN budget FLOAT;
 ALTER TABLE projects ADD COLUMN budget_currency VARCHAR(5);
-
+ALTER TABLE projects ADD COLUMN requestDate_timezone VARCHAR(255);
+ALTER TABLE projects ADD COLUMN est_closedate_timezone VARCHAR(255);
 
 ALTER TABLE project_requirements ADD COLUMN startdate TIMESTAMP(3) NULL;
+ALTER TABLE project_requirements ADD COLUMN startdate_timezone VARCHAR(255);
+ALTER TABLE project_requirements ADD COLUMN deadline_timezone VARCHAR(255);
+
 
 CREATE SEQUENCE project_assignmen_folder_id_seq;
 CREATE TABLE project_assignments_folder (
@@ -108,6 +112,7 @@ CREATE TABLE project_assignments_folder (
 ALTER TABLE project_assignments DROP COLUMN activity_id;
 ALTER TABLE project_assignments ADD COLUMN folder_id INTEGER NULL REFERENCES project_assignments_folder(folder_id);
 ALTER TABLE project_assignments ADD COLUMN percent_complete INTEGER NULL;
+ALTER TABLE project_assignments ADD COLUMN due_date_timezone VARCHAR(255);
 
 --DROP INDEX project_assignments_idx;
 
@@ -202,7 +207,9 @@ CREATE TABLE project_news (
   read_count INTEGER NOT NULL DEFAULT 0,
   enabled BOOLEAN DEFAULT true,
   status INTEGER DEFAULT NULL,
-  html BOOLEAN NOT NULL DEFAULT true
+  html BOOLEAN NOT NULL DEFAULT true,
+  start_date_timezone VARCHAR(255),
+  end_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE project_requirements_map (
