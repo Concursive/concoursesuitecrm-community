@@ -2,15 +2,24 @@
 
 #############################################################################
 #
-# Configuration
+# ASPCFS Web Application initialization script.  
+#
+# Installs or upgrades an existing installation
+#
+# $Id: Exp$
+#
+# Requirements:
+# - Must have an environment script with CLASSPATH specified in scripts/
+# - Sitecode must be specified either in the environment script or command-line
+#
+# Actions:
+# - Builds a parameter list from the environment script
+# - Executes the Ant build script with the specified parameters
 #
 #############################################################################
 ENVFILE="scripts/env.`hostname`.sh"
 PROGNAME=`basename $0`
 BASE=`pwd`
-WEBUSER="apache"
-CFSGROUP="cfs"
-CFSDBA="cfsdba"
 SITEHOME="/home"
 SITECODE=""
 GKHOST="jdbc:postgresql://127.0.0.1:5432/cfs2gk"
@@ -20,7 +29,7 @@ usage ()
 {
 	printf "\nUsage: ${PROGNAME} site_code\n\n"
 	printf "Where:\n"
-	printf "    site_code   is the target directory under ${SITEHOME} to deploy\n"
+	printf "    site_code = the target directory under ${SITEHOME} to deploy\n"
 	printf "\n"
 	exit 1
 }
@@ -105,8 +114,6 @@ if [ -n "${DBSITECODE}" ] ; then PARAMS="${PARAMS} -DDBSITECODE=${DBSITECODE}" ;
 echo "Params: ${PARAMS}"
 
 ant ${PARAMS} lib
-##/home/${SITECODE}/bin/restart 
-
 
 ) >>${LOG} 2>&1 
 
