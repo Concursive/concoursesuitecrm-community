@@ -255,11 +255,12 @@
       </fileset>
     </copy>
     <!-- Copy preference files -->
-    <mkdir dir="${CFS_HOME}/WEB-INF/bin"/>
-    <copy file="${bin.dir}/notifier.sh" todir="${CFS_HOME}/WEB-INF/bin"/>
-    <copy file="${pref.dir}/cfs/notifier/notifier.xml" todir="${CFS_HOME}/WEB-INF" overwrite="true" verbose="true"/>
+    <copy file="${pref.dir}/cfs/notifier/notifier.xml" 
+          todir="${CFS_HOME}/WEB-INF" overwrite="true" verbose="true"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@FILELIBRARY@" value="${CFS_HOME}${fs}WEB-INF${fs}fileLibrary"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@FAXFILES@" value="${CFS_HOME}${fs}WEB-INF${fs}faxFiles"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@GATEKEEPER.DRIVER@" value="${GATEKEEPER.DRIVER}"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"

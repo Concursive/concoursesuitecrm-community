@@ -49,7 +49,7 @@
   <!-- Temporary folder for fax images -->
   <init-param>
     <param-name>BaseDirectory</param-name>
-    <param-value>faxFiles</param-value>
+    <param-value>@FAXFILES@</param-value>
   </init-param>
   <init-param>
     <param-name>BaseFilename</param-name>
