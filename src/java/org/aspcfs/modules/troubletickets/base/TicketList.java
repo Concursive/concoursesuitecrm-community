@@ -26,6 +26,7 @@ public class TicketList extends Vector {
 	private boolean unassignedToo = false;
 	private int severity = 0;
 	private int priority = 0;
+	private String accountOwnerIdRange = null;
 	
 	private String searchText = "";
 
@@ -81,6 +82,12 @@ public String getSearchText() {
 }
 public void setSearchText(String searchText) {
 	this.searchText = searchText;
+}
+public String getAccountOwnerIdRange() {
+	return accountOwnerIdRange;
+}
+public void setAccountOwnerIdRange(String accountOwnerIdRange) {
+	this.accountOwnerIdRange = accountOwnerIdRange;
 }
 
 	/**
@@ -351,6 +358,10 @@ public void setOnlyClosed(boolean onlyClosed) {
 			
 			if (priority > 0) {
 				sqlFilter.append("AND t.pri_code = ? ");
+			}
+			
+			if (accountOwnerIdRange != null) {
+				sqlFilter.append("AND t.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
 			}
 		} else {
 			

@@ -226,7 +226,7 @@ public String executeCommandReports(ActionContext context) {
 	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
 
     	ContactReport contactReport = new ContactReport();
-	contactReport.setCriteria(context.getRequest().getParameterValues("fields"));
+	contactReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
 	contactReport.setFilePath(filePath);
 	contactReport.setEnteredBy(getUserId(context));
 	contactReport.setModifiedBy(getUserId(context));

@@ -31,6 +31,7 @@ public class OpportunityList extends Vector {
 	private int owner = -1;
 	private String ownerIdRange = null;
 	private String units = null;
+	private String accountOwnerIdRange = null;
 
 
 	/**
@@ -96,6 +97,12 @@ public class OpportunityList extends Vector {
 		this.enteredBy = tmp;
 	}
 
+public String getAccountOwnerIdRange() {
+	return accountOwnerIdRange;
+}
+public void setAccountOwnerIdRange(String accountOwnerIdRange) {
+	this.accountOwnerIdRange = accountOwnerIdRange;
+}
 
 	/**
 	 *  Sets the OwnerIdRange attribute of the OpportunityList object
@@ -425,6 +432,10 @@ public class OpportunityList extends Vector {
 
 		if (ownerIdRange != null) {
 			sqlFilter.append("AND x.owner in (" + this.ownerIdRange + ") ");
+		}
+		
+		if (accountOwnerIdRange != null) {
+			sqlFilter.append("AND x.acctlink IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
 		}
 
 		if (units != null) {

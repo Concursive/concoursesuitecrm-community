@@ -1,7 +1,9 @@
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/reportSelect.js"></script>
 
 <script language="JavaScript">
   function checkForm(form) {
+  	var test = document.generate.selectedList;
       formTest = true;
       message = "";
       if ((form.subject.value == "")) { 
@@ -11,9 +13,13 @@
       if (formTest == false) {
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
-      } else {
-        return true;
-      }
+		} else {
+			if (test != null) {
+				return selectAllOptions(document.generate.selectedList);
+			} else {
+				return true;
+			}
+		}
     }
 </script>
 
@@ -25,7 +31,7 @@
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
-    <td colspan=2 valign=center align=left>
+    <td colspan=4 valign=center align=left>
       <strong>Generate a New Report</strong>
     </td>     
   </tr>
@@ -34,7 +40,7 @@
     <td nowrap class="formLabel">
       Type
     </td>
-    <td>
+    <td colspan=3>
       <select name="type">
       <option value=1>Opportunities Listing</option>
       </select>
@@ -45,7 +51,7 @@
     <td nowrap class="formLabel">
       Subject
     </td>
-    <td>
+    <td colspan=3>
       <input type=text size=35 name="subject" maxlength=50>
     </td>
   </tr>
@@ -54,7 +60,7 @@
     <td nowrap class="formLabel">
       Criteria
     </td>
-    <td>
+    <td colspan=3>
       <select name="criteria1">
       <option value="my">My Opportunities</option>
       <option value="all">All Opportunities</option>
@@ -66,7 +72,7 @@
     <td nowrap class="formLabel">
       Sorting
     </td>
-    <td>
+    <td colspan=3>
       <select name="sort">
       <option value="description">Description</option>
       <option value="opp_id">Opportunity ID</option>
@@ -86,12 +92,10 @@
   
   <tr>
     <td nowrap valign=top class="formLabel">
-      Included Fields
+      Select fields to include
     </td>
-    <td>
+    <td width=50%>
       <select size=5 multiple name="fields">
-      <option value="id" >Opportunity ID</option>
-      <option value="description" >Description</option>
       <option value="contact" >Contact/Organization</option>
       <option value="owner" >Owner</option>
       <option value="amount1" >Low Amount</option>
@@ -109,8 +113,29 @@
       <option value="modified" >Modified</option>
       <option value="modifiedBy" >Modified By</option>
       </select>
-      (CTRL+click to select/de-select)
-    </td>
+     </td>
+      <td width=25>
+      <table width=100% cellspacing=0 cellpadding=2 border=0>
+      <tr><td valign=center>
+      <input type="button" value="All >" onclick="javascript:allValues()">
+      </td></tr>
+      
+      <tr><td valign=center>
+      <input type="button" value="Add >" onclick="javascript:addValue()">
+      </td></tr>
+      
+      <tr><td valign=center>
+      <input type="button" value="< Del" onclick="javascript:removeValue()">
+      </td></tr>
+      </table>
+      </td>
+      
+      <td width=50%>
+      <select size=5 name="selectedList" multiple>
+      <option value="id" >Opportunity ID</option>
+      <option value="description" >Description</option>
+      </select>
+      </td>
   </tr>
   
 </table>

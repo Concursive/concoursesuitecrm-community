@@ -1,21 +1,28 @@
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/reportSelect.js"></script>
+
 
 <script language="JavaScript">
-  function checkForm(form) {
-      formTest = true;
-      message = "";
-      if ((form.subject.value == "")) { 
-        message += "- A subject is required\r\n";
-        formTest = false;
-      }
-      if (formTest == false) {
-        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-        return false;
-      } else {
-        return true;
-      }
-    }
+	function checkForm(form) {
+		var test = document.generate.selectedList;
+		formTest = true;
+		message = "";
+		if ((form.subject.value == "")) { 
+			message += "- A subject is required\r\n";
+			formTest = false;
+		}
+		if (formTest == false) {
+			alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+			return false;
+		} else {
+			if (test != null) {
+				return selectAllOptions(document.generate.selectedList);
+			} else {
+				return true;
+			}
+		}
+	}
     
     function ShowSpan(thisID)
 {
@@ -102,7 +109,7 @@ function HideSpan(thisID)
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
-    <td colspan=2 valign=center align=left>
+    <td colspan=4 valign=center align=left>
       <strong>Generate a New Report</strong>
     </td>     
   </tr>
@@ -111,7 +118,7 @@ function HideSpan(thisID)
     <td nowrap class="formLabel">
       Type
     </td>
-    <td>
+    <td colspan=3>
       <select name="type" onchange='update();'>
       <option value="1">All Accounts</option>
       <option value="2">Accounts w/Contacts</option>
@@ -133,7 +140,7 @@ function HideSpan(thisID)
     <td nowrap class="formLabel">
       Subject
     </td>
-    <td>
+    <td colspan=3>
       <input type=text size=35 name="subject" maxlength=50>
     </td>
   </tr>
@@ -142,22 +149,21 @@ function HideSpan(thisID)
     <td nowrap class="formLabel">
       Criteria
     </td>
-    <td>
+    <td colspan=3>
       <select name="criteria1">
-      <option value="my">My Data</option>
-      <option value="all">All Data</option>
+      <option value="all">All Accounts</option>
+      <option value="my">My Accounts</option>
+      <option value="levels">My Account Hierarchy</option>
       </select>
     </td>
   </tr>
   
   <tr>
     <td nowrap valign=top class="formLabel">
-      Included Fields
+      Select fields to include
     </td>
-    <td>
+    <td width=50%>
       <select size=5 multiple name="fields">
-      <option value="id" >Account ID</option>
-      <option value="accountName" >Account Name</option>
       <option value="accountNumber" >Account No.</option>
       <option value="url" >URL</option>
       <option value="ticker" >Ticker</option>
@@ -170,8 +176,29 @@ function HideSpan(thisID)
       <option value="contractEndDate" >Contract End Date</option>
       <option value="notes" >Notes</option>
       </select>
-      (CTRL+click to select/de-select)
-    </td>
+     </td>
+      <td width=25>
+      <table width=100% cellspacing=0 cellpadding=2 border=0>
+      <tr><td valign=center>
+      <input type="button" value="All >" onclick="javascript:allValues()">
+      </td></tr>
+      
+      <tr><td valign=center>
+      <input type="button" value="Add >" onclick="javascript:addValue()">
+      </td></tr>
+      
+      <tr><td valign=center>
+      <input type="button" value="< Del" onclick="javascript:removeValue()">
+      </td></tr>
+      </table>
+      </td>
+      
+      <td width=50%>
+      <select size=5 name="selectedList" multiple>
+      <option value="id" >Account ID</option>
+      <option value="accountName" >Account Name</option>
+      </select>
+      </td>
   </tr>
   
 </table>

@@ -245,7 +245,7 @@ public final class Accounts extends CFSModule {
 
     //new
     OrganizationReport orgReport = new OrganizationReport();
-    orgReport.setCriteria(context.getRequest().getParameterValues("fields"));
+    orgReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
     orgReport.setFilePath(filePath);
     orgReport.setEnteredBy(getUserId(context));
     orgReport.setModifiedBy(getUserId(context));
@@ -254,7 +254,7 @@ public final class Accounts extends CFSModule {
 
     if (ownerCriteria.equals("my")) {
       orgReport.setOwnerId(this.getUserId(context));
-    } else if (ownerCriteria.equals("all")) {
+    } else if (ownerCriteria.equals("levels")) {
       orgReport.setOwnerIdRange(this.getUserRange(context));
     }
 
@@ -269,14 +269,22 @@ public final class Accounts extends CFSModule {
         oppReport.setEnteredBy(getUserId(context));
         oppReport.setModifiedBy(getUserId(context));
         oppReport.setSubject(subject);
+	
+	if (ownerCriteria.equals("my")) {
+          oppReport.setLimitId(this.getUserId(context));
+        }  else if (ownerCriteria.equals("levels")) {
+	  	oppReport.setAccountOwnerIdRange(this.getUserRange(context));
+	}
 
-        oppReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
+        oppReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
 
+	/**
         if (ownerCriteria.equals("my")) {
           oppReport.setOwner(this.getUserId(context));
         } else if (ownerCriteria.equals("all")) {
           oppReport.setOwnerIdRange(this.getUserRange(context));
         }
+	*/
 
         oppReport.setJoinOrgs(true);
         oppReport.buildReportFull(db);
@@ -291,13 +299,13 @@ public final class Accounts extends CFSModule {
         contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactReport.setPersonalId(this.getUserId(context));
 
-        contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
-
-        if (ownerCriteria.equals("my")) {
-          contactReport.setOwner(this.getUserId(context));
-        } else if (ownerCriteria.equals("all")) {
-          contactReport.setOwnerIdRange(this.getUserRange(context));
-        }
+        contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
+	
+	if (ownerCriteria.equals("my")) {
+          contactReport.setLimitId(this.getUserId(context));
+        } else if (ownerCriteria.equals("levels")) {
+	  contactReport.setAccountOwnerIdRange(this.getUserRange(context));
+	}
 
         contactReport.setJoinOrgs(true);
         contactReport.buildReportFull(db);
@@ -310,8 +318,14 @@ public final class Accounts extends CFSModule {
         ticReport.setSubject(subject);
         ticReport.setHeader("CFS Accounts");
         ticReport.setJoinOrgs(true);
+	
+	if (ownerCriteria.equals("my")) {
+		ticReport.setLimitId(this.getUserId(context));
+	} else if (ownerCriteria.equals("levels")) {
+	  	ticReport.setAccountOwnerIdRange(this.getUserRange(context));
+	}
 
-        ticReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
+        ticReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
 
         ticReport.buildReportFull(db);
         ticReport.saveAndInsert(db);

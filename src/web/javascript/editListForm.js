@@ -1,30 +1,6 @@
 <!--
 // need to set datatype for editing (searchField[index].type)
-function addValues(){
-	//var fieldList = document.searchForm.fieldSelect;
-	//var operatorList = document.searchForm.operatorSelect;
-	
-	var searchList = document.modifyList.selectedList;
-	var count = 0;
-	var x = 0;
-	
-	//fieldName = fieldList.options[fieldList.selectedIndex].text;
-	//fieldID = fieldList.options[fieldList.selectedIndex].value;
-	//operatorName = operatorList.options[operatorList.selectedIndex].text;
-	//operatorID = operatorList.options[operatorList.selectedIndex].value
-	
-	searchText = document.modifyList.newValue.value;
-	
-	var newOption = searchText;
-	
-  searchList.options[searchList.options.length] = new Option(newOption, ("*" + searchText));
-		
-	//searchCriteria[searchCriteria.length] = newCriteria;
-	//reset(this.form)
-  
-  	document.modifyList.newValue.value = "";
-  	document.modifyList.newValue.focus();
-}
+
 
 function removeValues(){
 	var searchList = document.modifyList.selectedList;

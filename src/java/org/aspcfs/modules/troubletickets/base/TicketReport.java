@@ -22,6 +22,7 @@ public class TicketReport extends TicketList {
 	protected String filePath = "";
 	protected String filenameToUse = "";
 	protected FileItem thisItem = new FileItem();
+	protected int limitId = -1;
 	
 	protected String subject = "";
 	protected int enteredBy = -1;
@@ -102,7 +103,13 @@ public class TicketReport extends TicketList {
 	public boolean getJoinOrgs() { return joinOrgs; }
 	public void setOrgReportJoin(OrganizationReport tmp) { this.orgReportJoin = tmp; }
 	public void setJoinOrgs(boolean tmp) { this.joinOrgs = tmp; }
-
+	
+	public int getLimitId() {
+		return limitId;
+	}
+	public void setLimitId(int limitId) {
+		this.limitId = limitId;
+	}
 
 	public ArrayList getCriteria() {
 		return criteria;
@@ -208,8 +215,16 @@ public class TicketReport extends TicketList {
 			
 			if (joinOrgs && thisTic.getOrgId() > -1) { 
 				tempOrg = new Organization(db, thisTic.getOrgId());
-				orgReportJoin.addDataRow(thisRow, tempOrg);
-				writeOut = true;
+				
+				if ( limitId > -1 ) {
+					if ( tempOrg.getOwner() == limitId ) {
+						orgReportJoin.addDataRow(thisRow, tempOrg);
+						writeOut = true;
+					}
+				} else {
+					orgReportJoin.addDataRow(thisRow, tempOrg);
+					writeOut = true;
+				}
 			}
 			
 			if (!joinOrgs || writeOut == true) {

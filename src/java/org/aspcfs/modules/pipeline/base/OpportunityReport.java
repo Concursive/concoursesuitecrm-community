@@ -22,6 +22,7 @@ public class OpportunityReport extends OpportunityList {
 	protected String filePath = "";
 	protected String filenameToUse = "";
 	protected FileItem thisItem = new FileItem();
+	protected int limitId = -1;
 	
 	protected String subject = "";
 	protected int enteredBy = -1;
@@ -110,6 +111,13 @@ public class OpportunityReport extends OpportunityList {
 	public void setOrgReportJoin(OrganizationReport tmp) { this.orgReportJoin = tmp; }
 	public void setJoinOrgs(boolean tmp) { this.joinOrgs = tmp; }
 	
+	public int getLimitId() {
+		return limitId;
+	}
+	public void setLimitId(int limitId) {
+		this.limitId = limitId;
+	}
+
 	public boolean getDisplayId() {
 		return displayId;
 	}
@@ -217,8 +225,16 @@ public class OpportunityReport extends OpportunityList {
 			
 			if (joinOrgs && thisOpp.getAccountLink() > -1) { 
 				tempOrg = new Organization(db, thisOpp.getAccountLink());
-				orgReportJoin.addDataRow(thisRow, tempOrg);
-				writeOut = true;
+				
+				if ( limitId > -1 ) {
+					if ( tempOrg.getOwner() == limitId ) {
+						orgReportJoin.addDataRow(thisRow, tempOrg);
+						writeOut = true;
+					}
+				} else {
+					orgReportJoin.addDataRow(thisRow, tempOrg);
+					writeOut = true;
+				}
 			}
 			
 			if (!joinOrgs || writeOut == true) {

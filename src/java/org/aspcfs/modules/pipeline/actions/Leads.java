@@ -693,7 +693,7 @@ public final class Leads extends CFSModule {
 	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
 	
 	OpportunityReport oppReport = new OpportunityReport();
-	oppReport.setCriteria(context.getRequest().getParameterValues("fields"));
+	oppReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
 	oppReport.setFilePath(filePath);
 	oppReport.setEnteredBy(getUserId(context));
 	oppReport.setModifiedBy(getUserId(context));

@@ -26,6 +26,7 @@ public class ContactReport extends ContactList {
 	protected String subject = "";
 	protected int enteredBy = -1;
 	protected int modifiedBy = -1;
+	protected int limitId = -1;
 	protected ArrayList criteria = null;
 	String[] params = null;
 	
@@ -119,6 +120,13 @@ public class ContactReport extends ContactList {
 	public void setOrgReportJoin(OrganizationReport tmp) { this.orgReportJoin = tmp; }
 	public void setJoinOrgs(boolean tmp) { this.joinOrgs = tmp; }
 	
+	public int getLimitId() {
+		return limitId;
+	}
+	public void setLimitId(int limitId) {
+		this.limitId = limitId;
+	}
+
 	public boolean getDisplayId() {
 		return displayId;
 	}
@@ -233,8 +241,16 @@ public class ContactReport extends ContactList {
 			
 			if (joinOrgs && thisContact.getOrgId() > 0) { 
 				tempOrg = new Organization(db, thisContact.getOrgId());
-				orgReportJoin.addDataRow(thisRow, tempOrg);
-				writeOut = true;
+				
+				if ( limitId > -1 ) {
+					if ( tempOrg.getOwner() == limitId ) {
+						orgReportJoin.addDataRow(thisRow, tempOrg);
+						writeOut = true;
+					}
+				} else {
+					orgReportJoin.addDataRow(thisRow, tempOrg);
+					writeOut = true;
+				}
 			}
 			
 			if (!joinOrgs || writeOut == true) {
