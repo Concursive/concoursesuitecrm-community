@@ -115,6 +115,23 @@ public class PagedListInfo {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("PagedListInfo-> Records in table: " + maxRecords);
     }
+    //Check to see if the currentOffset is greater than maxRecords,
+    //if so, find a nice page break to stop on
+    if (maxRecords <= currentOffset && maxRecords > 0) {
+      currentOffset = maxRecords;
+      
+      while (((currentOffset%itemsPerPage) != 0) && (currentOffset > 0)) {
+        --currentOffset;
+      }
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("PagedListInfo-> Offset reduced to: " + currentOffset);
+      }
+      //Check to see if the page break has any records to display, otherwise
+      //go to page 1
+      if (currentOffset == maxRecords) {
+        currentOffset = currentOffset - itemsPerPage;
+      }
+    }
   }
 
 
@@ -207,7 +224,11 @@ public class PagedListInfo {
     //User has specified a page number to view
     String tmpCurrentPage = context.getRequest().getParameter("page");
     if (tmpCurrentPage != null) {
-      this.setCurrentOffset((Integer.parseInt(tmpCurrentPage) - 1) * itemsPerPage);
+      try {
+        this.setCurrentOffset((Integer.parseInt(tmpCurrentPage) - 1) * itemsPerPage);
+      } catch (java.lang.NumberFormatException e) {
+        this.setCurrentOffset(0);
+      }
     }
 
     //User is changing the number of items to display -- needs to be done after the
