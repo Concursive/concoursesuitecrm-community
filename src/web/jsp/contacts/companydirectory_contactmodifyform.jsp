@@ -1,10 +1,11 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.admin.base.AccessType,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
@@ -40,6 +41,7 @@
 <%
   }
 %>
+  
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -128,6 +130,7 @@
     </td>
     <td>
       <%= UserList.getHtmlSelect("owner", ContactDetails.getOwner() ) %>
+       <%= showAttribute(request, "accessReassignError") %>
     </td>
   </tr>
     <tr class="containerBody">
@@ -242,6 +245,15 @@
       <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
     </td>
   </tr>
+  <tr class="containerBody"> 
+  <td nowrap class="formLabel">
+      Access Type
+    </td>
+    <td>
+      <%= AccessTypeList.getHtmlSelect("accessType", ContactDetails.getAccessType()) %>
+      <%= showAttribute(request, "accountAccessError") %>
+    </td>
+   </tr>
 </table>
 &nbsp;<br>
 <%--  include basic contact form --%>

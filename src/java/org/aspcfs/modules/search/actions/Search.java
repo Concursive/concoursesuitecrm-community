@@ -45,8 +45,7 @@ public final class Search extends CFSModule {
         contactList.setSearchText(searchCriteria);
         contactList.setPagedListInfo(searchSiteInfo);
         contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        contactList.setOwnerIdRange(this.getUserRange(context));
-        contactList.setPersonalId(this.getUserId(context));
+        contactList.setAllContacts(true, this.getUserRange(context));
         contactList.setBuildDetails(true);
         contactList.setBuildTypes(false);
         contactList.buildList(db);
@@ -56,7 +55,6 @@ public final class Search extends CFSModule {
       if (hasPermission(context, "contacts-internal_contacts-view")) {
         ContactList employeeList = new ContactList();
         employeeList.setOwner(getUserId(context));
-        employeeList.setPersonalId(getUserId(context));
         employeeList.setSearchText(searchCriteria);
         employeeList.setTypeId(1);
         employeeList.setBuildDetails(true);

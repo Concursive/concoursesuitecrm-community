@@ -1566,10 +1566,9 @@ public class Campaign extends GenericBean {
    *@param  db                Description of Parameter
    *@param  userId            Description of the Parameter
    *@param  userRangeId       Description of the Parameter
-   *@param  personalId        Description of the Parameter
    *@exception  SQLException  Description of Exception
    */
-  public void insertRecipients(Connection db, int userId, String userRangeId, int personalId) throws SQLException {
+  public void insertRecipients(Connection db, int userId, String userRangeId) throws SQLException {
     SearchCriteriaListList groupData = new SearchCriteriaListList();
     groupData.setCampaignId(this.id);
     groupData.setBuildCriteria(true);
@@ -1578,7 +1577,7 @@ public class Campaign extends GenericBean {
     while (i.hasNext()) {
       SearchCriteriaList thisGroup = (SearchCriteriaList) i.next();
       ContactList groupContacts = new ContactList();
-      groupContacts.setScl(thisGroup, userId, userRangeId, personalId);
+      groupContacts.setScl(thisGroup, userId, userRangeId);
       groupContacts.setBuildDetails(false);
       groupContacts.setBuildTypes(false);
       groupContacts.setCheckExcludedFromCampaign(this.getId());
@@ -2012,12 +2011,11 @@ public class Campaign extends GenericBean {
    *@param  db                Description of Parameter
    *@param  userId            Description of the Parameter
    *@param  userRangeId       Description of the Parameter
-   *@param  personalId        Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    *@since                    1.17
    */
-  public int activate(Connection db, int userId, String userRangeId, int personalId) throws SQLException {
+  public int activate(Connection db, int userId, String userRangeId) throws SQLException {
     int resultCount = 0;
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
@@ -2053,7 +2051,7 @@ public class Campaign extends GenericBean {
       if (resultCount == 1) {
         active = true;
         //Lock in the recipients
-        insertRecipients(db, userId, userRangeId, personalId);
+        insertRecipients(db, userId, userRangeId);
 
         //Lock in the survey
         if (this.surveyId > -1) {

@@ -11,6 +11,8 @@ import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.utils.web.*;
 
@@ -138,6 +140,11 @@ public final class Contacts extends CFSModule {
       thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
       thisContact.setModifiedBy(getUserId(context));
       thisContact.setEnteredBy(getUserId(context));
+      
+      //make sure all can see the contact
+      AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
+      thisContact.setAccessType(accessTypes.getDefaultItem());
+      
       if ("true".equals(context.getRequest().getParameter("primaryContact"))) {
         thisContact.setPrimaryContact(true);
       }

@@ -1,9 +1,10 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*, org.aspcfs.modules.admin.base.AccessType" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
@@ -57,6 +58,27 @@
     }
     popContactTypeSelectMultiple(selectedId, category, contactId); 
   }
+  
+  function updateCategoryInfo(category){
+    if(category == "general"){
+      document.forms[0].orgId.value = '-1';
+      var url = "ExternalContacts.do?command=AccessTypeJSList&category=" + <%= AccessType.GENERAL_CONTACTS %>;
+      window.frames['server_commands'].location.href=url;
+    }else if(category == "account"){
+      var url = "ExternalContacts.do?command=AccessTypeJSList&category=" + <%= AccessType.ACCOUNT_CONTACTS %>;
+      window.frames['server_commands'].location.href=url;
+    }else if(category == "employee"){
+      document.forms[0].orgId.value = '-1';
+      var url = "ExternalContacts.do?command=AccessTypeJSList&category=" + <%= AccessType.EMPLOYEES %>;
+      window.frames['server_commands'].location.href=url;
+    }
+  }
+  
+  function selectAccount(){
+   document.forms['addContact'].contactcategory[1].checked='t';
+   updateCategoryInfo('account');
+   popAccountsListSingle('orgId','changeaccount');
+  }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
   <form name="addContact" action="ExternalContacts.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
@@ -85,15 +107,15 @@
     </td>
     <td>
       <% if("adduser".equals(request.getParameter("source"))){ %>
-      	<input type="radio" name="contactcategory" value="3" onclick="javascript:document.forms[0].orgId.value = '-1';" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>Employee<br>
+      	<input type="radio" name="contactcategory" value="3" onChange="javascript:updateCategoryInfo('employee');" <%= ContactDetails.getOrgId() == -1 ? " checked" : ""%>>Employee<br>
 	<input type="hidden" name="source" value="<%= request.getParameter("source") %>">
       <% }else{ %>
-        <input type="radio" name="contactcategory" value="1" onclick="javascript:document.forms[0].orgId.value = '-1';" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
+        <input type="radio" name="contactcategory" value="1" onclick="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
       <% } %>
       <table cellspacing="0" cellpadding="0" border="0">
           <tr>
             <td>
-              <input type="radio" name="contactcategory" value="2" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
+              <input type="radio" name="contactcategory" value="2" onChange="javascript:updateCategoryInfo('account');" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
             </td>
             <td>
               Permanently associate with Account: &nbsp;
@@ -103,7 +125,7 @@
             </td>
             <td>
               <input type="hidden" name="orgId" id="orgId" value="<%= ContactDetails.getOrgId() %>">
-              &nbsp;[<a href="javascript:document.forms['addContact'].contactcategory[1].checked='t';popAccountsListSingle('orgId','changeaccount');" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]&nbsp;
+              &nbsp;[<a href="javascript:selectAccount();" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]&nbsp;
             </td>
           </tr>
        </table>
@@ -185,6 +207,18 @@
     </td>
     <td>
       <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
+    </td>
+    <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Access Type
+    </td>
+    <td>
+      <% 
+          HtmlSelect thisSelect = AccessTypeList.getHtmlSelectObj(ContactDetails.getAccessType());
+          thisSelect.addAttribute("id", "accessType");
+      %>
+      <%=  thisSelect.getHtml("accessType") %>
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </td>
   </tr>
 </table>

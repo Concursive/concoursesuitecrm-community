@@ -171,6 +171,16 @@ CREATE TABLE lookup_contactphone_types (
 )
 ;
 
+CREATE TABLE lookup_access_types (
+  code SERIAL PRIMARY KEY,
+  link_module_id INT NOT NULL,
+  description VARCHAR(50) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INT, 
+  enabled BOOLEAN DEFAULT true,
+  rule_id INT NOT NULL
+);
+
 CREATE SEQUENCE organization_org_id_seq MINVALUE 0 START 0;
 CREATE TABLE organization (
   org_id INTEGER DEFAULT nextval('organization_org_id_seq') NOT NULL PRIMARY KEY,
@@ -248,8 +258,9 @@ CREATE TABLE contact (
   primary_contact BOOLEAN DEFAULT false,
   employee boolean NOT NULL DEFAULT false,
   personal boolean NOT NULL DEFAULT false,
-  org_name VARCHAR(255)
-);
+  org_name VARCHAR(255),
+  access_type INT REFERENCES lookup_access_types(code) 
+) ;
 
 CREATE INDEX "contact_user_id_idx" ON "contact" USING btree ("user_id");
 

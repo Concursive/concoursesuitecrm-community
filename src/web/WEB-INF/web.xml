@@ -28,7 +28,7 @@
     </init-param>
     <init-param>
         <param-name>ActionConfig</param-name>
-        <param-value>cfs-config.xml</param-value>
+        <param-value>cfs-config.xml,cfs-config-globalactions.xml</param-value>
     </init-param>
     <init-param>
         <param-name>ModuleConfig</param-name>

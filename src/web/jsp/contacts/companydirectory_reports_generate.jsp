@@ -79,6 +79,9 @@ Generate New Report<br>
       <select name="criteria1">
       <option value="my">My Contacts</option>
       <option value="all">All Contacts</option>
+      <option value="hierarchy">Controlled-Hierarchy Contacts</option>
+      <option value="public">Public Contacts</option>
+      <option value="personal">Personal Contacts</option>
       </select>
     </td>
   </tr>

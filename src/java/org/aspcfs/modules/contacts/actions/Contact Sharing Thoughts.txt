@@ -1,0 +1,33 @@
+General Contacts Sharing :
+------------------------
+Requirements:
+
+- Four ways of sharing a general contact
+	- Controlled (default)
+	- private (only user)
+	- public read(all can read but hierarchy still respected)
+	- public read/write(all can read/write but hierarchy still respected)
+
+- Account Contacts are Public RW by default
+- Sharing Filters under View Contacts 
+- Implementation should be reusable
+
+Technical Implementation:
+
+- Implement a "Sharing Engine" which builds from a XML file/DB .
+- Each Sharing Component should be intelligent to cosider type of component or other details if any e.g A Call
+  component should process based on its type i.e Contact Call, Opportunity Call etc
+- A Sharing Engine will accept the following parameters to decide the Sharing Component to be invoked :context,
+  object, action requested
+- Have a hasAuthority(context, object, action) method in CFSModule which invokes the Sharing Engine
+
+
+=========================================================================================================
+
+- Module should just do the action it is required to do i.e if its a Insert method called on teh GeneralContacts module , the module should Call the insert on some object and get a response bak to decide where it needs to go from there.
+
+- Implement a Business Rule Engine for implementing rules of different types like : validation rules, content rules, Sharing rules etc
+
+- Implement a middle layer "SomeWorkFlow" which basically handles the workFlow of the module action. So if a Ticket is to be inserted , it first kicks of the Business Rule Engine and checks permissions, then kicks off the checks for record level permissions and lastly if record is inserted it knows to kick off a process/hook 
+
+

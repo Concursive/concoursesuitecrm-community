@@ -393,6 +393,42 @@ public class LookupList extends HtmlSelect implements SyncableList {
   }
 
 
+  public HtmlSelect getHtmlSelectObj(int defaultKey) {
+    HtmlSelect thisSelect = new HtmlSelect();
+    thisSelect.setSelectSize(selectSize);
+    thisSelect.setMultiple(multiple);
+    thisSelect.setJsEvent(jsEvent);
+
+    Iterator i = this.iterator();
+    boolean keyFound = false;
+    int lookupDefault = defaultKey;
+
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+
+      if (thisElement.getEnabled() == true || !showDisabledFlag) {
+        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+        if (thisElement.getDefaultItem()) {
+          lookupDefault = thisElement.getCode();
+        }
+      } else if (thisElement.getCode() == defaultKey) {
+        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+      }
+
+      if (thisElement.getCode() == defaultKey) {
+        keyFound = true;
+      }
+    }
+
+    if (keyFound) {
+      thisSelect.setDefaultKey(defaultKey);
+    } else {
+      thisSelect.setDefaultKey(lookupDefault);
+    }
+    return thisSelect;
+  }
+  
+  
   /**
    *  Gets the HtmlSelect attribute of the ContactEmailTypeList object
    *

@@ -443,7 +443,7 @@ public final class CampaignManagerGroup extends CFSModule {
       pagedListInfo.setLink("CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
       //Build the contactList
       ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context), this.getUserId(context));
+      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setBuildDetails(true);
       contacts.setBuildTypes(false);
@@ -499,7 +499,7 @@ public final class CampaignManagerGroup extends CFSModule {
       context.getRequest().setAttribute("scl", thisSCL);
       //Build the contactList
       ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context), this.getUserId(context));
+      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setBuildDetails(true);
       contacts.setBuildTypes(false);

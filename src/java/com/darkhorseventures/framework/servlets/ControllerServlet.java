@@ -581,6 +581,12 @@ public class ControllerServlet extends HttpServlet
       }
     }
     Resource resource = action.getResource(lookup);
+    if (resource == null) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("> Action not found, looking up under GlobalActions ");
+      }
+      resource = ((Action) actions.get("GlobalActions")).getResource(lookup);
+    }
     if (resource != null) {
       if ((resource.getXSL() != null) && (resource.getXSL().length() > 0)) {
         // the response forward Action has an XSL page associated with it,

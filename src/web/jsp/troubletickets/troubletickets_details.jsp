@@ -152,14 +152,19 @@ Ticket Details<br>
   <tr class="title">
     <td colspan="2">
       <strong>Primary Contact</strong>
-    </td>     
+    </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
       Name
     </td>
     <td>
-      <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
+      <dhv:permission name="accounts-accounts-contacts-view">
+        <a href="Contacts.do?command=Details&id=<%= TicketDetails.getContactId() %>"><%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %></a>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-view" none="true">
+        <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
+      </dhv:permission>
     </td>
   </tr>
 	<tr class="containerBody">

@@ -11,7 +11,6 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 
-
 /**
  *  Allows information to be stored in an object for the pagedlist. <p>
  *
@@ -26,7 +25,7 @@ import org.aspcfs.utils.web.HtmlSelect;
  */
 public class PagedListInfo implements Serializable {
   public final String[] lettersArray = {"0", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-  public static final int DEFAULT_ITEMS_PER_PAGE = 10;
+  public final static int DEFAULT_ITEMS_PER_PAGE = 10;
   String link = "";
   String id = null;
   String columnToSortBy = null;
@@ -47,9 +46,10 @@ public class PagedListInfo implements Serializable {
   //specifically for modules using the contactsList
   String parentFieldType = "";
   String parentFormName = "";
-  
+
   boolean expandedSelection = false;
-  
+
+
   /**
    *  Constructor for the PagedListInfo object
    *
@@ -73,7 +73,7 @@ public class PagedListInfo implements Serializable {
    *  Sets the ColumnToSortBy attribute of the PagedListInfo object
    *
    *@param  enableJScript  The new enableJScript value
-   *@since                    1.0
+   *@since                 1.0
    */
   public void setEnableJScript(boolean enableJScript) {
     this.enableJScript = enableJScript;
@@ -111,13 +111,27 @@ public class PagedListInfo implements Serializable {
     this.resetList = resetList;
   }
 
+
+  /**
+   *  Gets the expandedSelection attribute of the PagedListInfo object
+   *
+   *@return    The expandedSelection value
+   */
   public boolean getExpandedSelection() {
     return expandedSelection;
   }
+
+
+  /**
+   *  Sets the expandedSelection attribute of the PagedListInfo object
+   *
+   *@param  expandedSelection  The new expandedSelection value
+   */
   public void setExpandedSelection(boolean expandedSelection) {
     this.expandedSelection = expandedSelection;
     this.setItemsPerPage(DEFAULT_ITEMS_PER_PAGE);
   }
+
 
   /**
    *  Sets the ItemsPerPage attribute of the PagedListInfo object
@@ -162,6 +176,7 @@ public class PagedListInfo implements Serializable {
   public void setParentFieldType(String parentFieldType) {
     this.parentFieldType = parentFieldType;
   }
+
 
   /**
    *  Gets the id attribute of the PagedListInfo object
@@ -453,7 +468,6 @@ public class PagedListInfo implements Serializable {
       if (param.startsWith("search")) {
         if (!(reset)) {
           this.getSavedCriteria().clear();
-          this.setListView("search");
           reset = true;
         }
 
@@ -471,7 +485,7 @@ public class PagedListInfo implements Serializable {
    *@return      Description of the Return Value
    */
   public boolean setSearchCriteria(Object obj) {
-    if (("search".equals(this.getListView())) && !(this.getSavedCriteria().isEmpty())) {
+    if (!this.getSavedCriteria().isEmpty()) {
 
       Iterator hashIterator = this.getSavedCriteria().keySet().iterator();
 
@@ -488,10 +502,23 @@ public class PagedListInfo implements Serializable {
           }
         }
       }
-
+      System.out.println("Setting List View to search");
     }
-
     return true;
+  }
+
+
+  /**
+   *  Gets the searchOptionValue attribute of the PagedListInfo object
+   *
+   *@param  field  Description of the Parameter
+   *@return        The searchOptionValue value
+   */
+  public String getSearchOptionValue(String field) {
+    if (this.getSavedCriteria() != null && this.getSavedCriteria().get(field) != null) {
+      return (String) savedCriteria.get(field);
+    }
+    return "";
   }
 
 
@@ -625,7 +652,7 @@ public class PagedListInfo implements Serializable {
       if (expandedSelection) {
         link += "&pagedListSectionId=" + id;
       }
-      
+
       return ("<form name=\"" + id + "\" action=\"" + link + "\" method=\"post\">");
     } else {
       return "";
@@ -764,21 +791,21 @@ public class PagedListInfo implements Serializable {
    *@since           1.8
    */
   public String getPreviousPageLink(String linkOn, String linkOff) {
-    
+
     StringBuffer result = new StringBuffer();
-    
+
     if (currentOffset > 0) {
       int newOffset = currentOffset - itemsPerPage;
 
       if (!getEnableJScript()) {
         result.append("<a href='" + link + "&pagedListInfoId=" + this.getId());
-        
+
         if (getExpandedSelection()) {
           result.append("&pagedListSectionId=" + this.getId());
-        }        
-        
+        }
+
         result.append("&offset=" + (newOffset > 0 ? newOffset : 0) + "'>" + linkOn + "</a>");
-        
+
         return result.toString();
       } else {
         result.append("<a href=\"javascript:offsetsubmit('" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>");
@@ -823,19 +850,19 @@ public class PagedListInfo implements Serializable {
    *@since           1.8
    */
   public String getNextPageLink(String linkOn, String linkOff) {
-    
+
     StringBuffer result = new StringBuffer();
-    
+
     if ((currentOffset + itemsPerPage) < maxRecords) {
       if (!getEnableJScript()) {
         result.append("<a href='" + link + "&pagedListInfoId=" + this.getId());
-        
+
         if (getExpandedSelection()) {
           result.append("&pagedListSectionId=" + this.getId());
         }
-        
+
         result.append("&offset=" + (currentOffset + itemsPerPage) + "'>" + linkOn + "</a>");
-        
+
         return result.toString();
       } else {
         result.append("<a href=\"javascript:offsetsubmit('" + (currentOffset + itemsPerPage) + "');\">" + linkOn + "</a>");
@@ -845,7 +872,16 @@ public class PagedListInfo implements Serializable {
       return linkOff;
     }
   }
-  
+
+
+  /**
+   *  Gets the expandLink attribute of the PagedListInfo object
+   *
+   *@param  linkOn        Description of the Parameter
+   *@param  linkOff       Description of the Parameter
+   *@param  collapseLink  Description of the Parameter
+   *@return               The expandLink value
+   */
   public String getExpandLink(String linkOn, String linkOff, String collapseLink) {
     if ((currentOffset + itemsPerPage) < maxRecords && !expandedSelection) {
       return "<a href='" + link + "&pagedListInfoId=" + this.getId() + "&pagedListSectionId=" + this.getId() + "'>" + linkOn + "</a>";
@@ -855,7 +891,15 @@ public class PagedListInfo implements Serializable {
       return "<a href='" + link + "&resetList=true&pagedListInfoId=" + this.getId() + "'>" + collapseLink + "</a>";
     }
   }
-  
+
+
+  /**
+   *  Gets the expandLink attribute of the PagedListInfo object
+   *
+   *@param  expandLink    Description of the Parameter
+   *@param  collapseLink  Description of the Parameter
+   *@return               The expandLink value
+   */
   public String getExpandLink(String expandLink, String collapseLink) {
     if (!expandedSelection) {
       return "<a href=\"" + link + "&pagedListInfoId=" + this.getId() + "&pagedListSectionId=" + this.getId() + "\">" + expandLink + "</a>";
@@ -968,7 +1012,14 @@ public class PagedListInfo implements Serializable {
       return false;
     }
   }
-  
+
+
+  /**
+   *  Gets the refreshTag attribute of the PagedListInfo object
+   *
+   *@param  tmp  Description of the Parameter
+   *@return      The refreshTag value
+   */
   public String getRefreshTag(String tmp) {
     return ("<a href=\"" + link + "\"> " + tmp + " </a>");
   }
@@ -988,7 +1039,13 @@ public class PagedListInfo implements Serializable {
       listFilters.put("listFilter" + param, value);
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean hasLink() {
     return (link != null && !"".equals(link.trim()));
   }
@@ -1062,9 +1119,9 @@ public class PagedListInfo implements Serializable {
         String column = st.nextToken();
         sqlStatement.append(column + " ");
 //        if (count == 1) {
-          if (this.hasSortOrderConfigured()) {
-            sqlStatement.append(this.getSortOrder() + " ");
-          }
+        if (this.hasSortOrderConfigured()) {
+          sqlStatement.append(this.getSortOrder() + " ");
+        }
 //        }
         if (st.hasMoreTokens()) {
           sqlStatement.append(",");

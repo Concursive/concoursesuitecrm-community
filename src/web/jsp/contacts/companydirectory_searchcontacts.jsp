@@ -3,9 +3,10 @@
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SearchContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].searchFirstName.focus();">
-<form name="searchContact" action="ExternalContacts.do?command=ListContacts&auto-populate=true" method="post">
+<form name="searchContact" action="ExternalContacts.do?command=SearchContacts&auto-populate=true" method="post">
 <a href="ExternalContacts.do">General Contacts</a> > 
 Search Contacts<br>
 <hr color="#BFBFBB" noshade>
@@ -20,7 +21,7 @@ Search Contacts<br>
       First Name
     </td>
     <td>
-      <input type="text" size="35" name="searchFirstName" value="">
+      <input type="text" size="35" name="searchFirstName" value="<%= SearchContactsInfo.getSearchOptionValue("searchFirstName") %>">
     </td>
   </tr>
   <tr>
@@ -28,7 +29,7 @@ Search Contacts<br>
       Middle Name
     </td>
     <td>
-      <input type="text" size="35" name="searchMiddleName" value="">
+      <input type="text" size="35" name="searchMiddleName" value="<%= SearchContactsInfo.getSearchOptionValue("searchMiddleName") %>">
     </td>
   </tr>
   <tr>
@@ -36,7 +37,7 @@ Search Contacts<br>
       Last Name
     </td>
     <td>
-      <input type="text" size="35" name="searchLastName" value="">
+      <input type="text" size="35" name="searchLastName" value="<%= SearchContactsInfo.getSearchOptionValue("searchLastName") %>">
     </td>
   </tr>
   <tr>
@@ -44,7 +45,7 @@ Search Contacts<br>
       Company
     </td>
     <td>
-      <input type="text" size="35" name="searchCompany" value="">
+      <input type="text" size="35" name="searchCompany" value="<%= SearchContactsInfo.getSearchOptionValue("searchCompany") %>">
     </td>
   </tr>
   <tr>
@@ -52,12 +53,25 @@ Search Contacts<br>
       Title
     </td>
     <td>
-      <input type="text" size="35" name="searchTitle" value="">
+      <input type="text" size="35" name="searchTitle" value="<%= SearchContactsInfo.getSearchOptionValue("searchTitle") %>">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      From 
+    </td>
+    <td>
+      <select size="1" name="listView">
+        <option <%= SearchContactsInfo.getOptionValue("my") %>>My Contacts</option>
+        <option <%= SearchContactsInfo.getOptionValue("all") %>>All Contacts</option>
+        <option <%= SearchContactsInfo.getOptionValue("hierarchy") %>>Controlled-Hierarchy Contacts</option>
+        <option <%= SearchContactsInfo.getOptionValue("archived") %>>Archived Contacts</option>
+      </select>
     </td>
   </tr>
 </table>
 <br>
-<input type=submit value="Search">
+<input type="submit" value="Search">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts'">
 <input type="reset" value="Reset">
 <input type="hidden" name="doSearch" value="true">

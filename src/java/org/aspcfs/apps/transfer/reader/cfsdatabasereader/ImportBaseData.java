@@ -129,7 +129,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     writer.setAutoCommit(false);
     ContactList contacts = new ContactList();
     contacts.setIncludeEnabled(-1);
-    contacts.setPersonalId(-2);
+    contacts.setAllContacts(true);
     contacts.buildList(db);
     mappings.saveList(writer, contacts, "insert");
 

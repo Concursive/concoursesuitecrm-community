@@ -20,8 +20,9 @@ View Contacts<br>
     <form name="listView" method="post" action="ExternalContacts.do?command=ListContacts">
     <td>
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= ExternalContactsInfo.getOptionValue("my") %>>My Contacts </option>
+        <option <%= ExternalContactsInfo.getOptionValue("my") %>>My Contacts</option>
         <option <%= ExternalContactsInfo.getOptionValue("all") %>>All Contacts</option>
+        <option <%= ExternalContactsInfo.getOptionValue("hierarchy") %>>Controlled-Hierarchy Contacts</option>
         <option <%= ExternalContactsInfo.getOptionValue("archived") %>>Archived Contacts</option>
         <% if (!(ExternalContactsInfo.getSavedCriteria().isEmpty())) { %>
           <option <%= ExternalContactsInfo.getOptionValue("search") %>>Search Results</option>
@@ -57,7 +58,7 @@ View Contacts<br>
     <td>
       <strong>Phone: Mobile</strong>
     </td>
-    <dhv:evaluate exp="<%= "all".equals(ExternalContactsInfo.getListView()) || "search".equals(ExternalContactsInfo.getListView()) %>">
+    <dhv:evaluate if="<%= !"my".equals(ExternalContactsInfo.getListView()) && !"".equals(ExternalContactsInfo.getListView()) %>">
       <td>
         <strong>Owner</strong>
       </td>
@@ -68,7 +69,7 @@ View Contacts<br>
 	if (i.hasNext()) {
 	int rowid = 0;
 		while (i.hasNext()) {
-			rowid = (rowid != 1?1:2);
+      rowid = (rowid != 1 ? 1 : 2);
       Contact thisContact = (Contact)i.next();
 %>      
       <tr>
@@ -95,7 +96,7 @@ View Contacts<br>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisContact.getPhoneNumber("Mobile")) %>
         </td>
-        <dhv:evaluate exp="<%= "all".equals(ExternalContactsInfo.getListView()) || "search".equals(ExternalContactsInfo.getListView())%>">
+        <dhv:evaluate if="<%= !"my".equals(ExternalContactsInfo.getListView()) && !"".equals(ExternalContactsInfo.getListView()) %>">
           <td class="row<%= rowid %>" nowrap>
             <dhv:username id="<%= thisContact.getOwner() %>"/>
           </td>

@@ -9,10 +9,12 @@ import java.io.*;
 import java.sql.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+
 
 /**
  *  The CFS Company Directory module.
@@ -203,6 +205,11 @@ public final class CompanyDirectory extends CFSModule {
     }
     try {
       db = this.getConnection(context);
+      
+      //set the access type as public
+      AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(db, AccessType.EMPLOYEES);
+      thisEmployee.setAccessType(accessTypes.getDefaultItem());
+      
       if (thisEmployee.getId() == -1) {
         thisEmployee.setOrgId(0);
         addModuleBean(context, "Internal Contacts", "Internal Insert");

@@ -14,6 +14,7 @@ import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.accounts.base.Organization;
 
 /**
@@ -26,10 +27,9 @@ import org.aspcfs.modules.accounts.base.Organization;
 public class Contact extends GenericBean {
 
   /**
-   *  Description of the Field
+   *  Type 1 in the database refers to an Employee
    */
   public final static int EMPLOYEE_TYPE = 1;
-  public final static int PERSONAL_TYPE = 2;
 
   private int id = -1;
   private int orgId = -1;
@@ -62,6 +62,7 @@ public class Contact extends GenericBean {
   private int custom1 = -1;
   private String url = null;
   private int userId = -1;
+  private int accessType = -1;
 
   private ContactEmailAddressList emailAddressList = new ContactEmailAddressList();
   private ContactPhoneNumberList phoneNumberList = new ContactPhoneNumberList();
@@ -77,7 +78,6 @@ public class Contact extends GenericBean {
 
   private boolean primaryContact = false;
   private boolean employee = false;
-  private boolean personal = false;
   private boolean hasOpportunities = false;
   private LookupList types = new LookupList();
   private ArrayList typeList = null;
@@ -233,12 +233,32 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Sets the personal attribute of the Contact object
+   *  Sets the accessType attribute of the Contact object
    *
-   *@param  personal  The new personal value
+   *@param  accessType  The new accessType value
    */
-  public void setPersonal(boolean personal) {
-    this.personal = personal;
+  public void setAccessType(int accessType) {
+    this.accessType = accessType;
+  }
+
+
+  /**
+   *  Sets the accessType attribute of the Contact object
+   *
+   *@param  accessType  The new accessType value
+   */
+  public void setAccessType(String accessType) {
+    this.accessType = Integer.parseInt(accessType);
+  }
+
+
+  /**
+   *  Gets the accessType attribute of the Contact object
+   *
+   *@return    The accessType value
+   */
+  public int getAccessType() {
+    return accessType;
   }
 
 
@@ -249,16 +269,6 @@ public class Contact extends GenericBean {
    */
   public boolean getEmployee() {
     return employee;
-  }
-
-
-  /**
-   *  Gets the personal attribute of the Contact object
-   *
-   *@return    The personal value
-   */
-  public boolean getPersonal() {
-    return personal;
   }
 
 
@@ -1855,7 +1865,7 @@ public class Contact extends GenericBean {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO contact " +
-          "(user_id, namefirst, namelast, owner, primary_contact, org_name, ");
+          "(user_id, namefirst, namelast, owner, primary_contact, org_name, access_type, ");
 
       if (entered != null) {
         sql.append("entered, ");
@@ -1864,7 +1874,7 @@ public class Contact extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
 
       if (entered != null) {
         sql.append("?, ");
@@ -1882,9 +1892,10 @@ public class Contact extends GenericBean {
       pst.setBoolean(++i, this.getPrimaryContact());
       if (orgId > 0) {
         pst.setString(++i, orgName);
-      }else{
+      } else {
         pst.setString(++i, company);
       }
+      pst.setInt(++i, accessType);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1893,6 +1904,7 @@ public class Contact extends GenericBean {
       }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
+      System.out.println(pst.toString());
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "contact_contact_id_seq");
@@ -2122,9 +2134,8 @@ public class Contact extends GenericBean {
     i = 0;
     pst = db.prepareStatement(
         "UPDATE contact " +
-        "set employee = ?, personal = ? " +
+        "set employee = ? " +
         "WHERE contact_id = ? ");
-    pst.setBoolean(++i, false);
     pst.setBoolean(++i, false);
     pst.setInt(++i, this.getId());
     pst.execute();
@@ -2158,11 +2169,11 @@ public class Contact extends GenericBean {
     pst.execute();
     pst.close();
 
-    if (type_id == EMPLOYEE_TYPE || type_id == PERSONAL_TYPE) {
+    if (type_id == EMPLOYEE_TYPE) {
       i = 0;
       pst = db.prepareStatement(
           "UPDATE contact " +
-          "set " + (type_id == EMPLOYEE_TYPE ? "employee = ? " : "personal = ? ") +
+          "set employee = ? " +
           "WHERE contact_id = ? ");
       pst.setBoolean(++i, true);
       pst.setInt(++i, this.getId());
@@ -2312,9 +2323,22 @@ public class Contact extends GenericBean {
         errors.put("lastcompanyError", "Last Name or Company Name is required");
       }
     }
-    //Prevent personal contacts from being associated with acctions
-    if (orgId > 0 && typeList != null && typeList.contains(String.valueOf(PERSONAL_TYPE))) {
-      errors.put("personalContactError", "Account Contact cannot be personal");
+
+    //Prevent personal contacts from being associated with actions
+    if (accessType != -1) {
+      AccessType thisType = new AccessType(db, accessType);
+      
+      //all account contacts are public
+      if (orgId > 0 && thisType.getRuleId() != AccessType.PUBLIC) {
+        errors.put("accountAccessError", "All Account Contacts have public access");
+      }
+      
+      //personal contacts should be owned by the user who enters it i.e they cannot be reassigned 
+      if (thisType.getRuleId() == AccessType.PERSONAL && owner != enteredBy) {
+        errors.put("accessReassignError", "Personal Contact has to be owned by the user who entered it");
+      }
+    } else {
+      errors.put("accessError", "Access Type is required");
     }
 
     if (hasErrors()) {
@@ -2348,7 +2372,7 @@ public class Contact extends GenericBean {
         "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
         "namefirst = ?, namelast = ?, " +
         "namemiddle = ?, namesuffix = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
-        "org_id = ?, primary_contact = ?, org_name = ?, ");
+        "org_id = ?, primary_contact = ?, org_name = ?, access_type = ?, ");
 
     if (imService > -1) {
       sql.append("imservice = ?, ");
@@ -2392,9 +2416,10 @@ public class Contact extends GenericBean {
     pst.setBoolean(++i, this.getPrimaryContact());
     if (orgId > 0) {
       pst.setString(++i, orgName);
-    }else{
+    } else {
       pst.setString(++i, company);
     }
+    pst.setInt(++i, accessType);
     if (imService > -1) {
       pst.setInt(++i, this.getImService());
     }
@@ -2478,7 +2503,9 @@ public class Contact extends GenericBean {
     url = rs.getString("url");
     primaryContact = rs.getBoolean("primary_contact");
     employee = rs.getBoolean("employee");
-    personal = rs.getBoolean("personal");
+    //TODO:drop column personal from contact table
+    rs.getBoolean("personal");
+    accessType = rs.getInt("access_type");
 
     //lookup_department table
     departmentName = rs.getString("departmentname");

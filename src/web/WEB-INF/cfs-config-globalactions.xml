@@ -1,0 +1,8 @@
+<mvc-app>
+  <action name="GlobalActions">
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+  </action>
+</mvc-app>

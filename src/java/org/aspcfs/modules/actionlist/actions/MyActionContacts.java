@@ -178,7 +178,7 @@ public final class MyActionContacts extends CFSModule {
 
       //Build the contactList
       ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context), this.getUserId(context));
+      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
       contacts.setBuildDetails(true);
       contacts.setBuildTypes(false);
       contacts.buildList(db);
