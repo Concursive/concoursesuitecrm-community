@@ -46,8 +46,7 @@ View Users<br>
       <%= UserListInfo.getSortIcon("role") %>
     </td>
     <td nowrap>
-      <b><a href="Users.do?command=ListUsers&column=mgr_namelast">Reports To</a></b>
-      <%= UserListInfo.getSortIcon("mgr_namelast") %>
+      <b>Reports To</b>
     </td>
   </tr>
 <%
