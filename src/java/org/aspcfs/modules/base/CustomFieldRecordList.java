@@ -169,5 +169,13 @@ public class CustomFieldRecordList extends ArrayList {
       thisRecord.delete(db);
     }
   }
+  
+  public void buildRecordColumns(Connection db) throws SQLException {
+    Iterator customRecords = this.iterator();
+    while (customRecords.hasNext()) {
+      CustomFieldRecord thisRecord = (CustomFieldRecord)customRecords.next();
+      //thisRecord.buildInfo(db);
+    }
+  }
 }
 

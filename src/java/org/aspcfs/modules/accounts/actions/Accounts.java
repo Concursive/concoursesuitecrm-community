@@ -1065,6 +1065,7 @@ public final class Accounts extends CFSModule {
         recordList.setLinkItemId(thisOrganization.getOrgId());
         recordList.setCategoryId(thisCategory.getId());
         recordList.buildList(db);
+        recordList.buildRecordColumns(db);
         context.getRequest().setAttribute("Records", recordList);
       } else {
         //The user requested a specific record, or this category only
