@@ -117,13 +117,12 @@ public final class Login extends GenericAction {
         }
       }
       
-      sql = 
+      pst = db.prepareStatement(
         "SELECT * FROM access " +
         "WHERE lower(username) = ? " +
-        "AND enabled = " + DatabaseUtils.getTrue(db) + " ";
-      System.out.println(sql);
-      pst = db.prepareStatement(sql);
+        "AND enabled = ? ");
       pst.setString(1, username.toLowerCase());
+      pst.setBoolean(2, true);
       rs = pst.executeQuery();
       if (!rs.next()) {
         loginBean.setMessage("* Access denied: Invalid login information.");
@@ -149,9 +148,13 @@ public final class Login extends GenericAction {
       pst.close();
 
       if (userId > -1) {
-        if (System.getProperty("DEBUG") != null) System.out.println("Login-> Getting user " + userId + " from memory");
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Login-> Getting user " + userId + " from memory");
+        }
         SystemStatus thisSystem = (SystemStatus)((Hashtable)context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-        System.out.println("Login-> Getting SystemStatus from memory : " + ((thisSystem == null)?"false":"true"));
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Login-> Getting SystemStatus from memory : " + ((thisSystem == null)?"false":"true"));
+        }
         thisUser = new UserBean(thisSystem, userId);
         if (thisUser != null) {
           if (System.getProperty("DEBUG") != null) System.out.println("Login-> updating user");
