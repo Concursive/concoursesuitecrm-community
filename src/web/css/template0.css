@@ -62,6 +62,9 @@ A:visited:hover{color:#FF3300;}
   background-color: #E7E9EB;
 }
 /* trails */
+.trails {
+  padding-bottom: 10px;
+}
 .trails td {
   color: #000;
   background-color: #EDEDED;
