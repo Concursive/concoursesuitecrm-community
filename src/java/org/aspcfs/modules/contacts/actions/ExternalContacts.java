@@ -239,7 +239,7 @@ public String executeCommandReports(ActionContext context) {
         	//contactReport.setOwner(this.getUserId(context));
 		
 		//builds list also
-		contactReport.buildReport(db);
+		contactReport.buildReportFull(db);
 		contactReport.saveAndInsert(db);
 	} catch (Exception e) {
 		errorMessage = e;

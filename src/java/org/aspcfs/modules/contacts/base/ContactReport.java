@@ -166,11 +166,13 @@ public class ContactReport extends ContactList {
 	public void setFilenameToUse(String filenameToUse) {
 		this.filenameToUse = filenameToUse;
 	}
-
-	public void buildReport(Connection db) throws SQLException {
+	
+	public void buildReportBaseInfo() {
 		rep.setDelimitedCharacter(delimiter);
 		rep.setHeader(header + ": " + subject);
-		
+	}
+	
+	public void buildReportHeaders() {
 		if (displayType) { rep.addColumn("Type"); }
 		if (displayNameLast) { rep.addColumn("Last Name", "Last Name"); }
 		if (displayNameFirst) { rep.addColumn("First Name", "First Name"); }
@@ -191,7 +193,9 @@ public class ContactReport extends ContactList {
 		if (displayZip) { rep.addColumn("Zip"); }
 		if (displayCountry) { rep.addColumn("Country"); }
 		if (displayNotes) { rep.addColumn("Notes"); }
-		
+	}
+	
+	public void buildReportData(Connection db) throws SQLException {
 		this.buildList(db);
 		
 		Iterator x = this.iterator();
@@ -222,7 +226,13 @@ public class ContactReport extends ContactList {
 			
 			rep.addRow(thisRow);
 		}
+	}
 		
+
+	public void buildReportFull(Connection db) throws SQLException {
+		buildReportBaseInfo();
+		buildReportHeaders();
+		buildReportData(db);
 	}
 	
 	public boolean saveAndInsert(Connection db) throws Exception {
