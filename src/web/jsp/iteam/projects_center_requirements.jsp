@@ -1,6 +1,8 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <table border='0' width='100%'  bgcolor='#000000' cellspacing='0' cellpadding='0'>
   <tr>
     <td width='100%' bgcolor='#FF9900'>
@@ -32,7 +34,7 @@
       <%= thisRequirement.getEnteredString() %>
     </td>
     <td width='412' valign='top'>
-      <%= thisRequirement.getAssignmentTag("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=2&expand=" + thisRequirement.getId()) %>
+      <%= thisRequirement.getAssignmentTag("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() + "&expand=" + thisRequirement.getId()) %>
       <a href="ProjectManagementRequirements.do?command=Modify&rid=<%= thisRequirement.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisRequirement.getShortDescription()) %></a>
       (<%= thisRequirement.getAssignments().size() %> activit<%= (thisRequirement.getAssignments().size() == 1?"y":"ies") %>)<br>
       <%= ("".equals(thisRequirement.getSubmittedBy())?"":"<i>Requested By " + thisRequirement.getSubmittedBy() + "</i>") %>
@@ -43,6 +45,28 @@
     </td>
   </tr>
 <%    
+    if (thisRequirement.isTreeOpen() && thisRequirement.getAssignments().size() > 0) {
+      Iterator assignments = thisRequirement.getAssignments().iterator();
+      while (assignments.hasNext()) {
+        Assignment thisAssignment = (Assignment)assignments.next();
+%>
+  <tr<%= bgColorVar %>>
+    <td valign="top" colspan="2">
+      &nbsp;
+    </td>
+    <td valign="top">
+      &nbsp;<%= thisAssignment.getStatusGraphicTag() %>
+      <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= Project.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true','CFS_Assignment','600','325','yes','no');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
+      (<dhv:username id="<%= thisAssignment.getUserAssignedId() %>"/>)
+    </td>
+    <td valign="top" nowrap>
+      Due: <%= thisAssignment.getRelativeDueDateString() %><br>
+      LOE: <%= thisAssignment.getEstimatedLoeString() %>
+    </td>
+  </tr>
+<%
+      }
+    }
     if (bgColorVar.equals(" bgColor='#E4E4E4'")) {
       bgColorVar = "";
     } else {

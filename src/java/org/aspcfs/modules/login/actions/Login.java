@@ -78,8 +78,8 @@ public final class Login extends GenericAction {
             );
         ce.setDbName(dbName);
       } else {
-        loginBean.setMessage("* Access denied: Host does not exist ("
-             + serverName + "@" + siteCode + ")");
+        loginBean.setMessage("* Access denied: Host does not exist (" +
+             serverName + ")");
       }
       rs.close();
       pst.close();
@@ -123,11 +123,11 @@ public final class Login extends GenericAction {
       pst.setString(1, username.toLowerCase());
       rs = pst.executeQuery();
       if (!rs.next()) {
-        loginBean.setMessage("* Access denied: Username not found.");
+        loginBean.setMessage("* Access denied: Invalid login information.");
       } else {
         String pw = rs.getString("password");
         if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password))   ) {
-          loginBean.setMessage("* Access denied: Invalid password.");
+          loginBean.setMessage("* Access denied: Invalid login information.");
         } else {
           java.sql.Date expDate = rs.getDate("expires");
           

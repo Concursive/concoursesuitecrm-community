@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page  import="java.util.*,com.darkhorseventures.cfsmodule.*,com.darkhorseventures.controller.*" %>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <jsp:useBean id="ModuleBean" class="com.darkhorseventures.cfsmodule.ModuleBean" scope="request"/>
@@ -13,11 +14,11 @@
 <link rel="stylesheet" href="css/template0.css" type="text/css">
 </head>
 <script language="JavaScript" type="text/javascript" src="/javascript/popLEFT.js"></script>
-<body leftmargin=0 rightmargin=0 margin=0 marginwidth=0 topmargin=0 marginheight=0>
+<body leftmargin="0" rightmargin="0" margin="0" marginwidth="0" topmargin="0" marginheight="0">
 <table border="0" width="100%">
   <tr>
     <th align="left" class="highlight">
-      <!--<img border="0" src="/images/virginian-pilot.gif" width="295" height="32" align="top">-->
+      <dhv:label name="logo">&nbsp;</dhv:label>
       &nbsp;
     </th>
     <th align="right">
