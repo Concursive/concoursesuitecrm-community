@@ -387,6 +387,12 @@
       <property>modified</property>
       <property lookup="user">modifiedBy</property>
     </map>
+    <map class="com.zeroio.iteam.base.FileDownloadLog" id="fileDownloadLog">
+      <property lookup="fileItem">itemId</property>
+      <property>version</property>
+      <property lookup="user">userId</property>
+      <property>downloadDate</property>
+    </map>
     <map class="com.darkhorseventures.cfsbase.ContactEmailAddress" id="contactEmailAddress">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>

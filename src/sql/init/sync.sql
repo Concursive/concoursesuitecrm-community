@@ -732,7 +732,10 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'fileItemVersion', 'com.zeroio.iteam.base.FileItemVersion');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'fileItemVersionList', 'com.zeroio.iteam.base.FileItemVersionList'); 
+ VALUES (4, 'fileItemVersionList', 'com.zeroio.iteam.base.FileItemVersionList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'fileDownloadLog', 'com.zeroio.iteam.base.FileDownloadLog');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactAddress', 'com.darkhorseventures.cfsbase.ContactAddress');
