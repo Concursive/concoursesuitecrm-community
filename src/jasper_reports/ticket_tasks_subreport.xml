@@ -18,15 +18,15 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="ticketid" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(6)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT t.task_id,
 priority, description, 
 duedate, completedate,
 c.namefirst AS firstname, c.namelast AS lastname
 FROM task t
-LEFT JOIN tasklink_contact tc ON (t.task_id = tc.task_id)
-LEFT JOIN contact c ON (tc.contact_id = c.contact_id)
+LEFT JOIN access a ON (t.owner = a.user_id)
+LEFT JOIN contact c ON (a.contact_id = c.contact_id)
 WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id = $P{ticketid})]]></queryString>
 	<field name="description" class="java.lang.String"/>
 	<field name="duedate" class="java.sql.Timestamp"/>
@@ -128,7 +128,7 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						x="4"
 						y="1"
 						width="108"
-						height="15"
+						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -146,7 +146,7 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						x="114"
 						y="1"
 						width="104"
-						height="14"
+						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -164,7 +164,7 @@ WHERE t.task_id IN (SELECT tt.task_id FROM tasklink_ticket tt WHERE tt.ticket_id
 						x="222"
 						y="1"
 						width="61"
-						height="13"
+						height="17"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
