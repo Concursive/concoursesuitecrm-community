@@ -60,8 +60,8 @@ public class Campaign extends GenericBean {
   private int sendMethodId = -1;
   private String deliveryName = null;
   private int files = 0;
-  private int surveyId = -1;
   
+  private int surveyId = -1;
   private String serverName = "";
 
 
