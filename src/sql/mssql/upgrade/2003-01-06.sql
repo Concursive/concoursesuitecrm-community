@@ -14,11 +14,9 @@ CREATE TABLE sync_map (
   table_id INT NOT NULL,
   record_id INT NOT NULL,
   cuid VARCHAR(50) NOT NULL,
-  complete BIT DEFAULT false,
+  complete BIT DEFAULT 0,
   status_date DATETIME
 );
 
 CREATE UNIQUE INDEX idx_sync_map ON sync_map (client_id, table_id, record_id);
-
-UPDATE STATISTICS sync_map;
 
