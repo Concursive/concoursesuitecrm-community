@@ -415,10 +415,6 @@ public class OrganizationReport extends OrganizationList {
       rep.addColumn("Entered");
       rep.addColumn("Modified");
     }
-
-    if (folderId > -1) {
-      rep.addColumn("Folder Name");
-    }
   }
 
 
