@@ -1,0 +1,98 @@
+/*
+  This is a beanshell script that converts a decimal hours to '
+  integer hours and minutes in table ticket_activity_item
+  
+  The minutes are rounded to  five minutes intervals
+
+  connection (db) from ant upgradedb
+  
+*/
+import java.sql.*;
+import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.modules.servicecontracts.base.*;
+import java.util.*;
+
+int counter = 0;
+ArrayList oldActivityItemList = new ArrayList();
+ArrayList newActivityItemList = new ArrayList();
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT item_id, travel_time, labor_time " +
+  "FROM ticket_activity_item ");
+while(rs.next()){
+  ++counter;
+  System.out.println("Adding item: " + counter);
+  TicketPerDayDescription thisDescription = new TicketPerDayDescription();
+  thisDescription.setId(rs.getInt("item_id"));
+  thisDescription.setTravelTime(rs.getDouble("travel_time"));
+  thisDescription.setLaborTime(rs.getDouble("labor_time"));
+  oldActivityItemList.add(thisDescription);
+}
+rs.close();
+st.close();
+
+itr1 = oldActivityItemList.iterator(); 
+while (itr1.hasNext()){
+  TicketPerDayDescription thisDescription = new TicketPerDayDescription();
+  TicketPerDayDescription oldDescription = (TicketPerDayDescription)itr1.next();
+  
+  thisDescription.setId(oldDescription.getId());
+  double oldTravelTime = oldDescription.getTravelTime();
+  Double tmpDouble = new Double(oldTravelTime);
+  int newTravelHours = tmpDouble.intValue();
+  //convert the decimal part of the number to minutes
+  tmpDouble = new Double(((((oldTravelTime * 100) % 100) * 1.0) /100) * 60);
+  int newTravelMinutes = tmpDouble.intValue();
+  //Round minutes to multiples of 5
+  int fivesMultiple = newTravelMinutes / 5;
+  int fivesRemainder = newTravelMinutes % 5;
+  if (fivesRemainder >= 3)
+    newTravelMinutes = (fivesMultiple + 1) * 5;
+  else
+    newTravelMinutes = (fivesMultiple) * 5;
+
+  thisDescription.setTravelHours(newTravelHours);
+  thisDescription.setTravelMinutes(newTravelMinutes);
+
+  double oldLaborTime = oldDescription.getLaborTime();
+  tmpDouble = new Double(oldLaborTime);
+  int newLaborHours = tmpDouble.intValue();
+  //convert the decimal part of the number to minutes
+  tmpDouble = new Double(((((oldLaborTime * 100) % 100) * 1.0) /100) * 60);
+  int newLaborMinutes = tmpDouble.intValue();
+  //Round minutes to multiples of 5
+  fivesMultiple = newLaborMinutes / 5;
+  fivesRemainder = newLaborMinutes % 5;
+  if (fivesRemainder >= 3)
+    newLaborMinutes = (fivesMultiple + 1) * 5;
+  else
+    newLaborMinutes = (fivesMultiple) * 5;
+
+  thisDescription.setLaborHours(newLaborHours);
+  thisDescription.setLaborMinutes(newLaborMinutes);
+  
+  System.out.println(thisDescription.getLaborHours() + " " + thisDescription.getLaborMinutes());
+  
+  newActivityItemList.add(thisDescription);
+}
+
+itr2 = newActivityItemList.iterator(); 
+while (itr2.hasNext()){
+  TicketPerDayDescription thisDescription = (TicketPerDayDescription)itr2.next();  
+  st = db.prepareStatement(
+    "UPDATE ticket_activity_item " +
+    "SET travel_hours = ? , " + 
+    "travel_minutes = ? ," +
+    "labor_hours = ? ," +
+    "labor_minutes = ? " +
+    "WHERE item_id = ? ");
+   
+   int j = 0;
+   st.setInt(++j,thisDescription.getTravelHours()); 
+   st.setInt(++j,thisDescription.getTravelMinutes()); 
+   st.setInt(++j,thisDescription.getLaborHours()); 
+   st.setInt(++j,thisDescription.getLaborMinutes()); 
+   st.setInt(++j,thisDescription.getId());
+   st.execute();
+   st.close();
+}

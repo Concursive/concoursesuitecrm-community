@@ -1,0 +1,66 @@
+/*
+  This is a beanshell script that performs the following
+  1. Updates  remaining hours in the service contract for every related 
+     ticket_activity related, it ASSUMES that both labor and travel
+     count towards contract
+     
+     connection (db) from ant upgradedb
+*/
+
+import java.sql.*;
+import org.aspcfs.modules.servicecontracts.base.*;
+import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.utils.DatabaseUtils;
+import java.util.*;
+
+st = db.createStatement();
+rs = st.executeQuery(
+    "SELECT form_id, link_ticket_id, tcf.modified as modified, sum(labor_hours) as tlh,sum(labor_minutes) as tlm,sum(travel_hours) as tth,sum(travel_minutes) as ttm " +
+    "FROM ticket_activity_item , ticket_csstm_form tcf " +
+    "WHERE link_form_id = form_id " +
+    "GROUP BY form_id, tcf.modified, link_ticket_id");
+
+contractList = new ArrayList();
+while (rs.next()){
+  thisMaintenance = new  TicketActivityLog();
+  //thisObj.calculateNetHours();
+  thisMaintenance.setId(rs.getInt("form_id"));
+  thisMaintenance.setLinkTicketId(rs.getInt("link_ticket_id"));
+  thisMaintenance.setModified(rs.getTimestamp("modified"));
+  thisMaintenance.setTotalLaborHours(rs.getInt("tlh"));
+  thisMaintenance.setTotalLaborMinutes(rs.getInt("tlm"));
+  thisMaintenance.setTotalTravelHours(rs.getInt("tth"));
+  thisMaintenance.setTotalTravelMinutes(rs.getInt("ttm"));
+  contractList.add(thisMaintenance);
+}   
+
+rs.close();
+st.close();
+
+print("extracted records");
+itr1 = contractList.iterator();
+while(itr1.hasNext()){
+ thisMaintenance =  (TicketActivityLog)itr1.next();
+  
+ st = db.prepareStatement(
+   "SELECT link_contract_id " +
+   "FROM ticket " +
+   "WHERE ticketid = ? ");
+ 
+ st.setInt(1,thisMaintenance.getLinkTicketId());
+ 
+ rs = st.executeQuery();
+ tmpContractId = -1;
+ if (rs.next()){
+   tmpContractId = DatabaseUtils.getInt(rs,"link_contract_id");
+ }
+ 
+ rs.close();
+ st.close();
+ 
+ if (tmpContractId > 0){
+   double netHours = thisMaintenance.getTotalLaborHours() + thisMaintenance.getTotalTravelHours();
+   netHours = netHours + ((thisMaintenance.getTotalLaborMinutes() + thisMaintenance.getTotalTravelMinutes()) * 1.0)/60;
+   ServiceContract.updateHoursRemaining(db,tmpContractId, (-1.0 * netHours));
+ }
+}

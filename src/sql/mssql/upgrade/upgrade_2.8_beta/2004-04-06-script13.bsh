@@ -1,0 +1,56 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Reason lookup
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+String module = "Service Contracts";
+int level = 933;
+boolean hasFolders = false;
+boolean hasLookups = true;
+boolean hasViewpoints = false;
+boolean hasCategories = false;
+boolean hasScheduledEvents = false;
+boolean hasObjectEvents = false;
+boolean hasReports = false;
+
+//Check a module
+boolean isNew = false;
+int moduleId = -1;
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = '" + module + "'");
+if (rs.next()) {
+  moduleId = rs.getInt("category_id");
+}
+rs.close();
+st.close();
+//Insert the category if needed
+if (moduleId > -1) {
+  print("Inserting new lookup tables...");
+  if (1 == 1) {
+    PreparedStatement pst = db.prepareStatement(
+      "INSERT INTO lookup_lists_lookup " +
+      "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+    pst.setInt(1, moduleId);
+    pst.setInt(2, 130041100);
+    pst.setInt(3, 308041546);
+    pst.setInt(4, 10);
+    pst.setString(5, "lookup_hours_reason");
+    pst.setString(6, "Contract Hours Adjustment Reason");
+    pst.setString(7, "lookupList");
+    pst.executeUpdate();
+    pst.close();
+  }
+} else {
+  print("** PROBLEM: Service Contracts does not exist");
+}
+
+print("Finished");

@@ -1,0 +1,103 @@
+/*
+  This is a beanshell script that performs the following
+  1. Adds a record in service_contract_hours to record the initial purchase.
+  2. Populates the column "total_remaining hours" if it is null with the  value in total purchased hours.
+  3. Adds a record in the service_contract_hours with the difference of total_hours and remaining hours
+  
+  connection (db) from ant upgradedb
+  
+*/
+import java.sql.*;
+import org.aspcfs.modules.servicecontracts.base.*;
+import java.util.*;
+
+//1. Adds a record in service_contract_hours to record the initial purchase.
+st = db.createStatement();
+rs = st.executeQuery(
+    "SELECT contract_id, total_hours_purchased " +
+    "FROM service_contract ");
+hoursList = new ArrayList();
+while (rs.next()){
+  ServiceContractHours thisHours = new ServiceContractHours();
+  thisHours.setServiceContractId(rs.getInt("contract_id"));
+  thisHours.setAdjustmentHours(rs.getInt("total_hours_purchased"));
+  thisHours.setAdjustmentNotes("Initial addition of service contract hours");
+  hoursList.add(thisHours);  
+}
+rs.close();
+st.close();
+
+itr1 = hoursList.iterator();
+while (itr1.hasNext()){
+  ServiceContractHours thisHours = (ServiceContractHours)itr1.next();
+  st = db.prepareStatement(
+  "INSERT INTO service_contract_hours " +
+  "(link_contract_id, adjustment_hours, adjustment_notes, enteredBy, modifiedBy) " +
+  "VALUES (?,?,?,?,?) ");
+  i = 0;
+  st.setInt(++i, thisHours.getServiceContractId());
+  st.setDouble(++i, thisHours.getAdjustmentHours());
+  st.setString(++i, thisHours.getAdjustmentNotes());
+  st.setInt(++i, 0);
+  st.setInt(++i, 0);
+  
+  st.execute();
+  st.close();
+}
+
+
+//2. Populates the column "total_remaining hours" if it is null with the  value in total purchased hours.
+st = db.prepareStatement(
+  "UPDATE service_contract " +
+  "SET total_hours_remaining = total_hours_purchased " + 
+  "WHERE total_hours_remaining IS NULL ");
+
+st.execute();
+st.close();
+
+
+//3. Adds a record in the service_contract_hours with the difference total_hours and remaining hours.
+contractList = new ArrayList();
+st = db.createStatement();
+rs = st.executeQuery(
+      "SELECT contract_id, total_hours_purchased, total_hours_remaining " +
+      "FROM service_contract ");
+while (rs.next()){
+  ServiceContract thisContract = new ServiceContract();
+  thisContract.setId(rs.getInt("contract_id"));
+  thisContract.setTotalHoursPurchased(rs.getInt("total_hours_purchased"));
+  thisContract.setTotalHoursRemaining(rs.getDouble("total_hours_remaining"));
+  contractList.add(thisContract);
+}
+
+rs.close();
+st.close();
+
+itr2 = contractList.iterator();
+while (itr2.hasNext()){
+  ServiceContract thisContract = (ServiceContract) itr2.next();
+
+  double hoursChanged = thisContract.getTotalHoursRemaining() - thisContract.getTotalHoursPurchased();
+  if (hoursChanged != 0.0){
+    st = db.prepareStatement(
+          "INSERT INTO service_contract_hours " + 
+          "(link_contract_id, " +
+          "adjustment_hours, " +
+          "adjustment_notes, " +
+          "enteredby , " +
+          "modifiedby ) " +
+          "VALUES " +
+          "(?,?,?,?,?)");
+  
+    i = 0;
+    st.setInt(++i, thisContract.getId());
+    st.setDouble(++i, hoursChanged);
+    st.setString(++i, "Adjustment recorded during system upgrade, contact administrator for further information");
+    st.setInt(++i, 0);
+    st.setInt(++i, 0);
+
+    st.execute();
+    st.close();
+  }
+}
+
