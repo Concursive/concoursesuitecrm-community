@@ -1487,18 +1487,18 @@ public void setCompanyEnabled(boolean companyEnabled) {
                 pst.setNull(++i, java.sql.Types.INTEGER);
         }
     pst.setInt(++i, assignedTo);
-    if (this.getSubcat1() > 0) {
-            pst.setInt(++i, this.getSubcat1());
+    if (this.getSubCat1() > 0) {
+            pst.setInt(++i, this.getSubCat1());
     } else {
             pst.setNull(++i, java.sql.Types.INTEGER);
     }
-    if (this.getSubcat2() > 0) {
-            pst.setInt(++i, this.getSubcat2());
+    if (this.getSubCat2() > 0) {
+            pst.setInt(++i, this.getSubCat2());
     } else {
             pst.setNull(++i, java.sql.Types.INTEGER);
     }
-    if (this.getSubcat3() > 0) {
-            pst.setInt(++i, this.getSubcat3());
+    if (this.getSubCat3() > 0) {
+            pst.setInt(++i, this.getSubCat3());
     } else {
             pst.setNull(++i, java.sql.Types.INTEGER);
     }
