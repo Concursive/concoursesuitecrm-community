@@ -1,0 +1,59 @@
+/**
+ *  Browser challenges and solutions
+ *
+ *@author     Matt Rajkowski (mrajkowski@darkhorseventures.com)
+ *@created    March 8, 2003
+ *@version    $Id$
+ */
+
+There are several issues regarding the browser and the operating system the
+browser runs on.
+
+Supported and tested browsers:
+- Internet Explorer 5.0 (Windows)
+- Internet Explorer 5.5 (Windows)
+- Internet Explorer 6.0 (Windows)
+- Mozilla 1.2 (Windows/Linux/Macintosh)
+- Mozilla 1.3b (Windows/Linux/Macintosh)
+- Netscape 6 (Windows)
+- Netscape 7 (Windows)
+
+Issue #1: Fonts
+- Depending on the OS, different fonts are available, it's important to provide
+  several fonts for the browser to choose from in the HTML
+- For CFS, 8pt looks the best for the amount of data that is displayed
+- Up to Mozilla 1.2 on Linux, 10pt more closely matches 8pt on Windows
+Solutions:
+- Use font-family: verdana, arial, sans-serif
+- For everything except Mozilla < 1.3 use font-size: 8pt
+  For Mozilla < 1.3 use font-size: 10pt
+  An even easier solution is to just use 8pt fonts and let the user set
+  a minimum, hopefully their browser will catch up
+
+Issue #2: Cascading Style Sheets
+- Although there are issues in what CSS version a browser supports, CFS
+  keeps it simple and and supports the lowest-common-demoninator, which is
+  currently IE 5.0
+
+Issue #3: JavaScript
+- Most browsers fall into either the IE version x camp (mainly IE) or the
+  Netscape version x camp.  In JavaScript, a simple check can determine
+  the browsers capability.
+Solution:
+- ClientType can return the camp the browser falls under: 
+  IE 3, 4, 5, 5.5, 6
+  NS 4, 6 (Includes Mozilla and variants)
+
+Issue #4: In-line HTML editing
+- This is an interesting feature in which a user can compose HTML within
+  a web page
+- Internet Explorer 5.5 introduced this feature
+- Mozilla 1.3 now has its implementation available
+- As of now, Netscape doesn't support this, but it will in a new release
+Solution:
+- In a web page that uses HTML editing, specify the specific supported
+  browsers, else default to a simple TextArea
+- If IE 5.5 or greater, implement it one way
+- If Mozilla 1.3 or greater, implement it another way
+- Else use a TextArea
+
