@@ -202,7 +202,14 @@ public final class AdminConfig extends CFSModule {
     prefs.populateContext(context.getServletContext());
     return "UpdateOK";
   }
-  
+
+  // BEGIN DHV CODE ONLY
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpdateLicense(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-view")) {
       return ("PermissionError");
@@ -221,7 +228,7 @@ public final class AdminConfig extends CFSModule {
         //Send the current key, email address, profile, and crc
         java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
             getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-        XMLUtils xml = new XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, 
+        XMLUtils xml = new XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key,
             StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
         //Encode the license for transmission
         BASE64Encoder encoder = new BASE64Encoder();
@@ -277,7 +284,7 @@ public final class AdminConfig extends CFSModule {
       }
       //If manual input, then allow user to input the license code
       if ("manual".equals(process)) {
-        
+
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -285,5 +292,6 @@ public final class AdminConfig extends CFSModule {
     }
     return "LicenseCheckOK";
   }
+  // END DHV CODE ONLY
 }
 
