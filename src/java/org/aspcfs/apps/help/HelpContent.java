@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.*;
 import com.darkhorseventures.database.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -696,7 +697,7 @@ public class HelpContent {
       title.appendChild(d.createTextNode(getTitle()));
     }
     if (getDescription() != null) {
-      description.appendChild(d.createTextNode(getDescription()));
+      description.appendChild(d.createTextNode(XMLUtils.toXMLValue(getDescription())));
     }
 
     pageDescription.appendChild(action);
@@ -725,28 +726,28 @@ public class HelpContent {
     Iterator i = getFeatures().iterator();
     while (i.hasNext()) {
       Node description = d.createElement("featureDescription");
-      description.appendChild(d.createTextNode((String) i.next()));
+      description.appendChild(d.createTextNode(XMLUtils.toXMLValue((String) i.next())));
       features.appendChild(description);
     }
 
     i = getNotes().iterator();
     while (i.hasNext()) {
       Node description = d.createElement("noteDescription");
-      description.appendChild(d.createTextNode((String) i.next()));
+      description.appendChild(d.createTextNode(XMLUtils.toXMLValue((String) i.next())));
       notes.appendChild(description);
     }
 
     i = getRules().iterator();
     while (i.hasNext()) {
       Node description = d.createElement("ruleDescription");
-      description.appendChild(d.createTextNode((String) i.next()));
+      description.appendChild(d.createTextNode(XMLUtils.toXMLValue((String) i.next())));
       rules.appendChild(description);
     }
 
     i = getTips().iterator();
     while (i.hasNext()) {
       Node description = d.createElement("tipDescription");
-      description.appendChild(d.createTextNode((String) i.next()));
+      description.appendChild(d.createTextNode(XMLUtils.toXMLValue((String) i.next())));
       tips.appendChild(description);
     }
 

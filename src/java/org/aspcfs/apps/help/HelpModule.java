@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.*;
 import com.darkhorseventures.database.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -471,10 +472,10 @@ public class HelpModule {
     Node detailDescription = d.createElement("detailDescription");
 
     if (getBriefDescription() != null) {
-      briefDescription.appendChild(d.createTextNode(getBriefDescription()));
+      briefDescription.appendChild(d.createTextNode(XMLUtils.toXMLValue(getBriefDescription())));
     }
     if (getDetailDescription() != null) {
-      detailDescription.appendChild(d.createTextNode(getDetailDescription()));
+      detailDescription.appendChild(d.createTextNode(XMLUtils.toXMLValue(getDetailDescription())));
     }
     module.appendChild(briefDescription);
     module.appendChild(detailDescription);

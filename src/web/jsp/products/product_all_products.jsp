@@ -38,26 +38,30 @@ View Products
  <%
     Iterator itr = productList.iterator();
     if (itr.hasNext()){
-		int rowid = 0;
-    int i = 0;
-		while (itr.hasNext()) {
-      i++;
-		  rowid = (rowid != 1?1:2);
-      ProductCatalog thisProduct = (ProductCatalog)itr.next();
+		  int rowid = 0;
+    	int i = 0;
+      while (itr.hasNext()) {
+        i++;
+	      rowid = (rowid != 1?1:2);
+    	  ProductCatalog thisProduct = (ProductCatalog)itr.next();
   %>
-   <tr class="row<%= rowid %>">
-    <td>
-      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('menuProduct', '<%= thisProduct.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
-    </td>
-		<td>
-			<a href="ProductsCatalog.do?command=ViewProductDetails&productId=<%=thisProduct.getId()%>"><%= thisProduct.getSku() %></a>
-		</td>
-		<td>
-			<%= toHtml(thisProduct.getName()) %>
-		</td>
-    </tr>
-    <%}%>
+       <tr class="row<%= rowid %>">
+        <td>
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+           <a href="javascript:displayMenu('menuProduct', '<%= thisProduct.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+        </td>
+        <td>
+          <a href="ProductsCatalog.do?command=ViewProductDetails&productId=<%=thisProduct.getId()%>"><%= thisProduct.getSku() %></a>
+        </td>
+        <td>
+          <%= toHtml(thisProduct.getName()) %>
+        </td>
+        </tr>
+     <%}%>
+   <%}else{%>
+       <tr class="row2">
+        <td colspan="3">No products found.</td>
+       </tr>
    <%}%>
   </table>
 <br>

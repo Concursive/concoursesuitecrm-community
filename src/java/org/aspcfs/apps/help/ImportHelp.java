@@ -5,6 +5,7 @@ import java.util.*;
 import com.darkhorseventures.database.*;
 import org.aspcfs.modules.admin.base.*;
 import org.w3c.dom.*;
+import org.aspcfs.utils.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -246,10 +247,10 @@ public class ImportHelp {
       helpModule.setContentLevel(moduleNMP.getNamedItem("contentLevel").getNodeValue());
 
       NodeList briefDescription = ((Element) module).getElementsByTagName("briefDescription");
-      helpModule.setBriefDescription(briefDescription.item(0).getFirstChild().getNodeValue());
+      helpModule.setBriefDescription(XMLUtils.toString(briefDescription.item(0).getFirstChild().getNodeValue()));
 
       NodeList detailDescription = ((Element) module).getElementsByTagName("detailDescription");
-      helpModule.setDetailDescription(detailDescription.item(0).getFirstChild().getNodeValue());
+      helpModule.setDetailDescription(XMLUtils.toString(detailDescription.item(0).getFirstChild().getNodeValue()));
 
       NodeList pageList = ((Element) module).getElementsByTagName("pageDescription");
 
@@ -274,27 +275,27 @@ public class ImportHelp {
         helpContent.setTitle(((title.item(0).getFirstChild() != null) ? title.item(0).getFirstChild().getNodeValue() : null));
 
         NodeList description = ((Element) page).getElementsByTagName("description");
-        helpContent.setDescription(((description.item(0).getFirstChild() != null) ? description.item(0).getFirstChild().getNodeValue() : null));
+        helpContent.setDescription(((description.item(0).getFirstChild() != null) ? XMLUtils.toString(description.item(0).getFirstChild().getNodeValue()) : null));
 
         int k = 0;
         NodeList featureList = ((Element) page).getElementsByTagName("featureDescription");
         for (k = 0; k < featureList.getLength(); k++) {
-          helpContent.getFeatures().add(featureList.item(k).getFirstChild().getNodeValue());
+          helpContent.getFeatures().add(XMLUtils.toString(featureList.item(k).getFirstChild().getNodeValue()));
         }
 
         NodeList ruleList = ((Element) page).getElementsByTagName("ruleDescription");
         for (k = 0; k < ruleList.getLength(); k++) {
-          helpContent.getRules().add(ruleList.item(k).getFirstChild().getNodeValue());
+          helpContent.getRules().add(XMLUtils.toString(ruleList.item(k).getFirstChild().getNodeValue()));
         }
 
         NodeList noteList = ((Element) page).getElementsByTagName("noteDescription");
         for (k = 0; k < noteList.getLength(); k++) {
-          helpContent.getNotes().add(noteList.item(k).getFirstChild().getNodeValue());
+          helpContent.getNotes().add(XMLUtils.toString(noteList.item(k).getFirstChild().getNodeValue()));
         }
 
         NodeList tipList = ((Element) page).getElementsByTagName("tipDescription");
         for (k = 0; k < tipList.getLength(); k++) {
-          helpContent.getTips().add(tipList.item(k).getFirstChild().getNodeValue());
+          helpContent.getTips().add(XMLUtils.toString(tipList.item(k).getFirstChild().getNodeValue()));
         }
 
         helpModule.getHelpContents().add(helpContent);

@@ -28,7 +28,7 @@ Forms
 </table>
 <%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="tickets" selected="form" param="<%= "orgId=" + ticketDetails.getOrgId() %>" style="tabs"/>
+<dhv:container name="accounts" selected="tickets" param="<%= "orgId=" + ticketDetails.getOrgId() %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">

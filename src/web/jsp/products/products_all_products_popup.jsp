@@ -84,7 +84,7 @@
 %>
       <tr class="containerBody">
         <td colspan="3">
-          No options matched query.
+          No products found.
         </td>
       </tr>
 <%

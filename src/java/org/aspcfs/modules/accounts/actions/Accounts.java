@@ -1001,8 +1001,15 @@ public final class Accounts extends CFSModule {
       htmlDialog.setTitle("Dark Horse CRM: Account Management");
       DependencyList dependencies = thisOrg.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
-      if (thisOrg.getHasOpportunities()) {
-        htmlDialog.setHeader("Please re-assign or delete any opportunities associated with this account first.");
+      if (thisOrg.getHasOpportunities() || thisOrg.getHasPortalUsers()) {
+        String headerMessage = "";
+        if (thisOrg.getHasPortalUsers()){
+          headerMessage = "This account cannot be deleted because its contacts have (or had) portal access.  <br />";
+        }
+        if (thisOrg.getHasOpportunities()){
+          headerMessage = "Please re-assign or delete any opportunities associated with this account first.";
+        }
+        htmlDialog.setHeader(headerMessage);
         htmlDialog.addButton("OK", "javascript:parent.window.close()");
       } else {
         htmlDialog.setHeader("The account you are requesting to delete has the following dependencies within Dark Horse CRM:");

@@ -360,6 +360,26 @@ public class XMLUtils {
 
 
   /**
+   *  Converts an XML String by replacing XML characters with
+   *  the String equivalent
+   *
+   *@param  xml  Description of the Parameter
+   *@return      Description of the Return Value
+   */
+  public static String toString(String xml) {
+    if (xml != null) {
+      String stringReady = xml.trim();
+      stringReady = StringHelper.replace(stringReady, "&quot;", "\"");
+      stringReady = StringHelper.replace(stringReady, "&lt;", "<");
+      stringReady = StringHelper.replace(stringReady, "&gt;", ">");
+      return (stringReady);
+    } else {
+      return ("");
+    }
+  }
+
+
+  /**
    *  Convert XML to a string using the default encoding, UTF-8
    *
    *@param  node  Description of the Parameter

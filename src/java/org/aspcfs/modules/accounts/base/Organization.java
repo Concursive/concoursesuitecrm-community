@@ -81,6 +81,7 @@ public class Organization extends GenericBean {
 
   private Contact primaryContact = null;
   private boolean hasOpportunities = false;
+  private boolean hasPortalUsers = false;
 
 
   /**
@@ -798,6 +799,26 @@ public class Organization extends GenericBean {
    */
   public void setHasOpportunities(boolean hasOpportunities) {
     this.hasOpportunities = hasOpportunities;
+  }
+
+
+  /**
+   *  Sets the hasPortalUsers attribute of the Organization object
+   *
+   *@param  tmp  The new hasPortalUsers value
+   */
+  public void setHasPortalUsers(boolean tmp) {
+    this.hasPortalUsers = tmp;
+  }
+
+
+  /**
+   *  Gets the hasPortalUsers attribute of the Organization object
+   *
+   *@return    The hasPortalUsers value
+   */
+  public boolean getHasPortalUsers() {
+    return hasPortalUsers;
   }
 
 
@@ -1558,6 +1579,24 @@ public class Organization extends GenericBean {
       contactDependency.setName("Contacts");
       contactDependency.setCount(ContactList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       contactDependency.setCanDelete(true);
+
+      //finding if any of the account contacts have user accounts
+      if (contactDependency.getCount() > 0) {
+        ContactList contactList = new ContactList();
+        contactList.setOrgId(this.orgId);
+        contactList.buildList(db);
+        Iterator itr = contactList.iterator();
+        //Setting canDelete to false if an account contact has had portal access
+        while (itr.hasNext()) {
+          Contact contact = (Contact) itr.next();
+          contact.checkUserAccount(db);
+          if (contact.hasAccount()) {
+            contactDependency.setCanDelete(false);
+            this.setHasPortalUsers(true);
+            break;
+          }
+        }
+      }
       dependencyList.add(contactDependency);
 
       Dependency revenueDependency = new Dependency();
@@ -1577,19 +1616,19 @@ public class Organization extends GenericBean {
       oppDependency.setCount(oppCount);
       oppDependency.setCanDelete(true);
       dependencyList.add(oppDependency);
-      
+
       Dependency scDependency = new Dependency();
       scDependency.setName("Service Contracts");
       scDependency.setCount(ServiceContractList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       scDependency.setCanDelete(true);
       dependencyList.add(scDependency);
-      
+
       Dependency assetDependency = new Dependency();
       assetDependency.setName("Assets");
       assetDependency.setCount(AssetList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       assetDependency.setCanDelete(true);
       dependencyList.add(assetDependency);
-      
+
       Dependency ticDependency = new Dependency();
       ticDependency.setName("Tickets");
       ticDependency.setCount(TicketList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
@@ -2227,21 +2266,21 @@ public class Organization extends GenericBean {
     }
     try {
       db.setAutoCommit(false);
-      
+
       //Tickets have accounts, contacts, assets, service contracts related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setOrgId(this.getOrgId());
       ticketList.buildList(db);
       ticketList.delete(db, baseFilePath);
       ticketList = null;
-      
+
       // Delete after tickets
       AssetList assetList = new AssetList();
       assetList.setOrgId(this.getOrgId());
       assetList.buildList(db);
       assetList.delete(db);
       assetList = null;
-      
+
       // Delete after tickets and after assets
       ServiceContractList scList = new ServiceContractList();
       scList.setOrgId(this.getOrgId());
@@ -2257,7 +2296,7 @@ public class Organization extends GenericBean {
         fileList.delete(db, baseFilePath);
         fileList = null;
       }
-      
+
       CustomFieldRecordList folderList = new CustomFieldRecordList();
       folderList.setLinkModuleId(Constants.ACCOUNTS);
       folderList.setLinkItemId(this.getOrgId());
