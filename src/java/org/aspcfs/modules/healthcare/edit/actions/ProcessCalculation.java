@@ -18,142 +18,125 @@ import org.aspcfs.modules.base.CustomFieldGroup;
 import java.io.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.healthcare.edit.base.*;
+import java.text.DateFormat;
 
 /**
- *  This class processes EDIT transactions and stores them into a remote
- *  CFS system.  This process is intended to run on the transaction server
- *  each night, summarizing the transactions, and then storing them in CFS
- *  folders.
+ *  This class processes EDIT transactions and stores them into a remote CFS
+ *  system. This process is intended to run on the transaction server each
+ *  night, summarizing the transactions, and then storing them in CFS folders.
  *
  *@author     chris
  *@created    February 11, 2003
- *@version    $Id$
+ *@version    $Id: ProcessCalculation.java,v 1.4 2003/04/04 21:54:47 mrajkowski
+ *      Exp $
  */
 public final class ProcessCalculation extends CFSModule {
 
-  //these global IDs need to correspond to the folders for this to work!
-  //TODO: Move these into the CFS system_prefs table to be loaded at run-time
-  public final static int OFFICE_PROVIDER_DETAILS = 2;
-  public final static int OFFICE_PAYOR_DETAILS = 1;
-  public final static int PROVIDER_TRANSACTION_DETAILS = 4;
-  public final static int OFFICE_TRANSACTION_DETAILS = 3;
-  public final static String ERROR_REPORT_ADDRESS = "mrajkowski@darkhorseventures.com";
-
-
   /**
-   *  Execute this command to begin the processing
+   *  Execute this command to begin the processing, preferences must be set in
+   *  the system's preferences object
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
-    Connection db = null;
-    StringBuffer sb = new StringBuffer();
-    Connection prodDb = null;
+    //Declare the typical action objects
     Exception errorMessage = null;
-    java.sql.Date dateToProcess = null;
+    Connection db = null;
     HashMap errors = new HashMap();
     int providerRecordsInserted = 0;
-
-    //all the transactions from yesterday, from staging server
+    //Staging Server objects: all the transactions from yesterday will be processed
     TransactionRecordList recordList = null;
+    //CFS Server objects: folders to insert into
     CustomFieldCategoryList fullCategoryList = null;
     CustomFieldCategory providerTransDetails = null;
     CustomFieldCategory officeTransDetails = null;
-
-    //all Accounts folder categories
+    //Prepare all of the accounts folder categories
     fullCategoryList = new CustomFieldCategoryList();
     fullCategoryList.setLinkModuleId(Constants.ACCOUNTS);
     fullCategoryList.setIncludeEnabled(Constants.TRUE);
     fullCategoryList.setIncludeScheduled(Constants.TRUE);
-
-    //maps valid provider IDs with their respective OrgIds in CFS
+    //Prepare map to store valid provider IDs with their respective OrgIds in CFS
     HashMap providerOrgMapping = new HashMap();
-    //maps valid payor IDs with an ArrayList of Accounts to which they belong in CFS
+    //Prepare map to store valid payor IDs with an ArrayList of Accounts to which they belong in CFS
     HashMap payorOrgMapping = new HashMap();
-
+    //More maps to store transactions for summary report
     HashMap payorTransactions = new HashMap();
     HashMap providerTransactions = new HashMap();
+    //Objects for connecting to the remote database using the connection pool
     ConnectionPool sqlDriver = null;
     ConnectionElement connectionElement = null;
-
+    Connection prodDb = null;
     try {
       sqlDriver = new ConnectionPool();
     } catch (SQLException e) {
     }
-
-    //yesterday's date
+    //calculate date to process: yesterday's date by default
+    java.sql.Date dateToProcess = null;
     Calendar cal = Calendar.getInstance();
-    cal.add(Calendar.DATE, -1);
-    dateToProcess = new java.sql.Date(cal.getTime().getTime());
-
-    int month = cal.get(Calendar.MONTH);
-    month = month + 1;
-
-    //records from the staging server
+    String dateString = context.getRequest().getParameter("date");
+    if (dateString != null) {
+      dateToProcess = DateUtils.parseDateString(dateString);
+      cal.setTime(dateToProcess);
+    } else {
+      cal.add(Calendar.DATE, -1);
+      dateToProcess = new java.sql.Date(cal.getTimeInMillis());
+    }
+    int month = cal.get(Calendar.MONTH) + 1;
+    //Prepare records from the staging server
     recordList = new TransactionRecordList();
     recordList.setPerformed(dateToProcess);
-
+    //The report progress will be stored in a StringBuffer and emailed
+    StringBuffer sb = new StringBuffer();
     try {
       //get a local database connection
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
-
-      //connections to the remote production database
+      //get connections to the remote production database
       sqlDriver.setMaxConnections(2);
       if (System.getProperty("DEBUG") != null) {
         sqlDriver.setDebug(true);
       }
       connectionElement = new ConnectionElement(
-          "jdbc:postgresql://216.54.13.43:5432/cdb_edit",
-          "cfsdba",
-          "");
+          this.getValue(context, "DATABASE.URL"),
+          this.getValue(context, "DATABASE.USERNAME"),
+          this.getValue(context, "DATABASE.PASSWORD"));
       connectionElement.setAllowCloseOnIdle(false);
-      connectionElement.setDriver("org.postgresql.Driver");
+      connectionElement.setDriver(this.getValue(context, "DATABASE.DRIVER"));
       prodDb = sqlDriver.getConnection(connectionElement);
-
-      //build list of yesterday's records
+      //build list of yesterday's records on transaction server
       recordList.buildList(db);
-
-      //for specific Accounts folders categories (Provider Transaction Details)
-      providerTransDetails = new CustomFieldCategory(prodDb, PROVIDER_TRANSACTION_DETAILS);
+      //Get list of Accounts folders categories (Provider Transaction Details)
+      providerTransDetails = new CustomFieldCategory(prodDb, getValueAsInt(context, "PROVIDER_TRANSACTION_DETAILS"));
       providerTransDetails.setLinkModuleId(Constants.ACCOUNTS);
       providerTransDetails.setIncludeEnabled(Constants.TRUE);
       providerTransDetails.setIncludeScheduled(Constants.TRUE);
       providerTransDetails.setBuildResources(true);
-      //need some designated user
       providerTransDetails.setEnteredBy(1);
       providerTransDetails.setModifiedBy(1);
-
-      //for specific Accounts folders categories (Office Transaction Details)
-      officeTransDetails = new CustomFieldCategory(prodDb, OFFICE_TRANSACTION_DETAILS);
+      providerTransDetails.buildResources(prodDb);
+      //Get list of Accounts folders categories (Office Transaction Details)
+      officeTransDetails = new CustomFieldCategory(prodDb, getValueAsInt(context, "OFFICE_TRANSACTION_DETAILS"));
       officeTransDetails.setLinkModuleId(Constants.ACCOUNTS);
       officeTransDetails.setIncludeEnabled(Constants.TRUE);
       officeTransDetails.setIncludeScheduled(Constants.TRUE);
       officeTransDetails.setBuildResources(true);
-      //need some designated user
       officeTransDetails.setEnteredBy(1);
       officeTransDetails.setModifiedBy(1);
-
-      //build
-      providerTransDetails.buildResources(prodDb);
       officeTransDetails.buildResources(prodDb);
-
       //build a list of all the accounts custom categories
       fullCategoryList.buildList(prodDb);
-
-      //get mapping of providers to orgIds
-      CustomFieldCategory providerCategory = fullCategoryList.getCategory(OFFICE_PROVIDER_DETAILS);
-      //build groups
+      //get mapping of providers to orgIds and build
+      CustomFieldCategory providerCategory = fullCategoryList.getCategory(getValueAsInt(context, "OFFICE_PROVIDER_DETAILS"));
       providerCategory.setBuildResources(true);
       providerCategory.buildResources(prodDb);
-
+      //Get the actual provider records
       CustomFieldRecordList providerRecords = new CustomFieldRecordList();
       providerRecords.setLinkModuleId(Constants.ACCOUNTS);
       providerRecords.setCategoryId(providerCategory.getId());
       providerRecords.buildList(prodDb);
       providerRecords.buildRecordColumns(prodDb, providerCategory);
-
+      //Process the records
       Iterator p = providerRecords.iterator();
       while (p.hasNext()) {
         CustomFieldRecord rec = (CustomFieldRecord) p.next();
@@ -173,7 +156,7 @@ public final class ProcessCalculation extends CFSModule {
       //end mapping of providers to orgIds
 
       //get mapping of payors to orgIds
-      CustomFieldCategory payorCategory = fullCategoryList.getCategory(OFFICE_PAYOR_DETAILS);
+      CustomFieldCategory payorCategory = fullCategoryList.getCategory(getValueAsInt(context, "OFFICE_PAYOR_DETAILS"));
       payorCategory.setBuildResources(true);
       payorCategory.buildResources(prodDb);
 
@@ -247,7 +230,6 @@ public final class ProcessCalculation extends CFSModule {
           }
         }
         //end of error checking
-
 
         if (!hasErrors) {
           //if this taxId does not already exist as a key, add it.
@@ -427,15 +409,40 @@ public final class ProcessCalculation extends CFSModule {
     mail.setHost((String) System.getProperty("MailServer"));
     mail.setFrom("cfs-messenger@darkhorseventures.com");
     mail.setType("text/html");
-    mail.setTo(ERROR_REPORT_ADDRESS);
+    mail.setTo(this.getValue(context, "ERROR_REPORT_ADDRESS"));
     mail.setSubject("EDIT transaction data summary: " + month + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
     mail.setBody(sb.toString());
     if (mail.send() == 2) {
       System.err.println(mail.getErrorMsg());
     } else {
-      System.err.println("Error sending message to " + ERROR_REPORT_ADDRESS);
+      System.err.println("Error sending message to " + this.getValue(context, "ERROR_REPORT_ADDRESS"));
     }
     return ("-none-");
+  }
+
+
+  /**
+   *  Gets the requested preference from the System preferences as an integer.
+   *  Returns -1 if not found
+   *
+   *@param  context  Description of the Parameter
+   *@param  param    Description of the Parameter
+   *@return          The value value
+   */
+  private int getValueAsInt(ActionContext context, String param) {
+    return this.getSystemStatus(context).getValueAsInt("org.aspcfs.modules.healthcare.edit.actions.ProcessCalculation", param);
+  }
+
+
+  /**
+   *  Gets the requested preference from the System preferences as an integer.
+   *
+   *@param  context  Description of the Parameter
+   *@param  param    Description of the Parameter
+   *@return          The value value
+   */
+  private String getValue(ActionContext context, String param) {
+    return this.getSystemStatus(context).getValue("org.aspcfs.modules.healthcare.edit.actions.ProcessCalculation", param);
   }
 }
 
