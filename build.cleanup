@@ -61,3 +61,6 @@ troubletickets/troubletickets_add_activity_include.jsp
 ## 2004-09-01 updated reports to 0.5.3
 WEB-INF/lib/jasperreports.jar
 
+## 2004-09-03 updated jtds to 0.9-rc2 (fixes bug with 0.8)
+WEB-INF/lib/jtds-0.8.jar
+
