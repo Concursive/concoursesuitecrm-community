@@ -3,9 +3,22 @@
 <jsp:useBean id="OrgListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<form name="listView" method="post" action="/Accounts.do?command=View">
 <a href="/Accounts.do?command=Add">Add an Account</a>
 <center><%= OrgListInfo.getAlphabeticalPageLinks() %></center>
-<%= showAttribute(request, "actionError") %>
+
+<table width="100%" border="0">
+  <tr>
+    <td align="left">
+      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+        <option <%= OrgListInfo.getOptionValue("all") %>>All Accounts</option>
+        <option <%= OrgListInfo.getOptionValue("my") %>>My Accounts </option>
+      </select>
+      <%= showAttribute(request, "actionError") %>
+    </td>
+  </tr>
+</table>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td valign=center align=left bgcolor="#DEE0FA">
@@ -58,4 +71,4 @@
   <tr bgcolor="white"><td colspan=5 valign=center>No accounts found.</td></tr>
 </table>
 <%}%>
-
+</form>

@@ -387,7 +387,7 @@ public class OpportunityList extends Vector {
 		}
 
 		if (hasAlertDate == true) {
-			sqlFilter.append("AND alertdate is not null ");
+			sqlFilter.append("AND x.alertdate is not null ");
 		}
 
 		if (ignoreTypeIdList.size() > 0) {
@@ -413,7 +413,7 @@ public class OpportunityList extends Vector {
 		}
 
 		if (alertDate != null) {
-			sqlFilter.append("AND alertdate = ? ");
+			sqlFilter.append("AND x.alertdate = ? ");
 		}
 
 		if (owner != -1) {

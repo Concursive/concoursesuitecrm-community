@@ -4,8 +4,40 @@
 <jsp:useBean id="OrgEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+
+<script language="JavaScript">
+  function checkForm(form) {
+      formTest = true;
+      message = "";
+      if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
+        message += "- Check that Alert Date is entered correctly\r\n";
+        formTest = false;
+      }
+      if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
+        message += "- Check that Contract End Date is entered correctly\r\n";
+        formTest = false;
+      }
+      if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
+        message += "- Please specify an alert date\r\n";
+        formTest = false;
+      }
+      if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
+        message += "- Please specify an alert description\r\n";
+        formTest = false;
+      }
+      if (formTest == false) {
+        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+        return false;
+      } else {
+        return true;
+      }
+    }
+</script>
+
 <body onLoad="javascript:document.forms[0].name.focus();">
-<form name="addAccount" action="/Accounts.do?command=Insert&auto-populate=true" method="post">
+<form name="addAccount" action="/Accounts.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <input type="submit" value="Insert" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
 <input type="reset" value="Reset">
@@ -40,7 +72,7 @@
       Web Site URL
     </td>
     <td>
-      <input type=text size=55 name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
+      <input type=text size=50 name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
     </td>
   </tr>
   <tr>
@@ -76,6 +108,27 @@
     </td>
     <td valign=center colspan=1>
       <input type=text size=10 name="ticker">
+    </td>
+  </tr>
+  
+          <tr>
+    <td nowrap class="formLabel">
+      Contract End Date
+    </td>
+    <td valign=center colspan=1>
+      <input type=text size=10 name="contractEndDate" value="<%= toHtmlValue(OrgDetails.getContractEndDateString()) %>">
+      <a href="javascript:popCalendar('addAccount', 'contractEndDate');">Date</a> (mm/dd/yyyy)
+    </td>
+  </tr>
+  
+            <tr>
+    <td nowrap class="formLabel">
+      Alert
+    </td>
+    <td valign=center colspan=1>
+      <input type=text size=50 name="alertText" maxlength=50><br>
+      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateString()) %>">
+      <a href="javascript:popCalendar('addAccount', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
   

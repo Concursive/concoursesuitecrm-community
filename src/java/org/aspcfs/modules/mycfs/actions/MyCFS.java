@@ -315,7 +315,7 @@ public final class MyCFS extends CFSModule {
 			CalendarView companyCalendar = new CalendarView(context.getRequest());
 
 			PagedListInfo alertPaged = new PagedListInfo();
-			alertPaged.setMaxRecords(5);
+			alertPaged.setMaxRecords(20);
 			alertPaged.setColumnToSortBy("alertdate");
 
 			CallList alertCalls = new CallList();

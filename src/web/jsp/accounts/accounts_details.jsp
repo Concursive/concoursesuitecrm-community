@@ -89,6 +89,25 @@
        <%= toHtml(OrgDetails.getTicker()) %>&nbsp;
     </td>
   </tr>
+  
+    <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Contract End Date
+    </td>
+    <td>
+       <%= toHtml(OrgDetails.getContractEndDateString()) %>&nbsp;
+    </td>
+  </tr>
+  
+   <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Alert
+    </td>
+    <td valign=center colspan=1>
+       <%= toHtml(OrgDetails.getAlertDetails()) %>
+    </td>
+  </tr>
+  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Entered

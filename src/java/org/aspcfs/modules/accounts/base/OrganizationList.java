@@ -26,6 +26,8 @@ public class OrganizationList extends Vector {
 	private int ownerId = -1;
 	private String HtmlJsEvent = "";
 	private boolean showMyCompany = false;
+	private String ownerIdRange = null;
+	private boolean hasAlertDate = false;
 
 
 	/**
@@ -72,6 +74,12 @@ public class OrganizationList extends Vector {
 		this.showMyCompany = showMyCompany;
 	}
 
+	public boolean getHasAlertDate() {
+		return hasAlertDate;
+	}
+	public void setHasAlertDate(boolean hasAlertDate) {
+		this.hasAlertDate = hasAlertDate;
+	}
 
 	/**
 	 *  Sets the HtmlJsEvent attribute of the OrganizationList object
@@ -95,6 +103,8 @@ public class OrganizationList extends Vector {
 		this.enteredBy = tmp;
 	}
 
+	public String getOwnerIdRange() { return ownerIdRange; }
+	public void setOwnerIdRange(String tmp) { this.ownerIdRange = tmp; }
 
 	/**
 	 *  Sets the Name attribute of the OrganizationList object to limit results to
@@ -358,8 +368,16 @@ public class OrganizationList extends Vector {
 			sqlFilter.append("AND o.owner = ? ");
 		}
 		
+		if (ownerIdRange != null) {
+			sqlFilter.append("AND o.owner IN (" + ownerIdRange + ") ");
+		}
+		
 		if (showMyCompany == false) {
 			sqlFilter.append("AND o.org_id != 0 ");
+		}
+		
+		if (hasAlertDate == true) {
+			sqlFilter.append("AND o.alertdate is not null ");
 		}
 
 	}

@@ -140,97 +140,70 @@ public final class Accounts extends CFSModule {
   }
   
    public String executeCommandDashboard(ActionContext context) {
-    addModuleBean(context, "Dashboard", "Dashboard");
-    
-    int errorCode = 0;
-    int idToUse = 0;
-
-    String errorMessage = "";
-    String graphString = new String();
-    String fileName = "";
-    StringBuffer sql = new StringBuffer();
-    String checkFileName = "";
-
-    Connection db = null;
-    Statement st = null;
-    ResultSet rs = null;
-
-    //build the graph selection
-    HtmlSelect graphTypeSelect = new HtmlSelect();
-    graphTypeSelect.setSelectName("whichGraph");
-    graphTypeSelect.addItem("one", "Graph One");
-    graphTypeSelect.addItem("two", "Graph Two");
-    graphTypeSelect.addItem("three", "Graph Three");
-    graphTypeSelect.addItem("four", "Graph Four");
-    graphTypeSelect.addItem("hist", "Historical");
-    //done
-
-	
-    UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
-    String overrideId = context.getRequest().getParameter("oid");
-    
-    User thisRec = null;
-    
-    UserList shortChildList = new UserList();
-    
-	if (overrideId != null && !(overrideId.equals("null")) && !(overrideId.equals("" + thisUser.getUserId()))) {
-		idToUse = Integer.parseInt(overrideId);
-		thisRec = thisUser.getUserRecord().getChild(idToUse);
-		context.getRequest().setAttribute("override", overrideId);
-		context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
-		context.getRequest().setAttribute("previousId", "" + thisRec.getManagerId());
-	} else {
-		idToUse = thisUser.getUserId();
-		thisRec = thisUser.getUserRecord();
-	}
-	
-
-	//myOrgList.setEnteredBy(thisRec.getId());
-	//myOrgList.setOwner(thisRec.getId());
-	    
-	graphString = context.getRequest().getParameter("whichGraph");
-	
-	if (graphString == null || graphString.equals("")) {
-		graphString = "one";
-	}
-	
-	graphTypeSelect.setDefaultKey(graphString);
-	graphTypeSelect.build();
-    
-    try {
-	db = this.getConnection(context);
-	shortChildList = thisRec.getShortChildList();
-	context.getRequest().setAttribute("ShortChildList", shortChildList);
-
-	
-	OrganizationList myOrgList = new OrganizationList();
-	myOrgList.setMinerOnly(false);
-	myOrgList.setOwnerId(thisRec.getId());
-	myOrgList.buildList(db);
-	context.getRequest().setAttribute("MyOrgList", myOrgList);
-
-    } catch (Exception e) {
-	errorCode = 1;
-	errorMessage = e.toString();
-    } finally {
-	this.freeConnection(context, db);
-    }
-    
-	/**
-    if (errorCode == 0) {
-	context.getRequest().setAttribute("MyOrgList", myOrgList);
 	addModuleBean(context, "Dashboard", "Dashboard");
-	return ("DashboardOK");
-    } else {
-      //A System Error occurred
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-    */
+	
+	UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
+	
+	int alertsDD = getUserId(context);
+	
+	if (context.getRequest().getParameter("userId") != null) {
+		alertsDD = Integer.parseInt(context.getRequest().getParameter("userId"));
+	}
+	
+	//this is how we get the multiple-level heirarchy...recursive function.
+	
+	User thisRec = thisUser.getUserRecord();
+	
+	UserList shortChildList = thisRec.getShortChildList();
+	UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
+	
+	newUserList.setMyId(getUserId(context));
+	newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+	newUserList.setIncludeMe(true);
+	
+	newUserList.setJsEvent("onChange = javascript:document.forms[0].action='/Accounts.do?command=Dashboard';document.forms[0].submit()");
 	
 	
-	context.getRequest().setAttribute("GraphTypeList", graphTypeSelect);
-	return ("DashboardOK");
+	CalendarView companyCalendar = new CalendarView(context.getRequest());
+	
+	PagedListInfo orgAlertPaged = new PagedListInfo();
+	orgAlertPaged.setMaxRecords(20);
+	orgAlertPaged.setColumnToSortBy("alertdate");
+	
+	OrganizationList alertOrgs = new OrganizationList();
+	alertOrgs.setPagedListInfo(orgAlertPaged);
+	alertOrgs.setEnteredBy(alertsDD);
+	alertOrgs.setHasAlertDate(true);
+	
+	Connection db = null;
+	Exception errorMessage = null;
+
+	try {
+		db = this.getConnection(context);
+		alertOrgs.buildList(db);
+	} catch (SQLException e) {
+		errorMessage = e;
+	}
+	finally {
+		this.freeConnection(context, db);
+	}
+	
+	Iterator n = alertOrgs.iterator();
+	while (n.hasNext()) {
+		Organization thisOrg = (Organization) n.next();
+		companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getAlertText(), "Account");
+	}
+	
+	if (errorMessage == null) {
+		context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
+		context.getRequest().setAttribute("NewUserList", newUserList);
+		return ("DashboardOK");
+	}
+	else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+
 
   }
 
@@ -265,6 +238,11 @@ public final class Accounts extends CFSModule {
       db = this.getConnection(context);
       organizationList.setPagedListInfo(orgListInfo);
       organizationList.setMinerOnly(false);
+      
+      if ("my".equals(orgListInfo.getListView())) {
+        organizationList.setOwnerId(this.getUserId(context));
+      } 
+      
       organizationList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -379,7 +357,7 @@ public final class Accounts extends CFSModule {
     Connection db = null;
     int resultCount = 0;
     
-    Organization newOrg = (Organization)context.getRequest().getAttribute("OrgDetails");
+    Organization newOrg = (Organization)context.getFormBean();
     newOrg.setRequestItems(context.getRequest());
 
     try {

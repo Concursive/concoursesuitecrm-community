@@ -1,121 +1,90 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="MyOrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
-<jsp:useBean id="ShortChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<jsp:useBean id="GraphTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="CompanyCalendar" class="com.darkhorseventures.utils.CalendarView" scope="request"/>
+<jsp:useBean id="NewUserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
+<jsp:useBean id="orgAlertPaged" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-
-<form name=Dashboard action="/Accounts.do?command=Dashboard" method=POST>
-
-<table width=100% border=0 cellspacing=0 cellpadding=3>
+<table bgcolor="#FFFFFF" border="0" width="100%">
 <tr>
-<td width=350 valign=top>
-
-	<table width=100% cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr bgcolor="#DEE0FA">
-	<td valign=center colspan=1 align=center>
-		<strong>
-		<% if (request.getAttribute("override") == null || request.getAttribute("override").equals("null")) {%>
-		My Dashboard
-		<%} else if (!(request.getAttribute("othername") == null) && !(request.getAttribute("othername").equals("null"))) {%>
-		Dashboard - <%=request.getAttribute("othername")%>
-		<%}%>
-		</strong>
-	</td>
-	</tr>
+<form name="monthBean" action="MyCFS.do?command=Home" method="post">
+<td valign="top" bgcolor="#FFFFFF" width="300">
+<%  
+      CompanyCalendar.setBorderSize(1);
+      CompanyCalendar.setCellPadding(4);
+      CompanyCalendar.setCellSpacing(0);
+      CompanyCalendar.setSortEvents(true);
+      CompanyCalendar.setMonthArrows(true);
+      CompanyCalendar.setFrontPageView(true);
+      CompanyCalendar.setShowSubject(false);
+%>
+      <%= CompanyCalendar.getHtml() %>
+</td>
+  
+<td bgcolor="#FFFFFF" valign="top" height="100%" width="100%">
+	<table bgcolor="#FFFFFF" height="100%" width="100%" border="1" cellpadding="1" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr>
-	<td>
-		<img border=0 width="300" height="200" src="/images/acct_dashboard_tmp.jpg">
-	</td>
-	</tr>
-	</table>
-	&nbsp;
-	<center>
-	<%= GraphTypeList.getHtml() %>&nbsp;<input type=submit value="Show">
-	</center>
-</td>
-	
-<td valign=top width="100%">
-
-	<table width=100% cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr bgcolor="#DEE0FA">
-	<td valign=center>
-		<strong>Account</strong>
-	</td>
-		<td valign=center width=161>
-		<strong>Industry</strong>
-	</td>
-	</tr>
-		<%
-		Iterator n = MyOrgList.iterator();
-	
-		if ( n.hasNext() ) {
-			int rowid = 0;
-			while (n.hasNext()) {
-	
-				if (rowid != 1) {
-					rowid = 1;
-				} else {
-					rowid = 2;
-				}
-		
-				Organization thisOrg = (Organization)n.next();
-		%>    
-				<tr>
-				<td class="row<%= rowid %>" valign=center><a href="/Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a></td>
-				<td class="row<%= rowid %>" valign=center width=161><%= toHtml(thisOrg.getIndustryName()) %></td>
-				</tr>
-		<%}
-		} else {%>
-		<tr>
-		<td valign=center colspan=2>No Accounts at this time.</td>
-		</tr>
+	<td width="100%">
+		<table width="100%" cellspacing="0" cellpadding="0" border="0">
+		<tr class="title">
+       		<td width="60%" valign="center">
+                <strong>Alerts</strong>
+              	</td>
+              	<td valign="center" align="right">
+		<% if (request.getParameter("userId") == null || request.getParameter("userId").equals("")) { %>
+			<%= NewUserList.getHtmlSelect("userId",0) %>
+		<% } else { %>
+			<%=NewUserList.getHtmlSelect("userId",Integer.parseInt(request.getParameter("userId")))%>
 		<%}%>
-	</table>
-	<br>
-	<table width=100% cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr bgcolor="#DEE0FA">
-	<td valign=center colspan=1>
-		<strong>Reporting Staff</strong>
-	</td>
-	
-	<td valign=center colspan=1 width=161>
-		<strong>Department</strong>
-	</td>
-	</tr>
+              	</td>
+            	</tr>
+          	</table>
+        </td>
+      	</tr>
+      	<tr>
+        <td height="100%" width="100%" valign="top">
+	<%    
+   	Iterator days = (CompanyCalendar.getEvents(5)).iterator();
+   	if (days.hasNext()) {
+		%>
+     		<table width="100%" cellspacing="1" cellpadding="0" border="0">
 		<%
-		Iterator x = ShortChildList.iterator();
-		if ( x.hasNext() ) {
-		int rowid = 0;
-		while (x.hasNext()) {
-	
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-			User thisRec = (User)x.next();
-		%>    
-		<tr>
-			<td class="row<%= rowid %>" valign=center><a href="/Accounts.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLast()) %>, <%= toHtml(thisRec.getContact().getNameFirst()) %></a></td>
-			<td class="row<%= rowid %>" valign=center width=161><%= toHtml(thisRec.getContact().getDepartmentName()) %></td>
-		</tr>
-	
-		<%    }
-		} else {%>
-		<tr>
-			<td valign=center colspan=3>No Reporting staff.</td>
-		</tr>
-		<%}%>
-	</table>
-	
-	<br>
-	<% if (!(request.getAttribute("override") == null) && !(request.getAttribute("override").equals("null"))) {%>
-	<input type=hidden name="oid" value="<%=request.getAttribute("override")%>">
-	<a href = "Accounts.do?command=Dashboard&oid=<%=request.getAttribute("previousId")%>">Up One Level</a> |
-	<a href = "Accounts.do?command=Dashboard">Back to My Dashboard</a>
-	<%}%>
+     		while (days.hasNext()) {
+       		CalendarEventList thisDay = (CalendarEventList)days.next();
+		%>
+       		<tr>
+         	<td colspan="2">
+           	<strong><%= toFullDateString(thisDay.getDate()) %></strong>
+         	</td>
+       		</tr>
+		<%
+       		Iterator eventList = thisDay.iterator();
+      		while (eventList.hasNext()) {
+         	CalendarEvent thisEvent = (CalendarEvent)eventList.next();
+		%>
+       		<tr>
+         	<td valign="top" nowrap>
+           	<%= thisEvent.getIcon() %>&nbsp;
+         	</td>
+         	<td width="100%" valign="top">
+           	<%= thisEvent.getSubject() %><%= ((!eventList.hasNext() && days.hasNext())?"<br>&nbsp;":"") %>
+         	</td>
+       		</tr>
+		<%
+       		}
+     		}
+	%>
+       </table>
+	<%     
+   	} else {
+	%>
+       	No alerts found.
+	<%
+	}   
+	%>
+      	</td>
+    	</tr>
+  	</table>
 </td>
-</tr>
-</table>	   
 </form>
+</tr>
+</table>
 </body>

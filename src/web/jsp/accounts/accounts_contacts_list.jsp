@@ -26,6 +26,8 @@
     <td class="containerBack">
 <a href="Contacts.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add a Contact</a>
 <center><%= ContactListInfo.getAlphabeticalPageLinks() %></center>
+
+
 <%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <tr class="title">

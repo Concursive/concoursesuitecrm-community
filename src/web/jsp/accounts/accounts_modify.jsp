@@ -6,7 +6,39 @@
 <jsp:useBean id="OrgPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post">
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+
+<script language="JavaScript">
+  function checkForm(form) {
+      formTest = true;
+      message = "";
+      if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
+        message += "- Check that Alert Date is entered correctly\r\n";
+        formTest = false;
+      }
+      if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
+        message += "- Check that Contract End Date is entered correctly\r\n";
+        formTest = false;
+      }
+      if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
+        message += "- Please specify an alert date\r\n";
+        formTest = false;
+      }
+      if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
+        message += "- Please specify an alert description\r\n";
+        formTest = false;
+      }
+      if (formTest == false) {
+        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+        return false;
+      } else {
+        return true;
+      }
+    }
+</script>
+
+<form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -27,7 +59,7 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type="hidden" name="modified" value="<%= OrgDetails.getModifiedString() %>">
+<input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>'">
 <input type="reset" value="Reset">
@@ -68,7 +100,7 @@
       URL
     </td>
     <td>
-      <input type=text size=55 name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
+      <input type=text size=50 name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -103,6 +135,28 @@
       <input type=text size=10 name="ticker" value="<%= toHtmlValue(OrgDetails.getTicker()) %>">
     </td>
   </tr>
+  
+            <tr class="containerBody">
+   <td nowrap class="formLabel">
+      Contract End Date
+    </td>
+    <td valign=center colspan=1>
+      <input type=text size=10 name="contractEndDate" value="<%= toHtmlValue(OrgDetails.getContractEndDateString()) %>">
+      <a href="javascript:popCalendar('addAccount', 'contractEndDate');">Date</a> (mm/dd/yyyy)
+    </td>
+  </tr>
+  
+              <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Alert
+    </td>
+    <td valign=center colspan=1>
+      <input type=text size=50 name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>" maxlength=50><br>
+      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateString()) %>">
+      <a href="javascript:popCalendar('addAccount', 'alertDate');">Date</a> (mm/dd/yyyy)
+    </td>
+  </tr>
+  
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

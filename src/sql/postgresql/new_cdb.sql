@@ -293,6 +293,9 @@ CREATE TABLE organization (
   duplicate_id int default -1,
   custom1 int default -1,
   custom2 int default -1,
+  contract_end date default null,
+  alertdate date default null,
+  alert varchar(100) default null,
   custom_data TEXT
 );
 
