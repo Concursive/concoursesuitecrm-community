@@ -333,6 +333,7 @@
     <action name="CampaignManagerMessage"/>
     <action name="CampaignManagerSurvey"/>
     <action name="CampaignManagerAttachment"/>
+    <action name="CampaignDocuments"/>
     <page title="Communications Manager"/>
     <permission value="campaign-view"/>
     <long_html value="Communications"/>

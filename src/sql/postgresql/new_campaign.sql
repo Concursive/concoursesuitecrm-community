@@ -65,6 +65,14 @@ CREATE TABLE campaign_list_groups (
   group_id INT NOT NULL REFERENCES saved_criterialist(id)
 );
 
+CREATE TABLE active_campaign_groups (
+  id serial PRIMARY KEY,
+  campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
+  groupname VARCHAR(80) NOT NULL,
+  groupcriteria TEXT DEFAULT NULL
+);
+
+
 CREATE TABLE scheduled_recipient (
   id serial PRIMARY KEY,
   campaign_id INT NOT NULL REFERENCES campaign(campaign_id),

@@ -69,6 +69,17 @@
        </row>
       </group>
       <group name="Step2: Survey Questions">
+        <row elementClass="title">
+           <column valign="top"  align="center" width="100" nowrap="true">
+              <field display="Action" type="label" isStatic="yes"/>
+           </column>
+           <column valign="top"  align="left" nowrap="true">
+              <field display="Description" type="label" isStatic="yes"/>
+           </column>
+           <column valign="top"  align="left" nowrap="true">
+              <field display="Type" type="label" isStatic="yes"/>
+           </column>
+        </row>
         <row multiple="true" listName="questions" listId="id">
           <column width="100" align="center" valign="center">
             <field display="Edit" type="link" jsEvent="javascript:editQuestion($id);"/>
@@ -78,6 +89,9 @@
           </column>
           <column>
             <field name="description" type="displaytext"/>
+          </column>
+          <column>
+            <field name="typeString" type="displaytext"/>
           </column>
       </row>
       <row type="hidden">
@@ -94,7 +108,7 @@
       </group>
     </tab>
     
-    <tab id="2" name="Page 2" defaultField="questionText" onLoad="javascript:processButton('survey',document.forms['survey'].type.selectedIndex);"
+    <tab id="2" name="Page 2" defaultField="questionText" onLoad="javascript:processButton('survey',document.forms['survey'].type.value);"
          returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;Survey Details&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true&amp;pg=1');&quot;&gt;Survey Questions&lt;/a&gt; &gt; Survey Question  &lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
       <buttonGroup>
         <button type="2" name="saveadd" display="Save &amp; Add" onclick="this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=InsertAndAdd&amp;auto-populate=true&amp;pg=2'"/>
@@ -115,7 +129,7 @@
             <field display="Question Type" type="label" isStatic="yes"/>
           </column>
           <column valign="top" class="formLabel" align="left">
-            <field name="type" display="Type" type="select" lookupList="Open-Ended^Quantitative (no comments)^Quantitative (with comments)^Item List" required="true" onChange="javascript:processButton('survey',document.forms['survey'].type.selectedIndex);" listName="questions" listItemName="surveyQuestion"/>
+            <field name="type" display="Type" type="select" lookupList="lookup_survey_types" required="true" onChange="javascript:processButton('survey',document.forms['survey'].type.value);" listName="questions" listItemName="surveyQuestion"/>
             <field name="itemsButton" display="Edit Items" type="button" jsEvent="javascript:popItems(document.forms['survey'].questionId.value,document.forms['survey'].items.value);" enabled="no" isStatic="yes"/>
        </column>
       </row>
@@ -197,5 +211,5 @@
       </group>
     </tab>
   </form>
-  
 </application>
+

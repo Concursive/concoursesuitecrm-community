@@ -126,23 +126,38 @@
     <short_css on="containerOn" off="containerOff"/>
     <submenu name="details">
       <long_html value="Details"/>
-      <permission value=""/>
-      <link value="CampaignManager.do?command=ViewDetails&amp;id=${id}"/>
+      <permission value="campaign-dashboard-view"/>
+      <link value="CampaignManager.do?command=Details&amp;id=${id}"/>
     </submenu>
     <submenu name="groups">
       <long_html value="Groups"/>
-      <permission value="campaign-campaigns-groups-view"/>
+      <permission value="campaign-dashboard-view"/>
       <link value="CampaignManager.do?command=ViewGroups&amp;id=${id}"/>
+    </submenu>
+    <submenu name="recipients">
+      <long_html value="Recipients"/>
+      <permission value="campaign-dashboard-view"/>
+      <link value="CampaignManager.do?command=PreviewRecipients&amp;id=${id}"/>
     </submenu>
     <submenu name="message">
       <long_html value="Message"/>
-      <permission value="campaign-campaigns-messages-view"/>
-      <link value="CampaignManager.do?command=ViewMessage&amp;id=${id}"/>
+      <permission value="campaign-dashboard-view"/>
+      <link value="CampaignManager.do?command=PreviewMessage&amp;id=${id}"/>
     </submenu>
     <submenu name="schedule">
       <long_html value="Schedule"/>
-      <permission value="campaign-campaigns-view"/>
-      <link value="CampaignManager.do?command=ViewSchedule&amp;id=${id}"/>
+      <permission value="campaign-dashboard-view"/>
+      <link value="CampaignManager.do?command=PreviewSchedule&amp;id=${id}"/>
+    </submenu>
+    <submenu name="results">
+      <long_html value="Results"/>
+      <permission value="campaign-dashboard-view"/>
+      <link value="CampaignManager.do?command=ViewResults&amp;reset=true&amp;id=${id}"/>
+    </submenu>
+    <submenu name="documents">
+      <long_html value="Documents"/>
+      <permission value="campaign-dashboard-view"/>
+      <link value="CampaignDocuments.do?command=View&amp;id=${id}"/>
     </submenu>
   </container>
   
