@@ -39,7 +39,9 @@ Vehicle Inventory List<br>
       &nbsp;
       <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
 			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideAccountInfo.getFilterKey("listFilter1")) %>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="AutoGuideAccountInfo"/>
     </td>
     </form>
   </tr>
