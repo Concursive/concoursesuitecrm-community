@@ -1,5 +1,6 @@
 import java.sql.*;
 import com.darkhorseventures.utils.ConnectionPool;
+import com.darkhorseventures.utils.ConnectionElement;
 
 /**
  *  Description of the Class
@@ -41,8 +42,12 @@ public class TestDB {
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(5);
        //Test a single connection
-       db = sqlDriver.getConnection(
-           "jdbc:postgresql://12.101.73.29:5432/cdb_ds22", "postgres", "");
+       ConnectionElement thisElement = new ConnectionElement(
+           "jdbc:postgresql://12.101.73.29:5432/cdb_ds22", 
+           "postgres", 
+           "");
+       thisElement.setDriver("org.postgresql.Driver");
+       db = sqlDriver.getConnection(thisElement);
        PreparedStatement pst = db.prepareStatement(
          "SELECT COUNT(*) AS contactcount FROM contact WHERE type_id not in (?) and namelast < ?");
        pst.setInt(1, 0);
@@ -148,8 +153,11 @@ public class TestDB {
     public void run() {
       try {
         ++runningConnections;
-        Connection db = sqlDriver.getConnection(
-            "jdbc:postgresql://12.101.73.29:5432/" + this.database, "postgres", "");
+        ConnectionElement thisElement = new ConnectionElement(
+            "jdbc:postgresql://12.101.73.29:5432/" + this.database, 
+            "postgres", 
+            "");
+        Connection db = sqlDriver.getConnection(thisElement);
         Statement st = db.createStatement();
         ResultSet rs = st.executeQuery("SELECT * FROM EMPLOYEE");
         while (rs.next()) {

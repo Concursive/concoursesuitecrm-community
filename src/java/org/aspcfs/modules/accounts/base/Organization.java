@@ -1108,7 +1108,18 @@ public class Organization extends GenericBean {
       pst.close();
 
       Statement st = db.createStatement();
-      ResultSet rs = st.executeQuery("select currval('organization_org_id_seq')");
+      ResultSet rs = null;
+      
+      switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          rs = st.executeQuery("SELECT currval('organization_org_id_seq')");
+          break;
+        case DatabaseUtils.MSSQL:
+          rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        default:
+          break;
+      }
 
       if (rs.next()) {
         this.setOrgId(rs.getInt(1));

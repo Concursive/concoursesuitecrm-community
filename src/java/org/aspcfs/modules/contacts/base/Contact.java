@@ -100,7 +100,10 @@ public class Contact extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT c.*, d.description as departmentname, t.description as type_name, " +
-        "ct_owner.namelast || ', ' || ct_owner.namefirst as o_name, ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name, o.name as org_name " +
+        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
+        "o.name as org_name " +
         "FROM contact c " +
         "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
@@ -1746,14 +1749,12 @@ public class Contact extends GenericBean {
     company = rs.getString("company");
     title = rs.getString("title");
     department = rs.getInt("department");
-    departmentName = rs.getString("departmentname");
     nameSalutation = rs.getString("namesalutation");
     nameLast = rs.getString("namelast");
     nameFirst = rs.getString("namefirst");
     nameMiddle = rs.getString("namemiddle");
     nameSuffix = rs.getString("namesuffix");
     typeId = rs.getInt("type_id");
-    typeName = rs.getString("type_name");
     notes = rs.getString("notes");
     site = rs.getString("site");
     imName = rs.getString("imname");
@@ -1763,19 +1764,22 @@ public class Contact extends GenericBean {
     employmentType = rs.getInt("employmenttype");
     startOfDay = rs.getString("startofday");
     endOfDay = rs.getString("endofDay");
-    orgName = rs.getString("org_name");
-    owner = rs.getInt("owner");
-    ownerName = rs.getString("o_name");
-    enteredByName = rs.getString("eb_name");
-    modifiedByName = rs.getString("mb_name");
-
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
-
     modified = rs.getTimestamp("modified");
-
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
+    owner = rs.getInt("owner");
+    
+    departmentName = rs.getString("departmentname");
+    
+    typeName = rs.getString("type_name");
+    
+    ownerName = rs.getString("o_namelast") + ", " + rs.getString("o_namefirst");
+    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
+    modifiedByName = rs.getString("mb_namelast") + ", " + rs.getString("mb_namefirst");
+    
+    orgName = rs.getString("org_name");
   }
 
 

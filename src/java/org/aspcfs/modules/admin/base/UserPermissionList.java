@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
+import com.darkhorseventures.utils.DatabaseUtils;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -37,7 +38,7 @@ public class UserPermissionList extends Vector {
         "FROM permission p, permission_category c, role_permission r " +
         "WHERE p.category_id = c.category_id " +
         "AND p.permission_id = r.permission_id " +
-        "AND p.enabled = true ");
+        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " ");
 
     sqlOrder.append("ORDER BY role_id, c.level, p.level ");
         

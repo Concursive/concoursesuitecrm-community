@@ -830,7 +830,10 @@ public void setContactIdRange(String contactIdRange) {
     //Need to build a base SQL statement for returning records
     sqlSelect.append(
         "SELECT c.*, d.description as departmentname, t.description as type_name, " +
-        "ct_owner.namelast || ', ' || ct_owner.namefirst as o_name, ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name, o.name as org_name " +
+        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
+        "o.name as org_name " +
         "FROM contact c " +
         "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +

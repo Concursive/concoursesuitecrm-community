@@ -41,6 +41,7 @@ public final class Login extends GenericAction {
     
 
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
+    gk.setDriver("org.postgresql.Driver");
     ConnectionElement ce = null;
     Connection db = null;
     PreparedStatement pst = null;
@@ -69,14 +70,12 @@ public final class Login extends GenericAction {
       pst.setString(2, serverName);
       rs = pst.executeQuery();
       if (rs.next()) {
-        String dbName = rs.getString("dbname");
         ce = new ConnectionElement(
-            rs.getString("dbhost") + ":" + rs.getInt("dbport") +
-            "/" + dbName,
+            rs.getString("dbhost"),
             rs.getString("dbuser"),
-            rs.getString("dbpw")
-            );
-        ce.setDbName(dbName);
+            rs.getString("dbpw"));
+        ce.setDbName(rs.getString("dbName"));
+        ce.setDriver(rs.getString("driver"));
       } else {
         loginBean.setMessage("* Access denied: Host does not exist (" +
              serverName + ")");
@@ -118,7 +117,8 @@ public final class Login extends GenericAction {
       sql = 
         "SELECT * FROM access " +
         "WHERE lower(username) = ? " +
-        "AND enabled = true ";
+        "AND enabled = " + DatabaseUtils.getTrue(db) + " ";
+      System.out.println(sql);
       pst = db.prepareStatement(sql);
       pst.setString(1, username.toLowerCase());
       rs = pst.executeQuery();
@@ -130,16 +130,14 @@ public final class Login extends GenericAction {
           loginBean.setMessage("* Access denied: Invalid login information.");
         } else {
           java.sql.Date expDate = rs.getDate("expires");
-          
           if ( expDate != null && now.after(expDate) ) {
             loginBean.setMessage("* Access denied: Account Expired.");
           } else {
             int aliasId = rs.getInt("alias");
-            
             if ( aliasId > 0 ) {
-            userId = aliasId;
-                  } else {
-                    userId = rs.getInt("user_id");
+              userId = aliasId;
+            } else {
+              userId = rs.getInt("user_id");
             }
           }
         }

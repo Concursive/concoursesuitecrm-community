@@ -1,7 +1,7 @@
 CREATE TABLE ticket_level (
   id serial
   ,level_code int NOT NULL PRIMARY KEY
-  ,level text NOT NULL UNIQUE
+  ,level VARCHAR(300) NOT NULL UNIQUE
   ,default_item BOOLEAN DEFAULT false
   ,enabled BOOLEAN DEFAULT true
 );
@@ -9,7 +9,7 @@ CREATE TABLE ticket_level (
 
 CREATE TABLE ticket_severity (
   code serial PRIMARY KEY
-  ,description text NOT NULL UNIQUE
+  ,description VARCHAR(300) NOT NULL UNIQUE
   ,style text NOT NULL DEFAULT ''
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
@@ -19,7 +19,7 @@ CREATE TABLE ticket_severity (
 
 CREATE TABLE lookup_ticketsource (
   code serial PRIMARY KEY
-  ,description text NOT NULL UNIQUE
+  ,description VARCHAR(300) NOT NULL UNIQUE
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
@@ -28,7 +28,7 @@ CREATE TABLE lookup_ticketsource (
 
 CREATE TABLE ticket_priority (
   code serial PRIMARY KEY
-  ,description text NOT NULL UNIQUE
+  ,description VARCHAR(300) NOT NULL UNIQUE
   ,style text NOT NULL DEFAULT '' 
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
@@ -38,7 +38,7 @@ CREATE TABLE ticket_priority (
 
 CREATE TABLE ticket_source (
   source_code int NOT NULL PRIMARY KEY
-  ,source text NOT NULL UNIQUE 
+  ,source VARCHAR(300) NOT NULL UNIQUE 
 );
 
 
@@ -46,7 +46,7 @@ CREATE TABLE ticket_category (
   id serial PRIMARY KEY
   ,cat_level int  NOT NULL DEFAULT 0 
   ,parent_cat_code int  NOT NULL 
-  ,description text NOT NULL 
+  ,description VARCHAR(300) NOT NULL 
   ,full_description text NOT NULL DEFAULT ''
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
@@ -88,7 +88,7 @@ CREATE TABLE ticketlog (
   ,ticketid int NOT NULL
   ,assigned_to int
   ,comment text
-  ,closed bool NOT NULL 
+  ,closed BOOLEAN NOT NULL 
   ,pri_code int NOT NULL 
   ,level_code int NOT NULL 
   ,department_code int NOT NULL 

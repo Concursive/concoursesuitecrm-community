@@ -113,6 +113,9 @@ public class SystemStatus {
     hierarchyList.clear();
     
     //Get the top level managers
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SystemStatus-> buildHierarchyList: A");
+    }
     UserList tmpListA = new UserList();
     tmpListA.setBuildContact(false);
     tmpListA.setBuildHierarchy(false);
@@ -121,6 +124,9 @@ public class SystemStatus {
     tmpListA.buildList(db);
     
     //Get everyone
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SystemStatus-> buildHierarchyList: B");
+    }
     UserList tmpListB = new UserList();
     tmpListB.setBuildContact(false);
     tmpListB.setBuildHierarchy(false);

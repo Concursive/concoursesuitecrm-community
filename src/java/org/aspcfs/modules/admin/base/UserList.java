@@ -478,27 +478,24 @@ public void setIncludeAliases(boolean includeAliases) {
 		StringBuffer sqlFilter = new StringBuffer();
 		StringBuffer sqlOrder = new StringBuffer();
 
-		//Need to build a base SQL statement for returning records
-		/*
-		 *  sqlSelect.append(
-		 *  "SELECT a.*, r.role, c.namelast, c.namefirst, " +
-		 *  "m.namefirst as mgr_namefirst, m.namelast as mgr_namelast " +
-		 *  "FROM access a " +
-		 *  "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
-		 *  "LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
-		 *  "role r " +
-		 *  "WHERE a.role_id = r.role_id " +
-		 *  "AND a.enabled = true ");
-		 */
 		sqlSelect.append(
-				"SELECT a.username, a.password, a.role_id, a.last_login, a.manager_id, a.last_ip, a.timezone, a.startofday, a.endofday, a.expires, a.alias, " +
-				"r.role, c.*, d.description as departmentname, t.description as type_name, " +
-				"ct_owner.namelast || ', ' || ct_owner.namefirst as o_name, ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name, o.name as org_name, " +
+				"SELECT a.username, a.password, a.role_id, a.last_login, a.manager_id, " +
+        "a.last_ip, a.timezone, a.startofday as access_startofday, " +
+        "a.endofday as access_endofday, a.expires, a.alias, " +
+        "a.contact_id as contact_id_link, a.user_id as access_user_id, " +
+        "a.enabled as access_enabled, a.assistant, " +
+        "a.entered as access_entered, a.enteredby as access_enteredby, " +
+        "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
+				"r.role, " +
 				"m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, " +
-				"als.namefirst as als_namefirst, als.namelast as als_namelast " +
+				"als.namefirst as als_namefirst, als.namelast as als_namelast, " +
+        "c.*, d.description as departmentname, t.description as type_name, " +
+        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
+        "o.name as org_name " +
 				"FROM access a " +
 				"LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
-		//"contact c " +
 				"LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
 				"LEFT JOIN organization o ON (c.org_id = o.org_id) " +
 				"LEFT JOIN lookup_department d ON (c.department = d.code) " +
@@ -509,9 +506,7 @@ public void setIncludeAliases(boolean includeAliases) {
 				"LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
 				"role r " +
 				"WHERE a.role_id = r.role_id ");
-		//"AND a.contact_id = c.contact_id " +
 
-		//Need to build a base SQL statement for counting records
 		sqlCount.append("SELECT COUNT(*) AS recordcount " +
 				"FROM access a LEFT JOIN contact c ON (a.contact_id = c.contact_id), role r " +
 				"WHERE a.role_id = r.role_id ");
@@ -572,7 +567,7 @@ public void setIncludeAliases(boolean includeAliases) {
 		rs = pst.executeQuery();
 		while (rs.next()) {
 			User thisUser = new User(rs);
-			if (rs.getTimestamp("entered") != null) {
+			if (thisUser.getContactId() > -1) {
 				thisUser.setContact(new Contact(rs));
 			}
 			if (managerUser != null) {
@@ -585,8 +580,6 @@ public void setIncludeAliases(boolean includeAliases) {
 		rs.close();
 		pst.close();
 		
-		
-
 		buildResources(db);
 	}
 
@@ -648,7 +641,7 @@ public void setIncludeAliases(boolean includeAliases) {
 		}
 		
 		if (enabled > -1) {
-			sqlFilter.append("AND a.enabled = " + ((enabled == TRUE) ? "true" : "false") + " ");
+			sqlFilter.append("AND a.enabled = ? ");
 		}
 	
 	}
@@ -673,6 +666,9 @@ public void setIncludeAliases(boolean includeAliases) {
 		if (department > -1) {
 			pst.setInt(++i, department);
 		}
+    if (enabled > -1) {
+      pst.setBoolean(++i, enabled == TRUE);
+    }
 
 		return i;
 	}

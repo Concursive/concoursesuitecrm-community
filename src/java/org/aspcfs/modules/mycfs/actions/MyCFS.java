@@ -383,12 +383,11 @@ public final class MyCFS extends CFSModule {
 			//used to check the number of customized headlines
 			PreparedStatement pst = null;
 			StringBuffer headlineCount = new StringBuffer();
-			headlineCount.append("SELECT COUNT(org_id) AS headlinecount " +
-					"FROM organization " +
-					"WHERE miner_only = 't' and industry_temp_code = 1 and enteredby = " + getUserId(context) + " ");
-
-			sql.append("SELECT * from news ");
-
+			headlineCount.append(
+        "SELECT COUNT(org_id) AS headlinecount " +
+        "FROM organization " +
+        "WHERE miner_only = " + DatabaseUtils.getTrue(db) + " " + 
+        "AND industry_temp_code = 1 and enteredby = " + getUserId(context) + " ");
 			pst = db.prepareStatement(headlineCount.toString());
 			headline_rs = pst.executeQuery();
 			if (headline_rs.next()) {
@@ -406,31 +405,40 @@ public final class MyCFS extends CFSModule {
 			if (industryCheck == null && headlines > 0) {
 				industryCheck = "1";
 			}
+      
+      sql.append("SELECT ");
+      if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
+        sql.append("TOP 10 ");
+      }
+      sql.append("* FROM news ");
 
 			if (industryCheck != null && !(industryCheck.equals("0"))) {
 				whereClause = " WHERE organization.industry_temp_code = " + Integer.parseInt(industryCheck) + " ";
-
 				if (industryCheck.equals("1")) {
-					//whereClause += "OR (organization.duplicate_id = news.org_id AND organization.duplicate_id > -1) AND organization.enteredby = "
-					//		 + getUserId(context) + "AND organization.miner_only = 't' ";
-
-					whereClause += " AND news.org_id in ( organization.org_id, organization.duplicate_id ) AND organization.enteredby = " + getUserId(context) + "AND organization.miner_only = 't' ";
-				}
-				else {
+					whereClause += 
+          " AND news.org_id in ( organization.org_id, organization.duplicate_id ) " +
+          "AND organization.enteredby = " + getUserId(context) + 
+          "AND organization.miner_only = " + DatabaseUtils.getTrue(db) + " ";
+				} else {
 					whereClause += " AND organization.org_id = news.org_id ";
 				}
-
 				sql.append(whereClause);
 			}
 			else if (industryCheck == null || industryCheck.equals("0")) {
-				sql.append("WHERE organization.miner_only = 'f' AND organization.org_id = news.org_id ");
+				sql.append(
+          "WHERE organization.miner_only = " + DatabaseUtils.getFalse(db) + " " +
+          "AND organization.org_id = news.org_id ");
 			}
 
 			context.getRequest().setAttribute("IndSelect", indSelect);
 
 			//end
 
-			sql.append(" ORDER BY dateentered desc limit 10 ");
+			sql.append(" ORDER BY dateentered DESC ");
+      
+      if (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL) {
+        sql.append("LIMIT 10 ");
+      }
 
 			//System.out.println(sql.toString());
 			st = db.createStatement();

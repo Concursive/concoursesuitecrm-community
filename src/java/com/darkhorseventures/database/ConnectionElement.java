@@ -20,6 +20,7 @@ public class ConnectionElement {
   private String dbName = "";
   private String username = "";
   private String password = "";
+  private String driver = null;
   private java.util.Date activeDate = new java.util.Date();
   private boolean allowCloseOnIdle = true;
 
@@ -95,7 +96,7 @@ public class ConnectionElement {
   }
 
   public void setDbName(String tmp) { this.dbName = tmp; }
-
+  public void setDriver(String tmp) { this.driver = tmp; }
 
   /**
    *  Gets the Url attribute of the ConnectionElement object. <p>
@@ -156,7 +157,7 @@ public class ConnectionElement {
   }
   
   public String getDbName() { return dbName; }
-
+  public String getDriver() { return driver; }
 
 }
 

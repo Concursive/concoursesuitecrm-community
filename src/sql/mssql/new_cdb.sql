@@ -113,7 +113,7 @@ CREATE TABLE note (
   opp_id int not null,
   subject varchar(80),
   body text,
-  dateentered TIMESTAMP,
+  dateentered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   lastmodified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL, 
@@ -215,7 +215,7 @@ CREATE TABLE access (
   last_ip VARCHAR(15),
   last_login DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   expires DATETIME DEFAULT NULL,
@@ -229,7 +229,7 @@ CREATE TABLE role (
   role VARCHAR(80) NOT NULL,
   description VARCHAR(255) NOT NULL DEFAULT '',
   enteredby INT NOT NULL REFERENCES access,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BIT NOT NULL DEFAULT 1
@@ -291,7 +291,7 @@ CREATE TABLE organization (
   miner_only BIT NOT NULL DEFAULT 0,
   defaultlocale INT,
   fiscalmonth INT,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL,
@@ -353,7 +353,7 @@ CREATE TABLE opportunity (
   ,commission			float
   ,type				char(1)
   ,alertdate			DATETIME
-  ,entered 			TIMESTAMP
+  ,entered 			DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,enteredby 			INT NOT NULL
   ,modified 			DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,modifiedby 			INT NOT NULL
@@ -398,7 +398,7 @@ CREATE TABLE contact (
   employmenttype INT,
   startofday VARCHAR(10),
   endofday VARCHAR(10),
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL,
@@ -435,7 +435,7 @@ CREATE TABLE call_log (
   followup_date DATETIME,
   alertdate DATETIME,
   followup_notes TEXT,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -452,7 +452,7 @@ CREATE TABLE news (
   body TEXT,
   dateEntered DATETIME,
   type CHAR(1),
-  created TIMESTAMP
+  created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE motd (
@@ -462,7 +462,7 @@ CREATE TABLE motd (
   department_id INTEGER DEFAULT 0,
   headline TEXT,
   body TEXT,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -484,7 +484,7 @@ CREATE TABLE organization_address (
   state VARCHAR(80),
   country VARCHAR(80),
   postalcode VARCHAR(12),
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -496,7 +496,7 @@ CREATE TABLE organization_emailaddress (
   org_id INT REFERENCES organization(org_id),
   emailaddress_type INT,
   email VARCHAR(256),
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -509,7 +509,7 @@ CREATE TABLE organization_phone (
   phone_type INT,
   number VARCHAR(20),
   extension VARCHAR(10),
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -526,7 +526,7 @@ CREATE TABLE contact_address (
   state VARCHAR(80),
   country VARCHAR(80),
   postalcode VARCHAR(12),
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -538,7 +538,7 @@ CREATE TABLE contact_emailaddress (
   contact_id INT REFERENCES contact(contact_id),
   emailaddress_type INT,
   email VARCHAR(256),
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -551,7 +551,7 @@ CREATE TABLE contact_phone (
   phone_type INT,
   number VARCHAR(20),
   extension VARCHAR(10),
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -563,7 +563,7 @@ CREATE TABLE notification (
   notify_user INT NOT NULL,
   module VARCHAR(255) NOT NULL,
   item_id INT NOT NULL,
-  item_modified TIMESTAMP,
+  item_modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   attempt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   notify_type VARCHAR(30),
   subject TEXT,
@@ -583,7 +583,7 @@ CREATE TABLE message (
   url VARCHAR(100),
   img VARCHAR(80),  
   enabled BIT NOT NULL DEFAULT 1,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -596,7 +596,7 @@ CREATE TABLE cfsinbox_message (
   reply_id INT NOT NULL,
   enteredby INT NOT NULL,
   sent DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   type int not null default -1,
   modifiedby INT NOT NULL
@@ -620,7 +620,7 @@ CREATE TABLE message_template (
   num_imgs INT,
   num_urls INT,
   enabled BIT NOT NULL DEFAULT 1,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -644,7 +644,7 @@ CREATE TABLE campaign (
   approval_date DATETIME DEFAULT NULL,
   approvedby INT DEFAULT -1,
   enabled BIT NOT NULL DEFAULT 1,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -653,7 +653,7 @@ CREATE TABLE campaign (
 
 CREATE TABLE saved_criterialist (
   id INT IDENTITY PRIMARY KEY,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INTEGER NOT NULL,
@@ -678,7 +678,7 @@ CREATE TABLE recipient_list (
   search_id int,
   dynamic BIT NOT NULL DEFAULT 1,
   enabled BIT NOT NULL DEFAULT 1,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
@@ -689,7 +689,7 @@ CREATE TABLE campaign_run (
   id INT IDENTITY PRIMARY KEY,
   campaign_id INTEGER NOT NULL DEFAULT -1,
   status INTEGER NOT NULL DEFAULT 0,
-  run_date TIMESTAMP,
+  run_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   total_contacts INTEGER DEFAULT 0,
   total_sent INTEGER DEFAULT 0,
   total_replied INTEGER DEFAULT 0,

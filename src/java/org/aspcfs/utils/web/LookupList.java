@@ -46,8 +46,8 @@ public class LookupList extends HtmlSelect {
 
 		StringBuffer sql = new StringBuffer();
 		sql.append(
-				"SELECT * FROM " + table + " " +
-				//"WHERE enabled = true " +
+				"SELECT * " +
+        "FROM " + table + " " +
 				"ORDER BY level, description ");
 
 		st = db.createStatement();
@@ -94,7 +94,8 @@ public class LookupList extends HtmlSelect {
 
 		StringBuffer sql = new StringBuffer();
 		sql.append(
-				"SELECT * FROM " + table + " " +
+				"SELECT * " +
+        "FROM " + table + " " +
 				"WHERE field_id = " + fieldId + " " +
 				"AND CURRENT_TIMESTAMP > start_date " +
         "AND (CURRENT_TIMESTAMP < end_date OR end_date IS NULL) " +

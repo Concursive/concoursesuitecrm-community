@@ -16,7 +16,7 @@ CREATE TABLE custom_field_category (
   start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   end_date DATETIME,
   default_item BIT DEFAULT 0,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BIT DEFAULT 1
 );
 
@@ -31,7 +31,7 @@ CREATE TABLE custom_field_group (
   description TEXT,
   start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   end_date DATETIME,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BIT DEFAULT 1
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE custom_field_info (
   
   start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   end_date DATETIME DEFAULT NULL,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BIT DEFAULT 1
 );
 
@@ -67,7 +67,7 @@ CREATE TABLE custom_field_lookup (
   level INTEGER DEFAULT 0,
   start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   end_date DATETIME,
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BIT DEFAULT 1
 );
 
@@ -80,7 +80,7 @@ CREATE TABLE custom_field_record (
   /*private BIT DEFAULT 0,
   department_id INTEGER DEFAULT -1,
   role_id INTEGER DEFAULT -1,*/
-  entered TIMESTAMP,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL,

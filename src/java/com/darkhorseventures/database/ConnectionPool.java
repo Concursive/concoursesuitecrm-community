@@ -25,21 +25,22 @@ public class ConnectionPool implements Runnable {
 
   //5 minutes then connection is closed
 
-  //private String baseURL = "jdbc:postgresql://12.101.73.29:5432/databasename";
   //private String baseURL = "jdbc:postgresql://127.0.0.1:5432/databasename";
+  //private String baseURL = "jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs";
   //private String username = "postgres";
   //private String password = "";
 
   String url = "";
   String username = "";
   String password = "";
+  String driver = "org.postgresql.Driver";
+  
   private java.util.Date startDate = new java.util.Date();
   private Hashtable availableConnections;
   private Hashtable busyConnections;
   private boolean connectionPending = false;
   private boolean requireParameters = true;
   private boolean debug = false;
-  private String driver = "org.postgresql.Driver";
 
   private int maxConnections = 10;
   private boolean waitIfBusy = true;
@@ -95,9 +96,10 @@ public class ConnectionPool implements Runnable {
     }
     availableConnections = new Hashtable(min);
     busyConnections = new Hashtable();
+    ConnectionElement thisElement = new ConnectionElement(this.url, 
+      this.username, this.password);
     for (int i = 0; i < min; i++) {
-      Connection thisConnection = makeNewConnection(this.url, this.username,
-          this.password);
+      Connection thisConnection = makeNewConnection(thisElement);
       if (thisConnection != null) {
         availableConnections.put(new ConnectionElement(), thisConnection);
       }
@@ -187,26 +189,8 @@ public class ConnectionPool implements Runnable {
     if (requireParameters) {
       throw new SQLException("Connection information not specified and no default exists");
     } else {
-      return (getConnection(url, username, password));
-    }
-  }
-
-
-  /**
-   *  Gets the Connection attribute of the ConnectionPool object using the
-   *  parameters from the ConnectionElement
-   *
-   *@param  thisCE            Description of Parameter
-   *@return                   The Connection value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.2
-   */
-  public Connection getConnection(ConnectionElement thisCE)
-       throws SQLException {
-    if (thisCE == null) {
-      throw new SQLException("Connection Element cannot be null");
-    } else {
-      return (getConnection(thisCE.getUrl(), thisCE.getUsername(), thisCE.getPassword()));
+      ConnectionElement thisElement = new ConnectionElement(url, username, password);
+      return (getConnection(thisElement));
     }
   }
 
@@ -216,40 +200,31 @@ public class ConnectionPool implements Runnable {
    *  max connections has been reached then a thread will be spawned to wait for
    *  the next available connection.
    *
-   *@param  thisUrl           Description of Parameter
-   *@param  thisUsername      Description of Parameter
-   *@param  thisPassword      Description of Parameter
-   *@return                   The Connection value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.0
    */
-  public synchronized Connection getConnection(String thisUrl,
-      String thisUsername, String thisPassword) throws SQLException {
+  public synchronized Connection getConnection(ConnectionElement requestElement) throws SQLException {
 
     //Get an available matching connection
     if (!availableConnections.isEmpty()) {
       Enumeration e = availableConnections.keys();
       while (e.hasMoreElements()) {
-        ConnectionElement ce = (ConnectionElement)e.nextElement();
-        if (ce.getUrl().equals(thisUrl)) {
+        ConnectionElement thisElement = (ConnectionElement)e.nextElement();
+        if (thisElement.getUrl().equals(requestElement.getUrl())) {
           try {
             Connection existingConnection =
-                (Connection)availableConnections.get(ce);
-            availableConnections.remove(ce);
+                (Connection)availableConnections.get(thisElement);
+            availableConnections.remove(thisElement);
 
             if (existingConnection.isClosed()) {
               existingConnection = null;
               notifyAll();
               // Freed up a spot for anybody waiting
-              return (getConnection(thisUrl, thisUsername, thisPassword));
+              return (getConnection(requestElement));
             } else {
-              busyConnections.put(existingConnection,
-                  new ConnectionElement(ce.getUrl(), ce.getUsername(),
-                  ce.getPassword()));
+              busyConnections.put(existingConnection, thisElement);
               return (existingConnection);
             }
           } catch (NullPointerException npe) {
-            return (getConnection(thisUrl, thisUsername, thisPassword));
+            return (getConnection(requestElement));
           } catch (java.lang.ClassCastException cce) {
             throw new SQLException("Database connection error");
           }
@@ -261,11 +236,11 @@ public class ConnectionPool implements Runnable {
       if (!connectionPending && (totalConnections() == maxConnections)) {
         e = availableConnections.keys();
         if (e.hasMoreElements()) {
-          ConnectionElement ce = (ConnectionElement)e.nextElement();
-          availableConnections.remove(ce);
+          ConnectionElement thisElement = (ConnectionElement)e.nextElement();
+          availableConnections.remove(thisElement);
         }
         e = null;
-        return (getConnection(thisUrl, thisUsername, thisPassword));
+        return (getConnection(requestElement));
       }
     }
 
@@ -282,7 +257,7 @@ public class ConnectionPool implements Runnable {
     //    part of step 1: wait for next available connection.
 
     if ((totalConnections() < maxConnections) && !connectionPending) {
-      makeBackgroundConnection(thisUrl, thisUsername, thisPassword);
+      makeBackgroundConnection(requestElement);
     } else if (!waitIfBusy) {
       throw new SQLException("Connection limit reached");
     }
@@ -294,7 +269,7 @@ public class ConnectionPool implements Runnable {
     } catch (InterruptedException ie) {
     }
     // Someone freed up a connection, so try again.
-    return (getConnection(thisUrl, thisUsername, thisPassword));
+    return (getConnection(requestElement));
   }
 
 
@@ -335,21 +310,22 @@ public class ConnectionPool implements Runnable {
   public void run() {
     // Make the connection
     try {
-      Connection connection = makeNewConnection(this.url, this.username, this.password);
+      ConnectionElement thisElement = new ConnectionElement(this.url, 
+        this.username, this.password);
+      thisElement.setDriver(this.driver);
+      Connection connection = makeNewConnection(thisElement);
       synchronized (this) {
 
         if (connection != null) {
           if (debug) {
-            System.out.println("ConnectionPool: Thread made a new database connection");
+            System.out.println("ConnectionPool-> Thread made a new database connection: " + connection.getClass().getName());
           }
-          availableConnections.put(new ConnectionElement(this.url,
-              this.username, this.password), connection);
+          availableConnections.put(thisElement, connection);
         } else {
           if (debug) {
-            System.out.println("ConnectionPool: Database connection could not be created");
+            System.out.println("ConnectionPool-> Database connection could not be created");
           }
-          availableConnections.put(new ConnectionElement(this.url,
-              this.username, this.password), "Database Error");
+          availableConnections.put(thisElement, "Database Error");
         }
 
         connectionPending = false;
@@ -375,7 +351,7 @@ public class ConnectionPool implements Runnable {
   public synchronized void free(Connection connection) {
     
     if (connection != null) {
-      ConnectionElement ce = (ConnectionElement)busyConnections.get(connection);
+      ConnectionElement thisElement = (ConnectionElement)busyConnections.get(connection);
       busyConnections.remove(connection);
 
       try {
@@ -388,8 +364,8 @@ public class ConnectionPool implements Runnable {
         if (connection.isClosed()) {
           connection = null;
         } else {
-          availableConnections.put(new ConnectionElement(ce.getUrl(),
-              ce.getUsername(), ce.getPassword()), connection);
+          availableConnections.put(new ConnectionElement(thisElement.getUrl(),
+              thisElement.getUsername(), thisElement.getPassword()), connection);
         }
   
       } catch (SQLException e) {
@@ -521,20 +497,20 @@ public class ConnectionPool implements Runnable {
     Enumeration e = availableConnections.keys();
     java.util.Date currentDate = new java.util.Date();
     while (e.hasMoreElements()) {
-      ConnectionElement ce = null;
+      ConnectionElement thisElement = null;
       try {
-        ce = (ConnectionElement)e.nextElement();
-        java.util.Date testDate = ce.getActiveDate();
-        Connection connection = (Connection)availableConnections.get(ce);
+        thisElement = (ConnectionElement)e.nextElement();
+        java.util.Date testDate = thisElement.getActiveDate();
+        Connection connection = (Connection)availableConnections.get(thisElement);
         if (connection.isClosed() || (testDate.getTime() < (currentDate.getTime() - maxIdleTime))) {
           connection.close();
-          availableConnections.remove(ce);
+          availableConnections.remove(thisElement);
           if (debug) System.out.println("Removed an idle available connection");
           notify();
         }
       } catch (Exception sqle) {
-        if (ce != null) {
-          availableConnections.remove(ce);
+        if (thisElement != null) {
+          availableConnections.remove(thisElement);
           //if (debug) System.out.println("Removed a null available connection");
         }
         notify();
@@ -558,11 +534,11 @@ public class ConnectionPool implements Runnable {
       java.util.Date currentDate = new java.util.Date();
       while (e.hasMoreElements()) {
         Connection connection = (Connection)e.nextElement();
-        ConnectionElement ce = (ConnectionElement)busyConnections.get(connection);
-        java.util.Date testDate = ce.getActiveDate();
+        ConnectionElement thisElement = (ConnectionElement)busyConnections.get(connection);
+        java.util.Date testDate = thisElement.getActiveDate();
         if (connection.isClosed() ||
             (testDate.getTime() < (currentDate.getTime() - maxDeadTime)) &&
-            ce.getAllowCloseOnIdle()) {
+            thisElement.getAllowCloseOnIdle()) {
           connection.close();
           busyConnections.remove(connection);
           if (debug) {
@@ -592,14 +568,14 @@ public class ConnectionPool implements Runnable {
    *@param  thisPassword  Description of Parameter
    *@since                1.0
    */
-  private void makeBackgroundConnection(String thisUrl,
-      String thisUsername, String thisPassword) {
+  private void makeBackgroundConnection(ConnectionElement thisElement) {
     connectionPending = true;
     try {
       Thread connectThread = new Thread(this);
-      this.setUrl(thisUrl);
-      this.setUsername(thisUsername);
-      this.setPassword(thisPassword);
+      this.setUrl(thisElement.getUrl());
+      this.setUsername(thisElement.getUsername());
+      this.setPassword(thisElement.getPassword());
+      this.setDriver(thisElement.getDriver());
       connectThread.start();
     } catch (OutOfMemoryError oome) {
       // Give up on new connection
@@ -618,19 +594,19 @@ public class ConnectionPool implements Runnable {
    *@return               Description of the Returned Value
    *@since                1.0
    */
-  private Connection makeNewConnection(String thisUrl,
-      String thisUsername, String thisPassword) {
+  private Connection makeNewConnection(ConnectionElement thisElement) {
     try {
       // Load database driver if not already loaded
-      Class.forName(driver);
+      Class.forName(thisElement.getDriver());
       // Establish network connection to database
       Connection connection =
-          DriverManager.getConnection(thisUrl, thisUsername, thisPassword);
+          DriverManager.getConnection(thisElement.getUrl(), thisElement.getUsername(), thisElement.getPassword());
       return (connection);
     } catch (Exception cnfe) {
       // Simplify try/catch blocks of people using this by
       // throwing only one exception type.
       //throw new SQLException("Can't find class for driver: " + driver);
+      cnfe.printStackTrace(System.out);
       return null;
     }
   }

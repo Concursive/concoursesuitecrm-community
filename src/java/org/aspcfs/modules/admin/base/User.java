@@ -1169,14 +1169,29 @@ public void setLastLogin(java.sql.Timestamp tmp) { this.lastLogin = tmp; }
 			pst.close();
 
 			Statement st = db.createStatement();
-			ResultSet rs = st.executeQuery("select currval('access_user_id_seq')");
+			ResultSet rs = null;
+      
+      switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          rs = st.executeQuery("select currval('access_user_id_seq')");
+          break;
+        case DatabaseUtils.MSSQL:
+          rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        default:
+          break;
+      }
+      
 			if (rs.next()) {
 				this.setId(rs.getInt(1));
 			}
 			rs.close();
 			st.close();
 
-			st.executeUpdate("UPDATE contact SET user_id = " + id + " WHERE contact_id = " + contact.getId());
+			st.executeUpdate(
+        "UPDATE contact " +
+        "SET user_id = " + id + " " +
+        "WHERE contact_id = " + contact.getId());
 
 			db.commit();
 		}
@@ -1269,7 +1284,8 @@ public void setLastLogin(java.sql.Timestamp tmp) { this.lastLogin = tmp; }
 		if (this.id > -1) {
 			String sql =
 					"UPDATE access " +
-					"SET last_login = CURRENT_TIMESTAMP, last_ip = ? " +
+					"SET last_login = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+          "last_ip = ? " +
 					"WHERE user_id = ? ";
 			PreparedStatement pst = db.prepareStatement(sql);
 			pst.setString(1, this.ip);
@@ -1305,17 +1321,25 @@ public void setLastLogin(java.sql.Timestamp tmp) { this.lastLogin = tmp; }
 
 		StringBuffer sql = new StringBuffer();
 		sql.append(
-				"SELECT a.*, r.role, c.namelast, c.namefirst, " +
-				"m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, " +
-				"als.namefirst as als_namefirst, als.namelast as als_namelast " +
-				"FROM access a " +
-				"LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
-				"LEFT JOIN contact als ON (a.alias = als.user_id) " +
-				"LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
-				"role r " +
-				"WHERE a.role_id = r.role_id " +
-				"AND a.enabled = true " +
-				"AND a.user_id = " + userId + " ");
+      "SELECT a.username, a.password, a.role_id, a.last_login, a.manager_id, " +
+      "a.last_ip, a.timezone, a.startofday as access_startofday, " +
+      "a.endofday as access_endofday, a.expires, a.alias, " +
+      "a.contact_id as contact_id_link, a.user_id as access_user_id, " +
+      "a.enabled as access_enabled, a.assistant, " +
+      "a.entered as access_entered, a.enteredby as access_enteredby, " +
+      "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
+      "r.role, " +
+      "m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, " +
+      "als.namefirst as als_namefirst, als.namelast as als_namelast, " +
+      "c.* " +
+      "FROM access a " +
+      "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
+      "LEFT JOIN contact als ON (a.alias = als.user_id) " +
+      "LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
+      "role r " +
+      "WHERE a.role_id = r.role_id " +
+      "AND a.enabled = " + DatabaseUtils.getTrue(db) + " " +
+      "AND a.user_id = " + userId + " ");
 		st = db.createStatement();
 		rs = st.executeQuery(sql.toString());
 		if (rs.next()) {
@@ -1458,16 +1482,27 @@ public void setLastLogin(java.sql.Timestamp tmp) { this.lastLogin = tmp; }
 	 *@since                    1.1
 	 */
 	protected void buildRecord(ResultSet rs) throws SQLException {
-		this.setId(rs.getInt("user_id"));
 		this.setUsername(rs.getString("username"));
 		this.setPassword(rs.getString("password"));
-		this.setContactId(rs.getInt("contact_id"));
-		this.setRoleId(rs.getString("role_id"));
+    this.setRoleId(rs.getInt("role_id"));
+    lastLogin = rs.getTimestamp("last_login");
+    this.setManagerId(rs.getInt("manager_id"));
+    ip = rs.getString("last_ip");
+    timeZone = rs.getString("timezone");
+		startOfDay = rs.getInt("access_startofday");
+		endOfDay = rs.getInt("access_endofday");
+    expires = rs.getDate("expires");
+    this.setAlias(rs.getInt("alias"));
+		this.setContactId(rs.getInt("contact_id_link"));
+    this.setId(rs.getInt("access_user_id"));
+		enabled = rs.getBoolean("access_enabled");
+    this.setAssistant(rs.getInt("assistant"));
+    entered = rs.getTimestamp("access_entered");
+		enteredBy = rs.getInt("access_enteredby");
+		modified = rs.getTimestamp("access_modified");
+		modifiedBy = rs.getInt("access_modifiedby");
 		this.setRole(rs.getString("role"));
-		this.setManagerId(rs.getInt("manager_id"));
-		this.setAssistant(rs.getInt("assistant"));
-		this.setAlias(rs.getInt("alias"));
-
+		
 		String managerNameFirst = rs.getString("mgr_namefirst");
 		String managerNameLast = rs.getString("mgr_namelast");
 		if (managerNameFirst != null) {
@@ -1479,23 +1514,6 @@ public void setLastLogin(java.sql.Timestamp tmp) { this.lastLogin = tmp; }
 		if (aliasNameFirst != null) {
 			this.aliasName = aliasNameLast + ", " + aliasNameFirst;
 		}
-
-		entered = rs.getTimestamp("entered");
-
-		enteredBy = rs.getInt("enteredby");
-
-		modified = rs.getTimestamp("modified");
-
-		modifiedBy = rs.getInt("modifiedby");
-
-		expires = rs.getDate("expires");
-		lastLogin = rs.getTimestamp("last_login");
-
-		enabled = rs.getBoolean("enabled");
-		ip = rs.getString("last_ip");
-		timeZone = rs.getString("timezone");
-		startOfDay = rs.getInt("startofday");
-		endOfDay = rs.getInt("endofday");
 	}
 
 
