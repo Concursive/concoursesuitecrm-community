@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
@@ -92,15 +93,37 @@
 	}
   
   function addNewContact(){
+    <dhv:permission name="accounts-accounts-contacts-add">
+      var acctPermission = true;
+    </dhv:permission>
+    <dhv:permission name="accounts-accounts-contacts-add" none="true">
+      var acctPermission = false;
+    </dhv:permission>
+    <dhv:permission name="contacts-internal_contacts-add">
+      var empPermission = true;
+    </dhv:permission>
+    <dhv:permission name="contacts-internal_contacts-add" none="true">
+      var empPermission = false;
+    </dhv:permission>
     var orgId = document.forms['addticket'].orgId.value;
     if(orgId == -1){
-        alert('You  have to select an Account first');
-        return;
+      alert('You have to select an Account first');
+      return;
     }
     if(orgId == '0'){
-      popURL('CompanyDirectory.do?command=Prepare&popup=true&source=troubletickets', 'New_Employee','500','600','yes','yes');
+      if (empPermission) {
+        popURL('CompanyDirectory.do?command=Prepare&popup=true&source=troubletickets', 'New_Employee','500','600','yes','yes');
+      } else {
+        alert('You do not have permission to add employees');
+        return;
+      }
     }else{
-      popURL('Contacts.do?command=Prepare&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','600','yes','yes');
+      if (acctPermission) {
+        popURL('Contacts.do?command=Prepare&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','600','yes','yes');
+      } else {
+        alert('You do not have permission to add contacts');
+        return;
+      }
     }
   }
 </script>
