@@ -113,6 +113,7 @@
     <td>
     <table cellpadding="0" cellspacing="0">
       <tr <%= thisTask.getComplete()?"class=\"strike\"":"class=\"\""%> id="complete<%=count%>">
+        <dhv:hasAuthority owner="<%= thisTask.getOwner() %>">
         <td>
 <% 
       if (thisTask.getComplete()) {
@@ -126,6 +127,7 @@
       }
 %>
         </td>
+        </dhv:hasAuthority>
         <td valign="top">
 <% 
       if (thisTask.getHasLinks()) { 
