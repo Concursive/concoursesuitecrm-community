@@ -111,14 +111,13 @@ public final class ForwardNote extends CFSModule {
 				
 				SMTPMessage mail = new SMTPMessage();
 				mail.setHost("127.0.0.1");
-				/**
+				
 				if (replyAddr != null && !(replyAddr.equals("")))
 					mail.setFrom(replyAddr);
 				else
 					mail.setFrom(thisNote.getSentName());
-				*/
 				
-				mail.setFrom("root@darkhorseventures.com");
+				//mail.setFrom("root@darkhorseventures.com");
 				
 				mail.setType("text/html");
 				mail.setTo(tempUser.getContact().getEmailAddress("Business"));
