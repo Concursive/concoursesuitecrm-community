@@ -18,6 +18,7 @@
       <permission name="myhomepage-miner" attributes="va-d" description="Industry News records" enabled="false"/>
       <permission name="myhomepage-inbox" attributes="v---" description="My Mailbox"/>
       <permission name="myhomepage-tasks" attributes="vaed" description="My Tasks"/>
+      <permission name="contacts-internal_contacts" attributes="vaed" description="Employees"/>
       <permission name="myhomepage-reassign" attributes="v-e-" description="Re-assign Items"/>
       <permission name="myhomepage-profile" attributes="v---" description="My Profile"/>
       <permission name="myhomepage-profile-personal" attributes="v-e-" description="Personal Information"/>
@@ -33,7 +34,6 @@
       <lookup constantId="5" class="lookupList" table="lookup_department" description="Departments"/>
       <permission name="contacts" attributes="v---" description="Access to General Contacts module"/>
       <permission name="contacts-external_contacts" attributes="vaed" description="External Contact Records"/>
-      <permission name="contacts-internal_contacts" attributes="vaed" description="Internal Contact Records"/>
       <permission name="contacts-external_contacts-reports" attributes="va-d" description="Reports"/>
       <permission name="contacts-external_contacts-folders" attributes="vaed" description="Folders"/>
       <permission name="contacts-external_contacts-calls" attributes="vaed" description="Calls"/>
