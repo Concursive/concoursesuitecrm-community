@@ -74,8 +74,10 @@ public class OrganizationAddress extends Address {
     Statement st = null;
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT * " +
+    
+    sql.append("SELECT c.address_id, c.org_id, c.address_type, c.addrline1, c.addrline1,  " +
+        "c.addrline2, c.addrline3, c.city, c.state, c.country, c.postalcode, c.entered, c.enteredby, "+
+        "c.modified, c.modifiedby, l.description " +
         "FROM organization_address c, lookup_orgaddress_types l " +
         "WHERE c.address_type = l.code " +
         "AND address_id = " + addressId + " ");
@@ -140,7 +142,7 @@ public class OrganizationAddress extends Address {
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO organization_address " +
-        "(org_id, address_type, addrline1, addrline2, city, state, postalcode, country, ");
+        "(org_id, address_type, addrline1, addrline2, addrline3, city, state, postalcode, country, ");
     if (this.getEntered() != null) {
       sql.append("entered, ");
     }
@@ -148,7 +150,7 @@ public class OrganizationAddress extends Address {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
 
     if (this.getEntered() != null) {
       sql.append("?, ");
@@ -173,8 +175,13 @@ public class OrganizationAddress extends Address {
     }
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
+    pst.setString(++i, this.getStreetAddressLine3());
     pst.setString(++i, this.getCity());
-    pst.setString(++i, this.getState());
+    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(this.getCountry())) {
+      pst.setString(++i, this.getState());
+    } else {
+      pst.setString(++i, this.getOtherState());
+    }
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
     if (this.getEntered() != null) {
@@ -204,7 +211,7 @@ public class OrganizationAddress extends Address {
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE organization_address " +
-        "SET address_type = ?, addrline1 = ?, addrline2 = ?, city = ?, state = ?, postalcode = ?, country = ?, " +
+        "SET address_type = ?, addrline1 = ?, addrline2 = ?, addrline3 = ?, city = ?, state = ?, postalcode = ?, country = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE address_id = ? ");
     int i = 0;
@@ -215,8 +222,13 @@ public class OrganizationAddress extends Address {
     }
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
+    pst.setString(++i, this.getStreetAddressLine3());
     pst.setString(++i, this.getCity());
-    pst.setString(++i, this.getState());
+    if ("UNITED STATES".equals(this.getCountry()) || "CANADA".equals(this.getCountry())) {
+      pst.setString(++i, this.getState());
+    } else {
+      pst.setString(++i, this.getOtherState());
+    }
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
     pst.setInt(++i, modifiedBy);
