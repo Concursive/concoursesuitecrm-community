@@ -44,6 +44,21 @@ public class CustomFieldData extends GenericBean {
   public int getEnteredNumber() { return enteredNumber; }
   public double getEnteredDouble() { return enteredDouble; }
 
+  public int getType(Connection db) throws SQLException {
+    int result = -1;
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT field_type " +
+      "FROM custom_field_info " +
+      "WHERE field_id = ? ");
+    pst.setInt(1, fieldId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      result = rs.getInt("field_type");
+    }
+    rs.close();
+    pst.close();
+    return result;
+  }
   
   public void build(ResultSet rs) throws SQLException {
     recordId = rs.getInt("record_id");
@@ -75,5 +90,4 @@ public class CustomFieldData extends GenericBean {
     pst.close();
     return true;
   }
-
 }

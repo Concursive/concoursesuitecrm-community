@@ -72,6 +72,8 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
                 }
               }
             }
+            //NOTE: Could insert this field's data since the definition is needed,
+            //but a record is needed
           }
         }
         
@@ -124,7 +126,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
             thisFieldRecord.setAction("insert");
             thisFieldRecord.addField("recordId", String.valueOf(thisData.getRecordId()), "customFieldRecord", null);
             thisFieldRecord.addField("fieldId", String.valueOf(thisData.getFieldId()), "customField", null);
-            if (thisData.getType() == CustomField.SELECT) {
+            if (thisData.getType(db) == CustomField.SELECT) {
               thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()), "customFieldLookup", null);
             } else {
               thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()));
