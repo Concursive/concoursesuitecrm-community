@@ -38,7 +38,7 @@ public class SecurityHook implements ControllerHook {
     int slash = action.lastIndexOf("/");
     action = action.substring(slash + 1);
 
-    if (userSession == null && !action.toUpperCase().startsWith("LOGIN")) {
+    if (userSession == null && !action.toUpperCase().startsWith("LOGIN") && !action.toUpperCase().startsWith("PROCESS")) {
       LoginBean failedSession = new LoginBean();
       failedSession.setMessage("* Please login, your session has expired");
       request.setAttribute("LoginBean", failedSession);

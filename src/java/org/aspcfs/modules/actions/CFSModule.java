@@ -134,7 +134,11 @@ public class CFSModule {
    */
   protected String getDbName(ActionContext context) {
     ConnectionElement ce = (ConnectionElement)context.getSession().getAttribute("ConnectionElement");
-    return ce.getDbName();
+    if (ce != null) {
+      return ce.getDbName();
+    } else {
+      return null;
+    }
   }
 
 
@@ -146,11 +150,18 @@ public class CFSModule {
    *@return                   The Path value
    *@since
    */
+  protected String getPath(ActionContext context) {
+    return (
+        context.getServletContext().getRealPath("/") + ".." + fs +
+        "fileLibrary" + fs);
+  }
+  
+  
   protected String getPath(ActionContext context, String moduleFolderName) {
     return (
         context.getServletContext().getRealPath("/") + ".." + fs +
         "fileLibrary" + fs +
-        this.getDbName(context) + fs +
+        (this.getDbName(context) == null?"":this.getDbName(context) + fs) +
         moduleFolderName + fs);
   }
 

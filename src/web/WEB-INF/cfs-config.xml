@@ -11,6 +11,10 @@
   <!-- 
   Web default 
   -->
+  <action name="ProcessImage" class="com.darkhorseventures.cfsmodule.ProcessImage">
+    <forward name="SystemError" resource="/error_system.jsp"/>
+  </action>
+  
   <action name="Login" class="com.darkhorseventures.cfsmodule.Login">
     <bean name="LoginBean" class="com.darkhorseventures.cfsmodule.LoginBean" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>

@@ -6,9 +6,15 @@
 <script type="text/javascript" src="/javascript/coolbuttons.js"></script>
 <script>
   function save() {
+<%
+  if (!"html".equals(request.getParameter("editor"))) {
+%>  
     var edit = document.all.edit;
     document.all.messageText.value = edit.getHTML();
     edit.focus();
+<%
+  }
+%>
   }
 </script>
 <style>
@@ -22,7 +28,6 @@
 <body onLoad="javascript:document.forms[0].name.focus();">
 <a href="/CampaignManagerMessage.do?command=View">Back to Message List</a><br>
 <form name="addMessage" method="post" action="/CampaignManagerMessage.do?command=Insert&auto-populate=true">
-<input type="hidden" name="messageText" value="">
 <input type="submit" value="Save" onclick="javascript:save();">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
 <input type="reset" value="Reset">
@@ -57,7 +62,13 @@
       Text
     </td>
     <td valign=center>
-      <!--textarea name="messageText" rows=10 cols=75 wrap="physical"><%= Message.getMessageText() %></textarea-->
+<%
+  if ("html".equals(request.getParameter("editor"))) {
+%>
+      <textarea name="messageText" rows=10 cols=75 wrap="physical"><%= Message.getMessageText() %></textarea>
+<% 
+  } else {
+%>
       <table cellspacing="0" id="toolBar" class="coolBar">
         <tr>
           <td class="coolButton" onclick="document.all.edit.setBold(); document.all.edit.frameWindow.focus();">
@@ -82,6 +93,10 @@
            <%= Message.getMessageText() %>
          </body>
       </iframe>
+      <input type="hidden" name="messageText" value="">
+<%
+  }
+%>
     </td>
   </tr>
   
