@@ -35,7 +35,7 @@ Replaceable parameter  typical value / description
     <display-name>Controller</display-name>
     <servlet-class>org.theseus.servlets.ControllerServlet</servlet-class>
     <!--init-param>
-        <param-name>Debug</param-name>
+        <param-name>DEBUG</param-name>
         <param-value>2</param-value>
     </init-param-->
     <init-param>

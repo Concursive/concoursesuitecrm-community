@@ -169,5 +169,13 @@ public class DatabaseUtils {
       pst.setInt(paramCount, value);
     }
   }
+  
+  public static void setTimestamp(PreparedStatement pst, int paramCount, java.sql.Timestamp value) throws SQLException {
+    if (value == null) {
+      pst.setNull(paramCount, java.sql.Types.DATE);
+    } else {
+      pst.setTimestamp(paramCount, value);
+    }
+  }
 }
 

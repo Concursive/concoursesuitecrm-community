@@ -717,6 +717,11 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'assignmentList', 'com.zeroio.iteam.base.AssignmentList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'issue', 'com.zeroio.iteam.base.Issue');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'issueList', 'com.zeroio.iteam.base.IssueList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactAddress', 'com.darkhorseventures.cfsbase.ContactAddress');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactAddressList', 'com.darkhorseventures.cfsbase.ContactAddressList');
