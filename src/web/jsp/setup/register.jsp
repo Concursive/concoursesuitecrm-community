@@ -3,6 +3,8 @@
 <jsp:useBean id="server" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkCheckbox.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
     valid = true;
@@ -30,6 +32,20 @@
     if (!checkEmail(form.email.value)) {
       message += "- Email address is invalid.  Make sure there are no invalid characters\r\n";
       valid = false;
+    }
+    if (getSelectedCheckbox(form.proxy).length > 0) {
+      if (form.proxyHost.value.length == 0) {
+        message += "- Proxy host is required field when proxy is checked\r\n";
+        valid = false;
+      }
+      if (form.proxyPort.value.length == 0) {
+        message += "- Proxy port is required field when proxy is checked\r\n";
+        valid = false;
+      }
+      if (form.proxyPort.value.length > 0 && !checkNumber(form.proxyPort.value)) {
+        message += "- Proxy port must be a number\r\n";
+        valid = false;
+      }
     }
     if (valid == false) {
       alert("Form could not be submitted, please check the following:\r\n\r\n" + message);
@@ -113,7 +129,7 @@
             Email Address:
           </td>
           <td>
-            <input type="text" size="40" maxlength="255" name="email" value="<%= toHtmlValue(registration.getEmail()) %>"/><font color="red">*</font>
+            <input type="text" size="40" maxlength="255" name="email" value="<%= toHtmlValue(registration.getEmail()) %>" /><font color="red">*</font>
             <%= showAttribute(request, "emailError") %>
           </td>
         </tr>
@@ -144,8 +160,31 @@
         </tr>
         <tr>
           <td colspan="2">
-            <dhv:checkbox name="ssl" checked="<%= registration.getSsl() %>"/>
+            <dhv:checkbox name="ssl" value="true" checked="<%= registration.getSsl() %>"/>
             Use SSL (port 443) for sending information
+          </td>
+        </tr>
+        <%-- Proxy Server config --%>
+        <tr>
+          <td colspan="2">
+            <dhv:checkbox name="proxy" value="true" checked="<%= registration.getProxy() %>" />
+            Use proxy server to make internet connection
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            Proxy Host
+          </td>
+          <td>
+            <input type="text" size="30" name="proxyHost" value="<%= toHtmlValue(registration.getProxyHost()) %>" />
+          </td>
+        </tr>
+        <tr>
+          <td class="formLabel">
+            Proxy Port
+          </td>
+          <td>
+            <input type="text" size="5" name="proxyPort" value="<%= toHtmlValue(registration.getProxyPort()) %>" />
           </td>
         </tr>
       </table>
