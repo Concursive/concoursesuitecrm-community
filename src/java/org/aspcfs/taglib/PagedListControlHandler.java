@@ -5,12 +5,13 @@ import javax.servlet.jsp.tagext.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 
 /**
- *  Provides a visual control panel (html form) that allows the user
- *  to jump to another page, change the number of entries per page, etc.
+ *  Provides a visual control panel (html form) that allows the user to jump to
+ *  another page, change the number of entries per page, etc.
  *
  *@author     matt rajkowski
  *@created    June 12, 2002
- *@version    $Id$
+ *@version    $Id: PagedListControlHandler.java,v 1.2 2002/08/06 21:03:07 akhi_m
+ *      Exp $
  */
 public class PagedListControlHandler extends TagSupport {
   private String name = "controlProperties";
@@ -19,6 +20,8 @@ public class PagedListControlHandler extends TagSupport {
   private String fontColor = "#666666";
   private String tdClass = null;
   private boolean showForm = true;
+  private boolean resetList = true;
+
 
   /**
    *  Sets the name attribute of the PagedListControlHandler object
@@ -69,18 +72,27 @@ public class PagedListControlHandler extends TagSupport {
     tdClass = tmp;
   }
 
+
   /**
    *  Sets the showForm attribute of the PagedListControlHandler object
    *
    *@param  showForm  The new showForm value
    */
-  
-  public void setShowForm(String showForm) {
-	this.showForm = "true".equalsIgnoreCase(showForm);
-	
- }
 
-  
+  public void setShowForm(String showForm) {
+    this.showForm = "true".equalsIgnoreCase(showForm);
+  }
+
+
+  /**
+   *  Sets the resetList attribute of the PagedListControlHandler object
+   *
+   *@param  resetList  The new resetList value
+   */
+  public void setResetList(String resetList) {
+    this.resetList = "true".equalsIgnoreCase(resetList);
+  }
+
 
   /**
    *  Description of the Method
@@ -94,7 +106,9 @@ public class PagedListControlHandler extends TagSupport {
 
       if (pagedListInfo != null) {
         pagedListInfo.setShowForm(showForm);
+        pagedListInfo.setResetList(resetList);
         JspWriter out = this.pageContext.getOut();
+        out.write("<SCRIPT LANGUAGE=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"/javascript/pageListInfo.js\"></SCRIPT>");
         out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">");
         out.write(pagedListInfo.getListPropertiesHeader(name));
         out.write("<tr>");
@@ -104,16 +118,16 @@ public class PagedListControlHandler extends TagSupport {
             ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
             ">");
         out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
-        
+
         out.write("[" +
-            pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>","Previous") +
+            pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
             "|" +
             pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
             "] ");
-        
-	      out.write("<font color=\"" + fontColor + "\">");
+
+        out.write("<font color=\"" + fontColor + "\">");
         out.write("Page " + pagedListInfo.getNumericalPageEntry() + " ");
-        out.write("of " + ((pagedListInfo.getNumberOfPages() == 0)?"1":String.valueOf(pagedListInfo.getNumberOfPages())) + ", ");
+        out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())) + ", ");
         out.write("Items per page: " + pagedListInfo.getItemsPerPageEntry() + " ");
         out.write("<input type=\"submit\" value=\"go\">");
         out.write("</font>");

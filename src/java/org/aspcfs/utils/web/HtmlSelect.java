@@ -123,7 +123,10 @@ public class HtmlSelect extends ArrayList {
 	*@since       1.0
 	*/
 	public void setDefaultKey(String tmp) {
-		if (defaultKey != null) {
+		if(!tmp.equals(defaultKey)){
+      built = false;
+    }
+    if (defaultKey != null) {
 			this.defaultKey = tmp;
 		} else {
 			this.defaultKey = "";
@@ -137,7 +140,7 @@ public class HtmlSelect extends ArrayList {
 	*@since       1.0
 	*/
 	public void setDefaultKey(int tmp) {
-		this.defaultKey = "" + tmp;
+		setDefaultKey(String.valueOf(tmp));
 	}
 	
 	/**
@@ -522,6 +525,7 @@ public class HtmlSelect extends ArrayList {
    *@since    1.0
    */
   public void build() {
+    rowList.setLength(0);
     built = true;
     int rowSelect = -1;
     //If a default has not been set, then default the list to the first entry
@@ -547,6 +551,7 @@ public class HtmlSelect extends ArrayList {
         }
       }
     }
+    
     //Process a Vector
     for (int i = 0; i < this.size(); i++) {
       ++processedRowCount;

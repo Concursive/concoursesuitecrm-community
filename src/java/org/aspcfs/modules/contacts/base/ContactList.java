@@ -25,6 +25,8 @@ public class ContactList extends Vector {
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
   private int typeId = -1;
+  private int departmentId = -1;
+  private int projectId = -1;
   private String firstName = null;
   private String middleName = null;
   private String lastName = null;
@@ -39,8 +41,9 @@ public class ContactList extends Vector {
   private String ownerIdRange = null;
   private String accountOwnerIdRange = null;
   private boolean withAccountsOnly = false;
+  private boolean withProjectsOnly = false;
   private String emptyHtmlSelectRecord = null;
-    
+
   //ranges
   private String companyRange = null;
   private String nameFirstRange = null;
@@ -157,12 +160,24 @@ public class ContactList extends Vector {
     this.ownerIdRange = ownerIdRange;
   }
 
+
+  /**
+   *  Gets the emptyHtmlSelectRecord attribute of the ContactList object
+   *
+   *@return    The emptyHtmlSelectRecord value
+   */
   public String getEmptyHtmlSelectRecord() {
-	return emptyHtmlSelectRecord;
+    return emptyHtmlSelectRecord;
   }
-  
+
+
+  /**
+   *  Sets the emptyHtmlSelectRecord attribute of the ContactList object
+   *
+   *@param  emptyHtmlSelectRecord  The new emptyHtmlSelectRecord value
+   */
   public void setEmptyHtmlSelectRecord(String emptyHtmlSelectRecord) {
-	this.emptyHtmlSelectRecord = emptyHtmlSelectRecord;
+    this.emptyHtmlSelectRecord = emptyHtmlSelectRecord;
   }
 
 
@@ -422,7 +437,37 @@ public class ContactList extends Vector {
   }
 
 
-  
+
+  /**
+   *  Sets the departmentId attribute of the ContactList object
+   *
+   *@param  departmentId  The new departmentId value
+   */
+  public void setDepartmentId(int departmentId) {
+    this.departmentId = departmentId;
+  }
+
+
+  /**
+   *  Sets the withProjectsOnly attribute of the ContactList object
+   *
+   *@param  withProjectsOnly  The new withProjectsOnly value
+   */
+  public void setWithProjectsOnly(boolean withProjectsOnly) {
+    this.withProjectsOnly = withProjectsOnly;
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the ContactList object
+   *
+   *@param  projectId  The new projectId value
+   */
+  public void setProjectId(int projectId) {
+    this.projectId = projectId;
+  }
+
+
   /**
    *  Gets the contactIdRange attribute of the ContactList object
    *
@@ -696,11 +741,11 @@ public class ContactList extends Vector {
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect contactListSelect = new HtmlSelect();
-    
+
     if (emptyHtmlSelectRecord != null) {
       contactListSelect.addItem(-1, emptyHtmlSelectRecord);
     }
-    
+
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Contact thisContact = (Contact) i.next();
@@ -878,15 +923,15 @@ public class ContactList extends Vector {
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-      "SELECT COUNT(*) AS recordcount " +
-      "FROM contact c " +
-      "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
-      "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-      "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-      "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
-      "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
-      "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
-      "WHERE c.contact_id > -1 ");
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM contact c " +
+        "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+        "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
+        "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
+        "WHERE c.contact_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -932,11 +977,11 @@ public class ContactList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.*, o.enabled as orgenabled, d.description as departmentname, t.description as type_name, " +
+        "c.*, d.description as departmentname, t.description as type_name, " +
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-        "o.name as org_name " +
+        "o.name as org_name,o.enabled as orgenabled " +
         "FROM contact c " +
         "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
@@ -1082,6 +1127,15 @@ public class ContactList extends Vector {
         sqlFilter.append("AND c.type_id = ? ");
       }
 
+      if (departmentId != -1) {
+        sqlFilter.append("AND c.department = ? ");
+      }
+      
+      if (projectId != -1) {
+        sqlFilter.append("AND c.user_id in (Select distinct user_id from project_team where project_id = ?) ");
+      }
+      
+
       if (firstName != null) {
         if (firstName.indexOf("%") >= 0) {
           sqlFilter.append("AND lower(c.namefirst) like lower(?) ");
@@ -1178,15 +1232,18 @@ public class ContactList extends Vector {
         sqlFilter.append("AND c.org_id > 0 ");
       }
 
+      if (withProjectsOnly) {
+        sqlFilter.append("AND c.user_id in (Select distinct user_id from project_team) ");
+      }
+      
       if (accountOwnerIdRange != null) {
         sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
       }
 
       if (personalId != -1) {
         sqlFilter.append("AND (c.type_id != 2 OR (c.type_id = 2 AND c.owner = ?) ) ");
-      }
-      else{
-	sqlFilter.append("AND c.type_id != 2 ");
+      } else {
+        sqlFilter.append("AND c.type_id != 2 ");
       }
 
       if (ignoreTypeIdList.size() > 0) {
@@ -1246,10 +1303,18 @@ public class ContactList extends Vector {
         pst.setInt(++i, typeId);
       }
 
+      if (departmentId != -1) {
+        pst.setInt(++i, departmentId);
+      }
+      
+      if (projectId != -1) {
+        pst.setInt(++i, projectId);
+      }
+      
       if (firstName != null) {
         pst.setString(++i, firstName);
       }
-
+      
       if (middleName != null) {
         pst.setString(++i, middleName);
       }

@@ -129,7 +129,7 @@ public final class ForwardNote extends CFSModule {
 			list.buildList(db);
 			context.getRequest().setAttribute("NoteDetails", thisNote);
 			thisRecord.buildResources(db);
-			recordInserted = thisNote.insert(db,1);
+			recordInserted = thisNote.insert(db);
 				if (!recordInserted) 
 				processErrors(context, thisNote.getErrors());
 				
@@ -137,7 +137,7 @@ public final class ForwardNote extends CFSModule {
 			String[] params = context.getRequest().getParameterValues("selectedList");
 			for (k=0; k<params.length; k++) {
 				thisNote.setSentTo(Integer.parseInt(params[k]));
-				recordInserted = thisNote.insert(db,2);
+				recordInserted = thisNote.insertLink(db,true);
 	
 				if (!recordInserted) {
 					processErrors(context, thisNote.getErrors());

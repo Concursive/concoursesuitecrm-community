@@ -105,11 +105,11 @@ public class Contact extends GenericBean {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT c.*, o.enabled as orgenabled, d.description as departmentname, t.description as type_name, " +
+        "SELECT c.*, d.description as departmentname, t.description as type_name, " +
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-        "o.name as org_name " +
+        "o.name as org_name, o.enabled as orgenabled " +
         "FROM contact c " +
         "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
@@ -1835,15 +1835,16 @@ public void setOrgEnabled(boolean orgEnabled) {
   }
 
   
-  public int getContactType(Connection db,int id) throws SQLException {
-	  System.out.println("Comin in getCOntactType");
+  public static int getContactType(Connection db,int id) throws SQLException {
 	 PreparedStatement pst = null;
 	 ResultSet rs = null;
 	 int typeId = -1;   
 	 
 	 try {
 	if (id == -1) {
-		   System.out.println("Invalid Contact ID");
+		   if (System.getProperty("DEBUG") != null) {
+         System.out.println("Contact -> Invalid Contact ID");
+       }
 	 }
 	   
 	 StringBuffer sql = new StringBuffer();
@@ -1851,26 +1852,29 @@ public void setOrgEnabled(boolean orgEnabled) {
 	 if (System.getProperty("DEBUG") != null) {
 		  System.out.println("Contact-> Retrieving contact");
 	  }
-         sql.append(
+    
+    sql.append(
           "SELECT user_id,type_id " +
           "FROM contact "+
 	  "where contact_id =" + id + " ");
-	  System.out.println("Contact Query "+sql.toString());
+	  if (System.getProperty("DEBUG") != null) {
+      System.out.println("Contact -> GetContactType Query --\n\t"+sql.toString());
+    }
 	  int i = 0;
 	  Statement st = db.createStatement();
 	  pst = db.prepareStatement(sql.toString());
 	  rs  = pst.executeQuery();
 	  if (rs.next()) {
-	       this.userId = rs.getInt("user_id");
-	       typeId = rs.getInt("type_id");
+	         typeId = rs.getInt("type_id");
 	  }
-	  System.out.println("Type id is"+typeId);
+	  
       
-      	pst.close();
+  pst.close();
 	rs.close();
 	st.close();
 	if (System.getProperty("DEBUG") != null) {
-		System.out.println("Contact-> ContactID: " + this.getId());
+		System.out.println("Contact -> ContactID: " + id);
+    System.out.println("Contact -> Type id is " + typeId);
 	}
 	db.commit();
     } catch (SQLException e) {

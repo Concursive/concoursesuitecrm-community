@@ -178,5 +178,9 @@
       <name>showForm</name>
       <required>no</required>
     </attribute>
+    <attribute>
+      <name>resetList</name>
+      <required>no</required>
+    </attribute>
   </tag>
 </taglib>

@@ -1,13 +1,14 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Note" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
 <jsp:useBean id="returnUrl" class="java.lang.String" scope="request"/>
+<jsp:useBean id="sendUrl" class="java.lang.String" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <br>
 
-<form name="newMessageForm" action="/MyCFSInbox.do?command=SendMessage" method="post" onSubmit="return sendMessage();">
+<form name="newMessageForm" action=<%=sendUrl%> method="post" onSubmit="return sendMessage();">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -62,7 +63,7 @@
     </td>
   </tr>
 </table>
-
+  <input type=hidden name="return" value="<%=returnUrl%>">
 
 <br>
 <input type="submit" value="Send">

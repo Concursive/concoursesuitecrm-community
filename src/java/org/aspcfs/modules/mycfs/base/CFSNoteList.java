@@ -25,6 +25,7 @@ public class CFSNoteList extends Vector {
   private int sentFrom = -1;
   private boolean oldMessagesOnly = false;
   private boolean sentMessagesOnly = false;
+  private boolean newMessagesOnly = false;
 
 
   /**
@@ -33,6 +34,16 @@ public class CFSNoteList extends Vector {
    *@since
    */
   public CFSNoteList() { }
+
+
+  /**
+   *  Sets the newMessagesOnly attribute of the CFSNoteList object
+   *
+   *@param  newMessagesOnly  The new newMessagesOnly value
+   */
+  public void setNewMessagesOnly(boolean newMessagesOnly) {
+    this.newMessagesOnly = newMessagesOnly;
+  }
 
 
   /**
@@ -281,7 +292,11 @@ public class CFSNoteList extends Vector {
 
     if (oldMessagesOnly == true) {
       sqlFilter.append("AND ml.status = 2 ");
-    } else if (!sentMessagesOnly) {
+    }
+    else if (newMessagesOnly) {
+      sqlFilter.append("AND ml.status IN (0) ");
+    }
+    else if (!sentMessagesOnly) {
       sqlFilter.append("AND ml.status IN (0,1) ");
     }
   }

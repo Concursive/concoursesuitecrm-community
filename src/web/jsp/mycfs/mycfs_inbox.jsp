@@ -4,9 +4,10 @@
 <jsp:useBean id="InboxInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
 <%--<a href="javascript:popURLReturn('/ForwardNote.do?command=ShowForm&popup=true', 'MyCFSInbox.do?command=Inbox', 'Inbox_message','600','450','yes','no');">New Message</a>--%> 
-<a href="/MyCFSInbox.do?command=NewMessage&return=/MyCFSInbox.do?command=Inbox">New Message</a>
+<a href='javascript:window.location.href="MyCFSInbox.do?command=NewMessage&sendUrl="+escape("/MyCFSInbox.do?command=SendMessage")+"&return="+escape("MyCFSInbox.do?command=Inbox");'>New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
 
@@ -50,7 +51,7 @@
     <%}
      else{%>
       <td width=30% valign=center align=left nowrap>
-      <strong><a href="/MyCFSInbox.do?command=Inbox&column=sent_namelast">To</a></strong>
+      <strong>To</strong>
       <%= InboxInfo.getSortIcon("sent_namelast") %>
     </td>
     <td width=30% valign=center align=left nowrap>

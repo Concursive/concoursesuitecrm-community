@@ -32,10 +32,12 @@ public class PagedListInfo {
   String listView = null;
   HashMap listFilters = new HashMap();
   private int iteration = 0;
-  boolean enableJavaScript = false; 
+  boolean enableJavaScript = false;
   boolean showForm = true;
+  boolean resetList = true;
   String alternateSort = null;
-  
+
+
   /**
    *  Constructor for the PagedListInfo object
    *
@@ -54,16 +56,18 @@ public class PagedListInfo {
     this.columnToSortBy = tmp;
   }
 
-/**
+
+  /**
    *  Sets the ColumnToSortBy attribute of the PagedListInfo object
    *
-   *@param  tmp  The new ColumnToSortBy value
-   *@since       1.0
+   *@param  enableJavaScript  The new enableJavaScript value
+   *@since                    1.0
    */
-   public void setEnableJavaScript(boolean enableJavaScript) {
-	this.enableJavaScript = enableJavaScript;
-	
-   }
+  public void setEnableJavaScript(boolean enableJavaScript) {
+    this.enableJavaScript = enableJavaScript;
+
+  }
+
 
   /**
    *  Sets the SortOrder attribute of the PagedListInfo object
@@ -76,10 +80,25 @@ public class PagedListInfo {
   }
 
 
-  
-   public void setShowForm(boolean showForm) {
-	this.showForm = showForm;
-   }
+
+  /**
+   *  Sets the showForm attribute of the PagedListInfo object
+   *
+   *@param  showForm  The new showForm value
+   */
+  public void setShowForm(boolean showForm) {
+    this.showForm = showForm;
+  }
+
+
+  /**
+   *  Sets the resetList attribute of the PagedListInfo object
+   *
+   *@param  resetList  The new resetList value
+   */
+  public void setResetList(boolean resetList) {
+    this.resetList = resetList;
+  }
 
 
   /**
@@ -94,13 +113,27 @@ public class PagedListInfo {
     }
     this.itemsPerPage = tmp;
   }
-  
-public String getAlternateSort() {
-	return alternateSort;
-}
-public void setAlternateSort(String alternateSort) {
-	this.alternateSort = alternateSort;
-}
+
+
+  /**
+   *  Gets the alternateSort attribute of the PagedListInfo object
+   *
+   *@return    The alternateSort value
+   */
+  public String getAlternateSort() {
+    return alternateSort;
+  }
+
+
+  /**
+   *  Sets the alternateSort attribute of the PagedListInfo object
+   *
+   *@param  alternateSort  The new alternateSort value
+   */
+  public void setAlternateSort(String alternateSort) {
+    this.alternateSort = alternateSort;
+  }
+
 
   /**
    *  Sets the ItemsPerPage attribute of the PagedListInfo object
@@ -143,8 +176,8 @@ public void setAlternateSort(String alternateSort) {
     //if so, find a nice page break to stop on
     if (maxRecords <= currentOffset && maxRecords > 0) {
       currentOffset = maxRecords;
-      
-      while (((currentOffset%itemsPerPage) != 0) && (currentOffset > 0)) {
+
+      while (((currentOffset % itemsPerPage) != 0) && (currentOffset > 0)) {
         --currentOffset;
       }
       if (System.getProperty("DEBUG") != null) {
@@ -177,8 +210,8 @@ public void setAlternateSort(String alternateSort) {
    *@since       1.1
    */
   public void setCurrentOffset(int tmp) {
-	  
-   if (tmp < 0) {
+
+    if (tmp < 0) {
       this.currentOffset = 0;
     } else {
       this.currentOffset = tmp;
@@ -277,7 +310,7 @@ public void setAlternateSort(String alternateSort) {
       this.setCurrentLetter("");
     }
 
-    //The user has selected an offset to go to... could be through a 
+    //The user has selected an offset to go to... could be through a
     //page element that calculates the offset per page
     String tmpCurrentOffset = context.getRequest().getParameter("offset");
     if (tmpCurrentOffset != null) {
@@ -300,7 +333,8 @@ public void setAlternateSort(String alternateSort) {
       String tmpListFilter = context.getRequest().getParameter("listFilter" + filter);
       addFilter(filter, tmpListFilter);
     }
-    if (context.getRequest().getParameter("listFilter1") != null) {
+
+    if (context.getRequest().getParameter("listFilter1") != null && resetList) {
       resetList();
     }
   }
@@ -385,18 +419,19 @@ public void setAlternateSort(String alternateSort) {
     return currentOffset;
   }
 
+
   /**
    *  Gets the CurrentOffset attribute of the PagedListInfo object
    *
    *@return    The CurrentOffset value
    *@since     1.1
    */
-   public boolean getEnableJavaScript() {
-	return enableJavaScript;
-   }
+  public boolean getEnableJavaScript() {
+    return enableJavaScript;
+  }
 
-  
-  
+
+
   /**
    *  Gets the PageLinks attribute of the PagedListInfo object <p>
    *
@@ -431,13 +466,12 @@ public void setAlternateSort(String alternateSort) {
    *@return     The listPropertiesHeader value
    */
   public String getListPropertiesHeader(String id) {
-	  if(showForm){
-    return ("<form name=\"" + id + "\" action=\"" + link + "\" method=\"post\">");
+    if (showForm) {
+      return ("<form name=\"" + id + "\" action=\"" + link + "\" method=\"get\">");
+    } else {
+      return "";
     }
-    else{
-    return "";
-    }
-    
+
   }
 
 
@@ -447,11 +481,10 @@ public void setAlternateSort(String alternateSort) {
    *@return    The listPropertiesFooter value
    */
   public String getListPropertiesFooter() {
-     if(showForm){
-	     return ("</form>");
-    }
-    else {
-	    return "";
+    if (showForm) {
+      return ("</form>");
+    } else {
+      return "";
     }
   }
 
@@ -515,26 +548,28 @@ public void setAlternateSort(String alternateSort) {
     return links.toString();
   }
 
-  
-  
+
+
   /**
    *  Gets the AlphebeticalPageLinks attribute of the PagedListInfo object
    *
-   *@return    The AlphebeticalPageLinks value
-   *@since     1.1
+   *@param  javaScript  Description of the Parameter
+   *@return             The AlphebeticalPageLinks value
+   *@since              1.1
    */
-  public String getAlphabeticalPageLinks(String javaScript) {
+  public String getAlphabeticalPageLinks(String javaScript,String formName) {
     StringBuffer links = new StringBuffer();
     for (int i = 0; i < lettersArray.length; i++) {
       String thisLetter = lettersArray[i];
       if (thisLetter.equals(currentLetter)) {
         links.append(" <b>" + thisLetter + "</b> ");
       } else {
-        links.append("<a href=\"javascript:"+ javaScript +"('" + thisLetter + "');\"> " + thisLetter + " </a>");
+        links.append("<a href=\"javascript:" + javaScript + "('letter','" + thisLetter + "','"+ formName +"');\"> " + thisLetter + " </a>");
       }
     }
     return links.toString();
   }
+
 
   /**
    *  Gets the PreviousPageLink attribute of the PagedListInfo object
@@ -570,12 +605,11 @@ public void setAlternateSort(String alternateSort) {
   public String getPreviousPageLink(String linkOn, String linkOff) {
     if (currentOffset > 0) {
       int newOffset = currentOffset - itemsPerPage;
-      
-      if(!getEnableJavaScript()){
-	      return "<a href='" + link + "&offset=" + (newOffset > 0 ? newOffset : 0) + "'>" + linkOn + "</a>";
-      }
-      else{
-	      return "<a href=\"javascript:offsetsubmit('"+(newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>";
+
+      if (!getEnableJavaScript()) {
+        return "<a href='" + link + "&offset=" + (newOffset > 0 ? newOffset : 0) + "'>" + linkOn + "</a>";
+      } else {
+        return "<a href=\"javascript:offsetsubmit('" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>";
       }
     } else {
       return linkOff;
@@ -583,7 +617,7 @@ public void setAlternateSort(String alternateSort) {
   }
 
 
-  
+
   /**
    *  Gets the NextPageLink attribute of the PagedListInfo object
    *
@@ -617,11 +651,10 @@ public void setAlternateSort(String alternateSort) {
    */
   public String getNextPageLink(String linkOn, String linkOff) {
     if ((currentOffset + itemsPerPage) < maxRecords) {
-       if(!getEnableJavaScript()){
-	      return "<a href='" + link + "&offset=" + (currentOffset + itemsPerPage) + "'>" + linkOn + "</a>";
-      }
-      else{
-	      return "<a href=\"javascript:offsetsubmit('"+(currentOffset + itemsPerPage) + "');\">" + linkOn + "</a>";
+      if (!getEnableJavaScript()) {
+        return "<a href='" + link + "&offset=" + (currentOffset + itemsPerPage) + "'>" + linkOn + "</a>";
+      } else {
+        return "<a href=\"javascript:offsetsubmit('" + (currentOffset + itemsPerPage) + "');\">" + linkOn + "</a>";
       }
     } else {
       return linkOff;
@@ -677,7 +710,7 @@ public void setAlternateSort(String alternateSort) {
   }
 
 
-  
+
   /**
    *  Gets the filterValue attribute of the PagedListInfo object
    *
@@ -730,7 +763,12 @@ public void setAlternateSort(String alternateSort) {
    *@param  value  The feature to be added to the Filter attribute
    */
   public void addFilter(int param, String value) {
-    listFilters.put("listFilter" + param, value);
+    if (listFilters.get("listFilter" + param) == null) {
+      listFilters.put("listFilter" + param, value);
+    } else {
+      listFilters.remove("listFilter" + param);
+      listFilters.put("listFilter" + param, value);
+    }
   }
 
 
@@ -872,6 +910,7 @@ public void setAlternateSort(String alternateSort) {
    *  Description of the Method
    */
   private void resetList() {
+    System.out.println("resettin..");
     this.setCurrentLetter("");
     this.setCurrentOffset(0);
   }
@@ -880,5 +919,3 @@ public void setAlternateSort(String alternateSort) {
 
 
 
-
-                                                                                                                                 

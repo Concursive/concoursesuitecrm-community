@@ -30,7 +30,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     UserBean thisUser = (UserBean)request.getSession().getAttribute("User");
     int userId = thisUser.getUserId();
     int departmentId = thisUser.getUserRecord().getContact().getDepartment();
-
+    int contactId =  thisUser.getUserRecord().getContact().getId();
+    
     StringBuffer items = new StringBuffer();
     int itemCount = 0;
 
@@ -158,19 +159,11 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 	      //CFS Inbox Items
         if (thisUser.hasPermission("myhomepage-inbox-view")) {
           int inboxCount = 0;
-          sql = 
-            "SELECT COUNT(*) as inboxcount " +
-            "FROM cfsinbox_messagelink " +
-            "WHERE sent_to = ? AND viewed IS NULL ";
-          pst = db.prepareStatement(sql);
-          pst.setInt(1, userId);
-          rs = pst.executeQuery();
-          if (rs.next()) {
-            inboxCount = rs.getInt("inboxcount");
-            if (System.getProperty("DEBUG") != null) System.out.println("GlobalItemsHook-> Inbox: " + inboxCount);
-          }
-          rs.close();
-          pst.close();
+          CFSNoteList newMessages = new CFSNoteList();
+          newMessages.setSentTo(contactId);
+          newMessages.setNewMessagesOnly(true);
+          newMessages.buildList(db);
+          inboxCount = newMessages.size();
           items.append("<a href='/MyCFSInbox.do?command=Inbox&return=1' class='s'>Inbox</a> (" + paint(inboxCount) + " new)<br>");
           ++myItems;
         }

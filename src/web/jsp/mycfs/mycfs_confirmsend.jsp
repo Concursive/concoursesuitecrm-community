@@ -4,12 +4,12 @@
 <%@ include file="initPage.jsp" %>
 <br>
 
-<a href="/MyCFSInbox.do?command=Inbox">Back to Inbox</a>
+<a href="<%=request.getParameter("return")%>">Back</a>
 <p>
 <br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" >
-  <tr class="">
-    <td colspan=2 valign=center align=left width=50>
+  <tr>
+    <td colspan=2 valign=center align=left>
       Your message has been sent to the following recipients :
       <br><br>
       	<%

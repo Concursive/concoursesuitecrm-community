@@ -1,18 +1,3 @@
-function lettersubmit(thisLetter) {
-  document.forms[0].letter.value = thisLetter;
-  document.forms[0].submit();
-  }
-  
-  function offsetsubmit(newOffset) {
-  document.forms[0].offset.value = newOffset;
-  document.forms[0].submit();
-  }
-  
-  function contactsubmit() {
-	  document.forms[0].finalsubmit.value = "true";
-	  document.forms[0].submit();
-  }
-  
   function sendMessage() {
     formTest = true;
     message = "";
@@ -37,36 +22,23 @@ function lettersubmit(thisLetter) {
     }
   }
   
-  function insertNewOption(text,value){
-   myOption=new Option();
-   myOption.text= text;
-   myOption.value= value;
-   if (opener.document.newMessageForm.listView.selectedIndex>0){
-    insertIndex=opener.document.newMessageForm.listView.selectedIndex;
-   }
-   else{
-    insertIndex=opener.document.newMessageForm.listView.options.length;
-   }
-    opener.document.newMessageForm.listView.options[insertIndex]=myOption;	
-  }
-  
-  
   function setParentList(a){
-    deleteOptions();
+    opener.deleteOptions();
 	  if(a.length == 0){
-		  insertNewOption("None Selected","");
+		    createOption("None Selected","");
 	  }
     var i = 0;
-	for(i=0; i < a.length; i++) {
-		insertNewOption(a[i],"");
-	}
+    for(i=0; i < a.length; i++) {
+        opener.insertOption(a[i],"");
+	   }
   }
   
   
-   function deleteOptions(){ 
-   while (opener.document.newMessageForm.listView.options.length>0){
-      deleteIndex=opener.document.newMessageForm.listView.options.length-1;
-      opener.document.newMessageForm.listView.options[deleteIndex]=null;
+   function deleteOptions(){
+     
+   while (document.newMessageForm.listView.options.length>0){
+      deleteIndex=document.newMessageForm.listView.options.length-1;
+      document.newMessageForm.listView.options[deleteIndex]=null;
    }
   }
   
@@ -143,3 +115,12 @@ function lettersubmit(thisLetter) {
       E.className = E.className.substr(0,4);
     }
 
+    function insertOption(text,value){
+     if (document.forms[0].listView.selectedIndex>0){
+       insertIndex=opener.document.newMessageForm.listView.selectedIndex;
+     }
+     else{
+       insertIndex= document.forms[0].listView.options.length;
+     }
+     document.forms[0].listView.options[insertIndex] = new Option(text,value);
+    }

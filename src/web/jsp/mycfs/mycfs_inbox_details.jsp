@@ -8,7 +8,7 @@
 <a href="/MyCFSInbox.do?command=Inbox">Back to Inbox</a>
 <p>
 <input type=button name="action" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
-<input type=button name="action" value="Forward" onClick="javascript:window.location.href='/MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox'">
+<input type=button name="action" value="Forward" onClick="javascript:window.location.href='/MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox&sendUrl=/MyCFSInbox.do?command=SendMessage'">
   <% if(!InboxInfo.getListView().equalsIgnoreCase("sent")){%>
 <input type=button name="action" value="<%= (NoteDetails.getStatus() != 2?"Archive":"Send to Inbox") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
 <%}%>
