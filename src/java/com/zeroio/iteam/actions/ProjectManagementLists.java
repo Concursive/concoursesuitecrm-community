@@ -52,6 +52,12 @@ public final class ProjectManagementLists extends CFSModule {
 
       LookupList priorityList = new LookupList(db, "lookup_task_priority");
       context.getRequest().setAttribute("PriorityList", priorityList);
+      
+      String id = context.getParameter("id");
+      if (id != null && !"".equals(id)) {
+        Task thisTask = new Task(db, Integer.parseInt(id));
+        context.getRequest().setAttribute("Task", thisTask);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -93,6 +99,7 @@ public final class ProjectManagementLists extends CFSModule {
 
       Task newTask = (Task) context.getFormBean();
       newTask.setEnteredBy(getUserId(context));
+      newTask.setModifiedBy(getUserId(context));
       //TODO: Need to do this in a transaction, but in the object
       recordInserted = newTask.insert(db);
       if (!recordInserted) {
@@ -112,6 +119,51 @@ public final class ProjectManagementLists extends CFSModule {
         return ("AddOK");
       } else {
         return executeCommandAdd(context);
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandUpdate(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = 0;
+    /*
+     *  if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+     *  return ("DefaultError");
+     *  }
+     */
+    String projectId = (String) context.getRequest().getParameter("pid");
+
+    try {
+      db = this.getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("lists_add").toLowerCase());
+
+      Task updatedTask = (Task) context.getFormBean();
+      updatedTask.setModifiedBy(getUserId(context));
+      resultCount = updatedTask.update(db);
+      if (resultCount == -1) {
+        processErrors(context, updatedTask.getErrors());
+      }
+      context.getRequest().setAttribute("Task", updatedTask);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        return executeCommandAdd(context);
+      } else if (resultCount == 1) {
+        return ("UpdateOK");
+      } else {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
