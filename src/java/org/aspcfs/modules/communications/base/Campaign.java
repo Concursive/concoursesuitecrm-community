@@ -14,6 +14,7 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import com.zeroio.iteam.base.FileItemList;
+import org.aspcfs.modules.actionlist.base.ActionItemLog;
 
 /**
  *  Description of the Class
@@ -38,6 +39,10 @@ public class Campaign extends GenericBean {
   public final static String ERROR_TEXT = "Error in Campaign";
   public final static String CANCELLED_TEXT = "Cancelled";
 
+  //campaign types
+  public final static int GENERAL = 1;
+  public final static int INSTANT = 2;
+
   private int id = -1;
   private String name = null;
   private String description = null;
@@ -59,6 +64,7 @@ public class Campaign extends GenericBean {
   private String subject = null;
   private String message = null;
   private int sendMethodId = -1;
+  private int type = GENERAL;
 
   private int files = 0;
   private String deliveryName = null;
@@ -168,6 +174,36 @@ public class Campaign extends GenericBean {
    */
   public void setLastResponse(java.sql.Timestamp lastResponse) {
     this.lastResponse = lastResponse;
+  }
+
+
+  /**
+   *  Sets the type attribute of the Campaign object
+   *
+   *@param  type  The new type value
+   */
+  public void setType(int type) {
+    this.type = type;
+  }
+
+
+  /**
+   *  Sets the type attribute of the Campaign object
+   *
+   *@param  type  The new type value
+   */
+  public void setType(String type) {
+    this.type = Integer.parseInt(type);
+  }
+
+
+  /**
+   *  Gets the type attribute of the Campaign object
+   *
+   *@return    The type value
+   */
+  public int getType() {
+    return type;
   }
 
 
@@ -1530,6 +1566,7 @@ public class Campaign extends GenericBean {
    *@param  db                Description of Parameter
    *@param  userId            Description of the Parameter
    *@param  userRangeId       Description of the Parameter
+   *@param  personalId        Description of the Parameter
    *@exception  SQLException  Description of Exception
    */
   public void insertRecipients(Connection db, int userId, String userRangeId, int personalId) throws SQLException {
@@ -1575,20 +1612,23 @@ public class Campaign extends GenericBean {
     if (!isValid(db)) {
       return false;
     }
-
     StringBuffer sql = new StringBuffer();
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       sql.append(
           "INSERT INTO campaign " +
           "(enteredby, modifiedby, name, message_id, " +
           "reply_addr, subject, message, send_method_id, " +
-          "inactive_date, approval_date, ");
+          "inactive_date, approval_date, type, ");
       if (entered != null) {
         sql.append("entered, ");
       }
       sql.append("approvedby ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1605,6 +1645,7 @@ public class Campaign extends GenericBean {
       pst.setInt(++i, sendMethodId);
       pst.setDate(++i, inactiveDate);
       pst.setTimestamp(++i, approvalDate);
+      pst.setInt(++i, type);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1615,10 +1656,8 @@ public class Campaign extends GenericBean {
       }
       pst.execute();
       pst.close();
-
       id = DatabaseUtils.getCurrVal(db, "campaign_campaign_id_seq");
       this.update(db, true);
-
       if (this.getGroupList() != null && !this.getGroupList().equals("")) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Campaign-> GroupList: " + this.getGroupList());
@@ -1629,12 +1668,10 @@ public class Campaign extends GenericBean {
 
         while (strt.hasMoreTokens()) {
           String tmpString = (String) strt.nextToken();
-
           groupSql.append(
               "INSERT INTO campaign_list_groups " +
               "(campaign_id, group_id ) " +
               "VALUES (?, ?) ");
-
           int j = 0;
           pstx = db.prepareStatement(groupSql.toString());
           pstx.setInt(++j, this.getId());
@@ -1643,13 +1680,18 @@ public class Campaign extends GenericBean {
           pstx.close();
         }
       }
-
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -1821,37 +1863,41 @@ public class Campaign extends GenericBean {
     SQLException message = null;
     try {
       db.setAutoCommit(false);
+
+      //make sure there arent any  for instant action campaigns
+      ActionItemLog.deleteLink(db, this.getId(), Constants.CAMPAIGN_OBJECT);
+
       pst = db.prepareStatement(
           "DELETE FROM campaign_list_groups WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       pst = db.prepareStatement(
           "DELETE FROM scheduled_recipient WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       pst = db.prepareStatement(
           "DELETE FROM campaign_run WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       pst = db.prepareStatement(
           "DELETE FROM excluded_recipient WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       //Delete any inactive survey links
       pst = db.prepareStatement(
           "DELETE FROM campaign_survey_link WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       //Delete the attached survey
       int activeSurveyId = (ActiveSurvey.getId(db, id));
       if (activeSurveyId > -1) {
@@ -1933,7 +1979,7 @@ public class Campaign extends GenericBean {
         pst.setInt(1, id);
         pst.execute();
         pst.close();
-        
+
         //Remove attached survey if campaign has one
         int activeSurveyId = ActiveSurvey.getId(db, id);
         if (activeSurveyId > -1) {
@@ -1966,6 +2012,7 @@ public class Campaign extends GenericBean {
    *@param  db                Description of Parameter
    *@param  userId            Description of the Parameter
    *@param  userRangeId       Description of the Parameter
+   *@param  personalId        Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    *@since                    1.17
@@ -2074,7 +2121,6 @@ public class Campaign extends GenericBean {
     } finally {
       db.setAutoCommit(true);
     }
-
     if (message != null) {
       throw new SQLException(message.getMessage());
     }
