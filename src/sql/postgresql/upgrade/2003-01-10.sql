@@ -67,7 +67,7 @@ CREATE TABLE active_survey_answer_items (
   comments TEXT
 );
 
-CREATE TABLE active_survey_answer_itemavg (
+CREATE TABLE active_survey_answer_avg (
   id SERIAL primary key,
   question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
   item_id INT NOT NULL REFERENCES active_survey_items(item_id),
