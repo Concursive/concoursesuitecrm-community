@@ -128,7 +128,23 @@ public final class AdminConfig extends CFSModule {
     if (email != null) {
       prefs.add("MAILSERVER", email);
     }
+    //Process the request
+    String emailAddress = context.getRequest().getParameter("emailAddress");
+    if (emailAddress != null) {
+      prefs.add("EMAILADDRESS", emailAddress);
+    }
+    //Process the request
+    String fax = context.getRequest().getParameter("fax");
+    if (fax != null) {
+      prefs.add("FAXSERVER", fax);
+    }
+    //Process the request
+    String url = context.getRequest().getParameter("url");
+    if (url != null) {
+      prefs.add("WEBSERVER.URL", url);
+    }
     prefs.save();
+    prefs.populateContext(context.getServletContext());
     return "UpdateOK";
   }
 }
