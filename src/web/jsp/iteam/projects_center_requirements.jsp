@@ -1,11 +1,30 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="projectRequirementsInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
-<table border='0' width='100%'  bgcolor='#000000' cellspacing='0' cellpadding='0'>
+
+<table border='0' width='100%'  bgcolor='#FFFFFF' cellspacing='0' cellpadding='0'>
   <tr>
-    <td width='100%' bgcolor='#FF9900'>
+    <form name="listView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>">
+    <td align="left">
+      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+        <option <%= projectRequirementsInfo.getOptionValue("open") %>>Open Requirements</option>
+        <option <%= projectRequirementsInfo.getOptionValue("closed") %>>Closed Requirements</option>
+        <option <%= projectRequirementsInfo.getOptionValue("all") %>>All Requirements</option>
+      </select>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="projectRequirementsInfo"/>
+    </td>
+    </form>
+  </tr>
+</table>
+
+<table border='0' width='100%'  bgcolor='#000000' cellspacing='0' cellpadding='0'>  
+  <tr>
+    <td width="100%" bgcolor="#FF9900" colspan="2">
       <b><font color='#FFFFFF'>&nbsp;Requirements</font></b>
     </td>
   </tr>

@@ -16,7 +16,7 @@ import com.zeroio.iteam.base.*;
 /**
  *  Project Management module for CFS
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    November 6, 2001
  *@version    $Id: ProjectManagement.java,v 1.1.1.1 2002/01/14 19:49:26
  *      mrajkowski Exp $
@@ -392,6 +392,16 @@ public final class ProjectManagement extends CFSModule {
           }
         }
         
+        PagedListInfo projectRequirementsInfo = this.getPagedListInfo(context, "projectRequirementsInfo");
+        projectRequirementsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + thisProject.getId());
+        thisProject.getRequirements().setPagedListInfo(projectRequirementsInfo);
+        if ("all".equals(projectRequirementsInfo.getListView())) {
+          
+        } else if ("closed".equals(projectRequirementsInfo.getListView())) {
+          thisProject.getRequirements().setClosedOnly(true);
+        } else {
+          thisProject.getRequirements().setOpenOnly(true);
+        }
         thisProject.setBuildRequirementAssignments(true);
         thisProject.buildRequirementList(db);
         Iterator i = thisProject.getRequirements().iterator();
