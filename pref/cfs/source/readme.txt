@@ -46,8 +46,8 @@ Centric CRM there.
 
 You will need to have the following software installed in order to compile:
 
-  Sun J2SE SDK 1.4
-  http://java.sun.com
+  Sun J2SE 1.4
+  http://java.sun.com/j2se/1.4.2/download.html
 
   Apache Ant 1.6
   http://ant.apache.org
@@ -153,8 +153,8 @@ configuration steps of Centric CRM.
 
 Centric CRM licenses libraries and code from the following projects, some 
 are proprietary in which Dark Horse Ventures has been granted a license
-to redistribute, some are Open Source and are used according to the project
-license:
+to redistribute with Centric CRM, some are Open Source and are used 
+according to the project license:
 
 Project Name                      License
 --------------------------------  -----------------------------------------
