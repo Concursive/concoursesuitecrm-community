@@ -122,7 +122,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     }
   }
   
-  private void saveContactList(Connection db, ContactList contactList) throws SQLException{
+  private void saveContactList(Connection db, ContactList contactList) throws SQLException {
     Iterator contacts = contactList.iterator();
     
     while (contacts.hasNext()) {
@@ -179,7 +179,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     }
   }
   
-  private void saveOrgList(Connection db, OrganizationList orgList) throws SQLException{
+  private void saveOrgList(Connection db, OrganizationList orgList) throws SQLException {
     Iterator orgs = orgList.iterator();
     
     while (orgs.hasNext()) {
@@ -202,37 +202,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
               writer.save(anotherRecord);
               writer.commit();
       }
-      
-      /**
-      ContactAddressList addressList = new ContactAddressList();
-      addressList.setContactId(thisContact.getId());
-      addressList.buildList(db);
-      
-      logger.info("ImportBaseData-> Inserting " + addressList.size() + " Contact addresses");
-      
-      Iterator addresses = addressList.iterator();
-      while (addresses.hasNext()) {
-              ContactAddress streetAddress = (ContactAddress)addresses.next();
-              DataRecord addressRecord = mappings.createDataRecord(streetAddress, "insert");
-              writer.save(addressRecord);
-              writer.commit();
-      }
-      
-      OrganizationPhoneNumberList phoneList = new OrganizationPhoneNumberList();
-      phoneList.setOrgId(thisOrg.getId());
-      phoneList.buildList(db);
-      
-      logger.info("ImportBaseData-> Inserting " + phoneList.size() + " Organization phone numbers");
-      
-      Iterator phones = phoneList.iterator();
-      while (phones.hasNext()) {
-              OrganizationPhoneNumber phone = (OrganizationPhoneNumber)phones.next();
-              DataRecord phoneRecord = mappings.createDataRecord(phone, "insert");
-              writer.save(phoneRecord);
-              writer.commit();
-      }
-      
-      */
+
     }
   }
   

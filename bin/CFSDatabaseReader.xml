@@ -262,7 +262,6 @@
     <map class="com.darkhorseventures.cfsbase.OrganizationPhoneNumber" id="organizationPhoneNumber">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
-      <property lookup="contact">contactId</property>
       <property>number</property>
       <property>extension</property>
       <property lookup="lookupOrgPhoneTypes">type</property>
@@ -273,7 +272,6 @@
     <map class="com.darkhorseventures.cfsbase.OrganizationEmailAddress" id="organizationEmailAddressList">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
-      <property lookup="contact">contactId</property>
       <property lookup="lookupOrgEmailTypes">type</property>
       <property>email</property>
       <property lookup="user">enteredBy</property>
