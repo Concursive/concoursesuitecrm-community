@@ -23,7 +23,7 @@
       <%= CompanyCalendar.getHtml() %>
     </td>
   
-  <td "bgcolor=#FFFFFF" valign="top" height="100%" width="100%">
+  <td bgcolor="#FFFFFF" valign="top" height="100%" width="100%">
     <table bgcolor="#FFFFFF" height="100%" width="100%" border="1" cellpadding="1" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr>
         <td width="100%">

@@ -44,7 +44,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         "<tr><td valign='top'> <img border='0' src='images/sb-search.gif' width='147' height='20'></td></tr>" +
         "<tr>" +
         "<td bgcolor='#E7E9EB'><p align='center'>Search this site for...<br>" +
-        "<input type='text' name='search' size='15'><br>" +
+        "<input type=text size=15 name=search><br>" +
         "<a href='#SearchHelp' class='s'>More/Help</a> <input type='submit' value='Search' name='Search'>" +
         "</p>" +
         "</td>" +
