@@ -31,6 +31,8 @@ public class CFSHttpXMLWriter implements DataWriter {
   private int transactionCount = 0;
   private String lastResponse = null;
   
+  private boolean ignoreClientId = false;
+  
   /**
    *  Sets the url attribute of the CFSHttpXMLWriter object
    *
@@ -93,6 +95,13 @@ public class CFSHttpXMLWriter implements DataWriter {
       commit();
     }
   }
+  
+  public void setIgnoreClientId(boolean tmp) { this.ignoreClientId = tmp; }
+  public void setIgnoreClientId(String tmp) { 
+    this.ignoreClientId = "true".equals(tmp); 
+  }
+  public boolean getIgnoreClientId() { return ignoreClientId; }
+
 
   /**
    *  Gets the url attribute of the CFSHttpXMLWriter object
@@ -180,6 +189,10 @@ public class CFSHttpXMLWriter implements DataWriter {
   public boolean isConfigured() {
     if (url == null || id == null || code == null || systemId == -1) {
       return false;
+    }
+    
+    if (ignoreClientId) {
+      return true;
     }
     
     //Setup a new client id for this data transfer session
@@ -292,12 +305,12 @@ public class CFSHttpXMLWriter implements DataWriter {
           object.appendChild(field);
         }
       }
-      
       lastResponse = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
       this.transaction.clear();
       this.setAutoCommit(true);
     } catch (Exception ex) {
       logger.info(ex.toString());
+      ex.printStackTrace(System.out);
       return false;
     }
     return true;
