@@ -57,6 +57,7 @@ Add a Call<br>
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
+<%-- Begin container --%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -81,6 +82,7 @@ Add a Call<br>
   </tr>
   <tr>
     <td class="containerBack">
+<%-- Begin the container contents --%>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
       <input type="reset" value="Reset">
@@ -165,8 +167,10 @@ Add a Call<br>
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="oppHeaderId" value=<%= opportunityHeader.getId() %>>
       <input type="hidden" name="headerId" value=<%= opportunityHeader.getId() %>>
+<%-- End container contents --%>
     </td>
   </tr>
 </table>
+<%-- End container --%>
 </form>
 </body>
