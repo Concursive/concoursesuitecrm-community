@@ -745,19 +745,26 @@ public class CustomField extends GenericBean {
    *@since
    */
   public String getHtmlElement() {
+    String elementName = "";
+    if (id > -1) {
+      elementName = "cf" + id;
+    } else {
+      //Not tested
+      elementName = name;
+    }
     switch (type) {
         case TEXTAREA:
-          return ("<textarea cols=\"70\" rows=\"8\" name=\"" + "cf" + id + "\">" + toString(enteredValue) + "</textarea>");
+          return ("<textarea cols=\"70\" rows=\"8\" name=\"" + elementName + "\">" + toString(enteredValue) + "</textarea>");
         case SELECT:
           ((LookupList) elementData).addItem(-1, "-- None --");
-          return ((LookupList) elementData).getHtmlSelect("cf" + id, selectedItemId);
+          return ((LookupList) elementData).getHtmlSelect(elementName, selectedItemId);
         case CHECKBOX:
-          return ("<input type=\"checkbox\" name=\"" + "cf" + id + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
+          return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
         case DATE:
-          return ("<input type=\"text\" name=\"" + "cf" + id + "\" value=\"" + toHtmlValue(enteredValue) + "\"> " +
-              "<a href=\"javascript:popCalendar('forms[0]', 'cf" + id + "');\">Date</a> (mm/dd/yyyy)");
+          return ("<input type=\"text\" name=\"" + elementName + "\" value=\"" + toHtmlValue(enteredValue) + "\"> " +
+              "<a href=\"javascript:popCalendar('forms[0]', '" + elementName + "');\">Date</a> (mm/dd/yyyy)");
         case PERCENT:
-          return ("<input type=\"text\" name=\"" + "cf" + id + "\" size=\"8\" value=\"" + toHtmlValue(enteredValue) + "\"> " + "%");
+          return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + toHtmlValue(enteredValue) + "\"> " + "%");
         default:
           String maxlength = this.getParameter("maxlength");
           String size = "";
@@ -769,7 +776,7 @@ public class CustomField extends GenericBean {
             }
           }
           return ("<input type=\"text\" " +
-              "name=\"" + "cf" + id + "\" " +
+              "name=\"" + elementName + "\" " +
               (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
               (size.equals("") ? "" : "size=\"" + size + "\" ") +
               "value=\"" + toHtmlValue(enteredValue) + "\">");
