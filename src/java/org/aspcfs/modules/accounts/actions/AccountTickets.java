@@ -481,6 +481,7 @@ public final class AccountTickets extends CFSModule {
 
           thisCat.setDescription(context.getRequest().getParameter("newCat" + catCount));
           thisCat.setLevel(catCount);
+          thisCat.setCategoryLevel(catCount);
           catInserted = thisCat.insert(db);
 
           if (catInserted == true) {
