@@ -578,7 +578,7 @@
       <property field="send_method_id"/>
       <property field="inactive_date"/>
       <property field="approval_date"/>
-      <property field="approvedby"/>
+      <property lookup="user" field="approvedby"/>
       <property field="enabled"/>
       <property lookup="user" field="enteredby"/>
       <property lookup="user" field="modifiedby"/>

@@ -1479,8 +1479,11 @@ public void setCompanyEnabled(boolean companyEnabled) {
 
     sql.append(
         "UPDATE ticket SET department_code = ?, pri_code = ?, scode = ?, cat_code = ?, assigned_to = ?, " +
-        "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, source_code = ?, contact_id = ?, problem = ?, " +
-        "modified = CURRENT_TIMESTAMP ");
+        "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, source_code = ?, contact_id = ?, problem = ?, ");
+        
+        if (override == false) {
+                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
+        }
 
     if (this.getCloseIt() == true) {
       sql.append(

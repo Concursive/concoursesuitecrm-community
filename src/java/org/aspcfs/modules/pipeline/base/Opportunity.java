@@ -1787,12 +1787,18 @@ public void setEnabled(boolean enabled) {
         "SET lowvalue = ?, guessvalue = ?, highvalue = ?, closeprob = ?, " +
         "commission = ?, ");
 
-    if (this.getStageChange() == true) {
+    if (this.getStageChange() == true && override == false) {
       sql.append("stagedate = CURRENT_TIMESTAMP, ");
     }
 
     sql.append("type = ?, stage = ?, description = ?, " +
-        "closedate = ?, alertdate = ?, alert = ?, terms = ?, units = ?, owner = ?, modifiedby = ?, modified = CURRENT_TIMESTAMP ");
+        "closedate = ?, alertdate = ?, alert = ?, terms = ?, units = ?, owner = ?, ");
+        
+        if (override == false) {
+                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+        }
+        
+    sql.append("modifiedby = ? ");
 
     if (this.getCloseIt() == true) {
       sql.append(

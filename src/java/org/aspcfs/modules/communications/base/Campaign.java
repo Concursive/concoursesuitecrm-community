@@ -64,6 +64,7 @@ public class Campaign extends GenericBean {
   private String serverName = "";
   private String groupList = "";
   private int groupCount = -1;
+  private int approvedBy = -1;
 
 
   /**
@@ -259,6 +260,15 @@ public class Campaign extends GenericBean {
     this.groupList = groupList;
   }
 
+public int getApprovedBy() {
+	return approvedBy;
+}
+public void setApprovedBy(int approvedBy) {
+	this.approvedBy = approvedBy;
+}
+public void setApprovedBy(String approvedBy) {
+	this.approvedBy = Integer.parseInt(approvedBy);
+}
 
   /**
    *  Sets the id attribute of the Campaign object
@@ -1297,8 +1307,8 @@ public java.sql.Timestamp getModified() {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO campaign " +
-          "(enteredby, modifiedby, name, message_id ) " +
-          "VALUES (?, ?, ?, ?) ");
+          "(enteredby, modifiedby, name, message_id, approvedby ) " +
+          "VALUES (?, ?, ?, ?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1306,6 +1316,11 @@ public java.sql.Timestamp getModified() {
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getName());
       pst.setInt(++i, this.getMessageId());
+      if (approvedBy > -1) {
+        pst.setInt(++i, this.getApprovedBy());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
       pst.execute();
       pst.close();
 
@@ -2060,6 +2075,10 @@ public java.sql.Timestamp getModified() {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    approvedBy = rs.getInt("approvedBy");
+    if (rs.wasNull()) {
+            approvedBy=-1;
+    }
 
     //message table
     messageName = rs.getString("messageName");

@@ -721,8 +721,13 @@ public java.sql.Timestamp getModified() {
     StringBuffer sql = new StringBuffer();
 
     sql.append(
-        "UPDATE saved_criterialist " +
-        "SET modified = CURRENT_TIMESTAMP, name = ?, contact_source = ?, owner = ? " +
+        "UPDATE saved_criterialist SET ");
+        
+        if (override == false) {
+                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+        }
+        
+        sql.append("name = ?, contact_source = ?, owner = ? " +
         "WHERE id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
