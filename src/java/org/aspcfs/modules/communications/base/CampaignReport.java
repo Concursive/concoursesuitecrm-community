@@ -287,12 +287,12 @@ public class CampaignReport {
       workBook = new HSSFWorkbook();
 
       int surveyId = thisCampaign.getSurveyId();
-
-      //build the questions
       ActiveSurveyQuestionList questionList = new ActiveSurveyQuestionList();
-      questionList.setActiveSurveyId(surveyId);
-      questionList.buildList(db);
-
+      if (surveyId != -1){
+        //build the questions
+        questionList.setActiveSurveyId(surveyId);
+        questionList.buildList(db);
+      }
       //add summary report
       addSummaryReport(db, thisCampaign, questionList);
 
@@ -315,7 +315,6 @@ public class CampaignReport {
         //add responses
         addResponsesToReport(db, sheet, thisQuestion);
       }
-
     } catch (Exception e) {
       System.out.println("Exception " + e.toString());
     }
