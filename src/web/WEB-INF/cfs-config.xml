@@ -21,51 +21,110 @@
   
   <!-- Orders -->
   <action name="Orders" class="org.aspcfs.modules.orders.actions.Orders">
+    <bean name="statusBean" class="org.aspcfs.modules.orders.beans.StatusBean" scope="request"/>
     <forward name="SearchOK" resource="/orders/orders_search.jsp" layout="nav"/>
     <forward name="ListOK" resource="/orders/orders_list.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/orders/orders_details.jsp" layout="nav"/>
+    <forward name="SearchCriteriaError" resource="/Orders.do?command=SearchForm"/>
+    <forward name="ModifyStatusOK" resource="/orders/orders_modify_status.jsp" layout="style"/>
+    <forward name="SaveStatusOK" resource="/products/product_set_opener.jsp" layout="style"/>
+  </action>
+  
+  <!-- Orders Products -->
+  <action name="OrdersProducts" class="org.aspcfs.modules.orders.actions.OrdersProducts">
+    <bean name="statusBean" class="org.aspcfs.modules.orders.beans.StatusBean" scope="request"/>
+    <forward name="DetailsOK" resource="/orders/orders_products_details.jsp" layout="nav"/>
+    <forward name="SearchCriteriaError" resource="/Orders.do?command=SearchForm"/>
+    <forward name="ModifyOK" resource="/orders/orders_products_modify.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/products/product_set_opener.jsp" layout="style"/>
+    <forward name="DisplayCustomerProductOK" resource="/orders/orders_products_display_customer_products.jsp" layout="style"/>
+  </action>
+  
+  <!-- Orders Payments -->
+  <action name="OrdersPayments" class="org.aspcfs.modules.orders.actions.OrdersPayments">
+    <bean name="statusBean" class="org.aspcfs.modules.orders.beans.StatusBean" scope="request"/>
+    <forward name="DetailsOK" resource="/orders/orders_products_payments.jsp" layout="nav"/>
+    <forward name="SearchCriteriaError" resource="/Orders.do?command=SearchForm"/>
+    <forward name="ModifyOK" resource="/orders/orders_products_payments_modify.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/products/product_set_opener.jsp" layout="style"/>
   </action>
   
   <!-- Accounts Orders-->
   <action name="AccountOrders" class="org.aspcfs.modules.accounts.actions.AccountOrders">
+    <bean name="statusBean" class="org.aspcfs.modules.orders.beans.StatusBean" scope="request"/>
+    <forward name="ModifyStatusOK" resource="/orders/orders_modify_status.jsp" layout="style"/>
+    <forward name="SaveStatusOK" resource="/products/product_set_opener.jsp" layout="style"/>
     <forward name="ListOK" resource="/accounts/accounts_orders_list.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/accounts/accounts_orders_details.jsp" layout="nav"/>
   </action>  
 
+  <!-- Accounts Orders Products -->
+  <action name="AccountOrdersProducts" class="org.aspcfs.modules.accounts.actions.AccountOrdersProducts">
+    <bean name="statusBean" class="org.aspcfs.modules.orders.beans.StatusBean" scope="request"/>
+    <forward name="DetailsOK" resource="/accounts/accounts_orders_products_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/orders/orders_products_modify.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/products/product_set_opener.jsp" layout="style"/>
+    <forward name="DisplayCustomerProductOK" resource="/orders/orders_products_display_customer_products.jsp" layout="style"/>
+  </action>
+  
+  <!-- Accounts Orders Payments -->
+  <action name="AccountOrdersPayments" class="org.aspcfs.modules.accounts.actions.AccountOrdersPayments">
+    <bean name="statusBean" class="org.aspcfs.modules.orders.beans.StatusBean" scope="request"/>
+    <forward name="DetailsOK" resource="/accounts/accounts_orders_products_payments.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/orders/orders_products_payments_modify.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/products/product_set_opener.jsp" layout="style"/>
+  </action>
+
+  <!-- Accounts Quotes-->
+  <action name="AccountQuotes" class="org.aspcfs.modules.accounts.actions.AccountQuotes">
+    <bean name="quoteBean" class="org.aspcfs.modules.quotes.base.Quote" scope="request"/>
+    <forward name="ListOK" resource="/accounts/accounts_quotes_list.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/accounts/accounts_quotes_details.jsp" layout="nav"/>
+    <forward name="AddProductOK" resource="/AccountQuotes.do?command=Details" layout="nav"/>
+    <forward name="CreateQuoteOK" resource="/AccountQuotes.do?command=View" layout="nav"/>
+    <forward name="SaveNotesOK" resource="/accounts/accounts_quotes_notes.jsp" layout="nav"/>
+  </action>
+
   <!-- Accounts Products -->
   <action name="AccountsProducts" class="org.aspcfs.modules.accounts.actions.AccountsProducts">
     <forward name="ListOK" resource="/accounts/accounts_products_list.jsp" layout="nav"/>
+    <forward name="VersionDetailsOK" resource="/accounts/accounts_product_version_details.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/accounts/accounts_products_details.jsp" layout="nav"/>
     <forward name="AddOK" resource="/accounts/accounts_products_upload.jsp" layout="nav"/>
     <forward name="UploadOK" resource="/AccountsProducts.do?command=View" />
     <forward name="SVGDetailsOK" resource="/accounts/accounts_product_svg_details.jsp" layout="nav" />
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp" />
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="DeleteError" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ViewProductOK" resource="/media/adsjet/view_customer_product.jsp" layout="style"/>
   </action>  
 
   <!-- Quotes -->
   <action name="Quotes" class="org.aspcfs.modules.quotes.actions.Quotes">
-    <bean name="QuoteNotesBean" class="org.aspcfs.modules.quotes.beans.QuoteNotesBean" scope="request"/>
+    <bean name="quoteBean" class="org.aspcfs.modules.quotes.base.Quote" scope="request"/>
     <forward name="SearchOK" resource="/quotes/quotes_search.jsp" layout="nav"/>
     <forward name="ListOK" resource="/quotes/quotes_list.jsp" layout="nav"/>
-    <forward name="DisplayOK" resource="/quotes/quotes_display.jsp" layout="nav"/>
     <forward name="AddOK" resource="/quotes/quotes_add.jsp" layout="nav"/>
+    <forward name="SaveNotesOK" resource="/quotes/quotes_notes.jsp" layout="nav"/>
+    <forward name="SearchCriteriaError" resource="/Quotes.do?command=SearchForm"/>
     <forward name="DetailsOK" resource="/quotes/quotes_details.jsp" layout="nav"/>
+    <forward name="CreateQuoteFromTicketOK" resource="/Quotes.do?command=AddQuote" />
+    <forward name="CustomerQuoteDecisionOK" resource="/Publish.do?command=Billing"/>
+    <forward name="QuoteRejectedOK" resource="/products/product_set_parent_of_opener.jsp" layout="style"/>
     <forward name="CustomerDisplayOK" resource="/quotes/quotes_modify.jsp" layout="style"/>
   </action>
   
   <!-- Products Catalog Dialog -->
   <action name="ProductsCatalog" class="org.aspcfs.modules.products.actions.ProductsCatalog">
-    <bean name="ProductCatalog" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
     <forward name="CategoryListOK" resource="/products/product_category_list.jsp" layout="style"/>
     <forward name="ProductListOK" resource="/products/product_product_list.jsp" layout="style"/>
     <forward name="CategoriesOK" resource="/products/product_categories.jsp" layout="style"/>
+    <forward name="ParentCategoriesOK" resource="/products/product_parent_categories.jsp" layout="style"/>
     <forward name="ProductsOK" resource="/products/product_products.jsp" layout="style"/>
-    <forward name="AllProductsOK" resource="/products/product_all_products.jsp" layout="nav"/>
-    <forward name="ViewProductOK" resource="/products/product_details.jsp" layout="nav"/>
-    <forward name="AddProductOK" resource="/products/product_add.jsp" layout="nav"/>
-    <forward name="ModifyProductOK" resource="/products/product_modify.jsp" layout="nav"/>
-    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
-    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
-    <forward name="PopupProductListOK" resource="/products/products_all_products_popup.jsp" layout="style"/>
+    <forward name="AddProductsOK" resource="//products/product_options.jsp" layout="style"/>
+    <forward name="AddOptionsOK" resource="/products/product_set_opener.jsp" layout="style"/>
+    <forward name="AccountProductCategoriesOK" resource="/accounts/account_product_categories.jsp" layout="style"/>
+    <forward name="AccountProductsOK" resource="/accounts/account_product_products.jsp" layout="style"/>
   </action>
   
   
@@ -82,7 +141,7 @@
     <bean name="Transaction" class="org.aspcfs.modules.healthcare.edit.base.TransactionRecord" scope="request"/>
     <forward name="PacketOK" resource="/service/system_process_packet.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
-  </action>  
+  </action>
   <!-- Actions for people taking a survey -->
   <action name="ProcessSurvey" class="org.aspcfs.modules.communications.actions.ProcessSurvey">
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
@@ -123,6 +182,7 @@
   
   <!-- MyCFS Module -->
   <action name="MyCFS" class="org.aspcfs.modules.mycfs.actions.MyCFS">
+    <bean name="quoteBean" class="org.aspcfs.modules.quotes.base.Quote" scope="request"/>
     <forward name="HomeOK" resource="/mycfs/mycfs.jsp" layout="nav"/>
     <forward name="CalendarOK" resource="/calendar.jsp"/>
     <forward name="CalendarDetailsOK" resource="/calendar_details.jsp" layout="style"/>
@@ -177,7 +237,7 @@
     <forward name="ListProductsOK" resource="/mycfs/mycfs_product_selector.jsp" layout="style"/>
    </action>
 
-   <action name="LookupSelector" class="org.aspcfs.modules.actions.LookupSelector">
+  <action name="LookupSelector" class="org.aspcfs.modules.actions.LookupSelector">
     <forward name="PopLookupOK" resource="/lookup_selector.jsp" layout="style"/>
    </action>
   

@@ -31,17 +31,17 @@
     </submenu>
     <submenu name="quotes">
       <long_html value="Quotes"/>
-      <permission value="accounts-quotes"/>
+      <permission value="accounts-quotes-view"/>
       <link value="AccountQuotes.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="orders">
       <long_html value="Orders"/>
-      <permission value="accounts-orders"/>
+      <permission value="accounts-orders-view"/>
       <link value="AccountOrders.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="products">
       <long_html value="Products"/>
-      <permission value="accounts-products"/>
+      <permission value="accounts-products-view"/>
       <link value="AccountsProducts.do?command=List&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="revenue">
@@ -421,5 +421,29 @@
       <link value="LeadsReports.do?command=ExportList"/>
     </submenu>
   </container>
-  
+  <container name="quotes">
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="Quotes.do?command=Details&amp;quoteId=${quoteId}"/>
+    </submenu>
+	<submenu name="notes">
+      <long_html value="Notes"/>
+      <permission value=""/>
+      <link value="Quotes.do?command=SaveNotes&amp;quoteId=${quoteId}"/>
+    </submenu>
+  </container>
+  <container name="accountsQuotes">
+    <separator value=" | "/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="AccountQuotes.do?command=Details&amp;quoteId=${quoteId}"/>
+    </submenu>
+	<submenu name="notes">
+      <long_html value="Notes"/>
+      <permission value=""/>
+      <link value="AccountQuotes.do?command=SaveNotes&amp;quoteId=${quoteId}"/>
+    </submenu>
+  </container>
 </application>
