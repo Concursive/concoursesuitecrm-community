@@ -12,20 +12,14 @@
 <br>
 <%= showAttribute(request, "actionError") %>
 
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
-    <td>
+    <td align="left" colspan="7">
       <strong>Tickets Assigned to Me</strong>
     </td>
   </tr>
-
-    <tr>
-    <td>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-  <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
+    <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">
       <strong>Action</strong>
     </td>
@@ -89,22 +83,14 @@
 		</table>
 	<%}%>
   
-  </td></tr>
-  </table>
-
 <br>
 
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
-    <td>
+    <td align="left" colspan="7">
       <strong>Open/Unassigned Tickets</strong>
     </td>
   </tr>
-
-    <tr>
-    <td>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">
@@ -170,22 +156,14 @@
 		</table>
 	<%}%>
   
-  </td></tr>
-  </table>
-
 <br>
 
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
-    <td>
+    <td align="left" colspan="7">
       <strong>Tickets Created by Me</strong>
     </td>
   </tr>
-
-    <tr>
-    <td>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">
@@ -250,7 +228,4 @@
 		<tr bgcolor="white"><td colspan="7" valign="center">No tickets found.</td></tr>
 		</table>
 	<%}%>
-  
-  </td></tr>
-  </table>
   
