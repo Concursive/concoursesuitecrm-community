@@ -4,16 +4,16 @@
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="ContactMessageListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="listView" method="post" action="/ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<form name="listView" method="post" action="ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">
 
-<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
-<a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
-<a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Messages<br>
 <hr color="#BFBFBB" noshade>
 
-<a href="/ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
+<a href="ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -37,7 +37,9 @@ Messages<br>
         <option <%= ContactMessageListInfo.getOptionValue("my") %>>My Messages</option>
         <option <%= ContactMessageListInfo.getOptionValue("all") %>>All Messages</option>
       </select>
-      <%= showError(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactMessageListInfo"/>
     </td>
   </tr>
 </table>
@@ -47,11 +49,11 @@ Messages<br>
       <strong>Action</strong>
     </td>
     <td valign=center width="65%" align=left>
-      <a href="/ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%=ContactDetails.getId()%>"><strong>Name</strong></a>
+      <a href="ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%=ContactDetails.getId()%>"><strong>Name</strong></a>
       <%= ContactMessageListInfo.getSortIcon("c.name") %>
     </td>  
     <td valign=center width="20%" align=left>
-      <a href="/ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%=ContactDetails.getId()%>"><strong>Run Date</strong></a>
+      <a href="ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%=ContactDetails.getId()%>"><strong>Run Date</strong></a>
       <%= ContactMessageListInfo.getSortIcon("active_date") %>
     </td> 
     <!--td valign=center align=left>
@@ -94,16 +96,16 @@ Messages<br>
       <%=toHtml(campaign.getStatus())%>
     </td>
     <!--td valign=center align="center" nowrap class="row<%= rowid %>">
-      <a href="/ExternalContacts.do?command=ViewGroups&id=<%= campaign.getId() %>"><%= (campaign.hasGroups()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %></a>
+      <a href="ExternalContacts.do?command=ViewGroups&id=<%= campaign.getId() %>"><%= (campaign.hasGroups()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %></a>
     </td>
     <td valign=center align="center" nowrap class="row<%= rowid %>">
-      <a href="/ExternalContacts.do?command=ViewMessage&id=<%= campaign.getId() %>"><%= (campaign.hasMessage()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %></a>
+      <a href="ExternalContacts.do?command=ViewMessage&id=<%= campaign.getId() %>"><%= (campaign.hasMessage()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %></a>
     </td>
     <td valign=center align="center" nowrap class="row<%= rowid %>">
-      <a href="/ExternalContacts.do?command=ViewSchedule&id=<%= campaign.getId() %>"><%= (campaign.hasDetails()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %></a>
+      <a href="ExternalContacts.do?command=ViewSchedule&id=<%= campaign.getId() %>"><%= (campaign.hasDetails()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %></a>
     </td>
     <td valign=center align="center" nowrap class="row<%= rowid %>">
-      <%= (campaign.isReadyToActivate()?"<a href=\"javascript:confirmForward('/CampaignManager.do?command=Activate&id=" + campaign.getId() + "&notify=true&modified=" + campaign.getModified() + "');\"><font color=\"red\">Activate</font></a>":"&nbsp;") %>
+      <%= (campaign.isReadyToActivate()?"<a href=\"javascript:confirmForward('CampaignManager.do?command=Activate&id=" + campaign.getId() + "&notify=true&modified=" + campaign.getModified() + "');\"><font color=\"red\">Activate</font></a>":"&nbsp;") %>
     </td-->
 	</tr>
 	<%}%>
