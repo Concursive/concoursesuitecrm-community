@@ -21,7 +21,10 @@ import java.io.*;
 public class CFSModule {
 
   public final static String fs = System.getProperty("file.separator");
-
+  public static final String NOT_UPDATED_MESSAGE =
+    "<b>This record could not be updated because someone else updated it first.</b><p>" +
+    "You can hit the back button to review the changes that could not be committed, " +
+    "but you must reload the record and make the changes again.";
 
   /**
    *  Gets the PagedListInfo attribute of the CFSModule object

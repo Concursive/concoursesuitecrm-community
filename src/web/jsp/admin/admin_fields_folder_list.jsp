@@ -53,7 +53,7 @@ Custom Folders<br>
       </td>
       </dhv:permission>
       <td align="left" width="100%" nowrap>
-        <dhv:permission name="admin-sysconfig-folders-view"><a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a></dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-view"><a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a><%= (thisCategory.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif'>":"") %></dhv:permission>
       </td>
       <td align="center" nowrap>
         <dhv:permission name="admin-sysconfig-folders-edit">

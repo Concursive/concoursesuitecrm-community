@@ -690,10 +690,7 @@ public final class MyCFS extends CFSModule {
       } else if (resultCount == 1) {
         return ("UpdateProfileOK");
       } else {
-        context.getRequest().setAttribute("Error",
-            "<b>This record could not be updated because someone else updated it first.</b><p>" +
-            "You can hit the back button to review the changes that could not be committed, " +
-            "but you must reload the record and make the changes again.");
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
       }
     } else {
@@ -781,10 +778,7 @@ public final class MyCFS extends CFSModule {
       } else if (resultCount == 1) {
         return ("UpdatePasswordOK");
       } else {
-        context.getRequest().setAttribute("Error",
-            "<b>This record could not be updated because someone else updated it first.</b><p>" +
-            "You can hit the back button to review the changes that could not be committed, " +
-            "but you must reload the record and make the changes again.");
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
       }
     } else {

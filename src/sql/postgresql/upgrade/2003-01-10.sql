@@ -45,4 +45,10 @@ ALTER TABLE custom_field_category ADD COLUMN multiple_records BOOLEAN;
 ALTER TABLE custom_field_category ALTER COLUMN multiple_records SET DEFAULT false;
 UPDATE custom_field_category SET multiple_records = true;
 
+/*  4/2/2002  */
+ALTER TABLE custom_field_category ADD COLUMN read_only BOOLEAN;
+ALTER TABLE custom_field_category ALTER COLUMN read_only SET DEFAULT false;
+UPDATE custom_field_category SET read_only = false;
+
+ALTER TABLE custom_field_info ADD COLUMN additional_text VARCHAR(255);
 

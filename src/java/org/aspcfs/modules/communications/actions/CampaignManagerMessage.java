@@ -167,10 +167,7 @@ public final class CampaignManagerMessage extends CFSModule {
         context.getRequest().setAttribute("MessageDetails", newMessage);
         return ("UpdateOK");
       } else {
-        context.getRequest().setAttribute("Error",
-            "<b>This record could not be updated because someone else updated it first.</b><p>" +
-            "You can hit the back button to review the changes that could not be committed, " +
-            "but you must reload the record and make the changes again.");
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
       }
     } else {

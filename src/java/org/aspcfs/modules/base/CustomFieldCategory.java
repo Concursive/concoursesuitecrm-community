@@ -40,6 +40,7 @@ public class CustomFieldCategory extends Vector {
   private int modifiedBy = -1;
   private boolean enabled = false;
   private boolean allowMultipleRecords = false;
+  private boolean readOnly = false;
 
   //Properties for building a list
   private int linkModuleId = -1;
@@ -379,6 +380,17 @@ public class CustomFieldCategory extends Vector {
   public boolean getAllowMultipleRecords() { 
     return allowMultipleRecords; 
   }
+  
+  public void setReadOnly(boolean readOnly) {
+    this.readOnly = readOnly;
+  }
+  public void setReadOnly(String tmp) {
+    this.readOnly = ("ON").equalsIgnoreCase(tmp);
+  }
+  public boolean getReadOnly() {
+    return readOnly;
+  }
+
 
 
   /**
@@ -842,7 +854,8 @@ public class CustomFieldCategory extends Vector {
 
     String sql =
         "INSERT INTO custom_field_category " +
-        "(module_id, category_name, description, enabled, multiple_records) VALUES (?, ?, ?, ?, ?)";
+        "(module_id, category_name, description, enabled, " +
+        "multiple_records, read_only) VALUES (?, ?, ?, ?, ?, ?)";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, this.getModuleId());
@@ -850,6 +863,7 @@ public class CustomFieldCategory extends Vector {
     pst.setString(++i, this.getDescription());
     pst.setBoolean(++i, this.getEnabled());
     pst.setBoolean(++i, this.getAllowMultipleRecords());
+    pst.setBoolean(++i, this.getReadOnly());
     pst.execute();
     pst.close();
     return true;
@@ -900,7 +914,7 @@ public class CustomFieldCategory extends Vector {
     String sql =
         "UPDATE custom_field_category " +
         "SET category_name = ?, description = ?, enabled = ?, " +
-        "multiple_records = ? " +
+        "multiple_records = ?, read_only = ? " +
         "WHERE module_id = ? AND category_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
@@ -908,6 +922,7 @@ public class CustomFieldCategory extends Vector {
     pst.setString(++i, this.getDescription());
     pst.setBoolean(++i, this.getEnabled());
     pst.setBoolean(++i, this.getAllowMultipleRecords());
+    pst.setBoolean(++i, this.getReadOnly());
     pst.setInt(++i, this.getModuleId());
     pst.setInt(++i, this.getId());
     pst.execute();
@@ -1008,6 +1023,7 @@ public class CustomFieldCategory extends Vector {
     entered = rs.getTimestamp("entered");
     enabled = rs.getBoolean("enabled");
     allowMultipleRecords = rs.getBoolean("multiple_records");
+    readOnly = rs.getBoolean("read_only");
   }
 
 

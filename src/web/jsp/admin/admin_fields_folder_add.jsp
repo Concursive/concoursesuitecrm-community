@@ -44,10 +44,18 @@ New Folder<br>
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
+            Read Only
+          </td>
+          <td>
+            <input type="checkbox" value="ON" name="readOnly" <%= Category.getReadOnly()?"checked":"" %>>folder is read only by all users
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
             Enabled
           </td>
           <td>
-            <input type="checkbox" value="ON" name="enabled" <%= Category.getEnabled()?"checked":"" %>>
+            <input type="checkbox" value="ON" name="enabled" <%= Category.getEnabled()?"checked":"" %>>folder is visible by users
           </td>
         </tr>
       </table>

@@ -18,7 +18,8 @@ CREATE TABLE custom_field_category (
   default_item BOOLEAN DEFAULT false,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   enabled BOOLEAN DEFAULT true,
-  multiple_records BOOLEAN DEFAULT false
+  multiple_records BOOLEAN DEFAULT false,
+  read_only BOOLEAN DEFAULT false
 );
 
 CREATE INDEX "custom_field_cat_idx" ON "custom_field_category" USING btree ("module_id");
@@ -45,16 +46,15 @@ CREATE TABLE custom_field_info (
   field_id SERIAL,
   field_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
-  
   field_type INTEGER NOT NULL,
   validation_type INTEGER DEFAULT 0,
   required BOOLEAN DEFAULT false,
   parameters TEXT,
-  
   start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   end_date TIMESTAMP DEFAULT NULL,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  additional_text VARCHAR(255)
 );
 
 CREATE INDEX "custom_field_inf_idx" ON "custom_field_info" USING btree ("group_id");

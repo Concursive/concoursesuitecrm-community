@@ -18,7 +18,8 @@ CREATE TABLE custom_field_category (
   default_item BIT DEFAULT 0,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BIT DEFAULT 1,
-  multiple_records BIT DEFAULT 0
+  multiple_records BIT DEFAULT 0,
+  read_only BIT DEFAULT 0
 );
 
 CREATE INDEX "custom_field_cat_idx" ON "custom_field_category" ("module_id");
@@ -45,16 +46,15 @@ CREATE TABLE custom_field_info (
   field_id INT IDENTITY,
   field_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
-  
   field_type INTEGER NOT NULL,
   validation_type INTEGER DEFAULT 0,
   required BIT DEFAULT 0,
   parameters TEXT,
-  
   start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   end_date DATETIME DEFAULT NULL,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enabled BIT DEFAULT 1
+  enabled BIT DEFAULT 1,
+  additional_text VARCHAR(255)
 );
 
 CREATE INDEX "custom_field_inf_idx" ON "custom_field_info" ("group_id");

@@ -108,4 +108,18 @@
       <required>yes</required>
     </attribute>
   </tag>
+  
+  <tag>
+    <name>evaluate</name> 
+    <tag-class>com.darkhorseventures.taglib.EvaluateHandler</tag-class>
+    <body-content>JSP</body-content>
+    <display-name>
+      Include if the supplied parameter evaluates to true
+    </display-name>
+    <attribute>
+      <name>exp</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
 </taglib>

@@ -864,10 +864,7 @@ public final class Accounts extends CFSModule {
       } else if (resultCount == 1) {
         return ("UpdateOK");
       } else {
-        context.getRequest().setAttribute("Error",
-            "<b>This record could not be updated because someone else updated it first.</b><p>" +
-            "You can hit the back button to review the changes that could not be committed, " +
-            "but you must reload the record and make the changes again.");
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
       }
     } else {
@@ -1250,7 +1247,9 @@ public final class Accounts extends CFSModule {
       thisCategory.buildResources(db);
       thisCategory.setParameters(context);
       thisCategory.setModifiedBy(this.getUserId(context));
-      resultCount = thisCategory.update(db);
+      if (!thisCategory.getReadOnly()) {
+        resultCount = thisCategory.update(db);
+      }
       if (resultCount == -1) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Accounts-> ModifyField validation error");
@@ -1274,10 +1273,7 @@ public final class Accounts extends CFSModule {
       } else if (resultCount == 1) {
         return ("UpdateFieldsOK");
       } else {
-        context.getRequest().setAttribute("Error",
-            "<b>This record could not be updated because someone else updated it first.</b><p>" +
-            "You can hit the back button to review the changes that could not be committed, " +
-            "but you must reload the record and make the changes again.");
+        context.getRequest().setAttribute("Error", CFSModule.NOT_UPDATED_MESSAGE);
         return ("UserError");
       }
     } else {
@@ -1331,7 +1327,9 @@ public final class Accounts extends CFSModule {
       thisCategory.setParameters(context);
       thisCategory.setEnteredBy(this.getUserId(context));
       thisCategory.setModifiedBy(this.getUserId(context));
-      resultCode = thisCategory.insert(db);
+      if (!thisCategory.getReadOnly()) {
+        resultCode = thisCategory.insert(db);
+      }
       if (resultCode == -1) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Accounts-> InsertField validation error");
@@ -1362,7 +1360,6 @@ public final class Accounts extends CFSModule {
         }
       }
       context.getRequest().setAttribute("Category", thisCategory);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1396,11 +1393,16 @@ public final class Accounts extends CFSModule {
       String recordId = context.getRequest().getParameter("recId");
       String orgId = context.getRequest().getParameter("orgId");
       
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db,
+          Integer.parseInt(selectedCatId));
+      
       CustomFieldRecord thisRecord = new CustomFieldRecord(db, Integer.parseInt(recordId));
       thisRecord.setLinkModuleId(Constants.ACCOUNTS);
       thisRecord.setLinkItemId(Integer.parseInt(orgId));
       thisRecord.setCategoryId(Integer.parseInt(selectedCatId));
-      recordDeleted = thisRecord.delete(db);
+      if (!thisCategory.getReadOnly()) {
+        recordDeleted = thisRecord.delete(db);
+      }
       context.getRequest().setAttribute("recordDeleted", "true");
     } catch (Exception e) {
       errorMessage = e;

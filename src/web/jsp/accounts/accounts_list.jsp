@@ -46,11 +46,7 @@
 	if ( j.hasNext() ) {
     int rowid = 0;
     while (j.hasNext()) {
-    if (rowid != 1) {
-      rowid = 1;
-    } else {
-      rowid = 2;
-    }
+    rowid = (rowid == 1 ? 2 : 1);
     Organization thisOrg = (Organization)j.next();
 %>      
   <tr>

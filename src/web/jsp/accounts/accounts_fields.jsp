@@ -30,15 +30,17 @@
 <% } else { 
      CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
 %>
-  <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %>
+  <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %>
 <% } %>
 <br>
 &nbsp;<br>
+<dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
 <dhv:permission name="accounts-accounts-folders-edit"><input type="submit" value="Modify" onClick="javascript:this.form.action='/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>'"></dhv:permission>
 <dhv:permission name="accounts-accounts-folders-delete"><input type="submit" value="Delete Folder Record" onClick="javascript:this.form.action='/Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>'"></dhv:permission>
 <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
 <br>&nbsp;<br>
 </dhv:permission>
+</dhv:evaluate>
 <%
   Iterator groups = Category.iterator();
   while (groups.hasNext()) {
@@ -103,8 +105,10 @@
 </table>
 &nbsp;
 <br>
+<dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
 <dhv:permission name="accounts-accounts-folders-edit"><input type="submit" value="Modify" onClick="javascript:this.form.action='/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>'"></dhv:permission>
 <dhv:permission name="accounts-accounts-folders-delete"><input type="submit" value="Delete Folder Record" onClick="javascript:this.form.action='/Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>'"></dhv:permission>
+</dhv:evaluate>
 </td></tr>
 </table>
 </form>

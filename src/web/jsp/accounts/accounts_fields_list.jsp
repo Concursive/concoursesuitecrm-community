@@ -30,16 +30,19 @@
   CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
   if (CategoryList.size() > 0) {
 %>
-    <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><br>
+    <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %><br>
     &nbsp;<br>
-    <dhv:permission name="accounts-accounts-folders-add"><a href="/Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= (String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission>
+    <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="accounts-accounts-folders-add"><a href="/Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= (String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr class="title">
+        <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
           <td valign=center align=left bgcolor="#DEE0FA">
             <strong>Action</strong>
           </td>
         </dhv:permission>
+        </dhv:evaluate>
+        
         <td align="left">
           <strong>Record</strong>
         </td>
@@ -58,20 +61,18 @@
       int rowid = 0;
       Iterator records = Records.iterator();
       while (records.hasNext()) {
-        if (rowid != 1) {
-          rowid = 1;
-        } else {
-          rowid = 2;
-        }
+        rowid = (rowid == 1 ? 2 : 1);
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
       <tr class="containerBody">
       
+        <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <dhv:permission name="accounts-accounts-folders-edit"><a href="/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-folders-delete"><a href="javascript:confirmDelete('/Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
           </td>
         </dhv:permission>
+        </dhv:evaluate>
       
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
           <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= Category.getName() %> #<%= thisRecord.getId() %></a>

@@ -12,7 +12,8 @@ import java.util.*;
  *  supplied label.
  *
  *@author     Matt Rajkowski
- *@created    February 25, 2001
+ *@created    February 25, 2002
+ *@version    $Id$
  */
 public class LabelHandler extends TagSupport {
   private String labelName = null;
@@ -30,8 +31,8 @@ public class LabelHandler extends TagSupport {
 
 
   /**
-   *  Checks to see if the SystemStatus has a preference set for this label.
-   *  If so, the found label will be used, otherwise the body tag will be used.
+   *  Checks to see if the SystemStatus has a preference set for this label. If
+   *  so, the found label will be used, otherwise the body tag will be used.
    *
    *@return                   Description of the Returned Value
    *@exception  JspException  Description of Exception
@@ -40,19 +41,19 @@ public class LabelHandler extends TagSupport {
   public final int doStartTag() throws JspException {
     boolean result = true;
     String newLabel = null;
-    
-    ConnectionElement ce = (ConnectionElement)pageContext.getSession().getAttribute("ConnectionElement");
+
+    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
     if (ce == null) {
       System.out.println("FieldHandler-> ConnectionElement is null");
     }
-    SystemStatus systemStatus = (SystemStatus)((Hashtable)pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     if (systemStatus == null) {
       System.out.println("FieldHandler-> SystemStatus is null");
     }
     if (systemStatus != null) {
       newLabel = systemStatus.getLabel(labelName);
     }
-    
+
     if (newLabel != null) {
       try {
         this.pageContext.getOut().write(newLabel);
@@ -61,7 +62,7 @@ public class LabelHandler extends TagSupport {
         //Nowhere to output
       }
     }
-    
+
     if (result) {
       return EVAL_BODY_INCLUDE;
     } else {

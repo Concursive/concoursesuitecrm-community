@@ -102,7 +102,7 @@ New Field<br>
             Additional Text to Display
           </td>
           <td>
-            <input type="text" name="additionalText" maxlength="255" value="<%= toHtmlValue(CustomField.getAdditionalText()) %>">
+            <input type="text" name="additionalText" maxlength="255" width="50" value="<%= toHtmlValue(CustomField.getAdditionalText()) %>">
           </td>
         </tr>
         <tr class="containerBody">
