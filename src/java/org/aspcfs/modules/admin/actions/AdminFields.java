@@ -611,41 +611,66 @@ public final class AdminFields extends CFSModule {
         CustomFieldCategory thisCategory = (CustomFieldCategory)context.getRequest().getAttribute("Category");
         Iterator groups = thisCategory.iterator();
         int groupCount = 0;
+        int previousGroupId = -1;
+        int previousGroupSize = -1;
+        CustomFieldGroup previousGroup = null;  
+        boolean hasNewGroup = false;
+        int previousFieldId = -1;
         while (groups.hasNext()) {
           CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
           ++groupCount;
           Iterator fields = thisGroup.iterator();
           int level = 0;
           int fieldCount = 0;
+          boolean forceUpdate = false;
+          if (hasNewGroup) {
+            ++level;
+            ++fieldCount;
+            CustomField thisField = new CustomField();
+            thisField.setId(previousFieldId);
+            thisField.setLevel(level);
+            thisField.setGroupId(thisGroup.getId());
+            thisField.updateLevel(db);
+            hasNewGroup = false;
+            forceUpdate = true;
+          }
+          
           while (fields.hasNext()) {
             CustomField thisField = (CustomField)fields.next();
             ++fieldCount;
-            if (groupCount == groupChange && "U".equals(direction)) {
+            
+            if (groupCount > 1 && fieldCount == 1 && groupChange == groupCount && fieldChange == 1 && "U".equals(direction)) {
+              thisField.setLevel(previousGroup.size() + 1);
+              thisField.setGroupId(previousGroup.getId());
+            } else if (groups.hasNext() && !fields.hasNext() && groupChange == groupCount && fieldChange == fieldCount && "D".equals(direction)) {
+              hasNewGroup = true;
+              previousFieldId = thisField.getId();
+            } else if (groupCount == groupChange && "U".equals(direction)) {
               if (fieldCount < fieldChange) ++level;
               if ((fieldCount + 1) == fieldChange) ++level;
               if (fieldCount == fieldChange) --level;
               if (fieldCount > fieldChange) ++level;
               thisField.setLevel((new Integer(level)).intValue());
               if (fieldCount == fieldChange) ++level;
-            }
-            
-            //TODO: the down clause...
-            if (groupCount == groupChange && "D".equals(direction)) {
+            } else if (groupCount == groupChange && "D".equals(direction)) {
               if (fieldCount < fieldChange) ++level;
-              if (fieldCount == fieldChange) ++level;
-              if (fieldCount > fieldChange) ++level;
+              if (fieldCount == fieldChange) level = level + 2;
+              if ((fieldCount - 1) == fieldChange) --level;
+              if ((fieldCount - 1) > fieldChange) ++level;
               thisField.setLevel((new Integer(level)).intValue());
-              if ((fieldCount + 1) == fieldChange) ++level;
-              
-              if (fieldCount == fieldChange + 1) ++level;
+              if ((fieldCount - 1) == fieldChange) ++level;
+            } else if (forceUpdate) {
+              ++level;
+              thisField.setLevel((new Integer(level)).intValue());
             }
             
-            
-            System.out.println(thisField.getLevel());
+            if (!hasNewGroup) thisField.updateLevel(db);
+            System.out.println("Grp: " + thisField.getGroupId() + " Fld: " + thisField.getLevel());
           }
-          
+          previousGroup = thisGroup;
+          previousGroupId = thisGroup.getId();
+          previousGroupSize = thisGroup.size();
         }
-        
       }
       
     } catch (Exception e) {

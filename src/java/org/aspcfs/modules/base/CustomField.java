@@ -899,13 +899,12 @@ public class CustomField extends GenericBean {
     if (!this.isValid()) {
       return -1;
     }
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "INSERT INTO custom_field_data " +
-        "(record_id, field_id, selected_item_id, entered_value, entered_number, entered_float ) " +
-        "VALUES (?, ?, ?, ?, ?, ?) ");
+    String sql = 
+      "INSERT INTO custom_field_data " +
+      "(record_id, field_id, selected_item_id, entered_value, entered_number, entered_float ) " +
+      "VALUES (?, ?, ?, ?, ?, ?) ";
     int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
+    PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, recordId);
     pst.setInt(++i, id);
     pst.setInt(++i, selectedItemId);
@@ -913,6 +912,23 @@ public class CustomField extends GenericBean {
     pst.setInt(++i, enteredNumber);
     pst.setDouble(++i, enteredDouble);
     pst.execute();
+    pst.close();
+    return result;
+  }
+  
+  public int updateLevel(Connection db) throws SQLException {
+    if (id < 0) return 0;
+    int result = 1;
+    String sql = 
+      "UPDATE custom_field_info " +
+      "SET level = ?, group_id = ? " +
+      "WHERE field_id = ? ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, level);
+    pst.setInt(++i, groupId);
+    pst.setInt(++i, id);
+    result = pst.executeUpdate();
     pst.close();
     return result;
   }
