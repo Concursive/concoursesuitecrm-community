@@ -98,7 +98,13 @@ public class SecurityHook implements ControllerHook {
           ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
         }
       }
-      request.setAttribute("moduleAction", action);
+      //For Help and QA button, set the request with the module that was selected
+      String actionQuery = request.getQueryString();
+      if (actionQuery == null || actionQuery.indexOf("actionSource") == -1) {
+        request.setAttribute("moduleAction", action);
+        request.setAttribute("moduleCommand", request.getParameter("command"));
+        request.setAttribute("moduleSection", request.getParameter("section"));
+      }
       //Check the session manager to see if this session is valid
       SessionManager thisManager = systemStatus.getSessionManager();
       UserSession sessionInfo = thisManager.getUserSession(userSession.getActualUserId());
