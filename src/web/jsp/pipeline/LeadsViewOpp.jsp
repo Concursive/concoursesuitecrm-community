@@ -15,8 +15,8 @@ View Opportunities<br>
     <form name="listView" method="post" action="Leads.do?command=ViewOpp">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= OpportunityListInfo.getOptionValue("my") %>>My Opportunities</option>
-        <option <%= OpportunityListInfo.getOptionValue("all") %>>All Opportunities</option>
+        <option <%= OpportunityListInfo.getOptionValue("my") %>>My Open Opportunities</option>
+        <option <%= OpportunityListInfo.getOptionValue("all") %>>All Open Opportunities</option>
         <option <%= OpportunityListInfo.getOptionValue("closed") %>>All Closed Opportunities</option>
 	      <dhv:evaluate if="<%= (!OpportunityListInfo.getSavedCriteria().isEmpty()) %>">
           <option <%= OpportunityListInfo.getOptionValue("search") %>>Search Results</option>
