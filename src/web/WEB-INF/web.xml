@@ -1,33 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!DOCTYPE web-app PUBLIC
     "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
     "http://java.sun.com/dtd/web-app_2_3.dtd">
-
 <!--
-
-The labels used as replaceable parameters below are used by
-the build.xml script that the "ant" application uses to 
-install the ASPCFS application.
-
-Replaceable parameter  typical value / description
-=====================  =============================================
-             SiteCode  ds21 
-                       (the name that Login will search
-                       the gatekeeper database with)
-
-               GKHOST  jdbc:postgresql://127.0.0.1:5432/cfs2gk
-                       (Database URL: driver, host address, 
-                       port, and database name of the
-                       gatekeeper database that this installation
-                       will use)
-
-               GKUSER  gatekeeper
-                       (gatekeeper database user name)
-
-             GKUSERPW  (blank, empty, nada, ...)
-                       (gatekeeper database user password)
-
+Tokens are replaced by the Ant build.xml script according to parameters
+in the system's build.env, run ant for more information
 -->
 <web-app>
   <listener>
@@ -100,7 +77,7 @@ Replaceable parameter  typical value / description
     </init-param>
     <init-param>
         <param-name>SiteCode</param-name>
-        <param-value>@SiteCode@</param-value>
+        <param-value>@GKAPPCODE@</param-value>
     </init-param>
     <init-param>
         <param-name>ClientSSLKeystore</param-name>

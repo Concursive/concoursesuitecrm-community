@@ -84,9 +84,7 @@
   <!-- Prepare ant for processing -->
   <target name="init" depends="init.loadproperties">
     <!-- Default properties if not set in file above -->
-    <property name="SITEHOME" value="/home"/>
-    <property name="SITECODE" value="cfs"/>
-    <property name="DBSITECODE" value="ds21"/>
+    <property name="GKAPPCODE" value="cfs"/>
     <property name="GKDRIVER" value="org.postgresql.Driver"/>
     <property name="GKHOST" value="jdbc:postgresql://127.0.0.1:5432/cfs2gk"/>
     <property name="GKUSER" value="postgres"/>
@@ -249,7 +247,7 @@
     <echo message="Installing web.xml configuration file"/>
     <copy file="${src.web.dir}/WEB-INF/web.xml" todir="${CFS_HOME}/WEB-INF" overwrite="true"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@SiteCode@" value="${DBSITECODE}"/>
+             token="@SiteCode@" value="${GKAPPCODE}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@GKDRIVER@" value="${GKDRIVER}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
