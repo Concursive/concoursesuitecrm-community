@@ -225,6 +225,9 @@ A:visited:hover{color:#FF3300;}
 .highlight { color: #006699; font-weight: bold; }
 
 .title { background: #DEE0FA; color: #000; }
+.title a:link, .title a:visited { 
+  color: #000;
+}
 .title2 { background: #D4D4D4; }
 
 .column { color: #000080; font-weight: bold; }
