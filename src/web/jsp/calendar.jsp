@@ -13,7 +13,7 @@
     window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&month='+month+'&day='+day+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
   }
   function showToDaysEvents(thisMonth,thisDay,thisYear){
-    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&&month='+thisMonth+'&day='+thisDay+'&year='+thisYear+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&month='+thisMonth+'&day='+thisDay+'&year='+thisYear+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
     window.location.href='MyCFS.do?command=MonthView&inline=true&&month='+thisMonth+'&year='+thisYear+'&source=calendar<%=returnPage!=null?"&return="+returnPage:""%>';
   }
   function showWeekEvents(startMonth,startDay){
