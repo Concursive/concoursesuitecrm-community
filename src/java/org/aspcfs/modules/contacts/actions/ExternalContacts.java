@@ -116,7 +116,6 @@ public final class ExternalContacts extends CFSModule {
       thisContact = new Contact(db, contactId);
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-      newMessage = new Message(db, campaign.getMessageId());
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -124,7 +123,6 @@ public final class ExternalContacts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("Message", newMessage);
       context.getRequest().setAttribute("ContactDetails", thisContact);
       return ("MessageDetailsOK");
     } else {

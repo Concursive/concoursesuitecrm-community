@@ -2,7 +2,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<jsp:useBean id="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <a href="/ExternalContacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>">Back to Message List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -37,6 +36,16 @@
 			<%=toHtml(Campaign.getName())%>
     </td>
   </tr>
+  
+    <tr class="containerBody">
+    <td class="formLabel">
+      Reply To
+    </td>
+    <td width="100%">
+			<%=toHtml(Campaign.getReplyTo())%>
+    </td>
+  </tr>
+  
   <tr class="containerBody">
     <td class="formLabel">
       Message Subject
@@ -50,7 +59,7 @@
       Message Text
     </td>
     <td valign=center>
-			<%= (Message.getMessageText()) %>&nbsp; 
+			<%= (Campaign.getMessage()) %>&nbsp; 
     </td>
   </tr>
 </table>
