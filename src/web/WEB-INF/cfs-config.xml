@@ -186,7 +186,8 @@
     <forward name="EmployeeDetailsModifyOK" resource="/contacts/companydirectory_employeemodifyform.jsp" layout="nav"/>
     <forward name="EmployeeDetailsUpdateOK" resource="/CompanyDirectory.do?command=EmployeeDetails"/>
     <forward name="EmployeeInsertFormOK" resource="/contacts/companydirectory_employeeinsertform.jsp" layout="nav"/>
-    <forward name="EmployeeDeleteOK" resource="/dialogcloseandreload.jsp"/>
+    <forward name="EmployeeDeletePopupOK" resource="/dialogcloseandreload.jsp"/>
+    <forward name="EmployeeDeleteOK" resource="/CompanyDirectory.do?command=ListEmployees"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
