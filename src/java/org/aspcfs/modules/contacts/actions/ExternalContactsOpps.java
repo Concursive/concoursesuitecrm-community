@@ -736,7 +736,7 @@ public final class ExternalContactsOpps extends CFSModule {
       db = this.getConnection(context);
       component = new OpportunityComponent(db, componentId);
       thisContact = new Contact(db, contactId);
-      if (!(hasAuthority(db, context, thisContact) || hasAuthority(context, component.getOwner()))) {
+      if (!(hasAuthority(db, context, thisContact) || !hasAuthority(context, component.getOwner()))) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
