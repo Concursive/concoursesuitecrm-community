@@ -101,7 +101,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + "&section=" + thisItem.getSection() + "&subsection=" + thisItem.getSubsection());
+    context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : ""));
     return this.getReturn(context, "SaveIntro");
   }
 
@@ -187,7 +187,7 @@ public final class QA extends CFSModule {
       
       //set the refresh link 
       HelpItem thisItem = new HelpItem(db, thisFeature.getLinkHelpId());
-      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + "&section=" + thisItem.getSection() + "&subsection=" + thisItem.getSubsection());
+      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : ""));
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -362,7 +362,7 @@ public final class QA extends CFSModule {
       }
       //set the refresh link 
       HelpItem thisItem = new HelpItem(db, thisRule.getLinkHelpId());
-      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + "&section=" + thisItem.getSection() + "&subsection=" + thisItem.getSubsection());
+      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : ""));
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -536,7 +536,7 @@ public final class QA extends CFSModule {
       
       //set the refresh link 
       HelpItem thisItem = new HelpItem(db, thisTip.getLinkHelpId());
-      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + "&section=" + thisItem.getSection() + "&subsection=" + thisItem.getSubsection());
+      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : ""));
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -654,7 +654,7 @@ public final class QA extends CFSModule {
       }
       //set the refresh link 
       HelpItem thisItem = new HelpItem(db, thisNote.getLinkHelpId());
-      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + "&section=" + thisItem.getSection() + "&subsection=" + thisItem.getSubsection());
+      context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : ""));
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
