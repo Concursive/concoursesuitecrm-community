@@ -1064,15 +1064,19 @@ public class Campaign extends GenericBean {
       
       groupContacts.setScl(thisGroup);
       groupContacts.setBuildDetails(false);
+      groupContacts.setCheckExcludedFromCampaign(this.getId());
       groupContacts.buildList(db);
+      
       System.out.println("Campaign-> GroupContacts has " + groupContacts.size() + " items");
       Iterator j = groupContacts.iterator();
       while (j.hasNext()) {
         Contact thisContact = (Contact)j.next();
-        Recipient thisRecipient = new Recipient();
-        thisRecipient.setCampaignId(this.getId());
-        thisRecipient.setContactId(thisContact.getId());
-        thisRecipient.insert(db);
+		if (thisContact.excludedFromCampaign() == false) {
+			Recipient thisRecipient = new Recipient();
+			thisRecipient.setCampaignId(this.getId());
+			thisRecipient.setContactId(thisContact.getId());
+			thisRecipient.insert(db);
+		}
       }
     }
   }
