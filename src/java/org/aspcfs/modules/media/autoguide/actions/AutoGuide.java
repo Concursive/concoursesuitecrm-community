@@ -267,10 +267,10 @@ public final class AutoGuide extends CFSModule {
     boolean recordInserted = false;
 
     AccountInventory thisItem = (AccountInventory)context.getFormBean();
-    //thisItem.setRequestItems(context.getRequest());
+    thisItem.setRequestItems(context.getRequest());
     thisItem.setEnteredBy(getUserId(context));
     thisItem.setModifiedBy(getUserId(context));
-
+    
     Connection db = null;
     try {
       db = this.getConnection(context);

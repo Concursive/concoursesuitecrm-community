@@ -72,3 +72,14 @@ CREATE TABLE autoguide_inventory_options (
   inventory_id INTEGER NOT NULL,
   option_id INTEGER NOT NULL
 );
+
+CREATE TABLE autoguide_ad_run (
+  ad_run_id SERIAL PRIMARY KEY,
+  inventory_id INTEGER NOT NULL,
+  start_date DATETIME NOT NULL,
+  end_date DATETIME NOT NULL,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL
+);

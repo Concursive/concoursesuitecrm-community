@@ -9,7 +9,9 @@ import java.text.*;
 import java.util.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
+import com.darkhorseventures.utils.StringUtils;
 import com.darkhorseventures.cfsbase.Organization;
+import javax.servlet.http.*;
 
 public class AccountInventory {
 
@@ -35,6 +37,7 @@ public class AccountInventory {
   private Vehicle vehicle = new Vehicle();
   private Organization organization = null;
   private OptionList options = null;
+  private AdRunList adRuns = null;
   
   public AccountInventory() { }
 
@@ -75,6 +78,8 @@ public class AccountInventory {
     rs.close();
     pst.close();
     this.buildOrganizationInfo(db);
+    this.buildOptions(db);
+    this.buildAdRuns(db);
   }
 
   public void setId(int tmp) { id = tmp; }
@@ -88,7 +93,9 @@ public class AccountInventory {
   public void setAdType(int tmp) { this.adType = tmp; }
   public void setAdType(String tmp) { this.adType = Integer.parseInt(tmp); }
   public void setMileage(int tmp) { this.mileage = tmp; }
-  public void setMileage(String tmp) { this.mileage = Integer.parseInt(tmp); }
+  public void setMileage(String tmp) { 
+    this.mileage = StringUtils.getIntegerNumber(tmp);
+  }
   public void setIsNew(boolean tmp) { this.isNew = tmp; }
   public void setIsNew(String tmp) { 
     this.isNew = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp)); 
@@ -99,9 +106,13 @@ public class AccountInventory {
   public void setExteriorColor(String tmp) { this.exteriorColor = tmp; }
   public void setInteriorColor(String tmp) { this.interiorColor = tmp; }
   public void setInvoicePrice(double tmp) { this.invoicePrice = tmp; }
-  public void setInvoicePrice(String tmp) { this.invoicePrice = Double.parseDouble(tmp); }
+  public void setInvoicePrice(String tmp) { 
+    this.invoicePrice = StringUtils.getDoubleNumber(tmp);
+  }
   public void setSellingPrice(double tmp) { this.sellingPrice = tmp; }
-  public void setSellingPrice(String tmp) { this.sellingPrice = Double.parseDouble(tmp); }
+  public void setSellingPrice(String tmp) { 
+    sellingPrice = StringUtils.getDoubleNumber(tmp);
+  }
   public void setStatus(String tmp) { this.status = tmp; }
   public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
   public void setEntered(String tmp) {
@@ -118,7 +129,12 @@ public class AccountInventory {
   public void setVehicle(Vehicle tmp) { this.vehicle = tmp; }
   public void setOrganization(Organization tmp) { this.organization = tmp; }
   public void setOptions(OptionList tmp) { this.options = tmp; }
-
+  public void setRequestItems(HttpServletRequest request) {
+    options = new OptionList(request);
+    adRuns = new AdRunList(request);
+  }
+  public void setAdRuns(AdRunList tmp) { this.adRuns = tmp; }
+  
   public int getId() { return id; }
   public int getVehicleId() { return vehicleId; }
   public int getAccountId() { return accountId; }
@@ -152,6 +168,13 @@ public class AccountInventory {
   public Vehicle getVehicle() { return vehicle; }
   public Organization getOrganization() { return organization; }
   public OptionList getOptions() { return options; }
+  public boolean hasOptions() { 
+    return (options != null && options.size() > 0); 
+  }
+  public AdRunList getAdRuns() { return adRuns; }
+  public boolean hasAdRuns() {
+    return (adRuns != null && adRuns.size() > 0);
+  }
 
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -184,6 +207,43 @@ public class AccountInventory {
 
     id = DatabaseUtils.getCurrVal(db, "autoguide_acco_inventory_id_seq");
     //vehicle = new Vehicle(db, vehicleId);
+    
+    if (options != null) {
+      sql.setLength(0);
+      sql.append(
+        "INSERT INTO autoguide_inventory_options (inventory_id, option_id) " +
+        "VALUES (?, ?)");
+      Iterator optionList = options.iterator();
+      while (optionList.hasNext()) {
+        Option thisOption = (Option)optionList.next();
+        pst = db.prepareStatement(sql.toString());
+        pst.setInt(1, id);
+        pst.setInt(2, thisOption.getId());
+        pst.execute();
+        pst.close();
+      }
+    }
+    if (adRuns != null) {
+      sql.setLength(0);
+      sql.append(
+        "INSERT INTO autoguide_ad_run (inventory_id, " +
+        "start_date, end_date, " +
+        "enteredby, modifiedby) " +
+        "VALUES (?, ?, ?, ?, ?)");
+      Iterator adRunList = adRuns.iterator();
+      while (adRunList.hasNext()) {
+        AdRun thisAdRun = (AdRun)adRunList.next();
+        pst = db.prepareStatement(sql.toString());
+        i = 0;
+        pst.setInt(++i, id);
+        pst.setDate(++i, thisAdRun.getStartDate());
+        pst.setDate(++i, thisAdRun.getEndDate());
+        pst.setInt(++i, this.getModifiedBy());
+        pst.setInt(++i, this.getModifiedBy());
+        pst.execute();
+        pst.close();
+      }
+    }
     return true;
   }
 
@@ -203,6 +263,22 @@ public class AccountInventory {
         "WHERE inventory_id = ? ");
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
+    pst.close();
+    
+    //Options
+    pst = db.prepareStatement(
+        "DELETE FROM autoguide_inventory_options " +
+        "WHERE inventory_id = ? ");
+    pst.setInt(1, id);
+    pst.executeUpdate();
+    pst.close();
+    
+    //Ad Runs
+    pst = db.prepareStatement(
+        "DELETE FROM autoguide_ad_run " +
+        "WHERE inventory_id = ? ");
+    pst.setInt(1, id);
+    pst.executeUpdate();
     pst.close();
 
     if (recordCount == 0) {
@@ -293,6 +369,18 @@ public class AccountInventory {
       accountId = 0;
     }
     organization = new Organization(db, accountId);
+  }
+  
+  public void buildOptions(Connection db) throws SQLException {
+    options = new OptionList();
+    options.setInventoryId(id);
+    options.buildList(db);
+  }
+  
+  public void buildAdRuns(Connection db) throws SQLException {
+    adRuns = new AdRunList();
+    adRuns.setInventoryId(id);
+    adRuns.buildList(db);
   }
   
   public void generateVehicleId(Connection db) throws SQLException {

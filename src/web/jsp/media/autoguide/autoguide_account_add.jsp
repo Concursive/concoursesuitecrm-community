@@ -93,7 +93,7 @@
     <td>
       <% YearSelect.setJsEvent("onchange=\"updateMakeList();\""); %>
       <%= YearSelect.getHtml("vehicle_year", InventoryDetails.getVehicle().getYear()) %>
-      <%= showAttribute(request, "yearError") %>
+      <font color=red>*</font> <%= showAttribute(request, "yearError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -114,7 +114,7 @@
     </td>
     <td>
       <%= ModelSelect.getHtml("vehicle_modelId", InventoryDetails.getVehicle().getModelId()) %>
-      <%= showAttribute(request, "modelIdError") %>
+      <font color=red>*</font> <%= showAttribute(request, "modelIdError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -185,10 +185,12 @@
     ++rows;
   }
   
+  int itemCount = 0;
   for (int rowCount = 0; rowCount < rows; rowCount++) { 
     Option option1 = null;
     Option option2 = null;
     Option option3 = null;
+    ++itemCount;
     option1 = (Option)OptionList.get(rowCount);
     if (OptionList.size() > rowCount + rows) {
       option2 = (Option)OptionList.get(rowCount + rows);
@@ -199,19 +201,24 @@
 %>
   <tr class="containerBody">
     <td width="34%">
+      <input type="hidden" name="option<%= itemCount %>id" value="<%= option1.getId() %>">
       <input type="checkbox" name="option<%= option1.getId() %>"><%= option1.getName() %>
     </td>
     <td width="33%">
 <%
     if (option2 != null) {
+      ++itemCount;
 %>
+      <input type="hidden" name="option<%= itemCount %>id" value="<%= option2.getId() %>">
       <input type="checkbox" name="option<%= option2.getId() %>"><%= option2.getName() %>
 <%  }  %>&nbsp;
     </td>
     <td width="33%">
 <%
     if (option3 != null) {
+      ++itemCount;
 %>
+      <input type="hidden" name="option<%= itemCount %>id" value="<%= option3.getId() %>">
       <input type="checkbox" name="option<%= option3.getId() %>"><%= option3.getName() %>
 <%  }  %>&nbsp;
     </td>
@@ -219,6 +226,33 @@
 <%
   }
 %>
+</table>
+<br>
+&nbsp;
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td valign="center" align="left">
+      <strong>Select Ad Run Dates</strong>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td>
+      Start:<input type="text" size="10" name="adrun1startDate">
+      <a href="javascript:popCalendar('addVehicle', 'adrun1startDate');">Date</a> (mm/dd/yyyy)
+      &nbsp;&nbsp;
+      End:<input type="text" size="10" name="adrun1endDate">
+      <a href="javascript:popCalendar('addVehicle', 'adrun1endDate');">Date</a> (mm/dd/yyyy)
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td>
+      Start:<input type="text" size="10" name="adrun2startDate">
+      <a href="javascript:popCalendar('addVehicle', 'adrun2startDate');">Date</a> (mm/dd/yyyy)
+      &nbsp;&nbsp;
+      End:<input type="text" size="10" name="adrun2endDate">
+      <a href="javascript:popCalendar('addVehicle', 'adrun2endDate');">Date</a> (mm/dd/yyyy)
+    </td>
+  </tr>
 </table>
 &nbsp;
 <br>

@@ -59,6 +59,22 @@
     <td><%= toHtml(InventoryItem.getInteriorColor()) %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
+<dhv:evaluate exp="<%= InventoryItem.hasOptions() %>">
+  <tr>
+    <td nowrap class="formLabel">Options</td>
+    <td>
+<%
+      Iterator options = InventoryItem.getOptions().iterator();
+      while (options.hasNext()) {
+        Option thisOption = (Option)options.next();
+%>
+      <%= toHtml(thisOption.getName()) %><%= (options.hasNext()?", ":"") %>
+<%
+      }
+%>
+    </td>
+  </tr>
+</dhv:evaluate>
 </table>
 <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete"><br></dhv:permission>
 <dhv:permission name="autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>

@@ -9,30 +9,32 @@ import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.cfsbase.Constants;
 import javax.servlet.http.*;
 
-public class OptionList extends ArrayList {
+public class AdRunList extends ArrayList {
 
-  public static String tableName = "autoguide_options";
-  public static String uniqueField = "option_id";
+  public static String tableName = "autoguide_ad_run";
+  public static String uniqueField = "ad_run_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private int inventoryId = -1;
   
-  public OptionList() {}
+  public AdRunList() {}
   
-  public OptionList(Connection db) throws SQLException {
+  public AdRunList(Connection db) throws SQLException {
     buildList(db);
   }
   
-  public OptionList(HttpServletRequest request) {
+  public AdRunList(HttpServletRequest request) {
     int i = 0;
     String thisId = null;
-    while ((thisId = request.getParameter("option" + (++i) + "id")) != null) {
-      String checked = request.getParameter("option" + thisId);
-      if ("on".equalsIgnoreCase(checked)) {
-        Option thisOption = new Option();
-        thisOption.setId(Integer.parseInt(thisId));
-        this.add(thisOption);
+    while ((thisId = request.getParameter("adrun" + (++i) + "id")) != null) {
+      String startDate = request.getParameter("adrun" + thisId + "startDate");
+      String endDate = request.getParameter("adrun" + thisId + "endDate");
+      String remove = request.getParameter("adrun" + thisId + "remove");
+      if ("on".equalsIgnoreCase(remove)) {
+        AdRun thisAdRun = new AdRun();
+        //thisAdRun.setId(Integer.parseInt(thisId));
+        this.add(thisAdRun);
       }
     }
   }
@@ -61,16 +63,16 @@ public class OptionList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      Option thisOption = this.getObject(rs);
-      this.add(thisOption);
+      AdRun thisAdRun = this.getObject(rs);
+      this.add(thisAdRun);
     }
     rs.close();
     if (pst != null) pst.close();
   }
   
-  public Option getObject(ResultSet rs) throws SQLException {
-    Option thisOption = new Option(rs);
-    return thisOption;
+  public AdRun getObject(ResultSet rs) throws SQLException {
+    AdRun thisAdRun = new AdRun(rs);
+    return thisAdRun;
   }
   
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
@@ -79,15 +81,15 @@ public class OptionList extends ArrayList {
     
     StringBuffer sql = new StringBuffer(); 
     sql.append(  
-      "SELECT o.option_id, o.option_name, o.entered, o.modified " +
-      "FROM autoguide_options o ");
-    if (inventoryId > -1) {
-      sql.append(
-        ", autoguide_inventory_options io ");
-    }
-    sql.append("WHERE o.option_id > -1 ");
+      "SELECT ad.ad_run_id, ad.inventory_id, " +
+      "ad.start_date, ad.end_date, " +
+      "ad.entered, ad.enteredby, " +
+      "ad.modified, ad.modifiedby " +
+      "FROM autoguide_ad_run ad ");
+    sql.append("WHERE ad.ad_run_id > -1 ");
     createFilter(sql);
-    sql.append("ORDER BY level, option_id ");
+    sql.append("ORDER BY start_date DESC ");
+    //sql.append("ORDER BY inventory_id, start_date DESC ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -100,17 +102,17 @@ public class OptionList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
+        sqlFilter.append("AND ad.entered > ? ");
       }
-      sqlFilter.append("AND o.entered < ? ");
+      sqlFilter.append("AND ad.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
+      sqlFilter.append("AND ad.modified > ? ");
+      sqlFilter.append("AND ad.entered < ? ");
+      sqlFilter.append("AND ad.modified < ? ");
     }
     if (inventoryId > -1) {
-      sqlFilter.append("AND o.option_id = io.option_id AND io.inventory_id = ? ");
+      sqlFilter.append("AND ad.inventory_id = ? ");
     }
   }
   
