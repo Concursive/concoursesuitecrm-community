@@ -17,14 +17,16 @@ import java.io.*;
 import java.util.*;
 import org.jcrontab.data.*;
 import org.jcrontab.log.Log;
+import java.sql.Connection;
+import javax.servlet.ServletContext;
 
 /**
  *  Manages the creation and execution of all the scheduled tasks of jcrontab.
  *  This class is the core of the jcrontab
  *
- *@author     $Author$
- *@created    February 4, 2003
- *@version    $Revision$
+ *@author     Israel Olalla
+ *@created    November 2002
+ *@version    $Id$
  */
 
 public class Crontab {
@@ -33,11 +35,13 @@ public class Crontab {
   private int iNextTaskID;
   private Properties prop = new Properties();
   private int iTimeTableGenerationFrec = 3;
+  private Object connectionPool = null;
+  private ServletContext servletContext = null;
   /**
    *  The Cron that controls the execution of the tasks
    */
   private Cron cron;
-  private boolean stoping = false;
+  private boolean stopping = false;
   private boolean daemon = true;
 
   private static String strFileName = System.getProperty("user.home") +
@@ -91,14 +95,14 @@ public class Crontab {
     cron.setName("Cron");
     cron.setDaemon(daemon);
     cron.start();
-    stoping = false;
+    stopping = false;
   }
 
 
   /**
    *  Initializes the crontab, reading task table from configuration file
    *
-   *@param  strFileName               Name of the tasks configuration file
+   *@param  strFileName  Name of the tasks configuration file
    *@throws  Exception
    */
   public void init(String strFileName)
@@ -117,7 +121,7 @@ public class Crontab {
     cron.setName("Cron");
     cron.setDaemon(daemon);
     cron.start();
-    stoping = false;
+    stopping = false;
   }
 
 
@@ -125,7 +129,7 @@ public class Crontab {
    *  Used by the loadCrontabServlet to start Crontab with the configuration
    *  passed in a Properties object.
    *
-   *@param  props                     a <code>Properties</code> object
+   *@param  props       a <code>Properties</code> object
    *@throws  Exception
    */
   public void init(Properties props)
@@ -134,7 +138,6 @@ public class Crontab {
     String refreshFrequency =
         props.getProperty("org.jcrontab.Crontab.refreshFrequency");
     this.prop = props;
-
     if (refreshFrequency != null) {
       this.iTimeTableGenerationFrec = Integer.parseInt(refreshFrequency);
     }
@@ -143,20 +146,19 @@ public class Crontab {
     cron.setName("Cron");
     cron.setDaemon(daemon);
     cron.start();
-    stoping = false;
+    stopping = false;
   }
 
 
   /**
    *  UnInitializes the Crontab. Calls to the method stopInTheNextMinute() of
    *  the Cron.
-   *
    */
   public void uninit() {
-    if (stoping) {
+    if (stopping) {
       return;
     }
-    stoping = true;
+    stopping = true;
     cron.stopInTheNextMinute();
   }
 
@@ -169,12 +171,12 @@ public class Crontab {
    *      process before returning from this method
    */
   public void uninit(int iSecondsToWait) {
-    if (stoping) {
+    if (stopping) {
       return;
     }
     try {
       // Updates uninitializing flag
-      stoping = true;
+      stopping = true;
       cron.stopInTheNextMinute();
       CronTask[] tasks = getAllTasks();
 
@@ -235,6 +237,47 @@ public class Crontab {
       }
     }
   }
+
+
+  /**
+   *  Sets the connectionPool attribute of the Crontab object
+   *
+   *@param  tmp  The new connectionPool value
+   */
+  public void setConnectionPool(Object tmp) {
+    this.connectionPool = tmp;
+  }
+
+
+  /**
+   *  Sets the servletContext attribute of the Crontab object
+   *
+   *@param  tmp  The new servletContext value
+   */
+  public void setServletContext(ServletContext tmp) {
+    this.servletContext = tmp;
+  }
+
+
+  /**
+   *  Gets the connectionPool attribute of the Crontab object
+   *
+   *@return    The connectionPool value
+   */
+  public Object getConnectionPool() {
+    return connectionPool;
+  }
+
+
+  /**
+   *  Gets the servletContext attribute of the Crontab object
+   *
+   *@return    The servletContext value
+   */
+  public ServletContext getServletContext() {
+    return servletContext;
+  }
+
 
 
   /**
@@ -307,71 +350,91 @@ public class Crontab {
   /**
    *  Creates and runs a new task
    *
-   *@param  strClassName   Name of the task
-   *@param  strMethodName  Name of the method that will be called
-   *@param  strExtraInfo   Extra Information given to the task
-   *@return                The identifier of the new task created, or -1 if
+   *@param  strClassName       Name of the task
+   *@param  strMethodName      Name of the method that will be called
+   *@param  strExtraInfo       Extra Information given to the task
+   *@param  connectionContext  Description of the Parameter
+   *@return                    The identifier of the new task created, or -1 if
    *      could not create the new task (maximum number of tasks exceeded or
    *      another error)
    */
   public synchronized int newTask(String strClassName,
-      String strMethodName, String[] strExtraInfo) {
-    CronTask newTask;
-    Class cl;
-    int iTaskID;
-
-    // Do not run new tasks if it is uninitializing
-    if (stoping) {
+      String strMethodName, String[] strExtraInfo, Object connectionContext) {
+    // Do not run new tasks if jcron is uninitializing
+    if (stopping) {
       return -1;
     }
-    String params = "";
-    try {
-      iTaskID = iNextTaskID;
-
-      cl = (Class) (loadedClasses.get(strClassName));
-      // If the class was not previously created, then creates it
-      if (cl == null) {
-        cl = Class.forName(strClassName.trim());
-        loadedClasses.put(strClassName, cl);
-      }
-
-      // Creates the new task
-      newTask = new CronTask();
-      newTask.setParams(this, iTaskID, strClassName, strMethodName,
-          strExtraInfo);
-      // Aded name to newTask to show a name instead of Threads whe
-      // logging
-      // Thanks to Sander Verbruggen
-      int lastDot = strClassName.lastIndexOf(".");
-      if (lastDot > 0 && lastDot < strClassName.length()) {
-        String classOnlyName = strClassName.substring(lastDot + 1);
-        newTask.setName(classOnlyName);
-      }
-
-      synchronized (tasks) {
-        tasks.put(new Integer(iTaskID),
-            new TaskTableEntry(strClassName, newTask));
-      }
-      // Starts the task execution
-      newTask.setName("Crontask-" + iTaskID);
-      newTask.start();
-
-      if (strExtraInfo != null && strExtraInfo.length > 0) {
-        for (int i = 0; i < strExtraInfo.length; i++) {
-          params += strExtraInfo[i] + " ";
+    if (connectionContext != null) {
+      if (servletContext != null && connectionPool != null) {
+        //Get the corresponding connection element for this event
+        com.darkhorseventures.database.ConnectionElement ce =
+            (com.darkhorseventures.database.ConnectionElement) connectionContext;
+        com.darkhorseventures.database.ConnectionPool cp =
+            (com.darkhorseventures.database.ConnectionPool) connectionPool;
+        //Get the corresponding system status for this connection element
+        Connection db = null;
+        org.aspcfs.controller.SystemStatus thisSystem = null;
+        try {
+          db = cp.getConnection(ce);
+          thisSystem = org.aspcfs.controller.SecurityHook.retrieveSystemStatus(servletContext, db, ce);
+        } catch (Exception e) {
+        } finally {
+          if (db != null) {
+            cp.free(db);
+          }
+          if (thisSystem != null) {
+            thisSystem.processEvent(servletContext, strClassName, cp, ce);
+          }
         }
       }
-      Log.info(strClassName + "#" + strMethodName + " " + params);
-      // Increments the next task identifier
-      iNextTaskID++;
-      return iTaskID;
-    } catch (Exception e) {
-      Log.error("Smth was wrong with" +
-          strClassName +
-          "#" +
-          strMethodName +
-          " " +
-          params, e);
+    } else {
+      CronTask newTask;
+      Class cl;
+      int iTaskID;
+      String params = "";
+      try {
+        iTaskID = iNextTaskID;
+        cl = (Class) (loadedClasses.get(strClassName));
+        // If the class was not previously created, then creates it
+        if (cl == null) {
+          cl = Class.forName(strClassName.trim());
+          loadedClasses.put(strClassName, cl);
+        }
+        // Creates the new task
+        newTask = new CronTask();
+        newTask.setParams(this, iTaskID, strClassName, strMethodName,
+            strExtraInfo);
+        // Added name to newTask to show a name instead of Threads when
+        // logging.  Thanks to Sander Verbruggen
+        int lastDot = strClassName.lastIndexOf(".");
+        if (lastDot > 0 && lastDot < strClassName.length()) {
+          String classOnlyName = strClassName.substring(lastDot + 1);
+          newTask.setName(classOnlyName);
+        }
+        synchronized (tasks) {
+          tasks.put(new Integer(iTaskID),
+              new TaskTableEntry(strClassName, newTask));
+        }
+        // Starts the task execution
+        newTask.setName("Crontask-" + iTaskID);
+        newTask.start();
+        if (strExtraInfo != null && strExtraInfo.length > 0) {
+          for (int i = 0; i < strExtraInfo.length; i++) {
+            params += strExtraInfo[i] + " ";
+          }
+        }
+        Log.info(strClassName + "#" + strMethodName + " " + params);
+        // Increments the next task identifier
+        iNextTaskID++;
+        return iTaskID;
+      } catch (Exception e) {
+        Log.error("Something was wrong with" +
+            strClassName +
+            "#" +
+            strMethodName +
+            " " +
+            params, e);
+      }
     }
     return -1;
   }
