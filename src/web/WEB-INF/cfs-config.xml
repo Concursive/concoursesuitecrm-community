@@ -765,6 +765,7 @@
     <forward name="UserInsertFormOK" resource="/admin_userinsertform1.jsp" layout="nav"/>
     <forward name="UserInsertForm2OK" resource="/admin_userinsertform2.jsp" layout="nav"/>
     <forward name="UserDeleteOK" resource="/Users.do?command=ListUsers"/>
+    <forward name="UserDisableConfirmOK" resource="admin_disableuser_confirmation.jsp" layout="nav"/>
     <forward name="UserUpdateOK" resource="/Users.do?command=UserDetails"/>
     <forward name="UserModifyOK" resource="/admin_usermodifyform.jsp" layout="nav"/>
     <forward name="ReassignOK" resource="/admin_reassign.jsp" layout="nav"/>

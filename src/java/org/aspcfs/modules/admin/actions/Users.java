@@ -8,6 +8,7 @@ import java.util.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
+import com.zeroio.iteam.base.*;
 
 /**
  *  Action methods for managing users
@@ -104,25 +105,97 @@ public final class Users extends CFSModule {
 		}
 
 		Exception errorMessage = null;
-
 		Connection db = null;
-		Statement st = null;
-		ResultSet rs = null;
 
-		UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-
-		//this is how we get the multiple-level heirarchy...recursive function.
-
-		User thisRec = thisUser.getUserRecord();
-
+		User thisRec = ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
+    int userId = -1;
+    User sourceUser = null;
+    
+    OrganizationList sourceAccounts = null;
+    ContactList sourceContacts = null;
+    UserList sourceUsers = null;
+    TicketList sourceOpenTickets = null;
+    RevenueList sourceRevenue = null;
+    AssignmentList sourceAssignments = null;
+    OpportunityList sourceOpportunities = null;
+    OpportunityList sourceOpenOpportunities = null;
+    
+    //this is how we get the multiple-level heirarchy...recursive function.
 		UserList shortChildList = thisRec.getShortChildList();
 		UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
 		userList.setMyId(getUserId(context));
-		userList.setMyValue(Contact.getNameLastFirst(thisUser.getNameLast(), thisUser.getNameFirst()));
+		userList.setMyValue(thisRec.getContact().getNameLastFirst());
 		userList.setIncludeMe(true);
-		context.getRequest().setAttribute("UserList", userList);
+    userList.setEmptyHtmlSelectRecord("None Selected");
+		
+    if (context.getRequest().getParameter("userId") != null) {
+      userId = Integer.parseInt(context.getRequest().getParameter("userId"));
+    }
 
-
+    if (userId > -1) {    
+      if (userId == thisRec.getId()) {
+        sourceUser = thisRec;
+      } else {
+        sourceUser = (User)thisRec.getChild(userId);
+      }
+    }
+    
+    if (sourceUser != null) {
+      try {
+        db = getConnection(context);
+        
+        sourceAccounts = new OrganizationList();
+        sourceAccounts.setOwnerId(userId);
+        sourceAccounts.buildList(db);
+        context.getRequest().setAttribute("SourceAccounts", sourceAccounts);
+        
+        sourceContacts = new ContactList();
+        sourceContacts.setOwner(userId);
+        sourceContacts.buildList(db);
+        context.getRequest().setAttribute("SourceContacts", sourceContacts);
+        
+        sourceUsers = new UserList();
+        sourceUsers.setManagerId(userId);
+        sourceUsers.buildList(db);
+        context.getRequest().setAttribute("SourceUsers", sourceUsers);
+        
+        sourceOpenTickets = new TicketList();
+        sourceOpenTickets.setAssignedTo(userId);
+        sourceOpenTickets.setOnlyOpen(true);
+        sourceOpenTickets.buildList(db);
+        context.getRequest().setAttribute("SourceOpenTickets", sourceOpenTickets);
+        
+        sourceRevenue = new RevenueList();
+        sourceRevenue.setOwner(userId);
+        sourceRevenue.buildList(db);
+        context.getRequest().setAttribute("SourceRevenue", sourceRevenue);
+        
+        sourceAssignments = new AssignmentList();
+        sourceAssignments.setAssignmentsForUser(userId);
+        sourceAssignments.setIncompleteOnly(true);
+        sourceAssignments.buildList(db);
+        context.getRequest().setAttribute("SourceAssignments", sourceAssignments);
+        
+        sourceOpportunities = new OpportunityList();
+        sourceOpportunities.setOwner(userId);
+        sourceOpportunities.buildList(db);
+        context.getRequest().setAttribute("SourceOpportunities", sourceOpportunities);
+        
+        sourceOpenOpportunities = new OpportunityList();
+        sourceOpenOpportunities.setOwner(userId);
+        sourceOpenOpportunities.setQueryOpenOnly(true);
+        sourceOpenOpportunities.buildList(db);
+        context.getRequest().setAttribute("SourceOpenOpportunities", sourceOpenOpportunities);
+      } catch (Exception e) {
+        errorMessage = e;
+      } finally {
+        this.freeConnection(context, db);
+      }
+    }
+    
+    context.getRequest().setAttribute("SourceUser", sourceUser);
+    context.getRequest().setAttribute("UserList", userList);
+    context.getRequest().setAttribute("UserSelectList", userList.clone());
 		addModuleBean(context, "Reassign", "Bulk Reassign");
 		if (errorMessage == null) {
 			return ("ReassignOK");
@@ -146,92 +219,167 @@ public final class Users extends CFSModule {
 		if (!(hasPermission(context, "admin-reassign-edit"))) {
 			return ("PermissionError");
 		}
-
+    
+    User thisRec = ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
+    int userId = -1;
+    User sourceUser = null;
 		Exception errorMessage = null;
-
 		Connection db = null;
-		int resultCount = 0;
-		String sql = null;
+    
+        
+    if (context.getRequest().getParameter("userId") != null) {
+      userId = Integer.parseInt(context.getRequest().getParameter("userId"));
+    }
+    
+    if (userId > -1) {
+      if (userId == thisRec.getId()) {
+        sourceUser = thisRec;
+      } else {
+        sourceUser = (User)thisRec.getChild(userId);
+      }
+    }
+    
+    if (sourceUser == null) {
+      return ("PermissionError");
+    }  
+    
+    OrganizationList sourceAccounts = null;
+    int targetIdAccounts = -1;
+    
+    ContactList sourceContacts = null;
+    int targetIdContacts = -1;
+    
+    OpportunityList sourceOpenOpps = null;
+    int targetIdOpenOpps = -1;
+    
+    OpportunityList sourceOpps = null;
+    int targetIdOpps = -1;    
+    
+    RevenueList sourceRevenue = null;
+    int targetIdRevenue = -1;
+    
+    TicketList sourceOpenTickets = null;
+    int targetIdOpenTickets = -1;  
+    
+    UserList sourceUsers = null;
+    int targetIdUsers = -1;   
+    
+    AssignmentList sourceAssignments = null;
+    int targetIdAssignments = -1;
+    
+    if (context.getRequest().getParameter("ownerToAccounts") != null) {
+      targetIdAccounts = Integer.parseInt(context.getRequest().getParameter("ownerToAccounts"));
+    }
+    if (context.getRequest().getParameter("ownerToContacts") != null) {
+      targetIdContacts = Integer.parseInt(context.getRequest().getParameter("ownerToContacts"));
+    }
+    if (context.getRequest().getParameter("ownerToOpenOpps") != null) {
+      targetIdOpenOpps = Integer.parseInt(context.getRequest().getParameter("ownerToOpenOpps"));
+    }    
+    if (context.getRequest().getParameter("ownerToOpenClosedOpps") != null) {
+      targetIdOpps = Integer.parseInt(context.getRequest().getParameter("ownerToOpenClosedOpps"));
+    }     
+    if (context.getRequest().getParameter("ownerToRevenue") != null) {
+      targetIdRevenue = Integer.parseInt(context.getRequest().getParameter("ownerToRevenue"));
+    }     
+    if (context.getRequest().getParameter("ownerToOpenTickets") != null) {
+      targetIdOpenTickets = Integer.parseInt(context.getRequest().getParameter("ownerToOpenTickets"));
+    }    
+    if (context.getRequest().getParameter("ownerToUsers") != null) {
+      targetIdUsers = Integer.parseInt(context.getRequest().getParameter("ownerToUsers"));
+    }    
+    
+    if (context.getRequest().getParameter("ownerToActivities") != null) {
+      targetIdAssignments = Integer.parseInt(context.getRequest().getParameter("ownerToActivities"));
+    }      
+    
+    try {
+        db = getConnection(context);
+        
+        if (targetIdAccounts > -1) {
+          sourceAccounts = new OrganizationList();
+          sourceAccounts.setOwnerId(userId);
+          sourceAccounts.buildList(db);
+          sourceAccounts.reassignElements(db, targetIdAccounts);
+        }
+        
+        if (targetIdContacts > -1) {
+          sourceContacts = new ContactList();
+          sourceContacts.setOwner(userId);
+          sourceContacts.buildList(db);
+          sourceContacts.reassignElements(db, targetIdContacts);
+        }
+        
+        if (targetIdOpenOpps > -1) {
+          sourceOpenOpps = new OpportunityList();
+          sourceOpenOpps.setOwner(userId);
+          sourceOpenOpps.setQueryOpenOnly(true);
+          sourceOpenOpps.buildList(db);
+          sourceOpenOpps.reassignElements(db, targetIdOpenOpps);
+          invalidateUserInMemory(targetIdOpenOpps, context);
+        }        
+        
+        if (targetIdOpps > -1) {
+          sourceOpps = new OpportunityList();
+          sourceOpps.setOwner(userId);
+          sourceOpps.buildList(db);
+          sourceOpps.reassignElements(db, targetIdOpps);
+          invalidateUserInMemory(targetIdOpps, context);
+        }
+        
+        if (targetIdRevenue > -1) {
+          sourceRevenue = new RevenueList();
+          sourceRevenue.setOwner(userId);
+          sourceRevenue.buildList(db);
+          sourceRevenue.reassignElements(db, targetIdRevenue);
+          invalidateUserInMemory(targetIdRevenue, context);
+        }        
+        
+        if (targetIdOpenTickets > -1) {
+          sourceOpenTickets = new TicketList();
+          sourceOpenTickets.setAssignedTo(userId);
+          sourceOpenTickets.setOnlyOpen(true);
+          sourceOpenTickets.buildList(db);
+          sourceOpenTickets.reassignElements(db, targetIdOpenTickets);
+        }
+        
+        if (targetIdUsers > -1) {
+          sourceUsers = new UserList();
+          sourceUsers.setManagerId(userId);
+          sourceUsers.buildList(db);          
+          sourceUsers.reassignElements(db, targetIdUsers);
+          thisRec.setBuildHierarchy(true);
+          thisRec.buildResources(db);
+        }        
+        
+        if (targetIdAssignments > -1) {
+          sourceAssignments = new AssignmentList();
+          sourceAssignments.setAssignmentsForUser(userId);
+          sourceAssignments.setIncompleteOnly(true);
+          sourceAssignments.buildList(db);    
+          sourceAssignments.reassignElements(db, targetIdAssignments);
+        }
+        
+    } catch (Exception e) {
+        errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+      
+    if (errorMessage == null) {
 
-		int fromPerson = Integer.parseInt(context.getRequest().getParameter("ownerFrom"));
-		int toPerson = Integer.parseInt(context.getRequest().getParameter("ownerTo"));
-		String whichTable = context.getRequest().getParameter("whichTable");
-
-		if ("ticket".equals(whichTable)) {
-			sql =
-					"UPDATE ticket " +
-					"SET assigned_to = ? " +
-					"WHERE assigned_to = ? AND closed IS NULL ";
-
-		}
-		else if ("activity".equals(whichTable)) {
-			sql =
-					"UPDATE project_assignments " +
-					"SET user_assign_id = ?, assign_date = CURRENT_TIMESTAMP " +
-					"WHERE user_assign_id = ? AND status_id NOT IN (SELECT code FROM lookup_project_status WHERE type in (3,4)) ";
-
-		}
-		else if ("opportunity-open".equals(whichTable)) {
-			sql =
-					"UPDATE opportunity " +
-					"SET owner = ? " +
-					"WHERE owner = ? AND closed IS NULL ";
-
-		}
-		else if ("contact".equals(whichTable)) {
-			sql =
-					"UPDATE contact " +
-					"SET owner = ? " +
-					"WHERE owner = ? AND type_id != 2 ";
-
-		}
-		else if (whichTable != null && !whichTable.equals("")) {
-			sql =
-					"UPDATE " + whichTable + " " +
-					"SET owner = ? " +
-					"WHERE owner = ? ";
-		}
-
-		try {
-			if (sql != null) {
-				db = this.getConnection(context);
-				int i = 0;
-				PreparedStatement pst = db.prepareStatement(sql.toString());
-				pst.setInt(++i, toPerson);
-				pst.setInt(++i, fromPerson);
-				resultCount = pst.executeUpdate();
-				pst.close();
-			}
-		}
-		catch (SQLException e) {
-			errorMessage = e;
-		}
-		finally {
-			this.freeConnection(context, db);
-		}
-
-		if (errorMessage == null) {
-			if (resultCount == -1) {
-				context.getRequest().setAttribute("Error", "<b>These records could not be bulk-reassigned</b>");
-				return ("UserError");
-			}
-			else {
-				//FOR GRAPH CLEARING
-
-				if (whichTable.startsWith("opportunity") || whichTable.startsWith("revenue")) {
-					invalidateUserData(context, getUserId(context));
-					invalidateUserInMemory(fromPerson, context);
-					invalidateUserInMemory(toPerson, context);
-				}
-
-				context.getRequest().setAttribute("count", "" + resultCount);
-				return ("DoReassignOK");
-			}
+      if (targetIdOpps > -1 || targetIdOpenOpps > -1 || targetIdRevenue > -1) {
+        invalidateUserData(context, getUserId(context));
+        invalidateUserInMemory(sourceUser.getId(), context);
+      }
+        
+      return ("DoReassignOK");
 		}
 		else {
 			context.getRequest().setAttribute("Error", errorMessage);
 			return ("SystemError");
 		}
+
 	}
 
 
@@ -518,6 +666,197 @@ public final class Users extends CFSModule {
 			return ("SystemError");
 		}
 	}
+  
+	public String executeCommandDisableUser(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-delete"))) {
+			return ("PermissionError");
+		}
+
+		Exception errorMessage = null;
+		boolean recordDisabled = false;
+		User thisUser = null;
+    Ticket thisTicket = null;
+    User thisRec = ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
+    User managerUser = null;
+
+		Connection db = null;
+		try {
+			db = this.getConnection(context);
+			thisUser = new User(db, context.getRequest().getParameter("id"));
+      
+      recordDisabled = thisUser.delete(db);
+      
+      if (recordDisabled) {
+        thisTicket = new Ticket();
+        thisTicket.setProblem("CFS User " + thisUser.getUsername() + " has been disabled by " + thisRec.getUsername() + 
+              ".  Since you are the direct manager of " + thisUser.getUsername() + ", you have been notified.  It is essential that " +
+              "any data still directly associated with this disabled User gets re-assigned as soon as possible.");
+        thisTicket.setEnteredBy(thisRec.getId());
+        thisTicket.setModifiedBy(thisRec.getId());
+        thisTicket.setOrgId(0);
+        thisTicket.setContactId(thisUser.getContactId());
+        thisTicket.setSeverityCode(3);
+        thisTicket.setPriorityCode(3);
+        
+        if (thisUser.getManagerId() > -1) {
+          managerUser = new User();
+          managerUser.setBuildContact(true);
+          managerUser.buildRecord(db, thisUser.getManagerId());
+          thisTicket.setAssignedTo(managerUser.getId());
+          thisTicket.setDepartmentCode(managerUser.getContact().getDepartment());
+        } else {
+          thisTicket.setDepartmentCode(thisUser.getContact().getDepartment());
+        }
+        
+        thisTicket.insert(db);
+      }
+		}
+		catch (Exception e) {
+			errorMessage = e;
+		}
+		finally {
+			this.freeConnection(context, db);
+		}
+
+		addModuleBean(context, "View Users", "Delete User");
+		if (errorMessage == null) {
+			if (recordDisabled) {
+				return ("UserDeleteOK");
+			}
+			else {
+				processErrors(context, thisUser.getErrors());
+				return (executeCommandListUsers(context));
+			}
+		}
+		else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+	}    
+  
+	public String executeCommandEnableUser(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-edit"))) {
+			return ("PermissionError");
+		}
+
+		Exception errorMessage = null;
+		boolean recordEnabled = false;
+		User thisUser = null;
+
+		Connection db = null;
+		try {
+			db = this.getConnection(context);
+			thisUser = new User(db, context.getRequest().getParameter("id"));
+			recordEnabled = thisUser.enable(db);
+		}
+		catch (Exception e) {
+			errorMessage = e;
+		}
+		finally {
+			this.freeConnection(context, db);
+		}
+
+		addModuleBean(context, "View Users", "Enable User");
+		if (errorMessage == null) {
+			if (!recordEnabled) {
+				processErrors(context, thisUser.getErrors());
+			}
+      return (executeCommandListUsers(context));
+		}
+		else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+	}   
+  
+	public String executeCommandDisableUserConfirm(ActionContext context) {
+
+		if (!(hasPermission(context, "admin-users-delete"))) {
+			return ("PermissionError");
+		}
+    
+    Exception errorMessage = null;
+    User thisUser = null;
+    User managerUser = null;
+    
+		Connection db = null;
+		try {
+			db = this.getConnection(context);
+			thisUser = new User();
+      thisUser.setBuildContact(true);
+      thisUser.buildRecord(db, Integer.parseInt(context.getRequest().getParameter("id")));
+      
+      if (thisUser.getManagerId() > -1) {
+        managerUser = new User();
+        managerUser.setBuildContact(true);
+        managerUser.buildRecord(db, thisUser.getManagerId());
+      }
+		}
+		catch (Exception e) {
+			errorMessage = e;
+		}
+		finally {
+			this.freeConnection(context, db);
+		}    
+    
+    addModuleBean(context, "Users", "Disable User");
+		if (errorMessage == null) {
+			/**
+      if (recordDeleted) {
+				return ("UserDeleteOK");
+			}
+			else {
+				processErrors(context, thisUser.getErrors());
+				return (executeCommandListUsers(context));
+			}
+      */
+      
+      context.getRequest().setAttribute("User", thisUser);
+      context.getRequest().setAttribute("ManagerUser", managerUser);
+      return("UserDisableConfirmOK");
+      
+		}
+		else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+
+    /**
+		Exception errorMessage = null;
+		boolean recordDeleted = false;
+		User thisUser = null;
+
+		Connection db = null;
+		try {
+			db = this.getConnection(context);
+			thisUser = new User(db, context.getRequest().getParameter("id"));
+			recordDeleted = thisUser.delete(db);
+		}
+		catch (Exception e) {
+			errorMessage = e;
+		}
+		finally {
+			this.freeConnection(context, db);
+		}
+
+		addModuleBean(context, "View Users", "Delete User");
+		if (errorMessage == null) {
+			if (recordDeleted) {
+				return ("UserDeleteOK");
+			}
+			else {
+				processErrors(context, thisUser.getErrors());
+				return (executeCommandListUsers(context));
+			}
+		}
+		else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+    */
+	}  
 
 
 	/**

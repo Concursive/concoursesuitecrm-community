@@ -9,12 +9,26 @@
 User Details<br>
 <hr color="#BFBFBB" noshade>
 <input type=hidden name="id" value="<%= UserRecord.getId() %>">
+
+
+<dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
 <dhv:permission name="admin-users-edit">
   <input type="button" name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
 </dhv:permission>
-<dhv:permission name="admin-users-delete">  
-  <input type="button" name="action" value="Delete" onClick="document.details.command.value='DeleteUser';confirmSubmit(document.details);">
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%=!(UserRecord.getEnabled())%>">
+<dhv:permission name="accounts-accounts-edit">
+  <input type=button name="action" value="Enable"	onClick="document.details.command.value='EnableUser';document.details.submit()">
 </dhv:permission>
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
+<dhv:permission name="accounts-accounts-edit">
+  <input type="button" name="action" value="Disable" onClick="document.details.command.value='DisableUserConfirm';document.details.submit()">
+</dhv:permission>
+</dhv:evaluate>
+
 <dhv:permission name="admin-users-edit,admin-users-delete">
   <br>
   &nbsp;
@@ -52,9 +66,20 @@ User Details<br>
 </table>
 <br>
 <input type=hidden name="command" value="">
+<dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
 <dhv:permission name="admin-users-edit">
   <input type="button" name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
 </dhv:permission>
-<dhv:permission name="admin-users-delete">  
-  <input type="button" name="action" value="Delete" onClick="document.details.command.value='DeleteUser';confirmSubmit(document.details)">
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%=!(UserRecord.getEnabled())%>">
+<dhv:permission name="accounts-accounts-edit">
+  <input type=button name="action" value="Enable"	onClick="document.details.command.value='EnableUser';document.details.submit()">
 </dhv:permission>
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
+<dhv:permission name="accounts-accounts-edit">
+  <input type="button" name="action" value="Disable" onClick="document.details.command.value='DisableUserConfirm';document.details.submit()">
+</dhv:permission>
+</dhv:evaluate>

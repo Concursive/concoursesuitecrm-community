@@ -28,7 +28,7 @@ View Users<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <dhv:permission name="admin-users-edit,admin-users-delete">
-    <td valign=center align=left bgcolor="#DEE0FA">
+    <td width="8" valign=center align=center bgcolor="#DEE0FA">
       <strong>Action</strong>
     </td>
     </dhv:permission>
@@ -68,8 +68,15 @@ View Users<br>
 %>      
       <tr>
         <dhv:permission name="admin-users-edit,admin-users-delete">
-        <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="admin-users-edit"><a href="/Users.do?command=ModifyUser&id=<%= thisUser.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="admin-users-edit,admin-users-delete" all="true">|</dhv:permission><dhv:permission name="admin-users-delete"><a href="javascript:confirmDelete('/Users.do?command=DeleteUser&id=<%= thisUser.getId() %>');">Del</a></dhv:permission>
+        <td width="8" valign=center align=center nowrap class="row<%= rowid %>">
+          
+          <dhv:evaluate exp="<%=(thisUser.getEnabled())%>">
+          <dhv:permission name="admin-users-edit"><a href="Users.do?command=ModifyUser&id=<%= thisUser.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="admin-users-edit,admin-users-delete" all="true">|</dhv:permission><dhv:permission name="admin-users-delete"><a href="Users.do?command=DisableUserConfirm&id=<%= thisUser.getId() %>&return=list">Disable</a></dhv:permission>
+          </dhv:evaluate>
+          <dhv:evaluate exp="<%=!(thisUser.getEnabled())%>">
+          <dhv:permission name="admin-users-edit"><a href="Users.do?command=EnableUser&id=<%= thisUser.getId() %>&return=list">Enable</a></dhv:permission>
+          </dhv:evaluate>
+        
         </td>
         </dhv:permission>
         <td class="row<%= rowid %>"><font class="columntext1">
