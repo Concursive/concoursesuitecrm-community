@@ -32,7 +32,7 @@ Opportunity Details<br>
       <br>
     <dhv:permission name="contacts-external_contacts-opportunities-add">
       <br>
-      <a href="ExternalContactsOppComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %>">Add a Component</a><br>
+      <a href="ExternalContactsOppComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %><%= addLinkParams(request, "popup|popupType|actionId") %>">Add a Component</a><br>
     </dhv:permission>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 <input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
@@ -108,7 +108,7 @@ Opportunity Details<br>
 <br>
 <dhv:pagedListControl object="ComponentListInfo"/>
 &nbsp;<br>
-<dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Rename Opportunity" onClick="javascript:window.location.href='ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %>';"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Rename Opportunity" onClick="javascript:window.location.href='ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %><%= addLinkParams(request, "popup|popupType|actionId") %>';"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete Opportunity" onClick="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= ContactDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 </td>
 </tr>

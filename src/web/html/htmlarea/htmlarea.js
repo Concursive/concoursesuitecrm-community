@@ -53,12 +53,11 @@ HTMLArea.Config = function () {
 	this.toolbar = [ [ "fontname", "space" ],
 			 [ "fontsize", "space" ],
 			 [ "formatblock", "space"],
-			 [ "bold", "italic", "underline", "separator" ],
-			 [ "strikethrough", "subscript", "superscript", "linebreak" ],
+			 [ "bold", "italic", "underline", "linebreak" ],
 			 [ "justifyleft", "justifycenter", "justifyright", "justifyfull", "separator" ],
 			 [ "orderedlist", "unorderedlist", "outdent", "indent", "separator" ],
 			 [ "forecolor", "backcolor", "textindicator", "separator" ],
-       [ "horizontalrule", "createlink", "insertimage", "inserttable", "htmlmode", "separator" ],
+       [ "horizontalrule", "htmlmode", "separator" ],
 			 [ "popupeditor" ]
 		];
 
@@ -1298,4 +1297,8 @@ HTMLArea.prototype.popupURL = function(file) {
 // Local variables: //
 // c-basic-offset:8 //
 // indent-tabs-mode:t //
+//following features were removed and are archived here for future integration
+// "separator", "strikethrough", "subscript", "superscript","createlink", "insertimage", "inserttable"
+ 
+
 // End: //

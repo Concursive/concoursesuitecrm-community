@@ -105,6 +105,6 @@ Upload New Version<br>
   <input type="hidden" name="fid" value="<%= FileItem.getId() %>">
 </td>
 </tr>
-</form>
 </table>
+</form>
 </body>

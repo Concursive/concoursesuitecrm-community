@@ -313,4 +313,5 @@ Personal Information<br>
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 </dhv:permission>
+<input type="hidden" name="accessType" value="<%= EmployeeBean.getAccessType() %>">
 </form>

@@ -47,6 +47,8 @@ public class OpportunityHeader extends GenericBean {
   private int modifiedBy = -1;
 
   private int componentCount = 0;
+  //count of components owned by a specific user
+  private int ownerComponentCount = 0;
   private boolean buildComponentCount = true;
   private double totalValue = 0;
   private FileItemList files = new FileItemList();
@@ -146,6 +148,26 @@ public class OpportunityHeader extends GenericBean {
    */
   public int getComponentCount() {
     return componentCount;
+  }
+
+
+  /**
+   *  Sets the ownerComponentCount attribute of the OpportunityHeader object
+   *
+   *@param  ownerComponentCount  The new ownerComponentCount value
+   */
+  public void setOwnerComponentCount(int ownerComponentCount) {
+    this.ownerComponentCount = ownerComponentCount;
+  }
+
+
+  /**
+   *  Gets the ownerComponentCount attribute of the OpportunityHeader object
+   *
+   *@return    The ownerComponentCount value
+   */
+  public int getOwnerComponentCount() {
+    return ownerComponentCount;
   }
 
 
@@ -1150,17 +1172,31 @@ public class OpportunityHeader extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Retrieves count of all components
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void retrieveComponentCount(Connection db) throws SQLException {
+    retrieveComponentCount(db, -1);
+  }
+
+
+  /**
+   *  Retrieves count of all components
+   *  Optionally retrieves only count of components owned by a specific user
+   *
+   *@param  db                Description of the Parameter
+   *@param  ownerId           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void retrieveComponentCount(Connection db, int ownerId) throws SQLException {
     int count = 0;
+
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) as componentcount " +
         "FROM opportunity_component oc " +
-        "WHERE oc.opp_id = ?");
+        "WHERE oc.opp_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1169,22 +1205,56 @@ public class OpportunityHeader extends GenericBean {
     rs.close();
     pst.close();
     this.setComponentCount(count);
+
+    if (ownerId > -1) {
+      pst = db.prepareStatement(
+          "SELECT COUNT(*) as componentcount " +
+          "FROM opportunity_component oc " +
+          "WHERE oc.opp_id = ? " +
+          "AND oc.owner = ? ");
+      pst.setInt(1, id);
+      pst.setInt(2, ownerId);
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        count = rs.getInt("componentcount");
+      }
+      rs.close();
+      pst.close();
+      this.setOwnerComponentCount(count);
+    }
   }
 
 
   /**
-   *  Description of the Method
+   *  Builds the total value of the components.<br>
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void buildTotal(Connection db) throws SQLException {
+    buildTotal(db, -1);
+  }
+
+
+  /**
+   *  Builds the total value of the components.<br>
+   *  Optionally builds count only for components owned by a specified user
+   *
+   *@param  db                Description of the Parameter
+   *@param  ownerId           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildTotal(Connection db, int ownerId) throws SQLException {
     double total = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT sum(guessvalue) as total " +
         "FROM opportunity_component oc " +
-        "WHERE oc.opp_id = ?");
+        "WHERE oc.opp_id = ? " +
+        (ownerId != -1 ? "AND oc.owner = ? " : ""));
     pst.setInt(1, id);
+    if (ownerId != -1) {
+      pst.setInt(2, ownerId);
+    }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       total = rs.getDouble("total");

@@ -56,10 +56,16 @@ function addValues() {
 	var operatorList = document.searchForm.operatorSelect;
 	var searchList = document.searchForm.searchCriteria;
 	var count = 0;
-  if (document.searchForm.searchValue.value.length == 0) {
+  var fieldType = "select";
+  if (document.searchForm.fieldSelect.selectedIndex != 7 && document.searchForm.fieldSelect.selectedIndex != 8) {
+    fieldType = "text";
+  }
+  
+  if (fieldType == "text" && document.searchForm.searchValue.value.length == 0) {
     alert("You must specify search text in order to add criteria.");
     return false;
   }
+  
 	fieldName = fieldList.options[fieldList.selectedIndex].text;
 	fieldID = fieldList.options[fieldList.selectedIndex].value;
 	operatorName = operatorList.options[operatorList.selectedIndex].text;
@@ -75,6 +81,15 @@ function addValues() {
 	} else {
 		var newCriteria = fieldID + "|" + operatorID + "|" + typeValue + "|" + document.searchForm.contactSource.options[document.searchForm.contactSource.selectedIndex].value;
 	}
+  
+  for (j=0; j<searchCriteria.length; j++) {
+    if(newCriteria.toLowerCase() == searchCriteria[j].toLowerCase()){
+      alert('Entry already exists');
+      return;
+    }
+  }
+  
+  
 	if (searchList.length == 0 || searchList.options[0].value == "-1"){
 		searchList.options[0] = new Option(newOption)
 	}	else {

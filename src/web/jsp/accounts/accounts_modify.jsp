@@ -16,6 +16,7 @@
 <%@ include file="../initPageIsManagerOf.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
@@ -196,7 +197,16 @@
     for (int i=1; i<=(OrgDetails.getPhoneNumberList().size()+1); i++) {
 %>
   <dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
-      message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+      message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters\r\n";
+      formTest = false;
+    }
+<%
+    }
+
+    for (int i=1; i<=(OrgDetails.getEmailAddressList().size()+1); i++) {
+%>
+  <dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkEmail(form.email<%=i%>address.value)) { 
+      message += "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
     }
 <%

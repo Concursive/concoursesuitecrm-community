@@ -86,6 +86,22 @@ function updateOperators(){
 	}
 } // end updateOperators
 //  End -->
+
+function checkForm(form) {
+  formTest = true;
+  message = "";
+  if (form.groupName.value == "") {
+    message += "- Group Name is required\r\n";
+    formTest = false;
+  }
+  if (formTest == false) {
+    alert("Criteria could not be processed, please check the following:\r\n\r\n" + message);
+    return false;
+  } 
+  saveValues();
+  return true;
+}
+
 </SCRIPT>
 <body onLoad="javascript:document.forms[0].groupName.focus()">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>

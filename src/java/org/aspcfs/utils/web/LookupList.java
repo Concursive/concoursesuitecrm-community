@@ -393,6 +393,12 @@ public class LookupList extends HtmlSelect implements SyncableList {
   }
 
 
+  /**
+   *  Gets the htmlSelectObj attribute of the LookupList object
+   *
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelectObj value
+   */
   public HtmlSelect getHtmlSelectObj(int defaultKey) {
     HtmlSelect thisSelect = new HtmlSelect();
     thisSelect.setSelectSize(selectSize);
@@ -427,8 +433,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
     }
     return thisSelect;
   }
-  
-  
+
+
   /**
    *  Gets the HtmlSelect attribute of the ContactEmailTypeList object
    *
@@ -764,14 +770,34 @@ public class LookupList extends HtmlSelect implements SyncableList {
    *@since
    */
   public void addItem(int tmp1, String tmp2) {
-    LookupElement thisElement = new LookupElement();
-    thisElement.setCode(tmp1);
-    thisElement.setDescription(tmp2);
-    if (this.size() > 0) {
-      this.add(0, thisElement);
-    } else {
-      this.add(thisElement);
+    if (!exists(tmp1)) {
+      LookupElement thisElement = new LookupElement();
+      thisElement.setCode(tmp1);
+      thisElement.setDescription(tmp2);
+      if (this.size() > 0) {
+        this.add(0, thisElement);
+      } else {
+        this.add(thisElement);
+      }
     }
+  }
+
+
+  /**
+   *  Checks to see if the entry is already in the list
+   *
+   *@param  tmp1  Description of the Parameter
+   *@return       Description of the Return Value
+   */
+  public boolean exists(int tmp1) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (thisElement.getCode() == tmp1) {
+        return true;
+      }
+    }
+    return false;
   }
 
 

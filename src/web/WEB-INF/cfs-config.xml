@@ -35,6 +35,7 @@
     <forward name="ViewOK" resource="/communications/display_active_survey.jsp" layout="styleNoSession"/>
     <forward name="InsertOK" resource="/communications/survey_thanks.jsp" layout="styleNoSession"/>
     <forward name="NotFoundError" resource="/communications/survey_notfound.jsp" layout="styleNoSession"/>
+    <forward name="InvalidRequestError" resource="/communications/survey_invalid_request.jsp" layout="style"/>
   </action>
 	
   <action name="ProcessMessage" class="org.aspcfs.modules.communications.actions.ProcessMessage">
@@ -116,7 +117,7 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="NewTaskPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=MyTasks"/>
     <forward name="PrepareTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
-    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+    <forward name="InsertTaskPopupOK" resource="/closepopupandreload.jsp"/>
   </action>
   
   <action name="MyTasksForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
@@ -165,8 +166,9 @@
     <forward name="InsertCallPopupOK" resource="/closepopupandreload.jsp"/>
     <forward name="AddTicketOK" resource="/actionlist/action_contacts_addticket.jsp" layout="style"/>
     <forward name="InsertTicketOK" resource="/closepopupandreload.jsp"/>
-    <forward name="AddTaskOK" resource="/actionlist/action_contacts_addtask.jsp" layout="style"/>
-    <forward name="InsertTaskOK" resource="/closepopupandreload.jsp"/>
+    <forward name="NewTaskPopupOK" resource="/TaskForm.do?command=Prepare"/>
+    <forward name="PrepareTaskPopupOK" resource="/actionlist/action_contacts_addtask.jsp" layout="style"/>
+    <forward name="InsertTaskPopupOK" resource="/closepopupandreload.jsp"/>
     <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;entity=contact"/>
     <forward name="PrepareAddOppOK" resource="/actionlist/action_contacts_addopp.jsp" layout="style"/>
     <forward name="DetailsOppOK" resource="/closepopupandreload.jsp"/>
@@ -263,7 +265,7 @@
   
   <action name="ExternalContactsOppComponents" class="org.aspcfs.modules.contacts.actions.ExternalContactsOpps">
     <bean name="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
-    <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;entity=contact"/>
+    <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=ExternalContactsOppComponents&amp;entity=contact"/>
     <forward name="PrepareAddOppOK" resource="/contacts/companydirectory_addoppcomponent.jsp" layout="nav"/>
     <forward name="PrepareModifyOppOK" resource="/contacts/companydirectory_modifycomponent.jsp" layout="nav"/>
     <forward name="DetailsOppOK" resource="/contacts/companydirectory_detailsopp.jsp" layout="nav"/>
@@ -367,7 +369,8 @@
     <forward name="DetailsComponentOK" resource="/pipeline/leads_detailsoppcomponent.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="OppListOK" resource="/pipeline/LeadsViewOpp.jsp" layout="nav"/>
-    <forward name="PopupModifyOK" resource="/pipeline/leads_modifycomponent.jsp" layout="style"/>
+    <forward name="PopupModifyOK"  resource="/OpportunityForm.do?command=Prepare&amp;actionSource=LeadsComponents"/>
+    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent.jsp" layout="style"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ComponentModifyOK" resource="/pipeline/leads_modifycomponent.jsp" layout="nav"/>
     <forward name="ComponentUpdateOK" resource="LeadsComponents.do?command=DetailsComponent"/>
@@ -976,6 +979,7 @@
     <forward name="InsertTicketOK" resource="/closepopup.jsp"/>
     <forward name="NewTaskPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=GlobalItem"/>
     <forward name="PrepareTaskPopupOK" resource="/global/global_addtask.jsp" layout="style"/>
+    <forward name="InsertTaskPopupOK" resource="/closepopup.jsp"/>
     <forward name="PopupCloseOK" resource="/closepopup.jsp"/>
   </action>
   

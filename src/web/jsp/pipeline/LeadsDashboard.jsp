@@ -59,9 +59,9 @@ Dashboard<br>
               int prevId =  Integer.parseInt((String)request.getSession().getAttribute("leadspreviousId"));
               %>
             <input type="hidden" name="oid" value="<%=((String)request.getSession().getAttribute("leadsoverride"))%>">
-            <a href="Leads.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("leadspreviousId"))%><%= PipelineViewpointInfo.getVpUserId() == prevId ? "&reset=true" : ""%>">Up One Level</a> |
+            <a href="Leads.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("leadspreviousId"))%><%= PipelineViewpointInfo.getVpUserId() == prevId || ((String)request.getSession().getAttribute("leadspreviousId")).equals(String.valueOf(User.getUserId())) ? "&reset=true" : ""%>">Up One Level</a> |
             <a href="Leads.do?command=Dashboard&reset=true">Back to My Dashboard</a>
-            <%} else {%>
+            <% } else {%>
                 &nbsp;
             <%}%>
           </td>
@@ -129,7 +129,7 @@ Dashboard<br>
           <td width="100%" class="row<%= rowid %>" valign="center">
             <a href="Leads.do?command=DetailsOpp&headerId=<%= thisHeader.getId() %>&return=dashboard&reset=true"><%= toHtml(thisHeader.getDisplayName()) %>:
             <%= toHtml(thisHeader.getDescription()) %></a>
-            (<%= thisHeader.getComponentCount() %>)
+            (<%= thisHeader.getOwnerComponentCount() %>/<%= thisHeader.getComponentCount() %>)
             <dhv:evaluate if="<%= thisHeader.hasFiles() %>">
               <%= thisFile.getImageTag() %>
             </dhv:evaluate>

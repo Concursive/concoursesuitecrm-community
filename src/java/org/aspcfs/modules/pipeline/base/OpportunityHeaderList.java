@@ -42,6 +42,8 @@ public class OpportunityHeaderList extends ArrayList {
   private boolean queryClosedOnly = false;
 
   private boolean buildTotalValues = false;
+  //gets the component count and total value owned by the specificied user
+  private int componentsOwnedByUser = -1;
 
 
   /**
@@ -127,6 +129,26 @@ public class OpportunityHeaderList extends ArrayList {
    */
   public void setBuildTotalValues(boolean buildTotalValues) {
     this.buildTotalValues = buildTotalValues;
+  }
+
+
+  /**
+   *  Sets the componentsOwnedByUser attribute of the OpportunityHeaderList object
+   *
+   *@param  componentsOwnedByUser  The new componentsOwnedByUser value
+   */
+  public void setComponentsOwnedByUser(int componentsOwnedByUser) {
+    this.componentsOwnedByUser = componentsOwnedByUser;
+  }
+
+
+  /**
+   *  Gets the componentsOwnedByUser attribute of the OpportunityHeaderList object
+   *
+   *@return    The componentsOwnedByUser value
+   */
+  public int getComponentsOwnedByUser() {
+    return componentsOwnedByUser;
   }
 
 
@@ -543,9 +565,10 @@ public class OpportunityHeaderList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       OpportunityHeader thisOppHeader = (OpportunityHeader) i.next();
-      thisOppHeader.retrieveComponentCount(db);
+      //set the ownerId if the count and total value of only the components owned by a specific user is needed
+      thisOppHeader.retrieveComponentCount(db, componentsOwnedByUser);
       if (buildTotalValues) {
-        thisOppHeader.buildTotal(db);
+        thisOppHeader.buildTotal(db, componentsOwnedByUser);
       }
       thisOppHeader.buildFiles(db);
     }
@@ -653,7 +676,6 @@ public class OpportunityHeaderList extends ArrayList {
           "x.enteredby IN (" + ownerIdRange + ") ) " +
           ") ");
     }
-    
   }
 
 
@@ -757,6 +779,5 @@ public class OpportunityHeaderList extends ArrayList {
     return isOwner;
   }
 }
-
 
 

@@ -7,6 +7,7 @@
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
@@ -28,6 +29,10 @@
     message = "";
     if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) ) { 
       message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+      formTest = false;
+    }
+    if ((!checkEmail(form.email1address.value)) || (!checkEmail(form.email2address.value))){
+      message += "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
     }
     if (formTest == false) {
@@ -110,7 +115,7 @@
       	<input type="radio" name="contactcategory" value="3" onChange="javascript:updateCategoryInfo('employee');" <%= ContactDetails.getOrgId() == -1 ? " checked" : ""%>>Employee<br>
 	<input type="hidden" name="source" value="<%= request.getParameter("source") %>">
       <% }else{ %>
-        <input type="radio" name="contactcategory" value="1" onclick="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
+        <input type="radio" name="contactcategory" value="1" onChange="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
       <% } %>
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr>

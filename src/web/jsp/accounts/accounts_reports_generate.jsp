@@ -105,13 +105,13 @@ Generate New Report<br>
         <option value="url" >URL</option>
         <option value="ticker" >Ticker</option>
         <option value="employees" >Employees</option>
-        <option value="o.entered" >Entered</option>
-        <option value="o.enteredBy" >Entered By</option>
-        <option value="o.modified" >Modified</option>
-        <option value="o.modifiedBy" >Modified By</option>
-        <option value="o.owner" >Owner</option>
+        <option value="entered" >Entered</option>
+        <option value="enteredBy" >Entered By</option>
+        <option value="modified" >Modified</option>
+        <option value="modifiedBy" >Modified By</option>
+        <option value="owner" >Owner</option>
         <option value="contractEndDate" >Contract End Date</option>
-        <option value="o.notes" >Notes</option>
+        <option value="notes" >Notes</option>
       </select>
     </td>
     <td width="25">

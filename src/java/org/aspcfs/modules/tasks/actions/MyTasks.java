@@ -34,7 +34,7 @@ public final class MyTasks extends CFSModule {
    */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-tasks-view"))) {
-      return ("DefaultError");
+      return ("PermissionError");
     }
     return (this.executeCommandListTasks(context));
   }
@@ -47,6 +47,9 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandListTasks(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
+      return ("PermissionError");
+    }
     Exception errorMessage = null;
     PagedListInfo taskListInfo = this.getPagedListInfo(context, "TaskListInfo");
     Contact thisContact = null;
@@ -99,8 +102,8 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandNew(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
-      return ("DefaultError");
+    if (!(hasPermission(context, "myhomepage-tasks-add"))) {
+      return ("PermissionError");
     }
     addModuleBean(context, "My Tasks", "New Task");
     return this.getReturn(context, "NewTask");
@@ -118,8 +121,8 @@ public final class MyTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     int id = -1;
-    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
-      return ("DefaultError");
+    if (!(hasPermission(context, "myhomepage-tasks-edit"))) {
+      return ("PermissionError");
     }
     context.getSession().removeAttribute("contactListInfo");
     if (context.getRequest().getParameter("id") != null) {
@@ -163,8 +166,8 @@ public final class MyTasks extends CFSModule {
     Connection db = null;
     int id = -1;
     boolean done = false;
-    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
-      return ("DefaultError");
+    if (!(hasPermission(context, "myhomepage-tasks-add"))) {
+      return ("PermissionError");
     }
 
     if (context.getRequest().getParameter("id") != null) {
@@ -186,11 +189,7 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (context.getRequest().getParameter("popup") != null) {
-        return ("PopupCloseOK");
-      } else {
-        return ("InsertTaskOK");
-      }
+        return this.getReturn(context, "InsertTask");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -207,8 +206,8 @@ public final class MyTasks extends CFSModule {
   public String executeCommandUpdate(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
-    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
-      return ("DefaultError");
+    if (!(hasPermission(context, "myhomepage-tasks-edit"))) {
+      return ("PermissionError");
     }
 
     String id = context.getRequest().getParameter("id");
@@ -257,8 +256,8 @@ public final class MyTasks extends CFSModule {
     HtmlDialog htmlDialog = new HtmlDialog();
 
     int id = -1;
-    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
-      return ("DefaultError");
+    if (!(hasPermission(context, "myhomepage-tasks-delete"))) {
+      return ("PermissionError");
     }
 
     if (context.getRequest().getParameter("id") != null) {
@@ -311,8 +310,8 @@ public final class MyTasks extends CFSModule {
     Task thisTask = null;
     int id = -1;
     int action = -1;
-    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
-      return ("DefaultError");
+    if (!(hasPermission(context, "myhomepage-tasks-delete"))) {
+      return ("PermissionError");
     }
 
     if (context.getRequest().getParameter("id") != null) {

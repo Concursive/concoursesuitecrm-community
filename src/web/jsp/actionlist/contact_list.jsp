@@ -6,7 +6,7 @@
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
-<%@ include file="contact_list_menu.html" %>
+<%@ include file="contact_list_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript">
@@ -37,9 +37,12 @@
 <a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">My Action Lists</a> >
 Action Contacts<br>
 <hr color="#BFBFBB" noshade>
+<dhv:permission name="myhomepage-action-lists-edit">
 <a href="javascript:window.location.href='MyActionContacts.do?command=Prepare&actionId=<%= request.getParameter("actionId") %>&return=details&params=' + escape('filters=all|mycontacts|accountcontacts');"  onMouseOver="window.status='Add Contacts To List';return true;"  onMouseOut="window.status='';return true;">Add Contacts to List</a>&nbsp;
 <a href="MyActionContacts.do?command=Modify&actionId=<%= request.getParameter("actionId") %>">Modify List</a>
-<br><br>
+<br>
+</dhv:permission>
+<br>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="MyActionContacts.do?command=List&actionId=<%= request.getParameter("actionId") %>">
@@ -63,9 +66,11 @@ Action Contacts<br>
     </th>
   </tr>
   <tr>
+  <dhv:permission name="myhomepage-action-lists-edit">
     <th style="text-align: center;">
       <strong>Action</strong>
     </th>
+  </dhv:permission>
     <th>
       <strong>Name</strong>
     </th>
@@ -87,6 +92,7 @@ Action Contacts<br>
       ActionContact thisContact = (ActionContact) j.next();
 %>
   <tr class="row<%= rowid %>">
+   <dhv:permission name="myhomepage-action-lists-edit">
     <td valign="top">
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
       <%-- To display the menu, pass the actionId, accountId and the contactId--%>
@@ -95,19 +101,26 @@ Action Contacts<br>
          onmouseout="out(0, <%= i %>)"><img 
         src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
+   </dhv:permission>
     <td nowrap valign="top">
-    <% 
-      if (thisContact.getComplete()) {
-%>
-          <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|0','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');" onMouseOver="this.style.color='blue';window.status='View Details';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box-checked.gif" name="image<%= thisContact.getId() %>" id="1" border="0" title="Click to change" align="absmiddle"></a>
-<% 
-      } else {
-%>
-          <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|1','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');"><img src="images/box.gif" name="image<%= thisContact.getId() %>" id="0" border="0" title="Click to change" align="absmiddle"></a>
-<%
-      }
-%>
-      <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&actionId=<%= thisContact.getId() %>&id=<%= thisContact.getContact().getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"><%= toHtml(thisContact.getContact().getNameLastFirst()) %></a>
+    <dhv:permission name="myhomepage-action-lists-edit">
+      <% 
+        if (thisContact.getComplete()) {
+      %>
+        <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|0','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');" onMouseOver="this.style.color='blue';window.status='View Details';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box-checked.gif" name="image<%= thisContact.getId() %>" id="1" border="0" title="Click to change" align="absmiddle"></a>
+      <% 
+        } else {
+      %>
+        <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|1','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');"><img src="images/box.gif" name="image<%= thisContact.getId() %>" id="0" border="0" title="Click to change" align="absmiddle"></a>
+      <%
+        }
+      %>
+    </dhv:permission>
+    <dhv:permission name="myhomepage-action-lists-edit">
+      <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&actionId=<%= thisContact.getId() %>&id=<%= thisContact.getContact().getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');">
+    </dhv:permission>
+      <%= toHtml(thisContact.getContact().getNameLastFirst()) %>
+     <dhv:permission name="myhomepage-action-lists-edit"></a></dhv:permission>
     </td>
     <td valign="top" width="100%">
     <% if(thisContact.getMostRecentItem().getId() > 0){ %>

@@ -24,6 +24,7 @@
       <permission name="myhomepage-profile-personal" attributes="v-e-" description="Personal Information"/>
       <permission name="myhomepage-profile-settings" attributes="v-e-" description="Settings" enabled="false"/>
       <permission name="myhomepage-profile-password" attributes="--e-" description="Password"/>
+      <permission name="myhomepage-action-lists" attributes="vaed" description="My Action Lists"/>
     </category>
     <category id="2" name="General Contacts" folders="true" lookups="true">
       <folder constantId="2" description="Contacts"/>
@@ -91,6 +92,7 @@
       <lookup constantId="3" class="lookupList" table="ticket_priority" description="Ticket Priority"/>
       <permission name="tickets" attributes="v---" description="Access to Ticket module"/>
       <permission name="tickets-tickets" attributes="vaed" description="Ticket Records"/>
+      <permission name="tickets-reports" attributes="vaed" description="Ticket Reports"/>
     </category>
     <category id="9" name="Admin" folders="false" lookups="false">
       <permission name="admin" attributes="v---" description="Access to Admin module"/>

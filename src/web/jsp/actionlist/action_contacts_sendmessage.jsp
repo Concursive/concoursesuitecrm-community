@@ -35,8 +35,8 @@ Start by choosing an existing message or create a new one:<br>
 <SELECT SIZE="1" name="listView" onChange="javascript:updateMessageList();">
   <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>My Messages</OPTION>
   <OPTION VALUE="all"<dhv:evaluate if="<%= "all".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>All Messages</OPTION>
-  <OPTION VALUE="hierarchy"<dhv:evaluate if="<%= "hierarchy".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>>Controlled Hierarchy Messages</OPTION>
-  <OPTION VALUE="personal"<dhv:evaluate if="<%= "personal".equals((String) request.getAttribute("listView")) %>"> selected</dhv:evaluate>>Personal Messages</OPTION>
+  <OPTION VALUE="hierarchy"<dhv:evaluate if="<%= "hierarchy".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>Controlled Hierarchy Messages</OPTION>
+  <OPTION VALUE="personal"<dhv:evaluate if="<%= "personal".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>Personal Messages</OPTION>
   <OPTION VALUE="new"<dhv:evaluate if="<%= "new".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>New Message</OPTION>
 </SELECT>
 <%if(!"new".equals(request.getParameter("listView"))){ %>

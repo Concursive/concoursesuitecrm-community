@@ -69,7 +69,7 @@ My Mailbox<br>
 %>      
   <tr>
     <td valign="center" nowrap class="row<%= rowid %>">
-      <a href='javascript:window.location.href="MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%= thisNote.getId() %>"'>Fwd</a>|<a href="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
+      <a href='javascript:window.location.href="MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%= thisNote.getId() %>&return=list"'>Fwd</a>|<a href="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
     </td>
   <% if (InboxInfo.getListView().equalsIgnoreCase("new")){ %>
 		<td valign="center" nowrap class="row<%= rowid %>">

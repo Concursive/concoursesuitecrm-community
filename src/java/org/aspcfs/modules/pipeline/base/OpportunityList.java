@@ -792,10 +792,10 @@ public class OpportunityList extends ArrayList {
       sqlFilter.append("AND oc.stage = ? ");
     }
     if (queryOpenOnly) {
-      sqlFilter.append("AND oc.closed IS NULL ");
+      sqlFilter.append("AND x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.opp_id = x.opp_id AND oc.closed IS NULL) ");
     }
     if (queryClosedOnly) {
-      sqlFilter.append("AND oc.closed IS NOT NULL ");
+      sqlFilter.append("AND x.opp_id NOT IN (SELECT opp_id from opportunity_component oc where oc.opp_id = x.opp_id AND oc.closed IS NULL) ");
     }
     if (typeId > 0) {
       sqlFilter.append("AND oc.id IN (select ocl.opp_id from opportunity_component_levels ocl where ocl.type_id = ?) ");

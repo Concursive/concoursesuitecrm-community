@@ -176,7 +176,7 @@
       Low Estimate
     </td>
     <td>
-      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "low" : "component_low" %>" value="<%= toHtmlValue(ComponentDetails.getLowAmount()) %>">
+      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "low" : "component_low" %>" value="<%= toHtmlValue(ComponentDetails.getLowAmount()) %>"><%= showAttribute(request, "lowHighError") %>
     </td>
   </tr>
   <tr class="containerBody">

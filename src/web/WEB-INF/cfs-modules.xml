@@ -204,8 +204,8 @@
     
     <submenu name="View Opportunities">
       <permission value="pipeline-reports-view"/>
-      <long_html value="View Opportunities"/>
-      <short_html value="View&lt;br&gt;Opportunities"/>
+      <long_html value="View Components"/>
+      <short_html value="View&lt;br&gt;Components"/>
       <link value="Leads.do?command=ViewOpp"/>
     </submenu>
     
@@ -508,7 +508,7 @@
       <permission value="tickets-tickets-view"/>
       <long_html value="Search Tickets"/>
       <short_html value="Search&lt;br&gt;Tickets"/>
-      <link value="TroubleTickets.do?command=SearchTickets"/>
+      <link value="TroubleTickets.do?command=SearchTicketsForm"/>
     </submenu>
     
     <submenu name="-">

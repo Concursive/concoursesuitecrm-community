@@ -18,6 +18,8 @@ insert into lookup_access_types (link_module_id, description, default_item, leve
 ALTER TABLE contact ADD COLUMN access_type INT;
 ALTER TABLE contact ADD FOREIGN KEY (access_type) REFERENCES lookup_access_types(code); 
 UPDATE contact SET access_type = lookup_access_types.code WHERE lookup_access_types.description = 'Personal' AND lookup_access_types.link_module_id = 626030330 AND contact.personal = true;
+UPDATE contact SET access_type = lookup_access_types.code WHERE lookup_access_types.description = 'Public' AND lookup_access_types.link_module_id = 626030331 AND contact.org_id > -1;
+UPDATE contact SET access_type = lookup_access_types.code WHERE lookup_access_types.description = 'Controlled-Hierarchy' AND lookup_access_types.link_module_id = 626030330 AND contact.org_id IS NULL AND contact.personal = false;
 
 ALTER TABLE contact DROP COLUMN personal;
 

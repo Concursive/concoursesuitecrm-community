@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, org.aspcfs.utils.web.HtmlSelect" %>
 <%@ page import="org.aspcfs.modules.pipeline.base.*" %>
 <%@ page import="com.zeroio.iteam.base.*" %>
 <%@ page import="org.aspcfs.modules.pipeline.beans.OpportunityBean" %>
@@ -8,6 +8,7 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <a href="Leads.do">Pipeline Management</a> >
@@ -33,6 +34,12 @@ View Opportunities<br>
       </select>
 			<% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
       <%=TypeSelect.getHtmlSelect("listFilter1", OpportunityListInfo.getFilterKey("listFilter1"))%>
+      &nbsp;Owner: 
+      <% UserList.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); 
+         HtmlSelect userSelect = UserList.getHtmlSelectObj("listFilter2", OpportunityListInfo.getFilterKey("listFilter2"));
+         userSelect.addItem(-1, "All Users");
+      %>
+      <%= userSelect.getHtml("listFilter2", OpportunityListInfo.getFilterKey("listFilter2")) %>
     </td>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityListInfo"/>

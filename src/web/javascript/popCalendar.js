@@ -19,10 +19,10 @@ function popCalendar(formname, element) {
   }
   */
   
-  var posx = (screen.width - 190)/2;
+  var posx = (screen.width - 200)/2;
   var posy = (screen.height - 200)/2;
   
-  var newwin=window.open(filename, 'popcalendar', 'WIDTH=190,HEIGHT=200,RESIZABLE=yes,SCROLLBARS=no,STATUS=0,LEFT=' + posx + ',TOP=' + posy + ',screenx=' + posx + ',screeny=' + posy);
+  var newwin=window.open(filename, 'popcalendar', 'WIDTH=210,HEIGHT=200,RESIZABLE=yes,SCROLLBARS=no,STATUS=0,LEFT=' + posx + ',TOP=' + posy + ',screenx=' + posx + ',screeny=' + posy);
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;

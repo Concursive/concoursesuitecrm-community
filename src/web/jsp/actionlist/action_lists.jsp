@@ -6,7 +6,10 @@
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 My Action Lists<br>
 <hr color="#BFBFBB" noshade>
-<a href="javascript:window.location.href='MyActionLists.do?command=Add&return=list&params=' + escape('filters=all|mycontacts|accountcontacts');">New Action List</a><br><br>
+<dhv:permission name="myhomepage-action-lists-add">
+<a href="javascript:window.location.href='MyActionLists.do?command=Add&return=list&params=' + escape('filters=all|mycontacts|accountcontacts');">Add a Action List</a><br>
+</dhv:permission>
+<br>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">
@@ -25,9 +28,11 @@ My Action Lists<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
+    <dhv:permission name="myhomepage-action-lists-edit, myhomepage-action-lists-delete">
     <th rowspan="2" valign="middle">
       <strong>Action</strong>
     </th>
+    </dhv:permission>
     <th rowspan="2" valign="middle" width="100%">
       <strong><a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>&column=al.description">Name</a></strong>
       <%= ActionListInfo.getSortIcon("al.description") %>
@@ -57,9 +62,13 @@ My Action Lists<br>
       ActionList thisList = (ActionList) j.next();
 %>
   <tr class="row<%= rowid %>">
+  <dhv:permission name="myhomepage-action-lists-edit, myhomepage-action-lists-delete"> 
     <td>
-      <a href="javascript:window.location.href='MyActionLists.do?command=Modify&id=<%= thisList.getId() %>';">Edit</a>|<a href="javascript:popURLReturn('MyActionLists.do?command=ConfirmDelete&id=<%= thisList.getId() %>&popup=true&linkModuleId=<%= toHtmlValue(request.getParameter("linkModuleId")) %>','MyActionLists.do?command=List', 'Delete_message','320','200','yes','no');">Del</a>
+     <dhv:permission name="myhomepage-action-lists-edit">
+      <a href="javascript:window.location.href='MyActionLists.do?command=Modify&id=<%= thisList.getId() %>';">Edit</a> </dhv:permission><dhv:permission name="myhomepage-action-lists-delete">|<a href="javascript:popURLReturn('MyActionLists.do?command=ConfirmDelete&id=<%= thisList.getId() %>&popup=true&linkModuleId=<%= toHtmlValue(request.getParameter("linkModuleId")) %>','MyActionLists.do?command=List', 'Delete_message','320','200','yes','no');">Del</a>
+      </dhv:permission>
     </td>
+    </dhv:permission>
     <td width="100%">
       <a href="MyActionContacts.do?command=List&actionId=<%= thisList.getId() %>&reset=true"><%= toHtmlValue(thisList.getDescription()) %></a>
     </td>

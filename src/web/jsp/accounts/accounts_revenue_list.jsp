@@ -56,6 +56,12 @@ Revenue<br>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=amount">Amount</a></strong>
     <%= RevenueListInfo.getSortIcon("amount") %>
   </th>
+  <dhv:evaluate if="<%= "all".equals(RevenueListInfo.getListView()) %>">
+  <th align="center" nowrap>
+    <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=owner">Owner</a></strong>
+    <%= RevenueListInfo.getSortIcon("owner") %>
+  </th>
+  </dhv:evaluate>
 </tr>
 <%
 	Iterator j = RevenueList.iterator();
@@ -83,11 +89,16 @@ Revenue<br>
       <td valign="center" align="right" class="row<%= rowid %>">
         $<%=thisRevenue.getAmountCurrency()%>
       </td>
+      <dhv:evaluate if="<%= "all".equals(RevenueListInfo.getListView()) %>">
+      <td valign="center" align="right" class="row<%= rowid %>">
+        <dhv:username id="<%= thisRevenue.getOwner()%>" />
+      </td>
+      </dhv:evaluate>
 		</tr>
 <%}%>
 <%} else {%>
 		<tr class="containerBody">
-      <td colspan="5">
+      <td colspan="<%= "all".equals(RevenueListInfo.getListView()) ? "7" : "6" %>">
         No revenue found.
       </td>
     </tr>

@@ -82,13 +82,22 @@ View Contacts<br>
             <%}%>
           </td>
         </dhv:permission>
-        <td class="row<%= rowid %>" nowrap>
+        <td class="row<%= rowid %>" width="10" nowrap>
+          <% if(!"".equals(toString(thisContact.getNameLastFirst()))){ %>
           <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
           <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
           <dhv:permission name="accounts-view,accounts-accounts-view"><%= ((thisContact.getOrgId() > 0 )?"<a href=\"Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[Account]</a>":"")%></dhv:permission>
+          <% }else{ %>
+            &nbsp;
+          <%}%>
         </td>
         <td class="row<%= rowid %>">
-          <%= toHtml(thisContact.getOrgName()) %>
+          <% if(!"".equals(toString(thisContact.getNameLastFirst()))){ %>
+            <%= toHtml(thisContact.getOrgName()) %>
+          <%}else{%>
+            <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getOrgName()) %></a>
+            <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
+          <%}%>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisContact.getPhoneNumber("Business")) %>

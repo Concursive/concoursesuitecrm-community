@@ -26,7 +26,11 @@ Modify Folder Record
       Folder: <strong><%= Category.getName() %></strong><br>
       &nbsp;<br>
       <input type="submit" value="Update" onClick="javascript:this.form.action='Accounts.do?command=UpdateFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'"><br>
+      <% if ("list".equals(request.getParameter("return"))) { %>
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
+      <% }else{ %>
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
+      <% } %><br>
       &nbsp;<br>
 <%
   Iterator groups = Category.iterator();
@@ -71,7 +75,11 @@ Modify Folder Record
 <%}%>
 <br>
 <input type="submit" value="Update" onClick="javascript:this.form.action='Accounts.do?command=UpdateFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
+<% if("list".equals(request.getParameter("return"))) { %>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
+<% }else{ %>
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
+<% } %>
 </td></tr>
 </table>
 </form>

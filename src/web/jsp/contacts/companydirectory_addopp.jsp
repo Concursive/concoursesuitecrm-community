@@ -8,6 +8,7 @@
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].header_description.focus();">
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" type="text/javascript" src="javascript/popContacts.js"></SCRIPT>
@@ -31,6 +32,10 @@ function checkForm(form) {
     message += "- Check that Est. Close Date is entered correctly\r\n";
     formTest = false;
   }
+  if (form.component_low.value != "" && form.component_low.value != "" && (parseInt(form.component_low.value) > parseInt(form.component_high.value))) { 
+    message += "- Low Estimate cannot be higher than High Estimate\r\n";
+    formTest = false;
+  }
   if ((!form.component_alertDate.value == "") && (!checkDate(form.component_alertDate.value))) { 
     message += "- Check that Alert Date is entered correctly\r\n";
     formTest = false;
@@ -45,6 +50,10 @@ function checkForm(form) {
   }
   if ((!form.component_alertDate.value == "") && (form.component_alertText.value == "")) { 
     message += "- Please specify an alert description\r\n";
+    formTest = false;
+  }
+  if (!checkNumber(form.component_commission.value)) { 
+    message += "- Commission entered is invalid\r\n";
     formTest = false;
   }
   if (formTest == false) {

@@ -26,16 +26,20 @@ Tasks<br>
         [ <dhv:container name="accountstickets" selected="tasks" param="<%= param2 %>"/> ]
         <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
           <br><font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
-        </dhv:evaluate>
-        <br><br>
+        </dhv:evaluate><br>
+        <dhv:permission name="accounts-accounts-tickets-edit">
+        <br>
         <%-- display all tasks --%>
         <a  href="javascript:popURL('AccountTicketTasks.do?command=Add&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a><br>
+        </dhv:permission>
         &nbsp;<br>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
           <tr>
+          <dhv:permission name="accounts-accounts-tickets-edit">
           <th align="center" nowrap>
             <strong>Action</strong>
           </th>
+          </dhv:permission>
           <th align="center" nowrap>
             <strong>Priority</strong>
           </th>
@@ -66,14 +70,16 @@ Tasks<br>
             Task thisTask = (Task) j.next();
       %>
         <tr class="row<%= rowid %>">
+          <dhv:permission name="accounts-accounts-tickets-edit">
           <td align="center" valign="top">
             <a href="javascript:popURL('AccountTicketTasks.do?command=ConfirmDelete&id=<%= thisTask.getId() %>&popup=true', 'Delete_task','320','200','yes','no');">Del</a>
           </td>
+          </dhv:permission>
           <td nowrap align="center" valign="top">
             <%= thisTask.getPriority() == -1 ? "-NA-" : (new Integer(thisTask.getPriority())).toString() %>
           </td>
           <td>
-          <table cellpadding="0" cellspacing="0">
+          <table cellpadding="0" cellspacing="0" class="empty">
             <tr <%= thisTask.getComplete()?"class=\"strike\"":"class=\"\""%> id="complete<%=count%>">
               <td>
         <% boolean hasAuthority = false; %> 
@@ -84,8 +90,10 @@ Tasks<br>
            if (thisTask.getComplete()) {
         %>
               <dhv:evaluate if="<%= hasAuthority %>">
+                <dhv:permission name="accounts-accounts-tickets-edit">
                 <a href="javascript:changeImages('image<%= count %>','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%= thisTask.getId() %>+'|0','MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisTask.getId() %>+'|1');javascript:switchClass('complete<%=count%>');" onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;">
                 <img src="images/box-checked.gif" name="image<%= count %>" id="1" border="0" title="Click to change"></a>
+                </dhv:permission>
               </dhv:evaluate>
               <dhv:evaluate if="<%= !hasAuthority %>">
                 <a href="javascript:alert('Status can be changed only by the user who the task is assigned to');" onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;">
@@ -95,8 +103,10 @@ Tasks<br>
             } else {
         %>
                 <dhv:evaluate if="<%= hasAuthority %>">
-                  <a href="javascript:changeImages('image<%= count %>','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%= thisTask.getId() %>+'|1','MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisTask.getId() %>+'|1');javascript:switchClass('complete<%=count%>');" onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box.gif" name="image<%= count %>" id="0" border="0" title="Click to change">
-                  </a>
+                  <dhv:permission name="accounts-accounts-tickets-edit">
+                    <a href="javascript:changeImages('image<%= count %>','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%= thisTask.getId() %>+'|1','MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisTask.getId() %>+'|1');javascript:switchClass('complete<%=count%>');" onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box.gif" name="image<%= count %>" id="0" border="0" title="Click to change">
+                    </a>
+                   </dhv:permission>
                 </dhv:evaluate>
                 <dhv:evaluate if="<%= !hasAuthority %>">
                   <a href="javascript:alert('Status can be changed only by the user who the task is assigned to');" onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box.gif" name="image<%= count %>" id="0" border="0" title="Click to change"></a>
@@ -124,7 +134,7 @@ Tasks<br>
               <td></td>
               <td>
                 <span style="visibility:hidden" id="taskdetails<%= count %>">
-                  <table>
+                  <table class="empty">
                     <tr>
                       <td>Contact Information: </td>
                     </tr>

@@ -27,10 +27,10 @@ Modify Opportunity<br>
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= opportunityHeader.getAccountLink() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= opportunityHeader.getAccountLink() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <%}%>
       <input type="reset" value="Reset"><br>
       <%= showError(request, "actionError") %>
@@ -55,10 +55,10 @@ Modify Opportunity<br>
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
       <% if (request.getParameter("return") != null) {%>
         <% if (request.getParameter("return").equals("list")) {%>
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= opportunityHeader.getAccountLink() %>';this.form.dosubmit.value='false';">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
         <%}%>
       <%} else {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= opportunityHeader.getAccountLink() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
       <%}%>
       <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">

@@ -7,6 +7,7 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
@@ -22,6 +23,10 @@ function checkForm(form) {
   message = "";
   if ((!form.closeDate.value == "") && (!checkDate(form.closeDate.value))) { 
     message += "- Check that Est. Close Date is entered correctly\r\n";
+    formTest = false;
+  }
+  if (form.low.value != "" && form.low.value != "" && (parseInt(form.low.value) > parseInt(form.high.value))) { 
+    message += "- Low Estimate cannot be higher than High Estimate\r\n";
     formTest = false;
   }
   if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
@@ -40,6 +45,11 @@ function checkForm(form) {
     message += "- Please specify an alert description\r\n";
     formTest = false;
   }
+  if (!checkNumber(form.commission.value)) { 
+    message += "- Commission entered is invalid\r\n";
+    formTest = false;
+  }
+  
   if (formTest == false) {
     alert("Form could not be saved, please check the following:\r\n\r\n" + message);
     return false;

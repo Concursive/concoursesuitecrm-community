@@ -29,7 +29,7 @@ Modify Call<br>
           <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
     <%}%>
     <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-    <dhv:evaluate exp="<%= !isPopup(request) %>">
+    <dhv:evaluate exp="<%= !isPopup(request) || isInLinePopup(request) %>">
 	<% if ("list".equals(request.getParameter("return"))) {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 	<%}else {%>

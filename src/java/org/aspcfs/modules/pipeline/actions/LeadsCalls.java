@@ -98,13 +98,15 @@ public final class LeadsCalls extends CFSModule {
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
-      ContactList contactList = new ContactList();
-      contactList.setOwner(userId);
-      contactList.setBuildDetails(false);
-      contactList.setBuildTypes(false);
-      contactList.setOrgId(oppHeader.getAccountLink());
-      contactList.buildList(db);
-      context.getRequest().setAttribute("ContactList", contactList);
+      if(oppHeader.getAccountLink() > -1){
+        ContactList contactList = new ContactList();
+        contactList.setOwner(userId);
+        contactList.setBuildDetails(false);
+        contactList.setBuildTypes(false);
+        contactList.setOrgId(oppHeader.getAccountLink());
+        contactList.buildList(db);
+        context.getRequest().setAttribute("ContactList", contactList);
+      }
 
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");

@@ -8,6 +8,7 @@
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
@@ -31,6 +32,16 @@
 		}
 <%
     }
+    
+    for (int i=1; i<=(ContactDetails.getEmailAddressList().size()+1); i++) {
+%>
+  <dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkEmail(form.email<%=i%>address.value)) { 
+      message += "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n";
+      formTest = false;
+    }
+<%
+    }
+
     if(ContactDetails.getOrgId() == -1){
 %>
 
@@ -70,6 +81,28 @@
     }
     popContactTypeSelectMultiple(selectedId, category, contactId); 
   }
+  
+   function updateCategoryInfo(category){
+    if(category == "general"){
+      document.forms[0].orgId.value = '-1';
+      var url = "ExternalContacts.do?command=AccessTypeJSList&category=" + <%= AccessType.GENERAL_CONTACTS %>;
+      window.frames['server_commands'].location.href=url;
+    }else if(category == "account"){
+      var url = "ExternalContacts.do?command=AccessTypeJSList&category=" + <%= AccessType.ACCOUNT_CONTACTS %>;
+      window.frames['server_commands'].location.href=url;
+    }else if(category == "employee"){
+      document.forms[0].orgId.value = '-1';
+      var url = "ExternalContacts.do?command=AccessTypeJSList&category=" + <%= AccessType.EMPLOYEES %>;
+      window.frames['server_commands'].location.href=url;
+    }
+  }
+  
+  function selectAccount(){
+   document.forms['addContact'].contactcategory[1].checked='t';
+   updateCategoryInfo('account');
+   popAccountsListSingle('orgId','changeaccount');
+  }
+  
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
 <%
@@ -131,12 +164,12 @@
     </td>
     <td>
      <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
-        <input type="radio" name="contactcategory" value="1" onclick="javascript:document.forms[0].orgId.value = '-1';" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
+        <input type="radio" name="contactcategory" value="1" onclick="javascript:document.forms[0].orgId.value = '-1';" onChange="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
      </dhv:evaluate>
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr>
             <td>
-              <input type="radio" name="contactcategory" value="2" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
+              <input type="radio" name="contactcategory" value="2" onChange="javascript:updateCategoryInfo('account');" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
             </td>
             <td>
               Associated with Account: &nbsp;
@@ -147,7 +180,7 @@
             </td>
             <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
             <td>
-              &nbsp;[<a href="javascript:popAccountsListSingle('orgId','changeaccount');">Select</a>]&nbsp;
+              &nbsp;[<a href="javascript:selectAccount();">Select</a>]&nbsp;
             </td>
             </dhv:evaluate>
           </tr>
@@ -200,8 +233,13 @@
       Access Type
     </td>
     <td>
-      <%= AccessTypeList.getHtmlSelect("accessType", ContactDetails.getAccessType()) %>
+      <% 
+          HtmlSelect thisSelect = AccessTypeList.getHtmlSelectObj(ContactDetails.getAccessType());
+          thisSelect.addAttribute("id", "accessType");
+      %>
+      <%=  thisSelect.getHtml("accessType") %>
       <%= showAttribute(request, "accountAccessError") %>
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </td>
    </tr>
   <tr class="containerBody">
@@ -234,8 +272,13 @@
         Company
       </td>
       <td>
-        <input type="text" size="35" name="company" value="<%= toHtmlValue(ContactDetails.getCompany()) %>">
-        <font color="red">-</font> <%= showAttribute(request, "lastcompanyError") %>
+        <% if(ContactDetails.getOrgId() > 0) {%>
+          <div><%= toHtmlValue(ContactDetails.getCompany()) %></div>
+          <input type="hidden" name="company" value="<%= toHtmlValue(ContactDetails.getCompany()) %>">
+        <%}else{%>
+          <input type="text" size="35" name="company" value="<%= toHtmlValue(ContactDetails.getCompany()) %>">
+          <font color="red">-</font> <%= showAttribute(request, "lastcompanyError") %>
+        <%}%>
       </td>
     </tr>
   <tr class="containerBody">

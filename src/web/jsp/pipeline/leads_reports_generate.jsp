@@ -50,7 +50,7 @@ Generate New Report <br>
     </td>
     <td colspan="4">
       <select name="type">
-      <option value="1">Opportunities Listing</option>
+      <option value="1">Component Listing</option>
       </select>
     </td>
   </tr>

@@ -677,17 +677,6 @@ public final class TroubleTickets extends CFSModule {
 
     PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicListInfo");
 
-    if (ticListInfo.getSavedCriteria().isEmpty()) {
-      return (executeCommandSearchTicketsForm(context));
-    }
-
-    if (context.getRequest().getParameter("reset") != null) {
-      if (context.getRequest().getParameter("reset").equals("true")) {
-        ticListInfo.getSavedCriteria().clear();
-        return (executeCommandSearchTicketsForm(context));
-      }
-    }
-
     int errorCode = 0;
     Exception errorMessage = null;
     Connection db = null;

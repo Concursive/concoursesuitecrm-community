@@ -2,7 +2,9 @@
 <a href="MyTasks.do?command=ListTasks">My Tasks</a> >
 Forward Task
 <hr color="#BFBFBB" noshade>
-<form name="newMessageForm" action="MyCFSInbox.do?command=SendMessage" method="post" onSubmit="return sendMessage();">
+<form name="newMessageForm" action="MyTasksForward.do?command=SendMessage&actionSource=MyTasksForward" method="post" onSubmit="return sendMessage();">
+<input type="submit" value="Send">
+<input type="button" value="Cancel" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks'"><br><br>
 <%@ include file="../newmessage.jsp" %>
 <br>
 <input type="submit" value="Send">

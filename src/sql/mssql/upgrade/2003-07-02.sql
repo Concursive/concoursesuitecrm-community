@@ -18,6 +18,8 @@ insert into lookup_access_types (link_module_id, description, default_item, leve
 ALTER TABLE contact ADD access_type INT;
 ALTER TABLE contact ADD FOREIGN KEY (access_type) REFERENCES lookup_access_types(code);
 UPDATE contact SET access_type = (SELECT code FROM lookup_access_types WHERE description = 'Personal' AND link_module_id = 626030330) WHERE contact.personal = 1;
+UPDATE contact SET access_type = (SELECT code FROM lookup_access_types WHERE description = 'Public' AND link_module_id = 626030331) WHERE contact.org_id > -1;
+UPDATE contact SET access_type = (SELECT code FROM lookup_access_types WHERE description = 'Controlled-Hierarchy' AND link_module_id = 626030330) WHERE contact.org_id IS NULL AND contact.personal = 0;
 
 /* This may need to be done manually if SQL Server complains about a constraint */
 

@@ -20,7 +20,9 @@ function checkPhone(phonein) {
 		} else {
 			return false;
 		}
-	}
+	}else if(phonein.length > 0){
+    return false;
+  }
 	
 	return true;
 	

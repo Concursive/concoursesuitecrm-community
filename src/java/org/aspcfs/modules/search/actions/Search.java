@@ -56,7 +56,7 @@ public final class Search extends CFSModule {
         ContactList employeeList = new ContactList();
         employeeList.setOwner(getUserId(context));
         employeeList.setSearchText(searchCriteria);
-        employeeList.setTypeId(1);
+        employeeList.setEmployeesOnly(true);
         employeeList.setBuildDetails(true);
         employeeList.setBuildTypes(false);
         employeeList.buildList(db);

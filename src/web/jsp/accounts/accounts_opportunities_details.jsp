@@ -30,7 +30,7 @@ Opportunity Details<br>
       <br>
       <dhv:permission name="accounts-accounts-opportunities-add">
         <br>
-        <a href="OpportunitiesComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&orgId=<%= opportunityHeader.getAccountLink() %>">Add a Component</a><br>
+        <a href="OpportunitiesComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getOrgId() %>">Add a Component</a><br>
       </dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountsComponentListInfo"/>
  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
@@ -110,7 +110,7 @@ Opportunity Details<br>
 <br>
 <dhv:pagedListControl object="AccountsComponentListInfo"/>
 &nbsp;<br>
-<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Rename Opportunity" onClick="javascript:window.location.href='Opportunities.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&orgId=<%= opportunityHeader.getAccountLink() %>';"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Rename Opportunity" onClick="javascript:window.location.href='Opportunities.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete Opportunity" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>&popup=true','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 </td>
 </tr>

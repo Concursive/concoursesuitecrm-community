@@ -2027,6 +2027,9 @@ public class Ticket extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getTimestamp("closed");
+    if(!rs.wasNull()){
+      closeIt = true;
+    }
     priorityCode = DatabaseUtils.getInt(rs, "pri_code");
     levelCode = DatabaseUtils.getInt(rs, "level_code");
     departmentCode = DatabaseUtils.getInt(rs, "department_code");

@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
-<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
@@ -22,18 +22,21 @@ Component Details
     <td class="containerBack">
       <%-- Begin container content --%>
       <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
-      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+      <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
       <% FileItem thisFile = new FileItem(); %>
-      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+      <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
         <%= thisFile.getImageTag() %>
       </dhv:evaluate>
-      <br>
-      <br>
 <input type="hidden" name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
 <input type="hidden" name="id" value="<%= OppComponentDetails.getId() %>">
 <input type="hidden" name="orgId" value="<%= OrgDetails.getId() %>">
-<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-edit">
+  <br><br>
+  <input type="button" value="Modify" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';submit();">
+</dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-delete">
+  <input type="button" value="Delete" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')">
+</dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"></dhv:permission>
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

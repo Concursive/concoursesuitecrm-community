@@ -6,6 +6,7 @@
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
@@ -27,7 +28,16 @@
 			formTest = false;
 		}
 <%
-    }
+  }
+    for (int i=1; i<=(ContactDetails.getEmailAddressList().size()+1); i++) {
+    %>
+      <dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkEmail(form.email<%=i%>address.value)) { 
+          message += "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n";
+          formTest = false;
+        }
+    <%
+     }
+     
     if(ContactDetails.getOrgId() == -1){
 %>
 

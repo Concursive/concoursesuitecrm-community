@@ -468,6 +468,7 @@ public class PagedListInfo implements Serializable {
       if (param.startsWith("search")) {
         if (!(reset)) {
           this.getSavedCriteria().clear();
+          this.setListView("search");
           reset = true;
         }
 
@@ -485,7 +486,7 @@ public class PagedListInfo implements Serializable {
    *@return      Description of the Return Value
    */
   public boolean setSearchCriteria(Object obj) {
-    if (!this.getSavedCriteria().isEmpty()) {
+    if ("search".equals(this.getListView()) && !this.getSavedCriteria().isEmpty()) {
 
       Iterator hashIterator = this.getSavedCriteria().keySet().iterator();
 

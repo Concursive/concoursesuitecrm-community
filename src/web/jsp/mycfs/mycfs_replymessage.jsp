@@ -4,9 +4,19 @@
 Reply Message
 <hr color="#BFBFBB" noshade>
 <form name="newMessageForm" action="MyCFSInbox.do?command=SendMessage" method="post" onSubmit="return sendMessage();">
+<input type="submit" value="Send">
+<% if("list".equals(request.getParameter("return"))){ %>
+<input type="button" value="Cancel" onClick="javascript:window.location.href='MyCFSInbox.do?command=Inbox'">
+<% }else{ %>
+<input type="button" value="Cancel" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteDetails&id=<%= request.getParameter("id") %>'">
+<% } %><br><br>
 <%@ include file="../newmessage.jsp" %>
 <br>
 <input type="submit" value="Send">
+<% if("list".equals(request.getParameter("return"))){ %>
 <input type="button" value="Cancel" onClick="javascript:window.location.href='MyCFSInbox.do?command=Inbox'">
+<% }else{ %>
+<input type="button" value="Cancel" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteDetails&id=<%= request.getParameter("id") %>'">
+<% } %>
 </form>
 

@@ -27,7 +27,8 @@ Contacts<br>
   </th>
   </dhv:permission>
   <th>
-    <strong>Name</strong>
+    <strong><a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=c.namelast">Name</a></strong>
+    <%= ContactListInfo.getSortIcon("c.namelast") %>
   </th>
   <th>
     <strong>Title</strong>

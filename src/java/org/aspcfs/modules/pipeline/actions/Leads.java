@@ -32,19 +32,19 @@ import com.zeroio.webutils.*;
 /**
  *  Description of the Class
  *
- * @author     chris
- * @created    October 17, 2001
- * @version    $Id$
+ *@author     chris
+ *@created    October 17, 2001
+ *@version    $Id$
  */
 public final class Leads extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   * @param  y  Description of Parameter
-   * @param  m  Description of Parameter
-   * @param  d  Description of Parameter
-   * @return    Description of the Returned Value
+   *@param  y  Description of Parameter
+   *@param  m  Description of Parameter
+   *@param  d  Description of Parameter
+   *@return    Description of the Returned Value
    */
   public static java.util.Date createDate(int y, int m, int d) {
     GregorianCalendar calendar = new GregorianCalendar(y, m, d, 0, 0, 0);
@@ -55,8 +55,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
     return executeCommandDashboard(context);
@@ -66,8 +66,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
     //Get Viewpoints if any
@@ -116,8 +116,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSaveComponent(ActionContext context) {
     Exception errorMessage = null;
@@ -217,8 +217,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-add")) {
@@ -286,8 +286,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDetailsOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
@@ -341,8 +341,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandSearchOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
@@ -382,8 +382,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -428,8 +428,8 @@ public final class Leads extends CFSModule {
    *  Action method to generate dashboard graphs, opportunities, and hierarchy
    *  gross pipeline.
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandDashboard(ActionContext context) {
     if (!hasPermission(context, "pipeline-dashboard-view")) {
@@ -536,13 +536,15 @@ public final class Leads extends CFSModule {
       graphTypeSelect.addItem("cramr", "Commission Risk Adj. Monthly Revenue");
       graphTypeSelect.setDefaultKey(graphString);
 
-      //Generate the opportunities pagedList for the idToUse, right of graph
+      //Generate the opportunities pagedList for the idToUse (builds component count and value of idToUse only), right of graph
       PagedListInfo dashboardListInfo = this.getPagedListInfo(context, "DashboardListInfo");
       dashboardListInfo.setLink("Leads.do?command=Dashboard");
       dashboardListInfo.setColumnToSortBy("x.description");
       OpportunityHeaderList headerList = new OpportunityHeaderList();
       headerList.setPagedListInfo(dashboardListInfo);
       headerList.setOwner(idToUse);
+      headerList.setQueryOpenOnly(true);
+      headerList.setComponentsOwnedByUser(idToUse);
       headerList.setBuildTotalValues(true);
       headerList.buildList(db);
       context.getRequest().setAttribute("oppList", headerList);
@@ -676,8 +678,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandDeleteOpp(ActionContext context) {
     if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
@@ -726,8 +728,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDeleteComponent(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-delete")) {
@@ -779,8 +781,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmComponentDelete(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-delete")) {
@@ -817,8 +819,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModifyComponent(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
@@ -852,6 +854,17 @@ public final class Leads extends CFSModule {
     if (errorMessage == null) {
       context.getRequest().setAttribute("ComponentDetails", component);
       addRecentItem(context, component);
+
+      //Generate user list
+      User thisRec = this.getUser(context, userId);
+      UserList shortChildList = thisRec.getShortChildList();
+      UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+      userList.setMyId(userId);
+      userList.setMyValue(thisRec.getContact().getNameLastFirst());
+      userList.setIncludeMe(true);
+      userList.setExcludeDisabledIfUnselected(true);
+      context.getRequest().setAttribute("UserList", userList);
+
       if (context.getRequest().getParameter("popup") != null) {
         return ("PopupModifyOK");
       } else {
@@ -867,8 +880,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModifyOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
@@ -900,8 +913,8 @@ public final class Leads extends CFSModule {
   /**
    *  Action to prepare a list of opportunities
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandViewOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
@@ -943,8 +956,20 @@ public final class Leads extends CFSModule {
         oppList.setQueryOpenOnly(true);
       }
       oppList.setTypeId(oppListInfo.getFilterKey("listFilter1"));
+      oppList.setOwner(oppListInfo.getFilterKey("listFilter2"));
       oppList.buildList(db);
       context.getRequest().setAttribute("OpportunityList", oppList);
+      
+      //Generate user list
+      User thisRec = this.getUser(context, userId);
+      UserList shortChildList = thisRec.getShortChildList();
+      UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+      userList.setMyId(userId);
+      userList.setMyValue(thisRec.getContact().getNameLastFirst());
+      userList.setIncludeMe(true);
+      userList.setExcludeDisabledIfUnselected(true);
+      context.getRequest().setAttribute("UserList", userList);
+      
       addModuleBean(context, "View Opportunities", "Opportunities Add");
       return ("OppListOK");
     } catch (Exception errorMessage) {
@@ -959,8 +984,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandGenerateForm(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-add")) {
@@ -974,8 +999,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-delete")) {
@@ -1035,8 +1060,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandDownloadCSVReport(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-view")) {
@@ -1097,8 +1122,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-view")) {
@@ -1133,8 +1158,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandExportReport(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-add")) {
@@ -1194,8 +1219,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandReports(ActionContext context) {
     if (!hasPermission(context, "pipeline-reports-view")) {
@@ -1258,8 +1283,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandUpdateOpp(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
@@ -1315,8 +1340,8 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDetailsComponent(ActionContext context) {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
@@ -1361,21 +1386,16 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  pertainsTo    Description of Parameter
-   * @param  oppList       Description of Parameter
-   * @param  usersToGraph  Description of Parameter
-   * @return               Description of the Returned Value
+   *@param  pertainsTo    Description of Parameter
+   *@param  oppList       Description of Parameter
+   *@param  usersToGraph  Description of Parameter
+   *@return               Description of the Returned Value
    */
   private UserList prepareLines(User pertainsTo, OpportunityList oppList, UserList usersToGraph) {
     java.util.Date myDate = null;
     Calendar readDate = Calendar.getInstance();
     Calendar readDateAdjusted = Calendar.getInstance();
 
-    int passedDay = 0;
-    int passedYear = 0;
-    int passedMonth = 0;
-    int roundedMonth = 0;
-    int roundedYear = 0;
     int x = 0;
 
     Double ramrAddTerm = new Double(0.0);
@@ -1384,7 +1404,6 @@ public final class Leads extends CFSModule {
     Double cramrAddTerm = new Double(0.0);
 
     String valKey = "";
-    boolean adjustTerms = false;
 
     Calendar rightNow = Calendar.getInstance();
     rightNow.set(Calendar.DAY_OF_MONTH, 1);
@@ -1418,23 +1437,12 @@ public final class Leads extends CFSModule {
               readDate.setTime(myDate);
               readDateAdjusted.setTime(myDate);
               readDateAdjusted.add(java.util.Calendar.MONTH, +(int) (java.lang.Math.round(tempOpp.getComponent().getTerms())));
-              passedDay = readDate.get(Calendar.DATE);
-              passedYear = readDate.get(Calendar.YEAR);
-              passedMonth = readDate.get(Calendar.MONTH);
-              if (passedDay < 15) {
-                roundedMonth = passedMonth;
-                roundedYear = passedYear;
-              } else if (passedDay >= 15) {
-                if (passedMonth != 11) {
-                  roundedMonth = (passedMonth + 1);
-                  roundedYear = passedYear;
-                } else {
-                  roundedMonth = 0;
-                  roundedYear = passedYear + 1;
-                }
-                adjustTerms = true;
+              if (readDate.get(Calendar.DATE) >= 15) {
+                readDate.add(java.util.Calendar.MONTH, +1);
               }
-              valKey = String.valueOf(roundedYear) + String.valueOf(roundedMonth);
+
+              valKey = String.valueOf(readDate.get(java.util.Calendar.YEAR)) +
+                  String.valueOf(readDate.get(java.util.Calendar.MONTH));
 
               //get the individual graph values
               gmrAddTerm = new Double((tempOpp.getComponent().getGuess() / tempOpp.getComponent().getTerms()));
@@ -1453,16 +1461,13 @@ public final class Leads extends CFSModule {
 
               //more terms
               if ((java.lang.Math.round(tempOpp.getComponent().getTerms())) > 1) {
-                for (x = 1; x < (java.lang.Math.round(tempOpp.getComponent().getTerms())); x++) {
+                for (x = 1; x < java.lang.Math.round(tempOpp.getComponent().getTerms()); x++) {
                   readDate.add(java.util.Calendar.MONTH, +1);
                   if (((rightNow.before(readDate) || rightNowAdjusted.before(readDate)) && twelveMonths.after(readDate)) || rightNow.equals(readDate) || twelveMonths.equals(readDate)) {
                     valKey = String.valueOf(readDate.get(java.util.Calendar.YEAR)) +
                         String.valueOf(readDate.get(java.util.Calendar.MONTH));
-                    if (!(adjustTerms)) {
-                      pertainsTo.setGraphValues(valKey, gmrAddTerm, ramrAddTerm, cgmrAddTerm, cramrAddTerm);
-                    }
+                    pertainsTo.setGraphValues(valKey, gmrAddTerm, ramrAddTerm, cgmrAddTerm, cramrAddTerm);
                   }
-                  adjustTerms = false;
                 }
               }
             }
@@ -1488,9 +1493,9 @@ public final class Leads extends CFSModule {
    *  is pulled out by date range and put in an XYSeries, and then the XYSeries
    *  is added to an XYSeriesCollection.
    *
-   * @param  linesToDraw  Description of Parameter
-   * @param  whichGraph   Description of Parameter
-   * @return              Description of the Returned Value
+   *@param  linesToDraw  Description of Parameter
+   *@param  whichGraph   Description of Parameter
+   *@return              Description of the Returned Value
    */
   private XYSeriesCollection createCategoryDataset(UserList linesToDraw, String whichGraph) {
     XYSeriesCollection xyDataset = new XYSeriesCollection();
@@ -1533,9 +1538,9 @@ public final class Leads extends CFSModule {
    *  beginning of this month are stored under a new single User object (hmph)
    *  for drawing a line on the graph to show cumulative data.
    *
-   * @param  primaryNode   Description of Parameter
-   * @param  currentLines  Description of Parameter
-   * @return               Description of the Returned Value
+   *@param  primaryNode   Description of Parameter
+   *@param  currentLines  Description of Parameter
+   *@return               Description of the Returned Value
    */
   private UserList calculateLine(User primaryNode, UserList currentLines) {
     if (currentLines.size() == 0) {
@@ -1563,9 +1568,9 @@ public final class Leads extends CFSModule {
    *  together for each user and stored under a new single User object (hmph)
    *  for drawing a line on the graph.
    *
-   * @param  toRollUp      Description of Parameter
-   * @param  currentLines  Description of Parameter
-   * @return               Description of the Returned Value
+   *@param  toRollUp      Description of Parameter
+   *@param  currentLines  Description of Parameter
+   *@return               Description of the Returned Value
    */
   private UserList calculateLine(UserList toRollUp, UserList currentLines) {
     if (toRollUp.size() == 0) {

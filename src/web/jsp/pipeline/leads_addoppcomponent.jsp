@@ -9,6 +9,7 @@
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript">
@@ -40,6 +41,10 @@
     }
     if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
       message += "- Please specify an alert description\r\n";
+      formTest = false;
+    }
+    if (!checkNumber(form.commission.value)) { 
+      message += "- Commission entered is invalid\r\n";
       formTest = false;
     }
     if (formTest == false) {

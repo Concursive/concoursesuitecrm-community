@@ -5,18 +5,30 @@ function addValues(){
     var count = 0;
     var x = 0;
     
-    if (document.modifyList.newValue.value != null && document.modifyList.newValue.value.length > 0) {
-            searchText = document.modifyList.newValue.value;
-            var newOption = searchText;
-            searchList.options[searchList.length] = new Option(newOption, ("*" + searchText));
+    if (document.modifyList.newValue.value != null && document.modifyList.newValue.value.trim().length > 0) {
+      if(!isDuplicate()){
+        searchText = document.modifyList.newValue.value;
+        var newOption = searchText;
+        searchList.options[searchList.length] = new Option(newOption, ("*" + searchText));
+        document.modifyList.newValue.value = "";
+      }else{
+        alert('Entry already exists');
+      }
     } else {
-             alert ("You must provide a value for the new option");
+        alert ("You must provide a value for the new option");
     }
-    
-    document.modifyList.newValue.value = "";
     document.modifyList.newValue.focus();
-    
     return true;
+}
+
+function isDuplicate(){
+  var searchList = document.modifyList.selectedList;
+    for (count=0; count<(searchList.length); count++) {
+      if((searchList.options[count].text).toLowerCase() == (document.modifyList.newValue.value).toLowerCase()){
+        return true;
+      }
+    }
+  return false;
 }
 
 function removeValues(){

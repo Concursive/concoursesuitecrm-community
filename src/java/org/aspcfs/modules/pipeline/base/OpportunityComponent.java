@@ -1741,6 +1741,10 @@ public class OpportunityComponent extends GenericBean {
         }
       }
     }
+    
+    if(low > high){
+      errors.put("lowHighError", "Low Estimate cannot be higher than the High Estimate");
+    }
     if (closeDate == null || getCloseDateString().trim().equals("")) {
       errors.put("closeDateError", "Close Date cannot be left blank");
     }
@@ -1909,6 +1913,9 @@ public class OpportunityComponent extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getString("closed");
+    if(!rs.wasNull()){
+      closeIt = true;
+    }
     alertText = rs.getString("alert");
     enabled = rs.getBoolean("enabled");
     notes = rs.getString("notes");

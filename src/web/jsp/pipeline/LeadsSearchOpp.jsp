@@ -15,8 +15,8 @@ Search Opportunities<br>
     </th>
   </tr>
   <tr>
-    <td class="formLabel">
-      Description
+    <td class="formLabel" nowrap>
+      Opportunity Description
     </td>
     <td>
       <input type="text" size="35" name="searchDescription">
@@ -24,7 +24,7 @@ Search Opportunities<br>
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Organization
+      Account
     </td>
     <td>
       <%= OrgList.getHtmlSelectDefaultNone("searchcodeOrgId") %>
@@ -35,14 +35,14 @@ Search Opportunities<br>
       Contact
     </td>
     <td>
-      <table>
+      <table class="empty">
         <tr>
           <td>
             <div id="changecontact">None Selected</div>
           </td>
           <td>
-            <input type="hidden" name="contact" value="-1">
-            &nbsp;[<a href="javascript:popContactsListSingle('contact','changecontact', 'reset=true');">Select</a>]
+            <input type="hidden" id="contactId" name="searchcodeContactId" value="-1">
+            &nbsp;[<a href="javascript:popContactsListSingle('contactId','changecontact', 'reset=true');">Select</a>]
           </td>
         </tr>
       </table>

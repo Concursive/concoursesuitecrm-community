@@ -88,6 +88,6 @@ Upload Document<br>
   <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
 </td>
 </tr>
-</form>
 </table>
+</form>
 </body>
