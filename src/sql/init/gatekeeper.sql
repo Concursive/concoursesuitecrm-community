@@ -13,6 +13,16 @@ VALUES
  @FALSE@
 );
 
+/* Cron entry for cleaning up the server, every day at 12:00am */
+INSERT INTO events
+(minute, hour, task, extrainfo, enabled)
+VALUES
+('0', '0',
+ 'org.aspcfs.modules.service.tasks.GetURL#doTask',
+ 'http://127.0.0.1/ProcessSystem.do?command=ClearGraphData',
+ @TRUE@
+);
+
 /* Sample cron entry for running auto guide maintenance, every day at 2am */
 INSERT INTO events
 (minute, hour, task, extrainfo, enabled)
@@ -23,11 +33,11 @@ VALUES
  @FALSE@
 );
 
-/* Sample cron entry for running pilot online process, every tuesday at 3:05pm */
+/* Sample cron entry for running pilot online process, every tuesday at 2:50pm */
 INSERT INTO events
 (minute, hour, dayofweek, task, extrainfo, enabled)
 VALUES
-('5', '15', '2',
+('50', '14', '2',
  'org.aspcfs.apps.transfer.Transfer#doTask',
  '@CFS_HOME@/WEB-INF/dataImport-pilotonline.xml',
  @FALSE@
