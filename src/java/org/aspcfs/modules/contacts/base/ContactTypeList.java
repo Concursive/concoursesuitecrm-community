@@ -373,11 +373,24 @@ public void setIncludeIds(String includeIds) {
     contactTypeSelect.setJsEvent(jsEvent);
     contactTypeSelect.setSelectSize(this.getSize());
     contactTypeSelect.setMultiple(this.getMultiple());
-
+    
+    int category = -1;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       ContactType thisContactType = (ContactType) i.next();
-
+      if (thisContactType.getCategory() != category) {
+        category = thisContactType.getCategory();
+        switch (category) {
+          case ContactType.GENERAL: 
+            contactTypeSelect.addGroup("Contact Types");
+            break;
+          case ContactType.ACCOUNT:
+            contactTypeSelect.addGroup("Account Contact Types");
+            break;
+          default:
+            break;
+        }
+      }
       if (thisContactType.getEnabled() == true || thisContactType.getId() == EMPLOYEE_TYPE) {
         contactTypeSelect.appendItem(thisContactType.getId(), thisContactType.getDescription());
       } else if (thisContactType.getId() == defaultKey) {

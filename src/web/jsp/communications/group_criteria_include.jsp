@@ -20,12 +20,14 @@ function updateOperators(){
     deleteOptions("idSelect");
 <%
     Iterator x = ContactTypeList.iterator();
-    if (x.hasNext()) {
-      while (x.hasNext()) {
-        LookupElement thisContactType = (LookupElement)x.next();
+    while (x.hasNext()) {
+      LookupElement thisContactType = (LookupElement)x.next();
+      if (!thisContactType.isGroup()) {
 %>
         insertOption("<%= thisContactType.getDescription() %>", "<%= thisContactType.getCode() %>", "idSelect");
 <%
+      } else {
+        // option group
       }
     }
 %>
