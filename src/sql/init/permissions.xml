@@ -103,7 +103,7 @@
       <permission name="admin-object-workflow" attributes="vaed" description="Configure Object Workflow"/>
     </category>
     <category id="10" name="Help" folders="false" lookups="false">
-      <permission name="help" attributes="v---" description="Access to Help System"/>
+      <permission name="help" attributes="v-e-" description="Access to Help System"/>
     </category>
     <category id="5" name="Demo" folders="false" lookups="false" enabled="false">
       <permission name="demo" attributes="vaed" description="Access to Demo/Non-working features"/>
