@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
+<%@ page  import="java.text.DateFormat" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <jsp:useBean id="GlobalItems" class="java.lang.String" scope="request"/>
@@ -119,7 +120,7 @@
 <center><%= request.getAttribute("MainMenuSmall") %></center>
 <br>
 <center>Copyright (c) 2000-2004 Dark Horse Ventures.  All rights reserved.</center>
-<center><zeroio:tz timestamp="<%= new java.util.Date() %>"/></center>
+<center><zeroio:tz timestamp="<%= new java.util.Date() %>" timeFormat="<%= DateFormat.LONG %>"/></center>
 </div>
 <%-- Allow pages have to have a scrollTo... must be at end of html --%>
 <script language="JavaScript" type="text/javascript" src="javascript/scrollReload.js"></script>
