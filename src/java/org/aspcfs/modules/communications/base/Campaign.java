@@ -853,18 +853,16 @@ public class Campaign extends GenericBean {
    */
   public void setGroups(HttpServletRequest request) {
     StringBuffer sb = new StringBuffer();
-
     int selectCount = 0;
     String item = null;
     while ((item = request.getParameter("select" + (++selectCount))) != null) {
-      if ("on".equalsIgnoreCase(request.getParameter("select" + selectCount + "check"))) {
+      if (DatabaseUtils.parseBoolean(request.getParameter("select" + selectCount + "check"))) {
         if (sb.length() > 0) {
           sb.append("*");
         }
         sb.append(item);
       }
     }
-
     groupList = sb.toString();
   }
 
