@@ -449,9 +449,40 @@ public final class MyCFS extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandUpdatePassword(ActionContext context) {
-		return ("UpdatePasswordOK");
-	}
+		Exception errorMessage = null;
+		Connection db = null;
+		int resultCount = 0;
+		
+		System.out.println("CHRISasdasdaesfsdfsfsdfsdf");
+		
+		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
+		User thisRec = thisUser.getUserRecord();
 
+		try {
+			db = getConnection(context);
+			System.out.println("here it is");
+			resultCount = thisRec.updatePassword(db, context);
+		} catch (SQLException e) {
+			errorMessage = e;
+		} finally {
+			this.freeConnection(context, db);
+		}
+		
+		if (errorMessage == null) {
+			if (resultCount == 1) {
+				return ("UpdatePasswordOK");
+			} else {
+				context.getRequest().setAttribute("Error",
+				"<b>This record could not be updated because someone else updated it first.</b><p>" +
+				"You can hit the back button to review the changes that could not be committed, " +
+				"but you must reload the record and make the changes again.");
+				return ("UserError");
+			}
+		} else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+	}
 
 	/**
 	 *  Description of the Method

@@ -1007,6 +1007,10 @@ public class User extends GenericBean {
 		this.opportunityLock = false;
 	}
 
+	public synchronized int updatePassword(Connection db, ActionContext context) throws SQLException {
+		System.out.println("here I am");
+		return 1;
+	}
 
 	/**
 	 *  Inserts the current user record into the database
