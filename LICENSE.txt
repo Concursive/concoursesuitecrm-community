@@ -1,0 +1,9 @@
+/* ====================================================================
+ * Copyright (c) 2000-2003 Dark Horse Ventures.  All rights reserved.
+ *
+ * This module is made available by agreeing to the Dark Horse Ventures
+ * Open Code License and cannot be redistributed outside of this
+ * agreement.
+ * ====================================================================
+ * $Id$
+ */
