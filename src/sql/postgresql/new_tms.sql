@@ -67,9 +67,9 @@ CREATE TABLE ticket (
   org_id INT NOT NULL REFERENCES organization, 
   contact_id INT NOT NULL REFERENCES contact(contact_id), 
   problem TEXT NOT NULL,
-  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
   closed TIMESTAMP,
   pri_code INT NOT NULL DEFAULT -1 REFERENCES ticket_priority(code), 
@@ -102,9 +102,9 @@ CREATE TABLE ticketlog (
   ,department_code int NOT NULL 
   ,cat_code int NOT NULL 
   ,scode int NOT NULL REFERENCES ticket_severity(code)
-  ,entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ,entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,enteredby INT NOT NULL REFERENCES access(user_id)
-  ,modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ,modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 

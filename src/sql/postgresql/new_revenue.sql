@@ -8,9 +8,9 @@ CREATE TABLE revenue (
   type int default -1,
   owner int default -1,
   description VARCHAR(255),
-  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
 );
  
@@ -41,9 +41,9 @@ CREATE TABLE revenue_detail (
   type int default -1,
   owner int default -1,
   description VARCHAR(255),
-  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
-  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL
 );
 
