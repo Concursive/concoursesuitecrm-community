@@ -21,7 +21,6 @@ import java.awt.image.BufferedImage;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 
-
 /**
  *  Description of the Class
  *
@@ -112,7 +111,7 @@ public final class AutoGuide extends CFSModule {
       db = this.getConnection(context);
       Inventory inventoryItem = new Inventory(db, id);
       context.getRequest().setAttribute("InventoryItem", inventoryItem);
-      
+
       String orgId = context.getRequest().getParameter("orgId");
       if (orgId == null) {
         addModuleBean(context, "Auto Guide", "Details");
@@ -126,7 +125,6 @@ public final class AutoGuide extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    
     if (errorMessage == null) {
       return ("DetailsOK");
     } else {
@@ -223,10 +221,17 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandAccountAdd(ActionContext context) {
     if (!(hasPermission(context, "autoguide-inventory-add"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
     Exception errorMessage = null;
 
@@ -234,13 +239,13 @@ public final class AutoGuide extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      
+
       populateOrganization(context, db, orgId);
       populateYearSelect(context, db);
       populateMakeSelect(context, db, null);
       populateModelSelect(context, db, null);
       populateOptionList(context, db);
-      
+
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -255,20 +260,28 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandAccountInsert(ActionContext context) {
-/*     if (!(hasPermission(context, "contacts-external_contacts-add"))) {
-      return ("PermissionError");
-    }
- */
+    /*
+     *  if (!(hasPermission(context, "contacts-external_contacts-add"))) {
+     *  return ("PermissionError");
+     *  }
+     */
     Exception errorMessage = null;
     boolean recordInserted = false;
 
-    Inventory thisItem = (Inventory)context.getFormBean();
+    Inventory thisItem = (Inventory) context.getFormBean();
     thisItem.setRequestItems(context.getRequest());
     thisItem.setEnteredBy(getUserId(context));
     thisItem.setModifiedBy(getUserId(context));
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -298,7 +311,14 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandUpdateMakeList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -318,7 +338,14 @@ public final class AutoGuide extends CFSModule {
     }
     return ("MakeListOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandUpdateModelList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -342,29 +369,37 @@ public final class AutoGuide extends CFSModule {
     }
     return ("ModelListOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandAccountModify(ActionContext context) {
-/*     if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
-      return ("PermissionError");
-    }
- */
+    /*
+     *  if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
+     *  return ("PermissionError");
+     *  }
+     */
     Exception errorMessage = null;
     String orgId = context.getRequest().getParameter("orgId");
     String id = context.getRequest().getParameter("id");
-    
+
     Connection db = null;
     try {
       db = this.getConnection(context);
-      
+
       Inventory thisItem = new Inventory(db, Integer.parseInt(id));
       context.getRequest().setAttribute("InventoryDetails", thisItem);
-      
+
       populateOrganization(context, db, Integer.parseInt(orgId));
       populateYearSelect(context, db);
       populateMakeSelect(context, db, thisItem.getVehicle());
       populateModelSelect(context, db, thisItem.getVehicle());
       populateOptionList(context, db);
-      
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -379,23 +414,31 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandAccountUpdate(ActionContext context) {
-/*     if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
-      return ("PermissionError");
-    }
- */
+    /*
+     *  if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
+     *  return ("PermissionError");
+     *  }
+     */
     Exception errorMessage = null;
     Connection db = null;
-    
+
     String orgid = context.getRequest().getParameter("orgId");
     int resultCount = 0;
-    
+
     try {
-      Inventory thisItem = (Inventory)context.getFormBean();
+      Inventory thisItem = (Inventory) context.getFormBean();
       thisItem.setRequestItems(context.getRequest());
       thisItem.setModifiedBy(getUserId(context));
-      
+
       db = this.getConnection(context);
       thisItem.generateVehicleId(db);
       resultCount = thisItem.update(db);
@@ -423,7 +466,14 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandUploadForm(ActionContext context) {
 
     /*
@@ -439,14 +489,14 @@ public final class AutoGuide extends CFSModule {
       db = this.getConnection(context);
       Inventory inventoryItem = new Inventory(db, id);
       context.getRequest().setAttribute("InventoryItem", inventoryItem);
-      
+
       addModuleBean(context, "Auto Guide", "Photo Upload");
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     if (errorMessage == null) {
       return ("UploadFormOK");
     } else {
@@ -454,43 +504,50 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandUpload(ActionContext context) {
-/* 	  
-    if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
-	    return ("PermissionError");
-    }
-*/	
+    /*
+     *  if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
+     *  return ("PermissionError");
+     *  }
+     */
     Exception errorMessage = null;
     Connection db = null;
 
     boolean recordInserted = false;
     try {
       String filePath = this.getPath(context, "autoguide");
-      
+
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-      
+
       HashMap parts = multiPart.parseData(
-        context.getRequest().getInputStream(), "---------------------------", filePath);
-      
-      String id = (String)parts.get("id");
-      
+          context.getRequest().getInputStream(), "---------------------------", filePath);
+
+      String id = (String) parts.get("id");
+
       //Update the database with the resulting file
       db = getConnection(context);
-      
+
       //TODO: Delete the thumbnail also...
       FileItemList previousFiles = new FileItemList();
       previousFiles.setLinkModuleId(Constants.AUTOGUIDE);
       previousFiles.setLinkItemId(Integer.parseInt(id));
       previousFiles.buildList(db);
       previousFiles.delete(db, filePath);
-      
-      FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
+
+      FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
       FileItem thisItem = new FileItem();
       thisItem.setLinkModuleId(Constants.AUTOGUIDE);
       thisItem.setLinkItemId(Integer.parseInt(id));
@@ -503,24 +560,24 @@ public final class AutoGuide extends CFSModule {
       thisItem.setVersion(1.0);
       thisItem.setSize(newFileInfo.getSize());
       recordInserted = thisItem.insert(db);
-      
+
       if (!recordInserted) {
         processErrors(context, thisItem.getErrors());
       } else {
         //TODO: Create a thumbnail
         File thumbnail = new File(newFileInfo.getLocalFile().getPath() + "TH");
-        
+
         BufferedImage image = ImageIO.read(newFileInfo.getLocalFile());
-        double ratio = 133.0/image.getWidth();
+        double ratio = 133.0 / image.getWidth();
         AffineTransform at = AffineTransform.getScaleInstance(ratio, ratio);
         AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         BufferedImage scaledImage = op.filter(image, null);
         ImageIO.write(scaledImage, "jpg", thumbnail);
-        
+
         thisItem.setSubject("thumbnail");
-        thisItem.setFilename(newFileInfo.getRealFilename());
+        thisItem.setFilename(newFileInfo.getRealFilename() + "TH");
         thisItem.setVersion(1.1d);
-        thisItem.setSize((int)thumbnail.length());
+        thisItem.setSize((int) thumbnail.length());
         recordInserted = thisItem.insertVersion(db);
       }
     } catch (Exception e) {
@@ -540,14 +597,21 @@ public final class AutoGuide extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandShowImage(ActionContext context) {
     Exception errorMessage = null;
-    String linkId = (String)context.getRequest().getParameter("id");
-    String itemId = (String)context.getRequest().getParameter("fid");
-    String version = (String)context.getRequest().getParameter("ver");
+    String linkId = (String) context.getRequest().getParameter("id");
+    String itemId = (String) context.getRequest().getParameter("fid");
+    String version = (String) context.getRequest().getParameter("ver");
     FileItem thisItem = null;
-    
+
     Connection db = null;
     try {
       db = getConnection(context);
@@ -567,42 +631,71 @@ public final class AutoGuide extends CFSModule {
       } else {
         itemToDownload = thisItem.getVersion(Double.parseDouble(version));
       }
-      
+
       itemToDownload.setEnteredBy(this.getUserId(context));
       String filePath = this.getPath(context, "autoguide") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
-      
+
       FileDownload fileDownload = new FileDownload();
-      fileDownload.setFullPath(filePath + "TH");
+      fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(itemToDownload.getClientFilename());
       if (fileDownload.fileExists()) {
-        String imageType = "jpg"; //TODO: do not hard code this
+        String imageType = "jpg";
+        //TODO: do not hard code this
         fileDownload.sendFile(context, "image/" + imageType);
       } else {
         System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection
-			if (System.getProperty("DEBUG") != null) System.out.println(se.toString());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println(se.toString());
+      }
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
     }
-    
+
     return ("-none-");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of Parameter
+   *@param  db                Description of Parameter
+   *@param  orgId             Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   private void populateOrganization(ActionContext context, Connection db, int orgId) throws SQLException {
     Organization thisOrganization = new Organization(db, orgId);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of Parameter
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   private void populateYearSelect(ActionContext context, Connection db) throws SQLException {
-    ArrayList yearList = VehicleList.buildYearList(db); 
+    ArrayList yearList = VehicleList.buildYearList(db);
     HtmlSelect yearSelect = new HtmlSelect(yearList);
     yearSelect.addItem(-1, "--None--", 0);
     context.getRequest().setAttribute("YearSelect", yearSelect);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of Parameter
+   *@param  db                Description of Parameter
+   *@param  thisVehicle       Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   private void populateMakeSelect(ActionContext context, Connection db, Vehicle thisVehicle) throws SQLException {
     HtmlSelect makeSelect = new HtmlSelect();
     makeSelect.addItem(-1, "--None--");
@@ -622,7 +715,16 @@ public final class AutoGuide extends CFSModule {
     }
     context.getRequest().setAttribute("MakeSelect", makeSelect);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of Parameter
+   *@param  db                Description of Parameter
+   *@param  thisVehicle       Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   private void populateModelSelect(ActionContext context, Connection db, Vehicle thisVehicle) throws SQLException {
     HtmlSelect modelSelect = new HtmlSelect();
     modelSelect.addItem(-1, "--None--");
@@ -644,8 +746,17 @@ public final class AutoGuide extends CFSModule {
     context.getRequest().setAttribute("ModelSelect", modelSelect);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of Parameter
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   private void populateOptionList(ActionContext context, Connection db) throws SQLException {
     OptionList options = new OptionList(db);
     context.getRequest().setAttribute("OptionList", options);
   }
-}  
+}
+
