@@ -665,7 +665,8 @@
     <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
     <forward name="AddTicketOK" resource="/accounts/accounts_tickets_add.jsp" layout="nav"/>
     <forward name="InsertTicketOK" resource="/accounts/accounts_tickets_details.jsp" layout="nav"/>
-    <forward name="DeleteTicketOK" resource="/Accounts.do?command=ViewTickets"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteTicketOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ReturnListOK" resource="/Accounts.do?command=ViewTickets"/>
     <forward name="TicketDetailsOK" resource="/accounts/accounts_tickets_details.jsp" layout="nav"/>
     <forward name="ModifyTicketOK" resource="/accounts/accounts_tickets_modify.jsp" layout="nav"/>
@@ -676,6 +677,19 @@
     <forward name="CategoryJSListOK" resource="/troubletickets/troubletickets_js_categorylist.jsp"/>
     <forward name="DepartmentJSListOK" resource="/troubletickets/troubletickets_js_departmentlist.jsp"/>
     <forward name="OrganizationJSListOK" resource="/troubletickets/troubletickets_js_contactlist.jsp"/>
+  </action>
+  <action name="AccountTicketTasks" class="org.aspcfs.modules.accounts.actions.AccountTicketTasks">
+    <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="AddTaskOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=AccountTicketTasks"/>
+    <forward name="PrepareTaskPopupOK" resource="/accounts/accounts_ticket_tasks_include.jsp" layout="style"/>
+    <forward name="ListTasksOK" resource="/accounts/accounts_tickets_details.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/closepopupandreload.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <action name="AccountsDocuments" class="org.aspcfs.modules.accounts.actions.AccountsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
