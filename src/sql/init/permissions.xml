@@ -270,6 +270,7 @@
       <permission name="admin-sysconfig-folders" attributes="vaed"/>
       <permission name="admin-object-workflow" attributes="vaed"/>
       <permission name="admin-sysconfig-categories" attributes="vaed"/>
+      <permission name="admin-sysconfig-products" attributes="vaed"/>
       <permission name="help" attributes="v---"/>
       <permission name="globalitems-search" attributes="v---"/>
       <permission name="globalitems-myitems" attributes="v---"/>
