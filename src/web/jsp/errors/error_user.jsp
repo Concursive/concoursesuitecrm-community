@@ -1,5 +1,6 @@
 <%@ page  import="java.util.*" %>
 <jsp:useBean id="errors" class="java.util.HashMap" scope="request"/>
+<img src="images/error.gif" border="0" align="absmiddle"/>
 <font color='red'>An Error Has Occurred</font>
 <hr color="#BFBFBB" noshade>
 <%
