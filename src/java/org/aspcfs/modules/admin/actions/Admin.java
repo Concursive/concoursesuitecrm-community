@@ -429,7 +429,6 @@ public final class Admin extends CFSModule {
       while (k.hasNext()) {
         ContactType thisType = (ContactType) k.next();
         thisType.setCategory(category);
-        System.out.println("Admin -- > New List " + thisType.getId() + " Category : " + category);
         if (thisType.getId() == 0) {
           thisType.insert(db);
         } else {
