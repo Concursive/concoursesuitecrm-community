@@ -580,7 +580,7 @@ public final class MyCFS extends CFSModule {
         newNote.setBody(
             "\n\n----Original Message----\n" +
             "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
-            "Sent: " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT,DateFormat.LONG, newNote.getEntered()) + "\n" +
+            "Sent: " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, newNote.getEntered()) + "\n" +
             "To: " + recipientList.toString() + "\n" +
             "Subject: " + StringUtils.toString(newNote.getSubject()) +
             "\n\n" +
@@ -592,7 +592,7 @@ public final class MyCFS extends CFSModule {
             "------Task Details------\n\n" +
             "Task:" + StringUtils.toString(thisTask.getDescription()) + "\n" +
             "From: " + StringUtils.toString(userName) + "\n" +
-            "Due Date: " + (thisTask.getDueDate() != null ? DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisTask.getDueDate()) : "-NA-")  + "\n" +
+            "Due Date: " + (thisTask.getDueDate() != null ? DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisTask.getDueDate()) : "-NA-") + "\n" +
             ("".equals(thisTask.getNotes()) ? "" : "Relevant Notes: " + StringUtils.toString(thisTask.getNotes())) + "\n\n");
       }
     } catch (Exception errorMessage) {
@@ -645,7 +645,7 @@ public final class MyCFS extends CFSModule {
       newNote.setBody(
           "\n\n----Original Message----\n" +
           "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
-          "Sent: " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT,DateFormat.LONG, newNote.getEntered()) + "\n" +
+          "Sent: " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, newNote.getEntered()) + "\n" +
           "To: " + recipientList.toString() + "\n" +
           "Subject: " + StringUtils.toString(newNote.getSubject()) +
           "\n\n" +
@@ -732,51 +732,44 @@ public final class MyCFS extends CFSModule {
       }
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
-
-    String industryCheck = context.getRequest().getParameter("industry");
-    PagedListInfo newsListInfo = new PagedListInfo();
-
-    try {
-      db = this.getConnection(context);
-
-      NewsArticleList newsArticleList = new NewsArticleList();
-      newsArticleList.setIndustryCode(1);
-
-      newsArticleList.setEnteredBy(getUserId(context));
-      newsArticleList.buildList(db);
-
-      LookupList indSelect = new LookupList(db, "lookup_industry");
-      indSelect.setJsEvent("onChange=\"document.forms['miner_select'].submit();\"");
-      indSelect.addItem(0, "Latest News");
-      context.getRequest().setAttribute("IndSelect", indSelect);
-
-      if (newsArticleList.size() > 0) {
-        indSelect.addItem(1, "My News");
-
-        if (industryCheck == null) {
-          industryCheck = "1";
-        }
-      }
-
-      newsList = new NewsArticleList();
-      newsList.setPagedListInfo(newsListInfo);
-
-      if (industryCheck != null && !(industryCheck.equals("0"))) {
-        newsList.setIndustryCode(industryCheck);
-        if (industryCheck.equals("1")) {
-          newsList.setEnteredBy(getUserId(context));
-        }
-      } else if (industryCheck == null || industryCheck.equals("0")) {
-        newsList.setMinerOnly(false);
-      }
-      newsList.buildList(db);
-    } catch (Exception errorMessage) {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return "SystemError";
-    } finally {
-      this.freeConnection(context, db);
-    }
-    context.getRequest().setAttribute("NewsList", newsList);
+    /*
+     *  String industryCheck = context.getRequest().getParameter("industry");
+     *  PagedListInfo newsListInfo = new PagedListInfo();
+     *  try {
+     *  db = this.getConnection(context);
+     *  NewsArticleList newsArticleList = new NewsArticleList();
+     *  newsArticleList.setIndustryCode(1);
+     *  newsArticleList.setEnteredBy(getUserId(context));
+     *  newsArticleList.buildList(db);
+     *  LookupList indSelect = new LookupList(db, "lookup_industry");
+     *  indSelect.setJsEvent("onChange=\"document.forms['miner_select'].submit();\"");
+     *  indSelect.addItem(0, "Latest News");
+     *  context.getRequest().setAttribute("IndSelect", indSelect);
+     *  if (newsArticleList.size() > 0) {
+     *  indSelect.addItem(1, "My News");
+     *  if (industryCheck == null) {
+     *  industryCheck = "1";
+     *  }
+     *  }
+     *  newsList = new NewsArticleList();
+     *  newsList.setPagedListInfo(newsListInfo);
+     *  if (industryCheck != null && !(industryCheck.equals("0"))) {
+     *  newsList.setIndustryCode(industryCheck);
+     *  if (industryCheck.equals("1")) {
+     *  newsList.setEnteredBy(getUserId(context));
+     *  }
+     *  } else if (industryCheck == null || industryCheck.equals("0")) {
+     *  newsList.setMinerOnly(false);
+     *  }
+     *  newsList.buildList(db);
+     *  } catch (Exception errorMessage) {
+     *  context.getRequest().setAttribute("Error", errorMessage);
+     *  return "SystemError";
+     *  } finally {
+     *  this.freeConnection(context, db);
+     *  }
+     *  context.getRequest().setAttribute("NewsList", newsList);
+     */
     return "HomeOK";
   }
 
@@ -806,9 +799,9 @@ public final class MyCFS extends CFSModule {
       companyCalendar.addHolidaysByRange();
       //check if the user's account is expiring
       User thisUser = this.getUser(context, this.getUserId(context));
-      if(thisUser.getExpires() != null){
-      String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
-      companyCalendar.addEvent(expiryDate, "Your user account expires", CalendarEventList.EVENT_TYPES[9]);
+      if (thisUser.getExpires() != null) {
+        String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
+        companyCalendar.addEvent(expiryDate, "Your user account expires", CalendarEventList.EVENT_TYPES[9]);
       }
 
       //create events depending on alert type
@@ -882,9 +875,9 @@ public final class MyCFS extends CFSModule {
       companyCalendar.addHolidaysByRange();
       //check if the user's account is expiring
       User thisUser = this.getUser(context, this.getUserId(context));
-      if(thisUser.getExpires() != null){
-      String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
-      companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[9], expiryDate, new Integer(1));
+      if (thisUser.getExpires() != null) {
+        String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
+        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[9], expiryDate, new Integer(1));
       }
       //Use reflection to invoke methods on scheduler classes
       String param1 = "org.aspcfs.utils.web.CalendarView";
