@@ -38,6 +38,7 @@
       <%= OrgDetails.getOwnerName() %>
     </td>
   </tr>
+<dhv:evaluate exp="<%= hasText(OrgDetails.getTypes().valuesAsString()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Acct. Type(s)
@@ -45,7 +46,9 @@
     <td>  
       <%= toHtml(OrgDetails.getTypes().valuesAsString()) %>
      </td>
-  </tr> 
+  </tr>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= hasText(OrgDetails.getAccountNumber()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Acct. Number
@@ -54,6 +57,8 @@
        <%= toHtml(OrgDetails.getAccountNumber()) %>&nbsp;
     </td>
   </tr>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= hasText(OrgDetails.getUrl()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Web Site URL
@@ -62,6 +67,8 @@
       <a href="<%= toHtml(OrgDetails.getUrl()) %>" target="_new"><%=toHtml(OrgDetails.getUrl()) %></a>&nbsp;
     </td>
   </tr>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= hasText(OrgDetails.getIndustryName()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Industry
@@ -70,6 +77,8 @@
        <%= toHtml(OrgDetails.getIndustryName()) %>&nbsp;
     </td>
   </tr>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= (OrgDetails.getEmployees() > 0) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       No. of Employees
@@ -78,6 +87,8 @@
        <%= OrgDetails.getEmployees() %>&nbsp;
     </td>
   </tr>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= (OrgDetails.getRevenue() > 0) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Revenue
@@ -86,6 +97,8 @@
        <%= OrgDetails.getRevenue() %>&nbsp;
     </td>
   </tr>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= hasText(OrgDetails.getTicker()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Ticker Symbol
@@ -94,8 +107,9 @@
        <%= toHtml(OrgDetails.getTicker()) %>&nbsp;
     </td>
   </tr>
-  
-    <tr class="containerBody">
+</dhv:evaluate>
+<dhv:evaluate exp="<%= hasText(OrgDetails.getContractEndDateString()) %>">
+  <tr class="containerBody">
     <td nowrap class="formLabel">
       Contract End Date
     </td>
@@ -103,7 +117,8 @@
        <%= toHtml(OrgDetails.getContractEndDateString()) %>&nbsp;
     </td>
   </tr>
-  
+</dhv:evaluate>
+<dhv:evaluate exp="<%= hasText(OrgDetails.getAlertDetails()) %>">
    <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert
@@ -112,7 +127,7 @@
        <%= toHtml(OrgDetails.getAlertDetails()) %>
     </td>
   </tr>
-  
+</dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Entered
