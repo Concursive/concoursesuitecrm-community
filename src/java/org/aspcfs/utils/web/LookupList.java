@@ -13,14 +13,13 @@ import org.aspcfs.modules.base.SyncableList;
  *@author     mrajkowski
  *@created    September 7, 2001
  *@version    $Id$
- *@version    $Id$
  */
 public class LookupList extends HtmlSelect implements SyncableList {
   public static String uniqueField = "code";
   public String tableName = null;
-
   protected String jsEvent = null;
   protected int selectSize = 1;
+  protected String selectStyle = null;
   protected boolean multiple = false;
   protected java.sql.Timestamp lastAnchor = null;
   protected java.sql.Timestamp nextAnchor = null;
@@ -269,6 +268,16 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
+   *  Sets the selectStyle attribute of the LookupList object
+   *
+   *@param  tmp  The new selectStyle value
+   */
+  public void setSelectStyle(String tmp) {
+    this.selectStyle = tmp;
+  }
+
+
+  /**
    *  Gets the tableName attribute of the LookupList object
    *
    *@return    The tableName value
@@ -361,6 +370,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect thisSelect = new HtmlSelect();
     thisSelect.setSelectSize(selectSize);
+    thisSelect.setSelectStyle(selectStyle);
     thisSelect.setMultiple(multiple);
     thisSelect.setJsEvent(jsEvent);
 
@@ -446,6 +456,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
   public String getHtmlSelect(String selectName, String defaultValue) {
     HtmlSelect thisSelect = new HtmlSelect();
     thisSelect.setSelectSize(selectSize);
+    thisSelect.setSelectStyle(selectStyle);
     thisSelect.setJsEvent(jsEvent);
     Iterator i = this.iterator();
 
@@ -484,6 +495,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
   public String getHtmlSelect(String selectName, LookupList ms) {
     HtmlSelect thisSelect = new HtmlSelect();
     thisSelect.setSelectSize(selectSize);
+    thisSelect.setSelectStyle(selectStyle);
     thisSelect.setJsEvent(jsEvent);
     thisSelect.setMultiple(multiple);
     thisSelect.setMultipleSelects(ms);
@@ -660,8 +672,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString() +
@@ -733,7 +745,6 @@ public class LookupList extends HtmlSelect implements SyncableList {
     Iterator i = this.iterator();
     String result = "";
     int count = 0;
-
     while (i.hasNext()) {
       LookupElement thisElement = (LookupElement) i.next();
       if (count > 0) {
@@ -741,13 +752,46 @@ public class LookupList extends HtmlSelect implements SyncableList {
       } else {
         result += thisElement.getDescription();
       }
-
       count++;
     }
-
     return result;
   }
 
+
+  /**
+   *  Gets the idFromLevel attribute of the LookupList object
+   *
+   *@param  level  Description of the Parameter
+   *@return        The idFromLevel value
+   */
+  public int getIdFromLevel(int level) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (thisElement.getLevel() == level) {
+        return thisElement.getId();
+      }
+    }
+    return -1;
+  }
+
+
+  /**
+   *  Gets the levelFromId attribute of the LookupList object
+   *
+   *@param  id  Description of the Parameter
+   *@return     The levelFromId value
+   */
+  public int getLevelFromId(int id) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (thisElement.getCode() == id) {
+        return thisElement.getLevel();
+      }
+    }
+    return -1;
+  }
 
 
   /**
