@@ -18,6 +18,22 @@ ALTER TABLE contact_emailaddress ADD [primary_email] [bit] NULL;
 UPDATE contact_emailaddress SET primary_email = 0;
 ALTER TABLE contact_emailaddress ALTER COLUMN [primary_email] [bit] NOT NULL;
 
+UPDATE permission_category SET level = 700 WHERE category = 'Accounts';
+UPDATE permission_category SET level = 500 WHERE category = 'Contacts';
+UPDATE permission_category SET level = 800 WHERE category = 'Auto Guide';
+UPDATE permission_category SET level = 600 WHERE category = 'Pipeline';
+UPDATE permission_category SET level = 2100 WHERE category = 'Demo';
+UPDATE permission_category SET level = 1200 WHERE category = 'Communications';
+UPDATE permission_category SET level = 1300 WHERE category = 'Projects';
+UPDATE permission_category SET level = 1600 WHERE category = 'Help Desk';
+UPDATE permission_category SET level = 1800 WHERE category = 'Admin';
+UPDATE permission_category SET level = 1900 WHERE category = 'Help';
+UPDATE permission_category SET level = 100 WHERE category = 'System';
+UPDATE permission_category SET level = 200 WHERE category = 'My Home Page';
+UPDATE permission_category SET level = 2000 WHERE category = 'QA';
+UPDATE permission_category SET level = 1700 WHERE category = 'Reports';
+UPDATE permission_category SET level = 400 WHERE category = 'Employees';
+
 ALTER TABLE sync_client ADD [enabled] [bit] NULL;
 ALTER TABLE sync_client ADD [code] [varchar] (255) NULL;
 
