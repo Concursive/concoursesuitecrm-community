@@ -187,7 +187,7 @@
     <action name="OpportunitiesComponents"/>
     <action name="RevenueManager"/>
     <action name="AccountTickets"/>
-		<action name="AccountsDocuments"/>
+    <action name="AccountsDocuments"/>
     <action name="AccountsAutoGuide"/>
     <action name="AccountsPrototype"/>
     <action name="AccountTicketsDocuments"/>
@@ -196,6 +196,10 @@
     <action name="AccountContactsCalls"/>
     <action name="AccountContactsOpps"/>
     <action name="AccountContactsOppComponents"/>
+    <action name="AccountsServiceContracts"/>
+    <action name="AccountsAssets"/>
+    <action name="AccountTicketActivityLog"/>
+    <action name="AccountTicketMaintenanceNotes"/>
     <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
@@ -352,6 +356,8 @@
     <action name="TroubleTicketTasks"/>
     <action name="TroubleTicketsFolders"/>
     <action name="TroubleTicketsDocuments"/>
+    <action name="TroubleTicketActivityLog"/>
+    <action name="TroubleTicketMaintenanceNotes"/>
     <page title="Help Desk"/>
     <permission value="tickets-view"/>
     <long_html value="Help Desk"/>
@@ -394,8 +400,8 @@
     <graphic width="83" height="36" on="menu-reports-on.gif" off="menu-reports-off.gif" rollover=""/>
     <submenu name="reports.queue">
       <permission value="reports-view"/>
-      <long_html value="Queue"/>
-      <short_html value="Queue"/>
+      <long_html value="View"/>
+      <short_html value="View"/>
       <link value="Reports.do?command=ViewQueue"/>
     </submenu>
     <submenu name="reports.run">
