@@ -1334,7 +1334,7 @@ public class FileItem extends GenericBean {
    */
   private void logUpload(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO mod_log " +
+        "INSERT INTO usage_log " +
         "(enteredby, action, record_id, record_size) VALUES (?, ?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, enteredBy);
