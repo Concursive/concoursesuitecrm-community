@@ -14,6 +14,7 @@ import java.io.File;
 import java.sql.*;
 import org.jcrontab.data.CrontabEntryBean;
 import org.jcrontab.data.CrontabEntryDAO;
+import java.net.*;
 
 /**
  *  Perform system level maintenance, typically setup on a cron
@@ -47,8 +48,6 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandClearSystems(ActionContext context) {
-    //TODO: Must invalidate the user references too...
-    //NOTE: This doesn't work yet...
     Iterator i = this.getSystemIterator(context);
     while (i.hasNext()) {
       SystemStatus thisStatus = (SystemStatus) i.next();
@@ -131,7 +130,7 @@ public final class ProcessSystem extends CFSModule {
       //ArrayList entries = (ArrayList)Arrays.asList(entryList);
       ArrayList entries = new ArrayList();
       for (int i = 0; i < entryList.length; i++) {
-			  entries.add(entryList[i]);
+        entries.add(entryList[i]);
       }
       context.getRequest().setAttribute("entries", entries);
       if (System.getProperty("DEBUG") != null) {
@@ -153,6 +152,63 @@ public final class ProcessSystem extends CFSModule {
   private Iterator getSystemIterator(ActionContext context) {
     Hashtable globalStatus = (Hashtable) context.getServletContext().getAttribute("SystemStatus");
     return globalStatus.values().iterator();
+  }
+
+
+  /**
+   *  For each JSP found in the context path, a URL is constructed and requested
+   *  so that the server compiles the JSP
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPrecompileJSPs(ActionContext context) {
+    File baseDir = new File(context.getServletContext().getRealPath("/"));
+    precompileDirectory(context, baseDir, "/");
+    return "ProcessOK";
+  }
+
+
+  /**
+   *  Method to begin precompiling JSPs by specifying the directory to compile
+   *
+   *@param  context        Description of the Parameter
+   *@param  thisDirectory  Description of the Parameter
+   *@param  dir            Description of the Parameter
+   */
+  private void precompileDirectory(ActionContext context, File thisDirectory, String dir) {
+    File[] listing = thisDirectory.listFiles();
+    for (int i = 0; i < listing.length; i++) {
+      File thisFile = listing[i];
+      if (thisFile.isDirectory()) {
+        //System.out.println(thisFile.getName());
+        precompileDirectory(context, thisFile, dir + thisFile.getName() + "/");
+      } else {
+        precompileJSP(context, thisFile, dir);
+      }
+    }
+  }
+
+
+  /**
+   *  Method to compile a JSP by making an http request of the JSP
+   *
+   *@param  context   Description of the Parameter
+   *@param  thisFile  Description of the Parameter
+   *@param  dir       Description of the Parameter
+   */
+  private void precompileJSP(ActionContext context, File thisFile, String dir) {
+    if (thisFile.getName().endsWith(".jsp")) {
+      String serverName = "http://" + context.getRequest().getServerName();
+      String jsp = serverName + dir + thisFile.getName();
+      try {
+        URL url = new URL(jsp);
+        URLConnection conn = url.openConnection();
+        Object result = conn.getContent();
+      } catch (Exception e) {
+
+      }
+    }
   }
 }
 
