@@ -69,21 +69,21 @@ public final class ProcessPacket extends CFSModule {
       context.getSession().setMaxInactiveInterval(300);
       
       //Since this module bypasses the user login module, set this "user's"
-      //connection info to simulate the login
+      //connection info to simulate the login; currently required for getConnection
       context.getSession().setAttribute("ConnectionElement", ce);
       
+      db = this.getConnection(context);
+      
+      if (!"true".equals(getPref(context, "WEBSERVER.ASPMODE"))) {
+        // If binary version then perform a lookup in the system table to set the authcode
+        //auth.setAuthCode();
+        // The ASPMODE will look up the code in the gatekeeper table
+      }
       if (auth.isAuthenticated(context)) {
         //Environment variables for this packet request
         PacketContext packetContext = new PacketContext();
         packetContext.setActionContext(context);
-
-        if (auth.getSystemId() == -1) {
-          //Temporarily for Vport
-          auth.setSystemId(1);
-        }
         packetContext.setAuthenticationItem(auth);
-
-        db = this.getConnection(context);
 
         //Prepare the SyncClientManager
         SyncClientManager clientManager = new SyncClientManager();
