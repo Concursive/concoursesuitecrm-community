@@ -484,7 +484,17 @@ public final class MyCFS extends CFSModule {
 				Iterator assignmentList = thisProject.getAssignments().iterator();
 				while (assignmentList.hasNext()) {
 					com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
-					companyCalendar.addEvent(thisAssignment.getDueDate(), thisAssignment.getRole(), "Assignment", thisAssignment.getProjectId(), thisAssignment.getId());
+					//companyCalendar.addEvent(thisAssignment.getDueDate(), thisAssignment.getRole(), "Assignment", thisAssignment.getProjectId(), thisAssignment.getId());
+          if (thisAssignment.getDueDate() != null) {
+            CalendarEvent thisEvent = new CalendarEvent();
+            thisEvent.setDate(thisAssignment.getDueDate());
+            thisEvent.setSubject(thisAssignment.getRole());
+            thisEvent.setCategory("Assignment");
+            thisEvent.setId(thisAssignment.getProjectId());
+            thisEvent.setIdsub(thisAssignment.getId());
+            thisEvent.setIcon(thisAssignment.getStatusGraphicTag());
+            companyCalendar.addEvent(thisEvent);
+          }
 				}
 			}
 			
