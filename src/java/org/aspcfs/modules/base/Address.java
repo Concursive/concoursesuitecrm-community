@@ -83,6 +83,9 @@ public class Address {
     this.contactId = Integer.parseInt(tmp);
   }
 
+public int getContactId() {
+	return contactId;
+}
 
 
   /**
