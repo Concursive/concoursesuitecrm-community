@@ -33,8 +33,8 @@
       <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="320" height="400" src="MyCFS.do?command=MonthView&source=Calendar<%=returnPage!=null?"&return="+returnPage:""%>&reloadCalendarDetails=true">
       </iframe>
     </td>
-    <td valign="top" height="100%" width="100%">
-      <table height="100%" width="100%" border="0" cellpadding="0" cellspacing="0">
+    <td valign="top" height="380" width="100%"><%-- Change height 380 to 100% once Safari is udpated --%>
+      <table height="380" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td width="100%" style="border: 1px solid #000; background-color: #DEE0FA;">
             <table width="100%" cellspacing="4" cellpadding="0" border="0">
@@ -54,8 +54,8 @@
           </td>
         </tr>
         <tr>
-          <td width="100%" valign="top" height="100%">
-            <iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="100%" height="100%">
+          <td width="100%" valign="top" height="380">
+            <iframe id="calendardetailsid" name="calendardetails" frameborder="0" marginheight="0" width="100%" height="380">
             </iframe>
           </td>
         </tr>
