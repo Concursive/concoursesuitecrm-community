@@ -40,6 +40,8 @@ import org.aspcfs.jcrontab.datasource.Event;
  */
 public class Setup extends CFSModule {
 
+  public static final String os = System.getProperty("os.name");
+  
   /**
    *  The user is going to the setup page
    *
@@ -254,6 +256,18 @@ public class Setup extends CFSModule {
     String path = context.getRequest().getParameter("fileLibrary");
     if (path == null) {
       path = (String) context.getServletContext().getAttribute("FileLibrary");
+    }
+    //Display a default recommended file path
+    if (path == null) {
+      if (os.startsWith("Windows")) {
+        path = "c:\\dh_crm\\fileLibrary\\";
+      //TODO: Add Mac path
+      //} else if (os.startsWith("Mac")) {
+        
+      } else {
+        //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
+        path = "/var/lib/dh_crm/fileLibrary/";
+      }
     }
     context.getRequest().setAttribute("fileLibrary", path);
     return "ConfigureDirectoryCheckOK";
@@ -978,6 +992,7 @@ public class Setup extends CFSModule {
     prefs.add("CONNECTION_POOL.MAX_CONNECTIONS", "10");
     prefs.add("CONNECTION_POOL.MAX_IDLE_TIME.SECONDS", "60");
     prefs.add("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS", "300");
+    prefs.add("WEB-INF", context.getServletContext().getRealPath("/") + "WEB-INF" + fs);
     prefs.save();
     prefs.populateContext(context.getServletContext());
   }
