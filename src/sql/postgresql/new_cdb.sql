@@ -463,7 +463,7 @@ CREATE TABLE cfsinbox_messagelink (
 );
 
 CREATE TABLE account_type_levels (
-  id int not null references organization(org_id),
+  org_id int not null references organization(org_id),
   type_id int not null references lookup_account_types(code),
   level INTEGER not null,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

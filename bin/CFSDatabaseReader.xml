@@ -652,10 +652,11 @@
       <property>browser</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="accountTypeLevels" table="account_type_levels">
-      <property lookup="account" field="id"/>
-      <property lookup="lookupAccountTypes" field="type_id"/>
-      <property field="level"/>
-      <property>entered</property>
+      <property lookup="account" field="id">orgId</property>
+      <property lookup="lookupAccountTypes" field="type_id">typeId</property>
+      <property field="level">level</property>
+      <property field="entered">entered</property>
+      <property field="modified">modified</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="fieldTypes" table="field_types" uniqueField="id">
       <property alias="guid" field="id"/>
@@ -690,8 +691,8 @@
       <property field="total_bounced">totalBounced</property>
     </map>   
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaignListGroups" table="campaign_list_groups">
-      <property lookup="campaign" field="campaign_id"/>
-      <property lookup="searchCriteriaList" field="group_id"/>
+      <property lookup="campaign" field="campaign_id">campaignId</property>
+      <property lookup="searchCriteriaList" field="group_id">groupId</property>
     </map>  
   </mappings>
 </CFSDatabaseReader>

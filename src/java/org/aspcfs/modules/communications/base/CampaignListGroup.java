@@ -34,7 +34,7 @@ public void setGroupId(String tmp) { this.groupId = Integer.parseInt(tmp); }
                   throw new SQLException("Campaign List Group not found.");
           }
           
-          PreparedStatement pst = db.prepareStatement("SELECT c.*, " +
+          PreparedStatement pst = db.prepareStatement("SELECT c.* " +
                 "FROM campaign_list_groups c " +
                 "WHERE c.campaign_id = ? and c.group_id = ? ");
           pst.setInt(1, campaignId);

@@ -831,10 +831,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'accessLogList', 'com.darkhorseventures.cfsbase.AccessLogList');
  
-  INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'accountTypeLevels', 'com.darkhorseventures.webutils.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'accountTypeLevelsList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'accountTypeLevels', 'com.darkhorseventures.cfsbase.AccountTypeLevel');
 
    INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'fieldTypes', 'com.darkhorseventures.webutils.CustomLookupElement');
@@ -852,8 +850,6 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaignRun', 'com.darkhorseventures.cfsbase.CampaignRun');
  
-     INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaignListGroups', 'com.darkhorseventures.webutils.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaignListGroupsList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'campaignListGroups', 'com.darkhorseventures.cfsbase.CampaignListGroup');
  
