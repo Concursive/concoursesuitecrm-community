@@ -644,7 +644,7 @@ public class Message extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    if (!isValid(db)) {
+    if (!isValid()) {
       return false;
     }
 
@@ -713,7 +713,7 @@ public class Message extends GenericBean {
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
 
-    if (!isValid(db)) {
+    if (!isValid()) {
       return -1;
     }
 
@@ -847,7 +847,7 @@ public class Message extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  protected boolean isValid(Connection db) throws SQLException {
+  public boolean isValid() throws SQLException {
     errors.clear();
 
     if (name == null || name.trim().equals("")) {
