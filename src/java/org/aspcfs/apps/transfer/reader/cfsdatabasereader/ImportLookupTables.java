@@ -108,7 +108,6 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
           }
         }
         processOK = writer.save(thisRecord);
-        System.out.println(processOK);
         
       }
     }
