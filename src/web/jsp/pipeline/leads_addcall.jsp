@@ -158,6 +158,7 @@ Add a Call<br>
           </td>
         </tr>
       </table>
+      <br>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
       <input type="reset" value="Reset">

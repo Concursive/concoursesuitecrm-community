@@ -5,8 +5,8 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <a href="Leads.do">Pipeline Management</a> > 
 Reports<br>
 <hr color="#BFBFBB" noshade>
@@ -39,18 +39,18 @@ Reports<br>
     </td>
     </dhv:permission>
     <td>
-      <strong>File Subject</strong>
+      <strong>Subject</strong>
     </td>
     <td>
       <strong>Size</strong>
     </td>
-    <td>
+    <td nowrap>
       <strong>Create Date</strong>
     </td>
-    <td>
+    <td nowrap>
       <strong>Created By</strong>
     </td>
-   <td>
+   <td nowrap>
       <strong>D/L</strong>
     </td>
   </tr>
@@ -64,23 +64,23 @@ Reports<br>
 %>      
   <tr>
     <dhv:permission name="pipeline-reports-view,pipeline-reports-delete">
-    <td width="8" nowrap class="row<%= rowid %>">
+    <td nowrap class="row<%= rowid %>">
       <dhv:permission name="pipeline-reports-view"><a href="Leads.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="pipeline-reports-view,pipeline-reports-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-reports-delete"><a href="javascript:confirmDelete('Leads.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-    <td width="40%" class="row<%= rowid %>">
+    <td width="100%" class="row<%= rowid %>">
       <a href="javascript:popURL('Leads.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
     </td>
-    <td width="20" class="row<%= rowid %>">
+    <td align="right" class="row<%= rowid %>">
       <%= thisItem.getRelativeSize() %>k
     </td>
-    <td width="30%" class="row<%= rowid %>">
-      <%=toHtml(thisItem.getEnteredDateTimeString())%>
+    <td class="row<%= rowid %>" nowrap>
+      <%= toHtml(thisItem.getEnteredDateTimeString()) %>
     </td>
-    <td width="30%" class="row<%= rowid %>">
-      <%=toHtml(thisItem.getEnteredByString())%>
+    <td class="row<%= rowid %>" nowrap>
+      <%= toHtml(thisItem.getEnteredByString()) %>
     </td>
-    <td width="8" class="row<%= rowid %>">
+    <td align="right" class="row<%= rowid %>" nowrap>
       <%= thisItem.getDownloads() %>
     </td>
   </tr>
