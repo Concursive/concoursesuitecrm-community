@@ -4,9 +4,86 @@
 <jsp:useBean id="DateOperatorList" class="com.darkhorseventures.cfsbase.SearchOperatorList" scope="request"/>
 <jsp:useBean id="NumberOperatorList" class="com.darkhorseventures.cfsbase.SearchOperatorList" scope="request"/>
 <jsp:useBean id="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
+<jsp:useBean id="ContactTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="SCL" class="com.darkhorseventures.cfsbase.SearchCriteriaList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].groupName.focus();">
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Begin
+function HideSpans()
+{
+	isNS = (document.layers) ? true : false;
+	isIE = (document.all) ? true : false;
+	
+  if( (isIE) )
+  {
+    //document.all.new0.style.visibility="hidden";
+    //document.all.new1.style.visibility="hidden";
+    //document.all.new2.style.visibility="hidden";
+    //document.all.new3.style.visibility="hidden";
+  }
+  else if( (isNS) )
+  {
+    document.new0.visibility="hidden";
+    document.new1.visibility="hidden";
+    document.new2.visibility="hidden";
+    document.new3.visibility="hidden";
+  }
+
+  return true;
+}
+
+function ShowSpan(thisID)
+{
+	isNS4 = (document.layers) ? true : false;
+	isIE4 = (document.all && !document.getElementById) ? true : false;
+	isIE5 = (document.all && document.getElementById) ? true : false;
+	isNS6 = (!document.all && document.getElementById) ? true : false;
+
+	if (isNS4){
+	elm = document.layers[thisID];
+	}
+	else if (isIE4) {
+	elm = document.all[thisID];
+	}
+	else if (isIE5 || isNS6) {
+	elm = document.getElementById(thisID);
+	elm.style.visibility="visible";
+	}
+   
+}
+
+function setText(obj) {
+	document.searchForm.searchValue.value = obj.options[obj.selectedIndex].value;
+	return true;
+}
+
+function HideSpan(thisID)
+{
+	isNS4 = (document.layers) ? true : false;
+	isIE4 = (document.all && !document.getElementById) ? true : false;
+	isIE5 = (document.all && document.getElementById) ? true : false;
+	isNS6 = (!document.all && document.getElementById) ? true : false;
+
+	if (isNS4){
+	elm = document.layers[thisID];
+	}
+	else if (isIE4) {
+	elm = document.all[thisID];
+	}
+	else if (isIE5 || isNS6) {
+	elm = document.getElementById(thisID);
+	elm.style.visibility="hidden";
+	}
+   
+}
+
+
+//  End -->
+</SCRIPT>
+
+
+<body onLoad="javascript:document.forms[0].groupName.focus();HideSpans();">
 <script language="JavaScript" type="text/javascript" src="/javascript/searchForm.js"></script>
 <script language="JavaScript" type="text/javascript">
 var searchCriteria = new Array();
@@ -105,6 +182,7 @@ listOfOperators[2] = numberOperators
         page += "</SELECT>" // close selection item tag
         document.write(page) // lay out this part of the page
       </script>      
+      
       <br>
       &nbsp;<br>
       
@@ -124,6 +202,7 @@ listOfOperators[2] = numberOperators
         page += "</SELECT>" // close selection item tag
         document.write(page) // lay out this part of the page
       </script>
+      <span name="new0" ID="new0" style="position:relative; visibility:hidden">&nbsp;<%=ContactTypeList.getHtmlSelect("typeId",0)%></span>
       <br>
       &nbsp;<br>
       

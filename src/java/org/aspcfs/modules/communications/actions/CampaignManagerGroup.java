@@ -93,6 +93,12 @@ public final class CampaignManagerGroup extends CFSModule {
     // building the search field and operator lists
     try {
       db = this.getConnection(context);
+      
+      		ContactTypeList typeList = new ContactTypeList(db);
+		LookupList ctl = typeList.getLookupList("typeId",0);
+		ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
+		context.getRequest().setAttribute("ContactTypeList", ctl);
+	
       searchFieldList.buildFieldList(db);
       stringOperatorList.buildOperatorList(db, 0);
       dateOperatorList.buildOperatorList(db, 1);
@@ -119,6 +125,7 @@ public final class CampaignManagerGroup extends CFSModule {
     addModuleBean(context, submenu, "Build New Group");
 
     if (errorMessage == null) {
+      
       context.getRequest().setAttribute("SearchFieldList", searchFieldList);
       context.getRequest().setAttribute("StringOperatorList", stringOperatorList);
       context.getRequest().setAttribute("DateOperatorList", dateOperatorList);
@@ -244,6 +251,12 @@ public final class CampaignManagerGroup extends CFSModule {
     // building the search field and operator lists
     try {
       db = this.getConnection(context);
+      
+            	ContactTypeList typeList = new ContactTypeList(db);
+		LookupList ctl = typeList.getLookupList("typeId",0);
+		ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
+		context.getRequest().setAttribute("ContactTypeList", ctl);
+      
       searchFieldList.buildFieldList(db);
       stringOperatorList.buildOperatorList(db, 0);
       dateOperatorList.buildOperatorList(db, 1);

@@ -23,6 +23,15 @@ function reset(form){
 function updateOperators(){
 	operatorList = document.searchForm.operatorSelect;
 	fieldSelectIndex = searchField[document.searchForm.fieldSelect.options.selectedIndex].type
+	
+	if (document.searchForm.fieldSelect.options.selectedIndex == 7) {
+		ShowSpan('new0');
+		document.searchForm.searchValue.value = document.searchForm.typeId.options[document.searchForm.typeId.selectedIndex].value;
+	} else {
+		HideSpan('new0');
+		document.searchForm.searchValue.value = "";
+	}
+	
 	// empty the operator list
 	for (i = operatorList.options.length; i >= 0; i--)
 		operatorList.options[i]= null;

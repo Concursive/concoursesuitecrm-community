@@ -29,6 +29,7 @@ public class ContactList extends Vector {
 	private String middleName = null;
 	private String lastName = null;
 	private String title = null;
+	private String contactType = null;
 	private String company = null;
 	private boolean emailNotNull = false;
 	private Vector ignoreTypeIdList = new Vector();
@@ -44,6 +45,7 @@ public class ContactList extends Vector {
 	private String zipRange = null;
 	private String areaCodeRange = null;
 	private String cityRange = null;
+	private String typeIdRange = null;
 
 	private String dateBefore = null;
 	private String dateAfter = null;
@@ -113,6 +115,17 @@ public class ContactList extends Vector {
 	 */
 	public void setOwner(int owner) {
 		this.owner = owner;
+	}
+
+
+	/**
+	 *  Sets the TypeIdRange attribute of the ContactList object
+	 *
+	 *@param  typeIdRange  The new TypeIdRange value
+	 *@since
+	 */
+	public void setTypeIdRange(String typeIdRange) {
+		this.typeIdRange = typeIdRange;
 	}
 
 
@@ -306,6 +319,21 @@ public class ContactList extends Vector {
 		if (outerHash[6].containsKey("=") == true) {
 			this.cityRange = outerHash[6].get(new String("=")).toString();
 		}
+		
+		if (outerHash[7].containsKey("=") == true) {
+			this.typeIdRange = outerHash[7].get(new String("=")).toString();
+		}
+	}
+
+
+	/**
+	 *  Gets the TypeIdRange attribute of the ContactList object
+	 *
+	 *@return    The TypeIdRange value
+	 *@since
+	 */
+	public String getTypeIdRange() {
+		return typeIdRange;
 	}
 
 
@@ -520,6 +548,7 @@ public class ContactList extends Vector {
 		Hashtable zip = null;
 		Hashtable areacode = null;
 		Hashtable city = null;
+		Hashtable typeId = null;
 
 		int count = 0;
 
@@ -531,6 +560,7 @@ public class ContactList extends Vector {
 		zip = new Hashtable();
 		areacode = new Hashtable();
 		city = new Hashtable();
+		typeId = new Hashtable();
 
 		//THIS CORRESPONDS TO THE FIELD LIST
 
@@ -541,7 +571,8 @@ public class ContactList extends Vector {
 				entered,
 				zip,
 				areacode,
-				city
+				city,
+				typeId
 				};
 
 		System.out.println("ContactList-> SCL Size: " + this.getScl().size() + " name: " + this.getScl().getGroupName());
@@ -551,7 +582,7 @@ public class ContactList extends Vector {
 			Integer group = (Integer) i.next();
 			SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.getScl().get(group);
 			fieldName = thisGroup.getGroupField().getFieldName();
-			
+
 			//System.out.println("Field: " + fieldName);
 
 			Iterator j = thisGroup.iterator();
@@ -563,7 +594,7 @@ public class ContactList extends Vector {
 
 				readyToGo = replace(thisElement.getText().toLowerCase(), '\'', "\\'");
 				String check = (String) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
-				
+
 				//System.out.println("what is check : " + check);
 
 				//only if we have string data to deal with
@@ -845,6 +876,10 @@ public class ContactList extends Vector {
 		if (nameLastRange != null) {
 			sqlFilter.append("AND lower(c.namelast) in (" + nameLastRange + ") ");
 		}
+		
+		if (typeIdRange != null) {
+			sqlFilter.append("AND c.type_id in (" + typeIdRange + ") ");
+		}
 
 		if (zipRange != null) {
 			sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode in (" + zipRange + ")) ");
@@ -927,7 +962,7 @@ public class ContactList extends Vector {
 		if (lastName != null) {
 			pst.setString(++i, lastName);
 		}
-
+		
 		if (title != null) {
 			pst.setString(++i, title);
 		}

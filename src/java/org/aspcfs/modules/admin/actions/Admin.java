@@ -183,7 +183,9 @@ public final class Admin extends CFSModule {
 			db = this.getConnection(context);
 
 			if (id == 1) {
-				LookupList ctl = new LookupList(db, "lookup_contact_types");
+				ContactTypeList typeList = new ContactTypeList(db);
+				LookupList ctl = typeList.getLookupList("typeId",0);
+				//LookupList ctl = new LookupList(db, "lookup_contact_types");
 				ctl.setSelectSize(8);
 				ctl.setMultiple(true);
 				context.getRequest().setAttribute("SelectedList", ctl);
@@ -309,7 +311,9 @@ public final class Admin extends CFSModule {
 	 *@since
 	 */
 	protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
-		LookupList ctl = new LookupList(db, "lookup_contact_types");
+		ContactTypeList typeList = new ContactTypeList(db);
+		LookupList ctl = typeList.getLookupList("typeId",0);
+		
 		LookupList departmentList = new LookupList(db, "lookup_department");
 		LookupList sourceList = new LookupList(db, "lookup_ticketsource");
 		LookupList severityList = new LookupList(db, "ticket_severity");
@@ -350,7 +354,9 @@ public final class Admin extends CFSModule {
 		String tableName = "";
 
 		if (ignore != 1) {
-			LookupList ctl = new LookupList(db, "lookup_contact_types");
+			//LookupList ctl = new LookupList(db, "lookup_contact_types");
+			ContactTypeList typeList = new ContactTypeList(db);
+			LookupList ctl = typeList.getLookupList("typeId",0);
 			context.getRequest().setAttribute("ContactTypeList", ctl);
 		}
 		else {

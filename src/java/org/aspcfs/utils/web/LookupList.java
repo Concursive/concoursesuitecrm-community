@@ -323,6 +323,18 @@ public class LookupList extends HtmlSelect {
 			this.add(thisElement);
 		}
 	}
+	
+	public void appendItem(int tmp1, String tmp2) {
+		LookupElement thisElement = new LookupElement();
+		thisElement.setCode(tmp1);
+		thisElement.setDescription(tmp2);
+		if (this.size() <= 0) {
+			this.add(0, thisElement);
+		}
+		else {
+			this.add(this.size(),thisElement);
+		}
+	}
 
 }
 

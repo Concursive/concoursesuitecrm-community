@@ -4,6 +4,7 @@ import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.HtmlSelect;
+import com.darkhorseventures.webutils.LookupList;
 
 /**
  *  Contains a list of contact types built from the database
@@ -185,7 +186,13 @@ public class ContactTypeList extends Vector {
 	 *@since              1.1
 	 */
 	public String getHtmlSelect(String selectName, int defaultKey) {
-		HtmlSelect contactTypeSelect = new HtmlSelect();
+		LookupList contactTypeSelect = new LookupList();
+		contactTypeSelect = getLookupList(selectName, defaultKey);
+		return contactTypeSelect.getHtmlSelect(selectName, defaultKey);
+	}
+	
+	public LookupList getLookupList(String selectName, int defaultKey) {
+		LookupList contactTypeSelect = new LookupList();
 		contactTypeSelect.setJsEvent(jsEvent);
 		contactTypeSelect.setSelectSize(this.getSize());
 		contactTypeSelect.setMultiple(this.getMultiple());
@@ -193,15 +200,15 @@ public class ContactTypeList extends Vector {
 		Iterator i = this.iterator();
 		while (i.hasNext()) {
 			ContactType thisContactType = (ContactType) i.next();
-						
+			
 			if ( thisContactType.getEnabled() == true ) {
-				contactTypeSelect.addItem(thisContactType.getId(), thisContactType.getDescription());
+				contactTypeSelect.appendItem(thisContactType.getId(), thisContactType.getDescription());
 			} else if (thisContactType.getId() == defaultKey ) {
-				contactTypeSelect.addItem(thisContactType.getId(), thisContactType.getDescription() + " (X)");
+				contactTypeSelect.appendItem(thisContactType.getId(), thisContactType.getDescription() + " (X)");
 			}
 		}
 		
-		return contactTypeSelect.getHtml(selectName, defaultKey);
+		return contactTypeSelect;
 	}
 
 	/**
@@ -237,7 +244,9 @@ public class ContactTypeList extends Vector {
 			sql.append("WHERE code NOT IN (" + EMPLOYEE_TYPE + ") ");
 			//sql.append("AND code NOT IN (" + EMPLOYEE_TYPE + ") ");
 		}
-
+		
+		sql.append("ORDER BY level, description ");
+		
 		st = db.createStatement();
 		rs = st.executeQuery(sql.toString());
 		while (rs.next()) {
