@@ -27,6 +27,7 @@ public class HTMLUtils {
     }
     //Some things that will make the text look similar to the Html
     html = StringUtils.replace(html, "<br>", "\r\n");
+    html = StringUtils.replace(html, "<br />", "\r\n");
     //handle paragraphs
     html = StringUtils.replace(html, "<p>", "");
     html = StringUtils.replace(html, "</p>", "\r\n\r\n");
