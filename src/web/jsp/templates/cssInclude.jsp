@@ -15,10 +15,10 @@
     ClientType clientType = new ClientType(request);
     User.setClientType(clientType);
   }
-  //Mozilla: Mac (any version), Linux (1.2)
+  //Based on Red Hat releases, RH9 Mozilla 1.2.1 was the first to use XFT
   if ("moz".equals(User.getBrowserId()) &&
       ("linux".equals(User.getClientType().getOsString()) && 
-       User.getBrowserVersion() == 1.2 )) {
+       User.getBrowserVersion() < 1.2 )) {
 %>
 <link rel="stylesheet" href="css/template0-10pt.css" type="text/css">
 <%
