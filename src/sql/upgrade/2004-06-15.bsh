@@ -1,7 +1,8 @@
-
-import org.aspcfs.modules.base.Constants;
+// Script (C) 2004 Dark Horse Ventures, all rights reserved
 import java.sql.*;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.reports.base.*;
 
 // Accounts
 PermissionCategory category = new PermissionCategory(db, PermissionCategory.lookupId(db, "Accounts"));
@@ -136,7 +137,7 @@ permission.setViewpoints(false);
 permission.insert(db);
 
 // Tickets
-PermissionCategory category = new PermissionCategory(db, PermissionCategory.lookupId(db, "Tickets"));
+PermissionCategory category = new PermissionCategory(db, PermissionCategory.lookupId(db, "Help Desk"));
 
 Permission permission = new Permission();
 permission.setCategoryId(category.getId());
@@ -546,6 +547,17 @@ permission.setActive(false);
 permission.setViewpoints(false);
 permission.insert(db);
 
+PreparedStatement pst = db.prepareStatement(
+  "INSERT INTO module_field_categorylink " +
+  "(module_id, category_id, level, description) " +
+  "VALUES (?, ?, ?, ?) ");
+pst.setInt(1, category.getId());
+pst.setInt(2, 200403192);
+pst.setInt(3, 10);
+pst.setString(4, "Product Catalog Categories");
+pst.execute();
+pst.close();
+
 // Products and Services
 PermissionCategory category = new PermissionCategory();
 category.setCategory("Products and Services");
@@ -639,7 +651,7 @@ permission.setActive(true);
 permission.setViewpoints(false);
 permission.insert(db);
 
-// Role permissions
+// Products and Services portal user
 Role role = new Role();
 role.setRole("Products and Services Customer");
 role.setDescription("Products and Services portal user");
@@ -649,6 +661,34 @@ role.setEnteredBy(0);
 role.setModifiedBy(0);
 role.insert(db);
 
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "myhomepage"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
+
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "myhomepage-dashboard"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
+
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "products"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
+
+// Customer portal user
 Role role = new Role();
 role.setRole("Customer");
 role.setDescription("Customer portal user");
@@ -658,20 +698,86 @@ role.setEnteredBy(0);
 role.setModifiedBy(0);
 role.insert(db);
 
-PreparedStatement pst = db.prepareStatement(
-  "INSERT INTO role_permission " +
-  "(role_id, permission_id, role_view, role_add, role_edit, role_delete) " +
-  "VALUES(?,?,?,?,?,?) ");
-pst.setInt(1, role.getId());
-pst.setInt(2, permissionId);
-pst.setBoolean(3, true);
-pst.setBoolean(4, true);
-pst.setBoolean(5, true);
-pst.setBoolean(6, true);
-pst.execute();
-pst.close();
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "accounts"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
 
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "accounts-accounts"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
 
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "accounts-accounts-contacts"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
+
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "accounts-service-contracts"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
+
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "accounts-assets"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
+
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "accounts-accounts-tickets-maintenance-report"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
+
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "accounts-accounts-tickets-activity-log"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
+
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "accounts-accounts-contacts"));
+rolePermission.setView(true);
+rolePermission.setAdd(false);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
+
+RolePermission rolePermission = new RolePermission();
+rolePermission.setRoleId(role.getId());
+rolePermission.setPermissionId(Permission.lookupId(db, "accounts-accounts-tickets"));
+rolePermission.setView(true);
+rolePermission.setAdd(true);
+rolePermission.setEdit(false);
+rolePermission.setDelete(false);
+rolePermission.insert(db);
 
 
 
