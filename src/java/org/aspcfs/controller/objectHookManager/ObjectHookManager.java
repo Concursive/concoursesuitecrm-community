@@ -48,8 +48,6 @@ public class ObjectHookManager {
   public void initializeObjectHookList(String hookXML) {
     hookList = new ObjectHookList();
     hookList.parse(hookXML);
-    //TODO: remove test code
-    hookList.buildListTest();
   }
 
 
@@ -61,8 +59,6 @@ public class ObjectHookManager {
   public void initializeBusinessProcessList(String processXML) {
     processList = new BusinessProcessList();
     processList.parse(processXML);
-    //TODO: remove test code
-    processList.buildListTest();
   }
 
 

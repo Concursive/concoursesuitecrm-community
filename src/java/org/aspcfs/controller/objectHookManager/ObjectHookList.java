@@ -48,10 +48,9 @@ public class ObjectHookList extends HashMap {
     pst.close();
   }
 
-  public void buildListTest()  {
+  public void buildListTest(File xmlFile)  {
     try {
-      File file = new File("/home/matt/source/dhv/cfs2/documentation/Hooks and components.xml");
-      BufferedReader in = new BufferedReader(new FileReader(file));
+      BufferedReader in = new BufferedReader(new FileReader(xmlFile));
       
       StringBuffer config = new StringBuffer();
       String text = null;
