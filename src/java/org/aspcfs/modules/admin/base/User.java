@@ -1676,12 +1676,15 @@ public void setRevenueLock(boolean revenueLock) {
   public void buildRevenueYTD(Connection db, int year, int type) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
-
+    
+    String range = ((UserList)this.getFullChildList(this.getShortChildList(), new UserList())).getUserListIds(this.getId());
+    System.out.println("Using: " + range);
+    
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT sum(rv.amount) as s " +
         "FROM revenue rv " +
-        "WHERE rv.owner IN (" + childUsers.getUserListIds(id) + ") AND rv.year = ? ");
+        "WHERE rv.owner IN (" + range + ") AND rv.year = ? ");
 	
     if (type > 0) {
 	sql.append("AND rv.type = ? ");
@@ -1699,7 +1702,6 @@ public void setRevenueLock(boolean revenueLock) {
     rs.close();
     pst.close();
   }
-
 
   /**
    *  Method added in for SSS and other ASP customers newPassword: Updates the

@@ -174,7 +174,7 @@ public void setOwner(int owner) {
     if (orgId != -1) {
       sqlFilter.append("AND r.org_id = ? ");
     }
-    if (type != 0) {
+    if (type > 0) {
       sqlFilter.append("AND r.type = ? ");
     }
     if (owner > -1) {
@@ -195,7 +195,7 @@ public void setOwner(int owner) {
       pst.setInt(++i, orgId);
     }
     
-    if (type != 0) {
+    if (type > 0) {
       pst.setInt(++i, type);
     }
     if (owner > -1) {

@@ -31,6 +31,10 @@ public final class RevenueManager extends CFSModule {
     	}
 
     addModuleBean(context, "Revenue", "Revenue");
+    
+    Connection db = null;
+    Statement st = null;
+    ResultSet rs = null;
 
     int errorCode = 0;
     int idToUse = 0;
@@ -43,11 +47,7 @@ public final class RevenueManager extends CFSModule {
     StringBuffer sql = new StringBuffer();
     String checkFileName = "";
     
-    String graphString = context.getRequest().getParameter("type");
-
-    Connection db = null;
-    Statement st = null;
-    ResultSet rs = null;
+    //String graphString = context.getRequest().getParameter("type");
 
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     String overrideId = null;
@@ -60,7 +60,6 @@ public final class RevenueManager extends CFSModule {
 		context.getSession().setAttribute("othername", null);
 		context.getSession().setAttribute("previousId", null);
       	    }
-		    
     } else if (context.getSession().getAttribute("override") != null) {
 	    overrideId = (String)context.getSession().getAttribute("override");
     } 
@@ -72,7 +71,6 @@ public final class RevenueManager extends CFSModule {
     UserList tempUserList = new UserList();
     UserList linesToDraw = new UserList();
 
-    //RevenueList fullRevList = new RevenueList();
     RevenueList tempRevList = new RevenueList();
     RevenueList realFullRevList = new RevenueList();
     
@@ -88,14 +86,12 @@ public final class RevenueManager extends CFSModule {
     }
 
     if (overrideId != null && !(overrideId.equals("null")) && !(Integer.parseInt(overrideId) == getUserId(context))) {
-      System.out.println("first one" + overrideId);
       idToUse = Integer.parseInt(overrideId);
       thisRec = thisUser.getUserRecord().getChild(idToUse);
       context.getSession().setAttribute("override", overrideId);
       context.getSession().setAttribute("othername", thisRec.getContact().getNameFull());
       context.getSession().setAttribute("previousId", "" + thisRec.getManagerId());
     } else {
-      System.out.println("2nd one");
       idToUse = thisUser.getUserId();
       thisRec = thisUser.getUserRecord();
     }
@@ -104,73 +100,68 @@ public final class RevenueManager extends CFSModule {
       db = this.getConnection(context);
       buildFormElements(context, db);
       
-	RevenueTypeList rtl = new RevenueTypeList(db);
-	rtl.addItem(0, "--All--");
-	rtl.setJsEvent("onChange=\"document.forms[0].submit();\"");
-	context.getRequest().setAttribute("RevenueTypeList", rtl);
+      //graph type select
+      RevenueTypeList rtl = new RevenueTypeList(db);
+      rtl.addItem(0, "--All--");
+      rtl.setJsEvent("onChange=\"document.forms[0].submit();\"");
+      context.getRequest().setAttribute("RevenueTypeList", rtl);
+      //end
       
       PagedListInfo revenueInfo = this.getPagedListInfo(context, "DBRevenueListInfo");
       revenueInfo.setLink("/RevenueManager.do?command=Dashboard");
       
-      //sort by amount on the dashboard screen
-      //revenueInfo.setDefaultSort("s desc", null);
-      
+      //read in the year
       if (context.getRequest().getParameter("year") != null) {
 	      y = Integer.parseInt(context.getRequest().getParameter("year"));
 	      d.setYear(y - 1900);
 	      context.getSession().setAttribute("year", context.getRequest().getParameter("year"));
       } else if (context.getSession().getAttribute("year") != null) {
+	      System.out.println("Year is read as : " + (String)context.getSession().getAttribute("year"));
 	      y = Integer.parseInt((String)context.getSession().getAttribute("year"));
 	      d.setYear(y - 1900);
 	      context.getSession().setAttribute("year", (String)context.getSession().getAttribute("year"));
       } 
-           
+      //end 
+      
       shortChildList = thisRec.getShortChildList();
       shortChildList.setRevenueYear(y);
       
       if (context.getRequest().getParameter("type") != null) {
 	      shortChildList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
-	      
 	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
+	      
 	      displayList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
 	      context.getSession().setAttribute("type", context.getRequest().getParameter("type"));
       }  else if (context.getSession().getAttribute("type") != null) {
 	      shortChildList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("type")));
-	      
 	      realFullRevList.setType(Integer.parseInt((String)context.getSession().getAttribute("type")));
+	      
 	      displayList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("type")));
       }
       
-      shortChildList.buildRevenueYTD(db);
-      
-      context.getRequest().setAttribute("ShortChildList", shortChildList);
-
       fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
-
       String range = fullChildList.getUserListIds(idToUse);
       
-      thisRec.setRevenueIsValid(false, true);
+      //set the revenue YTD for each child in shortchildlist will use full-reporting range
+      shortChildList.buildRevenueYTD(db);
+      context.getRequest().setAttribute("ShortChildList", shortChildList);
+      
+      //might need this
+      //thisRec.setRevenueIsValid(false, true);
+      
       realFullRevList.setYear(y);
+      realFullRevList.setOwnerIdRange(range);
+      
+      System.out.println("The type of realfullrevlist is: " + realFullRevList.getType());
+      
+      realFullRevList.buildList(db);
       
       displayList.setRevenueYear(y);
       displayList.setBuildRevenueYTD(true);
       
-      System.out.println("here is the session variable: " + context.getSession().getAttribute("type"));
-      /**
-      if (context.getRequest().getParameter("type") != null) {
-	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
-	      displayList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
-	      context.getSession().setAttribute("type", context.getRequest().getParameter("type"));
-      }  else if (context.getSession().getAttribute("type") != null) {
-	      realFullRevList.setType(Integer.parseInt((String)context.getSession().getAttribute("type")));
-	      displayList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("type")));
-      }
-      */
-      realFullRevList.setOwnerIdRange(range);
-      realFullRevList.buildList(db);
+      //System.out.println("here is the session variable: " + context.getSession().getAttribute("type"));
 
       //filter out my revenue for displaying on page
-      
       Iterator z = realFullRevList.iterator();
 
       while (z.hasNext()) {
@@ -181,7 +172,6 @@ public final class RevenueManager extends CFSModule {
         }
       }
       
-      //displayList.setOwnerId(idToUse);
       displayList.setRevenueOwnerId(idToUse);
       displayList.setPagedListInfo(revenueInfo);
       displayList.buildList(db);
@@ -194,6 +184,9 @@ public final class RevenueManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    
+    //invalidating...??
+    thisRec.setRevenueIsValid(false, true);
 
     if (thisRec.getRevenueIsValid() == true) {
         checkFileName = thisRec.getRevenue().getLastFileName();
@@ -209,11 +202,12 @@ public final class RevenueManager extends CFSModule {
 
       while (n.hasNext()) {
         User thisRecord = (User) n.next();
+	thisRecord.setRevenueIsValid(false, true);
         tempUserList = prepareLines(thisRecord, realFullRevList, tempUserList, y);
       }
 
       linesToDraw = calculateLine(tempUserList, linesToDraw, y);
-
+      
       //set my own
 
       tempUserList = prepareLines(thisRec, tempRevList, tempUserList, y);

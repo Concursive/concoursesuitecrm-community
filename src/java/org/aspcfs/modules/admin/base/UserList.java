@@ -643,6 +643,7 @@ public void setRevenueType(int revenueType) {
       Iterator x = this.iterator();
       while (x.hasNext()) {
 	      User tempUser = (User)x.next();
+              //String range = ((UserList)tempUser.getFullChildList(tempUser.getShortChildList(), new UserList())).getUserListIds(tempUser.getId());
 	      tempUser.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType());
       }
   }
