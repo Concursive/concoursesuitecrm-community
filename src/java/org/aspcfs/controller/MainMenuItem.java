@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class MainMenuItem {
 
-  Vector actionNames = new Vector();
+  ArrayList actionNames = new ArrayList();
   String pageTitle = "";
   String permission = "";
   String longHtml = "";
@@ -22,7 +22,7 @@ public class MainMenuItem {
   String graphicOn = "";
   String graphicOff = "";
   String graphicRollover = "";
-  Vector submenuItems = new Vector();
+  ArrayList submenuItems = new ArrayList();
 
 
   /**
@@ -51,7 +51,7 @@ public class MainMenuItem {
    *@param  tmp  The new Name value
    *@since       1.1
    */
-  public void setActionNames(Vector tmp) {
+  public void setActionNames(ArrayList tmp) {
     this.actionNames = tmp;
   }
 
@@ -161,7 +161,7 @@ public class MainMenuItem {
    *@param  tmp  The new SubmenuItems value
    *@since       1.1
    */
-  public void setSubmenuItems(Vector tmp) {
+  public void setSubmenuItems(ArrayList tmp) {
     this.submenuItems = tmp;
   }
 
@@ -184,7 +184,7 @@ public class MainMenuItem {
    *@return    The Names value
    *@since     1.2
    */
-  public Vector getActionNames() {
+  public ArrayList getActionNames() {
     return actionNames;
   }
 
@@ -294,7 +294,7 @@ public class MainMenuItem {
    *@return    The SubmenuItems value
    *@since     1.1
    */
-  public Vector getSubmenuItems() {
+  public ArrayList getSubmenuItems() {
     return submenuItems;
   }
 
@@ -317,7 +317,7 @@ public class MainMenuItem {
    *@since       1.2
    */
   public void addActionName(String tmp) {
-    this.actionNames.addElement(tmp);
+    this.actionNames.add(tmp);
   }
 
 
@@ -330,6 +330,10 @@ public class MainMenuItem {
    */
   public boolean hasActionName(String tmp) {
     return actionNames.contains(tmp);
+  }
+  
+  public boolean hasRollover() {
+    return (graphicRollover != null && !graphicRollover.equals(""));
   }
   
   public String toString() {

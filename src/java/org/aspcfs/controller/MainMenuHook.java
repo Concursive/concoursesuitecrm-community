@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
  */
 public class MainMenuHook implements ControllerMainMenuHook {
 
-  private Vector menuItems;
+  private ArrayList menuItems;
   private File file;
   private ServletContext context;
 
@@ -38,12 +38,19 @@ public class MainMenuHook implements ControllerMainMenuHook {
    */
   public String executeControllerMainMenu(ServletConfig config) {
     context = config.getServletContext();
-    menuItems = new Vector();
+    menuItems = new ArrayList();
     if (config.getInitParameter("ModuleConfig") != null) {
       file = new File(context.getRealPath("/WEB-INF/" + config.getInitParameter("ModuleConfig")));
       load();
     }
     return ("");
+  }
+  
+  public void reload() {
+    if (menuItems != null) {
+      menuItems.clear();
+      load();
+    }
   }
 
 
@@ -90,7 +97,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
     int menuWidth = 0;
     StringBuffer menu = new StringBuffer();
     StringBuffer smallMenu = new StringBuffer();
-    Vector smallMenuList = new Vector();
+    ArrayList smallMenuList = new ArrayList();
 
     //Build the graphic menu and the module submenu
     Iterator menuItemsList = menuItems.iterator();
@@ -103,7 +110,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
   
           //Set the on state of the menu
           menu.append("<a href='" + thisMenu.getLink() + "'><img border='0' src='images/" + thisMenu.getGraphicOn() + "' width='" + thisMenu.getGraphicWidth() + "' height='" + thisMenu.getGraphicHeight() + "'></a>");
-          smallMenuList.addElement("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
+          smallMenuList.add("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
 
           //Build the submenu
           Iterator j = thisMenu.getSubmenuItems().iterator();
@@ -119,8 +126,20 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
         } else {
           //The user is not on this link, set the off state of the menu
-          menu.append("<a href='" + thisMenu.getLink() + "'><img border='0' src='images/" + thisMenu.getGraphicOff() + "' width='" + thisMenu.getGraphicWidth() + "' height='" + thisMenu.getGraphicHeight() + "'></a>");
-          smallMenuList.addElement("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
+          menu.append("<a href='" + thisMenu.getLink() + "'");
+          if (thisMenu.hasRollover()) {
+            menu.append(" onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + thisMenu.getShortHtml() + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
+          }
+          menu.append(">");
+          menu.append("<img ");
+          menu.append("border='0' ");
+          menu.append("src='images/" + thisMenu.getGraphicOff() + "' ");
+          menu.append("width='" + thisMenu.getGraphicWidth() + "' ");
+          menu.append("height='" + thisMenu.getGraphicHeight() + "' ");
+          
+          menu.append(">");
+          menu.append("</a>");
+          smallMenuList.add("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
         }
         menuWidth += Integer.parseInt(thisMenu.getGraphicWidth());
       }
@@ -178,7 +197,6 @@ public class MainMenuHook implements ControllerMainMenuHook {
       Element menuTag = (Element)menuTags.item(i);
       MainMenuItem thisMenu = parseMenu(menuTag);
       menuItems.add(thisMenu);
-      // only store it if it doesn't already exist.
     }
   }
 
@@ -194,7 +212,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
   private MainMenuItem parseMenu(Element e) {
     MainMenuItem mainItem = new MainMenuItem();
     //mainItem.setName(e.getAttribute("name"));
-    Vector submenuTable = mainItem.getSubmenuItems();
+    ArrayList submenuTable = mainItem.getSubmenuItems();
 
     NodeList children = e.getChildNodes();
     int len = children.getLength();
@@ -243,7 +261,13 @@ public class MainMenuHook implements ControllerMainMenuHook {
             submenuItem.setShortHtml(submenuChild.getAttribute("value"));
           } else if (tagName.equals("link")) {
             submenuItem.setLink(submenuChild.getAttribute("value"));
-          }
+          } else if (tagName.equals("graphic")) {
+            submenuItem.setGraphicWidth(submenuChild.getAttribute("width"));
+            submenuItem.setGraphicHeight(submenuChild.getAttribute("height"));
+            submenuItem.setGraphicOn(submenuChild.getAttribute("on"));
+            submenuItem.setGraphicOff(submenuChild.getAttribute("off"));
+            submenuItem.setGraphicRollover(submenuChild.getAttribute("rollover"));
+      	  }
         }
         submenuTable.add(submenuItem);
       }

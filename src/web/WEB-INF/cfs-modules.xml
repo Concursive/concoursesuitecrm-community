@@ -1,15 +1,18 @@
 <application>
 
   <!-- Not used yet -->
-  <menulinkselected value="true"/>
-  <submenulinkselected value="true"/>
-  <shortmenulinkselected value="true"/>
-  <menuclass on=""/>
-  <menuclass off=""/>
-  <submenuclass on="rs"/>
-  <submenuclass off="r"/>
-  <shortmenuclass on=""/>
-  <shortmenuclass off=""/>
+  <config>
+    <mainmenu>
+      <layout>horizontal</layout>
+      <long_css on="" off=""/>
+      <short_css on="" off=""/>
+    </mainmenu>
+    <submenu>
+      <layout>horizontal</layout>
+      <long_css on="rs" off="r"/>
+      <short_css on="rs" off="r"/>
+    </submenu>
+  </config>
   
   <!-- Modules that appear in main menu, in order -->
   <menu>
