@@ -157,7 +157,7 @@
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left>
+    <td valign="center" align="left" colspan="2">
       <strong>Addresses</strong>
     </td>
   </tr>
@@ -169,31 +169,125 @@
     ContactAddress thisAddress = (ContactAddress)anumber.next();
 %>    
   <tr class="containerBody">
+    <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
     <td>
-      <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
-      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
-      <input type="checkbox" name="address<%= acount %>delete" value="on">mark to remove<br>
-      <input type=text size=40 name="address<%= acount %>line1" maxlength=30 value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>"><br>
-      <input type=text size=40 name="address<%= acount %>line2" maxlength=30 value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>"><br>
-      <input type=text size=28 name="address<%= acount %>city" maxlength=30 value="<%= toHtmlValue(thisAddress.getCity()) %>">,
-      <input type=text size=2 name="address<%= acount %>state" maxlength=2 value="<%= toHtmlValue(thisAddress.getState()) %>">
-      <input type=text size=10 name="address<%= acount %>zip" maxlength=10 value="<%= toHtmlValue(thisAddress.getZip()) %>"><br>
-      <input type=text size=10 name="address<%= acount %>country" maxlength=30 value="<%= toHtmlValue(thisAddress.getCountry()) %>"><br>
-      
+      &nbsp;
     </td>
-  </tr>    
+    <td>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
+      <input type="checkbox" name="address<%= acount %>delete" value="on">mark to remove
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type=text size=40 name="address<%= acount %>line1" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type=text size=40 name="address<%= acount %>line2" maxlength=80 value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type=text size=28 name="address<%= acount %>city" maxlength=80 value="<%= toHtmlValue(thisAddress.getCity()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <input type=text size=28 name="address<%= acount %>state" maxlength=80 value="<%= toHtmlValue(thisAddress.getState()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type=text size=10 name="address<%= acount %>zip" maxlength=12 value="<%= toHtmlValue(thisAddress.getZip()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <input type=text size=28 name="address<%= acount %>country" maxlength=80 value="<%= toHtmlValue(thisAddress.getCountry()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr>
 <%    
   }
 %>
   <tr class="containerBody">
     <td>
-      <%= ContactAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Other") %><br>
-      <input type=text size=40 name="address<%= acount %>line1" maxlength=30><br>
-      <input type=text size=40 name="address<%= acount %>line2" maxlength=30><br>
-      <input type=text size=28 name="address<%= acount %>city" maxlength=30>,
-      <input type=text size=2 name="address<%= acount %>state" maxlength=2>
-      <input type=text size=10 name="address<%= acount %>zip" maxlength=10><br>
-      <input type=text size=10 name="address<%= acount %>country" maxlength=30>
+      &nbsp;
+    </td>
+    <td>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Other") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type=text size=40 name="address<%= acount %>line1" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type=text size=40 name="address<%= acount %>line2" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type=text size=28 name="address<%= acount %>city" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <input type=text size=28 name="address<%= acount %>state" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type=text size=10 name="address<%= acount %>zip" maxlength=12>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <input type=text size=28 name="address<%= acount %>country" maxlength=80>
     </td>
   </tr>
 </table>

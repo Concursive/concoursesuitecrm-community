@@ -138,33 +138,127 @@
 &nbsp;<br>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td valign=center align=left>
+    <td valign=center align=left colspan="2">
       <strong>Addresses</strong>
     </td>
   </tr>
   <tr class="containerBody">
     <td>
-      <%= ContactAddressTypeList.getHtmlSelect("address1type", "Business") %><br>
-      <input type=text size=40 name="address1line1" maxlength=30><br>
-      <input type=text size=40 name="address1line2" maxlength=30><br>
-      <input type=text size=28 name="address1city" maxlength=30>,
-      <input type=text size=2 name="address1state" maxlength=2>
-      <input type=text size=10 name="address1zip" maxlength=10><br>
-      <input type=text size=10 name="address1country" maxlength=30>
+      &nbsp;
     </td>
-  </tr> 
+    <td>
+      <%= ContactAddressTypeList.getHtmlSelect("address1type", "Business") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type=text size=40 name="address1line1" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type=text size=40 name="address1line2" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type=text size=28 name="address1city" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <input type=text size=12 name="address1state" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type=text size=28 name="address1zip" maxlength=12>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <input type=text size=28 name="address1country" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+		<td colspan="2">&nbsp;</td>
+	</tr>
   <tr class="containerBody">
     <td>
-      <%= ContactAddressTypeList.getHtmlSelect("address2type", "Home") %><br>
-      <input type=text size=40 name="address2line1" maxlength=30><br>
-      <input type=text size=40 name="address2line2" maxlength=30><br>
-      <input type=text size=28 name="address2city" maxlength=30>,
-      <input type=text size=2 name="address2state" maxlength=2>
-      <input type=text size=10 name="address2zip" maxlength=10><br>
-      <input type=text size=10 name="address2country" maxlength=30>
+      &nbsp;
     </td>
-  </tr> 
+    <td>
+      <%= ContactAddressTypeList.getHtmlSelect("address2type", "Home") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type=text size=40 name="address2line1" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type=text size=40 name="address2line2" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type=text size=28 name="address2city" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <input type=text size=12 name="address2state" maxlength=80>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type=text size=28 name="address2zip" maxlength=12>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <input type=text size=28 name="address2country" maxlength=80>
+    </td>
+  </tr>
 </table>
+<br>
 <input type=submit value="Save">
 <input type=reset value="Reset">
     </td>

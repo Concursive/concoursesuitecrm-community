@@ -111,7 +111,7 @@
   while (enumber.hasNext()) {
     ++ecount;
     ContactEmailAddress thisEmailAddress = (ContactEmailAddress)enumber.next();
-%>    
+%>
   <tr class="containerBody">
     <td>
       <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
@@ -245,7 +245,7 @@
     <td colspan="2">
       &nbsp;
     </td>
-  </tr>   
+  </tr>
 <%    
   }
 %>
