@@ -255,7 +255,8 @@ CREATE TABLE contact (
   custom1 int default -1,
   custom2 int default -1,
   custom_data TEXT,
-  url VARCHAR(100)
+  url VARCHAR(100),
+  primary_contact BOOLEAN DEFAULT false
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" USING btree ("user_id");
