@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.Ticket" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.Ticket,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="AccountTicketInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -28,26 +28,23 @@ Tickets<br>
       <strong>Action</strong>
     </th>
     </dhv:permission>
-    <th align="center">
-      <strong>Status</strong>
+    <th valign="center" align="left">
+      <strong>Number</strong>
     </th>
-    <th width="100%" nowrap>
-      <strong><dhv:label name="tickets-problem"><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=problem">Issue</a></dhv:label></strong>
-      <%= AccountTicketInfo.getSortIcon("problem") %>
-    </th>
-    <th align="center" nowrap>
-      <strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=pri_code">Priority</a></strong>
+    <th>
+      <b><strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=pri_code">Priority</a></strong></b>
       <%= AccountTicketInfo.getSortIcon("pri_code") %>
     </th>
-    <th align="center" nowrap>
-      <strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=entered">Age</a></strong>
-      <%= AccountTicketInfo.getSortIcon("entered") %>
-    </th nowrap>
-    <th align="center" nowrap>
-      <strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=modified">Last Modified</a></strong>
-      <%= AccountTicketInfo.getSortIcon("modified") %>
+    <th>
+      <b>Age</b>
     </th>
-  </tr>
+		<th>
+      <b>Assigned&nbsp;To</b>
+    </th>
+    <th>
+      <b>Modified</b>
+    </th>
+    </tr>
 <%
 	Iterator j = TicList.iterator();
 	if ( j.hasNext() ) {
@@ -58,41 +55,57 @@ Tickets<br>
 %>   
 	<tr class="containerBody">
     <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete">
-    <td width="8" valign="top" nowrap class="row<%= rowid %>">
+    <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
       <dhv:permission name="accounts-accounts-tickets-edit"><a href="AccountTickets.do?command=ModifyTicket&id=<%=thisTic.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-delete"><a href="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=thisTic.getId()%>&popup=true', 'Delete_ticket','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-    <td align="center" nowrap valign="top" class="row<%= rowid %>">
-<% if (thisTic.getClosed() == null) { %>
-      <font color="green">open</font>
-<%} else {%>
-      <font color="red">closed</font>
-<%}%>
+    <td width="15" valign="top" nowrap>
+			<a href="AccountTickets.do?command=TicketDetails&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
+		</td>
+		<td width="10" valign="top" nowrap>
+			<%= toHtml(thisTic.getPriorityName()) %>
+		</td>
+		<td width="8%" align="right" valign="top" nowrap>
+			<%= thisTic.getAgeOf() %>
+		</td>
+		<td width="150" nowrap valign="top">
+			<dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/><dhv:evaluate exp="<%= !(thisTic.getHasEnabledOwnerAccount()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+		</td>
+    <td width="150" nowrap valign="top">
+      <% if (thisTic.getClosed() == null) { %>
+        <%= thisTic.getModifiedDateTimeString() %>
+      <%} else {%>
+            <%= thisTic.getClosedDateTimeString() %>
+      <%}%>
     </td>
-    <td valign="top" class="row<%= rowid %>">
-      <a href="AccountTickets.do?command=TicketDetails&id=<%= thisTic.getId() %>"><%= toHtml(thisTic.getProblemHeader()) %></a>&nbsp;
-	<% if (thisTic.getCategoryName() != null) { %>
-      [<%= toHtml(thisTic.getCategoryName()) %>]
-	<%}%>
+   </tr>
+   <tr class="row<%= rowid %>">
+    <td colspan="6" valign="top">
+      <%
+        if (1==1) {
+          Iterator files = thisTic.getFiles().iterator();
+          while (files.hasNext()) {
+            FileItem thisFile = (FileItem)files.next();
+            if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
+      %>
+        <a href="AccountTicketsDocuments.do?command=Download&stream=true&tId=<%= thisTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
+      <%
+            }
+          }
+        }
+      %>
+      <%= toHtml(thisTic.getProblemHeader()) %>&nbsp;
+      <% if (thisTic.getClosed() == null) { %>
+        [<font color="green">open</font>]
+      <%} else {%>
+        [<font color="red">closed</font>]
+      <%}%>
     </td>
-    <td valign="top" align="center" nowrap class="row<%= rowid %>">
-      <%= toHtml(thisTic.getPriorityName()) %>
-    </td>
-    <td valign="top" align="right" nowrap class="row<%= rowid %>">
-      <%=thisTic.getAgeOf()%>
-    </td>
-    <td valign="top" align="center" nowrap class="row<%= rowid %>">
-<% if (thisTic.getClosed() == null) { %>
-      <%= thisTic.getModifiedDateTimeString() %>
-<%} else {%>
-      <%= thisTic.getClosedDateTimeString() %>
-<%}%>
-    </td>
-	</tr>
+  </tr>
 <%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="6">
+    <td colspan="7">
       No tickets found.
     </td>
   </tr>
