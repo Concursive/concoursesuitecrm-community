@@ -1,14 +1,14 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.cfsbase.Constants;
-import com.darkhorseventures.webutils.PagedListInfo;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Represents a list of vehicles
@@ -19,13 +19,14 @@ import com.darkhorseventures.webutils.PagedListInfo;
  */
 public class VehicleList extends ArrayList {
 
-  public static final String tableName = "autoguide_vehicle";
-  public static final String uniqueField = "vehicle_id";
+  public final static String tableName = "autoguide_vehicle";
+  public final static String uniqueField = "vehicle_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private int year = -1;
   private PagedListInfo pagedListInfo = null;
+
 
   /**
    *  Constructor for the VehicleList object
@@ -55,12 +56,26 @@ public class VehicleList extends ArrayList {
     return years;
   }
 
+
+  /**
+   *  Sets the pagedListInfo attribute of the VehicleList object
+   *
+   *@param  tmp  The new pagedListInfo value
+   */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
+
+
+  /**
+   *  Gets the pagedListInfo attribute of the VehicleList object
+   *
+   *@return    The pagedListInfo value
+   */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
   }
+
 
   /**
    *  Sets the lastAnchor attribute of the VehicleList object
@@ -225,16 +240,16 @@ public class VehicleList extends ArrayList {
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-    
+
     sqlCount.append(
-      "SELECT COUNT(*) AS recordcount " +
-      "FROM autoguide_vehicle v " +
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM autoguide_vehicle v " +
         " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
         " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
         "WHERE vehicle_id > -1 ");
-        
+
     createFilter(sqlFilter);
-        
+
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -246,14 +261,14 @@ public class VehicleList extends ArrayList {
       }
       pst.close();
       rs.close();
-      
+
       //Determine column to sort by
       pagedListInfo.setDefaultSort("v.vehicle_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY v.vehicle_id ");
     }
-    
+
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);

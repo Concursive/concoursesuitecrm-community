@@ -1,4 +1,4 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.contacts.base;
 
 import java.sql.*;
 

@@ -1,17 +1,18 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.ArrayList;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Contains a list of SearchField objects
  *
  *@author     Wesley S. Gillette
  *@created    November 1, 2001
- *@version    $Id$
+ *@version    $Id: SearchFieldList.java,v 1.3 2002/04/24 15:39:44 mrajkowski Exp
+ *      $
  */
 public class SearchFieldList extends ArrayList {
 

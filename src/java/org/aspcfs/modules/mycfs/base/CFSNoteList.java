@@ -2,14 +2,14 @@
 // The createFilter method and the prepareFilter method need to have the same
 // number of parameters if modified.
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.mycfs.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -292,11 +292,9 @@ public class CFSNoteList extends Vector {
 
     if (oldMessagesOnly == true) {
       sqlFilter.append("AND ml.status = 2 ");
-    }
-    else if (newMessagesOnly) {
+    } else if (newMessagesOnly) {
       sqlFilter.append("AND ml.status IN (0) ");
-    }
-    else if (!sentMessagesOnly) {
+    } else if (!sentMessagesOnly) {
       sqlFilter.append("AND ml.status IN (0,1) ");
     }
   }

@@ -1,11 +1,10 @@
-package com.darkhorseventures.autoguide.utils;
+package org.aspcfs.modules.media.autoguide.utils;
 
 import java.sql.*;
 import java.util.*;
 import java.io.*;
-import com.darkhorseventures.autoguide.base.*;
-import com.darkhorseventures.utils.ConnectionPool;
-import com.darkhorseventures.utils.ConnectionElement;
+import org.aspcfs.modules.media.autoguide.base.*;
+import com.darkhorseventures.database.*;
 import java.util.logging.*;
 
 /**
@@ -43,6 +42,8 @@ public class ParseKBB {
 
   /**
    *  Description of the Method
+   *
+   *@param  fileName  Description of the Parameter
    */
   public void process(String fileName) {
     Logger logger = Logger.getLogger("com.darkhorseventures.autoguide");
@@ -117,7 +118,7 @@ public class ParseKBB {
       logger.fine("Inserting Model-> " + model.getName());
       //System.out.println("Inserting-> " + make.getName() + " | " + model.getName());
       model.insert(db);
-      
+
       while (st.hasMoreTokens()) {
         int year = Integer.parseInt(st.nextToken());
         Vehicle thisVehicle = new Vehicle(year, make.getId(), model.getId());
@@ -125,7 +126,7 @@ public class ParseKBB {
         //System.out.println("         -> " + thisVehicle.getYear());
         thisVehicle.insert(db);
       }
-      
+
     }
   }
 }

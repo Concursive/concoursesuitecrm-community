@@ -1,12 +1,12 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.cfsbase.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
 import javax.servlet.http.*;
 
 /**
@@ -148,16 +148,36 @@ public class AdRunList extends ArrayList {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the accountInventoryId attribute of the AdRunList object
+   *
+   *@param  tmp  The new accountInventoryId value
+   */
   public void setAccountInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the inventoryId attribute of the AdRunList object
+   *
+   *@param  tmp  The new inventoryId value
+   */
   public void setInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
   }
 
-  public void setIncompleteOnly(boolean tmp) { this.incompleteOnly = tmp; }
+
+  /**
+   *  Sets the incompleteOnly attribute of the AdRunList object
+   *
+   *@param  tmp  The new incompleteOnly value
+   */
+  public void setIncompleteOnly(boolean tmp) {
+    this.incompleteOnly = tmp;
+  }
 
 
   /**
@@ -188,7 +208,13 @@ public class AdRunList extends ArrayList {
   public int getInventoryId() {
     return inventoryId;
   }
-  
+
+
+  /**
+   *  Gets the accountInventoryId attribute of the AdRunList object
+   *
+   *@return    The accountInventoryId value
+   */
   public int getAccountInventoryId() {
     return inventoryId;
   }
@@ -219,11 +245,18 @@ public class AdRunList extends ArrayList {
       return null;
     }
   }
-  
+
+
+  /**
+   *  Gets the adRun attribute of the AdRunList object
+   *
+   *@param  adId  Description of the Parameter
+   *@return       The adRun value
+   */
   public AdRun getAdRun(int adId) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      AdRun thisAdRun = (AdRun)i.next();
+      AdRun thisAdRun = (AdRun) i.next();
       if (thisAdRun.getId() == adId) {
         return thisAdRun;
       }

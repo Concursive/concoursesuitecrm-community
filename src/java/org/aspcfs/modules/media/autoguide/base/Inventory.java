@@ -1,18 +1,18 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
-import org.theseus.beans.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.text.*;
 import java.util.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.ObjectUtils;
-import com.darkhorseventures.utils.StringUtils;
-import com.darkhorseventures.cfsbase.Organization;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.modules.accounts.base.Organization;
 import javax.servlet.http.*;
-import com.darkhorseventures.cfsbase.Constants;
+import org.aspcfs.modules.base.Constants;
 import com.zeroio.iteam.base.FileItem;
 
 /**

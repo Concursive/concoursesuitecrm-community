@@ -1,29 +1,32 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Hashtable;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.cfsbase.Constants;
 import javax.servlet.http.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  A collection of options a specific Inventory object has
  *
  *@author     matt rajkowski
  *@created    June 16, 2002
- *@version    $Id$
+ *@version    $Id: InventoryOptionList.java,v 1.3 2002/06/17 18:29:12 mrajkowski
+ *      Exp $
  */
 public class InventoryOptionList extends ArrayList {
 
-/*   public static String tableName = "autoguide_inventory_options";
-  public static String uniqueField = "inventory_id";
-  private java.sql.Timestamp lastAnchor = null;
-  private java.sql.Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
- */  
+  /*
+   *  public static String tableName = "autoguide_inventory_options";
+   *  public static String uniqueField = "inventory_id";
+   *  private java.sql.Timestamp lastAnchor = null;
+   *  private java.sql.Timestamp nextAnchor = null;
+   *  private int syncType = Constants.NO_SYNC;
+   */
   private int inventoryId = -1;
 
 
@@ -63,32 +66,27 @@ public class InventoryOptionList extends ArrayList {
     }
   }
 
-/* 
-  public void setLastAnchor(java.sql.Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
 
-  public void setLastAnchor(String tmp) {
-    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
-  }
-
-  public void setNextAnchor(java.sql.Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-  public void setNextAnchor(String tmp) {
-    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
-  }
-
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-  public void setSyncType(String tmp) {
-    this.syncType = Integer.parseInt(tmp);
-  }
- */
-
+  /*
+   *  public void setLastAnchor(java.sql.Timestamp tmp) {
+   *  this.lastAnchor = tmp;
+   *  }
+   *  public void setLastAnchor(String tmp) {
+   *  this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+   *  }
+   *  public void setNextAnchor(java.sql.Timestamp tmp) {
+   *  this.nextAnchor = tmp;
+   *  }
+   *  public void setNextAnchor(String tmp) {
+   *  this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+   *  }
+   *  public void setSyncType(int tmp) {
+   *  this.syncType = tmp;
+   *  }
+   *  public void setSyncType(String tmp) {
+   *  this.syncType = Integer.parseInt(tmp);
+   *  }
+   */
   /**
    *  Sets the inventoryId attribute of the OptionList object
    *
@@ -129,15 +127,19 @@ public class InventoryOptionList extends ArrayList {
   }
 
 
-/*   public String getTableName() {
-    return tableName;
-  }
-
-  public String getUniqueField() {
-    return uniqueField;
-  }
- */
- 
+  /*
+   *  public String getTableName() {
+   *  return tableName;
+   *  }
+   *  public String getUniqueField() {
+   *  return uniqueField;
+   *  }
+   */
+  /**
+   *  Gets the inventoryId attribute of the InventoryOptionList object
+   *
+   *@return    The inventoryId value
+   */
   public int getInventoryId() {
     return inventoryId;
   }
@@ -266,9 +268,9 @@ public class InventoryOptionList extends ArrayList {
    *@exception  SQLException  Description of Exception
    */
   public void delete(Connection db) throws SQLException {
-    String sql = 
-      "DELETE FROM autoguide_inventory_options " +
-      "WHERE inventory_id = ? ";
+    String sql =
+        "DELETE FROM autoguide_inventory_options " +
+        "WHERE inventory_id = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, inventoryId);
     pst.execute();
@@ -285,19 +287,19 @@ public class InventoryOptionList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-/*     
-    if (syncType == Constants.SYNC_INSERTS) {
-      if (lastAnchor != null) {
-        sqlFilter.append("AND o.entered > ? ");
-      }
-      sqlFilter.append("AND o.entered < ? ");
-    }
-    if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND o.modified > ? ");
-      sqlFilter.append("AND o.entered < ? ");
-      sqlFilter.append("AND o.modified < ? ");
-    }
- */
+    /*
+     *  if (syncType == Constants.SYNC_INSERTS) {
+     *  if (lastAnchor != null) {
+     *  sqlFilter.append("AND o.entered > ? ");
+     *  }
+     *  sqlFilter.append("AND o.entered < ? ");
+     *  }
+     *  if (syncType == Constants.SYNC_UPDATES) {
+     *  sqlFilter.append("AND o.modified > ? ");
+     *  sqlFilter.append("AND o.entered < ? ");
+     *  sqlFilter.append("AND o.modified < ? ");
+     *  }
+     */
     if (inventoryId > -1) {
       sqlFilter.append("AND io.inventory_id = ? ");
     }
@@ -313,19 +315,19 @@ public class InventoryOptionList extends ArrayList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-/*     
-    if (syncType == Constants.SYNC_INSERTS) {
-      if (lastAnchor != null) {
-        pst.setTimestamp(++i, lastAnchor);
-      }
-      pst.setTimestamp(++i, nextAnchor);
-    }
-    if (syncType == Constants.SYNC_UPDATES) {
-      pst.setTimestamp(++i, lastAnchor);
-      pst.setTimestamp(++i, lastAnchor);
-      pst.setTimestamp(++i, nextAnchor);
-    }
- */
+    /*
+     *  if (syncType == Constants.SYNC_INSERTS) {
+     *  if (lastAnchor != null) {
+     *  pst.setTimestamp(++i, lastAnchor);
+     *  }
+     *  pst.setTimestamp(++i, nextAnchor);
+     *  }
+     *  if (syncType == Constants.SYNC_UPDATES) {
+     *  pst.setTimestamp(++i, lastAnchor);
+     *  pst.setTimestamp(++i, lastAnchor);
+     *  pst.setTimestamp(++i, nextAnchor);
+     *  }
+     */
     if (inventoryId > -1) {
       pst.setInt(++i, inventoryId);
     }

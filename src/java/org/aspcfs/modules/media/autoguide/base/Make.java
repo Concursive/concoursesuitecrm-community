@@ -1,12 +1,12 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
-import org.theseus.beans.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.ObjectUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.ObjectUtils;
 
 /**
  *  Represents a vehicle manufacturer

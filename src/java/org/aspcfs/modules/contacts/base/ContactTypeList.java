@@ -1,10 +1,11 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.contacts.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.LookupList;
 
 /**
  *  Contains a list of contact types built from the database

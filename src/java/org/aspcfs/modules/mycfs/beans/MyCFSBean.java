@@ -1,7 +1,7 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.mycfs.beans;
 
 import java.util.*;
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 
 /**
  *  Used by the MyCFS module for passing formatted data to the MyCFS JSP
@@ -24,8 +24,7 @@ public class MyCFSBean extends GenericBean {
    *
    *@since    1.0
    */
-  public MyCFSBean() {
-  }
+  public MyCFSBean() { }
 
 
   /**

@@ -1,15 +1,19 @@
 package org.aspcfs.controller.objectHookManager;
 
+import com.darkhorseventures.database.*;
+import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.apps.workFlowManager.*;
 import org.aspcfs.utils.*;
 import java.sql.*;
 
 /**
- *  Most components will extend this class to provide easy access to 
- *  database connections within a component, plus other useful methods.
+ *  Most components will extend this class to provide easy access to database
+ *  connections within a component, plus other useful methods.
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
- *@version    $Id$
+ *@version    $Id: ObjectHookComponent.java,v 1.3 2003/01/13 21:41:16 mrajkowski
+ *      Exp $
  */
 public class ObjectHookComponent {
 

@@ -1,13 +1,14 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Hashtable;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.cfsbase.Constants;
 import javax.servlet.http.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  A list of possible options a Vehicle can have
@@ -318,9 +319,9 @@ public class OptionList extends ArrayList {
    *@exception  SQLException  Description of Exception
    */
   public void delete(Connection db) throws SQLException {
-    String sql = 
-      "DELETE FROM autoguide_inventory_options " +
-      "WHERE inventory_id = ? ";
+    String sql =
+        "DELETE FROM autoguide_inventory_options " +
+        "WHERE inventory_id = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, inventoryId);
     pst.execute();

@@ -1,6 +1,6 @@
 //autoguide_options_option_id_seq
 
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
 import java.sql.*;
 
@@ -9,7 +9,8 @@ import java.sql.*;
  *
  *@author     matt rajkowski
  *@created    June 16, 2002
- *@version    $Id$
+ *@version    $Id: InventoryOption.java,v 1.1 2002/06/16 19:49:40 mrajkowski Exp
+ *      $
  */
 public class InventoryOption {
   private int inventoryId = -1;

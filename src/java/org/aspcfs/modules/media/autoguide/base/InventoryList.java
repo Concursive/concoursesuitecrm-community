@@ -1,21 +1,22 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.cfsbase.Constants;
-import com.darkhorseventures.webutils.PagedListInfo;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Collection of Inventory objects
  *
  *@author     matt
  *@created    May 17, 2002
- *@version    $Id$
+ *@version    $Id: InventoryList.java,v 1.22 2002/10/24 20:51:01 mrajkowski Exp
+ *      $
  */
 public class InventoryList extends ArrayList {
 
@@ -29,7 +30,7 @@ public class InventoryList extends ArrayList {
   private boolean buildOrganizationInfo = false;
   private boolean buildPictureId = false;
   private int orgId = -1;
-  
+
   private int showSold = -1;
   private boolean showIncompleteAdRunsOnly = false;
   private int showIncompleteInventoryAds = -1;
@@ -40,17 +41,32 @@ public class InventoryList extends ArrayList {
   private java.sql.Date adRunDateStart = null;
   private java.sql.Date adRunDateEnd = null;
 
+
   /**
    *  Constructor for the InventoryList object
    */
   public InventoryList() { }
 
+
+  /**
+   *  Sets the pagedListInfo attribute of the InventoryList object
+   *
+   *@param  tmp  The new pagedListInfo value
+   */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
+
+
+  /**
+   *  Gets the pagedListInfo attribute of the InventoryList object
+   *
+   *@return    The pagedListInfo value
+   */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
   }
+
 
   /**
    *  Sets the lastAnchor attribute of the InventoryList object
@@ -120,15 +136,33 @@ public class InventoryList extends ArrayList {
   public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the accountId attribute of the InventoryList object
+   *
+   *@param  tmp  The new accountId value
+   */
   public void setAccountId(int tmp) {
     setOrgId(tmp);
   }
-  
+
+
+  /**
+   *  Sets the orgId attribute of the InventoryList object
+   *
+   *@param  tmp  The new orgId value
+   */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
   }
-  
+
+
+  /**
+   *  Sets the accountId attribute of the InventoryList object
+   *
+   *@param  tmp  The new accountId value
+   */
   public void setAccountId(String tmp) {
     setOrgId(tmp);
   }
@@ -142,10 +176,16 @@ public class InventoryList extends ArrayList {
   public void setBuildOrganizationInfo(boolean tmp) {
     this.buildOrganizationInfo = tmp;
   }
-  
+
+
+  /**
+   *  Sets the buildOrganizationInfo attribute of the InventoryList object
+   *
+   *@param  tmp  The new buildOrganizationInfo value
+   */
   public void setBuildOrganizationInfo(String tmp) {
-    this.buildOrganizationInfo = 
-     ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.buildOrganizationInfo =
+        ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -157,11 +197,33 @@ public class InventoryList extends ArrayList {
   public void setBuildPictureId(boolean tmp) {
     this.buildPictureId = tmp;
   }
+
+
+  /**
+   *  Sets the buildPictureId attribute of the InventoryList object
+   *
+   *@param  tmp  The new buildPictureId value
+   */
   public void setBuildPictureId(String tmp) {
     this.buildPictureId = ("on".equals(tmp) || "true".equals(tmp) || "1".equals(tmp));
   }
 
-  public void setShowSold(int tmp) { this.showSold = tmp; }
+
+  /**
+   *  Sets the showSold attribute of the InventoryList object
+   *
+   *@param  tmp  The new showSold value
+   */
+  public void setShowSold(int tmp) {
+    this.showSold = tmp;
+  }
+
+
+  /**
+   *  Sets the showSold attribute of the InventoryList object
+   *
+   *@param  tmp  The new showSold value
+   */
   public void setShowSold(String tmp) {
     if (tmp != null) {
       this.showSold = Integer.parseInt(tmp);
@@ -169,14 +231,33 @@ public class InventoryList extends ArrayList {
       this.showSold = -1;
     }
   }
-  
-  public void setShowIncompleteAdRunsOnly(boolean tmp) { 
-    this.showIncompleteAdRunsOnly = tmp; 
+
+
+  /**
+   *  Sets the showIncompleteAdRunsOnly attribute of the InventoryList object
+   *
+   *@param  tmp  The new showIncompleteAdRunsOnly value
+   */
+  public void setShowIncompleteAdRunsOnly(boolean tmp) {
+    this.showIncompleteAdRunsOnly = tmp;
   }
-  
-  public void setShowIncompleteInventoryAds(int tmp) { 
-    this.showIncompleteInventoryAds = tmp; 
+
+
+  /**
+   *  Sets the showIncompleteInventoryAds attribute of the InventoryList object
+   *
+   *@param  tmp  The new showIncompleteInventoryAds value
+   */
+  public void setShowIncompleteInventoryAds(int tmp) {
+    this.showIncompleteInventoryAds = tmp;
   }
+
+
+  /**
+   *  Sets the showIncompleteInventoryAds attribute of the InventoryList object
+   *
+   *@param  tmp  The new showIncompleteInventoryAds value
+   */
   public void setShowIncompleteInventoryAds(String tmp) {
     if (tmp != null) {
       this.showIncompleteInventoryAds = Integer.parseInt(tmp);
@@ -184,8 +265,23 @@ public class InventoryList extends ArrayList {
       this.showIncompleteInventoryAds = -1;
     }
   }
-  
-  public void setHasRunDate(int tmp) { this.hasRunDate = tmp; }
+
+
+  /**
+   *  Sets the hasRunDate attribute of the InventoryList object
+   *
+   *@param  tmp  The new hasRunDate value
+   */
+  public void setHasRunDate(int tmp) {
+    this.hasRunDate = tmp;
+  }
+
+
+  /**
+   *  Sets the hasRunDate attribute of the InventoryList object
+   *
+   *@param  tmp  The new hasRunDate value
+   */
   public void setHasRunDate(String tmp) {
     if (tmp != null) {
       this.hasRunDate = Integer.parseInt(tmp);
@@ -193,13 +289,56 @@ public class InventoryList extends ArrayList {
       this.hasRunDate = -1;
     }
   }
-  public void setMakeId(int tmp) { this.makeId = tmp; }
-  public void setMakeId(String tmp) { 
-    this.makeId = Integer.parseInt(tmp); 
+
+
+  /**
+   *  Sets the makeId attribute of the InventoryList object
+   *
+   *@param  tmp  The new makeId value
+   */
+  public void setMakeId(int tmp) {
+    this.makeId = tmp;
   }
-  public void setAdRunDate(java.sql.Date tmp) { this.adRunDate = tmp; }
-  public void setAdRunDateStart(java.sql.Date tmp) { this.adRunDateStart = tmp; }
-  public void setAdRunDateEnd(java.sql.Date tmp) { this.adRunDateEnd = tmp; }
+
+
+  /**
+   *  Sets the makeId attribute of the InventoryList object
+   *
+   *@param  tmp  The new makeId value
+   */
+  public void setMakeId(String tmp) {
+    this.makeId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the adRunDate attribute of the InventoryList object
+   *
+   *@param  tmp  The new adRunDate value
+   */
+  public void setAdRunDate(java.sql.Date tmp) {
+    this.adRunDate = tmp;
+  }
+
+
+  /**
+   *  Sets the adRunDateStart attribute of the InventoryList object
+   *
+   *@param  tmp  The new adRunDateStart value
+   */
+  public void setAdRunDateStart(java.sql.Date tmp) {
+    this.adRunDateStart = tmp;
+  }
+
+
+  /**
+   *  Sets the adRunDateEnd attribute of the InventoryList object
+   *
+   *@param  tmp  The new adRunDateEnd value
+   */
+  public void setAdRunDateEnd(java.sql.Date tmp) {
+    this.adRunDateEnd = tmp;
+  }
 
 
   /**
@@ -254,7 +393,7 @@ public class InventoryList extends ArrayList {
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
-    
+
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -303,19 +442,19 @@ public class InventoryList extends ArrayList {
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-    
+
     sqlCount.append(
-      "SELECT COUNT(*) AS recordcount " +
-      "FROM autoguide_inventory i " +
-      " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
-      " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
-      " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
-      " LEFT JOIN organization o ON i.account_id = o.org_id " +
-      "WHERE i.inventory_id > -1 " +
-      "AND i.account_id IN (SELECT org_id FROM organization) ");
-    
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM autoguide_inventory i " +
+        " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
+        " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
+        " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
+        " LEFT JOIN organization o ON i.account_id = o.org_id " +
+        "WHERE i.inventory_id > -1 " +
+        "AND i.account_id IN (SELECT org_id FROM organization) ");
+
     createFilter(sqlFilter);
-    
+
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -327,7 +466,7 @@ public class InventoryList extends ArrayList {
       }
       pst.close();
       rs.close();
-      
+
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -350,7 +489,7 @@ public class InventoryList extends ArrayList {
     } else {
       sqlOrder.append("ORDER BY o.name,i.stock_no ");
     }
-    
+
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -422,12 +561,12 @@ public class InventoryList extends ArrayList {
     if (showIncompleteInventoryAds > -1) {
       if (showIncompleteInventoryAds == Constants.TRUE) {
         sqlFilter.append(
-          "AND i.inventory_id IN " +
-          "(SELECT inventory_id FROM autoguide_ad_run WHERE completedby = -1) ");
+            "AND i.inventory_id IN " +
+            "(SELECT inventory_id FROM autoguide_ad_run WHERE completedby = -1) ");
       } else {
         sqlFilter.append(
-          "AND i.inventory_id IN " +
-          "(SELECT inventory_id FROM autoguide_ad_run WHERE completedby > -1) ");
+            "AND i.inventory_id IN " +
+            "(SELECT inventory_id FROM autoguide_ad_run WHERE completedby > -1) ");
       }
     }
     if (makeId > -1) {
@@ -437,18 +576,18 @@ public class InventoryList extends ArrayList {
     }
     if (adRunDate != null) {
       sqlFilter.append(
-        "AND i.inventory_id IN " +
-        "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date = ?) ");
+          "AND i.inventory_id IN " +
+          "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date = ?) ");
     }
     if (adRunDateStart != null) {
       sqlFilter.append(
-        "AND i.inventory_id IN " +
-        "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date >= ?) ");
+          "AND i.inventory_id IN " +
+          "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date >= ?) ");
     }
     if (adRunDateEnd != null) {
       sqlFilter.append(
-        "AND i.inventory_id IN " +
-        "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date <= ?) ");
+          "AND i.inventory_id IN " +
+          "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date <= ?) ");
     }
   }
 

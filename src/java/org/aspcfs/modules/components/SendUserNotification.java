@@ -1,27 +1,49 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfs.component;
+package org.aspcfs.modules.components;
 
-import com.darkhorseventures.controller.*;
-import com.darkhorseventures.cfsbase.*;
+import org.aspcfs.controller.*;
+import org.aspcfs.apps.workFlowManager.*;
+import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.modules.base.Notification;
 import java.sql.*;
-import com.darkhorseventures.utils.StringUtils;
 
+/**
+ *  Description of the Class
+ *
+ *@author     mrajkowski
+ *@created    January 14, 2003
+ *@version    $Id$
+ */
 public class SendUserNotification extends ObjectHookComponent implements ComponentInterface {
-  public static final String HOST = "notification.host";
-  public static final String MODULE = "notification.module";
-  public static final String ITEM_ID = "notification.itemId";
-  public static final String ITEM_MODIFIED = "notification.itemModified";
-  public static final String USER_TO_NOTIFY = "notification.userToNotify";
-  public static final String SUBJECT = "notification.subject";
-  public static final String FROM = "notification.from";
-  public static final String REPLY_TO = "notification.replyTo";
-  public static final String BODY = "notification.body";
-  
+  public final static String HOST = "notification.host";
+  public final static String MODULE = "notification.module";
+  public final static String ITEM_ID = "notification.itemId";
+  public final static String ITEM_MODIFIED = "notification.itemModified";
+  public final static String USER_TO_NOTIFY = "notification.userToNotify";
+  public final static String SUBJECT = "notification.subject";
+  public final static String FROM = "notification.from";
+  public final static String REPLY_TO = "notification.replyTo";
+  public final static String BODY = "notification.body";
+
+
+  /**
+   *  Gets the description attribute of the SendUserNotification object
+   *
+   *@return    The description value
+   */
   public String getDescription() {
     return "Send an email to a user, using the CFS Notification System.";
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public boolean execute(ComponentContext context) {
     boolean result = false;
     Connection db = null;
@@ -51,3 +73,4 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
     return result;
   }
 }
+

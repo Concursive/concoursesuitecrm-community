@@ -1,8 +1,8 @@
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
 import java.sql.*;
 import java.text.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Represents a scheduled date when an ad is going to run, along with details

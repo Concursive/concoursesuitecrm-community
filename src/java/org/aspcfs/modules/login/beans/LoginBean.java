@@ -1,7 +1,7 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.login.beans;
 
-import org.theseus.beans.*;
-import com.darkhorseventures.utils.PasswordHash;
+import com.darkhorseventures.framework.beans.*;
+import org.aspcfs.utils.PasswordHash;
 
 /**
  *  Used by the Login module for passing formatted data to the Login JSP

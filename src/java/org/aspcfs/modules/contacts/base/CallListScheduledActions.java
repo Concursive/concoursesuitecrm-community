@@ -1,11 +1,13 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.contacts.base;
 
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.modules.base.ScheduledActions;
+import org.aspcfs.modules.mycfs.base.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+
 
 /**
  *  Description of the Class

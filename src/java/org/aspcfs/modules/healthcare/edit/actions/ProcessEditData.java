@@ -2,7 +2,7 @@
  *  Copyright 2002 Dark Horse Ventures
  *  Class begins with "Process" so it bypasses security
  */
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.healthcare.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

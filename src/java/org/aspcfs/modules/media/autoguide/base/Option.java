@@ -1,6 +1,6 @@
 //autoguide_options_option_id_seq
 
-package com.darkhorseventures.autoguide.base;
+package org.aspcfs.modules.media.autoguide.base;
 
 import java.sql.*;
 
@@ -17,6 +17,7 @@ public class Option {
   private String name = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
+
 
   /**
    *  Constructor for the Option object
@@ -53,10 +54,23 @@ public class Option {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the accountInventoryId attribute of the Option object
+   *
+   *@param  tmp  The new accountInventoryId value
+   */
   public void setAccountInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
   }
+
+
+  /**
+   *  Sets the optionId attribute of the Option object
+   *
+   *@param  tmp  The new optionId value
+   */
   public void setOptionId(String tmp) {
     this.id = Integer.parseInt(tmp);
   }
@@ -71,8 +85,25 @@ public class Option {
     this.name = tmp;
   }
 
-  public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
-  public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
+
+  /**
+   *  Sets the entered attribute of the Option object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Option object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
 
 
   /**
@@ -93,13 +124,43 @@ public class Option {
   public String getName() {
     return name;
   }
-  
-  public java.sql.Timestamp getEntered() { return entered; }
-  public java.sql.Timestamp getModified() { return modified; }
 
+
+  /**
+   *  Gets the entered attribute of the Option object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the Option object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Gets the accountInventoryId attribute of the Option object
+   *
+   *@return    The accountInventoryId value
+   */
   public int getAccountInventoryId() {
     return this.inventoryId;
   }
+
+
+  /**
+   *  Gets the optionId attribute of the Option object
+   *
+   *@return    The optionId value
+   */
   public int getOptionId() {
     return this.id;
   }

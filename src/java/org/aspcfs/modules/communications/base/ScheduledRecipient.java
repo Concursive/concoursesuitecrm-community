@@ -1,18 +1,19 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.StringTokenizer;
 import java.sql.*;
-import com.darkhorseventures.utils.DateUtils;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
  *
  *@author     chris price
  *@created    September 19, 2002
- *@version    $Id$
+ *@version    $Id: ScheduledRecipient.java,v 1.5 2002/09/19 19:24:02 mrajkowski
+ *      Exp $
  */
 public class ScheduledRecipient {
 
@@ -390,11 +391,11 @@ public class ScheduledRecipient {
     if (id == -1) {
       throw new SQLException("Scheduled Recipient not found.");
     }
-    
+
     PreparedStatement pst = db.prepareStatement(
-      "SELECT s.* " +
-      "FROM scheduled_recipient s " +
-      "WHERE s.id = ? ");
+        "SELECT s.* " +
+        "FROM scheduled_recipient s " +
+        "WHERE s.id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

@@ -1,21 +1,42 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfs.component;
+package org.aspcfs.modules.components;
 
-import com.darkhorseventures.controller.*;
-import com.darkhorseventures.cfsbase.*;
+import org.aspcfs.controller.*;
+import org.aspcfs.apps.workFlowManager.*;
+import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.utils.StringUtils;
 import java.sql.*;
-import com.darkhorseventures.utils.StringUtils;
 
+/**
+ *  Description of the Class
+ *
+ *@author     mrajkowski
+ *@created    January 14, 2003
+ *@version    $Id$
+ */
 public class SendSSLNotification extends ObjectHookComponent implements ComponentInterface {
-  public static final String HOST = "notification.host";
-  public static final String PORT = "notification.port";
-  public static final String BODY = "notification.body";
-  
+  public final static String HOST = "notification.host";
+  public final static String PORT = "notification.port";
+  public final static String BODY = "notification.body";
+
+
+  /**
+   *  Gets the description attribute of the SendSSLNotification object
+   *
+   *@return    The description value
+   */
   public String getDescription() {
     return "Post text data to a remote system using SSL.";
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public boolean execute(ComponentContext context) {
     boolean result = false;
     try {
@@ -32,3 +53,4 @@ public class SendSSLNotification extends ObjectHookComponent implements Componen
     return result;
   }
 }
+
