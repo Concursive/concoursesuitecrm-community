@@ -1,3 +1,5 @@
+DROP TABLE lookup_ticket_form;
+
 update service_contract
 set contract_value = null
 where contract_value = -1.0;

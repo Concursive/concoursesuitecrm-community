@@ -284,7 +284,7 @@ CREATE TABLE product_option_map (
 
 -- For each option, there are structure fields specified by the configurator
 -- which determine the option's structure
-CREATE TABLE product_option_BIT (
+CREATE TABLE product_option_boolean (
   product_option_id INTEGER NOT NULL REFERENCES product_option(option_id),
   value BIT NOT NULL
 );
@@ -296,7 +296,7 @@ CREATE TABLE product_option_float (
 
 CREATE TABLE product_option_timestamp (
   product_option_id INTEGER NOT NULL REFERENCES product_option(option_id),
-  value TIMESTAMP NOT NULL
+  value DATETIME NOT NULL
 );
 
 CREATE TABLE product_option_integer (
@@ -418,7 +418,7 @@ CREATE TABLE quote_product (
   estimated_delivery_date DATETIME,
   -- quote status
 	status_id INTEGER REFERENCES lookup_quote_status(code),
-  status_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  status_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Each quote_product can have configurable options
@@ -437,7 +437,7 @@ CREATE TABLE quote_product_options (
   status_id INTEGER REFERENCES lookup_quote_status(code)
 );
 
-CREATE TABLE quote_product_option_BIT (
+CREATE TABLE quote_product_option_boolean (
 	quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
 	value BIT NOT NULL
 );
@@ -449,7 +449,7 @@ CREATE TABLE quote_product_option_float (
 
 CREATE TABLE quote_product_option_timestamp (
 	quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
-	value TIMESTAMP NOT NULL
+	value DATETIME NOT NULL
 );
 
 CREATE TABLE quote_product_option_integer (
@@ -590,7 +590,7 @@ CREATE TABLE order_product_options (
   status_id INTEGER REFERENCES lookup_order_status(code)
 );
 
-CREATE TABLE order_product_option_BIT (
+CREATE TABLE order_product_option_boolean (
 	order_product_option_id INTEGER REFERENCES order_product_options(order_product_option_id),
 	value BIT NOT NULL
 );
