@@ -35,11 +35,11 @@ Build Relationship
       &nbsp;&nbsp;&nbsp;&nbsp;<%= objectSubSelect.getHtml() %> (Object Sub-Type)<br>
       &nbsp;<br>
       Choose specific object:<br>
-      <iframe src="ExternalContactsPrototype.do?include=companydirectory_relationships_viewopportunities.jsp" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 200;"</dhv:browser>>
+      <iframe src="ExternalContactsPrototype.do?include=companydirectory_relationships_viewopportunities.jsp" frameborder="0" <dhv:browser id="ns">width="100%" height="150"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 200;"</dhv:browser>>
         browser doesn't support this view
       </iframe>
-      <input type="BUTTON" value="Modify" onclick="">
-      <input type="BUTTON" value="Delete" onclick="">
+      <input type="BUTTON" value="Save" onclick="window.location.href='ExternalContactsPrototype.do?module=ExternalContacts&include=companydirectory_relationships_view.jsp&contactId=<%= ContactDetails.getId() %>'">
+      <input type="BUTTON" value="Cancel" onclick="window.location.href='ExternalContactsPrototype.do?module=ExternalContacts&include=companydirectory_relationships_view.jsp&contactId=<%= ContactDetails.getId() %>'">
     </td>
   </tr>
 </table>

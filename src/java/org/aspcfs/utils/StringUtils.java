@@ -146,7 +146,7 @@ public class StringUtils {
   
   public static String toHtmlTextValue(String s) {
     String htmlReady = replace(s, "<br>", "\r\n");
-    return htmlReady;  
+    return htmlReady;
   }
 
 
