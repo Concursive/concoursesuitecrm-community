@@ -24,7 +24,7 @@
     formTest = true;
     message = "";
 <%
-    for (int i=1; i<=(ContactDetails.getPhoneNumberList().size()+1); i++) {
+    for (int i=1; i<=(ContactDetails.getPhoneNumberList().size()); i++) {
 %>
 		<dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
 			message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
