@@ -6,7 +6,6 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
-<%--<a href="javascript:popURLReturn('/ForwardNote.do?command=ShowForm&popup=true', 'MyCFSInbox.do?command=Inbox', 'Inbox_message','600','450','yes','no');">New Message</a>--%> 
 <a href='javascript:window.location.href="MyCFSInbox.do?command=NewMessage&sendUrl="+escape("/MyCFSInbox.do?command=SendMessage")+"&return="+escape("MyCFSInbox.do?command=Inbox");'>New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
