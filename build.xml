@@ -78,6 +78,24 @@
     <property name="CFS_HOME" value="${env.CFS_HOME}"/>
   </target>
   
+  <!-- See if servlet API file exists -->
+  <target name="init.servlet4.exists" depends="init.environment">
+    <available file="${CATALINA_HOME}/common/lib/servlet.jar" 
+               property="build.servlet4.present"/>
+  </target>
+  <target name="init.servlet4.set" depends="init.servlet4.exists" if="build.servlet4.present">
+    <property name="servletJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"/>
+    <echo message="Web Server: Tomcat 4.x"/>
+  </target>
+  <target name="init.servlet5.exists" depends="init.environment">
+    <available file="${CATALINA_HOME}/common/lib/servlet-api.jar" 
+               property="build.servlet5.present"/>
+  </target>
+  <target name="init.servlet5.set" depends="init.servlet5.exists" if="build.servlet5.present">
+    <property name="servletJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet-api.jar"/>
+    <echo message="Web Server: Tomcat 5.x"/>
+  </target>
+  
   <!-- See if the properties file exists -->
   <target name="init.buildfile.exists" depends="init.environment">
     <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties" 
@@ -144,7 +162,7 @@
   </target>
   
   <!-- Prepare ant for processing -->
-  <target name="init" depends="init.loadproperties,init.classpath" 
+  <target name="init" depends="init.loadproperties,init.classpath,init.servlet4.set,init.servlet5.set" 
     description="Verify system environment needed by install">
     <!-- Default properties if not otherwise specified in build.properties -->
     <property name="DEBUGLEVEL" value="none"/>
@@ -868,7 +886,7 @@
         url="${SITE.URL}${DATABASE.NAME}"
         user="${SITE.USER}"
         password="${SITE.PASSWORD}"
-        servletJar="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"
+        servletJar="${servletJar}"
         webPath="${CFS_HOME}"
         baseFile="${src.sql.dir}${fs}init${fs}workflow.bsh"
         specificDatabase="${DATABASE.NAME}"
@@ -907,7 +925,7 @@
         url="${GATEKEEPER.URL}"
         user="${GATEKEEPER.USER}"
         password="${GATEKEEPER.PASSWORD}"
-        servletJar="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"
+        servletJar="${servletJar}"
         webPath="${CFS_HOME}"
         baseFile="${src.sql.dir}${fs}${SITE.DBTYPE}${fs}upgrade${fs}${arg1}"
         specificDatabase="${arg2}">
