@@ -148,7 +148,7 @@ Add Opportunity<br>
             <input type="radio" name="opp_type" value="contact" <dhv:evaluate exp="<%=(OppDetails.getHeader().getContactLink() > -1)%>">checked</dhv:evaluate>>Contact
           </td>
           <td align="left" valign="bottom">
-            <a href="javascript:popContactsListOppsSingle('header_contactLink','changecontact','true');"><div id="changecontact"><%= String.valueOf(OppDetails.getHeader().getContactLink()).equals("-1")?"&nbsp;None Selected":"&nbsp;" + OppDetails.getHeader().getContactName()%></div></a>
+            <a href="javascript:popContactsListSingle('header_contactLink','changecontact','reset=true&filters=mycontacts|accountcontacts');"><div id="changecontact"><%= String.valueOf(OppDetails.getHeader().getContactLink()).equals("-1")?"&nbsp;None Selected":"&nbsp;" + OppDetails.getHeader().getContactName()%></div></a>
             <input type="hidden" name="header_contactLink" id="header_contactLink" value="<%= OppDetails.getHeader().getContactLink() == -1?-1:OppDetails.getHeader().getContactLink() %>">
           </td>
         </tr>
