@@ -477,8 +477,35 @@ public class UserList extends Vector {
     }
     return userListSelect.getHtml(selectName, defaultKey);
   }
+<<<<<<< UserList.java
   
   
+  public HtmlSelect getHtmlSelectObj(String selectName, int defaultKey) {
+    HtmlSelect userListSelect = new HtmlSelect();
+    userListSelect.setJsEvent(jsEvent);
+
+    if (emptyHtmlSelectRecord != null) {
+      userListSelect.addItem(-1, emptyHtmlSelectRecord);
+    }
+    if (includeMe == true) {
+      userListSelect.addItem(myId, myValue);
+    }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      User thisUser = (User) i.next();
+      userListSelect.addItem(
+          thisUser.getId(),
+          Contact.getNameLastFirst(thisUser.getContact().getNameLast(),
+          thisUser.getContact().getNameFirst()));
+    }
+    return userListSelect;
+  }
+
+
+=======
+  
+  
+>>>>>>> 1.22
   /**
    *  Gets the UserListIds attribute of the UserList object
    *
