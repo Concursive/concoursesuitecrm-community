@@ -278,8 +278,8 @@ public final class Accounts extends CFSModule {
     OrganizationReport orgReport = new OrganizationReport();
     orgReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
     orgReport.setFilePath(filePath);
-    orgReport.setEnteredBy(getUserId(context));
-    orgReport.setModifiedBy(getUserId(context));
+    //orgReport.setEnteredBy(getUserId(context));
+    //orgReport.setModifiedBy(getUserId(context));
     orgReport.setSubject(subject);
     orgReport.setMinerOnly(false);
 
@@ -307,10 +307,13 @@ public final class Accounts extends CFSModule {
           oppReport.setAccountOwnerIdRange(this.getUserRange(context));
         }
 
+        oppReport.setCriteria(null);
         oppReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
 
         oppReport.setJoinOrgs(true);
         oppReport.buildReportFull(db);
+        orgReport.setEnteredBy(getUserId(context));
+        orgReport.setModifiedBy(getUserId(context));
         oppReport.saveAndInsert(db);
       } else if (type.equals("2")) {
         ContactReport contactReport = new ContactReport();
@@ -322,7 +325,7 @@ public final class Accounts extends CFSModule {
         contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contactReport.setPersonalId(this.getUserId(context));
 
-	contactReport.setCriteria(null);
+	      contactReport.setCriteria(null);
         contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
 
         if (ownerCriteria.equals("my")) {
@@ -349,6 +352,7 @@ public final class Accounts extends CFSModule {
           ticReport.setAccountOwnerIdRange(this.getUserRange(context));
         }
 
+        ticReport.setCriteria(null);
         ticReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
 
         ticReport.buildReportFull(db);

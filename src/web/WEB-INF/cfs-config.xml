@@ -643,6 +643,11 @@
     <forward name="CategoryJSListOK" resource="/troubletickets_js_categorylist.jsp"/>
     <forward name="DepartmentJSListOK" resource="/troubletickets_js_departmentlist.jsp"/>
     <forward name="OrganizationJSListOK" resource="/troubletickets_js_contactlist.jsp"/>
+    <forward name="ReportsOK" resource="/troubletickets_reports.jsp" layout="nav"/>
+    <forward name="GenerateFormOK" resource="/troubletickets_reports_generate.jsp" layout="nav"/>
+    <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
+    <forward name="DeleteReportOK" resource="/TroubleTickets.do?command=Reports"/>
+    <forward name="DeleteReportERROR" resource="/TroubleTickets.do?command=Reports"/>
   </action>
   <!-- End Ticket Module -->
   

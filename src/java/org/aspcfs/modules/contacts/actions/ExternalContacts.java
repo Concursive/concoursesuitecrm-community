@@ -302,8 +302,6 @@ public final class ExternalContacts extends CFSModule {
     ContactReport contactReport = new ContactReport();
     contactReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
     contactReport.setFilePath(filePath);
-    contactReport.setEnteredBy(getUserId(context));
-    contactReport.setModifiedBy(getUserId(context));
     contactReport.setSubject(subject);
     contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
     contactReport.setPersonalId(this.getUserId(context));
@@ -323,6 +321,8 @@ public final class ExternalContacts extends CFSModule {
 
       //builds list also
       contactReport.buildReportFull(db);
+      contactReport.setEnteredBy(getUserId(context));
+      contactReport.setModifiedBy(getUserId(context));
       contactReport.saveAndInsert(db);
     } catch (Exception e) {
       errorMessage = e;

@@ -987,8 +987,8 @@ public final class Leads extends CFSModule {
     OpportunityReport oppReport = new OpportunityReport();
     oppReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
     oppReport.setFilePath(filePath);
-    oppReport.setEnteredBy(getUserId(context));
-    oppReport.setModifiedBy(getUserId(context));
+    //oppReport.setEnteredBy(getUserId(context));
+    //oppReport.setModifiedBy(getUserId(context));
     oppReport.setSubject(subject);
 
     PagedListInfo thisInfo = new PagedListInfo();
@@ -1004,6 +1004,8 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       oppReport.buildReportFull(db);
+      oppReport.setEnteredBy(getUserId(context));
+      oppReport.setModifiedBy(getUserId(context));
       oppReport.saveAndInsert(db);
     } catch (Exception e) {
       errorMessage = e;

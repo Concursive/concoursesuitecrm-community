@@ -27,8 +27,9 @@ public class TicketReport extends TicketList {
 	protected String subject = "";
 	protected int enteredBy = -1;
 	protected int modifiedBy = -1;
+  protected int createdBy = -1;
 	protected ArrayList criteria = null;
-	String[] params = null;
+	protected String[] params = new String[] {"ticketid", "organization", "problem" };
 	
 	protected boolean displayId = true;
 	protected boolean displayProblem = true;
@@ -45,7 +46,9 @@ public class TicketReport extends TicketList {
 	protected boolean displayEnteredBy = true;
 	protected boolean displayModified = true;
 	protected boolean displayModifiedBy = true;
-	
+	protected boolean displayAssignedTo = true;
+  protected boolean displayOrganization = true;
+  
 	protected OrganizationReport orgReportJoin = new OrganizationReport();
 	protected boolean joinOrgs = false;
 
@@ -103,6 +106,19 @@ public class TicketReport extends TicketList {
 	public boolean getJoinOrgs() { return joinOrgs; }
 	public void setOrgReportJoin(OrganizationReport tmp) { this.orgReportJoin = tmp; }
 	public void setJoinOrgs(boolean tmp) { this.joinOrgs = tmp; }
+        
+        public boolean getDisplayAssignedTo() {
+                return displayAssignedTo;
+        }
+        public void setDisplayAssignedTo(boolean displayAssignedTo) {
+                this.displayAssignedTo = displayAssignedTo;
+        }
+        public boolean getDisplayOrganization() {
+	return displayOrganization;
+}
+public void setDisplayOrganization(boolean displayOrganization) {
+	this.displayOrganization = displayOrganization;
+}
 	
 	public int getLimitId() {
 		return limitId;
@@ -117,17 +133,20 @@ public class TicketReport extends TicketList {
 	public void setCriteria(String[] criteriaString) {
 		if (criteriaString != null) {
 			params = criteriaString;
-			criteria = new ArrayList(Arrays.asList(params));
-			setCriteriaVars();
-		} else {
-			criteria = new ArrayList();
-		}
-	
+		} 
+		
+		criteria = new ArrayList(Arrays.asList(params));
 		this.criteria = criteria;
 	}
-	
+  public int getCreatedBy() {
+	return createdBy;
+}
+public void setCreatedBy(int createdBy) {
+	this.createdBy = createdBy;
+}
+
 	public void setCriteriaVars() {
-		if ( !(criteria.contains("id")) ) { displayId = false; }
+		if ( !(criteria.contains("ticketid")) ) { displayId = false; }
 		if ( !(criteria.contains("problem")) ) { displayProblem = false; }
 		if ( !(criteria.contains("source")) ) { displaySourceName = false; }
 		if ( !(criteria.contains("contact")) ) { displayContactName = false; }
@@ -142,6 +161,8 @@ public class TicketReport extends TicketList {
 		if ( !(criteria.contains("enteredBy")) ) { displayEnteredBy = false; }
 		if ( !(criteria.contains("modified")) ) { displayModified = false; }
 		if ( !(criteria.contains("modifiedBy")) ) { displayModifiedBy = false; }
+    if ( !(criteria.contains("assignedTo")) ) { displayAssignedTo = false; }
+    if ( !(criteria.contains("organization")) ) { displayOrganization = false; }
 	}
 	
 	public String[] getParams() {
@@ -165,40 +186,56 @@ public class TicketReport extends TicketList {
 	
 	public void buildReportHeaders() {
 		if (joinOrgs) { orgReportJoin.buildReportHeaders(rep); }
+    
+    Iterator y = criteria.iterator();
+		while (y.hasNext()) {
+			String param = (String) y.next();
 		
-		if (displayId) { rep.addColumn("Ticket Id"); }
-		if (displayProblem) { rep.addColumn("Problem"); }
-		if (displaySourceName) { rep.addColumn("Source"); }
-		if (displayContactName) { rep.addColumn("Contact Name"); }
-		if (displaySeverity) { rep.addColumn("Severity"); }
-		if (displayPriority) { rep.addColumn("Priority"); }
-		if (displayCategory) { rep.addColumn("Category"); }
-		if (displayDepartment) { rep.addColumn("Department"); }
-		if (displayOwner) { rep.addColumn("Owner"); }
-		if (displaySolution) { rep.addColumn("Solution"); }
-		if (displayClosed) { rep.addColumn("Closed"); }
-		if (displayEntered) { rep.addColumn("Entered"); }
-		if (displayEnteredBy) { rep.addColumn("Entered By"); }
-		if (displayModified) { rep.addColumn("Modified"); }
-		if (displayModifiedBy) { rep.addColumn("Modified By"); }
+		if (param.equals("ticketid")) { rep.addColumn("Ticket Id"); }
+		if (param.equals("problem")) { rep.addColumn("Issue"); }
+		if (param.equals("source")) { rep.addColumn("Source"); }
+		//if (displayContactName) { rep.addColumn("Contact Name"); }
+		if (param.equals("severity")) { rep.addColumn("Severity"); }
+		if (param.equals("priority")) { rep.addColumn("Priority"); }
+		if (param.equals("category")) { rep.addColumn("Category"); }
+		if (param.equals("department")) { rep.addColumn("Department"); }
+		//if (displayOwner) { rep.addColumn("Owner"); }
+		if (param.equals("solution")) { rep.addColumn("Solution"); }
+		if (param.equals("closed")) { rep.addColumn("Closed"); }
+		if (param.equals("entered")) { rep.addColumn("Entered"); }
+		if (param.equals("enteredBy")) { rep.addColumn("Entered By"); }
+		if (param.equals("modified")) { rep.addColumn("Modified"); }
+		if (param.equals("modifiedBy")) { rep.addColumn("Modified By"); }
+    if (param.equals("assignedTo")) { rep.addColumn("Assigned To"); }
+    if (param.equals("organization")) { rep.addColumn("Organization"); }
+    
+    }
 	}
 	
 	public void buildReportHeaders(Report passedReport) {
-		if (displayId) { passedReport.addColumn("Ticket Id"); }
-		if (displayProblem) { passedReport.addColumn("Problem"); }
-		if (displaySourceName) { passedReport.addColumn("Source"); }
-		if (displayContactName) { passedReport.addColumn("Contact Name"); }
-		if (displaySeverity) { passedReport.addColumn("Severity"); }
-		if (displayPriority) { passedReport.addColumn("Priority"); }
-		if (displayCategory) { passedReport.addColumn("Category"); }
-		if (displayDepartment) { passedReport.addColumn("Department"); }
-		if (displayOwner) { passedReport.addColumn("Owner"); }
-		if (displaySolution) { passedReport.addColumn("Solution"); }
-		if (displayClosed) { passedReport.addColumn("Closed"); }
-		if (displayEntered) { passedReport.addColumn("Entered"); }
-		if (displayEnteredBy) { passedReport.addColumn("Entered By"); }
-		if (displayModified) { passedReport.addColumn("Modified"); }
-		if (displayModifiedBy) { passedReport.addColumn("Modified By"); }
+    Iterator y = criteria.iterator();
+		while (y.hasNext()) {
+			String param = (String) y.next();
+		
+		if (param.equals("ticketid")) { passedReport.addColumn("Ticket Id"); }
+		if (param.equals("problem")) { passedReport.addColumn("Issue"); }
+		if (param.equals("source")) { passedReport.addColumn("Source"); }
+		//if (displayContactName) { passedReport.addColumn("Contact Name"); }
+		if (param.equals("severity")) { passedReport.addColumn("Severity"); }
+		if (param.equals("priority")) { passedReport.addColumn("Priority"); }
+		if (param.equals("category")) { passedReport.addColumn("Category"); }
+		if (param.equals("department")) { passedReport.addColumn("Department"); }
+		//if (displayOwner) { passedReport.addColumn("Owner"); }
+		if (param.equals("solution")) { passedReport.addColumn("Solution"); }
+		if (param.equals("closed")) { passedReport.addColumn("Closed"); }
+		if (param.equals("entered")) { passedReport.addColumn("Entered"); }
+		if (param.equals("enteredBy")) { passedReport.addColumn("Entered By"); }
+		if (param.equals("modified")) { passedReport.addColumn("Modified"); }
+		if (param.equals("modifiedBy")) { passedReport.addColumn("Modified By"); }
+    if (param.equals("assignedTo")) { passedReport.addColumn("Assigned To"); }
+    if (param.equals("organization")) { passedReport.addColumn("Organization"); }
+    
+    }
 	}
 	
 	public void buildReportData(Connection db) throws SQLException {
@@ -228,21 +265,30 @@ public class TicketReport extends TicketList {
 			}
 			
 			if (!joinOrgs || writeOut == true) {
-				if (displayId) { thisRow.addCell(thisTic.getId());	}
-				if (displayProblem) { thisRow.addCell(thisTic.getProblem()); }
-				if (displaySourceName) {	thisRow.addCell(thisTic.getSourceName()); }
-				if (displayContactName) {	thisRow.addCell(thisTic.getThisContact().getNameLastFirst()); }
-				if (displaySeverity) {	thisRow.addCell(thisTic.getSeverityName());}
-				if (displayPriority) {	thisRow.addCell(thisTic.getPriorityName());}
-				if (displayCategory) {	thisRow.addCell(thisTic.getCategoryName());}
-				if (displayDepartment) {	thisRow.addCell(thisTic.getDepartmentName());}
-				if (displayOwner) {	thisRow.addCell(thisTic.getOwnerName());}
-				if (displaySolution) { thisRow.addCell(thisTic.getSolution());}
-				if (displayClosed) { thisRow.addCell(thisTic.getClosedString());}
-				if (displayEntered) { thisRow.addCell(thisTic.getEnteredString());}
-				if (displayEnteredBy) { thisRow.addCell(thisTic.getEnteredByName());  }
-				if (displayModified) { thisRow.addCell(thisTic.getModifiedString()); }
-				if (displayModifiedBy) { thisRow.addCell(thisTic.getModifiedByName()); }
+              
+				Iterator y = criteria.iterator();
+				while (y.hasNext()) {
+					String param = (String) y.next();
+          
+				if (param.equals("ticketid")) { thisRow.addCell(thisTic.getId());	}
+				if (param.equals("problem")) { thisRow.addCell(thisTic.getProblem()); }
+				if (param.equals("source")) {	thisRow.addCell(thisTic.getSourceName()); }
+				//if (displayContactName) {	thisRow.addCell(thisTic.getThisContact().getNameLastFirst()); }
+				if (param.equals("severity")) {	thisRow.addCell(thisTic.getSeverityName());}
+				if (param.equals("priority")) {	thisRow.addCell(thisTic.getPriorityName());}
+				if (param.equals("category")) {	thisRow.addCell(thisTic.getCategoryName());}
+				if (param.equals("department")) {	thisRow.addCell(thisTic.getDepartmentName());}
+				//if (displayOwner) {	thisRow.addCell(thisTic.getOwnerName());}
+				if (param.equals("solution")) { thisRow.addCell(thisTic.getSolution());}
+				if (param.equals("closed")) { thisRow.addCell(thisTic.getClosedString());}
+				if (param.equals("entered")) { thisRow.addCell(thisTic.getEnteredString());}
+				if (param.equals("enteredBy")) { thisRow.addCell(thisTic.getEnteredByName());  }
+				if (param.equals("modified")) { thisRow.addCell(thisTic.getModifiedString()); }
+				if (param.equals("modifiedBy")) { thisRow.addCell(thisTic.getModifiedByName()); }
+        if (param.equals("assignedTo")) { thisRow.addCell(thisTic.getOwnerName()); }
+        if (param.equals("organization")) { thisRow.addCell(thisTic.getCompanyName()); }
+        
+        }
 			
 				rep.addRow(thisRow);
 			}

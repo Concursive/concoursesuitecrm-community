@@ -504,12 +504,13 @@
       <link value="/TroubleTickets.do?command=Home"/>
     </submenu>
     
-    <!--submenu name="Reports">
-      <permission value="tickets-reports"/>
+    <submenu name="Reports">
+      <permission value="tickets-tickets-reports-view"/>
       <long_html value="Reports"/>
       <short_html value="Reports"/>
-      <link value="/TroubleTickets.do?command=Home&amp;action=RepT"/>
-    </submenu-->
+      <link value="/TroubleTickets.do?command=Reports"/>
+    </submenu>
+    
   </menu>
   
   <menu>

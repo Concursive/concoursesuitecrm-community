@@ -9,6 +9,9 @@ import java.util.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
+import com.zeroio.iteam.base.*;
+import com.zeroio.webutils.*;
+import java.text.*;
 
 /**
  *  Description of the Class
@@ -78,6 +81,221 @@ public final class TroubleTickets extends CFSModule {
       return ("SystemError");
     }
 
+  }
+ 
+  public String executeCommandGenerateForm(ActionContext context) {
+
+    if (!(hasPermission(context, "tickets-tickets-reports-add"))) {
+      return ("PermissionError");
+    }
+
+    addModuleBean(context, "Reports", "Generate new");
+    return ("GenerateFormOK");
+  }
+  
+  public String executeCommandExportReport(ActionContext context) {
+
+    if (!(hasPermission(context, "tickets-tickets-reports-add"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    boolean recordInserted = false;
+    Connection db = null;
+    String subject = context.getRequest().getParameter("subject");
+    String ownerCriteria = context.getRequest().getParameter("criteria1");
+    
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+
+    //setup file stuff
+    String filePath = this.getPath(context, "ticket-reports");
+    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
+    String datePathToUse1 = formatter1.format(new java.util.Date());
+    SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
+    String datePathToUse2 = formatter2.format(new java.util.Date());
+    filePath += datePathToUse1 + fs + datePathToUse2 + fs;
+
+    TicketReport ticketReport = new TicketReport();
+    ticketReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
+    ticketReport.setFilePath(filePath);
+    ticketReport.setSubject(subject);
+
+    //PagedListInfo thisInfo = new PagedListInfo();
+    //thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
+    //ticketReport.setPagedListInfo(thisInfo);
+
+    if (ownerCriteria.equals("assignedToMe")) {
+      ticketReport.setAssignedTo(this.getUserId(context));
+      ticketReport.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+    } else if (ownerCriteria.equals("unassigned")) {
+      ticketReport.setUnassignedToo(true);
+      ticketReport.setDepartment(thisUser.getUserRecord().getContact().getDepartment());    
+    } else if (ownerCriteria.equals("createdByMe")) {
+      ticketReport.setUnassignedToo(true);
+      ticketReport.setEnteredBy(getUserId(context));
+    } 
+
+    try {
+      db = this.getConnection(context);
+
+      //builds list also
+      ticketReport.buildReportFull(db);
+      ticketReport.setEnteredBy(getUserId(context));
+      ticketReport.setModifiedBy(getUserId(context));
+      ticketReport.saveAndInsert(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return executeCommandReports(context);
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandShowReportHtml(ActionContext context) {
+
+    if (!(hasPermission(context, "tickets-tickets-reports-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String itemId = (String) context.getRequest().getParameter("fid");
+
+    Connection db = null;
+
+    try {
+      db = getConnection(context);
+
+      //-1 is the project ID for non-projects
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+
+      String filePath = this.getPath(context, "ticket-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+      String textToShow = this.includeFile(filePath);
+      context.getRequest().setAttribute("ReportText", textToShow);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    return ("ReportHtmlOK");
+  }
+  
+  
+  public String executeCommandReports(ActionContext context) {
+
+    if (!(hasPermission(context, "tickets-tickets-reports-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+
+    FileItemList files = new FileItemList();
+    files.setLinkModuleId(Constants.TICKETS_REPORTS);
+    files.setLinkItemId(-1);
+
+    PagedListInfo rptListInfo = this.getPagedListInfo(context, "TicketRptListInfo");
+    rptListInfo.setLink("/TroubleTickets.do?command=Reports");
+
+    try {
+      db = this.getConnection(context);
+      files.setPagedListInfo(rptListInfo);
+
+      if ("all".equals(rptListInfo.getListView())) {
+        files.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        files.setOwner(this.getUserId(context));
+      }
+
+      files.buildList(db);
+
+      Iterator i = files.iterator();
+      while (i.hasNext()) {
+        FileItem thisItem = (FileItem) i.next();
+        Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
+        Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
+        thisItem.setEnteredByString(enteredBy.getNameFirstLast());
+        thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
+      }
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "Reports", "TicketReports");
+      context.getRequest().setAttribute("FileList", files);
+      return ("ReportsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+
+  }
+  
+  
+  public String executeCommandDeleteReport(ActionContext context) {
+
+    if (!(hasPermission(context, "tickets-tickets-reports-delete"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    boolean recordDeleted = false;
+
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String itemId = (String) context.getRequest().getParameter("fid");
+
+    Connection db = null;
+    try {
+      db = getConnection(context);
+
+      //-1 is the project ID for non-projects
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+
+      if (thisItem.getEnteredBy() == this.getUserId(context)) {
+        recordDeleted = thisItem.delete(db, this.getPath(context, "ticket-reports"));
+
+        String filePath1 = this.getPath(context, "ticket-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
+        java.io.File fileToDelete1 = new java.io.File(filePath1);
+        if (!fileToDelete1.delete()) {
+          System.err.println("FileItem-> Tried to delete file: " + filePath1);
+        }
+
+        String filePath2 = this.getPath(context, "ticket-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+        java.io.File fileToDelete2 = new java.io.File(filePath2);
+        if (!fileToDelete2.delete()) {
+          System.err.println("FileItem-> Tried to delete file: " + filePath2);
+        }
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "Reports", "Reports delete");
+
+    if (errorMessage == null) {
+      if (recordDeleted) {
+        return ("DeleteReportOK");
+      } else {
+        return ("DeleteReportERROR");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 
