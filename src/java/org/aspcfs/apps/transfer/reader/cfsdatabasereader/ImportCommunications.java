@@ -46,18 +46,20 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     }
 
     writer.setAutoCommit(true);
-
+    
     logger.info("ImportCommunications-> Inserting Saved Criteria Elements");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
     if (!processOK) {
       return false;
     }
-    
+
+    /**
     logger.info("ImportCommunications-> Inserting Search Field Elements");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "searchFieldElement");
     if (!processOK) {
       return false;
     }
+    */
     
     /**
     processOK = writer.commit();
