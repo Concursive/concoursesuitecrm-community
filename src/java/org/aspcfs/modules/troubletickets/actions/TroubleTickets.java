@@ -586,7 +586,11 @@ public final class TroubleTickets extends CFSModule {
       if (resultCount == -1) {
         return (executeCommandModify(context));
       } else if (resultCount == 1) {
-        return ("UpdateOK");
+		if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+			return (executeCommandHome(context));
+		} else {
+			return ("UpdateOK");
+		}
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

@@ -24,11 +24,22 @@
 </style>
 <a href="/CampaignManagerMessage.do?command=View">Back to Message List</a><br>
 <form name="modMessage" action="/CampaignManagerMessage.do?command=Update&auto-populate=true" method="post">
-&nbsp;<br>
 <input type="hidden" name="id" value="<%= Message.getId() %>">
 <input type="hidden" name="modified" value="<%= Message.getModified() %>">
+
+<% if (request.getParameter("return") != null) {%>
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
 <input type="submit" value="Update" name="Save" onclick="javascript:save();">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
+<%}%>
 <input type="reset" value="Reset">
 <br>
 &nbsp;
@@ -127,7 +138,13 @@
 </table>
 <br>
 <input type="submit" value="Update" name="Save" onclick="javascript:save();">
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
+<%}%>
 <input type="reset" value="Reset">
 </form>
 <script type="text/javascript">

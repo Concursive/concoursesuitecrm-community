@@ -312,7 +312,11 @@ public final class Contacts extends CFSModule {
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
         return ("ModifyOK");
       } else if (resultCount == 1) {
-        return ("UpdateOK");
+              if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+		      return (executeCommandView(context));
+	      } else {
+		      return ("UpdateOK");
+	      }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

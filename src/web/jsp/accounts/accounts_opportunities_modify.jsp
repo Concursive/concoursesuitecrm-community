@@ -48,8 +48,20 @@
 <input type="hidden" name="id" value="<%= OppDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= OppDetails.getModified() %>">
 
+<% if (request.getParameter("return") != null) {%>
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
 <input type="submit" value="Update">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=View&orgId=<%= OppDetails.getAccountLink() %>'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=Details&id=<%= OppDetails.getId() %>'">
+<%}%>
+
 <input type="reset" value="Reset">
 <br>
 &nbsp;
@@ -177,7 +189,14 @@
 &nbsp;
 <br>
 <input type="submit" value="Update">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=View&orgId=<%= OppDetails.getAccountLink() %>'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Opportunities.do?command=Details&id=<%= OppDetails.getId() %>'">
+<%}%>
 <input type="reset" value="Reset">
   </td>
   </tr>

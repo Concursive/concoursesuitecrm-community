@@ -116,7 +116,13 @@ function ShowSpan(thisID)
 			<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
 		<%} else {%>
 			<input type=submit value="Update">
-			<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type=submit value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
+	<%}%>
+<%} else {%>
+	<input type=submit value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+<%}%>
 			<%= showAttribute(request, "closedError") %>
 		<%}%>
       </td>
@@ -170,6 +176,9 @@ function ShowSpan(thisID)
         <input type=hidden name=id value="<%=TicketDetails.getId()%>">
         <input type=hidden name=companyName value="<%=toHtml(TicketDetails.getCompanyName())%>">
         <input type=hidden name=refresh value="-1">
+		<% if (request.getParameter("return") != null) {%>
+			<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+		<%}%>
       </td>
 		</tr>
 		
@@ -368,7 +377,14 @@ function ShowSpan(thisID)
 <%} else {%>
   <input type="submit" value="Update">
 <%}%>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type=submit value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
+	<%}%>
+<%} else {%>
+	<input type=submit value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+<%}%>
   </td>
   </tr>
 </table>

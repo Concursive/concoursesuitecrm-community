@@ -25,8 +25,21 @@
     <td class="containerBack">
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
+
+<% if (request.getParameter("return") != null) {%>
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
 <input type="submit" value="Update" name="Save">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Contacts.do?command=View&orgId=<%= ContactDetails.getOrgId() %>'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Contacts.do?command=Details&id=<%= ContactDetails.getId() %>'">
+<%}%>
+
 <input type="reset" value="Reset">
 <input type="hidden" name="owner" value="<%= ContactDetails.getOwner() %>">
 <br>
@@ -289,7 +302,13 @@
 </table>
 <br>
 <input type="submit" value="Update" name="Save">
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Contacts.do?command=View&orgId=<%= ContactDetails.getOrgId() %>'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Contacts.do?command=Details&id=<%= ContactDetails.getId() %>'">
+<%}%>
 <input type="reset" value="Reset">
   </td>
   </tr>

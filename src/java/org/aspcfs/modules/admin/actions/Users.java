@@ -629,7 +629,11 @@ public final class Users extends CFSModule {
 			}
 			else if (resultCount == 1) {
 				context.getRequest().setAttribute("id", context.getRequest().getParameter("id"));
-				return ("UserUpdateOK");
+				if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+					return (executeCommandListUsers(context));
+				} else {
+					return ("UserUpdateOK");
+				}
 			}
 			else {
 				context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);

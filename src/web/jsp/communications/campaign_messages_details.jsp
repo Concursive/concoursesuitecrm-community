@@ -17,7 +17,7 @@
   </tr>
   
   <tr>
-    <td class="formLabel" valign=center align=right>
+    <td width=125 class="formLabel" valign=center align=right>
       Name
     </td>
     <td width="100%" valign=center width=100%>
@@ -26,7 +26,7 @@
   </tr>
   
   <tr>
-    <td class="formLabel" valign=center align=right>
+    <td width=125 class="formLabel" valign=center align=right>
       Description
     </td>
     <td valign=center>
@@ -34,7 +34,7 @@
     </td>
   </tr>
 	<tr>
-    <td class="formLabel" valign="center" align="right">
+    <td width=125 class="formLabel" valign="center" align="right">
       Reply To
     </td>
     <td valign=center>
@@ -42,7 +42,7 @@
     </td>
   </tr>
 	<tr>
-    <td class="formLabel" valign="center" align="right">
+    <td width=125 class="formLabel" valign="center" align="right">
       Message Subject
     </td>
     <td valign=center>
@@ -50,7 +50,7 @@
     </td>
   </tr>
   <tr>
-    <td class="formLabel" valign=top align=right>
+    <td width=125 class="formLabel" valign=top align=right>
       Message Text
     </td>
     <td valign=center>
@@ -58,7 +58,7 @@
     </td>
   </tr>
   <tr>
-    <td class="formLabel" valign=center align=right>
+    <td width=125 class="formLabel" valign=center align=right>
       URL
     </td>
     <td valign=center>
@@ -66,7 +66,7 @@
     </td>
   </tr>
 	<tr>
-    <td class="formLabel" valign=center align=right>
+    <td width=125 class="formLabel" valign=center align=right>
       Template
     </td>
     <td valign=center>
@@ -74,7 +74,7 @@
     </td>
   </tr> 
   <tr>
-    <td class="formLabel" valign=center align=right>
+    <td width=125 class="formLabel" valign=center align=right>
       Image
     </td>
     <td valign=center>

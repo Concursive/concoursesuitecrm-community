@@ -5,15 +5,28 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></SCRIPT>
+
 <body onLoad="javascript:document.forms[0].username.focus();">
-<form name="details" action="/Users.do?auto-populate=true" method="post">
-<input type=hidden name="command" value="UpdateUser">
-<input type=button name="action" value="Update"	onClick="document.details.command.value='UpdateUser';document.details.submit()">
-<input type=button name="action" value="Cancel"	onClick="document.details.command.value='ListUsers';document.details.submit()">
-<input type=button name="action" value="Delete" onClick="document.details.command.value='DeleteUser';document.details.submit()">
+<form name="details" action="/Users.do?command=UpdateUser&auto-populate=true" method="post">
+
+<% if (request.getParameter("return") != null) {%>
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
+<input type=submit value="Update">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=ListUsers'">
+	<%}%>
+<%} else {%>
+<input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
+<%}%>
+<input type=submit value="Delete" onClick="javascript:this.form.action='/Users.do?command=DeleteUser&id=<%=UserRecord.getId()%>'">
 <br>
 &nbsp;
 <input type="hidden" name="id" value="<%= UserRecord.getId() %>">
+
 <input type="hidden" name="previousUsername" value="<%= ((UserRecord.getPreviousUsername() == null)?UserRecord.getUsername():UserRecord.getPreviousUsername()) %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
@@ -64,8 +77,14 @@
   
 </table>
 <br>
-<input type=button name="action" value="Update"	onClick="document.details.command.value='UpdateUser';document.details.submit()">
-<input type=button name="action" value="Cancel"	onClick="document.details.command.value='ListUsers';document.details.submit()">
-<input type=button name="action" value="Delete" onClick="document.details.command.value='DeleteUser';document.details.submit()">
+<input type=submit value="Update">
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=ListUsers'">
+	<%}%>
+<%} else {%>
+<input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
+<%}%>
+<input type=submit value="Delete" onClick="javascript:this.form.action='/Users.do?command=DeleteUser&id=<%=UserRecord.getId()%>'">
 </form>
 </body>

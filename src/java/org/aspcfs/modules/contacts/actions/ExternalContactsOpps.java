@@ -402,7 +402,11 @@ public final class ExternalContactsOpps extends CFSModule {
         processErrors(context, newOpp.getErrors());
         return executeCommandModifyOpp(context);
       } else if (resultCount == 1) {
-        return ("OppUpdateOK");
+              if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+		      return (executeCommandViewOpps(context));
+	      } else {
+		      return ("OppUpdateOK");
+	      }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

@@ -64,7 +64,7 @@
       <tr>
         <dhv:permission name="admin-users-edit,admin-users-delete">
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="admin-users-edit"><a href="/Users.do?command=ModifyUser&id=<%= thisUser.getId() %>">Edit</a></dhv:permission><dhv:permission name="admin-users-edit,admin-users-delete" all="true">|</dhv:permission><dhv:permission name="admin-users-delete"><a href="javascript:confirmDelete('/Users.do?command=DeleteUser&id=<%= thisUser.getId() %>');">Del</a></dhv:permission>
+          <dhv:permission name="admin-users-edit"><a href="/Users.do?command=ModifyUser&id=<%= thisUser.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="admin-users-edit,admin-users-delete" all="true">|</dhv:permission><dhv:permission name="admin-users-delete"><a href="javascript:confirmDelete('/Users.do?command=DeleteUser&id=<%= thisUser.getId() %>');">Del</a></dhv:permission>
         </td>
         </dhv:permission>
         <td class="row<%= rowid %>"><font class="columntext1">

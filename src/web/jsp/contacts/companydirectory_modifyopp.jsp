@@ -48,8 +48,19 @@
 <input type="hidden" name="id" value="<%= OppDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= OppDetails.getModified() %>">
 
+<% if (request.getParameter("return") != null) {%>
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
 <input type="submit" value="Update">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=DetailsOpp&id=<%= OppDetails.getId() %>&contactId=<%= ContactDetails.getId() %>'">
+<%}%>
 <input type="reset" value="Reset">
 <br>
 &nbsp;
@@ -190,7 +201,13 @@
 &nbsp;
 <br>
 <input type="submit" value="Update">
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=DetailsOpp&id=<%= OppDetails.getId() %>&contactId=<%= ContactDetails.getId() %>'">
+<%}%>
 <input type="reset" value="Reset">
   </td>
   </tr>
