@@ -382,7 +382,7 @@ public final class TroubleTicketsFolders extends CFSModule {
       }
       context.getRequest().setAttribute("recordDeleted", "true");
     } catch (Exception e) {
-      addModuleBean(context, "Accounts", "Delete Folder Record");
+      addModuleBean(context, "ViewTickets", "Delete Folder Record");
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
