@@ -186,8 +186,6 @@ public final class Login extends CFSModule {
           thisUser.setClientType(context.getRequest());
           thisUser.setTemplate("template0");
           thisUser.setIdRange(userRecord.getIdRange());
-          userRecord.buildUserRoleType(db);
-          userRecord.buildUserOrganization(db);
           thisUser.setUserRecord(userRecord);
           //Log that the user attempted login (does not necessarily mean logged in
           //anymore due to the single-session manager below

@@ -67,6 +67,7 @@
     </td>
     <td>
       <input type="text" size="7" name="adjustmentHours" maxlength="8" ><font color="red">*</font>
+      (Use "-" to substract hours)
     </td>
   </tr>
   <tr class="containerBody">

@@ -13,6 +13,7 @@
 <jsp:useBean id="categoryList2" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="categoryList3" class="org.aspcfs.modules.base.CategoryList" scope="request"/>
 <jsp:useBean id="assetStatusList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="viewAccountAsset" action="AccountsAssets.do?command=Modify&auto-populate=true&id=<%=asset.getId()%>" method="post">
@@ -184,7 +185,13 @@
     </td>
     <td>
       <dhv:evaluate if="<%= assetContact.getId() > 0 %>">
-      <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= assetContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"><%= toHtml(assetContact.getNameLastFirst()) %></a>
+        <dhv:permission name="contacts-external_contacts-view">
+          <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= assetContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');">
+        </dhv:permission>
+            <%= toHtml(assetContact.getNameLastFirst()) %>
+         <dhv:permission name="contacts-external_contacts-view">
+          </a>
+         </dhv:permission>
       </dhv:evaluate>
       &nbsp;
     </td>

@@ -97,11 +97,6 @@ public final class AccountTickets extends CFSModule {
     if (!isRecordAccessPermitted(context,tempid)){
       return ("PermissionError");
     }
-    if (isPortalUser(context)){
-     context.getRequest().setAttribute("portalUser","1"); 
-    }else{
-     context.getRequest().setAttribute("portalUser","0"); 
-    }
     try {
       db = this.getConnection(context);
       //Organization for header

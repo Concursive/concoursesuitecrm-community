@@ -12,7 +12,7 @@
   </tr>
 <%
   int ecount = 0;
-  int etotal = 2;
+  int etotal = 3;
   Iterator enumber = ContactDetails.getEmailAddressList().iterator();
   while (enumber.hasNext()) {
     ++ecount;

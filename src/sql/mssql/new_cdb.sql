@@ -266,7 +266,8 @@ CREATE TABLE role (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enabled BIT NOT NULL DEFAULT 1
+  enabled BIT NOT NULL DEFAULT 1,
+  role_type INT
 );
 
 CREATE TABLE permission_category (
@@ -411,7 +412,8 @@ CREATE TABLE contact_emailaddress (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id)
+  modifiedby INT NOT NULL references access(user_id),
+  primary_email BIT NOT NULL DEFAULT 0
 )
 ;
 

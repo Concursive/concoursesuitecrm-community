@@ -11,6 +11,7 @@
 <jsp:useBean id="SubList2" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -131,7 +132,7 @@ Add Ticket
       <strong>Add a new Ticket</strong>
     </th>
 	</tr>
-<dhv:evaluate if="<%= ("0".equals(request.getAttribute("portalUser"))) %>" >
+<dhv:evaluate if="<%= (User.getRoleType() == 0) %>" >
 	<tr class="containerBody">
     <td class="formLabel">
       Ticket Source
@@ -205,7 +206,7 @@ Add Ticket
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 <%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      <dhv:evaluate if="<%= ("0".equals(request.getAttribute("portalUser"))) %>" >
+      <dhv:evaluate if="<%= (User.getRoleType() == 0) %>" >
       [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','550','yes','yes');">Create New Contact</a>]
       </dhv:evaluate> 
      </td>
@@ -245,7 +246,7 @@ Add Ticket
       <input type="text" name="location" value="<%= toHtmlValue(TicketDetails.getLocation()) %>" size="50" maxlength="256" />
     </td>
   </tr>
-<dhv:evaluate if="<%= ("0".equals(request.getAttribute("portalUser"))) %>" >
+<dhv:evaluate if="<%= (User.getRoleType() == 0) %>" >
 <dhv:include name="ticket.catCode" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
@@ -300,7 +301,7 @@ Add Ticket
 </dhv:evaluate >
 </table>
 <br>
-<dhv:evaluate if="<%= ("0".equals(request.getAttribute("portalUser"))) %>" >
+<dhv:evaluate if="<%= (User.getRoleType() == 0) %>" >
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 	<tr>
     <th colspan="2">

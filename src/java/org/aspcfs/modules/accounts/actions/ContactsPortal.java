@@ -49,7 +49,7 @@ public final class ContactsPortal extends CFSModule {
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
       User thisPortalUser = new User();
-      thisPortalUser.queryPortalInformation(db, thisContact.getId());
+      thisPortalUser.buildRecord(db, thisContact.getUserId());
       setOrganization(context, db, thisContact.getOrgId());
 
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -167,7 +167,7 @@ public final class ContactsPortal extends CFSModule {
       }
 
       User thisPortalUser = new User();
-      thisPortalUser.queryPortalInformation(db, thisContact.getId());
+      thisPortalUser.buildRecord(db, thisContact.getUserId());
 
       setOrganization(context, db, thisContact.getOrgId());
 
@@ -209,7 +209,7 @@ public final class ContactsPortal extends CFSModule {
       oldContactInfo = new Contact(db, id);
 
       User oldUserInfo = new User();
-      oldUserInfo.queryPortalInformation(db, oldContactInfo.getId());
+      oldUserInfo.buildRecord(db, oldContactInfo.getUserId());
       updateUser(context, db, oldContactInfo, oldUserInfo);
       setOrganization(context, db, oldContactInfo.getOrgId());
     } catch (Exception e) {
@@ -428,7 +428,7 @@ public final class ContactsPortal extends CFSModule {
     newUser.setEnteredBy(getUserId(context));
     newUser.setModifiedBy(getUserId(context));
     newUser.setTimeZone((String) context.getServletContext().getAttribute("SYSTEM.TIMEZONE"));
-    recordInserted = newUser.insertPortalUser(db, context);
+    recordInserted = newUser.insert(db);
 
     //subsequently use this email address to email the user
     //of the portal access information

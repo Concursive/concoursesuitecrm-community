@@ -290,7 +290,7 @@ public class UserBean extends GenericBean {
    *@return    The orgId value
    */
   public int getOrgId() {
-    return getUserRecord().getOrgId();
+    return getUserRecord().getContact().getOrgId();
   }
 
 

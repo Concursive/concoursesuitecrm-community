@@ -10,6 +10,7 @@
 <jsp:useBean id="phoneModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="emailModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
@@ -116,7 +117,13 @@
     </td>
     <td>
       <dhv:evaluate if="<%= serviceContract.getContactId() > -1 %>">
-        <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= serviceContractContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"><%= toHtml(serviceContractContact.getNameLastFirst()) %></a>
+        <dhv:permission name="contacts-external_contacts-view">
+          <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= serviceContractContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');">
+        </dhv:permission>
+            <%= toHtml(serviceContractContact.getNameLastFirst()) %>
+         <dhv:permission name="contacts-external_contacts-view">
+          </a>
+         </dhv:permission>
       </dhv:evaluate>
       &nbsp;
     </td>

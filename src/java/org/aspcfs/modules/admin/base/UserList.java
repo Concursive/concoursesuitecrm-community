@@ -1102,7 +1102,7 @@ public class UserList extends Vector implements SyncableList {
       sqlFilter.append("AND a.role_id > -1 AND a.role_id IS NOT NULL ");
     }
     if (roleType != -1) {
-      sqlFilter.append("AND a.role_type = ? ");
+      sqlFilter.append("AND r.role_type = ? ");
     }
   }
 

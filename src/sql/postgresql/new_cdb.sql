@@ -272,7 +272,8 @@ CREATE TABLE role (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enabled boolean NOT NULL DEFAULT true
+  enabled boolean NOT NULL DEFAULT true,
+  role_type INT
 );
 
 CREATE SEQUENCE permission_cate_category_id_seq;
@@ -423,7 +424,8 @@ CREATE TABLE contact_emailaddress (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id)
+  modifiedby INT NOT NULL references access(user_id),
+  primary_email BOOLEAN NOT NULL DEFAULT false
 )
 ;
 
