@@ -153,9 +153,6 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPrecompileJSPs(ActionContext context) {
-    if (!allow(context)) {
-      return ("PermissionError");
-    }
     File baseDir = new File(context.getServletContext().getRealPath("/"));
     precompileDirectory(context, baseDir, "/");
     return "ProcessOK";
