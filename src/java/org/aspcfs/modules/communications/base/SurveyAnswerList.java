@@ -9,6 +9,7 @@ import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.utils.DatabaseUtils;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import java.util.HashMap;
 
 /**
  *  Contains a list of survey answers for a campaign
@@ -22,6 +23,9 @@ public class SurveyAnswerList extends Vector {
 
   private int questionId = -1;
   private int hasComments = -1;
+  private boolean lastAnswers = false;
+  private int itemsPerPage = 10;
+  private HashMap contacts = null;
   protected PagedListInfo pagedListInfo = null;
 
 
@@ -103,6 +107,46 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
+   *  Set if Most recently entered survey answers are needed
+   *
+   *@param  lastItems  The new lastItems value
+   */
+  public void setLastAnswers(boolean lastAnswers) {
+    this.lastAnswers = lastAnswers;
+  }
+
+
+  /**
+   *  Sets the itemsPerPage attribute of the SurveyAnswerList object
+   *
+   *@param  itemsPerPage  The new itemsPerPage value
+   */
+  public void setItemsPerPage(int itemsPerPage) {
+    this.itemsPerPage = itemsPerPage;
+  }
+
+
+  /**
+   *  Contacts HashMap for storing Contact Id and Names
+   *
+   *@param  contacts  The new contacts value
+   */
+  public void setContacts(HashMap contacts) {
+    this.contacts = contacts;
+  }
+
+
+  /**
+   *  Gets the contacts HashMap
+   *
+   *@return    The contacts value
+   */
+  public HashMap getContacts() {
+    return contacts;
+  }
+
+
+  /**
    *  Gets the hasComments attribute of the SurveyAnswerList object
    *
    *@return    The hasComments value
@@ -136,6 +180,11 @@ public class SurveyAnswerList extends Vector {
 
     createFilter(sqlFilter);
 
+    if (pagedListInfo == null && lastAnswers) {
+      pagedListInfo = new PagedListInfo();
+      pagedListInfo.setItemsPerPage(itemsPerPage);
+    }
+
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -165,7 +214,7 @@ public class SurveyAnswerList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("sr.entered", null);
+      pagedListInfo.setDefaultSort("sr.entered DESC", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY response_id, question_id ");
@@ -177,8 +226,9 @@ public class SurveyAnswerList extends Vector {
     } else {
       sqlSelect.append("SELECT ");
     }
-    sqlSelect.append("sa.* " +
+    sqlSelect.append("sa.*, c.namelast as lastname, c.namefirst as firstname, c.contact_id as contactid " +
         "FROM active_survey_answers sa, active_survey_responses sr " +
+        "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
         "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id "
         );
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
@@ -198,6 +248,11 @@ public class SurveyAnswerList extends Vector {
       ++count;
       SurveyAnswer thisAnswer = this.getObject(db, rs);
       this.add(thisAnswer);
+      if(contacts == null){
+        contacts = new HashMap();
+      }
+      String contactName = Contact.getNameLastFirst(rs.getString("lastname") , rs.getString("firstname"));
+      contacts.put(new Integer(rs.getInt("contactid")),contactName);
     }
     rs.close();
     pst.close();
