@@ -67,7 +67,7 @@ public class StringUtils {
         return str;
       } else {
         result.append(str.substring(oldpos));
-        return new String(result);
+        return result.toString();
       }
     } else {
       return str;
