@@ -32,11 +32,16 @@
 		}
 <%
     }
+    if(ContactDetails.getOrgId() == -1){
 %>
+
     if(document.forms[0].contactcategory[1].checked && document.forms[0].orgId.value == '-1') {
        message += "- Make sure you select an account.\r\n";
 			 formTest = false;
     }
+<%
+  }
+%>
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -115,7 +120,7 @@ Modify Contact<br>
        Contact Category
     </td>
     <td>
-      <dhv:evaluate exp="<%= !ContactDetails.getPrimaryContact() %>">
+      <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
         <input type="radio" name="contactcategory" value="1" <%= ContactDetails.getOrgId() == -1 ? " checked":""%> onclick="javascript:document.forms[0].orgId.value = '-1';"> General Contact<br>
       </dhv:evaluate>
       <table cellspacing="0" cellpadding="0" border="0">
@@ -128,11 +133,13 @@ Modify Contact<br>
             </td>
             <td>
               <div id="changeaccount"><%= ContactDetails.getOrgId() > -1 ? ContactDetails.getCompany() : "None Selected"%></div>
-            </td>
-            <td>
               <input type="hidden" name="orgId" id="orgId" value="<%= ContactDetails.getOrgId() %>">
+            </td>
+            <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
+            <td>
               &nbsp;[<a href="javascript:popAccountsListSingle('orgId','changeaccount');">Select</a>]&nbsp;
             </td>
+            </dhv:evaluate>
           </tr>
        </table>
     </td>
@@ -142,20 +149,39 @@ Modify Contact<br>
       Contact Type(s)
     </td>
   	<td>
-    
       <table border="0" cellpadding="0" cellspacing="0">
       <tr>
-      <td>
+       <td>
         <select multiple name="selectedList" id="selectedList" size="5">
-          <dhv:lookupHtml listName="TypeList" lookupName="ContactTypeList" lookupElementClass="org.aspcfs.modules.contacts.base.ContactTypeList"/>
+          <%if(request.getAttribute("TypeList") != null){ %>
+            <dhv:lookupHtml listName="TypeList" lookupName="ContactTypeList" lookupElementClass="org.aspcfs.modules.contacts.base.ContactTypeList"/>
+          <% }else{ %>
+               <dhv:evaluate exp="<%= ContactDetails.getTypes().isEmpty() %>">
+                  <option value="-1">None Selected</option>
+                </dhv:evaluate>
+                <dhv:evaluate exp="<%= !ContactDetails.getTypes().isEmpty() %>">
+              <%
+                Iterator i = ContactDetails.getTypes().iterator();
+                while (i.hasNext()) {
+                LookupElement thisElt = (LookupElement)i.next();
+              %>
+                <option value="<%= thisElt.getCode() %>"><%= thisElt.getDescription() %></option>
+              <%}%>
+              </dhv:evaluate>
+           <% } %>
         </select>
       </td>
       <td valign="top">
         <input type="hidden" name="previousSelection" value="">
-        &nbsp;[<a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);">Select</a>]
-      </td>
+        <%if(ContactDetails.getOrgId() == -1){%>
+          &nbsp;[<a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);">Select</a>]
+        <% }else{ %>
+          &nbsp;[<a href="javascript:popContactTypeSelectMultiple('selectedList', 'accounts', <%= ContactDetails.getId() %>);">Select</a>]
+        <%}%>
+        
+       </td>
       </tr>
-      </table>
+     </table>
     </td>
   </tr>
   <tr class="containerBody">
