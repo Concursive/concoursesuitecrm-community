@@ -473,13 +473,13 @@ public final class Admin extends CFSModule {
     int moduleId = -1;
     int lookupId = -1;
     LookupList selectedList = null;
+    PermissionCategory permCat = null;
 
     try {
       db = this.getConnection(context);
-      
       moduleId = Integer.parseInt(context.getRequest().getParameter("module"));
       lookupId = Integer.parseInt(context.getRequest().getParameter("sublist"));
-      
+      permCat = new PermissionCategory(db, moduleId);
       LookupListElement thisList = new LookupListElement(db, moduleId, lookupId);
       thisList.buildLookupList(db, this.getUserId(context));
       selectedList = thisList.getLookupList();
@@ -513,6 +513,7 @@ public final class Admin extends CFSModule {
     }
     addModuleBean(context, "Configuration", "Configuration");
     if (errorMessage == null) {
+      context.getRequest().setAttribute("PermissionCategory", permCat);
       return ("ModifyListOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
