@@ -25,6 +25,7 @@ public class TicketCategory extends GenericBean {
   private String description = "";
   private boolean enabled = true;
   private int level = -1;
+  private TicketCategoryDraftList shortChildList = new TicketCategoryDraftList();
 
 
   /**
@@ -196,6 +197,26 @@ public class TicketCategory extends GenericBean {
 
 
   /**
+   *  Sets the shortChildList attribute of the TicketCategory object
+   *
+   *@param  shortChildList  The new shortChildList value
+   */
+  public void setShortChildList(TicketCategoryDraftList shortChildList) {
+    this.shortChildList = shortChildList;
+  }
+
+
+  /**
+   *  Gets the shortChildList attribute of the TicketCategory object
+   *
+   *@return    The shortChildList value
+   */
+  public TicketCategoryDraftList getShortChildList() {
+    return shortChildList;
+  }
+
+
+  /**
    *  Gets the Level attribute of the TicketCategory object
    *
    *@return    The Level value
@@ -296,6 +317,44 @@ public class TicketCategory extends GenericBean {
       db.setAutoCommit(true);
     }
     return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int update(Connection db) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("Id not specified");
+    }
+    int i = 0;
+    int count = 0;
+    try {
+      db.setAutoCommit(false);
+      PreparedStatement pst = db.prepareStatement(
+          "UPDATE ticket_category " +
+          "SET description = ?, cat_level = ?, parent_cat_code = ?, level = ?, enabled = ? " +
+          "WHERE  id = ? ");
+      pst.setString(++i, this.getDescription());
+      pst.setInt(++i, this.getCategoryLevel());
+      pst.setInt(++i, this.getParentCode());
+      pst.setInt(++i, this.getLevel());
+      pst.setBoolean(++i, this.getEnabled());
+      pst.setInt(++i, this.getId());
+      count = pst.executeUpdate();
+      pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return count;
   }
 
 
