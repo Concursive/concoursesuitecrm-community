@@ -88,3 +88,5 @@ CREATE TABLE contact_type_levels (
 
 /* execute the contact_type_update.pl */
 
+/* TODO: drop type_id from contact */
+
