@@ -57,7 +57,7 @@ View Contacts<br>
     <td>
       <strong>Phone: Mobile</strong>
     </td>
-    <dhv:evaluate exp="<%= "all".equals(ExternalContactsInfo.getListView()) %>">
+    <dhv:evaluate exp="<%= "all".equals(ExternalContactsInfo.getListView()) || "search".equals(ExternalContactsInfo.getListView()) %>">
       <td>
         <strong>Owner</strong>
       </td>
@@ -95,7 +95,7 @@ View Contacts<br>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisContact.getPhoneNumber("Mobile")) %>
         </td>
-        <dhv:evaluate exp="<%= "all".equals(ExternalContactsInfo.getListView()) %>">
+        <dhv:evaluate exp="<%= "all".equals(ExternalContactsInfo.getListView()) || "search".equals(ExternalContactsInfo.getListView())%>">
           <td class="row<%= rowid %>" nowrap>
             <dhv:username id="<%= thisContact.getOwner() %>"/>
           </td>
