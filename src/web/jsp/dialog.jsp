@@ -7,7 +7,7 @@
 %>
   <html>
    <title><%=Dialog.getTitle()%></title>
-    <frameset rows="20%,60%,*" frameborder="0">
+    <frameset rows="25%,45%,*" frameborder="0">
       <frame name="topframe" src="loadframes.jsp">
       <frame name="middleframe" src="">
       <frame name="bottomframe" src="">
