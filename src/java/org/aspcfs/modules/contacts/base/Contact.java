@@ -1435,7 +1435,7 @@ public class Contact extends GenericBean {
    *@since
    */
   public String getNameLastFirst() {
-    return  Contact.getNameLastFirst(nameLast, nameFirst);
+    return Contact.getNameLastFirst(nameLast, nameFirst);
   }
 
 
@@ -1888,6 +1888,9 @@ public class Contact extends GenericBean {
       if (modified != null) {
         sql.append("modified, ");
       }
+      if (employee) {
+        sql.append("employee, ");
+      }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
 
@@ -1895,6 +1898,9 @@ public class Contact extends GenericBean {
         sql.append("?, ");
       }
       if (modified != null) {
+        sql.append("?, ");
+      }
+      if (employee) {
         sql.append("?, ");
       }
       sql.append("?, ?) ");
@@ -1917,9 +1923,11 @@ public class Contact extends GenericBean {
       if (modified != null) {
         pst.setTimestamp(++i, modified);
       }
+      if (employee) {
+        pst.setBoolean(++i, true);
+      }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-      System.out.println(pst.toString());
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "contact_contact_id_seq");
@@ -2183,18 +2191,6 @@ public class Contact extends GenericBean {
     pst.setInt(++i, level);
     pst.execute();
     pst.close();
-
-    if (type_id == EMPLOYEE_TYPE) {
-      i = 0;
-      pst = db.prepareStatement(
-          "UPDATE contact " +
-          "set employee = ? " +
-          "WHERE contact_id = ? ");
-      pst.setBoolean(++i, true);
-      pst.setInt(++i, this.getId());
-      pst.execute();
-      pst.close();
-    }
     return true;
   }
 
