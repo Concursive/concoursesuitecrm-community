@@ -71,8 +71,8 @@ Folder<br>
       <td>
         <a href="/AdminFieldsGroup.do?command=ModifyGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Edit</a> |
         <a href="javascript:confirmDeleteGroup('/AdminFieldsGroup.do?command=DeleteGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisGroup.getId() %>&auto-populate=true');">Del</a> | 
-        Up | 
-        Down | 
+        <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|U">Up</a> |
+        <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|D">Down</a> |
         <a href="/AdminFields.do?command=AddField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Add a Custom Field</a>
       </td>
     </tr>

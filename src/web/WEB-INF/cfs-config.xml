@@ -400,6 +400,7 @@
     <forward name="UpdateGroupERROR" resource="/AdminFieldsGroup.do?command=ModifyGroup"/>
     <forward name="DeleteGroupOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
     <forward name="DeleteGroupERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="MoveGroupOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
   </action>
   <action name="AdminFields" class="com.darkhorseventures.cfsmodule.AdminFields">
     <bean name="CustomField" class="com.darkhorseventures.cfsbase.CustomField" scope="request"/>

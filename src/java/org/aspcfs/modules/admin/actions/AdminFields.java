@@ -685,5 +685,64 @@ public final class AdminFields extends CFSModule {
     return ("MoveFieldOK");
   }
   
+  public String executeCommandMoveGroup(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+
+    try {
+      db = this.getConnection(context);
+      this.addModuleList(context, db);
+      this.addCategoryList(context, db);
+      this.addCategory(context, db);
+      
+      String change = context.getRequest().getParameter("chg");
+      if (System.getProperty("DEBUG") != null) System.out.println("AdminFields->MoveGroup: " + change);
+      
+      if (change != null && change.indexOf("|") > -1) {
+        StringTokenizer st = new StringTokenizer(change, "|");
+        int groupChange = Integer.parseInt((String)st.nextToken());
+        String direction = (String)st.nextToken();
+        
+        CustomFieldCategory thisCategory = (CustomFieldCategory)context.getRequest().getAttribute("Category");
+        Iterator groups = thisCategory.iterator();
+        int groupCount = 0;
+        int level = 0;
+        while (groups.hasNext()) {
+          CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
+          ++groupCount;
+            
+          if ("U".equals(direction)) {
+            if (groupCount < groupChange) ++level;
+            if ((groupCount + 1) == groupChange) ++level;
+            if (groupCount == groupChange) --level;
+            if (groupCount > groupChange) ++level;
+            thisGroup.setLevel((new Integer(level)).intValue());
+            if (groupCount == groupChange) ++level;
+          } else if ("D".equals(direction)) {
+            if (groupCount < groupChange) ++level;
+            if (groupCount == groupChange) level = level + 2;
+            if ((groupCount - 1) == groupChange) --level;
+            if ((groupCount - 1) > groupChange) ++level;
+            thisGroup.setLevel((new Integer(level)).intValue());
+            if ((groupCount - 1) == groupChange) ++level;
+          }
+          
+          thisGroup.updateLevel(db);
+          System.out.println("Grp: " + thisGroup.getId());
+        }
+      }
+      
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "Configuration", "Configuration");
+    return ("MoveGroupOK");
+  }
+  
 }
 

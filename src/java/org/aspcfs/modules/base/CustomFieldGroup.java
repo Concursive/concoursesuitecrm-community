@@ -508,6 +508,21 @@ public class CustomFieldGroup extends Vector {
     pst.close();
     return true;
   }
+  
+  public int updateLevel(Connection db) throws SQLException {
+    int result = 1;
+    String sql =
+      "UPDATE custom_field_group " +
+      "SET level = ? " +
+      "WHERE group_id = ? ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getLevel());
+    pst.setInt(++i, this.getId());
+    result = pst.executeUpdate();
+    pst.close();
+    return result;
+  }
 
 
   /**
