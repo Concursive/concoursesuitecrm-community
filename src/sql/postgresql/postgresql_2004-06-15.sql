@@ -1,5 +1,5 @@
+-- Script (C) 2004 Dark Horse Ventures, all rights reserved
 -- Database upgrade v2.8 (2004-06-15)
--- NOT FINISHED YET
 
 ALTER TABLE organization ADD COLUMN import_id integer;
 
@@ -7,10 +7,17 @@ ALTER TABLE contact ADD COLUMN status_id integer;
 ALTER TABLE contact ADD COLUMN import_id integer;
 
 ALTER TABLE role ADD COLUMN role_type integer;
+UPDATE role SET role_type = 0 WHERE role_type IS NULL;
 
-ALTER TABLE permission_category ADD COLUMN products boolean DEFAULT false NOT NULL;
+ALTER TABLE permission_category ADD COLUMN products boolean;
+ALTER TABLE permission_category ALTER products SET DEFAULT false;
+UPDATE permission_category SET products = false WHERE products IS NULL;
+ALTER TABLE permission_category ADD CONSTRAINT products_not_null CHECK(products IS NOT NULL) ;
 
-ALTER TABLE contact_emailaddress ADD COLUMN primary_email boolean DEFAULT false NOT NULL;
+ALTER TABLE contact_emailaddress ADD COLUMN primary_email boolean;
+ALTER TABLE contact_emailaddress ALTER primary_email SET DEFAULT false;
+UPDATE contact_emailaddress SET primary_email = false WHERE primary_email IS NULL;
+ALTER TABLE contact_emailaddress ADD CONSTRAINT primary_email_not_null CHECK(primary_email IS NOT NULL) ;
 
 CREATE TABLE category_editor_lookup (
     id serial NOT NULL,
@@ -1083,7 +1090,9 @@ CREATE TABLE customer_product_history (
 );
 
 
-ALTER TABLE sync_client ADD COLUMN enabled boolean DEFAULT false;
+ALTER TABLE sync_client ADD COLUMN enabled boolean;
+ALTER TABLE sync_client ALTER enabled SET DEFAULT false;
+
 ALTER TABLE sync_client ADD COLUMN code character varying(255);
 
 CREATE TABLE quote_notes (
@@ -1214,8 +1223,6 @@ INSERT INTO lookup_creditcard_types VALUES (1, 'Visa', false, 0, true);
 INSERT INTO lookup_creditcard_types VALUES (2, 'Master Card', false, 0, true);
 INSERT INTO lookup_creditcard_types VALUES (3, 'American Express', false, 0, true);
 INSERT INTO lookup_creditcard_types VALUES (4, 'Discover', false, 0, true);
-
-INSERT INTO module_field_categorylink VALUES (4, 17, 200403192, 10, 'Product Catalog Categories', '2004-06-15 08:40:34.691');
 
 INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VALUES ('Labor Categories', 0, 0, true);
 
@@ -2828,5 +2835,5 @@ SELECT pg_catalog.setval ('customer_product_history_history_id_seq', 1, false);
 
 SELECT pg_catalog.setval ('quote_notes_notes_id_seq', 1, false);
 
-INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(1,'mssql.sql','2004-06-15','Jun 15 2004  8:50:20:450AM')
+INSERT INTO database_version (script_filename, script_version) VALUES ('postgresql_2004-06-15.sql', '2004-06-15');
 
