@@ -45,6 +45,10 @@ public final class TroubleTicketTasks extends CFSModule {
       db = this.getConnection(context);
       taskList.setTicketId(Integer.parseInt(ticketId));
       taskList.buildList(db);
+      
+      //get the ticket
+      Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      context.getRequest().setAttribute("TicketDetails", thisTicket);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -53,7 +57,7 @@ public final class TroubleTicketTasks extends CFSModule {
 
     if (errorMessage == null) {
       context.getRequest().setAttribute("TaskList", taskList);
-      addModuleBean(context, "View Tickets", "List Tasks");
+      addModuleBean(context, "ViewTickets", "List Tasks");
       return this.getReturn(context, "ListTasks");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -222,7 +226,7 @@ public final class TroubleTicketTasks extends CFSModule {
     }
     if (errorMessage == null) {
       context.getRequest().setAttribute("Task", thisTask);
-      context.getRequest().setAttribute("refreshUrl", "TroubleTickets.do?command=Details&id=" + thisTask.getLinkDetails().getLinkItemId());
+      context.getRequest().setAttribute("refreshUrl", "TroubleTicketTasks.do?command=List&ticketId=" + thisTask.getLinkDetails().getLinkItemId());
       return ("DeleteOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
