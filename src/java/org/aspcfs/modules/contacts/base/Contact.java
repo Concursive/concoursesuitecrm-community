@@ -2646,6 +2646,24 @@ public class Contact extends GenericBean {
       }
       rs.close();
       pst.close();
+      
+      i = 0;
+      pst = db.prepareStatement(
+          "SELECT count(*) as taskcount " +
+          "FROM tasklink_contact " +
+          "WHERE contact_id = ? ");
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Tasks");
+        thisDependency.setCount(rs.getInt("taskcount"));
+        thisDependency.setCanDelete(false);
+        dependencyList.add(thisDependency);
+      }
+      rs.close();
+      pst.close();
+      
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }
