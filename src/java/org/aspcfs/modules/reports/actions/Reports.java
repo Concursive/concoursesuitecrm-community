@@ -33,6 +33,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     return executeCommandViewQueue(context);
   }
 
@@ -44,6 +47,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandViewQueue(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "reports.queue", "View Queue");
     Connection db = null;
     try {
@@ -80,6 +86,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandRunReport(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "reports.run", "Run Report");
     Connection db = null;
     try {
@@ -106,6 +115,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandListReports(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "reports.run", "Run Report");
     Connection db = null;
     //Process parameters
@@ -138,6 +150,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandCriteriaList(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "reports.run", "Run Report");
     Connection db = null;
     //Process parameters
@@ -174,6 +189,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDeleteCriteria(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     Connection db = null;
     //Process parameters
     String criteriaId = context.getRequest().getParameter("criteriaId");
@@ -200,6 +218,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandParameterList(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "reports.run", "Run Report");
     Connection db = null;
     //Process parameters
@@ -255,6 +276,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandGenerateReport(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     addModuleBean(context, "reports.run", "Run Report");
     Connection db = null;
     //Process parameters
@@ -320,6 +344,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandStreamReport(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     Connection db = null;
     //Process parameters
     String id = context.getRequest().getParameter("id");
@@ -355,6 +382,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDownloadReport(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     Connection db = null;
     //Process parameters
     String id = context.getRequest().getParameter("id");
@@ -391,6 +421,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     Connection db = null;
     //Process parameters
     String id = context.getRequest().getParameter("id");
@@ -421,6 +454,9 @@ public final class Reports extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandCancelReport(ActionContext context) {
+    if (!hasPermission(context, "reports-view")) {
+      return ("PermissionError");
+    }
     Connection db = null;
     //Process parameters
     String id = context.getRequest().getParameter("id");

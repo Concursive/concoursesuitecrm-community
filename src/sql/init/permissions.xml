@@ -105,6 +105,9 @@
       <permission name="tickets-reports" attributes="vaed" description="Export Ticket Data"/>
       <permission name="tickets-tickets-tasks" attributes="vaed" description="Tasks"/>
     </category>
+    <category id="16" name="Reports" folders="false" lookups="false">
+      <permission name="reports" attributes="v---" description="Access to Reports module"/>
+    </category>
     <category id="9" name="Admin" folders="false" lookups="false">
       <permission name="admin" attributes="v---" description="Access to Admin module"/>
       <permission name="admin-users" attributes="vaed" description="Users"/>

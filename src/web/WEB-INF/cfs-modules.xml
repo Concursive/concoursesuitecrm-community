@@ -377,19 +377,19 @@
   <menu>
     <action name="Reports"/>
     <page title="Reports"/>
-    <permission value="admin-view"/>
+    <permission value="reports-view"/>
     <long_html value="Reports"/>
     <short_html value="&amp;nbsp;Reports&amp;nbsp;"/>
     <link value="Reports.do"/>
     <graphic width="83" height="36" on="menu-reports-on.gif" off="menu-reports-off.gif" rollover=""/>
     <submenu name="reports.queue">
-      <permission value="admin-users-add"/>
+      <permission value="reports-view"/>
       <long_html value="View"/>
       <short_html value="View"/>
       <link value="Reports.do?command=ViewQueue"/>
     </submenu>
     <submenu name="reports.run">
-      <permission value="admin-users-add"/>
+      <permission value="reports-view"/>
       <long_html value="Add"/>
       <short_html value="Add"/>
       <link value="Reports.do?command=RunReport"/>
