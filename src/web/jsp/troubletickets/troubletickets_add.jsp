@@ -71,6 +71,10 @@
       message += "- Check that a Contact is selected\r\n";
       formTest = false;
     }
+    if (form.problem.value == "") { 
+      message += "- Check that an issue is entered\r\n";
+      formTest = false;
+    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
