@@ -492,7 +492,7 @@ public class OpportunityReport extends OpportunityList {
         while (y.hasNext()) {
           String param = (String) y.next();
           if (param.equals("id")) {
-            thisRow.addCell(oppBean.getComponent().getId());
+            thisRow.addCell(oppBean.getHeader().getId());
           }
           if (param.equals("type")) {
             thisRow.addCell(oppBean.getComponent().getTypes().valuesAsString());
