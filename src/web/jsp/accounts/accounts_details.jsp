@@ -122,16 +122,29 @@ Account Details<br>
     </td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(OrgDetails.getAlertDetails()) %>">
+<dhv:evaluate exp="<%= hasText(OrgDetails.getAlertText()) %>">
    <tr class="containerBody">
     <td nowrap class="formLabel">
-      Alert
+      Alert Description
     </td>
     <td valign=center colspan=1>
-       <%= toHtml(OrgDetails.getAlertDetails()) %>
+       <%= toHtml(OrgDetails.getAlertText()) %>
     </td>
   </tr>
 </dhv:evaluate>
+
+<dhv:evaluate exp="<%= (OrgDetails.getAlertDate() != null) %>">
+   <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Alert Date
+    </td>
+    <td valign=center colspan=1>
+       <%= OrgDetails.getAlertDate() %>
+    </td>
+  </tr>
+</dhv:evaluate>
+
+
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Entered

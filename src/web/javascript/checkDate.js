@@ -57,3 +57,35 @@ function checkDigits(str) {
   return true;
 }
 
+function checkAlertDate(datein) {
+  var m = 0, d = 0, y = 0;
+  var sep;
+  var now = new Date();
+  var today = new Date(now.getYear(),(now.getMonth()+1),now.getDate());
+  
+
+  if (datein.indexOf("/") != -1) {
+    sep = datein.split("/");
+  } else if (datein.indexOf("-") != -1) {
+    sep = datein.split("-");
+  } 
+  
+  m = parseInt(sep[0],10);
+  d = parseInt(sep[1],10);
+  y = parseInt(sep[2],10);
+  
+  //alert(m);
+    
+  var thisDate = new Date(y, m, d);
+  
+  var difference = thisDate.getTime() - today.getTime();
+  
+  var daysDifference = Math.floor(difference/1000/60/60/24);
+  
+  if ( daysDifference < 0 ) {
+	  return false; 
+  } else {
+	  return true; 
+  }
+}
+

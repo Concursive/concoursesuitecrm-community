@@ -21,6 +21,10 @@
         message += "- Check that Alert Date is entered correctly\r\n";
         formTest = false;
       }
+      if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+        message += "- Check that Alert Date is on or after today's date\r\n";
+        formTest = false;
+      }
       if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
         message += "- Check that Contract End Date is entered correctly\r\n";
         formTest = false;
@@ -179,12 +183,24 @@ Modify Account<br>
   
               <tr class="containerBody">
     <td nowrap class="formLabel">
-      Alert
+      Alert Description
     </td>
     <td valign=center colspan=1>
-      <input type=text size=50 name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>" maxlength=50><br>
-      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateString()) %>">
+      <input type=text size=50 name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>"><br>
+
+    </td>
+  </tr>
+  
+
+      
+                    <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Alert Date
+    </td>
+    <td valign=center colspan=1>
+              <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateString()) %>">
       <a href="javascript:popCalendar('addAccount', 'alertDate');">Date</a> (mm/dd/yyyy)
+
     </td>
   </tr>
   
