@@ -702,7 +702,7 @@ public java.sql.Timestamp getModified() {
         "body = ?, reply_addr = ?, url = ?, img = ?, " +
         "enabled = ?, ");
         
-        if (modified == null) {
+        if (override==true) {
                 sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
         }
         

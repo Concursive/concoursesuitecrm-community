@@ -1852,7 +1852,7 @@ public class Contact extends GenericBean {
     sql.append(
         "startofday = ?, endofday = ?, ");
         
-        if (modified == null) {
+        if (override == true) {
                 sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
         }
         

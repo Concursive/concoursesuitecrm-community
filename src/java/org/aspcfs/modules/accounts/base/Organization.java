@@ -1589,7 +1589,7 @@ public boolean getEnabled() {
         "SET name = ?, industry_temp_code = ?, " +
         "url = ?, notes= ?, ");
         
-        if (modified == null) {
+        if (override==true) {
                 sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
         }
         
