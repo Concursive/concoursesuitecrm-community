@@ -68,6 +68,7 @@ public class Ticket extends GenericBean {
   private boolean sendNotification = true;
 
   private int ageOf = 0;
+  private int campaignId = -1;
 
   private TicketLogList history = new TicketLogList();
   private FileItemList files = new FileItemList();
@@ -475,6 +476,8 @@ public class Ticket extends GenericBean {
     this.errorMessage = tmp;
   }
 
+  public void setCampaignId(int tmp) { this.campaignId = tmp; }
+  public void setCampaignId(String tmp) { this.campaignId = Integer.parseInt(tmp); }
 
   /**
    *  Sets the History attribute of the Ticket object
@@ -1116,6 +1119,7 @@ public class Ticket extends GenericBean {
     return departmentName;
   }
 
+  public int getCampaignId() { return campaignId; }
 
   /**
    *  Gets the History attribute of the Ticket object
