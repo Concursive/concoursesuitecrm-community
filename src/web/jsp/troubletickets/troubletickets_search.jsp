@@ -6,7 +6,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <body onLoad="javascript:document.forms[0].searchcodeId.focus();">
-<form name="searchTicket" action="TroubleTickets.do?command=SearchTickets&auto-populate=true" method="post">
+<form name="searchTicket" action="TroubleTickets.do?command=SearchTickets" method="post">
 <a href="TroubleTickets.do">Tickets</a> > 
 Search Form<br>
 <hr color="#BFBFBB" noshade>
