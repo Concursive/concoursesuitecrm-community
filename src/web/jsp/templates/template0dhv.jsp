@@ -1,4 +1,5 @@
 <%-- (C) 2001-2004 Dark Horse Ventures --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
 <jsp:useBean id="ModuleBean" class="org.aspcfs.modules.beans.ModuleBean" scope="request"/>
 <%
@@ -35,9 +36,16 @@
           <td width="100%">
             <table width="100%" border="0" cellpadding="8" cellspacing="0">
               <tr>
-                <td width="150" valign="top" nowrap style="border-right: #333333 solid 1px;">
-                  <jsp:include page="../setup/configure_global_items.jsp" flush="true"/>
-                </td>
+                <dhv:evaluate if="<%= "Upgrade".equals(ModuleBean.getCurrentAction()) %>">
+                  <td width="150" valign="top" nowrap style="border-right: #333333 solid 1px;">
+                    <jsp:include page="../setup/configure_global_upgrade_items.jsp" flush="true"/>
+                  </td>
+                </dhv:evaluate>
+                <dhv:evaluate if="<%= !"Upgrade".equals(ModuleBean.getCurrentAction()) %>">
+                  <td width="150" valign="top" nowrap style="border-right: #333333 solid 1px;">
+                    <jsp:include page="../setup/configure_global_items.jsp" flush="true"/>
+                  </td>
+                </dhv:evaluate>
                 <td width="100%" valign="top" style="padding-left: 10px">
                   <% String includeModule = (String) request.getAttribute("IncludeModule"); %>
                   <jsp:include page="<%= includeModule %>" flush="true"/>

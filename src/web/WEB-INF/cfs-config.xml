@@ -186,6 +186,7 @@
     <forward name="LicenseError" resource="/errors/error_license.jsp" layout="dhv"/>
     <forward name="CustomerPortalLoginOK" resource="/Accounts.do?command=Search" />
     <forward name="ProductsPortalLoginOK" resource="/MyCFS.do?command=Home" />
+    <forward name="PerformUpgradeOK" resource="/Upgrade.do?command=Check" />
  </action>
   
   <!-- MyCFS Module -->
@@ -1407,6 +1408,12 @@
     <forward name="ConfigureUserERROR" resource="/setup/configure_user.jsp" layout="dhv"/>
     <forward name="ConfigureUserOK" resource="/setup/configure_user_success.jsp" layout="dhv"/>
     <forward name="ConfigureUserDatabaseERROR" resource="/SetupDatabase.do?command=ConfigureDatabaseCheck"/>
+  </action>
+  <action name="Upgrade" class="org.aspcfs.modules.setup.actions.Upgrade">
+    <forward name="NeedUpgradeOK" resource="/setup/upgrade_needed.jsp" layout="dhv"/>
+    <forward name="CheckOK" resource="/setup/upgrade_check.jsp" layout="dhv"/>
+    <forward name="UpgradeOK" resource="/setup/upgrade_complete.jsp" layout="dhv"/>
+    <forward name="UpgradeERROR" resource="/setup/upgrade_error.jsp" layout="dhv"/>
   </action>
   
   <!-- 

@@ -10,6 +10,7 @@ import org.aspcfs.utils.StringUtils;
 import com.darkhorseventures.framework.actions.*;
 import com.darkhorseventures.database.*;
 import java.util.prefs.*;
+import org.aspcfs.modules.system.base.ApplicationVersion;
 
 /**
  *  Loads and saves the build.properties file for application settings; each
@@ -228,6 +229,7 @@ public class ApplicationPrefs {
     try {
       BufferedWriter out = new BufferedWriter(new FileWriter(filename));
       out.write(GENERATED_MESSAGE + " on " + new java.util.Date() + " ###" + ls);
+      add("VERSION", ApplicationVersion.getVersionDate());
       Iterator i = prefs.keySet().iterator();
       while (i.hasNext()) {
         String param = (String) i.next();
@@ -247,8 +249,8 @@ public class ApplicationPrefs {
 
 
   /**
-   *  When preferences are loaded, some values are not easily accessible
-   *  so they are stored in the System context.
+   *  When preferences are loaded, some values are not easily accessible so they
+   *  are stored in the System context.
    *
    *@param  context  Description of the Parameter
    */
@@ -354,7 +356,7 @@ public class ApplicationPrefs {
         }
       }
     }
-    
+
     //initialize the import manager
     if (this.has("IMPORT_QUEUE_MAX")) {
       ImportManager importManager = new ImportManager(cp, Integer.parseInt(this.get("IMPORT_QUEUE_MAX")));
@@ -363,7 +365,7 @@ public class ApplicationPrefs {
       ImportManager importManager = new ImportManager(cp, 1);
       context.setAttribute("ImportManager", importManager);
     }
-    
+
     //Start the cron last
     if ("true".equals(this.get("CRON.ENABLED"))) {
       try {
@@ -479,6 +481,19 @@ public class ApplicationPrefs {
       sb.append(name + "=" + value + ls);
     }
     return sb.toString();
+  }
+
+
+  /**
+   *  Determines if this system is upgradeable (not an ASP)
+   *
+   *@return    The upgradeable value
+   */
+  public boolean isUpgradeable() {
+    if ("true".equals(this.get("WEBSERVER.ASPMODE"))) {
+      return false;
+    }
+    return (!ApplicationVersion.getVersionDate().equals(this.get("VERSION")));
   }
 }
 

@@ -10,6 +10,7 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.login.beans.LoginBean;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.system.base.ApplicationVersion;
 
 /**
  *  Every request to the ServletController executes this code.
@@ -42,13 +43,20 @@ public class SecurityHook implements ControllerHook {
     String action = request.getServletPath();
     int slash = action.lastIndexOf("/");
     action = action.substring(slash + 1);
+    ApplicationPrefs applicationPrefs = (ApplicationPrefs) servlet.getServletConfig().getServletContext().getAttribute("applicationPrefs");
 
     //Login and Process modules bypass security and must implement their own
     if (action.toUpperCase().startsWith("LOGIN") ||
         action.toUpperCase().startsWith("SETUP") ||
+        action.toUpperCase().startsWith("UPGRADE") ||
         action.toUpperCase().startsWith("LICENSESERVER") ||
         action.toUpperCase().startsWith("PROCESS")) {
       return null;
+    }
+    
+    //Version check
+    if (applicationPrefs.isUpgradeable()) {
+      return "UpgradeCheck";
     }
 
     //User is supposed to have a valid session, so fail security check

@@ -16,6 +16,7 @@ import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.utils.StringUtils;
 import java.io.File;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.system.base.ApplicationVersion;
 
 /**
  *  The CFS Login module.
@@ -248,6 +249,14 @@ public final class Login extends CFSModule {
     // TODO: Replace this so it does not need to be maintained
     // NOTE: Make sure to update this similar code in the following method
     if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
+      ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+      if (applicationPrefs.isUpgradeable()) {
+        if (thisUser.getRoleId() == 1 || "Administrator".equals(thisUser.getRole())) {
+          return "PerformUpgradeOK";
+        } else {
+          return "UpgradeCheck";
+        }
+      }
       return "LoginOK";
     } else if (thisUser.getRoleType() == Constants.ROLETYPE_CUSTOMER) {
       return "CustomerPortalLoginOK";
@@ -283,6 +292,14 @@ public final class Login extends CFSModule {
       // TODO: Replace this so it does not need to be maintained
       // NOTE: Make sure to update this similar code in the previous method
       if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
+        ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+        if (applicationPrefs.isUpgradeable()) {
+          if (thisUser.getRoleId() == 1 || "Administrator".equals(thisUser.getRole())) {
+            return "PerformUpgradeOK";
+          } else {
+            return "UpgradeCheck";
+          }
+        }
         return "LoginOK";
       } else if (thisUser.getRoleType() == Constants.ROLETYPE_CUSTOMER) {
         return "CustomerPortalLoginOK";
