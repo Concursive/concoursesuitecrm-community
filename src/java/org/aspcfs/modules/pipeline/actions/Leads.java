@@ -1563,7 +1563,7 @@ public final class Leads extends CFSModule {
       String[] valKeys = thisUser.getGmr().getRange(12);
       Calendar iteratorDate = Calendar.getInstance();
       for (int count = 0; count < 12; count++) {
-        java.util.Date dateValue = createDate(iteratorDate.get(Calendar.YEAR), iteratorDate.get(Calendar.MONTH), 0);
+        java.util.Date dateValue = createDate(iteratorDate.get(Calendar.YEAR), iteratorDate.get(Calendar.MONTH), 1);
         Double itemValue = new Double(0);
         if (whichGraph.equals("gmr")) {
           itemValue = thisUser.getGmr().getValue(valKeys[count]);
