@@ -5,7 +5,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="listView" method="post" action="/MyCFSInbox.do?command=Inbox">
-<a href="javascript:popURL('/ForwardNote.do?command=ShowForm&popup=true','Inbox_message','600','450','yes','no');">New Message</a>
+<a href="javascript:popURL('/ForwardNote.do?command=ShowForm&popup=true&return=<%= java.net.URLEncoder.encode("MyCFSInbox.do?command=Inbox") %>','Inbox_message','600','450','yes','no');">New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
 
@@ -57,7 +57,7 @@
 %>      
   <tr>
           <td width=4 valign=center nowrap class="row<%= rowid %>">
-          <a href="javascript:popURL('/ForwardNote.do?command=ShowForm&linkRecordId=<%=thisNote.getId()%>&linkModuleId=9&popup=true','Forward_Note','600','450','yes','no');">Fwd</a>|<a href="javascript:confirmDelete('/MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
+          <a href="javascript:popURL('/ForwardNote.do?command=ShowForm&linkRecordId=<%=thisNote.getId()%>&linkModuleId=9&popup=true&return=<%= java.net.URLEncoder.encode("MyCFSInbox.do?command=Inbox") %>','Forward_Note','600','450','yes','no');">Fwd</a>|<a href="javascript:confirmDelete('/MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
         </td>
 	        <td width=4 valign=center nowrap class="row<%= rowid %>">
 		<%=toHtml(thisNote.getStatusText())%>
