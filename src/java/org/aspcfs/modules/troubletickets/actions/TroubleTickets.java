@@ -376,7 +376,7 @@ public final class TroubleTickets extends CFSModule {
       subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
       subList1.buildList(db);
       context.getRequest().setAttribute("SubList1", subList1);
-
+      
       ContactList contactList = new ContactList();
       contactList.setEmptyHtmlSelectRecord("-- None --");
       contactList.setPersonalId(getUserId(context));

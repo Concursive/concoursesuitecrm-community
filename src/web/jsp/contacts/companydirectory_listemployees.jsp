@@ -4,6 +4,7 @@
 <jsp:useBean id="CompanyDirectoryInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
 View Employees<br>
 <hr color="#BFBFBB" noshade>
@@ -55,7 +56,7 @@ View Employees<br>
       <tr>
         <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="contacts-internal_contacts-edit"><a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId()%>&action=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-internal_contacts-delete"><a href="javascript:confirmDelete('/CompanyDirectory.do?command=DeleteEmployee&empid=<%= thisEmployee.getId() %>');">Del</a></dhv:permission>
+          <dhv:permission name="contacts-internal_contacts-edit"><a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId()%>&action=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-internal_contacts-delete"><a href="javascript:popURLReturn('/CompanyDirectory.do?command=ConfirmDelete&id=<%=thisEmployee.getId()%>','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');">Del</a></dhv:permission>
         </td>
 	</dhv:permission>
         <td class="row<%= rowid %>"><font class="columntext1">

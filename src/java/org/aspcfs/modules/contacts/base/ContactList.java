@@ -27,6 +27,7 @@ public class ContactList extends Vector {
   private int includeEnabled = TRUE;
   
   private boolean includeEnabledUsersOnly = false;
+  private boolean includeNonUsersOnly = false;
   
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
@@ -50,6 +51,7 @@ public class ContactList extends Vector {
   private boolean withAccountsOnly = false;
   private boolean withProjectsOnly = false;
   private String emptyHtmlSelectRecord = null;
+  private String jsEvent = null;
   
   private int sclOwnerId = -1;
   private String sclOwnerIdRange = null;
@@ -294,6 +296,13 @@ public class ContactList extends Vector {
     this.setPersonalId(-2);
     
     buildQuery(thisOwnerId, thisUserRange);
+  }
+  
+  public String getJsEvent() {
+    return jsEvent;
+  }
+  public void setJsEvent(String jsEvent) {
+    this.jsEvent = jsEvent;
   }
   
   public boolean getCheckEnabledUserAccess() {
@@ -629,6 +638,12 @@ public class ContactList extends Vector {
     return title;
   }
   
+  public boolean getIncludeNonUsersOnly() {
+    return includeNonUsersOnly;
+  }
+  public void setIncludeNonUsersOnly(boolean includeNonUsersOnly) {
+    this.includeNonUsersOnly = includeNonUsersOnly;
+  }
   
   /**
    *  Gets the MiddleName attribute of the ContactList object
@@ -699,6 +714,7 @@ public class ContactList extends Vector {
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect contactListSelect = new HtmlSelect();
+    contactListSelect.setJsEvent(jsEvent);
     
     if (emptyHtmlSelectRecord != null) {
       contactListSelect.addItem(-1, emptyHtmlSelectRecord);
@@ -1140,8 +1156,12 @@ public class ContactList extends Vector {
       }
       
       if (includeEnabledUsersOnly) {
-        sqlFilter.append("AND c.user_id in (SELECT user_id from access where enabled = ?) ");
+        sqlFilter.append("AND c.user_id IN (SELECT user_id FROM access WHERE enabled = ?) ");
       }
+      
+      if (includeNonUsersOnly) {
+        sqlFilter.append("AND c.contact_id NOT IN (SELECT contact_id FROM access) ");
+      }      
       
       if (accountOwnerIdRange != null) {
         sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");

@@ -1522,6 +1522,26 @@ public class User extends GenericBean {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Beginning insert");
       }
+      
+      //new contact at the same time
+      if (contactId < 1) {
+        Contact newContact = this.getContact();
+        newContact.setEnteredBy(enteredBy);
+        newContact.setModifiedBy(modifiedBy);
+        newContact.setOwner(enteredBy);
+        newContact.insert(db);
+
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("User-> Inserting new Contact");
+        }
+        
+        contactId = newContact.getId();
+        
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("User-> New Contact ID: " + newContact.getId());
+        }
+        
+      }      
 
       StringBuffer sql = new StringBuffer();
       sql.append(
@@ -1923,6 +1943,10 @@ public class User extends GenericBean {
     if (contact == null || contact.getId() == -1) {
       errors.put("contactId", "User is not associated with a Contact");
     }
+    
+    if (contactId < 1 && contact.getNameLast().length() == 0) {
+      errors.put("contactIdError", "Contact needs to be selected or newly created first");
+    }        
 
     if (password1 == null || password1.trim().equals("")) {
       errors.put("password1Error", "Password cannot be left blank");
@@ -1993,7 +2017,7 @@ public class User extends GenericBean {
     if (roleId < 0) {
       errors.put("roleError", "Role needs to be selected");
     }
-
+    
     //No circular allowed -- check hierarchy context
     //Get id of the user being modified, see if the managerId is in their hierarchy
     if (managerId > 0 && id > -1 && alias == -1) {

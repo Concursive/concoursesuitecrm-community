@@ -1814,7 +1814,7 @@ public class Contact extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
-
+    checkUserAccount(db);
     PreparedStatement pst = db.prepareStatement(
       "SELECT * " +
       "FROM access " +
@@ -1822,7 +1822,7 @@ public class Contact extends GenericBean {
     pst.setInt(1, this.getId());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
+    if (rs.next() || !hasAccount()) {
       setHasEnabledAccount(true);
     } else {
       setHasEnabledAccount(false);

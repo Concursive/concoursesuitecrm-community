@@ -471,16 +471,28 @@ public final class Users extends CFSModule {
 			contactTypeList.setShowEmployees(true);
 			contactTypeList.buildList(db);
 			contactTypeList.setDefaultKey(typeId);
+      contactTypeList.setJsEvent("onChange=\"javascript:updateContactList();\"");
 			context.getRequest().setAttribute("ContactTypeList", contactTypeList);
 
 			ContactList contactList = new ContactList();
-			contactList.setPersonalId(getUserId(context));
-			contactList.setTypeId(Integer.parseInt(typeId));
-			contactList.setCheckUserAccess(true);
-			contactList.setBuildDetails(false);
+      contactList.setEmptyHtmlSelectRecord("-- Please Select --");
+      contactList.setIncludeNonUsersOnly(true);
+      contactList.setPersonalId(getUserId(context));
+      contactList.setTypeId(Integer.parseInt(typeId));
 			contactList.buildList(db);
 			context.getRequest().setAttribute("ContactList", contactList);
-
+      
+			RoleList roleList = new RoleList();
+			roleList.setEmptyHtmlSelectRecord("-- Please Select --");
+			roleList.buildList(db);
+			context.getRequest().setAttribute("RoleList", roleList);    
+      
+			UserList userList = new UserList();
+			userList.setEmptyHtmlSelectRecord("-- None --");
+			userList.setBuildContact(true);
+			userList.buildList(db);
+			context.getRequest().setAttribute("UserList", userList);
+      
 		}
 		catch (Exception e) {
 			errorMessage = e;
@@ -498,75 +510,30 @@ public final class Users extends CFSModule {
 		}
 	}
 
-
-	/**
-	 *  Generates the form data for step 2 of adding a new user
-	 *
-	 *@param  context  Description of Parameter
-	 *@return          Description of the Returned Value
-	 *@since           1.7
-	 */
-	public String executeCommandInsertUserDecision(ActionContext context) {
-
-		if (!(hasPermission(context, "admin-users-add"))) {
-			return ("PermissionError");
-		}
-
-		Exception errorMessage = null;
-		addModuleBean(context, "Add User", "Add New User");
-
-		String newAccount = context.getRequest().getParameter("newAccount");
-		String typeId = context.getRequest().getParameter("typeId");
-		String contactId = context.getRequest().getParameter("contactId");
-
-		//New account is selected
-		if (newAccount != null && newAccount.equals("on")) {
-			return ("NewAccountFirstOK");
-		}
-
-		//Using a current account, but no contact was selected
-		if (typeId == null || typeId.equals("") || contactId == null || contactId.equals("")) {
-			context.getRequest().setAttribute("usernameError",
-					"Select a contact or choose to create a new contact first");
-			return (executeCommandInsertUserForm(context));
-		}
-
-		//A contact was selected, so proceed
-		Connection db = null;
-		try {
-			db = this.getConnection(context);
-
-			Contact thisContact = new Contact(db, contactId);
-			context.getRequest().setAttribute("Contact", thisContact);
-
-			UserList userList = new UserList();
-			userList.setEmptyHtmlSelectRecord("-- None --");
-			userList.setBuildContact(true);
-			userList.buildList(db);
-			context.getRequest().setAttribute("UserList", userList);
-
-			RoleList roleList = new RoleList();
-			roleList.setEmptyHtmlSelectRecord("-- None --");
-			roleList.buildList(db);
-			context.getRequest().setAttribute("RoleList", roleList);
-
-		}
-		catch (Exception e) {
-			errorMessage = e;
-		}
-		finally {
-			this.freeConnection(context, db);
-		}
-
-		if (errorMessage == null) {
-			return ("UserInsertForm2OK");
-		}
-		else {
-			context.getRequest().setAttribute("Error", errorMessage);
-			return ("SystemError");
-		}
-	}
-
+  public String executeCommandContactJSList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      String typeId = context.getRequest().getParameter("typeId");
+			if (typeId == null || typeId.equals("")) {
+				typeId = "" + Contact.EMPLOYEE_TYPE;
+			}      
+      db = this.getConnection(context);
+      
+			ContactList contactList = new ContactList();
+			contactList.setPersonalId(getUserId(context));
+      contactList.setTypeId(Integer.parseInt(typeId));
+      contactList.setIncludeNonUsersOnly(true);
+			contactList.buildList(db);
+			context.getRequest().setAttribute("ContactList", contactList);
+      
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("ContactJSListOK");
+  }
 
 	/**
 	 *  Adds the user to the database
@@ -584,14 +551,23 @@ public final class Users extends CFSModule {
 		Exception errorMessage = null;
 		Connection db = null;
 		boolean recordInserted = false;
+    boolean contactInserted = false;
+    
 		try {
 			db = getConnection(context);
 			User thisUser = (User) context.getRequest().getAttribute("UserRecord");
+    
+      if (context.getRequest().getParameter("typeId") != null) {
+        ((Contact)thisUser.getContact()).setTypeId(context.getRequest().getParameter("typeId"));
+      }
+      
 			thisUser.setEnteredBy(getUserId(context));
 			thisUser.setModifiedBy(getUserId(context));
+      
 			recordInserted = thisUser.insert(db, context);
 			if (recordInserted) {
-				thisUser = new User(db, "" + thisUser.getId());
+        thisUser.setBuildContact(true);
+				thisUser = new User(db, thisUser.getId());
 				context.getRequest().setAttribute("UserRecord", thisUser);
 				updateSystemHierarchyCheck(db, context);
 			}
@@ -611,7 +587,7 @@ public final class Users extends CFSModule {
 				return ("UserDetailsOK");
 			}
 			else {
-				return (executeCommandInsertUserDecision(context));
+				return (executeCommandInsertUserForm(context));
 			}
 		}
 		else {

@@ -36,7 +36,7 @@ User Details<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
-	    <strong>User: <%= toHtml(UserRecord.getContact().getNameFull()) %></strong>
+	    <strong>User: <%= toHtml(UserRecord.getContact().getNameLastFirst()) %></strong>
 	  </td>
   </tr>
   <tr>

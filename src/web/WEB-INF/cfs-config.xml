@@ -175,8 +175,9 @@
     <forward name="EmployeeDetailsModifyOK" resource="/companydirectory_employeemodifyform.jsp" layout="nav"/>
     <forward name="EmployeeDetailsUpdateOK" resource="/CompanyDirectory.do?command=EmployeeDetails"/>
     <forward name="EmployeeInsertFormOK" resource="/companydirectory_employeeinsertform.jsp" layout="nav"/>
-    <forward name="EmployeeDeleteOK" resource="/CompanyDirectory.do?command=ListEmployees"/>
+    <forward name="EmployeeDeleteOK" resource="/dialogcloseandreload.jsp"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <action name="ExternalContacts" class="com.darkhorseventures.cfsmodule.ExternalContacts">
     <bean name="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
@@ -787,6 +788,7 @@
     <forward name="DoReassignOK" resource="/Users.do?command=Reassign"/>
     <forward name="NewAccountFirstOK" resource="/admin_newusercontact.jsp" layout="nav"/>
     <forward name="UserDetailsModifyOK" resource="/admin_userdetails.jsp" layout="nav"/>
+    <forward name="ContactJSListOK" resource="/admin_jsuser_contactlist.jsp"/>
   </action>  
   <action name="Roles" class="com.darkhorseventures.cfsmodule.Roles">
     <bean name="Role" class="com.darkhorseventures.cfsbase.Role" scope="request" />
@@ -800,6 +802,8 @@
     <forward name="RoleDetailsOK" resource="/admin_roledetails.jsp" layout="nav"/>
     <forward name="RoleDetailsModifyOK" resource="/admin_roledetails.jsp" layout="nav"/>
     <forward name="RoleUpdateOK" resource="/Roles.do?command=ListRoles"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <!-- End Setup Module -->
   

@@ -137,6 +137,51 @@ public final class CompanyDirectory extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandConfirmDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Contact thisContact = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
+
+    if (!(hasPermission(context, "contacts-internal_contacts-delete"))) {
+      return ("PermissionError");
+    }
+
+    if (context.getRequest().getParameter("id") != null) {
+      id = context.getRequest().getParameter("id");
+    }
+    
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, id);
+      thisContact.checkUserAccount(db);
+      htmlDialog.setRelationships(thisContact.processDependencies(db));
+      
+      if (!thisContact.hasAccount()) {
+        htmlDialog.setTitle("CFS: Confirm Delete");
+        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='/CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "'");
+        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      } else {
+        htmlDialog.setHeader("This Employee cannot be deleted because it is associated with a User account.");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+      }        
+        
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
 
 
   /**
@@ -321,6 +366,8 @@ public final class CompanyDirectory extends CFSModule {
     addModuleBean(context, "Internal Contacts", "Internal Delete");
     if (errorMessage == null) {
       if (recordDeleted) {
+        context.getRequest().setAttribute("refreshUrl","CompanyDirectory.do?command=ListEmployees");
+        deleteRecentItem(context, thisContact);        
         return ("EmployeeDeleteOK");
       } else {
         processErrors(context, thisContact.getErrors());
