@@ -36,12 +36,14 @@ public class ImportGeneralContacts implements DataReader {
   private int TITLE = 0;
   private int BUSINESS_ADDRESS_1 = 0;
   private int BUSINESS_ADDRESS_2 = 0;
+  private int BUSINESS_ADDRESS_3 = 0;
   private int BUSINESS_CITY = 0;
   private int BUSINESS_STATE = 0;
   private int BUSINESS_ZIP = 0;
   private int BUSINESS_COUNTRY = 0;
   private int HOME_ADDRESS_1 = 0;
   private int HOME_ADDRESS_2 = 0;
+  private int HOME_ADDRESS_3 = 0;
   private int HOME_CITY = 0;
   private int HOME_STATE = 0;
   private int HOME_ZIP = 0;
@@ -281,19 +283,21 @@ public class ImportGeneralContacts implements DataReader {
           TITLE = findColumn(thisRecord, "Title");
           BUSINESS_ADDRESS_1 = findColumn(thisRecord, "Business Address Line 1");
           BUSINESS_ADDRESS_2 = findColumn(thisRecord, "Business Address Line 2");
+          BUSINESS_ADDRESS_3 = findColumn(thisRecord, "Business Address Line 3");
           BUSINESS_CITY = findColumn(thisRecord, new String[]{"BusinessCity", "Business City"});
           BUSINESS_STATE = findColumn(thisRecord, "Business State/Province");
           BUSINESS_ZIP = findColumn(thisRecord, "Business Postal Code");
           BUSINESS_COUNTRY = findColumn(thisRecord, "Business Country");
           HOME_ADDRESS_1 = findColumn(thisRecord, "Home Address Line 1");
           HOME_ADDRESS_2 = findColumn(thisRecord, "Home Address Line 2");
+          HOME_ADDRESS_3 = findColumn(thisRecord, "Home Address Line 3");
           HOME_CITY = findColumn(thisRecord, new String[]{"HomeCity", "Home City"});
           HOME_STATE = findColumn(thisRecord, "Home State/Province");
           HOME_ZIP = findColumn(thisRecord, "Home Postal Code");
           HOME_COUNTRY = findColumn(thisRecord, "Home Country");
           BUSINESS_PHONE = findColumn(thisRecord, new String[]{"BusinessPhone", "Business Phone"});
           BUSINESS_2_PHONE = findColumn(thisRecord, "Business2 Phone");
-          BUSINESS_FAX = findColumn(thisRecord, "Business Fax");
+          BUSINESS_FAX = findColumn(thisRecord, new String[]{"BusinessFax", "Business Fax"});
           HOME_PHONE = findColumn(thisRecord, "Home Phone");
           HOME_2_PHONE = findColumn(thisRecord, "Home2 Phone");
           HOME_FAX = findColumn(thisRecord, "Home Fax");
@@ -340,6 +344,7 @@ public class ImportGeneralContacts implements DataReader {
         //ContactAddress Fields
         businessAddress.setStreetAddressLine1(getValue(thisRecord, BUSINESS_ADDRESS_1));
         businessAddress.setStreetAddressLine2(getValue(thisRecord, BUSINESS_ADDRESS_2));
+        businessAddress.setStreetAddressLine3(getValue(thisRecord, BUSINESS_ADDRESS_3));
         businessAddress.setCity(getValue(thisRecord, BUSINESS_CITY));
         businessAddress.setState(getValue(thisRecord, BUSINESS_STATE));
         businessAddress.setZip(getValue(thisRecord, BUSINESS_ZIP));
@@ -358,6 +363,7 @@ public class ImportGeneralContacts implements DataReader {
         //ContactAddress Fields
         homeAddress.setStreetAddressLine1(getValue(thisRecord, HOME_ADDRESS_1));
         homeAddress.setStreetAddressLine2(getValue(thisRecord, HOME_ADDRESS_2));
+        homeAddress.setStreetAddressLine3(getValue(thisRecord, HOME_ADDRESS_3));
         homeAddress.setCity(getValue(thisRecord, HOME_CITY));
         homeAddress.setState(getValue(thisRecord, HOME_STATE));
         homeAddress.setZip(getValue(thisRecord, HOME_ZIP));
