@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.zip.*;
 import java.util.regex.*;
 import java.io.*;
+import java.util.*;
 
 /**
  *  Variety of methods for Strings
@@ -16,6 +17,7 @@ import java.io.*;
 public class StringUtils {
 
   public static String allowed = "-0123456789.";
+  private static Random rn = new Random();
 
 
   /**
@@ -499,6 +501,41 @@ public class StringUtils {
       return match.replaceAll(replacement);
     }
     return source;
+  }
+
+
+  /**
+   *  Generates a random string of letters with the resulting length being
+   *  between the specified lo and hi range
+   *
+   *@param  lo  Description of the Parameter
+   *@param  hi  Description of the Parameter
+   *@return     Description of the Return Value
+   */
+  public static String randomString(int lo, int hi) {
+    int n = rand(lo, hi);
+    byte b[] = new byte[n];
+    for (int i = 0; i < n; i++) {
+      b[i] = (byte) rand('a', 'z');
+    }
+    return new String(b);
+  }
+
+
+  /**
+   *  Returns a random number that falls within the specified range
+   *
+   *@param  lo  Description of the Parameter
+   *@param  hi  Description of the Parameter
+   *@return     Description of the Return Value
+   */
+  public static int rand(int lo, int hi) {
+    int n = hi - lo + 1;
+    int i = rn.nextInt() % n;
+    if (i < 0) {
+      i = -i;
+    }
+    return lo + i;
   }
 }
 

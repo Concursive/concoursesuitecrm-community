@@ -16,7 +16,6 @@ import org.aspcfs.utils.*;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.*;
 
-
 /**
  *  Represents a user access record <p>
  *
@@ -36,7 +35,6 @@ import org.aspcfs.modules.base.*;
  *@version    $Id$
  */
 public class User extends GenericBean {
-  private static Random rn = new Random();
   //User Properties
   protected String errmsg = "";
   protected int id = -1;
@@ -268,7 +266,7 @@ public class User extends GenericBean {
     User modUser = null;
     Contact targetContact = null;
 
-    String newPassword = randomstring(6, 8);
+    String newPassword = StringUtils.randomString(6, 8);
     this.setPassword1(newPassword);
     this.setPassword2(newPassword);
     resultCount = this.newPassword(db, context);
@@ -2377,40 +2375,6 @@ public class User extends GenericBean {
 
 
   /**
-   *  The following functions are used to generate a random password
-   *
-   *@param  lo  Description of the Parameter
-   *@param  hi  Description of the Parameter
-   *@return     Description of the Return Value
-   */
-  public static int rand(int lo, int hi) {
-    int n = hi - lo + 1;
-    int i = rn.nextInt() % n;
-    if (i < 0) {
-      i = -i;
-    }
-    return lo + i;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  lo  Description of the Parameter
-   *@param  hi  Description of the Parameter
-   *@return     Description of the Return Value
-   */
-  public static String randomstring(int lo, int hi) {
-    int n = rand(lo, hi);
-    byte b[] = new byte[n];
-    for (int i = 0; i < n; i++) {
-      b[i] = (byte) rand('a', 'z');
-    }
-    return new String(b);
-  }
-
-
-  /**
    *  Returns a comma delimited string of all users in this user's hierarchy for
    *  querying records.
    *
@@ -2421,7 +2385,13 @@ public class User extends GenericBean {
     UserList fullChildList = this.getFullChildList(shortChildList, new UserList());
     return (fullChildList.getUserListIds(id));
   }
-  
+
+
+  /**
+   *  Returns the names of the fields that must be adjusted for time
+   *
+   *@return    The timeZoneParams value
+   */
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
     thisList.add("expires");
