@@ -76,19 +76,24 @@ Add Component<br>
   </tr>
   <tr>
     <td class="containerBack">
+      <%-- Begin container content --%>
+      <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
+      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+      <% FileItem thisFile = new FileItem(); %>
+      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+        <%= thisFile.getImageTag() %>
+      </dhv:evaluate>
+      <br>
+      <br>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-
-<input type="reset" value="Reset">
-<br>
-<%= showError(request, "actionError") %>  
-
+      <input type="reset" value="Reset">
+      <br>
+      <%= showError(request, "actionError") %>  
 <%--  include basic opportunity form --%>
 <%@ include file="../pipeline/opportunity_include.jsp" %>
-
 &nbsp;
 <br>
-
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&id=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">

@@ -31,9 +31,17 @@ Opportunity Details<br>
   <tr>
     <td class="containerBack">
       <%-- Begin container content --%>
-<dhv:permission name="contacts-external_contacts-opportunities-add">
-  <a href="ExternalContactsOppComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %>">Add a Component</a><br>
-</dhv:permission>
+      <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
+      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+      <% FileItem thisFile = new FileItem(); %>
+      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+        <%= thisFile.getImageTag() %>
+      </dhv:evaluate>
+      <br>
+    <dhv:permission name="contacts-external_contacts-opportunities-add">
+      <br>
+      <a href="ExternalContactsOppComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>&contactId=<%= opportunityHeader.getContactLink() %>">Add a Component</a><br>
+    </dhv:permission>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 <input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ComponentListInfo"/>

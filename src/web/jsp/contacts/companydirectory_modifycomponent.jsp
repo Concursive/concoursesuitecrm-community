@@ -83,7 +83,16 @@ Modify Component<br>
   </tr>
   <tr>
     <td class="containerBack">
-<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+      <%-- Begin container content --%>
+      <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
+      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+      <% FileItem thisFile = new FileItem(); %>
+      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+        <%= thisFile.getImageTag() %>
+      </dhv:evaluate>
+      <br>
+      <br>
+      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
  <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">

@@ -19,9 +19,9 @@ import org.aspcfs.modules.base.DependencyList;
 /**
  *  Description of the Class
  *
- * @author     chris
- * @created    October 15, 2001
- * @version    $Id: ExternalContactsOpps.java,v 1.3 2002/02/05 19:44:43 chris Exp
+ *@author     chris
+ *@created    October 15, 2001
+ *@version    $Id: ExternalContactsOpps.java,v 1.3 2002/02/05 19:44:43 chris Exp
  *      $
  */
 public final class ExternalContactsOpps extends CFSModule {
@@ -32,9 +32,9 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
    */
   public String executeCommandViewOpps(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-view")) {
@@ -95,8 +95,8 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandPrepare(ActionContext context) {
     Exception errorMessage = null;
@@ -153,8 +153,8 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
    */
   public String executeCommandSave(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-add")) {
@@ -209,6 +209,12 @@ public final class ExternalContactsOpps extends CFSModule {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpdateOpp(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-edit")) {
       return ("PermissionError");
@@ -259,8 +265,8 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSaveComponent(ActionContext context) {
     Exception errorMessage = null;
@@ -359,9 +365,9 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
    */
   public String executeCommandDetailsOpp(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-view")) {
@@ -411,7 +417,7 @@ public final class ExternalContactsOpps extends CFSModule {
         return ("PermissionError");
       }
       addRecentItem(context, thisHeader);
-      if(popup){
+      if (popup) {
         return ("DetailsOppPopupOK");
       }
       return ("DetailsOppOK");
@@ -425,8 +431,8 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModifyOpp(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-edit")) {
@@ -458,7 +464,7 @@ public final class ExternalContactsOpps extends CFSModule {
       boolean popup = "true".equals(context.getRequest().getParameter("popup"));
       context.getRequest().setAttribute("opportunityHeader", thisHeader);
       addRecentItem(context, thisHeader);
-      if(popup){
+      if (popup) {
         return ("ModifyOppPopupOK");
       }
       return ("ModifyOppOK");
@@ -472,57 +478,55 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDetailsComponent(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
+    OpportunityComponent thisComponent = null;
+    Contact thisContact = null;
+    Connection db = null;
     addModuleBean(context, "External Contacts", "Opportunities");
+    //Parameters
     String componentId = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
-    OpportunityComponent thisComponent = null;
-
-    Connection db = null;
     try {
       db = this.getConnection(context);
-      Contact thisContact = new Contact(db, contactId);
-      thisComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
-      if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(context, thisComponent.getOwner()))) {
-        return "PermissionError";
-      }
-      thisComponent.checkEnabledOwnerAccount(db);
+      //Load the contact
+      thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
-    } catch (Exception e) {
-      errorMessage = e;
+      //Load the component
+      thisComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
+      thisComponent.checkEnabledOwnerAccount(db);
+      context.getRequest().setAttribute("oppComponentDetails", thisComponent);
+      //Load the opportunity header for display
+      OpportunityHeader oppHeader = new OpportunityHeader(db, thisComponent.getHeaderId());
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (!hasAuthority(context, thisComponent.getOwner())) {
-        return ("PermissionError");
-      }
-      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
-      context.getRequest().setAttribute("oppComponentDetails", thisComponent);
-      addRecentItem(context, thisComponent);
-      if(popup){
-      return ("DetailsComponentPopupOK");
-      }
-      return ("DetailsComponentOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(context, thisComponent.getOwner()))) {
+      return "PermissionError";
     }
+    boolean popup = "true".equals(context.getRequest().getParameter("popup"));
+    addRecentItem(context, thisComponent);
+    if (popup) {
+      return ("DetailsComponentPopupOK");
+    }
+    return ("DetailsComponentOK");
   }
 
 
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-delete")) {
@@ -564,8 +568,8 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmComponentDelete(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-delete")) {
@@ -587,7 +591,7 @@ public final class ExternalContactsOpps extends CFSModule {
       }
       htmlDialog.setTitle("CFS: General Contacts Opportunities");
       htmlDialog.setShowAndConfirm(false);
-      htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'" );
+      htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
       errorMessage = e;
@@ -607,9 +611,9 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
    */
   public String executeCommandDeleteOpp(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-delete")) {
@@ -637,7 +641,7 @@ public final class ExternalContactsOpps extends CFSModule {
       boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
       if (recordDeleted) {
         context.getRequest().setAttribute("contactId", contactId);
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(),  "popupType|actionId" + (inLinePopup ? "|popup" : "")));
+        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
         deleteRecentItem(context, newOpp);
         return "OppDeleteOK";
       } else {
@@ -654,8 +658,8 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDeleteComponent(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-delete")) {
@@ -682,7 +686,7 @@ public final class ExternalContactsOpps extends CFSModule {
     if (errorMessage == null) {
       boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(),  "popupType|actionId" + (inLinePopup ? "|popup" : "")));
+        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
         deleteRecentItem(context, component);
         return ("ComponentDeleteOK");
       } else {
@@ -699,8 +703,8 @@ public final class ExternalContactsOpps extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModifyComponent(ActionContext context) {
     if (!hasPermission(context, "contacts-external_contacts-opportunities-edit")) {
