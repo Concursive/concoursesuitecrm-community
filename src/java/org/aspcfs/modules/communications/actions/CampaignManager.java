@@ -1430,19 +1430,16 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-
       if (campaign.hasSurvey()) {
         Survey survey = new Survey(db, campaign.getSurveyId());
         context.getRequest().setAttribute("Survey", survey);
       }
       
-      if (campaign.hasFiles()) {
-        FileItemList files = new FileItemList();
-        files.setLinkModuleId(Constants.COMMUNICATIONS);
-        files.setLinkItemId(campaign.getId());
-        files.buildList(db);
-        context.getRequest().setAttribute("FileItemList", files);
-      }
+      FileItemList files = new FileItemList();
+      files.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
+      files.setLinkItemId(campaign.getId());
+      files.buildList(db);
+      context.getRequest().setAttribute("fileItemList", files);
       
     } catch (Exception e) {
       errorMessage = e;
@@ -1476,7 +1473,7 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("Campaign", campaign);
 
       FileItemList files = new FileItemList();
-      files.setLinkModuleId(Constants.COMMUNICATIONS);
+      files.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       files.setLinkItemId(campaign.getId());
       files.buildList(db);
       context.getRequest().setAttribute("fileItemList", files);
@@ -1530,7 +1527,7 @@ public final class CampaignManager extends CFSModule {
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
 
         FileItem thisItem = new FileItem();
-        thisItem.setLinkModuleId(Constants.COMMUNICATIONS);
+        thisItem.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
         thisItem.setLinkItemId(campaign.getId());
         thisItem.setEnteredBy(getUserId(context));
         thisItem.setModifiedBy(getUserId(context));
@@ -1576,7 +1573,7 @@ public final class CampaignManager extends CFSModule {
       String itemId = (String) context.getRequest().getParameter("fid");
       String campaignId = (String) context.getRequest().getParameter("id");
       db = getConnection(context);
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       recordDeleted = thisItem.delete(db, this.getPath(context, "communications", thisItem.getLinkItemId()));
     } catch (Exception e) {
       errorMessage = e;
@@ -1604,7 +1601,7 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
