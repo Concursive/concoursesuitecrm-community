@@ -16,7 +16,7 @@ Ticket Details<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%=toHtml(TicketDetails.getCompanyName())%> - Ticket #<%=TicketDetails.getId()%></strong>
+      <strong><%=toHtml(TicketDetails.getCompanyName())%> - Ticket # <%=TicketDetails.getPaddedId()%></strong>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -166,7 +166,7 @@ Ticket Details<br>
       Email
 		</td>
 		<td>
-      <a href="mailto:<%=toHtml(TicketDetails.getThisContact().getEmailAddress("Business"))%>"><%=toHtml(TicketDetails.getThisContact().getEmailAddress("Business"))%></a>
+      <%= TicketDetails.getThisContact().getEmailAddressTag("Business", toHtml(TicketDetails.getThisContact().getEmailAddress("Business")), "&nbsp;") %>
 		</td>
   </tr>
   <tr class="containerBody">
@@ -174,7 +174,7 @@ Ticket Details<br>
       Phone
 		</td>
 		<td>
-      <%=TicketDetails.getThisContact().getPhoneNumber("Business")%>
+      <%= toHtml(TicketDetails.getThisContact().getPhoneNumber("Business")) %>
 		</td>
   </tr>
 </table>
@@ -212,8 +212,8 @@ Ticket Details<br>
   } else {
 %>
   <tr class="containerBody">
-    <td class="formLabel">
-      <font color="#9E9E9E" colspan=3>No Log Entries.</font>
+    <td bgcolor="white">
+      <font color="#9E9E9E" colspan="3">No Log Entries.</font>
     </td>
   </tr>
 <%}%>

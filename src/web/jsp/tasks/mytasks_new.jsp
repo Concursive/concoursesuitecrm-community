@@ -100,7 +100,7 @@
       <table>
         <tr>
           <td>
-            <div id="changeowner"><%=Task.getOwnerName()==null?toHtml(User.getNameLastFirst()):""%><%=Task.getOwnerName()!=null?Task.getOwnerName():""%></div>
+            <div id="changeowner"><%= Task.getOwnerName()==null?toHtml(User.getUserRecord().getContact().getNameLastFirst()):""%><%=Task.getOwnerName()!=null?Task.getOwnerName():"" %></div>
           </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%=(Task.getOwner() == -1)?User.getUserRecord().getContact().getId():Task.getOwner()%>"><a href="javascript:popContactsListSingle('ownerid','changeowner');">Change Owner</a>

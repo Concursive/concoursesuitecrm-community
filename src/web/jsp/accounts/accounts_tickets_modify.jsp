@@ -93,7 +93,7 @@ function ShowSpan(thisID)
 <a href="/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
 
 <% if (request.getParameter("return") == null) {%>
-<a href="/AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getId()%>">Ticket Details</a> >
+<a href="/AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getPaddedId()%>">Ticket Details</a> >
 <%}%>
 
 Modify Ticket<br>

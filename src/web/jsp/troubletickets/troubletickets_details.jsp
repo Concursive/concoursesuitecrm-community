@@ -8,7 +8,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-    <strong>Ticket #<%=TicketDetails.getId()%><br>
+    <strong>Ticket # <%=TicketDetails.getPaddedId()%><br>
     <%=toHtml(TicketDetails.getCompanyName())%></strong>
     <dhv:evaluate exp="<%=!(TicketDetails.getCompanyEnabled())%>"><font color="red">(account disabled)</font></dhv:evaluate>
     </td>
@@ -151,7 +151,7 @@
       Name
     </td>
     <td>
-      <%=toHtml(TicketDetails.getThisContact().getNameLast())%>, <%=toHtml(TicketDetails.getThisContact().getNameFirst())%>
+      <%=toHtml(TicketDetails.getThisContact().getNameLastFirst())%>
     </td>
   </tr>
 	<tr class="containerBody">
@@ -167,7 +167,7 @@
       Email
     </td>
     <td>
-      <a href="mailto:<%=toHtml(TicketDetails.getThisContact().getEmailAddress("Business"))%>"><%=toHtml(TicketDetails.getThisContact().getEmailAddress("Business"))%></a>
+      <%= TicketDetails.getThisContact().getEmailAddressTag("Business", toHtml(TicketDetails.getThisContact().getEmailAddress("Business")), "&nbsp;") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -175,7 +175,7 @@
       Phone
     </td>
     <td>
-      <%=TicketDetails.getThisContact().getPhoneNumber("Business")%>
+      <%= toHtml(TicketDetails.getThisContact().getPhoneNumber("Business")) %>
     </td>
   </tr>
 </table>
