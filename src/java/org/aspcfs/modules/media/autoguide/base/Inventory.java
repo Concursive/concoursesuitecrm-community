@@ -977,16 +977,6 @@ public class Inventory {
     }
 
     PreparedStatement pst = null;
-    //Delete related records (mappings)
-
-    //Delete the record
-    int recordCount = 0;
-    pst = db.prepareStatement(
-        "DELETE FROM autoguide_inventory " +
-        "WHERE inventory_id = ? ");
-    pst.setInt(1, id);
-    recordCount = pst.executeUpdate();
-    pst.close();
 
     //Options
     if (options != null) {
@@ -999,7 +989,7 @@ public class Inventory {
       adRuns.setInventoryId(id);
       adRuns.delete(db);
     }
-
+    
     //TODO: Pictures -- need filepath at this point
     /*
      *  if (pictureId > -1) {
@@ -1010,6 +1000,16 @@ public class Inventory {
      *  previousFiles.delete(db, filePath);
      *  }
      */
+     
+    //Delete the record
+    int recordCount = 0;
+    pst = db.prepareStatement(
+        "DELETE FROM autoguide_inventory " +
+        "WHERE inventory_id = ? ");
+    pst.setInt(1, id);
+    recordCount = pst.executeUpdate();
+    pst.close();
+     
     if (recordCount == 0) {
       //errors.put("actionError", "Record could not be deleted because it no longer exists.");
       return false;
@@ -1026,9 +1026,6 @@ public class Inventory {
    *@exception  SQLException  Description of Exception
    */
   public void buildOrganizationInfo(Connection db) throws SQLException {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Inventory-> Building org info: " + accountId);
-    }
     if (accountId == -1) {
       accountId = 0;
     }
@@ -1083,9 +1080,6 @@ public class Inventory {
   public void buildPictureId(Connection db) throws SQLException {
     FileItem fileItem = new FileItem(db, -1, id, Constants.AUTOGUIDE);
     pictureId = fileItem.getId();
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Inventory-> PictureID: " + pictureId);
-    }
   }
   
   public void buildPicture(Connection db) throws SQLException {
@@ -1094,9 +1088,6 @@ public class Inventory {
     pictureId = picture.getId();
     if (pictureId == -1) {
       picture = null;
-    }
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Inventory-> PictureID: " + pictureId);
     }
   }
 

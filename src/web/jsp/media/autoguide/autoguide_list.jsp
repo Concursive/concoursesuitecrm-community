@@ -7,27 +7,23 @@
 <jsp:useBean id="MakeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-
-
-<br>
-<center><%= AutoGuideDirectoryInfo.getNumericalPageLinks() %></center>
-
+<center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %><br>&nbsp;</center>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="AutoGuide.do?command=List">
     <td align="left">
-      Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+      Layout: <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
         <option <%= AutoGuideDirectoryInfo.getOptionValue("list") %>>List View</option>
         <option <%= AutoGuideDirectoryInfo.getOptionValue("slides") %>>Ad View</option>
       </select>
       &nbsp;
-      <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+      <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
 			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideDirectoryInfo.getFilterKey("listFilter1")) %>
       &nbsp;
-      <% statusFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+      <% statusFilterSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
 			Status: <%= statusFilterSelect.getHtml("listFilter2", AutoGuideDirectoryInfo.getFilterKey("listFilter2")) %>
       &nbsp;
-      <% MakeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+      <% MakeSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
 			Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
@@ -45,8 +41,8 @@
     </dhv:permission>
 --%>
     <td nowrap>
-      <strong><a href="AutoGuide.do?command=List&column=o.name">Account</a></strong>
-      <%= AutoGuideDirectoryInfo.getSortIcon("o.name") %>
+      <strong><a href="AutoGuide.do?command=List&column=o.name,i.stock_no">Account</a></strong>
+      <%= AutoGuideDirectoryInfo.getSortIcon("o.name,i.stock_no") %>
     </td>
     <td nowrap>
       <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Stock No</a></strong>
@@ -131,4 +127,18 @@
 <%}%>
 </table>
 <br>
-[<%= AutoGuideDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= AutoGuideDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= AutoGuideDirectoryInfo.getNumericalPageEntry() %>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <%= AutoGuideDirectoryInfo.getListPropertiesHeader("2") %>
+  <tr>
+    <td valign="middle" align="center" class="row1">
+      <font color="#666666">
+      [<%= AutoGuideDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= AutoGuideDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
+      Page <%= AutoGuideDirectoryInfo.getNumericalPageEntry() %>
+      of <%= AutoGuideDirectoryInfo.getNumberOfPages() %>,
+      Items per page: <%= AutoGuideDirectoryInfo.getItemsPerPageEntry() %>
+      <input type="submit" value="go">
+      </font>
+    </td>
+  </tr>
+  <%= AutoGuideDirectoryInfo.getListPropertiesFooter() %>
+</table>

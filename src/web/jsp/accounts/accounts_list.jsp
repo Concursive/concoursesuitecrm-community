@@ -4,19 +4,20 @@
 <jsp:useBean id="OrgListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<form name="listView" method="post" action="/Accounts.do?command=View">
 <dhv:permission name="accounts-accounts-add"><a href="/Accounts.do?command=Add">Add an Account</a></dhv:permission>
 <dhv:permission name="accounts-accounts-add" none="true"><br></dhv:permission>
 <center><%= OrgListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/Accounts.do?command=View">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+      <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
         <option <%= OrgListInfo.getOptionValue("all") %>>All Accounts</option>
         <option <%= OrgListInfo.getOptionValue("my") %>>My Accounts </option>
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 
@@ -69,5 +70,18 @@
 <%}%>
 </table>
 <br>
-[<%= OrgListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= OrgListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= OrgListInfo.getNumericalPageLinks() %>
-</form>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <%= OrgListInfo.getListPropertiesHeader("2") %>
+  <tr>
+    <td valign="middle" align="center" class="row1">
+      <font color="#666666">
+      [<%= OrgListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= OrgListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
+      Page <%= OrgListInfo.getNumericalPageEntry() %>
+      of <%= OrgListInfo.getNumberOfPages() %>,
+      Items per page: <%= OrgListInfo.getItemsPerPageEntry() %>
+      <input type="submit" value="go">
+      </font>
+    </td>
+  </tr>
+  <%= OrgListInfo.getListPropertiesFooter() %>
+</table>

@@ -307,6 +307,7 @@ public class InventoryList extends ArrayList {
       " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
       " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
       " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
+      " LEFT JOIN organization o ON i.account_id = o.org_id " +
       "WHERE i.inventory_id > -1 " +
       "AND i.account_id IN (SELECT org_id FROM organization) ");
     
@@ -328,7 +329,7 @@ public class InventoryList extends ArrayList {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND c.namelast < ? ");
+            "AND o.name < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -341,10 +342,10 @@ public class InventoryList extends ArrayList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("i.stock_no", null);
+      pagedListInfo.setDefaultSort("o.name,i.stock_no", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY i.stock_no ");
+      sqlOrder.append("ORDER BY o.name,i.stock_no ");
     }
     
     //Need to build a base SQL statement for returning records

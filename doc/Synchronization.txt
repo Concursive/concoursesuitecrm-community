@@ -43,7 +43,7 @@ Client #1 Configures its internal clock
 - Client sends transaction to get the time
 - This will be used as the "nextAnchor" for the current session of transactions
 - An XML record is returned with a field called "dateTime"
-  Ex. "2002-05-28 16:34:20.167"
+  Ex. "2002-05-28 16:34:20.167" (SQL formatted date/time is expected)
   
 <?xml version="1.0" standalone="yes"?>
 <app>
@@ -176,6 +176,7 @@ and limit.
 - Client processes the received data, performing the appropriate SQL
 - Client sends next table to be synchronized
 
+** EXAMPLE -- LOOK AT THE OBJECT API BELOW FOR ACTUAL USAGE **
 <app>
   <authentication>
     <id>ds21.darkhorseventures.com</id>
@@ -189,9 +190,9 @@ and limit.
     <meta>
       <property>guid</property>
       <property>name</property>
-      <property>enteredBy</property>
+      <property>enteredBy^userGuid</property>
       <property>modified</property>
-      <property>modifiedBy</property>
+      <property>modifiedBy^userGuid</property>
     </meta>
     <makeList action="sync" identity="1" offset="0" items="50"/>
   </transaction>
@@ -274,8 +275,9 @@ Client #1 Ends Synchronization
   
   ** The server has no way of sending passwords. **
   ** After the user is validated with a direct sync, record their password **
-  ** On every sync, validate the user's name and password... if it doesn't match
-  ** prompt them for a new password **
+  ** On every sync, validate the user's name and password against the server... 
+  ** if it doesn't match prompt them for a new password (and destroy the local
+  ** reference)
   
   <transaction id="2">
     <meta>
@@ -298,6 +300,7 @@ Client #1 Ends Synchronization
   </transaction>
   
   ** TODO: user_account **
+  ** User account will not be in this version **
   
   <transaction id="5">
     <meta>
@@ -411,8 +414,11 @@ Client #1 Ends Synchronization
   </transaction>
   
   ** TODO: inventory_pictures **
-  ** Might not be necessary... seems that pictures are just important for
-     handhelds to remember. **
+  ** There is a lot going on here... the handheld needs to know which pictures
+  ** it needs to send, which pictures it has already sent and which pictures
+  ** the server already has.  Plus, the handheld needs to be careful not
+  ** to replace a picture for the incorrect vehicle since pictures will 
+  ** all have the same filenames.
   
   
 
@@ -437,7 +443,7 @@ SYNC'D ALL TABLES FIRST):
       <guid>10</guid>
       <vehicleGuid>1089</vehicleGuid>
       <accountGuid>5</accountGuid>
-      <enteredBy>*USER'S ID*</enteredBy>
+      <enteredBy lookup="user">*USER'S ID*</enteredBy>
       <stockNo>aaa</stockNo>
       <mileage>123</mileage>
       <vin>XCV</vin>

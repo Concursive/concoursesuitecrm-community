@@ -4,6 +4,8 @@ import org.theseus.actions.*;
 import java.util.HashMap;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.webutils.HtmlSelect;
+import java.util.StringTokenizer;
 
 /**
  *  Allows information to be stored in an object for the pagedlist. <p>
@@ -69,6 +71,9 @@ public class PagedListInfo {
    *@since       1.0
    */
   public void setItemsPerPage(int tmp) {
+    if (tmp > itemsPerPage) {
+      resetList();
+    }
     this.itemsPerPage = tmp;
   }
 
@@ -81,7 +86,7 @@ public class PagedListInfo {
    */
   public void setItemsPerPage(String tmp) {
     try {
-      itemsPerPage = Integer.parseInt(tmp);
+      this.setItemsPerPage(Integer.parseInt(tmp));
     } catch (Exception e) {
     }
   }
@@ -179,6 +184,8 @@ public class PagedListInfo {
       this.setSortOrder(tmpSortOrder);
     }
 
+    //Check to see if the user is changing the sort column, or clicking on the
+    //same column again
     String tmpColumnToSortBy = context.getRequest().getParameter("column");
     if (tmpColumnToSortBy != null) {
       if (columnToSortBy != null) {
@@ -197,33 +204,45 @@ public class PagedListInfo {
       this.setColumnToSortBy(tmpColumnToSortBy);
     }
 
-    String tmpItemsPerPage = context.getRequest().getParameter("items");
-    if (tmpItemsPerPage != null) {
-      this.setItemsPerPage(tmpItemsPerPage);
-    }
-
-    String tmpCurrentLetter = context.getRequest().getParameter("letter");
-    if (tmpCurrentLetter != null) {
-      this.setCurrentLetter(tmpCurrentLetter);
-    } else {
-      this.setCurrentLetter("");
-    }
-
-    String tmpCurrentOffset = context.getRequest().getParameter("offset");
-    if (tmpCurrentOffset != null) {
-      this.setCurrentOffset(tmpCurrentOffset);
-    }
-    
+    //User has specified a page number to view
     String tmpCurrentPage = context.getRequest().getParameter("page");
     if (tmpCurrentPage != null) {
       this.setCurrentOffset((Integer.parseInt(tmpCurrentPage) - 1) * itemsPerPage);
     }
 
+    //User is changing the number of items to display -- needs to be done after the
+    //page select
+    String tmpItemsPerPage = context.getRequest().getParameter("items");
+    if (tmpItemsPerPage != null) {
+      this.setItemsPerPage(tmpItemsPerPage);
+    }
+
+    //The user wants to jump to a specific letter of the alphabet...
+    //The alphabet is currently tuned to a specific field that is identified
+    //by the object... maybe in the future it will use the column being
+    //sorted on.
+    String tmpCurrentLetter = context.getRequest().getParameter("letter");
+    if (tmpCurrentLetter != null) {
+      this.setCurrentLetter(tmpCurrentLetter);
+      //Need to reset the sort because it is configured by the underlying query object
+      this.setColumnToSortBy(null);
+      this.setSortOrder(null);
+    } else {
+      this.setCurrentLetter("");
+    }
+
+    //The user has selected an offset to go to... could be through a 
+    //page element that calculates the offset per page
+    String tmpCurrentOffset = context.getRequest().getParameter("offset");
+    if (tmpCurrentOffset != null) {
+      this.setCurrentOffset(tmpCurrentOffset);
+    }
+
+    //The user has changed the view of the pagedList
     String tmpListView = context.getRequest().getParameter("listView");
     if (tmpListView != null) {
       if (listView != null && !listView.equals(tmpListView)) {
-        this.setCurrentLetter("");
-        this.setCurrentOffset(0);
+        resetList();
       }
       this.setListView(tmpListView);
     }
@@ -236,13 +255,8 @@ public class PagedListInfo {
       addFilter(filter, tmpListFilter);
     }
     if (context.getRequest().getParameter("listFilter1") != null) {
-      this.setCurrentLetter("");
-      this.setCurrentOffset(0);
+      resetList();
     }
-  }
-  
-  public void addFilter(int param, String value) {
-    listFilters.put("listFilter" + param, value);
   }
 
 
@@ -352,18 +366,58 @@ public class PagedListInfo {
     return links.toString();
   }
 
-  public String getNumericalPageEntry() {
-    int numPages = this.getNumberOfPages();
-    StringBuffer links = new StringBuffer();
-    if (numPages > 1) {
-      links.append("<form name=\"pageEntry\" action=\"" + link + "\" method=\"post\">");
-      links.append("Page <input type=\"text\" name=\"page\" value=\"" + ((currentOffset / itemsPerPage) + 1) + "\" size=\"3\"> of " + numPages);
-      links.append("</form>");
-    }
-    return links.toString();
+
+  /**
+   *  Gets the listPropertiesHeader attribute of the PagedListInfo object
+   *
+   *@param  id  Description of Parameter
+   *@return     The listPropertiesHeader value
+   */
+  public String getListPropertiesHeader(String id) {
+    return ("<form name=\"listProperties" + id + "\" action=\"" + link + "\" method=\"post\">");
   }
 
-  
+
+  /**
+   *  Gets the listPropertiesFooter attribute of the PagedListInfo object
+   *
+   *@return    The listPropertiesFooter value
+   */
+  public String getListPropertiesFooter() {
+    return ("</form>");
+  }
+
+
+  /**
+   *  Gets the numericalPageEntry attribute of the PagedListInfo object
+   *
+   *@return    The numericalPageEntry value
+   */
+  public String getNumericalPageEntry() {
+    int numPages = this.getNumberOfPages();
+    return ("<input type=\"text\" name=\"page\" value=\"" + ((currentOffset / itemsPerPage) + 1) + "\" size=\"3\">");
+  }
+
+
+  /**
+   *  Gets the itemsPerPageEntry attribute of the PagedListInfo object
+   *
+   *@return    The itemsPerPageEntry value
+   */
+  public String getItemsPerPageEntry() {
+    HtmlSelect itemSelect = new HtmlSelect();
+    itemSelect.addItem("6");
+    itemSelect.addItem("10");
+    itemSelect.addItem("12");
+    itemSelect.addItem("20");
+    itemSelect.addItem("30");
+    itemSelect.addItem("50");
+    itemSelect.addItem("100");
+    return (itemSelect.getHtml("items", itemsPerPage));
+    //return("Items per page <input type=\"text\" name=\"items\" value=\"" + itemsPerPage + "\" size=\"3\">");
+  }
+
+
   /**
    *  Gets the numberOfPages attribute of the PagedListInfo object
    *
@@ -384,28 +438,6 @@ public class PagedListInfo {
     StringBuffer links = new StringBuffer();
     for (int i = 0; i < lettersArray.length; i++) {
       String thisLetter = lettersArray[i];
-      if (thisLetter.equals(currentLetter)) {
-        links.append(" <b>" + thisLetter + "</b> ");
-      } else {
-        links.append("<a href='" + link + "&letter=" + thisLetter + "'> " + thisLetter + " </a>");
-      }
-    }
-    return links.toString();
-  }
-
-  public String getAlphabeticalPageLinksTwoLines() {
-    StringBuffer links = new StringBuffer();
-    for (int i = 0; i < (lettersArray.length/2); i++) {
-      String thisLetter = lettersArray[i];
-      if (thisLetter.equals(currentLetter)) {
-        links.append(" <b>" + thisLetter + "</b> ");
-      } else {
-        links.append("<a href='" + link + "&letter=" + thisLetter + "'> " + thisLetter + " </a>");
-      }
-    }
-    links.append("<br>");
-    for (int j = (lettersArray.length/2); j < lettersArray.length; j++) {
-      String thisLetter = lettersArray[j];
       if (thisLetter.equals(currentLetter)) {
         links.append(" <b>" + thisLetter + "</b> ");
       } else {
@@ -569,7 +601,43 @@ public class PagedListInfo {
       return -1;
     }
   }
-  
+
+
+  /**
+   *  Gets the endOfOffset attribute of the PagedListInfo object
+   *
+   *@param  db                Description of Parameter
+   *@return                   The endOfOffset value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean isEndOfOffset(Connection db) throws SQLException {
+    if (this.getItemsPerPage() > 0 &&
+        DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+        iteration >= this.getItemsPerPage()) {
+      return true;
+    } else {
+      ++iteration;
+      return false;
+    }
+  }
+
+
+  /**
+   *  Adds a feature to the Filter attribute of the PagedListInfo object
+   *
+   *@param  param  The feature to be added to the Filter attribute
+   *@param  value  The feature to be added to the Filter attribute
+   */
+  public void addFilter(int param, String value) {
+    listFilters.put("listFilter" + param, value);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
   public boolean hasListFilters() {
     return listFilters.size() > 0;
   }
@@ -600,7 +668,6 @@ public class PagedListInfo {
    *
    *@param  db            Description of Parameter
    *@param  sqlStatement  Description of Parameter
-   *@return               Description of the Returned Value
    */
   public void appendSqlSelectHead(Connection db, StringBuffer sqlStatement) {
     if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
@@ -623,10 +690,29 @@ public class PagedListInfo {
    *@param  sqlStatement  Description of Parameter
    */
   public void appendSqlTail(Connection db, StringBuffer sqlStatement) {
+    sqlStatement.append("ORDER BY ");
     //Determine sort order
-    sqlStatement.append("ORDER BY " + this.getColumnToSortBy() + " ");
-    if (this.hasSortOrderConfigured()) {
-      sqlStatement.append(this.getSortOrder() + " ");
+    if (this.getColumnToSortBy().indexOf(",") > -1) {
+      int count = 0;
+      StringTokenizer st = new StringTokenizer(this.getColumnToSortBy(), ",");
+      while (st.hasMoreTokens()) {
+        ++count;
+        String column = st.nextToken();
+        sqlStatement.append(column + " ");
+        if (count == 1) {
+          if (this.hasSortOrderConfigured()) {
+            sqlStatement.append(this.getSortOrder() + " ");
+          }
+        }
+        if (st.hasMoreTokens()) {
+          sqlStatement.append(",");
+        }
+      }
+    } else {
+      sqlStatement.append(this.getColumnToSortBy() + " ");
+      if (this.hasSortOrderConfigured()) {
+        sqlStatement.append(this.getSortOrder() + " ");
+      }
     }
 
     //Determine items per page for PostgreSQL
@@ -658,17 +744,6 @@ public class PagedListInfo {
       }
     }
   }
-  
-  public boolean isEndOfOffset(Connection db) throws SQLException {
-    if (this.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          iteration >= this.getItemsPerPage()) {
-      return true;
-    } else {
-      ++iteration;
-      return false;
-    }
-  }
 
 
   /**
@@ -689,6 +764,15 @@ public class PagedListInfo {
     sb.append("Current offset record: " + currentOffset + "\r\n");
     sb.append("List View: " + listView + "\r\n");
     return sb.toString();
+  }
+
+
+  /**
+   *  Description of the Method
+   */
+  private void resetList() {
+    this.setCurrentLetter("");
+    this.setCurrentOffset(0);
   }
 
 }

@@ -8,12 +8,11 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
-<form name="listView" method="post" action="AutoGuide.do?command=List">
-<br>
-<center><%= AutoGuideDirectoryInfo.getNumericalPageLinks() %></center>
+<center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %><br>&nbsp;</center>
 
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="AutoGuide.do?command=List">
     <td align="left">
       Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= AutoGuideDirectoryInfo.getOptionValue("list") %>>List View</option>
@@ -30,6 +29,7 @@
 			Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 
@@ -79,5 +79,18 @@
 <%}%>
 </table>
 <br>
-[<%= AutoGuideDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= AutoGuideDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= AutoGuideDirectoryInfo.getNumericalPageLinks() %>
-</form>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <%= AutoGuideDirectoryInfo.getListPropertiesHeader("2") %>
+  <tr>
+    <td valign="middle" align="center" class="row1">
+      <font color="#666666">
+      [<%= AutoGuideDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= AutoGuideDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
+      Page <%= AutoGuideDirectoryInfo.getNumericalPageEntry() %>
+      of <%= AutoGuideDirectoryInfo.getNumberOfPages() %>,
+      Items per page: <%= AutoGuideDirectoryInfo.getItemsPerPageEntry() %>
+      <input type="submit" value="go">
+      </font>
+    </td>
+  </tr>
+  <%= AutoGuideDirectoryInfo.getListPropertiesFooter() %>
+</table>
