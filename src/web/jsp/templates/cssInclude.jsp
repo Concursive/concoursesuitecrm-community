@@ -20,13 +20,13 @@
       ("linux".equals(User.getClientType().getOsString()) && 
        User.getBrowserVersion() < 1.2 )) {
 %>
-<link rel="stylesheet" href="css/template0-10pt.css" type="text/css">
+<link rel="stylesheet" href="css/template0-10pt.css" type="text/css" media="screen">
 <%
   } else {
 %>
-<link rel="stylesheet" href="css/template0-8pt.css" type="text/css">
+<link rel="stylesheet" href="css/template0-8pt.css" type="text/css" media="screen">
 <%  
   }
 %>
-<link rel="stylesheet" href="css/template0.css" type="text/css">
-
+<link rel="stylesheet" href="css/template0.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/print.css" type="text/css" media="print">

@@ -14,6 +14,7 @@
 </head>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <body leftmargin="0" rightmargin="0" margin="0" marginwidth="0" topmargin="0" marginheight="0">
+<div id="header">
 <table border="0" width="100%">
   <tr>
     <th align="left" class="highlight">
@@ -70,6 +71,7 @@
     </td>
   </tr>
 </table>
+</div>
 <table border="0" width="100%">
   <tr>
     <td valign="top">
@@ -89,9 +91,11 @@
     <!-- End Global Items -->
   </tr>
 </table>
+<div id="footer">
 <br>
 <center><%= request.getAttribute("MainMenuSmall") %></center>
 <br>
 <center>Copyright (c) 2000-2003 Dark Horse Ventures.  All rights reserved.</center>
+</div>
 </body>
 </html>

@@ -248,7 +248,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
     if (items.length() > 0) {
       //If they have any modules, then create a cell to hold them...
-      return ("<td width=\"150\" valign=\"top\">" + items.toString() + "</td>");
+      return ("<td width=\"150\" valign=\"top\" id=\"rightcol\">" + items.toString() + "</td>");
     } else {
       //No global items
       return "";
