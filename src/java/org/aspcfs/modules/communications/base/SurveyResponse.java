@@ -10,6 +10,7 @@ import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.contacts.base.Contact;
 
 /**
  *  Description of the Class
@@ -27,6 +28,7 @@ public class SurveyResponse {
   private String ipAddress = null;
   private java.sql.Timestamp entered = null;
   private SurveyAnswerList answers = new SurveyAnswerList();
+  private Contact contact = null;
 
 
   /**
@@ -38,11 +40,24 @@ public class SurveyResponse {
   /**
    *  Constructor for the SurveyResponse object
    *
+   *@param  rs  Description of the Parameter
+   */
+  public SurveyResponse(ResultSet rs) throws SQLException{
+    id = rs.getInt("response_id");
+    activeSurveyId = rs.getInt("active_survey_id");
+    contactId = rs.getInt("contact_id");
+    uniqueCode = rs.getString("unique_code");
+    ipAddress = rs.getString("ip_address");
+    entered = rs.getTimestamp("entered");
+  }
+
+
+  /**
+   *  Constructor for the SurveyResponse object
+   *
    *@param  context  Description of the Parameter
    */
   public SurveyResponse(ActionContext context) {
-    //this.setActiveSurveyId(Integer.parseInt(context.getRequest().getParameter("id")));
-    //this.setContactId(-1);
     this.setIpAddress(context.getIpAddress());
     answers = new SurveyAnswerList(context.getRequest());
   }
@@ -115,6 +130,26 @@ public class SurveyResponse {
    */
   public void setAnswers(SurveyAnswerList tmp) {
     this.answers = tmp;
+  }
+
+
+  /**
+   *  Sets the contact attribute of the SurveyResponse object
+   *
+   *@param  contact  The new contact value
+   */
+  public void setContact(Contact contact) {
+    this.contact = contact;
+  }
+
+
+  /**
+   *  Gets the contact attribute of the SurveyResponse object
+   *
+   *@return    The contact value
+   */
+  public Contact getContact() {
+    return contact;
   }
 
 
@@ -248,6 +283,20 @@ public class SurveyResponse {
       db.setAutoCommit(true);
     }
     return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildContact(Connection db) throws SQLException {
+    if (contactId == -1) {
+      throw new SQLException("Contact Id not specified");
+    }
+    this.setContact(new Contact(db, contactId));
   }
 }
 
