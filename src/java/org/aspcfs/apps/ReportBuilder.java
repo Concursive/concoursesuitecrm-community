@@ -103,7 +103,6 @@ public class ReportBuilder {
     mail.setHost("mail.darkhorseventures.com");
     mail.setFrom("notifier_error@" + this.getHostName());
     mail.addTo("mrajkowski@darkhorseventures.com");
-    mail.addTo("chris@darkhorseventures.com");
     mail.setSubject("Report [1 day: " + totalRecords + " record" + ((totalRecords != 1) ? "s" : "") + "]");
     mail.setBody("Emails generated: " + userList.size() + "<br><br>" + log.toString());
     mail.setType("text/html");
@@ -125,7 +124,6 @@ public class ReportBuilder {
     mail.setHost("mail.darkhorseventures.com");
     mail.setFrom("notifier_error@" + getHostName());
     mail.addTo("mrajkowski@darkhorseventures.com");
-    mail.addTo("chris@darkhorseventures.com");
     mail.setSubject("Admin Alert");
     mail.setBody("<PRE>Any Errors Follow:<br>" + exc.toString() + "</PRE>");
     mail.setType("text/html");
