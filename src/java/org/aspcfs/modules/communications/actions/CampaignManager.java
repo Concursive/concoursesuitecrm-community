@@ -8,6 +8,7 @@ import java.util.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import com.zeroio.iteam.base.*;

@@ -4,11 +4,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.web.*;
 import java.text.*;
 import java.awt.*;
@@ -22,6 +17,12 @@ import com.jrefinery.chart.*;
 import com.jrefinery.chart.data.*;
 import com.jrefinery.data.*;
 import com.jrefinery.chart.ui.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.base.GraphSummaryList;
 
 /**
  *  Description of the Class

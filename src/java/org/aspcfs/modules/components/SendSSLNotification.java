@@ -7,6 +7,7 @@ import org.aspcfs.apps.workFlowManager.*;
 import org.aspcfs.controller.objectHookManager.*;
 import org.aspcfs.utils.StringUtils;
 import java.sql.*;
+import org.aspcfs.modules.base.Notification;
 
 /**
  *  Description of the Class

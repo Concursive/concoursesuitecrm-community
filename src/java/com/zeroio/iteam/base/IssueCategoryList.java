@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.zeroio.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Description of the Class

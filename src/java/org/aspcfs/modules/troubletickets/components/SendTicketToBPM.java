@@ -11,9 +11,11 @@ import java.sql.*;
 import org.aspcfs.controller.*;
 import org.aspcfs.apps.workFlowManager.*;
 import org.aspcfs.controller.objectHookManager.*;
-import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.troubletickets.base.*;
 
 /**
  *  Description of the Class
