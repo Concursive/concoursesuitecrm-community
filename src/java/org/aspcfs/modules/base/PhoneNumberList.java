@@ -21,9 +21,9 @@ import com.darkhorseventures.webutils.PagedListInfo;
 public class PhoneNumberList extends Vector {
 
   protected PagedListInfo pagedListInfo = null;
-  private int orgId = -1;
+  protected int orgId = -1;
   protected int type = -1;
-  private int contactId = -1;
+  protected int contactId = -1;
 
 
   /**

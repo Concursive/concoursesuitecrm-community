@@ -334,7 +334,6 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
     
   }
 
-
   /**
    *  Description of the Method
    *

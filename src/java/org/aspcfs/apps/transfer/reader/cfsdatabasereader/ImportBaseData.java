@@ -181,13 +181,14 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
   
   private void saveOrgList(Connection db, OrganizationList orgList) throws SQLException {
     Iterator orgs = orgList.iterator();
-    
+
     while (orgs.hasNext()) {
       Organization thisOrg = (Organization)orgs.next();
       DataRecord thisRecord = mappings.createDataRecord(thisOrg, "insert");
       writer.save(thisRecord);
       writer.commit();
 
+      /**
       OrganizationEmailAddressList emailList = new OrganizationEmailAddressList();
       emailList.setOrgId(thisOrg.getId());
       emailList.buildList(db);
@@ -201,6 +202,22 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
               writer.save(anotherRecord);
               writer.commit();
       }
+      */
+      
+      OrganizationAddressList addressList = new OrganizationAddressList();
+      addressList.setOrgId(thisOrg.getId());
+      addressList.buildList(db);
+      
+      logger.info("ImportBaseData-> Inserting " + addressList.size() + " Organization addresses");
+      
+      Iterator addresses = addressList.iterator();
+      while (addresses.hasNext()) {
+              OrganizationAddress streetAddress = (OrganizationAddress)addresses.next();
+              DataRecord addressRecord = mappings.createDataRecord(streetAddress, "insert");
+              writer.save(addressRecord);
+              writer.commit();
+      }
+      
       
       OrganizationPhoneNumberList phoneList = new OrganizationPhoneNumberList();
       phoneList.setOrgId(thisOrg.getId());
