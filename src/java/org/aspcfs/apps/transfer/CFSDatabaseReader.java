@@ -9,7 +9,9 @@ import com.darkhorseventures.cfsmodule.*;
 import com.zeroio.iteam.base.*;
 
 /**
- *  Description of the Class
+ *  Reads data by constructing CFS objects from a database connection.
+ *  This reader will process objects in a specific order so that data integrity
+ *  will be maintained during a copy process.
  *
  *@author     matt rajkowski
  *@created    September 3, 2002
@@ -21,6 +23,15 @@ public class CFSDatabaseReader implements DataReader {
   private String url = null;
   private String user = null;
   private String password = null;
+
+  public void setDriver(String tmp) { this.driver = tmp; }
+  public void setUrl(String tmp) { this.url = tmp; }
+  public void setUser(String tmp) { this.user = tmp; }
+  public void setPassword(String tmp) { this.password = tmp; }
+  public String getDriver() { return driver; }
+  public String getUrl() { return url; }
+  public String getUser() { return user; }
+  public String getPassword() { return password; }
 
 
   /**
@@ -49,7 +60,7 @@ public class CFSDatabaseReader implements DataReader {
    *@return    The description value
    */
   public String getDescription() {
-    return "Reads data from ASPCFS version 2.x";
+    return "Reads data from an ASPCFS version 2.x database";
   }
 
 
@@ -85,8 +96,8 @@ public class CFSDatabaseReader implements DataReader {
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(2);
       ConnectionElement thisElement = new ConnectionElement(
-          "jdbc:postgresql://127.0.0.1:5432/cdb_dhv", "postgres", "");
-      thisElement.setDriver("org.postgresql.Driver");
+          url, user, password);
+      thisElement.setDriver(driver);
       db = sqlDriver.getConnection(thisElement);
     } catch (SQLException e) {
       logger.info("Could not get database connection" + e.toString());
@@ -104,8 +115,10 @@ public class CFSDatabaseReader implements DataReader {
 
       //Afterwards... update all owners
 
-      HashMap test = new HashMap();
-
+      DataRecord test = new DataRecord();
+      test.setName("contact");
+      test.addField("nameFirst", "Auto");
+      test.addField("nameLast", "Matt");
       if (!writer.save(test)) {
         return false;
       }

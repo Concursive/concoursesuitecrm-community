@@ -3,9 +3,16 @@ package com.darkhorseventures.apps.dataimport;
 import java.util.*;
 import java.util.logging.*;
 import com.darkhorseventures.utils.*;
+import javax.xml.parsers.*;
+import org.w3c.dom.*;
+import org.xml.sax.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
 
 /**
- *  Description of the Class
+ *  Writes CFS data using an HTTP connection and passing objects as XML to
+ *  a CFS web server.
  *
  *@author     matt rajkowski
  *@created    September 3, 2002
@@ -16,6 +23,7 @@ public class CFSHttpXMLWriter implements DataWriter {
   private String id = null;
   private String code = null;
   private int systemId = -1;
+  private int clientId = -1;
 
 
   /**
@@ -66,6 +74,14 @@ public class CFSHttpXMLWriter implements DataWriter {
   public void setSystemId(String tmp) {
     this.systemId = Integer.parseInt(tmp);
   }
+  
+  public void setClientId(int tmp) {
+    this.clientId = tmp;
+  }
+  
+  public void setClientId(String tmp) {
+    this.clientId = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -105,6 +121,10 @@ public class CFSHttpXMLWriter implements DataWriter {
    */
   public int getSystemId() {
     return systemId;
+  }
+  
+  public int getClientId() {
+    return clientId;
   }
 
 
@@ -157,18 +177,64 @@ public class CFSHttpXMLWriter implements DataWriter {
    *@param  data  Description of the Parameter
    *@return       Description of the Return Value
    */
-  public boolean save(HashMap data) {
-    Exception errorMessage = null;
-    String filename = "aspcfs-copier.xml";
+  public boolean save(DataRecord record) {
     try {
-      String xmlPacket = StringUtils.loadText(filename);
-      String response = HTTPUtils.sendPacket("address", xmlPacket);
+      //Construct XML insert
+      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = dbf.newDocumentBuilder();
+      Document document = builder.newDocument();
+      Element app = document.createElement("app");
+      document.appendChild(app);
+      
+      //Add the authentication
+      Element auth = document.createElement("authentication");
+      app.appendChild(auth);
+      
+      Element authId = document.createElement("id");
+      authId.appendChild(document.createTextNode(id));
+      auth.appendChild(authId);
+      
+      Element authCode = document.createElement("code");
+      authCode.appendChild(document.createTextNode(code));
+      auth.appendChild(authCode);
+      
+      Element authSystemId = document.createElement("systemId");
+      authSystemId.appendChild(document.createTextNode(String.valueOf(systemId)));
+      auth.appendChild(authSystemId);
+      
+      if (clientId > -1) {
+        Element authClientId = document.createElement("clientId");
+        authClientId.appendChild(document.createTextNode(String.valueOf(clientId)));
+        auth.appendChild(authClientId);
+      }
+      
+      //Add the object
+      Element transaction = document.createElement("transaction");
+      app.appendChild(transaction);
+      
+      Element object = document.createElement(record.getName());
+      object.setAttribute("action", "insert");
+      transaction.appendChild(object);
+      
+      Iterator recordItems = record.iterator();
+      while (recordItems.hasNext()) {
+        DataField thisField = (DataField)recordItems.next();
+        Element field = document.createElement(thisField.getName());
+        if (thisField.hasValueLookup()) {
+          object.setAttribute("lookup", thisField.getValueLookup());
+        }
+        field.appendChild(document.createTextNode(thisField.getValue()));
+        object.appendChild(field);
+      }
+      
+      String response = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
       System.out.println(response);
-    } catch (java.io.IOException io) {
-      logger.info(io.toString());
+    } catch (Exception ex) {
+      logger.info(ex.toString());
       return false;
     }
     return true;
   }
+  
 }
 

@@ -49,7 +49,9 @@ public class AuthenticationItem {
     String gkDriver = (String)context.getServletContext().getAttribute("GKDRIVER");
     String serverName = context.getRequest().getServerName();
     if (System.getProperty("DEBUG") != null) {
+      System.out.println("AuthenticationItem-> GateKeeper: " + gkHost);
       System.out.println("AuthenticationItem-> ServerName: " + serverName);
+      System.out.println("AuthenticationItem-> SiteCode: " + siteCode);
     }
     ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);

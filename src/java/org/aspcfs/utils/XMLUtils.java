@@ -10,8 +10,6 @@ import org.xml.sax.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
-import java.io.*;
-
 import java.util.*;
 
 /**
@@ -28,6 +26,22 @@ public class XMLUtils {
   private StringBuffer XMLString = null;
   private boolean cacheXML = false;
 
+  public XMLUtils(String info, boolean parseXML) throws Exception {
+    if (parseXML) {
+      this.parseXML(info);
+    } else {
+      document = XMLUtils.createDocument(info);
+    }
+  }
+  
+  public static Document createDocument(String name) throws Exception {
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    DocumentBuilder builder = dbf.newDocumentBuilder();
+    Document document = builder.newDocument();
+    Element rootElement = document.createElement(name);
+    document.appendChild(rootElement);
+    return document;
+  }
 
   /**
    *  Constructor for the XMLUtils object

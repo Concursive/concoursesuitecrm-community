@@ -20,6 +20,6 @@ public interface DataWriter extends DataImportHandler {
    *@param  data  Description of the Parameter
    *@return       Description of the Return Value
    */
-  boolean save(HashMap data);
+  boolean save(DataRecord record);
 }
 

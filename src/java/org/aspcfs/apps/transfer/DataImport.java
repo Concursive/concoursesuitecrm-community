@@ -25,6 +25,7 @@ public class DataImport {
    *@param  args  Description of the Parameter
    */
   public static void main(String args[]) {
+    System.setProperty("DEBUG", "1");
     //Initialize app from the config file
     if (args.length == 0) {
       System.out.println("Usage: DataImport [config file]");
@@ -106,7 +107,9 @@ public class DataImport {
       Iterator i = itemList.keySet().iterator();
       while (i.hasNext()) {
         String param = (String) i.next();
-        logger.info(displayText + ": " + param);
+        if (param != null && param.indexOf("^Guid") == -1) {
+          logger.info(displayText + ": " + param);
+        }
       }
     }
   }
