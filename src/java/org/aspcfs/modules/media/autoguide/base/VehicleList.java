@@ -23,8 +23,17 @@ public class VehicleList extends ArrayList {
     
     StringBuffer sql = new StringBuffer(); 
     sql.append(  
-      "SELECT * " +
-      "FROM autoguide_vehicle ");
+      "SELECT v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
+      "v.model_id AS vehicle_model_id, v.entered AS vehicle_entered, " +
+      "v.enteredby AS vehicle_enteredby, v.modified AS vehicle_modified, " +
+      "v.modifiedby AS vehicle_modifiedby, " +
+      "model.model_id, model.make_id AS model_make_id, model.model_name, " +
+      "model.entered, model.enteredby, " + 
+      "model.modified, model.modifiedby, " +
+      "make.make_id, make.make_name, " +
+      "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
+      "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
+      "FROM autoguide_vehicle v LEFT JOIN autoguide_make make ON v.make_id = make.make_id LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
     sql.append("WHERE vehicle_id > -1 ");
     createFilter(sql);
     pst = db.prepareStatement(sql.toString());
@@ -33,6 +42,8 @@ public class VehicleList extends ArrayList {
     while (rs.next()) {
       Vehicle thisVehicle = new Vehicle(rs);
       this.add(thisVehicle);
+      thisVehicle.setMake(new Make(rs));
+      thisVehicle.setModel(new Model(rs));
     }
     rs.close();
     pst.close();

@@ -17,6 +17,8 @@ public class Vehicle extends GenericBean {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
+  private Make make = null;
+  private Model model = null;
   
   public Vehicle() { }
 
@@ -57,7 +59,9 @@ public class Vehicle extends GenericBean {
   }
   public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
   public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
-  
+  public void setMake(Make tmp) { this.make = tmp; }
+  public void setModel(Model tmp) { this.model = tmp; }
+
   public int getId() { return id; }
   public int getYear() { return year; }
   public int getMakeId() { return makeId; }
@@ -66,6 +70,11 @@ public class Vehicle extends GenericBean {
   public int getEnteredBy() { return enteredBy; }
   public java.sql.Timestamp getModified() { return modified; }
   public int getModifiedBy() { return modifiedBy; }
+  public String getGuid() {
+    return ObjectUtils.generateGuid(entered, enteredBy, id);
+  }
+  public Make getMake() { return make; }
+  public Model getModel() { return model; }
 
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -151,14 +160,14 @@ public class Vehicle extends GenericBean {
 
 
   protected void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("id");
+    id = rs.getInt("vehicle_id");
     year = rs.getInt("year");
-    makeId = rs.getInt("make_id");
-    modelId = rs.getInt("model_id");
-    entered = rs.getTimestamp("entered");
-    enteredBy = rs.getInt("enteredby");
-    modified = rs.getTimestamp("modified");
-    modifiedBy = rs.getInt("modifiedby");
+    makeId = rs.getInt("vehicle_make_id");
+    modelId = rs.getInt("vehicle_model_id");
+    entered = rs.getTimestamp("vehicle_entered");
+    enteredBy = rs.getInt("vehicle_enteredby");
+    modified = rs.getTimestamp("vehicle_modified");
+    modifiedBy = rs.getInt("vehicle_modifiedby");
   }
 
 }
