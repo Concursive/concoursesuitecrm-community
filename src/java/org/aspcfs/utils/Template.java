@@ -142,7 +142,9 @@ public class Template {
     if (parseElements == null) {
       parseElements = new HashMap();
     }
-    parseElements.put(key, value);
+    if (value != null) {
+      parseElements.put(key, value);
+    }
   }
 
 
