@@ -1,11 +1,10 @@
 //Copyright 2002 Dark Horse Ventures
+package org.aspcfs.modules.service.base;
 
-package com.darkhorseventures.cfsbase;
-
-import org.theseus.beans.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Description of the Class

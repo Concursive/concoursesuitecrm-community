@@ -1,18 +1,17 @@
 //Copyright 2002 Dark Horse Ventures
+package org.aspcfs.modules.service.base;
 
-package com.darkhorseventures.cfsbase;
-
-import org.theseus.beans.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  A SyncClient represents a uniquely identifiable system that is
  *  performing synchronization with the server.
  *  The server maintains specific information about clients as well.  
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    April 10, 2002
  *@version    $Id$
  */

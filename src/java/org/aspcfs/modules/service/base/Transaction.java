@@ -1,10 +1,9 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.modules.service.base;
 
 import java.util.*;
 import org.w3c.dom.*;
 import java.sql.*;
-import com.darkhorseventures.cfsbase.SyncTable;
-import com.darkhorseventures.controller.ObjectHookList;
+import org.aspcfs.controller.objectHookManager.ObjectHookManager;
 
 /**
  *  A Transaction is an array of TransactionItems.  When a system requests

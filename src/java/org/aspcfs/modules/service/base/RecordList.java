@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.modules.service.base;
 
 import java.util.*;
 

@@ -1,11 +1,12 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.modules.service.base;
 
 /**
  *  Description of the Class
  *
  *@author     matt
  *@created    April 10, 2002
- *@version    $Id$
+ *@version    $Id: TransactionStatus.java,v 1.1 2002/04/10 19:38:29 mrajkowski
+ *      Exp $
  */
 public class TransactionStatus {
 

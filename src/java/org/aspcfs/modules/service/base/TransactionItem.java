@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.modules.service.base;
 
 import java.util.*;
 import org.w3c.dom.*;
@@ -50,7 +50,8 @@ public class TransactionItem {
   private HashMap ignoredProperties = null;
   private SyncClientMap syncClientMap = null;
   private PacketContext packetContext = null;
-  
+
+
   /**
    *  Constructor for the TransactionItem object
    */
@@ -191,6 +192,11 @@ public class TransactionItem {
   }
 
 
+  /**
+   *  Sets the packetContext attribute of the TransactionItem object
+   *
+   *@param  tmp  The new packetContext value
+   */
   public void setPacketContext(PacketContext tmp) {
     this.packetContext = tmp;
   }

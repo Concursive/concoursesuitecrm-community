@@ -1,9 +1,8 @@
 //Copyright 2002 Dark Horse Ventures
-
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.service.base;
 
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  For each sync API request, this class represents one or more of the

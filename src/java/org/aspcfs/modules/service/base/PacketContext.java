@@ -1,5 +1,5 @@
 //Copyright 2002 Dark Horse Ventures
-package com.darkhorseventures.utils;
+package org.aspcfs.modules.service.base;
 
 import com.darkhorseventures.controller.*;
 import com.darkhorseventures.cfsbase.*;

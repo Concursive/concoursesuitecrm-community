@@ -1,6 +1,5 @@
 //Copyright 2002 Dark Horse Ventures
-
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.service.base;
 
 import java.sql.*;
 import java.util.*;

@@ -1,12 +1,11 @@
 //Copyright 2002 Dark Horse Ventures
-
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.service.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Description of the Class

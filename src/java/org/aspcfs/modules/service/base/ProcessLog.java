@@ -1,15 +1,14 @@
 //Copyright 2002 Dark Horse Ventures
+package org.aspcfs.modules.service.base;
 
-package com.darkhorseventures.cfsbase;
-
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.DateUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
 
 /**
  *  Represents the output of a process that can be inserted in a database

@@ -1,16 +1,17 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.modules.service.base;
 
 import java.util.*;
 import org.w3c.dom.*;
 import java.sql.*;
 
 /**
- *  TransactionMeta stores data for Transaction Items.  The meta data can
- *  then be used for identifying object properties, for example.
+ *  TransactionMeta stores data for Transaction Items. The meta data can then be
+ *  used for identifying object properties, for example.
  *
  *@author     matt
  *@created    April 10, 2002
- *@version    $Id$
+ *@version    $Id: TransactionMeta.java,v 1.2 2002/04/22 15:32:59 mrajkowski Exp
+ *      $
  */
 public class TransactionMeta {
 
