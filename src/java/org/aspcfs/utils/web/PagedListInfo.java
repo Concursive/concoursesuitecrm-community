@@ -127,7 +127,7 @@ public class PagedListInfo {
         System.out.println("PagedListInfo-> Offset reduced to: " + currentOffset);
       }
       //Check to see if the page break has any records to display, otherwise
-      //go to page 1
+      //go back a page
       if (currentOffset == maxRecords) {
         currentOffset = currentOffset - itemsPerPage;
       }
