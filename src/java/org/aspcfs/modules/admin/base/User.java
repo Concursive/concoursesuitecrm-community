@@ -1,4 +1,4 @@
-//Copyright 2001-2002 Dark Horse Ventures
+//Copyright 2001-2003 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -1983,26 +1983,19 @@ public class User extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void buildGrossPipelineValue(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT sum(oc.guessvalue) as sum " +
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT SUM(oc.guessvalue) AS sum " +
         "FROM opportunity_component oc " +
-        "WHERE oc.owner = ? and oc.enabled = ? ");
-
-    pst = db.prepareStatement(sql.toString());
-    int i = 0;
-    pst.setInt(++i, id);
-    pst.setBoolean(++i, true);
-    rs = pst.executeQuery();
+        "WHERE oc.owner IN (" + this.getIdRange() + ") " +
+        "AND oc.enabled = ? ");
+    pst.setBoolean(1, true);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       this.setPipelineValue(rs.getDouble("sum"));
     }
-    this.setPipelineValueIsValid(true);
     rs.close();
     pst.close();
+    this.setPipelineValueIsValid(true);
   }
 
 
