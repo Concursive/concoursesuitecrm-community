@@ -434,7 +434,14 @@ public class PagedListInfo implements Serializable {
           }
         }
       }
-      this.setColumnToSortBy(tmpColumnToSortBy);
+      // Security check so that arbitrary queries cannot be executed
+      if (tmpColumnToSortBy.indexOf("(") == -1 &&
+          tmpColumnToSortBy.indexOf(")") == -1 &&
+          tmpColumnToSortBy.indexOf("\"") == -1 &&
+          tmpColumnToSortBy.indexOf("'") == -1 &&
+          tmpColumnToSortBy.indexOf(" ") == -1) {
+        this.setColumnToSortBy(tmpColumnToSortBy);
+      }
     }
 
     //User has specified a page number to view
