@@ -58,8 +58,6 @@ public class Ticket extends GenericBean {
 	private String severityName = "";
 	private String sourceName = "";
 
-	private String newticketlogentry = "";
-
 	private boolean closeIt = false;
 
 	private int ageOf = 0;
@@ -179,10 +177,9 @@ public void setClosed(String tmp) { this.closed = java.sql.Timestamp.valueOf(tmp
 	 *@since
 	 */
 	public void setNewticketlogentry(String newticketlogentry) {
-		this.newticketlogentry = newticketlogentry;
+		this.comment = newticketlogentry;
 	}
-
-
+  
 	/**
 	 *  Sets the AssignedTo attribute of the Ticket object
 	 *
@@ -808,7 +805,7 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 	 *@since
 	 */
 	public String getNewticketlogentry() {
-		return newticketlogentry;
+		return comment;
 	}
 
 
@@ -1224,7 +1221,7 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 		StringBuffer sql = new StringBuffer();
 
 		sql.append(
-				"UPDATE ticket SET comment = ?, department_code = ?, pri_code = ?, scode = ?, cat_code = ?, assigned_to = ?, " +
+				"UPDATE ticket SET department_code = ?, pri_code = ?, scode = ?, cat_code = ?, assigned_to = ?, " +
 				"subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, source_code = ?, contact_id = ?, problem = ?, " +
 				"modified = CURRENT_TIMESTAMP ");
 
@@ -1242,7 +1239,6 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
 		int i = 0;
 		pst = db.prepareStatement(sql.toString());
-		pst.setString(++i, comment);
 		pst.setInt(++i, departmentCode);
 		pst.setInt(++i, priorityCode);
 		pst.setInt(++i, severityCode);
@@ -1330,8 +1326,8 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 			thisEntry.setDepartmentCode(this.getDepartmentCode());
 			thisEntry.setAssignedTo(this.getAssignedTo());
 
-			if (this.getNewticketlogentry() != null && !(this.getNewticketlogentry().equals(""))) {
-				thisEntry.setEntryText(this.getNewticketlogentry());
+			if (this.getComment() != null && !(this.getComment().equals(""))) {
+				thisEntry.setEntryText(this.getComment());
 			}
 
 			thisEntry.setTicketId(this.getId());
@@ -1413,7 +1409,6 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 		contactId = rs.getInt("contact_id");
 		owner = rs.getInt("enteredby");
 		problem = rs.getString("problem");
-		comment = rs.getString("comment");
 		solution = rs.getString("solution");
 
 		companyName = rs.getString("orgname");
