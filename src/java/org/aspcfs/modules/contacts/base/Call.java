@@ -809,14 +809,15 @@ public class Call extends GenericBean {
    */
   protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
+    
     if ((subject == null || subject.trim().equals("")) &&
         (notes == null || notes.trim().equals(""))) {
       errors.put("actionError", "Cannot insert a blank record");
     }
 
-    if (contactId == -1 && orgId == -1) {
-      errors.put("actionError", "Record is not associated with a valid record");
-    }
+    //if (contactId == -1 && orgId == -1) {
+    //  errors.put("actionError", "Record is not associated with a valid record");
+    //}
 
     if (length < 0) {
       errors.put("lengthError", "Length cannot be less than 0");
