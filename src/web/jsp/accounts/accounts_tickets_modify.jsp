@@ -69,6 +69,20 @@ function ShowSpan(thisID){
     var url = "TroubleTickets.do?command=DepartmentJSList&departmentCode=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
+  function checkForm(form) {
+    formTest = true;
+    message = "";
+    if (form.problem.value == "") { 
+      message += "- Check that <dhv:label name="tickets-problem">Issue</dhv:label> is entered\r\n";
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    } else {
+      return true;
+    }
+  }
 //  End -->
 </script>
 <body onLoad="HideSpans();">
@@ -103,7 +117,7 @@ Modify Ticket<br>
   </tr>
   <tr>
     <td class="containerBack">
-<form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" method="post">    
+<form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" onSubmit="return checkForm(this);" method="post">    
 <% if (TicketDetails.getClosed() != null) { %>
       <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
     <% if ("list".equals(request.getParameter("return"))) {%>
