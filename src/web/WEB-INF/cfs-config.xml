@@ -173,6 +173,7 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ListOK" resource="/autoguide-list.jsp" layout="nav"/>
     <forward name="List2OK" resource="/autoguide-list2.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/autoguide-details.jsp" layout="nav"/>
   </action>
   
   <!-- Pipeline Management Module -->
