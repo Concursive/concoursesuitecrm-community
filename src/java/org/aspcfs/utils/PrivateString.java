@@ -98,7 +98,6 @@ public class PrivateString {
       in.close();
       return key;
     } catch (Exception e) {
-      System.out.println(e);
       return null;
     }
   }
