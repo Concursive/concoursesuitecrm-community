@@ -6,59 +6,52 @@
 <jsp:useBean id="usageList" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="usageList2" class="java.util.ArrayList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript">
   function page_init() {
     if ('custom' == '<%= rangeSelect %>') {
-      var obj = document.getElementById('customFields');
-      obj.style.display = '';
-      var obj2 = document.getElementById('customFields2');
-      obj2.style.display = '';
-      var obj3 = document.getElementById('customFields3');
-      obj3.style.display = '';
+      showSpan('customFields');
+      showSpan('customFields2');
+      showSpan('customFields3');
     }
   }
   function checkSubmit() {
     var sel = document.forms['usage'].elements['rangeSelect'];
     var value = sel.options[sel.selectedIndex].value;
-    var obj = document.getElementById('customFields');
-    var obj2 = document.getElementById('customFields2');
-    var obj3 = document.getElementById('customFields3');
     if (value == 'custom') {
-      obj.style.display = '';
-      obj2.style.display = '';
-      obj3.style.display = '';
-      if (obj.style.display == '') {
-        document.usage.dateStart.focus();
-      }
+      showSpan('customFields');
+      showSpan('customFields2');
+      showSpan('customFields3');
+      document.usage.dateStart.focus();
       return false;
     } else {
-      obj.style.display = 'none';
-      obj2.style.display = 'none';
-      obj3.style.display = 'none';
+      hideSpan('customFields');
+      hideSpan('customFields2');
+      hideSpan('customFields3');
       document.usage.dateStart.value = '';
       document.usage.dateEnd.value = '';
       document.forms['usage'].submit();
     }
   }
   function checkForm(form) {
-      formTest = true;
-      message = "";
-      if ((!form.dateStart.value == "") && (!checkDate(form.dateStart.value))) { 
-        message += "- Check that Start Date is entered correctly\r\n";
-        formTest = false;
-      }
-      if ((!form.dateEnd.value == "") && (!checkDate(form.dateEnd.value))) { 
-        message += "- Check that End Date is entered correctly\r\n";
-        formTest = false;
-      }
-      if (formTest == false) {
-        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-        return false;
-      } else {
-        return true;
-      }
+    formTest = true;
+    message = "";
+    if ((!form.dateStart.value == "") && (!checkDate(form.dateStart.value))) { 
+      message += "- Check that Start Date is entered correctly\r\n";
+      formTest = false;
+    }
+    if ((!form.dateEnd.value == "") && (!checkDate(form.dateEnd.value))) { 
+      message += "- Check that End Date is entered correctly\r\n";
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    } else {
+      return true;
+    }
   }
 </SCRIPT>
 <body onLoad="page_init();">
@@ -67,7 +60,6 @@ Usage<br>
 <hr color="#BFBFBB" noshade>
 Current Usage and Billing Usage Information<br>
 &nbsp;<br>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td>

@@ -1,6 +1,7 @@
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/reportSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/reportSelect.js"></script>
 <script language="JavaScript">
 	function checkForm(form) {
 		var test = document.generate.selectedList;
@@ -21,62 +22,15 @@
 			}
 		}
 	}
-  function ShowSpan(thisID) {
-    isNS4 = (document.layers) ? true : false;
-    isIE4 = (document.all && !document.getElementById) ? true : false;
-    isIE5 = (document.all && document.getElementById) ? true : false;
-    isNS6 = (!document.all && document.getElementById) ? true : false;
-    if (isNS4){
-      elm = document.layers[thisID];
-    } else if (isIE4) {
-      elm = document.all[thisID];
-    } else if (isIE5 || isNS6) {
-      elm = document.getElementById(thisID);
-      elm.style.visibility="visible";
-    }
-    return true;
-  }
   function update() {
     if (document.generate.type.options[document.generate.type.selectedIndex].value == 4) {
-      javascript:ShowSpan('new0');
+      javascript:showSpan('new0');
     } else {
-      javascript:HideSpan('new0');
+      javascript:hideSpan('new0');
     }
   }
-  function HideSpan(thisID) {
-    isNS4 = (document.layers) ? true : false;
-    isIE4 = (document.all && !document.getElementById) ? true : false;
-    isIE5 = (document.all && document.getElementById) ? true : false;
-    isNS6 = (!document.all && document.getElementById) ? true : false;
-    if (isNS4){
-      elm = document.layers[thisID];
-    } else if (isIE4) {
-      elm = document.all[thisID];
-    } else if (isIE5 || isNS6) {
-      elm = document.getElementById(thisID);
-      elm.style.visibility="hidden";
-    }
-    return true;
-  }
-    
-	function HideSpans(){
-    isNS = (document.layers) ? true : false;
-    isIE = (document.all) ? true : false;
-    if( (isIE) ) {
-      //document.all.new0.style.visibility="hidden";
-      //document.all.new1.style.visibility="hidden";
-      //document.all.new2.style.visibility="hidden";
-      //document.all.new3.style.visibility="hidden";
-    } else if( (isNS) ) {
-      document.new0.visibility="hidden";
-      document.new1.visibility="hidden";
-      document.new2.visibility="hidden";
-      document.new3.visibility="hidden";
-    }
-    return true;
-	}
 </script>
-<body onLoad="javascript:document.forms[0].subject.focus();">
+<body onLoad="javascript:document.forms[0].subject.focus()">
 <form name="generate" action="ExternalContacts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=Reports">Reports</a> >
@@ -103,7 +57,8 @@ Generate New Report<br>
           <option value="4">Contacts w/Folders</option>
         <% } %>
       </select>
-      <span name="new0" ID="new0" style="position:relative; visibility:hidden">&nbsp;:&nbsp;
+      <span name="new0" ID="new0" style="display:none">
+        &nbsp;:&nbsp;
         <%= CategoryList.getHtmlSelect("catId", 0) %>
       </span>
     </td>
