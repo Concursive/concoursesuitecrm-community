@@ -45,8 +45,8 @@ public interface DataWriter extends DataImportHandler {
 
 
   /**
-   *  Forces a stack of writes to be executed at once if autoCommit is false
-   *  and the writer supports commits.
+   *  Forces a stack of writes to be executed at once if autoCommit is false and
+   *  the writer supports commits.
    *
    *@return    Description of the Return Value
    */
@@ -67,5 +67,13 @@ public interface DataWriter extends DataImportHandler {
    *@return    The lastResponse value
    */
   String getLastResponse();
+
+
+  /**
+   *  Allow the writer to cleanup at the end of its use
+   *
+   *@return    Description of the Return Value
+   */
+  boolean close();
 }
 

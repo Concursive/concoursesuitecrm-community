@@ -474,5 +474,9 @@ public class CFSHttpXMLWriter implements DataWriter {
     }
     return true;
   }
+  
+  public boolean close() {
+    return true;
+  }
 }
 

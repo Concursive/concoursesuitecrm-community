@@ -113,5 +113,12 @@ public class TextWriter implements DataWriter {
   public boolean load(DataRecord record) {
     return false;
   }
+  
+  public boolean close() {
+    if (out != null) {
+      out.close();
+    }
+    return true;
+  }
 }
 

@@ -276,6 +276,16 @@ public class TicketCategoryWriter implements DataWriter {
   public boolean load(DataRecord record) {
     return false;
   }
+  
+  public boolean close() {
+    if (db != null) {
+      try {
+        db.close();
+      } catch (Exception e) {
+      }
+    }
+    return true;
+  }
 }
 
 
