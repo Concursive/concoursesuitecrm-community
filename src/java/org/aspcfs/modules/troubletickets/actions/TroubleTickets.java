@@ -816,7 +816,7 @@ public final class TroubleTickets extends CFSModule {
       nc.setModifiedBy(getUserId(context));
       nc.setOwner(getUserId(context));
       if (newTic.getOrgId() == 0) {
-        nc.addType(Contact.EMPLOYEE_TYPE);
+        nc.setEmployee(true);
       }
     }
 
