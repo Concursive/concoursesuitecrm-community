@@ -64,7 +64,9 @@ public class Asset extends GenericBean {
   /**
    *  Constructor for the Asset object
    */
-  public Asset() { }
+  public Asset() {
+    errors.clear();
+  }
 
 
   /**
@@ -75,6 +77,7 @@ public class Asset extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public Asset(Connection db, String tmpId) throws SQLException {
+    errors.clear();
     queryRecord(db, Integer.parseInt(tmpId));
   }
 
@@ -86,6 +89,7 @@ public class Asset extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public Asset(ResultSet rs) throws SQLException {
+    errors.clear();
     buildRecord(rs);
   }
 
@@ -396,7 +400,14 @@ public class Asset extends GenericBean {
    *@param  tmp  The new purchaseCost value
    */
   public void setPurchaseCost(String tmp) {
-    this.purchaseCost = Double.parseDouble(tmp);
+    tmp = StringUtils.replace(tmp, ",", "");
+    tmp = StringUtils.replace(tmp, "$", "");
+
+    try {
+      this.purchaseCost = Double.parseDouble(tmp);
+    } catch (NumberFormatException ne) {
+      errors.put("purchaseCostError", tmp + " is invalid input for this field");
+    }
   }
 
 
@@ -1042,7 +1053,7 @@ public class Asset extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid() throws SQLException {
-    errors.clear();
+
     if (hasErrors()) {
       return false;
     } else {
@@ -1083,7 +1094,7 @@ public class Asset extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
+    if (!isValid() || hasErrors()) {
       return false;
     }
 
@@ -1168,7 +1179,7 @@ public class Asset extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
-    if (!isValid()) {
+    if (!isValid() || hasErrors()) {
       return resultCount;
     }
 
