@@ -448,6 +448,31 @@ public final class ProjectManagement extends CFSModule {
           Contact user = this.getUser(context, thisItem.getEnteredBy()).getContact();
           thisItem.setEnteredByString(user.getNameFirstLast());
         }
+      } else if ("Lists_Categories".equals(section)) {
+        TaskCategoryList categoryList = new TaskCategoryList();
+        categoryList.setProjectId(thisProject.getId());
+        categoryList.buildList(db);
+        context.getRequest().setAttribute("categoryList", categoryList);
+      } else if ("Lists".equals(section)) {
+        String categoryId = context.getRequest().getParameter("cid");
+        if (categoryId == null) categoryId = context.getRequest().getParameter("categoryId");
+        
+        LookupElement thisCategory = new LookupElement(db, Integer.parseInt(categoryId), "lookup_task_category");
+        context.getRequest().setAttribute("category", thisCategory);
+        
+        TaskList outlineList = new TaskList();
+        outlineList.setProjectId(thisProject.getId());
+        outlineList.setCategoryId(Integer.parseInt(categoryId));
+        outlineList.buildList(db);
+        context.getRequest().setAttribute("outlineList", outlineList);
+/*         
+        Iterator i = outlineList.iterator();
+        while (i.hasNext()) {
+          Issue thisIssue = (Issue)i.next();
+          Contact user = this.getUser(context, thisIssue.getEnteredBy()).getContact();
+          thisIssue.setUser(user.getNameFirstLast());
+        }
+ */
       } else {
         addRecentItem(context, thisProject);
       }
