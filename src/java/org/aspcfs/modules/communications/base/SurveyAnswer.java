@@ -22,8 +22,8 @@ public class SurveyAnswer {
   private int responseId = -1;
   private int contactId = -1;
   private ArrayList itemList = null;
-  private String comments = "";
-  private String textAns = "";
+  private String comments = null;
+  private String textAns = null;
   private java.sql.Timestamp entered = null;
 
 
