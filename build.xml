@@ -306,7 +306,7 @@ determined user is ${USER}
     </javac>
     
     <jar jarfile="${DEST_BIN}/Notifier.jar" basedir="${SRC_BIN}"
-          includes="com/darkhorseventures/apps/*.class"
+          includes="com/darkhorseventures/**/*.class"
           manifest="${SRC_BIN}/com/darkhorseventures/apps/notifier.mf"/>
     <copy todir="${DEST_BIN}" >
       <fileset dir="${SRC_BIN}">
