@@ -42,9 +42,6 @@ Custom Folders
       <th align="center" nowrap>
         <strong>Active Date</strong>
       </th>
-      <th align="center" nowrap>
-        <strong>End Date</strong>
-      </th>
     </tr>
 <%
   if (CategoryList.size() > 0) {
@@ -72,16 +69,13 @@ Custom Folders
       <td align="center" nowrap>
         <dhv:tz timestamp="<%= thisCategory.getStartDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
       </td>
-      <td align="center" nowrap>
-        <dhv:tz timestamp="<%= thisCategory.getEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
-      </td>
     </tr>
 <%    
     }
   } else {
 %>
     <tr class="containerBody">
-      <td colspan="5">
+      <td colspan="4">
         <font color="#9E9E9E">No folders have been entered.</font>
       </td>
     </tr>
