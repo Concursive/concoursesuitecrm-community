@@ -1,6 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
+<jsp:useBean id="DocListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="/javascript/confirmDelete.js"></script>
@@ -20,11 +21,15 @@
   <tr>
     <td class="containerBack">
 <dhv:permission name="accounts-accounts-documents-add"><a href="AccountsDocuments.do?command=Add&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
-      <%= showAttribute(request, "actionError") %>
+<center><%= DocListInfo.getAlphabeticalPageLinks() %></center>
+<%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td width="10" align="center">Action</td>
-    <td>Item</td>
+    <td>
+    <strong><a href="/AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=subject">Item</a></strong>
+      <%= DocListInfo.getSortIcon("subject") %>
+      </td>
     <td align="center">Ext</td>
     <td align="center">Size</td>
     <td align="center">Version</td>
@@ -69,6 +74,8 @@
     </tr>
 <%}%>
   </table>
+  <br>
+  <dhv:pagedListControl object="DocListInfo"/>
 <%} else {%>
     <tr class="containerBody">
       <td colspan="7" valign="center">

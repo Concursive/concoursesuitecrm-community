@@ -919,6 +919,7 @@ public final class Accounts extends CFSModule {
     addModuleBean(context, "Accounts", "Delete Account");
     if (errorMessage == null) {
       if (recordDeleted) {
+	deleteRecentItem(context, thisOrganization);
         return ("DeleteOK");
       } else {
         processErrors(context, thisOrganization.getErrors());
