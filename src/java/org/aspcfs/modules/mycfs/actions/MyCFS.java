@@ -926,6 +926,8 @@ public final class MyCFS extends CFSModule {
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
     try {
       db = this.getConnection(context);
+      calendarInfo.setCalendarView("day");
+      calendarInfo.resetParams("day");
       calendarInfo.update(db, context);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -933,8 +935,6 @@ public final class MyCFS extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    calendarInfo.setCalendarView("day");
-    calendarInfo.resetParams("day");
     return executeCommandAlerts(context);
   }
 

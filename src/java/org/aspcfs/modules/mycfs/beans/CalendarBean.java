@@ -33,6 +33,8 @@ public class CalendarBean {
   private String selectedUserName = "";
   private boolean agendaView = true;
   private ArrayList alertTypes = new ArrayList();
+  //used for checking if the next or previous month bordering the selected month is being viewed
+  private int monthDisplacement = 0;
 
 
 
@@ -159,6 +161,26 @@ public class CalendarBean {
       errorMessage = e;
       System.out.println(" *** ERROR *** \t CalendarBean -- > Error retrieving User Record");
     }
+  }
+
+
+  /**
+   *  Sets the monthDisplacement attribute of the CalendarBean object
+   *
+   *@param  monthDisplacement  The new monthDisplacement value
+   */
+  public void setMonthDisplacement(int monthDisplacement) {
+    this.monthDisplacement = monthDisplacement;
+  }
+
+
+  /**
+   *  Gets the monthDisplacement attribute of the CalendarBean object
+   *
+   *@return    The monthDisplacement value
+   */
+  public int getMonthDisplacement() {
+    return monthDisplacement;
   }
 
 
@@ -319,12 +341,23 @@ public class CalendarBean {
     }
 
     if (context.getRequest().getParameter("month") != null) {
-      monthSelected = Integer.parseInt(context.getRequest().getParameter("month"));
-      if (context.getRequest().getParameter("next.x") != null) {
-        ++monthSelected;
-      }
-      if (context.getRequest().getParameter("prev.x") != null) {
-        monthSelected += -1;
+      if ("day".equalsIgnoreCase(calendarView)) {
+        //check to see if the next or previous month was selected
+        int tmpMonth = Integer.parseInt(context.getRequest().getParameter("month"));
+        monthDisplacement = 0;
+        if (tmpMonth > monthSelected) {
+          monthDisplacement = 1;
+        } else if (tmpMonth < monthSelected) {
+          monthDisplacement = -1;
+        }
+      } else {
+        monthSelected = Integer.parseInt(context.getRequest().getParameter("month"));
+        if (context.getRequest().getParameter("next.x") != null) {
+          ++monthSelected;
+        }
+        if (context.getRequest().getParameter("prev.x") != null) {
+          monthSelected += -1;
+        }
       }
     }
 
