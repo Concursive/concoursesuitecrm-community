@@ -326,7 +326,12 @@ public final class MyCFS extends CFSModule {
 			Iterator m = alertCalls.iterator();
 			while (m.hasNext()) {
 				Call thisCall = (Call) m.next();
-				companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Call");
+				if (thisCall.getOppId() == -1 && thisCall.getContactId() > -1) {
+					companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Contact Call", thisCall.getContactId());
+				} else {
+					companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Opportunity Call", thisCall.getOppId());
+				}
+	
 			}
 
 			com.zeroio.iteam.base.ProjectList projects = new com.zeroio.iteam.base.ProjectList();
@@ -345,7 +350,7 @@ public final class MyCFS extends CFSModule {
 				Iterator assignmentList = thisProject.getAssignments().iterator();
 				while (assignmentList.hasNext()) {
 					com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
-					companyCalendar.addEvent(thisAssignment.getDueDate(), thisAssignment.getRole(), "Assignment");
+					companyCalendar.addEvent(thisAssignment.getDueDate(), thisAssignment.getRole(), "Assignment", thisAssignment.getProjectId());
 				}
 			}
 			
@@ -360,7 +365,7 @@ public final class MyCFS extends CFSModule {
 			Iterator n = alertOpps.iterator();
 			while (n.hasNext()) {
 				Opportunity thisOpp = (Opportunity) n.next();
-				companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "", thisOpp.getDescription(), "Opportunity");
+				companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "", thisOpp.getDescription(), "Opportunity", thisOpp.getId());
 			}
 
 			context.getRequest().setAttribute("CompanyCalendar", companyCalendar);

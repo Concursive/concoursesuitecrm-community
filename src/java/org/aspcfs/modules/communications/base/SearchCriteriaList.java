@@ -455,10 +455,17 @@ public class SearchCriteriaList extends Hashtable {
 		while (i.hasNext()) {
 			SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.get(i.next());
 			Iterator j = thisGroup.iterator();
+			String valueString = "";
+			
 			while (j.hasNext()) {
 				SearchCriteriaElement thisElt = (SearchCriteriaElement) (j.next());
 				String keyString = thisElt.getFieldIdAsString() + "*" + thisElt.getOperatorIdAsString() + "*" + thisElt.getText();
-				String valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText();
+				if (thisGroup.getGroupField().getDescription().equals("Contact Type") && thisElt.getContactTypeName() != null) {
+					valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName();
+				} else {
+					valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText();
+				}
+				
 				selectList.addItem(keyString, valueString);
 			}
 		}
@@ -480,8 +487,9 @@ public class SearchCriteriaList extends Hashtable {
 
 		//The elements
 		sql.append(
-				"SELECT s.* " +
+				"SELECT s.*, t.description as ctype " +
 				"FROM saved_criteriaelement s " +
+				"LEFT JOIN lookup_contact_types t ON (s.value = t.code) " +
 				"WHERE s.id = " + id + " ");
 		st = db.createStatement();
 		rs = st.executeQuery(sql.toString());

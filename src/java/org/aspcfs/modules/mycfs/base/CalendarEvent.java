@@ -17,6 +17,8 @@ public class CalendarEvent implements Comparable {
 	protected String location = "";
 	protected String category = "";
 	protected String icon = "";
+	
+	protected int id = -1;
 
 	protected String details = "";
 	//Body of the event
@@ -138,6 +140,26 @@ public class CalendarEvent implements Comparable {
 		}
 	}
 
+public int getId() { return id; }
+public String getLink() {
+	
+	if (category.equalsIgnoreCase("Opportunity")) {
+		return "<a href=\"/Leads.do?command=DetailsOpp&id=" + id + "\">";
+	} else if (category.equalsIgnoreCase("Account")) {
+		return "<a href=\"/Accounts.do?command=Details&orgId=" + id + "\">";
+	} else if (category.equalsIgnoreCase("Assignment")) {
+		return "<a href=\"/ProjectManagement.do?command=PersonalView&pid=" + id + "\">";
+	} else if (category.equalsIgnoreCase("Contact Call")) {
+		return "<a href=\"/ExternalContacts.do?command=ContactDetails&id=" + id + "\">";
+	} else if (category.equalsIgnoreCase("Opportunity Call")) {
+		return "<a href=\"/Leads.do?command=DetailsOpp&id=" + id + "\">";
+	}   
+		
+	return link; 
+
+}
+public void setId(int tmp) { this.id = tmp; }
+public void setLink(String tmp) { this.link = tmp; }
 
 	/**
 	 *  Sets the Subject attribute of the CalendarEvent object
@@ -169,17 +191,6 @@ public class CalendarEvent implements Comparable {
 	 */
 	public void setHTMLClass(String tmp) {
 		HTMLClass = tmp;
-	}
-
-
-	/**
-	 *  Sets the Link attribute of the CalendarEvent object
-	 *
-	 *@param  tmp  The new Link value
-	 *@since
-	 */
-	public void setLink(String tmp) {
-		link = tmp;
 	}
 
 
@@ -219,7 +230,7 @@ public class CalendarEvent implements Comparable {
 			return "<img border=0 src=\"/images/event-holiday.gif\" alt=\"Holiday:" + this.getSubject() + "\" align=texttop width=12 height=12>";
 		} else if (category.equalsIgnoreCase("Opportunity")) {
 			return "<img border=0 src=\"images/alertopp.gif\" alt=\"Opp:" + this.getSubject() + "\" align=texttop>";
-		} else if (category.equalsIgnoreCase("Call")) {
+		} else if (category.equalsIgnoreCase("Contact Call") || category.equalsIgnoreCase("Opportunity Call")) {
 			return "<img border=0 src=\"images/alertcall.gif\" alt=\"Call:" + this.getSubject() + "\" align=texttop>";
 		} else if (category.equalsIgnoreCase("Assignment")) {
 			return "<img border=0 src=\"images/alertassignment.gif\" alt=\"Assignment:" + this.getSubject() + "\" align=texttop>";

@@ -34,7 +34,7 @@ function ShowSpan(thisID)
 }
 
 function setText(obj) {
-	document.searchForm.searchValue.value = obj.options[obj.selectedIndex].value;
+	document.searchForm.searchValue.value = obj.options[obj.selectedIndex].text;
 	return true;
 }
 
@@ -75,7 +75,7 @@ function updateOperators(){
 	
 	if (document.searchForm.fieldSelect.selectedIndex == 7) {
 		javascript:ShowSpan('new0');
-		document.searchForm.searchValue.value = document.searchForm.typeId.options[document.searchForm.typeId.selectedIndex].value;
+		document.searchForm.searchValue.value = document.searchForm.typeId.options[document.searchForm.typeId.selectedIndex].text;
 	} else if (document.searchForm.fieldSelect.selectedIndex == 3) {
 		javascript:HideSpan('new0');
 		javascript:ShowSpan('new1');
@@ -107,8 +107,16 @@ function addValues(){
 	operatorName = operatorList.options[operatorList.selectedIndex].text;
 	operatorID = operatorList.options[operatorList.selectedIndex].value
 	searchText = document.searchForm.searchValue.value;
+	
+	typeValue = document.searchForm.typeId.value;
+	
 	var newOption = fieldName + " (" + operatorName + ") " + searchText;
-	var newCriteria = fieldID  + "|" + operatorID + "|" + searchText;
+	
+	if (typeValue == "") {
+		var newCriteria = fieldID  + "|" + operatorID + "|" + searchText;
+	} else {
+		var newCriteria = fieldID + "|" + operatorID + "|" + typeValue;
+	}
 	
 	if (searchList.length == 0 || searchList.options[0].value == "-1"){
 		searchList.options[0] = new Option(newOption)

@@ -191,7 +191,7 @@ public final class Accounts extends CFSModule {
 	Iterator n = alertOrgs.iterator();
 	while (n.hasNext()) {
 		Organization thisOrg = (Organization) n.next();
-		companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getAlertText(), "Account");
+		companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), "Account", thisOrg.getOrgId());
 	}
 	
 	if (errorMessage == null) {

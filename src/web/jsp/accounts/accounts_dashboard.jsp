@@ -65,7 +65,7 @@
            	<%= thisEvent.getIcon() %>&nbsp;
          	</td>
          	<td width="100%" valign="top">
-           	<%= thisEvent.getSubject() %><%= ((!eventList.hasNext() && days.hasNext())?"<br>&nbsp;":"") %>
+           	<%= thisEvent.getLink() %><%= thisEvent.getSubject() %></a><%= ((!eventList.hasNext() && days.hasNext())?"<br>&nbsp;":"") %>
          	</td>
        		</tr>
 		<%

@@ -22,6 +22,7 @@ public class SearchCriteriaElement {
   String operator = null;
   String dataType = null;
   String operatorDisplayText = null;
+  String contactTypeName = null;
 
   /**
    *  Description of the Method
@@ -30,6 +31,12 @@ public class SearchCriteriaElement {
    */
   public SearchCriteriaElement() { }
 
+public String getContactTypeName() {
+	return contactTypeName;
+}
+public void setContactTypeName(String contactTypeName) {
+	this.contactTypeName = contactTypeName;
+}
 
   /**
    *  Description of the Method
@@ -295,6 +302,7 @@ public class SearchCriteriaElement {
     operatorId = rs.getInt("operatorid");
     operator = rs.getString("operator");
     text = rs.getString("value");
+    contactTypeName = rs.getString("ctype");
   }
 
 }
