@@ -384,25 +384,6 @@ public class CFSModule {
 
 
   /**
-   *  Gets the Path attribute of the CFSModule object, no longer used because
-   *  the item id would result in too many directories on a large system
-   *
-   *@param  context           Description of Parameter
-   *@param  moduleFolderName  Description of Parameter
-   *@param  moduleItemId      Description of Parameter
-   *@return                   The Path value
-   *@deprecated
-   */
-  public static String getPath(ActionContext context, String moduleFolderName, int moduleItemId) {
-    return (
-        context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
-        "fileLibrary" + fs +
-        getDbName(context) + fs +
-        moduleFolderName + fs);
-  }
-
-
-  /**
    *  Gets the dbNamePath attribute of the CFSModule class
    *
    *@param  context  Description of the Parameter

@@ -803,16 +803,13 @@ public class ContactReport extends ContactList {
    *@exception  Exception  Description of the Exception
    */
   public boolean saveAndInsert(Connection db) throws Exception {
-
     int fileSize = save();
     if (joinOrgs) {
       thisItem.setLinkModuleId(Constants.DOCUMENTS_ACCOUNTS_REPORTS);
     } else {
       thisItem.setLinkModuleId(Constants.DOCUMENTS_CONTACTS_REPORTS);
     }
-
     thisItem.setLinkItemId(0);
-    thisItem.setProjectId(-1);
     thisItem.setEnteredBy(enteredBy);
     thisItem.setModifiedBy(modifiedBy);
     thisItem.setSubject(subject);

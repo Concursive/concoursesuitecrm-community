@@ -606,7 +606,7 @@ public final class CampaignManager extends CFSModule {
       if (version == null) {
         FileItem itemToDownload = thisItem;
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "communications", id) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "communications") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -624,7 +624,7 @@ public final class CampaignManager extends CFSModule {
       } else {
         FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
         itemToDownload.setEnteredBy(this.getUserId(context));
-        String filePath = this.getPath(context, "campaign", id) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+        String filePath = this.getPath(context, "campaign") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
         FileDownload fileDownload = new FileDownload();
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -1867,7 +1867,7 @@ public final class CampaignManager extends CFSModule {
 
     //Start the download
     try {
-      String filePath = this.getPath(context, "communications", Integer.parseInt(linkItemId)) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+      String filePath = this.getPath(context, "communications") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
 
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
@@ -2153,7 +2153,7 @@ public final class CampaignManager extends CFSModule {
         return "PermissionError";
       }
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
-      recordDeleted = thisItem.delete(db, this.getPath(context, "communications", thisItem.getLinkItemId()));
+      recordDeleted = thisItem.delete(db, this.getPath(context, "communications"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {

@@ -1101,8 +1101,7 @@ public final class Leads extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      //-1 is the project ID for non-projects
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_LEADS_REPORTS);
       if (!hasViewpointAuthority(db, context, "pipeline", thisItem.getEnteredBy(), userId)) {
         return "PermissionError";
       }
@@ -1157,7 +1156,7 @@ public final class Leads extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_LEADS_REPORTS);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1221,8 +1220,7 @@ public final class Leads extends CFSModule {
     try {
       db = getConnection(context);
 
-      //TODO: -1 is the project ID for non-projects (and shouldn't be used anymore here)
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_LEADS_REPORTS);
 
       String filePath = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
       String textToShow = this.includeFile(filePath);

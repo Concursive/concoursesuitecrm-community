@@ -28,10 +28,8 @@ public class FileItem extends GenericBean {
    */
   public final static String fs = System.getProperty("file.separator");
 
-  private Project project = null;
   private int linkModuleId = -1;
   private int linkItemId = -1;
-  private int projectId = -1;
   private int id = -1;
   private int folderId = -1;
   private String subject = "";
@@ -78,21 +76,6 @@ public class FileItem extends GenericBean {
   /**
    *  Constructor for the FileItem object
    *
-   *@param  db                Description of Parameter
-   *@param  itemId            Description of Parameter
-   *@param  projectId         Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@deprecated
-   */
-  public FileItem(Connection db, int itemId, int projectId) throws SQLException {
-    this.projectId = projectId;
-    queryRecord(db, itemId);
-  }
-
-
-  /**
-   *  Constructor for the FileItem object
-   *
    *@param  db                Description of the Parameter
    *@param  itemId            Description of the Parameter
    *@param  moduleItemId      Description of the Parameter
@@ -122,9 +105,6 @@ public class FileItem extends GenericBean {
     if (itemId > -1) {
       sql.append("AND f.item_id = ? ");
     }
-    if (projectId > -1) {
-      sql.append("AND project_id = ? ");
-    }
     if (linkModuleId > -1) {
       sql.append("AND link_module_id = ? ");
     }
@@ -135,9 +115,6 @@ public class FileItem extends GenericBean {
     int i = 0;
     if (itemId > -1) {
       pst.setInt(++i, itemId);
-    }
-    if (projectId > -1) {
-      pst.setInt(++i, projectId);
     }
     if (linkModuleId > -1) {
       pst.setInt(++i, linkModuleId);
@@ -267,36 +244,6 @@ public class FileItem extends GenericBean {
    */
   public void setLinkItemId(String tmp) {
     linkItemId = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the project attribute of the FileItem object
-   *
-   *@param  tmp  The new project value
-   */
-  public void setProject(Project tmp) {
-    this.project = tmp;
-  }
-
-
-  /**
-   *  Sets the projectId attribute of the FileItem object
-   *
-   *@param  tmp  The new projectId value
-   */
-  public void setProjectId(int tmp) {
-    this.projectId = tmp;
-  }
-
-
-  /**
-   *  Sets the projectId attribute of the FileItem object
-   *
-   *@param  tmp  The new projectId value
-   */
-  public void setProjectId(String tmp) {
-    this.projectId = Integer.parseInt(tmp);
   }
 
 
@@ -597,26 +544,6 @@ public class FileItem extends GenericBean {
    */
   public boolean getDoVersionInsert() {
     return doVersionInsert;
-  }
-
-
-  /**
-   *  Gets the project attribute of the FileItem object
-   *
-   *@return    The project value
-   */
-  public Project getProject() {
-    return project;
-  }
-
-
-  /**
-   *  Gets the projectId attribute of the FileItem object
-   *
-   *@return    The projectId value
-   */
-  public int getProjectId() {
-    return projectId;
   }
 
 
@@ -996,7 +923,7 @@ public class FileItem extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "INSERT INTO project_files " +
-          "(project_id, folder_id, subject, client_filename, filename, version, size, ");
+          "(folder_id, subject, client_filename, filename, version, size, ");
       sql.append("enabled, downloads, ");
       if (entered != null) {
         sql.append("entered, ");
@@ -1006,7 +933,7 @@ public class FileItem extends GenericBean {
       }
       sql.append(" link_module_id, link_item_id, " +
           " enteredBy, modifiedBy ) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1017,7 +944,6 @@ public class FileItem extends GenericBean {
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, projectId);
       if (folderId > 0) {
         pst.setInt(++i, folderId);
       } else {
@@ -1277,7 +1203,7 @@ public class FileItem extends GenericBean {
    *@return    The valid value
    */
   private boolean isValid() {
-    if ((linkModuleId == -1 || linkItemId == -1) && (projectId == -1)) {
+    if ((linkModuleId == -1 || linkItemId == -1)) {
       errors.put("actionError", "Id not specified");
     }
 
@@ -1309,7 +1235,6 @@ public class FileItem extends GenericBean {
     if (!isVersion) {
       linkModuleId = rs.getInt("link_module_id");
       linkItemId = rs.getInt("link_item_id");
-      projectId = rs.getInt("project_id");
       folderId = DatabaseUtils.getInt(rs, "folder_id");
     }
     clientFilename = rs.getString("client_filename");

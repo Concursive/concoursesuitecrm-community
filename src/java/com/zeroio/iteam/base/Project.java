@@ -12,6 +12,7 @@ import java.text.*;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Represents a Project in iTeam
@@ -1070,8 +1071,8 @@ public class Project extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public int buildFileItemList(Connection db) throws SQLException {
-    files.setProject(this);
-    files.setProjectId(this.getId());
+    files.setLinkModuleId(Constants.DOCUMENTS_PROJECTS);
+    files.setLinkItemId(this.getId());
     files.buildList(db);
     return files.size();
   }

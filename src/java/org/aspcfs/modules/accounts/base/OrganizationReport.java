@@ -690,7 +690,6 @@ public class OrganizationReport extends OrganizationList {
 
     thisItem.setLinkModuleId(Constants.DOCUMENTS_ACCOUNTS_REPORTS);
     thisItem.setLinkItemId(0);
-    thisItem.setProjectId(-1);
     thisItem.setEnteredBy(enteredBy);
     thisItem.setModifiedBy(modifiedBy);
     thisItem.setSubject(subject);

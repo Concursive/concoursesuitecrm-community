@@ -111,7 +111,7 @@ public final class Accounts extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_ACCOUNTS_REPORTS);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -168,8 +168,7 @@ public final class Accounts extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      //-1 is the project ID for non-projects
-      thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_ACCOUNTS_REPORTS);
       String filePath = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
       String textToShow = this.includeFile(filePath);
       context.getRequest().setAttribute("ReportText", textToShow);
@@ -358,8 +357,7 @@ public final class Accounts extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      //-1 is the project ID for non-projects
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_ACCOUNTS_REPORTS);
       recordDeleted = thisItem.delete(db, this.getPath(context, "account-reports"));
       String filePath1 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
       java.io.File fileToDelete1 = new java.io.File(filePath1);
@@ -861,7 +859,7 @@ public final class Accounts extends CFSModule {
           thisOrganization.setContactDelete(true);
           thisOrganization.setRevenueDelete(true);
           thisOrganization.setDocumentDelete(true);
-          recordDeleted = thisOrganization.delete(db, this.getPath(context, "accounts", thisOrganization.getOrgId()));
+          recordDeleted = thisOrganization.delete(db, this.getPath(context, "accounts"));
         } else if (((String) context.getRequest().getParameter("action")).equals("disable")) {
           recordDeleted = thisOrganization.disable(db);
         }

@@ -587,7 +587,6 @@ public class OpportunityReport extends OpportunityList {
       thisItem.setLinkModuleId(Constants.DOCUMENTS_LEADS_REPORTS);
     }
     thisItem.setLinkItemId(0);
-    thisItem.setProjectId(-1);
     thisItem.setEnteredBy(enteredBy);
     thisItem.setModifiedBy(modifiedBy);
     thisItem.setSubject(subject);

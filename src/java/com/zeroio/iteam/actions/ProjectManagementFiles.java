@@ -18,6 +18,7 @@ import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import java.io.*;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Description of the Class
@@ -103,7 +104,8 @@ public final class ProjectManagementFiles extends CFSModule {
       context.getRequest().setAttribute("IncludeSection", ("file_library").toLowerCase());
       
       FileItem thisItem = new FileItem();
-      thisItem.setProjectId(thisProject.getId());
+      thisItem.setLinkModuleId(Constants.DOCUMENTS_PROJECTS);
+      thisItem.setLinkItemId(thisProject.getId());
       thisItem.setEnteredBy(getUserId(context));
       thisItem.setModifiedBy(getUserId(context));
       thisItem.setFolderId(Integer.parseInt(folderId));
@@ -112,7 +114,6 @@ public final class ProjectManagementFiles extends CFSModule {
       thisItem.setFilename(newFileInfo.getRealFilename());
       thisItem.setVersion(1.0);
       thisItem.setSize(newFileInfo.getSize());
-      
       recordInserted = thisItem.insert(db);
       if (!recordInserted) {
         processErrors(context, thisItem.getErrors());
@@ -155,9 +156,8 @@ public final class ProjectManagementFiles extends CFSModule {
       Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       context.getRequest().setAttribute("Project", thisProject);
       
-      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(projectId));
+      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(projectId), Constants.DOCUMENTS_PROJECTS);
       context.getRequest().setAttribute("FileItem", thisFile);
-      
       
       context.getRequest().setAttribute("IncludeSection", ("file_upload_version").toLowerCase());
     } catch (Exception e) {
@@ -207,7 +207,8 @@ public final class ProjectManagementFiles extends CFSModule {
       context.getRequest().setAttribute("IncludeSection", ("file_library").toLowerCase());
       
       FileItem thisItem = new FileItem();
-      thisItem.setProjectId(thisProject.getId());
+      thisItem.setLinkModuleId(Constants.DOCUMENTS_PROJECTS);
+      thisItem.setLinkItemId(thisProject.getId());
       thisItem.setId(Integer.parseInt(itemId));
       thisItem.setEnteredBy(getUserId(context));
       thisItem.setModifiedBy(getUserId(context));
@@ -267,7 +268,7 @@ public final class ProjectManagementFiles extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("file_details").toLowerCase());
       
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId());
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.DOCUMENTS_PROJECTS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
       
@@ -298,7 +299,7 @@ public final class ProjectManagementFiles extends CFSModule {
     try {
       db = getConnection(context);
       Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
-      thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId());
+      thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.DOCUMENTS_PROJECTS);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -383,7 +384,7 @@ public final class ProjectManagementFiles extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("file_modify").toLowerCase());
       
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId());
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.DOCUMENTS_PROJECTS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
 
@@ -417,7 +418,7 @@ public final class ProjectManagementFiles extends CFSModule {
       Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       context.getRequest().setAttribute("Project", thisProject);
       
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId());
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.DOCUMENTS_PROJECTS);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
       recordInserted = thisItem.update(db);
@@ -457,7 +458,7 @@ public final class ProjectManagementFiles extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("pid", projectId);
       
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId());
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId(), Constants.DOCUMENTS_PROJECTS);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
         recordDeleted = thisItem.delete(db, this.getPath(context, "projects"));
       }

@@ -128,7 +128,7 @@ public final class ExternalContacts extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_CONTACTS_REPORTS);
       if (!hasAuthority(context, thisItem.getEnteredBy())) {
         return ("PermissionError");
       }
@@ -197,8 +197,7 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = getConnection(context);
 
-      //-1 is the project ID for non-projects
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_CONTACTS_REPORTS);
       if (!hasAuthority(context, thisItem.getEnteredBy())) {
         return ("PermissionError");
       }

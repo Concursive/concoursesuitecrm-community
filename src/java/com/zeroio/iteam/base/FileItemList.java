@@ -28,8 +28,6 @@ public class FileItemList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private int linkModuleId = -1;
   private int linkItemId = -1;
-  private Project project = null;
-  private int projectId = -1;
   private int folderId = -1;
   private int owner = -1;
   private String ownerIdRange = null;
@@ -93,26 +91,6 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the project attribute of the FileItemList object
-   *
-   *@param  tmp  The new project value
-   */
-  public void setProject(Project tmp) {
-    this.project = tmp;
-  }
-
-
-  /**
-   *  Sets the projectId attribute of the FileItemList object
-   *
-   *@param  tmp  The new projectId value
-   */
-  public void setProjectId(int tmp) {
-    this.projectId = tmp;
-  }
-
-
-  /**
    *  Sets the folderId attribute of the FileItemList object
    *
    *@param  tmp  The new folderId value
@@ -159,26 +137,6 @@ public class FileItemList extends ArrayList {
    */
   public String getOwnerIdRange() {
     return ownerIdRange;
-  }
-
-
-  /**
-   *  Gets the project attribute of the FileItemList object
-   *
-   *@return    The project value
-   */
-  public Project getProject() {
-    return project;
-  }
-
-
-  /**
-   *  Gets the projectId attribute of the FileItemList object
-   *
-   *@return    The projectId value
-   */
-  public int getProjectId() {
-    return projectId;
   }
 
 
@@ -304,7 +262,6 @@ public class FileItemList extends ArrayList {
       }
       ++count;
       FileItem thisItem = new FileItem(rs);
-      thisItem.setProject(project);
       thisItem.setDirectory(fileLibraryPath);
       this.add(thisItem);
     }
@@ -347,10 +304,6 @@ public class FileItemList extends ArrayList {
       sqlFilter.append("AND link_item_id = ? ");
     }
 
-    if (projectId > -1) {
-      sqlFilter.append("AND project_id = ? ");
-    }
-
     if (folderId > -1) {
       sqlFilter.append("AND folder_id = ? ");
     }
@@ -381,10 +334,6 @@ public class FileItemList extends ArrayList {
 
     if (linkItemId > -1) {
       pst.setInt(++i, linkItemId);
-    }
-
-    if (projectId > -1) {
-      pst.setInt(++i, projectId);
     }
 
     if (folderId > -1) {
