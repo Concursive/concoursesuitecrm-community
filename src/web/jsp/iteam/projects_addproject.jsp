@@ -26,7 +26,8 @@
 		<tr>
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="100%" colspan="2">
-        &nbsp;Import Requirements, Assignments, and Team from an Existing Project<br>
+        &nbsp;<br>
+				&nbsp;Import Requirements, Assignments, and Team from an Existing Project<br>
         &nbsp;
 				<%= ProjectList.getHtmlSelect("templateId", 0) %>
       </td>
