@@ -272,5 +272,10 @@ public class TicketCategoryWriter implements DataWriter {
   public boolean rollback() {
     return true;
   }
+  
+  public boolean load(DataRecord record) {
+    return false;
+  }
 }
+
 

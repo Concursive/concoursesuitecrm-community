@@ -28,6 +28,15 @@ public interface DataWriter extends DataImportHandler {
 
 
   /**
+   *  Loads data from a data store
+   *
+   *@param  record  Description of the Parameter
+   *@return         Description of the Return Value
+   */
+  boolean load(DataRecord record);
+
+
+  /**
    *  Sets the autoCommit attribute of the DataWriter object
    *
    *@param  flag  The new autoCommit value
@@ -36,7 +45,8 @@ public interface DataWriter extends DataImportHandler {
 
 
   /**
-   *  Description of the Method
+   *  Forces a stack of writes to be executed at once if autoCommit is false
+   *  and the writer supports commits.
    *
    *@return    Description of the Return Value
    */
@@ -44,7 +54,7 @@ public interface DataWriter extends DataImportHandler {
 
 
   /**
-   *  Description of the Method
+   *  Forces stacked writes to be cleared
    *
    *@return    Description of the Return Value
    */

@@ -12,12 +12,13 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
 /**
- *  Writes CFS data using an HTTP connection and passing objects as XML to
- *  a CFS web server.
+ *  Writes CFS data using an HTTP connection and passing objects as XML to a CFS
+ *  web server.
  *
  *@author     matt rajkowski
  *@created    September 3, 2002
- *@version    $Id$
+ *@version    $Id: CFSHttpXMLWriter.java,v 1.6 2002/10/07 19:04:00 mrajkowski
+ *      Exp $
  */
 public class CFSHttpXMLWriter implements DataWriter {
   private String url = null;
@@ -30,9 +31,10 @@ public class CFSHttpXMLWriter implements DataWriter {
   private boolean autoCommit = true;
   private int transactionCount = 0;
   private String lastResponse = null;
-  
+
   private boolean ignoreClientId = false;
-  
+
+
   /**
    *  Sets the url attribute of the CFSHttpXMLWriter object
    *
@@ -41,7 +43,8 @@ public class CFSHttpXMLWriter implements DataWriter {
   public void setUrl(String tmp) {
     this.url = tmp;
   }
-  
+
+
   /**
    *  Sets the id attribute of the CFSHttpXMLWriter object
    *
@@ -80,27 +83,69 @@ public class CFSHttpXMLWriter implements DataWriter {
   public void setSystemId(String tmp) {
     this.systemId = Integer.parseInt(tmp);
   }
-  
+
+
+  /**
+   *  Sets the clientId attribute of the CFSHttpXMLWriter object
+   *
+   *@param  tmp  The new clientId value
+   */
   public void setClientId(int tmp) {
     this.clientId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the clientId attribute of the CFSHttpXMLWriter object
+   *
+   *@param  tmp  The new clientId value
+   */
   public void setClientId(String tmp) {
     this.clientId = Integer.parseInt(tmp);
   }
 
+
+  /**
+   *  Sets the autoCommit attribute of the CFSHttpXMLWriter object
+   *
+   *@param  flag  The new autoCommit value
+   */
   public void setAutoCommit(boolean flag) {
     autoCommit = flag;
     if (autoCommit && transaction.size() > 0) {
       commit();
     }
   }
-  
-  public void setIgnoreClientId(boolean tmp) { this.ignoreClientId = tmp; }
-  public void setIgnoreClientId(String tmp) { 
-    this.ignoreClientId = "true".equals(tmp); 
+
+
+  /**
+   *  Sets the ignoreClientId attribute of the CFSHttpXMLWriter object
+   *
+   *@param  tmp  The new ignoreClientId value
+   */
+  public void setIgnoreClientId(boolean tmp) {
+    this.ignoreClientId = tmp;
   }
-  public boolean getIgnoreClientId() { return ignoreClientId; }
+
+
+  /**
+   *  Sets the ignoreClientId attribute of the CFSHttpXMLWriter object
+   *
+   *@param  tmp  The new ignoreClientId value
+   */
+  public void setIgnoreClientId(String tmp) {
+    this.ignoreClientId = "true".equals(tmp);
+  }
+
+
+  /**
+   *  Gets the ignoreClientId attribute of the CFSHttpXMLWriter object
+   *
+   *@return    The ignoreClientId value
+   */
+  public boolean getIgnoreClientId() {
+    return ignoreClientId;
+  }
 
 
   /**
@@ -141,7 +186,13 @@ public class CFSHttpXMLWriter implements DataWriter {
   public int getSystemId() {
     return systemId;
   }
-  
+
+
+  /**
+   *  Gets the clientId attribute of the CFSHttpXMLWriter object
+   *
+   *@return    The clientId value
+   */
   public int getClientId() {
     return clientId;
   }
@@ -175,7 +226,13 @@ public class CFSHttpXMLWriter implements DataWriter {
   public String getDescription() {
     return "Writes data to ASPCFS using the XML HTTP Web API";
   }
-  
+
+
+  /**
+   *  Gets the lastResponse attribute of the CFSHttpXMLWriter object
+   *
+   *@return    The lastResponse value
+   */
   public String getLastResponse() {
     return lastResponse;
   }
@@ -190,11 +247,11 @@ public class CFSHttpXMLWriter implements DataWriter {
     if (url == null || id == null || code == null || systemId == -1) {
       return false;
     }
-    
+
     if (ignoreClientId) {
       return true;
     }
-    
+
     //Setup a new client id for this data transfer session
     DataRecord clientRecord = new DataRecord();
     clientRecord.setName("syncClient");
@@ -203,7 +260,7 @@ public class CFSHttpXMLWriter implements DataWriter {
     clientRecord.addField("type", "Java CFS Http XML Writer");
     clientRecord.addField("version", String.valueOf(this.getVersion()));
     this.save(clientRecord);
-    
+
     try {
       XMLUtils responseXML = new XMLUtils(lastResponse, true);
       clientId = Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstElement("id")));
@@ -219,8 +276,8 @@ public class CFSHttpXMLWriter implements DataWriter {
   /**
    *  Description of the Method
    *
-   *@param  data  Description of the Parameter
-   *@return       Description of the Return Value
+   *@param  record  Description of the Parameter
+   *@return         Description of the Return Value
    */
   public boolean save(DataRecord record) {
     transaction.add(record);
@@ -229,7 +286,13 @@ public class CFSHttpXMLWriter implements DataWriter {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean commit() {
     try {
       //Construct XML insert
@@ -238,57 +301,57 @@ public class CFSHttpXMLWriter implements DataWriter {
       Document document = builder.newDocument();
       Element app = document.createElement("app");
       document.appendChild(app);
-      
+
       //Add the authentication
       Element auth = document.createElement("authentication");
       app.appendChild(auth);
-      
+
       Element authId = document.createElement("id");
       authId.appendChild(document.createTextNode(id));
       auth.appendChild(authId);
-      
+
       Element authCode = document.createElement("code");
       authCode.appendChild(document.createTextNode(code));
       auth.appendChild(authCode);
-      
+
       Element authSystemId = document.createElement("systemId");
       authSystemId.appendChild(document.createTextNode(String.valueOf(systemId)));
       auth.appendChild(authSystemId);
-      
+
       if (clientId > -1) {
         Element authClientId = document.createElement("clientId");
         authClientId.appendChild(document.createTextNode(String.valueOf(clientId)));
         auth.appendChild(authClientId);
       }
-      
+
       //Process the records to be submitted
       Iterator dataRecordItems = transaction.iterator();
       while (dataRecordItems.hasNext()) {
-        DataRecord record = (DataRecord)dataRecordItems.next();
-        
+        DataRecord record = (DataRecord) dataRecordItems.next();
+
         //Begin the transaction
         Element transaction = document.createElement("transaction");
         transaction.setAttribute("id", String.valueOf(++transactionCount));
         app.appendChild(transaction);
-        
+
         //Add the meta node: fields that will be returned
         Element meta = document.createElement("meta");
         transaction.appendChild(meta);
-        
+
         //Add the object node
         Element object = document.createElement(record.getName());
         object.setAttribute("action", record.getAction());
         transaction.appendChild(object);
-        
+
         Iterator fieldItems = record.iterator();
         while (fieldItems.hasNext()) {
-          DataField thisField = (DataField)fieldItems.next();
-          
+          DataField thisField = (DataField) fieldItems.next();
+
           //Add the property to the meta node
           Element property = document.createElement("property");
           property.appendChild(document.createTextNode(thisField.getName()));
           meta.appendChild(property);
-            
+
           //Add the field to the object node
           Element field = null;
           if (thisField.hasAlias()) {
@@ -315,9 +378,100 @@ public class CFSHttpXMLWriter implements DataWriter {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean rollback() {
     transaction.clear();
+    return true;
+  }
+
+
+  /**
+   *  Reads data from the writer source instead of saving
+   *
+   *@param  record  Description of the Parameter
+   *@return         Description of the Return Value
+   */
+  public boolean load(DataRecord record) {
+    try {
+      //Construct XML insert
+      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = dbf.newDocumentBuilder();
+      Document document = builder.newDocument();
+      Element app = document.createElement("app");
+      document.appendChild(app);
+  
+      //Add the authentication
+      Element auth = document.createElement("authentication");
+      app.appendChild(auth);
+  
+      Element authId = document.createElement("id");
+      authId.appendChild(document.createTextNode(id));
+      auth.appendChild(authId);
+  
+      Element authCode = document.createElement("code");
+      authCode.appendChild(document.createTextNode(code));
+      auth.appendChild(authCode);
+  
+      Element authSystemId = document.createElement("systemId");
+      authSystemId.appendChild(document.createTextNode(String.valueOf(systemId)));
+      auth.appendChild(authSystemId);
+  
+      if (clientId > -1) {
+        Element authClientId = document.createElement("clientId");
+        authClientId.appendChild(document.createTextNode(String.valueOf(clientId)));
+        auth.appendChild(authClientId);
+      }
+  
+      //Read the record
+      //Begin the transaction
+      Element transaction = document.createElement("transaction");
+      transaction.setAttribute("id", String.valueOf(++transactionCount));
+      app.appendChild(transaction);
+  
+      //Add the meta node: fields that will be returned
+      Element meta = document.createElement("meta");
+      transaction.appendChild(meta);
+  
+      //Add the object node
+      Element object = document.createElement(record.getName());
+      object.setAttribute("action", record.getAction());
+      transaction.appendChild(object);
+  
+      Iterator fieldItems = record.iterator();
+      while (fieldItems.hasNext()) {
+        DataField thisField = (DataField) fieldItems.next();
+  
+        //Add the property to the meta node
+        Element property = document.createElement("property");
+        property.appendChild(document.createTextNode(thisField.getName()));
+        meta.appendChild(property);
+  
+        //Ignore the field to add to the object node
+        /* Element field = null;
+        if (thisField.hasAlias()) {
+          field = document.createElement(thisField.getAlias());
+        } else {
+          field = document.createElement(thisField.getName());
+        }
+        if (thisField.hasValueLookup()) {
+          field.setAttribute("lookup", thisField.getValueLookup());
+        }
+        if (thisField.hasValue()) {
+          field.appendChild(document.createTextNode(thisField.getValue()));
+        }
+        object.appendChild(field); */
+      }
+      lastResponse = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
+      System.out.println(lastResponse);
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    }
     return true;
   }
 }
