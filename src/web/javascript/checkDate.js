@@ -61,9 +61,12 @@ function checkAlertDate(datein) {
   var m = 0, d = 0, y = 0;
   var sep;
   var now = new Date();
-  var today = new Date(now.getYear(),(now.getMonth()+1),now.getDate());
   
-
+  var theYear = now.getYear() 
+  theYear += (theYear < 1900) ? 1900 : 0 
+  
+  var today = new Date(theYear,(now.getMonth()+1),now.getDate());
+  
   if (datein.indexOf("/") != -1) {
     sep = datein.split("/");
   } else if (datein.indexOf("-") != -1) {

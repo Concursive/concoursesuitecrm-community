@@ -12,6 +12,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 
 <script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -35,15 +42,14 @@
     }
 </script>
 
-<form action='/CompanyDirectory.do?command=UpdateEmployee&auto-populate=true' method='post'>
-<input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
-
+<form action='/CompanyDirectory.do?command=UpdateEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
+<input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 	<%}%>
     <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>'">
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
     <%}%>
     
 <input type="reset" value="Reset">
@@ -308,13 +314,14 @@
   </tr>
 </table>
 <br>
-<input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 	<%}%>
     <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>'">
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
     <%}%>
     <input type="reset" value="Reset">
+    <input type="hidden" name="dosubmit" value="true">
 </form>

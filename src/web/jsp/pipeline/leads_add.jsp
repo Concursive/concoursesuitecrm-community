@@ -8,6 +8,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -39,15 +46,15 @@
       }
     }
 </script>
-<form name="addOpportunity" action="/Leads.do?command=InsertOpp&auto-populate=true" method="post">
+<form name="addOpportunity" action="/Leads.do?command=InsertOpp&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="/Leads.do">Pipeline Management</a> > 
 Add Opportunity<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td>
-<input type="submit" value="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp'">
+<input type="submit" value="Save" onClick="return checkForm(this.form);this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 &nbsp;
@@ -177,9 +184,10 @@ Add Opportunity<br>
 </table>
 &nbsp;
 <br>
-<input type="submit" value="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp'">
+<input type="submit" value="Save" onClick="return checkForm(this.form);this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
     </td>
   </tr>
 </table>

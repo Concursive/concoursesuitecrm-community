@@ -10,6 +10,13 @@
 
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 <script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -27,9 +34,9 @@
 </script>
 
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<form action='/CompanyDirectory.do?command=InsertEmployee&auto-populate=true' method='post'>
-<input type="submit" value="Save" name="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees'">
+<form action='/CompanyDirectory.do?command=InsertEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
+<input type="submit" value="Save" name="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 &nbsp;
@@ -269,8 +276,9 @@
   </tr>
 </table>
 <br>
-<input type="submit" value="Save" name="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees'">
+<input type="submit" value="Save" name="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
 </form>
 </body>

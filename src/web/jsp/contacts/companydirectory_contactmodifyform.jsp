@@ -13,6 +13,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 
 <script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -36,7 +43,7 @@
     }
 </script>
 
-<form action="/ExternalContacts.do?command=UpdateContact&auto-populate=true" method="post">
+<form action="/ExternalContacts.do?command=UpdateContact&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -54,15 +61,14 @@
     <td class="containerBack">
     
        
-    <input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
-    
+    <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
 	<%}%>
-    <%} else {%>
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>'">
-    <%}%>
+<%} else {%>
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+<%}%>
 <input type="reset" value="Reset">
 <br>&nbsp;
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
@@ -371,15 +377,16 @@
   </tr>
 </table>
 <br>
-    <input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
+    <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
   </td>
   </tr>
   </table>

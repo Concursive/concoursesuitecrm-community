@@ -9,6 +9,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -40,7 +47,7 @@
       }
     }
 </script>
-<form name="addOpportunity" action="/ExternalContactsOpps.do?command=InsertOpp&contactId=<%= ContactDetails.getId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="addOpportunity" action="/ExternalContactsOpps.do?command=InsertOpp&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">Back to Opportunity List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -56,8 +63,8 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type="submit" value="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>'">
+  <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 &nbsp;    
@@ -168,7 +175,7 @@
     </td>
   </tr>
   
-  <tr>
+  <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Description
     </td>
@@ -177,12 +184,12 @@
     </td>
   </tr>
   
-   <tr>
+   <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Date
     </td>
     <td valign=center colspan=1>
-              <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppDetails.getAlertDateString()) %>">
+      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppDetails.getAlertDateString()) %>">
       <a href="javascript:popCalendar('addOpportunity', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
@@ -190,9 +197,10 @@
 </table>
 &nbsp;
 <br>
-  <input type="submit" value="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>'">
+  <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
   <input type="reset" value="Reset">
+  <input type="hidden" name="dosubmit" value="true">
   </td>
 </tr>
 </table>
