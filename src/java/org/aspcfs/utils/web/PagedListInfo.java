@@ -600,7 +600,7 @@ public class PagedListInfo {
         if ((i - 1) * itemsPerPage == currentOffset) {
           links.append(" <b>" + i + "</b> ");
         } else {
-          links.append("<a href='" + link + "&offset=" + ((i - 1) * itemsPerPage) + "'> " + i + " </a>");
+          links.append("<a href=\"" + link + "&offset=" + ((i - 1) * itemsPerPage) + "\"> " + i + " </a>");
         }
       }
       links.append("]");
@@ -962,6 +962,10 @@ public class PagedListInfo {
       return false;
     }
   }
+  
+  public String getRefreshTag(String tmp) {
+    return ("<a href=\"" + link + "\"> " + tmp + " </a>");
+  }
 
 
   /**
@@ -977,6 +981,10 @@ public class PagedListInfo {
       listFilters.remove("listFilter" + param);
       listFilters.put("listFilter" + param, value);
     }
+  }
+  
+  public boolean hasLink() {
+    return (link != null && !"".equals(link.trim()));
   }
 
 
