@@ -27,6 +27,7 @@
   <property name="lf" value="${line.separator}"/>
   <property name="base.dir" value="${basedir}"/>
   <property name="bin.dir" value="${base.dir}${fs}bin"/>
+  <property name="doc.dir" value="${base.dir}${fs}doc"/>
   <property name="lib.dir" value="${base.dir}${fs}lib"/>
   <property name="src.dir" value="${base.dir}${fs}src"/>
   <property name="src.classes.dir" value="${src.dir}${fs}java"/>
@@ -647,6 +648,12 @@
          compress="true"
          manifest="${pref.dir}/cfs/war/MANIFEST.MF"
          />
+    <!-- Create the distributable .zip file -->
+    <zip destfile="${dist.dir}/dhcrm.war.zip">
+      <fileset dir="${doc.dir}" includes="Binary*EULA.rtf"/>
+      <fileset dir="${base.dir}" includes="README-WAR.txt"/>
+      <fileset dir="${dist.dir}" includes="darkhorse.war"/>
+    </zip>
     <!-- Cleanup files -->
     <delete dir="${dist.dir}/cfs"/>
   </target>
