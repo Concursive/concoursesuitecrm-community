@@ -1017,12 +1017,52 @@
   <action name="ReportGenerator" class="org.aspcfs.modules.reports.actions.ReportGenerator">
     <forward name="DefaultOK" resource="/admin/system_process_ok.jsp" layout="nav"/>
   </action>
-  
-  <action name="MyTest" class="org.aspcfs.modules.mycfs.actions.Test">
-    <bean name="testBean" class="org.aspcfs.modules.mycfs.base.TestBean" scope="request"/>
-    <forward name="TestOK" resource="/mycfs/mycfs_test.jsp" layout="nav"/>
-    <forward name="TestSaveERROR" resource="/MyTest.do?command=Default"/>
-    <forward name="TestSaveOK" resource="/mycfs/mycfs_test_saveok.jsp" layout="nav"/>
+  <!-- Initial Setup actions -->
+  <action name="SetupServer" class="org.aspcfs.modules.setup.actions.SetupServer">
+    <forward name="SubmitProcessOK" resource="/service/system_process_packet.jsp"/>
+  </action>
+  <action name="Setup" class="org.aspcfs.modules.setup.actions.Setup">
+    <bean name="registration" class="org.aspcfs.modules.setup.beans.RegistrationBean" scope="request" />
+    <forward name="SetupOK" resource="/setup/welcome.jsp" layout="dhv"/>
+    <forward name="SetupHaveRegOK" resource="/setup/validate.jsp" layout="dhv"/>
+    <forward name="SetupNeedRegOK" resource="/setup/register.jsp" layout="dhv"/>
+    <forward name="SendRegERROR" resource="/setup/register.jsp" layout="dhv"/>
+    <forward name="SubmitRegistrationOK" resource="/setup/submitted.jsp" layout="dhv"/>
+    <forward name="SubmitProcessOK" resource="/service/system_process_packet.jsp"/>
+    <forward name="ValidateRETRY" resource="/setup/validate.jsp" layout="dhv"/>
+    <forward name="ValidateOK" resource="/setup/validate_success.jsp" layout="dhv"/>
+  </action>
+  <action name="SetupDirectory" class="org.aspcfs.modules.setup.actions.Setup">
+    <forward name="ConfigureDirectoryCheckOK" resource="/setup/configure_directory.jsp" layout="dhv"/>
+    <forward name="ConfigureDirectoryERROR" resource="/setup/configure_directory.jsp" layout="dhv"/>
+    <forward name="ConfigureDirectoryConfirmOK" resource="/setup/configure_directory_confirm.jsp" layout="dhv"/>
+    <forward name="ConfigureDirectoryOK" resource="/SetupDirectory.do?command=ConfigureDirectoryFinalize"/>
+    <forward name="ConfigureDirectoryCompleteOK" resource="/setup/configure_directory_success.jsp" layout="dhv"/>
+  </action>
+  <action name="SetupDatabase" class="org.aspcfs.modules.setup.actions.Setup">
+    <bean name="database" class="org.aspcfs.modules.setup.beans.DatabaseBean" scope="request" />
+    <forward name="ConfigureDatabaseCheckOK" resource="/setup/configure_database.jsp" layout="dhv"/>
+    <forward name="ConfigureDatabaseERROR" resource="/setup/configure_database.jsp" layout="dhv"/>
+    <forward name="ConfigureDatabaseConfirmOK" resource="/setup/configure_database_confirm.jsp" layout="dhv"/>
+    <forward name="ConfigureDatabaseOK" resource="/setup/configure_database_success.jsp" layout="dhv"/>
+    <forward name="ConfigureDatabaseCreateOK" resource="/setup/configure_database_create_success.jsp" layout="dhv"/>
+    <forward name="ConfigureDatabaseCreateERROR" resource="/SetupDatabase.do?command=ConfigureDatabaseCheck" layout="dhv"/>
+  </action>
+  <action name="SetupServer" class="org.aspcfs.modules.setup.actions.Setup">
+    <bean name="server" class="org.aspcfs.modules.setup.beans.ServerBean" scope="request" />
+    <forward name="ConfigureServerCheckOK" resource="/setup/configure_server.jsp" layout="dhv"/>
+    <forward name="ConfigureServerERROR" resource="/setup/configure_server.jsp" layout="dhv"/>
+    <forward name="ConfigureServerConfirmOK" resource="/setup/configure_server_confirm.jsp" layout="dhv"/>
+    <forward name="ConfigureServerOK" resource="/setup/configure_server_success.jsp" layout="dhv"/>
+    <forward name="SendMailOK" resource="/setup/configure_server_mail_success.jsp" layout="style"/>
+    <forward name="SendMailERROR" resource="/setup/configure_server_mail_error.jsp" layout="style"/>
+  </action>
+  <action name="SetupUser" class="org.aspcfs.modules.setup.actions.Setup">
+    <bean name="user" class="org.aspcfs.modules.setup.beans.UserBean" scope="request" />
+    <forward name="ConfigureUserCheckOK" resource="/setup/configure_user.jsp" layout="dhv"/>
+    <forward name="ConfigureUserERROR" resource="/setup/configure_user.jsp" layout="dhv"/>
+    <forward name="ConfigureUserOK" resource="/setup/configure_user_success.jsp" layout="dhv"/>
+    <forward name="ConfigureUserDatabaseERROR" resource="/SetupDatabase.do?command=ConfigureDatabaseCheck"/>
   </action>
   
   <!-- 
