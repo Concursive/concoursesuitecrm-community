@@ -72,13 +72,22 @@
 	
 	</table>
 	<br>
+	       <% if (!(((String)request.getSession().getAttribute("override")) == null)) {%>
+	       
+	       <div margintop=5 align=center width=285>
+        <input type=hidden name="oid" value="<%=((String)request.getSession().getAttribute("override"))%>">
+        <a href="RevenueManager.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("previousId"))%>">Up One Level</a> |
+        <a href="RevenueManager.do?command=Dashboard&reset=1">Back to My Dashboard</a>
+	 </div>
+      <%}%>
+     
 	<table width=285 cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
 	
 	<tr bgcolor="#DEE0FA">
-          <td width=100% valign=center colspan=1 align=center>
+          <td width=100% valign=center colspan=1>
 	    Reporting Staff
           </td>
-	  <td width=55 valign=center colspan=1 align=center>
+	  <td width=55 valign=center colspan=1>
 	    YTD
           </td>
         </tr>
@@ -122,7 +131,7 @@
       <table width=100% cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
 	<td>Account Name</td>
-          <td>Amount</td>
+          <td>YTD</td>
         </tr>
 <%
 	Iterator n = MyRevList.iterator();
@@ -152,13 +161,8 @@
 	  
       </table>
       <br>
-       <% if (!(((String)request.getSession().getAttribute("override")) == null)) {%>
-        <input type=hidden name="oid" value="<%=((String)request.getSession().getAttribute("override"))%>">
-        <a href="RevenueManager.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("previousId"))%>">Up One Level</a> |
-        <a href="RevenueManager.do?command=Dashboard&reset=1">Back to My Dashboard</a>
-      <%}%>
+
       
-      <br>
       <!--dhv:pagedListControl object="DBRevenueListInfo" tdClass="row1"/-->
     </td>
 </table>

@@ -75,6 +75,7 @@ public final class RevenueManager extends CFSModule {
     //RevenueList fullRevList = new RevenueList();
     RevenueList tempRevList = new RevenueList();
     RevenueList realFullRevList = new RevenueList();
+    
     OrganizationList displayList = new OrganizationList();
 
     XYDataSource categoryData = null;
@@ -134,11 +135,11 @@ public final class RevenueManager extends CFSModule {
 
       String range = fullChildList.getUserListIds(idToUse);
       
-
-      
       thisRec.setRevenueIsValid(false, true);
       realFullRevList.setYear(y);
+      
       displayList.setRevenueYear(y);
+      
       displayList.setBuildRevenueYTD(true);
       
       //System.out.println("here is the session variable: " + context.getSession().getAttribute("RevenueGraphType"));
@@ -161,13 +162,14 @@ public final class RevenueManager extends CFSModule {
 
       while (z.hasNext()) {
         Revenue tempRev = (Revenue) (z.next());
-        //tempOppList is MY (or user drilled-to) Revs
+        //tempRevList is MY (or user drilled-to) Revs
         if (tempRev.getOwner() == idToUse) {
           tempRevList.addElement(tempRev);
         }
       }
       
-      displayList.setOwnerId(idToUse);
+      //displayList.setOwnerId(idToUse);
+      displayList.setRevenueOwnerId(idToUse);
       displayList.setPagedListInfo(revenueInfo);
       displayList.buildList(db);
       

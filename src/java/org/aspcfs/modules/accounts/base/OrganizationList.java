@@ -39,8 +39,8 @@ public class OrganizationList extends Vector {
   
   private int revenueType = -1;
   private int revenueYear = -1;
+  private int revenueOwnerId = -1;
   private boolean buildRevenueYTD = false;
-
 
   /**
    *  Constructor for the OrganizationList object, creates an empty list. After
@@ -173,6 +173,13 @@ public void setBuildRevenueYTD(boolean buildRevenueYTD) {
   public void setName(String tmp) {
     this.name = tmp;
   }
+  
+public int getRevenueOwnerId() {
+	return revenueOwnerId;
+}
+public void setRevenueOwnerId(int revenueOwnerId) {
+	this.revenueOwnerId = revenueOwnerId;
+}
 
 
   /**
@@ -505,6 +512,10 @@ public void setBuildRevenueYTD(boolean buildRevenueYTD) {
       sqlFilter.append("AND o.entered < ? ");
       sqlFilter.append("AND o.modified < ? ");
     }
+        
+    if (revenueOwnerId > -1) {
+      sqlFilter.append("AND o.org_id in (SELECT org_id from revenue WHERE owner = ?) ");
+    }
   }
 
 
@@ -565,6 +576,10 @@ public void setBuildRevenueYTD(boolean buildRevenueYTD) {
       pst.setTimestamp(++i, nextAnchor);
     }
 
+    if (revenueOwnerId > -1) {
+      pst.setInt(++i, revenueOwnerId);
+    }
+    
     return i;
   }
 
