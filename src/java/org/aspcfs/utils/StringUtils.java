@@ -358,6 +358,27 @@ public class StringUtils {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  file                     Description of the Parameter
+   *@return                          Description of the Return Value
+   *@exception  java.io.IOException  Description of the Exception
+   */
+  public static String loadText(File file) throws java.io.IOException {
+    String ls = System.getProperty("line.separator");
+    StringBuffer text = new StringBuffer();
+    BufferedReader in = new BufferedReader(new FileReader(file));
+    String line = null;
+    while ((line = in.readLine()) != null) {
+      text.append(line);
+      text.append(ls);
+    }
+    in.close();
+    return text.toString();
+  }
+
+
+  /**
    *  Loads text into a string from a file
    *
    *@param  filename                 Description of the Parameter
