@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="classic"
+		 name="opportunities"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -25,7 +25,7 @@
 		<defaultValueExpression><![CDATA["my"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="userid_range" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["1,2"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Close Date from]]></parameterDescription>
@@ -198,10 +198,10 @@ x.description asc, oc.closedate asc]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[close date]]></text>
+				<text><![CDATA[CLOSE DATE]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -217,10 +217,10 @@ x.description asc, oc.closedate asc]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[probability]]></text>
+				<text><![CDATA[PROBABILITY]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -236,10 +236,10 @@ x.description asc, oc.closedate asc]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[amount]]></text>
+				<text><![CDATA[AMOUNT]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -258,7 +258,7 @@ x.description asc, oc.closedate asc]]></queryString>
 $F{header_acctlink} != null &&
 $F{header_acctlink}.intValue() > 0)]]></printWhenExpression>
 						</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{acct_name} + ": " + 
@@ -281,7 +281,7 @@ $F{header_description}]]></textFieldExpression>
 $F{header_contactlink} != null && 
 $F{header_contactlink}.intValue() > 0)]]></printWhenExpression>
 						</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{last_name} + ", " +
@@ -360,7 +360,7 @@ $P{user_name} + "\r\n" +
 						mode="Transparent"
 						x="360"
 						y="1"
-						width="57"
+						width="54"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -378,7 +378,7 @@ $P{user_name} + "\r\n" +
 						mode="Transparent"
 						x="425"
 						y="1"
-						width="50"
+						width="43"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
