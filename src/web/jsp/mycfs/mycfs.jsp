@@ -33,7 +33,7 @@
 </tr>
 <tr style="visibility:hidden"><td></td></tr>
 <tr valign="top">
-  <td valign="top" bgcolor="#FFFFFF" width="300">
+  <td valign="top" bgcolor="#FFFFFF" width="320">
     <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="310" height="380" src="MyCFS.do?command=MonthView&source=Calendar<%=returnPage!=null?"&return="+returnPage:""%>">
     </iframe>
   </td>
