@@ -40,7 +40,7 @@
 		<defaultValueExpression><![CDATA[new Integer(-1)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="lookup_department_where" isForPrompting="false" class="java.lang.String">
-		<parameterDescription><![CDATA["AND t.department_code = 6"]]></parameterDescription>
+		<parameterDescription><![CDATA[AND t.department_code = $P{lookup_department}]]></parameterDescription>
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT t.*, 

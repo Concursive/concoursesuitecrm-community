@@ -25,8 +25,8 @@
 		<defaultValueExpression><![CDATA[new Integer(-1)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="lookup_department_where" isForPrompting="false" class="java.lang.String">
-		<parameterDescription><![CDATA[" AND t.department_code = $P{lookup_department} "]]></parameterDescription>
-		<defaultValueExpression><![CDATA["  "]]></defaultValueExpression>
+		<parameterDescription><![CDATA[AND t.department_code = $P{lookup_department}]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Entered Date from]]></parameterDescription>
@@ -41,16 +41,15 @@
 
 ]]></defaultValueExpression>
 	</parameter>
-	<queryString><![CDATA[select distinct ld.code as lookup_department, 
-ld.description as dept  
-from ticket t
-left join lookup_department ld
-on t.department_code = ld.code
-WHERE
-     t.entered >= $P{date_start}
-     AND t.entered <= $P{date_end}
-     $P!{lookup_department_where}
-order by dept]]></queryString>
+	<queryString><![CDATA[SELECT DISTINCT ld.code AS lookup_department, 
+ld.description AS dept  
+FROM ticket t
+LEFT JOIN lookup_department ld
+ON t.department_code = ld.code
+WHERE t.entered >= $P{date_start}
+AND t.entered <= $P{date_end}
+$P!{lookup_department_where}
+ORDER BY dept]]></queryString>
 	<field name="lookup_department" class="java.lang.Integer"/>
 	<field name="dept" class="java.lang.String"/>
 		<background>

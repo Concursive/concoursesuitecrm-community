@@ -25,7 +25,7 @@
 		<defaultValueExpression><![CDATA[new Integer(-1)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="lookup_department_where" isForPrompting="false" class="java.lang.String">
-		<parameterDescription><![CDATA["AND t.department_code < 9999"]]></parameterDescription>
+		<parameterDescription><![CDATA[AND t.department_code < 9999]]></parameterDescription>
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ticket_severity" isForPrompting="true" class="java.lang.Integer">
@@ -33,7 +33,7 @@
 		<defaultValueExpression><![CDATA[new Integer(-1)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ticket_severity_where" isForPrompting="false" class="java.lang.String">
-		<parameterDescription><![CDATA["AND t.scode < 9999"]]></parameterDescription>
+		<parameterDescription><![CDATA[AND t.scode < 9999]]></parameterDescription>
 		<defaultValueExpression><![CDATA[$P{ticket_severity} == null ?
 " AND t.scode = " + $P{ticket_severity}.intValue() +" ":
 " AND t.scode =" +
@@ -50,7 +50,7 @@
 	<parameter name="department_where" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression><![CDATA[$P{lookup_department}== null ? 
  "and t.department_code is null ":
-"and t.department_code = " +
+ "and t.department_code = " +
  $P{lookup_department}.intValue() +" "]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT count(*) AS cnt 
