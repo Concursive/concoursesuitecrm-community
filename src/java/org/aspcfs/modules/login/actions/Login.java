@@ -14,7 +14,7 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.login.beans.LoginBean;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.utils.StringUtils;
-
+import java.io.File;
 
 /**
  *  The CFS Login module.
@@ -115,31 +115,35 @@ public final class Login extends CFSModule {
       }
       //Check the license
       try {
-        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
-        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
-        //The edition will be shown
-        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
-        PreparedStatement pst = db.prepareStatement(
-            "SELECT count(*) AS user_count " +
-            "FROM access " +
-            "WHERE user_id > 0 " +
-            "AND role_id > 0 " +
-            "AND enabled = ? ");
-        pst.setBoolean(1, true);
-        ResultSet rs = pst.executeQuery();
-        if (rs.next()) {
-          if (rs.getInt("user_count") <= Integer.parseInt(lpd.substring(7)) || "-1".equals(lpd.substring(7))) {
-            continueId = true;
+        File keyFile = new File((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
+        File inputFile = new File((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt");
+        if (keyFile.exists() && inputFile.exists()) {
+          java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
+          org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+          //The edition will be shown
+          String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+          PreparedStatement pst = db.prepareStatement(
+              "SELECT count(*) AS user_count " +
+              "FROM access " +
+              "WHERE user_id > 0 " +
+              "AND role_id > 0 " +
+              "AND enabled = ? ");
+          pst.setBoolean(1, true);
+          ResultSet rs = pst.executeQuery();
+          if (rs.next()) {
+            if (rs.getInt("user_count") <= Integer.parseInt(lpd.substring(7)) || "-1".equals(lpd.substring(7))) {
+              continueId = true;
+            } else {
+              loginBean.setMessage("* Access denied: License error");
+            }
           }
+          rs.close();
+          pst.close();
+          userId2 = lpd.substring(7);
+        } else {
+          loginBean.setMessage("* Access denied: License not found");
         }
-        rs.close();
-        pst.close();
-        userId2 = lpd.substring(7);
       } catch (Exception e) {
-        loginBean.setMessage("* Access denied: License not found");
-        continueId = true;
-      }
-      if (!continueId) {
         loginBean.setMessage("* Access denied: License is not up-to-date");
       }
       if (continueId) {
