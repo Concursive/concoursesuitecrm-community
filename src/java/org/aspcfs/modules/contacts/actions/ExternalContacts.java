@@ -401,33 +401,25 @@ public final class ExternalContacts extends CFSModule {
    *@since           1.1
    */
   public String executeCommandListContacts(ActionContext context) {
-
     if (!(hasPermission(context, "contacts-external_contacts-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
     externalContactsInfo.setLink("/ExternalContacts.do?command=ListContacts");
-
     if (context.getRequest().getParameter("doSearch") != null || ("search".equals(externalContactsInfo.getListView()))) {
       externalContactsInfo.addFilter(1, "-1");
     }
-
     Connection db = null;
     ContactList contactList = new ContactList();
-
     ContactTypeList contactTypeList = new ContactTypeList();
     context.getSession().removeAttribute("ContactMessageListInfo");
-
     try {
       db = this.getConnection(context);
-
       contactTypeList.setShowPersonal(true);
       contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
-      contactTypeList.buildList(db);
       contactTypeList.addItem(-1, "All Contact Types");
+      contactTypeList.buildList(db);
       context.getRequest().setAttribute("ContactTypeList", contactTypeList);
 
       contactList.setPagedListInfo(externalContactsInfo);
