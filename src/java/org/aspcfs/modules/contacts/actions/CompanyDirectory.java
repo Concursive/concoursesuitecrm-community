@@ -246,6 +246,9 @@ public final class CompanyDirectory extends CFSModule {
         }
         context.getRequest().setAttribute("ContactDetails", thisEmployee);
         if ("true".equals(context.getRequest().getParameter("popup"))) {
+          if ("troubletickets".equals(context.getRequest().getParameter("source"))) {
+            return ("TroubleTicketsCloseInsertPopup");
+          }
           return ("CloseInsertContactPopup");
         }
         return ("EmployeeDetailsOK");
@@ -257,7 +260,7 @@ public final class CompanyDirectory extends CFSModule {
         }
       } else {
         if (thisEmployee.getId() == -1) {
-          if (!"true".equals(context.getRequest().getParameter("popup"))) {
+          if (!"true".equals(context.getRequest().getParameter("popup")) || "troubletickets".equals(context.getRequest().getParameter("source"))) {
             return (executeCommandPrepare(context));
           } else {
             return "ReloadAddContactPopup";
@@ -351,7 +354,6 @@ public final class CompanyDirectory extends CFSModule {
     }
     try {
       db = this.getConnection(context);
-      db = this.getConnection(context);
       //prepare the Department List if employee is being added.
       LookupList departmentList = new LookupList(db, "lookup_department");
       departmentList.addItem(0, "--None--");
@@ -363,8 +365,8 @@ public final class CompanyDirectory extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (context.getRequest().getParameter("popup") != null) {
-        return ("PopupPrepareOK");
+      if(context.getRequest().getParameter("actionSource") != null){
+        return this.getReturn(context, "EmployeePrepare");
       }
       return ("PrepareOK");
     } else {
