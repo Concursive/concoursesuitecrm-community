@@ -220,7 +220,7 @@ public class SurveyAnswerList extends Vector {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM active_survey_answers sa, active_survey_responses sr " +
-        "WHERE sa.question_id > -1 ");
+        "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id ");
 
     createFilter(sqlFilter);
 
@@ -273,7 +273,7 @@ public class SurveyAnswerList extends Vector {
     sqlSelect.append("sa.*, c.namelast as lastname, c.namefirst as firstname, c.contact_id as contactid, sr.entered as entered " +
         "FROM active_survey_answers sa, active_survey_responses sr " +
         "LEFT JOIN contact c ON (c.contact_id = sr.contact_id) " +
-        "WHERE sa.question_id > -1 "
+        "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id "
         );
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -325,9 +325,7 @@ public class SurveyAnswerList extends Vector {
     }
 
     if (responseId != -1) {
-      sqlFilter.append("AND sa.response_id = ? ");
-    } else {
-      sqlFilter.append("AND sa.response_id = sr.response_id ");
+      sqlFilter.append("AND sr.response_id = ? ");
     }
 
     if (contactId != -1) {

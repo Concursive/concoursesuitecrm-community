@@ -54,7 +54,7 @@ Response Details
              </tr>
                <tr class="title">
                   <td valign="center" align="left" width="24">
-                    Answer(s) Provided
+                    Answer Provided
                   </td>
                </tr>
                  <tr>
