@@ -134,7 +134,7 @@ Add Ticket
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 <%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','600','yes','yes');">Create New Contact</a>]
+      [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','550','yes','yes');">Create New Contact</a>]
     </td>
 	</tr>
 </table>

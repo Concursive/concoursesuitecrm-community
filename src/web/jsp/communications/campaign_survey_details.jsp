@@ -199,5 +199,5 @@ Survey Details
 <dhv:permission name="campaign-campaigns-surveys-delete">
 <input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
 </dhv:permission>
-<input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','700','680','yes','yes');">
+<input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','700','550','yes','yes');">
 
