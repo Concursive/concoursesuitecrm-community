@@ -33,15 +33,12 @@ public class AddressFormatter {
    *@param  thisAddress  Description of the Parameter
    */
   public void format(Address thisAddress) {
-    //Add a 0 to the zip code when it was stripped by a number parser
-    String zipCode = thisAddress.getZip();
-    if (zipCode != null) {
-      if (zipCode.trim().length() == 4 && "UNITED STATES".equals(thisAddress.getCountry())) {
-        thisAddress.setZip("0" + zipCode.trim());
-      }
+    String country = thisAddress.getCountry();
+    //Add a default country or else state cannot be retrieved
+    if (country == null || country.trim().length() == 0) { 
+      country = "UNITED STATES";
     }
     //Format the country
-    String country = thisAddress.getCountry();
     if (country != null) {
       country = country.toUpperCase().trim();
       if ("UNITED STATES OF AMERICA".equals(country) ||
@@ -52,6 +49,13 @@ public class AddressFormatter {
         country = "UNITED KINGDOM";
       }
       thisAddress.setCountry(country);
+    }
+    //Add a 0 to the zip code when it was stripped by a number parser
+    String zipCode = thisAddress.getZip();
+    if (zipCode != null) {
+      if (zipCode.trim().length() == 4 && "UNITED STATES".equals(thisAddress.getCountry())) {
+        thisAddress.setZip("0" + zipCode.trim());
+      }
     }
   }
 }
