@@ -31,7 +31,11 @@ else{%>
     <table cellpadding="4" cellspacing="0" border="0" width="95%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr valign="center">
         <td>
-           Are you sure you wish to permanently delete this object from CFS?
+          <center>
+           <strong>
+           <%= (Dialog.getHeader() != null && !"".equals(Dialog.getHeader())) ? Dialog.getHeader() : "Are you sure you wish to permanently delete this object from CFS?" %>
+          </strong>
+         </center>
         </td>
       </tr>
       <tr><td>&nbsp;</td></tr>
