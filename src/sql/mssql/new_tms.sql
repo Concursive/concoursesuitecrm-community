@@ -125,7 +125,6 @@ CREATE TABLE ticketlog (
   ,enteredby INT NOT NULL REFERENCES access(user_id)
   ,modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,modifiedby INT NOT NULL REFERENCES access(user_id)
-  ,product_id INT REFERENCES product_catalog(product_id)
   -- DO NOT PUT ANY MORE FIELDS IN THIS TABLE HERE
   -- THEY MUST BE APPENDED to new_tms_append_fields.sql because of referential
   -- integrity
