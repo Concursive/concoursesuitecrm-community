@@ -52,24 +52,21 @@
     var url = "TroubleTickets.do?command=OrganizationJSList&orgId=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
-  
   function checkForm(form) {
-      formTest = true;
-      message = "";
-      
-      if ((!checkPhone(form.phone1number.value))) { 
-        message += "- The entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
-        formTest = false;
-      }
-      if (formTest == false) {
-        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-        return false;
-      } else {
-        return true;
-      }
+    formTest = true;
+    message = "";
+    if ((!checkPhone(form.phone1number.value))) { 
+      message += "- The entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    } else {
+      return true;
+    }
   }
-  
-  </script>
+</script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -92,27 +89,23 @@ Add Ticket<br>
     <td class="containerBack">
 <form name="addticket" action="AccountTickets.do?command=InsertTicket&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <% if (request.getParameter("contact") != null) {%>
-<input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
+  <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
 <%} else {%>
-<input type="submit" value="Insert" name="Save">
+  <input type="submit" value="Insert" name="Save">
 <%}%>
-
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
-
-<input type="reset" value="Reset">	
-<%= showAttribute(request, "closedError") %>
-<br>
-<%= showError(request, "actionError") %>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
+  <input type="reset" value="Reset">	
+  <%= showAttribute(request, "closedError") %>
+  <br>
+  <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-
 	<tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Add a new Ticket</strong>
     </td>     
 	</tr>
 	<tr class="containerBody">
-    <td width=100 class="formLabel">
+    <td class="formLabel">
       Ticket Source
     </td>
     <td>
@@ -120,40 +113,36 @@ Add Ticket<br>
     </td>
 	</tr>	
 	<tr class="containerBody">
-    <td width=100 class="formLabel">
+    <td class="formLabel">
       Organization
     </td>
     <td>
-      <%=toHtml(OrgDetails.getName())%>
-      <input type=hidden name="orgId" value="<%=OrgDetails.getOrgId()%>">
+      <%= toHtml(OrgDetails.getName()) %>
+      <input type="hidden" name="orgId" value="<%=OrgDetails.getOrgId()%>">
     </td>
 	</tr>	
 	<tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Contact
     </td>
-    <td valign=center>
+    <td>
 <% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
       <%= ContactList.getEmptyHtmlSelect("contactId") %>
 <%} else {%>
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 <%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      <input type="checkbox" name="contact" 
-<% if ( request.getParameter("contact") != null ) {%>
-      checked
-<%}%>
+      <input type="checkbox" name="contact"<dhv:evaluate if="<%= request.getParameter("contact") != null %>"> checked</dhv:evaluate>
       onClick="javascript:this.form.action='AccountTickets.do?command=AddTicket&auto-populate=true#newcontact';this.form.submit()">Add new
       <a name="newcontact"></a> 
     </td>
 	</tr>
 </table>
-	
 <% if ( request.getParameter("contact") != null ) {%>
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>New Contact</strong>
     </td>     
 	</tr>
@@ -161,16 +150,16 @@ Add Ticket<br>
     <td class="formLabel">
       First Name
     </td>
-    <td valign=center>
-      <input type=text size=35 name="thisContact_nameFirst" value="<%=TicketDetails.getThisContact().getNameFirst()%>">
+    <td>
+      <input type="text" size="35" name="thisContact_nameFirst" value="<%= TicketDetails.getThisContact().getNameFirst() %>">
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
       Last Name
     </td>
-    <td valign=center>
-      <input type=text size=35 name="thisContact_nameLast" value="<%=TicketDetails.getThisContact().getNameLast()%>">
+    <td>
+      <input type="text" size="35" name="thisContact_nameLast" value="<%= TicketDetails.getThisContact().getNameLast() %>">
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
@@ -178,8 +167,8 @@ Add Ticket<br>
     <td class="formLabel">
       Title
     </td>
-    <td valign=center>
-      <input type=text size=35 name="thisContact_title" value="<%=TicketDetails.getThisContact().getTitle()%>">
+    <td>
+      <input type="text" size="35" name="thisContact_title" value="<%= TicketDetails.getThisContact().getTitle() %>">
     </td>
   </tr>
   <tr class="containerBody">
@@ -187,8 +176,8 @@ Add Ticket<br>
       Email
     </td>
     <td>
-      <input type=hidden name="email1type" value="1">
-      <input type=text size=40 name="email1address" maxlength=255>
+      <input type="hidden" name="email1type" value="1">
+      <input type="text" size="40" name="email1address" maxlength="255">
     </td>
   </tr>
   <tr class="containerBody">
@@ -196,12 +185,9 @@ Add Ticket<br>
       Phone
     </td>
     <td>
-      <input type=hidden name="phone1type" value="1">
-      <!--input type=text size=3 name="phone1ac" maxlength=3>-
-      <input type=text size=3 name="phone1pre" maxlength=3>-
-      <input type=text size=4 name="phone1number" maxlength=4>ext. -->
-      <input type=text size=20 name="phone1number">&nbsp;ext.
-      <input type=text size=5 name="phone1ext" maxlength=10>
+      <input type="hidden" name="phone1type" value="1">
+      <input type="text" size="20" name="phone1number">&nbsp;ext.
+      <input type="text" size="5" name="phone1ext" maxlength="10">
     </td>
   </tr>
 </table>
@@ -210,7 +196,7 @@ Add Ticket<br>
 <a name="categories"></a> 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Classification</strong>
     </td>     
 	</tr>
@@ -219,13 +205,12 @@ Add Ticket<br>
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
     <td valign="top">
-      <textarea name="problem" cols=55 rows=3><%=toString(TicketDetails.getProblem())%></textarea>
+      <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
       <font color="red">*</font> <%= showAttribute(request, "problemError") %>
-      <input type=hidden name=refresh value="-1">
+      <input type="hidden" name="refresh" value="-1">
     </td>
 	</tr>
-  
-  <dhv:include name="tickets-code" none="true">
+<dhv:include name="tickets-code" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Category
@@ -234,21 +219,19 @@ Add Ticket<br>
       <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
     </td>
 	</tr>
-  </dhv:include>
-  
-  <dhv:include name="tickets-subcat1" none="true">
+</dhv:include>
+<dhv:include name="tickets-subcat1" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Sub-level 1
     </td>
     <td>
       <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
-      <input type=hidden name="close" value="">
+      <input type="hidden" name="close" value="">
     </td>
 	</tr>
-  </dhv:include>
-  
-  <dhv:include name="tickets-subcat2" none="true">
+</dhv:include>
+<dhv:include name="tickets-subcat2" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Sub-level 2
@@ -257,9 +240,8 @@ Add Ticket<br>
       <%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
     </td>
 	</tr>
-  </dhv:include>
-	
-  <dhv:include name="tickets-subcat3" none="true">
+</dhv:include>
+<dhv:include name="tickets-subcat3" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Sub-level 3
@@ -268,18 +250,17 @@ Add Ticket<br>
       <%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
     </td>
 	</tr>
-  </dhv:include>
+</dhv:include>
 </table>
 <br>
 <a name="department"></a> 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Assignment</strong>
     </td>     
 	</tr>
-  
-  <dhv:include name="tickets-severity" none="true">
+<dhv:include name="tickets-severity" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Severity
@@ -288,9 +269,8 @@ Add Ticket<br>
       <%= SeverityList.getHtmlSelect("severityCode",  TicketDetails.getSeverityCode()) %>
     </td>
 	</tr>
-  </dhv:include>
-	
-  <dhv:include name="tickets-priority" none="true">
+</dhv:include>
+<dhv:include name="tickets-priority" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Priority
@@ -299,8 +279,7 @@ Add Ticket<br>
       <%= PriorityList.getHtmlSelect("priorityCode", TicketDetails.getPriorityCode()) %>
     </td>
 	</tr>
-  </dhv:include>
-  
+</dhv:include>
   <tr class="containerBody">
     <td class="formLabel">
       Department
@@ -310,10 +289,10 @@ Add Ticket<br>
     </td>
 	</tr>
 	<tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel">
       Assign To
     </td>
-    <td valign=center>
+    <td>
       <%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
     </td>
 	</tr>
@@ -322,14 +301,14 @@ Add Ticket<br>
       Entry Comments
     </td>
     <td>
-      <textarea name="comment" cols="55" rows="3"><%=toString(TicketDetails.getComment())%></textarea>
+      <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
     </td>
 	</tr>
 </table>
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Resolution</strong>
     </td>     
 	</tr>
@@ -338,8 +317,8 @@ Add Ticket<br>
       Solution
     </td>
     <td>
-      <textarea name=solution cols=55 rows=3><%= toString(TicketDetails.getSolution()) %></textarea><br>
-      <input type=checkbox name="closeNow">Close ticket
+      <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
+      <input type="checkbox" name="closeNow">Close ticket
       <br><input type="checkbox" name="kbase">Add this solution to Knowledge Base &nbsp;
     </td>
 	</tr>
@@ -350,7 +329,6 @@ Add Ticket<br>
 <%} else {%>
 <input type="submit" value="Insert" name="Save">
 <%}%>
-
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">

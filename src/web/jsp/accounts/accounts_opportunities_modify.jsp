@@ -8,11 +8,9 @@
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
-
 <% if (request.getParameter("return") == null) {%>
 	<a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= OrgDetails.getOrgId() %>">Opportunity Details</a> >
 <%}%>
-
 Modify Opportunity<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -29,60 +27,50 @@ Modify Opportunity<br>
   </tr>
   <tr>
     <td class="containerBack">
-    
-<input type="hidden" name="headerId" value="<%= HeaderDetails.getId() %>">
-<input type="hidden" name="modified" value="<%= HeaderDetails.getModified() %>">
-
+      <input type="hidden" name="headerId" value="<%= HeaderDetails.getId() %>">
+      <input type="hidden" name="modified" value="<%= HeaderDetails.getModified() %>">
 <% if (request.getParameter("return") != null) {%>
-  <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+      <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
-
-<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-
+      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
 <%}%>
-
-<input type="reset" value="Reset">
-<br>
-<%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-  <td colspan=2 valign=center align=left>
-    <strong><%= HeaderDetails.getDescription() %></strong>
-  </td>     
-</tr>
-
-<tr class="containerBody">
-  <td nowrap class="formLabel">
-    Description
-  </td>
-  <td valign=center>
-    <input type=text size=50 name="description" value="<%= toHtmlValue(HeaderDetails.getDescription()) %>">
-    <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
-  </td>
-</tr>
-</table>
-&nbsp;
-<br>
-<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
-	<%}%>
-<%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
-<%}%>
-
-<input type="reset" value="Reset">
-<input type="hidden" name="dosubmit" value="true">
-  </td>
+      <input type="reset" value="Reset"><br>
+      <%= showError(request, "actionError") %>
+      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+        <tr class="title">
+        <td colspan="2">
+          <strong><%= HeaderDetails.getDescription() %></strong>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td nowrap class="formLabel">
+          Description
+        </td>
+        <td>
+          <input type="text" size="50" name="description" value="<%= toHtmlValue(HeaderDetails.getDescription()) %>">
+          <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
+        </td>
+      </tr>
+      </table>
+      &nbsp;
+      <br>
+      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+      <% if (request.getParameter("return") != null) {%>
+        <% if (request.getParameter("return").equals("list")) {%>
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
+        <%}%>
+      <%} else {%>
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
+      <%}%>
+      <input type="reset" value="Reset">
+      <input type="hidden" name="dosubmit" value="true">
+    </td>
   </tr>
-  </table>
+</table>
 </form>
-</body>

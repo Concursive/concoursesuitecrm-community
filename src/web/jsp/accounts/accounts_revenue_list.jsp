@@ -44,65 +44,58 @@ Revenue<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <tr class="title">
   <dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete">
-  <td valign=center align=left>
+  <td width="8">
     <strong>Action</strong>
   </td>
   </dhv:permission>
-  <td width="30%" valign=center align=left>
+  <td width="30%" nowrap>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=description">Description</a></strong>
     <%= RevenueListInfo.getSortIcon("description") %>
   </td>  
-  <td width="20%" valign=center align="center">
+  <td width="20%" nowrap>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.month">Month</a></strong>
     <%= RevenueListInfo.getSortIcon("r.month") %>
   </td>   
-  <td width="20%" valign=center align="center">
+  <td width="20%" nowrap>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.year,r.month">Year</a></strong>
     <%= RevenueListInfo.getSortIcon("r.year,r.month") %>
   </td>
-  <td width="30%" valign=center align="right">
+  <td width="30%" nowrap>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=amount">Amount</a></strong>
     <%= RevenueListInfo.getSortIcon("amount") %>
   </td>
 </tr>
 <%
 	Iterator j = RevenueList.iterator();
-	
 	if ( j.hasNext() ) {
 		int rowid = 0;
-	       	while (j.hasNext()) {
-		
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-		
-		Revenue thisRevenue = (Revenue)j.next();
+    while (j.hasNext()) {
+		  rowid = (rowid != 1?1:2);
+      Revenue thisRevenue = (Revenue)j.next();
 %>      
 		<tr class="containerBody">
 		<dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete">
-      <td width=8 valign=center nowrap class="row<%= rowid %>">
+      <td valign=center nowrap class="row<%= rowid %>">
         <dhv:permission name="accounts-accounts-revenue-edit"><a href="RevenueManager.do?command=Modify&orgId=<%= OrgDetails.getOrgId()%>&id=<%=thisRevenue.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-revenue-delete"><a href="javascript:confirmDelete('RevenueManager.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%=thisRevenue.getId()%>');">Del</a></dhv:permission>
       </td>
-      		</dhv:permission>
-      <td width="30%" valign=center class="row<%= rowid %>">
+    </dhv:permission>
+      <td valign="center" class="row<%= rowid %>">
         <a href="RevenueManager.do?command=Details&id=<%=thisRevenue.getId()%>"><%= toHtml(thisRevenue.getDescription()) %></a>
       </td>
-      <td width="20%" valign=center align="center" class="row<%= rowid %>">
+      <td valign="center" align="center" class="row<%= rowid %>">
         <%= toHtml(thisRevenue.getMonthName()) %>
       </td>
-      <td width="20%" valign=center align="center" class="row<%= rowid %>" nowrap>
+      <td valign="center" align="center" class="row<%= rowid %>" nowrap>
         <%= thisRevenue.getYear() %>
       </td>
-      <td width="30%" valign=center align="right" class="row<%= rowid %>">
+      <td valign="center" align="right" class="row<%= rowid %>">
         $<%=thisRevenue.getAmountCurrency()%>
       </td>
 		</tr>
 <%}%>
 <%} else {%>
 		<tr class="containerBody">
-      <td colspan=5 valign=center>
+      <td colspan="5">
         No revenue found.
       </td>
     </tr>

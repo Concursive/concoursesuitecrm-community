@@ -33,11 +33,11 @@ Tickets<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete">
-    <td valign=center align=left>
+    <td>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td valign=center align=left>
+    <td>
       	<strong>Status</strong>
     </td>
     <td>
@@ -57,41 +57,36 @@ Tickets<br>
 	Iterator j = TicList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
-	while (j.hasNext()) {
-		if (rowid != 1) {
-			rowid = 1;
-		} else {
-			rowid = 2;
-		}
-	
-		Ticket thisTic = (Ticket)j.next();
+    while (j.hasNext()) {
+      rowid = (rowid != 1?1:2);
+      Ticket thisTic = (Ticket)j.next();
 %>   
 	<tr class="containerBody">
     <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete">
-    <td width=8 valign=center nowrap class="row<%= rowid %>">
+    <td width="8" valign="center" nowrap class="row<%= rowid %>">
       <dhv:permission name="accounts-accounts-tickets-edit"><a href="AccountTickets.do?command=ModifyTicket&id=<%=thisTic.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-delete"><a href="javascript:confirmDelete('AccountTickets.do?command=DeleteTicket&orgId=<%=OrgDetails.getOrgId()%>&id=<%=thisTic.getId()%>');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-    <td width=8 nowrap valign=center class="row<%= rowid %>">
+    <td width="8" nowrap valign="center" class="row<%= rowid %>">
 <% if (thisTic.getClosed() == null) { %>
       <font color="green">open</font>
 <%} else {%>
       <font color="red">closed</font>
 <%}%>
     </td>
-    <td  valign=center class="row<%= rowid %>">
+    <td valign="center" class="row<%= rowid %>">
       <a href="AccountTickets.do?command=TicketDetails&id=<%=thisTic.getId()%>"><%= toHtml(thisTic.getProblemHeader()) %></a>&nbsp;
 	<% if (thisTic.getCategoryName() != null) { %>
-	[<%=toHtml(thisTic.getCategoryName())%>]
+      [<%=toHtml(thisTic.getCategoryName())%>]
 	<%}%>
     </td>
-    <td width=65 valign=center nowrap class="row<%= rowid %>">
+    <td width="65" valign="center" nowrap class="row<%= rowid %>">
       <%=toHtml(thisTic.getPriorityName())%>
     </td>
-    <td width=40 valign=center nowrap class="row<%= rowid %>">
+    <td width="40" valign="center" nowrap class="row<%= rowid %>">
       <%=thisTic.getAgeOf()%>
     </td>
-    <td width=160 nowrap valign=center class="row<%= rowid %>">
+    <td width="160" nowrap valign="center" class="row<%= rowid %>">
 <% if (thisTic.getClosed() == null) { %>
       <%=thisTic.getModifiedDateTimeString()%>
 <%} else {%>
@@ -102,7 +97,7 @@ Tickets<br>
 <%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="6" valign="center">
+    <td colspan="6">
       No tickets found.
     </td>
   </tr>
@@ -111,6 +106,7 @@ Tickets<br>
 	<br>
   <dhv:pagedListControl object="AccountTicketInfo"/>
 <br>
-</td></tr>
+</td>
+</tr>
 </table>
 

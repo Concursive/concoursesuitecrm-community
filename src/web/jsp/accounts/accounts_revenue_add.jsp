@@ -35,24 +35,24 @@ Add Revenue<br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Add a New Revenue</strong>
-    </td>     
+    </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Type
     </td>
-    <td valign=center>
-      <%=RevenueTypeList.getHtmlSelect("type", Revenue.getType())%>
+    <td>
+      <%= RevenueTypeList.getHtmlSelect("type", Revenue.getType()) %>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Description
     </td>
-    <td valign=center>
-      <input type=text size=40 name="description" value="<%= toString(Revenue.getDescription()) %>">
+    <td>
+      <input type="text" size="40" name="description" value="<%= toString(Revenue.getDescription()) %>">
       <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
     </td>
   </tr>
@@ -60,7 +60,7 @@ Add Revenue<br>
     <td nowrap class="formLabel">
       Month
     </td>
-    <td valign=center>
+    <td>
       <%= MonthList.getHtml() %>
     </td>
   </tr>
@@ -68,7 +68,7 @@ Add Revenue<br>
     <td nowrap class="formLabel">
       Year
     </td>
-    <td valign=center>
+    <td>
       <%= YearList.getHtml() %>
       <font color="red">*</font> <%= showAttribute(request, "yearError") %>
     </td>
@@ -77,12 +77,11 @@ Add Revenue<br>
     <td nowrap class="formLabel">
       Amount
     </td>
-    <td valign=center>
-      <input type=text size=15 name="amount" value="<%=Revenue.getAmountValue()%>">
+    <td>
+      <input type="text" size="15" name="amount" value="<%=Revenue.getAmountValue()%>">
       <font color="red">*</font> <%= showAttribute(request, "amountError") %>
     </td>
   </tr>
-  
 </table>
 &nbsp;<br>
 <input type="submit" value="Save">

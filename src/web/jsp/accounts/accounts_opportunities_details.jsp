@@ -34,7 +34,7 @@ Opportunity Details<br>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <% FileItem thisFile = new FileItem(); %>
       <strong><%= toHtml(HeaderDetails.getDescription()) %></strong>
       <dhv:evaluate if="<%= HeaderDetails.hasFiles() %>">
@@ -65,34 +65,34 @@ Opportunity Details<br>
  <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
-    <td valign=center align=left>
+    <td>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.description">Component</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.description") %>
     </td>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.closed">Status</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.closed") %>
     </td>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.guessvalue">Guess Amount</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.guessvalue") %>
     </td>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%=OrgDetails.getId()%>&column=oc.closedate">Close Date</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.closedate") %>
     </td>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%=OrgDetails.getId()%>&column=stagename">Current Stage</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("stagename") %>
     </td>  
   </tr>
 <%
 	Iterator j = ComponentList.iterator();
-	if ( j.hasNext() ) {
+	if (j.hasNext()) {
 		int rowid = 0;
 	    while (j.hasNext()) {
         rowid = (rowid != 1?1:2);
@@ -100,41 +100,39 @@ Opportunity Details<br>
 %>
   <tr class="containerBody">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
-    <td width=8 valign=top align="center" nowrap class="row<%= rowid %>">
+    <td width="8" valign="top" align="center" nowrap class="row<%= rowid %>">
       <dhv:permission name="accounts-accounts-opportunities-edit"><a href="OpportunitiesComponents.do?command=ModifyComponent&id=<%= oppComponent.getId() %>&orgId=<%=OrgDetails.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true','Opportunities.do?command=ViewOpps&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-    <td width="100%" valign=top class="row<%= rowid %>">
+    <td width="100%" valign="top" class="row<%= rowid %>">
       <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%= OrgDetails.getId() %>&id=<%=oppComponent.getId()%>">
       <%= toHtml(oppComponent.getDescription()) %></a>
     </td>
-    <td valign=top nowrap class="row<%= rowid %>">
+    <td valign="top" nowrap class="row<%= rowid %>">
       <%= oppComponent.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
     </td>
-    <td valign=top nowrap class="row<%= rowid %>">
+    <td valign="top" nowrap class="row<%= rowid %>">
       $<%= oppComponent.getGuessCurrency() %>
     </td>
-    <td valign=top nowrap class="row<%= rowid %>">
+    <td valign="top" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getCloseDateString()) %>
     </td>
-    <td valign=top nowrap class="row<%= rowid %>">
+    <td valign="top" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getStageName()) %>
     </td>		
   </tr>
 <%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="6" valign=center>
+    <td colspan="6">
       No opportunity components found.
     </td>
   </tr>
 <%}%>
-  
 </table>
 <br>
 <dhv:pagedListControl object="AccountsComponentListInfo"/>
 </td>
 </tr>
 </table>
-
 

@@ -31,10 +31,9 @@ Ticket Details<br>
       <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>';confirmSubmit(this.form);"></dhv:permission>
 <%}%>
 <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br>&nbsp;</dhv:permission>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-		<td colspan=2 valign=center align=left>
+		<td colspan="2">
       <strong>Ticket Information</strong>
 		</td>     
   </tr>
@@ -43,22 +42,21 @@ Ticket Details<br>
       Ticket Source
 		</td>
 		<td>
-      <%=toHtml(TicketDetails.getSourceName())%>
+      <%= toHtml(TicketDetails.getSourceName()) %>
 		</td>
   </tr>
 	<tr class="containerBody">
-		<td class="formLabel">
+		<td valign="top" class="formLabel">
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
-		<td valign=top>
+		<td>
       <%= toHtml(TicketDetails.getProblem()) %>
-      <input type=hidden name=problem value="<%=toHtml(TicketDetails.getProblem())%>">
-      <input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
-      <input type=hidden name=id value="<%=TicketDetails.getId()%>">
+      <input type="hidden" name="problem" value="<%= toHtml(TicketDetails.getProblem()) %>">
+      <input type="hidden" name="orgId" value="<%= TicketDetails.getOrgId() %>">
+      <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
 		</td>
   </tr>
-  
-  <dhv:include name="tickets-code" none="true">
+<dhv:include name="tickets-code" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Category
@@ -67,30 +65,27 @@ Ticket Details<br>
       <%=toHtml(TicketDetails.getCategoryName())%>
 		</td>
   </tr>
-  </dhv:include>
-  
-  <dhv:include name="tickets-severity" none="true">
+</dhv:include>
+<dhv:include name="tickets-severity" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Severity
     </td>
-		<td valign=top>
+		<td>
       <%=toHtml(TicketDetails.getSeverityName())%>
 		</td>
   </tr>
-  </dhv:include>
-	
-  <dhv:include name="tickets-priority" none="true">
+</dhv:include>
+<dhv:include name="tickets-priority" none="true">
   <tr class="containerBody">
 		<td class="formLabel">
       Priority
     </td>
-		<td valign=top bgColor="white">
+		<td>
       <%=toHtml(TicketDetails.getPriorityName())%>
 		</td>
   </tr>
-  </dhv:include>
-  
+</dhv:include>
 	<tr class="containerBody">
 		<td class="formLabel">
       Department
@@ -120,7 +115,7 @@ Ticket Details<br>
 		<td class="formLabel">
       Entered
     </td>
-		<td valign=top>
+		<td>
       <%=toHtml(TicketDetails.getEnteredByName())%> - <%=TicketDetails.getEnteredString()%>
 		</td>
   </tr>
@@ -128,7 +123,7 @@ Ticket Details<br>
 		<td class="formLabel">
       Modified
     </td>
-		<td valign=top>
+		<td>
       <%=toHtml(TicketDetails.getModifiedByName())%> - <%=TicketDetails.getModifiedString()%>
 		</td>
   </tr>
@@ -139,7 +134,7 @@ Ticket Details<br>
 %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=4 valign=center align=left>
+    <td colspan="4">
       <strong>Primary Contact</strong>
 		</td>     
   </tr>
@@ -148,7 +143,7 @@ Ticket Details<br>
       Name
 		</td>
 		<td>
-      <%=toHtml(TicketDetails.getThisContact().getNameLastFirst())%>
+      <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
 		</td>
   </tr>
 	<tr class="containerBody">
@@ -180,7 +175,7 @@ Ticket Details<br>
 <%}%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-		<td colspan=4 valign=center align=left>
+		<td colspan="4">
       <strong>Ticket Log History</strong>
 		</td>     
   </tr>
@@ -195,14 +190,14 @@ Ticket Details<br>
 <% } else { %>
   <tr class="containerBody">
 <%}%>
-    <td nowrap valign="top" width=100 class="formLabel">
-      <%=toHtml(thisEntry.getEnteredByName())%>
+    <td nowrap valign="top" class="formLabel">
+      <%= toHtml(thisEntry.getEnteredByName()) %>
     </td>
-    <td nowrap valign="top" width=150>
-			<%=thisEntry.getEnteredString()%>
+    <td nowrap valign="top" width="150">
+			<%= thisEntry.getEnteredString() %>
     </td>
     <td valign="top">
-			<%=toHtml(thisEntry.getEntryText())%>
+			<%= toHtml(thisEntry.getEntryText()) %>
     </td>
   </tr>
 <%    
@@ -223,7 +218,7 @@ Ticket Details<br>
       <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
       <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>';confirmSubmit(this.form);"></dhv:permission>
 <%}%>
-
-</td></tr>
+</td>
+</tr>
 </table>
 </form>

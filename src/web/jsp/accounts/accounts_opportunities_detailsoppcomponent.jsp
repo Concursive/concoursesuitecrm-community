@@ -142,7 +142,7 @@ Component Details
     <td nowrap class="formLabel">
       Alert Description
     </td>
-    <td valign=center>
+    <td>
        <%= toHtml(OppComponentDetails.getAlertText()) %>
     </td>
   </tr>
@@ -153,7 +153,7 @@ Component Details
     <td nowrap class="formLabel">
       Alert Date
     </td>
-    <td valign=center>
+    <td>
        <%= OppComponentDetails.getAlertDateStringLongYear() %>
     </td>
   </tr>

@@ -74,13 +74,11 @@ Add Ticket<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">	
 <br>
-<%= showError(request, "actionError") %>
+<%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <% if (request.getAttribute("closedError") != null) { %>
   <%= showAttribute(request, "closedError") %>
 <%}%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-
 	<tr bgcolor="#DEE0FA">
 	<td colspan="2" valign="center" align="left">
 	<strong>Add a new Ticket</strong>

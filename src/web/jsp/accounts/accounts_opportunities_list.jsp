@@ -4,7 +4,7 @@
 <jsp:useBean id="OpportunityList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="OpportunityPagedInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -42,29 +42,25 @@ Opportunities<br>
     </form>
   </tr>
 </table>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
-    <td width="8" valign=center align=left nowrap>
+    <td width="8" nowrap>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td valign=center align=left width="100%">
+    <td valign="center" nowrap>
       <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description">Opportunity Name</a></strong>
       <%= OpportunityPagedInfo.getSortIcon("x.description") %>
     </td>
-    
-    <td valign=center align=left nowrap>
+    <td valign="center" nowrap>
       <strong>Best Guess Total</strong>
     </td>
-    
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified">Last Modified</a></strong>
       <%= OpportunityPagedInfo.getSortIcon("x.modified") %>
     </td>
   </tr>
-
 <%
 	Iterator j = OpportunityList.iterator();
   FileItem thisFile = new FileItem();
@@ -76,11 +72,11 @@ Opportunities<br>
 %>      
   <tr class="containerBody">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
-    <td width="8" valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-opportunities-edit"><a href="Opportunities.do?command=Modify&headerId=<%= oppHeader.getId() %>&orgId=<%= oppHeader.getAccountLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= oppHeader.getId() %>','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&popup=true', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+    <td width="8" valign="center" nowrap class="row<%= rowid %>">
+      <dhv:permission name="accounts-accounts-opportunities-edit"><a href="Opportunities.do?command=Modify&headerId=<%= oppHeader.getId() %>&orgId=<%= oppHeader.getAccountLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= oppHeader.getId() %>','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&popup=true', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-      <td width=100% valign=center class="row<%= rowid %>">
+      <td "width=100%" valign="center" class="row<%= rowid %>">
         <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
         <%= toHtml(oppHeader.getDescription()) %></a>
         (<%= oppHeader.getComponentCount() %>)
@@ -88,10 +84,10 @@ Opportunities<br>
         <%= thisFile.getImageTag() %>
 </dhv:evaluate>
       </td>  
-      <td valign=center class="row<%= rowid %>" nowrap>
+      <td valign="center" align="right" class="row<%= rowid %>" nowrap>
         $<%= toHtml(oppHeader.getTotalValueCurrency()) %>
       </td>      
-      <td valign=center class="row<%= rowid %>" nowrap>
+      <td valign="center" class="row<%= rowid %>" nowrap>
         <%= toHtml(oppHeader.getModifiedString()) %>
       </td>   
   </tr>

@@ -72,7 +72,7 @@ Revenue Dashboard<br>
       </table>
       <%-- User List --%>
       <table width="285" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr bgcolor="#DEE0FA">
+        <tr class="title">
           <td>Reporting Staff</td>
           <td>YTD</td>
         </tr>
@@ -107,8 +107,8 @@ Revenue Dashboard<br>
       </table>
     </td>
     <td valign=top width="100%">
-      <table width=100% cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr bgcolor="#DEE0FA">
+      <table width="100%" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
+        <tr class="title">
           <td>Account Name</td>
           <td>YTD</td>
         </tr>
@@ -117,13 +117,9 @@ Revenue Dashboard<br>
 		if ( n.hasNext() ) {
 			int rowid = 0;
 			while (n.hasNext()) {
-				if (rowid != 1) {
-					rowid = 1;
-				} else {
-					rowid = 2;
-				}
+        rowid = (rowid != 1?1:2);
 				Organization thisOrg = (Organization)n.next();
-%>    
+%>
 				<tr>
           <td class="row<%= rowid %>" valign="top">
             <a href="RevenueManager.do?command=View&orgId=<%=thisOrg.getId()%>"><%= toHtml(thisOrg.getName()) %></a>
