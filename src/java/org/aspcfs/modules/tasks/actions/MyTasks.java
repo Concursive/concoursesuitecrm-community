@@ -84,9 +84,6 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if(!(hasAuthority(context, thisContact.getOwner()))){
-        return "PermissionError";
-      }
       context.getRequest().setAttribute("TaskList", taskList);
       addModuleBean(context, "My Tasks", "Task Home");
       return ("TaskListOK");
