@@ -9,7 +9,7 @@ INSERT INTO events
 VALUES
 ('*/5',
  'org.aspcfs.apps.notifier.Notifier#doTask',
- '@CFS_HOME@/WEB-INF/notifier.xml',
+ '${FILEPATH}',
  @TRUE@
 );
 
@@ -19,7 +19,7 @@ INSERT INTO events
 VALUES
 ('0', '0',
  'org.aspcfs.modules.service.tasks.GetURL#doTask',
- 'http://127.0.0.1/ProcessSystem.do?command=ClearGraphData',
+ 'http://${WEBSERVER.URL}/ProcessSystem.do?command=ClearGraphData',
  @TRUE@
 );
 
@@ -29,7 +29,7 @@ INSERT INTO events
 VALUES
 ('0', '2',
  'org.aspcfs.apps.notifier.Notifier#doTask',
- '@CFS_HOME@/WEB-INF/notifier.xml org.aspcfs.modules.media.autoguide.tasks.AutoGuideMaintenance',
+ '${FILEPATH} org.aspcfs.modules.media.autoguide.tasks.AutoGuideMaintenance',
  @FALSE@
 );
 
