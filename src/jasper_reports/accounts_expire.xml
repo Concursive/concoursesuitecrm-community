@@ -53,9 +53,13 @@ ORDER BY o.contract_end, lat.level]]></queryString>
 $V{acct_type} + ($V{acct_type}.length() > 0 ? ", " : "") + ($F{type_desc} != null ? $F{type_desc} : "") :
 ""]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
 	<variable name="namecount" class="java.lang.Integer" resetType="Group" resetGroup="expire_group" calculation="Nothing">
-		<variableExpression><![CDATA[( $V{num_type}.equals(new Integer(0)) ? new Integer( ($V{namecount}.intValue() + 1) ) :  new Integer( $V{namecount}.intValue() ))]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
+		<variableExpression><![CDATA[$V{num_type} != null ?
+( $V{num_type}.equals(new Integer(0)) ? new Integer( ($V{namecount}.intValue() + 1) ) :  new Integer( $V{namecount}.intValue() )) :
+new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 	<variable name="num_type" class="java.lang.Integer" resetType="Group" resetGroup="name" calculation="Nothing">
-		<variableExpression><![CDATA[new Integer( ($V{num_type}.intValue() + 1) )]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
+		<variableExpression><![CDATA[$V{num_type} != null ?
+new Integer( ($V{num_type}.intValue() + 1) ) :
+new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 		<group  name="expire_group" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="48" >
 			<groupExpression><![CDATA[$F{contract_end}]]></groupExpression>
 			<groupHeader>
