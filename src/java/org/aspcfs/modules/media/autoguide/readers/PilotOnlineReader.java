@@ -1,4 +1,4 @@
-package org.aspcfs.apps.transfer.readers.autoguide;
+package org.aspcfs.modules.media.autoguide.readers;
 
 import org.aspcfs.apps.transfer.*;
 import java.sql.*;
