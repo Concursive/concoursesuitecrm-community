@@ -667,6 +667,7 @@ public final class AccountTickets extends CFSModule {
     subList1.setCatLevel(1);
     subList1.setParentCode(newTic.getCatCode());
     subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
+    subList1.getCatListSelect().addItem(0, "Undetermined");
     subList1.buildList(db);
     context.getRequest().setAttribute("SubList1", subList1);
 
@@ -684,6 +685,7 @@ public final class AccountTickets extends CFSModule {
       subList2.setParentCode(newTic.getSubCat1());
     }
     subList2.setHtmlJsEvent("onChange=\"javascript:updateSubList3();\"");
+    subList2.getCatListSelect().addItem(0, "Undetermined");
     subList2.buildList(db);
     context.getRequest().setAttribute("SubList2", subList2);
 
@@ -699,6 +701,7 @@ public final class AccountTickets extends CFSModule {
     } else {
       subList3.setParentCode(newTic.getSubCat2());
     }
+    subList3.getCatListSelect().addItem(0, "Undetermined");
     subList3.buildList(db);
     context.getRequest().setAttribute("SubList3", subList3);
     if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(context.getRequest().getParameter("refresh")) == 3)) {
