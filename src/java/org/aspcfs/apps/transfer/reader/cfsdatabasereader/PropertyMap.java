@@ -16,4 +16,8 @@ public class PropertyMap extends ArrayList {
     return (table != null && !"".equals(table));
   }
   
+  public boolean hasProperties() {
+    return (this.size() > 0);
+  }
+  
 }
