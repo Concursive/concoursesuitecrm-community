@@ -21,7 +21,7 @@ import org.aspcfs.modules.system.base.ApplicationVersion;
 import org.aspcfs.modules.system.base.DatabaseVersion;
 
 /**
- *  Administrative commands executor.
+ *  Admin actions
  *
  *@author     chris
  *@created    January 7, 2002
@@ -34,10 +34,9 @@ public final class Admin extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDefault(ActionContext context) {
-    if (!(hasPermission(context, "admin-view"))) {
+    if (!hasPermission(context, "admin-view")) {
       return ("PermissionError");
     }
     return executeCommandHome(context);
@@ -49,10 +48,9 @@ public final class Admin extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandHome(ActionContext context) {
-    if (!(hasPermission(context, "admin-view"))) {
+    if (!hasPermission(context, "admin-view")) {
       return ("PermissionError");
     }
     addModuleBean(context, "Admin", "Admin");
@@ -67,7 +65,7 @@ public final class Admin extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandManage(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+    if (!hasPermission(context, "admin-sysconfig-view")) {
       return ("PermissionError");
     }
     addModuleBean(context, "Configuration", "Management");
@@ -87,7 +85,6 @@ public final class Admin extends CFSModule {
     }
     addModuleBean(context, "Configuration", "Usage");
     Connection db = null;
-    Exception errorMessage = null;
     ArrayList usageList = new ArrayList();
     ArrayList usageList2 = new ArrayList();
     String rangeSelect = context.getRequest().getParameter("rangeSelect");
@@ -188,25 +185,21 @@ public final class Admin extends CFSModule {
 
       context.getRequest().setAttribute("usageList", usageList);
       context.getRequest().setAttribute("usageList2", usageList2);
-      
+
       //Application Version
       String appVersion = ApplicationVersion.VERSION;
       context.getRequest().setAttribute("applicationVersion", appVersion);
-      
+
       //Database Version
       String dbVersion = DatabaseVersion.getLatestVersion(db);
       context.getRequest().setAttribute("databaseVersion", dbVersion);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      return "UsageOK";
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return "UsageOK";
   }
 
 
@@ -217,7 +210,7 @@ public final class Admin extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandConfig(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+    if (!hasPermission(context, "admin-sysconfig-view")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -309,23 +302,19 @@ public final class Admin extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandUpdateList(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-lists-edit")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     String tblName = context.getRequest().getParameter("tableName");
-
     if ("lookup_contact_types".equals(tblName)) {
       return executeCommandUpdateContactList(context);
     }
     String[] params = context.getRequest().getParameterValues("selectedList");
     String[] names = new String[params.length];
     int j = 0;
-
     StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
     while (st.hasMoreTokens()) {
       names[j] = (String) st.nextToken();
@@ -336,16 +325,13 @@ public final class Admin extends CFSModule {
       //begin for all lookup lists
       LookupList compareList = new LookupList(db, tblName);
       LookupList newList = new LookupList(params, names);
-
       Iterator i = compareList.iterator();
       while (i.hasNext()) {
         LookupElement thisElement = (LookupElement) i.next();
-
         //still there, stay enabled, don't re-insert it
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Here: " + thisElement.getCode() + " " + newList.getSelectedValue(thisElement.getCode()));
         }
-
         //not there, disable it, leave it
         if (newList.getSelectedValue(thisElement.getCode()).equals("") ||
             newList.getSelectedValue(thisElement.getCode()) == null) {
@@ -361,24 +347,18 @@ public final class Admin extends CFSModule {
           thisElement.setNewOrder(db, tblName);
         }
       }
-      
       //invalidate the cache for this list
       SystemStatus systemStatus = this.getSystemStatus(context);
       systemStatus.removeLookup(tblName);
-      
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
-      addModuleBean(context, "Configuration", "Configuration");
-      return (executeCommandEditLists(context));
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
+    addModuleBean(context, "Configuration", "Configuration");
+    return (executeCommandEditLists(context));
   }
 
 
@@ -391,33 +371,27 @@ public final class Admin extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdateContactList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     String category = context.getRequest().getParameter("category");
     String[] params = context.getRequest().getParameterValues("selectedList");
     String[] names = new String[params.length];
     int j = 0;
-
     StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
     while (st.hasMoreTokens()) {
       names[j] = (String) st.nextToken();
       j++;
     }
-
     try {
       db = this.getConnection(context);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Admin -- > Updating Contact Types ");
       }
-
       ContactTypeList compareList = new ContactTypeList();
       compareList.setCategory(category);
       compareList.setIncludeDefinedByUser(this.getUserId(context));
       compareList.setShowPersonal(true);
       compareList.buildList(db);
-
       ContactTypeList newList = new ContactTypeList(params, names);
-
       Iterator i = compareList.iterator();
       while (i.hasNext()) {
         ContactType thisType = (ContactType) i.next();
@@ -426,7 +400,6 @@ public final class Admin extends CFSModule {
           thisType.setEnabled(db, false);
         }
       }
-
       Iterator k = newList.iterator();
       while (k.hasNext()) {
         ContactType thisType = (ContactType) k.next();
@@ -438,18 +411,14 @@ public final class Admin extends CFSModule {
         }
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
-      addModuleBean(context, "Configuration", "Configuration");
-      return (executeCommandEditLists(context));
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
+    addModuleBean(context, "Configuration", "Configuration");
+    return (executeCommandEditLists(context));
   }
 
 
@@ -460,17 +429,14 @@ public final class Admin extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandModifyList(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-lists-edit"))) {
+    if (!hasPermission(context, "admin-sysconfig-lists-edit")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     int moduleId = -1;
     int lookupId = -1;
     LookupList selectedList = null;
     PermissionCategory permCat = null;
-
     try {
       db = this.getConnection(context);
       moduleId = Integer.parseInt(context.getRequest().getParameter("module"));
@@ -479,7 +445,6 @@ public final class Admin extends CFSModule {
       LookupListElement thisList = new LookupListElement(db, moduleId, lookupId);
       thisList.buildLookupList(db, this.getUserId(context));
       selectedList = thisList.getLookupList();
-
       switch (thisList.getCategoryId()) {
           case PermissionCategory.PERMISSION_CAT_CONTACTS:
             if (lookupId == PermissionCategory.LOOKUP_CONTACTS_TYPE) {
@@ -494,28 +459,22 @@ public final class Admin extends CFSModule {
           default:
             break;
       }
-
       context.getRequest().setAttribute("moduleId", String.valueOf(moduleId));
       context.getRequest().setAttribute("SelectedList", selectedList);
       context.getRequest().setAttribute("SubTitle", thisList.getDescription());
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     if (selectedList != null) {
       selectedList.setSelectSize(8);
       selectedList.setMultiple(true);
     }
     addModuleBean(context, "Configuration", "Configuration");
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("PermissionCategory", permCat);
-      return ("ModifyListOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("PermissionCategory", permCat);
+    return ("ModifyListOK");
   }
 
 
@@ -525,7 +484,6 @@ public final class Admin extends CFSModule {
    *@param  context           Description of Parameter
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
-   *@since
    */
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
     int moduleId = Integer.parseInt(context.getRequest().getParameter("moduleId"));
@@ -533,6 +491,11 @@ public final class Admin extends CFSModule {
     thisList.setUserId(this.getUserId(context));
     thisList.setModuleId(moduleId);
     thisList.buildList(db);
+    //NOTE: This is a temporary fix to remove an edit list that is not enabled in the system
+    //TODO: Lookup lists could be tied to a specific permission
+    if (!hasPermission(context, "accounts-accounts-revenue-view")) {
+      thisList.removeList(PermissionCategory.PERMISSION_CAT_ACCOUNTS, PermissionCategory.LOOKUP_ACCOUNTS_REVENUE_TYPE);
+    }
     context.getRequest().setAttribute("LookupLists", thisList);
   }
 }

@@ -107,5 +107,23 @@ public class LookupListList extends HtmlSelect {
       thisLookup.buildLookupList(db, userId);
     }
   }
+
+
+  /**
+   *  Removes a specific LookupListElement item from the list
+   *
+   *@param  categoryId  Description of the Parameter
+   *@param  lookupId    Description of the Parameter
+   */
+  public void removeList(int categoryId, int lookupId) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupListElement thisLookup = (LookupListElement) i.next();
+      if (thisLookup.getCategoryId() == categoryId && thisLookup.getLookupId() == lookupId) {
+        this.remove(thisLookup);
+        break;
+      }
+    }
+  }
 }
 
