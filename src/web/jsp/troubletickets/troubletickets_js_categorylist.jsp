@@ -15,7 +15,7 @@
 %>
 function page_init() {
 <dhv:evaluate exp="<%= ((SubList1.size() > 0) || (catCode != null)) %>">
-  var list = parent.document.forms['addticket'].elements['subCat1'];
+  var list = parent.document.forms[0].elements['subCat1'];
   list.options.length = 0;
   list.options[list.length] = new Option("Undetermined", "0");
 <%
@@ -27,12 +27,12 @@ function page_init() {
 <%
   }
 %>
-  resetList(parent.document.forms['addticket'].elements['subCat2']);
-  resetList(parent.document.forms['addticket'].elements['subCat3']);
+  resetList(parent.document.forms[0].elements['subCat2']);
+  resetList(parent.document.forms[0].elements['subCat3']);
 </dhv:evaluate>
   
 <dhv:evaluate exp="<%= ((SubList2.size() > 0) || (subCat1 != null)) %>">
-  var list2 = parent.document.forms['addticket'].elements['subCat2'];
+  var list2 = parent.document.forms[0].elements['subCat2'];
   list2.options.length = 0;
   list2.options[list2.length] = new Option("Undetermined", "0");
 <%
@@ -44,11 +44,11 @@ function page_init() {
 <%
   }
 %>
-  resetList(parent.document.forms['addticket'].elements['subCat3']);
+  resetList(parent.document.forms[0].elements['subCat3']);
 </dhv:evaluate>
   
 <dhv:evaluate exp="<%= ((SubList3.size() > 0) || (subCat2 != null)) %>">
-  var list3 = parent.document.forms['addticket'].elements['subCat3'];
+  var list3 = parent.document.forms[0].elements['subCat3'];
   list3.options.length = 0;
   list3.options[list3.length] = new Option("Undetermined", "0");
 <%

@@ -316,7 +316,8 @@ public final class AccountTickets extends CFSModule {
 
       LookupList departmentList = new LookupList(db, "lookup_department");
       departmentList.addItem(0, "-- None --");
-      departmentList.setJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true#department';document.forms[0].submit()");
+      //departmentList.setJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true#department';document.forms[0].submit()");
+      departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
       context.getRequest().setAttribute("DepartmentList", departmentList);
 
       LookupList severityList = new LookupList(db, "ticket_severity");
@@ -332,7 +333,8 @@ public final class AccountTickets extends CFSModule {
       TicketCategoryList categoryList = new TicketCategoryList();
       categoryList.setCatLevel(0);
       categoryList.setParentCode(0);
-      categoryList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true&refresh=1#categories';document.forms[0].submit()");
+      //categoryList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true&refresh=1#categories';document.forms[0].submit()");
+      categoryList.setHtmlJsEvent("onChange=\"javascript:updateSubList1();\"");
       categoryList.buildList(db);
       context.getRequest().setAttribute("CategoryList", categoryList);
 
@@ -353,7 +355,8 @@ public final class AccountTickets extends CFSModule {
 
       subList1.setCatLevel(1);
       subList1.setParentCode(newTic.getCatCode());
-      subList1.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true&refresh=2#categories';document.forms[0].submit()");
+      //subList1.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true&refresh=2#categories';document.forms[0].submit()");
+      subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
       subList1.buildList(db);
       context.getRequest().setAttribute("SubList1", subList1);
 
@@ -382,7 +385,8 @@ public final class AccountTickets extends CFSModule {
         subList2.setParentCode(newTic.getSubCat1());
       }
 
-      subList2.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true&refresh=3#categories';document.forms[0].submit()");
+      //subList2.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=ModifyTicket&passedid=" + newTic.getId() + "&auto-populate=true&refresh=3#categories';document.forms[0].submit()");
+      subList2.setHtmlJsEvent("onChange=\"javascript:updateSubList3();\"");
       subList2.buildList(db);
       context.getRequest().setAttribute("SubList2", subList2);
 
@@ -533,7 +537,8 @@ public final class AccountTickets extends CFSModule {
 
     LookupList departmentList = new LookupList(db, "lookup_department");
     departmentList.addItem(0, "-- None --");
-    departmentList.setJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true#department';document.forms[0].submit()");
+    //departmentList.setJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true#department';document.forms[0].submit()");
+    departmentList.setJsEvent("onChange=\"javascript:updateUserList();\"");
     context.getRequest().setAttribute("DepartmentList", departmentList);
 
     LookupList severityList = new LookupList(db, "ticket_severity");
@@ -549,7 +554,8 @@ public final class AccountTickets extends CFSModule {
     TicketCategoryList categoryList = new TicketCategoryList();
     categoryList.setCatLevel(0);
     categoryList.setParentCode(0);
-    categoryList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true&refresh=1#categories';document.forms[0].submit()");
+    //categoryList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true&refresh=1#categories';document.forms[0].submit()");
+    categoryList.setHtmlJsEvent("onChange=\"javascript:updateSubList1();\"");
     categoryList.buildList(db);
     context.getRequest().setAttribute("CategoryList", categoryList);
 
@@ -567,17 +573,12 @@ public final class AccountTickets extends CFSModule {
     contactList.buildList(db);
     context.getRequest().setAttribute("ContactList", contactList);
 
-    OrganizationList orgList = new OrganizationList();
-    orgList.setMinerOnly(false);
-    orgList.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true';document.forms[0].submit()");
-    orgList.buildList(db);
-    context.getRequest().setAttribute("OrgList", orgList);
-
     TicketCategoryList subList1 = new TicketCategoryList();
 
     subList1.setCatLevel(1);
     subList1.setParentCode(newTic.getCatCode());
-    subList1.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true&refresh=2#categories';document.forms[0].submit()");
+    //subList1.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true&refresh=2#categories';document.forms[0].submit()");
+    subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
     subList1.buildList(db);
     context.getRequest().setAttribute("SubList1", subList1);
 
@@ -596,7 +597,8 @@ public final class AccountTickets extends CFSModule {
       subList2.setParentCode(newTic.getSubCat1());
     }
 
-    subList2.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true&refresh=3#categories';document.forms[0].submit()");
+    //subList2.setHtmlJsEvent("onChange = javascript:document.forms[0].action='/AccountTickets.do?command=AddTicket&auto-populate=true&refresh=3#categories';document.forms[0].submit()");
+    subList2.setHtmlJsEvent("onChange=\"javascript:updateSubList3();\"");
     subList2.buildList(db);
     context.getRequest().setAttribute("SubList2", subList2);
 
@@ -622,6 +624,87 @@ public final class AccountTickets extends CFSModule {
     }
 
     context.getRequest().setAttribute("TicketDetails", newTic);
+  }
+  
+    public String executeCommandCategoryJSList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      String catCode = context.getRequest().getParameter("catCode");
+      String subCat1 = context.getRequest().getParameter("subCat1");
+      String subCat2 = context.getRequest().getParameter("subCat2");
+      
+      db = this.getConnection(context);
+      if (catCode != null) {
+        TicketCategoryList subList1 = new TicketCategoryList();
+        subList1.setCatLevel(1);
+        subList1.setParentCode(Integer.parseInt(catCode));
+        subList1.buildList(db);
+        context.getRequest().setAttribute("SubList1", subList1);
+      } else if (subCat1 != null) {
+        TicketCategoryList subList2 = new TicketCategoryList();
+        subList2.setCatLevel(2);
+        subList2.setParentCode(Integer.parseInt(subCat1));
+        subList2.buildList(db);
+        context.getRequest().setAttribute("SubList2", subList2);
+      } else if (subCat2 != null) {
+        TicketCategoryList subList3 = new TicketCategoryList();
+        subList3.setCatLevel(3);
+        subList3.setParentCode(Integer.parseInt(subCat2));
+        subList3.buildList(db);
+        context.getRequest().setAttribute("SubList3", subList3);
+      }
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("CategoryJSListOK");
+  }
+  
+  public String executeCommandDepartmentJSList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      String departmentCode = context.getRequest().getParameter("departmentCode");
+      db = this.getConnection(context);
+      UserList userList = new UserList();
+      userList.setEmptyHtmlSelectRecord("-- None --");
+      if ((departmentCode != null) && (!"0".equals(departmentCode))) {
+        userList.setBuildContact(true);
+        userList.setDepartment(Integer.parseInt(departmentCode));
+        userList.buildList(db);
+      }
+      context.getRequest().setAttribute("UserList", userList);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("DepartmentJSListOK");
+  }
+  
+  public String executeCommandOrganizationJSList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      String orgId = context.getRequest().getParameter("orgId");
+      db = this.getConnection(context);
+      
+      ContactList contactList = new ContactList();
+      if (orgId != null && !"-1".equals(orgId)) {
+        contactList.setBuildDetails(false);
+        contactList.setPersonalId(getUserId(context));
+        contactList.setOrgId(Integer.parseInt(orgId));
+        contactList.buildList(db);
+      }
+      context.getRequest().setAttribute("ContactList", contactList);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("OrganizationJSListOK");
   }
 
 }

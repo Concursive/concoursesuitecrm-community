@@ -58,12 +58,38 @@ function ShowSpan(thisID)
    
 }
 
+  function updateSubList1() {
+    var sel = document.forms['details'].elements['catCode'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&catCode=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateSubList2() {
+    var sel = document.forms['details'].elements['subCat1'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&subCat1=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateSubList3() {
+    var sel = document.forms['details'].elements['subCat2'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&subCat2=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateUserList() {
+    var sel = document.forms['details'].elements['departmentCode'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=DepartmentJSList&departmentCode=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+
 
 //  End -->
 </script>
 <body onLoad="HideSpans();">
 <a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Back to Ticket List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <tr class="containerHeader">
     <td>
       <strong><%=toHtml(TicketDetails.getCompanyName())%> - Ticket #<%=TicketDetails.getId()%></strong>

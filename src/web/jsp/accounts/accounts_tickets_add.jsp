@@ -6,7 +6,6 @@
 <jsp:useBean id="PriorityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="SourceList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
 <jsp:useBean id="SubList1" class="com.darkhorseventures.cfsbase.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList2" class="com.darkhorseventures.cfsbase.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList3" class="com.darkhorseventures.cfsbase.TicketCategoryList" scope="request"/>
@@ -14,6 +13,43 @@
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <%@ include file="initPage.jsp" %>
+
+  <script language="JavaScript">
+
+  function updateSubList1() {
+    var sel = document.forms['addticket'].elements['catCode'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&catCode=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateSubList2() {
+    var sel = document.forms['addticket'].elements['subCat1'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&subCat1=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateSubList3() {
+    var sel = document.forms['addticket'].elements['subCat2'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=CategoryJSList&subCat2=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateUserList() {
+    var sel = document.forms['addticket'].elements['departmentCode'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=DepartmentJSList&departmentCode=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  function updateContactList() {
+    var sel = document.forms['addticket'].elements['orgId'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "TroubleTickets.do?command=OrganizationJSList&orgId=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
+  
+  </script>
+
+
 <a href="/Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -37,6 +73,8 @@
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+
 	<tr class="title">
     <td colspan=2 valign=center align=left>
       <strong>Add a new Ticket</strong>

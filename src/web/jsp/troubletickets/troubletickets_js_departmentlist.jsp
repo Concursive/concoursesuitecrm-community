@@ -10,7 +10,7 @@
 %>
 function page_init() {
 <dhv:evaluate exp="<%= ((UserList.size() > 0) || (departmentCode != null)) %>">
-  var list = parent.document.forms['addticket'].elements['assignedTo'];
+  var list = parent.document.forms[0].elements['assignedTo'];
   list.options.length = 0;
   list.options[list.length] = new Option("-- None --", "0");
 <%

@@ -322,6 +322,9 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="CategoryJSListOK" resource="/troubletickets_js_categorylist.jsp"/>
+    <forward name="DepartmentJSListOK" resource="/troubletickets_js_departmentlist.jsp"/>
+    <forward name="OrganizationJSListOK" resource="/troubletickets_js_contactlist.jsp"/>
   </action>
   <action name="AccountsDocuments" class="com.darkhorseventures.cfsmodule.AccountsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
