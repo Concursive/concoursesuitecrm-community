@@ -29,7 +29,7 @@ public class Contact extends GenericBean {
   private String orgName = "";
   private String company = "";
   private String title = "";
-  private int department = 0;
+  private int department = -1;
   private String nameSalutation = "";
   private String nameFirst = "";
   private String nameMiddle = "";
@@ -65,7 +65,7 @@ public class Contact extends GenericBean {
   private String ownerName = "";
   private String enteredByName = "";
   private String modifiedByName = "";
-  
+
   private boolean orgEnabled = true;
 
 
@@ -155,25 +155,67 @@ public class Contact extends GenericBean {
   public void setOwnerName(String ownerName) {
     this.ownerName = ownerName;
   }
-  
- public String getUrl() {
-	return url;
-}
-public void setUrl(String url) {
-	this.url = url;
-}
-public String getFullNameAbbr() {
-	return (this.getNameFirst().charAt(0) + ". " + this.getNameLast());
-}
-public int getCustom1() {
-	return custom1;
-}
-public void setCustom1(int custom1) {
-	this.custom1 = custom1;
-}
-public void setCustom1(String custom1) {
-	this.custom1 = Integer.parseInt(custom1);
-}
+
+
+  /**
+   *  Gets the url attribute of the Contact object
+   *
+   *@return    The url value
+   */
+  public String getUrl() {
+    return url;
+  }
+
+
+  /**
+   *  Sets the url attribute of the Contact object
+   *
+   *@param  url  The new url value
+   */
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+
+  /**
+   *  Gets the fullNameAbbr attribute of the Contact object
+   *
+   *@return    The fullNameAbbr value
+   */
+  public String getFullNameAbbr() {
+    return (this.getNameFirst().charAt(0) + ". " + this.getNameLast());
+  }
+
+
+  /**
+   *  Gets the custom1 attribute of the Contact object
+   *
+   *@return    The custom1 value
+   */
+  public int getCustom1() {
+    return custom1;
+  }
+
+
+  /**
+   *  Sets the custom1 attribute of the Contact object
+   *
+   *@param  custom1  The new custom1 value
+   */
+  public void setCustom1(int custom1) {
+    this.custom1 = custom1;
+  }
+
+
+  /**
+   *  Sets the custom1 attribute of the Contact object
+   *
+   *@param  custom1  The new custom1 value
+   */
+  public void setCustom1(String custom1) {
+    this.custom1 = Integer.parseInt(custom1);
+  }
+
 
   /**
    *  Sets the Id attribute of the Contact object
@@ -207,7 +249,7 @@ public void setCustom1(String custom1) {
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
   }
-  
+
 
   /**
    *  Sets the entered attribute of the Contact object
@@ -261,7 +303,7 @@ public void setCustom1(String custom1) {
   public void setId(String tmp) {
     this.setId(Integer.parseInt(tmp));
   }
-  
+
 
   /**
    *  Sets the OrgId attribute of the Contact object
@@ -441,12 +483,26 @@ public void setCustom1(String custom1) {
     this.phoneNumberList = tmp;
   }
 
-public boolean getOrgEnabled() {
-	return orgEnabled;
-}
-public void setOrgEnabled(boolean orgEnabled) {
-	this.orgEnabled = orgEnabled;
-}
+
+  /**
+   *  Gets the orgEnabled attribute of the Contact object
+   *
+   *@return    The orgEnabled value
+   */
+  public boolean getOrgEnabled() {
+    return orgEnabled;
+  }
+
+
+  /**
+   *  Sets the orgEnabled attribute of the Contact object
+   *
+   *@param  orgEnabled  The new orgEnabled value
+   */
+  public void setOrgEnabled(boolean orgEnabled) {
+    this.orgEnabled = orgEnabled;
+  }
+
 
   /**
    *  Sets the excludedFromCampaign attribute of the Contact object
@@ -720,14 +776,15 @@ public void setOrgEnabled(boolean orgEnabled) {
   }
 
 
-   /**
+  /**
    *  Gets the user_id attribute of the Contact object
    *
    *@return    The user_id value
    */
   public int getUserId() {
-	return userId;
+    return userId;
   }
+
 
   /**
    *  Gets the modifiedString attribute of the Contact object
@@ -1051,9 +1108,17 @@ public void setOrgEnabled(boolean orgEnabled) {
     return phoneNumberList.getPhoneNumber(thisType);
   }
 
+
+  /**
+   *  Gets the phoneNumber attribute of the Contact object
+   *
+   *@param  thisType  Description of the Parameter
+   *@return           The phoneNumber value
+   */
   public String getPhoneNumber(int thisType) {
     return phoneNumberList.getPhoneNumber(thisType);
   }
+
 
   /**
    *  Gets the EmailAddress attribute of the Contact object
@@ -1434,12 +1499,16 @@ public void setOrgEnabled(boolean orgEnabled) {
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getNameFirst());
       pst.setString(++i, this.getNameLast());
-      pst.setInt(++i, this.getOwner());
+      if (owner > -1) {
+        pst.setInt(++i, this.getOwner());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
       pst.execute();
       pst.close();
-      
+
       id = DatabaseUtils.getCurrVal(db, "contact_contact_id_seq");
-      
+
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Contact-> ContactID: " + this.getId());
       }
@@ -1466,7 +1535,7 @@ public void setOrgEnabled(boolean orgEnabled) {
       }
 
       this.update(db, true);
-      
+
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1709,10 +1778,8 @@ public void setOrgEnabled(boolean orgEnabled) {
         "UPDATE contact " +
         "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
         "namefirst = ?, namelast = ?, " +
-        "namemiddle = ?, namesuffix = ?, type_id = ?, notes = ?, owner = ?, custom1 = ?, url = ?,  ");
-    if (orgId > -1) {
-      sql.append("org_id = ?, ");
-    }
+        "namemiddle = ?, namesuffix = ?, type_id = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
+        "org_id = ?, ");
     if (imService > -1) {
       sql.append("imservice = ?, ");
     }
@@ -1735,7 +1802,11 @@ public void setOrgEnabled(boolean orgEnabled) {
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getCompany());
     pst.setString(++i, this.getTitle());
-    pst.setInt(++i, this.getDepartment());
+    if (department > -1) {
+      pst.setInt(++i, this.getDepartment());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getNameSalutation());
     pst.setString(++i, this.getNameFirst());
     pst.setString(++i, this.getNameLast());
@@ -1743,12 +1814,18 @@ public void setOrgEnabled(boolean orgEnabled) {
     pst.setString(++i, this.getNameSuffix());
     pst.setInt(++i, this.getTypeId());
     pst.setString(++i, this.getNotes());
-    pst.setInt(++i, this.getOwner());
+    if (owner > -1) {
+      pst.setInt(++i, this.getOwner());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setInt(++i, this.getCustom1());
     pst.setString(++i, this.getUrl());
 
     if (orgId > -1) {
       pst.setInt(++i, this.getOrgId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
     }
     if (imService > -1) {
       pst.setInt(++i, this.getImService());
@@ -1791,9 +1868,15 @@ public void setOrgEnabled(boolean orgEnabled) {
     //contact table
     this.setId(rs.getInt("contact_id"));
     orgId = rs.getInt("org_id");
+    if (rs.wasNull()) {
+      orgId = -1;
+    }
     company = rs.getString("company");
     title = rs.getString("title");
     department = rs.getInt("department");
+    if (rs.wasNull()) {
+      department = -1;
+    }
     nameSalutation = rs.getString("namesalutation");
     nameLast = rs.getString("namelast");
     nameFirst = rs.getString("namefirst");
@@ -1815,68 +1898,78 @@ public void setOrgEnabled(boolean orgEnabled) {
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
     owner = rs.getInt("owner");
+    if (rs.wasNull()) {
+      owner = -1;
+    }
     custom1 = rs.getInt("custom1");
     url = rs.getString("url");
-    
+
     //lookup_department table
     departmentName = rs.getString("departmentname");
-    
+
     //lookup_contact_types table
     typeName = rs.getString("type_name");
-    
+
     //contact table
     ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
     enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
     modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
-    
+
     //organization table
     orgName = rs.getString("org_name");
     orgEnabled = rs.getBoolean("orgenabled");
   }
 
-  
-  public static int getContactType(Connection db,int id) throws SQLException {
-	 PreparedStatement pst = null;
-	 ResultSet rs = null;
-	 int typeId = -1;   
-	 
-	 try {
-	if (id == -1) {
-		   if (System.getProperty("DEBUG") != null) {
-         System.out.println("Contact -> Invalid Contact ID");
-       }
-	 }
-	   
-	 StringBuffer sql = new StringBuffer();
-	 db.setAutoCommit(false);
-	 if (System.getProperty("DEBUG") != null) {
-		  System.out.println("Contact-> Retrieving contact");
-	  }
-    
-    sql.append(
+
+  /**
+   *  Gets the contactType attribute of the Contact class
+   *
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@return                   The contactType value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int getContactType(Connection db, int id) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    int typeId = -1;
+
+    try {
+      if (id == -1) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Contact -> Invalid Contact ID");
+        }
+      }
+
+      StringBuffer sql = new StringBuffer();
+      db.setAutoCommit(false);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Contact-> Retrieving contact");
+      }
+
+      sql.append(
           "SELECT user_id,type_id " +
-          "FROM contact "+
-	  "where contact_id =" + id + " ");
-	  if (System.getProperty("DEBUG") != null) {
-      System.out.println("Contact -> GetContactType Query --\n\t"+sql.toString());
-    }
-	  int i = 0;
-	  Statement st = db.createStatement();
-	  pst = db.prepareStatement(sql.toString());
-	  rs  = pst.executeQuery();
-	  if (rs.next()) {
-	         typeId = rs.getInt("type_id");
-	  }
-	  
-      
-  pst.close();
-	rs.close();
-	st.close();
-	if (System.getProperty("DEBUG") != null) {
-		System.out.println("Contact -> ContactID: " + id);
-    System.out.println("Contact -> Type id is " + typeId);
-	}
-	db.commit();
+          "FROM contact " +
+          "where contact_id =" + id + " ");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Contact -> GetContactType Query --\n\t" + sql.toString());
+      }
+      int i = 0;
+      Statement st = db.createStatement();
+      pst = db.prepareStatement(sql.toString());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        typeId = rs.getInt("type_id");
+      }
+
+      pst.close();
+      rs.close();
+      st.close();
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Contact -> ContactID: " + id);
+        System.out.println("Contact -> Type id is " + typeId);
+      }
+      db.commit();
     } catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
@@ -1885,7 +1978,8 @@ public void setOrgEnabled(boolean orgEnabled) {
       db.setAutoCommit(true);
     }
     return typeId;
- }
+  }
+
 
   /**
    *  Description of the Method
@@ -1908,7 +2002,15 @@ public void setOrgEnabled(boolean orgEnabled) {
 
     return (recordCount > 0);
   }
-  
+
+
+  /**
+   *  Gets the nameLastFirst attribute of the Contact class
+   *
+   *@param  nameLast   Description of the Parameter
+   *@param  nameFirst  Description of the Parameter
+   *@return            The nameLastFirst value
+   */
   public static String getNameLastFirst(String nameLast, String nameFirst) {
     StringBuffer out = new StringBuffer();
     if (nameLast != null && nameLast.length() > 0) {

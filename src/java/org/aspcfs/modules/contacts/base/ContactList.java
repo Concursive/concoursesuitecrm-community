@@ -845,19 +845,14 @@ public class ContactList extends Vector {
       SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.getScl().get(group);
       fieldName = thisGroup.getGroupField().getFieldName();
 
-      //System.out.println("Field: " + fieldName);
-
       Iterator j = thisGroup.iterator();
 
       while (j.hasNext()) {
 
         SearchCriteriaElement thisElement = (SearchCriteriaElement) j.next();
-        //System.out.println("which one: " + (thisElement.getFieldId() + " " + thisElement.getOperator()) + " " + thisElement.getText());
 
         readyToGo = replace(thisElement.getText().toLowerCase(), '\'', "\\'");
         String check = (String) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
-
-        //System.out.println("what is check : " + check);
 
         //only if we have string data to deal with
         if (check == null || thisElement.getDataType().equals("date")) {
@@ -1355,8 +1350,6 @@ public class ContactList extends Vector {
         pst.setInt(++i, personalId);
       }
     }
-
-    //System.out.println(pst.toString());
 
     return i;
   }
