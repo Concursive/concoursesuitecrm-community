@@ -2391,10 +2391,14 @@ public class Campaign extends GenericBean {
     description = rs.getString("description");
     groupId = rs.getInt("list_id");
     messageId = rs.getInt("message_id");
+    replyTo = rs.getString("reply_addr");
+    subject = rs.getString("subject");
+    message = rs.getString("message");
     statusId = rs.getInt("status_id");
     status = rs.getString("status");
     active = rs.getBoolean("active");
     activeDate = rs.getDate("active_date");
+    sendMethodId = rs.getInt("send_method_id");
     inactiveDate = rs.getDate("inactive_date");
     approvalDate = rs.getTimestamp("approval_date");
     approvedBy = rs.getInt("approvedBy");
@@ -2406,10 +2410,6 @@ public class Campaign extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
-    replyTo = rs.getString("reply_addr");
-    subject = rs.getString("subject");
-    message = rs.getString("message");
-    sendMethodId = rs.getInt("send_method_id");
 
     //message table
     messageName = rs.getString("messageName");
