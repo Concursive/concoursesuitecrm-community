@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import java.io.*;
 import java.util.*;
@@ -6,8 +6,22 @@ import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     matt rajkowski
+ *@created    January 15, 2003
+ *@version    $Id$
+ */
 public class AppUtils {
-  
+
+  /**
+   *  Description of the Method
+   *
+   *@param  filename  Description of the Parameter
+   *@param  config    Description of the Parameter
+   *@return           Description of the Return Value
+   */
   public static boolean loadConfig(String filename, HashMap config) {
     File file = new File(filename);
     if (file == null) {
@@ -47,7 +61,18 @@ public class AppUtils {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  file                              Description of the Parameter
+   *@return                                   Description of the Return Value
+   *@exception  FactoryConfigurationError     Description of the Exception
+   *@exception  ParserConfigurationException  Description of the Exception
+   *@exception  SAXException                  Description of the Exception
+   *@exception  IOException                   Description of the Exception
+   */
   private static Document parseDocument(File file)
        throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -57,3 +82,4 @@ public class AppUtils {
   }
 
 }
+
