@@ -190,12 +190,12 @@ public String executeCommandDefault(ActionContext context) {
 						      thisCategory = new CustomFieldCategory(db,PROVIDER_TRANSACTION_CATEGORY);
 						      thisCategory.setLinkModuleId(Constants.ACCOUNTS);
 						      thisCategory.setLinkItemId(((Integer)thisMap.get(t)).intValue());
-						      //thisCategory.setIncludeEnabled(Constants.TRUE);
-						      //thisCategory.setIncludeScheduled(Constants.TRUE);
+						      thisCategory.setIncludeEnabled(Constants.TRUE);
+						      thisCategory.setIncludeScheduled(Constants.TRUE);
 						      thisCategory.setEnteredBy(2);
 						      thisCategory.setModifiedBy(2);
-						      //thisCategory.setBuildResources(true);
-						      //thisCategory.buildResources(db);
+						      thisCategory.setBuildResources(true);
+						      thisCategory.buildResources(db);
 									
 						      if (sub.indexOf("Eligibility") != -1) {
 							      transType = 0;
@@ -377,12 +377,12 @@ public String executeCommandDefault(ActionContext context) {
 			CustomFieldCategory thisCat = new CustomFieldCategory(db,OFFICE_TRANSACTION_CATEGORY);
 			thisCat.setLinkModuleId(Constants.ACCOUNTS);
 			thisCat.setLinkItemId(tempKey.intValue());
-			//thisCat.setIncludeEnabled(Constants.TRUE);
-			//thisCat.setIncludeScheduled(Constants.TRUE);
+			thisCat.setIncludeEnabled(Constants.TRUE);
+			thisCat.setIncludeScheduled(Constants.TRUE);
 			thisCat.setEnteredBy(2);
 			thisCat.setModifiedBy(2);
-			//thisCat.setBuildResources(true);
-			//thisCat.buildResources(db);
+			thisCat.setBuildResources(true);
+			thisCat.buildResources(db);
 			
 			context.getRequest().setAttribute("cf" + finalIds.get(0), anotherKey);
 			
