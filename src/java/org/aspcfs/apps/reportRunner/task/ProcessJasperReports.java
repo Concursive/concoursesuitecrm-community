@@ -93,7 +93,7 @@ public class ProcessJasperReports {
         path + 
         thisReport.getFilename().substring(0, thisReport.getFilename().lastIndexOf(".xml")) + ".jasper", 
         destFilename, 
-        criteria.getParameters(jasperReport), db);
+        criteria.getParameters(jasperReport, path), db);
     //Determine the size
     File reportFile = new File(destFilename);
     if (reportFile.exists()) {

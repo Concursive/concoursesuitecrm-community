@@ -196,6 +196,28 @@ public class QueueCriteriaList extends ArrayList {
    */
   public Map getParameters(JasperReport jasperReport) throws java.lang.NoSuchMethodException,
       java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException {
+    return getParameters(jasperReport, null);
+  }
+
+
+  /**
+   *  Gets the parameters attribute of the QueueCriteriaList object
+   *
+   *@param  jasperReport                                     Description of the
+   *      Parameter
+   *@param  path                                             Description of the
+   *      Parameter
+   *@return                                                  The parameters
+   *      value
+   *@exception  java.lang.NoSuchMethodException              Description of the
+   *      Exception
+   *@exception  java.lang.IllegalAccessException             Description of the
+   *      Exception
+   *@exception  java.lang.reflect.InvocationTargetException  Description of the
+   *      Exception
+   */
+  public Map getParameters(JasperReport jasperReport, String path) throws java.lang.NoSuchMethodException,
+      java.lang.IllegalAccessException, java.lang.reflect.InvocationTargetException {
     //Get a list of the parameter definitions
     ParameterList params = new ParameterList();
     params.setParameters(jasperReport);
@@ -218,6 +240,9 @@ public class QueueCriteriaList extends ArrayList {
       } else {
         parameters.put(thisCriteria.getParameter(), thisCriteria.getValue());
       }
+    }
+    if (path != null) {
+      parameters.put("path", path);
     }
     return parameters;
   }
