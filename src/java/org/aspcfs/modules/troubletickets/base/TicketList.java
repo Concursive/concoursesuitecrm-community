@@ -389,10 +389,10 @@ public class TicketList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("t.pri_code", "desc");
+      pagedListInfo.setDefaultSort("t.pri_code desc, t.ticketid", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY t.pri_code desc ");
+      sqlOrder.append("ORDER BY t.pri_code desc, t.ticketid ");
     }
 
     //Need to build a base SQL statement for returning records
