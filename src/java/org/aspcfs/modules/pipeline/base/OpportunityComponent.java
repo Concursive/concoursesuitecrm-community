@@ -1585,7 +1585,7 @@ public class OpportunityComponent extends GenericBean {
    *@since                    1.1
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
+    if (!isValid()) {
       return false;
     }
     if (this.getHeaderId() == -1) {
@@ -1782,7 +1782,7 @@ public class OpportunityComponent extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  public boolean isValid(Connection db) throws SQLException {
+  public boolean isValid() throws SQLException {
     //errors.clear();
 
     if (description == null || description.trim().equals("")) {
@@ -1842,7 +1842,7 @@ public class OpportunityComponent extends GenericBean {
       throw new SQLException("Opportunity Component ID was not specified");
     }
 
-    if (!isValid(db)) {
+    if (!isValid()) {
       return -1;
     }
 
@@ -2097,9 +2097,6 @@ public class OpportunityComponent extends GenericBean {
         }
       }
       this.updateHeaderModified(db);
-    }
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Opportunity Component-> Closing PreparedStatement");
     }
     return resultCount;
   }

@@ -358,9 +358,6 @@ public class OpportunityComponentList extends ArrayList {
     rs = pst.executeQuery();
     while (rs.next()) {
       String alertdate = Call.getAlertDateStringLongYear(rs.getDate("alertdate"));
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("OpportunityComponentList-> Added Days Calls " + alertdate + ":" + rs.getInt("count"));
-      }
       events.put(alertdate, new Integer(rs.getInt("count")));
     }
     rs.close();
