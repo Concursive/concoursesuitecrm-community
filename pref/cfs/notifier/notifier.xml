@@ -26,6 +26,10 @@
     <param-value>127.0.0.1</param-value>
   </init-param>
   <init-param>
+      <param-name>ForceSSL</param-name>
+      <param-value>@FORCESSL@</param-value>
+  </init-param>
+  <init-param>
     <param-name>FileLibrary</param-name>
     <param-value>@FILELIBRARY@</param-value>
   </init-param>
