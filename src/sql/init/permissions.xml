@@ -86,7 +86,7 @@
       <permission name="accounts-service-contracts" attributes="vaed" description="Service Contracts"/>
       <permission name="accounts-assets" attributes="vaed" description="Assets"/>
       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" description="Ticket Maintenance Notes"/>
-      <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" description="Ticket Activity Log"/>
+      <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" description="Ticket Activities"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
@@ -137,7 +137,7 @@
       <permission name="tickets-reports" attributes="vaed" description="Export Ticket Data"/>
       <permission name="tickets-tickets-tasks" attributes="vaed" description="Tasks"/>
       <permission name="tickets-maintenance-report" attributes="vaed" description="Maintenance Notes"/>
-      <permission name="tickets-activity-log" attributes="vaed" description="Activity Log"/>
+      <permission name="tickets-activity-log" attributes="vaed" description="Activities"/>
       <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets by Department" description="What tickets are there in each department?"/>
       <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Ticket counts by Department" description="How man tickets are there in the system on a particular date?"/>
       <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Ticket activity by Department" description="How many tickets exist within a date range?"/>

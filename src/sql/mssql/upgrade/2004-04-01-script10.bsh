@@ -43,7 +43,7 @@ if (!hasPermission) {
   permission = new Permission();
   permission.setCategoryId(thisCategory.getId());
   permission.setName("accounts-accounts-tickets-maintenance-report");
-  permission.setDescription("Ticket Asset Maintenance Notes");
+  permission.setDescription("Ticket Maintenance Notes");
   permission.setView(true);
   permission.setAdd(true);
   permission.setEdit(true);
