@@ -41,7 +41,7 @@ public class OrganizationList extends Vector {
   private String ownerIdRange = null;
   private boolean hasAlertDate = false;
   private boolean hasExpireDate = false;
-  private String accountNumber = "";
+  private String accountNumber = null;
   
   private int revenueType = 0;
   private int revenueYear = -1;
