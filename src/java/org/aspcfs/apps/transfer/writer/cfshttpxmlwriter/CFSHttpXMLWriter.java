@@ -253,21 +253,23 @@ public class CFSHttpXMLWriter implements DataWriter {
     }
 
     //Setup a new client id for this data transfer session
-    DataRecord clientRecord = new DataRecord();
-    clientRecord.setName("syncClient");
-    clientRecord.setAction("insert");
-    clientRecord.addField("id", "-1");
-    clientRecord.addField("type", "Java CFS Http XML Writer");
-    clientRecord.addField("version", String.valueOf(this.getVersion()));
-    this.save(clientRecord);
-
-    try {
-      XMLUtils responseXML = new XMLUtils(lastResponse, true);
-      clientId = Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstElement("id")));
-      logger.info("CFSHttpXMLWriter-> Client ID: " + clientId);
-    } catch (Exception e) {
-      e.printStackTrace(System.err);
-      return false;
+    if (clientId == -1) {
+      DataRecord clientRecord = new DataRecord();
+      clientRecord.setName("syncClient");
+      clientRecord.setAction("insert");
+      clientRecord.addField("id", "-1");
+      clientRecord.addField("type", "Java CFS Http XML Writer");
+      clientRecord.addField("version", String.valueOf(this.getVersion()));
+      this.save(clientRecord);
+  
+      try {
+        XMLUtils responseXML = new XMLUtils(lastResponse, true);
+        clientId = Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstElement("id")));
+        logger.info("CFSHttpXMLWriter-> Client ID: " + clientId);
+      } catch (Exception e) {
+        e.printStackTrace(System.err);
+        return false;
+      }
     }
     return true;
   }
