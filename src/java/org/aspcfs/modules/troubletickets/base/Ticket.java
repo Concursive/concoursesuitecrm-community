@@ -209,7 +209,7 @@ public class Ticket extends GenericBean {
 	public String getPaddedId() {
 		String padded = ("" + this.getId());
 		
-		while (padded.length() < 8) {
+		while (padded.length() < 6) {
 			padded = "0" + padded;
 		}
 		

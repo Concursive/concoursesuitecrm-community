@@ -1,0 +1,27 @@
+/**
+ *  Notifications
+ *
+ *@author     mrajkowski
+ *@created    January 16, 2002
+ *@version    $Id$
+ */
+
+Scheduled
+- Every 5 minutes scheduled notifications are checked and processed.  
+- If an alert is due today, then at midnight the alert is processed and emailed
+- The following are processed:
+    x Opportunity alerts for today
+    x Call alerts for today
+    x Campaigns scheduled for today
+    - Project activity is due today
+   
+Event Based
+- When an action occurs, an email is sent:
+    x New ticket is assigned to a user
+    - Previously assigned ticket is re-assigned to another user
+    - Previously unassigned ticket is assigned to a user
+    - New project activity is assigned to a user
+    - Existing project activity is re-assigned to a user
+      - Does user from need to be notified?
+    - Team member is added to project?
+    
