@@ -24,6 +24,6 @@ CREATE TABLE tasklink_contact (
   );
 CREATE TABLE tasklink_ticket (
   task_id INT NOT NULL REFERENCES task,
-  ticket_id INT NOT NULL  REFERENCES ticket(ticket_id)
+  ticket_id INT NOT NULL  REFERENCES ticket(ticketid)
   );
 

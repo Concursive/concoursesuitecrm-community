@@ -6,6 +6,7 @@
 #
 */
 	
+/*
 DELETE FROM org_type;
 INSERT INTO org_type (org_type_code, org_type) values ('CU','Customer');
 INSERT INTO org_type (org_type_code, org_type) values ('CO','Competitor');
@@ -15,6 +16,7 @@ INSERT INTO org_type (org_type_code, org_type) values ('IN','Investor');
 INSERT INTO org_type (org_type_code, org_type) values ('PR','Prospect');
 INSERT INTO org_type (org_type_code, org_type) values ('ME','Us');
 INSERT INTO org_type (org_type_code, org_type) values ('OT','Other');
+*/
 
 DELETE FROM lookup_department;
 INSERT INTO lookup_department (description) values ('Customer Relations');
