@@ -52,7 +52,7 @@ public final class Users extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo listInfo = getPagedListInfo(context, "UserListInfo");
-    listInfo.setLink("/Users.do?command=ListUsers");
+    listInfo.setLink("Users.do?command=ListUsers");
 
     Connection db = null;
     UserList list = new UserList();
@@ -104,7 +104,7 @@ public final class Users extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo listInfo = getPagedListInfo(context, "AccessLogInfo");
-    listInfo.setLink("/Users.do?command=ViewLog&id=" + context.getRequest().getParameter("id"));
+    listInfo.setLink("Users.do?command=ViewLog&id=" + context.getRequest().getParameter("id"));
 
     Connection db = null;
     AccessLogList list = new AccessLogList();
