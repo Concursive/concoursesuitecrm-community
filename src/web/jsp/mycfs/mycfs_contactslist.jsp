@@ -11,6 +11,7 @@
 <jsp:useBean id="HiddenFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="ListType" class="java.lang.String" scope="request"/>
 <jsp:useBean id="Campaign" class="java.lang.String" scope="request"/>
+<jsp:useBean id="AllContacts" class="java.lang.String" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popContacts.js"></script>
@@ -178,6 +179,7 @@ else{%>
       <input type=hidden name="hiddenFieldId" value="<%=HiddenFieldId%>">
       <input type=hidden name="listType" value="<%=ListType%>">
       <input type=hidden name="campaign" value="<%=Campaign.toString()%>">
+      <input type=hidden name="allcontacts" value="<%=AllContacts.toString()%>">
     </table>
     
     <%if(ListType.equalsIgnoreCase("list")){%>

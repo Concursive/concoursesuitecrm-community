@@ -190,6 +190,10 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       newOpp = new Opportunity(db, oppId);
+      
+      //check whether or not the owner is an active User
+      newOpp.checkEnabledOwnerAccount(db);
+      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -685,6 +689,7 @@ public final class Leads extends CFSModule {
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
     userList.setIncludeMe(true);
+    userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
 
     int tempId = -1;

@@ -49,7 +49,9 @@ User Details<br>
   </tr>
   <tr>
     <td width="150">Reports To</td>
-    <td><%= toHtml(UserRecord.getManager()) %></td>
+    <td><%= toHtml(UserRecord.getManager()) %>
+    <dhv:evaluate exp="<%=!(UserRecord.getManagerUserEnabled())%>"><font color="red">*</font></dhv:evaluate>
+    </td>
   </tr>
   <tr>
     <td width="150">Aliased To</td>

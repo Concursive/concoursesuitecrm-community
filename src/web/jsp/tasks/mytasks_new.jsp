@@ -97,10 +97,13 @@
       <table>
         <tr>
           <td>
-            <div id="changeowner"><%= Task.getOwnerName()==null?toHtml(User.getUserRecord().getContact().getNameLastFirst()):""%><%=Task.getOwnerName()!=null?Task.getOwnerName():"" %></div>
+            <div id="changeowner"><%= Task.getOwnerName()==null?toHtml(User.getUserRecord().getContact().getNameLastFirst()):""%><%=Task.getOwnerName()!=null?Task.getOwnerName():"" %>
+            <dhv:evaluate exp="<%=!(Task.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
+            </div>
           </td>
           <td>
-            <input type="hidden" name="owner" id="ownerid" value="<%=(Task.getOwner() == -1)?User.getUserRecord().getContact().getId():Task.getOwner()%>"><a href="javascript:popContactsListSingle('ownerid','changeowner');">Change Owner</a>
+            <input type="hidden" name="owner" id="ownerid" value="<%=(Task.getOwner() == -1)?User.getUserRecord().getContact().getId():Task.getOwner()%>">
+            &nbsp;<a href="javascript:popContactsListSingle('ownerid','changeowner');">Change Owner</a>
           </td>
         </tr>
       </table>
@@ -136,7 +139,8 @@
             <div id="changecontact"><%=Task.getContactName()!=null?Task.getContactName():"None"%></div>
           </td>
           <td>
-            <input type="hidden" name="contact" id="contactid" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>"><a href="javascript:popContactsListSingle('contactid','changecontact');">Change Contact</a>
+            <input type="hidden" name="contact" id="contactid" value="<%=(Task.getContactId() == -1)?-1:Task.getContactId()%>">
+            &nbsp;<a href="javascript:popContactsListSingle('contactid','changecontact','true');">Change Contact</a>
           </td>
           <td>
             <a href="javascript:document.addTask.contact.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a>

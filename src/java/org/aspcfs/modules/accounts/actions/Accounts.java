@@ -544,6 +544,10 @@ public final class Accounts extends CFSModule {
       int tempid = Integer.parseInt(temporgId);
       db = this.getConnection(context);
       newOrg = new Organization(db, tempid);
+      
+      //check whether or not the owner is an active User
+      newOrg.checkEnabledOwnerAccount(db);
+      
       addRecentItem(context, newOrg);
     } catch (Exception e) {
       errorMessage = e;
@@ -1097,6 +1101,7 @@ public final class Accounts extends CFSModule {
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
     userList.setIncludeMe(true);
+    userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
 
     Connection db = null;

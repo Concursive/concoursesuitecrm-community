@@ -214,6 +214,10 @@ public final class ExternalContactsOpps extends CFSModule {
     try {
       db = this.getConnection(context);
       newOpp = new Opportunity(db, oppId);
+      
+      //check whether or not the owner is an active User
+      newOpp.checkEnabledOwnerAccount(db);
+      
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
@@ -326,6 +330,7 @@ public final class ExternalContactsOpps extends CFSModule {
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
     userList.setIncludeMe(true);
+    userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
 
     Connection db = null;

@@ -62,6 +62,8 @@ public class Organization extends GenericBean {
   private boolean contactDelete = false;
   private boolean revenueDelete = false;
   private boolean documentDelete = false;
+  
+  private boolean hasEnabledOwnerAccount = true;
 
 
   /**
@@ -214,6 +216,12 @@ public class Organization extends GenericBean {
     this.modifiedByName = modifiedByName;
   }
 
+  public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
+    this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
+  }
+  public boolean getHasEnabledOwnerAccount() {
+    return hasEnabledOwnerAccount;
+  }
 
   /**
    *  Sets the OwnerName attribute of the Organization object
@@ -223,7 +231,27 @@ public class Organization extends GenericBean {
   public void setOwnerName(String ownerName) {
     this.ownerName = ownerName;
   }
+  
+  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
+    if (this.getOwner() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
 
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE user_id = ? AND enabled = ? ");
+    pst.setInt(1, this.getOwner());
+    pst.setBoolean(2, true);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setHasEnabledOwnerAccount(true);
+    } else {
+      this.setHasEnabledOwnerAccount(false);
+    }
+    rs.close();
+    pst.close();
+  }
 
   /**
    *  Sets the ErrorMessage attribute of the Organization object

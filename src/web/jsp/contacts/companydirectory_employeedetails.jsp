@@ -17,6 +17,7 @@ Employee Details<br>
   <tr class="title">
     <td colspan=2 valign=center align=left>
 	    <strong><%= toHtml(EmployeeBean.getNameFull()) %></strong>
+      <dhv:evaluate exp="<%=!(EmployeeBean.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          
 	  </td>
   </tr>
   <tr>

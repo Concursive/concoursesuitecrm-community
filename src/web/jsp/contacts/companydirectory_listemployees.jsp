@@ -60,6 +60,7 @@ View Employees<br>
 	</dhv:permission>
         <td class="row<%= rowid %>"><font class="columntext1">
           <a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a></font>
+          <dhv:evaluate exp="<%=!(thisEmployee.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          
           <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "&nbsp;") %>
         </td>
         <td class="row<%= rowid %>">

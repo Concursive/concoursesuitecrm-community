@@ -43,6 +43,7 @@ Contact Details<br>
     </td>
     <td>
       <%= toHtml(ContactDetails.getOwnerName()) %>
+      <dhv:evaluate exp="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
   <tr class="containerBody">

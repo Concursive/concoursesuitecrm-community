@@ -68,6 +68,7 @@ public class Opportunity extends GenericBean {
   private boolean callsDelete = false;
   private boolean documentDelete = false;
 
+  private boolean hasEnabledOwnerAccount = true;
 
   /**
    *  Constructor for the Opportunity object
@@ -186,6 +187,12 @@ public class Opportunity extends GenericBean {
     this.alertText = alertText;
   }
 
+  public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
+    this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
+  }
+  public boolean getHasEnabledOwnerAccount() {
+    return hasEnabledOwnerAccount;
+  }
 
   /**
    *  Sets the OpenIt attribute of the Opportunity object
@@ -882,7 +889,28 @@ public class Opportunity extends GenericBean {
     }
     return tmp;
   }
+  
+  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
+    if (this.getOwner() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
 
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE user_id = ? AND enabled = ? ");
+    pst.setInt(1, this.getOwner());
+    pst.setBoolean(2, true);
+    System.out.println(pst.toString());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setHasEnabledOwnerAccount(true);
+    } else {
+      this.setHasEnabledOwnerAccount(false);
+    }
+    rs.close();
+    pst.close();
+  }  
 
   /**
    *  Gets the Closed attribute of the Opportunity object

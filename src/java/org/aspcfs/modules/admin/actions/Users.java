@@ -702,7 +702,9 @@ public final class Users extends CFSModule {
         if (thisUser.getManagerId() > -1) {
           managerUser = new User();
           managerUser.setBuildContact(true);
-          managerUser.buildRecord(db, thisUser.getManagerId());
+          managerUser.setBuildHierarchy(true);
+          managerUser.buildResources(db);
+          updateSystemHierarchyCheck(db, context);
           thisTicket.setAssignedTo(managerUser.getId());
           thisTicket.setDepartmentCode(managerUser.getContact().getDepartment());
         } else {
@@ -744,12 +746,18 @@ public final class Users extends CFSModule {
 		Exception errorMessage = null;
 		boolean recordEnabled = false;
 		User thisUser = null;
+    User managerUser = null;
 
 		Connection db = null;
 		try {
 			db = this.getConnection(context);
 			thisUser = new User(db, context.getRequest().getParameter("id"));
 			recordEnabled = thisUser.enable(db);
+      
+      if (recordEnabled) {
+        updateSystemHierarchyCheck(db, context);
+      }
+      
 		}
 		catch (Exception e) {
 			errorMessage = e;
@@ -887,6 +895,7 @@ public final class Users extends CFSModule {
 			UserList userList = new UserList();
 			userList.setEmptyHtmlSelectRecord("-- None --");
 			userList.setBuildContact(false);
+      userList.setExcludeDisabledIfUnselected(true);
 			userList.buildList(db);
 
 			context.getRequest().setAttribute("UserList", userList);

@@ -56,6 +56,7 @@ Account Details<br>
     </td>
     <td>
       <%= OrgDetails.getOwnerName() %>
+      <dhv:evaluate exp="<%=!(OrgDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
 <dhv:evaluate exp="<%= hasText(OrgDetails.getTypes().valuesAsString()) %>">

@@ -116,6 +116,7 @@ Revenue Dashboard<br>
 	<tr>
 	<td width=100% class="row<%= rowid %>" valign=center nowrap>
 	<a href="/RevenueManager.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
+  <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
 	</td>
 	<td width=55 nowrap class="row<%= rowid %>" valign=center>
 	$<%=toHtml(thisRec.getYTDCurrency())%>

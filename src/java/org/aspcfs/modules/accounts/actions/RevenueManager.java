@@ -53,7 +53,6 @@ public final class RevenueManager extends CFSModule {
     String overrideId = null;
     
     if (context.getRequest().getParameter("oid") != null) {
-	    System.out.println("Based on req");
 	    overrideId = context.getRequest().getParameter("oid");
 	    if (Integer.parseInt(overrideId) == getUserId(context)) {
 		context.getSession().setAttribute("override", null);
@@ -116,7 +115,6 @@ public final class RevenueManager extends CFSModule {
 	      d.setYear(y - 1900);
 	      context.getSession().setAttribute("year", context.getRequest().getParameter("year"));
       } else if (context.getSession().getAttribute("year") != null) {
-	      System.out.println("Year is read as : " + (String)context.getSession().getAttribute("year"));
 	      y = Integer.parseInt((String)context.getSession().getAttribute("year"));
 	      d.setYear(y - 1900);
 	      context.getSession().setAttribute("year", (String)context.getSession().getAttribute("year"));
@@ -152,15 +150,11 @@ public final class RevenueManager extends CFSModule {
       realFullRevList.setYear(y);
       realFullRevList.setOwnerIdRange(range);
       
-      System.out.println("The type of realfullrevlist is: " + realFullRevList.getType());
-      
       realFullRevList.buildList(db);
       
       displayList.setRevenueYear(y);
       displayList.setBuildRevenueYTD(true);
       
-      //System.out.println("here is the session variable: " + context.getSession().getAttribute("type"));
-
       //filter out my revenue for displaying on page
       Iterator z = realFullRevList.iterator();
 
@@ -511,6 +505,7 @@ public final class RevenueManager extends CFSModule {
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
     userList.setIncludeMe(true);
+    userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
     
     //end
@@ -558,6 +553,10 @@ public final class RevenueManager extends CFSModule {
     try {
       db = this.getConnection(context);
       newRevenue = new Revenue(db, revenueId);
+      
+      //check whether or not the owner is an active User
+      newRevenue.checkEnabledOwnerAccount(db);      
+      
       thisOrganization = new Organization(db, newRevenue.getOrgId());
     } catch (Exception e) {
       errorMessage = e;
@@ -735,11 +734,8 @@ public final class RevenueManager extends CFSModule {
               revenueAddTerm = new Double(tempRev.getAmount());
               //done
 
-	      //System.out.println(passedYear + " " + rightNow.get(java.util.Calendar.YEAR));
-	      
               //case: amount date within 12 month range
               if ( passedYear == rightNow.get(java.util.Calendar.YEAR) ) {
-		//System.out.println("adding in " + revenueAddTerm + " at " + valKey);
                 pertainsTo.setRevenueGraphValues(valKey, revenueAddTerm);
               }
 
@@ -800,7 +796,6 @@ public final class RevenueManager extends CFSModule {
 
     for (count = 0; count < 12; count++) {
       thisLine.getRevenue().setValue(valKeys[count], new Double(primaryNode.getRevenue().getValue(valKeys[count]).doubleValue() + (addToMe.getRevenue().getValue(valKeys[count])).doubleValue()));
-      //System.out.println("VK: " + valKeys[count]);
     }
 
     currentLines.addElement(thisLine);
@@ -824,7 +819,6 @@ public final class RevenueManager extends CFSModule {
 
       for (count = 0; count < 12; count++) {
         thisLine.getRevenue().setValue(valKeys[count], thisUser.getRevenue().getValue(valKeys[count]));
-	//System.out.println("VK: " + valKeys[count]);
       }
     }
 

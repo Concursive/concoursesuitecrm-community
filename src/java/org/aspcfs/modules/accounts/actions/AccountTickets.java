@@ -243,6 +243,10 @@ public final class AccountTickets extends CFSModule {
       ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       newTic = new Ticket(db, Integer.parseInt(ticketId));
+      
+      //check whether or not the owner is an active User
+      newTic.checkEnabledOwnerAccount(db);      
+      
       newTic.getHistory().setPagedListInfo(ticListInfo);
 
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
@@ -378,6 +382,7 @@ public final class AccountTickets extends CFSModule {
       userList.setEmptyHtmlSelectRecord("-- None --");
       userList.setBuildContact(true);
       userList.setDepartment(newTic.getDepartmentCode());
+      userList.setExcludeDisabledIfUnselected(true);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
 
@@ -602,6 +607,7 @@ public final class AccountTickets extends CFSModule {
     UserList userList = new UserList();
     userList.setEmptyHtmlSelectRecord("-- None --");
     userList.setBuildContact(true);
+    userList.setExcludeDisabledIfUnselected(true);
     userList.setDepartment(newTic.getDepartmentCode());
     userList.buildList(db);
     context.getRequest().setAttribute("UserList", userList);

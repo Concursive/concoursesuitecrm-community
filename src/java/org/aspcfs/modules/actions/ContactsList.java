@@ -128,6 +128,19 @@ public final class ContactsList extends CFSModule {
 
       firstFilter = contactListInfo.getListView();
       contactList = new ContactList();
+      
+      //we want only contacts with valid user accounts if we are not in campaign groups 
+      if (context.getRequest().getParameter("campaign") != null && context.getRequest().getParameter("campaign").length() > 0) {
+          if (!(((String) context.getRequest().getParameter("campaign")).equalsIgnoreCase("true"))) {
+            contactList.setIncludeEnabledUsersOnly(true);
+          } 
+      } else if (context.getRequest().getParameter("allcontacts") != null && context.getRequest().getParameter("allcontacts").length() > 0) {
+          if (!(((String) context.getRequest().getParameter("allcontacts")).equalsIgnoreCase("true"))) {
+            contactList.setIncludeEnabledUsersOnly(true);
+          } 
+      } else {
+        contactList.setIncludeEnabledUsersOnly(true);
+      }
 
       /*
        *  Collect the selected entries in the contactList & store it in the session's HashMap i.e checkcontact
@@ -252,7 +265,13 @@ public final class ContactsList extends CFSModule {
                       context.getRequest().setAttribute("Campaign", (String)context.getRequest().getParameter("campaign"));
               }
       }
-    
+      
+      if (context.getRequest().getParameter("allcontacts") != null) {
+              if (((String) context.getRequest().getParameter("allcontacts")).equalsIgnoreCase("true")) {
+                      context.getRequest().setAttribute("AllContacts", (String)context.getRequest().getParameter("allcontacts"));
+              }
+      }      
+      
       context.getSession().setAttribute("selectedContacts", selectedList);
       if (listDone) {
         context.getSession().setAttribute("finalContacts", finalContactList);

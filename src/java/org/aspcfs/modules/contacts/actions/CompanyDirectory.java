@@ -62,6 +62,7 @@ public final class CompanyDirectory extends CFSModule {
       db = this.getConnection(context);
       employeeList.setPagedListInfo(companyDirectoryInfo);
       employeeList.setTypeId(Contact.EMPLOYEE_TYPE);
+      employeeList.setCheckEnabledUserAccess(true);
       employeeList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -107,6 +108,8 @@ public final class CompanyDirectory extends CFSModule {
     try {
       db = this.getConnection(context);
       thisEmployee = new Contact(db, employeeId);
+      //enabled user?
+      thisEmployee.checkEnabledUserAccount(db);
       context.getRequest().setAttribute("EmployeeBean", thisEmployee);
       addRecentItem(context, thisEmployee);
 

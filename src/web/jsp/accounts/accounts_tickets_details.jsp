@@ -106,6 +106,7 @@ Ticket Details<br>
 		</td>
 		<td>
       <%= toHtml(TicketDetails.getOwnerName()) %>
+      <dhv:evaluate exp="<%=!(TicketDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
 		</td>
   </tr>
 	<tr class="containerBody">

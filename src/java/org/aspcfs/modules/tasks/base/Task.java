@@ -51,7 +51,9 @@ public class Task extends GenericBean {
   private HashMap dependencyList = new HashMap();
   private Contact contact = null;
   private Ticket ticket = null;
-
+  
+  private boolean hasEnabledOwnerAccount = true;
+  private boolean hasEnabledLinkAccount = true;
 
 
   /**
@@ -135,6 +137,10 @@ public class Task extends GenericBean {
     this.enteredBy = enteredBy;
   }
 
+  public boolean getHasEnabledOwnerAccount() { return hasEnabledOwnerAccount; }
+  public boolean getHasEnabledLinkAccount() { return hasEnabledLinkAccount; }
+  public void setHasEnabledOwnerAccount(boolean tmp) { this.hasEnabledOwnerAccount = tmp; }
+  public void setHasEnabledLinkAccount(boolean tmp) { this.hasEnabledLinkAccount = tmp; }
 
   /**
    *  Sets the enteredBy attribute of the Task object
@@ -583,6 +589,48 @@ public java.sql.Timestamp getModified() {
     }
     return toReturn;
   }
+  
+  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
+    if (this.getOwner() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE user_id = ? AND enabled = ? ");
+    pst.setInt(1, this.getOwner());
+    pst.setBoolean(2, true);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setHasEnabledOwnerAccount(true);
+    } else {
+      this.setHasEnabledOwnerAccount(false);
+    }
+    rs.close();
+    pst.close();
+  }  
+  
+  public void checkEnabledLinkAccount(Connection db) throws SQLException {
+    if (this.getContactId() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE user_id = ? AND enabled = ? ");
+    pst.setInt(1, this.getContactId());
+    pst.setBoolean(2, true);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setHasEnabledLinkAccount(true);
+    } else {
+      this.setHasEnabledLinkAccount(false);
+    }
+    rs.close();
+    pst.close();
+  }  
 
 
   /**

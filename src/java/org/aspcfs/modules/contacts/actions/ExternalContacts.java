@@ -728,6 +728,7 @@ public final class ExternalContacts extends CFSModule {
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
     userList.setIncludeMe(true);
+    userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
 
     Connection db = null;
@@ -736,6 +737,10 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
+      
+      //check whether or not the owner is an active User
+      thisContact.checkEnabledOwnerAccount(db);
+      
       context.getRequest().setAttribute("ContactDetails", thisContact);
       addRecentItem(context, thisContact);
 

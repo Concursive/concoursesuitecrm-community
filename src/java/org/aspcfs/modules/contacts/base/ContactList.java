@@ -26,6 +26,8 @@ public class ContactList extends Vector {
   public static final int FALSE = 0;
   private int includeEnabled = TRUE;
   
+  private boolean includeEnabledUsersOnly = false;
+  
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
   private int typeId = -1;
@@ -39,6 +41,7 @@ public class ContactList extends Vector {
   private boolean emailNotNull = false;
   private Vector ignoreTypeIdList = new Vector();
   private boolean checkUserAccess = false;
+  private boolean checkEnabledUserAccess = false;
   private int checkExcludedFromCampaign = -1;
   private boolean buildDetails = true;
   private int owner = -1;
@@ -116,6 +119,13 @@ public class ContactList extends Vector {
   }
   public void setAccountTypeIdHash(HashMap accountTypeIdHash) {
     this.accountTypeIdHash = accountTypeIdHash;
+  }
+  
+  public void setIncludeEnabledUsersOnly(boolean includeEnabledUsersOnly) {
+    this.includeEnabledUsersOnly = includeEnabledUsersOnly;
+  }
+  public boolean getIncludeEnabledUsersOnly() {
+    return includeEnabledUsersOnly;
   }
   
   /**
@@ -286,6 +296,13 @@ public class ContactList extends Vector {
     buildQuery(thisOwnerId, thisUserRange);
   }
   
+  public boolean getCheckEnabledUserAccess() {
+    return checkEnabledUserAccess;
+  }
+  public void setCheckEnabledUserAccess(boolean checkEnabledUserAccess) {
+    this.checkEnabledUserAccess = checkEnabledUserAccess;
+  }
+
   
   /**
    *  Sets the MiddleName attribute of the ContactList object
@@ -1018,6 +1035,9 @@ public class ContactList extends Vector {
       if (checkUserAccess) {
         thisContact.checkUserAccount(db);
       }
+      if (checkEnabledUserAccess) {
+        thisContact.checkEnabledUserAccount(db);
+      }
       if (checkExcludedFromCampaign > -1) {
         thisContact.checkExcludedFromCampaign(db, checkExcludedFromCampaign);
       }
@@ -1117,6 +1137,10 @@ public class ContactList extends Vector {
       
       if (withProjectsOnly) {
         sqlFilter.append("AND c.user_id in (Select distinct user_id from project_team) ");
+      }
+      
+      if (includeEnabledUsersOnly) {
+        sqlFilter.append("AND c.user_id in (SELECT user_id from access where enabled = ?) ");
       }
       
       if (accountOwnerIdRange != null) {
@@ -1582,6 +1606,11 @@ public class ContactList extends Vector {
       if (company != null) {
         pst.setString(++i, company);
       }
+      
+      if (includeEnabledUsersOnly) {
+        pst.setBoolean(++i, true);
+      }
+      
       switch (personalId) {
         case -2: break;
         case -1: break;

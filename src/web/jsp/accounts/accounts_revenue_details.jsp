@@ -42,6 +42,7 @@ Revenue Details<br>
     </td>
     <td>
       <%= toHtml(Revenue.getOwnerName()) %>
+      <dhv:evaluate exp="<%=!(Revenue.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
   <tr class="containerBody">

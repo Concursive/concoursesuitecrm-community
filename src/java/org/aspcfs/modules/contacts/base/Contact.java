@@ -68,7 +68,8 @@ public class Contact extends GenericBean {
   private String modifiedByName = "";
 
   private boolean orgEnabled = true;
-
+  private boolean hasEnabledOwnerAccount = true;
+  private boolean hasEnabledAccount = true;
 
   /**
    *  Constructor for the Contact object
@@ -181,6 +182,12 @@ public class Contact extends GenericBean {
     this.ownerName = ownerName;
   }
 
+  public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
+    this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
+  }
+  public boolean getHasEnabledOwnerAccount() {
+    return hasEnabledOwnerAccount;
+  }
 
   /**
    *  Gets the url attribute of the Contact object
@@ -190,7 +197,6 @@ public class Contact extends GenericBean {
   public String getUrl() {
     return url;
   }
-
 
   /**
    *  Sets the url attribute of the Contact object
@@ -237,7 +243,14 @@ public class Contact extends GenericBean {
   public void setCustom1(int custom1) {
     this.custom1 = custom1;
   }
-
+  
+  public boolean hasEnabledAccount() {
+    return hasEnabledAccount;
+  }
+  
+  public void setHasEnabledAccount(boolean hasEnabledAccount) {
+    this.hasEnabledAccount = hasEnabledAccount;
+  }
 
   /**
    *  Sets the custom1 attribute of the Contact object
@@ -248,6 +261,27 @@ public class Contact extends GenericBean {
     this.custom1 = Integer.parseInt(custom1);
   }
 
+  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
+    if (this.getOwner() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE user_id = ? AND enabled = ? ");
+    pst.setInt(1, this.getOwner());
+    pst.setBoolean(2, true);
+    System.out.println(pst.toString());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setHasEnabledOwnerAccount(true);
+    } else {
+      this.setHasEnabledOwnerAccount(false);
+    }
+    rs.close();
+    pst.close();
+  } 
 
   /**
    *  Sets the Id attribute of the Contact object
@@ -1775,7 +1809,27 @@ public class Contact extends GenericBean {
     rs.close();
     pst.close();
   }
+  
+  public void checkEnabledUserAccount(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
 
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE contact_id = ? AND enabled = ? ");
+    pst.setInt(1, this.getId());
+    pst.setBoolean(2, true);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      setHasEnabledAccount(true);
+    } else {
+      setHasEnabledAccount(false);
+    }
+    rs.close();
+    pst.close();
+  }  
 
   /**
    *  Description of the Method

@@ -40,6 +40,8 @@ public class Revenue extends GenericBean {
   private String typeName = "";
   private String orgName = "";
   
+  private boolean hasEnabledOwnerAccount = true;
+  
   public Revenue() { }
   
   public Revenue(ResultSet rs) throws SQLException {
@@ -172,6 +174,13 @@ public class Revenue extends GenericBean {
     this.orgName = orgName;
   }
   
+  public boolean getHasEnabledOwnerAccount() {
+    return hasEnabledOwnerAccount;
+  }
+  public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
+    this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
+  }
+  
   public int getId() { return id; }
   public int getOrgId() { return orgId; }
   public int getTransactionId() { return transactionId; }
@@ -286,6 +295,27 @@ public class Revenue extends GenericBean {
       return false;
     }
   }
+  
+  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
+    if (this.getOwner() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE user_id = ? AND enabled = ? ");
+    pst.setInt(1, this.getOwner());
+    pst.setBoolean(2, true);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setHasEnabledOwnerAccount(true);
+    } else {
+      this.setHasEnabledOwnerAccount(false);
+    }
+    rs.close();
+    pst.close();
+  }   
   
   public int update(Connection db, ActionContext context) throws SQLException {
     int oldId = -1;

@@ -68,6 +68,7 @@ Opportunity Details<br>
     </td>
     <td valign=center width=100%>
       <%= OpportunityDetails.getOwnerName() %>
+      <dhv:evaluate exp="<%=!(OpportunityDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
   

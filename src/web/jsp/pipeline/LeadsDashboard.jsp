@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="UserInfo" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <jsp:useBean id="ShortChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
@@ -84,6 +85,7 @@ Dashboard<br>
         <tr>
           <td class="row<%= rowid %>" valign=center nowrap>
             <a href="/Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
+            <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
           </td>
           <td width=125 class="row<%= rowid %>" valign=center>
             <%= toHtml(thisRec.getContact().getDepartmentName()) %>

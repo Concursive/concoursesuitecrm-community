@@ -230,6 +230,10 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       newOpp = new Opportunity(db, oppId);
+      
+      //check whether or not the owner is an active User
+      newOpp.checkEnabledOwnerAccount(db);
+      
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
     } catch (Exception e) {
@@ -339,6 +343,7 @@ public final class Opportunities extends CFSModule {
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
     userList.setIncludeMe(true);
+    userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
 
     int tempId = -1;

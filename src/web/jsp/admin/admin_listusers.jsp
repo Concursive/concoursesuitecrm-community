@@ -90,6 +90,7 @@ View Users<br>
         </td>
         <td class="row<%= rowid %>">
           <%= toHtml(thisUser.getManager()) %>
+          <dhv:evaluate exp="<%=!(thisUser.getManagerUserEnabled())%>"><font color="red">*</font></dhv:evaluate>
         </td>
       </tr>
 <%      

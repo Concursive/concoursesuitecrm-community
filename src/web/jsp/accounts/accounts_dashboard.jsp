@@ -23,7 +23,7 @@
 
 <table bgcolor="#FFFFFF" border="0" width="100%" class="tableBorder" cellspacing="0">
 <tr valign="top" class="title">
-   <td width="100%" align="center" colspan="2"> <strong><div id="userName"> User: <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst()) %></div></strong></td>
+   <td width="100%" align="center" colspan="2"> <strong><div id="userName"> User:&nbsp;<%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst()) %></div></strong></td>
 </tr>
 <tr style="visibility:hidden"><td></td></tr>
 <tr valign="top">
