@@ -451,10 +451,10 @@ public class User extends GenericBean {
     }
 
     if (!isValid) {
-      this.gmr.setLastFileName("");
-      this.ramr.setLastFileName("");
-      this.cgmr.setLastFileName("");
-      this.cramr.setLastFileName("");
+      this.gmr.setLastFileName(null);
+      this.ramr.setLastFileName(null);
+      this.cgmr.setLastFileName(null);
+      this.cramr.setLastFileName(null);
     }
 
     if (managerUser != null) {
@@ -473,11 +473,9 @@ public class User extends GenericBean {
     if (dataAlso == true) {
       this.revenue.setIsValid(isValid);
     }
-
     if (isValid == false) {
-      this.revenue.setLastFileName("");
+      this.revenue.setLastFileName(null);
     }
-
     if (managerUser != null) {
       managerUser.setRevenueIsValid(false, false);
     }
@@ -1364,21 +1362,16 @@ public class User extends GenericBean {
    */
   public UserList getFullChildList(UserList inList, UserList currentList) {
     if (inList != null) {
-
       Iterator j = inList.iterator();
-
       while (j.hasNext()) {
         User thisRec = (User) j.next();
         currentList.addElement(thisRec);
-
         UserList countList = thisRec.getShortChildList();
-
         if (countList != null && countList.getListSize() > 0) {
           currentList = thisRec.getFullChildList(countList, currentList);
         }
       }
     }
-
     return currentList;
   }
 
@@ -2070,7 +2063,7 @@ public class User extends GenericBean {
     if (contactId < 1 && (contact == null || !contact.isValid(db))) {
       errors.put("contactIdError", "Contact needs to be selected or newly created first");
     }
-    
+
     if (password1 == null || password1.trim().equals("")) {
       errors.put("password1Error", "Password cannot be left blank");
     }
@@ -2440,14 +2433,12 @@ public class User extends GenericBean {
    *@param  hi  Description of the Parameter
    *@return     Description of the Return Value
    */
-
   public static int rand(int lo, int hi) {
     int n = hi - lo + 1;
     int i = rn.nextInt() % n;
     if (i < 0) {
       i = -i;
     }
-
     return lo + i;
   }
 
@@ -2465,7 +2456,6 @@ public class User extends GenericBean {
     for (int i = 0; i < n; i++) {
       b[i] = (byte) rand('a', 'z');
     }
-
     return new String(b, 0);
   }
 
