@@ -45,11 +45,12 @@ Call Details<br>
     <td class="containerBack">
       <dhv:permission name="pipeline-opportunities-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
       <dhv:permission name="pipeline-opportunities-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardMessage&forwardType=<%= Constants.PIPELINE_CALLS %>&headerId=<%= opportunityHeader.getId() %>&id=<%=CallDetails.getId()%>&return='+escape('LeadsCalls.do?command=Details&id=<%=CallDetails.getId()%>&headerId=<%= opportunityHeader.getId() %>') + '&sendUrl=' + escape('LeadsCallsForward.do?command=SendMessage&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %>');"></dhv:permission>
       <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td colspan="2">
-            <strong>Call Details</strong> [ <a href="javascript:popURL('ForwardNote.do?command=ShowForm&linkRecordId=<%= CallDetails.getId() %>&linkModuleId=<%= Constants.CONTACTS_CALLS %>&popup=true','Forward_Call','600','290','yes','yes');">Forward</a> ]
+            <strong>Call Details</strong>
           </td>     
         </tr>
         <tr class="containerBody">
@@ -128,6 +129,7 @@ Call Details<br>
       <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br></dhv:permission>
       <dhv:permission name="pipeline-opportunities-calls-edit"><input type="submit" name="command" value="Modify"></dhv:permission>
       <dhv:permission name="pipeline-opportunities-calls-delete"><input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardMessage&forwardType=<%= Constants.PIPELINE_CALLS %>&headerId=<%= opportunityHeader.getId() %>&id=<%=CallDetails.getId()%>&return='+escape('LeadsCalls.do?command=Details&id=<%=CallDetails.getId()%>&headerId=<%= opportunityHeader.getId() %>') + '&sendUrl=' + escape('LeadsCallsForward.do?command=SendMessage&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %>');"></dhv:permission>
     </td>
   </tr>
 </table>
