@@ -15,7 +15,7 @@
 <a href="Accounts.do?command=Details&orgId=<%=ticketDetails.getOrgId()%>">Account Details</a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=ticketDetails.getOrgId()%>">Tickets</a> >
 <a href="AccountTickets.do?command=TicketDetails&id=<%=ticketDetails.getId()%>">Ticket Details</a> >
-Forms
+Maintenance Notes
 </td>
 </tr>
 </table>
@@ -32,7 +32,7 @@ Forms
   <table cellpadding="4" cellspacing="0" border="0" width="100%" >
   <br />
   <tr>
-    <th align="left">An asset should be associated with the ticket to add maintenance notes</th>
+    <th align="left">An asset was not provided in the ticket.<br />When all required information is entered, this page shows the asset maintenance notes.</th>
   </tr>
   </table>
  </td>
