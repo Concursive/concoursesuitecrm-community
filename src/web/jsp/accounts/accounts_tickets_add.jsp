@@ -14,6 +14,7 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
   <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -66,6 +67,13 @@
       return true;
     }
   }
+  //used when a new contact is added
+  function insertOption(text,value,optionListId){
+     var obj = document.forms['addticket'].contactId;
+     insertIndex= obj.options.length;
+     obj.options[insertIndex] = new Option(text,value);
+     obj.selectedIndex = insertIndex;
+    }
 </script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
@@ -132,9 +140,7 @@ Add Ticket<br>
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 <%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      <input type="checkbox" name="contact"<dhv:evaluate if="<%= request.getParameter("contact") != null %>"> checked</dhv:evaluate>
-      onClick="javascript:this.form.action='AccountTickets.do?command=AddTicket&auto-populate=true#newcontact';this.form.submit()">Add new
-      <a name="newcontact"></a> 
+      <a href="javascript:popURL('Contacts.do?command=Add&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','600','yes','yes');">Add New</a>
     </td>
 	</tr>
 </table>
