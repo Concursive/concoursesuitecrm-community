@@ -39,7 +39,7 @@ View Tickets
     <th><b>Priority</b></th>
     <th><b>Age</b></th>
     <th><b>Company</b></th>
-		<th><b>Assigned&nbsp;To</b></th>
+	<th><b>Resource Assigned</b></th>
   </tr>
 <%
 	Iterator k = AssignedToMeList.iterator();
@@ -124,7 +124,7 @@ View Tickets
     <th><b>Priority</b></th>
     <th><b>Age</b></th>
     <th><b>Company</b></th>
-		<th><b>Assigned&nbsp;To</b></th>
+	<th><b>Resource Assigned</b></th>
   </tr>
 <%
 	Iterator n = OpenList.iterator();
@@ -215,7 +215,7 @@ View Tickets
     <th><b>Priority</b></th>
     <th><b>Age</b></th>
     <th><b>Company</b></th>
-		<th><b>Assigned&nbsp;To</b></th>
+	<th><b>Resource Assigned</b></th>
   </tr>
 <%
 	Iterator j = CreatedByMeList.iterator();
@@ -292,3 +292,4 @@ View Tickets
   </table>
 	<%}%>
 <%}%>
+
