@@ -23,7 +23,7 @@ public class UserList extends Vector {
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;
-
+  //Sync variables
   public final static String tableName = "access";
   public final static String uniqueField = "user_id";
   private java.sql.Timestamp lastAnchor = null;
@@ -31,7 +31,7 @@ public class UserList extends Vector {
   private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
-
+  //Query properties
   private int enteredBy = -1;
   private int roleId = -1;
   private int managerId = -1;
@@ -43,8 +43,8 @@ public class UserList extends Vector {
   private int department = -1;
   private int enabled = -1;
   private String jsEvent = null;
-  private boolean includeAliases = false;
-
+  private int includeAliases = Constants.FALSE;
+  //Revenue specific properties
   private boolean buildRevenueYTD = false;
   private int revenueYear = -1;
   private int revenueType = 0;
@@ -392,14 +392,7 @@ public class UserList extends Vector {
   }
 
 
-  /**
-   *  Sets the includeAliases attribute of the UserList object
-   *
-   *@param  includeAliases  The new includeAliases value
-   */
-  public void setIncludeAliases(boolean includeAliases) {
-    this.includeAliases = includeAliases;
-  }
+  public void setIncludeAliases(int tmp) { this.includeAliases = tmp; }
 
 
   /**
@@ -491,14 +484,7 @@ public class UserList extends Vector {
   }
 
 
-  /**
-   *  Gets the includeAliases attribute of the UserList object
-   *
-   *@return    The includeAliases value
-   */
-  public boolean getIncludeAliases() {
-    return includeAliases;
-  }
+  public int getIncludeAliases() { return includeAliases; }
 
 
   /**
@@ -802,6 +788,7 @@ public class UserList extends Vector {
    *@since                    1.4
    */
   public void buildList(Connection db) throws SQLException {
+    //A super query -- builds the user and contact data at same time
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
@@ -815,12 +802,6 @@ public class UserList extends Vector {
       if (managerUser != null) {
         thisUser.setManagerId(managerUser.getId());
         thisUser.setManagerUser(managerUser);
-      }
-      if (buildRevenueYTD && revenueYear > -1) {
-        thisUser.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType());
-      }
-      if (buildGrossPipelineValue) {
-        thisUser.buildGrossPipelineValue(db);
       }
       this.add(thisUser);
     }
@@ -874,21 +855,17 @@ public class UserList extends Vector {
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM access a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id), " +
         "role r " +
         "WHERE a.role_id = r.role_id ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -901,7 +878,6 @@ public class UserList extends Vector {
       }
       rs.close();
       pst.close();
-
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(
@@ -918,14 +894,12 @@ public class UserList extends Vector {
         rs.close();
         pst.close();
       }
-
       //Determine column to sort by
       pagedListInfo.setDefaultSort("c.namelast", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY c.namelast ");
     }
-
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -941,35 +915,23 @@ public class UserList extends Vector {
         "a.entered as access_entered, a.enteredby as access_enteredby, " +
         "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
         "r.role, " +
-        "m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, m_usr.enabled as mgr_enabled, " +
-        "als.namefirst as als_namefirst, als.namelast as als_namelast, " +
+        "m_usr.enabled as mgr_enabled, " +
         "c.*, d.description as departmentname, t.description as type_name, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
         "o.name as org_name, o.enabled as orgenabled " +
         "FROM access a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
         "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
         "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN contact als ON (a.alias = als.user_id) " +
-        "LEFT JOIN contact m ON (a.manager_id = m.user_id) " +
         "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id), " +
         "role r " +
         "WHERE a.role_id = r.role_id ");
-
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
     return rs;
   }
 
@@ -982,14 +944,20 @@ public class UserList extends Vector {
    *@since                    1.4
    */
   private void buildResources(Connection db) throws SQLException {
-    if (buildContact || buildHierarchy) {
-      Iterator i = this.iterator();
-      while (i.hasNext()) {
-        User thisUser = (User) i.next();
-        thisUser.setBuildContact(buildContact);
-        thisUser.setBuildContactDetails(buildContactDetails);
-        thisUser.setBuildHierarchy(buildHierarchy);
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      User thisUser = (User) i.next();
+      thisUser.setBuildContact(buildContact);
+      thisUser.setBuildContactDetails(buildContactDetails);
+      thisUser.setBuildHierarchy(buildHierarchy);
+      if (buildContact || buildHierarchy) {
         thisUser.buildResources(db);
+      }
+      if (buildRevenueYTD && revenueYear > -1) {
+        thisUser.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType());
+      }
+      if (buildGrossPipelineValue) {
+        thisUser.buildGrossPipelineValue(db);
       }
     }
   }
@@ -1005,10 +973,10 @@ public class UserList extends Vector {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-    if (includeAliases) {
+    if (includeAliases == Constants.TRUE) {
       sqlFilter.append("AND a.alias > -1 ");
     }
-    if (!(includeAliases)) {
+    if (includeAliases == Constants.FALSE) {
       sqlFilter.append("AND a.alias = -1 ");
     }
     if (enteredBy > -1) {
