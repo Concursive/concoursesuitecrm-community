@@ -87,12 +87,12 @@
     <action name="ExternalContactsCalls"/>
     <action name="ExternalContactsCallsForward"/>
     <action name="ExternalContactsPrototype"/>
-    <page title="Contacts &amp; Resources"/>
+    <page title="General Contacts"/>
     <permission value="contacts-view"/>
-    <long_html value="Contacts &amp; Resources"/>
-    <short_html value="Contacts &amp; Resources"/>
+    <long_html value="General Contacts"/>
+    <short_html value="General Contacts"/>
     <link value="ExternalContacts.do"/>
-    <graphic width="83" height="36" on="menu-contacts-on.gif" off="menu-contacts-off.gif" rollover=""/>
+    <graphic width="83" height="36" on="menu-general-contacts-on.gif" off="menu-general-contacts-off.gif" rollover=""/>
     
     <submenu name="Add Contact">
       <permission value="contacts-external_contacts-add"/>
@@ -241,7 +241,7 @@
 		<action name="AccountsDocuments"/>
     <action name="AccountsAutoGuide"/>
     <action name="AccountsPrototype"/>
-    <page title="Accounts"/>
+    <page title="Account Management"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
     <short_html value="Accounts"/>
@@ -536,12 +536,12 @@
     <action name="AdminFieldsGroup"/>
     <action name="Users"/>
     <action name="Roles"/>
-    <page title="Setup"/>
+    <page title="System Administration"/>
     <permission value="admin-view"/>
-    <long_html value="Setup"/>
-    <short_html value="Setup"/>
+    <long_html value="System Administration"/>
+    <short_html value="System Administration"/>
     <link value="Admin.do"/>
-    <graphic width="83" height="36" on="menu-setup-on.gif" off="menu-setup-off.gif" rollover=""/>
+    <graphic width="83" height="36" on="menu-sysadmin-on.gif" off="menu-sysadmin-off.gif" rollover=""/>
     
     <submenu name="Add User">
       <permission value="admin-users-add"/>
