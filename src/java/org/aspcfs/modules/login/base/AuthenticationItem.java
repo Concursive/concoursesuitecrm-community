@@ -89,7 +89,7 @@ public class AuthenticationItem {
     if ( (id != null && id.equals(serverName)) || !checkCode ) {
       ConnectionElement ce = this.getConnectionElement(context);
       if (ce != null) {
-        if (!checkCode || code.equals(authCode)) {
+        if (!checkCode || (code != null && authCode != null && code.equals(authCode))) {
           if (System.getProperty("DEBUG") != null) {
             System.out.println("AuthenticationItem-> Site: " + serverName + "/" + ce.getDbName());
           }
