@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.media.autoguide.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="InventoryDetails" class="org.aspcfs.modules.media.autoguide.base.Inventory" scope="request"/>
 <jsp:useBean id="YearSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>

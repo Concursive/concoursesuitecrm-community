@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.acounts.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.mycfs.beans.CalendarBean" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="NewUserList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></script>

@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.pipline.base.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OpportunityDetails" class="org.aspcfs.modules.pipline.base.Opportunity" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="OpportunityDetails" class="org.aspcfs.modules.pipeline.base.Opportunity" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>

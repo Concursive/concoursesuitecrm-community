@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.controller.*,org.aspcfs.utils.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.controller.*,org.aspcfs.utils.*,org.aspcfs.utils.web.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="OrgEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>

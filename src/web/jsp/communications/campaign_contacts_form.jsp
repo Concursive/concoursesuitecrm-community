@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.modules.contacts.base.Contact,org.aspcfs.modules.contacts.base.ContactList" %>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="CampaignGroupsContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>

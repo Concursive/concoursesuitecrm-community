@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.pipeline.beans.OpportunityBean" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
-<jsp:useBean id="OppDetails" class="org.aspcfs.modules.accounts.base.OpportunityBean" scope="request"/>
+<jsp:useBean id="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>

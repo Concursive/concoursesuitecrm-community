@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.pipline.base.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OpportunityDetails" class="org.aspcfs.modules.pipline.base.Opportunity" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.modules.contacts.base.Call,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="OpportunityDetails" class="org.aspcfs.modules.pipeline.base.Opportunity" scope="request"/>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="LeadsCallList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
 <jsp:useBean id="LeadsCallListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>

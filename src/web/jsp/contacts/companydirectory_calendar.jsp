@@ -1,5 +1,5 @@
 <%-- Import required libraries --%>
-<jsp:useBean id="CompanyCalendar" class="org.aspcfs.utils.CalendarView" scope="request"/>
+<jsp:useBean id="CompanyCalendar" class="org.aspcfs.utils.web.CalendarView" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <b>Company Calendar</b>
 <hr color="#BFBFBB" noshade>

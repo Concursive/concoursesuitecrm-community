@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="HeaderDetails" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="modifyOpp" action="Leads.do?command=UpdateOpp&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post">

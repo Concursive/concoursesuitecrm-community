@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*,org.aspcfs.modules.admin.base.User" %>
 <jsp:useBean id="ShortChildList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="OppList" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>

@@ -3,7 +3,7 @@
 <jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<jsp:useBean id="OppDetails" class="org.aspcfs.modules.pipline.base.OpportunityBean" scope="request"/>
+<jsp:useBean id="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].header_description.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>

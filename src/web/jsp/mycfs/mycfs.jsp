@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.mycfs.beans.*" %>
-<jsp:useBean id="NewsList" class="org.aspcfs.modules.mycfs.base.NewsArticleList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.accounts.base.NewsArticle,org.aspcfs.modules.mycfs.beans.*" %>
+<jsp:useBean id="NewsList" class="org.aspcfs.modules.accounts.base.NewsArticleList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="NewUserList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="IndSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>

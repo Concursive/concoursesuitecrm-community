@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="EmployeeBean" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -55,7 +55,7 @@ Personal Information<br>
 <input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="modified" value="<%= EmployeeBean.getModified().toString() %>">
 <input type="hidden" name="orgId" value="<%= EmployeeBean.getOrgId() %>">
-<input type="hidden" name="typeId" value="<%= EmployeeBean.getTypeId() %>">
+<input type="hidden" name="typeId" value="<%= EmployeeBean.getTypesNameString() %>">
 <input type="hidden" name="department" value="<%=EmployeeBean.getDepartment()%>">
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

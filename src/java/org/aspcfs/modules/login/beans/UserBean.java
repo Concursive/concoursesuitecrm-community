@@ -306,6 +306,11 @@ public class UserBean extends GenericBean {
     return getUserRecord().getContact().getNameLast();
   }
 
+  
+  public String getNameFirstLast() {
+    return getUserRecord().getContact().getNameFirstLast();
+  }
+  
 
   /**
    *  Gets the Template attribute of the User object
