@@ -173,9 +173,14 @@ public final class RevenueManager extends CFSModule {
       }
       
       displayList.setRevenueOwnerId(idToUse);
-      displayList.setPagedListInfo(revenueInfo);
+      //displayList.setPagedListInfo(revenueInfo);
       displayList.buildList(db);
       
+      Comparator comparator = null;
+      comparator = new OrganizationYTDComparator();
+      
+      java.util.Collections.sort(displayList, comparator);
+
       context.getRequest().setAttribute("MyRevList", displayList);
       
     } catch (Exception e) {

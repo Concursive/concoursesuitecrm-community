@@ -356,8 +356,13 @@ public void setRevenueOwnerId(int revenueOwnerId) {
       Organization thisOrganization = this.getObject(rs);
       if (buildRevenueYTD && revenueYear > -1 && revenueOwnerId > -1) {
 	      thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType(), this.getRevenueOwnerId());
+	      
+	      if (thisOrganization.getYTD() > 0) {
+		      this.add(thisOrganization);
+	      }
+      } else {
+	      this.add(thisOrganization);
       }
-      this.add(thisOrganization);
     }
     rs.close();
     if (pst != null) {

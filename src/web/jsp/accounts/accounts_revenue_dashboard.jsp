@@ -172,6 +172,6 @@
     </td>
 </table>
       <br>
-      <dhv:pagedListControl object="DBRevenueListInfo" tdClass="row1"/>
+      <!--dhv:pagedListControl object="DBRevenueListInfo" tdClass="row1"/-->
 </form>
 </body>

@@ -57,7 +57,6 @@ public class Organization extends GenericBean {
   private ArrayList typeList = null;
   protected double YTD = 0;
 
-
   /**
    *  Constructor for the Organization object, creates an empty Organization
    *
