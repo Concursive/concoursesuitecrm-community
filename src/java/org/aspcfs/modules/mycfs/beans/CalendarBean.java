@@ -23,18 +23,18 @@ public class CalendarBean {
 
   private String calendarDetailsView = "all";
   private String calendarView = "";
-  private int daySelected = -1;
   Calendar cal = Calendar.getInstance();
+  private int primaryMonth = cal.get(Calendar.MONTH) + 1;
   private int monthSelected = cal.get(Calendar.MONTH) + 1;
+  private int primaryYear = cal.get(Calendar.YEAR);
   private int yearSelected = cal.get(Calendar.YEAR);
+  private int daySelected = -1;
   private int startMonthOfWeek = -1;
   private int startDayOfWeek = -1;
   private int selectedUserId = -1;
   private String selectedUserName = "";
   private boolean agendaView = true;
   private ArrayList alertTypes = new ArrayList();
-  //used for checking if the next or previous month bordering the selected month is being viewed
-  private int monthDisplacement = 0;
 
 
 
@@ -91,6 +91,26 @@ public class CalendarBean {
    */
   public void setSelectedUserName(String selectedUserName) {
     this.selectedUserName = selectedUserName;
+  }
+
+
+  /**
+   *  Sets the primaryYear attribute of the CalendarBean object
+   *
+   *@param  primaryYear  The new primaryYear value
+   */
+  public void setPrimaryYear(int primaryYear) {
+    this.primaryYear = primaryYear;
+  }
+
+
+  /**
+   *  Gets the primaryYear attribute of the CalendarBean object
+   *
+   *@return    The primaryYear value
+   */
+  public int getPrimaryYear() {
+    return primaryYear;
   }
 
 
@@ -164,25 +184,6 @@ public class CalendarBean {
   }
 
 
-  /**
-   *  Sets the monthDisplacement attribute of the CalendarBean object
-   *
-   *@param  monthDisplacement  The new monthDisplacement value
-   */
-  public void setMonthDisplacement(int monthDisplacement) {
-    this.monthDisplacement = monthDisplacement;
-  }
-
-
-  /**
-   *  Gets the monthDisplacement attribute of the CalendarBean object
-   *
-   *@return    The monthDisplacement value
-   */
-  public int getMonthDisplacement() {
-    return monthDisplacement;
-  }
-
 
   /**
    *  Gets the selectedUserName attribute of the CalendarBean object
@@ -202,6 +203,26 @@ public class CalendarBean {
    */
   public void setAlertTypes(ArrayList alertTypes) {
     this.alertTypes = alertTypes;
+  }
+
+
+  /**
+   *  Sets the primaryMonth attribute of the CalendarBean object
+   *
+   *@param  primaryMonth  The new primaryMonth value
+   */
+  public void setPrimaryMonth(int primaryMonth) {
+    this.primaryMonth = primaryMonth;
+  }
+
+
+  /**
+   *  Gets the primaryMonth attribute of the CalendarBean object
+   *
+   *@return    The primaryMonth value
+   */
+  public int getPrimaryMonth() {
+    return primaryMonth;
   }
 
 
@@ -320,6 +341,31 @@ public class CalendarBean {
 
 
   /**
+   *  Gets the startOfWeekDate attribute of the CalendarBean object
+   *
+   *@return    The startOfWeekDate value
+   */
+  public java.util.Date getStartOfWeekDate() {
+    Calendar thisCal = Calendar.getInstance();
+    thisCal.set(yearSelected, startMonthOfWeek - 1, startDayOfWeek);
+    return thisCal.getTime();
+  }
+
+
+  /**
+   *  Gets the endOfWeekDate attribute of the CalendarBean object
+   *
+   *@return    The endOfWeekDate value
+   */
+  public java.util.Date getEndOfWeekDate() {
+    Calendar thisCal = Calendar.getInstance();
+    thisCal.set(yearSelected, startMonthOfWeek - 1, startDayOfWeek);
+    thisCal.add(java.util.Calendar.DATE, +6);
+    return thisCal.getTime();
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  context           Description of the Parameter
@@ -327,6 +373,14 @@ public class CalendarBean {
    *@exception  SQLException  Description of the Exception
    */
   public void update(Connection db, ActionContext context) throws SQLException {
+    if (context.getRequest().getParameter("primaryMonth") != null) {
+      setPrimaryMonth(Integer.parseInt(context.getRequest().getParameter("primaryMonth")));
+    }
+
+    if (context.getRequest().getParameter("primaryYear") != null) {
+      setPrimaryYear(Integer.parseInt(context.getRequest().getParameter("primaryYear")));
+    }
+    
     if (context.getRequest().getParameter("alertsView") != null) {
       setCalendarDetailsView(context.getRequest().getParameter("alertsView"));
     }
@@ -341,24 +395,7 @@ public class CalendarBean {
     }
 
     if (context.getRequest().getParameter("month") != null) {
-      if ("day".equalsIgnoreCase(calendarView)) {
-        //check to see if the next or previous month was selected
-        int tmpMonth = Integer.parseInt(context.getRequest().getParameter("month"));
-        monthDisplacement = 0;
-        if (tmpMonth > monthSelected) {
-          monthDisplacement = 1;
-        } else if (tmpMonth < monthSelected) {
-          monthDisplacement = -1;
-        }
-      } else {
-        monthSelected = Integer.parseInt(context.getRequest().getParameter("month"));
-        if (context.getRequest().getParameter("next.x") != null) {
-          ++monthSelected;
-        }
-        if (context.getRequest().getParameter("prev.x") != null) {
-          monthSelected += -1;
-        }
-      }
+      monthSelected = Integer.parseInt(context.getRequest().getParameter("month"));
     }
 
     if (context.getRequest().getParameter("year") != null) {

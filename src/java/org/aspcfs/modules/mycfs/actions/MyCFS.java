@@ -794,16 +794,15 @@ public final class MyCFS extends CFSModule {
     Connection db = null;
     addModuleBean(context, "Home", "");
     CalendarBean calendarInfo = null;
+    CalendarView companyCalendar = null;
 
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
-    CalendarView companyCalendar = new CalendarView(context.getRequest());
 
     try {
       db = this.getConnection(context);
       calendarInfo.update(db, context);
-      companyCalendar.setCalendarInfo(calendarInfo);
-      companyCalendar.updateParams();
+      companyCalendar = new CalendarView(calendarInfo);
       companyCalendar.addHolidaysByRange();
 
       //create events depending on alert type
@@ -861,20 +860,21 @@ public final class MyCFS extends CFSModule {
     addModuleBean(context, "Home", "");
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
-    if (context.getRequest().getAttribute("CompanyCalendar") != null) {
-      companyCalendar = (CalendarView) context.getRequest().getAttribute("CompanyCalendar");
-    } else {
-      companyCalendar = new CalendarView(context.getRequest());
+    if(calendarInfo == null){
+      calendarInfo = new CalendarBean();
+      context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
-
+    
     try {
       db = this.getConnection(context);
+      
       calendarInfo.update(db, context);
-      companyCalendar.setCalendarInfo(calendarInfo);
-      companyCalendar.updateParams();
+      companyCalendar = new CalendarView(calendarInfo);
+      //companyCalendar.updateParams();
+      companyCalendar.addHolidaysByRange();
+      
 
       //Use reflection to invoke methods on scheduler classes
-
       String param1 = "org.aspcfs.utils.web.CalendarView";
       String param2 = "java.sql.Connection";
       ArrayList alertTypes = calendarInfo.getAlertTypes();
@@ -919,25 +919,38 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
     }
-    Connection db = null;
     CalendarBean calendarInfo = null;
     addModuleBean(context, "Home", "");
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
-    try {
-      db = this.getConnection(context);
-      calendarInfo.setCalendarView("day");
-      calendarInfo.resetParams("day");
-      calendarInfo.update(db, context);
-    } catch (Exception errorMessage) {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return "SystemError";
-    } finally {
-      this.freeConnection(context, db);
-    }
+    calendarInfo.setCalendarView("day");
+    calendarInfo.resetParams("day");
     return executeCommandAlerts(context);
   }
 
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandTodaysView(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-profile-view"))) {
+      return ("PermissionError");
+    }
+    CalendarBean calendarInfo = null;
+    addModuleBean(context, "Home", "");
+    String returnPage = context.getRequest().getParameter("return");
+    calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
+    Calendar cal = Calendar.getInstance();
+    calendarInfo.setCalendarView("day");
+    calendarInfo.resetParams("day");
+    calendarInfo.setPrimaryMonth(cal.get(Calendar.MONTH) + 1);
+    calendarInfo.setPrimaryYear(cal.get(Calendar.YEAR));
+    return executeCommandAlerts(context);
+  }
 
 
   /**
@@ -950,21 +963,10 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
     }
-    Connection db = null;
     addModuleBean(context, "Home", "");
     CalendarBean calendarInfo = null;
-
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
-    try {
-      db = this.getConnection(context);
-      calendarInfo.update(db, context);
-    } catch (Exception errorMessage) {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return "SystemError";
-    } finally {
-      this.freeConnection(context, db);
-    }
     calendarInfo.setCalendarView("week");
     calendarInfo.resetParams("week");
     return executeCommandAlerts(context);
@@ -982,24 +984,13 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
     }
-    Connection db = null;
     addModuleBean(context, "Home", "");
     CalendarBean calendarInfo = null;
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
-    try {
-      db = this.getConnection(context);
-      calendarInfo.update(db, context);
-    } catch (Exception errorMessage) {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return "SystemError";
-    } finally {
-      this.freeConnection(context, db);
-    }
-    calendarInfo.resetParams("agenda");
     calendarInfo.setAgendaView(true);
-    executeCommandAlerts(context);
-    return ("CalendarDetailsOK");
+    calendarInfo.resetParams("agenda");
+    return executeCommandAlerts(context);
   }
 
 
