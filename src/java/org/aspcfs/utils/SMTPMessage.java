@@ -24,6 +24,7 @@ public class SMTPMessage {
   private String body = "";
   private String type = "text";
   private String errorMsg = "";
+  private Vector replyTo = new Vector();
 
 
   /**
@@ -67,7 +68,6 @@ public class SMTPMessage {
     addTo(tmp);
   }
 
-
   /**
    *  Sets the Cc attribute of the SMTPMessage object
    *
@@ -89,8 +89,7 @@ public class SMTPMessage {
   public void setSubject(String tmp) {
     subject = tmp;
   }
-
-
+  
   /**
    *  Sets the Body attribute of the SMTPMessage object
    *
@@ -101,6 +100,12 @@ public class SMTPMessage {
     body = tmp;
   }
 
+public Vector getReplyTo() {
+	return replyTo;
+}
+public void setReplyTo(Vector replyTo) {
+	this.replyTo = replyTo;
+}
 
   /**
    *  Sets the Type attribute of the SMTPMessage object. Use "text" for standard
@@ -134,7 +139,10 @@ public class SMTPMessage {
   public void addTo(String tmp) {
     to.addElement(tmp);
   }
-
+  
+  public void addReplyTo(String tmp) {
+	  replyTo.addElement(tmp);
+  }
 
   /**
    *  Adds a feature to the Cc attribute of the SMTPMessage object
@@ -157,7 +165,7 @@ public class SMTPMessage {
     //throws Exception {
 
     if (host == null || host.equals("")) errorMsg = "Host not specified";
-    if (from == null || from.equals("")) errorMsg = "Repy to address not specified";
+    if (from == null || from.equals("")) errorMsg = "Reply to address not specified";
     if (to.size() == 0) errorMsg = "Recipients not specified";
       
     if (errorMsg != null && !errorMsg.equals("")) {
@@ -182,7 +190,17 @@ public class SMTPMessage {
 
       // Set the from address
       message.setFrom(new InternetAddress(from));
-
+      
+      //Set the Reply to addresses
+      if (replyTo.size() > 0) {
+	      InternetAddress[] tempReply = new InternetAddress[replyTo.size()];
+		for (int i = 0; i < replyTo.size(); i++) {
+			tempReply[i] = new InternetAddress((String)replyTo.get(i));
+		}
+		
+		message.setReplyTo(tempReply);
+      }
+	      
       // Set the to address(es)
       for (int i = 0; i < to.size(); i++) {
         message.addRecipient(Message.RecipientType.TO,
