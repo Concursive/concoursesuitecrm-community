@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.modules.base;
 
 import java.util.*;
 import java.text.DateFormat;

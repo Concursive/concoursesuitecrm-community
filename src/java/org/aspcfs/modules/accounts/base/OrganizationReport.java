@@ -7,8 +7,6 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.database.Connection;
-import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.utils.*;
 import com.zeroio.iteam.base.*;

@@ -1,10 +1,10 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.beans;
 
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
-import com.darkhorseventures.controller.*;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.controller.*;
 
 /**
  *  Contains information that a JSP template can access when displaying the page

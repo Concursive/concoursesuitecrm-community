@@ -1,10 +1,9 @@
 package org.aspcfs.modules.admin.base;
 
 import java.sql.*;
-import com.darkhorseventures.database.Connection;
-import org.aspcfs.modules.utils.web.*;
-import org.aspcfs.modules.utils.DatabaseUtils;
-import org.aspcfs.modules.modules.admin.base.Usage;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.admin.base.Usage;
 
 /**
  *  Represents a list of Usage objects. Can be used for generating the list by

@@ -1,8 +1,7 @@
 package org.aspcfs.modules.admin.base;
 
 import java.sql.*;
-import com.darkhorseventures.database.Connection;
-import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Used for tracking user usage. All usage should be able to be tracked to a

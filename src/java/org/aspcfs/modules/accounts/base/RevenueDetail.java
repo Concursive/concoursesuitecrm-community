@@ -7,7 +7,6 @@ import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.database.Connection;
 import com.darkhorseventures.framework.beans.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.accounts.base.*;

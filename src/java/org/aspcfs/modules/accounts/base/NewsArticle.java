@@ -1,6 +1,5 @@
 package org.aspcfs.modules.accounts.base;
 
-import com.darkhorseventures.database.Connection;
 import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;

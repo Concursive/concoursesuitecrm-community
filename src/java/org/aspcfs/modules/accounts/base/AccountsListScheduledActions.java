@@ -1,7 +1,6 @@
 package org.aspcfs.modules.accounts.base;
 
 import org.aspcfs.modules.base.ScheduledActions;
-import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.mycfs.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.*;

@@ -1,14 +1,15 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 import java.sql.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
 import java.net.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.*;
-import com.darkhorseventures.controller.ComponentContext;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.apps.workFlowManager.*;
+import org.aspcfs.utils.*;
 
 /**
  *  A logged message sent to a person using 1 of several transports: SMTP, Fax,

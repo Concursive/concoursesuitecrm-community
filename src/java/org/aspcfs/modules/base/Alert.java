@@ -1,6 +1,6 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;

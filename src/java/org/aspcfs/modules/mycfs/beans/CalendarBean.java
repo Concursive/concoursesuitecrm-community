@@ -1,12 +1,13 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.mycfs.beans;
 
 import java.util.*;
 import java.text.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import java.sql.*;
-import com.darkhorseventures.cfsbase.*;
-
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.admin.base.User;
 /**
  *  CalendarBean maintains all the users setting on his home page's calendar
  *  view like date,alerts etc so his view is maintained whenever he returns to

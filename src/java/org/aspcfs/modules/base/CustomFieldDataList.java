@@ -2,14 +2,14 @@
 // The createFilter method and the prepareFilter method need to have the same
 // number of parameters if modified.
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.HtmlSelect;
 
 public class CustomFieldDataList extends ArrayList {
   

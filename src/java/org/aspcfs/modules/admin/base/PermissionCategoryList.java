@@ -6,10 +6,10 @@ import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.database.Connection;
-import org.aspcfs.modules.utils.web.*;
-import org.aspcfs.modules.utils.DatabaseUtils;
-import org.aspcfs.modules.modules.admin.base.PermissionCategory;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.Constants;
 
 
 /**

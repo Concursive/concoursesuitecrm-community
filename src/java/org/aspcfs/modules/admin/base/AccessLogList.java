@@ -5,13 +5,12 @@ package org.aspcfs.modules.admin.base;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
-
-import com.darkhorseventures.database.Connection;
-import org.aspcfs.modules.utils.DatabaseUtils;
-import org.aspcfs.modules.utils.web.*;
-import org.aspcfs.modules.admin.base.AccessLog;
-
 import javax.servlet.http.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.admin.base.AccessLog;
+import org.aspcfs.modules.base.Constants;
+
 
 /**
  *  Description of the Class

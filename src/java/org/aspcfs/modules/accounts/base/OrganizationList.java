@@ -4,10 +4,13 @@ package org.aspcfs.modules.accounts.base;
 
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.database.Connection;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.base.Constants;
+
+
 
 /**
  *  Contains a list of organizations... currently used to build the list from

@@ -1,11 +1,11 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.text.*;
 

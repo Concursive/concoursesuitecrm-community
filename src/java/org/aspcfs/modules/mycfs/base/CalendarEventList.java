@@ -1,4 +1,4 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.mycfs.base;
 
 import java.util.*;
 

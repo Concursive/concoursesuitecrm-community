@@ -3,7 +3,6 @@ package org.aspcfs.modules.accounts.base;
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.database.Connection;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.accounts.base.*;
 

@@ -1,5 +1,6 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.modules.base;
 
+import org.aspcfs.utils.StringHelper;
 import java.util.*;
 import java.io.*;
 

@@ -2,12 +2,12 @@
 // The createFilter method and the prepareFilter method need to have the same
 // number of parameters if modified.
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
+import org.aspcfs.utils.web.PagedListInfo;
 
 /**
  *  Description of the Class

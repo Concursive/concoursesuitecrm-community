@@ -6,8 +6,9 @@ import java.sql.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
 import com.darkhorseventures.database.ConnectionElement;
-import com.darkhorseventures.framework.servlets.SystemStatus;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.admin.base.User;
 
 /**
  *  User Session record -- maintained while the user is logged in

@@ -3,7 +3,6 @@
 package org.aspcfs.modules.accounts.base;
 
 import java.util.*;
-import com.darkhorseventures.database.Connection;
 
 /**
  *  Description of the Class

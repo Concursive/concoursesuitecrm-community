@@ -1,14 +1,15 @@
 package org.aspcfs.utils.web;
 
-import com.darkhorseventures.cfsbase.CalendarEvent;
-import com.darkhorseventures.cfsbase.CalendarEventList;
-import com.darkhorseventures.cfsbase.CalendarBean;
-import org.theseus.actions.ActionContext;
+import org.aspcfs.modules.mycfs.base.CalendarEvent;
+import org.aspcfs.modules.mycfs.base.CalendarEventList;
+import org.aspcfs.modules.mycfs.beans.CalendarBean;
+import com.darkhorseventures.framework.actions.ActionContext;
 import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
 import java.lang.reflect.*;
+
 /**
  *  CalendarView.java Creates a monthly calendar and exports the HTML The
  *  current month is shown completely, the prev/next month is partially shown,
