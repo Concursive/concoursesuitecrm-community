@@ -38,6 +38,8 @@ function HideSpans()
 </SCRIPT>
 
 <body onLoad="javascript:document.forms[0].groupName.focus();HideSpans();">
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/searchForm.js"></script>
 <script language="JavaScript" type="text/javascript">
 var searchCriteria = new Array();
@@ -161,6 +163,7 @@ listOfOperators[2] = numberOperators
       
 		  Search Text
       <input type="text" name="searchValue" value="" size=25  maxlength=125>
+      <span name="new1" ID="new1" style="position:relative; visibility:hidden"><a href="javascript:popCalendar('searchForm', 'searchValue');">Date</a></span>
       
       <br>
       &nbsp;<br>
