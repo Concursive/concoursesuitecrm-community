@@ -27,24 +27,21 @@ import org.aspcfs.modules.login.base.AuthenticationItem;
 public final class ProcessMessage extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  This action is used for displaying a message to a logged in user
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     String code = context.getRequest().getParameter("code");
     String messageId = context.getRequest().getParameter("messageId");
     String contactId = context.getRequest().getParameter("contactId");
-
     try {
       AuthenticationItem auth = new AuthenticationItem();
       auth.setId(context.getRequest().getServerName());
       auth.setCode(code);
       db = auth.getConnection(context);
-
       Message thisMessage = new Message(db, messageId);
       if (contactId != null && !"".equals(contactId)) {
         Contact thisContact = new Contact(db, Integer.parseInt(contactId));
@@ -63,21 +60,15 @@ public final class ProcessMessage extends CFSModule {
         thisMessage.setMessageText(template.getParsedText());
       }
       context.getRequest().setAttribute("Message", thisMessage);
-
     } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
+      System.out.println(e.getMessage());
+      return ("SystemError");
     } finally {
       if (db != null) {
         this.freeConnection(context, db);
       }
     }
-
-    if (errorMessage != null) {
-      return ("SystemError");
-    } else {
-      return ("PreviewOK");
-    }
+    return ("PreviewOK");
   }
 }
 

@@ -27,33 +27,30 @@ import org.aspcfs.modules.login.base.AuthenticationItem;
 public final class ProcessSurvey extends CFSModule {
 
   /**
-   *  Generates the survey for presentation
+   *  Generates the survey for presentation, decodes URL for a non-user of this
+   *  system.
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
-    Exception errorMessage = null;
     ActiveSurvey thisSurvey = null;
     ConnectionPool sqlDriver = null;
     Connection db = null;
-
     String codedId = context.getRequest().getParameter("id");
     //return alert message if someone tried clicking link from the campaign dashboard's message tab
     if (codedId != null && codedId.startsWith("${surveyId")) {
       return "InvalidRequestError";
     }
-
     try {
-      //CustomForm thisForm = getDynamicForm(context, "surveyview");
+      // Get a database connection based on the request
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
-
+      // Load the survey key which decodes the url
       String dbName = auth.getConnectionElement(context).getDbName();
       String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
       String uncodedId = PrivateString.decrypt(filename, codedId);
       int surveyId = -1;
-
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
       while (st.hasMoreTokens()) {
         String pair = (st.nextToken());
@@ -66,21 +63,16 @@ public final class ProcessSurvey extends CFSModule {
       }
       thisSurvey = new ActiveSurvey(db, surveyId);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("NotFoundError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (thisSurvey != null) {
-        context.getRequest().setAttribute("ActiveSurvey", thisSurvey);
-        return ("ViewOK");
-      } else {
-        context.getRequest().setAttribute("Error", "No Survey Found.");
-        return ("NotFoundError");
-      }
+    if (thisSurvey != null) {
+      context.getRequest().setAttribute("ActiveSurvey", thisSurvey);
+      return ("ViewOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
+      context.getRequest().setAttribute("Error", "No Survey Found.");
       return ("NotFoundError");
     }
   }
@@ -93,22 +85,18 @@ public final class ProcessSurvey extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     ActiveSurvey thisSurvey = null;
-
     try {
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
-
+      // Load the survey key which decodes the url
       String dbName = auth.getConnectionElement(context).getDbName();
       String filename = getPath(context) + dbName + fs + "keys" + fs + "survey.key";
       String codedId = context.getRequest().getParameter("id");
       String uncodedId = PrivateString.decrypt(filename, codedId);
-
       int surveyId = -1;
       int contactId = -1;
-
       StringTokenizer st = new StringTokenizer(uncodedId, ",");
       while (st.hasMoreTokens()) {
         String pair = (st.nextToken());
@@ -128,18 +116,13 @@ public final class ProcessSurvey extends CFSModule {
       thisResponse.insert(db);
       thisSurvey = new ActiveSurvey(db, surveyId);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("ThankYouText", thisSurvey.getOutro());
-      return ("InsertOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("ThankYouText", thisSurvey.getOutro());
+    return ("InsertOK");
   }
 }
 
