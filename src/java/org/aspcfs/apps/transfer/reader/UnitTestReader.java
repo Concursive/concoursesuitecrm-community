@@ -8,6 +8,8 @@ import org.w3c.dom.*;
 
 public class UnitTestReader implements DataReader {
 
+  public static final String lf = System.getProperty("line.separator");
+  
   /**
    *  Gets the version attribute of the CFSDatabaseReader object
    *
@@ -101,6 +103,27 @@ public class UnitTestReader implements DataReader {
       thisRecord.addField("severityCode", "1");
       thisRecord.addField("catCode", "3");
       thisRecord.addField("subCat1", "14");
+      writer.save(thisRecord);
+      logger.info(writer.getLastResponse());
+    }
+    
+    if (1 == 1) {
+      DataRecord thisRecord = new DataRecord();
+      thisRecord.setName("processLog");
+      thisRecord.setAction("insert");
+      thisRecord.addField("name", "Pilot Online Reader/FTP");
+      thisRecord.addField("version", "1.0");
+      thisRecord.addField("systemId", "5");
+      thisRecord.addField("clientId", "4");
+      thisRecord.addField("status", "0");
+      thisRecord.addField("message", 
+        "INFO: PilotOnlineReader-> Started Tue Oct 29 14:50:00 EST 2002" + lf +
+        "INFO: Processing organizations/vehicles: 59 for Mon Oct 28 12:00:00 EST 2002 through Fri Nov 01 12:00:00 EST 2002" + lf +
+        "INFO: Vehicles added-> 137" + lf +
+        "INFO: Processing pictures (resize/copy): 134" + lf +
+        "INFO: FTP Sending pictures" + lf +
+        "INFO: FTP Sending data" + lf +
+        "INFO: PilotOnlineReader-> Finished Tue Oct 29 14:55:28 EST 2002");
       writer.save(thisRecord);
       logger.info(writer.getLastResponse());
     }
