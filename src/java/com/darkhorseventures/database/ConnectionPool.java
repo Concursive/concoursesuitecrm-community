@@ -184,6 +184,22 @@ public class ConnectionPool implements Runnable {
     this.requireParameters = tmp;
   }
 
+  public String getUrl() {
+    return url;
+  }
+  
+  public String getUsername() {
+    return username;
+  }
+  
+  public String getPassword() {
+    return password;
+  }
+  
+  public String getDriver() {
+    return driver;
+  }
+
 
   /**
    *  Gets the Connection attribute of the ConnectionPool object when the
