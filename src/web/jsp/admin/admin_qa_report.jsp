@@ -16,13 +16,15 @@
     ++modCount;
     HelpItem thisItem = (HelpItem) i.next();
 %>
-<dhv:evaluate if="<%= itemCount > 1 && ((thisItem.getModule().equals(previousModule) && !previousSection.equals(thisItem.getSection())) || !thisItem.getModule().equals(previousModule)) %>">
+<%-- This check should only evaluate if an item was previously printed, but there is an error --%>
+<dhv:evaluate if="<%= itemCount > 0 && ((thisItem.getModule().equals(previousModule) && !previousSection.equals(thisItem.getSection())) || !thisItem.getModule().equals(previousModule)) && open %>">
       </td>
     </tr>
 </dhv:evaluate>
-<dhv:evaluate if="<%= modCount > 1 && !thisItem.getModule().equals(previousModule) && open == true %>">
+<dhv:evaluate if="<%= modCount > 1 && !thisItem.getModule().equals(previousModule) && open %>">
   </table>
 </dhv:evaluate>
+<%-- end check --%>
 <dhv:evaluate if="<%= !thisItem.getModule().equals(previousModule) && !thisItem.getNotes().isEmpty() %>">
 <%
   open = false;
@@ -35,9 +37,7 @@
 <%
     Iterator j = thisItem.getNotes().iterator();
     while (j.hasNext()) {
-      if (!thisItem.getModule().equals(previousModule)) {
-        open = true;
-      }
+      open = true;
       ++itemCount;
       HelpNote thisNote = (HelpNote) j.next();
 %>
@@ -68,6 +68,8 @@
     }
   }
 %>
+<dhv:evaluate if="<%= open %>">
     </td>
   </tr>
 </table>
+</dhv:evaluate>
