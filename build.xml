@@ -119,13 +119,6 @@
   <target name="init" depends="init.loadproperties,init.classpath">
     <!-- Default properties if not otherwise specified in build.properties -->
     <property name="DEBUGLEVEL" value="none"/>
-    <!-- Web Server Prefs -->
-    <property name="WEBSERVER.TYPE" value="catalina"/>
-    <property name="FORCESSL" value="false"/>
-    <property name="KEYSTORE.COMMONNAME" value="127.0.0.1"/>
-    <property name="KEYSTORE.ORGANIZATIONALUNIT" value="CFS"/>
-    <property name="KEYSTORE.ORGANIZATION" value="ASPCFS.org"/>
-    <property name="KEYSTORE.COUNTRY" value="US"/>
     <!-- Gatekeeper database -->
     <property name="GATEKEEPER.APPCODE" value=""/>
     <property name="GATEKEEPER.DBTYPE" value=""/>
@@ -143,7 +136,6 @@
     <!-- External Servers -->
     <property name="MAILSERVER" value="127.0.0.1"/>
     <property name="FAXSERVER" value="127.0.0.1"/>
-    <property name="CRON.ENABLED" value="false"/>
     
     <!-- Begin output -->
     <echo message="Project: ${ant.project.name}"/>
@@ -324,6 +316,18 @@
              token="@DEBUGLEVEL@" value="${DEBUGLEVEL}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@CRON.ENABLED@" value="${CRON.ENABLED}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@CONNECTION_POOL.DEBUG@" value="${CONNECTION_POOL.DEBUG}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@CONNECTION_POOL.TEST_CONNECTIONS@" value="${CONNECTION_POOL.TEST_CONNECTIONS}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@CONNECTION_POOL.ALLOW_SHRINKING@" value="${CONNECTION_POOL.ALLOW_SHRINKING}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@CONNECTION_POOL.MAX_CONNECTIONS@" value="${CONNECTION_POOL.MAX_CONNECTIONS}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@CONNECTION_POOL.MAX_IDLE_TIME.SECONDS@" value="${CONNECTION_POOL.MAX_IDLE_TIME.SECONDS}"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@CONNECTION_POOL.MAX_DEAD_TIME.SECONDS@" value="${CONNECTION_POOL.MAX_DEAD_TIME.SECONDS}"/>
   </target>
   
   <!-- Log the deployment procss to the web-app folder -->
