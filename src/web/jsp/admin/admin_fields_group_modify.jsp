@@ -4,6 +4,7 @@
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Group" class="org.aspcfs.modules.base.CustomFieldGroup" scope="request"/>
 <jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="ConstantId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.forms[0].name.focus();">
@@ -51,7 +52,7 @@ New Group<br>
       </table>
       &nbsp;<br>
       <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
-      <input type="hidden" name="moduleId" value="<%= ModId %>">
+      <input type="hidden" name="moduleId" value="<%= ConstantId %>">
       <input type="hidden" name="groupId" value="<%= Group.getId() %>">
       <input type="submit" value="Update">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
