@@ -733,6 +733,9 @@ public class TransactionItem {
         thisRecord.put(thisField, thisValue);
       }
       try {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("TransactionItem-> Action: " + thisRecord.getAction());
+        }
         thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
         if (thisRecord.containsKey("guid")) {
           if (thisRecord.getAction().equals("processed")) {
@@ -740,7 +743,8 @@ public class TransactionItem {
           } else if (thisRecord.getAction().equals("insert")) {
             thisRecord.put("guid", String.valueOf(identity++));
           } else if (thisRecord.getAction().equals("update")) {
-            thisRecord.put("guid", ObjectUtils.getParam(object, "id"));
+            //Sending an update back to client, get the correct guid
+            thisRecord.put("guid", syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")));
           }
         }
       } catch (java.lang.NumberFormatException e) {

@@ -99,5 +99,9 @@ public class Record extends LinkedHashMap {
   public boolean hasAction() {
     return (action != null);
   }
+  
+  public void put(String name, int value) {
+    this.put(name, String.valueOf(value));
+  }
 }
 
