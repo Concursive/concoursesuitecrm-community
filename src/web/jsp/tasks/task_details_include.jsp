@@ -29,7 +29,7 @@
   <tr class="containerBody">
     <td class="formLabel">Priority</td>
     <td>
-      <%= PriorityList.getHtmlSelect("priority",Task.getPriority()) %>
+      <%= PriorityList.getSelectedValue(Task.getPriority()) %>
     </td>
   </tr>
   <tr class="containerBody"> 
@@ -43,16 +43,11 @@
     </td>
   </tr>
   <tr class="containerBody"> 
-    <td class="formLabel">Sharing</td>
+    <td class="formLabel">
+      Sharing
+    </td>
     <td>
-      <table cellpadding="3" cellspacing="0" class="empty">
-        <tr>
-          <td>
-            <input type="checkbox" name="chk2" value="true" <%= (Task.getSharing()==1)?" checked":"" %>>
-          </td>
-          <td>personal</td>
-        </tr>
-      </table>
+      <%= ((Task.getSharing()==1) ? "personal" : "public") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -68,7 +63,9 @@
       Estimated LOE
     </td>
     <td>
-      <%= EstimatedLOETypeList.getHtmlSelect("estimatedLOEType",Task.getEstimatedLOEType()) %>
+      <dhv:evaluate if="<%= (Task.getEstimatedLOE() != -1.0) %>">
+        <%=Task.getEstimatedLOE()%>&nbsp;<%= toHtml(EstimatedLOETypeList.getSelectedValue(Task.getEstimatedLOEType())) %>
+      </dhv:evaluate>&nbsp;
     </td>
   </tr>
   <tr class="containerBody">

@@ -441,7 +441,7 @@ public class TicketActivityLog extends GenericBean {
    *@param  request  The new requestItems value
    */
   public void setRequestItems(HttpServletRequest request) {
-    ticketPerDayDescriptionList = new TicketPerDayDescriptionList(request);
+    ticketPerDayDescriptionList = new TicketPerDayDescriptionList(request, errors);
     this.totalTravelHours = ticketPerDayDescriptionList.getTotalTravelHours();
     this.totalTravelMinutes = ticketPerDayDescriptionList.getTotalTravelMinutes();
     this.totalLaborHours = ticketPerDayDescriptionList.getTotalLaborHours();
@@ -794,7 +794,8 @@ public class TicketActivityLog extends GenericBean {
    */
   public void buildPerDayDescriptionList(Connection db) throws SQLException {
     ticketPerDayDescriptionList = new TicketPerDayDescriptionList();
-    ticketPerDayDescriptionList.queryList(db, this.id);
+    ticketPerDayDescriptionList.setFormId(this.id);
+    ticketPerDayDescriptionList.buildList(db);
   }
 
 
@@ -807,7 +808,9 @@ public class TicketActivityLog extends GenericBean {
    */
   public boolean deletePerDayDescriptionList(Connection db) throws SQLException {
     ticketPerDayDescriptionList = new TicketPerDayDescriptionList();
-    return ticketPerDayDescriptionList.deleteList(db, this.id);
+    ticketPerDayDescriptionList.setFormId(this.id);
+    ticketPerDayDescriptionList.buildList(db);
+    return ticketPerDayDescriptionList.deleteList(db);
   }
 
 
@@ -830,7 +833,6 @@ public class TicketActivityLog extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid() throws SQLException {
-    errors.clear();
     if (hasErrors()) {
       return false;
     } else {
@@ -842,9 +844,9 @@ public class TicketActivityLog extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                 Description of the Parameter
-   *@return                    Description of the Return Value
-   *@exception  SQLException   Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -899,8 +901,11 @@ public class TicketActivityLog extends GenericBean {
         return resultCount;
       } else if (resultCount == 1) {
         // Save the description list (delete and then insert)
+        TicketPerDayDescriptionList toDeleteDescriptionList = new TicketPerDayDescriptionList();
+        toDeleteDescriptionList.setFormId(this.id);
+        toDeleteDescriptionList.buildList(db);
+        toDeleteDescriptionList.deleteList(db);
         TicketPerDayDescriptionList tmpPerDayDescriptionList = getTicketPerDayDescriptionList();
-        tmpPerDayDescriptionList.deleteList(db, this.id);
         insertPerDayDescriptionList(db, tmpPerDayDescriptionList);
         //Update Remaining hours in the service contract
         if (request != null) {
@@ -950,9 +955,9 @@ public class TicketActivityLog extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db                 Description of the Parameter
-   *@return                    Description of the Return Value
-   *@exception  SQLException   Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
 
@@ -1002,9 +1007,13 @@ public class TicketActivityLog extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public void insert(Connection db) throws SQLException {
+  public boolean insert(Connection db) throws SQLException {
+    if (!isValid()) {
+      return false;
+    }
 
     boolean doCommit = false;
     try {
@@ -1063,6 +1072,7 @@ public class TicketActivityLog extends GenericBean {
         db.setAutoCommit(true);
       }
     }
+    return true;
   }
 
 

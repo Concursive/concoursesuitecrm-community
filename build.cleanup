@@ -55,3 +55,6 @@ htmlarea/test.cgi
 ## 2004-07-21 new version added
 WEB-INF/lib/jtds.jar
 
+## 2004-08-05 i18n and validation fixes
+troubletickets/troubletickets_add_activity_include.jsp
+

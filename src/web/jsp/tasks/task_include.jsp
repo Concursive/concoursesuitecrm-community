@@ -26,8 +26,7 @@
       Due Date
     </td>
     <td>
-      <input type="text" size="10" name="dueDate" value="<zeroio:tz timestamp="<%= Task.getDueDate() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('addTask', 'dueDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="addTask" field="dueDate" timestamp="<%= Task.getDueDate() %>" />
       <%= showAttribute(request, "dueDateError") %>
     </td>
   </tr>

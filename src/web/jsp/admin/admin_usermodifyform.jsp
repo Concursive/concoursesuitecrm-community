@@ -93,8 +93,8 @@ Modify User
   <tr class="containerBody">
     <td nowrap class="formLabel">Expire Date</td>
     <td>
-      <input type="text" size="10" name="expires" value="<zeroio:tz timestamp="<%= UserRecord.getExpires() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('details', 'expires', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="details" field="expires" timestamp="<%= UserRecord.getExpires() %>" />
+      <%= showAttribute(request, "expiresError") %>
     </td>
   </tr>
   <tr class="containerBody">

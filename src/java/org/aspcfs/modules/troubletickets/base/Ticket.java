@@ -2837,7 +2837,6 @@ public class Ticket extends GenericBean {
    *@since
    */
   protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
     if (problem == null || problem.trim().equals("")) {
       errors.put("problemError", "An issue is required");
     }

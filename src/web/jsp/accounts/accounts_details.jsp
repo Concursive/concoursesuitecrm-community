@@ -264,7 +264,7 @@ Account Details
       ContactAddress thisAddress = (ContactAddress)iaddress.next();
 %>
     <tr class="containerBody">
-      <td nowrap class="formLabel">
+      <td valign="top" nowrap class="formLabel">
         <%= toHtml(thisAddress.getTypeName()) %>
       </td>
       <td>

@@ -874,17 +874,6 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the purchaseCostCurrency attribute of the Asset object
-   *
-   *@return    The purchaseCostCurrency value
-   */
-  public String getPurchaseCostCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    return numberFormatter.format(purchaseCost);
-  }
-
-
-  /**
    *  Gets the poNumber attribute of the Asset object
    *
    *@return    The poNumber value

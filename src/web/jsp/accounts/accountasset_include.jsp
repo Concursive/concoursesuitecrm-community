@@ -31,18 +31,6 @@
       message += "- Serial Number is required\r\n";
       formTest = false;
     }
-    if ((!form.dateListed.value == "") && (!checkDate(form.dateListed.value))) {
-      message += "- Check that Date Listed is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.expirationDate.value == "") && (!checkDate(form.expirationDate.value))) { 
-      message += "- Check that Expiration Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.purchaseDate.value == "") && (!checkDate(form.purchaseDate.value))) { 
-      message += "- Check that Purchase Date is entered correctly\r\n";
-      formTest = false;
-    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -50,8 +38,8 @@
   }
 
   function resetNumericFieldValue(fieldId){
-  document.getElementById(fieldId).value = -1;
- }
+    document.getElementById(fieldId).value = -1;
+  }
 </script>
 <%-- start details --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -111,12 +99,7 @@
       Date Listed
     </td>
     <td>
-      <%if (asset.getDateListed() == null){ %>
-        <input type="text" size="10" name="dateListed" maxlength="10" value="<%=toHtml((String)request.getAttribute("currentDate"))%>">
-      <%}else{%>
-        <input type="text" size="10" name="dateListed" maxlength="10" value="<zeroio:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" />">
-      <%}%>
-      <a href="javascript:popCalendar('addAccountAsset', 'dateListed', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="addAccountAsset" field="dateListed" timestamp="<%= asset.getDateListed() %>" />
       <%= showAttribute(request, "dateListedError") %>
       <font color="red">*</font>
     </td>
@@ -195,10 +178,11 @@
      <table cellspacing="0" cellpadding="0" border="0" class="empty">
       <tr>
         <td>
-          <div id="addServiceContract"><%= (asset.getContractId() != -1) ? asset.getServiceContractNumber() :"None Selected" %></div>
+          <div id="addServiceContract"><%= (asset.getContractId() != -1)? asset.getServiceContractNumber() :"None Selected" %></div>
         </td>
         <td>
           <input type="hidden" name="contractId" id="contractId" value="<%= asset.getContractId() %>">
+          <input type="hidden" name="serviceContractNumber" id="serviceContractNumber" value="<%= toHtmlValue(asset.getServiceContractNumber()) %>">
           <%= showAttribute(request, "contractIdError") %>
           [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%=OrgDetails.getOrgId()%>);">Select</a>]
           &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');">Clear</a>] 
@@ -268,8 +252,7 @@
       Expiration Date
     </td>
     <td>
-      <input type="text" size="10" name="expirationDate" maxlength="10" value="<zeroio:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('addAccountAsset', 'expirationDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="addAccountAsset" field="expirationDate" timestamp="<%= asset.getExpirationDate() %>" />
       <%= showAttribute(request, "expirationDateError") %>
     </td>
   </tr>
@@ -302,8 +285,7 @@
       Purchase Date
     </td>
     <td>
-      <input type="text" size="10" name="purchaseDate" maxlength="10" value="<zeroio:tz timestamp="<%= asset.getPurchaseDate() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('addAccountAsset', 'purchaseDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="addAccountAsset" field="purchaseDate" timestamp="<%= asset.getPurchaseDate() %>" />
       <%= showAttribute(request, "purchaseDateError") %>
     </td>
   </tr>

@@ -49,11 +49,28 @@ function setAssetList(assetIds, assetNumbers, scIds, scNumbers, listType, displa
     
     opener.document.getElementById(hiddenFieldId1).value = assetIds[i];
     opener.changeDivContent(displayFieldId1, assetNumbers[i]);
+    if (opener.document.getElementById('assetSerialNumber')){
+      opener.document.getElementById('assetSerialNumber').value = assetNumbers[i];
+    }
     
     if (hiddenFieldId2){
       if (scIds[i] != "-1"){
+        if (scIds[i] != opener.document.getElementById(hiddenFieldId2).value){
+         if (opener.document.getElementById('productId')){
+          opener.document.getElementById('productId').value = -1;
+         }
+         if (opener.document.getElementById('productSku')){
+          opener.document.getElementById('productSku').value = 'None Selected';
+         }
+         if (opener.document.getElementById('addLaborCategory')){
+          opener.changeDivContent('addLaborCategory', 'None Selected');
+         }
+        }
         opener.document.getElementById(hiddenFieldId2).value = scIds[i];
         opener.changeDivContent(displayFieldId2, scNumbers[i]);
+        if (opener.document.getElementById('serviceContractNumber')){
+          opener.document.getElementById('serviceContractNumber').value = scNumbers[i];
+        }
       }
     }
   }

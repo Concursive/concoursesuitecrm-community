@@ -1950,7 +1950,7 @@ public class OpportunityComponent extends GenericBean {
         int lvlcount = 0;
         for (int k = 0; k < typeList.size(); k++) {
           String val = (String) typeList.get(k);
-          if (val != null && !(val.equals(""))) {
+          if (val != null && !"".equals(val)) {
             int type_id = Integer.parseInt((String) typeList.get(k));
             lvlcount++;
             insertType(db, type_id, lvlcount);
@@ -1990,6 +1990,17 @@ public class OpportunityComponent extends GenericBean {
     thisList.add("guess");
     thisList.add("high");
     return thisList;
+  }
+
+  /**
+   *  sets the items in the type list to the the lookup list 'types' Organization object
+   */
+  public void setTypeListToTypes(Connection db) throws SQLException {
+    Iterator itr = typeList.iterator();
+    while (itr.hasNext()) {
+      String tmpId = (String) itr.next();
+      types.add(new LookupElement(db, Integer.parseInt(tmpId), "lookup_opportunity_types"));
+    }
   }
 }
 

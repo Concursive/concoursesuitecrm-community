@@ -180,7 +180,7 @@ public final class Leads extends CFSModule {
         context.getRequest().setAttribute("TypeSelect", typeSelect);
         context.getRequest().setAttribute("TypeList", newComponent.getTypeList());
       }
-
+      newComponent.setTypeListToTypes(db);
       context.getRequest().setAttribute("ComponentDetails", newComponent);
     } catch (Exception e) {
       errorMessage = e;

@@ -705,24 +705,12 @@ public final class ProductsCatalog extends CFSModule {
     PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "ProductCatalogSelectorInfo");
     lookupSelectorInfo.setLink("ProductsCatalog.do?command=PopupSelector");
 
-
-    try {
-      db = this.getConnection(context);
-      if (previousSelection != null) {
-        int j = 0;
-        StringTokenizer st = new StringTokenizer(previousSelection, "|");
-        while (st.hasMoreTokens()) {
-          int id = Integer.parseInt(st.nextToken());
-          ProductCatalog pc = new ProductCatalog(db,id);
-          selectedList.put(new Integer(id), pc.getSku());
-          j++;
-        }
+    if (previousSelection != null) {
+      StringTokenizer st = new StringTokenizer(previousSelection, "|");
+      StringTokenizer st1 = new StringTokenizer(context.getRequest().getParameter("previousSelectionDisplay"), "|");
+      while (st.hasMoreTokens()) {
+        selectedList.put(new Integer(st.nextToken()), st1.nextToken());
       }
-    }catch(Exception errorMessage){
-      context.getRequest().setAttribute("Error", errorMessage);
-    return ("SystemError");
-    }finally{
-      this.freeConnection(context, db);
     }
     if (context.getRequest().getParameter("displayFieldId") != null) {
       displayFieldId = context.getRequest().getParameter("displayFieldId");
@@ -760,6 +748,7 @@ public final class ProductsCatalog extends CFSModule {
     }
 
     try {
+      db = this.getConnection(context);
       productList = new ProductCatalogList();
       productList.setPagedListInfo(lookupSelectorInfo);
       productList.setBuildResources(true);

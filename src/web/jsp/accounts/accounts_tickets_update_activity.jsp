@@ -45,7 +45,8 @@ Modify Activity Log
       <%}else{ %>
         <input type="button" value="Cancel" onClick="window.location.href='AccountTicketActivityLog.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%=activityDetails.getId()%>';this.form.dosubmit.value='false';" />
       <%}%>
-      <br /> <br />   
+      <br />
+      <%= showError(request, "actionError") %>
       <%@ include file="../troubletickets/troubletickets_update_activity_include.jsp" %>
       <br />
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />

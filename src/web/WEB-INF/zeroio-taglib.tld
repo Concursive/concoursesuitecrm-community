@@ -384,7 +384,7 @@
     </attribute>
     <attribute>
       <name>timestamp</name>
-      <required>yes</required>
+      <required>no</required>
       <rtexprvalue>yes</rtexprvalue>
     </attribute>
     <attribute>

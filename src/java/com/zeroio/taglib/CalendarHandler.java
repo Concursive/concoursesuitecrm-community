@@ -143,21 +143,25 @@ public class CalendarHandler extends TagSupport {
         //Format the specified value with the retrieved timezone
         SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
             dateFormat, locale);
-
+        formatter.applyPattern(formatter.toPattern() + "yy");
+            
         //set the timezone
         if (timeZone != null) {
           java.util.TimeZone tz = java.util.TimeZone.getTimeZone(timeZone);
           formatter.setTimeZone(tz);
         }
         dateString = formatter.format(timestamp);
-      } else {
-        //no date found, output default
-        dateString = "";
       }
     } catch (Exception e) {
     }
     // Output the result based on the retrieved info (if any)
     try {
+      if (pageContext.getRequest().getAttribute(field + "Error") != null){
+        dateString = pageContext.getRequest().getParameter(field); 
+      }
+      if ( dateString == null){
+        dateString = "";
+      }
       if (!hidden) {
         // TODO: Add onChange="checkDate(this.value)"
         this.pageContext.getOut().write(

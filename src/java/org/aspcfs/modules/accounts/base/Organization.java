@@ -23,7 +23,8 @@ import org.aspcfs.modules.servicecontracts.base.ServiceContractList;
 /**
  *@author     chris
  *@created    July 12, 2001
- *@version    $Id$
+ *@version    $Id: Organization.java,v 1.82.2.1 2004/07/26 20:46:39 kbhoopal Exp
+ *      $
  */
 public class Organization extends GenericBean {
   protected double YTD = 0;
@@ -610,6 +611,16 @@ public class Organization extends GenericBean {
    */
   public void setRevenue(String revenue) {
     this.revenue = Double.parseDouble(revenue);
+  }
+
+
+  /**
+   *  Sets the revenue attribute of the Organization object
+   *
+   *@param  tmp  The new revenue value
+   */
+  public void setRevenue(double tmp) {
+    this.revenue = tmp;
   }
 
 
@@ -1710,6 +1721,22 @@ public class Organization extends GenericBean {
 
 
   /**
+   *  sets the items in the type list to the the lookup list 'types'
+   *  Organization object
+   *
+   *@param  db                The new typeListToTypes value
+   *@exception  SQLException  Description of the Exception
+   */
+  public void setTypeListToTypes(Connection db) throws SQLException {
+    Iterator itr = typeList.iterator();
+    while (itr.hasNext()) {
+      String tmpId = (String) itr.next();
+      types.add(new LookupElement(db, Integer.parseInt(tmpId), "lookup_account_types"));
+    }
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
@@ -2558,7 +2585,7 @@ public class Organization extends GenericBean {
     }
     rs.close();
     pst.close();
-    if(recordCount > 0){
+    if (recordCount > 0) {
       return true;
     }
     return false;
@@ -2587,7 +2614,6 @@ public class Organization extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
     if ((name == null || name.trim().equals("")) && (nameLast == null || nameLast.trim().equals(""))) {
       errors.put("nameError", "Organization name is required.");
       errors.put("nameLastError", "Last name is required.");
@@ -2715,6 +2741,18 @@ public class Organization extends GenericBean {
     ArrayList thisList = new ArrayList();
     thisList.add("alertDate");
     thisList.add("contractEndDate");
+    return thisList;
+  }
+
+
+  /**
+   *  Gets the numberParams attribute of the Organization class
+   *
+   *@return    The numberParams value
+   */
+  public static ArrayList getNumberParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("revenue");
     return thisList;
   }
 }

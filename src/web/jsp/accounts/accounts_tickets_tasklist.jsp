@@ -134,7 +134,7 @@ Tasks
       %>
               </td>
               <td valign="top">
-                <a href="javascript:popURL('AccountTicketTasks.do?command=Modify&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&id=<%= thisTask.getId() %>&popup=true','CRM_Task','600','425','yes','yes');"><%= thisTask.getDescription()!=null?thisTask.getDescription():"" %></a>&nbsp; <%=(thisTask.getContactId()==-1)?"":"[<a href=\"ExternalContacts.do?command=ContactDetails&id="+ thisTask.getContact().getId() +"\" title=\""+ thisTask.getContact().getNameLastFirst() +"\"><font color=\"green\">C</font></a>]"%>
+                <a href="javascript:popURL('AccountTicketTasks.do?command=Details&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&id=<%= thisTask.getId() %>&popup=true','CRM_Task','600','425','yes','yes');"><%= toHtml(thisTask.getDescription()) %></a>&nbsp; <%=(thisTask.getContactId()==-1)?"":"[<a href=\"ExternalContacts.do?command=ContactDetails&id="+ thisTask.getContact().getId() +"\" title=\""+ thisTask.getContact().getNameLastFirst() +"\"><font color=\"green\">C</font></a>]"%>
               </td>
             </tr>
             <% if(thisTask.getHasLinks()){ %>

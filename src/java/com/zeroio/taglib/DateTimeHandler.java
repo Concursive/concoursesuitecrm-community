@@ -223,6 +223,19 @@ public class DateTimeHandler extends TagSupport {
         //set the pattern
         if (pattern != null) {
           formatter.applyPattern(pattern);
+        } else {
+          if (dateOnly){
+            formatter.applyPattern(formatter.toPattern() + "yy");
+          }else{
+            SimpleDateFormat dateFormatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+                        dateFormat, locale);
+            dateFormatter.applyPattern(dateFormatter.toPattern() + "yy");
+            
+            SimpleDateFormat timeFormatter = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(
+                        timeFormat, locale);
+                        
+            formatter.applyPattern(dateFormatter.toPattern() + " " + timeFormatter.toPattern());
+          }
         }
         //set the timezone
         if (timeZone != null) {

@@ -52,10 +52,6 @@
     }
       
     for (i=1;i<=5;i++){ 
-      if ((!activityDates[i].value == "") && (!checkDate(activityDates[i].value))){
-        message += "- Check that Activity Date in row "+ i + " is entered correctly\r\n";
-        formTest = false;
-      }
       if ((!activityDates[i].value == "") && (descriptions[i].value=="")){
         message += "- Check that all items in row "+ i +" are filled in\r\n";
         formTest = false;
@@ -76,10 +72,6 @@
       
       if (form.followUpDescription.value == ""){
         message += "- Follow-up Description is mandatory if Follow-up Required is checked\r\n";
-        formTest = false;
-      }
-      if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-        message += "- Check that Alert Date is entered correctly\r\n";
         formTest = false;
       }
     }
@@ -153,17 +145,25 @@
     boolean noneSelected = false;
     int icount = 0;
     if (activityDetails != null){
+      TicketPerDayDescriptionList ticketPerDayDescriptionList = activityDetails.getTicketPerDayDescriptionList();
+      if (ticketPerDayDescriptionList == null){
+        noneSelected = true;
+      }else{
        Iterator inumber = activityDetails.getTicketPerDayDescriptionList().iterator();
-      if(inumber.hasNext()){
-      while (inumber.hasNext()){
-        icount++;
-        TicketPerDayDescription thisDayDescription = (TicketPerDayDescription) inumber.next();
+       if(inumber.hasNext()){
+        while (inumber.hasNext()){
+          icount++;
+          TicketPerDayDescription thisDayDescription = (TicketPerDayDescription) inumber.next();
      %>
       <tr valign="top" class="containerBody">
         <input type="hidden" name="activityId<%= icount %>" value="<%= thisDayDescription.getId() %>">
         <td nowrap>
-          <input type="text" size="10" name="activityDate<%=icount%>" value="<zeroio:tz timestamp="<%=thisDayDescription.getActivityDate()%>" dateOnly="true" />">
-          <a href="javascript:popCalendar('details', 'activityDate<%=icount%>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+          <%
+            String activityDate = "activityDate" + icount ;
+            String activityDateError = "activityDate" + icount + "Error";
+          %>
+          <zeroio:dateSelect form="details" field="<%=activityDate%>" timestamp="<%=thisDayDescription.getActivityDate()%>" />
+          <%= showAttribute(request, activityDateError) %>
           <br />
         </td >
         <td>
@@ -185,8 +185,12 @@
       <tr valign="top" class="containerBody">
         <input type="hidden" name="activityId<%= icount %>" value="">
         <td nowrap>
-          <input type="text" size="10" name="activityDate<%=icount%>" value="">
-          <a href="javascript:popCalendar('details', 'activityDate<%=icount%>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+          <%
+            String activityDate = "activityDate" + icount ;
+            String activityDateError = "activityDate" + icount + "Error";
+          %>
+          <zeroio:dateSelect form="details" field="<%=activityDate%>" />
+          <%= showAttribute(request, activityDateError) %>
           <br />
         </td >
         <td>
@@ -201,9 +205,10 @@
       </tr>
       <%
           }
-      } 
-     }else{
+       } 
+      }else{
        noneSelected = true;
+      }
      }
     }
   %>
@@ -214,8 +219,12 @@
   %>
   <tr valign="top" class="containerBody">
     <td nowrap>
-      <input type="text" size="10" name="activityDate<%=count%>">
-      <a href="javascript:popCalendar('details', 'activityDate<%=count%>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <%
+        String activityDate = "activityDate" + count ;
+        String activityDateError = "activityDate" + count + "Error";
+      %>
+      <zeroio:dateSelect form="details" field="<%=activityDate%>" />
+      <%= showAttribute(request, activityDateError) %>
       <br />
     </td>
     <td >
@@ -256,8 +265,8 @@
       Alert Date
     </td>
     <td>
-      <input type="text" size="10" name="alertDate" value="<zeroio:tz timestamp="<%=activityDetails.getAlertDate()%>" dateOnly="true" />">
-      <a href="javascript:popCalendar('details', 'alertDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="details" field="alertDate" timestamp="<%=activityDetails.getAlertDate()%>" />
+      <%= showAttribute(request, "alertDateError") %>
     </td>
   </tr>
   <tr class="containerBody">

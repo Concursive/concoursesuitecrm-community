@@ -1634,7 +1634,6 @@ public class Call extends GenericBean {
    *@since
    */
   protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
 
     if (subject == null || subject.trim().equals("")) {
       errors.put("subjectError", "Cannot insert a blank record");

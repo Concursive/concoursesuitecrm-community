@@ -88,18 +88,18 @@ public final class Admin extends CFSModule {
     ArrayList usageList = new ArrayList();
     ArrayList usageList2 = new ArrayList();
     String rangeSelect = context.getRequest().getParameter("rangeSelect");
-    java.sql.Date dateStart = null;
+    java.sql.Timestamp dateStart = null;
     String dateStartParam = context.getRequest().getParameter("dateStart");
     if (dateStartParam != null) {
-      dateStart = DatabaseUtils.parseDate(dateStartParam);
+      dateStart = DatabaseUtils.parseDateToTimestamp(dateStartParam);
       if (dateStart != null) {
         rangeSelect = "custom";
       }
     }
-    java.sql.Date dateEnd = null;
+    java.sql.Timestamp dateEnd = null;
     String dateEndParam = context.getRequest().getParameter("dateEnd");
     if (dateEndParam != null) {
-      dateEnd = DatabaseUtils.parseDate(dateEndParam);
+      dateEnd = DatabaseUtils.parseDateToTimestamp(dateEndParam);
       if (dateEnd != null) {
         rangeSelect = "custom";
       }
@@ -116,7 +116,7 @@ public final class Admin extends CFSModule {
       cal.set(Calendar.SECOND, 0);
       cal.set(Calendar.MILLISECOND, 0);
       long startRange = cal.getTimeInMillis();
-      context.getRequest().setAttribute("dateStart", new java.sql.Date(cal.getTimeInMillis()));
+      context.getRequest().setAttribute("dateStart", new java.sql.Timestamp(cal.getTimeInMillis()));
       //Date End Range
       if (dateStart != null && dateEnd != null && dateEnd.after(dateStart)) {
         cal.setTimeInMillis(dateEnd.getTime());
@@ -126,7 +126,7 @@ public final class Admin extends CFSModule {
       cal.set(Calendar.SECOND, 59);
       cal.set(Calendar.MILLISECOND, 999);
       long endRange = cal.getTimeInMillis();
-      context.getRequest().setAttribute("dateEnd", new java.sql.Date(cal.getTimeInMillis()));
+      context.getRequest().setAttribute("dateEnd", new java.sql.Timestamp(cal.getTimeInMillis()));
 
       NumberFormat nf = NumberFormat.getInstance();
       db = this.getConnection(context);

@@ -45,7 +45,6 @@ Modify Ticket
 </table>
 <%-- End Trails --%>
 <%@ include file="ticket_header_include.jsp" %>
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <% String param1 = "id=" + TicketDetails.getId(); %>
 <dhv:container name="tickets" selected="details" param="<%= param1 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
@@ -54,8 +53,7 @@ Modify Ticket
       <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
         <font color="red">This ticket was closed on
         <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" />
-        </font><br>
-        <br>
+        </font><br />
       </dhv:evaluate>
       <% if (TicketDetails.getClosed() != null) { %>
         <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
@@ -70,13 +68,14 @@ Modify Ticket
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
         <%}%>
       <%}%>
-      <br /><br />
-<%@ include file="troubletickets_modify_include.jsp" %>
-<% if (TicketDetails.getClosed() != null) { %>
-  <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
-<%} else {%>
-  <input type="submit" value="Update" onClick="return checkForm(this.form)">
-<%}%>
+      <br />
+      <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+  <%@ include file="troubletickets_modify_include.jsp" %>
+  <% if (TicketDetails.getClosed() != null) { %>
+    <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
+  <%} else {%>
+    <input type="submit" value="Update" onClick="return checkForm(this.form)">
+  <%}%>
 	<% if ("list".equals(request.getParameter("return"))) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
   <%} else if ("searchResults".equals(request.getParameter("return"))){%> 

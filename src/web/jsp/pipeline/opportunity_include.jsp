@@ -167,8 +167,7 @@
       Est. Close Date
     </td>
     <td>
-      <input type="text" name="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" size="10" value="<zeroio:tz timestamp="<%= ComponentDetails.getCloseDate() %>" dateOnly="true"/>">
-      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"></a>
+      <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" timestamp="<%= ComponentDetails.getCloseDate() %>" />
       <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
   </tr>
@@ -245,9 +244,9 @@
       Alert Date
     </td>
     <td>
-      <input type="text" name="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" size="10" value="<zeroio:tz timestamp="<%= ComponentDetails.getAlertDate() %>" dateOnly="true"/>">
-      <zeroio:debug value="TODO: This needs to be set to the system locale" />
-      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"></a>
+      <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" timestamp="<%= ComponentDetails.getAlertDate() %>" />
+      <font color="red">*</font>
+      <%= showAttribute(request, "alertDateError") %>
     </td>
   </tr>
 </table>

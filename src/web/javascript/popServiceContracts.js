@@ -40,6 +40,9 @@ function setContractList(scIds, scNumbers, listType, displayFieldId, hiddenField
     opener.document.getElementById(hiddenFieldId).value = scIds[i];
     opener.changeDivContent(displayFieldId, scNumbers[i]);
     
+   if (opener.document.getElementById('serviceContractNumber')){
+     opener.document.getElementById('serviceContractNumber').value = scNumbers[i];
+   }
    if (opener.document.getElementById('assetId')){
       opener.resetNumericFieldValue('assetId');
       opener.changeDivContent('addAsset', "None Selected");

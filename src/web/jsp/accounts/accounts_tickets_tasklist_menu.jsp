@@ -18,9 +18,13 @@
   
   //Menu link functions
   function details() {
-    popURL('AccountTicketTasks.do?command=Modify&orgId=' + thisOrgId + '&ticketId=' + thisTicId + '&id=' + thisTaskId + '&popup=true','CRM_Task','600','425','yes','yes');
+    popURL('AccountTicketTasks.do?command=Details&orgId=' + thisOrgId + '&ticketId=' + thisTicId + '&id=' + thisTaskId + '&popup=true','CRM_Task','600','425','yes','yes');
   }
   
+  function modify() {
+    popURL('AccountTicketTasks.do?command=Modify&orgId=' + thisOrgId + '&ticketId=' + thisTicId + '&id=' + thisTaskId + '&popup=true','CRM_Task','600','425','yes','yes');
+  }
+
   function deleteTask() {
     popURL('AccountTicketTasks.do?command=ConfirmDelete&id=' + thisTaskId + '&popup=true', 'Delete_task','320','200','yes','no');
   }

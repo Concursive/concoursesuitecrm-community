@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.HtmlSelect" %>
 <jsp:useBean id="SearchOppListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -61,6 +62,7 @@ Search Opportunities
 </tr>
 </table>
 <%-- End Trails --%>
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -136,11 +138,9 @@ Search Opportunities
       Est. Close Date between
     </td>
     <td>
-      <input type="text" size="10" name="searchdateCloseDateStart" value="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateStart") %>">
-      <a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateStart', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateStart" timestamp="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateStart") %>" />
       &nbsp;and<br>
-      <input type="text" size="10" name="searchdateCloseDateEnd" value="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateEnd") %>">
-      <a href="javascript:popCalendar('searchLeads', 'searchdateCloseDateEnd', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateEnd" timestamp="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateEnd") %>" />
     </td>
   </tr>
   <tr>

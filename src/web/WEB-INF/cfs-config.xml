@@ -867,6 +867,7 @@
   <action name="AccountTicketTasks" class="org.aspcfs.modules.accounts.actions.AccountTicketTasks">
     <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>
     <forward name="TaskDetailsOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=TroubleTicketTasks&amp;returnAction=TaskDetailsForm"/>
+    <forward name="TaskDetailsPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=TroubleTicketTasks&amp;returnAction=TaskDetailsForm"/>
     <forward name="TaskDetailsFormPopupOK" resource="/accounts/accounts_tickets_taskdetails.jsp" layout="style"/>
     <forward name="AddTaskOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=AccountTicketTasks"/>
     <forward name="PrepareTaskPopupOK" resource="/accounts/accounts_ticket_tasks_include.jsp" layout="style"/>
@@ -1276,6 +1277,7 @@
   <action name="TroubleTicketTasks" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketTasks">
     <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>
     <forward name="TaskDetailsOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=TroubleTicketTasks&amp;returnAction=TaskDetailsForm"/>
+    <forward name="TaskDetailsPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=TroubleTicketTasks&amp;returnAction=TaskDetailsForm"/>
     <forward name="TaskDetailsFormPopupOK" resource="/troubletickets/troubletickets_taskdetails.jsp" layout="style"/>
     <forward name="AddTaskOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=TroubleTicketTasks"/>
     <forward name="PrepareTaskPopupOK" resource="/troubletickets/troubletickets_taskform.jsp" layout="style"/>

@@ -125,19 +125,23 @@ public final class ContactsPortal extends CFSModule {
 
     Connection db = null;
     Contact thisContact = null;
+    boolean inserted = false;
     try {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
-      insertUser(context, db, thisContact);
+      inserted = insertUser(context, db, thisContact);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    return executeCommandView(context);
+    if (inserted){
+      return executeCommandView(context);
+    }else{
+      return executeCommandAdd(context);
+    }
   }
 
 
@@ -154,6 +158,7 @@ public final class ContactsPortal extends CFSModule {
 
     Connection db = null;
     Contact thisContact = null;
+    User thisPortalUser = null;
     try {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
@@ -167,9 +172,12 @@ public final class ContactsPortal extends CFSModule {
         return ("ContactPortalError");
       }
 
-      User thisPortalUser = new User();
-      thisPortalUser.buildRecord(db, thisContact.getUserId());
-
+      thisPortalUser = (User)context.getRequest().getAttribute("portalUserDetails");
+      if (thisPortalUser == null){
+          thisPortalUser = new User();
+          thisPortalUser.buildRecord(db, thisContact.getUserId());
+      }
+      
       setOrganization(context, db, thisContact.getOrgId());
 
       RoleList roleList = new RoleList();
@@ -206,14 +214,15 @@ public final class ContactsPortal extends CFSModule {
 
     Connection db = null;
     Contact oldContactInfo = null;
+    User oldUserInfo = null;
+    int resultCount = -1;
     try {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
       oldContactInfo = new Contact(db, id);
-
-      User oldUserInfo = new User();
+      oldUserInfo = new User();
       oldUserInfo.buildRecord(db, oldContactInfo.getUserId());
-      updateUser(context, db, oldContactInfo, oldUserInfo);
+      resultCount = updateUser(context, db, oldContactInfo, oldUserInfo);
       setOrganization(context, db, oldContactInfo.getOrgId());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -221,7 +230,11 @@ public final class ContactsPortal extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return executeCommandView(context);
+    if (resultCount == 1){
+      return executeCommandView(context);
+    }else{
+      return executeCommandModify(context);
+    }
   }
 
 
@@ -407,7 +420,7 @@ public final class ContactsPortal extends CFSModule {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  private boolean insertUser(ActionContext context, Connection db, Contact thisContact) throws SQLException {
+  private boolean insertUser(ActionContext context, Connection db, Contact thisContact) throws Exception {
 
     boolean recordInserted = false;
 
@@ -421,31 +434,24 @@ public final class ContactsPortal extends CFSModule {
     newUser.setPassword1(password);
     newUser.setPassword2(password);
 
-    java.sql.Timestamp tmpDate = null;
-    String tmpExpires = context.getRequest().getParameter("expires");
-    tmpDate = DateUtils.parseTimestampString(tmpExpires, "M/d/yy");
-    if (tmpDate == null) {
-      tmpDate = DateUtils.parseTimestampString(tmpExpires, "M-d-yy");
-    }
-
-    newUser.setExpires(tmpDate);
+    newUser.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("expires"), "expires");
     newUser.setEnteredBy(getUserId(context));
     newUser.setModifiedBy(getUserId(context));
     newUser.setTimeZone(getPref(context, "SYSTEM.TIMEZONE"));
     newUser.setCurrency(getPref(context, "SYSTEM.CURRENCY"));
     newUser.setLanguage(getPref(context, "SYSTEM.LANGUAGE"));
-    recordInserted = newUser.insert(db);
+    recordInserted = newUser.insert(db,context);
 
-    //subsequently use this email address to email the user
-    //of the portal access information
-    int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
-    ContactEmailAddress emailAddress = null;
-    if (emailAddressId != -1){
-       emailAddress = new ContactEmailAddress(db, emailAddressId);
-    }else{
-      emailAddress = getAddressToEmail(thisContact);
-    }
     if (recordInserted) {
+      //subsequently use this email address to email the user
+      //of the portal access information
+      int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
+      ContactEmailAddress emailAddress = null;
+      if (emailAddressId != -1){
+         emailAddress = new ContactEmailAddress(db, emailAddressId);
+      }else{
+        emailAddress = getAddressToEmail(thisContact);
+      }
       addRecentItem(context, newUser);
       context.getRequest().setAttribute("UserRecord", newUser);
       updateSystemHierarchyCheck(db, context);
@@ -466,6 +472,7 @@ public final class ContactsPortal extends CFSModule {
       }
     } else {
       processErrors(context, newUser.getErrors());
+      context.getRequest().setAttribute("portalUserDetails", newUser);
       return false;
     }
     return true;
@@ -482,7 +489,7 @@ public final class ContactsPortal extends CFSModule {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  private boolean updateUser(ActionContext context, Connection db, Contact thisContact, User thisUser) throws SQLException {
+  private int updateUser(ActionContext context, Connection db, Contact thisContact, User thisUser) throws Exception {
 
     boolean roleChanged = false;
     boolean expirationDateChanged = false;
@@ -500,24 +507,16 @@ public final class ContactsPortal extends CFSModule {
     }
 
     //has the expiration date been changed?
-    java.sql.Timestamp tmpDate = null;
     String tmpExpires = context.getRequest().getParameter("expires");
-    tmpDate = DateUtils.parseTimestampString(tmpExpires, "M/d/yy");
-    if (tmpDate == null) {
-      tmpDate = DateUtils.parseTimestampString(tmpExpires, "M-d-yy");
-    }
-    if ((thisUser.getExpires() == null) && (tmpDate != null)) {
+    if ((thisUser.getExpires() == null) && (!"".equals(tmpExpires))) {
       expirationDateChanged = true;
-      newUser.setExpires(tmpDate);
-    } else if ((thisUser.getExpires() != null) && (tmpDate == null)) {
+      newUser.setTimeZoneForDateFields(context.getRequest(), tmpExpires, "expires");
+    } else if ((thisUser.getExpires() != null) && ("".equals(tmpExpires))) {
       expirationDateChanged = true;
-      newUser.setExpires(tmpDate);
-    } else if ((thisUser.getExpires() != null) && (tmpDate != null)) {
-      if (!thisUser.getExpires().equals(tmpDate)) {
+    } else if ((thisUser.getExpires() != null) && (!"".equals(tmpExpires))) {
+      newUser.setTimeZoneForDateFields(context.getRequest(), tmpExpires, "expires");
+      if (!thisUser.getExpires().equals(newUser.getExpires())) {
         expirationDateChanged = true;
-        newUser.setExpires(tmpDate);
-      } else {
-        newUser.setExpires(thisUser.getExpires());
       }
     }
 
@@ -531,27 +530,28 @@ public final class ContactsPortal extends CFSModule {
     }
 
     if ((roleChanged = false) && (expirationDateChanged = false) && (newPassword = false)) {
-      return true;
+      return 1;
     }
 
     newUser.setModifiedBy(getUserId(context));
     newUser.setModified(context.getRequest().getParameter("modified"));
     newUser.setUsername(thisUser.getUsername());
-
-    int tmpUserId = 0;
-    tmpUserId = newUser.updatePortalUser(db, context);
-    newUser = new User(db, tmpUserId);
-
-    //subsequently use this email address to email the user
-    //of the portal access information
-    int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
-    ContactEmailAddress emailAddress = null;
-    if (emailAddressId != -1){
-       emailAddress = new ContactEmailAddress(db, emailAddressId);
-    }else{
-      emailAddress = getAddressToEmail(thisContact);
-    }
-    if (tmpUserId > 0) {
+    newUser.setId(Integer.parseInt(context.getRequest().getParameter("userId")));
+    int resultCount = -1;
+    resultCount = newUser.updatePortalUser(db);
+    
+    if (resultCount == 1) {
+      newUser = new User(db, newUser.getId());
+  
+      //subsequently use this email address to email the user
+      //of the portal access information
+      int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
+      ContactEmailAddress emailAddress = null;
+      if (emailAddressId != -1){
+         emailAddress = new ContactEmailAddress(db, emailAddressId);
+      }else{
+        emailAddress = getAddressToEmail(thisContact);
+      }
       context.getRequest().setAttribute("UserRecord", newUser);
       updateSystemHierarchyCheck(db, context);
 
@@ -584,9 +584,10 @@ public final class ContactsPortal extends CFSModule {
         System.err.println(mail.getErrorMsg());
       }
     } else {
-      return false;
+      processErrors(context, newUser.getErrors());
+      context.getRequest().setAttribute("portalUserDetails", newUser);
     }
-    return true;
+    return resultCount;
   }
 }
 

@@ -43,6 +43,7 @@ function setHours(hiddenValues, hiddenFields, displayValues, displayFields){
   if (opener.document.getElementById('netRemainingHours')){
     var netHours = 0;
     netHours = parseFloat(opener.document.getElementById('totalHoursRemaining').value) + parseFloat(opener.document.getElementById('adjustmentHours').value);
+    opener.document.getElementById('netHours').value = netHours;
     opener.changeDivContent('netRemainingHours', netHours);
   }
 }

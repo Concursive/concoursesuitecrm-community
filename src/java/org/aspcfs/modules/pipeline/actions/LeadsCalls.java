@@ -297,7 +297,7 @@ public final class LeadsCalls extends CFSModule {
           }
         }
         thisCall.setEnteredBy(getUserId(context));
-        recordInserted = thisCall.insert(db, context);
+      recordInserted = thisCall.insert(db, context);
       }
 
       if (!recordInserted && resultCount == -1) {
@@ -325,7 +325,7 @@ public final class LeadsCalls extends CFSModule {
       return this.getReturn(context, "Insert");
     } else if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
-        return (executeCommandView(context));
+      return (executeCommandView(context));
       } else {
         return ("UpdateOK");
       }
@@ -461,7 +461,7 @@ public final class LeadsCalls extends CFSModule {
     Call thisCall = null;
     try {
       db = this.getConnection(context);
-      thisCall = new Call(db, callId);
+        thisCall = new Call(db, callId);
       OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
 

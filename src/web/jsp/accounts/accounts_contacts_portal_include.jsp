@@ -16,11 +16,6 @@
       message += "- Portal Role is required\r\n";
       formTest = false;
     }
-    if ((!form.expires.value == "") && (!checkDate(form.expires.value))) {
-      message += "- Check that Expiration Date is entered correctly\r\n";
-      formTest = false;
-      initialStartDateValid = false;
-    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -61,17 +56,17 @@
       Expiration Date
     </td>
     <td>
-      <input type="text" size="10" name="expires" maxlength="10" value="<zeroio:tz timestamp="<%= portalUserDetails.getExpires() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('contactPortal', 'expires', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="contactPortal" field="expires" timestamp="<%= portalUserDetails.getExpires() %>" />
+      <%= showAttribute(request, "expiresError") %>
     </td>
   </tr>
-  <dhv:evaluate if="<%= (portalUserDetails.getUsername() != null) %>" >
+  <dhv:evaluate if="<%= (portalUserDetails.getId() != -1) %>" >
   <tr class="containerBody">
     <td class="formLabel" >
       Generate new password?
     </td>
     <td>
-    <input type="checkbox" name="autoGenerate" value="on"></input>
+    <input type="checkbox" name="autoGenerate" value="on"  <%=("on".equals(request.getParameter("autoGenerate")) ? " checked" : "")%> ></input>
     </td>
   </tr>
   <input type="hidden" name="modified" value="<%=portalUserDetails.getModified()%>" />
@@ -81,7 +76,14 @@
       Email
     </td>
     <td>
-      <%= ContactDetails.getEmailAddressList().getHtmlSelect("emailAddressId", -1)%><font color="red"> Login information would be sent to this email or to the primary email of the contact</font>
+      <% 
+        String tmpId = request.getParameter("emailAddressId");
+        int emailId = -1;
+        if ((tmpId != null) && (!"".equals(tmpId))){
+          emailId = Integer.parseInt(tmpId);
+        }
+      %>
+      <%= ContactDetails.getEmailAddressList().getHtmlSelect("emailAddressId", emailId)%><font color="red"> Login information would be sent to this email or to the primary email of the contact</font>
     </td>
   </tr>
 </table>

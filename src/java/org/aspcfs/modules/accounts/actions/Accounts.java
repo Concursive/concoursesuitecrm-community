@@ -451,6 +451,11 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       buildFormElements(context, db);
+      Organization newOrg = (Organization) context.getFormBean();
+      if (newOrg.getEnteredBy() != -1){
+       newOrg.setTypeListToTypes(db); 
+       context.getRequest().setAttribute("OrgDetails", newOrg);
+      }
     } catch (Exception e) {
       errorCode = 1;
       errorMessage = e;
@@ -817,32 +822,29 @@ public final class Accounts extends CFSModule {
     }
     Connection db = null;
     int resultCount = 0;
-    Organization updatedOrg = null;
     Organization newOrg = (Organization) context.getFormBean();
     newOrg.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOrg.setModifiedBy(getUserId(context));
     newOrg.setEnteredBy(getUserId(context));
-    //set the name to namelastfirstmiddle if individual
-    if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
-      newOrg.setName(newOrg.getNameLastFirstMiddle());
-    } else {
-      //don't want to populate the addresses, etc. if this is an individual account
-      newOrg.setRequestItems(context.getRequest());
-    }
     try {
-      String orgId = context.getRequest().getParameter("orgId");
-      int tempid = Integer.parseInt(orgId);
       db = this.getConnection(context);
-      updatedOrg = new Organization(db, tempid);
+      //set the name to namelastfirstmiddle if individual
+      if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
+        newOrg.populatePrimaryContact(db);
+        newOrg.updatePrimaryContact();
+        ((Contact) newOrg.getPrimaryContact()).setRequestItems(context.getRequest());
+        newOrg.setName(newOrg.getNameLastFirstMiddle());
+      } else {
+        //don't want to populate the addresses, etc. if this is an individual account
+        newOrg.setRequestItems(context.getRequest());
+      }
+
       resultCount = newOrg.update(db);
       if (resultCount == -1) {
         processErrors(context, newOrg.getErrors());
       } else {
         //if this is an individual account, populate and update the primary contact
         if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
-          newOrg.populatePrimaryContact(db);
-          newOrg.updatePrimaryContact();
-          ((Contact) newOrg.getPrimaryContact()).setRequestItems(context.getRequest());
           ((Contact) newOrg.getPrimaryContact()).update(db);
         }
         //update all contacts which are associated with this organization
@@ -1066,8 +1068,12 @@ public final class Accounts extends CFSModule {
     Organization newOrg = null;
     try {
       db = this.getConnection(context);
-      newOrg = new Organization(db, tempid);
-
+      newOrg = (Organization) context.getFormBean();
+      if (newOrg.getId() == -1){
+        newOrg = new Organization(db, tempid);
+      }else{
+       newOrg.setTypeListToTypes(db); 
+      }
       SystemStatus systemStatus = this.getSystemStatus(context);
 
       LookupList industrySelect = systemStatus.getLookupList(db, "lookup_industry");

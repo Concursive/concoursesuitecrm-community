@@ -201,6 +201,7 @@ Add Ticket
       </td>
       <td>
         <input type="hidden" name="contractId" id="contractId" value="<%= TicketDetails.getContractId() %>">
+        <input type="hidden" name="serviceContractNumber" id="serviceContractNumber" value="<%= TicketDetails.getServiceContractNumber() %>">
         &nbsp;
         <%= showAttribute(request, "contractIdError") %>
         [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%= TicketDetails.getOrgId() %>);">Select</a>]
@@ -222,6 +223,7 @@ Add Ticket
       </td>
       <td>
         <input type="hidden" name="assetId" id="assetId" value="<%=  TicketDetails.getAssetId() %>">
+        <input type="hidden" name="assetSerialNumber" id="assetSerialNumber" value="<%=  TicketDetails.getAssetSerialNumber() %>">
         &nbsp;
         <%= showAttribute(request, "assetIdError") %>
         [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=allassets|undercontract','contractId','addServiceContract', <%= TicketDetails.getOrgId() %>);">Select</a>]
@@ -243,6 +245,7 @@ Add Ticket
         </td>
         <td>
           <input type="hidden" name="productId" id="productId" value="<%=  TicketDetails.getProductId() %>">
+          <input type="hidden" name="productSku" id="productSku" value="<%=  TicketDetails.getProductSku() %>">
           &nbsp;
           <%= showAttribute(request, "productIdError") %>
           [<a href="javascript:popProductListSingle('productId','addLaborCategory', 'filters=all|my|disabled');">Select</a>]
@@ -381,8 +384,8 @@ Add Ticket
       Assignment Date
     </td>
     <td>
-      <input type="text" size="10" name="assignedDate" value="<zeroio:tz timestamp="<%= TicketDetails.getAssignedDate() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('addticket', 'assignedDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="addticket" field="assignedDate" timestamp="<%= TicketDetails.getAssignedDate() %>" />
+      <%= showAttribute(request, "assignedDateError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -390,8 +393,8 @@ Add Ticket
       Estimated Resolution Date
     </td>
     <td>
-      <input type="text" size="10" name="estimatedResolutionDate" value="<zeroio:tz timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('addticket', 'estimatedResolutionDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="addticket" field="estimatedResolutionDate" timestamp="<%= TicketDetails.getEstimatedResolutionDate() %>" />
+      <%= showAttribute(request, "estimatedResolutionDateError") %>
     </td>
   </tr>
 	<tr class="containerBody">
@@ -436,8 +439,8 @@ Add Ticket
       Resolution Date
     </td>
     <td>
-      <input type="text" size="10" name="resolutionDate" value="<zeroio:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('addticket', 'resolutionDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="addticket" field="resolutionDate" timestamp="<%= TicketDetails.getResolutionDate() %>" />
+      <%= showAttribute(request, "resolutionDateError") %>
     </td>
   </tr>
   <tr class="containerBody">

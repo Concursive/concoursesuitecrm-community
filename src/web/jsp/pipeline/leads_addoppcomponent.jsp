@@ -27,15 +27,7 @@
     formTest = true;
     message = "";
     alertMessage = "";
-    if ((!form.closeDate.value == "") && (!checkDate(form.closeDate.value))) { 
-      message += "- Check that Est. Close Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
+   if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
     }

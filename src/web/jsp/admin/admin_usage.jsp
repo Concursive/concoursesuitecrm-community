@@ -3,8 +3,8 @@
 <%@ page import="java.text.DateFormat,org.aspcfs.modules.admin.base.PermissionCategory, java.util.*" %>
 <jsp:useBean id="rangeSelect" class="java.lang.String" scope="request"/>
 <%
-  java.sql.Date dateStart = (java.sql.Date) request.getAttribute("dateStart");
-  java.sql.Date dateEnd = (java.sql.Date) request.getAttribute("dateEnd");
+  java.sql.Timestamp dateStart = (java.sql.Timestamp) request.getAttribute("dateStart");
+  java.sql.Timestamp dateEnd = (java.sql.Timestamp) request.getAttribute("dateEnd");
 %>
 <jsp:useBean id="usageList" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="usageList2" class="java.util.ArrayList" scope="request"/>
@@ -44,14 +44,6 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    if ((!form.dateStart.value == "") && (!checkDate(form.dateStart.value))) { 
-      message += "- Check that Start Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.dateEnd.value == "") && (!checkDate(form.dateEnd.value))) { 
-      message += "- Check that End Date is entered correctly\r\n";
-      formTest = false;
-    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -112,11 +104,11 @@ Current Usage and Billing Usage Information<br>
       </td>
       <td nowrap align="left">
         <span name="customFields" id="customFields" style="display:none">
-          <input type="text" size="10" name="dateStart" value="<%= toDateString(dateStart) %>">
-          <a href="javascript:popCalendar('usage', 'dateStart', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+          <zeroio:dateSelect form="usage" field="dateStart" timestamp="<%= dateStart %>" />
+          <%= showAttribute(request, "dateStartError") %>
           <br />
-          <input type="text" size="10" name="dateEnd" value="<%= toDateString(dateEnd) %>">
-          <a href="javascript:popCalendar('usage', 'dateEnd', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+          <zeroio:dateSelect form="usage" field="dateEnd" timestamp="<%= dateEnd %>" />
+          <%= showAttribute(request, "dateEndError") %>
         </span>
       </td>
       <td width="100%" align="left" valign="top" nowrap>

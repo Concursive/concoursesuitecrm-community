@@ -149,9 +149,34 @@ public class DateUtils {
       //convertedDate = serverFormatter.format(localeFormatter.parse(date));
       convertedDate = serverFormatter.format(new java.util.Date(localeFormatter.parse(date).getTime() + 1000 * 60 * 60 * 12));
     } catch (Exception e) {
-      System.err.println("EXCEPTION: DateUtils-> Timestamp ");
+      System.err.println("EXCEPTION: DateUtils-> Timestamp " + e);
     }
     return convertedDate;
+  }
+
+
+  /**
+   *  Gets the userToServerDateTime attribute of the DateUtils class
+   *
+   *@param  timeZone    Description of the Parameter
+   *@param  dateFormat  Description of the Parameter
+   *@param  timeFormat  Description of the Parameter
+   *@param  date        Description of the Parameter
+   *@param  locale      Description of the Parameter
+   *@return             The userToServerDateTime value
+   */
+  public static Timestamp getUserToServerDateTime(TimeZone timeZone, int dateFormat, int timeFormat, String date, Locale locale) {
+    try {
+      DateFormat localeFormatter = DateFormat.getDateInstance(dateFormat,locale);
+      if (timeZone != null) {
+        localeFormatter.setTimeZone(timeZone);
+      }
+      localeFormatter.setLenient(false);
+      return new Timestamp(localeFormatter.parse(date).getTime());
+    } catch (Exception e) {
+      System.err.println("EXCEPTION: DateUtils-> Timestamp " + e);
+    }
+    return null;
   }
 
 

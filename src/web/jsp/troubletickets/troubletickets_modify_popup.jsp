@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.communications.base.Campaign,org.aspcfs.modules.communications.base.CampaignList,org.aspcfs.utils.web.HtmlSelect" %>
@@ -30,8 +31,9 @@
         <input type="submit" value="Update" onClick="return checkForm(this.form)" />
          <input type="button" value="Cancel" onClick="window.close()" />
       <%}%>
-      <br /><br />
-<%-- include basic troubleticket add form --%>
+      <br />
+      <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<%-- include basic troubleticket modify form --%>
 <%@ include file="troubletickets_modify_include.jsp" %>
 <% if (TicketDetails.getClosed() != null) { %>
   <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();" />

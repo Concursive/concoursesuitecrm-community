@@ -52,6 +52,9 @@ public class TicketTask extends Task {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    if (!isValid(db)) {
+      return false;
+    }
     try {
       db.setAutoCommit(false);
       boolean recordInserted = super.insert(db);
@@ -74,6 +77,5 @@ public class TicketTask extends Task {
     }
     return true;
   }
-
 }
 

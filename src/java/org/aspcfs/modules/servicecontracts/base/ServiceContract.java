@@ -53,6 +53,12 @@ public class ServiceContract extends GenericBean {
   private boolean override = false;
   private String serviceModelNotes = null;
   private ArrayList productList = null;
+  private ServiceContractProductList serviceContractProductList = null;
+  //special case as -1 is also valid
+  private double adjustmentHours = 0;
+  private int adjustmentReason = -1;
+  private String adjustmentNotes = null;
+  private double netHours = 0.0;
 
 
   /**
@@ -158,16 +164,7 @@ public class ServiceContract extends GenericBean {
    *@param  tmp  The new contractValue value
    */
   public void setContractValue(String tmp) {
-    tmp = StringUtils.replace(tmp, ",", "");
-    tmp = StringUtils.replace(tmp, "$", "");
-
-    if (!"".equals(tmp)) {
-      try {
-        this.contractValue = Double.parseDouble(tmp);
-      } catch (NumberFormatException ne) {
-        errors.put("contractValueError", tmp + " is invalid input for this field");
-      }
-    }
+    this.contractValue = Double.parseDouble(tmp);
   }
 
 
@@ -538,6 +535,17 @@ public class ServiceContract extends GenericBean {
 
 
   /**
+   *  Sets the serviceContractProductList attribute of the ServiceContract
+   *  object
+   *
+   *@param  tmp  The new serviceContractProductList value
+   */
+  public void setServiceContractProductList(ServiceContractProductList tmp) {
+    this.serviceContractProductList = tmp;
+  }
+
+
+  /**
    *  Adds a feature to the Product attribute of the ServiceContract object
    *
    *@param  productId  The feature to be added to the Product attribute
@@ -574,6 +582,17 @@ public class ServiceContract extends GenericBean {
 
 
   /**
+   *  Gets the serviceContractProductList attribute of the ServiceContract
+   *  object
+   *
+   *@return    The serviceContractProductList value
+   */
+  public ServiceContractProductList getServiceContractProductList() {
+    return serviceContractProductList;
+  }
+
+
+  /**
    *  Sets the override attribute of the ServiceContract object
    *
    *@param  tmp  The new override value
@@ -600,6 +619,76 @@ public class ServiceContract extends GenericBean {
    */
   public void setServiceModelNotes(String tmp) {
     this.serviceModelNotes = tmp;
+  }
+
+
+  /**
+   *  Sets the adjustmentHours attribute of the ServiceContract object
+   *
+   *@param  tmp  The new adjustmentHours value
+   */
+  public void setAdjustmentHours(double tmp) {
+    this.adjustmentHours = tmp;
+  }
+
+
+  /**
+   *  Sets the adjustmentHours attribute of the ServiceContract object
+   *
+   *@param  tmp  The new adjustmentHours value
+   */
+  public void setAdjustmentHours(String tmp) {
+    this.adjustmentHours = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Sets the adjustmentReason attribute of the ServiceContract object
+   *
+   *@param  tmp  The new adjustmentReason value
+   */
+  public void setAdjustmentReason(int tmp) {
+    this.adjustmentReason = tmp;
+  }
+
+
+  /**
+   *  Sets the adjustmentReason attribute of the ServiceContract object
+   *
+   *@param  tmp  The new adjustmentReason value
+   */
+  public void setAdjustmentReason(String tmp) {
+    this.adjustmentReason = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the adjustmentNotes attribute of the ServiceContract object
+   *
+   *@param  tmp  The new adjustmentNotes value
+   */
+  public void setAdjustmentNotes(String tmp) {
+    this.adjustmentNotes = tmp;
+  }
+
+
+  /**
+   *  Sets the netHours attribute of the ServiceContract object
+   *
+   *@param  tmp  The new netHours value
+   */
+  public void setNetHours(String tmp) {
+    this.netHours = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Sets the netHours attribute of the ServiceContract object
+   *
+   *@param  tmp  The new netHours value
+   */
+  public void setNetHours(double tmp) {
+    this.netHours = tmp;
   }
 
 
@@ -889,20 +978,69 @@ public class ServiceContract extends GenericBean {
 
 
   /**
+   *  Gets the adjustmentHours attribute of the ServiceContract object
+   *
+   *@return    The adjustmentHours value
+   */
+  public double getAdjustmentHours() {
+    return adjustmentHours;
+  }
+
+
+  /**
+   *  Gets the adjustmentReason attribute of the ServiceContract object
+   *
+   *@return    The adjustmentReason value
+   */
+  public int getAdjustmentReason() {
+    return adjustmentReason;
+  }
+
+
+  /**
+   *  Gets the adjustmentHoursNotes attribute of the ServiceContract object
+   *
+   *@return    The adjustmentHoursNotes value
+   */
+  public String getAdjustmentNotes() {
+    return adjustmentNotes;
+  }
+
+
+  /**
+   *  Gets the netHours attribute of the ServiceContract object
+   *
+   *@return    The netHours value
+   */
+  public double getNetHours() {
+    return netHours;
+  }
+
+
+  /**
    *  Gets the properties that are TimeZone sensitive
    *
    *@return    The timeZoneParams value
    */
   public static ArrayList getTimeZoneParams() {
-
     ArrayList thisList = new ArrayList();
     thisList.add("initialStartDate");
     thisList.add("currentStartDate");
     thisList.add("currentEndDate");
-
     return thisList;
   }
 
+
+  /**
+   *  Gets the numberParams attribute of the ServiceContract class
+   *
+   *@return    The numberParams value
+   */
+  public static ArrayList getNumberParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("contractValue");
+    return thisList;
+  }
 
 
   /**
@@ -956,7 +1094,7 @@ public class ServiceContract extends GenericBean {
         "response_time = ? , " +
         "telephone_service_model= ? , " +
         "onsite_service_model = ? , " +
-        "email_service_model = ? , " + 
+        "email_service_model = ? , " +
         "service_model_notes = ? ");
 
     if (!override) {
@@ -1257,6 +1395,21 @@ public class ServiceContract extends GenericBean {
     }
     rs.close();
     pst.close();
+
+    buildServiceContractProductList(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildServiceContractProductList(Connection db) throws SQLException {
+    serviceContractProductList = new ServiceContractProductList();
+    serviceContractProductList.setContractId(this.id);
+    serviceContractProductList.buildList(db);
   }
 
 

@@ -188,7 +188,9 @@ public class AccountsAssets extends CFSModule {
 
       int assetId = Integer.parseInt((context.getRequest().getParameter("id")));
       Asset thisAsset = (Asset) context.getFormBean();
-      thisAsset.queryRecord(db, assetId);
+      if (thisAsset.getId() == -1){
+        thisAsset.queryRecord(db, assetId);
+      }
       buildFormElements(context, db);
       buildCategories(context, db, thisAsset);
       context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));

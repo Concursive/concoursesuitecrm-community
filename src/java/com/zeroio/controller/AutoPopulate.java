@@ -112,7 +112,7 @@ public class AutoPopulate {
           if (System.getProperty("DEBUG") != null) {
             System.out.println("AutoPopulate-> timeParams trying to set: " + param);
           }
-          String tmp = DateUtils.getUserToServerDateTimeString(TimeZone.getTimeZone(user.getTimeZone()), DateFormat.SHORT, DateFormat.LONG, value, user.getLocale());
+          Timestamp tmp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(user.getTimeZone()), DateFormat.SHORT, DateFormat.LONG, value, user.getLocale());
           if (tmp != null) {
             modified = ObjectUtils.setParam(bean, param, tmp);
           }

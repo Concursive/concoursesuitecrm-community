@@ -74,8 +74,24 @@ public final class TroubleTicketTasks extends CFSModule {
     if (!hasPermission(context, "tickets-tickets-tasks-view")) {
       return ("PermissionError");
     }
+    Connection db = null;
+    Task thisTask = null;
+    String id = context.getRequest().getParameter("id");
+    try{
+      db = this.getConnection(context);
+      thisTask = new Task(db, Integer.parseInt(id));
+      context.getRequest().setAttribute("Task", thisTask);
+    }catch (Exception e){
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
     addModuleBean(context, "View Tickets", "View Tickets");
-    return this.getReturn(context, "TaskDetails");
+    if (hasAuthority(context, thisTask.getOwner())) {
+      return this.getReturn(context, "TaskDetails");
+    }
+    return ("PermissionError");
   }
 
 
@@ -88,7 +104,7 @@ public final class TroubleTicketTasks extends CFSModule {
   public String executeCommandSave(ActionContext context) {
     String permission = "tickets-tickets-tasks-edit";
     Connection db = null;
-    int resultCount = 0;
+    int resultCount = -1;
     boolean recordInserted = false;
     boolean contactRecordInserted = false;
     String ticketId = context.getRequest().getParameter("ticketId");
@@ -129,7 +145,11 @@ public final class TroubleTicketTasks extends CFSModule {
       addModuleBean(context, "View Tickets", "Ticket Save OK");
       return ("SaveOK");
     }
-    return this.getReturn(context, "PrepareTask");
+    if ("insert".equals(action)){
+      return executeCommandAdd(context);
+    }else{
+      return executeCommandModify(context);
+    }
   }
 
 
@@ -143,6 +163,13 @@ public final class TroubleTicketTasks extends CFSModule {
     if (!hasPermission(context, "tickets-tickets-tasks-add")) {
       return ("PermissionError");
     }
+
+    TicketTask thisTicketTask = (TicketTask) context.getFormBean();
+    if (thisTicketTask.getEnteredBy() != -1){
+      Task  thisTask = thisTicketTask;
+      context.getRequest().setAttribute("Task", thisTask);
+    }
+    
     addModuleBean(context, "View Tickets", "Add Ticket");
     return ("AddTaskOK");
   }
@@ -161,7 +188,10 @@ public final class TroubleTicketTasks extends CFSModule {
     addModuleBean(context, "View Tickets", "Add Ticket");
     try {
       db = this.getConnection(context);
-      thisTask = new Task(db, Integer.parseInt(id));
+      thisTask = (Task) context.getFormBean();
+      if (thisTask.getId() == -1){
+        thisTask = new Task(db, Integer.parseInt(id));
+      }
       thisTask.checkEnabledOwnerAccount(db);
       if (thisTask.getContactId() > -1) {
         thisTask.checkEnabledLinkAccount(db);
@@ -237,20 +267,23 @@ public final class TroubleTicketTasks extends CFSModule {
       db = this.getConnection(context);
       thisTask = new Task(db, Integer.parseInt(id));
       if (!hasAuthority(context, thisTask.getOwner())) {
-        return ("PermissionError");
-      }
-      DependencyList dependencies = thisTask.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
-
-      if (dependencies.size() == 0) {
         htmlDialog.setTitle("Confirm");
-        htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
-      } else {
-        htmlDialog.setTitle("Confirm");
-        htmlDialog.setHeader("Are you sure you want to delete this item:");
-        htmlDialog.addButton("Delete", "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
-        htmlDialog.addButton("No", "javascript:parent.window.close()");
+        htmlDialog.setHeader("You are not permitted to delete this task because it is not owned by you or by a user reporting to you.");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+      }else{
+        DependencyList dependencies = thisTask.processDependencies(db);
+        htmlDialog.addMessage(dependencies.getHtmlString());
+  
+        if (dependencies.size() == 0) {
+          htmlDialog.setTitle("Confirm");
+          htmlDialog.setShowAndConfirm(false);
+          htmlDialog.setDeleteUrl("javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
+        } else {
+          htmlDialog.setTitle("Confirm");
+          htmlDialog.setHeader("Are you sure you want to delete this item:");
+          htmlDialog.addButton("Delete", "javascript:window.location.href='TroubleTicketTasks.do?command=Delete&id=" + id + "'");
+          htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        }
       }
     } catch (Exception e) {
       errorMessage = e;

@@ -10,7 +10,6 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.modules.troubletickets.base.*;
-
 /**
  *  Description of the Class
  *
@@ -293,7 +292,7 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  inserts the work item for the data into the database
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -328,18 +327,38 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
+   *  Deletes the work item for the day from the database
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    pst = db.prepareStatement(
+        "DELETE FROM  ticket_activity_item " +
+        "WHERE item_id = ? ");
+    int i = 0;
+    pst.setInt(++i, id);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
    *  Description of the Method
    *
-   *@param  request    Description of the Parameter
-   *@param  parseItem  Description of the Parameter
+   *@param  request                       Description of the Parameter
+   *@param  parseItem                     Description of the Parameter
+   *@exception  java.text.ParseException  Description of the Exception
    */
-  public void buildRecord(HttpServletRequest request, int parseItem) {
-    this.setActivityDate(request.getParameter("activityDate" + parseItem));
+  public void buildRecord(HttpServletRequest request, int parseItem) throws java.text.ParseException {
+    //this.setActivityDate(request.getParameter("activityDate" + parseItem));
     this.setDescriptionOfService(request.getParameter("descriptionOfService" + parseItem));
     this.setTravelHours(request.getParameter("travelHours" + parseItem));
     this.setTravelMinutes(request.getParameter("travelMinutes" + parseItem));
     this.setLaborHours(request.getParameter("laborHours" + parseItem));
     this.setLaborMinutes(request.getParameter("laborMinutes" + parseItem));
+    sanitizeDate(request, request.getParameter("activityDate" + parseItem), "ActivityDate");
   }
 
 
@@ -359,6 +378,5 @@ public class TicketPerDayDescription extends GenericBean {
     laborHours = rs.getInt("labor_hours");
     laborMinutes = rs.getInt("labor_minutes");
   }
-
 }
 

@@ -78,8 +78,24 @@ public final class AccountTicketTasks extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-tickets-tasks-view"))) {
       return ("PermissionError");
     }
+    Connection db = null;
+    Task thisTask = null;
+    String id = context.getRequest().getParameter("id");
+    try{
+      db = this.getConnection(context);
+      thisTask = new Task(db, Integer.parseInt(id));
+      context.getRequest().setAttribute("Task", thisTask);
+    }catch (Exception e){
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
     addModuleBean(context, "View Accounts", "View Tickets");
-    return this.getReturn(context, "TaskDetails");
+    if (hasAuthority(context, thisTask.getOwner())) {
+      return this.getReturn(context, "TaskDetails");
+    }
+    return ("PermissionError");
   }
 
 
@@ -96,7 +112,7 @@ public final class AccountTicketTasks extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
-    int resultCount = 0;
+    int resultCount = -1;
     boolean recordInserted = false;
     boolean contactRecordInserted = false;
     String ticketId = context.getRequest().getParameter("ticketId");
@@ -130,7 +146,11 @@ public final class AccountTicketTasks extends CFSModule {
         addModuleBean(context, "View Accounts", "Ticket Save OK");
         return ("SaveOK");
       }
-      return this.getReturn(context, "PrepareTask");
+      if ("insert".equals(action)){
+        return executeCommandAdd(context);
+      }else{
+        return executeCommandModify(context);
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -148,6 +168,13 @@ public final class AccountTicketTasks extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-tickets-tasks-add"))) {
       return ("PermissionError");
     }
+
+    TicketTask thisTicketTask = (TicketTask) context.getFormBean();
+    if (thisTicketTask.getEnteredBy() != -1){
+      Task  thisTask = thisTicketTask;
+      context.getRequest().setAttribute("Task", thisTask);
+    }
+        
     addModuleBean(context, "View Accounts", "Add Ticket");
     return ("AddTaskOK");
   }
@@ -166,7 +193,10 @@ public final class AccountTicketTasks extends CFSModule {
     addModuleBean(context, "View Accounts", "Add Ticket");
     try {
       db = this.getConnection(context);
-      thisTask = new Task(db, Integer.parseInt(id));
+      thisTask = (TicketTask) context.getFormBean();
+      if (thisTask.getId() == -1){
+        thisTask = new Task(db, Integer.parseInt(id));
+      }
       thisTask.checkEnabledOwnerAccount(db);
       if (thisTask.getContactId() > -1) {
         thisTask.checkEnabledLinkAccount(db);

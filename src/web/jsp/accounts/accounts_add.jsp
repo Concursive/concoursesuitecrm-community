@@ -10,6 +10,7 @@
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
@@ -36,18 +37,6 @@
     message = "";
     alertMessage = "";
   <dhv:include name="organization.alert" none="true">
-    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-  </dhv:include>
-  <dhv:include name="organization.contractEndDate" none="true">
-    if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
-      message += "- Check that Contract End Date is entered correctly\r\n";
-      formTest = false;
-    }
-  </dhv:include>
-  <dhv:include name="organization.alert" none="true">
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -72,12 +61,6 @@
   <dhv:include name="organization.url" none="true">
     if (!checkURL(form.url.value)) { 
       message += "- URL entered is invalid.  Make sure there are no invalid characters\r\n";
-      formTest = false;
-    }
-  </dhv:include>
-  <dhv:include name="organization.revenue" none="true">
-    if (!checkNumber(form.revenue.value)) { 
-      message += "- Revenue entered is invalid\r\n";
       formTest = false;
     }
   </dhv:include>
@@ -216,7 +199,12 @@
     }
   }
 </script>
-<body onLoad="javascript:document.forms[0].name.focus();updateFormElements(0);">
+<dhv:evaluate if="<%= (request.getParameter("form_type") == null || "organization".equals((String) request.getParameter("form_type"))) %>">
+  <body onLoad="javascript:document.forms[0].name.focus();updateFormElements(0);">
+</dhv:evaluate>
+<dhv:evaluate if="<%= ("individual".equals((String) request.getParameter("form_type"))) %>">
+  <body onLoad="javascript:document.forms[0].name.focus();updateFormElements(1);">
+</dhv:evaluate>
 <form name="addAccount" action="Accounts.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -248,11 +236,22 @@ Add Account
         <tr>
           <td>
             <select multiple name="selectedList" id="selectedList" size="5">
-              <option value="-1">None Selected</option>
+            <dhv:evaluate exp="<%=OrgDetails.getTypes().isEmpty()%>">
+            <option value="-1">None Selected</option>
+            </dhv:evaluate>
+            <dhv:evaluate exp="<%=!(OrgDetails.getTypes().isEmpty())%>">
+      <%
+              Iterator i = OrgDetails.getTypes().iterator();
+              while (i.hasNext()) {
+                LookupElement thisElt = (LookupElement)i.next();
+      %>
+              <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
+            <%}%>
+            </dhv:evaluate>      
             </select>
-            <input type="hidden" name="previousSelection" value="" />
           </td>
           <td valign="top">
+            <input type="hidden" name="previousSelection" value="" />
             &nbsp;[<a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_account_types');">Select</a>]
           </td>
         </tr>
@@ -345,7 +344,8 @@ Add Account
       Revenue
     </td>
     <td>
-      <input type="text" size="10" name="revenue" value="<%= OrgDetails.getRevenue() %>">
+      <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
+      <input type="text" name="revenue" size="15" value="<zeroio:number value="<%= OrgDetails.getRevenue() %>" locale="<%= User.getLocale() %>" />">
     </td>
   </tr>
   </dhv:include>
@@ -365,8 +365,8 @@ Add Account
       Contract End Date
     </td>
     <td>
-      <input type="text" size="10" name="contractEndDate" value="<zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('addAccount', 'contractEndDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="addAccount" field="contractEndDate" timestamp="<%= OrgDetails.getContractEndDate() %>" />
+      <%= showAttribute(request, "contractEndDateError") %>
     </td>
   </tr>
   </dhv:include>
@@ -384,8 +384,8 @@ Add Account
       Alert Date
     </td>
     <td>
-      <input type="text" size="10" name="alertDate" value="<zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" />">
-      <a href="javascript:popCalendar('addAccount', 'alertDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+      <zeroio:dateSelect form="addAccount" field="alertDate" timestamp="<%= OrgDetails.getAlertDate() %>" />
+      <%= showAttribute(request, "alertDateError") %>
     </td>
   </tr>
   </dhv:include>

@@ -16,6 +16,10 @@
   
   //Menu link functions
   function details() {
+   popURL('TroubleTicketTasks.do?command=Details&ticketId=' + thisTicId + '&id=' + thisTaskId +  '&popup=true','CRM_Task','600','425','yes','yes');
+  }
+
+  function modify() {
    popURL('TroubleTicketTasks.do?command=Modify&ticketId=' + thisTicId + '&id=' + thisTaskId +  '&popup=true','CRM_Task','600','425','yes','yes');
   }
   
@@ -37,7 +41,7 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="tickets-tickets-tasks-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="details()">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>

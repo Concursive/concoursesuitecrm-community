@@ -32,6 +32,10 @@ function setParentList(selectedValues, selectedIds, listType, displayFieldId, hi
   var i = 0;
   opener.document.getElementById(hiddenFieldId).value = selectedIds[i];
   opener.changeDivContent(displayFieldId, selectedValues[i]);
+   if (opener.document.getElementById('productSku')){
+     opener.document.getElementById('productSku').value = selectedValues[i];
+   }
+
 }
 
 

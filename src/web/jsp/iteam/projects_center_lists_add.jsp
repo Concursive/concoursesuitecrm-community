@@ -5,6 +5,7 @@
  This source code cannot be modified, distributed or used without
  permission from Matt Rajkowski
 --%>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.tasks.base.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
@@ -80,7 +81,7 @@
     <tr class="containerBody">
       <td nowrap class="formLabel" valign="top">Notes</td>
       <td>
-        <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(Task.getNotes()) %></TEXTAREA>
+        <TEXTAREA NAME="notes" ROWS="8" COLS="55"><%= toString(Task.getNotes()) %></TEXTAREA>
       </td>
     </tr>
   </table>

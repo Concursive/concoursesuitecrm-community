@@ -35,7 +35,7 @@ Contact Details
         [ <dhv:container name="accountscontacts" selected="portal" param="<%= param1 %>"/> ]
       <br /> <br />
   <input	type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-  <br /> <br />
+  <br /><%= showError(request, "actionError") %>
   <%@ include file="accounts_contacts_portal_include.jsp" %>
   <br />
   <input	type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />

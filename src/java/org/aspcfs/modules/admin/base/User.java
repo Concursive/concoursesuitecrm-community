@@ -1810,9 +1810,12 @@ public class User extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public int updatePortalUser(Connection db, ActionContext context) throws SQLException {
+  public int updatePortalUser(Connection db) throws SQLException {
 
     int updated = -1;
+    if (hasErrors()){
+      return updated;
+    }
     if (System.getProperty("DEBUG") != null) {
       System.out.println("User-> Beginning update");
     }
@@ -1848,28 +1851,7 @@ public class User extends GenericBean {
     updated = pst.executeUpdate();
     pst.close();
 
-    if (updated != 1) {
-      return updated;
-    }
-
-    //fetch the updated user id
-    int tmpUserId = -1;
-    ResultSet rs = null;
-    sql = new StringBuffer();
-    sql.append(
-        "SELECT user_id " +
-        "FROM access " +
-        "WHERE username = ? ");
-    pst = db.prepareStatement(sql.toString());
-    i = 0;
-    pst.setString(++i, this.username);
-
-    rs = pst.executeQuery();
-    if (rs.next()) {
-      tmpUserId = rs.getInt("user_id");
-    }
-
-    return tmpUserId;
+    return updated;
   }
 
 
@@ -2278,7 +2260,6 @@ public class User extends GenericBean {
    *@since                    1.27
    */
   protected boolean isValidNoPass(Connection db, ActionContext context) throws SQLException {
-    errors.clear();
 
     if (username == null || username.trim().equals("")) {
       errors.put("usernameError", "Username cannot be left blank");

@@ -12,7 +12,9 @@
 <jsp:useBean id="phoneModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="emailModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="hoursReasonList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].serviceContractNumber.focus();">
 <form name="addServiceContract" action="AccountsServiceContracts.do?command=Update&auto-populate=true&return=<%= request.getParameter("return") %>" onSubmit="return doCheck(this);" method="post">

@@ -7,11 +7,16 @@ import java.util.*;
 import java.io.*;
 import com.darkhorseventures.framework.actions.*;
 import java.text.*;
+import java.lang.reflect.*;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.login.beans.*;
+import org.aspcfs.utils.*;
 
 /**
  *@author     Kevin Duffey
  *@created    Novemeber 19, 2000
- *@version    $Id$
+ *@version    $Id: GenericBean.java,v 1.4.166.1 2004/07/29 19:49:44 kbhoopal Exp
+ *      $
  */
 
 public class GenericBean implements Serializable {
@@ -294,10 +299,10 @@ public class GenericBean implements Serializable {
   /**
    *  Rounds a float to the specified decimal places
    *
-   *@param  x            Description of the Parameter
-   *@param  decimals     Description of the Parameter
-   *@return              Description of the Returned Value
-   *@since               1.6
+   *@param  x         Description of the Parameter
+   *@param  decimals  Description of the Parameter
+   *@return           Description of the Returned Value
+   *@since            1.6
    */
   public final static double round(double x, int decimals) {
     // rounds to the nearest integer
@@ -309,6 +314,49 @@ public class GenericBean implements Serializable {
       return factor * Math.rint(x / factor);
     } else {
       return Math.rint(factor * x) / factor;
+    }
+  }
+
+
+  /**
+   *  Converts dates based on the time zone. This method is called when the
+   *  autopopulate does not have access to the attributes through the bean.
+   *
+   *@param  request                       Description of the Parameter
+   *@param  value                         Description of the Parameter
+   *@param  param                         Description of the Parameter
+   *@exception  java.text.ParseException  Description of the Exception
+   */
+  protected void sanitizeDate(HttpServletRequest request, String value, String param) throws java.text.ParseException {
+    try {
+      UserBean userBean = (UserBean) request.getSession().getAttribute("User");
+      User user = userBean.getUserRecord();
+      param = param.substring(0, 1).toUpperCase() + param.substring(1);
+
+      Timestamp tmp = DateUtils.getUserToServerDateTime(TimeZone.getTimeZone(user.getTimeZone()), DateFormat.SHORT, DateFormat.LONG, value, user.getLocale());
+      Class[] argTypes = new Class[]{tmp.getClass()};
+      Method method = this.getClass().getMethod("set" + param, argTypes);
+      method.invoke(this, new Object[]{tmp});
+    } catch (Exception e) {
+      throw new java.text.ParseException("invalid date", 1);
+    }
+  }
+
+
+  /**
+   *  Sets the timeZoneForDateFields attribute of the GenericBean object
+   *
+   *@param  request  The new timeZoneForDateFields value
+   *@param  value    The new timeZoneForDateFields value
+   *@param  field    The new timeZoneForDateFields value
+   */
+  public void setTimeZoneForDateFields(HttpServletRequest request, String value, String field) {
+    try {
+      if ((value != null) && (!"".equals(value))){
+        sanitizeDate(request, value, field);
+      }
+    } catch (Exception e) {
+      errors.put(field + "Error", "invalid date");
     }
   }
 }

@@ -998,9 +998,19 @@ public class TicketList extends ArrayList implements SyncableList {
     }
     if (description != null) {
       if (description.indexOf("%") >= 0) {
-        sqlFilter.append("AND lower(t.problem) like lower(?) ");
+        if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
+          sqlFilter.append(
+              "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) LIKE LOWER(?)) ");
+        }else{
+          sqlFilter.append("AND lower(t.problem) like lower(?) ");
+        }
       } else {
-        sqlFilter.append("AND lower(t.problem) = lower(?) ");
+        if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
+          sqlFilter.append(
+              "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) = LOWER(?)) ");
+        }else{
+          sqlFilter.append("AND lower(t.problem) = lower(?) ");
+        }
       }
     }
     if (onlyOpen) {

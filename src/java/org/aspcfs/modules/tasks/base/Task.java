@@ -1583,7 +1583,6 @@ public class Task extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
 
     if (this.getDescription() == null || this.getDescription().equals("")) {
       errors.put("descriptionError", "Task Description is required");

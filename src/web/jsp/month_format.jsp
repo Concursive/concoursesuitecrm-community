@@ -6,6 +6,7 @@
  permission from Matt Rajkowski
 --%>
 <%@ page import="java.util.Calendar" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.Locale" %>
@@ -20,7 +21,8 @@
     country = "US";
   }
   Locale locale = new Locale(language, country);
-  DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+  SimpleDateFormat formatter = (SimpleDateFormat)SimpleDateFormat.getDateInstance(DateFormat.SHORT, locale);
+  formatter.applyPattern(formatter.toPattern() + "yy");
   Calendar cal = Calendar.getInstance();
   cal.set(Calendar.YEAR, Integer.parseInt(year));
   cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));

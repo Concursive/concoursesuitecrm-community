@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.*, org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.tasks.base.*, org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<jsp:useBean id="activityDetails" class="org.aspcfs.modules.troubletickets.base.TicketActivityLog" scope="request" />
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -40,8 +41,9 @@ Add Activity Log
   <form name="details" action="TroubleTicketActivityLog.do?command=Save&auto-populate=true&id=<%=ticketDetails.getId()%>" onSubmit="return doCheck(this);" method="post">
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
       <input type="button" value="Cancel" onClick="window.location.href='TroubleTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
-      <br /><br />
-      <%@ include file="troubletickets_add_activity_include.jsp" %>
+      <br />
+      <%= showError(request, "actionError") %>
+      <%@ include file="troubletickets_update_activity_include.jsp" %>
       <br />
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
       <input type="button" value="Cancel" onClick="window.location.href='TroubleTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />

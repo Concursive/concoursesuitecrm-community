@@ -43,18 +43,13 @@ public final class AccountTicketActivityLog extends CFSModule {
       db = this.getConnection(context);
       // Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
-
       //find record permissions for portal users
       if (!isRecordAccessPermitted(context,thisTicket.getOrgId())){
         return ("PermissionError");
       }
-
-
       context.getRequest().setAttribute("ticketDetails", thisTicket);
-
       // Load the Organization
       loadOrganizaton(context, db, thisTicket);
-
       // Build activity list
       TicketActivityLogList thisList = new TicketActivityLogList();
       PagedListInfo tmListInfo = this.getPagedListInfo(context, "TMListInfo");
@@ -97,6 +92,16 @@ public final class AccountTicketActivityLog extends CFSModule {
       LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
       onsiteModelList.addItem(-1, "-- None --");
       context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
+
+      context.getRequest().setAttribute("ticketDetails", thisTicket);
+      TicketActivityLog thisMaintenance = (TicketActivityLog)context.getRequest().getAttribute("activityDetails");
+      if (thisMaintenance != null){
+        if (thisMaintenance.getEnteredBy() == -1){
+          // Load the activity log elements
+          thisMaintenance = new TicketActivityLog();
+          context.getRequest().setAttribute("activityDetails", thisMaintenance);
+        }
+      }
       return ("AddOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -121,23 +126,26 @@ public final class AccountTicketActivityLog extends CFSModule {
     Connection db = null;
     // Begin with data needed for all forms
     try {
-      String ticketId = context.getRequest().getParameter("id");
-      String formId = context.getRequest().getParameter("formId");
-      db = this.getConnection(context);
-      // Load the ticket
-      thisTicket = new Ticket(db, Integer.parseInt(ticketId));
-      context.getRequest().setAttribute("ticketDetails", thisTicket);
-      // Load the Organization
-      loadOrganizaton(context, db, thisTicket);
-      // Load onsite model list
-      LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
-      onsiteModelList.addItem(-1, "-- None --");
-      context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
-      context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
-      // Load the activity log elements
-      TicketActivityLog thisMaintenance = new TicketActivityLog();
-      thisMaintenance.queryRecord(db, Integer.parseInt(formId));
-      context.getRequest().setAttribute("activityDetails", thisMaintenance);
+      thisTicket = (Ticket)context.getFormBean();
+      if (thisTicket  == null){
+        String ticketId = context.getRequest().getParameter("id");
+        String formId = context.getRequest().getParameter("formId");
+        db = this.getConnection(context);
+        // Load the ticket
+        thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+        context.getRequest().setAttribute("ticketDetails", thisTicket);
+        // Load the Organization
+        loadOrganizaton(context, db, thisTicket);
+        // Load onsite model list
+        LookupList onsiteModelList = new LookupList(db, "lookup_onsite_model");
+        onsiteModelList.addItem(-1, "-- None --");
+        context.getRequest().setAttribute("onsiteModelList", onsiteModelList);
+        context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
+        // Load the activity log elements
+        TicketActivityLog thisMaintenance = new TicketActivityLog();
+        thisMaintenance.queryRecord(db, Integer.parseInt(formId));
+        context.getRequest().setAttribute("activityDetails", thisMaintenance);
+      }
       return ("ModifyOK");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -159,6 +167,8 @@ public final class AccountTicketActivityLog extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
+    boolean inserted = false;
+    
     try {
       String ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
@@ -175,23 +185,30 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setLaborTowardsServiceContract((String) context.getRequest().getParameter("laborTowardsServiceContract"));
       thisMaintenance.setPhoneResponseTime((String) context.getRequest().getParameter("phoneResponseTime"));
       thisMaintenance.setEngineerResponseTime((String) context.getRequest().getParameter("engineerResponseTime"));
-      thisMaintenance.setAlertDate((String) context.getRequest().getParameter("alertDate"));
+      thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
-      
       //Saves each activity item (description of work done for the day)
       thisMaintenance.setRequestItems(context.getRequest());
       thisMaintenance.setRequest(context.getRequest());
-      
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
-      thisMaintenance.insert(db);
+      inserted = thisMaintenance.insert(db);
+      if (!inserted){
+        context.getRequest().setAttribute("ticketDetails", thisTicket);
+        context.getRequest().setAttribute("activityDetails", thisMaintenance);
+        processErrors(context, thisMaintenance.getErrors());
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    return executeCommandList(context);
+    if (!inserted){
+      return executeCommandAdd(context);
+    }else{
+      return executeCommandList(context);
+    }
   }
 
 
@@ -224,7 +241,7 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setLaborTowardsServiceContract((String) context.getRequest().getParameter("laborTowardsServiceContract"));
       thisMaintenance.setPhoneResponseTime((String) context.getRequest().getParameter("phoneResponseTime"));
       thisMaintenance.setEngineerResponseTime((String) context.getRequest().getParameter("engineerResponseTime"));
-      thisMaintenance.setAlertDate((String) context.getRequest().getParameter("alertDate"));
+      thisMaintenance.setTimeZoneForDateFields(context.getRequest(), context.getRequest().getParameter("alertDate"), "alertDate");
       thisMaintenance.setFollowUpRequired((String) context.getRequest().getParameter("followUpRequired"));
       thisMaintenance.setFollowUpDescription((String) context.getRequest().getParameter("followUpDescription"));
 
@@ -236,6 +253,8 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       resultCount = thisMaintenance.update(db);
       if (resultCount == -1) {
+        context.getRequest().setAttribute("ticketDetails", thisTicket);
+        context.getRequest().setAttribute("activityDetails", thisMaintenance);
         processErrors(context, thisMaintenance.getErrors());
       }
     } catch (Exception e) {

@@ -1,5 +1,6 @@
 package org.aspcfs.modules.accounts.actions;
 
+import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.ActionContext;
@@ -12,6 +13,7 @@ import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.products.base.ProductCatalog;
 
 /**
  *  A service contract action handler provides action methods to List, view, add and modify service
@@ -105,13 +107,34 @@ public class AccountsServiceContracts extends CFSModule {
       context.getRequest().setAttribute("contactList", contactList);
 
       //prepare contract product list
-      ServiceContractProductList scpl = new ServiceContractProductList();
-      context.getRequest().setAttribute("serviceContractProductList", scpl);
+      thisContract.setServiceContractProductList(new ServiceContractProductList());
 
       //prepare contract hours modification history
       ServiceContractHoursList schHistory = new ServiceContractHoursList();
       context.getRequest().setAttribute("serviceContractHoursHistory", schHistory);
 
+      if (thisContract.getEnteredBy() != -1){
+        //prepare contract product list
+        thisContract.setProductList(context.getRequest().getParameterValues("selectedList"));
+        ServiceContractProductList scpl = new ServiceContractProductList();  
+        thisContract.setServiceContractProductList(scpl);
+        Iterator itr = thisContract.getProductList().iterator();
+        while (itr.hasNext()){
+          int productId = Integer.parseInt((String)itr.next());
+          ProductCatalog pc = new ProductCatalog(db, productId);
+          
+          ServiceContractProduct spc =  new ServiceContractProduct();
+          spc.setProductId(pc.getId());
+          spc.setContractId(thisContract.getId());
+          spc.setProductName(pc.getName());
+          spc.setProductSku(pc.getSku());
+          
+          thisContract.getServiceContractProductList().add(spc);
+        }
+      }
+      
+      context.getRequest().setAttribute("serviceContract", thisContract);
+      
     } catch (Exception e) {
       //An error occurred, go to generic error message page
       context.getRequest().setAttribute("Error", e);
@@ -216,7 +239,7 @@ public class AccountsServiceContracts extends CFSModule {
       }
       if (resultCount == 1) {
         // inserting into hours history if service_contract update is successful
-        if (!"".equals(tmpHours)) {
+        if (!"".equals(tmpHours) && (Double.parseDouble(tmpHours) != 0.0)) {
           ServiceContractHours scHours = new ServiceContractHours();
           scHours.setServiceContractId(thisContract.getId());
           scHours.setAdjustmentHours(tmpHours);
@@ -356,6 +379,7 @@ public class AccountsServiceContracts extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
+    boolean fromBean = true;
     try {
       db = this.getConnection(context);
       setOrganization(context, db);
@@ -363,18 +387,11 @@ public class AccountsServiceContracts extends CFSModule {
       int contractId = Integer.parseInt((context.getRequest().getParameter("id")));
       ServiceContract thisContract = (ServiceContract) context.getFormBean();
       if (thisContract.getId() == -1) {
+        fromBean = false;
         thisContract.queryRecord(db, contractId);
       }
 
-      //Fetch the history of changes to the hours used in the service contract
-      ServiceContractHoursList schHistory = new ServiceContractHoursList();
-      schHistory.setContractId(contractId);
-      schHistory.buildList(db);
-      context.getRequest().setAttribute("serviceContractHoursHistory", schHistory);
-
       buildFormElements(context, db);
-      context.getRequest().setAttribute("serviceContract", thisContract);
-      context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
 
       ContactList contactList = new ContactList();
       contactList.setOrgId(Integer.parseInt(context.getRequest().getParameter("orgId")));
@@ -382,11 +399,45 @@ public class AccountsServiceContracts extends CFSModule {
       contactList.setEmptyHtmlSelectRecord("-- None --");
       context.getRequest().setAttribute("contactList", contactList);
 
-      //prepare contract product list
-      ServiceContractProductList scpl = new ServiceContractProductList();
-      scpl.setContractId(thisContract.getId());
-      scpl.buildList(db);
-      context.getRequest().setAttribute("serviceContractProductList", scpl);
+      //Fetch the history of changes to the hours used in the service contract
+      ServiceContractHoursList schHistory = new ServiceContractHoursList();
+      schHistory.setContractId(thisContract.getId());
+      schHistory.buildList(db);
+      context.getRequest().setAttribute("serviceContractHoursHistory", schHistory);
+
+      if (fromBean){
+        //prepare changed contract product list
+        thisContract.setProductList(context.getRequest().getParameterValues("selectedList"));
+        ServiceContractProductList scpl = new ServiceContractProductList();  
+        thisContract.setServiceContractProductList(scpl);
+        Iterator itr = thisContract.getProductList().iterator();
+        while (itr.hasNext()){
+          int productId = Integer.parseInt((String)itr.next());
+          ProductCatalog pc = new ProductCatalog(db, productId);
+          
+          ServiceContractProduct spc =  new ServiceContractProduct();
+          spc.setProductId(pc.getId());
+          spc.setContractId(thisContract.getId());
+          spc.setProductName(pc.getName());
+          spc.setProductSku(pc.getSku());
+          
+          thisContract.getServiceContractProductList().add(spc);
+        }
+        
+        //Reset contract hours remaining fields  
+        double newHoursRemaining = thisContract.getTotalHoursRemaining();
+        String tmpHours = (String) context.getRequest().getParameter("adjustmentHours");
+        if (tmpHours != null){
+          tmpHours = tmpHours.trim();
+          if (!"".equals(tmpHours)) {
+            newHoursRemaining = newHoursRemaining - Double.parseDouble(tmpHours);
+          }
+        }
+        thisContract.setTotalHoursRemaining(newHoursRemaining);
+      }
+
+      context.getRequest().setAttribute("serviceContract", thisContract);
+      context.getRequest().setAttribute("return", context.getRequest().getParameter("return"));
 
     } catch (Exception e) {
       //Go through the SystemError process
@@ -522,6 +573,10 @@ public class AccountsServiceContracts extends CFSModule {
     LookupList emailModelList = new LookupList(db, "lookup_email_model");
     emailModelList.addItem(-1, "-- None --");
     context.getRequest().setAttribute("emailModelList", emailModelList);
+
+    LookupList hoursReasonList = new LookupList(db, "lookup_hours_reason");
+    hoursReasonList.addItem(-1, "No Adjustment");
+    context.getRequest().setAttribute("hoursReasonList", hoursReasonList);
 
   }
 
