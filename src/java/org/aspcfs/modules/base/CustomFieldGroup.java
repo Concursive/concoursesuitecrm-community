@@ -528,28 +528,28 @@ public class CustomFieldGroup extends ArrayList {
     if (!isGroupValid()) {
       return false;
     }
-    
     StringBuffer sql = new StringBuffer();
-    
+    level = this.retrieveNextLevel(db);
     sql.append("INSERT INTO custom_field_group ");
     sql.append("(category_id, group_name, ");
-                if (entered != null) {
-                        sql.append("entered, ");
-                }
-    sql.append("description ) ");
+    if (entered != null) {
+      sql.append("entered, ");
+    }
+    sql.append("description, level ) ");
     sql.append("VALUES (?, ?, ");
-                if (entered != null) {
-                        sql.append("?, ");
-                }
-    sql.append("?) ");
+    if (entered != null) {
+      sql.append("?, ");
+    }
+    sql.append("?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getCategoryId());
     pst.setString(++i, this.getName());
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
+    if (entered != null) {
+      pst.setTimestamp(++i, entered);
+    }
     pst.setString(++i, this.getDescription());
+    pst.setInt(++i, level);
     pst.execute();
     pst.close();
     
@@ -788,5 +788,23 @@ public class CustomFieldGroup extends ArrayList {
     return i;
   }
 
+  private int retrieveNextLevel(Connection db) throws SQLException {
+    int returnLevel = 0;
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT MAX(level) as level " +
+      "FROM custom_field_group " +
+      "WHERE category_id = ? ");
+    pst.setInt(1, categoryId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      returnLevel = rs.getInt("level");
+      if (rs.wasNull()) {
+        returnLevel = 0;
+      }
+    }
+    rs.close();
+    pst.close();
+    return ++returnLevel;
+  }
 }
 
