@@ -8,6 +8,8 @@ import java.sql.*;
 import java.util.Hashtable;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.controller.*;
+import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.login.beans.LoginBean;
 import org.aspcfs.modules.admin.base.User;
@@ -33,67 +35,53 @@ public final class Login extends CFSModule {
    *@since           1.0
    */
   public String executeCommandLogin(ActionContext context) {
+    //Process the login request
     LoginBean loginBean = (LoginBean) context.getFormBean();
     String username = loginBean.getUsername();
     String password = loginBean.getPassword();
     String serverName = context.getRequest().getServerName();
+    //Prepare the gatekeeper
     String gkDriver = (String) context.getServletContext().getAttribute("GKDRIVER");
     String gkHost = (String) context.getServletContext().getAttribute("GKHOST");
     String gkUser = (String) context.getServletContext().getAttribute("GKUSER");
     String gkUserPw = (String) context.getServletContext().getAttribute("GKUSERPW");
     String siteCode = (String) context.getServletContext().getAttribute("SiteCode");
-    String sql;
-
-    java.util.Date now = new java.util.Date();
-
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
     gk.setDriver(gkDriver);
-    ConnectionElement ce = null;
-    Connection db = null;
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-
+    //Prepare the database connection
     ConnectionPool sqlDriver =
         (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     if (sqlDriver == null) {
       loginBean.setMessage("Connection pool missing!");
       return "LoginRetry";
     }
-
-    ///////////////////////////////////////////////////////////
-    //	Get connected to gatekeeper database,
-    //	Validate this host and get the assigned database
-    //	name and credentials.
-    //
-    sql = "SELECT * FROM sites " +
-        "WHERE sitecode = ? " +
-        "AND vhost = ? ";
+    Connection db = null;
+    ConnectionElement ce = null;
+    //Connect to the gatekeeper, validate this host and get new connection info
     try {
       db = sqlDriver.getConnection(gk);
-      pst = db.prepareStatement(sql);
-      pst.setString(1, siteCode);
-      pst.setString(2, serverName);
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        String siteDbHost = rs.getString("dbhost");
-        String siteDbName = rs.getString("dbname");
-        String siteDbUser = rs.getString("dbuser");
-        String siteDbPw = rs.getString("dbpw");
-        String siteDriver = rs.getString("driver");
-        ce = new ConnectionElement(siteDbHost, siteDbUser, siteDbPw);
-        ce.setDbName(siteDbName);
-        ce.setDriver(siteDriver);
+      SiteList siteList = new SiteList();
+      siteList.setSiteCode(siteCode);
+      siteList.setVirtualHost(serverName);
+      siteList.buildList(db);
+      if (siteList.size() > 0) {
+        Site thisSite = (Site) siteList.get(0);
+        ce = new ConnectionElement(
+            thisSite.getDatabaseHost(), 
+            thisSite.getDatabaseUsername(), 
+            thisSite.getDatabasePassword());
+        ce.setDbName(thisSite.getDatabaseName());
+        ce.setDriver(thisSite.getDatabaseDriver());
       } else {
         loginBean.setMessage("* Access denied: Host does not exist (" +
             serverName + ")");
       }
-      rs.close();
-      pst.close();
     } catch (Exception e) {
       loginBean.setMessage("* Gatekeeper: " + e.getMessage());
-    }
-    if (db != null) {
-      sqlDriver.free(db);
+    } finally {
+      if (db != null) {
+        sqlDriver.free(db);
+      }
     }
     if (ce == null) {
       return "LoginRetry";
@@ -106,6 +94,7 @@ public final class Login extends CFSModule {
     UserBean thisUser = null;
     int userId = -1;
     int aliasId = -1;
+    java.util.Date now = new java.util.Date();
     try {
       db = sqlDriver.getConnection(ce);
       //A good place to initialize this SystemStatus, must be done before getting a user
@@ -114,14 +103,14 @@ public final class Login extends CFSModule {
         System.out.println("Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
       }
       //Query the user record
-      pst = db.prepareStatement(
+      PreparedStatement pst = db.prepareStatement(
           "SELECT password, expires, alias, user_id " +
           "FROM access " +
           "WHERE lower(username) = ? " +
           "AND enabled = ? ");
       pst.setString(1, username.toLowerCase());
       pst.setBoolean(2, true);
-      rs = pst.executeQuery();
+      ResultSet rs = pst.executeQuery();
       if (!rs.next()) {
         loginBean.setMessage("* Access denied: Invalid login information.");
       } else {

@@ -12,6 +12,7 @@ import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.pipeline.base.*;
 import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.system.base.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.actions.*;
 import org.aspcfs.apps.ReportBuilder;
@@ -105,43 +106,23 @@ public class Notifier extends ReportBuilder {
 
     try {
       Class.forName((String) this.config.get("GATEKEEPER.DRIVER"));
-      ArrayList siteList = new ArrayList();
-
+      //Build list of sites to process
       Connection dbSites = DriverManager.getConnection(
           this.baseName, this.dbUser, this.dbPass);
-      PreparedStatement pstSites = dbSites.prepareStatement(
-          "SELECT * " +
-          "FROM sites " +
-          "WHERE enabled = ? ");
-      pstSites.setBoolean(1, true);
-      ResultSet rsSites = pstSites.executeQuery();
-      while (rsSites.next()) {
-        HashMap siteInfo = new HashMap();
-        siteInfo.put("sitecode", rsSites.getString("sitecode"));
-        siteInfo.put("vhost", rsSites.getString("vhost"));
-        siteInfo.put("host", rsSites.getString("dbhost"));
-        siteInfo.put("name", rsSites.getString("dbname"));
-        siteInfo.put("port", rsSites.getString("dbport"));
-        siteInfo.put("user", rsSites.getString("dbuser"));
-        siteInfo.put("password", rsSites.getString("dbpw"));
-        siteInfo.put("driver", rsSites.getString("driver"));
-        siteInfo.put("code", rsSites.getString("code"));
-        siteList.add(siteInfo);
-      }
-      rsSites.close();
-      pstSites.close();
+      SiteList siteList = new SiteList();
+      siteList.setEnabled(Constants.TRUE);
+      siteList.buildList(dbSites);
       dbSites.close();
-
+      //Process each site
       Iterator i = siteList.iterator();
       while (i.hasNext()) {
-        HashMap siteInfo = (HashMap) i.next();
-        Class.forName((String) siteInfo.get("driver"));
+        Site thisSite = (Site) i.next();
+        Class.forName(thisSite.getDatabaseDriver());
         Connection db = DriverManager.getConnection(
-            (String) siteInfo.get("host"),
-            (String) siteInfo.get("user"),
-            (String) siteInfo.get("password"));
-        this.baseName = (String) siteInfo.get("sitecode");
-
+            thisSite.getDatabaseHost(),
+            thisSite.getDatabaseName(),
+            thisSite.getDatabasePassword());
+        this.baseName = thisSite.getSiteCode();
         //TODO: The intent is to move these all out as separate tasks and
         //have a TaskContext with an interface
         if (this.getTaskList().size() == 1) {
@@ -152,7 +133,7 @@ public class Notifier extends ReportBuilder {
               Class thisClass = Class.forName((String) classes.next());
               Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), HashMap.class, HashMap.class};
               Constructor constructor = thisClass.getConstructor(paramClass);
-              Object[] paramObject = new Object[]{db, siteInfo, this.getConfig()};
+              Object[] paramObject = new Object[]{db, thisSite, this.getConfig()};
               Object theTask = constructor.newInstance(paramObject);
               theTask = null;
             } catch (Exception e) {
@@ -161,13 +142,13 @@ public class Notifier extends ReportBuilder {
           }
         }
         if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners")) {
-          this.output.append(this.buildOpportunityAlerts(db, siteInfo));
+          this.output.append(this.buildOpportunityAlerts(db, thisSite));
         }
         if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients")) {
-          this.output.append(this.buildCommunications(db, siteInfo));
+          this.output.append(this.buildCommunications(db, thisSite));
         }
         if (this.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCallOwners")) {
-          this.output.append(this.buildCallAlerts(db, siteInfo));
+          this.output.append(this.buildCallAlerts(db, thisSite));
         }
         db.close();
       }
@@ -190,7 +171,7 @@ public class Notifier extends ReportBuilder {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  private String buildOpportunityAlerts(Connection db, HashMap siteInfo) throws SQLException {
+  private String buildOpportunityAlerts(Connection db, Site siteInfo) throws SQLException {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("User");
@@ -239,7 +220,7 @@ public class Notifier extends ReportBuilder {
           } catch (Exception ignore) {
           }
         }
-        thisNotification.setFrom("cfs-messenger@" + (String) siteInfo.get("vhost"));
+        thisNotification.setFrom("cfs-messenger@" + siteInfo.getVirtualHost());
         thisNotification.setSiteCode(baseName);
         thisNotification.setSubject("CFS Opportunity" + (relationshipName != null ? ": " + StringUtils.toHtml(relationshipName) : ""));
         thisNotification.setMessageToSend(
@@ -280,7 +261,7 @@ public class Notifier extends ReportBuilder {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  private String buildCallAlerts(Connection db, HashMap siteInfo) throws SQLException {
+  private String buildCallAlerts(Connection db, Site siteInfo) throws SQLException {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("User");
@@ -342,8 +323,8 @@ public class Notifier extends ReportBuilder {
    *@return                Description of the Returned Value
    *@exception  Exception  Description of Exception
    */
-  private String buildCommunications(Connection db, HashMap siteInfo) throws Exception {
-    String dbName = (String) siteInfo.get("name");
+  private String buildCommunications(Connection db, Site siteInfo) throws Exception {
+    String dbName = siteInfo.getDatabaseName();
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("Report");
@@ -505,7 +486,7 @@ public class Notifier extends ReportBuilder {
    *@return                Description of the Returned Value
    *@exception  Exception  Description of the Exception
    */
-  private boolean outputFaxLog(ArrayList faxLog, Connection db, HashMap siteInfo) throws Exception {
+  private boolean outputFaxLog(ArrayList faxLog, Connection db, Site siteInfo) throws Exception {
     System.out.println("Notifier-> Outputting fax log");
     if (faxLog == null || faxLog.size() == 0) {
       return false;
@@ -548,7 +529,7 @@ public class Notifier extends ReportBuilder {
           //Faxing is enabled
           String baseFilename = baseDirectory + (String) config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
           //Must escape the & for Linux shell script
-          String url = "http://" + (String) siteInfo.get("vhost") + "/ProcessMessage.do?code=" + (String) siteInfo.get("code") + "\\&messageId=" + messageId + (contactId != null ? "\\&contactId=" + contactId : "");
+          String url = "http://" + siteInfo.getVirtualHost() + "/ProcessMessage.do?code=" + siteInfo.getSiteCode() + "\\&messageId=" + messageId + (contactId != null ? "\\&contactId=" + contactId : "");
           if (HTTPUtils.convertUrlToPostscriptFile(url, baseFilename) == 1) {
             continue;
           }
@@ -595,14 +576,12 @@ public class Notifier extends ReportBuilder {
         out.close();
       }
     }
-
     try {
       java.lang.Process process = java.lang.Runtime.getRuntime().exec(
           "/bin/sh " + baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".sh");
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
-
     return true;
   }
 
@@ -681,12 +660,12 @@ public class Notifier extends ReportBuilder {
    *@param  url       Description of the Parameter
    *@return           Description of the Return Value
    */
-  public String generateCFSUrl(HashMap siteInfo, String url) {
+  public String generateCFSUrl(Site siteInfo, String url) {
     String schema = "http";
     if ("true".equals((String) config.get("ForceSSL"))) {
       schema = "https";
     }
-    return ("<a href=\"" + schema + "://" + (String) siteInfo.get("vhost") + "/" + url + "\">" +
+    return ("<a href=\"" + schema + "://" + siteInfo.getVirtualHost() + "/" + url + "\">" +
         "View in CFS" +
         "</a>");
   }
