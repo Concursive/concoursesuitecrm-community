@@ -380,23 +380,27 @@ public class PagedListStatusHandler extends TagSupport {
         out.write("<td valign=\"bottom\" align=\"" + (showControlOnly ? "center" : "right") + "\" nowrap>");
         //Display record count
         if (pagedListInfo.getMaxRecords() > 0) {
-          if (pagedListInfo.getItemsPerPage() == 1) {
-            //1 of 20 [Previous|Next]
-            out.write(String.valueOf(pagedListInfo.getCurrentOffset() + 1));
-          } else {
-            //Items 1 to 10 of 20 total [Previous|Next]
-            out.write(label + " " + (pagedListInfo.getCurrentOffset() + 1) + " to ");
-            if (pagedListInfo.getItemsPerPage() <= 0) {
-              out.write(String.valueOf(pagedListInfo.getMaxRecords()));
-            } else if ((pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()) < pagedListInfo.getMaxRecords()) {
-              out.write(String.valueOf(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));
+          if ((pagedListInfo.getCurrentOffset() + 1) <= pagedListInfo.getMaxRecords()) {
+            if (pagedListInfo.getItemsPerPage() == 1) {
+              //1 of 20 [Previous|Next]
+              out.write(String.valueOf(pagedListInfo.getCurrentOffset() + 1));
             } else {
-              out.write(String.valueOf(pagedListInfo.getMaxRecords()));
+              //Items 1 to 10 of 20 total [Previous|Next]
+              out.write(label + " " + (pagedListInfo.getCurrentOffset() + 1) + " to ");
+              if (pagedListInfo.getItemsPerPage() <= 0) {
+                out.write(String.valueOf(pagedListInfo.getMaxRecords()));
+              } else if ((pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()) < pagedListInfo.getMaxRecords()) {
+                out.write(String.valueOf(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));
+              } else {
+                out.write(String.valueOf(pagedListInfo.getMaxRecords()));
+              }
             }
-          }
-          out.write(" of " + pagedListInfo.getMaxRecords());
-          if (pagedListInfo.getItemsPerPage() != 1) {
-            out.write(" total");
+            out.write(" of " + pagedListInfo.getMaxRecords());
+            if (pagedListInfo.getItemsPerPage() != 1) {
+              out.write(" total");
+            }
+          } else {
+            out.write("End of list");
           }
         } else {
           out.write("No " + label.toLowerCase() + " to display");
