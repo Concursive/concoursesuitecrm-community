@@ -114,6 +114,8 @@ notified TIMESTAMP,
 custom_data TEXT
 );
 
+CREATE INDEX "ticket_cidx" ON "ticket" USING btree ("assigned_to", "closed");
+
 CREATE TABLE ticketlog (
 id serial
 ,ticketid int NOT NULL

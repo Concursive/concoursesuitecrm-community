@@ -397,6 +397,8 @@ CREATE TABLE call_log (
   modifiedby INT NOT NULL
 );
 
+CREATE INDEX "call_log_cidx" ON "call_log" USING btree ("alertdate", "enteredby");
+
 CREATE TABLE news (
   rec_id SERIAL PRIMARY KEY,
   org_id INT,
