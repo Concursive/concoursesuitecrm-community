@@ -29,10 +29,6 @@ CREATE TABLE access (
   enabled BIT NOT NULL DEFAULT 1
 );
 
-
-
-
-
 CREATE TABLE lookup_industry (
   code INT IDENTITY PRIMARY KEY,
   order_id INT,
@@ -51,7 +47,7 @@ CREATE TABLE access_log (
   browser VARCHAR(255)
 );
 
- 
+
 CREATE TABLE system_prefs (
   pref_id INT IDENTITY PRIMARY KEY,
   category VARCHAR(255) NOT NULL,
@@ -77,7 +73,9 @@ CREATE TABLE lookup_contact_types (
   description VARCHAR(50) NOT NULL,
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
-  enabled BIT DEFAULT 1
+  enabled BIT DEFAULT 1,
+  user_id INT references access(user_id),
+  category INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE lookup_account_types (
@@ -96,7 +94,7 @@ CREATE TABLE state (
 
 CREATE TABLE lookup_department (
   code INT IDENTITY PRIMARY KEY,
-  description VARCHAR(50) NOT NULL UNIQUE,
+  description VARCHAR(50) NOT NULL,
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
   enabled BIT DEFAULT 1
@@ -218,13 +216,10 @@ CREATE TABLE organization (
   namesuffix varchar(80)
 );
 
-
-
-
 CREATE TABLE contact (
   contact_id INT IDENTITY PRIMARY KEY,
   user_id INT references access(user_id),
-  org_id int REFERENCES organization,
+  org_id int REFERENCES organization(org_id),
   company VARCHAR(255),
   title VARCHAR(80),
   department INT references lookup_department(code),
@@ -265,9 +260,9 @@ CREATE TABLE role (
   role_id INT IDENTITY PRIMARY KEY,
   role VARCHAR(80) NOT NULL,
   description VARCHAR(255) NOT NULL DEFAULT '',
-  enteredby INT NOT NULL REFERENCES access,
+  enteredby INT NOT NULL REFERENCES access(user_id),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BIT NOT NULL DEFAULT 1
 );
@@ -299,8 +294,8 @@ CREATE TABLE permission (
 
 CREATE TABLE role_permission (
   id INT IDENTITY PRIMARY KEY,
-  role_id INT NOT NULL REFERENCES role,
-  permission_id INT NOT NULL REFERENCES permission,
+  role_id INT NOT NULL REFERENCES role(role_id),
+  permission_id INT NOT NULL REFERENCES permission(permission_id),
   role_view BIT NOT NULL DEFAULT 0,
   role_add BIT NOT NULL DEFAULT 0,
   role_edit BIT NOT NULL DEFAULT 0,
@@ -372,7 +367,7 @@ CREATE TABLE organization_phone (
   phone_id INT IDENTITY PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
   phone_type INT references lookup_orgphone_types(code),
-  number VARCHAR(20),
+  number VARCHAR(30),
   extension VARCHAR(10),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
@@ -414,7 +409,7 @@ CREATE TABLE contact_phone (
   phone_id INT IDENTITY PRIMARY KEY,
   contact_id INT REFERENCES contact(contact_id),
   phone_type INT references lookup_contactphone_types(code),
-  number VARCHAR(20),
+  number VARCHAR(30),
   extension VARCHAR(10),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
@@ -468,3 +463,21 @@ CREATE TABLE account_type_levels (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE contact_type_levels (
+  contact_id INT NOT NULL REFERENCES contact(contact_id),
+  type_id INT NOT NULL REFERENCES lookup_contact_types(code),
+  level INTEGER not null,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE lookup_lists_lookup(
+  id INT IDENTITY PRIMARY KEY,
+  module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
+  lookup_id INT NOT NULL,
+  class_name VARCHAR(20),
+  table_name VARCHAR(60),
+  level INTEGER DEFAULT 0,
+  description TEXT,
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP
+);

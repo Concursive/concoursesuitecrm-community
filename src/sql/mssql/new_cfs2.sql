@@ -39,8 +39,8 @@ insert into lookup_industry (description) values ('Transportation');
 
 create table industry_temp (
 	ind_id INT IDENTITY,
-  name varchar(80),
-  code smallint
+  name VARCHAR(80),
+  code SMALLINT
 );
 
 insert into industry_temp (name,code) values ('Automotive',2);

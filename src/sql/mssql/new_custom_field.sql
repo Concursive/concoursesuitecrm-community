@@ -6,9 +6,19 @@
  *@version    $Id$
  */
  
+/* The link between the field category & modules */
+CREATE TABLE module_field_categorylink (
+  id INTEGER IDENTITY PRIMARY KEY,
+  module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
+  category_id INT UNIQUE NOT NULL,
+  level INTEGER DEFAULT 0,
+  description TEXT,
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 /* Each module can have multiple categories or folders of custom data */
 CREATE TABLE custom_field_category (
-  module_id INTEGER NOT NULL REFERENCES system_modules(code),
+  module_id INTEGER NOT NULL REFERENCES module_field_categorylink(category_id),
   category_id INT IDENTITY PRIMARY KEY,
   category_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,

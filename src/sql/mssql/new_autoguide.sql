@@ -17,7 +17,7 @@ CREATE TABLE autoguide_make (
 
 CREATE TABLE autoguide_model (
   model_id INT IDENTITY PRIMARY KEY,
-  make_id INTEGER NOT NULL,
+  make_id INTEGER NOT NULL REFERENCES autoguide_make(make_id),
   model_name VARCHAR(50),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
@@ -28,8 +28,8 @@ CREATE TABLE autoguide_model (
 CREATE TABLE autoguide_vehicle (
   vehicle_id INT IDENTITY PRIMARY KEY,
   year VARCHAR(4) NOT NULL,
-  make_id INTEGER NOT NULL,
-  model_id INTEGER NOT NULL,
+  make_id INTEGER NOT NULL REFERENCES autoguide_make(make_id),
+  model_id INTEGER NOT NULL REFERENCES autoguide_model(model_id),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -38,8 +38,8 @@ CREATE TABLE autoguide_vehicle (
 
 CREATE TABLE autoguide_inventory (
   inventory_id INT IDENTITY PRIMARY KEY,
-  vehicle_id INTEGER NOT NULL,
-  account_id INTEGER,
+  vehicle_id INTEGER NOT NULL REFERENCES autoguide_vehicle(vehicle_id),
+  account_id INTEGER REFERENCES organization(org_id),
   vin VARCHAR(20),
   mileage VARCHAR(20) NULL,
   is_new BIT DEFAULT 0,
@@ -69,7 +69,7 @@ CREATE TABLE autoguide_options (
 );
 
 CREATE TABLE autoguide_inventory_options (
-  inventory_id INTEGER NOT NULL,
+  inventory_id INTEGER NOT NULL REFERENCES autoguide_inventory(inventory_id),
   option_id INTEGER NOT NULL
 );
 
@@ -77,7 +77,7 @@ CREATE UNIQUE INDEX idx_autog_inv_opt ON autoguide_inventory_options (inventory_
 
 CREATE TABLE autoguide_ad_run (
   ad_run_id INT IDENTITY PRIMARY KEY,
-  inventory_id INTEGER NOT NULL,
+  inventory_id INTEGER NOT NULL REFERENCES autoguide_inventory(inventory_id),
   run_date DATETIME NOT NULL,
   ad_type VARCHAR(20) NULL,
   include_photo BIT DEFAULT 0,

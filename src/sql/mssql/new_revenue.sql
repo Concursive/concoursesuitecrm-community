@@ -42,10 +42,10 @@ CREATE TABLE revenue (
 
 CREATE TABLE revenue_detail (
   id INT IDENTITY PRIMARY KEY,
-  revenue_id int references revenue(id),
-  amount float default 0,
-  type int references lookup_revenue_types(code),
-  owner int references access(user_id),
+  revenue_id INT REFERENCES revenue(id),
+  amount FLOAT DEFAULT 0,
+  type INT REFERENCES lookup_revenue_types(code),
+  owner INT REFERENCES access(user_id),
   description VARCHAR(255),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),

@@ -72,7 +72,7 @@ CREATE TABLE autoguide_options (
 );
 
 CREATE TABLE autoguide_inventory_options (
-  inventory_id INTEGER NOT NULL,
+  inventory_id INTEGER NOT NULL REFERENCES autoguide_inventory(inventory_id),
   option_id INTEGER NOT NULL
 );
 
@@ -80,7 +80,7 @@ CREATE UNIQUE INDEX idx_autog_inv_opt ON autoguide_inventory_options (inventory_
 
 CREATE TABLE autoguide_ad_run (
   ad_run_id SERIAL PRIMARY KEY,
-  inventory_id INTEGER NOT NULL,
+  inventory_id INTEGER NOT NULL REFERENCES autoguide_inventory(inventory_id),
   run_date TIMESTAMP(3) NOT NULL,
   ad_type VARCHAR(20) NULL,
   include_photo BOOLEAN DEFAULT false,

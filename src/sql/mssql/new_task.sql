@@ -22,6 +22,15 @@ CREATE TABLE lookup_task_loe (
   enabled BIT DEFAULT 1
 );
 
+CREATE TABLE lookup_task_category (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+
 CREATE TABLE task (
   task_id INT IDENTITY PRIMARY KEY,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,16 +48,28 @@ CREATE TABLE task (
   estimatedloe FLOAT,
   estimatedloetype INTEGER REFERENCES lookup_task_loe,
   owner INTEGER NOT NULL,
-  completedate DATETIME
-  );
+  completedate DATETIME,
+  category_id INTEGER REFERENCES lookup_task_category
+);
 
 CREATE TABLE tasklink_contact (
   task_id INT NOT NULL REFERENCES task,
   contact_id INT NOT NULL REFERENCES contact(contact_id),
-  notes VARCHAR(255)
-  );
+  notes TEXT
+);
+
 CREATE TABLE tasklink_ticket (
   task_id INT NOT NULL REFERENCES task,
-  ticket_id INT NOT NULL  REFERENCES ticket(ticketid)
-  );
+  ticket_id INT NOT NULL REFERENCES ticket(ticketid)
+);
+
+CREATE TABLE tasklink_project (
+  task_id INT NOT NULL REFERENCES task,
+  project_id INT NOT NULL REFERENCES projects(project_id)
+);
+
+CREATE TABLE taskcategory_project (
+  category_id INTEGER NOT NULL REFERENCES lookup_task_category,
+  project_id INTEGER NOT NULL REFERENCES projects(project_id)
+);
 

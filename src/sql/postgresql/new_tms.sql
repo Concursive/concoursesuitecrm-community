@@ -16,7 +16,7 @@ CREATE TABLE ticket_level (
 
 
 CREATE TABLE ticket_severity (
-  code serial PRIMARY KEY
+  code SERIAL PRIMARY KEY
   ,description VARCHAR(300) NOT NULL UNIQUE
   ,style text NOT NULL DEFAULT ''
   ,default_item BOOLEAN DEFAULT false
@@ -35,7 +35,7 @@ CREATE TABLE lookup_ticketsource (
 
 
 CREATE TABLE ticket_priority (
-  code serial PRIMARY KEY
+  code SERIAL PRIMARY KEY
   ,description VARCHAR(300) NOT NULL UNIQUE
   ,style text NOT NULL DEFAULT '' 
   ,default_item BOOLEAN DEFAULT false

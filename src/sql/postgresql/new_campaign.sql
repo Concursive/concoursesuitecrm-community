@@ -55,7 +55,7 @@ CREATE TABLE campaign_run (
 );
 
 CREATE TABLE excluded_recipient (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
   contact_id INT NOT NULL REFERENCES contact(contact_id)
 );
@@ -66,7 +66,7 @@ CREATE TABLE campaign_list_groups (
 );
 
 CREATE TABLE active_campaign_groups (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
   groupname VARCHAR(80) NOT NULL,
   groupcriteria TEXT DEFAULT NULL
@@ -74,7 +74,7 @@ CREATE TABLE active_campaign_groups (
 
 
 CREATE TABLE scheduled_recipient (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
   contact_id INT NOT NULL REFERENCES contact(contact_id),
   run_id INT DEFAULT -1,
@@ -127,7 +127,7 @@ CREATE TABLE survey_questions (
 );
 
 CREATE TABLE survey_items (
-  item_id serial PRIMARY KEY,
+  item_id SERIAL PRIMARY KEY,
   question_id INT NOT NULL REFERENCES survey_questions(question_id),
   type INT DEFAULT -1,
   description VARCHAR(255)
@@ -141,7 +141,7 @@ CREATE TABLE active_survey (
   description VARCHAR(255),
   intro TEXT,
   outro TEXT,
-  itemLength int default -1,
+  itemLength INT DEFAULT -1,
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   enabled BOOLEAN NOT NULL DEFAULT true,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -158,14 +158,14 @@ CREATE TABLE active_survey_questions (
   description VARCHAR(255),
   required BOOLEAN NOT NULL DEFAULT false,
   position INT NOT NULL DEFAULT 0,
-  average float default 0.00,
-  total1 int default 0,
-  total2 int default 0,
-  total3 int default 0,
-  total4 int default 0,
-  total5 int default 0,
-  total6 int default 0,
-  total7 int default 0
+  average FLOAT DEFAULT 0.00,
+  total1 INT DEFAULT 0,
+  total2 INT DEFAULT 0,
+  total3 INT DEFAULT 0,
+  total4 INT DEFAULT 0,
+  total5 INT DEFAULT 0,
+  total6 INT DEFAULT 0,
+  total7 INT DEFAULT 0
 );
 
 CREATE SEQUENCE active_survey_items_item_id_seq;
@@ -192,7 +192,7 @@ CREATE TABLE active_survey_answers (
   response_id INT NOT NULL REFERENCES active_survey_responses(response_id),
   question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
   comments TEXT,
-  quant_ans int DEFAULT -1,
+  quant_ans INT DEFAULT -1,
   text_ans TEXT
 );
 
@@ -218,11 +218,11 @@ CREATE TABLE field_types (
 	data_type VARCHAR(20),
   operator VARCHAR(50),
   display_text varchar(50),
-  enabled boolean not null default true
+  enabled boolean NOT NULL DEFAULT true
 );
 
 CREATE TABLE search_fields (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   field varchar(80),
   description VARCHAR(255),
   searchable BOOLEAN NOT NULL DEFAULT true,
@@ -233,7 +233,7 @@ CREATE TABLE search_fields (
 );
 
 CREATE TABLE message (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   template_id INT,
@@ -269,6 +269,6 @@ CREATE TABLE saved_criteriaelement (
   operator VARCHAR(50) NOT NULL,
   operatorid INTEGER NOT NULL references field_types(id),
   value VARCHAR(80) NOT NULL,
-  source int not null default -1
+  source INT NOT NULL DEFAULT -1
 );
 

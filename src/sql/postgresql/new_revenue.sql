@@ -26,7 +26,7 @@ CREATE TABLE lookup_revenuedetail_types (
 ;
 
 CREATE TABLE revenue (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
   transaction_id INT DEFAULT -1,
   month INT DEFAULT -1,
@@ -42,7 +42,7 @@ CREATE TABLE revenue (
 );
 
 CREATE TABLE revenue_detail (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   revenue_id INT REFERENCES revenue(id),
   amount FLOAT DEFAULT 0,
   type INT REFERENCES lookup_revenue_types(code),

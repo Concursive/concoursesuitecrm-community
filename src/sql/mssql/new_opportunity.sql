@@ -8,21 +8,21 @@
  
 CREATE TABLE opportunity (
   opp_id INT IDENTITY PRIMARY KEY,
-  owner INT not null REFERENCES access(user_id),
+  owner INT NOT NULL REFERENCES access(user_id),
   description VARCHAR(80),
-  acctlink INT default -1,
-  contactlink INT default -1,
-  closedate DATETIME not null,
-  closeprob float,
-  terms float,
-  units char(1),
-  lowvalue float,
-  guessvalue float,
-  highvalue float,
-  stage INT references lookup_stage(code),
+  acctlink INT DEFAULT -1,
+  contactlink INT DEFAULT -1,
+  closedate DATETIME NOT NULL,
+  closeprob FLOAT,
+  terms FLOAT,
+  units CHAR(1),
+  lowvalue FLOAT,
+  guessvalue FLOAT,
+  highvalue FLOAT,
+  stage INT REFERENCES lookup_stage(code),
   stagedate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  commission float,
-  type char(1),
+  commission FLOAT,
+  type CHAR(1),
   alertdate DATETIME,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
@@ -32,7 +32,7 @@ CREATE TABLE opportunity (
   custom2 int default -1,
   closed DATETIME,
   custom_data TEXT,
-  alert varchar(100) default null,
+  alert varchar(100) DEFAULT NULL,
   enabled BIT NOT NULL DEFAULT 1,
   notes TEXT
 );
@@ -55,40 +55,38 @@ CREATE TABLE lookup_opportunity_types (
   enabled BIT DEFAULT 1
 );
 
-CREATE INDEX "call_log_cidx" ON "call_log" ("alertdate", "enteredby");
-
 CREATE TABLE opportunity_header (
   opp_id INT IDENTITY PRIMARY KEY,
   description VARCHAR(80),
-	acctlink INT default -1,
-	contactlink INT default -1,
-	entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	enteredby INT NOT NULL REFERENCES access(user_id),
-	modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	modifiedby INT NOT NULL REFERENCES access(user_id)
+  acctlink INT default -1,
+  contactlink INT default -1,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 
 CREATE TABLE opportunity_component (
   id INT IDENTITY PRIMARY KEY,
   opp_id int references opportunity_header(opp_id),
-	owner INT NOT NULL REFERENCES access(user_id),
-	description VARCHAR(80),
-	closedate date not null,
-	closeprob float,
-	terms float,
-	units char(1),
-	lowvalue float,
-	guessvalue float,
-	highvalue float,
-	stage INT references lookup_stage(code),
-	stagedate date NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	commission float,
-	type char(1),
-	alertdate date,
-	entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	enteredby INT NOT NULL REFERENCES access(user_id),
-	modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	modifiedby INT NOT NULL REFERENCES access(user_id),  
+  owner INT NOT NULL REFERENCES access(user_id),
+  description VARCHAR(80),
+  closedate date not null,
+  closeprob float,
+  terms float,
+  units char(1),
+  lowvalue float,
+  guessvalue float,
+  highvalue float,
+  stage INT references lookup_stage(code),
+  stagedate date NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  commission float,
+  type char(1),
+  alertdate date,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),  
   closed DATETIME,
   alert varchar(100) default null,
   enabled BIT NOT NULL DEFAULT 1,
@@ -129,3 +127,5 @@ CREATE TABLE call_log (
   modifiedby INT NOT NULL REFERENCES access(user_id),
   alert varchar(100) default null
 );
+
+CREATE INDEX "call_log_cidx" ON "call_log" ("alertdate", "enteredby");

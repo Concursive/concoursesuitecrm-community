@@ -65,6 +65,14 @@ CREATE TABLE campaign_list_groups (
   group_id INT NOT NULL REFERENCES saved_criterialist(id)
 );
 
+CREATE TABLE active_campaign_groups (
+  id INT IDENTITY PRIMARY KEY,
+  campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
+  groupname VARCHAR(80) NOT NULL,
+  groupcriteria TEXT DEFAULT NULL
+);
+
+
 CREATE TABLE scheduled_recipient (
   id INT IDENTITY PRIMARY KEY,
   campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
@@ -92,8 +100,9 @@ CREATE TABLE survey (
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   intro TEXT,
+  outro TEXT,
   itemLength INT DEFAULT -1,
-  type INT NOT NULL REFERENCES lookup_survey_types(code),
+  type INT DEFAULT -1,
   enabled BIT NOT NULL DEFAULT 1,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
@@ -110,6 +119,15 @@ CREATE TABLE survey_questions (
   question_id INT IDENTITY PRIMARY KEY,
   survey_id INT NOT NULL REFERENCES survey(survey_id),
   type INT NOT NULL REFERENCES lookup_survey_types(code),
+  description VARCHAR(255),
+  required BIT NOT NULL DEFAULT 0,
+  position INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE survey_items (
+  item_id INT IDENTITY PRIMARY KEY,
+  question_id INT NOT NULL REFERENCES survey_questions(question_id),
+  type INT DEFAULT -1,
   description VARCHAR(255)
 );
 
@@ -119,7 +137,8 @@ CREATE TABLE active_survey (
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   intro TEXT,
-  itemLength int default -1,
+  outro TEXT,
+  itemLength INT DEFAULT -1,
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   enabled BIT NOT NULL DEFAULT 1,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -133,14 +152,23 @@ CREATE TABLE active_survey_questions (
   active_survey_id INT REFERENCES active_survey(active_survey_id),
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   description VARCHAR(255),
-  average float default 0.00,
-  total1 int default 0,
-  total2 int default 0,
-  total3 int default 0,
-  total4 int default 0,
-  total5 int default 0,
-  total6 int default 0,
-  total7 int default 0
+  required BIT NOT NULL DEFAULT 0,
+  position INT NOT NULL DEFAULT 0,
+  average FLOAT DEFAULT 0.00,
+  total1 INT DEFAULT 0,
+  total2 INT DEFAULT 0,
+  total3 INT DEFAULT 0,
+  total4 INT DEFAULT 0,
+  total5 INT DEFAULT 0,
+  total6 INT DEFAULT 0,
+  total7 INT DEFAULT 0
+);
+
+CREATE TABLE active_survey_items (
+  item_id INTEGER IDENTITY PRIMARY KEY,
+  question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
+  type INT DEFAULT -1,
+  description VARCHAR(255)
 );
 
 CREATE TABLE active_survey_responses (
@@ -157,14 +185,28 @@ CREATE TABLE active_survey_answers (
   response_id INT NOT NULL REFERENCES active_survey_responses(response_id),
   question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
   comments TEXT,
-  quant_ans int DEFAULT -1,
+  quant_ans INT DEFAULT -1,
   text_ans TEXT
+);
+
+CREATE TABLE active_survey_answer_items (
+  id INTEGER IDENTITY PRIMARY KEY,
+  item_id INT NOT NULL REFERENCES active_survey_items(item_id),
+  answer_id INT NOT NULL REFERENCES active_survey_answers(answer_id),
+  comments TEXT
+);
+
+CREATE TABLE active_survey_answer_avg (
+  id INTEGER IDENTITY PRIMARY KEY,
+  question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
+  item_id INT NOT NULL REFERENCES active_survey_items(item_id),
+  total INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE field_types (
   id INT IDENTITY PRIMARY KEY,
   data_typeid int NOT NULL DEFAULT -1,
-  data_type VARCHAR(20),
+	data_type VARCHAR(20),
   operator VARCHAR(50),
   display_text varchar(50),
   enabled BIT DEFAULT 1
@@ -218,6 +260,6 @@ CREATE TABLE saved_criteriaelement (
   operator VARCHAR(50) NOT NULL,
   operatorid INTEGER NOT NULL references field_types(id),
   value VARCHAR(80) NOT NULL,
-  source int not null default -1
+  source INT NOT NULL DEFAULT -1
 );
 
