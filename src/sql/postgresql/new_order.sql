@@ -218,7 +218,7 @@ CREATE TABLE payment_creditcard (
 	-- credit card information
 	card_type INT REFERENCES lookup_creditcard_types(code),
 	card_number VARCHAR(300),
-	card_security_code VARCHAR(10),
+	card_security_code VARCHAR(300),
 	expiration_month INT,
 	expiration_year INT,
   name_on_card VARCHAR(300),
