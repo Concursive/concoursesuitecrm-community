@@ -164,6 +164,7 @@ public class UpgradeDatabaseTask extends Task {
           script.eval("addClassPath(\"" + servletJar + "\")");
           script.set("db", db);
           script.source(scriptFile);
+          System.out.println("BSH Script complete: " + scriptFile);
         }
         //Run the specified sql file
         String sqlFile = baseFile + (baseFile.indexOf(".")>-1?"":".sql");
@@ -174,6 +175,7 @@ public class UpgradeDatabaseTask extends Task {
             st.execute(StringUtils.loadText(sqlFile));
             st.close();
             db.commit();
+            System.out.println("SQL Script complete: " + sqlFile);
           } catch (SQLException sq) {
             db.rollback();
             System.out.println("SQL ERROR: " + sq.getMessage());
