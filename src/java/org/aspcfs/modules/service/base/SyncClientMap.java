@@ -383,8 +383,6 @@ public class SyncClientMap {
     if (rs.next()) {
       statusDate = rs.getTimestamp("status_date");
       System.out.println("SyncClientMap-> Retrieved status date: " + statusDate);
-    } else {
-      System.out.println(this.toString());
     }
     rs.close();
     pst.close();
@@ -402,9 +400,6 @@ public class SyncClientMap {
     if (clientId == -1 && tableId == -1 && recordId == -1) {
       throw new SQLException("ID was not specified");
     }
-
-    System.out.println(this.toString());
-    
     PreparedStatement pst = null;
     //Delete the record
     int recordCount = 0;
@@ -419,7 +414,6 @@ public class SyncClientMap {
     pst.setInt(++i, recordId);
     recordCount = pst.executeUpdate();
     pst.close();
-
     if (recordCount == 0) {
       return false;
     } else {
@@ -533,7 +527,6 @@ public class SyncClientMap {
     pst.setInt(++i, clientId);
     pst.setInt(++i, tableId);
     ResultSet rs = pst.executeQuery();
-    System.out.println(this.toString());
     return rs;
   }
 
