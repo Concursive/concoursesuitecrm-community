@@ -18,7 +18,7 @@ View Contacts<br>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="ExternalContacts.do?command=ListContacts">
-    <td align="left">
+    <td>
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= ExternalContactsInfo.getOptionValue("my") %>>My Contacts </option>
         <option <%= ExternalContactsInfo.getOptionValue("all") %>>All Contacts</option>
