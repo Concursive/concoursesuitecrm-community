@@ -214,9 +214,9 @@ public class Setup extends CFSModule {
       }
       //Make sure the server received the key ok
       if (bean.getSsl()) {
-        response = HTTPUtils.sendPacket("https://registration.darkhorsecrm.com/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
+        response = HTTPUtils.sendPacket("https://registration.centriccrm.com/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
       } else {
-        response = HTTPUtils.sendPacket("http://registration.darkhorsecrm.com/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
+        response = HTTPUtils.sendPacket("http://registration.centriccrm.com/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
       }
       if (response == null) {
         context.getRequest().setAttribute("actionError",
@@ -331,13 +331,13 @@ public class Setup extends CFSModule {
       File instance = new File(context.getServletContext().getRealPath("/"));
       if (os.startsWith("Windows")) {
         //Windows
-        path = "c:\\DarkHorse\\crm\\fileLibrary\\" + instance.getName() + "\\";
+        path = "c:\\Centric\\crm\\fileLibrary\\" + instance.getName() + "\\";
       } else if (os.startsWith("Mac")) {
         //Mac OSX
-        path = "/Library/Application Support/Dark Horse/crm/fileLibrary/" + instance.getName() + "/";
+        path = "/Library/Application Support/Centric/crm/fileLibrary/" + instance.getName() + "/";
       } else {
         //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
-        path = "/var/lib/darkhorse/crm/fileLibrary/" + instance.getName() + "/";
+        path = "/var/lib/centric/crm/fileLibrary/" + instance.getName() + "/";
       }
     }
     context.getRequest().setAttribute("fileLibrary", path);
