@@ -8,20 +8,18 @@ import java.text.*;
  *  used as is for a dialog with the user, specifically it is best used for a
  *  dialog which conveys certain dependencies or relationships. <p>
  *
- *  For example<p>
+ *  Usage :<p>
  *
- *  htmlDialog.setRelationships(thisTask.processDependencies(db)); 
- if
- *  (htmlDialog.getRelationships().size() == 0) {
- *  htmlDialog.setTitle("Confirm"); htmlDialog.setShowAndConfirm(false);
- *  htmlDialog.setDeleteUrl("javascript:window.location.href='MyTasks.do?command=Delete&id="
- *  + id + "'"); } else { htmlDialog.setTitle("Confirm");
- *  htmlDialog.setHeader("Are you sure you want to delete this item:");
- *  htmlDialog.addButton("Delete All", "javascript:window.location.href='/MyTasks.do?command=Delete&id="
- *  + id + "'"); htmlDialog.addButton("No", "javascript:parent.window.close()");
+ *  htmlDialog.setRelationships(thisTask.processDependencies(db)); <br>
+ *  if (htmlDialog.getRelationships().size() == 0) {
+ *  htmlDialog.setTitle("Confirm"); htmlDialog.setDeleteUrl("MyTasks.do?command=Delete&id=)
+ *  }<br>
+ *  else { <br>
+ *  htmlDialog.setTitle("Confirm");<br>
+ *  htmlDialog.setHeader("Are you sure you want to delete this item:");<br>
+ *  htmlDialog.addButton("Delete All", "MyTasks.do?command=Delete&id=");<br>
  *  } <p>
  *
- *  The setRelationships
  *
  *@author     akhi_m
  *@created    August 22, 2002

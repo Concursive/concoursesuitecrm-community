@@ -11,12 +11,12 @@ Customize and configure your Campaigns with the following attachments:<br>
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">
           <td>
-            <strong><a href="/CampaignManagerSurvey.do?command=View">Surveys</a></strong>
+            <strong><a href="/CampaignManagerSurvey.do?command=View">Interactive Responses</a></strong>
           </td>
         </tr>
         <tr class="containerBody">
           <td>
-            Create interactive surveys that you can associate with Campaign Messages.
+            Create interactive ads &amp; special deals in the form of lists &amp; associate them with a campaign and handle responses within CFS.
           </td>
         </tr>
       </table>

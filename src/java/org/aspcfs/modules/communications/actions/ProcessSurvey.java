@@ -38,7 +38,7 @@ public final class ProcessSurvey extends CFSModule {
     Connection db = null;
 
     try {
-      CustomForm thisForm = getDynamicForm(context, "surveyview");
+      //CustomForm thisForm = getDynamicForm(context, "surveyview");
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
       
@@ -58,10 +58,8 @@ public final class ProcessSurvey extends CFSModule {
           surveyId = Integer.parseInt(value);
         }
       }
-      
+      System.out.println("ProcessSurvey -- > Survey Id "  + surveyId);
       thisSurvey = new ActiveSurvey(db, surveyId);
-      thisForm.populate(thisSurvey);
-      context.getRequest().setAttribute("CustomFormInfo", thisForm);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -93,6 +91,7 @@ public final class ProcessSurvey extends CFSModule {
   public String executeCommandInsert(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
+    ActiveSurvey thisSurvey = null;
 
     try {
       AuthenticationItem auth = new AuthenticationItem();
@@ -118,12 +117,12 @@ public final class ProcessSurvey extends CFSModule {
           contactId = Integer.parseInt(value);
         }
       }
-      
       SurveyResponse thisResponse = new SurveyResponse(context);
       thisResponse.setActiveSurveyId(surveyId);
       thisResponse.setContactId(contactId);
       thisResponse.setUniqueCode(codedId);
       thisResponse.insert(db);
+      thisSurvey = new ActiveSurvey(db, surveyId);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -131,6 +130,7 @@ public final class ProcessSurvey extends CFSModule {
     }
 
     if (errorMessage == null) {
+      context.getRequest().setAttribute("ThankYouText", thisSurvey.getOutro());
       return ("InsertOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);

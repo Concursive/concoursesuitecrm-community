@@ -92,9 +92,11 @@ CREATE TABLE survey (
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   intro TEXT,
+  outro TEXT,
   itemLength INT DEFAULT -1,
-  type INT NOT NULL REFERENCES lookup_survey_types(code),
+  type INT DEFAULT -1,
   enabled BOOLEAN NOT NULL DEFAULT true,
+  status INT NOT NULL DEFAULT -1,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -110,8 +112,18 @@ CREATE TABLE survey_questions (
   question_id serial PRIMARY KEY,
   survey_id INT NOT NULL REFERENCES survey(survey_id),
   type INT NOT NULL REFERENCES lookup_survey_types(code),
+  description VARCHAR(255),
+  required BOOLEAN NOT NULL DEFAULT false,
+  position INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE survey_items (
+  item_id serial PRIMARY KEY,
+  question_id INT NOT NULL REFERENCES survey_questions(question_id),
+  type INT DEFAULT -1,
   description VARCHAR(255)
 );
+
 
 CREATE TABLE active_survey (
   active_survey_id serial PRIMARY KEY,
@@ -119,6 +131,7 @@ CREATE TABLE active_survey (
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   intro TEXT,
+  outro TEXT,
   itemLength int default -1,
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   enabled BOOLEAN NOT NULL DEFAULT true,
@@ -133,6 +146,8 @@ CREATE TABLE active_survey_questions (
   active_survey_id INT REFERENCES active_survey(active_survey_id),
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   description VARCHAR(255),
+  required BOOLEAN NOT NULL DEFAULT false,
+  position INT NOT NULL DEFAULT 0,
   average float default 0.00,
   total1 int default 0,
   total2 int default 0,
@@ -142,6 +157,14 @@ CREATE TABLE active_survey_questions (
   total6 int default 0,
   total7 int default 0
 );
+
+CREATE TABLE active_survey_items (
+  item_id serial PRIMARY KEY,
+  question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
+  type INT DEFAULT -1,
+  description VARCHAR(255)
+);
+
 
 CREATE TABLE active_survey_responses (
   response_id SERIAL PRIMARY KEY,
@@ -159,6 +182,20 @@ CREATE TABLE active_survey_answers (
   comments TEXT,
   quant_ans int DEFAULT -1,
   text_ans TEXT
+);
+
+CREATE TABLE active_survey_answer_items (
+  id SERIAL primary key,
+  item_id INT NOT NULL REFERENCES active_survey_items(item_id),
+  answer_id INT NOT NULL REFERENCES active_survey_answers(answer_id),
+  comments TEXT
+);
+
+CREATE TABLE active_survey_answer_itemavg (
+  id SERIAL primary key,
+  question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
+  item_id INT NOT NULL REFERENCES active_survey_items(item_id),
+  total INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE field_types (

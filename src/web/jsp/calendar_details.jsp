@@ -79,18 +79,17 @@ function switchStyle(E){
        boolean firstTime = true;
        for (int i = 0; i< Array.getLength(CalendarEventList.EVENT_TYPES); i++) {
        firstTime = true;
-       int categoryCount = 0 ;
+       int categoryCount = CompanyCalendar.getEventCount(thisCal.get(Calendar.MONTH) + 1,thisCal.get(Calendar.DAY_OF_MONTH),thisCal.get(Calendar.YEAR), CalendarEventList.EVENT_TYPES[i]);
        eventList = thisDay.iterator();
        while (eventList.hasNext()) {
         CalendarEvent thisEvent = (CalendarEvent)eventList.next();
         if(thisEvent.getCategory().toUpperCase().startsWith(CalendarEventList.EVENT_TYPES[i].toUpperCase())){
-        categoryCount++;
         if(firstTime){
           firstTime = false;
         %>
         <table cellspacing="0" cellpadding="0" border="0" marginheight="0" marginwidth="0">
         <tr>
-          <td nowrap><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;<font id="category<%=i%>"></font></td>
+          <td nowrap><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;(<%=categoryCount%>)</td>
         </tr>
         </table>
         <table width="100%" cellspacing="0" cellpadding="0" marginheight="0" marginwidth="0" border="0" id="alertdetails<%= toFullDateString(thisDay.getDate()) + i %>" style="<%=count==0?"display:":"display:none"%>">
@@ -104,7 +103,6 @@ function switchStyle(E){
      <%}
       if(!firstTime){
         %>
-        <script type="text/javascript">document.getElementById('category<%=i%>').innerHTML = '(<%=categoryCount%>)';</script>
         </table>
       <%}
      }%>
@@ -116,16 +114,7 @@ function switchStyle(E){
        }%>
        <%}
     else {
-         Calendar thisCal = Calendar.getInstance();
-         if(CalendarInfo.getCalendarView().equalsIgnoreCase("day")){
-         thisCal.set(CalendarInfo.getYearSelected(),CalendarInfo.getMonthSelected()-1,CalendarInfo.getDaySelected());
          %>
-       <tr>
-         <td colspan="2">
-           <strong><%= toFullDateString(thisCal.getTime()) %> </strong>
-         </td>
-       </tr>
-       <%}%>
        <tr>
          <td valign="top" nowrap>
            &nbsp;&nbsp;

@@ -14,12 +14,14 @@ import javax.servlet.http.*;
  *
  *@author     chris price
  *@created    August 13, 2002
- *@version    $Id$
+ *@version    $Id: SurveyAnswerList.java,v 1.4 2002/08/27 19:28:31 mrajkowski
+ *      Exp $
  */
 public class SurveyAnswerList extends Vector {
 
   private int questionId = -1;
   private int hasComments = -1;
+
 
   /**
    *  Constructor for the SurveyAnswerList object
@@ -64,8 +66,25 @@ public class SurveyAnswerList extends Vector {
     this.questionId = questionId;
   }
 
-  public void setHasComments(int tmp) { this.hasComments = tmp; }
-  public int getHasComments() { return hasComments; }
+
+  /**
+   *  Sets the hasComments attribute of the SurveyAnswerList object
+   *
+   *@param  tmp  The new hasComments value
+   */
+  public void setHasComments(int tmp) {
+    this.hasComments = tmp;
+  }
+
+
+  /**
+   *  Gets the hasComments attribute of the SurveyAnswerList object
+   *
+   *@return    The hasComments value
+   */
+  public int getHasComments() {
+    return hasComments;
+  }
 
 
   /**
@@ -78,7 +97,7 @@ public class SurveyAnswerList extends Vector {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      SurveyAnswer thisAnswer = this.getObject(rs);
+      SurveyAnswer thisAnswer = this.getObject(db, rs);
       this.add(thisAnswer);
     }
     rs.close();
@@ -92,11 +111,12 @@ public class SurveyAnswerList extends Vector {
    *  Gets the object attribute of the SurveyAnswerList object
    *
    *@param  rs                Description of the Parameter
+   *@param  db                Database connection needed for related items
    *@return                   The object value
    *@exception  SQLException  Description of the Exception
    */
-  public SurveyAnswer getObject(ResultSet rs) throws SQLException {
-    SurveyAnswer thisAnswer = new SurveyAnswer(rs);
+  public SurveyAnswer getObject(Connection db, ResultSet rs) throws SQLException {
+    SurveyAnswer thisAnswer = new SurveyAnswer(db, rs);
     return thisAnswer;
   }
 
@@ -112,24 +132,33 @@ public class SurveyAnswerList extends Vector {
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "SELECT sa.* " +
-      "FROM active_survey_answers sa " +
-      "WHERE sa.question_id = ? ");
+        "SELECT sa.* " +
+        "FROM active_survey_answers sa " +
+        "WHERE sa.question_id = ? ");
     if (hasComments > -1) {
       if (hasComments == Constants.TRUE) {
         sql.append("AND comments <> '' ");
       } else {
         sql.append("AND comments = '' ");
       }
-    }  
-      sql.append("ORDER BY response_id, question_id ");
+    }
+    sql.append("ORDER BY response_id, question_id ");
     pst = db.prepareStatement(sql.toString());
     pst.setInt(1, questionId);
+    System.out.println("SurveyAnswerList -- > QueryList " + pst.toString());
     ResultSet rs = pst.executeQuery();
     return rs;
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  responseId        Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insert(Connection db, int responseId) throws SQLException {
     Iterator ans = this.iterator();
     while (ans.hasNext()) {

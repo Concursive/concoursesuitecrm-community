@@ -4,6 +4,8 @@ package com.darkhorseventures.cfsbase;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import javax.servlet.http.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  For each SurveyItem (question), a user's response is stored as a
@@ -20,6 +22,7 @@ public class SurveyAnswer {
   private int quantAns = -1;
   private String textAns = "";
   private int responseId = -1;
+  private ArrayList itemList = null;
 
 
   /**
@@ -32,10 +35,11 @@ public class SurveyAnswer {
    *  Constructor for the SurveyAnswer object
    *
    *@param  rs                Description of the Parameter
+   *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public SurveyAnswer(ResultSet rs) throws SQLException {
-    buildRecord(rs);
+  public SurveyAnswer(Connection db, ResultSet rs) throws SQLException {
+    buildRecord(db, rs);
   }
 
 
@@ -46,14 +50,38 @@ public class SurveyAnswer {
    *@param  parseItem  Description of the Parameter
    */
   public void buildRecord(HttpServletRequest request, int parseItem) {
-    this.setQuestionId(request.getParameter("quest" + parseItem + "id"));
+    String question = "quest" + parseItem;
+    this.setQuestionId(request.getParameter(question + "id"));
 
-    if (request.getParameter("quest" + parseItem + "comments") != null) {
-      this.setComments(request.getParameter("quest" + parseItem + "comments"));
+    if (request.getParameter(question + "comments") != null) {
+      this.setComments(request.getParameter(question + "comments"));
     }
 
-    if (request.getParameter("quest" + parseItem + "qans") != null) {
-      this.setQuantAns(request.getParameter("quest" + parseItem + "qans"));
+    if (request.getParameter(question + "qans") != null) {
+      this.setQuantAns(request.getParameter(question + "qans"));
+    }
+    
+    if (request.getParameter(question + "text") != null) {
+      this.setTextAns(request.getParameter(question + "text"));
+    }
+
+    //add items if any.
+    if (request.getParameter(question + "itemCount") != null) {
+      int i = 0;
+      int itemCount = Integer.parseInt(request.getParameter(question + "itemCount"));
+      for (int j = 0; j < itemCount; j++) {
+        if (request.getParameter(question + "item" + (++i)) != null) {
+          if (itemList == null) {
+            itemList = new ArrayList();
+          }
+          SurveyAnswerItem thisItem = new SurveyAnswerItem();
+          thisItem.buildRecord(request, question + "item" + i);
+          itemList.add(thisItem);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Added an item: " + thisItem.getId());
+          }
+        }
+      }
     }
   }
 
@@ -112,15 +140,48 @@ public class SurveyAnswer {
    *  Description of the Method
    *
    *@param  rs                Description of the Parameter
+   *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  protected void buildRecord(ResultSet rs) throws SQLException {
+  protected void buildRecord(Connection db, ResultSet rs) throws SQLException {
     this.setId(rs.getInt("answer_id"));
     this.setResponseId(rs.getInt("response_id"));
     this.setQuestionId(rs.getInt("question_id"));
     this.setComments(rs.getString("comments"));
     this.setQuantAns(rs.getInt("quant_ans"));
     this.setTextAns(rs.getString("text_ans"));
+    buildItems(db, id);
+  }
+
+
+  /**
+   *  Build Items related to Answer
+   *
+   *@param  db                Description of the Parameter
+   *@param  thisAnswerId      Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildItems(Connection db, int thisAnswerId) throws SQLException {
+    try {
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT * " +
+          "FROM active_survey_answer_items t " +
+          "WHERE t.answer_id = ? ");
+      pst.setInt(1, thisAnswerId);
+      ResultSet rs = pst.executeQuery();
+      while (rs.next()) {
+        if (itemList == null) {
+          itemList = new ArrayList();
+        }
+        SurveyAnswerItem thisAnswerItem = new SurveyAnswerItem();
+        thisAnswerItem.buildRecord(rs);
+        itemList.add(thisAnswerItem);
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
   }
 
 
@@ -138,15 +199,15 @@ public class SurveyAnswer {
 
     PreparedStatement pst = null;
     ResultSet rs = null;
-    String sql = 
-      "SELECT * " +
-      "FROM active_survey_answers s " +
-      "WHERE answer_id = ? ";
+    String sql =
+        "SELECT * " +
+        "FROM active_survey_answers s " +
+        "WHERE answer_id = ? ";
     pst = db.prepareStatement(sql);
     pst.setInt(1, passedId);
     rs = pst.executeQuery();
     if (rs.next()) {
-      buildRecord(rs);
+      buildRecord(db, rs);
     } else {
       rs.close();
       pst.close();
@@ -261,32 +322,64 @@ public class SurveyAnswer {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  enteredBy         Description of the Parameter
-   *@param  responseId          Description of the Parameter
+   *@param  responseId        Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void insert(Connection db, int responseId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "INSERT INTO active_survey_answers " +
-      "(response_id, question_id, comments, quant_ans, text_ans) " +
-      "VALUES " +
-      "(?, ?, ?, ?, ?) ");
+        "INSERT INTO active_survey_answers " +
+        "(response_id, question_id, comments, quant_ans, text_ans) " +
+        "VALUES " +
+        "(?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, responseId);
     pst.setInt(++i, questionId);
     pst.setString(++i, comments);
     pst.setInt(++i, quantAns);
     pst.setString(++i, textAns);
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SurveyAnswer -- > Insert Query: " + pst.toString());
+    }
     pst.execute();
     pst.close();
+    id = DatabaseUtils.getCurrVal(db, "active_survey_ans_answer_id_seq");
+    if (itemList != null) {
+      insertItemList(db, id);
+    }
 
-    //id = DatabaseUtils.getCurrVal(db, "active_survey_ans_answer_id_seq");
     if (this.quantAns > -1) {
       this.updateSurveyAverage(db);
       this.updateAnswerTotal(db);
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  thisId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  private void insertItemList(Connection db, int thisId) throws SQLException {
+    if (thisId == -1) {
+      throw new SQLException("Answer ID not specified.");
+    }
+    Iterator items = itemList.iterator();
+    while (items.hasNext()) {
+      SurveyAnswerItem thisItem = (SurveyAnswerItem) items.next();
+      thisItem.insert(db, thisId, this.getQuestionId());
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int updateSurveyAverage(Connection db) throws SQLException {
     if (questionId == -1) {
       throw new SQLException("Question ID not specified.");
@@ -295,10 +388,10 @@ public class SurveyAnswer {
     double thisAverage = 0;
     PreparedStatement pst = null;
     ResultSet rs = null;
-    String sql = 
-      "SELECT avg(quant_ans) as av " +
-      "FROM active_survey_answers s " +
-      "WHERE question_id = ? ";
+    String sql =
+        "SELECT avg(quant_ans) as av " +
+        "FROM active_survey_answers s " +
+        "WHERE question_id = ? ";
     pst = db.prepareStatement(sql);
     pst.setInt(1, this.getQuestionId());
     rs = pst.executeQuery();
@@ -306,11 +399,11 @@ public class SurveyAnswer {
       thisAverage = rs.getDouble("av");
     }
     rs.close();
-    
+
     pst = db.prepareStatement(
-      "UPDATE active_survey_questions " +
-      "SET average = ? " +
-      "WHERE question_id = ? ");
+        "UPDATE active_survey_questions " +
+        "SET average = ? " +
+        "WHERE question_id = ? ");
     int i = 0;
     pst.setDouble(++i, thisAverage);
     pst.setInt(++i, this.getQuestionId());
@@ -319,13 +412,21 @@ public class SurveyAnswer {
 
     return 1;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private boolean updateAnswerTotal(Connection db) throws SQLException {
     PreparedStatement pst = null;
-    String sql = 
-      "UPDATE active_survey_questions " +
-      "SET total" + this.getQuantAns() + " = total" + this.getQuantAns() + " + 1 " +
-      "WHERE question_id = ? ";
+    String sql =
+        "UPDATE active_survey_questions " +
+        "SET total" + this.getQuantAns() + " = total" + this.getQuantAns() + " + 1 " +
+        "WHERE question_id = ? ";
     pst = db.prepareStatement(sql);
     pst.setInt(1, this.getQuestionId());
     pst.execute();
@@ -334,14 +435,43 @@ public class SurveyAnswer {
   }
 
 
-  public void delete(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM active_survey_answers " +
-        "WHERE answer_id = ? ");
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Answer ID not specified");
+    }
     int i = 0;
-    pst.setInt(++i, this.getId());
-    pst.execute();
-    pst.close();
+    PreparedStatement pst = null;
+    try {
+      db.setAutoCommit(false);
+      //delete any item dependency first
+      pst = db.prepareStatement(
+          "DELETE FROM active_survey_answer_items " +
+          "WHERE answer_id = ? ");
+      pst.setInt(++i, this.getId());
+      pst.execute();
+
+      //delete the answer
+      pst = db.prepareStatement(
+          "DELETE FROM active_survey_answers " +
+          "WHERE answer_id = ? ");
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return true;
   }
 
 }

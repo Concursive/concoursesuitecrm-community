@@ -8,6 +8,7 @@ import com.darkhorseventures.utils.XMLUtils;
 import com.darkhorseventures.utils.Template;
 import com.darkhorseventures.controller.SubmenuItem;
 import com.darkhorseventures.controller.CustomForm;
+import com.darkhorseventures.webutils.HtmlButton;
 import java.io.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
@@ -17,7 +18,8 @@ import org.xml.sax.*;
  *
  *@author     chris price
  *@created    June 12, 2002
- *@version    $Id$
+ *@version    $Id: CustomFormList.java,v 1.2 2002/08/27 19:28:31 mrajkowski Exp
+ *      $
  */
 public class CustomFormList extends HashMap {
 
@@ -39,7 +41,7 @@ public class CustomFormList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   *  Loads the given XML file & builds the CustomForm object from the XML
    *
    *@param  context  Description of the Parameter
    *@param  file     Description of the Parameter
@@ -73,19 +75,18 @@ public class CustomFormList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   *  Builds the CustomForm object from the XML<br>
+   *  CustomForm follows a strict heirarchy : tabs --> groups --> rows -->
+   *  columns --> fields
    *
-   *@param  container  Description of the Parameter
-   *@return            Description of the Return Value
+   *@param  container  XML element containing the representation of the form
+   *@return            The populated CustomForm
    */
   private CustomForm buildForm(Element container) {
     CustomForm thisForm = new CustomForm();
     thisForm.setName(container.getAttribute("name"));
-    thisForm.setReturnLink(container.getAttribute("returnLink"));
-    thisForm.setReturnLinkText(container.getAttribute("returnLinkText"));
-    //thisForm.setDefaultField(container.getAttribute("defaultField"));
     thisForm.setAction(container.getAttribute("action"));
-    thisForm.setCancel(container.getAttribute("cancel"));
+    thisForm.addJScripts(container.getAttribute("scripts"));
 
     //Buttons
     LinkedList buttonElements = new LinkedList();
@@ -95,7 +96,7 @@ public class CustomFormList extends HashMap {
       Element button = (Element) buttons.next();
       thisForm.getButtonList().put(button.getAttribute("text"), button.getAttribute("link"));
     }
-    
+
     //Tabs
     LinkedList tabList = new LinkedList();
     XMLUtils.getAllChildren(container, "tab", tabList);
@@ -105,11 +106,27 @@ public class CustomFormList extends HashMap {
 
       CustomFormTab thisTab = new CustomFormTab();
       thisTab.setName(tab.getAttribute("name"));
-      thisTab.setNext(tab.getAttribute("next"));
-      thisTab.setPrev(tab.getAttribute("prev"));
       thisTab.setId(tab.getAttribute("id"));
       thisTab.setDefaultField(tab.getAttribute("defaultField"));
+      thisTab.setOnLoadEvent(tab.getAttribute("onLoad"));
+      thisTab.setReturnLinkText(tab.getAttribute("returnLinkText"));
 
+      //header & footer buttons
+      LinkedList buttonList = new LinkedList();
+      XMLUtils.getAllChildren(tab, "buttonGroup", buttonList);
+      Iterator tmpList = buttonList.iterator();
+      while (tmpList.hasNext()) {
+        Element buttonGroup = (Element) tmpList.next();
+        LinkedList TabButtons = new LinkedList();
+        XMLUtils.getAllChildren(buttonGroup, "button", TabButtons);
+        Iterator tmpList1 = TabButtons.iterator();
+        while (tmpList1.hasNext()) {
+          Element button = (Element) tmpList1.next();
+          thisTab.addButton(new HtmlButton(button).toString());
+        }
+      }
+
+      //groups
       LinkedList groupList = new LinkedList();
       XMLUtils.getAllChildren(tab, "group", groupList);
       Iterator list2 = groupList.iterator();
@@ -120,60 +137,99 @@ public class CustomFormList extends HashMap {
         CustomFormGroup thisGroup = new CustomFormGroup();
         thisGroup.setName(group.getAttribute("name"));
 
-        LinkedList fieldList = new LinkedList();
-        XMLUtils.getAllChildren(group, "field", fieldList);
-        Iterator list3 = fieldList.iterator();
+        //rows
+        LinkedList rowList = new LinkedList();
+        XMLUtils.getAllChildren(group, "row", rowList);
+        Iterator list3 = rowList.iterator();
 
         while (list3.hasNext()) {
-          Element field = (Element) list3.next();
+          Element row = (Element) list3.next();
+          CustomRow thisRow = new CustomRow(row);
 
-          CustomField thisField = new CustomField();
-          thisField.setName(field.getAttribute("name"));
-          thisField.setDisplay(field.getAttribute("display"));
-          thisField.setType(field.getAttribute("type"));
-          thisField.setLengthVar(field.getAttribute("lengthVar"));
+          //columns
+          LinkedList columnList = new LinkedList();
+          XMLUtils.getAllChildren(row, "column", columnList);
+          Iterator list4 = columnList.iterator();
+          while (list4.hasNext()) {
+            Element column = (Element) list4.next();
+            CustomColumn thisColumn = new CustomColumn(column);
 
-          thisField.setDelimiter("^");
-
-          thisField.setTextAsCode(field.getAttribute("textAsCode"));
-          thisField.setLookupList(field.getAttribute("lookupList"));
-
-          StringTokenizer st = new StringTokenizer(field.getAttribute("parameters"), "^");
-
-          if (st.hasMoreTokens()) {
-            while (st.hasMoreTokens()) {
-              StringTokenizer b = new StringTokenizer(st.nextToken(), "=");
-              if (b.hasMoreTokens()) {
-                while (b.hasMoreTokens()) {
-                  thisField.setParameter(b.nextToken(), b.nextToken());
-                  //System.out.println(b.nextToken());
-                }
+            //fields
+            LinkedList fieldList = new LinkedList();
+            XMLUtils.getAllChildren(column, "field", fieldList);
+            Iterator list5 = fieldList.iterator();
+            while (list5.hasNext()) {
+              Element field = (Element) list5.next();
+              CustomField thisField = new CustomField();
+              processField(field, thisField);
+              thisColumn.add(thisField);
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("--CustomFormList-> Field Added: " + thisField.getType());
               }
             }
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("--CustomFormList-> Column Added: ");
+            }
+            thisRow.add(thisColumn);
           }
-
-          thisField.setRequired(field.getAttribute("required"));
-          thisGroup.add(thisField);
-
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("---CustomFormList-> Field Added: " + thisField.getName());
+            System.out.println("--CustomFormList-> Row Added: ");
           }
+          thisGroup.add(thisRow);
         }
-
-        thisTab.add(thisGroup);
 
         if (System.getProperty("DEBUG") != null) {
           System.out.println("--CustomFormList-> Group Added: " + thisGroup.getName());
         }
+        thisTab.add(thisGroup);
       }
-
-      thisForm.add(thisTab);
 
       if (System.getProperty("DEBUG") != null) {
         System.out.println("-CustomFormList-> Tab Added: " + thisTab.getName());
       }
+      thisForm.add(thisTab);
     }
     return thisForm;
+  }
+
+
+  /**
+   *  Sets the Attributes of a CustomField from XML element
+   *
+   *@param  field      XML element representing the field
+   *@param  thisField  CustomField
+   */
+  private void processField(Element field, CustomField thisField) {
+    thisField.setName(field.getAttribute("name"));
+    thisField.setDisplay(field.getAttribute("display"));
+    thisField.setType(field.getAttribute("type"));
+    thisField.setLengthVar(field.getAttribute("lengthVar"));
+    thisField.setOnChange(field.getAttribute("onChange"));
+    thisField.setJsEvent(field.getAttribute("jsEvent"));
+    
+    //check if the field is to be populated using a list object
+    thisField.setListName(field.getAttribute("listName"));
+    thisField.setListItemName(field.getAttribute("listItemName"));
+
+    thisField.setDelimiter("^");
+
+    thisField.setTextAsCode(field.getAttribute("textAsCode"));
+    thisField.setLookupList(field.getAttribute("lookupList"));
+
+    StringTokenizer st = new StringTokenizer(field.getAttribute("parameters"), "^");
+
+    if (st.hasMoreTokens()) {
+      while (st.hasMoreTokens()) {
+        StringTokenizer b = new StringTokenizer(st.nextToken(), "=");
+        if (b.hasMoreTokens()) {
+          while (b.hasMoreTokens()) {
+            thisField.setParameter(b.nextToken(), b.nextToken());
+          }
+        }
+      }
+    }
+
+    thisField.setRequired(field.getAttribute("required"));
   }
 }
 

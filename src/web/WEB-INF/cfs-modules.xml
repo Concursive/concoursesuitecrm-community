@@ -386,6 +386,7 @@
       <long_html value="Create Attachments"/>
       <short_html value="Create&lt;br&gt;Attachments"/>
       <link value="/CampaignManagerAttachment.do"/>
+      <!-- <link value="/CampaignManagerSurvey.do?command=Add"/>!-->
     </submenu>
     
     <!--submenu name="QuiComm">

@@ -12,17 +12,19 @@ import java.sql.*;
  *@author     akhi_m
  *@created    October 2, 2002
  *@version    $Id$
+ *@version    $Id$
  */
+ 
 public class ProjectListScheduledActions extends ProjectList implements ScheduledActions {
 
   private int userId = -1;
-protected java.sql.Date alertRangeStart = null;
+  protected java.sql.Date alertRangeStart = null;
   protected java.sql.Date alertRangeEnd = null;
+
   /**
    *  Constructor for the ProjectListScheduledActions object
    */
   public ProjectListScheduledActions() { }
-
 
   /**
    *  Sets the userId attribute of the CallListScheduledActions object

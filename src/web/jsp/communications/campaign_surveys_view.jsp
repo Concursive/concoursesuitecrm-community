@@ -36,9 +36,6 @@ Surveys
     <td width=40% valign=center align=left>
       <a href="/CampaignManagerSurvey.do?command=View&column=name"><strong>Name</strong></a>
     </td>  
-    <td width=60% valign=center align=left>
-      <a href="/CampaignManagerSurvey.do?command=View&column=description"><strong>Type</strong></a>
-    </td>
     <td valign=center align=left nowrap>
       <a href="/CampaignManagerSurvey.do?command=View&column=s.enteredby"><strong>Entered By</strong></a>
     </td>
@@ -69,9 +66,6 @@ Surveys
 	</dhv:permission>
         <td class="row<%= rowid %>" nowrap>
           <a href="/CampaignManagerSurvey.do?command=Details&id=<%= thisSurvey.getId() %>"><%= toHtml(thisSurvey.getName()) %></a>
-        </td>
-        <td class="row<%= rowid %>">
-          <%=toHtml(thisSurvey.getTypeName())%>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <dhv:username id="<%= thisSurvey.getEnteredBy() %>"/>

@@ -19,6 +19,8 @@ import com.darkhorseventures.utils.DatabaseUtils;
  */
 public class Survey extends SurveyBase {
 
+  public final static int INCOMPLETE = 1;
+  public final static int COMPLETE = 2;
   protected int id = -1;
   protected SurveyQuestionList questions = new SurveyQuestionList();
 
@@ -27,6 +29,8 @@ public class Survey extends SurveyBase {
   protected java.sql.Timestamp modified = null;
   protected java.sql.Timestamp entered = null;
   protected boolean enabled = true;
+  //TODO: used later on to make sure that survey is not activated until all steps are completed
+  protected int status = INCOMPLETE;
 
 
   /**
@@ -53,24 +57,38 @@ public class Survey extends SurveyBase {
    *@param  surveyId          Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-   
+
   public Survey(Connection db, String surveyId) throws SQLException {
-          queryRecord(db, Integer.parseInt(surveyId));
+    queryRecord(db, Integer.parseInt(surveyId));
   }
-  
+
+
+  /**
+   *  Constructor for the Survey object
+   *
+   *@param  db                Description of the Parameter
+   *@param  surveyId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public Survey(Connection db, int surveyId) throws SQLException {
-          queryRecord(db, surveyId);
+    queryRecord(db, surveyId);
   }
-          
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  surveyId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db, int surveyId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
-    String sql = 
-      "SELECT s.*, " +
-      "st.description as typename " +
-      "FROM survey s " +
-      "LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
-      "WHERE s.survey_id = " + surveyId;
+    String sql =
+        "SELECT s.* " +
+        "FROM survey s " +
+        "WHERE s.survey_id = " + surveyId;
     st = db.createStatement();
     rs = st.executeQuery(sql);
     if (rs.next()) {
@@ -94,13 +112,13 @@ public class Survey extends SurveyBase {
    *@return    The enteredString value
    */
   public String getEnteredString() {
+    String tmp = "";
     try {
-      return DateFormat.getDateInstance(DateFormat.SHORT).format(entered);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
     } catch (NullPointerException e) {
     }
-    return ("");
+    return tmp;
   }
-
 
   /**
    *  Sets the requestItems attribute of the Survey object
@@ -112,11 +130,41 @@ public class Survey extends SurveyBase {
   }
 
 
+  /**
+   *  Sets the status attribute of the Survey object
+   *
+   *@param  status  The new status value
+   */
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+
+  /**
+   *  Gets the status attribute of the Survey object
+   *
+   *@return    The status value
+   */
+  public int getStatus() {
+    return status;
+  }
+
+
+  /**
+   *  Gets the questions attribute of the Survey object
+   *
+   *@return    The questions value
+   */
   public SurveyQuestionList getQuestions() {
     return questions;
   }
 
 
+  /**
+   *  Sets the questions attribute of the Survey object
+   *
+   *@param  items  The new questions value
+   */
   public void setQuestions(SurveyQuestionList items) {
     this.questions = questions;
   }
@@ -130,13 +178,22 @@ public class Survey extends SurveyBase {
   public int getId() {
     return id;
   }
-  
+
+
+  /**
+   *  Gets the id attribute of the Survey class
+   *
+   *@param  db                Description of the Parameter
+   *@param  campaignId        Description of the Parameter
+   *@return                   The id value
+   *@exception  SQLException  Description of the Exception
+   */
   public static int getId(Connection db, int campaignId) throws SQLException {
     int surveyId = -1;
-    String sql = 
-      "SELECT survey_id " +
-      "FROM campaign_survey_link " +
-      "WHERE campaign_id = ? ";
+    String sql =
+        "SELECT survey_id " +
+        "FROM campaign_survey_link " +
+        "WHERE campaign_id = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, campaignId);
     ResultSet rs = pst.executeQuery();
@@ -144,18 +201,28 @@ public class Survey extends SurveyBase {
       surveyId = rs.getInt("survey_id");
     }
     rs.close();
+    pst.close();
     return surveyId;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  campaignId        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public static void removeLink(Connection db, int campaignId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "DELETE FROM campaign_survey_link " +
-      "WHERE campaign_id = ? ");
+        "DELETE FROM campaign_survey_link " +
+        "WHERE campaign_id = ? ");
     pst.setInt(1, campaignId);
     pst.execute();
     pst.close();
   }
-  
+
+
   /**
    *  Gets the enteredBy attribute of the Survey object
    *
@@ -255,11 +322,18 @@ public class Survey extends SurveyBase {
     this.modified = tmp;
   }
 
+
+  /**
+   *  Sets the modified attribute of the Survey object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(String tmp) {
     if (tmp != null) {
       this.modified = java.sql.Timestamp.valueOf(tmp);
     }
   }
+
 
   /**
    *  Sets the entered attribute of the Survey object
@@ -329,11 +403,12 @@ public class Survey extends SurveyBase {
    *@return    The modifiedString value
    */
   public String getModifiedString() {
+    String tmp = "";
     try {
-      return DateFormat.getDateInstance(DateFormat.SHORT).format(modified);
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
     } catch (NullPointerException e) {
     }
-    return ("");
+    return tmp;
   }
 
 
@@ -359,10 +434,10 @@ public class Survey extends SurveyBase {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    String sql = 
-      "INSERT INTO survey " +
-      "(name, description, intro, itemLength, type, enteredBy, modifiedBy) " +
-      "VALUES (?, ?, ?, ?, ?, ?, ?) ";
+    String sql =
+        "INSERT INTO survey " +
+        "(name, description, intro, outro, itemLength, type, status, enteredBy, modifiedBy) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
     try {
       db.setAutoCommit(false);
       int i = 0;
@@ -370,8 +445,10 @@ public class Survey extends SurveyBase {
       pst.setString(++i, name);
       pst.setString(++i, description);
       pst.setString(++i, intro);
+      pst.setString(++i, outro);
       pst.setInt(++i, itemLength);
-      pst.setInt(++i, type);
+      pst.setInt(++i, 1);
+      pst.setInt(++i, status);
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, enteredBy);
       pst.execute();
@@ -383,9 +460,8 @@ public class Survey extends SurveyBase {
       Iterator x = questions.iterator();
       while (x.hasNext()) {
         SurveyQuestion thisQuestion = (SurveyQuestion) x.next();
-        thisQuestion.insert(db, this.getId(), this.getType());
+        thisQuestion.process(db, this.getId());
       }
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -412,31 +488,37 @@ public class Survey extends SurveyBase {
     ResultSet rs = null;
     try {
       commit = db.getAutoCommit();
-      
+
       //Check to see if a survey is being used by any Inactive campaigns
       //If so, the survey can't be deleted
       int inactiveCount = 0;
       st = db.createStatement();
       rs = st.executeQuery(
-        "SELECT COUNT(*) AS survey_count " +
-        "FROM campaign_survey_link " +
-        "WHERE survey_id = " + this.getId());
+          "SELECT COUNT(*) AS survey_count " +
+          "FROM campaign_survey_link " +
+          "WHERE survey_id = " + this.getId());
       rs.next();
       inactiveCount = rs.getInt("survey_count");
       rs.close();
       if (inactiveCount > 0) {
         st.close();
         errors.put("actionError", "Survey could not be deleted because " +
-          inactiveCount + " " +
-          (inactiveCount == 1?"campaign is":"campaigns are") +
-          " being built that " +
-          (inactiveCount == 1?"uses":"use") +
-          " this survey.");
+            inactiveCount + " " +
+            (inactiveCount == 1 ? "campaign is" : "campaigns are") +
+            " being built that " +
+            (inactiveCount == 1 ? "uses" : "use") +
+            " this survey.");
         return false;
       }
-      
+
       if (commit) {
         db.setAutoCommit(false);
+      }
+
+      Iterator x = questions.iterator();
+      while (x.hasNext()) {
+        SurveyQuestion thisQuestion = (SurveyQuestion) x.next();
+        thisQuestion.delete(db, this.getId());
       }
       st.executeUpdate("DELETE FROM survey_questions WHERE survey_id = " + this.getId());
       st.executeUpdate("DELETE FROM survey WHERE survey_id = " + this.getId());
@@ -467,45 +549,42 @@ public class Survey extends SurveyBase {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    
+
     if (this.getId() == -1) {
       throw new SQLException("Survey ID was not specified");
     }
 
     try {
       db.setAutoCommit(false);
-
-      //Update the questions
-      questions.delete(db, this.getId());
-      Iterator x = questions.iterator();
-      while (x.hasNext()) {
-        SurveyQuestion thisQuestion = (SurveyQuestion) x.next();
-        thisQuestion.insert(db, this.getId(), this.getType());
-      }
+      System.out.println("Survey -- > Update Questions ");
+      //update the question
+      questions.process(db, this.getId());
 
       //Update the survey
       PreparedStatement pst = null;
-      String sql = 
-        "UPDATE survey " +
-        "SET name = ?, description = ?, intro = ?, itemlength = ?, " +
-        "type = ?, " +
-        "enabled = ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-        "WHERE survey_id = ? AND modified = ? ";
+      String sql =
+          "UPDATE survey " +
+          "SET name = ?, description = ?, intro = ?, outro = ?, itemlength = ?, " +
+          "type = ?, " +
+          "enabled = ?, " +
+          "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
+          "WHERE survey_id = ? AND modified = ? ";
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       pst.setString(++i, this.getName());
       pst.setString(++i, this.getDescription());
       pst.setString(++i, this.getIntro());
+      pst.setString(++i, this.getOutro());
       pst.setInt(++i, this.getItemLength());
-      pst.setInt(++i, this.getType());
+      pst.setInt(++i, 1);
       pst.setBoolean(++i, this.getEnabled());
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getId());
       pst.setTimestamp(++i, modified);
+      System.out.println("Survey -- > Update " + pst.toString());
       resultCount = pst.executeUpdate();
       pst.close();
-      
+
       db.commit();
     } catch (Exception e) {
       db.rollback();
@@ -516,8 +595,15 @@ public class Survey extends SurveyBase {
     db.setAutoCommit(true);
     return resultCount;
   }
-  
-    
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public HashMap processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
     String sql = "";
@@ -525,8 +611,8 @@ public class Survey extends SurveyBase {
     try {
       db.setAutoCommit(false);
       sql = "SELECT COUNT(*) AS survey_count " +
-        "FROM campaign_survey_link " +
-        "WHERE survey_id = ? ";
+          "FROM campaign_survey_link " +
+          "WHERE survey_id = ? ";
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -534,7 +620,7 @@ public class Survey extends SurveyBase {
       rs = pst.executeQuery();
       if (rs.next()) {
         if (rs.getInt("survey_count") != 0) {
-                dependencyList.put("Campaigns", new Integer(rs.getInt("survey_count")));
+          dependencyList.put("Campaigns", new Integer(rs.getInt("survey_count")));
         }
       }
 
@@ -563,6 +649,7 @@ public class Survey extends SurveyBase {
     name = rs.getString("name");
     description = rs.getString("description");
     intro = rs.getString("intro");
+    outro = rs.getString("outro");
     itemLength = rs.getInt("itemlength");
     type = rs.getInt("type");
     enabled = rs.getBoolean("enabled");
@@ -570,9 +657,6 @@ public class Survey extends SurveyBase {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
-
-    //lookup_survey_types table
-    typeName = rs.getString("typename");
   }
 
 }

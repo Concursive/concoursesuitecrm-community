@@ -55,7 +55,6 @@ public class SurveyList extends Vector {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM survey s " +
-        "LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
         "WHERE s.survey_id > -1 ");
 
     createFilter(sqlFilter);
@@ -102,10 +101,8 @@ public class SurveyList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "s.*, " +
-        "st.description as typename " +
+        "s.* " +
         "FROM survey s " +
-        "LEFT JOIN lookup_survey_types st ON (s.type = st.code) " +
         "WHERE s.survey_id > -1 ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

@@ -493,6 +493,7 @@
     <forward name="ViewScheduleOK" resource="/campaign_center_schedule.jsp" layout="nav"/>
     <forward name="AddGroupsOK" resource="/campaign_center_groups_add.jsp" layout="nav"/>
     <forward name="InsertGroupsOK" resource="/CampaignManager.do?command=ViewDetails"/>
+    <forward name="ItemListOK" resource="campaign_survey_items.jsp" layout="style"/>
     <forward name="RemoveGroupsOK" resource="/CampaignManager.do?command=ViewGroups"/>
     <forward name="AddMessageOK" resource="/campaign_center_message_add.jsp" layout="nav"/>
     <forward name="InsertMessageOK" resource="/CampaignManager.do?command=ViewDetails"/>
@@ -550,12 +551,15 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/campaign_surveys_view.jsp" layout="nav"/>
     <forward name="AddOK" resource="/dynamic_form.jsp" layout="nav"/>
-    <forward name="DetailsOK" resource="/dynamic_form.jsp" layout="nav"/>
-    <forward name="PreviewOK" resource="/dynamic_form.jsp" layout="nav"/>
+    <forward name="ViewItemsOK" resource="/campaign_attachments_itemlist.jsp" layout="style"/>
+    <forward name="DetailsOK" resource="/campaign_survey_details.jsp" layout="nav"/>
+    <forward name="PreviewOK" resource="/campaign_survey_preview.jsp" layout="style"/>
     <forward name="ModifyOK" resource="/dynamic_form.jsp" layout="nav"/>
+    <forward name="InsertAndAddOK" resource="/dynamic_form.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/CampaignManagerSurvey.do?command=ViewReturn"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="MockInsertOK" resource="/survey_thanks.jsp" layout="style"/>
   </action>
   <action name="CampaignManagerAttachment" class="com.darkhorseventures.cfsmodule.CampaignManagerAttachment">
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>

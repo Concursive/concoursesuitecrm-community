@@ -8,7 +8,7 @@ import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
-
+import java.lang.reflect.*;
 /**
  *  CalendarView.java Creates a monthly calendar and exports the HTML The
  *  current month is shown completely, the prev/next month is partially shown,
@@ -426,15 +426,20 @@ public class CalendarView {
    */
   public java.util.Date getStartOfWeekDate() {
     Calendar thisCal = Calendar.getInstance();
-    thisCal.set(this.getYear(cal),this.getStartMonthOfWeek()-1,this.getStartDayOfWeek());
+    thisCal.set(this.getYear(cal), this.getStartMonthOfWeek() - 1, this.getStartDayOfWeek());
     return thisCal.getTime();
   }
-  
-  
+
+
+  /**
+   *  Gets the endOfWeekDate attribute of the CalendarView object
+   *
+   *@return    The endOfWeekDate value
+   */
   public java.util.Date getEndOfWeekDate() {
     Calendar thisCal = Calendar.getInstance();
-    thisCal.set(this.getYear(cal),this.getStartMonthOfWeek()-1,this.getStartDayOfWeek());
-    thisCal.add(java.util.Calendar.DATE, + 6);
+    thisCal.set(this.getYear(cal), this.getStartMonthOfWeek() - 1, this.getStartDayOfWeek());
+    thisCal.add(java.util.Calendar.DATE, +6);
     return thisCal.getTime();
   }
 
@@ -524,10 +529,42 @@ public class CalendarView {
   public ArrayList getEvents(String tmp1, String tmp2, String tmp3) {
     String key = tmp1 + "/" + tmp2 + "/" + tmp3;
     if (eventList.containsKey(key)) {
+      System.out.println("Events for key are " + eventList.toString());
       return (ArrayList) eventList.get(key);
     } else {
       return new ArrayList();
     }
+  }
+
+
+  /**
+   *  Gets the eventCount attribute of the CalendarView object
+   *
+   *@param  tmp1           Description of the Parameter
+   *@param  tmp2           Description of the Parameter
+   *@param  tmp3           Description of the Parameter
+   *@param  eventCategory  Description of the Parameter
+   *@return                The eventCount value
+   */
+  public int getEventCount(int tmp1, int tmp2, int tmp3, String eventCategory) {
+    String key = tmp1 + "/" + tmp2 + "/" + tmp3;
+    ArrayList tmpList = null;
+    int eventCount = 0;
+    if (eventList.containsKey(key)) {
+      tmpList = (ArrayList) eventList.get(key);
+      System.out.println("Getting ArrayList ---- " + tmpList.toString());
+    }
+    Iterator events = tmpList.iterator();
+    if (events.hasNext()) {
+      while (events.hasNext()) {
+        CalendarEvent thisEvent = (CalendarEvent) events.next();
+        System.out.println("Comparing ---- " + thisEvent.getCategory() + ":" + eventCategory.toUpperCase());
+          if (thisEvent.getCategory().toUpperCase().startsWith(eventCategory.toUpperCase())) {
+            eventCount++;
+        }
+      }
+    }
+    return eventCount;
   }
 
 

@@ -26,14 +26,19 @@ import java.text.*;
  *@author     mrajkowski
  *@created    December 27, 2001
  *@version    $Id$
+ *@version    $Id$
  */
-public class CustomField extends GenericBean {
+public class CustomField extends GenericBean implements Cloneable {
 
   //Types of custom fields
   public final static int TEXT = 1;
   public final static int SELECT = 2;
   public final static int TEXTAREA = 3;
   public final static int CHECKBOX = 4;
+  public final static int BUTTON = 5;
+  public final static int LABEL = 6;
+  public final static int LINK = 7;
+
   //public final static int RADIOBOX = 5;
   //public final static int LISTSELECT = 6;
   //public final static int MULTILISTSELECT = 7;
@@ -69,7 +74,7 @@ public class CustomField extends GenericBean {
   private java.sql.Timestamp endDate = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
-  private boolean enabled = false;
+  private boolean enabled = true;
   private String error = null;
 
   //Properties for related data
@@ -82,11 +87,22 @@ public class CustomField extends GenericBean {
   private double enteredDouble = 0;
   private Object elementData = null;
 
+  //is used along with ITEMLIST type & is the name of the method applied on object
+  //i.e "questions" in case of Survey object
+  private String listName = null;
+  private String listItemName = null;
+
+  private String jsEvent = null;
+  private String onChange = null;
   private String display = null;
   private String lengthVar = null;
   private int maxRowItems = 0;
   private String delimiter = "\r\n";
   private boolean textAsCode = false;
+
+  //static field i.e label
+  private boolean isStatic = false;
+
 
 
   /**
@@ -96,6 +112,14 @@ public class CustomField extends GenericBean {
    */
   public CustomField() { }
 
+
+  /**
+   *  Constructor for the CustomField object
+   *
+   *@param  db                Description of the Parameter
+   *@param  thisId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public CustomField(Connection db, int thisId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
@@ -108,11 +132,12 @@ public class CustomField extends GenericBean {
     }
     rs.close();
     pst.close();
-    
+
     if (this.getType() == CustomField.SELECT) {
       this.buildElementData(db);
     }
   }
+
 
   /**
    *  Constructor for the CustomField object
@@ -216,6 +241,46 @@ public class CustomField extends GenericBean {
 
 
   /**
+   *  Sets the onChange attribute of the CustomField object
+   *
+   *@param  onChange  The new onChange value
+   */
+  public void setOnChange(String onChange) {
+    this.onChange = onChange;
+  }
+
+
+  /**
+   *  Sets the listItemName attribute of the CustomField object
+   *
+   *@param  listItemName  The new listItemName value
+   */
+  public void setListItemName(String listItemName) {
+    this.listItemName = listItemName;
+  }
+
+
+  /**
+   *  Gets the listItemName attribute of the CustomField object
+   *
+   *@return    The listItemName value
+   */
+  public String getListItemName() {
+    return listItemName;
+  }
+
+
+  /**
+   *  Gets the onChange attribute of the CustomField object
+   *
+   *@return    The onChange value
+   */
+  public String getOnChange() {
+    return onChange;
+  }
+
+
+  /**
    *  Gets the delimiter attribute of the CustomField object
    *
    *@return    The delimiter value
@@ -284,6 +349,26 @@ public class CustomField extends GenericBean {
    */
   public void setMaxRowItems(int maxRowItems) {
     this.maxRowItems = maxRowItems;
+  }
+
+
+  /**
+   *  Sets the listName attribute of the CustomField object
+   *
+   *@param  listName  The new listName value
+   */
+  public void setListName(String listName) {
+    this.listName = listName;
+  }
+
+
+  /**
+   *  Gets the listName attribute of the CustomField object
+   *
+   *@return    The listName value
+   */
+  public String getListName() {
+    return listName;
   }
 
 
@@ -376,7 +461,13 @@ public class CustomField extends GenericBean {
   public void setLevel(int tmp) {
     this.level = tmp;
   }
-  
+
+
+  /**
+   *  Sets the level attribute of the CustomField object
+   *
+   *@param  tmp  The new level value
+   */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
   }
@@ -421,6 +512,12 @@ public class CustomField extends GenericBean {
         this.type = LOOKUP_USERID;
       } else if (tmp.equalsIgnoreCase("displayrowlist")) {
         this.type = DISPLAYROWLIST;
+      } else if (tmp.equalsIgnoreCase("button")) {
+        this.type = BUTTON;
+      } else if (tmp.equalsIgnoreCase("label")) {
+        this.type = LABEL;
+      } else if (tmp.equalsIgnoreCase("link")) {
+        this.type = LINK;
       }
     }
   }
@@ -435,7 +532,13 @@ public class CustomField extends GenericBean {
   public void setValidationType(int tmp) {
     this.validationType = tmp;
   }
-  
+
+
+  /**
+   *  Sets the validationType attribute of the CustomField object
+   *
+   *@param  tmp  The new validationType value
+   */
   public void setValidationType(String tmp) {
     this.validationType = Integer.parseInt(tmp);
   }
@@ -472,7 +575,13 @@ public class CustomField extends GenericBean {
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
   }
-  
+
+
+  /**
+   *  Sets the startDate attribute of the CustomField object
+   *
+   *@param  tmp  The new startDate value
+   */
   public void setStartDate(String tmp) {
     this.startDate = DateUtils.parseTimestampString(tmp);
   }
@@ -487,7 +596,13 @@ public class CustomField extends GenericBean {
   public void setEndDate(java.sql.Timestamp tmp) {
     this.endDate = tmp;
   }
-  
+
+
+  /**
+   *  Sets the endDate attribute of the CustomField object
+   *
+   *@param  tmp  The new endDate value
+   */
   public void setEndDate(String tmp) {
     this.endDate = DateUtils.parseTimestampString(tmp);
   }
@@ -502,18 +617,37 @@ public class CustomField extends GenericBean {
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
   }
-  
+
+
+  /**
+   *  Sets the entered attribute of the CustomField object
+   *
+   *@param  tmp  The new entered value
+   */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
   }
 
+
+  /**
+   *  Sets the modified attribute of the CustomField object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
   }
-  
+
+
+  /**
+   *  Sets the modified attribute of the CustomField object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
   }
+
 
   /**
    *  Sets the Enabled attribute of the CustomField object
@@ -524,7 +658,13 @@ public class CustomField extends GenericBean {
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
   }
-  
+
+
+  /**
+   *  Sets the enabled attribute of the CustomField object
+   *
+   *@param  tmp  The new enabled value
+   */
   public void setEnabled(String tmp) {
     this.enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
@@ -592,7 +732,13 @@ public class CustomField extends GenericBean {
    */
   public void setSelectedItemId(String tmp) {
     if (tmp != null) {
-      this.selectedItemId = Integer.parseInt(tmp);
+      if (tmp.equalsIgnoreCase("true")) {
+        this.selectedItemId = 1;
+      } else if (tmp.equalsIgnoreCase("false")) {
+        this.selectedItemId = 0;
+      } else {
+        this.selectedItemId = Integer.parseInt(tmp);
+      }
     }
   }
 
@@ -694,6 +840,12 @@ public class CustomField extends GenericBean {
     }
   }
 
+
+  /**
+   *  Sets the parameters attribute of the CustomField object
+   *
+   *@param  param  The new parameters value
+   */
   public void setParameters(String param) {
     StringTokenizer st = new StringTokenizer(param, "^");
     while (st.hasMoreTokens()) {
@@ -703,6 +855,47 @@ public class CustomField extends GenericBean {
       }
     }
   }
+
+
+  /**
+   *  Sets the jsEvent attribute of the CustomField object
+   *
+   *@param  jsEvent  The new jsEvent value
+   */
+  public void setJsEvent(String jsEvent) {
+    this.jsEvent = jsEvent;
+  }
+
+
+  /**
+   *  Sets the isStatic attribute of the CustomField object
+   *
+   *@param  isStatic  The new isStatic value
+   */
+  public void setIsStatic(boolean isStatic) {
+    this.isStatic = isStatic;
+  }
+
+
+  /**
+   *  Gets the isStatic attribute of the CustomField object
+   *
+   *@return    The isStatic value
+   */
+  public boolean getIsStatic() {
+    return isStatic;
+  }
+
+
+  /**
+   *  Gets the jsEvent attribute of the CustomField object
+   *
+   *@return    The jsEvent value
+   */
+  public String getJsEvent() {
+    return jsEvent;
+  }
+
 
   /**
    *  Gets the recordId attribute of the CustomField object
@@ -844,7 +1037,8 @@ public class CustomField extends GenericBean {
   public boolean getRequired() {
     return required;
   }
-  
+
+
   /**
    *  Gets the StartDate attribute of the CustomField object
    *
@@ -854,7 +1048,7 @@ public class CustomField extends GenericBean {
   public java.sql.Timestamp getStartDate() {
     return startDate;
   }
-  
+
 
   /**
    *  Gets the EndDate attribute of the CustomField object
@@ -877,9 +1071,16 @@ public class CustomField extends GenericBean {
     return entered;
   }
 
+
+  /**
+   *  Gets the modified attribute of the CustomField object
+   *
+   *@return    The modified value
+   */
   public java.sql.Timestamp getModified() {
     return modified;
   }
+
 
   /**
    *  Gets the Enabled attribute of the CustomField object
@@ -933,6 +1134,17 @@ public class CustomField extends GenericBean {
    */
   public Object getElementData() {
     return elementData;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return                                 Description of the Return Value
+   *@exception  CloneNotSupportedException  Description of the Exception
+   */
+  public CustomField duplicate() throws CloneNotSupportedException {
+    return (CustomField) this.clone();
   }
 
 
@@ -1108,12 +1320,16 @@ public class CustomField extends GenericBean {
     }
     switch (type) {
         case TEXTAREA:
-          return ("<textarea cols=\"70\" rows=\"8\" name=\"" + elementName + "\">" + toString(enteredValue) + "</textarea>");
+          return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.toHtmlTextBlank(toString(enteredValue)) + "</textarea>");
         case SELECT:
           if (!(((LookupList) elementData).containsKey(-1))) {
             ((LookupList) elementData).addItem(-1, "-- None --");
           }
-          return ((LookupList) elementData).getHtmlSelect(elementName, selectedItemId);
+          LookupList tmpList = (LookupList) elementData;
+          tmpList.setJsEvent(this.getOnChange() != null ? " onchange=\"" + this.getOnChange() + "\"" : "");
+          return tmpList.getHtmlSelect(elementName, selectedItemId);
+        case BUTTON:
+          return ("<input type=\"button\" name=\"" + elementName + "\" value=\"" + display + "\" " + (jsEvent != null ? " onClick=\"" + jsEvent + "\"" : "") + (enabled ? "" : " disabled") + ">");
         case CHECKBOX:
           return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
         case DATE:
@@ -1125,6 +1341,10 @@ public class CustomField extends GenericBean {
           return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + toHtmlValue(enteredValue) + "\">");
         case DISPLAYTEXT:
           return (toHtmlValue(enteredValue));
+        case LABEL:
+          return this.getDisplayHtml();
+        case LINK:
+          return ("<a href=\"" + jsEvent + "\" > " + display + " </a>");
         default:
           String maxlength = this.getParameter("maxlength");
           String size = "";
@@ -1229,7 +1449,13 @@ public class CustomField extends GenericBean {
           return "";
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean hasDisplay() {
     return (display != null && !"".equals(display));
   }
@@ -1245,10 +1471,10 @@ public class CustomField extends GenericBean {
   public void buildResources(Connection db) throws SQLException {
     if (recordId > -1) {
       PreparedStatement pst = db.prepareStatement(
-        "SELECT * " +
-        "FROM custom_field_data " +
-        "WHERE record_id = ? " +
-        "AND field_id = ? ");
+          "SELECT * " +
+          "FROM custom_field_data " +
+          "WHERE record_id = ? " +
+          "AND field_id = ? ");
       pst.setInt(1, this.recordId);
       pst.setInt(2, this.id);
       ResultSet rs = pst.executeQuery();
@@ -1290,9 +1516,9 @@ public class CustomField extends GenericBean {
     if (!this.isValid()) {
       return -1;
     }
-    
+
     StringBuffer sql = new StringBuffer();
-    
+
     sql.append(
         "INSERT INTO custom_field_data " +
         "(record_id, field_id, selected_item_id, entered_value, entered_number, ");
@@ -1372,7 +1598,7 @@ public class CustomField extends GenericBean {
       pst.setInt(++i, level);
       pst.execute();
       pst.close();
-      
+
       id = DatabaseUtils.getCurrVal(db, "custom_field_info_field_id_seq");
 
       if (type == SELECT && elementData != null && elementData instanceof LookupList) {
@@ -1388,7 +1614,15 @@ public class CustomField extends GenericBean {
 
     return result;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insertLookupList(Connection db) throws SQLException {
     if (elementData == null || !(elementData instanceof LookupList)) {
       return false;
@@ -1545,14 +1779,14 @@ public class CustomField extends GenericBean {
         }
       }
     }
-/*     
-    //Removed because this doesn't have to happen here
-    if (type == SELECT &&
-        (elementData == null || (((LookupList) elementData).size() == 0))
-        ) {
-      errors.put("lookupListError", "Items are required");
-    }
- */
+    /*
+     *  /Removed because this doesn't have to happen here
+     *  if (type == SELECT &&
+     *  (elementData == null || (((LookupList) elementData).size() == 0))
+     *  ) {
+     *  errors.put("lookupListError", "Items are required");
+     *  }
+     */
     return (errors.size() == 0);
   }
 

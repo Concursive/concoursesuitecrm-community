@@ -205,9 +205,9 @@ public class TaskList extends Vector {
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    //if (System.getProperty("DEBUG") != null) {
-    System.out.println("TaskList Query --> " + pst.toString());
-    //}
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("TaskList Query --> " + pst.toString());
+    }
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);

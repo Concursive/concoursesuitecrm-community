@@ -33,12 +33,13 @@ public final class CampaignManager extends CFSModule {
     //Check to see if the user has a preference
     return "DefaultOK";
     //Otherwise go to the specified module...
-/*     if (hasPermission(context, "campaign-dashboard-view")) {
-      return executeCommandDashboard(context);
-    } else {
-      return executeCommandView(context);
-    }
- */
+    /*
+     *  if (hasPermission(context, "campaign-dashboard-view")) {
+     *  return executeCommandDashboard(context);
+     *  } else {
+     *  return executeCommandView(context);
+     *  }
+     */
   }
 
 
@@ -902,11 +903,11 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
       campaign.setActiveDate(context.getRequest().getParameter("activeDate"));
-      
+
       if (context.getRequest().getParameter("active") != null) {
-              campaign.setActive(context.getRequest().getParameter("active"));
+        campaign.setActive(context.getRequest().getParameter("active"));
       }
-      
+
       campaign.setModifiedBy(this.getUserId(context));
       campaign.setSendMethodId(Integer.parseInt(context.getRequest().getParameter("sendMethodId")));
       resultCount = campaign.updateSchedule(db);
@@ -1151,7 +1152,7 @@ public final class CampaignManager extends CFSModule {
         ActiveSurvey thisSurvey = new ActiveSurvey(db, surveyId);
         context.getRequest().setAttribute("ActiveSurvey", thisSurvey);
       }
-      
+
       RecipientList recipients = new RecipientList();
       recipients.setCampaignId(campaign.getId());
       recipients.setBuildContact(true);
@@ -1168,6 +1169,46 @@ public final class CampaignManager extends CFSModule {
     if (errorMessage == null) {
       addModuleBean(context, "Dashboard", "Campaign: Details");
       return ("DetailsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandShowItems(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    ActiveSurveyQuestionItemList itemList = null;
+
+    int questionId = Integer.parseInt(context.getRequest().getParameter("questionId"));
+
+    try {
+      db = this.getConnection(context);
+      itemList = new ActiveSurveyQuestionItemList();
+      itemList.setQuestionId(questionId);
+      itemList.buildList(db);
+      itemList.updateResponse(db, questionId);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("ItemList", itemList);
+      return ("ItemListOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1261,6 +1302,7 @@ public final class CampaignManager extends CFSModule {
   }
 
 
+
   /**
    *  Description of the Method
    *
@@ -1326,9 +1368,8 @@ public final class CampaignManager extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandShowComments(ActionContext context) {
     Exception errorMessage = null;
@@ -1347,7 +1388,7 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     return ("PopupCommentsOK");
   }
 

@@ -1,7 +1,8 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="ActiveSurvey" class="com.darkhorseventures.cfsbase.ActiveSurvey" scope="request"/>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*"%>
+<jsp:useBean id="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request"/>
 <%@ include file="initPage.jsp" %>
+
 <html>
 <head>
   <title>Thank you for visiting our survey page</title>
@@ -53,32 +54,32 @@ function validateRadio (field) {
   </tr>
 </table>
 &nbsp;<br>
-<form name="survey" action="ProcessSurvey.do?command=Insert&auto-populate=true"  method="post" onSubmit="return checkForm(this);">
-  <table cellpadding="0" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+<form name="survey" action="CampaignManagerSurvey.do?command=MockInsert&id=<%=Survey.getId()%>"  method="post" onSubmit="return checkForm(this);">
+  <table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="containerBody">
       <td colspan="2" valign="center">
-        <%=toHtml(ActiveSurvey.getIntro())%>
+        <%=toHtml(Survey.getIntro())%>
       </td>
     </tr>
   </table>
   &nbsp;<br>
   <table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <%
-  Iterator j = ActiveSurvey.getQuestions().iterator();
+  Iterator j = Survey.getQuestions().iterator();
 	if ( j.hasNext() ) {
 		int count = 0;
 	  while (j.hasNext()) {
 			count++;		
-		ActiveSurveyQuestion thisQuestion = (ActiveSurveyQuestion)j.next();
+		SurveyQuestion thisQuestion = (SurveyQuestion)j.next();
     int type = thisQuestion.getType();
    %>
  <tr>
   <td width="100%" valign="top">
     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr>
-        <td colspan="7" width="100%" valign="center" class="containerHeader">
+        <td colspan="7" width="100%" valign="center" class="containerHeader" align="left">
           <input type="hidden" name="quest<%=count%>id" value="<%=thisQuestion.getId()%>">
-          <%=count%>.&nbsp;<%=thisQuestion.getDescription()%>
+          <%=count%>. &nbsp;<%=thisQuestion.getDescription()%>
         </td>
       </tr>
       <dhv:evaluate exp="<%=(type == SurveyQuestion.QUANT_NOCOMMENTS) || (type == SurveyQuestion.QUANT_COMMENTS)%>">
@@ -112,11 +113,11 @@ function validateRadio (field) {
         if ( k.hasNext() ) {
         int itemCount = 0;
         while (k.hasNext()) {
-        ActiveSurveyQuestionItem thisItem = (ActiveSurveyQuestionItem)k.next();
+        Item thisItem = (Item)k.next();
         %>
         <tr class="containerBack">
           <td valign="center" align="center" width="6%">
-            <input type="checkbox" name="quest<%=count%>item<%=itemCount++%>">
+            <input type="checkbox" name="quest<%=count%>item<%=++itemCount%>">
             <input type="hidden" name="quest<%=count%>item<%=itemCount%>id" value="<%=thisItem.getId()%>">
           </td>
           <td valign="center" align="left">
@@ -153,3 +154,4 @@ function validateRadio (field) {
   </center>
  </body>
 </html>
+

@@ -148,6 +148,11 @@ public class StringUtils {
     String htmlReady = replace(s, "<br>", "\r\n");
     return htmlReady;
   }
+  
+   public static String toHtmlTextBlank(String s) {
+    String htmlReady = replace(s, "<br>", "");
+    return htmlReady;
+  }
 
 
   /**

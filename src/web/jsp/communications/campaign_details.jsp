@@ -116,23 +116,30 @@ Campaign Details
   <tr>
     <td align=right nowrap><%=count%></td>
     <td><%= toHtml(thisItem.getDescription()) %></td>
-    <td width="24" nowrap>
+    
+    <% if(! (thisItem.getType() == 4)){ %>
+    
+    <td width="24" <%=thisItem.getType() == 1?" colspan=\"8\"":""%> align="center" nowrap>
 <% 
-      if (ActiveSurvey.getType() == 3) {
+      if (thisItem.getType() == 3 || thisItem.getType() == 1) {
 %>
-    <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowComments&surveyId=<%=ActiveSurvey.getId()%>&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','600','450','yes','no');">
+    <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowComments&surveyId=<%=ActiveSurvey.getId()%>&questionId=<%=thisItem.getId()%>&type=<%=thisItem.getType()==1?"open":"quant"%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','240','yes','no');">
 <%
       }
 %>
-    <%= toHtml(thisItem.getAverageValue()) %>
+    <%=thisItem.getType()==1?"View Comments":toHtml(thisItem.getAverageValue())%>
 <% 
-      if (ActiveSurvey.getType() == 3) {
+      if (ActiveSurvey.getType() == 3 || thisItem.getType() == 1) {
 %>
     </a>
 <%
       }
 %>
     </td>
+<%  
+      if (thisItem.getType() != 1) { 
+
+%>
     <td width="24" nowrap ><%= toHtml(String.valueOf(thisItem.getResponseTotals().get(0)))%></td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(1) + "")%></td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(2) + "")%></td>
@@ -140,6 +147,16 @@ Campaign Details
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(4) + "")%></td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(5) + "")%></td>
     <td width="24" nowrap ><%= toHtml(thisItem.getResponseTotals().get(6) + "")%></td>
+<%
+    }
+%>
+    <%}else{%>
+    
+    <td colspan="8" align="center">
+      <a href="javascript:popURLReturn('/CampaignManager.do?command=ShowItems&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','no');">View Item Details</a>
+    </td>
+    
+    <%}%>
   </tr>
 
 <%	

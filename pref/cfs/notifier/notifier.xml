@@ -28,7 +28,7 @@
   </init-param>
   <init-param>
     <param-name>MailServer</param-name>
-    <param-value>@MAILSERVER@</param-value>
+    <param-value>mail.darkhorseventures.com</param-value>
   </init-param>
   <!-- Remote Hylafax fax server -->
   <init-param>

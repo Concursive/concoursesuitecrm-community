@@ -1,3 +1,5 @@
+<jsp:useBean id="ThankYouText" class="java.lang.String" scope="request"/>
+<%@ include file="initPage.jsp" %>
 <html>
 <head>
   <title>Thank you for visiting our survey page</title>
@@ -22,8 +24,7 @@
   </tr>
   <tr>
     <td>
-      Thank you for taking the time to submit the survey.<br>
-      Your answers have been stored in our database.
+      <%= toHtml(ThankYouText) %> <br>
     </td>
   </tr>
 </table>

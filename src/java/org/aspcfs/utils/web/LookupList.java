@@ -15,6 +15,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@author     mrajkowski
  *@created    September 7, 2001
  *@version    $Id$
+ *@version    $Id$
  */
 public class LookupList extends HtmlSelect {
   public static String uniqueField = "code";
@@ -308,6 +309,7 @@ public class LookupList extends HtmlSelect {
     thisSelect.setSelectSize(selectSize);
     thisSelect.setMultiple(multiple);
     thisSelect.setJsEvent(jsEvent);
+    
 
     Iterator i = this.iterator();
     boolean keyFound = false;
@@ -336,6 +338,7 @@ public class LookupList extends HtmlSelect {
       return thisSelect.getHtml(selectName, lookupDefault);
     }
   }
+  
 
   /**
    *  Gets the HtmlSelect attribute of the ContactEmailTypeList object

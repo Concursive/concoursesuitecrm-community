@@ -16,6 +16,10 @@ public class CustomFormTab extends ArrayList {
   String prev = "";
   int id = 0;
   private String defaultField = null;
+  private String onLoadEvent = null;
+  private String returnLinkText = null;
+
+  private StringBuffer buttonString = null;
 
 
   /**
@@ -61,6 +65,81 @@ public class CustomFormTab extends ArrayList {
    */
   public void setPrev(String tmp) {
     this.prev = tmp;
+  }
+
+
+  /**
+   *  Sets the buttonString attribute of the CustomFormTab object
+   *
+   *@param  buttonString  The new buttonString value
+   */
+  public void setButtonString(StringBuffer buttonString) {
+    this.buttonString = buttonString;
+  }
+
+
+  /**
+   *  Sets the onLoadEvent attribute of the CustomFormTab object
+   *
+   *@param  onLoadEvent  The new onLoadEvent value
+   */
+  public void setOnLoadEvent(String onLoadEvent) {
+    this.onLoadEvent = onLoadEvent;
+  }
+
+
+  /**
+   *  Sets the returnLinkText attribute of the CustomFormTab object
+   *
+   *@param  returnLinkText  The new returnLinkText value
+   */
+  public void setReturnLinkText(String returnLinkText) {
+    this.returnLinkText = returnLinkText;
+  }
+
+
+  /**
+   *  Gets the returnLinkText attribute of the CustomFormTab object
+   *
+   *@return    The returnLinkText value
+   */
+  public String getReturnLinkText() {
+    return returnLinkText;
+  }
+
+
+  /**
+   *  Gets the onLoadEvent attribute of the CustomFormTab object
+   *
+   *@return    The onLoadEvent value
+   */
+  public String getOnLoadEvent() {
+    return onLoadEvent;
+  }
+
+
+  /**
+   *  Gets the buttonString attribute of the CustomFormTab object
+   *
+   *@return    The buttonString value
+   */
+  public String getButtonString() {
+    return buttonString.toString();
+  }
+
+
+  /**
+   *  Constructor for the addButton object
+   *
+   *@param  htmlButton  Description of the Parameter
+   */
+  public void addButton(String htmlButton) {
+    if (buttonString == null) {
+      buttonString = new StringBuffer();
+    }
+    buttonString.append("&nbsp;");
+    buttonString.append(htmlButton);
+    buttonString.append("&nbsp;");
   }
 
 
@@ -132,7 +211,13 @@ public class CustomFormTab extends ArrayList {
   public String getDefaultField() {
     return defaultField;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean hasDefaultField() {
     return (defaultField != null && !"".equals(defaultField));
   }

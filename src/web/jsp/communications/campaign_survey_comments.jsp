@@ -1,6 +1,9 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="SurveyAnswerList" class="com.darkhorseventures.cfsbase.SurveyAnswerList" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<%
+  boolean openEnded =  "open".equalsIgnoreCase(request.getParameter("type"));
+%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
@@ -8,9 +11,11 @@
     </td>
   </tr>
   <tr class="title">
-    <td width="25" valign="top" align="center">
-      Answer Provided
-    </td>  
+    <%if(!openEnded){%>
+      <td width="25" valign="top" align="center">
+        Answer Provided
+      </td>
+    <%}%>
     <td width="100%" valign="center" align="left">
       Comment Provided
     </td>
@@ -28,9 +33,12 @@
       SurveyAnswer thisAnswer = (SurveyAnswer)i.next();
 %>      
   <tr>
-    <td valign="top" align="center" class="row<%= rowid %>" nowrap>
-      <%=thisAnswer.getQuantAns()%>
-    </td>
+    <%if(!openEnded){%>
+      <td valign="top" align="center" class="row<%= rowid %>" nowrap>
+        <%=thisAnswer.getQuantAns()%>
+      </td>
+    <%}%>
+    
     <td class="row<%= rowid %>">
       <%=toHtml(thisAnswer.getComments())%>
       </td>

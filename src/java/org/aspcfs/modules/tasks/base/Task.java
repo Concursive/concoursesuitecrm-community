@@ -16,6 +16,7 @@ import org.theseus.actions.*;
  *@author     akhi_m
  *@created    August 15, 2002
  *@version    $Id$
+ *@version    $Id$
  */
 public class Task extends GenericBean {
 
@@ -436,17 +437,36 @@ public class Task extends GenericBean {
     this.completeDate = completeDate;
   }
 
-public void setModified(java.sql.Timestamp modified) {
-	this.modified = modified;
-}
 
-public void setModified(String modified) {
-	this.modified = DatabaseUtils.parseTimestamp(modified);
-}
+  /**
+   *  Sets the modified attribute of the Task object
+   *
+   *@param  modified  The new modified value
+   */
+  public void setModified(java.sql.Timestamp modified) {
+    this.modified = modified;
+  }
 
-public java.sql.Timestamp getModified() {
-	return modified;
-}
+
+  /**
+   *  Sets the modified attribute of the Task object
+   *
+   *@param  modified  The new modified value
+   */
+  public void setModified(String modified) {
+    this.modified = DatabaseUtils.parseTimestamp(modified);
+  }
+
+
+  /**
+   *  Gets the modified attribute of the Task object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
 
   /**
    *  Gets the completeDate attribute of the Task object
@@ -578,7 +598,13 @@ public java.sql.Timestamp getModified() {
   public double getEstimatedLOE() {
     return estimatedLOE;
   }
-  
+
+
+  /**
+   *  Gets the estimatedLOEValue attribute of the Task object
+   *
+   *@return    The estimatedLOEValue value
+   */
   public String getEstimatedLOEValue() {
     String toReturn = String.valueOf(estimatedLOE);
     if (toReturn.endsWith(".0")) {
@@ -787,11 +813,11 @@ public java.sql.Timestamp getModified() {
       db.setAutoCommit(false);
       sql = "INSERT INTO task " +
           "(enteredby, priority, description, notes, sharing, owner, duedate, estimatedloe, " +
-           (estimatedLOEType==-1?"":"estimatedLOEType, ") +
+          (estimatedLOEType == -1 ? "" : "estimatedLOEType, ") +
           "complete, completedate) " +
           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, " +
-           (estimatedLOEType==-1?"":"?, ") +
-           "?, ? ) ";
+          (estimatedLOEType == -1 ? "" : "?, ") +
+          "?, ? ) ";
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -803,7 +829,7 @@ public java.sql.Timestamp getModified() {
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
       pst.setDouble(++i, this.getEstimatedLOE());
-      if(this.getEstimatedLOEType() != -1){
+      if (this.getEstimatedLOEType() != -1) {
         pst.setInt(++i, this.getEstimatedLOEType());
       }
       pst.setBoolean(++i, this.getComplete());
@@ -860,8 +886,8 @@ public java.sql.Timestamp getModified() {
 
       sql = "UPDATE task " +
           "SET enteredby = ?, priority = ?, description = ?, notes = ?, " +
-          "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " + 
-          (estimatedLOEType==-1?"":"estimatedloetype = ?, ") +
+          "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " +
+          (estimatedLOEType == -1 ? "" : "estimatedloetype = ?, ") +
           "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ? " +
           "WHERE task_id = ? AND modified = ? ";
 
@@ -875,7 +901,7 @@ public java.sql.Timestamp getModified() {
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
       pst.setDouble(++i, this.getEstimatedLOE());
-      if(this.getEstimatedLOEType()!=-1){
+      if (this.getEstimatedLOEType() != -1) {
         pst.setInt(++i, this.getEstimatedLOEType());
       }
       pst.setBoolean(++i, this.getComplete());
@@ -887,7 +913,7 @@ public java.sql.Timestamp getModified() {
         pst.setTimestamp(++i, null);
       }
       pst.setInt(++i, thisId);
-      pst.setTimestamp(++i,this.getModified());
+      pst.setTimestamp(++i, this.getModified());
 
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Task -> Update Query is " + pst.toString());
@@ -1159,7 +1185,7 @@ public java.sql.Timestamp getModified() {
     complete = rs.getBoolean("complete");
     estimatedLOE = rs.getDouble("estimatedloe");
     estimatedLOEType = rs.getInt("estimatedloetype");
-    if(rs.wasNull()){
+    if (rs.wasNull()) {
       estimatedLOEType = -1;
     }
     owner = rs.getInt("owner");

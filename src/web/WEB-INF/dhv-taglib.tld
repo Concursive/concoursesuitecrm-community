@@ -235,4 +235,26 @@
     </attribute>   
   </tag>
   
+  <tag>
+    <name>group</name>
+    <tag-class>com.darkhorseventures.taglib.Group</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays a group of fields for the CustomGroup object specified.
+    </display-name>
+    <attribute>
+      <name>object</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>page</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>rowClass</name>
+      <required>no</required>
+    </attribute>
+  </tag>
+  
 </taglib>
