@@ -15,7 +15,9 @@
 	int rowid = 0;
 	while (i.hasNext()) {
 		rowid = (rowid != 1?1:2);
-		Object st = finalContacts.get(i.next());
+    Integer hashKey = (Integer) i.next();
+    int contactId = hashKey.intValue();
+		Object st = finalContacts.get(hashKey);
 		String email = st.toString();
 		if(email.startsWith("P:")) {
 			email = email.substring(2);
@@ -23,7 +25,7 @@
 %>
   <tr class="row<%= rowid %>">
     <td>
-      <%= email %>
+      <%= email %> <%= showAttribute(request, "contact" + contactId) %>
     </td>
   </tr>
 <%
