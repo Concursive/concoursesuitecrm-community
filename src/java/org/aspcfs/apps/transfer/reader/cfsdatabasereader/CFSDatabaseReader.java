@@ -36,6 +36,7 @@ public class CFSDatabaseReader implements DataReader {
   private ArrayList modules = null;
   private PropertyMapList mappings = null;
 
+  private int count = 0;
 
   /**
    *  Sets the driver attribute of the CFSDatabaseReader object
@@ -192,11 +193,13 @@ public class CFSDatabaseReader implements DataReader {
       XMLUtils.getAllChildren(xml.getFirstChild("mappings"), "map", mapElements);
       Iterator mapItems = mapElements.iterator();
       while (mapItems.hasNext()) {
+        //Get the map node
         Element map = (Element) mapItems.next();
         PropertyMap mapProperties = new PropertyMap();
         mapProperties.setId((String) map.getAttribute("id"));
-        //xml.getAllChildrenText(map, "property", mapProperties);
-
+        mapProperties.setTable((String) map.getAttribute("table"));
+        
+        //Get any property nodes
         NodeList nl = map.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
           Node n = nl.item(i);
@@ -219,7 +222,11 @@ public class CFSDatabaseReader implements DataReader {
             }
           }
         }
-        mappings.put((String) map.getAttribute("class"), mapProperties);
+        if (mappings.containsKey(map.getAttribute("class"))) {
+          mappings.put((String) map.getAttribute("class") + ++count, mapProperties);
+        } else {
+          mappings.put((String) map.getAttribute("class"), mapProperties);
+        }
       }
 
     } catch (Exception e) {
@@ -260,6 +267,7 @@ public class CFSDatabaseReader implements DataReader {
       Iterator moduleList = modules.iterator();
       while (moduleList.hasNext() && processOK) {
         String moduleClass = (String) moduleList.next();
+        logger.info("Processing: " + moduleClass);
         Object module = Class.forName(moduleClass).newInstance();
         processOK = ((CFSDatabaseReaderImportModule) module).process(writer, db, mappings);
         if (!processOK) {

@@ -19,20 +19,12 @@ INSERT INTO lookup_ticketsource (level,description) VALUES (2,'Email');
 INSERT INTO lookup_ticketsource (level,description) VALUES (3,'Letter');
 INSERT INTO lookup_ticketsource (level,description) VALUES (4,'Other');
 
-
 INSERT INTO ticket_priority (description,style,default_item,level,enabled) VALUES 
   ('Scheduled','background-color:lightgreen;color:black;',false,0,true);
 INSERT INTO ticket_priority (description,style,default_item,level,enabled) VALUES 
   ('Next','background-color:yellow;color:black;',false,1,true);
 INSERT INTO ticket_priority (description,style,default_item,level,enabled) VALUES 
   ('Immediate','background-color:red;color:black;font-weight:bold;',false,2,true);
-
-
-INSERT INTO ticket_source (source_code,source) VALUES (0,'Phone');
-INSERT INTO ticket_source (source_code,source) VALUES (1,'Email');
-INSERT INTO ticket_source (source_code,source) VALUES (2,'System');
-INSERT INTO ticket_source (source_code,source) VALUES (3,'Other');
-INSERT INTO ticket_source (source_code,source) VALUES (4,'Message');
 
 
 INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Sales','',false,1,true);

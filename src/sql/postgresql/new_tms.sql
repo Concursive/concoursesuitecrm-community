@@ -6,6 +6,7 @@
  *@version    $Id$
  */
  
+/* Not used, re-write as a lookup */
 CREATE TABLE ticket_level (
   id serial
   ,level_code int NOT NULL PRIMARY KEY
@@ -41,12 +42,6 @@ CREATE TABLE ticket_priority (
   ,default_item BOOLEAN DEFAULT false
   ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
-);
-
-
-CREATE TABLE ticket_source (
-  source_code int NOT NULL PRIMARY KEY
-  ,source VARCHAR(300) NOT NULL UNIQUE 
 );
 
 

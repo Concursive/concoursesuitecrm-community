@@ -1626,7 +1626,7 @@ public void setCompanyEnabled(boolean companyEnabled) {
     //ticket_category table
     categoryName = rs.getString("catname");
 
-    //ticket_source table
+    //lookup_ticket_source table
     sourceName = rs.getString("sourcename");
 
     //contact table

@@ -16,23 +16,29 @@
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
   </processes>
   <mappings>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupIndustry"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="systemModules"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupAccountTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupDepartment"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgAddressTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgEmailTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgPhoneTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupInstantMessengerTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupEmploymentTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupLocale"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactAddressTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactEmailTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactPhoneTypes"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupStage"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupDeliveryOptions"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupCallTypes"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupIndustry" table="lookup_industry"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="systemModules" table="system_modules"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactTypes" table="lookup_contact_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupAccountTypes" table="lookup_account_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupDepartment" table="lookup_department"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgAddressTypes" table="lookup_orgaddress_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgEmailTypes" table="lookup_orgemail_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgPhoneTypes" table="lookup_orgphone_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupInstantMessengerTypes" table="lookup_instantmessenger_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupEmploymentTypes" table="lookup_employment_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupLocale" table="lookup_locale"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactAddressTypes" table="lookup_contactaddress_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactEmailTypes" table="lookup_contactemail_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactPhoneTypes" table="lookup_contactphone_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupStage" table="lookup_stage"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupDeliveryOptions" table="lookup_delivery_options"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupCallTypes" table="lookup_call_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="ticketSeverity" table="ticket_severity"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupTicketSource" table="lookup_ticketsource"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="ticketPriority" table="ticket_priority"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupRevenueTypes" table="lookup_revenue_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupRevenueDetailTypes" table="lookup_revenuedetail_types"/>
+    <map class="com.darkhorseventures.webutils.LookupList" id="lookupSurveyTypes" table="lookup_survey_types"/>
     <map class="com.darkhorseventures.cfsbase.Contact" id="contact">
       <property>guid</property>
       <property lookup="account">orgId</property>

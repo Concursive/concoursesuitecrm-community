@@ -570,6 +570,35 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'lookupCallTypesList', 'com.darkhorseventures.webutils.LookupList');
  
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'ticketSeverity', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'ticketSeverityList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupTicketSource', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupTicketSourceList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'ticketPriority', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'ticketPriorityList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupRevenueTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupRevenueTypesList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupRevenueDetailTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupRevenueDetailTypesList', 'com.darkhorseventures.webutils.LookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupSurveyTypes', 'com.darkhorseventures.webutils.LookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupSurveyTypesList', 'com.darkhorseventures.webutils.LookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient');
