@@ -95,8 +95,6 @@ public class CustomLookupElement extends HashMap {
   }
   
   public boolean insert(Connection db) throws SQLException {
-    int sequenceTest = -1;
-    
     if (tableName == null) {
       throw new SQLException("Table name not specified");
     }
@@ -141,6 +139,9 @@ public class CustomLookupElement extends HashMap {
       seqName = tableName;
     }
     
+    if (System.getProperty("DEBUG") != null) {
+            System.out.println("HERE: " + seqName + "_" + getUniqueField() + "_seq");
+    }
     id = DatabaseUtils.getCurrVal(db, seqName + "_" + getUniqueField() + "_seq");
     
     return true;
