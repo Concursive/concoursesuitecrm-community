@@ -552,32 +552,26 @@ public final class TroubleTickets extends CFSModule {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
     }
-
     int errorCode = 0;
     Exception errorMessage = null;
     Connection db = null;
-
     TicketList assignedToMeList = new TicketList();
     TicketList openList = new TicketList();
     TicketList createdByMeList = new TicketList();
     String sectionId = null;
-
     if (context.getRequest().getParameter("pagedListSectionId") != null) {
       sectionId = context.getRequest().getParameter("pagedListSectionId");
     }
-
     //reset the paged lists
     if (context.getRequest().getParameter("resetList") != null && context.getRequest().getParameter("resetList").equals("true")) {
       context.getSession().removeAttribute("AssignedToMeInfo");
       context.getSession().removeAttribute("OpenInfo");
       context.getSession().removeAttribute("CreatedByMeInfo");
     }
-
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-
-    PagedListInfo assignedToMeInfo = this.getPagedListInfo(context, "AssignedToMeInfo");
-    assignedToMeInfo.setLink("/TroubleTickets.do?command=Home");
-
+    //Assigned To Me
+    PagedListInfo assignedToMeInfo = this.getPagedListInfo(context, "AssignedToMeInfo", "t.entered", "desc");
+    assignedToMeInfo.setLink("TroubleTickets.do?command=Home");
     if (sectionId == null) {
       if (!assignedToMeInfo.getExpandedSelection()) {
         if (assignedToMeInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -591,22 +585,19 @@ public final class TroubleTickets extends CFSModule {
     } else if (sectionId.equals(assignedToMeInfo.getId())) {
       assignedToMeInfo.setExpandedSelection(true);
     }
-
     if (sectionId == null || assignedToMeInfo.getExpandedSelection() == true) {
       assignedToMeList.setPagedListInfo(assignedToMeInfo);
       assignedToMeList.setAssignedTo(getUserId(context));
       assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       assignedToMeList.setOnlyOpen(true);
-
       if ("assignedToMe".equals(assignedToMeInfo.getListView())) {
         assignedToMeList.setAssignedTo(getUserId(context));
         assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
     }
-
-    PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
+    //Other Tickets In My Department
+    PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo", "t.entered", "desc");
     openInfo.setLink("TroubleTickets.do?command=Home");
-
     if (sectionId == null) {
       if (!openInfo.getExpandedSelection()) {
         if (openInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -620,7 +611,6 @@ public final class TroubleTickets extends CFSModule {
     } else if (sectionId.equals(openInfo.getId())) {
       openInfo.setExpandedSelection(true);
     }
-
     if (sectionId == null || openInfo.getExpandedSelection() == true) {
       openList.setPagedListInfo(openInfo);
       openList.setUnassignedToo(true);
@@ -632,10 +622,9 @@ public final class TroubleTickets extends CFSModule {
         openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
     }
-
-    PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo");
-    createdByMeInfo.setLink("/TroubleTickets.do?command=Home");
-
+    //Tickets Created By Me
+    PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo", "t.entered", "desc");
+    createdByMeInfo.setLink("TroubleTickets.do?command=Home");
     if (sectionId == null) {
       if (!createdByMeInfo.getExpandedSelection()) {
         if (createdByMeInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -649,25 +638,20 @@ public final class TroubleTickets extends CFSModule {
     } else if (sectionId.equals(createdByMeInfo.getId())) {
       createdByMeInfo.setExpandedSelection(true);
     }
-
     if (sectionId == null || createdByMeInfo.getExpandedSelection() == true) {
       createdByMeList.setPagedListInfo(createdByMeInfo);
       createdByMeList.setUnassignedToo(true);
       createdByMeList.setEnteredBy(getUserId(context));
       createdByMeList.setOnlyOpen(true);
     }
-
     try {
       db = this.getConnection(context);
-
       if (sectionId == null || assignedToMeInfo.getExpandedSelection() == true) {
         assignedToMeList.buildList(db);
       }
-
       if (sectionId == null || openInfo.getExpandedSelection() == true) {
         openList.buildList(db);
       }
-
       if (sectionId == null || createdByMeInfo.getExpandedSelection() == true) {
         createdByMeList.buildList(db);
       }
@@ -677,12 +661,10 @@ public final class TroubleTickets extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "ViewTickets", "View Tickets");
     context.getRequest().setAttribute("CreatedByMeList", createdByMeList);
     context.getRequest().setAttribute("AssignedToMeList", assignedToMeList);
     context.getRequest().setAttribute("OpenList", openList);
-
     if (errorCode == 0) {
       addModuleBean(context, "ViewTickets", "View Tickets");
       return ("HomeOK");
