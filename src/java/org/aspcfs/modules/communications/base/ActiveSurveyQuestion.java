@@ -399,11 +399,19 @@ public class ActiveSurveyQuestion {
    *@param  numberOfComments  Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void buildComments(Connection db, int numberOfComments) throws SQLException {
-    PreparedStatement pst = null;
+  public void buildComments(Connection db) throws SQLException {
     comments = new LinkedHashMap();
-    int count = numberOfComments;
-    ResultSet rs = queryAnswerList(db, pst);
+    int count = 5;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 5 " : "") +
+        "sa.comments as comments, sr.contact_id as contactid " +
+        "FROM active_survey_answers sa, active_survey_responses sr " +
+        "WHERE question_id = ? AND (sa.response_id = sr.response_id) AND sa.comments <> '' " +
+        "ORDER BY sr.entered DESC " +
+        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 5 " : ""));
+    int i = 0;
+    pst.setInt(++i, this.getId());
+    ResultSet rs = pst.executeQuery();
     while (rs.next() && count > 0) {
       ArrayList commentList = null;
       Integer contactId = new Integer(rs.getInt("contactid"));
@@ -420,27 +428,6 @@ public class ActiveSurveyQuestion {
     if (pst != null) {
       pst.close();
     }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public ResultSet queryAnswerList(Connection db, PreparedStatement pst) throws SQLException {
-    pst = db.prepareStatement(
-        "SELECT sa.comments as comments, sr.contact_id as contactid " +
-        "FROM active_survey_answers sa, active_survey_responses sr " +
-        "WHERE question_id = ? AND (sa.response_id = sr.response_id) AND sa.comments <> '' " +
-        "ORDER BY sr.entered DESC ");
-    int i = 0;
-    pst.setInt(++i, this.getId());
-    ResultSet rs = pst.executeQuery();
-    return rs;
   }
 
 
