@@ -29,6 +29,8 @@ public class ContactList extends Vector {
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;
+  public final static int EXCLUDE_PERSONAL = -1;
+  public final static int IGNORE_PERSONAL = -2;
   private int includeEnabled = TRUE;
 
   private boolean includeEnabledUsersOnly = false;
@@ -60,7 +62,7 @@ public class ContactList extends Vector {
   //Combination filters
   private boolean allContacts = false;
   private boolean controlledHierarchyOnly = false;
-  private boolean includePersonal = false;
+
   //Html drop-down helper properties
   private String emptyHtmlSelectRecord = null;
   private String jsEvent = null;
@@ -85,6 +87,8 @@ public class ContactList extends Vector {
   private String searchText = "";
   //access type filters
   private int ruleId = -1;
+  private int personalId = EXCLUDE_PERSONAL;
+
 
 
   /**
@@ -178,6 +182,26 @@ public class ContactList extends Vector {
 
 
   /**
+   *  Sets the personalId attribute of the ContactList object
+   *
+   *@param  personalId  The new personalId value
+   */
+  public void setPersonalId(int personalId) {
+    this.personalId = personalId;
+  }
+
+
+  /**
+   *  Gets the personalId attribute of the ContactList object
+   *
+   *@return    The personalId value
+   */
+  public int getPersonalId() {
+    return personalId;
+  }
+
+
+  /**
    *  Gets the nameFirstHash attribute of the ContactList object
    *
    *@return    The nameFirstHash value
@@ -204,7 +228,6 @@ public class ContactList extends Vector {
    */
   public void setAllContacts(boolean allContacts) {
     this.allContacts = allContacts;
-    this.includePersonal = true;
   }
 
 
@@ -213,11 +236,12 @@ public class ContactList extends Vector {
    *
    *@param  allContacts   The new allContacts value
    *@param  ownerIdRange  The new allContacts value
+   *@param  owner         The new allContacts value
    */
-  public void setAllContacts(boolean allContacts, String ownerIdRange) {
+  public void setAllContacts(boolean allContacts, int owner, String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
     this.allContacts = allContacts;
-    this.includePersonal = true;
+    this.personalId = owner;
   }
 
 
@@ -262,35 +286,12 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Sets the includePersonal attribute of the ContactList object
-   *
-   *@param  includePersonal  The new includePersonal value
-   */
-  public void setIncludePersonal(boolean includePersonal) {
-    this.includePersonal = includePersonal;
-  }
-
-
-  /**
-   *  Gets the includePersonal attribute of the ContactList object
-   *
-   *@return    The includePersonal value
-   */
-  public boolean getIncludePersonal() {
-    return includePersonal;
-  }
-
-
-  /**
    *  Sets the ruleId attribute of the ContactList object
    *
    *@param  ruleId  The new ruleId value
    */
   public void setRuleId(int ruleId) {
     this.ruleId = ruleId;
-    if (ruleId == AccessType.PERSONAL) {
-      includePersonal = true;
-    }
   }
 
 
@@ -1524,11 +1525,19 @@ public class ContactList extends Vector {
     }
 
     if (allContacts) {
+      //get contact in users hierarchy
       sqlFilter.append("AND (c.owner IN (" + ownerIdRange + ") OR c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)) ");
     }
 
-    if (!includePersonal) {
-      sqlFilter.append("AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
+    switch (personalId) {
+        case IGNORE_PERSONAL:
+          break;
+        case EXCLUDE_PERSONAL:
+          sqlFilter.append("AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
+          break;
+        default:
+          sqlFilter.append("AND (c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)  OR (c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) AND c.owner = ?)) ");
+          break;
     }
 
     if (searchText != null && !"".equals(searchText)) {
@@ -2052,8 +2061,17 @@ public class ContactList extends Vector {
       pst.setInt(++i, AccessType.PUBLIC);
     }
 
-    if (!includePersonal) {
-      pst.setInt(++i, AccessType.PERSONAL);
+    switch (personalId) {
+        case IGNORE_PERSONAL:
+          break;
+        case EXCLUDE_PERSONAL:
+          pst.setInt(++i, AccessType.PERSONAL);
+          break;
+        default:
+          pst.setInt(++i, AccessType.PERSONAL);
+          pst.setInt(++i, AccessType.PERSONAL);
+          pst.setInt(++i, personalId);
+          break;
     }
 
     if (searchText != null && !"".equals(searchText)) {
