@@ -266,16 +266,10 @@ public class InventoryList extends ArrayList {
     if (pst != null) {
       pst.close();
     }
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("InventoryList-> buildList generated items: " + this.size());
-    }
     if (buildOrganizationInfo || buildPictureId) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
         Inventory thisItem = (Inventory) i.next();
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("InventoryList-> Building info for: " + thisItem.getId());
-        }
         if (buildOrganizationInfo) {
           thisItem.buildOrganizationInfo(db);
         }
@@ -439,8 +433,8 @@ public class InventoryList extends ArrayList {
     }
     if (adRunDate != null) {
       sqlFilter.append(
-        "AND i.vehicle_id IN " +
-        "(SELECT vehicle_id FROM autoguide_ad_run WHERE run_date = ?) ");
+        "AND i.inventory_id IN " +
+        "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date = ?) ");
     }
   }
 
