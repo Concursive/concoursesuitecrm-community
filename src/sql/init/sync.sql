@@ -847,6 +847,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaignRun', 'com.darkhorseventures.cfsbase.CampaignRun');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'campaignRunList', 'com.darkhorseventures.cfsbase.CampaignRunList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaignListGroups', 'com.darkhorseventures.cfsbase.CampaignListGroup');
