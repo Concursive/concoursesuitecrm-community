@@ -646,6 +646,7 @@ public class Notifier extends ReportBuilder {
     thisItem.setEnteredBy(thisCampaign.getEnteredBy());
     thisItem.setModifiedBy(thisCampaign.getModifiedBy());
     thisItem.setSubject("Campaign Mail Merge");
+    thisItem.setVersion(1.0);
     thisItem.setClientFilename("cfs-" + baseFilename + ".zip");
     thisItem.setFilename(baseFilename);
     thisItem.setSize(fileSize);
