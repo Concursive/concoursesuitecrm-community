@@ -107,8 +107,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 	<field name="assgfirstname" class="java.lang.String"/>
 	<field name="dept" class="java.lang.String"/>
 	<variable name="res_assg" class="java.lang.String" resetType="Report" calculation="Nothing">
-		<variableExpression><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{assglastname}, $F{assgfirstname})]]></variableExpression>
-	</variable>
+		<variableExpression><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{assglastname}, $F{assgfirstname})]]></variableExpression>	</variable>
 		<group  name="primarycontact" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
@@ -1853,6 +1852,24 @@ Resolution Date]]></text>
 		</background>
 		<title>
 			<band height="85"  isSplitAllowed="true" >
+				<rectangle radius="0" >
+					<reportElement
+						mode="Transparent"
+						x="284"
+						y="37"
+						width="286"
+						height="45"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="rectangle"
+						stretchType="NoStretch"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+				</rectangle>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="59"
@@ -2053,7 +2070,7 @@ Resolution Date]]></text>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst(null, $F{modifiedbyfirstname}) + " " + ((java.text.SimpleDateFormat) java.text.SimpleDateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.LONG)).format($F{modified})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst(null, $F{modifiedbyfirstname}) + " " + ((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLocaleFormat($F{modified})]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -2115,7 +2132,7 @@ Resolution Date]]></text>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst(null, $F{enteredbyfirstname}) + " " + ((java.text.SimpleDateFormat) java.text.SimpleDateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.LONG)).format($F{entered})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst(null, $F{enteredbyfirstname}) + " " + ((org.aspcfs.utils.JasperScriptletUtils) $P{REPORT_SCRIPTLET}).getLocaleFormat($F{entered})]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement
@@ -2203,24 +2220,6 @@ Resolution Date]]></text>
 						x="4"
 						y="36"
 						width="276"
-						height="45"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="rectangle"
-						stretchType="NoStretch"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
-				</rectangle>
-				<rectangle radius="0" >
-					<reportElement
-						mode="Transparent"
-						x="284"
-						y="37"
-						width="286"
 						height="45"
 						forecolor="#000000"
 						backcolor="#FFFFFF"

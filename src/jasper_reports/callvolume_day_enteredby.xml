@@ -52,6 +52,7 @@ co.namelast
 FROM ticket t
 LEFT JOIN contact co ON (t.enteredby = co.user_id)
 WHERE t.ticketid > 0
+AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project)
 AND t.entered >= $P{date_start}
 AND t.entered <= $P{date_end}
 ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, co.namelast, co.namefirst, t.enteredby]]></queryString>

@@ -47,6 +47,7 @@
 		FROM ticket t 
 		LEFT JOIN lookup_department ld ON t.department_code = ld.code 
 		WHERE t.entered <= $P{date_start}
+    AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project)
 		$P!{lookup_department_where}
 		ORDER BY dept]]></queryString>
 	<field name="lookup_department" class="java.lang.Integer"/>

@@ -35,7 +35,8 @@ FROM ticket t
 LEFT JOIN organization o ON (t.org_id = o.org_id)
 LEFT JOIN ticket_severity ts ON (t.scode = ts.code) 
 LEFT JOIN contact co ON (t.assigned_to = co.user_id)
-WHERE t.ticketid > 0 
+WHERE t.ticketid > 0
+AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project) 
 AND t.closed IS NULL
 ORDER BY t.entered, o.name]]></queryString>
 	<field name="entered" class="java.sql.Timestamp"/>

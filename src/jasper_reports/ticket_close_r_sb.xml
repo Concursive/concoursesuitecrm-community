@@ -56,7 +56,8 @@
 	</parameter>
 	<queryString><![CDATA[SELECT count(*) AS cnt 
 	FROM ticket t
-	WHERE t.ticketid > 0 
+	WHERE t.ticketid > 0
+  AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project)
 	AND t.closed >= $P{date_start}
 	AND t.closed <= $P{date_end}
         $P!{department_where}]]></queryString>

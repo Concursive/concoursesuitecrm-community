@@ -55,11 +55,12 @@
  $P{lookup_department}.intValue() +" "]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT count(*) AS cnt 
-	FROM ticket t
-	WHERE t.ticketid > 0 
-	AND t.entered <= $P{date_start}
-	$P!{department_where}
-	$P!{ticket_severity_where}]]></queryString>
+FROM ticket t
+WHERE t.ticketid > 0 
+AND t.ticketid NOT IN (SELECT ticket_id FROM ticketlink_project)
+AND t.entered <= $P{date_start}
+$P!{department_where}
+$P!{ticket_severity_where}]]></queryString>
 	<field name="cnt" class="java.lang.Integer"/>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
