@@ -573,8 +573,9 @@
     </java>
   </target>
   
+  <!-- Add a site record to the sites table -->
   <target name="install.addsite" depends="init,install.prepare.dbname,install.gatekeeper.init" unless="DATABASE.SKIP_GATEKEEPER">
-    <input message="Please enter the virtual host URL for this site, ex &lt;site&gt;.aspcfs.com: " 
+    <input message="Please enter the virtual host URL for this site, ex &lt;site&gt;.aspcfs.com or 127.0.0.1: " 
            addproperty="SITE.VIRTUAL_HOST"/>
     <sql
         driver="${GATEKEEPER.DRIVER}"
@@ -592,7 +593,17 @@
     <echo message="Make sure to set ENABLED = TRUE in sites table if events for this site should be processed."/>
   </target>
   
-  <target name="installdb" depends="install.database,install.permissions,install.addsite">
+  <!-- Copy the default .XML preferences for this system -->
+  <target name="install.copyprefs" depends="init,install.prepare.dbname">
+    <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
+    <copy todir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}">
+      <fileset dir="${pref.dir}/cfs/system">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="installdb" depends="install.database,install.permissions,install.addsite,install.copyprefs">
   
   </target>
   

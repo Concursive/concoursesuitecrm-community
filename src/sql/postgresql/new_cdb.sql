@@ -46,18 +46,6 @@ CREATE TABLE access_log (
   browser VARCHAR(255)
 );
 
-
-CREATE TABLE system_prefs (
-  pref_id SERIAL PRIMARY KEY,
-  category VARCHAR(255) NOT NULL,
-  data TEXT DEFAULT '' NOT NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL references access(user_id),
-  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id),
-  enabled BOOLEAN NOT NULL DEFAULT true
-);
-
 CREATE TABLE usage_log (
   usage_id SERIAL PRIMARY KEY,
   entered TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,

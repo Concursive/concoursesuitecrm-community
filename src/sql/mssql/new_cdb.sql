@@ -47,18 +47,6 @@ CREATE TABLE access_log (
   browser VARCHAR(255)
 );
 
-
-CREATE TABLE system_prefs (
-  pref_id INT IDENTITY PRIMARY KEY,
-  category VARCHAR(255) NOT NULL,
-  data TEXT DEFAULT '' NOT NULL,
-  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL references access(user_id),
-  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id),
-  enabled BIT NOT NULL DEFAULT 1
-);
-
 CREATE TABLE usage_log (
   usage_id INT IDENTITY PRIMARY KEY,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

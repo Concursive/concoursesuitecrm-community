@@ -1,0 +1,76 @@
+<workflow>
+  <!-- Hooks decide which items can be hooked in CFS, so if there is code
+  that executes the WorkflowManager when a ticket is updated or inserted,
+  the corresponding process is activated -->
+  <hooks>
+    <hook class="org.aspcfs.modules.troubletickets.base.Ticket">
+      <actions>
+        <action type="update" process="dhv.ticket.insert" enabled="true"/>
+        <action type="insert" process="dhv.ticket.insert" enabled="true"/>
+      </actions>
+    </hook>
+  </hooks>
+  <!-- Each process describes the workflow for the various object and action
+    that is being hooked-->
+  <processes>
+    <process name="dhv.ticket.insert" description="DHV Ticket alert" startId="1" entered="" modified="">
+      <parameters>
+        <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
+        <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
+      </parameters>
+      <components>
+        <component id="1" parent="0" class="org.aspcfs.modules.troubletickets.components.LoadTicketDetails" enabled="true"/>
+        <component id="2" parent="1" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustClosed"/>
+        <component id="3" parent="2" if="false" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustAssigned"/>
+        <component id="4" parent="2" if="true" class="org.aspcfs.modules.components.SendUserNotification">
+          <parameters>
+            <parameter name="notification.module" value="Tickets"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
+            <parameter name="notification.subject">CFS Ticket Closed: ${this.paddedId}</parameter>
+<parameter name="notification.body"><![CDATA[
+The following ticket in CFS has been closed:
+
+--- Ticket Details ---
+
+Ticket # ${this.paddedId}
+Priority: ${ticketPriorityLookup.description}
+Severity: ${ticketSeverityLookup.description}
+Issue: ${this.problem}
+
+Comment: ${this.comment}
+
+Closed by: ${ticketModifiedByContact.nameFirstLast}
+
+Solution: ${this.solution}
+]]></parameter>
+          </parameters>
+        </component>
+        <component id="5" parent="3" if="true" class="org.aspcfs.modules.components.SendUserNotification">
+          <parameters>
+            <parameter name="notification.module" value="Tickets"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
+            <parameter name="notification.subject">CFS Ticket Assigned: ${this.paddedId}</parameter>
+<parameter name="notification.body"><![CDATA[
+The following ticket in CFS has been assigned to you:
+
+--- Ticket Details ---
+
+Ticket # ${this.paddedId}
+Priority: ${ticketPriorityLookup.description}
+Severity: ${ticketSeverityLookup.description}
+Issue: ${this.problem}
+
+Assigned By: ${ticketModifiedByContact.nameFirstLast}
+Comment: ${this.comment}
+]]></parameter>
+          </parameters>
+        </component>
+        <component id="7" parent="2" if="true" class="org.aspcfs.modules.troubletickets.components.SendTicketSurvey" enabled="false"/>
+      </components>
+    </process>
+  </processes>
+</workflow>

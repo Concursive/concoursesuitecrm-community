@@ -1,0 +1,6 @@
+<aspcfs>
+ <config name="system.fields.ignore">
+   <param name="accounts-employees"/>
+ </config>
+</aspcfs>
+
