@@ -77,7 +77,7 @@ public class PhoneNumberList extends Vector {
    *@return           The PhoneNumber value
    *@since
    */
-  protected String getPhoneNumber(String thisType) {
+  public String getPhoneNumber(String thisType) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       PhoneNumber thisNumber = (PhoneNumber)i.next();
@@ -89,7 +89,7 @@ public class PhoneNumberList extends Vector {
   }
 
   
-  protected String getPhoneNumber(int thisType) {
+  public String getPhoneNumber(int thisType) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       PhoneNumber thisNumber = (PhoneNumber)i.next();

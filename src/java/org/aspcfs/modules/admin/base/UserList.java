@@ -9,9 +9,8 @@ import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.admin.User;
-
-
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.contacts.base.Contact;
 
 /**
  *  A list of User objects.

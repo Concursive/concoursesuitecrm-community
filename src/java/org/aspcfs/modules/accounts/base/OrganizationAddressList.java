@@ -5,10 +5,11 @@ package org.aspcfs.modules.accounts.base;
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.database.Connection;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.accounts.base.OrganizationAddress;
+import org.aspcfs.modules.base.AddressList;
+import org.aspcfs.modules.base.Constants;
 import javax.servlet.*;
 import javax.servlet.http.*;
 

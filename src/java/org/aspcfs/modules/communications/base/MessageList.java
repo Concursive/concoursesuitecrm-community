@@ -1,13 +1,14 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
 
 /**
  *  Contains a list of Campaign Message objects. The list can be built by

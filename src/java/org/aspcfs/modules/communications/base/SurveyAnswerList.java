@@ -1,12 +1,14 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.HashMap;

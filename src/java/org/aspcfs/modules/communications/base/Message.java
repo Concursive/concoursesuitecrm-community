@@ -1,16 +1,20 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.StringUtils;
-import com.darkhorseventures.utils.DateUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+
 
 /**
  *  Represents an HTML message than can be emailed, faxed, or printed. Messages

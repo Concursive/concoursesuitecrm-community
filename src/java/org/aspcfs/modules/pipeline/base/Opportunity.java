@@ -4,6 +4,7 @@ package org.aspcfs.modules.pipeline.base;
 
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.database.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
@@ -11,9 +12,12 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.*;
 import com.zeroio.iteam.base.FileItemList;
-import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.contacts.base.*;
 
 /**
  *  Description of the Class

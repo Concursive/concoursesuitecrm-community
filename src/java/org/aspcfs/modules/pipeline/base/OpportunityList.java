@@ -2,16 +2,19 @@
 // The createFilter method and the prepareFilter method need to have the same
 // number of parameters if modified.
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.pipeline.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import java.util.*;
 import java.text.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.ObjectUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.base.Constants;
+
 
 /**
  *  Contains a list of opportunities, which are now a combination of

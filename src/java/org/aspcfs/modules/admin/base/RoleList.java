@@ -5,12 +5,14 @@ package org.aspcfs.modules.admin.base;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.database.Connection;
 import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.modules.admin.base.*;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.*; 
 import javax.servlet.*;
 import javax.servlet.http.*;
 

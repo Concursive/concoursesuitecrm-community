@@ -1,13 +1,16 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.contacts.base.Contact;
 import java.text.*;
-import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Contains a group of criteria groups, that each contain criteria elements. A

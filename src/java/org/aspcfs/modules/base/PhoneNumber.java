@@ -379,7 +379,7 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
    *@exception  SQLException  Description of Exception
    *@since                    1.4
    */
-  protected void buildRecord(ResultSet rs) throws SQLException {
+  public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("phone_id"));
 
     if (!isContact) {
@@ -436,7 +436,7 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
    *@param  parseItem  The phone number item to parse
    *@since             1.8
    */
-  protected void buildRecord(HttpServletRequest request, int parseItem) {
+  public void buildRecord(HttpServletRequest request, int parseItem) {
     this.setType(request.getParameter("phone" + parseItem + "type"));
 
     StringBuffer thisString = new StringBuffer();

@@ -13,7 +13,10 @@ import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.LookupElement;
-import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.modules.pipeline.base.OpportunityList;
 
 
 /**

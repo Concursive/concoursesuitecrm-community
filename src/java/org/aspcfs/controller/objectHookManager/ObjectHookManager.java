@@ -6,9 +6,11 @@ import org.w3c.dom.Element;
 import java.sql.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.apps.workFlowManager.*;
 import java.io.*;
 import com.darkhorseventures.framework.actions.*;
-
+import com.darkhorseventures.database.*;
+import org.aspcfs.modules.service.base.PacketContext;
 /**
  *  Manages hooks within the application and attaches to a WorkflowManager
  *  to execute BusinessProcess objects as defined by ObjectHook objects.

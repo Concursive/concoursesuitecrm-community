@@ -1,13 +1,14 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.webutils.PagedListInfo;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Description of the Class

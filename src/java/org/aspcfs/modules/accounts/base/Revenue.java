@@ -10,10 +10,11 @@ import javax.servlet.http.*;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.database.*;
 import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.framework.servlets.SystemStatus;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.*;
 import org.aspcfs.controller.*;
-
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.base.Constants;
 /**
  *  Description of the Class
  *

@@ -75,7 +75,7 @@ public class EmailAddressList extends Vector {
    *@return           The EmailAddress value
    *@since            1.1
    */
-  protected String getEmailAddress(String thisType) {
+  public String getEmailAddress(String thisType) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       EmailAddress thisAddress = (EmailAddress) i.next();
@@ -94,7 +94,7 @@ public class EmailAddressList extends Vector {
    *@return           The EmailAddress value
    *@since            1.2
    */
-  protected String getEmailAddress(int thisItem) {
+  public String getEmailAddress(int thisItem) {
     if (thisItem - 1 > -1 && thisItem <= this.size()) {
       EmailAddress thisAddress = (EmailAddress) this.get(thisItem - 1);
       return thisAddress.getEmail();
@@ -110,7 +110,7 @@ public class EmailAddressList extends Vector {
    *@return           The EmailAddressType value
    *@since            1.2
    */
-  protected int getEmailAddressTypeId(int thisItem) {
+  public int getEmailAddressTypeId(int thisItem) {
     if (thisItem - 1 > -1 && thisItem <= this.size()) {
       EmailAddress thisAddress = (EmailAddress) this.get(thisItem - 1);
       return thisAddress.getType();

@@ -1,10 +1,10 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 import javax.servlet.http.*;
 
 /**

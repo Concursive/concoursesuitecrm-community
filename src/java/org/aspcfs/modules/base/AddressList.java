@@ -62,7 +62,7 @@ public class AddressList extends Vector {
     this.type = tmp;
   }
   
-  protected Address getAddress(String thisType) {
+  public Address getAddress(String thisType) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Address thisAddress = (Address)i.next();

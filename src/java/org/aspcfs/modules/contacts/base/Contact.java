@@ -13,7 +13,8 @@ import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.LookupElement;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.modules.base.*;
-
+import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.accounts.base.Organization;
 
 /**
  *  Represents a Contact in CFS

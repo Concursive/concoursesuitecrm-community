@@ -4,6 +4,7 @@ package org.aspcfs.modules.pipeline.base;
 
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.database.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
@@ -13,7 +14,11 @@ import org.aspcfs.utils.*;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.controller.SystemStatus;
 import com.zeroio.iteam.base.FileItemList;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.contacts.base.*;
+ 
 
 /**
  *  An OpportunityComponent makes up 1 or more elements of an Opportunity.

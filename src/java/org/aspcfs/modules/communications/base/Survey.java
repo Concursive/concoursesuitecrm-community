@@ -1,14 +1,16 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.Dependency;
 
 /**
  *  Represents a survey that can have introductory text and questions.

@@ -1,11 +1,13 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.communications.base.*;
 
 /**
  *  Description of the Class

@@ -13,6 +13,9 @@ import org.aspcfs.utils.DateUtils;
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.modules.base.Constants;
+
 
 /**
  *  Represents a Ticket in CFS

@@ -1,11 +1,13 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.sql.*;
 import java.text.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.communications.base.*;
 
 /**
  *  Description of the Class

@@ -1,16 +1,17 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.troubletickets.base;
 
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.DateUtils;
-
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
 /**
  *  Description of the Class
  *

@@ -1,9 +1,10 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.ArrayList;
 import java.sql.*;
+
 
 /**
  *  A group contains SearchCriteriaElements which specify the search criteria

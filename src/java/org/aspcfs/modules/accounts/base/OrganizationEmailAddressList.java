@@ -7,12 +7,11 @@ import java.util.Iterator;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.database.Connection;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.base.EmailAddressList;
-
+import org.aspcfs.modules.base.Constants;
 /**
  *  Contains a list of email addresses... currently used to build the list from
  *  the database with any of the parameters to limit the results.

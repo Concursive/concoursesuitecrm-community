@@ -4,7 +4,6 @@ package org.aspcfs.modules.accounts.base;
 
 import java.sql.*;
 
-import com.darkhorseventures.database.Connection;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Address;
 

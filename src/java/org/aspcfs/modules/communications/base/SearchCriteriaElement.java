@@ -1,6 +1,6 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.communications.base;
 
 import java.util.StringTokenizer;
 import java.sql.*;

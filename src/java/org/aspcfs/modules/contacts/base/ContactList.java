@@ -2,15 +2,17 @@
 //The createFilter method and the prepareFilter method need to have the same
 //number of parameters if modified.
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.contacts.base;
 
 import java.sql.*;
 import java.text.*;
 import java.util.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
-
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.communications.base.*;
 /**
  *  Contains a list of contacts... currently used to build the list from the
  *  database with any of the parameters to limit the results.
