@@ -1,13 +1,33 @@
 <aspcfs>
   <!-- Each config is a unique name and must only be listed once -->
-  <config name="system.fields.ignore">
+  <config name="system.fields.ignore" enabled="true">
     <!-- An unlimited number of parameters can exist under each config -->
-    <param name="accounts-employees"/>
+    <param name="accounts-employees" obsolete="true" since="2004-01-22"/>
+    <param name="accounts-revenue" obsolete="true" since="2004-01-22"/>
+    <param name="organization.employees"/>
+    <param name="organization.revenue"/>
+    <!--
+    <param name="organization.industry"/>
+    <param name="organization.ticker"/>
+    <param name="organization.contractEndDate"/>
+    <param name="organization.types"/>
+    -->
   </config>
-  <config name="system.fields.label.invalid">
-    <param name="logo.example">
+  <config name="system.fields.label" enabled="false">
+    <!--
+    <param name="logo">
       <value><![CDATA[<img border="0" src="images/dev21.jpg">]]></value>
     </param>
+    <param name="ticket.issue">
+      <value>Issue</value>
+    </param>
+    <param name="organization.accountNumber">
+      <value>Cust ID</value>
+    </param>
+    <param name="organization.owner">
+      <value>Salesperson</value>
+    </param>
+    -->
   </config>
 </aspcfs>
 
