@@ -45,32 +45,30 @@
       <property field="data"/>
     </map>
     <map class="org.aspcfs.modules.contacts.base.Contact" id="contact">
-      <property alias="guid">id</property>
-      <property>accessType</property>
-      <property lookup="account">orgId</property>
-      <property>title</property>
-      <property>department</property>
-      <property>company</property>
-      <property>nameSalutation</property>
-      <property>nameFirst</property>
-      <property>nameMiddle</property>
-      <property>nameLast</property>
-      <property>nameSuffix</property>
-      <property>typeId</property>
-      <property>site</property>
-      <property>notes</property>
-      <property>locale</property>
-      <property>employeeId</property>
-      <property>employmentType</property>
-      <property lookup="user">enteredBy</property>
-      <property lookup="user">modifiedBy</property>
-      <property>enabled</property>
-      <property>owner</property>
-      <property>custom1</property>
-      <property>url</property>
-      <property lookup="user">userId</property>
-      <property>entered</property>
-      <property>modified</property>
+      <property type="int" alias="guid">id</property>
+      <property type="int" lookup="account">orgId</property>
+      <property type="int">accessType</property>
+      <property type="String">title</property>
+      <property type="int" lookup="lookupDepartment">department</property>
+      <property type="String">orgName</property>
+      <property type="String">company</property>
+      <property type="String">nameSalutation</property>
+      <property type="String">nameFirst</property>
+      <property type="String">nameMiddle</property>
+      <property type="String">nameLast</property>
+      <property type="String">nameSuffix</property>
+      <property type="String">notes</property>
+      <property type="int" lookup="user">enteredBy</property>
+      <property type="int" lookup="user">modifiedBy</property>
+      <property type="boolean">primaryContact</property>
+      <property type="boolean">employee</property>
+      <property type="boolean">enabled</property>
+      <property type="int" lookup="user">owner</property>
+      <property type="int">custom1</property>
+      <property type="String">url</property>
+      <property type="int" lookup="user">userId</property>
+      <property type="Timestamp">entered</property>
+      <property type="Timestamp">modified</property>
     </map>
     <map class="org.aspcfs.modules.accounts.base.Organization" id="account">
       <property alias="guid">id</property>
@@ -191,8 +189,12 @@
       <property lookup="contact">contactId</property>
       <property lookup="user">owner</property>
       <property lookup="user">assignedTo</property>
+      <property>assignedDate</property>
+      <property>estimatedResolutionDate</property>
       <property>problem</property>
+      <property>location</property>
       <property>comment</property>
+      <property>cause</property>
       <property>solution</property>
       <property lookup="ticketPriority">priorityCode</property>
       <property>levelCode</property>
@@ -206,7 +208,7 @@
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>closed</property>
-      <property value="false">sendNotification</property>
+      <property>resolutionDate</property>
       <property>entered</property>
       <property>modified</property>
     </map>
