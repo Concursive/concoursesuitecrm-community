@@ -945,6 +945,7 @@ public void setId(String id) {
   public void appendSqlTail(Connection db, StringBuffer sqlStatement) {
     sqlStatement.append("ORDER BY ");
     //Determine sort order
+    //If multiple columns are being sorted, then the sort order applies to all columns
     if (this.getColumnToSortBy().indexOf(",") > -1) {
       int count = 0;
       StringTokenizer st = new StringTokenizer(this.getColumnToSortBy(), ",");
@@ -952,11 +953,11 @@ public void setId(String id) {
         ++count;
         String column = st.nextToken();
         sqlStatement.append(column + " ");
-        if (count == 1) {
+//        if (count == 1) {
           if (this.hasSortOrderConfigured()) {
             sqlStatement.append(this.getSortOrder() + " ");
           }
-        }
+//        }
         if (st.hasMoreTokens()) {
           sqlStatement.append(",");
         }
