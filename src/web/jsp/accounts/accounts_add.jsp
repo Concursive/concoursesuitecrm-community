@@ -4,6 +4,8 @@
 <jsp:useBean id="OrgEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
+<jsp:useBean id="StateSelect" class="com.darkhorseventures.webutils.StateSelect" scope="request"/>
+<jsp:useBean id="CountrySelect" class="com.darkhorseventures.webutils.CountrySelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
@@ -64,7 +66,20 @@ Add Account<br>
       Account Type(s)
     </td>
     <td>
+    <table width=100% cellpadding=0 cellspacing=0 border=0>
+	<tr>
+	<td width=90 valign=center>
       <%= AccountTypeList.getHtmlSelect("selectedList", 0) %>
+      	</td>
+	
+	<td valign=top>
+	Instructions: Press "Shift" and drag with your mouse for multiple consecutive selections. 
+	For multiple non-consecutive selections, hold down "Ctrl" and click on each item you want to select. 
+	To de-select an item, press "Ctrl" and click on the item. 
+	</td>
+	
+	</tr>
+	</table>
     </td>
   </tr>
   <tr>
@@ -72,7 +87,7 @@ Add Account<br>
       Name
     </td>
     <td>
-      <input type=text size=35 name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+        <input type=text size=35 name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
   <tr>
@@ -230,7 +245,8 @@ Add Account<br>
       State/Province
     </td>
     <td>
-      <input type=text size=12 name="address1state" maxlength=80>
+      <%=StateSelect.getHtml("address1state")%>
+      <!--input type=text size=12 name="address1state" maxlength=80-->
     </td>
   </tr>
   <tr>
@@ -246,7 +262,8 @@ Add Account<br>
       Country
     </td>
     <td>
-      <input type=text size=28 name="address1country" maxlength=80>
+    <%=CountrySelect.getHtml("address1country")%>
+      <!--input type=text size=28 name="address1country" maxlength=80-->
     </td>
   </tr>
   <tr><td colspan="2">&nbsp;</td></tr>
@@ -287,7 +304,8 @@ Add Account<br>
       State/Province
     </td>
     <td>
-      <input type=text size=12 name="address2state" maxlength=80>
+      <%=StateSelect.getHtml("address2state")%>
+      <!--input type=text size=12 name="address2state" maxlength=80-->
     </td>
   </tr>
   <tr>
@@ -303,7 +321,8 @@ Add Account<br>
       Country
     </td>
     <td>
-      <input type=text size=28 name="address2country" maxlength=80>
+    <%=CountrySelect.getHtml("address2country")%>
+      <!--input type=text size=28 name="address2country" maxlength=80-->
     </td>
   </tr>
 </table>

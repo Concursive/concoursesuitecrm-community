@@ -502,7 +502,7 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
       
       LookupList accountTypeList = new LookupList(db, "lookup_account_types");
-      accountTypeList.setSelectSize(3);
+      accountTypeList.setSelectSize(4);
       accountTypeList.setMultiple(true);
       context.getRequest().setAttribute("AccountTypeList", accountTypeList);
 

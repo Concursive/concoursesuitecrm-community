@@ -359,9 +359,12 @@ public class Address {
         ((streetAddressLine1 != null && !streetAddressLine1.trim().equals("")) ||
         (streetAddressLine2 != null && !streetAddressLine2.trim().equals("")) ||
         (city != null && !city.trim().equals("")) ||
-        (state != null && !state.trim().equals("")) ||
+        (state != null && !state.trim().equals("") && !state.trim().equals("-1")) ||
         (zip != null && !zip.trim().equals("")) ||
-        (country != null && !country.trim().equals(""))
+        (country != null && !country.equals("") && !country.equals("-1") && ((streetAddressLine1 != null && !streetAddressLine1.trim().equals("")) || 
+		(streetAddressLine2 != null && !streetAddressLine2.trim().equals("")) || (city != null && !city.trim().equals("")) || 
+		(state != null && !state.trim().equals("") && !state.trim().equals("-1")) || (zip != null && !zip.trim().equals("")) )) ||
+	(!country.equals("UNITED STATES"))
         ));
   }
 
