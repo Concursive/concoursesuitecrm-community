@@ -265,7 +265,7 @@
       <property lookup="contact">contactId</property>
       <property>number</property>
       <property>extension</property>
-      <property lookup="lookupContactPhoneTypes">type</property>
+      <property lookup="lookupOrgPhoneTypes">type</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>

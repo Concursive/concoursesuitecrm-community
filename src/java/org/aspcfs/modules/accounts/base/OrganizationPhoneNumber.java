@@ -117,15 +117,8 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     }
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
-    
-    pst.setInt(++i, enteredBy);
-    if (enteredBy == -1) {
-            this.setEnteredBy(0);
-    }
+    pst.setInt(++i, this.getEnteredBy());
     pst.setInt(++i, this.getModifiedBy());
-    if (this.getModifiedBy() == -1) {
-            this.setModifiedBy(0);
-    }
     
     pst.execute();
     pst.close();
@@ -148,11 +141,6 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
     pst.setInt(++i, this.getModifiedBy());
-    
-    if (this.getModifiedBy() == -1) {
-            this.setModifiedBy(0);
-    }
-    
     pst.setInt(++i, this.getId());
     pst.execute();
     pst.close();
