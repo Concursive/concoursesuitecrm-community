@@ -169,83 +169,16 @@ public void setRevenueDelete(boolean tmp) { this.revenueDelete = tmp; }
 public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
 
   public HashMap processDependencies(Connection db)  throws SQLException {
-    ResultSet rs = null;
-    String sql = "";
     HashMap dependencyList = new HashMap();
-	  
     try {
-      db.setAutoCommit(false);
-      sql = "SELECT COUNT(*) as contactcount FROM contact c WHERE c.org_id = ? ";
-      
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Contacts", new Integer(rs.getInt("contactcount")));
-      }
-      
-	    sql = "SELECT COUNT(*) as revenuecount FROM revenue r WHERE r.org_id = ? ";
-      
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Revenue", new Integer(rs.getInt("revenuecount")));
-      }
-      
-      sql = "SELECT COUNT(*) as oppcount FROM opportunity o WHERE o.acctlink = ? ";
-	
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Opportunities", new Integer(rs.getInt("oppcount")));
-      }
-	  
-      sql = "SELECT COUNT(*) as ticketcount FROM ticket t WHERE t.org_id = ? ";
-      
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Tickets", new Integer(rs.getInt("ticketcount")));
-      }
-	  
-	    sql = "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = ? and pf.link_item_id = ? ";
-	
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, Constants.ACCOUNTS);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Documents", new Integer(rs.getInt("documentcount")));
-      }
-	  
-	  sql =	"SELECT COUNT(*) as foldercount FROM custom_field_record cfr WHERE cfr.link_module_id = ? and cfr.link_item_id = ? ";
-	
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, Constants.ACCOUNTS);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Folders", new Integer(rs.getInt("foldercount")));
-      }
-	  
-    pst.close();
-    db.commit();
-    
+      dependencyList.put("Contacts", new Integer(ContactList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+	    dependencyList.put("Revenue", new Integer(RevenueList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+	    dependencyList.put("Opportunities", new Integer(OpportunityList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+	    dependencyList.put("Tickets", new Integer(TicketList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+      dependencyList.put("Document", new Integer(FileItemList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+	    dependencyList.put("Folders", new Integer(CustomFieldRecordList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
     } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
     }
     return dependencyList;
   }
