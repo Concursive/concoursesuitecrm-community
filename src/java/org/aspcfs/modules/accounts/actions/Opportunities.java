@@ -62,9 +62,9 @@ public final class Opportunities extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      oppList.setOwner(getUserId(context));
       oppList.setPagedListInfo(oppPagedInfo);
       oppList.setOrgId(orgId);
+      oppList.setOwnerIdRange(this.getUserRange(context));
       oppList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
