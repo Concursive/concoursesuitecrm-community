@@ -71,16 +71,6 @@
         </td>
       </tr>
       </dhv:permission>
-      <!-- 
-      <tr>
-        <td
-          &nbsp;
-        </td>
-        <td>
-          <a href="javascript:addAccount()">Add Account</a>
-        </td>
-      </tr>
-      !-->
       <dhv:permission name="tickets-tickets-add">
       <tr>
         <td>
@@ -103,7 +93,7 @@
       </dhv:permission>
       <tr>
         <td>
-          &nbsp;
+          <img src="images/icons/stock_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td>
           <a href="javascript:sendMessage()">Send Message</a>

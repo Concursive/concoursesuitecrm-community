@@ -102,9 +102,9 @@ Current Usage and Billing Usage Information<br>
       <td nowrap align="left">
         <span name="customFields" id="customFields" style="display:none">
           <input type="text" size="10" name="dateStart" value="<%= toDateString(dateStart) %>">
-          <a href="javascript:popCalendar('usage', 'dateStart');">Date</a> (mm/dd/yyyy)<br>
+          <a href="javascript:popCalendar('usage', 'dateStart');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)<br>
           <input type="text" size="10" name="dateEnd" value="<%= toDateString(dateEnd) %>">
-          <a href="javascript:popCalendar('usage', 'dateEnd');">Date</a> (mm/dd/yyyy)
+          <a href="javascript:popCalendar('usage', 'dateEnd');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
         </span>
       </td>
       <td width="100%" align="left" valign="top" nowrap>

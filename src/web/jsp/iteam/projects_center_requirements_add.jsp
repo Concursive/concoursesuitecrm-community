@@ -107,7 +107,7 @@
         &nbsp;Requirements Due:<br>
         &nbsp;
         <input type="text" name="deadline" size="20" onChange="checkDate(this.value)" value="<%= toHtmlValue(Requirement.getDeadlineValue()) %>">
-        <a href="javascript:popCalendar('inputForm', 'deadline');">Date</a><br>
+        <a href="javascript:popCalendar('inputForm', 'deadline');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a><br>
         &nbsp;
       </td>
       <td width="2" bgcolor="#000000">&nbsp;</td>

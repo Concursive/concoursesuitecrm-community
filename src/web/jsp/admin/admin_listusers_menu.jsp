@@ -63,13 +63,13 @@
       </dhv:permission>
       <tr>
         <td>
-          &nbsp;
+          <img src="images/icons/stock_toggle-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td id="menuDisable">
-          <a href="javascript:disable()">Disable</a>
+          <a href="javascript:disable()">Disable Login</a>
         </td>
         <td id="menuEnable">
-          <a href="javascript:enable()">Enable</a>
+          <a href="javascript:enable()">Enable Login</a>
         </td>
       </tr>
     </table>

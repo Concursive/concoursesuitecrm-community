@@ -167,7 +167,7 @@
     </td>
     <td>
       <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" value="<%= toHtmlValue(ComponentDetails.getCloseDateString()) %>">
-      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>');">Date</a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
       <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
   </tr>
@@ -238,7 +238,7 @@
     </td>
     <td>
       <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" value="<%= toHtmlValue(ComponentDetails.getAlertDateString()) %>">
-      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>');">Date</a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>
 </table>

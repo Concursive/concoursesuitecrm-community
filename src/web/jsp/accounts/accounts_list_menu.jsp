@@ -68,13 +68,13 @@
       </dhv:permission>
       <tr>
         <td>
-          &nbsp;
+          <img src="images/icons/stock_archive-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td id="menuArchiveAccount">
           <a href="javascript:archive()">Archive</a>
         </td>
         <td id="menuReEnableAccount">
-          <a href="javascript:enable()">Re-Enable</a>
+          <a href="javascript:enable()">Un-Archive</a>
         </td>
       </tr>
       <dhv:permission name="accounts-accounts-delete">

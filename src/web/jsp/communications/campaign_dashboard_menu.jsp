@@ -64,7 +64,7 @@
       </tr>
       <tr id="menuCancel">
         <td>
-          <img src="images/icons/stock_calc-cancel-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+          <img src="images/icons/stock_stop-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
           <a href="javascript:cancel()">Cancel</a>

@@ -26,12 +26,15 @@
       </dhv:evaluate>
     </th>
     <th align="right">
+      <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="javascript:window.print()" class="s">Print</a>
       |
+      <img src="images/icons/stock_help-agent-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="javascript:popURL('Help.do?module=<%= request.getAttribute("moduleAction") %><%= request.getParameter("command") != null ? "&section=" + request.getParameter("command") : ""%> <%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CFS_Help','790','500','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a>
       |
       <dhv:permission name="qa-edit"><a href="javascript:popURL('QA.do?module=<%= request.getAttribute("moduleAction") %><%= request.getParameter("command") != null ? "&section=" + request.getParameter("command") : ""%><%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CFS_QA','450','550','yes','yes');" class="s" onMouseOver="window.status='Pop-up QA';return true;" onMouseOut="window.status='';return true;">QA</a>
-      |</dhv:permission><a href="Login.do?command=Logout" class="s">Logout</a><br>
+      |</dhv:permission><img src="images/icons/stock_exit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+      <a href="Login.do?command=Logout" class="s">Logout</a><br>
 <%
   if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
 %>  

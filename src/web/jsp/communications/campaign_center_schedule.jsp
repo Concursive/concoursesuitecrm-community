@@ -53,7 +53,7 @@ Delivery
     </td>
     <td>
       <input type="text" size="10" name="activeDate" value="<%= toHtmlValue(Campaign.getActiveDateString()) %>">
-      <dhv:permission name="campaign-campaigns-edit"><a href="javascript:popCalendar('inputForm', 'activeDate');">Date</a> (mm/dd/yyyy)</dhv:permission>
+      <dhv:permission name="campaign-campaigns-edit"><a href="javascript:popCalendar('inputForm', 'activeDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)</dhv:permission>
     </td>
   </tr>
   <tr class="containerBody">

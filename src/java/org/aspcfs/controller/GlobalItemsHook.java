@@ -37,6 +37,26 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     int contactId = thisUser.getUserRecord().getContact().getId();
 
     StringBuffer items = new StringBuffer();
+    
+    //Site Search
+    if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
+      items.append(
+          "<!-- Site Search -->" +
+          "<table class='globalItem'>" +
+          "<form action='Search.do?command=SiteSearch' method='post'>" +
+          "<tr><th>Search data...</th></tr>" +
+          "<tr>" +
+          "<td nowrap><center>" +
+          "<img src=\"images/icons/stock_zoom-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
+          "<input type='text' size='10' name='search'>" +
+          "<input type='submit' value='go' name='Search'>" +
+          "</center>" +
+          "</td>" +
+          "</tr>" +
+          "</form>" +
+          "</table>");
+    }
+    
     //Quick Items
     if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
       items.append(
@@ -46,7 +66,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           "<table class='globalItem'>" +
           "<tr><th>Quick Actions</th></tr>" +
           "<tr>" +
-          "<td align='center'>" +
+          "<td nowrap align='center'>" +
+          "<img src=\"images/icons/stock_hyperlink-target-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
           "<select name='quickAction' onChange='javascript:quickAction(this.options[this.selectedIndex].value);this.selectedIndex = 0'>");
           
       items.append("<option value='0'>Select...</option>");
@@ -73,24 +94,6 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           "</table>");
     }
     
-    //Site Search
-    if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
-      items.append(
-          "<!-- Site Search -->" +
-          "<table class='globalItem'>" +
-          "<form action='Search.do?command=SiteSearch' method='post'>" +
-          "<tr><th>Site Search</th></tr>" +
-          "<tr>" +
-          "<td><center>Search this site for...<br>" +
-          "<input type='text' size='14' name='search'>" +
-          "<input type='submit' value='go' name='Search'>" +
-          "</center>" +
-          "</td>" +
-          "</tr>" +
-          "</form>" +
-          "</table>");
-    }
-
     //My Items
     if (systemStatus.hasPermission(userId, "globalitems-myitems-view")) {
       ConnectionPool sqlDriver = (ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool");

@@ -103,7 +103,7 @@
         &nbsp;Start Date:<br>
         &nbsp;
         <input type="text" name="requestDate" size="10" value="<%= Project.getRequestDateString() %>">
-        <a href="javascript:popCalendar('inputForm', 'requestDate');">Date</a>
+        <a href="javascript:popCalendar('inputForm', 'requestDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
         <font color=red>*</font> <%= showAttribute(request, "requestDateError") %><br>
         &nbsp;
       </td>

@@ -132,7 +132,7 @@ Add User<br>
     </td>
     <td>
       <input type="text" size="10" name="expires" value="">
-      <a href="javascript:popCalendar('addUser', 'expires');">Date</a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('addUser', 'expires');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>
 </table>

@@ -439,7 +439,7 @@ Modify Account<br>
     </td>
     <td>
       <input type="text" size="10" name="contractEndDate" value="<%= toHtmlValue(OrgDetails.getContractEndDateString()) %>">
-      <a href="javascript:popCalendar('addAccount', 'contractEndDate');">Date</a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('addAccount', 'contractEndDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>
   <tr class="containerBody">
@@ -456,7 +456,7 @@ Modify Account<br>
     </td>
     <td>
       <input type="text" size="10" name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateStringLongYear()) %>">
-      <a href="javascript:popCalendar('addAccount', 'alertDate');">Date</a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('addAccount', 'alertDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>
 </table>

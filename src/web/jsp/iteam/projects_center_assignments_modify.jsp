@@ -168,7 +168,7 @@
       <td width="50%" colspan="2">&nbsp;Activity Due: (mm/dd/yy)<br>
         &nbsp;
         <input type="text" name="dueDate" size="20" value="<%= Assignment.getDueDateValue() %>">
-        <a href="javascript:popCalendar('inputForm', 'dueDate');">Date</a>
+        <a href="javascript:popCalendar('inputForm', 'dueDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
         <br>
         &nbsp;
       </td>

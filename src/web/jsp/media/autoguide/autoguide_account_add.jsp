@@ -292,7 +292,7 @@ Add Vehicle<br>
     <td nowrap>
       <input type="hidden" name="adrun<%= runCount %>id" value="-1">
       Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate');">Date</a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
       &nbsp;&nbsp;
       Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", -1) %>
       &nbsp;&nbsp;

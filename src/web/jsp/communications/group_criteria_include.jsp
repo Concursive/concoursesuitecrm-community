@@ -226,7 +226,7 @@ listOfOperators[2] = numberOperators
             <span name="new1a" ID="new1a" style="display:none">&nbsp;</span>
           </td>
           <td valign="center">
-            <span name="new1" ID="new1" style="display:none">[<a href="javascript:popCalendar('searchForm', 'searchValue');">Date</a>]</span>
+            <span name="new1" ID="new1" style="display:none"><a href="javascript:popCalendar('searchForm', 'searchValue');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/>Date</a></span>
           </td>
         </tr>
         <tr>

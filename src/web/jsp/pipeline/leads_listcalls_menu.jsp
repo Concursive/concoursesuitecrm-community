@@ -59,7 +59,7 @@
       <dhv:permission name="pipeline-opportunities-calls-view">
       <tr>
         <td>
-          &nbsp;
+          <img src="images/icons/stock_forward_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
           <a href="javascript:forward()">Forward</a>
