@@ -653,11 +653,6 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'rolePermissionList', 'com.darkhorseventures.cfsbase.RolePermissionList');
 
-/*INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'rolePermission', 'com.darkhorseventures.webutils.CustomLookupElement');
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'rolePermissionList', 'com.darkhorseventures.webutils.CustomLookupList');
- */
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'opportunity', 'com.darkhorseventures.cfsbase.Opportunity');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
