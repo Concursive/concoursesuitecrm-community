@@ -1,4 +1,4 @@
--- Script (C) 2004 Dark Horse Ventures, all rights reserved
+-- Script (C) 2004 Dark Horse Ventures LLC, all rights reserved
 
 CREATE TABLE [events] (
 	[event_id] [int] IDENTITY (1, 1) NOT NULL ,
@@ -1049,7 +1049,8 @@ CREATE TABLE [campaign] (
 	[enteredby] [int] NOT NULL ,
 	[modified] [datetime] NOT NULL ,
 	[modifiedby] [int] NOT NULL ,
-	[type] [int] NULL 
+	[type] [int] NULL ,
+  [active_date_timezone] [varchar] (255) NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -2491,7 +2492,10 @@ CREATE TABLE [service_contract] (
 	[enabled] [bit] NULL ,
 	[contract_value] [float] NULL ,
 	[total_hours_remaining] [float] NULL ,
-	[service_model_notes] [text] NULL 
+	[service_model_notes] [text] NULL ,
+  [initial_start_date_timezone] [varchar] (255) NULL ,
+  [current_start_date_timezone] [varchar] (255) NULL ,
+  [current_end_date_timezone] [varchar] (255) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -2561,7 +2565,10 @@ CREATE TABLE [asset] (
 	[modified] [datetime] NOT NULL ,
 	[modifiedby] [int] NOT NULL ,
 	[enabled] [bit] NULL ,
-	[purchase_cost] [float] NULL 
+	[purchase_cost] [float] NULL ,
+  [date_listed_timezone] [varchar] (255) NULL ,
+  [expiration_date_timezone] [varchar] (255) NULL ,
+  [purchase_date_timezone] [varchar] (255) NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -2628,7 +2635,8 @@ CREATE TABLE [opportunity_component] (
 	[alert] [varchar] (100) NULL ,
 	[enabled] [bit] NOT NULL ,
 	[notes] [text] NULL ,
-	[alertdate_timezone] [varchar] (255) NULL 
+	[alertdate_timezone] [varchar] (255) NULL ,
+	[closedate_timezone] [varchar] (255) NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -3250,7 +3258,9 @@ CREATE TABLE [ticket] (
 	[customer_product_id] [int] NULL ,
 	[expectation] [int] NULL ,
 	[key_count] [int] NULL ,
-	[est_resolution_date_timezone] [varchar] (255) NULL 
+	[est_resolution_date_timezone] [varchar] (255) NULL ,
+	[assigned_date_timezone] [varchar] (255) NULL ,
+	[resolution_date_timezone] [varchar] (255) NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -6338,8 +6348,8 @@ INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(2,3,2,'${this.id}',1)
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(3,3,3,'${this.modified}',1)
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(4,3,4,'${previous.enteredBy}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(5,3,5,'Dark Horse CRM Ticket Closed: ${this.paddedId}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(6,3,6,'The following ticket in Dark Horse CRM has been closed:
+INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(5,3,5,'Centric CRM Ticket Closed: ${this.paddedId}',1)
+INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(6,3,6,'The following ticket in Centric CRM has been closed:
 
 --- Ticket Details ---
 
@@ -6358,8 +6368,8 @@ INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(8,6,8,'${this.id}',1)
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(9,6,9,'${this.modified}',1)
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(10,6,10,'${this.assignedTo}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(11,6,11,'Dark Horse CRM Ticket Assigned: ${this.paddedId}',1)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(12,6,12,'The following ticket in Dark Horse CRM has been assigned to you:
+INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(11,6,11,'Centric CRM Ticket Assigned: ${this.paddedId}',1)
+INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(12,6,12,'The following ticket in Centric CRM has been assigned to you:
 
 --- Ticket Details ---
 
@@ -6379,10 +6389,10 @@ INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(18,7,18,'${process.nextAnchor}',1)
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(19,8,19,'${this.enteredBy}',1)
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(20,8,20,'${this.contactId}',0)
-INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(21,8,21,'Dark Horse CRM Unassigned Ticket Report (${objects.size})',1)
+INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(21,8,21,'Centric CRM Unassigned Ticket Report (${objects.size})',1)
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(22,8,22,'** This is an automated message **
 
-The following tickets in Dark Horse CRM are unassigned and need attention:
+The following tickets in Centric CRM are unassigned and need attention:
 
 ',1)
 INSERT [business_process_component_parameter] ([id],[component_id],[parameter_id],[param_value],[enabled])VALUES(23,8,23,'----- Ticket Details -----
@@ -9190,8 +9200,8 @@ INSERT [business_process_parameter_library] ([parameter_id],[component_id],[para
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(2,3,'notification.itemId',NULL,'${this.id}',1)
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(3,3,'notification.itemModified',NULL,'${this.modified}',1)
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(4,3,'notification.userToNotify',NULL,'${previous.enteredBy}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(5,3,'notification.subject',NULL,'Dark Horse CRM Ticket Closed: ${this.paddedId}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(6,3,'notification.body',NULL,'The following ticket in Dark Horse CRM has been closed:
+INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(5,3,'notification.subject',NULL,'Centric CRM Ticket Closed: ${this.paddedId}',1)
+INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(6,3,'notification.body',NULL,'The following ticket in Centric CRM has been closed:
 
 --- Ticket Details ---
 
@@ -9210,8 +9220,8 @@ INSERT [business_process_parameter_library] ([parameter_id],[component_id],[para
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(8,6,'notification.itemId',NULL,'${this.id}',1)
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(9,6,'notification.itemModified',NULL,'${this.modified}',1)
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(10,6,'notification.userToNotify',NULL,'${this.assignedTo}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(11,6,'notification.subject',NULL,'Dark Horse CRM Ticket Assigned: ${this.paddedId}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(12,6,'notification.body',NULL,'The following ticket in Dark Horse CRM has been assigned to you:
+INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(11,6,'notification.subject',NULL,'Centric CRM Ticket Assigned: ${this.paddedId}',1)
+INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(12,6,'notification.body',NULL,'The following ticket in Centric CRM has been assigned to you:
 
 --- Ticket Details ---
 
@@ -9231,10 +9241,10 @@ INSERT [business_process_parameter_library] ([parameter_id],[component_id],[para
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(18,7,'ticketList.nextAnchor',NULL,'${process.nextAnchor}',1)
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(19,8,'notification.users.to',NULL,'${this.enteredBy}',1)
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(20,8,'notification.contacts.to',NULL,'${this.contactId}',1)
-INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(21,8,'notification.subject',NULL,'Dark Horse CRM Unassigned Ticket Report (${objects.size})',1)
+INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(21,8,'notification.subject',NULL,'Centric CRM Unassigned Ticket Report (${objects.size})',1)
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(22,8,'notification.body',NULL,'** This is an automated message **
 
-The following tickets in Dark Horse CRM are unassigned and need attention:
+The following tickets in Centric CRM are unassigned and need attention:
 
 ',1)
 INSERT [business_process_parameter_library] ([parameter_id],[component_id],[param_name],[description],[default_value],[enabled])VALUES(23,8,'report.ticket.content',NULL,'----- Ticket Details -----

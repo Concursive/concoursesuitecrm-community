@@ -1,4 +1,4 @@
--- Script (C) 2004 Dark Horse Ventures, all rights reserved
+-- Script (C) 2004 Dark Horse Ventures LLC, all rights reserved
 -- Database upgrade v2.9 (2004-08-30)
 
 ALTER TABLE access ADD [currency] [varchar] (5);
@@ -72,17 +72,17 @@ ALTER TABLE call_log ADD [parent_id] integer;
 ALTER TABLE call_log ADD [owner] integer;
 ALTER TABLE call_log ADD [assignedby] integer;
 ALTER TABLE call_log ADD [assign_date] DATETIME;
-ALTER TABLE call_log ADD completedby integer;
-ALTER TABLE call_log ADD complete_date DATETIME;
-ALTER TABLE call_log ADD result_id integer;
-ALTER TABLE call_log ADD priority_id integer;
+ALTER TABLE call_log ADD [completedby] integer;
+ALTER TABLE call_log ADD [complete_date] DATETIME;
+ALTER TABLE call_log ADD [result_id] integer;
+ALTER TABLE call_log ADD [priority_id] integer;
 ALTER TABLE call_log ADD [status_id] [integer] NULL;
 UPDATE call_log SET status_id = 2;
 ALTER TABLE call_log ALTER COLUMN [status_id] [integer] NOT NULL;
-ALTER TABLE call_log ADD reminder_value integer;
-ALTER TABLE call_log ADD reminder_type_id integer;
+ALTER TABLE call_log ADD [reminder_value] integer;
+ALTER TABLE call_log ADD [reminder_type_id] integer;
 UPDATE call_log SET result_id = 1;
-ALTER table call_log ADD alertdate_timezone VARCHAR(255);
+ALTER table call_log ADD [alertdate_timezone] VARCHAR(255);
 UPDATE call_log set alertdate_timezone = 'America/New_York';
 
 ALTER TABLE [call_log] WITH NOCHECK ADD 
