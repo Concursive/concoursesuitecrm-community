@@ -9,6 +9,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="org.aspcfs.utils.web.CountrySelect" %>
 <%@ page import="org.aspcfs.utils.web.HtmlSelect" %>
+<jsp:useBean id="countrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="modify" action="AdminConfig.do?command=Update" method="post">
 <%-- Trails --%>
@@ -40,7 +41,7 @@ default country be for the system?</b><br />
         Country
       </td>
       <td>
-         <%= CountrySelect.getHtml("country", getPref(getServletContext(), "SYSTEM.COUNTRY")) %><font color="red">*</font>
+         <%= countrySelect.getHtml("country", getPref(getServletContext(), "SYSTEM.COUNTRY")) %><font color="red">*</font>
          <%= showAttribute(request, "countryError") %>
       </td>
     </tr>
