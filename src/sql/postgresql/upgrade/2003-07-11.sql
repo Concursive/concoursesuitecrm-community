@@ -15,6 +15,14 @@ CREATE TABLE help_contents (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE TABLE lookup_help_features (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(1000) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
 CREATE TABLE help_features (
   feature_id SERIAL PRIMARY KEY,
   link_help_id INT NOT NULL REFERENCES help_contents(help_id),
@@ -66,12 +74,5 @@ CREATE TABLE help_tips (
   enabled boolean NOT NULL DEFAULT true
 );
 
-CREATE TABLE lookup_help_features (
-  code SERIAL PRIMARY KEY,
-  description VARCHAR(1000) NOT NULL,
-  default_item BOOLEAN DEFAULT false,
-  level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
-);
 
 update permission set permission_edit = 't' where permission='help';
