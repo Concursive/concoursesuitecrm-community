@@ -513,12 +513,13 @@ CREATE TABLE viewpoint(
   enabled BOOLEAN DEFAULT TRUE
 );
 
+CREATE SEQUENCE viewpoint_per_vp_permission_seq;
 CREATE TABLE viewpoint_permission (
- vp_permission_id SERIAL PRIMARY KEY,
- viewpoint_id INT NOT NULL references viewpoint(viewpoint_id),
- permission_id INT NOT NULL references permission(permission_id),
- viewpoint_view BOOLEAN NOT NULL DEFAULT false,
- viewpoint_add BOOLEAN NOT NULL DEFAULT false,
- viewpoint_edit BOOLEAN NOT NULL DEFAULT false,
- viewpoint_delete BOOLEAN NOT NULL DEFAULT false
+  vp_permission_id INTEGER DEFAULT nextval('viewpoint_per_vp_permission_seq') NOT NULL PRIMARY KEY,
+  viewpoint_id INT NOT NULL references viewpoint(viewpoint_id),
+  permission_id INT NOT NULL references permission(permission_id),
+  viewpoint_view BOOLEAN NOT NULL DEFAULT false,
+  viewpoint_add BOOLEAN NOT NULL DEFAULT false,
+  viewpoint_edit BOOLEAN NOT NULL DEFAULT false,
+  viewpoint_delete BOOLEAN NOT NULL DEFAULT false
 );
