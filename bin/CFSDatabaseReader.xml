@@ -117,7 +117,6 @@
       <property lookup="user">enteredby</property>
       <property>closed</property>
       <property>alert</property>
-      <!--property>enabled</property-->
     </map>
   </mappings>
 </CFSDatabaseReader>
