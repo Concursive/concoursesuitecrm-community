@@ -1,3 +1,15 @@
 #header, #footer, #rightcol, #menutabs, #topmenutabs {
   display: none;
 }
+#menuFileContainer, #menucallContainer, #menuOppContainer, 
+#menuViewpointContainer, #menuContactContainer, #menuFoldersContainer,
+#menuAccountContainer, #menuReportContainer, #menuRevenueContainer,
+#menuTicContainer, #menuTaskContainer, #menuActionContainer,
+#menuRoleContainer, #menuUserContainer, #menuProcessContainer,
+#menuCampaignContainer, #menuGroupContainer, #menuMsgContainer,
+#menuSurveyContainer, #menuFieldContainer, #menuCallContainer,
+#menuContactContainer, #menuEmployeeContainer, #menuNoteContainer,
+#menu1Container, #menu1aContainer, #menu1bContainer, #menu2Container,
+#menuTicketContainer {
+  display: none;
+}
