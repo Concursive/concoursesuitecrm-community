@@ -145,7 +145,7 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
         }
       }
     } catch (SQLException e) {
-      throw new SQLException("Error Building Task Calendar Alerts");
+      throw new SQLException("Error Building Task Calendar Alerts: " + e.getMessage());
     }
   }
 }
