@@ -1189,10 +1189,10 @@ public class FileItem extends GenericBean {
   public boolean buildVersionList(Connection db) throws SQLException {
     if (versionList == null) {
       versionList = new FileItemVersionList();
-      versionList.setItemId(this.getId());
     } else {
       versionList.clear();
     }
+    versionList.setItemId(this.getId());
     versionList.buildList(db);
     return true;
   }
