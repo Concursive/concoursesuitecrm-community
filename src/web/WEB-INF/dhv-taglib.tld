@@ -66,6 +66,37 @@
   </tag>
   
   <tag>
+    <name>sharing</name> 
+    <tag-class>org.aspcfs.taglib.SharingHandler</tag-class>
+    <body-content>JSP</body-content>
+    <display-name>
+      Access the User session and determine if user can perform this action
+    </display-name>
+    <attribute>
+      <name>primaryBean</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>secondaryBeans</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>action</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>all</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>none</name>
+      <required>no</required>
+    </attribute>
+    
+  </tag>
+  
+  
+  <tag>
     <name>username</name> 
     <tag-class>org.aspcfs.taglib.UsernameHandler</tag-class>
     <body-content>empty</body-content>

@@ -16,6 +16,12 @@ Contact Details<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
+    <% String param1 = "id=" + ContactDetails.getId(); 
+    %>
+        <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
+        [ <dhv:container name="accountscontacts" selected="details" param="<%= param1 %>"/> ]
+      <br>
+      <br>
       <input type="hidden" name="id" value="<%=ContactDetails.getId()%>">
       <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>">
 <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>

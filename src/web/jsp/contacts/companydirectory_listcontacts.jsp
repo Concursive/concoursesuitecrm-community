@@ -71,12 +71,16 @@ View Contacts<br>
 		while (i.hasNext()) {
       rowid = (rowid != 1 ? 1 : 2);
       Contact thisContact = (Contact)i.next();
-%>      
+%>    
       <tr>
         <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete">
           <td width="8" class="row<%= rowid %>" nowrap>
-            <%if(thisContact.getEnabled()) {%>
-             <dhv:permission name="contacts-external_contacts-edit"><a href="ExternalContacts.do?command=ModifyContact&id=<%= thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-delete"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
+           <%if(thisContact.getEnabled()) {%>
+             <% if(thisContact.getOrgId() < 0){ %>
+             <dhv:permission name="contacts-external_contacts-edit"><a href="ExternalContacts.do?command=ModifyContact&id=<%= thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"  all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-delete"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=SearchContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
+             <% }else{ %>
+              <dhv:permission name="contacts-external_contacts-edit,accounts-accounts-contacts-edit" all="true"><a href="ExternalContacts.do?command=ModifyContact&id=<%= thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-contacts-delete,contacts-external_contacts-delete" all="true"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=SearchContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
+             <% } %>
             <%}else{%>
               &nbsp;
             <%}%>
@@ -116,7 +120,7 @@ View Contacts<br>
   } else {%>  
   <tr>
     <td class="containerBody" colspan="5">
-      No contacts found.
+      No  Contacts found for the specified search parameters. <a href="ExternalContacts.do?command=SearchContactsForm">Modify Search</a>.
     </td>
   </tr>
 <%}%>

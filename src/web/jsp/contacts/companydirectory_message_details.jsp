@@ -18,45 +18,47 @@ Message Details
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-    <br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong>Selected message</strong>
-    </th>
+      <br>
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+        <tr>
+          <th colspan="2">
+            <strong>Selected message</strong>
+          </th>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
+            Campaign
+          </td>
+          <td>
+            <%=toHtml(Campaign.getName())%>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
+            Reply To
+          </td>
+          <td>
+            <%=toHtml(Campaign.getReplyTo())%>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
+            Message Subject
+          </td>
+          <td>
+            <%=toHtml(Campaign.getMessageName())%>
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel" valign="top">
+            Message Text
+          </td>
+          <td>
+            <%= (Campaign.getMessage()) %>&nbsp; 
+          </td>
+        </tr>
+      </table>
+      <br>
+    </td>
   </tr>
-	<tr class="containerBody">
-    <td class="formLabel">
-      Campaign
-    </td>
-    <td>
-			<%=toHtml(Campaign.getName())%>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Reply To
-    </td>
-    <td>
-			<%=toHtml(Campaign.getReplyTo())%>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Message Subject
-    </td>
-    <td>
-			<%=toHtml(Campaign.getMessageName())%>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" valign="top">
-      Message Text
-    </td>
-    <td>
-			<%= (Campaign.getMessage()) %>&nbsp; 
-    </td>
-  </tr>
-</table>
-<br>
 </table>

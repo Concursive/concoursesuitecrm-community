@@ -423,7 +423,7 @@ public class HelpNote extends GenericBean {
         pst.setInt(++i, completedBy);
       } else {
         pst.setTimestamp(++i, null);
-        pst.setTimestamp(++i, null);
+        pst.setNull(++i, java.sql.Types.SMALLINT);
       }
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "help_notes_note_id_seq");

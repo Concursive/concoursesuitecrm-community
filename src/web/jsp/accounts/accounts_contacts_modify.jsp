@@ -101,6 +101,12 @@ Modify Contact<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
+    <% String param2 = "id=" + ContactDetails.getId(); 
+    %>
+        <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
+        [ <dhv:container name="accountscontacts" selected="details" param="<%= param2 %>"/> ]
+      <br>
+      <br>
     <input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
     <% if (request.getParameter("return") != null) {%>
       <% if (request.getParameter("return").equals("list")) {%>

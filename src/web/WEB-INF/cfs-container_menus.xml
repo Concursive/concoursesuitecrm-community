@@ -90,6 +90,34 @@
     </submenu>
   </container>
   
+  <!-- Submenu used in the Contacts module -->
+  <container name="accountscontacts">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value="accounts-accounts-contacts-view"/>
+      <link value="Contacts.do?command=Details&amp;id=${id}"/>
+    </submenu>
+    <submenu name="calls">
+      <long_html value="Calls"/>
+      <permission value="accounts-accounts-contacts-calls-view"/>
+      <link value="AccountContactsCalls.do?command=View&amp;contactId=${id}"/>
+    </submenu>
+    <submenu name="messages">
+      <long_html value="Messages"/>
+      <permission value="accounts-accounts-contacts-messages-view"/>
+      <link value="Contacts.do?command=ViewMessages&amp;contactId=${id}"/>
+    </submenu>
+    <submenu name="opportunities">
+      <long_html value="Opportunities"/>
+      <permission value="accounts-accounts-contacts-opportunities-view"/>
+      <link value="AccountContactsOpps.do?command=ViewOpps&amp;contactId=${id}"/>
+    </submenu>
+  </container>
+  
+  
   <!-- Submenu used in the Opportunities (Pipeline) module -->
   <container name="opportunities">
     <separator value=" | "/>

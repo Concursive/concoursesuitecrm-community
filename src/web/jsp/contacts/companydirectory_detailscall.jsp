@@ -21,10 +21,10 @@ Call Details
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-<dhv:permission name="contacts-external_contacts-calls-edit"><input type="submit"  value="Modify"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-calls-delete"><input type="button" value="Delete" onClick="javascript:popURL('ExternalContactsCalls.do?command=ConfirmDelete&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId()%><%= isPopup(request) ? "" : "&popup=true" %><%= addLinkParams(request, "popup|popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');"></dhv:permission>
+<dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit"  value="Modify"></dhv:sharing>
+<dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="delete"><input type="button" value="Delete" onClick="javascript:popURL('ExternalContactsCalls.do?command=ConfirmDelete&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId()%><%= isPopup(request) ? "" : "&popup=true" %><%= addLinkParams(request, "popup|popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');"></dhv:sharing>
 <dhv:evaluate exp="<%= !isPopup(request) %>">
-<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardMessage&forwardType=<%= Constants.CONTACTS_CALLS %>&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"></dhv:permission>
+<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"></dhv:permission>
 </dhv:evaluate>
 <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -99,10 +99,10 @@ Call Details
   </tr>
 </table>
 <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"><br></dhv:permission>
-<dhv:permission name="contacts-external_contacts-calls-edit"><input type="submit"  value="Modify"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-calls-delete"><input type="button" value="Delete" onClick="javascript:popURL('ExternalContactsCalls.do?command=ConfirmDelete&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId()%><%= isPopup(request) ? "" : "&popup=true" %><%= addLinkParams(request, "popup|popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');"></dhv:permission>
+<dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="edit"><input type="submit"  value="Modify"></dhv:sharing>
+<dhv:sharing primaryBean="CallDetails" secondaryBeans="ContactDetails" action="delete"><input type="button" value="Delete" onClick="javascript:popURL('ExternalContactsCalls.do?command=ConfirmDelete&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId()%><%= isPopup(request) ? "" : "&popup=true" %><%= addLinkParams(request, "popup|popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');"></dhv:sharing>
 <dhv:evaluate exp="<%= !isPopup(request) %>">
-<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardMessage&forwardType=<%= Constants.CONTACTS_CALLS %>&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"></dhv:permission>
+<dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='ExternalContactsCallsForward.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"></dhv:permission>
 </dhv:evaluate>
 </td>
 </tr>

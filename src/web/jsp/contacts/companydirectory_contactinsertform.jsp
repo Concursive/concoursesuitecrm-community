@@ -117,6 +117,7 @@
       <% }else{ %>
         <input type="radio" name="contactcategory" value="1" onChange="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
       <% } %>
+      <dhv:permission name="accounts-accounts-contacts-add">
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr>
             <td>
@@ -134,6 +135,7 @@
             </td>
           </tr>
        </table>
+       </dhv:permission>
     </td>
   </tr>
   <tr class="containerBody">

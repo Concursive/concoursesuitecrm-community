@@ -70,7 +70,7 @@ function sendMessage() {
       <font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel">
       Options
     </td>

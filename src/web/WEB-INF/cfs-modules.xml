@@ -243,6 +243,9 @@
     <action name="AccountsPrototype"/>
     <action name="AccountTicketsDocuments"/>
     <action name="AccountTicketTasks"/>
+    <action name="AccountContactsCalls"/>
+    <action name="AccountContactsOpps"/>
+    <action name="AccountContactsOppComponents"/>
     <page title="Account Management"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>

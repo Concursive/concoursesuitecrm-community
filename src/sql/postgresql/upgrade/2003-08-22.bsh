@@ -1,0 +1,81 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  August 12th 2003
+  - Adds the account contact permissions
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.admin.base.PermissionList;
+
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = 'Account Management'");
+if(rs.next()){
+  categoryId = rs.getInt("category_id");
+}
+
+print("Category Id for Account Management: " + categoryId);
+PermissionCategory thisCategory = new PermissionCategory(db, categoryId);
+
+newPermissions = new PermissionList();
+
+thisPermission1 = new Permission();
+thisPermission1.setName("accounts-accounts-contacts-opportunities");
+thisPermission1.setDescription("Contact Opportunities");
+newPermissions.add(thisPermission1);
+
+thisPermission2 = new Permission();
+thisPermission2.setName("accounts-accounts-contacts-calls");
+thisPermission2.setDescription("Contact Calls");
+newPermissions.add(thisPermission2);
+
+thisPermission3 = new Permission();
+thisPermission3.setName("accounts-accounts-contacts-messages");
+thisPermission3.setDescription("Contact Messages");
+newPermissions.add(thisPermission3);
+
+//Iterate through all permissions and insert
+Iterator newPerms = newPermissions.iterator();
+while (newPerms.hasNext()) {
+  tmpPermission = (Permission) newPerms.next();
+  print("Processing Permission " + tmpPermission.getName());
+  //Check to see if the permission already exists before inserting
+  rs = st.executeQuery(
+    "SELECT count(permission_id) AS recordcount " +
+    "FROM permission " +
+    "WHERE permission = '" + tmpPermission.getName() + "'");
+  rs.next();
+  hasPermission = (rs.getInt("recordcount") > 0);
+  print("Permission Status: " + tmpPermission.getName() + " :" + hasPermission);
+  
+  
+  //Doesn't exist so insert the new permission
+  if (!hasPermission) {
+    rs = st.executeQuery(
+      "SELECT max(p.level) AS maxlevel " +
+      "FROM permission p, permission_category pc " +
+      "WHERE p.category_id = pc.category_id AND pc.category ='Account Management'");
+    rs.next();
+    level = (rs.getInt("maxlevel") + 10);
+    print("level to insert: " + level);
+    //Insert the new permission
+    permission = new Permission();
+    permission.setCategoryId(thisCategory.getId());
+    permission.setName(tmpPermission.getName());
+    permission.setDescription(tmpPermission.getDescription());
+    permission.setView(true);
+    permission.setAdd(true);
+    permission.setEdit(true);
+    permission.setDelete(true);
+    permission.setPermissionLevel(level);
+    permission.setEnabled(true);
+    permission.setActive(true);
+    permission.insert(db);
+    print("New permission " + tmpPermission.getName() + " added");
+  }
+}

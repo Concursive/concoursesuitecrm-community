@@ -13,23 +13,25 @@ import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.communications.base.Campaign;
+import org.aspcfs.modules.communications.base.CampaignList;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.utils.web.*;
 
 /**
  *  Description of the Class
  *
- * @author     chris
- * @created    August 29, 2001
- * @version    $Id$
+ *@author     chris
+ *@created    August 29, 2001
+ *@version    $Id$
  */
 public final class Contacts extends CFSModule {
 
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
     Exception errorMessage = null;
@@ -77,8 +79,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandClone(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
@@ -115,8 +117,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     Exception errorMessage = null;
@@ -124,7 +126,7 @@ public final class Contacts extends CFSModule {
     int resultCount = 0;
     String permission = "accounts-accounts-contacts-add";
     Contact thisContact = (Contact) context.getFormBean();
-    if (thisContact.getId() >  0) {
+    if (thisContact.getId() > 0) {
       permission = "accounts-accounts-contacts-edit";
     }
     if (!hasPermission(context, permission)) {
@@ -140,11 +142,11 @@ public final class Contacts extends CFSModule {
       thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
       thisContact.setModifiedBy(getUserId(context));
       thisContact.setEnteredBy(getUserId(context));
-      
+
       //make sure all can see the contact
       AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(db, AccessType.ACCOUNT_CONTACTS);
       thisContact.setAccessType(accessTypes.getDefaultItem());
-      
+
       if ("true".equals(context.getRequest().getParameter("primaryContact"))) {
         thisContact.setPrimaryContact(true);
       }
@@ -206,8 +208,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -273,9 +275,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-view")) {
@@ -313,9 +315,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-delete")) {
@@ -363,8 +365,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
@@ -396,9 +398,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
    */
 
   public String executeCommandView(ActionContext context) {
@@ -420,6 +422,7 @@ public final class Contacts extends CFSModule {
     Connection db = null;
     ContactList contactList = new ContactList();
     Organization thisOrganization = null;
+    this.resetPagedListInfo(context);
     try {
       db = this.getConnection(context);
       contactList.setPagedListInfo(companyDirectoryInfo);
@@ -442,6 +445,119 @@ public final class Contacts extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+
+
+  /**
+   *  View Message Details of an Account Contact
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandMessageDetails(ActionContext context) {
+
+    if (!(hasPermission(context, "accounts-accounts-contacts-messages-view"))) {
+      return ("PermissionError");
+    }
+
+    addModuleBean(context, "View Accounts", "View Contact Details");
+
+    Connection db = null;
+    Organization thisOrganization = null;
+    Contact thisContact = null;
+    Campaign campaign = null;
+
+    String campaignId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      String contactId = context.getRequest().getParameter("contactId");
+      thisContact = new Contact(db, contactId);
+      campaign = new Campaign(db, campaignId);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (!hasAuthority(context, campaign.getEnteredBy())) {
+      return ("PermissionError");
+    }
+
+    context.getRequest().setAttribute("ContactDetails", thisContact);
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    return this.getReturn(context, "MessageDetails");
+  }
+
+
+  /**
+   *  View Account Contact Messages
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandViewMessages(ActionContext context) {
+
+    if (!(hasPermission(context, "accounts-accounts-contacts-messages-view"))) {
+      return ("PermissionError");
+    }
+
+    Connection db = null;
+    Organization thisOrganization = null;
+    Contact thisContact = null;
+
+    try {
+      db = this.getConnection(context);
+
+      String contactId = context.getRequest().getParameter("contactId");
+
+      if ("true".equals(context.getRequest().getParameter("contactId"))) {
+        context.getSession().removeAttribute("AccountContactMessageListInfo");
+      }
+      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ContactMessageListInfo");
+      pagedListInfo.setLink("ExternalContacts.do?command=ViewMessages&contactId=" + contactId);
+
+      thisContact = new Contact(db, contactId);
+      if (!hasAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      CampaignList campaignList = new CampaignList();
+      campaignList.setPagedListInfo(pagedListInfo);
+      campaignList.setCompleteOnly(true);
+      campaignList.setContactId(Integer.parseInt(contactId));
+
+      if ("all".equals(pagedListInfo.getListView())) {
+        campaignList.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        campaignList.setOwner(this.getUserId(context));
+      }
+
+      campaignList.buildList(db);
+      context.getRequest().setAttribute("CampaignList", campaignList);
+
+      thisOrganization = new Organization(db, thisContact.getOrgId());
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Accounts", "View Contact Details");
+    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+
+    return this.getReturn(context, "ViewMessages");
+  }
+  
+  private void resetPagedListInfo(ActionContext context) {
+    this.deletePagedListInfo(context, "AccountContactCallsListInfo");
+    this.deletePagedListInfo(context, "AccountContactOppsPagedListInfo");
+    this.deletePagedListInfo(context, "AccountContactMessageListInfo");
   }
 }
 

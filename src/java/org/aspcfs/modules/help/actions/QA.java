@@ -177,9 +177,11 @@ public final class QA extends CFSModule {
         LookupElement thisElement = new LookupElement(db, thisFeature.getLinkFeatureId(), "lookup_help_features");
         thisFeature.setDescription(thisElement.getDescription());
       }
+      if(thisFeature.getComplete()){
+        thisFeature.setCompletedBy(this.getUserId(context));
+      }
       if (thisFeature.getId() > 0) {
         //completedby is used only if the feature is completed
-        thisFeature.setCompletedBy(this.getUserId(context));
         resultCount = thisFeature.update(db);
       } else {
         thisFeature.setEnteredBy(this.getUserId(context));
@@ -645,6 +647,9 @@ public final class QA extends CFSModule {
     try {
       db = this.getConnection(context);
       thisNote.setModifiedBy(this.getUserId(context));
+      if(thisNote.getComplete()){
+        thisNote.setCompletedBy(this.getUserId(context));
+      }
       if (thisNote.getId() > 0) {
         //completedby is used only if the note is completed
         thisNote.setCompletedBy(this.getUserId(context));

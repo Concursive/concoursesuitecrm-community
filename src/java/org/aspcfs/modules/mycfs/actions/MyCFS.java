@@ -555,11 +555,13 @@ public final class MyCFS extends CFSModule {
             mail.setTo(email);
             mail.setSubject(thisNote.getSubject());
             mail.setBody("The following message was sent to your CFS Inbox by " + thisRecord.getUsername() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + StringUtils.toHtml(thisNote.getBody()));
+            System.out.println("Sending Mail .. " + thisNote.getBody());
             if (mail.send() == 2) {
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("MyCFS-> Send error: " + mail.getErrorMsg() + "<br><br>");
               }
               System.err.println(mail.getErrorMsg());
+              System.out.println(mail.getErrorMsg());
               if (errors == null) {
                 errors = new HashMap();
               }
@@ -589,7 +591,7 @@ public final class MyCFS extends CFSModule {
       addModuleBean(context, "External Contacts", "");
     } else if (context.getAction().getActionName().equals("MyCFSInbox")) {
       addModuleBean(context, "MyInbox", "");
-    } else {
+    } else if (context.getAction().getActionName().equals("MyTasksForward")) {
       addModuleBean(context, "My Tasks", "");
     }
 
@@ -629,28 +631,9 @@ public final class MyCFS extends CFSModule {
       String msgId = context.getRequest().getParameter("id");
       int noteType = Integer.parseInt(context.getRequest().getParameter("forwardType"));
       db = this.getConnection(context);
-      if (context.getSession().getAttribute("DepartmentList") == null) {
-        LookupList departmentList = new LookupList(db, "lookup_department");
-        departmentList.addItem(-1, "--All Departments--");
-        context.getSession().setAttribute("DepartmentList", departmentList);
-      }
-
-      if (context.getSession().getAttribute("ProjectListSelect") == null) {
-        ProjectList projects = new ProjectList();
-        projects.setUserRange(this.getUserRange(context));
-        projects.setBuildAssignments(false);
-        projects.setBuildIssues(false);
-        projects.setGroupId(-1);
-        projects.buildList(db);
-        HtmlSelect htmlSelect = projects.getHtmlSelect();
-        htmlSelect.addItem(-1, "--All Projects--", 0);
-        context.getSession().setAttribute("ProjectListSelect", htmlSelect);
-      }
       newNote = new CFSNote();
       if (noteType == Constants.CFSNOTE) {
-
         //For a sent message myId is a user_id else its a contactId
-
         if (inboxInfo.getListView().equals("sent")) {
           myId = getUserId(context);
         } else {
@@ -677,16 +660,6 @@ public final class MyCFS extends CFSModule {
             "Subject: " + StringUtils.toString(newNote.getSubject()) +
             "\n\n" +
             StringUtils.toString(newNote.getBody()) + "\n\n");
-      } else if (noteType == Constants.CONTACTS_CALLS || noteType == Constants.PIPELINE_CALLS) {
-        Call thisCall = new Call(db, msgId);
-        newNote.setBody(
-            "Contact Name: " + StringUtils.toString(thisCall.getContactName()) + "\n" +
-            "Type: " + StringUtils.toString(thisCall.getCallType()) + "\n" +
-            "Length: " + StringUtils.toString(thisCall.getLengthText()) + "\n" +
-            "Subject: " + StringUtils.toString(thisCall.getSubject()) + "\n" +
-            "Notes: " + StringUtils.toString(thisCall.getNotes()) + "\n" +
-            "Entered: " + StringUtils.toString(thisCall.getEnteredName()) + " - " + thisCall.getEnteredString() + "\n" +
-            "Modified: " + StringUtils.toString(thisCall.getModifiedName()) + " - " + thisCall.getModifiedString());
       } else if (noteType == Constants.TASKS) {
         Task thisTask = new Task(db, Integer.parseInt(msgId));
         String userName = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getNameLastFirst();
@@ -697,8 +670,6 @@ public final class MyCFS extends CFSModule {
             "Due Date: " + thisTask.getDueDateString() + "\n" +
             ("".equals(thisTask.getNotes()) ? "" : "Relevant Notes: " + StringUtils.toString(thisTask.getNotes())) + "\n\n");
       }
-      context.getSession().removeAttribute("selectedContacts");
-      context.getSession().removeAttribute("finalContacts");
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -706,9 +677,7 @@ public final class MyCFS extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (context.getAction().getActionName().equals("ExternalContactsCallsForward")) {
-        addModuleBean(context, "External Contacts", "");
-      } else if (context.getAction().getActionName().equals("MyCFSInbox")) {
+      if (context.getAction().getActionName().equals("MyCFSInbox")) {
         addModuleBean(context, "My Inbox", "");
       } else if (context.getAction().getActionName().equals("LeadsCallsForward")) {
         addModuleBean(context, "View Opportunities", "Opportunity Calls");
@@ -764,26 +733,26 @@ public final class MyCFS extends CFSModule {
           "Subject: " + StringUtils.toString(newNote.getSubject()) +
           "\n\n" +
           StringUtils.toString(newNote.getBody()) + "\n\n");
-     
-     //add the sender as a recipient
-     User sender = this.getUser(context, newNote.getReplyId());
-     Contact recipient = new Contact(db, sender.getContactId());
-     context.getRequest().setAttribute("Recipient", recipient);
-     
-   //Add the recipient to the selectedList
-   HashMap thisList = null;
-    if(context.getSession().getAttribute("finalContacts") != null){
-      thisList = (HashMap) context.getSession().getAttribute("finalContacts");
-      thisList.clear();
-    }else{
-      thisList = new HashMap();
-      context.getSession().setAttribute("finalContacts", thisList);
-    }
-     thisList.put(new Integer(sender.getContactId()), "");
-     if(context.getSession().getAttribute("selectedContacts") != null){
-      HashMap tmp = (HashMap) context.getSession().getAttribute("selectedContacts");
-      tmp.clear();
-     }
+
+      //add the sender as a recipient
+      User sender = this.getUser(context, newNote.getReplyId());
+      Contact recipient = new Contact(db, sender.getContactId());
+      context.getRequest().setAttribute("Recipient", recipient);
+
+      //Add the recipient to the selectedList
+      HashMap thisList = null;
+      if (context.getSession().getAttribute("finalContacts") != null) {
+        thisList = (HashMap) context.getSession().getAttribute("finalContacts");
+        thisList.clear();
+      } else {
+        thisList = new HashMap();
+        context.getSession().setAttribute("finalContacts", thisList);
+      }
+      thisList.put(new Integer(sender.getContactId()), "");
+      if (context.getSession().getAttribute("selectedContacts") != null) {
+        HashMap tmp = (HashMap) context.getSession().getAttribute("selectedContacts");
+        tmp.clear();
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -796,9 +765,9 @@ public final class MyCFS extends CFSModule {
       }
       context.getRequest().setAttribute("Note", newNote);
       return this.getReturn(context, "ReplyMessage");
-    } 
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    }
+    context.getRequest().setAttribute("Error", errorMessage);
+    return ("SystemError");
   }
 
 
@@ -850,10 +819,10 @@ public final class MyCFS extends CFSModule {
         calendarInfo.addAlertType("Project", "com.zeroio.iteam.base.ProjectListScheduledActions", "Projects");
       }
       if (hasPermission(context, "accounts-accounts-view")) {
-      calendarInfo.addAlertType("Accounts", "org.aspcfs.modules.accounts.base.AccountsListScheduledActions", "Accounts");
+        calendarInfo.addAlertType("Accounts", "org.aspcfs.modules.accounts.base.AccountsListScheduledActions", "Accounts");
       }
       if (hasPermission(context, "contacts-external_contacts-opportunities-view") || hasPermission(context, "pipeline-opportunities-view")) {
-      calendarInfo.addAlertType("Opportunity", "org.aspcfs.modules.pipeline.base.OpportunityListScheduledActions", "Opportunities");
+        calendarInfo.addAlertType("Opportunity", "org.aspcfs.modules.pipeline.base.OpportunityListScheduledActions", "Opportunities");
       }
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }

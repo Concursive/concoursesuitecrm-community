@@ -20,7 +20,13 @@ Calls<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-<dhv:permission name="contacts-external_contacts-calls-add"><a href="ExternalContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">Add a Call</a></dhv:permission>
+<% if(ContactDetails.getOrgId() < 0){ %>
+<dhv:permission name="contacts-external_contacts-calls-add">
+<a href="ExternalContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">Add a Call</a><br></dhv:permission>
+<% }else{ %>
+<dhv:permission name="contacts-external_contacts-calls-add,accounts-accounts-contacts-calls-add" all="true">
+<a href="ExternalContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">Add a Call</a><br></dhv:permission>
+<% } %>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CallListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
@@ -53,7 +59,13 @@ Calls<br>
     <tr class="containerBody">
       <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete">
       <td width="8" valign="center" nowrap class="row<%= rowid %>">
+          <% if(ContactDetails.getOrgId() < 0){ %>
           <dhv:permission name="contacts-external_contacts-calls-edit"><a href="ExternalContactsCalls.do?command=Modify&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-calls-delete"><a href="javascript:popURL('ExternalContactsCalls.do?command=ConfirmDelete&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>&popup=true<%= addLinkParams(request, "popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');">Del</a></dhv:permission>
+          <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"  all="true" none="true">&nbsp;</dhv:permission>
+          <% }else{ %>
+          <dhv:permission name="contacts-external_contacts-calls-edit,accounts-accounts-contacts-calls-edit"  all="true"><a href="ExternalContactsCalls.do?command=Modify&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete,accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-calls-delete,,accounts-accounts-contacts-calls-delete" all="true"><a href="javascript:popURL('ExternalContactsCalls.do?command=ConfirmDelete&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>&popup=true<%= addLinkParams(request, "popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');">Del</a></dhv:permission>
+          <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete,accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete"  all="true" none="true">&nbsp;</dhv:permission>
+          <% } %>
       </td>
       </dhv:permission>
       <td width="100%" valign="center" class="row<%= rowid %>">

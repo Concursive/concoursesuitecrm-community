@@ -63,6 +63,7 @@ public class ContactList extends Vector {
   private boolean withAccountsOnly = false;
   private boolean withProjectsOnly = false;
   private boolean employeesOnly = false;
+  private boolean excludeAccountContacts = false;
   //Combination filters
   private boolean allContacts = false;
   private boolean controlledHierarchyOnly = false;
@@ -92,7 +93,7 @@ public class ContactList extends Vector {
   //access type filters
   private int ruleId = -1;
   private int personalId = EXCLUDE_PERSONAL;
-
+  
   //objects for speed up
   AccessTypeList accessTypes = null;
 
@@ -144,6 +145,12 @@ public class ContactList extends Vector {
     this.employeesOnly = employeesOnly;
   }
 
+public void setExcludeAccountContacts(boolean excludeAccountContacts) {
+	this.excludeAccountContacts = excludeAccountContacts;
+}
+public boolean getExcludeAccountContacts() {
+	return excludeAccountContacts;
+}
 
   /**
    *  Gets the employeesOnly attribute of the ContactList object
@@ -1602,6 +1609,10 @@ public class ContactList extends Vector {
       sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
 
+    if(excludeAccountContacts){
+      sqlFilter.append("AND c.org_id IS NULL ");
+    }
+    
     //TODO: Use cached AccessTypeList to get the public codes for Account & General contacts
     if (allContacts) {
       sqlFilter.append("AND (c.owner IN (" + ownerIdRange + ") OR c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)) ");
