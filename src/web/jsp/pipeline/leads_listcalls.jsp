@@ -29,7 +29,7 @@
     <td>
       <a href="/Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#000000">Details</font></a> | 
       <a href="/LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Calls</font></a> |
-      <a href=""><font color="#000000">Documents</font></a>
+      <a href="#"><font color="#000000">Documents</font></a>
    </td>
   </tr>
   <tr>
