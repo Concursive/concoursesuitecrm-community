@@ -19,6 +19,12 @@ import javax.servlet.http.*;
  *@version    $Id$
  */
 public class OrganizationPhoneNumberList extends PhoneNumberList {
+        
+  public final static String tableName = "organization_phone";
+  public final static String uniqueField = "phone_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   /**
    *  Constructor for the OrganizationPhoneNumberList object
@@ -37,6 +43,14 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
       }
     }
   }
+public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+public void setSyncType(int tmp) { this.syncType = tmp; }
+public String getTableName() { return tableName; }
+public String getUniqueField() { return uniqueField; }
+public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
+public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
+public int getSyncType() { return syncType; }
 
   /**
    *  Builds a list of addresses based on several parameters. The parameters are

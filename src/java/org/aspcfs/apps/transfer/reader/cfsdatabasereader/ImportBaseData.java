@@ -50,6 +50,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     //TODO: update all user managers
 
     //Copy Accounts
+    /**
     logger.info("ImportBaseData-> Inserting accounts");
     writer.setAutoCommit(false);
     OrganizationList accounts = new OrganizationList();
@@ -57,7 +58,16 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     accounts.setIncludeEnabled(-1);
     accounts.buildList(db);
     mappings.saveList(writer, accounts, "insert");
-
+    */
+    
+    logger.info("ImportBaseData-> Inserting accounts");
+    writer.setAutoCommit(false);
+    OrganizationList accounts = new OrganizationList();
+    accounts.setShowMyCompany(true);
+    accounts.setIncludeEnabled(-1);
+    accounts.buildList(db);
+    this.saveOrgList(db, accounts);
+    
     processOK = writer.commit();
     if (!processOK) {
       return false;
@@ -156,6 +166,62 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       phoneList.buildList(db);
       
       logger.info("ImportBaseData-> Inserting " + phoneList.size() + " Contact phone numbers");
+      
+      Iterator phones = phoneList.iterator();
+      while (phones.hasNext()) {
+              ContactPhoneNumber phone = (ContactPhoneNumber)phones.next();
+              DataRecord phoneRecord = mappings.createDataRecord(phone, "insert");
+              writer.save(phoneRecord);
+              writer.commit();
+      }
+      
+      
+    }
+  }
+  
+  private void saveOrgList(Connection db, OrganizationList orgList) throws SQLException{
+    Iterator orgs = orgList.iterator();
+    
+    while (orgs.hasNext()) {
+      Organization thisOrg = (Organization)orgs.next();
+      DataRecord thisRecord = mappings.createDataRecord(thisOrg, "insert");
+      writer.save(thisRecord);
+      writer.commit();
+
+      /**
+      ContactEmailAddressList emailList = new ContactEmailAddressList();
+      emailList.setContactId(thisContact.getId());
+      emailList.buildList(db);
+      
+      logger.info("ImportBaseData-> Inserting " + emailList.size() + " Contact emails");
+      
+      Iterator emails = emailList.iterator();
+      while (emails.hasNext()) {
+              ContactEmailAddress thisAddress = (ContactEmailAddress)emails.next();
+              DataRecord anotherRecord = mappings.createDataRecord(thisAddress, "insert");
+              writer.save(anotherRecord);
+              writer.commit();
+      }
+      
+      ContactAddressList addressList = new ContactAddressList();
+      addressList.setContactId(thisContact.getId());
+      addressList.buildList(db);
+      
+      logger.info("ImportBaseData-> Inserting " + addressList.size() + " Contact addresses");
+      
+      Iterator addresses = addressList.iterator();
+      while (addresses.hasNext()) {
+              ContactAddress streetAddress = (ContactAddress)addresses.next();
+              DataRecord addressRecord = mappings.createDataRecord(streetAddress, "insert");
+              writer.save(addressRecord);
+              writer.commit();
+      }
+      */
+      OrganizationPhoneNumberList phoneList = new OrganizationPhoneNumberList();
+      phoneList.setOrgId(thisOrg.getId());
+      phoneList.buildList(db);
+      
+      logger.info("ImportBaseData-> Inserting " + phoneList.size() + " Organization phone numbers");
       
       Iterator phones = phoneList.iterator();
       while (phones.hasNext()) {

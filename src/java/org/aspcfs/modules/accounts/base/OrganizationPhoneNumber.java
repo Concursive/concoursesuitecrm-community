@@ -44,8 +44,16 @@ public class OrganizationPhoneNumber extends PhoneNumber {
    *@since
    */
   public OrganizationPhoneNumber(Connection db, String phoneNumberId) throws SQLException {
-    if (phoneNumberId == null) {
-      throw new SQLException("Phone Number ID not specified.");
+          queryRecord(db, Integer.parseInt(phoneNumberId));
+  }
+  
+  public OrganizationPhoneNumber(Connection db, int phoneNumberId) throws SQLException {
+          queryRecord(db, phoneNumberId);
+  }
+          
+  public void queryRecord(Connection db, int phoneNumberId) throws SQLException {
+    if (phoneNumberId <= 0) {
+      throw new SQLException("Invalid Phone Number ID specified.");
     }
 
     Statement st = null;
@@ -88,8 +96,16 @@ public class OrganizationPhoneNumber extends PhoneNumber {
         "VALUES " +
         "(?, ?, ?, ?, ?, ?) ");
     int i = 0;
-    pst.setInt(++i, orgId);
-    pst.setInt(++i, this.getType());
+    if (orgId > -1) {
+      pst.setInt(++i, this.getOrgId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
     pst.setInt(++i, enteredBy);
@@ -107,7 +123,11 @@ public class OrganizationPhoneNumber extends PhoneNumber {
         "modified = CURRENT_TIMESTAMP " +
         "WHERE phone_id = ? ");
     int i = 0;
-    pst.setInt(++i, this.getType());
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
     pst.setInt(++i, modifiedBy);
