@@ -35,6 +35,10 @@
     <forward name="PacketOK" resource="/system_process_packet.jsp"/>
   </action>
   
+  <action name="ProcessSystem" class="com.darkhorseventures.cfsmodule.ProcessSystem">
+    <forward name="ProcessOK" resource="/system_process_ok.jsp"/>
+  </action>
+  
   <action name="Login" class="com.darkhorseventures.cfsmodule.Login">
     <bean name="LoginBean" class="com.darkhorseventures.cfsmodule.LoginBean" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
