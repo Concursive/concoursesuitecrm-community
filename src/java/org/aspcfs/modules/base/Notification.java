@@ -585,6 +585,7 @@ public class Notification extends Thread {
       } catch (Exception e) {
         result = 2;
         errorMessage = e.toString();
+        e.printStackTrace(System.out);
       }
     } else {
       System.out.println("Notification-> Type not set");
