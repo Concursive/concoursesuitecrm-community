@@ -2246,10 +2246,9 @@ public class Ticket extends GenericBean {
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "ticket_ticketid_seq");
       //Update the rest of the fields
+      this.update(db, true);
       if (this.getEntered() == null) {
-        this.update(db);
-      } else {
-        this.update(db, true);
+        this.updateEntry(db);
       }
       if (actionId > 0) {
         updateLog(db);
@@ -2324,7 +2323,7 @@ public class Ticket extends GenericBean {
         "cat_code = ?, assigned_to = ?, " +
         "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, " +
         "source_code = ?, contact_id = ?, problem = ?, ");
-    if (override == false) {
+    if (!override) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ?, ");
     }
     if (this.getCloseIt()) {
@@ -2705,28 +2704,8 @@ public class Ticket extends GenericBean {
     }
     try {
       db.setAutoCommit(false);
-      if (entered != null) {
-        i = this.update(db, false);
-      } else {
-        i = this.update(db, true);
-      }
-      TicketLog thisEntry = new TicketLog();
-      thisEntry.setEnteredBy(this.getModifiedBy());
-      thisEntry.setDepartmentCode(this.getDepartmentCode());
-      thisEntry.setAssignedTo(this.getAssignedTo());
-      thisEntry.setEntryText(this.getComment());
-      thisEntry.setTicketId(this.getId());
-      thisEntry.setPriorityCode(this.getPriorityCode());
-      thisEntry.setSeverityCode(this.getSeverityCode());
-      if (this.getCloseIt() == true) {
-        thisEntry.setClosed(true);
-      }
-      history.add(thisEntry);
-      Iterator hist = history.iterator();
-      while (hist.hasNext()) {
-        TicketLog thisLog = (TicketLog) hist.next();
-        thisLog.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
-      }
+      i = this.update(db, false);
+      updateEntry(db);
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -2735,6 +2714,34 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(true);
     }
     return i;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateEntry(Connection db) throws SQLException {
+    TicketLog thisEntry = new TicketLog();
+    thisEntry.setEnteredBy(this.getModifiedBy());
+    thisEntry.setDepartmentCode(this.getDepartmentCode());
+    thisEntry.setAssignedTo(this.getAssignedTo());
+    thisEntry.setEntryText(this.getComment());
+    thisEntry.setTicketId(this.getId());
+    thisEntry.setPriorityCode(this.getPriorityCode());
+    thisEntry.setSeverityCode(this.getSeverityCode());
+    if (this.getCloseIt() == true) {
+      thisEntry.setClosed(true);
+    }
+    history.add(thisEntry);
+    Iterator hist = history.iterator();
+    while (hist.hasNext()) {
+      TicketLog thisLog = (TicketLog) hist.next();
+      thisLog.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
+    }
   }
 
 

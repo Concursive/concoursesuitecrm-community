@@ -461,4 +461,5 @@
     </td>
   </tr>
 </table>
+<input type="hidden" name="modified" value="<%=  TicketDetails.getModified() %>" />
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
