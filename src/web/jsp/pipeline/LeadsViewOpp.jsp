@@ -4,15 +4,15 @@
 <jsp:useBean id="OpportunityListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <jsp:useBean id="TypeSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<a href="/Leads.do">Pipeline Management</a> > 
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<a href="Leads.do">Pipeline Management</a> > 
 View Opportunities<br>
 <hr color="#BFBFBB" noshade>
 <center><%= OpportunityListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
-    <form name="listView" method="post" action="/Leads.do?command=ViewOpp">
+    <form name="listView" method="post" action="Leads.do?command=ViewOpp">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= OpportunityListInfo.getOptionValue("my") %>>My Opportunities</option>
