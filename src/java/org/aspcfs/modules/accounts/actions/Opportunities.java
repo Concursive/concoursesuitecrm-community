@@ -323,7 +323,8 @@ public final class Opportunities extends CFSModule {
         componentList.buildList(db);
         context.getRequest().setAttribute("ComponentList", componentList);
       } else {
-        processErrors(context, newOpp.getErrors());
+        processErrors(context, newOpp.getHeader().getErrors());
+        processErrors(context, newOpp.getComponent().getErrors());
       }
 
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
