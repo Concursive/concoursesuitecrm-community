@@ -480,6 +480,11 @@
   
   <!-- Generate license for new system -->
   <target name="license" depends="license.exists,taskdef.register" unless="license.present">
+    <fail unless="LICENSE.ORGANIZATION">Initialization aborted ${lf}${lf}License information needs to be entered in ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties</fail>
+    <fail unless="LICENSE.FIRST_NAME">Initialization aborted ${lf}${lf}License information needs to be entered in ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties</fail>
+    <fail unless="LICENSE.LAST_NAME">Initialization aborted ${lf}${lf}License information needs to be entered in ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties</fail>
+    <fail unless="LICENSE.EMAIL">Initialization aborted ${lf}${lf}License information needs to be entered in ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties</fail>
+    <fail unless="LICENSE.PROFILE">Initialization aborted ${lf}${lf}License information needs to be entered in ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties</fail>
     <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary/init"/>
     <register
         organization="${LICENSE.ORGANIZATION}"
@@ -756,6 +761,9 @@
       <!-- opportunities -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
       <transaction src="${build.sql.dir}/opportunity.sql"/>
+      <!-- service contracts and assets -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_service_contract.sql"/>
+      <transaction src="${build.sql.dir}/service_contract.sql"/>
       <!-- tickets -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms.sql"/>
       <transaction src="${build.sql.dir}/tms.sql"/>
