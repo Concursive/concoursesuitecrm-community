@@ -120,7 +120,7 @@ View Opportunities<br>
 <%
     }
   } else {%>
-  <tr bgcolor="containerBody">
+  <tr class="containerBody">
     <td colspan="7" valign="center">No opportunities found.</td>
   </tr>
 <%}%>
