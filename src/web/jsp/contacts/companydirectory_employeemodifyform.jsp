@@ -43,6 +43,22 @@
 </script>
 
 <form action='/CompanyDirectory.do?command=UpdateEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
+
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<a href="/CompanyDirectory.do?command=ListEmployees">View Employees</a> >
+  <%}%>
+<%} else {%>
+<a href="/CompanyDirectory.do?command=ListEmployees">View Employees</a> >
+<a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%=EmployeeBean.getId()%>">Employee Details</a> >
+<%}%>
+
+
+Modify Employee<br>
+<hr color="#BFBFBB" noshade>
+
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>

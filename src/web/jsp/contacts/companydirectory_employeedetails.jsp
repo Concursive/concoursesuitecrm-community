@@ -3,8 +3,12 @@
 <jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<a href="/CompanyDirectory.do?command=ListEmployees">Back to Employee List</a><p>
+<!--a href="/CompanyDirectory.do?command=ListEmployees">Back to Employee List</a><p-->
 <form name="details" action="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify" method="post">
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="/CompanyDirectory.do?command=ListEmployees">View Employees</a> >
+Employee Details<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify';submit();"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/CompanyDirectory.do?command=DeleteEmployee&empid=<%=EmployeeBean.getId() %>';confirmSubmit(document.details);"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br>&nbsp;</dhv:permission>

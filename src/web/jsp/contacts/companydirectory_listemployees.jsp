@@ -4,6 +4,9 @@
 <jsp:useBean id="CompanyDirectoryInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+View Employees<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="contacts-internal_contacts-add"><a href="/CompanyDirectory.do?command=InsertEmployeeForm">Add an Employee</a></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-add" none="true"><br></dhv:permission>
 <center><%= CompanyDirectoryInfo.getAlphabeticalPageLinks() %></center>

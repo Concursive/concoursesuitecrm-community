@@ -6,6 +6,9 @@
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].searchFirstName.focus();">
 <form name="searchContact" action="/ExternalContacts.do?command=ListContacts&auto-populate=true" method="post">
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+Search Contacts<br>
+<hr color="#BFBFBB" noshade>
 <!--input type=submit value="Search">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
 <input type="reset" value="Reset"-->

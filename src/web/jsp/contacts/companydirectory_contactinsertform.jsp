@@ -30,10 +30,11 @@
       }
     }
 </script>
-
-
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
 <form name="addContact" action="/ExternalContacts.do?command=InsertContact&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+Add Contact<br>
+<hr color="#BFBFBB" noshade>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">

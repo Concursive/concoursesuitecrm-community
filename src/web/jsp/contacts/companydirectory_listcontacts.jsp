@@ -5,7 +5,9 @@
 <jsp:useBean id="ExternalContactsInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+View Contacts<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="contacts-external_contacts-add">
 <a href="/ExternalContacts.do?command=InsertContactForm">Add a Contact</a>
 </dhv:permission>

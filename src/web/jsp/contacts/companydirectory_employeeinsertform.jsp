@@ -35,6 +35,9 @@
 
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
 <form action='/CompanyDirectory.do?command=InsertEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+Add Employee<br>
+<hr color="#BFBFBB" noshade>
 <input type="submit" value="Save" name="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
