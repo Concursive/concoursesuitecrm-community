@@ -40,26 +40,26 @@ Tasks<br>
             <strong>Action</strong>
           </td>
           <td align="center" nowrap>
-            <strong><a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>&column=t.priority">Priority</a></strong>
+            <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.priority">Priority</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.priority") %>
           </td>
            <td width="100%" nowrap>
-            <strong><a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>&column=t.description">Task</a></strong>
+            <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.description">Task</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.description") %>
           </td>
           <td align="center" nowrap>
             <strong>Assigned To</strong>
           </td>
           <td align="center" nowrap>
-            <strong><a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>&column=t.duedate">Due Date</a></strong>
+            <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.duedate">Due Date</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.duedate") %>
           </td>
           <td align="center" nowrap>
-            <strong><a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>&column=t.completedate">Complete Date</a></strong>
+            <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.completedate">Complete Date</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.completedate") %>
           </td>
           <td align="center" nowrap>
-            <strong><a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>&column=t.entered">Age</a></strong>
+            <strong><a href="TroubleTicketTasks.do?command=List&ticketId=<%= TicketDetails.getId() %>&column=t.entered">Age</a></strong>
             <%= TicketTaskListInfo.getSortIcon("t.entered") %>
           </td>
          </tr>
@@ -85,17 +85,34 @@ Tasks<br>
           <table cellpadding="0" cellspacing="0">
             <tr <%= thisTask.getComplete()?"class=\"strike\"":"class=\"\""%> id="complete<%=count%>">
               <td>
-      <% 
-            if (thisTask.getComplete()) {
-      %>
-                <a href="javascript:changeImages('image<%= count %>','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%= thisTask.getId() %>+'|0','MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisTask.getId() %>+'|1');javascript:switchClass('complete<%=count%>');" onMouseOver="this.style.color='blue';window.status='View Details';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box-checked.gif" name="image<%= count %>" id="1" border="0" title="Click to change"></a>
-      <% 
-            } else {
-      %>
-                <a href="javascript:changeImages('image<%= count %>','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%= thisTask.getId() %>+'|1','MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisTask.getId() %>+'|1');javascript:switchClass('complete<%=count%>');"><img src="images/box.gif" name="image<%= count %>" id="0" border="0" title="Click to change"></a>
-      <%
-            }
-      %>
+        <% boolean hasAuthority = false; %> 
+        <dhv:hasAuthority owner="<%= thisTask.getOwner() %>">
+          <% hasAuthority = true; %>
+        </dhv:hasAuthority>
+            <%
+              if (thisTask.getComplete()) {
+            %>
+                <dhv:evaluate if="<%= hasAuthority %>">
+                  <a href="javascript:changeImages('image<%= count %>','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%= thisTask.getId() %>+'|0','MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisTask.getId() %>+'|1');javascript:switchClass('complete<%=count%>');" onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;">
+                  <img src="images/box-checked.gif" name="image<%= count %>" id="1" border="0" title="Click to change"></a>
+                </dhv:evaluate>
+                <dhv:evaluate if="<%= !hasAuthority %>">
+                  <a href="javascript:alert('Status can be changed only by the user who the task is assigned to');" onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;">
+                  <img src="images/box-checked.gif" name="image<%= count %>" id="1" border="0" title="Click to change"></a>
+                </dhv:evaluate>
+              <% 
+                 } else {
+              %>
+                  <dhv:evaluate if="<%= hasAuthority %>">
+                    <a href="javascript:changeImages('image<%= count %>','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%= thisTask.getId() %>+'|1','MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisTask.getId() %>+'|1');javascript:switchClass('complete<%=count%>');" onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box.gif" name="image<%= count %>" id="0" border="0" title="Click to change">
+                    </a>
+                  </dhv:evaluate>
+                  <dhv:evaluate if="<%= !hasAuthority %>">
+                    <a href="javascript:alert('Status can be changed only by the user who the task is assigned to');" onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box.gif" name="image<%= count %>" id="0" border="0" title="Click to change"></a>
+                  </dhv:evaluate>
+              <%
+                }
+              %>
               </td>
               <td valign="top">
       <% 
