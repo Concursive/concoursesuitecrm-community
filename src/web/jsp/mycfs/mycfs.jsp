@@ -47,18 +47,48 @@
       </tr>
       <tr>
         <td height="100%" width="100%" valign="top">
+          <table width="100%" cellspacing="1" cellpadding="0" border="0">
 <%    
    Iterator days = (CompanyCalendar.getEvents(5)).iterator();
    if (days.hasNext()) {
+     boolean showToday = false;
+     Calendar today = Calendar.getInstance();
+     today.setTime(new java.util.Date());
 %>
-     <table width="100%" cellspacing="1" cellpadding="0" border="0">
+     
 <%
      while (days.hasNext()) {
        CalendarEventList thisDay = (CalendarEventList)days.next();
+       Calendar thisCal = Calendar.getInstance();
+       thisCal.setTime(thisDay.getDate());
+       boolean isToday = 
+          ((thisCal.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) &&
+          (thisCal.get(Calendar.YEAR) == today.get(Calendar.YEAR)));
+       
+       if (showToday == false && !isToday) {
+%>       
+       <tr>
+         <td colspan="2">
+           <strong><%= toFullDateString(new java.util.Date()) %> (Today)</strong>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top" nowrap>
+           &nbsp;&nbsp;
+         </td>
+         <td width="100%" valign="top">
+           No alerts found.
+         </td>
+       </tr>
+<%     }
+      showToday = true;
 %>
        <tr>
          <td colspan="2">
-           <strong><%= toFullDateString(thisDay.getDate()) %></strong>
+           <strong>
+             <%= toFullDateString(thisDay.getDate()) %>
+             <dhv:evaluate exp="<%= isToday %>">(Today)</dhv:evaluate>
+           </strong>
          </td>
        </tr>
 <%
@@ -78,14 +108,27 @@
        }
      }
 %>
-     </table>
+     
 <%     
    } else {
 %>
-       No alerts found.
+       <tr>
+         <td colspan="2">
+           <strong><%= toFullDateString(new java.util.Date()) %> (Today)</strong>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top" nowrap>
+           &nbsp;&nbsp;
+         </td>
+         <td width="100%" valign="top">
+           No alerts found.
+         </td>
+       </tr>
 <%
    }   
 %>
+        </table>
       </td>
     </tr>
   </table>
