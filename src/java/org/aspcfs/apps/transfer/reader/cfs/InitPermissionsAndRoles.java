@@ -64,19 +64,19 @@ public class InitPermissionsAndRoles implements DataReader {
       Comparator comparator = new CategoryElementComparator();
       Object sortArray[] = categoryList.toArray();
       Arrays.sort(sortArray, comparator);
-      categoryList.clear();
+      
+      ArrayList sortedCategoryList = new ArrayList();
       for (int i = 0; i < sortArray.length; i++) {
-        categoryList.add((Element) sortArray[i]);
+        sortedCategoryList.add((Element) sortArray[i]);
       }
       
       //Insert the category, then insert the permission, keep a hashmap of permission IDs for
       //processing roles
       HashMap permissionIds = new HashMap();
-      Iterator sortedCategoryItems = categoryList.iterator();
-      int categoryLevel = 0;
+      Iterator sortedCategoryItems = sortedCategoryList.iterator();
       while (sortedCategoryItems.hasNext()) {
-        categoryLevel = categoryLevel + 100;
         Element category = (Element) sortedCategoryItems.next();
+        int categoryLevel = (categoryList.indexOf(category) + 1) * 100;
         DataRecord thisRecord = new DataRecord();
         thisRecord.setName("permissionCategory");
         thisRecord.setAction("insert");
@@ -155,7 +155,7 @@ public class InitPermissionsAndRoles implements DataReader {
           rolePermissionRecord.setName("rolePermission");
           rolePermissionRecord.setAction("insert");
           rolePermissionRecord.addField("roleId", String.valueOf(roleId));
-          rolePermissionRecord.addField("permissionId", (String) permissionIds.get((String) rolePermission.getAttribute("name")));
+          rolePermissionRecord.addField("permissionId", ((Integer) permissionIds.get((String) rolePermission.getAttribute("name"))).intValue());
           String attributes = (String) rolePermission.getAttribute("attributes");
           rolePermissionRecord.addField("view", String.valueOf(attributes.indexOf("v") > -1));
           rolePermissionRecord.addField("add", String.valueOf(attributes.indexOf("a") > -1));
