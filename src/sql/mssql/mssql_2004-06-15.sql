@@ -3357,6 +3357,30 @@ ALTER TABLE [ticket] ADD
 	),
 	 FOREIGN KEY 
 	(
+		[cat_code]
+	) REFERENCES [ticket_category] (
+		[id]
+	),
+	 FOREIGN KEY 
+	(
+		[subcat_code1]
+	) REFERENCES [ticket_category] (
+		[id]
+	),
+	 FOREIGN KEY 
+	(
+		[subcat_code2]
+	) REFERENCES [ticket_category] (
+		[id]
+	),
+	 FOREIGN KEY 
+	(
+		[subcat_code3]
+	) REFERENCES [ticket_category] (
+		[id]
+	),
+	 FOREIGN KEY 
+	(
 		[link_asset_id]
 	) REFERENCES [asset] (
 		[asset_id]
