@@ -267,7 +267,8 @@ public class DatabaseUtils {
     return ("ON".equalsIgnoreCase(tmp) ||
         "TRUE".equalsIgnoreCase(tmp) ||
         "1".equals(tmp) ||
-        "Y".equalsIgnoreCase(tmp));
+        "Y".equalsIgnoreCase(tmp) ||
+        "YES".equalsIgnoreCase(tmp));
   }
 
 
