@@ -52,6 +52,7 @@ public class Opportunity extends GenericBean {
 
 	private String accountName = "";
 	private String contactName = "";
+	private String contactCompanyName = "";
 	private String ownerName = "";
 	private String enteredByName = "";
 	private String modifiedByName = "";
@@ -94,7 +95,7 @@ public class Opportunity extends GenericBean {
 		StringBuffer sql = new StringBuffer();
 
 		sql.append(
-				"SELECT x.*, y.description as stagename, org.name as acct_name, ct.namelast as last_name, ct.namefirst as first_name, " +
+				"SELECT x.*, y.description as stagename, org.name as acct_name, ct.namelast as last_name, ct.namefirst as first_name, ct.company as ctcompany," +
 				"ct_owner.namelast || ', ' || ct_owner.namefirst as o_name, ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name " +
 				"FROM opportunity x " +
 				"LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
@@ -143,6 +144,12 @@ public boolean getOpenIt() {
 }
 public void setOpenIt(boolean openIt) {
 	this.openIt = openIt;
+}
+public String getContactCompanyName() {
+	return contactCompanyName;
+}
+public void setContactCompanyName(String contactCompanyName) {
+	this.contactCompanyName = contactCompanyName;
 }
 
 	/**
@@ -894,8 +901,10 @@ public void setCloseIt(boolean closeIt) {
 		if (accountName != null) {
 			return accountName;
 		}
-		else {
+		else if ( !(contactName.equals(" ")) )  {
 			return this.getContactName();
+		} else {
+			return this.getContactCompanyName();
 		}
 	}
 
@@ -1243,6 +1252,7 @@ public void setCloseIt(boolean closeIt) {
 		accountLink = rs.getInt("acctLink");
 		accountName = rs.getString("acct_name");
 		contactName = rs.getString("first_name") + " " + rs.getString("last_name");
+		contactCompanyName = rs.getString("ctcompany");
 		ownerName = rs.getString("o_name");
 		enteredByName = rs.getString("eb_name");
 		modifiedByName = rs.getString("mb_name");

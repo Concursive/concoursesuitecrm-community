@@ -235,7 +235,7 @@ public class OpportunityList extends Vector {
 		//    "WHERE c.department = d.department_id ");
 
 		sqlSelect.append(
-				"SELECT x.*, y.description as stagename, org.name as acct_name, ct.namelast as last_name, ct.namefirst as first_name, " +
+				"SELECT x.*, y.description as stagename, org.name as acct_name, ct.namelast as last_name, ct.namefirst as first_name, ct.company as ctcompany," +
 				"ct_owner.namelast || ', ' || ct_owner.namefirst as o_name, ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name " +
 				"FROM opportunity x " +
 				"LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
