@@ -132,7 +132,7 @@ Replaceable parameter  typical value / description
     </init-param>
     <init-param>
         <param-name>GlobalPWInfo</param-name>
-        <param-value>3d17aefbade4b011fbc4333508c0bd2b</param-value>
+        <param-value>118c0f0bb67a6058a911342a059bae03</param-value>
     </init-param>
     <init-param>
         <param-name>PreloadXSL</param-name>
