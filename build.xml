@@ -25,7 +25,7 @@
   <!-- classpath as both object and a property -->
   <path id="cfs2.classpath">
     <pathelement path="${classes.dir}"/>
-    <fileset dir="${env.TOMCAT_HOME}/common/lib">
+    <fileset dir="${env.CATALINA_HOME}/common/lib">
       <include name="**/*.jar"/>
     </fileset>
   </path>
@@ -103,7 +103,6 @@
     <echo message="Date: ${date.long}"/>
     <echo message="User: ${user.name}"/>
     <echo message="System: ${os.name} ${os.arch} ${os.version}"/>
-    <echo message="Processors: ${env.NUMBER_OF_PROCESSORS}"/>
     <echo message="Ant version: ${ant.version}"/>
     <echo message="Java version: ${java.version}"/>
     <echo message="Source Path: ${base.dir}"/>
@@ -210,7 +209,11 @@
       </fileset>
     </copy>
     <!-- Copy the meta-data, only if new -->
-    
+    <copy todir="${CFS_HOME}/WEB-INF">
+      <fileset dir="${web.dir}/WEB-INF">
+        <include name="*.*"/>
+      </fileset>
+    </copy>
     
     
     <!-- Merge meta-data with build.env, only if 1 of the following -->
