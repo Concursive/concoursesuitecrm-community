@@ -99,6 +99,7 @@ public class OrganizationEmailAddress extends EmailAddress {
                 }    
     sql.append("?, ?) ");
     int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
     if (orgId > -1) {
       pst.setInt(++i, this.getOrgId());
     } else {

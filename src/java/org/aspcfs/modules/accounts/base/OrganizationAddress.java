@@ -111,6 +111,8 @@ public class OrganizationAddress extends Address {
     sql.append("?, ?) ");          
     
     int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    
     if (this.getOrgId() > -1) {
       pst.setInt(++i, this.getOrgId());
     } else {
