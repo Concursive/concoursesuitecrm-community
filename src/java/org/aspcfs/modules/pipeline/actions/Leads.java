@@ -682,29 +682,8 @@ public final class Leads extends CFSModule {
 	boolean recordInserted = false;
 	Connection db = null;
 	String subject = context.getRequest().getParameter("subject");
-	
-	Report rep = new Report();
-	rep.setDelimitedCharacter(",");
-	
-	rep.setHeader("CFS Pipeline Management: " + subject);
-	
-	rep.addColumn("Description");
-	rep.addColumn("Contact/Organization");
-	rep.addColumn("Owner");
-	rep.addColumn("Amount");
-	rep.addColumn("Stage");
-	rep.addColumn("Stage Date");
-	rep.addColumn("Prob. of Close");
-	rep.addColumn("Revenue Start");
-	rep.addColumn("Terms");
-	rep.addColumn("Alert Date");
-	rep.addColumn("Commission");
-	rep.addColumn("Entered");
-	rep.addColumn("Entered By");
-	rep.addColumn("Modified");
-	rep.addColumn("Modified By");
 		
-	String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
+	//String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
 	
 	String filePath = this.getPath(context, "lead-reports");
 	
@@ -714,62 +693,19 @@ public final class Leads extends CFSModule {
 	String datePathToUse2 = formatter2.format(new java.util.Date());
 	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
 	
-	SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
-	String filenameToUse = formatter.format(new java.util.Date());
-	
-	File f = new File(filePath);
-	f.mkdirs();
-
-    	OpportunityList oppList = new OpportunityList();
+	OpportunityReport oppReport = new OpportunityReport();
+	oppReport.setCriteria(context.getRequest().getParameterValues("fields"));
+	oppReport.setFilePath(filePath);
+	oppReport.setEnteredBy(getUserId(context));
+	oppReport.setModifiedBy(getUserId(context));
+	oppReport.setSubject(subject);
+	oppReport.setOwnerIdRange(this.getUserRange(context));
+	//oppReport.setOwner(this.getUserId(context));
 	
 	try {
 		db = this.getConnection(context);
-		oppList.setOwnerIdRange(this.getUserRange(context));
-		//oppList.setOwner(this.getUserId(context));
-	
-		oppList.buildList(db);
-		
-		Iterator m = oppList.iterator();
-		while (m.hasNext()) {
-			Opportunity thisOpp = (Opportunity) m.next();
-			ReportRow thisRow = new ReportRow();
-			
-			thisRow.addCell(thisOpp.getDescription(), tdNumStart);
-			thisRow.addCell(thisOpp.getAccountName());
-			thisRow.addCell(thisOpp.getOwnerName());
-			thisRow.addCell("$" + thisOpp.getGuessCurrency());
-			thisRow.addCell(thisOpp.getStageName());
-			thisRow.addCell(thisOpp.getStageDateString());
-			thisRow.addCell(thisOpp.getCloseProbValue());
-			thisRow.addCell(thisOpp.getCloseDateString());
-			thisRow.addCell(thisOpp.getTermsString());
-			thisRow.addCell(thisOpp.getAlertDateString());
-			thisRow.addCell(thisOpp.getCommissionPercent());
-			thisRow.addCell(thisOpp.getEnteredString());
-			thisRow.addCell(thisOpp.getEnteredByName());
-			thisRow.addCell(thisOpp.getModifiedString());
-			thisRow.addCell(thisOpp.getModifiedByName());
-						
-			rep.addRow(thisRow);
-		}
-		
-		rep.saveHtml(filePath + filenameToUse + ".html");
-		rep.saveDelimited(filePath + filenameToUse + ".csv");
-
-		File fileLink = new File(filePath + filenameToUse + ".csv");
-		
-		FileItem thisItem = new FileItem();
-		thisItem.setLinkModuleId(Constants.LEADS_REPORTS);
-		thisItem.setLinkItemId(0);
-		thisItem.setProjectId(-1);
-		thisItem.setEnteredBy(getUserId(context));
-		thisItem.setModifiedBy(getUserId(context));
-		thisItem.setSubject(subject);
-		thisItem.setClientFilename(filenameToUse + ".csv");
-		thisItem.setFilename(filenameToUse);
-		thisItem.setSize((int)fileLink.length());
-		thisItem.insert(db);
-		
+		oppReport.buildReportFull(db);
+		oppReport.saveAndInsert(db);
 	} catch (Exception e) {
 		errorMessage = e;
 	} finally {
