@@ -63,7 +63,7 @@ Dashboard<br>
       <table width=285 cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
           <td valign=center nowrap>
-           Reporting Staff
+           Reports ($Gr. Pipe.)
           </td>
           
           <td width=125 valign=center>
@@ -85,6 +85,7 @@ Dashboard<br>
         <tr>
           <td class="row<%= rowid %>" valign=center nowrap>
             <a href="/Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
+            ($<%=thisRec.getGrossPipelineCurrency(1000)%>K)
             <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
           </td>
           <td width=125 class="row<%= rowid %>" valign=center>

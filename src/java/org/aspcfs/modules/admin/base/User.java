@@ -58,6 +58,7 @@ public class User extends GenericBean {
   protected ArrayList permissions = new ArrayList();
   protected UserList childUsers = null;
   protected double YTD = 0;
+  protected double pipelineValue = 0;
 
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
@@ -697,7 +698,13 @@ public class User extends GenericBean {
       this.roleId = Integer.parseInt(tmp);
     }
   }
-
+  
+  public void setPipelineValue(double pipelineValue) {
+    this.pipelineValue = pipelineValue;
+  }
+  public double getPipelineValue() {
+    return pipelineValue;
+  }
 
   /**
    *  Sets the Role attribute of the User object
@@ -1923,6 +1930,46 @@ public class User extends GenericBean {
     }
     rs.close();
     pst.close();
+  }
+  
+  public String getGrossPipelineCurrency(int divisor) {
+    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    double tempValue = (pipelineValue / divisor);
+    String amountOut = "";
+    
+    if (tempValue < 1) {
+      if (tempValue == 0.0) {
+        amountOut = "0";
+      } else {
+        amountOut = "<1";
+      }
+    } else {
+      amountOut = numberFormatter.format(tempValue);
+    }
+
+    return amountOut;
+  }  
+  
+  public void buildGrossPipelineValue(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT sum(oc.guessvalue) as sum " +
+        "FROM opportunity_component oc " +
+        "WHERE oc.owner = ? and oc.enabled = ? ");
+
+    pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setInt(++i, id);
+    pst.setBoolean(++i, true);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setPipelineValue(rs.getDouble("sum"));
+    } 
+    rs.close();
+    pst.close();    
   }
 
 

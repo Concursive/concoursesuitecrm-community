@@ -45,6 +45,7 @@ public class UserList extends Vector {
   private boolean buildRevenueYTD = false;
   private int revenueYear = -1;
   private int revenueType = 0;
+  private boolean buildGrossPipelineValue = true;
   
   private boolean includeMe = false;
   private String myValue = "";
@@ -158,6 +159,12 @@ public class UserList extends Vector {
     this.pagedListInfo = tmp;
   }
   
+  public boolean getBuildGrossPipelineValue() {
+    return buildGrossPipelineValue;
+  }
+  public void setBuildGrossPipelineValue(boolean buildGrossPipelineValue) {
+    this.buildGrossPipelineValue = buildGrossPipelineValue;
+  }
   
   /**
    *  Sets the EmptyHtmlSelectRecord attribute of the UserList object
@@ -711,6 +718,9 @@ public class UserList extends Vector {
       }
       if (buildRevenueYTD && revenueYear > -1) {
         thisUser.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType());
+      }
+      if (buildGrossPipelineValue) {
+        thisUser.buildGrossPipelineValue(db);
       }
       
       this.add(thisUser);
