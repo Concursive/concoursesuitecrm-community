@@ -1,5 +1,5 @@
 <workflow>
-  <!-- Hooks decide which items can be hooked in Dark Horse CRM, so if there is code
+  <!-- Hooks decide which items can be hooked in Centric CRM, so if there is code
   that executes the WorkflowManager when a ticket is updated or inserted,
   the corresponding process is activated -->
   <hooks>
@@ -15,7 +15,7 @@
   <processes>
     <process name="dhv.ticket.insert" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="Help Desk">
       <parameters>
-        <!-- Global parameters for the process override the defaults from Dark Horse CRM -->
+        <!-- Global parameters for the process override the defaults from Centric CRM -->
         <!--
         <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
         <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
@@ -32,8 +32,8 @@
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
-            <parameter name="notification.subject">Dark Horse CRM Ticket Closed: ${this.paddedId}</parameter>
-<parameter name="notification.body"><![CDATA[The following ticket in Dark Horse CRM has been closed:
+            <parameter name="notification.subject">Centric CRM Ticket Closed: ${this.paddedId}</parameter>
+<parameter name="notification.body"><![CDATA[The following ticket in Centric CRM has been closed:
 
 --- Ticket Details ---
 
@@ -56,8 +56,8 @@ Solution: ${this.solution}
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
-            <parameter name="notification.subject">Dark Horse CRM Ticket Assigned: ${this.paddedId}</parameter>
-            <parameter name="notification.body"><![CDATA[The following ticket in Dark Horse CRM has been assigned to you:
+            <parameter name="notification.subject">Centric CRM Ticket Assigned: ${this.paddedId}</parameter>
+            <parameter name="notification.body"><![CDATA[The following ticket in Centric CRM has been assigned to you:
 
 --- Ticket Details ---
 
@@ -104,10 +104,10 @@ Comment: ${this.comment}
             <!-- not implemented
             <parameter name="notification.departments.to" value="${this.departmentCode}" enabled="false"/>
             -->
-            <parameter name="notification.subject">Dark Horse CRM Unassigned Ticket Report (${objects.size})</parameter>
+            <parameter name="notification.subject">Centric CRM Unassigned Ticket Report (${objects.size})</parameter>
             <parameter name="notification.body"><![CDATA[** This is an automated message **
 
-The following tickets in Dark Horse CRM are unassigned and need attention:
+The following tickets in Centric CRM are unassigned and need attention:
 
 ]]></parameter>
             <parameter name="report.ticket.content"><![CDATA[----- Ticket Details -----

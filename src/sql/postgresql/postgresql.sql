@@ -1,4 +1,4 @@
--- Script (C) 2004 Dark Horse Ventures, all rights reserved
+-- Script (C) 2004 Dark Horse Ventures LLC, all rights reserved
 
 SET search_path = public, pg_catalog;
 
@@ -7750,8 +7750,8 @@ INSERT INTO business_process_parameter_library VALUES (1, 3, 'notification.modul
 INSERT INTO business_process_parameter_library VALUES (2, 3, 'notification.itemId', NULL, '${this.id}', true);
 INSERT INTO business_process_parameter_library VALUES (3, 3, 'notification.itemModified', NULL, '${this.modified}', true);
 INSERT INTO business_process_parameter_library VALUES (4, 3, 'notification.userToNotify', NULL, '${previous.enteredBy}', true);
-INSERT INTO business_process_parameter_library VALUES (5, 3, 'notification.subject', NULL, 'Dark Horse CRM Ticket Closed: ${this.paddedId}', true);
-INSERT INTO business_process_parameter_library VALUES (6, 3, 'notification.body', NULL, 'The following ticket in Dark Horse CRM has been closed:
+INSERT INTO business_process_parameter_library VALUES (5, 3, 'notification.subject', NULL, 'Centric CRM Ticket Closed: ${this.paddedId}', true);
+INSERT INTO business_process_parameter_library VALUES (6, 3, 'notification.body', NULL, 'The following ticket in Centric CRM has been closed:
 
 
 Ticket # ${this.paddedId}
@@ -7769,8 +7769,8 @@ INSERT INTO business_process_parameter_library VALUES (7, 6, 'notification.modul
 INSERT INTO business_process_parameter_library VALUES (8, 6, 'notification.itemId', NULL, '${this.id}', true);
 INSERT INTO business_process_parameter_library VALUES (9, 6, 'notification.itemModified', NULL, '${this.modified}', true);
 INSERT INTO business_process_parameter_library VALUES (10, 6, 'notification.userToNotify', NULL, '${this.assignedTo}', true);
-INSERT INTO business_process_parameter_library VALUES (11, 6, 'notification.subject', NULL, 'Dark Horse CRM Ticket Assigned: ${this.paddedId}', true);
-INSERT INTO business_process_parameter_library VALUES (12, 6, 'notification.body', NULL, 'The following ticket in Dark Horse CRM has been assigned to you:
+INSERT INTO business_process_parameter_library VALUES (11, 6, 'notification.subject', NULL, 'Centric CRM Ticket Assigned: ${this.paddedId}', true);
+INSERT INTO business_process_parameter_library VALUES (12, 6, 'notification.body', NULL, 'The following ticket in Centric CRM has been assigned to you:
 
 
 Ticket # ${this.paddedId}
@@ -7789,10 +7789,10 @@ INSERT INTO business_process_parameter_library VALUES (17, 7, 'ticketList.lastAn
 INSERT INTO business_process_parameter_library VALUES (18, 7, 'ticketList.nextAnchor', NULL, '${process.nextAnchor}', true);
 INSERT INTO business_process_parameter_library VALUES (19, 8, 'notification.users.to', NULL, '${this.enteredBy}', true);
 INSERT INTO business_process_parameter_library VALUES (20, 8, 'notification.contacts.to', NULL, '${this.contactId}', true);
-INSERT INTO business_process_parameter_library VALUES (21, 8, 'notification.subject', NULL, 'Dark Horse CRM Unassigned Ticket Report (${objects.size})', true);
+INSERT INTO business_process_parameter_library VALUES (21, 8, 'notification.subject', NULL, 'Centric CRM Unassigned Ticket Report (${objects.size})', true);
 INSERT INTO business_process_parameter_library VALUES (22, 8, 'notification.body', NULL, '** This is an automated message **
 
-The following tickets in Dark Horse CRM are unassigned and need attention:
+The following tickets in Centric CRM are unassigned and need attention:
 
 ', true);
 INSERT INTO business_process_parameter_library VALUES (23, 8, 'report.ticket.content', NULL, '----- Ticket Details -----
@@ -7834,8 +7834,8 @@ INSERT INTO business_process_component_parameter VALUES (1, 3, 1, 'Tickets', tru
 INSERT INTO business_process_component_parameter VALUES (2, 3, 2, '${this.id}', true);
 INSERT INTO business_process_component_parameter VALUES (3, 3, 3, '${this.modified}', true);
 INSERT INTO business_process_component_parameter VALUES (4, 3, 4, '${previous.enteredBy}', true);
-INSERT INTO business_process_component_parameter VALUES (5, 3, 5, 'Dark Horse CRM Ticket Closed: ${this.paddedId}', true);
-INSERT INTO business_process_component_parameter VALUES (6, 3, 6, 'The following ticket in Dark Horse CRM has been closed:
+INSERT INTO business_process_component_parameter VALUES (5, 3, 5, 'Centric CRM Ticket Closed: ${this.paddedId}', true);
+INSERT INTO business_process_component_parameter VALUES (6, 3, 6, 'The following ticket in Centric CRM has been closed:
 
 
 Ticket # ${this.paddedId}
@@ -7853,8 +7853,8 @@ INSERT INTO business_process_component_parameter VALUES (7, 6, 7, 'Tickets', tru
 INSERT INTO business_process_component_parameter VALUES (8, 6, 8, '${this.id}', true);
 INSERT INTO business_process_component_parameter VALUES (9, 6, 9, '${this.modified}', true);
 INSERT INTO business_process_component_parameter VALUES (10, 6, 10, '${this.assignedTo}', true);
-INSERT INTO business_process_component_parameter VALUES (11, 6, 11, 'Dark Horse CRM Ticket Assigned: ${this.paddedId}', true);
-INSERT INTO business_process_component_parameter VALUES (12, 6, 12, 'The following ticket in Dark Horse CRM has been assigned to you:
+INSERT INTO business_process_component_parameter VALUES (11, 6, 11, 'Centric CRM Ticket Assigned: ${this.paddedId}', true);
+INSERT INTO business_process_component_parameter VALUES (12, 6, 12, 'The following ticket in Centric CRM has been assigned to you:
 
 
 Ticket # ${this.paddedId}
@@ -7873,10 +7873,10 @@ INSERT INTO business_process_component_parameter VALUES (17, 7, 17, '${process.l
 INSERT INTO business_process_component_parameter VALUES (18, 7, 18, '${process.nextAnchor}', true);
 INSERT INTO business_process_component_parameter VALUES (19, 8, 19, '${this.enteredBy}', true);
 INSERT INTO business_process_component_parameter VALUES (20, 8, 20, '${this.contactId}', false);
-INSERT INTO business_process_component_parameter VALUES (21, 8, 21, 'Dark Horse CRM Unassigned Ticket Report (${objects.size})', true);
+INSERT INTO business_process_component_parameter VALUES (21, 8, 21, 'Centric CRM Unassigned Ticket Report (${objects.size})', true);
 INSERT INTO business_process_component_parameter VALUES (22, 8, 22, '** This is an automated message **
 
-The following tickets in Dark Horse CRM are unassigned and need attention:
+The following tickets in Centric CRM are unassigned and need attention:
 
 ', true);
 INSERT INTO business_process_component_parameter VALUES (23, 8, 23, '----- Ticket Details -----
