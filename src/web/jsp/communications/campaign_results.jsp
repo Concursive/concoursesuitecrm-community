@@ -130,7 +130,7 @@ Results
              </tr>
              <tr>
                 <td class="containerBody" valign="center" style="text-align: left;" width="100%">
-                  [<a href="javascript:popURLReturn('CampaignManager.do?command=ShowItems&questionId=<%= thisItem.getId() %>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','no');">View Item Details</a>]
+                  [<a href="javascript:popURLReturn('CampaignManager.do?command=ShowItems&questionId=<%= thisItem.getId() %>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','yes');">View Item Details</a>]
                 </td>
              </tr>
             <%}%>

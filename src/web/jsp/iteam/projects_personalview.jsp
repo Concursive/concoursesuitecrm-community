@@ -72,7 +72,7 @@
       <td width="2" align="center" valign="top" bgcolor="<%= currentHighlight %>">&nbsp;</td>
       <td width="418">
         &nbsp;&nbsp;&nbsp;<%= thisAssignment.getStatusGraphicTag() %>&nbsp;
-        <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= thisProject.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true&return=ProjectPersonalView','CRM_Assignment','600','325','yes','no');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
+        <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= thisProject.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true&return=ProjectPersonalView','CRM_Assignment','600','325','yes','yes');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
       </td>
       <td width="140" align="left">&nbsp;<%= toHtml(thisAssignment.getStatus()) %></td>
       <td width="100">&nbsp;<%= thisAssignment.getRelativeDueDateString() %></td>
