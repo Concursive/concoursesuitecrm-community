@@ -22,6 +22,8 @@ public class LookupElement {
   //private java.sql.Timestamp startDate = null;
   //private java.sql.Timestamp endDate = null;
   private boolean enabled = true;
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
 
 
   /**
@@ -47,6 +49,10 @@ public class LookupElement {
     //startDate = rs.getTimestamp("start_date");
     //endDate = rs.getTimestamp("end_date");
     enabled = rs.getBoolean("enabled");
+    
+    //not guaranteed to be here
+    //entered = rs.getTimestamp("entered");
+    //modified = rs.getTimestamp("modified");
   }
 
 
@@ -207,6 +213,9 @@ public class LookupElement {
   public boolean getEnabled() {
     return enabled;
   }
+  
+  public java.sql.Timestamp getModified() { return modified; }
+
 
 
   /**

@@ -282,7 +282,7 @@ public class TransactionItem {
       Record record) throws SQLException {
     syncClientMap.setRecordId(record.getRecordId());
     syncClientMap.setClientUniqueId((String) record.get("guid"));
-    syncClientMap.insert(db);
+    syncClientMap.insert(db, (String)record.get("modified"));
   }
 
 
@@ -396,9 +396,14 @@ public class TransactionItem {
             break;
       }
       if (executeMethod != null) {
-        if (action == INSERT) {
+        if (action == INSERT || action == UPDATE) {
           //Populate any client GUIDs with the correct server ID
           setGuidParameters(db, mapping, syncClientMap);
+        }
+        
+        if (action == UPDATE) {
+          //Retrieve the previous modified date to ensure integrity of update
+          
         }
         Object result = doExecute(db, executeMethod);
         if (System.getProperty("DEBUG") != null) {
@@ -413,11 +418,18 @@ public class TransactionItem {
               if (param.equals("guid")) {
                 syncClientMap.setRecordId( Integer.parseInt(ObjectUtils.getParam(object, "id")) );
                 syncClientMap.setClientUniqueId((String)ignoredProperties.get(param));
-                syncClientMap.insert(db);
+                //Need to log the date/time of the new record for later approval of updates
+                //Reload the newly inserted object to get it's insert/modified date
+                Object insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
+                syncClientMap.insert(db, ObjectUtils.getParam(insertedObject, "modified"));
                 break;
               }
             }
           }
+        } else if (action == UPDATE) {
+          //Update the modified date in client mapping
+          
+          
         }
         addRecords(object, recordList, null, mapping, syncClientMap, db);
       }

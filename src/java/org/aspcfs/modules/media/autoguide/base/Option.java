@@ -15,7 +15,8 @@ public class Option {
   private int id = -1;
   private int inventoryId = -1;
   private String name = null;
-
+  private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp modified = null;
 
   /**
    *  Constructor for the Option object
@@ -63,6 +64,9 @@ public class Option {
     this.name = tmp;
   }
 
+  public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+  public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
+
 
   /**
    *  Gets the id attribute of the Option object
@@ -82,6 +86,10 @@ public class Option {
   public String getName() {
     return name;
   }
+  
+  public java.sql.Timestamp getEntered() { return entered; }
+  public java.sql.Timestamp getModified() { return modified; }
+
 
 
   /**
@@ -132,6 +140,8 @@ public class Option {
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("option_id");
     name = rs.getString("option_name");
+    entered = rs.getTimestamp("entered");
+    modified = rs.getTimestamp("modified");
   }
 }
 

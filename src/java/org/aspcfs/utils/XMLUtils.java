@@ -308,7 +308,8 @@ public class XMLUtils {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
       //transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      transformer.setOutputProperty(OutputKeys.ENCODING, "US-ASCII");
+      //transformer.setOutputProperty(OutputKeys.ENCODING, "US-ASCII");
+      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-16");
       //transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
       //transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
 

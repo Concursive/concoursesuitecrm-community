@@ -258,7 +258,16 @@ Client #1 Ends Synchronization
     </tableList>
   </transaction>
   
-  ** TODO: users **
+  ** The server has no way of sending passwords. **
+  ** After the user is validated with a direct sync, record their password **
+  <transaction id="2">
+    <meta>
+      <property>guid</property>
+      <property>username</property>
+      <property>modified</property>
+    </meta>
+    <userList action="sync" identity="1"/>
+  </transaction>
   
   <transaction id="3">
     <meta>
@@ -320,10 +329,9 @@ Client #1 Ends Synchronization
     </vehicleList>
   </transaction>
   
-  ** NOT IMPLEMENTED **
   <transaction id="9">
     <meta>
-      <property>code</property>
+      <property>guid</property>
       <property>description</property>
       <property>modified</property>
     </meta>
@@ -347,6 +355,7 @@ Client #1 Ends Synchronization
       <property>comments</property>
       <property>sold</property>
       <property>modified</property>
+      <property>hasPicture</property>
     </meta>
     <accountInventoryList action="sync">
       <accountGuid>*OPTIONAL: SPECIFY AN ACCOUNT ID OR YOU GET ALL ACCOUNTS*</accountGuid>
@@ -384,6 +393,9 @@ Client #1 Ends Synchronization
   </transaction>
   
   ** TODO: inventory_pictures **
+  ** Might not be necessary... seems that pictures are just important for
+     handhelds to remember. **
+  
   
 
 ...Client inserts a vehicle with options and ad runs (MUST HAVE

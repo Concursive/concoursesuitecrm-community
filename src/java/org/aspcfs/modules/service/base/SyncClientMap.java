@@ -9,37 +9,156 @@ import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
 import com.darkhorseventures.utils.RecordList;
 
+/**
+ *  Description of the Class
+ *
+ *@author     matt
+ *@created    June 3, 2002
+ *@version    $Id$
+ */
 public class SyncClientMap {
 
-  private int id = -1;
+  //private int id = -1;
   private int clientId = -1;
   private int tableId = -1;
   private int recordId = -1;
   private String clientUniqueId = null;
   private boolean complete = false;
-  
+  private java.sql.Timestamp statusDate = null;
+
+
+  /**
+   *  Constructor for the SyncClientMap object
+   */
   public SyncClientMap() { }
 
-  public void setId(int tmp) { this.id = tmp; }
-  public void setClientId(int tmp) { this.clientId = tmp; }
-  public void setTableId(int tmp) { this.tableId = tmp; }
-  public void setRecordId(int tmp) { this.recordId = tmp; }
-  public void setClientUniqueId(String tmp) { this.clientUniqueId = tmp; }
-  public void setComplete(boolean tmp) { this.complete = tmp; }
-  
-  public int getId() { return id; }
-  public int getClientId() { return clientId; }
-  public int getTableId() { return tableId; }
-  public int getRecordId() { return recordId; }
-  public String getClientUniqueId() { return clientUniqueId; }
-  public boolean getComplete() { return complete; }
 
-  public boolean insert(Connection db) throws SQLException {
+  /**
+   *  Sets the clientId attribute of the SyncClientMap object
+   *
+   *@param  tmp  The new clientId value
+   */
+  public void setClientId(int tmp) {
+    this.clientId = tmp;
+  }
+
+
+  /**
+   *  Sets the tableId attribute of the SyncClientMap object
+   *
+   *@param  tmp  The new tableId value
+   */
+  public void setTableId(int tmp) {
+    this.tableId = tmp;
+  }
+
+
+  /**
+   *  Sets the recordId attribute of the SyncClientMap object
+   *
+   *@param  tmp  The new recordId value
+   */
+  public void setRecordId(int tmp) {
+    this.recordId = tmp;
+  }
+
+
+  /**
+   *  Sets the clientUniqueId attribute of the SyncClientMap object
+   *
+   *@param  tmp  The new clientUniqueId value
+   */
+  public void setClientUniqueId(String tmp) {
+    this.clientUniqueId = tmp;
+  }
+
+
+  /**
+   *  Sets the complete attribute of the SyncClientMap object
+   *
+   *@param  tmp  The new complete value
+   */
+  public void setComplete(boolean tmp) {
+    this.complete = tmp;
+  }
+  
+  public void setStatusDate(java.sql.Timestamp tmp) { this.statusDate = tmp; }
+
+
+
+  /**
+   *  Gets the clientId attribute of the SyncClientMap object
+   *
+   *@return    The clientId value
+   */
+  public int getClientId() {
+    return clientId;
+  }
+
+
+  /**
+   *  Gets the tableId attribute of the SyncClientMap object
+   *
+   *@return    The tableId value
+   */
+  public int getTableId() {
+    return tableId;
+  }
+
+
+  /**
+   *  Gets the recordId attribute of the SyncClientMap object
+   *
+   *@return    The recordId value
+   */
+  public int getRecordId() {
+    return recordId;
+  }
+
+
+  /**
+   *  Gets the clientUniqueId attribute of the SyncClientMap object
+   *
+   *@return    The clientUniqueId value
+   */
+  public String getClientUniqueId() {
+    return clientUniqueId;
+  }
+
+
+  /**
+   *  Gets the complete attribute of the SyncClientMap object
+   *
+   *@return    The complete value
+   */
+  public boolean getComplete() {
+    return complete;
+  }
+
+  public java.sql.Timestamp getStatusDate() { return statusDate; }
+
+  public boolean insert(Connection db, String timestamp) throws SQLException {
+    if (timestamp != null && !timestamp.trim().equals("")) {
+      return insertMap(db, java.sql.Timestamp.valueOf(timestamp));
+    } else {
+      System.out.println("NULL TIMESTAMP-> " + getTableId() + " " + getRecordId());
+      return insertMap(db, null);
+    }
+  }
+  
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean insertMap(Connection db, java.sql.Timestamp timestamp) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO sync_map " +
-        "(client_id, table_id, record_id, cuid, complete) " +
-        "VALUES (?, ?, ?, ?, ?) ");
+        "(client_id, table_id, record_id, cuid, complete, status_date) " +
+        "VALUES (?, ?, ?, ?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, clientId);
@@ -47,13 +166,27 @@ public class SyncClientMap {
     pst.setInt(++i, recordId);
     pst.setString(++i, clientUniqueId);
     pst.setBoolean(++i, complete);
+    if (timestamp != null) {
+      pst.setTimestamp(++i, timestamp);
+    } else {
+      pst.setNull(++i, java.sql.Types.DATE);
+    }
     pst.execute();
     pst.close();
 
-    id = DatabaseUtils.getCurrVal(db, "sync_map_map_id_seq");
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  referenceTable    Description of Parameter
+   *@param  clientUniqueId    Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int lookupId(Connection db, int referenceTable, String clientUniqueId) throws SQLException {
     int resultId = -1;
     StringBuffer sql = new StringBuffer();
@@ -78,8 +211,15 @@ public class SyncClientMap {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean delete(Connection db) throws SQLException {
-    if (id == -1) {
+    if (clientId == -1 && tableId == -1 && recordId == -1) {
       throw new SQLException("ID was not specified");
     }
 
@@ -89,9 +229,14 @@ public class SyncClientMap {
     //Delete the record
     int recordCount = 0;
     pst = db.prepareStatement(
-        "DELETE FROM sync_map " +
-        "WHERE map_id = ? ");
-    pst.setInt(1, id);
+      "DELETE FROM sync_map " +
+      "WHERE client_id = ? " +
+      "AND table_id = ? " +
+      "AND record_id = ? ");
+    int i = 0;
+    pst.setInt(++i, clientId);
+    pst.setInt(++i, tableId);
+    pst.setInt(++i, recordId);
     recordCount = pst.executeUpdate();
     pst.close();
 
@@ -107,12 +252,11 @@ public class SyncClientMap {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
   public int updateStatus(Connection db) throws SQLException {
-    if (this.getId() == -1) {
+    if (clientId == -1 && tableId == -1 && recordId == -1) {
       throw new SQLException("Record ID was not specified");
     }
 
@@ -120,18 +264,63 @@ public class SyncClientMap {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE sync_map " +
-        "SET complete = ? " +
-        "WHERE map_id = ? ");
+      "UPDATE sync_map " +
+      "SET complete = ? " +
+      "WHERE client_id = ? " +
+      "AND table_id = ? " +
+      "AND record_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setBoolean(++i, complete);
-    pst.setInt(++i, id);
+    pst.setInt(++i, clientId);
+    pst.setInt(++i, tableId);
+    pst.setInt(++i, recordId);
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
   }
   
+  public int updateStatusDate(Connection db, java.sql.Timestamp timestamp) throws SQLException {
+    if (clientId == -1 && tableId == -1 && recordId == -1) {
+      throw new SQLException("Record ID was not specified");
+    }
+
+    int resultCount = 0;
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+      "UPDATE sync_map " +
+      "SET status_date = ? " +
+      "WHERE client_id = ? " +
+      "AND table_id = ? " +
+      "AND record_id = ? ");
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    if (timestamp != null) {
+      pst.setTimestamp(++i, timestamp);
+    } else {
+      pst.setNull(++i, java.sql.Types.DATE);
+    }
+    pst.setInt(++i, clientId);
+    pst.setInt(++i, tableId);
+    pst.setInt(++i, recordId);
+    resultCount = pst.executeUpdate();
+    pst.close();
+    return resultCount;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  pst               Description of Parameter
+   *@param  uniqueField       Description of Parameter
+   *@param  tableName         Description of Parameter
+   *@param  recordList        Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public ResultSet buildSyncDeletes(Connection db, PreparedStatement pst, String uniqueField, String tableName, RecordList recordList) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -147,15 +336,22 @@ public class SyncClientMap {
     ResultSet rs = pst.executeQuery();
     return rs;
   }
-  
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("map_id");
+    //id = rs.getInt("map_id");
     clientId = rs.getInt("client_id");
     tableId = rs.getInt("table_id");
-    recordId = rs.getInt("record_id"); 
+    recordId = rs.getInt("record_id");
     clientUniqueId = rs.getString("cuid");
     complete = rs.getBoolean("complete");
+    statusDate = rs.getTimestamp("status_date");
   }
 
 }

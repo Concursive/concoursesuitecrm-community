@@ -36,10 +36,14 @@ CREATE TABLE sync_table (
 );
 
 CREATE TABLE sync_map (
-  map_id SERIAL PRIMARY KEY,
   client_id INT NOT NULL,
   table_id INT NOT NULL,
   record_id INT NOT NULL,
   cuid VARCHAR(50) NOT NULL,
-  complete BOOLEAN DEFAULT false
+  complete BOOLEAN DEFAULT false,
+  status_date TIMESTAMP
 );
+
+CREATE UNIQUE INDEX idx_sync_map ON sync_map (client_id, table_id, record_id);
+
+

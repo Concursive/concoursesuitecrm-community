@@ -2,6 +2,7 @@ package com.darkhorseventures.utils;
 
 import java.lang.reflect.*;
 import java.text.SimpleDateFormat;
+import java.sql.*;
 
 public class ObjectUtils {
 
@@ -62,5 +63,19 @@ public class ObjectUtils {
       id1 = 0;
     }
     return (formatter.format(inDate) + String.valueOf(id1) + String.valueOf(id2));
+  }
+  
+  public static Object constructObject(Class theClass, Connection db, int objectId) { 
+    try {
+      Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), int.class};
+      Constructor constructor = theClass.getConstructor(paramClass);
+      Object[] paramObject = new Object[]{db, new Integer(objectId)};
+      return constructor.newInstance(paramObject);
+    } catch (Exception e) {
+      if (System.getProperty("DEBUG") != null) {
+        e.printStackTrace(System.out);
+      }
+      return null;
+    }
   }
 }
