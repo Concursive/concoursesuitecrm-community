@@ -18,7 +18,7 @@
         }
       }
     }
-    document.forms['modifyCategory'].categories.value = items;
+    document.getElementById('categories').value = items;
   }
   
   function category(id, description, enabled){
@@ -83,7 +83,7 @@
     if(text == ""){
       alert('Description is required');
       return;
-    }else if(checkDuplicate(text) && !(mode  == "Add >")){
+    }else if(checkDuplicate(text, mode)){
       alert('Category with that description already exists');
       return;
     }
@@ -93,7 +93,11 @@
       if(mode  == "Add >"){
         tmpList.options[tmpList.length] = new Option(text);
       }else{
-        tmpList.options[tmpList.selectedIndex].text = text;
+        if(tmpList.options[tmpList.selectedIndex].enabled){
+          tmpList.options[tmpList.selectedIndex].text = text;
+        }else{
+          tmpList.options[tmpList.selectedIndex].text = text + "*";
+        }
       }
     }
     if(mode == "Add >"){
@@ -110,7 +114,7 @@
    var tmpList = document.getElementById("itemSelect");
     if(tmpList.options[0].value != "-1"){
       document.getElementById("addButton").value  = "Update >";
-      document.getElementById("newitem").value = tmpList.options[tmpList.selectedIndex].text;
+      document.getElementById("newitem").value = itemList[tmpList.selectedIndex].description;
     }
   }
   
@@ -136,10 +140,12 @@
     document.getElementById("newitem").value = "";
   }
   
-  function checkDuplicate(description){
+  function checkDuplicate(description, mode){
     for(i = 0; i < itemList.length ; i++){
       if(itemList[i].description == description){
-        return true;
+        if(mode == "Add >" || (mode == "Update >" && document.getElementById("itemSelect").selectedIndex != i)){
+          return true;
+        }
       }
     }
     return false;
@@ -148,15 +154,14 @@
   function confirmSave(){
     populateForm();
     var params =
-    'categories=' + escape(document.forms['modifyCategory'].categories.value) + 
-    '&parentCode=' + document.forms['modifyCategory'].parentCode.value + 
-    '&level=' + document.forms['modifyCategory'].level.value;
+    'categories=' + escape(document.getElementById('categories').value) + 
+    '&parentCode=' + <%= request.getParameter("categoryId") %> + 
+    '&level=' + <%= request.getParameter("level") %>;
     popURL('AdminCategories.do?command=ConfirmSave&' + params + '&popup=true', 'Save','320','200','yes','no');
   }
   
 </SCRIPT>
 <script>var itemList = new Array();</script>
-<form name="modifyCategory" action="AdminCategories.do?command=ConfirmSave">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF" id="viewTable">
 <tr class="title">
   <td colspan="2">
@@ -223,8 +228,5 @@
  </table>
  <script>document.getElementById("newitem").focus();document.getElementById("itemSelect").selectedIndex = "-1"; </script>
 <br>
-<input type="hidden" name="categories">
-<input type="hidden" name="parentCode" value="<%= request.getParameter("categoryId") %>">
-<input type="hidden" name="level" value="<%= request.getParameter("level") %>">
-</form>
+<input type="hidden" name="categories" id="categories">
 
