@@ -49,7 +49,7 @@ Custom Folders<br>
     <tr class="row<%= rowId %>">
       <dhv:permission name="admin-sysconfig-folders-edit">
       <td align="center">
-        <a href="/AdminFieldsFolder.do?command=ModifyFolder&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= thisCategory.getId() %>">Edit</a>
+        <a href="/AdminFieldsFolder.do?command=ModifyFolder&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= thisCategory.getId() %>">Details</a>
       </td>
       </dhv:permission>
       <td align="left" width="100%" nowrap>

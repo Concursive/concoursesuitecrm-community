@@ -4,12 +4,10 @@
 <jsp:useBean id="OrgListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-
 <form name="listView" method="post" action="/Accounts.do?command=View">
 <dhv:permission name="accounts-accounts-add"><a href="/Accounts.do?command=Add">Add an Account</a></dhv:permission>
 <dhv:permission name="accounts-accounts-add" none="true"><br></dhv:permission>
 <center><%= OrgListInfo.getAlphabeticalPageLinks() %></center>
-
 <table width="100%" border="0">
   <tr>
     <td align="left">
@@ -45,7 +43,6 @@
   </tr>
 <%
 	Iterator j = OrgList.iterator();
-	
 	if ( j.hasNext() ) {
     int rowid = 0;
     while (j.hasNext()) {

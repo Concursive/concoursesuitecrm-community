@@ -114,7 +114,7 @@ Folder<br>
 %>    
     <tr class="row<%= rowId %>">
       <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete,admin-sysconfig-folders-add">
-      <td align="left" width="16" nowrap>
+      <td align="left" nowrap>
         <dhv:permission name="admin-sysconfig-folders-edit">
           <a href="/AdminFields.do?command=ModifyField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisField.getGroupId() %>">Edit</a>
         </dhv:permission>
@@ -128,8 +128,8 @@ Folder<br>
         </dhv:permission>
       </td>
       </dhv:permission>
-      <td width="30%" nowrap>
-        <%= thisField.getName() %>
+      <td width="100%" nowrap>
+        <%= thisField.getName() %><font color="red"><%= thisField.getRequired()?"*":"" %></font>
       </td>
       <td width="30%" nowrap>
         <%= thisField.getTypeString() %>

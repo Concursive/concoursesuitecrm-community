@@ -39,7 +39,7 @@ Existing Folder<br>
             Records
           </td>
           <td>
-            <input type="checkbox" value="ON" name="allowMultipleRecords" <%= Category.getAllowMultipleRecords()?"checked":"" %>>records can have multiple records
+            <input type="checkbox" value="ON" name="allowMultipleRecords" <%= Category.getAllowMultipleRecords()?"checked":"" %>>folder can have multiple records
           </td>
         </tr>
         <tr class="containerBody">

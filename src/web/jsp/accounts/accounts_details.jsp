@@ -25,7 +25,7 @@
 <input type=hidden name="orgId" value="<%= OrgDetails.getOrgId() %>">
 
 <dhv:permission name="accounts-accounts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
-<dhv:permission name="accounts-accounts-delete"><input type=button name="action" value="Delete" onClick="document.details.command.value='Delete';document.details.submit()"></dhv:permission>
+<dhv:permission name="accounts-accounts-delete"><input type=button name="action" value="Delete Account" onClick="document.details.command.value='Delete';document.details.submit()"></dhv:permission>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -241,7 +241,7 @@
 <input type=hidden name="command" value="">
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br></dhv:permission>
 <dhv:permission name="accounts-accounts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
-<dhv:permission name="accounts-accounts-delete"><input type=button name="action" value="Delete" onClick="document.details.command.value='Delete';document.details.submit()"></dhv:permission>
+<dhv:permission name="accounts-accounts-delete"><input type=button name="action" value="Delete Account" onClick="document.details.command.value='Delete';document.details.submit()"></dhv:permission>
 </td></tr>
 </table>
 </form>
