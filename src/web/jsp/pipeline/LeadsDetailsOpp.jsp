@@ -7,7 +7,6 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
-<form name="oppdet" action="Leads.do?id=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
 <a href="Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
 	<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
@@ -49,6 +48,7 @@ Opportunity Details<br>
   </tr>
   <tr>
     <td class="containerBack">
+     <form name="oppdet" action="Leads.do?id=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
       <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='Leads.do?command=ModifyOpp&headerId=<%= HeaderDetails.getId() %>';submit();"></dhv:permission>
       <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= HeaderDetails.getId() %>&popup=true','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
       <dhv:permission name="pipeline-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='LeadsComponents.do?command=AddOppComponent&id=<%= HeaderDetails.getId() %>';submit();"></dhv:permission>
@@ -76,6 +76,10 @@ Opportunity Details<br>
           </td>
         </tr> 
       </table>
+      <% if (request.getParameter("return") != null) { %>
+        <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
+      <%}%>
+     </form>
 <br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsComponentListInfo"/>
  <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -147,11 +151,7 @@ Opportunity Details<br>
 <%}%>
 </table>
 <br>
-<% if (request.getParameter("return") != null) { %>
-<input type="hidden" name="return" value="<%= request.getParameter("return") %>">
-<%}%>
 <dhv:pagedListControl object="LeadsComponentListInfo"/>
 </td>
 </tr>
 </table>
-</form>
