@@ -6,7 +6,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
-<form name="modInventory" action="/AccountsAutoGuide.do?command=AccountModify&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>" method="post">
+<form name="modInventory" action="AccountsAutoGuide.do?command=AccountModify&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>" method="post">
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -38,7 +38,10 @@ Vehicle Details<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2" valign="center" align="center">
-	    <strong><%= InventoryItem.getVehicle().getYear() %> <%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %> <%= toHtml(InventoryItem.getStyle()) %></strong>
+	    <strong><%= InventoryItem.getVehicle().getYear() %>
+      <%= toHtml(InventoryItem.getVehicle().getMake().getName()) %>
+      <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %>
+      <%= toHtml(InventoryItem.getStyle()) %></strong>
 	  </td>
   </tr>
 <dhv:evaluate exp="<%= hasText(InventoryItem.getStockNo()) %>">

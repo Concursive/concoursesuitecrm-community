@@ -54,7 +54,12 @@
         <a href="AutoGuide.do?command=Details&id=<%= thisItem.getId()%>"><img src="<%= (thisItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + thisItem.getId() + "&fid=" + thisItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/></a><br>
         &nbsp;<br>
         <%= toHtml(thisItem.getOrganization().getName()) %><br>
-        <%= thisItem.getVehicle().getYear() %> <%= toHtml(thisItem.getVehicle().getMake().getName()) %> <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
+        <%= thisItem.getVehicle().getYear() %>
+        <%= toHtml(thisItem.getVehicle().getMake().getName()) %>
+        <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
+<dhv:evaluate exp="<%= hasText(thisItem.getStyle()) %>">
+        <%= toHtml(thisItem.getStyle()) %>
+</dhv:evaluate>
 <dhv:evaluate exp="<%= (thisItem.getSellingPrice() > 0) %>">
         <br><%= thisItem.getSellingPriceString() %>
 </dhv:evaluate>          

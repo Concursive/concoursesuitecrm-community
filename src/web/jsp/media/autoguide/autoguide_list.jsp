@@ -18,11 +18,11 @@
         <option <%= AutoGuideDirectoryInfo.getOptionValue("slides") %>>Ad View</option>
       </select>
       <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
-			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideDirectoryInfo.getFilterKey("listFilter1")) %>
+      View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideDirectoryInfo.getFilterKey("listFilter1")) %>
       <% statusFilterSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
-			Status: <%= statusFilterSelect.getHtml("listFilter2", AutoGuideDirectoryInfo.getFilterKey("listFilter2")) %>
+      Status: <%= statusFilterSelect.getHtml("listFilter2", AutoGuideDirectoryInfo.getFilterKey("listFilter2")) %>
       <% MakeSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
-			Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
+      Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
     </td>
     </form>
   </tr>
@@ -65,19 +65,16 @@
     </td>
   </tr>
 <%    
-	Iterator i = InventoryList.iterator();
-	
-	if (i.hasNext()) {
-	int rowid = 0;
-	
-		while (i.hasNext()) {
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-			
-		Inventory thisItem = (Inventory)i.next();
+  Iterator i = InventoryList.iterator();
+  if (i.hasNext()) {
+  int rowid = 0;
+    while (i.hasNext()) {
+      if (rowid != 1) {
+        rowid = 1;
+      } else {
+        rowid = 2;
+      }
+      Inventory thisItem = (Inventory)i.next();
 %>
       <tr>
 <%--
@@ -101,6 +98,9 @@
         </td>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
+          <dhv:evaluate exp="<%= hasText(thisItem.getStyle()) %>">
+            <%= toHtml(thisItem.getStyle()) %>
+          </dhv:evaluate>
         </td>
         <td class="row<%= rowid %>">
           <dhv:evaluate exp="<%= thisItem.hasAdRuns() %>">

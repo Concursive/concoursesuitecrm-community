@@ -15,7 +15,9 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2" valign="center" align="center">
-	    <strong><%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %> <%= InventoryItem.getVehicle().getYear() %></strong>
+	    <strong><%= toHtml(InventoryItem.getVehicle().getMake().getName()) %>
+      <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %><dhv:evaluate exp="<%= hasText(InventoryItem.getStyle()) %>"> <%= toHtml(InventoryItem.getStyle()) %></dhv:evaluate>
+      <%= InventoryItem.getVehicle().getYear() %></strong>
 	  </td>
   </tr>
   <tr>
@@ -139,7 +141,7 @@
 &nbsp;<br>
 <%-- The following is specially formatted to look correctly in an input field and cannot have line breaks --%><% String phoneType = "Main"; %>
 Ad Text:
-<input type="text" name="adtext" size="80" value="<%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %> <%= InventoryItem.getVehicle().getYear() %><dhv:evaluate exp="<%= hasText(InventoryItem.getExteriorColor()) %>"> <%= toHtml(InventoryItem.getExteriorColor()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getMileage() > -1) %>"> <%= InventoryItem.getMileageString() %></dhv:evaluate><dhv:evaluate exp="<%= InventoryItem.hasOptions() %>"> <%
+<input type="text" name="adtext" size="80" value="<%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %><dhv:evaluate exp="<%= hasText(InventoryItem.getStyle()) %>"> <%= toHtml(InventoryItem.getStyle()) %></dhv:evaluate> <%= InventoryItem.getVehicle().getYear() %><dhv:evaluate exp="<%= hasText(InventoryItem.getExteriorColor()) %>"> <%= toHtml(InventoryItem.getExteriorColor()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getMileage() > -1) %>"> <%= InventoryItem.getMileageString() %></dhv:evaluate><dhv:evaluate exp="<%= InventoryItem.hasOptions() %>"> <%
       Iterator options = InventoryItem.getOptions().iterator();
       while (options.hasNext()) {
         Option thisOption = (Option)options.next();
