@@ -7,17 +7,17 @@
     thisOrgId = orgId;
     if (!menu_init) {
       menu_init = true;
-      if(status == 0){
-        hideSpan('menuArchiveAccount');
-        showSpan('menuReEnableAccount');
-      }else if(status == 1){
-        hideSpan('menuReEnableAccount');
-        showSpan('menuArchiveAccount');
-      }else{
-        hideSpan('menuReEnableAccount');
-        hideSpan('menuArchiveAccount');
-      }
       new ypSlideOutMenu("menuAccount", "down", 0, 0, 170, getHeight("menuAccountTable"));
+    }
+    if(status == 0){
+      hideSpan('menuArchiveAccount');
+      showSpan('menuReEnableAccount');
+    }else if(status == 1){
+      hideSpan('menuReEnableAccount');
+      showSpan('menuArchiveAccount');
+    }else{
+      hideSpan('menuReEnableAccount');
+      hideSpan('menuArchiveAccount');
     }
     return ypSlideOutMenu.displayMenu(id);
   }
