@@ -974,7 +974,6 @@ public class TicketReport extends TicketList {
           if (param.equals("source")) {
             thisRow.addCell(thisTic.getSourceName());
           }
-          //if (displayContactName) {	thisRow.addCell(thisTic.getThisContact().getNameLastFirst()); }
           if (param.equals("severity")) {
             thisRow.addCell(thisTic.getSeverityName());
           }
@@ -987,7 +986,6 @@ public class TicketReport extends TicketList {
           if (param.equals("department")) {
             thisRow.addCell(thisTic.getDepartmentName());
           }
-          //if (displayOwner) {	thisRow.addCell(thisTic.getOwnerName());}
           if (param.equals("solution")) {
             thisRow.addCell(thisTic.getSolution());
           }
@@ -1007,7 +1005,11 @@ public class TicketReport extends TicketList {
             thisRow.addCell(UserList.retrieveUserContact(context, thisTic.getModifiedBy()).getNameLastFirst());
           }
           if (param.equals("assignedTo")) {
-            thisRow.addCell(UserList.retrieveUserContact(context, thisTic.getAssignedTo()).getNameLastFirst());
+            if (thisTic.getAssignedTo() > 0) {
+              thisRow.addCell(UserList.retrieveUserContact(context, thisTic.getAssignedTo()).getNameLastFirst());
+            } else {
+              thisRow.addCell("Unassigned");
+            }
           }
           if (param.equals("organization")) {
             thisRow.addCell(thisTic.getCompanyName());
