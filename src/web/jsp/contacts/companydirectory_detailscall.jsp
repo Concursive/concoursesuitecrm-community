@@ -23,13 +23,15 @@
   <tr>
     <td class="containerBack">
 <input type="submit" name="command" value="Modify">
+<input type="submit" name="command" value="Forward" onClick="javascript:form.action='/ExternalContactsCalls.do?command=ForwardForm&contactId=<%= ContactDetails.getId() %>&id=<%=CallDetails.getId()%>'">
 <input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()">
+
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
       <strong>Call Details</strong>
-    </td>     
+    </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -73,14 +75,33 @@
   </tr>
   
   <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Entered
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getEnteredName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getEnteredString()) %>
+    </td>
+  </tr>
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Modified
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getModifiedName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getModifiedString()) %>
+    </td>
+  </tr>
+  
+  <!--tr class="containerBody">
     <td align=center colspan=2>
       <i>Created <%= toHtml(CallDetails.getEnteredString()) %> by <%= toHtml(CallDetails.getEnteredName()) %><br>
       Modifed <%= toHtml(CallDetails.getModifiedString()) %> by <%= toHtml(CallDetails.getModifiedName()) %></i>
     </td>
-  </tr>
+  </tr-->
 </table>
 <br>
 <input type="submit" name="command" value="Modify">
+<input type="submit" name="command" value="Forward" onClick="javascript:form.action='/ExternalContactsCalls.do?command=ForwardForm&contactId=<%= ContactDetails.getId() %>&id=<%=CallDetails.getId()%>'">
 <input type="submit" name="command" value="Delete" onClick="javascript:return confirmAction()">
 </td>
 </tr>

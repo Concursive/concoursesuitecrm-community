@@ -103,6 +103,44 @@ public final class ExternalContactsCalls extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandForward(ActionContext context) {
+    Exception errorMessage = null;
+    boolean recordInserted = false;
+    
+    CFSNote thisNote = new CFSNote();
+    thisNote.setEnteredBy(getUserId(context));
+    thisNote.setModifiedBy(getUserId(context));
+    thisNote.setBody(context.getRequest().getParameter("msgBody"));
+    thisNote.setSubject(context.getRequest().getParameter("fwdsubject"));
+    thisNote.setReplyId(getUserId(context));
+    thisNote.setSentTo(Integer.parseInt(context.getRequest().getParameter("sentTo")));
+    
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      recordInserted = thisNote.insert(db);
+      
+      if (!recordInserted) {
+        processErrors(context, thisNote.getErrors());
+      }
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+	    if (!recordInserted) {
+		    return (executeCommandForwardForm(context));
+   	    } else {
+      		    return (executeCommandDetails(context));
+            }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 
 
   /**
@@ -263,6 +301,46 @@ public final class ExternalContactsCalls extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandForwardForm(ActionContext context) {
+    Exception errorMessage = null;
+    addModuleBean(context, "External Contacts", "Calls");
+    
+    Contact thisContact = null;
+    String contactId = context.getRequest().getParameter("contactId");
+    
+    Call thisCall = null;
+    String callId = context.getRequest().getParameter("id");
+
+    Connection db = null;
+    UserList list = new UserList();
+    list.setEnabled(UserList.TRUE);
+    list.setBuildContact(false);
+    list.setBuildHierarchy(false);
+    list.setBuildPermissions(false);
+    
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      thisCall = new Call(db, callId);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      list.buildList(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("UserList", list);
+      context.getRequest().setAttribute("CallDetails", thisCall);
+      return ("ForwardFormOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
 
 
   /**

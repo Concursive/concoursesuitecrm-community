@@ -153,6 +153,26 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           items.append("<a href='/TroubleTickets.do?command=Home' class='s'>Unassigned Tickets</a> (" + ticketCount + ")<br>");
           ++myItems;
         }
+	
+	//CFS Inbox Items
+        if (thisUser.hasPermission("myhomepage-view")) {
+          int inboxCount = 0;
+          sql = 
+            "SELECT COUNT(*) as inboxcount " +
+            "FROM cfsinbox_messagelink " +
+            "WHERE sent_to = ? AND viewed IS NULL ";
+          pst = db.prepareStatement(sql);
+          pst.setInt(1, userId);
+          rs = pst.executeQuery();
+          if (rs.next()) {
+            inboxCount = rs.getInt("inboxcount");
+            if (System.getProperty("DEBUG") != null) System.out.println("GlobalItemsHook-> Inbox: " + inboxCount);
+          }
+          rs.close();
+          pst.close();
+          items.append("<a href='/MyCFSInbox.do?command=Inbox' class='s'>Inbox</a> (" + inboxCount + " new)<br>");
+          ++myItems;
+        }
       
         //Default no items
         if (myItems == 0) {

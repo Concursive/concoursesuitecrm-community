@@ -17,6 +17,7 @@
     <action name="MyCFSProfile"/>
     <action name="MyCFSPassword"/>
     <action name="MyCFSSettings"/>
+    <action name="MyCFSInbox"/>
     <page title="My Home Page"/>
     <permission value="myhomepage-view"/>
     <long_html value="My Home Page"/>
@@ -44,11 +45,11 @@
       <link value="/MyCFS.do?command=MyProfile"/>
     </submenu>
     
-    <submenu name="MyAlerts">
+    <submenu name="MyInbox">
       <permission value="myhomepage-view"/>
-      <long_html value="My Alerts"/>
-      <short_html value="My&lt;br&gt;Alerts"/>
-      <link value="#"/>
+      <long_html value="My Inbox"/>
+      <short_html value="My&lt;br&gt;Inbox"/>
+      <link value="/MyCFSInbox.do?command=Inbox"/>
     </submenu>
     
     <submenu name="Customize Headlines">

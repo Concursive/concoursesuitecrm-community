@@ -34,7 +34,43 @@ public final class MyCFS extends CFSModule {
 		addModuleBean(context, module, module);
 		return ("IncludeOK");
 	}
-
+	
+	public String executeCommandInbox(ActionContext context) {
+		Exception errorMessage = null;
+	
+		PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
+		inboxInfo.setLink("/MyCFSInbox.do?command=Inbox");
+	
+		Connection db = null;
+		CFSNoteList noteList = new CFSNoteList();
+	
+		try {
+			db = this.getConnection(context);
+			noteList.setPagedListInfo(inboxInfo);
+			noteList.setSentTo(getUserId(context));
+	
+			if ("old".equals(inboxInfo.getListView())) {
+				noteList.setStatus(1);
+			} else {
+				noteList.setStatus(0);
+			}
+	
+			noteList.buildList(db);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	if (errorMessage == null) {
+		context.getRequest().setAttribute("CFSNoteList", noteList);
+		addModuleBean(context, "MyInbox", "Inbox Home");
+		return ("InboxOK");
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+}
 
 	/**
 	 *  Description of the Method
@@ -82,6 +118,32 @@ public final class MyCFS extends CFSModule {
 		}
 	}
 
+	public String executeCommandCFSNoteDelete(ActionContext context) {
+		Connection db = null;
+		Exception errorMessage = null;
+		
+		try {
+			db = this.getConnection(context);
+			int noteId = Integer.parseInt(context.getRequest().getParameter("id"));
+			CFSNote newNote = new CFSNote(db, noteId);
+			newNote.delete(db, getUserId(context));
+		}
+		catch (SQLException e) {
+			errorMessage = e;
+		}
+		finally {
+			this.freeConnection(context, db);
+		}
+
+		if (errorMessage == null) {
+			addModuleBean(context, "MyInbox", "Inbox Home");
+			return (executeCommandInbox(context));
+		}
+		else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+	}
 
 	/**
 	 *  Takes a look at the User Session Object and prepares the MyCFSBean for the
@@ -170,6 +232,36 @@ public final class MyCFS extends CFSModule {
 			return ("GoHomeOK");
 		}
 		else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+	}
+	
+	public String executeCommandCFSNoteDetails(ActionContext context) {
+		Exception errorMessage = null;
+		Connection db = null;
+		CFSNote newNote = null;
+	
+		try {
+			int msgId = Integer.parseInt(context.getRequest().getParameter("msgId"));
+			db = this.getConnection(context);
+			newNote = new CFSNote(db, msgId);
+			if (newNote.getStatus() == 0) {
+				newNote.setStatus(1);
+				newNote.updateStatus(db);
+			}
+			//addRecentItem(context, newOrg);
+		} catch (Exception e) {
+			errorMessage = e;
+		} finally {
+			this.freeConnection(context, db);
+		}
+	
+		if (errorMessage == null) {
+			addModuleBean(context, "MyInbox", "Inbox Details");
+			context.getRequest().setAttribute("NoteDetails", newNote);
+			return ("CFSNoteDetailsOK");
+		} else {
 			context.getRequest().setAttribute("Error", errorMessage);
 			return ("SystemError");
 		}

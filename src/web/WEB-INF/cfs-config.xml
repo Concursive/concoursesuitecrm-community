@@ -32,7 +32,6 @@
     <forward name="LoginRetry" resource="/login.jsp"/>
   </action>
   
-  
   <!-- MyCFS Module -->
   <action name="MyCFS" class="com.darkhorseventures.cfsmodule.MyCFS">
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -52,6 +51,13 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ProfileOK" resource="/mycfs_personal.jsp" layout="nav"/>
     <forward name="UpdateProfileOK" resource="/MyCFS.do?command=MyProfile"/>
+  </action>
+  <action name="MyCFSInbox" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="InboxOK" resource="/mycfs_inbox.jsp" layout="nav"/>
+    <forward name="CFSNoteDetailsOK" resource="/mycfs_inbox_details.jsp" layout="nav"/>
   </action>
   <action name="MyCFSPassword" class="com.darkhorseventures.cfsmodule.MyCFS">
     <bean name="User" class="com.darkhorseventures.cfsbase.User" scope="request" />
@@ -127,6 +133,7 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/companydirectory_listcalls.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/companydirectory_detailscall.jsp" layout="nav"/>
+    <forward name="ForwardFormOK" resource="/companydirectory_forwardcall.jsp" layout="nav"/>
     <forward name="AddOK" resource="/companydirectory_addcall.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/companydirectory_modifycall.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/ExternalContactsCalls.do?command=Details"/>

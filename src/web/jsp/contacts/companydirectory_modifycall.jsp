@@ -78,12 +78,12 @@
     </td>
   </tr>
   
-  <tr class="containerBody">
+  <!--tr class="containerBody">
     <td align=center colspan=2>
       <i>Created <%= toHtml(CallDetails.getEnteredString()) %> by <%= toHtml(CallDetails.getEnteredName()) %> - 
       Modifed <%= toHtml(CallDetails.getModifiedString()) %> by <%= toHtml(CallDetails.getModifiedName()) %></i>
     </td>
-  </tr>
+  </tr-->
 </table>
 <br>
 <input type="submit" value="Update">

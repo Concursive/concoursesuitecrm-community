@@ -581,6 +581,28 @@ CREATE TABLE message (
   modifiedby INT NOT NULL
 );
 
+CREATE TABLE cfsinbox_message (
+  id serial PRIMARY KEY,
+  subject VARCHAR(255) DEFAULT NULL,
+  body TEXT NOT NULL,
+  reply_id INT NOT NULL,
+  enteredby INT NOT NULL,
+  sent TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL
+);
+
+CREATE TABLE cfsinbox_messagelink (
+  id INT NOT NULL,
+  sent_to INT NOT NULL,
+  status INT NOT NULL DEFAULT 0,
+  viewed TIMESTAMP DEFAULT NULL,
+  enabled BOOLEAN NOT NULL DEFAULT 't',
+  sent_from INT NOT NULL
+);
+  
+
 CREATE TABLE message_template (
   id serial PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
