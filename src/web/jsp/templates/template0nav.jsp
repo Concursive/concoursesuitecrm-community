@@ -19,13 +19,31 @@
 <table border="0" width="100%">
   <tr>
     <th align="left" valign="top">
-      <dhv:label name="logo">&nbsp;</dhv:label>
-      &nbsp;
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <th align="left" valign="top">
+            <dhv:label name="logo">&nbsp;</dhv:label>
+          </th>
+          <th align="left" valign="top" nowrap>
+<%
+  if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
+%>  
+    <%= User.getActualUserId() != User.getUserId() ? "User Aliased To:":"User:" %> <b class="highlight"><%= User.getUserRecord().getContact().getNameFirstLast() %></b> /
+<%}%>      
+      <b class="highlight"><%= User.getRole() %></b>
+<%
+  if (User.getUserRecord().getManagerUser() != null && User.getUserRecord().getManagerUser().getContact() != null) {
+%>      
+      <br>Manager: <b class="highlight"><%= User.getUserRecord().getManagerUser().getContact().getNameFull() %></b>
       <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) && request.getAttribute("debug.action.time") != null %>">
-        Action took: <b class="highlight"><%= request.getAttribute("debug.action.time") %> ms</b>
+        <br>Action took: <b class="highlight"><%= request.getAttribute("debug.action.time") %> ms</b>
       </dhv:evaluate>
+<%}%>
+          </th>
+        </tr>
+      </table>
     </th>
-    <th align="right">
+    <th align="right" nowrap>
       <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="javascript:window.print()" class="s">Print</a>
       |
@@ -36,19 +54,7 @@
       <a href="javascript:popURL('QA.do?module=<%= request.getAttribute("moduleAction") %><%= request.getParameter("command") != null ? "&section=" + request.getParameter("command") : ""%><%= request.getParameter("section") != null ? "&sub=" + request.getParameter("section") : "" %>&popup=true','CFS_QA','450','550','yes','yes');" class="s" onMouseOver="window.status='Pop-up QA';return true;" onMouseOut="window.status='';return true;">QA</a>
       |</dhv:permission>
       <img src="images/icons/stock_exit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-      <a href="Login.do?command=Logout" class="s">Logout</a><br>
-<%
-  if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
-%>  
-    <%= User.getActualUserId() != User.getUserId() ? "User Aliased To:":"User:" %> <b class="highlight"><%= User.getUserRecord().getContact().getNameFirstLast() %></b> /
-<%}%>      
-      <b class="highlight"><%= User.getRole() %></b>
-<%
-  if (User.getUserRecord().getManagerUser() != null && User.getUserRecord().getManagerUser().getContact() != null) {
-%>      
-      <br>
-      Manager: <b class="highlight"><%= User.getUserRecord().getManagerUser().getContact().getNameFull() %></b>
-<%}%>
+      <a href="Login.do?command=Logout" class="s">Logout</a>
     </th>
   </tr>
 </table>
