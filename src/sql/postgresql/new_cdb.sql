@@ -490,6 +490,7 @@ CREATE TABLE lookup_lists_lookup (
   category_id INT NOT NULL
 );
 
+/* Viewpoints */
 CREATE TABLE viewpoint(
   viewpoint_id SERIAL PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
@@ -511,3 +512,45 @@ CREATE TABLE viewpoint_permission (
   viewpoint_edit BOOLEAN NOT NULL DEFAULT false,
   viewpoint_delete BOOLEAN NOT NULL DEFAULT false
 );
+
+/* Action Lists */
+CREATE SEQUENCE action_list_code_seq;
+CREATE TABLE action_list (
+  action_id INTEGER DEFAULT nextval('action_list_code_seq') NOT NULL PRIMARY KEY,
+  description VARCHAR(255) NOT NULL,
+  owner INT NOT NULL references access(user_id),
+  completedate TIMESTAMP(3),
+  link_module_id INT NOT NULL,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enabled BOOLEAN NOT NULL DEFAULT true
+);
+
+CREATE SEQUENCE action_item_code_seq;
+CREATE TABLE action_item (
+  item_id INTEGER DEFAULT nextval('action_item_code_seq') NOT NULL PRIMARY KEY,
+  action_id INT NOT NULL references action_list(action_id),
+  link_item_id INT NOT NULL,
+  completedate TIMESTAMP(3),
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enabled BOOLEAN NOT NULL DEFAULT true
+);
+
+
+CREATE SEQUENCE action_item_log_code_seq;
+CREATE TABLE action_item_log (
+  log_id INTEGER DEFAULT nextval('action_item_log_code_seq') NOT NULL PRIMARY KEY,
+  item_id INT NOT NULL references action_item(item_id),
+  link_item_id INT DEFAULT -1,
+  type INT NOT NULL,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+

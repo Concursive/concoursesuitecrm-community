@@ -477,6 +477,7 @@ CREATE TABLE lookup_lists_lookup(
   category_id INT NOT NULL
 );
 
+/* Viewpoints */
 CREATE TABLE viewpoint(
   viewpoint_id INT IDENTITY PRIMARY KEY,
   user_id INT NOT NULL REFERENCES access(user_id),
@@ -497,3 +498,42 @@ CREATE TABLE viewpoint_permission(
  viewpoint_edit BIT NOT NULL DEFAULT 0,
  viewpoint_delete BIT NOT NULL DEFAULT 0
 );
+
+/* Action Lists */
+CREATE TABLE action_list (
+  action_id INT IDENTITY PRIMARY KEY,
+  description VARCHAR(255) NOT NULL,
+  owner INT NOT NULL references access(user_id),
+  completedate DATETIME,
+  link_module_id INT NOT NULL,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enabled BIT NOT NULL DEFAULT 1
+);
+
+CREATE TABLE action_item (
+  item_id INT IDENTITY PRIMARY KEY,
+  action_id INT NOT NULL references action_list(action_id),
+  link_item_id INT NOT NULL,
+  completedate DATETIME,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enabled BIT NOT NULL DEFAULT 1
+);
+
+
+CREATE TABLE action_item_log (
+  log_id INT IDENTITY PRIMARY KEY,
+  item_id INT NOT NULL references action_item(item_id),
+  link_item_id INT DEFAULT -1,
+  type INT NOT NULL,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
