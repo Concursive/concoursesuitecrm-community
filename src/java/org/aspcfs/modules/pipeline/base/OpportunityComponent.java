@@ -416,7 +416,16 @@ public class OpportunityComponent extends GenericBean {
     } catch (NumberFormatException ne) {
       errors.put("termsError", terms + " is invalid input for this field");
     }
+  }
 
+
+  /**
+   *  Sets the terms attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new terms value
+   */
+  public void setTerms(double tmp) {
+    terms = tmp;
   }
 
 
@@ -586,6 +595,16 @@ public class OpportunityComponent extends GenericBean {
    */
   public void setStage(String stage) {
     this.stage = Integer.parseInt(stage);
+  }
+
+
+  /**
+   *  Sets the stage attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new stage value
+   */
+  public void setStage(int tmp) {
+    stage = tmp;
   }
 
 
@@ -1739,8 +1758,8 @@ public class OpportunityComponent extends GenericBean {
         errors.put("closeProbError", "Close Probability cannot be less than 0%");
       }
     }
-    
-    if(low > high){
+
+    if (low > high) {
       errors.put("lowHighError", "Low Estimate cannot be higher than the High Estimate");
     }
     if (closeDate == null || getCloseDateString().trim().equals("")) {
@@ -1911,7 +1930,7 @@ public class OpportunityComponent extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getString("closed");
-    if(!rs.wasNull()){
+    if (!rs.wasNull()) {
       closeIt = true;
     }
     alertText = rs.getString("alert");
@@ -2041,6 +2060,7 @@ public class OpportunityComponent extends GenericBean {
     }
     return resultCount;
   }
+
 
   /**
    *  Gets the properties that are TimeZone sensitive for a Call
