@@ -13,7 +13,7 @@ public class Template {
   public static final int HTMLEncoding = 1;
   public static final int XMLEncoding = 2;
   
-  Hashtable parseElements = null;
+  HashMap parseElements = null;
   String text = null;
   int valueEncoding = -1;
 
@@ -22,6 +22,10 @@ public class Template {
    *  Constructor for the Template object
    */
   public Template() { }
+  
+  public Template(String theText) {
+    text = theText;
+  }
 
   public void setValueEncoding(int tmp) { this.valueEncoding = tmp; }
   public int getValueEncoding() { return valueEncoding; }
@@ -31,7 +35,7 @@ public class Template {
    *
    *@param  tmp  The new parseElements value
    */
-  public void setParseElements(Hashtable tmp) {
+  public void setParseElements(HashMap tmp) {
     this.parseElements = tmp;
   }
 
@@ -51,7 +55,7 @@ public class Template {
    *
    *@return    The parseElements value
    */
-  public Hashtable getParseElements() {
+  public HashMap getParseElements() {
     return parseElements;
   }
 
@@ -111,7 +115,7 @@ public class Template {
    */
   public void addParseElement(String key, String value) {
     if (parseElements == null) {
-      parseElements = new Hashtable();
+      parseElements = new HashMap();
     }
     parseElements.put(key, value);
   }

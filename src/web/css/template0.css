@@ -1,23 +1,26 @@
-A            {color:#000000;text-decoration:underline;} 
-A:active     {color:#000000;} 
+A            {color:#000000;text-decoration:underline;}
+A:active     {color:#000000;}
 A:visited    {color:#000000;}
-A:hover      {color:#FF3300;} 
-A:visited:hover{color:#FF3300;} 
+A:hover      {color:#FF3300;}
+A:visited:hover{color:#FF3300;}
 
-.r{color:#FFFFFF;text-decoration:none;} 
-.r:active{color:#FFFFFF;} 
-.r:visited{color:#FFFFFF;} 
-.r:hover{color:#ccccff;text-decoration:underline;} 
+.r{color:#FFFFFF;text-decoration:none;}
+.r:active{color:#FFFFFF;}
+.r:visited{color:#FFFFFF;}
+.r:hover{color:#ccccff;text-decoration:underline;}
 .r:visited:hover{color:#ccccff;text-decoration:underline;}
 
-.rs{color:#FFFF00;text-decoration:none;} 
-.rs:active{color:#FFFF00;} 
-.rs:visited{color:#FFFF00;} 
-.rs:hover{color:#ccccff;text-decoration:underline;} 
+.rs{color:#FFFF00;text-decoration:none;}
+.rs:active{color:#FFFF00;}
+.rs:visited{color:#FFFF00;}
+.rs:hover{color:#ccccff;text-decoration:underline;}
 .rs:visited:hover{color:#ccccff;text-decoration:underline;}
 
-.s{color:#000000;text-decoration:underline;} 
-.s:active{color:#000000;} 
-.s:visited{color:#000000;} 
-.s:hover{color:#FF3300;text-decoration:underline;} 
+.s{color:#000000;text-decoration:underline;}
+.s:active{color:#000000;}
+.s:visited{color:#000000;}
+.s:hover{color:#FF3300;text-decoration:underline;}
 .s:visited:hover{color:#FF3300;text-decoration:underline;}
+
+.containerOn{color:#0000FF;}
+.containerOff{color:#000000;}

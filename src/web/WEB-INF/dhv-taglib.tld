@@ -122,4 +122,28 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  
+  <tag>
+    <name>container</name> 
+    <tag-class>com.darkhorseventures.taglib.ContainerMenuHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays the specified container menu from the config
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>yes</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>selected</name>
+      <required>yes</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>param</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
 </taglib>

@@ -1,0 +1,38 @@
+<application>
+  <!-- Submenu used in the Accounts module -->
+  <container name="accounts">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="Accounts.do?command=Details&amp;orgId=$orgId"/>
+    </submenu>
+    <submenu name="folders">
+      <long_html value="Folders"/>
+      <permission value="accounts-accounts-folders-view"/>
+      <link value="Accounts.do?command=Fields&amp;orgId=$orgId"/>
+    </submenu>
+    <submenu name="contacts">
+      <long_html value="Contacts"/>
+      <permission value="accounts-accounts-contacts-view"/>
+      <link value="Contacts.do?command=View&amp;orgId=$orgId"/>
+    </submenu>
+    <submenu name="opportunities">
+      <long_html value="Opportunities"/>
+      <permission value="accounts-accounts-opportunities-view"/>
+      <link value="Opportunities.do?command=View&amp;orgId=$orgId"/>
+    </submenu>
+    <submenu name="tickets">
+      <long_html value="Tickets"/>
+      <permission value="accounts-accounts-tickets-view"/>
+      <link value="Accounts.do?command=ViewTickets&amp;orgId=$orgId"/>
+    </submenu>
+    <submenu name="documents">
+      <long_html value="Documents"/>
+      <permission value="accounts-accounts-documents-view"/>
+      <link value="AccountsDocuments.do?command=View&amp;orgId=$orgId"/>
+    </submenu>
+  </container>
+</application>

@@ -47,6 +47,10 @@ Replaceable parameter  typical value / description
         <param-value>cfs-modules.xml</param-value>
     </init-param>
     <init-param>
+        <param-name>ContainerMenuConfig</param-name>
+        <param-value>cfs-container_menus.xml</param-value>
+    </init-param>
+    <init-param>
         <param-name>PopulateAttributeName</param-name>
         <param-value>auto-populate</param-value>
     </init-param>

@@ -146,16 +146,6 @@
   </menu>
   
   <menu>
-    <action name="AutoGuide"/>
-    <page title="Auto Guide"/>
-    <permission value="autoguide-view"/>
-    <long_html value="Auto Guide"/>
-    <short_html value="Auto Guide"/>
-    <link value="AutoGuide.do"/>
-    <graphic width="83" height="36" on="menu-autoguide-on.gif" off="menu-autoguide-off.gif" rollover=""/>
-  </menu>
-  
-  <menu>
     <action name="Leads"/>
     <action name="LeadsCalls"/>
     <action name="LeadsDocuments"/>
@@ -276,13 +266,6 @@
       <link value="/Accounts.do?command=Reports"/>
     </submenu>
     
-    <!--submenu name="Reports">
-      <permission value="accounts-reports-view"/>
-      <long_html value="Reports"/>
-      <short_html value="Reports"/>
-      <link value="#/Accounts.do?module=Reports&amp;include=accounts_reports.htm"/>
-    </submenu-->
-    
     <!--submenu name="Manage Lists">
       <permission value="accounts-managelists"/>
       <long_html value="Manage Lists"/>
@@ -303,6 +286,16 @@
       <short_html value="Utilities"/>
       <link value="#/Accounts.do?module=Utilities&amp;include=accounts_utilities.htm"/>
     </submenu-->
+  </menu>
+  
+  <menu>
+    <action name="AutoGuide"/>
+    <page title="Auto Guide"/>
+    <permission value="autoguide-view"/>
+    <long_html value="Auto Guide"/>
+    <short_html value="Auto Guide"/>
+    <link value="AutoGuide.do"/>
+    <graphic width="83" height="36" on="menu-autoguide-on.gif" off="menu-autoguide-off.gif" rollover=""/>
   </menu>
   
   <menu>

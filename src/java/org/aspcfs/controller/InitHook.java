@@ -79,6 +79,15 @@ public class InitHook implements ControllerInitHook {
       config.getServletContext().setAttribute("ClientSSLKeystorePassword", 
         config.getInitParameter("ClientSSLKeystorePassword"));
     }
+    
+    if (config.getInitParameter("ContainerMenuConfig") != null) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("InitHook-> Setting the ContainerMenuConfig property: " + 
+          config.getInitParameter("ContainerMenuConfig"));
+      }
+      config.getServletContext().setAttribute("ContainerMenuConfig", 
+        config.getInitParameter("ContainerMenuConfig"));
+    }
 
     config.getServletContext().setAttribute("SystemStatus", new Hashtable());
 

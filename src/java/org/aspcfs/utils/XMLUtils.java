@@ -10,6 +10,7 @@ import org.xml.sax.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
+import java.io.*;
 
 import java.util.*;
 
@@ -70,6 +71,10 @@ public class XMLUtils {
       System.out.println("  XML: " + data.toString());
     }
     this.parseXML(data.toString());
+  }
+  
+  public XMLUtils(File xmlFile) throws Exception {
+    this.parseXML(xmlFile);
   }
 
 
@@ -411,6 +416,15 @@ public class XMLUtils {
     //factory.setIgnoringElementContentWhitespace(true);
     DocumentBuilder builder = factory.newDocumentBuilder();
     this.document = builder.parse(isXML);
+  }
+  
+  private void parseXML(File xmlFileToParse) throws Exception {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("XMLUtils-> Parsing XML file");
+    }
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    this.document = builder.parse(xmlFileToParse);
   }
 }
 
