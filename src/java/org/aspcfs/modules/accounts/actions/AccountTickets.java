@@ -216,6 +216,8 @@ public final class AccountTickets extends CFSModule {
         }
 
         addRecentItem(context, newTicket);
+        
+        processInsertHook(context, newTic);
       } else {
         processErrors(context, newTic.getErrors());
       }
@@ -358,6 +360,7 @@ public final class AccountTickets extends CFSModule {
       Ticket thisTic = new Ticket(db, Integer.parseInt(passedId));
       recordDeleted = thisTic.delete(db, this.getPath(context, "tickets"));
       if (recordDeleted) {
+        processDeleteHook(context, thisTic);
         deleteRecentItem(context, thisTic);
         context.getRequest().setAttribute("OrgDetails", newOrg);
         context.getRequest().setAttribute("refreshUrl", "Accounts.do?command=ViewTickets&orgId=" + orgId);
@@ -565,9 +568,13 @@ public final class AccountTickets extends CFSModule {
           }
         }
       }
-
+      //Get the previousTicket, update the ticket, then send both to a hook
+      Ticket previousTicket = new Ticket(db, newTic.getId());
       newTic.setModifiedBy(getUserId(context));
       resultCount = newTic.update(db);
+      if (resultCount == 1) {
+        processUpdateHook(context, previousTicket, newTic);
+      }
 
     } catch (Exception e) {
       errorMessage = e;
