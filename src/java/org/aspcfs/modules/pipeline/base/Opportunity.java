@@ -723,7 +723,12 @@ public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
 	 */
 	public String getTermsString() {
 		Double tmp = new Double(round(terms, 2));
-		return tmp.toString();
+		String toReturn = "" + tmp;
+		if (toReturn.endsWith(".0")) {
+			return (toReturn.substring(0, toReturn.length()-2));
+		} else {
+			return toReturn;
+		}
 	}
 
 
