@@ -2,7 +2,6 @@
 <%@ page import="java.util.*,java.lang.reflect.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="CompanyCalendar" class="com.darkhorseventures.utils.CalendarView" scope="request"/>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
-<%--<jsp:useBean id="CalendarInfo" class="com.darkhorseventures.cfsbase.CalendarBean" scope="session"/>--%>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
 <%@ include file="initPage.jsp" %>
