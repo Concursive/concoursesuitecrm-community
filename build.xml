@@ -344,7 +344,7 @@
             storetype="JKS"
             keyalg="RSA"
             keysize="1024"
-            validity="1000">
+            validity="${KEYSTORE.VALIDITY}">
       <dname>
         <param name="CN" value="${KEYSTORE.COMMONNAME}"/>
         <param name="OU" value="${KEYSTORE.ORGANIZATIONALUNIT}"/>
@@ -355,7 +355,7 @@
       </dname>
     </genkey>
     <!-- 
-    keytool -certreq -keyalg RSA -file ${CFS_HOME}/WEB-INF/domain.csr -keystore ${CFS_HOME}/WEB-INF/keystore
+    keytool -certreq -keyalg RSA -file ${CFS_HOME}/WEB-INF/domain.csr -keystore ${CFS_HOME}/WEB-INF/keystore -alias cfs
     -->
   </target>
   
