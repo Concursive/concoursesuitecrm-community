@@ -4,7 +4,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
 import java.io.*;
-import java.net.*;
 import java.sql.*;
 import java.util.*;
 import com.darkhorseventures.utils.*;

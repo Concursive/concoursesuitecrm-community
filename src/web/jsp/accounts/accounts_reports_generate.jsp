@@ -60,18 +60,18 @@
     </td>
     <td>
       <select size=5 multiple name="fields">
-      <option value="1" selected>Account Name</option>
-      <option value="2" selected>Account No.</option>
-      <option value="3" selected>URL</option>
-      <option value="4" selected>Ticker</option>
-      <option value="5" selected>Employees</option>
-      <option value="6" selected>Entered</option>
-      <option value="7" selected>Entered By</option>
-      <option value="8" selected>Modified</option>
-      <option value="9" selected>Modified By</option>
-      <option value="10" selected>Owner</option>
-      <option value="11" selected>Contract End Date</option>
-      <option value="12" selected>Notes</option>
+      <option value="accountName" selected>Account Name</option>
+      <option value="accountNumber" selected>Account No.</option>
+      <option value="url" selected>URL</option>
+      <option value="ticker" selected>Ticker</option>
+      <option value="employees" selected>Employees</option>
+      <option value="entered" selected>Entered</option>
+      <option value="enteredBy" selected>Entered By</option>
+      <option value="modified" selected>Modified</option>
+      <option value="modifiedBy" selected>Modified By</option>
+      <option value="owner" selected>Owner</option>
+      <option value="contractEndDate" selected>Contract End Date</option>
+      <option value="notes" selected>Notes</option>
       </select>
     </td>
   </tr>

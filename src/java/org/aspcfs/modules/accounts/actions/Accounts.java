@@ -169,21 +169,6 @@ public final class Accounts extends CFSModule {
 	return("GenerateFormOK");
   }
   
-  public void setBaseAccountReportInfo( ArrayList newList, ReportRow thisRow, Organization thisOrg, String tdNumStart) {
-	if ((newList.contains("1"))) {	thisRow.addCell(thisOrg.getName(), tdNumStart);	}
-	if ((newList.contains("2"))) {	thisRow.addCell(thisOrg.getAccountNumber()); }
-	if ((newList.contains("3"))) {	thisRow.addCell(thisOrg.getUrl()); }
-	if ((newList.contains("4"))) {	thisRow.addCell(thisOrg.getTicker()); }
-	if ((newList.contains("5"))) {	thisRow.addCell(thisOrg.getEmployees());}
-	if ((newList.contains("6"))) {	thisRow.addCell(thisOrg.getEnteredString());}
-	if ((newList.contains("7"))) {	thisRow.addCell(thisOrg.getEnteredByName());}
-	if ((newList.contains("8"))) {	thisRow.addCell(thisOrg.getModifiedString());}
-	if ((newList.contains("9"))) {	thisRow.addCell(thisOrg.getModifiedByName());}
-	if ((newList.contains("10"))) { thisRow.addCell(thisOrg.getOwnerName());}
-	if ((newList.contains("11"))) { thisRow.addCell(thisOrg.getContractEndDateString());}
-	if ((newList.contains("12"))) { thisRow.addCell(thisOrg.getNotes());}
-  }
-  
   public String executeCommandExportReport(ActionContext context) {
 	Exception errorMessage = null;
 	boolean recordInserted = false;
@@ -191,51 +176,28 @@ public final class Accounts extends CFSModule {
 	String subject = context.getRequest().getParameter("subject");
 	String type = context.getRequest().getParameter("type");
 	
-	String[] params = null;
-	String[] names = null;
-	ArrayList newList = null;
-	int lastId = -1;
+	//String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
 	
-	if (context.getRequest().getParameterValues("fields") != null) {
-		params = context.getRequest().getParameterValues("fields");
-		newList = new ArrayList(Arrays.asList(params));
-	} else {
-		newList = new ArrayList();
-	}
-	
-	Report rep = new Report();
-	rep.setDelimitedCharacter(",");
-	
-	rep.setHeader("CFS Accounts: " + subject);
-	
-	if ((newList.contains("1"))) {	rep.addColumn("Account", "Account Name"); }
-	if ((newList.contains("2"))) {	rep.addColumn("Account No."); }
-	if ((newList.contains("3"))) {	rep.addColumn("URL"); }
-	if ((newList.contains("4"))) {	rep.addColumn("Ticker"); }
-	if ((newList.contains("5"))) {	rep.addColumn("Employees"); }
-	if ((newList.contains("6"))) { rep.addColumn("Entered"); }
-	if ((newList.contains("7"))) {	rep.addColumn("Entered By"); }
-	if ((newList.contains("8"))) { rep.addColumn("Modified");}
-	if ((newList.contains("9"))) {	rep.addColumn("Modified By");}
-	if ((newList.contains("10"))) { rep.addColumn("Owner"); }
-	if ((newList.contains("11"))) { rep.addColumn("Contract End Date"); }
-	if ((newList.contains("12"))) { rep.addColumn("Notes"); }
-	
-	String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
 	String filePath = this.getPath(context, "account-reports");
-	
 	SimpleDateFormat formatter1 = new SimpleDateFormat ("yyyy");
 	String datePathToUse1 = formatter1.format(new java.util.Date());
 	SimpleDateFormat formatter2 = new SimpleDateFormat ("MMdd");
 	String datePathToUse2 = formatter2.format(new java.util.Date());
 	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
 	
-	SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
-	String filenameToUse = formatter.format(new java.util.Date());
-	
-	File f = new File(filePath);
-	f.mkdirs();
+	//new
+	OrganizationReport orgReport = new OrganizationReport();
+	orgReport.setCriteria(context.getRequest().getParameterValues("fields"));
+	orgReport.setFilePath(filePath);
+	orgReport.setEnteredBy(getUserId(context));
+	orgReport.setModifiedBy(getUserId(context));
+	orgReport.setSubject(subject);
+	orgReport.setMinerOnly(false);
 
+	//orgReport.setOwnerIdRange(this.getUserRange(context));
+	//
+
+	/**
     	OrganizationList organizationList = new OrganizationList();
 	ContactList contactList = new ContactList();
 	TicketList ticList = new TicketList();
@@ -250,68 +212,49 @@ public final class Accounts extends CFSModule {
 	
 	CustomFieldRecordList recordList = new CustomFieldRecordList();
 	CustomFieldGroup thisGroup = new CustomFieldGroup();
+	*/
 	
 	try {
 		db = this.getConnection(context);
 		
 		//Accounts with opportunities report
 		if (type.equals("5")) {
-			rep.addColumn("Description");
-			rep.addColumn("Contact/Organization");
-			rep.addColumn("Owner");
-			rep.addColumn("Amount");
-			rep.addColumn("Stage");
-			rep.addColumn("Stage Date");
-			rep.addColumn("Prob. of Close");
-			rep.addColumn("Revenue Start");
-			rep.addColumn("Terms");
-			rep.addColumn("Alert Date");
-			rep.addColumn("Commission");
-			rep.addColumn("Entered");
-			rep.addColumn("Entered By");
-			rep.addColumn("Modified");
-			rep.addColumn("Modified By");
-					
-			oppList.setOwnerIdRange(this.getUserRange(context));
-			//oppList.setOwner(this.getUserId(context));
-			oppList.buildList(db);
-			
-			Iterator opp = oppList.iterator();
-			while (opp.hasNext()) {
-				Opportunity thisOpp = (Opportunity) opp.next();
-				
-				if (thisOpp.getAccountLink() > -1) {
-					if (thisOpp.getAccountLink() != lastId) {
-						ctOrg = new Organization(db, thisOpp.getAccountLink());
-					}
-				
-					ReportRow thisRow = new ReportRow();
-					
-					setBaseAccountReportInfo( newList, thisRow, ctOrg, tdNumStart);
-					
-					thisRow.addCell(thisOpp.getDescription(), tdNumStart);
-					thisRow.addCell(thisOpp.getAccountName());
-					thisRow.addCell(thisOpp.getOwnerName());
-					thisRow.addCell("$" + thisOpp.getGuessCurrency());
-					thisRow.addCell(thisOpp.getStageName());
-					thisRow.addCell(thisOpp.getStageDateString());
-					thisRow.addCell(thisOpp.getCloseProbValue());
-					thisRow.addCell(thisOpp.getCloseDateString());
-					thisRow.addCell(thisOpp.getTermsString());
-					thisRow.addCell(thisOpp.getAlertDateString());
-					thisRow.addCell(thisOpp.getCommissionPercent());
-					thisRow.addCell(thisOpp.getEnteredString());
-					thisRow.addCell(thisOpp.getEnteredByName());
-					thisRow.addCell(thisOpp.getModifiedString());
-					thisRow.addCell(thisOpp.getModifiedByName());
-						
-					rep.addRow(thisRow);
-					lastId = thisOpp.getAccountLink();
-				}
-			}
-			
-	 	}
+			OpportunityReport oppReport = new OpportunityReport();
+			oppReport.setHeader("CFS Accounts");
+			oppReport.setFilePath(filePath);
+			oppReport.setEnteredBy(getUserId(context));
+			oppReport.setModifiedBy(getUserId(context));
+			oppReport.setSubject(subject);
+			oppReport.setOwnerIdRange(this.getUserRange(context));
+			oppReport.setJoinOrgs(true);
+			oppReport.buildReportFull(db);
+			oppReport.saveAndInsert(db);
+		} else if (type.equals("2")) {
+			ContactReport contactReport = new ContactReport();
+			contactReport.setFilePath(filePath);
+			contactReport.setEnteredBy(getUserId(context));
+			contactReport.setModifiedBy(getUserId(context));
+			contactReport.setSubject(subject);
+			contactReport.setHeader("CFS Accounts");
+			contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+			contactReport.setPersonalId(this.getUserId(context));
+			contactReport.setOwnerIdRange(this.getUserRange(context));
+			contactReport.setJoinOrgs(true);
+			contactReport.buildReportFull(db);
+			contactReport.saveAndInsert(db);
+		} else if (type.equals("3")) {
+			TicketReport ticReport = new TicketReport();
+			ticReport.setFilePath(filePath);
+			ticReport.setEnteredBy(getUserId(context));
+			ticReport.setModifiedBy(getUserId(context));
+			ticReport.setSubject(subject);
+			ticReport.setHeader("CFS Accounts");
+			ticReport.setJoinOrgs(true);
+			ticReport.buildReportFull(db);
+			ticReport.saveAndInsert(db);
+		} else {
 		
+		/**
 		//Accounts with Folders
 		else if (type.equals("4")) {
 			
@@ -440,86 +383,14 @@ public final class Accounts extends CFSModule {
 			}
 			
 	 	}
-		
-		//Accounts with contacts report
-		else if (type.equals("2")) {
-			
-			rep.addColumn("Contact Type");
-			rep.addColumn("Last Name");
-			rep.addColumn("First Name");
-			rep.addColumn("Middle Name");
-			rep.addColumn("Department");
-			rep.addColumn("Title");
-			rep.addColumn("Owner");
-			rep.addColumn("Business Email");
-			rep.addColumn("Business Phone");
-			rep.addColumn("Business Address");
-			rep.addColumn("City");
-			rep.addColumn("State");
-			rep.addColumn("Zip");
-			rep.addColumn("Country");
-			rep.addColumn("Notes");
-			
-			contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-			contactList.setPersonalId(this.getUserId(context));
-			contactList.setOwnerIdRange(this.getUserRange(context));
-			//contactList.setOwner(this.getUserId(context));
-			contactList.buildList(db);
-			
-			Iterator c = contactList.iterator();
-			while (c.hasNext()) {
-				Contact thisContact = (Contact)c.next();
-				
-				if (thisContact.getOrgId() > 0) {
-					System.out.println("this: " + thisContact.getOrgId() + " Last: " + lastId);
-					if (thisContact.getOrgId() != lastId) {
-						System.out.println("I am getting a new Org...");
-						ctOrg = new Organization(db, thisContact.getOrgId());
-					}
-					
-					ReportRow thisRow = new ReportRow();
-					
-					setBaseAccountReportInfo( newList, thisRow, ctOrg, tdNumStart);
-					
-					thisRow.addCell(thisContact.getTypeName());
-					thisRow.addCell(thisContact.getNameLast());
-					thisRow.addCell(thisContact.getNameFirst());
-					thisRow.addCell(thisContact.getNameMiddle());
-					thisRow.addCell(thisContact.getDepartmentName());
-					thisRow.addCell(thisContact.getTitle());
-					thisRow.addCell(thisContact.getOwnerName());
-					thisRow.addCell(thisContact.getEmailAddress("Business"));
-					thisRow.addCell(thisContact.getPhoneNumber("Business"));
-					thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1() + " " + thisContact.getAddress("Business").getStreetAddressLine2());
-					thisRow.addCell(thisContact.getAddress("Business").getCity());
-					thisRow.addCell(thisContact.getAddress("Business").getState());
-					thisRow.addCell(thisContact.getAddress("Business").getZip());
-					thisRow.addCell(thisContact.getAddress("Business").getCountry());
-					thisRow.addCell(thisContact.getNotes());
-					
-					rep.addRow(thisRow);
-					lastId = thisContact.getOrgId();
-				}
-				
-				
+		*/
+			if (type.equals("4")) {
+				orgReport.setIncludeFolders(true);
 			}
-		//All accounts or accounts w/folders
-	 	} else {
-		
-			organizationList.setMinerOnly(false);
-			organizationList.buildList(db);
-			
-			Iterator m = organizationList.iterator();
-			while (m.hasNext()) {
-				Organization thisOrg = (Organization) m.next();
-				
-				ReportRow thisRow = new ReportRow();
-				
-				setBaseAccountReportInfo( newList, thisRow, thisOrg, tdNumStart);
-
-				rep.addRow(thisRow);
-			}
-		}
+			orgReport.buildReportFull(db);
+			orgReport.saveAndInsert(db);
+		}	
+		/**
 		
 		rep.saveHtml(filePath + filenameToUse + ".html");
 		rep.saveDelimited(filePath + filenameToUse + ".csv");
@@ -537,7 +408,7 @@ public final class Accounts extends CFSModule {
 		thisItem.setFilename(filenameToUse);
 		thisItem.setSize((int)fileLink.length());
 		thisItem.insert(db);
-		
+		*/
 	} catch (Exception e) {
 		errorMessage = e;
 	} finally {

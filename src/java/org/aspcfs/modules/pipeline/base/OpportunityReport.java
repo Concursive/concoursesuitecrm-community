@@ -45,6 +45,9 @@ public class OpportunityReport extends OpportunityList {
 	protected boolean displayModified = true;
 	protected boolean displayModifiedBy = true;
 	
+	protected OrganizationReport orgReportJoin = new OrganizationReport();
+	protected boolean joinOrgs = false;
+	
 	public OpportunityReport() { }
 	
 	public void setRep(Report tmp) { this.rep = tmp; }
@@ -93,7 +96,12 @@ public class OpportunityReport extends OpportunityList {
 	public boolean getDisplayEnteredBy() { return displayEnteredBy; }
 	public boolean getDisplayModified() { return displayModified; }
 	public boolean getDisplayModifiedBy() { return displayModifiedBy; }
-	
+
+	public OrganizationReport getOrgReportJoin() { return orgReportJoin; }
+	public boolean getJoinOrgs() { return joinOrgs; }
+	public void setOrgReportJoin(OrganizationReport tmp) { this.orgReportJoin = tmp; }
+	public void setJoinOrgs(boolean tmp) { this.joinOrgs = tmp; }
+
 	public boolean getDisplayEntered() {
 		return displayEntered;
 	}
@@ -156,6 +164,8 @@ public class OpportunityReport extends OpportunityList {
 	}
 	
 	public void buildReportHeaders() {
+		if (joinOrgs) { orgReportJoin.buildReportHeaders(rep); }
+		
 		if (displayDescription) { rep.addColumn("Description"); }
 		if (displayContact) { rep.addColumn("Contact/Organization"); }
 		if (displayOwner) { rep.addColumn("Owner"); }
@@ -176,28 +186,41 @@ public class OpportunityReport extends OpportunityList {
 	public void buildReportData(Connection db) throws SQLException {
 		this.buildList(db);
 		
+		boolean writeOut = false;
+		Organization tempOrg = null;
+		
 		Iterator x = this.iterator();
 		while (x.hasNext()) {
 			Opportunity thisOpp = (Opportunity) x.next();
 			ReportRow thisRow = new ReportRow();
-
-			if (displayDescription) { thisRow.addCell(thisOpp.getDescription());	}
-			if (displayContact) { thisRow.addCell(thisOpp.getAccountName()); }
-			if (displayOwner) {	thisRow.addCell(thisOpp.getOwnerName()); }
-			if (displayAmount) {	thisRow.addCell("$" + thisOpp.getGuessCurrency()); }
-			if (displayStageName) {	thisRow.addCell(thisOpp.getStageName());}
-			if (displayStageDate) {	thisRow.addCell(thisOpp.getStageDateString());}
-			if (displayProbability) {	thisRow.addCell(thisOpp.getCloseProbValue());}
-			if (displayRevenueStart) {	thisRow.addCell(thisOpp.getCloseDateString());}
-			if (displayTerms) {	thisRow.addCell(thisOpp.getTermsString());}
-			if (displayAlertDate) { thisRow.addCell(thisOpp.getAlertDateString()); }
-			if (displayCommission) { thisRow.addCell(thisOpp.getCommissionPercent()); }
-			if (displayEntered) { thisRow.addCell(thisOpp.getEnteredString()); }
-			if (displayEnteredBy) { thisRow.addCell(thisOpp.getEnteredByName()); }
-			if (displayModified) { thisRow.addCell(thisOpp.getModifiedString()); }
-			if (displayModifiedBy) { thisRow.addCell(thisOpp.getModifiedByName()); }
 			
-			rep.addRow(thisRow);
+			if (joinOrgs && thisOpp.getAccountLink() > -1) { 
+				tempOrg = new Organization(db, thisOpp.getAccountLink());
+				orgReportJoin.addDataRow(thisRow, tempOrg);
+				writeOut = true;
+			}
+			
+			if (!joinOrgs || writeOut == true) {
+				if (displayDescription) { thisRow.addCell(thisOpp.getDescription());	}
+				if (displayContact) { thisRow.addCell(thisOpp.getAccountName()); }
+				if (displayOwner) {	thisRow.addCell(thisOpp.getOwnerName()); }
+				if (displayAmount) {	thisRow.addCell("$" + thisOpp.getGuessCurrency()); }
+				if (displayStageName) {	thisRow.addCell(thisOpp.getStageName());}
+				if (displayStageDate) {	thisRow.addCell(thisOpp.getStageDateString());}
+				if (displayProbability) {	thisRow.addCell(thisOpp.getCloseProbValue());}
+				if (displayRevenueStart) {	thisRow.addCell(thisOpp.getCloseDateString());}
+				if (displayTerms) {	thisRow.addCell(thisOpp.getTermsString());}
+				if (displayAlertDate) { thisRow.addCell(thisOpp.getAlertDateString()); }
+				if (displayCommission) { thisRow.addCell(thisOpp.getCommissionPercent()); }
+				if (displayEntered) { thisRow.addCell(thisOpp.getEnteredString()); }
+				if (displayEnteredBy) { thisRow.addCell(thisOpp.getEnteredByName()); }
+				if (displayModified) { thisRow.addCell(thisOpp.getModifiedString()); }
+				if (displayModifiedBy) { thisRow.addCell(thisOpp.getModifiedByName()); }
+				
+				rep.addRow(thisRow);
+			}
+			
+			writeOut = false;
 		}
 	}
 		
@@ -219,7 +242,11 @@ public class OpportunityReport extends OpportunityList {
 		rep.saveHtml(filePath + filenameToUse + ".html");
 		rep.saveDelimited(filePath + filenameToUse + ".csv");
 		
-		thisItem.setLinkModuleId(Constants.LEADS_REPORTS);
+		if (joinOrgs) { thisItem.setLinkModuleId(Constants.ACCOUNTS_REPORTS); }
+		else {
+			thisItem.setLinkModuleId(Constants.LEADS_REPORTS);
+		}
+		
 		thisItem.setLinkItemId(0);
 		thisItem.setProjectId(-1);
 		thisItem.setEnteredBy(enteredBy);

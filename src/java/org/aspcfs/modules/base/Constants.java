@@ -13,6 +13,7 @@ public final class Constants {
   public static final int ACCOUNTS_REPORTS = 10;
   public static final int CONTACTS_REPORTS = 11;
   public static final int LEADS_REPORTS = 12;
+  public static final int TICKETS_REPORTS = 13;
   
   public static final int TRUE = 1;
   public static final int FALSE = 0;

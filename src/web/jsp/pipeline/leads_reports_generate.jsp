@@ -50,6 +50,31 @@
     </td>
   </tr>
   
+  <tr>
+    <td nowrap valign=top class="formLabel">
+      Included Fields
+    </td>
+    <td>
+      <select size=5 multiple name="fields">
+      <option value="description" selected>Description</option>
+      <option value="contact" selected>Contact/Organization</option>
+      <option value="owner" selected>Owner</option>
+      <option value="amount" selected>Amount</option>
+      <option value="stageName" selected>Stage Name</option>
+      <option value="stageDate" selected>Stage Date</option>
+      <option value="probability" selected>Prob. of Close</option>
+      <option value="revenueStart" selected>Revenue Start</option>
+      <option value="terms" selected>Terms</option>
+      <option value="alertDate" selected>Alert Date</option>
+      <option value="commission" selected>Commission</option>
+      <option value="entered" selected>Entered</option>
+      <option value="enteredBy" selected>Entered By</option>
+      <option value="modified" selected>Modified</option>
+      <option value="modifiedBy" selected>Modified By</option>
+      </select>
+    </td>
+  </tr>
+  
 </table>
 <br>
 <input type="submit" value="Generate">

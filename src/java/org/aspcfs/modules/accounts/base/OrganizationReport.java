@@ -41,6 +41,8 @@ public class OrganizationReport extends OrganizationList {
 	protected boolean displayOwner = true;
 	protected boolean displayContractEndDate = true;
 	protected boolean displayNotes = true;
+	
+	protected boolean includeFolders = false;
 
 	public OrganizationReport() { }
 	
@@ -86,6 +88,13 @@ public class OrganizationReport extends OrganizationList {
 	public void setDisplayOwner(boolean tmp) { this.displayOwner = tmp; }
 	public void setDisplayContractEndDate(boolean tmp) { this.displayContractEndDate = tmp; }
 	public void setDisplayNotes(boolean tmp) { this.displayNotes = tmp; }
+	
+	public void setIncludeFolders(boolean includeFolders) {
+		this.includeFolders = includeFolders;
+	}
+	public boolean getIncludeFolders() {
+		return includeFolders;
+	}
 
 	public ArrayList getCriteria() {
 		return criteria;
@@ -150,6 +159,16 @@ public class OrganizationReport extends OrganizationList {
 		if (displayOwner) { rep.addColumn("Owner"); }
 		if (displayContractEndDate) { rep.addColumn("Contract End Date"); }
 		if (displayNotes) { rep.addColumn("Notes"); }
+		
+		if (includeFolders) {
+			rep.addColumn("Folder Name");
+			rep.addColumn("Record Name");
+			rep.addColumn("Group Name");
+			rep.addColumn("Field Name");
+			rep.addColumn("Field Value");
+			rep.addColumn("Entered");
+			rep.addColumn("Modified");
+		}
 	}
 	
 	public void buildReportHeaders(Report passedReport) {
@@ -169,26 +188,94 @@ public class OrganizationReport extends OrganizationList {
 	
 	public void buildReportData(Connection db) throws SQLException {
 		this.buildList(db);
+		CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+		
+		if (includeFolders) {
+			thisList.setLinkModuleId(Constants.ACCOUNTS);
+			thisList.setIncludeEnabled(Constants.TRUE);
+			thisList.setIncludeScheduled(Constants.TRUE);
+			thisList.setBuildResources(true);
+			thisList.buildList(db);	
+		}
 		
 		Iterator x = this.iterator();
 		while (x.hasNext()) {
 			Organization thisOrg = (Organization) x.next();
-			ReportRow thisRow = new ReportRow();
 			
-			if (displayAccountName) { thisRow.addCell(thisOrg.getName());	}
-			if (displayAccountNumber) { thisRow.addCell(thisOrg.getAccountNumber()); }
-			if (displayURL) {	thisRow.addCell(thisOrg.getUrl()); }
-			if (displayTicker) {	thisRow.addCell(thisOrg.getTicker()); }
-			if (displayEmployees) {	thisRow.addCell(thisOrg.getEmployees());}
-			if (displayEntered) {	thisRow.addCell(thisOrg.getEnteredString());}
-			if (displayEnteredBy) {	thisRow.addCell(thisOrg.getEnteredByName());}
-			if (displayModified) {	thisRow.addCell(thisOrg.getModifiedString());}
-			if (displayModifiedBy) {	thisRow.addCell(thisOrg.getModifiedByName());}
-			if (displayOwner) { thisRow.addCell(thisOrg.getOwnerName());}
-			if (displayContractEndDate) { thisRow.addCell(thisOrg.getContractEndDateString());}
-			if (displayNotes) { thisRow.addCell(thisOrg.getNotes());}
+			if (includeFolders) {
+				
+				CustomFieldRecordList recordList = new CustomFieldRecordList();
+				CustomFieldGroup thisGroup = new CustomFieldGroup();
 			
-			rep.addRow(thisRow);
+				Iterator cat = thisList.iterator();
+				while (cat.hasNext()) {
+					CustomFieldCategory thisCat = (CustomFieldCategory) cat.next();
+				
+					recordList = new CustomFieldRecordList();
+					recordList.setLinkModuleId(Constants.ACCOUNTS);
+					recordList.setLinkItemId(thisOrg.getOrgId());
+					recordList.setCategoryId(thisCat.getId());
+					recordList.buildList(db);
+				
+					Iterator rec = recordList.iterator();
+
+					while (rec.hasNext()) {
+						
+						CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
+						Iterator grp = thisCat.iterator();
+							while (grp.hasNext()) {
+								thisGroup = new CustomFieldGroup();
+								thisGroup = (CustomFieldGroup)grp.next();
+								thisGroup.buildResources(db);
+				
+								Iterator fields = thisGroup.iterator();
+								if (fields.hasNext()) {
+									while (fields.hasNext()) {
+										
+										ReportRow thisRow = new ReportRow();
+										
+										CustomField thisField = (CustomField)fields.next();
+				
+										thisField.setRecordId(thisRec.getId());
+										thisField.buildResources(db);
+				
+										addDataRow( thisRow, thisOrg );
+				
+										thisRow.addCell(thisCat.getName());
+										thisRow.addCell(thisCat.getName() + " #" + thisRec.getId());
+										thisRow.addCell(thisGroup.getName());
+										thisRow.addCell(thisField.getNameHtml());
+										thisRow.addCell(thisField.getValueHtml());
+										thisRow.addCell(thisRec.getEnteredString());
+										thisRow.addCell(thisRec.getModifiedDateTimeString());
+				
+										rep.addRow(thisRow);
+				
+									}
+								}
+							}
+						}
+						
+					}
+					
+			} else {
+				ReportRow thisRow = new ReportRow();
+				
+				if (displayAccountName) { thisRow.addCell(thisOrg.getName());	}
+				if (displayAccountNumber) { thisRow.addCell(thisOrg.getAccountNumber()); }
+				if (displayURL) {	thisRow.addCell(thisOrg.getUrl()); }
+				if (displayTicker) {	thisRow.addCell(thisOrg.getTicker()); }
+				if (displayEmployees) {	thisRow.addCell(thisOrg.getEmployees());}
+				if (displayEntered) {	thisRow.addCell(thisOrg.getEnteredString());}
+				if (displayEnteredBy) {	thisRow.addCell(thisOrg.getEnteredByName());}
+				if (displayModified) {	thisRow.addCell(thisOrg.getModifiedString());}
+				if (displayModifiedBy) {	thisRow.addCell(thisOrg.getModifiedByName());}
+				if (displayOwner) { thisRow.addCell(thisOrg.getOwnerName());}
+				if (displayContractEndDate) { thisRow.addCell(thisOrg.getContractEndDateString());}
+				if (displayNotes) { thisRow.addCell(thisOrg.getNotes());}
+				
+				rep.addRow(thisRow);
+			}
 		}
 	}
 	
