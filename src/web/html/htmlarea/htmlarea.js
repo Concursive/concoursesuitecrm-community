@@ -741,8 +741,9 @@ HTMLArea.prototype.generate = function () {
 			html += "<head>\n";
 			if (editor.config.baseURL)
 				html += '<base href="' + editor.config.baseURL + '" />';
-			html += "<style> html,body { border: 0px; } " +
-				editor.config.pageStyle + "</style>\n";
+			// this fixes adding style sheets
+      html += "<style> html,body { border: 0px; } </style>\n" +
+                editor.config.pageStyle;
 			html += "</head>\n";
 			html += "<body>\n";
 			html += editor._textArea.value;
@@ -1400,7 +1401,7 @@ HTMLArea.prototype._createLink = function(link) {
 		f_title  : link.title,
 		f_target : link.target
 	};
-	this._popupDialog("link.html", function(param) {
+	this._popupDialog("link.html", 400, 230, function(param) {
 		if (!param)
 			return false;
 		var a = link;
@@ -1442,7 +1443,7 @@ HTMLArea.prototype._insertImage = function(image) {
 		f_vert   : image.vspace,
 		f_horiz  : image.hspace
 	};
-	this._popupDialog("insert_image.html", function(param) {
+	this._popupDialog("insert_image.html", 420, 440, function(param) {
 		if (!param) {	// user must have pressed Cancel
 			return false;
 		}
@@ -1481,7 +1482,7 @@ HTMLArea.prototype._insertTable = function() {
 	var sel = this._getSelection();
 	var range = this._createRange(sel);
 	var editor = this;	// for nested functions
-	this._popupDialog("insert_table.html", function(param) {
+	this._popupDialog("insert_table.html", 420, 220, function(param) {
 		if (!param) {	// user must have pressed Cancel
 			return false;
 		}
@@ -1562,7 +1563,7 @@ HTMLArea.prototype.execCommand = function(cmdID, UI, param) {
 	    case "hilitecolor":
 		(HTMLArea.is_ie) && (cmdID = "backcolor");
 	    case "forecolor":
-		this._popupDialog("select_color.html", function(color) {
+		this._popupDialog("select_color.html", 240, 182, function(color) {
 			if (color) { // selection not canceled
 				editor._doc.execCommand(cmdID, false, "#" + color);
 			}
@@ -1596,7 +1597,7 @@ HTMLArea.prototype.execCommand = function(cmdID, UI, param) {
 		break;
 	    case "inserttable": this._insertTable(); break;
 	    case "insertimage": this._insertImage(); break;
-	    case "about"    : this._popupDialog("about.html", null, this); break;
+	    case "about"    : this._popupDialog("about.html", 450, 250, null, this); break;
 	    case "showhelp" : window.open(_editor_url + "reference.html", "ha_help"); break;
 
 	    case "killword": this._wordClean(); break;
@@ -2126,8 +2127,8 @@ HTMLArea._colorToRgb = function(v) {
 // receives an URL to the popup dialog and a function that receives one value;
 // this function will get called after the dialog is closed, with the return
 // value of the dialog.
-HTMLArea.prototype._popupDialog = function(url, action, init) {
-	Dialog(this.popupURL(url), action, init);
+HTMLArea.prototype._popupDialog = function(url, width, height, action, init) {
+	Dialog(this.popupURL(url), width, height, action, init);
 };
 
 // paths

@@ -70,7 +70,7 @@ FullPage.prototype.buttonPress = function(editor, id) {
 
 			editor         : editor
 		};
-		editor._popupDialog("plugin://FullPage/docprop", function(params) {
+		editor._popupDialog("plugin://FullPage/docprop", 640, 480, function(params) {
 			self.setDocProp(params);
 		}, init);
 		break;

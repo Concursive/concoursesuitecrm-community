@@ -819,7 +819,7 @@ TableOperations.createColorButton = function(doc, editor, color, name) {
 		if (this.parentNode.disabled) {
 			return false;
 		}
-		editor._popupDialog("select_color.html", function(color) {
+		editor._popupDialog("select_color.html", 275, 190, function(color) {
 			if (color) {
 				span.style.backgroundColor = "#" + color;
 				field.value = "#" + color;
