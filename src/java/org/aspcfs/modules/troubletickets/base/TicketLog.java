@@ -81,14 +81,10 @@ public class TicketLog extends GenericBean {
    *@since
    */
   public TicketLog(Connection db, int id) throws SQLException {
-
     if (id == -1) {
       throw new SQLException("Invalid Ticket Log Number");
     }
-
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT t.*, " +
         "d.description as deptname, " +
         "tp.description AS priorityname, ts.description AS severityname, " +
@@ -101,16 +97,14 @@ public class TicketLog extends GenericBean {
         "LEFT JOIN ticket_priority tp ON (t.pri_code = tp.code) " +
         "LEFT JOIN ticket_severity ts ON (t.scode = ts.code) " +
         "LEFT JOIN lookup_department d ON (t.department_code = d.code) " +
-        "WHERE t.id = " + id + " ");
-    Statement st = null;
-    ResultSet rs = null;
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+        "WHERE t.id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     }
     rs.close();
-    st.close();
+    pst.close();
     if (id == -1) {
       throw new SQLException("Ticket Log not found");
     }
@@ -810,32 +804,16 @@ public class TicketLog extends GenericBean {
       sql.append("?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      if (this.getPriorityCode() > -1) {
-        pst.setInt(++i, this.getPriorityCode());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
+      DatabaseUtils.setInt(pst, ++i, this.getPriorityCode());
       pst.setInt(++i, this.getLevelCode());
       if (this.getDepartmentCode() > 0) {
         pst.setInt(++i, this.getDepartmentCode());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-      if (this.getCatCode() > -1) {
-        pst.setInt(++i, this.getCatCode());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
-      if (this.getSeverityCode() > -1) {
-        pst.setInt(++i, this.getSeverityCode());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
-      if (ticketId > -1) {
-        pst.setInt(++i, this.getTicketId());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
+      DatabaseUtils.setInt(pst, ++i, this.getCatCode());
+      DatabaseUtils.setInt(pst, ++i, this.getSeverityCode());
+      DatabaseUtils.setInt(pst, ++i, this.getTicketId());
       pst.setString(++i, this.getEntryText());
       pst.setBoolean(++i, this.getClosed());
       if (entered != null) {
@@ -848,9 +826,7 @@ public class TicketLog extends GenericBean {
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
-
       id = DatabaseUtils.getCurrVal(db, "ticketlog_id_seq");
-
       this.update(db, true);
       db.commit();
     } catch (SQLException e) {
@@ -892,41 +868,30 @@ public class TicketLog extends GenericBean {
    */
   public int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
-
     if (ticketId == -1) {
       throw new SQLException("Log Entry must be associated to a Ticket");
     }
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-
     sql.append(
         "UPDATE ticketlog " +
         "SET assigned_to = ? ");
-
     if (override == false) {
       sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
     }
-
     sql.append("WHERE id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
     }
-
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-    if (this.getAssignedTo() > -1) {
-      pst.setInt(++i, this.getAssignedTo());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
+    DatabaseUtils.setInt(pst, ++i, this.getAssignedTo());
     pst.setInt(++i, id);
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
     }
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
 
