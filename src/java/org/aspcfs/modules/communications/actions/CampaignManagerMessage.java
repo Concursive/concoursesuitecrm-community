@@ -403,12 +403,12 @@ public final class CampaignManagerMessage extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      Survey thisSurvey = new Survey(db, Integer.parseInt(surveyId));
-
-      if (thisSurvey == null) {
+      Survey thisSurvey = null;
+      if (Integer.parseInt(surveyId) > 0) {
+        thisSurvey = new Survey(db, Integer.parseInt(surveyId));
+      } else {
         thisSurvey = new Survey();
       }
-
       thisForm.populate(thisSurvey);
       context.getRequest().setAttribute("CustomFormInfo", thisForm);
       context.getRequest().setAttribute("Survey", thisSurvey);
@@ -421,7 +421,7 @@ public final class CampaignManagerMessage extends CFSModule {
     if (errorMessage == null) {
       return ("PreviewSurveyOK");
     } else {
-      return ("PreviewSurveyOK");
+      return ("PreviewSurveyMISSING");
     }
   }
 

@@ -456,6 +456,7 @@
     <forward name="InsertOK" resource="/CampaignManagerMessage.do?command=View"/>
     <forward name="PreviewOK" resource="/campaign_messages_preview.jsp"/>
     <forward name="PreviewSurveyOK" resource="/display_survey.jsp" layout="styleNoSession"/>
+    <forward name="PreviewSurveyMISSING" resource="/display_survey_missing.jsp" layout="styleNoSession"/>
     <forward name="DeleteOK" resource="/CampaignManagerMessage.do?command=View"/>
   </action>
   <action name="CampaignManagerSurvey" class="com.darkhorseventures.cfsmodule.CampaignManagerSurvey">
