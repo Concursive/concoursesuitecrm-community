@@ -7,7 +7,7 @@
  * @arg5 = allow resize (yes/no)
  * @arg6 = show scroll bars (yes/no)
  */
-function popURLReturn(filename, title, width, height, resize, bars) {
+function popURL(filename, title, width, height, resize, bars) {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   
@@ -19,7 +19,7 @@ function popURLReturn(filename, title, width, height, resize, bars) {
   }
 }
 
-function popURL(filename, returnUrl, title, width, height, resize, bars) {
+function popURLReturn(filename, returnUrl, title, width, height, resize, bars) {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   
