@@ -174,8 +174,7 @@ public class SyncClientMap {
       return insertMap(db, null);
     }
   }
-
-
+  
   /**
    *  Description of the Method
    *
@@ -207,8 +206,7 @@ public class SyncClientMap {
 
     return true;
   }
-
-
+  
   /**
    *  Description of the Method
    *
@@ -413,6 +411,16 @@ public class SyncClientMap {
     return resultCount;
   }
 
+  public int updateStatusDate(Connection db, String timestamp) throws SQLException {
+    if (timestamp != null && !timestamp.trim().equals("")) {
+      return updateStatusDate(db, java.sql.Timestamp.valueOf(timestamp));
+    } else {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("NULL TIMESTAMP-> " + getTableId() + " " + getRecordId());
+      }
+      return updateStatusDate(db, (java.sql.Timestamp)null);
+    }
+  }
 
   /**
    *  Description of the Method

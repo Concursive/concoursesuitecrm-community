@@ -53,6 +53,7 @@ public class Inventory {
 
   private boolean showIncompleteAdRunsOnly = false;
 
+
   /**
    *  Constructor for the Inventory object
    */
@@ -485,14 +486,27 @@ public class Inventory {
   public void setPictureId(int tmp) {
     this.pictureId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the picture attribute of the Inventory object
+   *
+   *@param  tmp  The new picture value
+   */
   public void setPicture(FileItem tmp) {
     this.picture = tmp;
   }
 
-  public void setShowIncompleteAdRunsOnly(boolean tmp) { 
-    this.showIncompleteAdRunsOnly = tmp; 
+
+  /**
+   *  Sets the showIncompleteAdRunsOnly attribute of the Inventory object
+   *
+   *@param  tmp  The new showIncompleteAdRunsOnly value
+   */
+  public void setShowIncompleteAdRunsOnly(boolean tmp) {
+    this.showIncompleteAdRunsOnly = tmp;
   }
+
 
   /**
    *  Gets the id attribute of the Inventory object
@@ -725,16 +739,6 @@ public class Inventory {
 
 
   /**
-   *  Gets the guid attribute of the Inventory object
-   *
-   *@return    The guid value
-   */
-  public String getGuid() {
-    return ObjectUtils.generateGuid(entered, enteredBy, id);
-  }
-
-
-  /**
    *  Gets the vehicle attribute of the Inventory object
    *
    *@return    The vehicle value
@@ -752,7 +756,13 @@ public class Inventory {
   public Organization getOrganization() {
     return organization;
   }
-  
+
+
+  /**
+   *  Gets the account attribute of the Inventory object
+   *
+   *@return    The account value
+   */
   public Organization getAccount() {
     return organization;
   }
@@ -787,9 +797,16 @@ public class Inventory {
     return pictureId;
   }
 
+
+  /**
+   *  Gets the picture attribute of the Inventory object
+   *
+   *@return    The picture value
+   */
   public FileItem getPicture() {
     return picture;
   }
+
 
   /**
    *  Description of the Method
@@ -830,7 +847,13 @@ public class Inventory {
   public boolean hasPictureId() {
     return pictureId > -1;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
   public boolean hasPicture() {
     return (picture != null);
   }
@@ -989,7 +1012,7 @@ public class Inventory {
       adRuns.setInventoryId(id);
       adRuns.delete(db);
     }
-    
+
     //TODO: Pictures -- need filepath at this point
     /*
      *  if (pictureId > -1) {
@@ -1000,7 +1023,6 @@ public class Inventory {
      *  previousFiles.delete(db, filePath);
      *  }
      */
-     
     //Delete the record
     int recordCount = 0;
     pst = db.prepareStatement(
@@ -1009,7 +1031,7 @@ public class Inventory {
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
     pst.close();
-     
+
     if (recordCount == 0) {
       //errors.put("actionError", "Record could not be deleted because it no longer exists.");
       return false;
@@ -1081,7 +1103,14 @@ public class Inventory {
     FileItem fileItem = new FileItem(db, -1, id, Constants.AUTOGUIDE);
     pictureId = fileItem.getId();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void buildPicture(Connection db) throws SQLException {
     picture = new FileItem(db, -1, id, Constants.AUTOGUIDE);
     picture.buildVersionList(db);
@@ -1089,6 +1118,71 @@ public class Inventory {
     if (pictureId == -1) {
       picture = null;
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
+  public String toString() {
+    String lf = System.getProperty("line.separator");
+    StringBuffer sb = new StringBuffer();
+    sb.append("AUTO GUIDE VEHICLE OUTPUT: " + StringUtils.toDateTimeString(new java.util.Date()) + lf);
+    sb.append(lf);
+    sb.append(StringUtils.toString(organization.getName()));
+    sb.append(" (" + StringUtils.toString(organization.getAccountNumber()) + ")" + lf);
+    sb.append(organization.getPhoneNumber("Main") + lf);
+    sb.append(lf);
+    if (this.hasAdRuns()) {
+      sb.append("Ad Runs:" + lf);
+      int displayCount = 0;
+      Iterator irun = adRuns.iterator();
+      while (irun.hasNext()) {
+        ++displayCount;
+        AdRun thisAdRun = (AdRun) irun.next();
+        sb.append(displayCount + ". ");
+        if (adRuns.size() > 9 && displayCount < 10) {
+          sb.append(" ");
+        }
+        sb.append(StringUtils.toDateString(thisAdRun.getRunDate()) + " ");
+        sb.append(thisAdRun.getAdTypeName());
+        sb.append(" - with");
+        if (!thisAdRun.getIncludePhoto()) {
+          sb.append("out");
+        }
+        sb.append(" photo");
+        sb.append(lf);
+      }
+    } else {
+      sb.append("Ad Runs: none specified" + lf);
+    }
+    sb.append(lf);
+    sb.append("Make: " + StringUtils.toString(vehicle.getMake().getName()) + lf);
+    sb.append("Model: " + StringUtils.toString(vehicle.getModel().getName()) + lf);
+    sb.append("Year: " + vehicle.getYear() + lf);
+    sb.append("Stock No: " + StringUtils.toString(stockNo) + lf);
+    sb.append("Mileage: " + StringUtils.toString(this.getMileageString()) + lf);
+    sb.append("VIN: " + StringUtils.toString(this.getVin()) + lf);
+    sb.append("Selling Price: " + StringUtils.toString(this.getSellingPriceString()) + lf);
+    sb.append("Color: " + StringUtils.toString(this.getExteriorColor()) + lf);
+    sb.append("Condition: " + StringUtils.toString(condition) + lf);
+    sb.append("Additional Text: " + StringUtils.toString(comments) + lf);
+    sb.append("Options: ");
+    if (this.hasOptions()) {
+      Iterator options = this.getOptions().iterator();
+      while (options.hasNext()) {
+        Option thisOption = (Option) options.next();
+        sb.append(thisOption.getName());
+        if (options.hasNext()) {
+          sb.append(", ");
+        }
+      }
+    }
+    sb.append(lf);
+
+    return sb.toString();
   }
 
 
@@ -1119,65 +1213,6 @@ public class Inventory {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     vehicle = new Vehicle(rs);
-  }
-  
-  public String toString() {
-    String lf = System.getProperty("line.separator");
-    StringBuffer sb = new StringBuffer();
-    sb.append("AUTO GUIDE VEHICLE OUTPUT: " + StringUtils.toDateTimeString(new java.util.Date()) + lf);
-    sb.append(lf);
-    sb.append(StringUtils.toString(organization.getName()));
-    sb.append(" (" + StringUtils.toString(organization.getAccountNumber()) + ")" + lf);
-    sb.append(organization.getPhoneNumber("Main") + lf);
-    sb.append(lf);
-    if (this.hasAdRuns()) {
-      sb.append("Ad Runs:" + lf);
-      int displayCount = 0;
-      Iterator irun = adRuns.iterator();
-      while (irun.hasNext()) {
-        ++displayCount;
-        AdRun thisAdRun = (AdRun)irun.next();
-        sb.append(displayCount + ". ");
-        if (adRuns.size() > 9 && displayCount < 10) {
-          sb.append(" ");
-        }
-        sb.append(StringUtils.toDateString(thisAdRun.getRunDate()) + " ");
-        sb.append(thisAdRun.getAdTypeName());
-        sb.append(" - with");
-        if (!thisAdRun.getIncludePhoto()) {
-          sb.append("out");
-        }
-        sb.append(" photo");
-        sb.append(lf);
-      }
-    } else {
-      sb.append("Ad Runs: none specified" + lf);
-    }
-    sb.append(lf);
-    sb.append("Make: " + StringUtils.toString(vehicle.getMake().getName()) + lf);
-    sb.append("Model: " + StringUtils.toString(vehicle.getModel().getName()) + lf);
-    sb.append("Year: " + vehicle.getYear() + lf);
-    sb.append("Stock No: " + StringUtils.toString(stockNo) + lf);
-    sb.append("Mileage: " + StringUtils.toString(this.getMileageString()) + lf);
-    sb.append("VIN: " + StringUtils.toString(this.getVin()) + lf);
-    sb.append("Selling Price: " + StringUtils.toString(this.getSellingPriceString()) + lf);
-    sb.append("Color: " + StringUtils.toString(this.getExteriorColor()) + lf);
-    sb.append("Condition: " + StringUtils.toString(condition) + lf);
-    sb.append("Additional Text: " + StringUtils.toString(comments) + lf);
-    sb.append("Options: "); 
-    if (this.hasOptions()) {
-      Iterator options = this.getOptions().iterator();
-      while (options.hasNext()) {
-        Option thisOption = (Option)options.next();
-        sb.append(thisOption.getName());
-        if (options.hasNext()) {
-          sb.append(", ");
-        }
-      }
-    }
-    sb.append(lf);
-    
-    return sb.toString();
   }
 }
 

@@ -143,6 +143,8 @@ public class TransactionItem {
       setAction(this.SYNC_END);
     } else if ("getDateTime".equals(tmp)) {
       setAction(this.GET_DATETIME);
+    } else if ("syncDelete".equals(tmp)) {
+      setAction(this.SYNC_DELETE);
     }
   }
 
@@ -332,15 +334,14 @@ public class TransactionItem {
       ResultSet rs = syncClientMap.buildSyncDeletes(db, pst, uniqueField, tableName, recordList);
       while (rs.next()) {
         Record thisRecord = new Record("delete");
-        int id = rs.getInt(uniqueField);
-        java.sql.Timestamp entered = rs.getTimestamp("entered");
-        int enteredBy = rs.getInt("enteredby");
-        thisRecord.put("guid",
-            ObjectUtils.generateGuid(entered, enteredBy, id));
+        int id = rs.getInt("cuid");
+        thisRecord.put("guid", String.valueOf(id));
         recordList.add(thisRecord);
       }
       rs.close();
-      pst.close();
+      if (pst != null) {
+        pst.close();
+      }
     } else {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TransactionItem-> Base request");
@@ -373,8 +374,12 @@ public class TransactionItem {
         }
 
         if (action == UPDATE) {
+          //Set the object's id to be written, based on the client guid
+          this.setObjectId(db);
           //Retrieve the previous modified date to ensure integrity of update
-
+          //TODO: Read modified from sync_map
+          //TODO: Set modified from read
+          //ObjectUtils.setParam(object, "modified", ObjectUtils.getParam(object, "modified"));
         }
         Object result = doExecute(db, executeMethod);
         if (System.getProperty("DEBUG") != null) {
@@ -386,15 +391,18 @@ public class TransactionItem {
             syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
             syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
             //Need to log the date/time of the new record for later approval of updates
-            //Reload the newly inserted object to get it's insert/modified date
+            //Reload the newly inserted object to get its insert/modified date
             Object insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
             syncClientMap.insert(db, ObjectUtils.getParam(insertedObject, "modified"));
-            
           }
         } else if (action == UPDATE) {
           //Update the modified date in client mapping
-          //Object updatedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
-          //syncClientMap.update(db, ObjectUtils.getParam(updatedObject, "modified"));
+          if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
+            syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
+            syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
+            Object updatedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
+            syncClientMap.updateStatusDate(db, ObjectUtils.getParam(updatedObject, "modified"));
+          }
         }
         if (action == INSERT || action == UPDATE) {
           addRecords(object, recordList, "processed");
@@ -443,6 +451,19 @@ public class TransactionItem {
     }
   }
 
+  public void setObjectId(Connection db) throws SQLException {
+    if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
+      SyncTable referencedTable = (SyncTable) mapping.get(name + "List");
+      if (referencedTable != null) {
+        String value = (String)ignoredProperties.get("guid");
+        int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
+        ObjectUtils.setParam(object, "id", String.valueOf(recordId));
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("TransactionItem-> Setting object id: " + recordId);
+        }
+      }
+    }
+  }
 
   /**
    *  Sets the guidParameters attribute of the TransactionItem object.
