@@ -90,7 +90,7 @@
     <action name="ExternalContactsCalls"/>
     <action name="ExternalContactsCallsForward"/>
     <action name="ExternalContactsPrototype"/>
-    <page title="General Contacts"/>
+    <page title="Contacts"/>
     <permission value="contacts-view"/>
     <long_html value="Contacts"/>
     <short_html value="&amp;nbsp;Contacts&amp;nbsp;"/>
@@ -127,7 +127,7 @@
     <action name="LeadsComponents"/>
     <action name="LeadsDocuments"/>
     <action name="LeadsPrototype"/>
-    <page title="Pipeline Management"/>
+    <page title="Pipeline"/>
     <permission value="pipeline-view"/>
     <long_html value="Pipeline"/>
     <short_html value="&amp;nbsp;Pipeline&amp;nbsp;"/>
@@ -176,10 +176,11 @@
     <action name="AccountsPrototype"/>
     <action name="AccountTicketsDocuments"/>
     <action name="AccountTicketTasks"/>
+    <action name="AccountTicketFolders"/>
     <action name="AccountContactsCalls"/>
     <action name="AccountContactsOpps"/>
     <action name="AccountContactsOppComponents"/>
-    <page title="Account Management"/>
+    <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
     <short_html value="&amp;nbsp;Accounts&amp;nbsp;"/>
@@ -246,7 +247,7 @@
     <action name="CampaignManagerSurvey"/>
     <action name="CampaignManagerAttachment"/>
     <action name="CampaignDocuments"/>
-    <page title="Communications Manager"/>
+    <page title="Communications"/>
     <permission value="campaign-view"/>
     <long_html value="Communications"/>
     <short_html value="&amp;nbsp;Communications&amp;nbsp;"/>
@@ -303,7 +304,7 @@
     <action name="ProjectManagementAssignments"/>
     <action name="ProjectManagementIssues"/>
     <action name="ProjectManagementFiles"/>
-    <page title="Project Management"/>
+    <page title="Projects"/>
     <permission value="projects-view"/>
     <long_html value="Projects"/>
     <short_html value="&amp;nbsp;Projects&amp;nbsp;"/>
@@ -418,7 +419,7 @@
     <action name="AdminObjectEvents"/>
     <action name="AdminScheduledEvents"/>
     <action name="AdminQA"/>
-    <page title="System Administration"/>
+    <page title="Admin"/>
     <permission value="admin-view"/>
     <long_html value="Admin"/>
     <short_html value="&amp;nbsp;Admin&amp;nbsp;"/>

@@ -253,6 +253,11 @@
       <permission value="accounts-accounts-tickets-tasks-view"/>
       <link value="AccountTicketTasks.do?command=List&amp;ticketId=${id}"/>
     </submenu>
+    <submenu name="folders">
+      <long_html value="Folders"/>
+      <permission value="accounts-accounts-tickets-folders-view"/>
+      <link value="AccountTicketFolders.do?command=Fields&amp;ticketId=${id}"/>
+    </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>
       <permission value="accounts-accounts-tickets-documents-view"/>

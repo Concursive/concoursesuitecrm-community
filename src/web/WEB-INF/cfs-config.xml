@@ -588,6 +588,15 @@
     <forward name="DeleteOK" resource="/AccountTicketsDocuments.do?command=View"/>
     <forward name="DeleteERROR" resource="/AccountTicketsDocuments.do?command=View"/>
   </action>
+  <action name="AccountTicketFolders" class="org.aspcfs.modules.accounts.actions.AccountTicketFolders">
+    <forward name="FieldRecordListOK" resource="/accounts/accounts_tickets_fields_list.jsp" layout="nav"/>
+    <forward name="AddFolderRecordOK" resource="/accounts/accounts_tickets_fields_add.jsp" layout="nav"/>
+    <forward name="FieldsEmptyOK" resource="/accounts/accounts_tickets_nofields.jsp" layout="nav"/>
+    <forward name="FieldsOK" resource="/accounts/accounts_tickets_fields.jsp" layout="nav"/>
+    <forward name="ModifyFieldsOK" resource="/accounts/accounts_tickets_fields_modify.jsp" layout="nav"/>
+    <forward name="UpdateFieldsOK" resource="/accounts/accounts_tickets_fields.jsp" layout="nav"/>
+    <forward name="DeleteFieldsOK" resource="AccountTicketFolders.do?command=Fields"/>
+  </action>
   <action name="AccountsDocuments" class="org.aspcfs.modules.accounts.actions.AccountsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ViewOK" resource="/accounts/accounts_documents_list.jsp" layout="nav"/>
