@@ -147,7 +147,7 @@ function validateRadio (field) {
       %>
           <tr class="containerBack">
             <td valign="center" align="center" width="6%">
-              <input type="checkbox" name="quest<%= count %>item<%= ++itemCount %>" id="quest<%= count %>item<%= itemCount %>">
+              <input type="checkbox" name="quest<%= count %>item<%= ++itemCount %>" id="quest<%= count %>item<%= itemCount %>" value="true">
               <input type="hidden" name="quest<%= count %>item<%= itemCount %>id" value="<%= thisItem.getId() %>">
             </td>
             <td valign="center" align="left">

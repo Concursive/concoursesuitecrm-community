@@ -75,7 +75,7 @@ function sendMessage() {
       Options
     </td>
     <td>
-      <input type="checkbox" name="mailrecipients">
+      <input type="checkbox" name="mailrecipients" value="true">
       Email copy to recipient(s)
     </td> 
   </tr>

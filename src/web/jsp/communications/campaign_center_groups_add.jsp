@@ -60,7 +60,7 @@ Choose Groups
   <tr class="containerBody">
     <td width="8" valign="center" nowrap class="row<%= rowid %>">
       <input type="hidden" name="select<%= ++selectCount %>" value="<%= thisList.getId() %>">
-      <input type="checkbox" name="select<%= selectCount %>check"<%= (selectedList.containsItem(thisList)?" checked":"") %>>
+      <input type="checkbox" name="select<%= selectCount %>check" value="true"<%= (selectedList.containsItem(thisList)?" checked":"") %>>
     </td>
     <td width="100%" valign="center" nowrap class="row<%= rowid %>">
       <%= toHtml(thisList.getGroupName()) %>

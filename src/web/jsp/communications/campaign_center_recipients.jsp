@@ -29,7 +29,7 @@ Add Recipient | Rebuild Recipients from Groups<br>
 %>  
   <tr class="containerBody">
     <td width="8" nowrap class="row<%= rowid %>">
-      <input type="checkbox" name="<%= thisList.getId() %>">
+      <input type="checkbox" name="<%= thisList.getId() %>" value="true">
     </td>
     <td nowrap class="row<%= rowid %>">
       <%= toHtml(thisList.getGroupName()) %>

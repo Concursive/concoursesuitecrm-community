@@ -40,7 +40,7 @@ function validate() {
     Complete
   </td>
   <td>
-    <input type="checkbox" name="complete" <%= BusinessRule.getComplete() ?  " checked" : ""%>>
+    <input type="checkbox" name="complete" value="true" <%= BusinessRule.getComplete() ?  " checked" : ""%>>
    </td>
 </tr>
 </table>

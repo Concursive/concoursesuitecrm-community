@@ -43,7 +43,7 @@ Tasks
       <font color="red">*</font>
       <input type="hidden" name="owner" value="<%= User.getUserRecord().getId() %>">
       <input type="hidden" name="priority" value="1">
-      <input type="checkbox" name="chk2" onclick="javascript:setField('sharing',document.addTask.chk2.checked,'addTask');">
+      <input type="checkbox" name="chk2" value="true" onclick="javascript:setField('sharing',document.addTask.chk2.checked,'addTask');">
       Personal
       <input type="hidden" name="sharing" value="">
       <input type="submit" value="Insert">

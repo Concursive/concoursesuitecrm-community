@@ -151,7 +151,7 @@ Survey Details
       %>
         <tr class="containerBack">
           <td valign="center" style="text-align: center" width="6%">
-            <input type="checkbox" name="quest<%= thisQuestion.getId() %>item<%= thisItem.getId() %>">
+            <input type="checkbox" name="quest<%= thisQuestion.getId() %>item<%= thisItem.getId() %>" value="true">
           </td>
           <td valign="center">
             <%= toHtml(thisItem.getDescription()) %>

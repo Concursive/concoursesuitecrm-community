@@ -212,7 +212,7 @@
     </td>
     <td>
       <%= StageList.getHtmlSelect((opportunityHeader.getId() > 0 ? "stage" : "component_stage"),ComponentDetails.getStage()) %>
-      <input type="checkbox" name="<%= opportunityHeader.getId() > 0 ? "closeNow" : "component_closeNow" %>" <%= ComponentDetails.getCloseIt() ? " checked" : ""%>>Close this component
+      <input type="checkbox" name="<%= opportunityHeader.getId() > 0 ? "closeNow" : "component_closeNow" %>" value="true" <%= ComponentDetails.getCloseIt() ? " checked" : ""%>>Close this component
     </td>
   </tr>
   <tr class="containerBody">

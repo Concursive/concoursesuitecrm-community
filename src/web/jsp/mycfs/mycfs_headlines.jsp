@@ -77,7 +77,7 @@ Headlines
   <tr class="row<%= rowid %>">
     <dhv:permission name="myhomepage-miner-delete">
     <td width="5" valign="center" align="center">
-      <input type="checkbox" name="<%= thisOrg.getOrgId() %>">
+      <input type="checkbox" name="<%= thisOrg.getOrgId() %>" value="true">
     </td>
     </dhv:permission>
     <td valign="center">

@@ -47,7 +47,7 @@
       <table cellpadding="3" cellspacing="0" class="empty">
         <tr>
           <td>
-            <input type="checkbox" name="chk2" <%= (Task.getSharing()==1)?" checked":"" %>>
+            <input type="checkbox" name="chk2" value="true" <%= (Task.getSharing()==1)?" checked":"" %>>
           </td>
           <td>personal</td>
         </tr>

@@ -108,8 +108,10 @@ Modify Ticket
   <tr>
   	<td class="containerBack">
       <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-        <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
-        &nbsp;<br>
+        <font color="red">This ticket was closed on
+        <dhv:tz timestamp="<%= TicketDetails.getClosed() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+        </font><br>
+        <br>
       </dhv:evaluate>
       <% if (TicketDetails.getClosed() != null) { %>
         <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
@@ -393,10 +395,10 @@ Modify Ticket
       </td>
       <td>
         <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
-        <input type="checkbox" name="closeNow">Close ticket
+        <input type="checkbox" name="closeNow" value="true">Close ticket
         <%--
         <br>
-        <input type="checkbox" name="kbase">Add this solution to Knowledge Base
+        <input type="checkbox" name="kbase" value="true">Add this solution to Knowledge Base
         --%>
 <%-- Added for voice demo, will show a list of surveys that can be emailed... --%>
 <%--

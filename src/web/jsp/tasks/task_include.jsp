@@ -58,7 +58,7 @@
       <table cellpadding="3" cellspacing="0" class="empty">
         <tr>
           <td>
-            <input type="checkbox" name="chk2" onclick="javascript:setField('sharing',document.addTask.chk2.checked,'addTask');" <%= (Task.getSharing()==1)?" checked":"" %>>
+            <input type="checkbox" name="chk2" value="true" onclick="javascript:setField('sharing',document.addTask.chk2.checked,'addTask');" <%= (Task.getSharing()==1)?" checked":"" %>>
             <input type="hidden" name="sharing" value="<%= Task.getSharing() %>">
           </td>
           <td>personal</td>

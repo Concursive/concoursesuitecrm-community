@@ -224,7 +224,7 @@ Add Vehicle
       Sold
     </td>
     <td>
-      <input type="checkbox" name="sold"<%= (InventoryDetails.getSold()?" checked":"") %>>
+      <input type="checkbox" name="sold"<%= (InventoryDetails.getSold()?" checked":"") %> value="true">
     </td>
   </tr>
 </table>
@@ -258,7 +258,7 @@ Add Vehicle
   <tr class="containerBody">
     <td width="34%">
       <input type="hidden" name="option<%= itemCount %>id" value="<%= option1.getId() %>">
-      <input type="checkbox" name="option<%= option1.getId() %>"><%= option1.getName() %>
+      <input type="checkbox" name="option<%= option1.getId() %>" value="true"><%= option1.getName() %>
     </td>
     <td width="33%">
 <%
@@ -266,7 +266,7 @@ Add Vehicle
       ++itemCount;
 %>
       <input type="hidden" name="option<%= itemCount %>id" value="<%= option2.getId() %>">
-      <input type="checkbox" name="option<%= option2.getId() %>"><%= option2.getName() %>
+      <input type="checkbox" name="option<%= option2.getId() %>" value="true"><%= option2.getName() %>
 <%  }  %>&nbsp;
     </td>
     <td width="33%">
@@ -275,7 +275,7 @@ Add Vehicle
       ++itemCount;
 %>
       <input type="hidden" name="option<%= itemCount %>id" value="<%= option3.getId() %>">
-      <input type="checkbox" name="option<%= option3.getId() %>"><%= option3.getName() %>
+      <input type="checkbox" name="option<%= option3.getId() %>" value="true"><%= option3.getName() %>
 <%  }  %>&nbsp;
     </td>
   </tr>
@@ -302,7 +302,7 @@ Add Vehicle
       &nbsp;&nbsp;
       Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", -1) %>
       &nbsp;&nbsp;
-      <input type="checkbox" name="adrun<%= runCount %>includePhoto">Include Photo
+      <input type="checkbox" name="adrun<%= runCount %>includePhoto" value="true">Include Photo
     </td>
   </tr>
 <%}%>

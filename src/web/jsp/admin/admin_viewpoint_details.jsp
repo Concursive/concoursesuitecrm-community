@@ -50,7 +50,7 @@ Update Viewpoint
   </tr>
   <tr class="containerBody">
     <td class="formLabel">Enabled</td>
-    <td><input type="checkbox" name="enabled" <%= Viewpoint.getEnabled() ? " checked" : ""%>></td>
+    <td><input type="checkbox" name="enabled" value="true" <%= Viewpoint.getEnabled() ? " checked" : ""%>></td>
   </tr>
 </table>
 &nbsp;

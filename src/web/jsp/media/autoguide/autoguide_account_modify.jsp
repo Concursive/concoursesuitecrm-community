@@ -229,7 +229,7 @@ Modify Vehicle
       Sold
     </td>
     <td>
-      <input type="checkbox" name="sold"<%= (InventoryDetails.getSold()?" checked":"") %>>
+      <input type="checkbox" name="sold" value="true"<%= (InventoryDetails.getSold()?" checked":"") %>>
     </td>
   </tr>
 </table>
@@ -264,7 +264,7 @@ Modify Vehicle
   <tr class="containerBody">
     <td width="34%">
       <input type="hidden" name="option<%= itemCount %>id" value="<%= option1.getId() %>">
-      <input type="checkbox" name="option<%= option1.getId() %>"<%= (InventoryDetails.hasOption(option1.getId())?" checked":"") %>><%= option1.getName() %>
+      <input type="checkbox" name="option<%= option1.getId() %>" value="true"<%= (InventoryDetails.hasOption(option1.getId())?" checked":"") %>><%= option1.getName() %>
     </td>
     <td width="33%">
 <%
@@ -272,7 +272,7 @@ Modify Vehicle
       ++itemCount;
 %>
       <input type="hidden" name="option<%= itemCount %>id" value="<%= option2.getId() %>">
-      <input type="checkbox" name="option<%= option2.getId() %>"<%= (InventoryDetails.hasOption(option2.getId())?" checked":"") %>><%= option2.getName() %>
+      <input type="checkbox" name="option<%= option2.getId() %>" value="true"<%= (InventoryDetails.hasOption(option2.getId())?" checked":"") %>><%= option2.getName() %>
 <%  }  %>&nbsp;
     </td>
     <td width="33%">
@@ -281,7 +281,7 @@ Modify Vehicle
       ++itemCount;
 %>
       <input type="hidden" name="option<%= itemCount %>id" value="<%= option3.getId() %>">
-      <input type="checkbox" name="option<%= option3.getId() %>"<%= (InventoryDetails.hasOption(option3.getId())?" checked":"") %>><%= option3.getName() %>
+      <input type="checkbox" name="option<%= option3.getId() %>" value="true"<%= (InventoryDetails.hasOption(option3.getId())?" checked":"") %>><%= option3.getName() %>
 <%  }  %>&nbsp;
     </td>
   </tr>
@@ -312,9 +312,9 @@ Modify Vehicle
       &nbsp;&nbsp;
       Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", adRun.getAdType()) %>
       &nbsp;&nbsp;
-      <input type="checkbox" name="adrun<%= runCount %>includePhoto"<%= (adRun.getIncludePhoto()?" checked":"") %>>Include Photo
+      <input type="checkbox" name="adrun<%= runCount %>includePhoto" value="true"<%= (adRun.getIncludePhoto()?" checked":"") %>>Include Photo
       &nbsp;&nbsp;
-      <input type="checkbox" name="adrun<%= runCount %>remove">remove
+      <input type="checkbox" name="adrun<%= runCount %>remove" value="true">remove
     </td>
   </tr>
 <%}%>
@@ -330,7 +330,7 @@ Modify Vehicle
       &nbsp;&nbsp;
       Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", -1) %>
       &nbsp;&nbsp;
-      <input type="checkbox" name="adrun<%= runCount %>includePhoto">Include Photo
+      <input type="checkbox" name="adrun<%= runCount %>includePhoto" value="true">Include Photo
     </td>
   </tr>
 <%}%>

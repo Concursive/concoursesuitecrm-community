@@ -76,7 +76,7 @@
       <td width='2' bgcolor='#808080'>&nbsp;</td>
       <td width='100%' colspan='2'>
         &nbsp;Status:<br>
-        &nbsp;&nbsp;<input type="checkbox" name="complete" <%=Task.getComplete()?" checked":""%>> Complete<br>
+        &nbsp;&nbsp;<input type="checkbox" name="complete" value="true" <%=Task.getComplete()?" checked":""%>> Complete<br>
         &nbsp;
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>

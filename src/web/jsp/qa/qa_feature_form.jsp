@@ -48,7 +48,7 @@ function validate() {
     Complete
   </td>
   <td>
-    <input type="checkbox" name="complete" <%= Feature.getComplete() ?  " checked" : ""%>>
+    <input type="checkbox" name="complete" value="true" <%= Feature.getComplete() ?  " checked" : ""%>>
    </td>
 </tr>
 <tr class="containerBody">

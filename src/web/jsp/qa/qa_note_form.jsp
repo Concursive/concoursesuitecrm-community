@@ -40,7 +40,7 @@ function validate() {
     Complete
   </td>
   <td>
-    <input type="checkbox" name="complete" <%= Note.getComplete() ?  " checked" : ""%>>
+    <input type="checkbox" name="complete" value="true" <%= Note.getComplete() ?  " checked" : ""%>>
    </td>
 </tr>
 </table><br>

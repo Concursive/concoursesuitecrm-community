@@ -47,7 +47,7 @@ Disable User Account
       If you are also responsible for the data re-assignments of this user, you can go to "Re-Assignments" in My Home Page, or just <a href="Reassignments.do?command=Reassign&userId=<%=User.getId()%>">click here</a> to go to
       that module and make those changes.<br><br>
 </dhv:permission>
-      <input type="checkbox" name="disablecontact"> Check this box if you want to archive the contact associated with this user so that the information no longer displays in the Contact/Employee modules.<br>&nbsp;
+      <input type="checkbox" name="disablecontact" value="true"> Check this box if you want to archive the contact associated with this user so that the information no longer displays in the Contact/Employee modules.<br>&nbsp;
     </td>
   </tr>
 </table>

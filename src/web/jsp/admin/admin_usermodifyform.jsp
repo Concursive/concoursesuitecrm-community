@@ -101,7 +101,7 @@ Modify User
       <table border="0" cellpadding="0" cellspacing="0" class="empty">
         <tr>
           <td valign="center">
-            <input type="checkbox" name="generatePass">
+            <input type="checkbox" name="generatePass" value="true">
           </td>
           <td width="8"></td>
           <td valign="center">
