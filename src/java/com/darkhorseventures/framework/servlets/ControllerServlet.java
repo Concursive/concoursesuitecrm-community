@@ -453,7 +453,7 @@ public class ControllerServlet extends HttpServlet
         if (request.getParameter(populateAttribute) != null) {
           if (populateClassInstance != null) {
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("> Auto populating a bean");
+              System.out.println("> Auto populating a bean: " + beans.getClassName());
             }
             populateClassInstance.populateObject(beanRef, request, nestedAttribute, indexAttribute);
           }
