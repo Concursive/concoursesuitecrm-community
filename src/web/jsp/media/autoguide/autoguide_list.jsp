@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.autoguide.base.*" %>
 <jsp:useBean id="InventoryList" class="com.darkhorseventures.autoguide.base.InventoryList" scope="request"/>
 <jsp:useBean id="AutoGuideDirectoryInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<jsp:useBean id="listFilterSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 
@@ -14,15 +15,18 @@
 <br>
 </dhv:permission>
 
-<center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %></center>
+<center><%= AutoGuideDirectoryInfo.getNumericalPageLinks() %></center>
 
 <table width="100%" border="0">
   <tr>
     <td align="left">
-      View: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+      Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= AutoGuideDirectoryInfo.getOptionValue("list") %>>List View</option>
         <option <%= AutoGuideDirectoryInfo.getOptionValue("slides") %>>Ad View</option>
       </select>
+      &nbsp;
+      <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideDirectoryInfo.getFilterKey("listFilter1")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
   </tr>

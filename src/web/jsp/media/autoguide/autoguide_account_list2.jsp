@@ -3,6 +3,7 @@
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="InventoryList" class="com.darkhorseventures.autoguide.base.InventoryList" scope="request"/>
 <jsp:useBean id="AutoGuideAccountInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<jsp:useBean id="listFilterSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
@@ -25,7 +26,7 @@
     <td class="containerBack">
 <dhv:permission name="autoguide-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
 <dhv:permission name="autoguide-inventory-add" none="true"><br></dhv:permission>
-<center><%= AutoGuideAccountInfo.getAlphabeticalPageLinks() %></center>
+<center><%= AutoGuideAccountInfo.getNumericalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
     <td align="left">

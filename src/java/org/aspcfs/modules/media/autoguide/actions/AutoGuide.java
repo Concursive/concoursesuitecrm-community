@@ -57,9 +57,11 @@ public final class AutoGuide extends CFSModule {
     InventoryList inventoryList = new InventoryList();
     try {
       db = this.getConnection(context);
+      populateListFilters(context, autoGuideDirectoryInfo);
       //inventoryList.setPagedListInfo(autoGuideDirectoryInfo);
       inventoryList.setBuildOrganizationInfo(true);
       inventoryList.setBuildPictureId(true);
+      inventoryList.setShowSold(autoGuideDirectoryInfo.getFilterKey("listFilter1"));
       inventoryList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
