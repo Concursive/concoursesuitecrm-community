@@ -87,7 +87,7 @@ View Contacts<br>
           <dhv:permission name="accounts-view,accounts-accounts-view"><%= ((thisContact.getOrgId() > 0 )?"<a href=\"Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[Account]</a>":"")%></dhv:permission>
         </td>
         <td class="row<%= rowid %>">
-          <%= toHtml(thisContact.getCompany()) %>
+          <%= toHtml(thisContact.getOrgName()) %>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisContact.getPhoneNumber("Business")) %>
