@@ -149,6 +149,10 @@ public class AdRunList extends ArrayList {
     this.inventoryId = tmp;
   }
   
+  public void setAccountInventoryId(int tmp) {
+    this.inventoryId = tmp;
+  }
+  
   public void setInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
   }
@@ -182,6 +186,10 @@ public class AdRunList extends ArrayList {
    *@return    The inventoryId value
    */
   public int getInventoryId() {
+    return inventoryId;
+  }
+  
+  public int getAccountInventoryId() {
     return inventoryId;
   }
 
