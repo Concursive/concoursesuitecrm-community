@@ -15,8 +15,12 @@ Task Details
 <%-- End Trails --%>
 </dhv:evaluate>
 <%= showError(request, "actionError") %>
-<input type="button" value="Cancel" onClick="<%= isPopup(request) ? "javascript:window.close();" : "javascript:window.location.href='MyTasks.do?command=ListTasks';"%>"><br>
+<dhv:evaluate exp="<%= isPopup(request) %>"> 
+<input type="button" value="Cancel" onClick="javascript:window.close();"><br>
+</dhv:evaluate>
 <%@ include file="task_details_include.jsp" %>
 <br>
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
-<input type="button" value="Cancel" onClick="<%= isPopup(request) ? "javascript:window.close();" : "javascript:window.location.href='MyTasks.do?command=ListTasks';"%>">
+<dhv:evaluate exp="<%= isPopup(request) %>">
+<input type="button" value="Cancel" onClick="javascript:window.close();">
+</dhv:evaluate>
