@@ -439,6 +439,8 @@ public class PilotOnlineReader implements DataReader {
       if (!processOK) {
         processLog.add("ERROR: FTP Sending pictures-> " + ftp.getStdErr());
       }
+    } else {
+      processLog.add("ERROR: FTP Sending pictures-> Skipped because of previous error");
     }
 
     if (processOK) {
@@ -451,6 +453,8 @@ public class PilotOnlineReader implements DataReader {
       if (!processOK) {
         processLog.add("ERROR: FTP Sending data-> " + ftp.getStdErr());
       }
+    } else {
+      processLog.add("ERROR: FTP Sending data-> Skipped because of previous error");
     }
     
     processLog.add("INFO: PilotOnlineReader-> Finished " + new java.util.Date());
@@ -487,6 +491,16 @@ public class PilotOnlineReader implements DataReader {
       } catch (Exception e) {
         e.printStackTrace();
       }
+      
+      //Local Debug
+      if (!processOK) {
+        Iterator logData = processLog.iterator();
+        while (logData.hasNext()) {
+          String logItem = (String)logData.next();
+          System.out.println(logItem);
+        }
+      }
+      
     }
 
     return processOK;
