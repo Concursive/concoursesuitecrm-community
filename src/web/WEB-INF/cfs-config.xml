@@ -802,6 +802,9 @@
     <forward name="WorkflowOK" resource="/admin/admin_workflow_list.jsp" layout="nav"/>
     <forward name="WorkflowDetailsOK" resource="/admin/admin_workflow_details.jsp" layout="nav"/>
   </action>
+  <action name="AdminQA" class="org.aspcfs.modules.admin.actions.AdminQA">
+    <forward name="QAReportOK" resource="/admin/admin_qa_report.jsp" layout="nav"/>
+  </action>
   
   <action name="AdminFieldsFolder" class="org.aspcfs.modules.admin.actions.AdminFields">
     <bean name="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
@@ -974,6 +977,17 @@
     <forward name="NewTaskPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=GlobalItem"/>
     <forward name="PrepareTaskPopupOK" resource="/global/global_addtask.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopup.jsp"/>
+  </action>
+  
+  <action name="ReportGenerator" class="org.aspcfs.modules.reports.actions.ReportGenerator">
+    <forward name="DefaultOK" resource="/admin/system_process_ok.jsp" layout="nav"/>
+  </action>
+  
+  <action name="MyTest" class="org.aspcfs.modules.mycfs.actions.Test">
+    <bean name="testBean" class="org.aspcfs.modules.mycfs.base.TestBean" scope="request"/>
+    <forward name="TestOK" resource="/mycfs/mycfs_test.jsp" layout="nav"/>
+    <forward name="TestSaveERROR" resource="/MyTest.do?command=Default"/>
+    <forward name="TestSaveOK" resource="/mycfs/mycfs_test_saveok.jsp" layout="nav"/>
   </action>
   
   <!-- 

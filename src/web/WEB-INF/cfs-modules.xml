@@ -544,6 +544,7 @@
     <action name="Viewpoints"/>
     <action name="AdminObjectEvents"/>
     <action name="AdminScheduledEvents"/>
+    <action name="AdminQA"/>
     <page title="System Administration"/>
     <permission value="admin-view"/>
     <long_html value="System Administration"/>
