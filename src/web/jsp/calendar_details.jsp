@@ -30,12 +30,15 @@ function switchStyle(E){
 
 <table bgcolor="#FFFFFF" width="100%" border="0" cellpadding="0" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr>
-         <td align="center" valign="top" nowrap><strong><%= CalendarInfo.isAgendaView()?"Agenda View": Character.toUpperCase(CalendarInfo.getCalendarView().charAt(0)) + CalendarInfo.getCalendarView().substring(1) + " View" %> </strong></td>
+         <td align="center" valign="top" nowrap><strong><%= CalendarInfo.isAgendaView()?"Next 7 Days View": Character.toUpperCase(CalendarInfo.getCalendarView().charAt(0)) + CalendarInfo.getCalendarView().substring(1) + " View " + (CalendarInfo.getCalendarView().equalsIgnoreCase("week")?" : " + toMediumDateString(CompanyCalendar.getStartOfWeekDate()) + " - " + toMediumDateString(CompanyCalendar.getEndOfWeekDate()):"")%> </strong></td>
       </tr>
+      <dhv:evaluate exp="<%= !CalendarInfo.isAgendaView() %>">
       <tr>
-        <td valign="top" align="left" nowrap><a href="MyCFS.do?command=AgendaView&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>"><font style="<%=!CalendarInfo.isAgendaView()?"visibility:visible":"visibility:hidden"%>">Back To Agenda View</font></a></td>
+        <td valign="top" align="left" nowrap><a href="MyCFS.do?command=AgendaView&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>">Back To Agenda View</a></td>
         <table style="visibility:none" border="0" height="6"><tr height='2' style="visibility:none"><td></td></tr></table>
       </tr>
+      </dhv:evaluate>
+      
       <tr>
         <td height="100%" width="100%" valign="top">
           <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -80,7 +83,7 @@ function switchStyle(E){
         %>
         <table cellspacing="0" cellpadding="0" border="0" marginheight="0" marginwidth="0">
         <tr>
-          <td nowrap><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;<font id="category<%=i%>"></font></td>
+          <td nowrap><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;<font id="category<%=i%>"></font></td>
         </tr>
         </table>
         <table width="100%" cellspacing="0" cellpadding="0" marginheight="0" marginwidth="0" border="0" id="alertdetails<%= toFullDateString(thisDay.getDate()) + i %>" style="<%=count==0?"display:":"display:none"%>">
