@@ -10,7 +10,7 @@
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
-<a href="MyCFS.do?command=MyProfile">My Settings</a> >
+<a href="MyCFS.do?command=MyProfile">Settings</a> >
 Password
 </td>
 </tr>

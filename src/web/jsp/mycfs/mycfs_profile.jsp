@@ -4,7 +4,7 @@
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
-My Settings
+Settings
 </td>
 </tr>
 </table>

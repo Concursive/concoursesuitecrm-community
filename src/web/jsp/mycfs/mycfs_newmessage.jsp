@@ -3,7 +3,7 @@
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
-<a href="MyCFSInbox.do?command=Inbox&return=1">My Mailbox</a> >
+<a href="MyCFSInbox.do?command=Inbox&return=1">Mailbox</a> >
 New Message
 </td>
 </tr>

@@ -18,7 +18,7 @@
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
-My Mailbox
+Mailbox
 </td>
 </tr>
 </table>
@@ -33,7 +33,7 @@ My Mailbox
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= InboxInfo.getOptionValue("new") %>>Messages (Inbox)</option>
         <option <%= InboxInfo.getOptionValue("old") %>>Archive</option>
-        <option <%= InboxInfo.getOptionValue("sent") %>>Sent(Outbox)</option>
+        <option <%= InboxInfo.getOptionValue("sent") %>>Sent (Outbox)</option>
       </select>
     </td>
     <td>

@@ -9,7 +9,7 @@
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
-<a href="MyCFSInbox.do?command=Inbox">My Mailbox</a> >
+<a href="MyCFSInbox.do?command=Inbox">Mailbox</a> >
 Message Details
 </td>
 </tr>

@@ -23,7 +23,7 @@
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
-My Tasks
+Tasks
 </td>
 </tr>
 </table>
