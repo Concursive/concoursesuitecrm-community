@@ -1,4 +1,5 @@
-<config>
+<!--INSERT INTO system_prefs (category, modifiedby, enteredby, data) VALUES 
+('system.objects.hooks', 1, 1, '--><config>
   <hooks>
     <hook class="com.darkhorseventures.cfsbase.Ticket">
       <actions>
@@ -14,7 +15,7 @@
     </hook>
     <hook class="com.darkhorseventures.cfsbase.CustomFieldCategory">
       <actions>
-        <action type="insert" process="vport.accountFolder.insert" enabled="true"/>
+        <action type="insert" process="vport.accountFolder.insert" enabled="false"/>
       </actions>
     </hook>
   </hooks>
@@ -22,7 +23,7 @@
   <processes>
     <process name="dhv.ticket.insert" description="DHV Ticket alert" startId="1" entered="" modified="">
       <parameters>
-        <parameter name="notification.host" value="mail.darkhorseventures.com" type="java.lang.String" enabled="true"/>
+        <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
         <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
       </parameters>
       <components>
@@ -34,7 +35,7 @@
             <parameter name="notification.module" value="Tickets"/>
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
-            <parameter name="notification.userToNotify" value="${this.enteredBy}"/>
+            <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
             <parameter name="notification.subject">CFS Ticket Closed: ${this.paddedId}</parameter>
 <parameter name="notification.body">
 The following ticket in CFS has been closed:&#13;
@@ -59,7 +60,7 @@ Solution: ${this.solution}
             <parameter name="notification.module" value="Tickets"/>
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
-            <parameter name="notification.userToNotify" value="${this.enteredBy}"/>
+            <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
             <parameter name="notification.subject">CFS Ticket Assigned: ${this.paddedId}</parameter>
 <parameter name="notification.body">
 The following ticket in CFS has been assigned to you:&#13;
@@ -76,7 +77,7 @@ Comment: ${this.comment}
 </parameter>
           </parameters>
         </component>
-        <component id="6" parent="1" class="com.darkhorseventures.cfs.troubletickets.component.SendTicketToBPM" enabled="false">
+        <component id="6" parent="1" class="com.darkhorseventures.cfs.troubletickets.component.SendTicketToBPM" enabled="true">
           <parameters>
             <parameter name="bpm.host.url" value="http://ds21.darkhorseventures.com:8080/Horse/servlet/ProcessInitiateServlet"/>
           </parameters>
@@ -86,7 +87,7 @@ Comment: ${this.comment}
     </process>
     
     <process name="dhv.assignment.insert" description="DHV Assignment alert" startId="100">
-      <parameter name="notification.host" value="mail.darkhorseventures.com" type="java.lang.String" enabled="true"/>
+      <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
       <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
       <components>
         <component id="100" parent="0" class="com.darkhorseventures.cfs.projectmanager.component.LoadAssignmentDetails" enabled="true"/>
@@ -158,4 +159,6 @@ Assigned By: ${assignmentAssignedByContact.nameFirstLast}&#13;
       </components>
     </process>
   </processes>
-</config>
+</config><!--');-->
+
+
