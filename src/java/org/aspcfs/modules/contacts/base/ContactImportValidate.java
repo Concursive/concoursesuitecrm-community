@@ -312,6 +312,9 @@ public class ContactImportValidate {
                   addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + "\" has already been mapped to another field");
                 }
               } else {
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println("** Mapping " + field + " to " + fieldNumber);
+                }
                 thisProperty.setMappedColumn(fieldNumber);
                 mappedProperty = thisProperty;
 
