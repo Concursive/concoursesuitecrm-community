@@ -451,8 +451,7 @@ public class InventoryList extends ArrayList {
         " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
         " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
         " LEFT JOIN organization o ON i.account_id = o.org_id " +
-        "WHERE i.inventory_id > -1 " +
-        "AND i.account_id IN (SELECT org_id FROM organization) ");
+        "WHERE i.inventory_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -518,8 +517,7 @@ public class InventoryList extends ArrayList {
         " LEFT JOIN organization o ON i.account_id = o.org_id " +
         " LEFT JOIN project_files files ON " +
         "   (i.inventory_id = files.link_item_id AND files.link_module_id = " + Constants.AUTOGUIDE + ") " +
-        "WHERE i.inventory_id > -1 " +
-        "AND i.account_id IN (SELECT org_id FROM organization) ");
+        "WHERE i.inventory_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

@@ -346,7 +346,8 @@ public class AdRunList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM autoguide_ad_run ad, autoguide_ad_run_types adtype " +
-        "WHERE ad.ad_run_id > -1 AND ad.ad_type = adtype.code ");
+        "WHERE ad.ad_run_id > -1 " +
+        "AND ad.ad_type = adtype.code ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -378,7 +379,8 @@ public class AdRunList extends ArrayList {
         "ad.modified, ad.modifiedby, " +
         "adtype.description " +
         "FROM autoguide_ad_run ad, autoguide_ad_run_types adtype " +
-        "WHERE ad.ad_run_id > -1 AND ad.ad_type = adtype.code ");
+        "WHERE ad.ad_run_id > -1 " +
+        "AND ad.ad_type = adtype.code ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
