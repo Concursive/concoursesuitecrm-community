@@ -254,11 +254,15 @@ public class ImportAccounts extends CSVReader {
 
         //Save all new records now
         processOK = writer.save(mappings.createDataRecord(thisOrganization, "insert"));
+        boolean processOK2 = true;
+        boolean processOK3 = true;
         if (processOK) {
-          processOK = mappings.saveList(writer, organizationAddressList, "insert");
-          processOK = mappings.saveList(writer, organizationNumberList, "insert");
+          processOK2 = mappings.saveList(writer, organizationAddressList, "insert");
+          processOK3 = mappings.saveList(writer, organizationNumberList, "insert");
         }
-        writeln(out, thisRecord);
+        if (!processOK || !processOK2 || !processOK3) {
+          writeln(out, thisRecord);
+        }
       }
       out.flush();
       out.close();
