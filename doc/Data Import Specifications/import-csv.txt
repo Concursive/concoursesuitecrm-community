@@ -29,6 +29,9 @@
 - Each field should have at most one (1) item, but can be left blank
 
 ** Field Specific Information
+- Owner is the name of the CFS User that should own this contact, the name
+  will be mapped to CFS by the transfer program
+
 - For Phone Numbers, we provide several fields that can be used in place of 
   using return characters.  For example, Business Phone and Business2 Phone.  
   There must be at most one (1) phone number entered per phone number field
