@@ -373,6 +373,12 @@ public class ImportGeneralContacts implements DataReader {
           addressList.add(homeAddress);
         }
 
+        //Determine the locale to be used for formatting
+        Locale thisLocale = businessAddress.getLocale();
+        if (thisLocale == null) {
+          thisLocale = homeAddress.getLocale();
+        }
+
         ContactPhoneNumber businessPhone = new ContactPhoneNumber();
         businessPhone.setContactId(contactId);
         businessPhone.setType(1);
@@ -380,7 +386,7 @@ public class ImportGeneralContacts implements DataReader {
         businessPhone.setModifiedBy(userId);
         businessPhone.setNumber(getValue(thisRecord, BUSINESS_PHONE));
         if (businessPhone.isValid()) {
-          phoneFormatter.format(businessPhone);
+          phoneFormatter.format(businessPhone, thisLocale);
           phoneNumberList.add(businessPhone);
         }
 
@@ -391,7 +397,7 @@ public class ImportGeneralContacts implements DataReader {
         business2Phone.setModifiedBy(userId);
         business2Phone.setNumber(getValue(thisRecord, BUSINESS_2_PHONE));
         if (business2Phone.isValid()) {
-          phoneFormatter.format(business2Phone);
+          phoneFormatter.format(business2Phone, thisLocale);
           phoneNumberList.add(business2Phone);
         }
 
@@ -402,7 +408,7 @@ public class ImportGeneralContacts implements DataReader {
         businessFax.setModifiedBy(userId);
         businessFax.setNumber(getValue(thisRecord, BUSINESS_FAX));
         if (businessFax.isValid()) {
-          phoneFormatter.format(businessFax);
+          phoneFormatter.format(businessFax, thisLocale);
           phoneNumberList.add(businessFax);
         }
 
@@ -413,7 +419,7 @@ public class ImportGeneralContacts implements DataReader {
         homePhone.setModifiedBy(userId);
         homePhone.setNumber(getValue(thisRecord, HOME_PHONE));
         if (homePhone.isValid()) {
-          phoneFormatter.format(homePhone);
+          phoneFormatter.format(homePhone, thisLocale);
           phoneNumberList.add(homePhone);
         }
 
@@ -424,7 +430,7 @@ public class ImportGeneralContacts implements DataReader {
         home2Phone.setModifiedBy(userId);
         home2Phone.setNumber(getValue(thisRecord, HOME_2_PHONE));
         if (home2Phone.isValid()) {
-          phoneFormatter.format(home2Phone);
+          phoneFormatter.format(home2Phone, thisLocale);
           phoneNumberList.add(home2Phone);
         }
 
@@ -435,7 +441,7 @@ public class ImportGeneralContacts implements DataReader {
         homeFax.setModifiedBy(userId);
         homeFax.setNumber(getValue(thisRecord, HOME_FAX));
         if (homeFax.isValid()) {
-          phoneFormatter.format(homeFax);
+          phoneFormatter.format(homeFax, thisLocale);
           phoneNumberList.add(homeFax);
         }
 
@@ -446,7 +452,7 @@ public class ImportGeneralContacts implements DataReader {
         mobilePhone.setModifiedBy(userId);
         mobilePhone.setNumber(getValue(thisRecord, MOBILE_PHONE));
         if (mobilePhone.isValid()) {
-          phoneFormatter.format(mobilePhone);
+          phoneFormatter.format(mobilePhone, thisLocale);
           phoneNumberList.add(mobilePhone);
         }
 
@@ -457,7 +463,7 @@ public class ImportGeneralContacts implements DataReader {
         otherPhone.setModifiedBy(userId);
         otherPhone.setNumber(getValue(thisRecord, OTHER_PHONE));
         if (otherPhone.isValid()) {
-          phoneFormatter.format(otherPhone);
+          phoneFormatter.format(otherPhone, thisLocale);
           phoneNumberList.add(otherPhone);
         }
 
@@ -468,7 +474,7 @@ public class ImportGeneralContacts implements DataReader {
         pager.setModifiedBy(userId);
         pager.setNumber(getValue(thisRecord, PAGER));
         if (pager.isValid()) {
-          phoneFormatter.format(pager);
+          phoneFormatter.format(pager, thisLocale);
           phoneNumberList.add(pager);
         }
 
@@ -534,7 +540,7 @@ public class ImportGeneralContacts implements DataReader {
    *@return         The value value
    */
   public String getValue(ArrayList record, int column) {
-    if (column > record.size()) {
+    if (column > record.size() || column < 1) {
       return null;
     }
     String value = (String) record.get(column - 1);
