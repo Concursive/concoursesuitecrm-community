@@ -353,6 +353,7 @@
     <forward name="DetailsComponentOK" resource="/leads_detailsoppcomponent.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="OppListOK" resource="/LeadsViewOpp.jsp" layout="nav"/>
+    <forward name="PopupModifyOK" resource="/leads_modifycomponent.jsp" layout="style"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ComponentModifyOK" resource="/leads_modifycomponent.jsp" layout="nav"/>
     <forward name="ComponentUpdateOK" resource="LeadsComponents.do?command=DetailsComponent"/>

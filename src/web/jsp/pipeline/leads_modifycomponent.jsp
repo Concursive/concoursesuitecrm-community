@@ -51,7 +51,12 @@
       }
     }
 </SCRIPT>
-<form name="updateOpp" action="LeadsComponents.do?command=UpdateComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="updateOpp" action="LeadsComponents.do?command=UpdateComponent&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
+<%boolean popUp = false;
+  if(request.getParameter("popup")!=null){
+    popUp = true;
+  }%>
+<dhv:evaluate exp="<%= !popUp %>">
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Opportunities</a> >
 
@@ -66,7 +71,7 @@
 <%}%>
 Modify Component<br>
 <hr color="#BFBFBB" noshade>
-
+</dhv:evaluate>
 <input type="hidden" name="id" value="<%= LeadsComponentDetails.getId() %>">
 <input type="hidden" name="oppId" value="<%= LeadsComponentDetails.getOppId() %>">
 <input type="hidden" name="modified" value="<%= LeadsComponentDetails.getModified() %>">
@@ -85,6 +90,9 @@ Modify Component<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= LeadsComponentDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
+<dhv:evaluate exp="<%= popUp %>">
+  <input type="button" value="Cancel" onclick="javascript:window.close();">
+</dhv:evaluate>
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -273,5 +281,8 @@ Modify Component<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= LeadsComponentDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
+<dhv:evaluate exp="<%= popUp %>">
+  <input type="button" value="Cancel" onclick="javascript:window.close();">
+</dhv:evaluate>
 <input type="hidden" name="dosubmit" value="true">
 </form>

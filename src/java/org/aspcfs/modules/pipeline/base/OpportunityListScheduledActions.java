@@ -60,7 +60,7 @@ public class OpportunityListScheduledActions extends OpportunityList implements 
           thisOpp.getAccountName() + ": " +
           thisOpp.getDescription()  + 
           " (" + thisOpp.getAlertText() + ")", 
-          "Opportunity", thisOpp.getId());
+          "Opportunity", thisOpp.getComponentId());
       }
     } catch (SQLException e) {
      throw new SQLException("Error Building Opportunity Calendar Alerts");

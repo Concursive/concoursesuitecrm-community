@@ -866,7 +866,11 @@ public final class Leads extends CFSModule {
     if (errorMessage == null) {
       context.getRequest().setAttribute("LeadsComponentDetails", component);
       addRecentItem(context, component);
-      return ("ComponentModifyOK");
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("PopupModifyOK");
+      } else {
+        return ("ComponentModifyOK");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

@@ -273,7 +273,7 @@ public class CalendarEvent implements Comparable {
   public String getLink() {
 
     if (category.equalsIgnoreCase("Opportunity")) {
-      return "<a href=\"javascript:popURL('Leads.do?command=ModifyOpp&id=" + id + "&popup=true&return=Calendar','CFS_Opportunity','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Opportunity';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
+      return "<a href=\"javascript:popURL('LeadsComponents.do?command=ModifyComponent&id=" + id + "&popup=true&return=Calendar','CFS_Opportunity','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Opportunity';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     } else if (category.equalsIgnoreCase("Accounts")) {
       return "<a href=\"javascript:popURL('/Accounts.do?command=Modify&orgId=" + id + "&popup=true&return=Calendar','CFS_Account','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Account';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     } else if (category.equalsIgnoreCase("Assignments")) {
