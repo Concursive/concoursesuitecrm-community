@@ -1,10 +1,9 @@
 package com.zeroio.iteam.base;
 
-import com.darkhorseventures.database.ConnectionPool;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.ScheduledActions;
-import org.aspcfs.modules.mycfs.base.*; 
+import org.aspcfs.modules.mycfs.base.*;
 import java.util.*;
 import com.zeroio.iteam.base.*;
 import java.sql.*;
@@ -14,7 +13,6 @@ import java.sql.*;
  *
  *@author     akhi_m
  *@created    October 2, 2002
- *@version    $Id$
  *@version    $Id$
  */
  
