@@ -493,7 +493,8 @@ public class UserList extends Vector {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    sqlCount.append("SELECT COUNT(*) AS recordcount " +
+    sqlCount.append(
+        "SELECT COUNT(*) AS recordcount " +
         "FROM access a LEFT JOIN contact c ON (a.contact_id = c.contact_id), role r " +
         "WHERE a.role_id = r.role_id ");
 
@@ -535,6 +536,7 @@ public class UserList extends Vector {
       sqlOrder.append("ORDER BY c.namelast ");
     }
 
+    //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
