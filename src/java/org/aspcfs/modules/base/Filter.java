@@ -1,4 +1,4 @@
-package org.aspcfs.modules.contacts.base;
+package org.aspcfs.modules.base;
 /**
  *  Custom Contact Filter for the Contacts Popup
  *
@@ -6,18 +6,18 @@ package org.aspcfs.modules.contacts.base;
  *@created    March 5, 2003
  *@version    $Id$
  */
-public class ContactFilter {
+public class Filter {
   String value = null;
   String displayName = null;
 
 
-  public ContactFilter(String value, String displayName){
+  public Filter(String value, String displayName){
     this.value = value;
     this.displayName = displayName;
   }
   
   /**
-   *  Sets the value attribute of the ContactFilter object
+   *  Sets the value attribute of the Filter object
    *
    *@param  value  The new value value
    */
@@ -27,7 +27,7 @@ public class ContactFilter {
 
 
   /**
-   *  Sets the displayName attribute of the ContactFilter object
+   *  Sets the displayName attribute of the Filter object
    *
    *@param  displayName  The new displayName value
    */
@@ -37,7 +37,7 @@ public class ContactFilter {
 
 
   /**
-   *  Gets the value attribute of the ContactFilter object
+   *  Gets the value attribute of the Filter object
    *
    *@return    The value value
    */
@@ -47,7 +47,7 @@ public class ContactFilter {
 
 
   /**
-   *  Gets the displayName attribute of the ContactFilter object
+   *  Gets the displayName attribute of the Filter object
    *
    *@return    The displayName value
    */
