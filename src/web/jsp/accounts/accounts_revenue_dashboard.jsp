@@ -1,27 +1,22 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="UserInfo" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <jsp:useBean id="ShortChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<jsp:useBean id="FullChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<jsp:useBean id="FullRevList" class="com.darkhorseventures.cfsbase.RevenueList" scope="request"/>
 <jsp:useBean id="MyRevList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
 <jsp:useBean id="RevenueTypeList" class="com.darkhorseventures.cfsbase.RevenueTypeList" scope="request"/>
-<jsp:useBean id="DBRevenueListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <jsp:useBean id="YearList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name=Dashboard action="/RevenueManager.do?command=Dashboard" method=POST>
-<a href="/Accounts.do">Account Management</a> > 
+<form name=Dashboard action="RevenueManager.do?command=Dashboard" method=POST>
+<a href="Accounts.do">Account Management</a> > 
 Revenue Dashboard<br>
 <hr color="#BFBFBB" noshade>
 <table width=100% border=0 cellspacing=0 cellpadding=3>
   <tr>
     <!-- Left Column -->
-    <td width=275 valign=top>
+    <td width="275" valign="top">
       <!-- Graphic -->
-      <table width=275 cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table width="275" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
-          <td width=255 valign=center colspan=1 align=center>
-		
+          <td width=255 valign=center colspan="1" align="center">
 		<% if (((String)request.getSession().getAttribute("override")) == null) {%>
 		My Dashboard
 		<%} else {%>
