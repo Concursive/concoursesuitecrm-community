@@ -97,7 +97,7 @@ public final class AutoGuide extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "Auto Guide", "List");
+    addModuleBean(context, "Auto Guide", "Details");
     if (errorMessage == null) {
       return ("DetailsOK");
     } else {
@@ -106,5 +106,37 @@ public final class AutoGuide extends CFSModule {
     }
   }
   
+  public String executeCommandDelete(ActionContext context) {
+
+    /*
+     *  if (!(hasPermission(context, "autoguide-inventory-view"))) {
+     *  return ("PermissionError");
+     *  }
+     */
+    Exception errorMessage = null;
+
+    Connection db = null;
+    try {
+      int id = Integer.parseInt((String)context.getRequest().getParameter("id"));
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("AutoGuide-> Delete ID: " + id);
+      }
+      db = this.getConnection(context);
+      AccountInventory inventoryItem = new AccountInventory(db, id);
+      inventoryItem.delete(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "Auto Guide", "Delete");
+    if (errorMessage == null) {
+      return ("DeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 }
 
