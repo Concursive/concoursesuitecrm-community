@@ -176,7 +176,7 @@ public class ContactReport extends ContactList {
 	
 	public void buildReportBaseInfo() {
 		rep.setDelimitedCharacter(delimiter);
-		rep.setHeader(header + ": " + subject);
+		rep.setHeader(header + ((!header.equals("") && !subject.equals(""))?": ":"") + subject);
 	}
 	
 	public void buildReportHeaders() {

@@ -125,7 +125,7 @@ public class CFSModule {
     return (thisUser.hasPermission(permission));
   }
   
-  protected static String includeFile(String sourceFile){
+  public static String includeFile(String sourceFile){
     StringBuffer HTMLBuffer = new StringBuffer();
     String desc;
     char[] chars = null;
@@ -150,7 +150,7 @@ public class CFSModule {
    *@return          The DbName value
    *@since
    */
-  protected String getDbName(ActionContext context) {
+  public static String getDbName(ActionContext context) {
     ConnectionElement ce = (ConnectionElement)context.getSession().getAttribute("ConnectionElement");
     if (ce != null) {
       return ce.getDbName();
@@ -193,15 +193,18 @@ public class CFSModule {
    *@return                   The Path value
    *@since
    */
-  protected String getPath(ActionContext context, String moduleFolderName, int moduleItemId) {
+  public static String getPath(ActionContext context, String moduleFolderName, int moduleItemId) {
     return (
         context.getServletContext().getRealPath("/") + ".." + fs +
         "fileLibrary" + fs +
-        this.getDbName(context) + fs +
+        getDbName(context) + fs +
         moduleFolderName + fs +
         "id" + moduleItemId + fs);
   }
 
+  public static String getDatePath(java.util.Date fileDate) {
+    return getDatePath(new java.sql.Timestamp(fileDate.getTime()));
+  }
 
   /**
    *  Gets the DatePath attribute of the CFSModule object
@@ -210,7 +213,7 @@ public class CFSModule {
    *@return           The DatePath value
    *@since
    */
-  protected String getDatePath(java.sql.Timestamp fileDate) {
+  public static String getDatePath(java.sql.Timestamp fileDate) {
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
     String datePathToUse1 = formatter1.format(fileDate);
     SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
@@ -504,6 +507,13 @@ public class CFSModule {
         recentItems.remove(10);
       }
     }
+  }
+  
+  public static void saveTextFile(String text, String filename) throws java.io.IOException {
+    File outputFile = new File(filename);
+    FileWriter out = new FileWriter(outputFile);
+    out.write(text);
+    out.close();
   }
 
 }

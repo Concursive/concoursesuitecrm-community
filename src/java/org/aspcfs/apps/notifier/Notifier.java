@@ -7,6 +7,7 @@ import java.net.*;
 import java.text.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
+import com.darkhorseventures.cfsmodule.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -490,17 +491,18 @@ public class Notifier extends ReportBuilder {
       return false;
     }
     String fs = System.getProperty("file.separator");
-    String filePath = (String)config.get("FileLibrary") + fs + dbName + fs + "communications" + fs;
+    String filePath = (String)config.get("FileLibrary") + fs + dbName + fs + "communications" + fs + "id" + thisCampaign.getId() + fs + CFSModule.getDatePath(new java.util.Date()) + fs;
     String[] fields = {"nameLast", "nameMiddle", "nameFirst", "company", "title", "department", "businessPhone", "businessAddress", "city", "state", "zip", "country"};
     contactReport.setCriteria(fields);
     contactReport.setFilePath(filePath);
     contactReport.setEnteredBy(0);
     contactReport.setModifiedBy(0);
-    contactReport.setSubject("Communications mail merge");
+    contactReport.setHeader("Communications mail merge");
     contactReport.buildReportBaseInfo();
 		contactReport.buildReportHeaders();
     contactReport.buildReportData(null);
     contactReport.save();
+    CFSModule.saveTextFile(thisCampaign.getMessage(), filePath + contactReport.getFilenameToUse() + ".txt");
     return true;
   }
 
