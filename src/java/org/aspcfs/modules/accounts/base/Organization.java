@@ -1279,7 +1279,7 @@ public boolean getEnabled() {
     }
     String sql = 
       "INSERT INTO account_type_levels " +
-      "(id, type_id, level) " +
+      "(org_id, type_id, level) " +
       "VALUES (?, ?, ?) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
