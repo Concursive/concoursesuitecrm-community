@@ -99,6 +99,7 @@ public final class LeadsCalls extends CFSModule {
       context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
       ContactList contactList = new ContactList();
+      contactList.setOwner(userId);
       contactList.setPersonalId(userId);
       contactList.setBuildDetails(false);
       contactList.setBuildTypes(false);

@@ -308,12 +308,12 @@ public final class Accounts extends CFSModule {
         contactReport.setSubject(subject);
         contactReport.setHeader("CFS Accounts");
         contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        contactReport.setPersonalId(this.getUserId(context));
         contactReport.setCriteria(null);
         contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("selectedList"));
 
         if (ownerCriteria.equals("my")) {
           contactReport.setLimitId(this.getUserId(context));
+          contactReport.setOwner(this.getUserId(context));
         } else if (ownerCriteria.equals("levels")) {
           contactReport.setAccountOwnerIdRange(this.getUserRange(context));
         }

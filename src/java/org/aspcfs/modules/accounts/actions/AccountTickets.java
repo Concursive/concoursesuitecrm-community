@@ -744,6 +744,7 @@ public final class AccountTickets extends CFSModule {
       if (orgId != null && !"-1".equals(orgId)) {
         contactList.setBuildDetails(false);
         contactList.setBuildTypes(false);
+        contactList.setOwner(getUserId(context));
         contactList.setPersonalId(getUserId(context));
         contactList.setOrgId(Integer.parseInt(orgId));
         contactList.buildList(db);

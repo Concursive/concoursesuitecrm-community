@@ -331,6 +331,7 @@ public final class ExternalContacts extends CFSModule {
     contactReport.setFilePath(filePath);
     contactReport.setSubject(subject);
     contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+    contactReport.setOwner(this.getUserId(context));
     contactReport.setPersonalId(this.getUserId(context));
     //Prepare the pagedList to provide sorting
     PagedListInfo thisInfo = new PagedListInfo();

@@ -29,6 +29,7 @@ public class Contact extends GenericBean {
    *  Description of the Field
    */
   public final static int EMPLOYEE_TYPE = 1;
+  public final static int PERSONAL_TYPE = 2;
 
   private int id = -1;
   private int orgId = -1;
@@ -2061,6 +2062,18 @@ public class Contact extends GenericBean {
     pst.setInt(++i, this.getId());
     pst.execute();
     pst.close();
+
+    i = 0;
+    pst = db.prepareStatement(
+        "UPDATE contact " +
+        "set employee = ?, personal = ? " +
+        "WHERE contact_id = ? ");
+    pst.setBoolean(++i, false);
+    pst.setBoolean(++i, false);
+    pst.setInt(++i, this.getId());
+    pst.execute();
+    pst.close();
+
     return true;
   }
 
@@ -2078,17 +2091,28 @@ public class Contact extends GenericBean {
     if (id == -1) {
       throw new SQLException("No Contact ID Specified");
     }
-    String sql =
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
         "INSERT INTO contact_type_levels " +
         "(contact_id, type_id, level) " +
-        "VALUES (?, ?, ?) ";
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql);
+        "VALUES (?, ?, ?) ");
     pst.setInt(++i, this.getId());
     pst.setInt(++i, type_id);
     pst.setInt(++i, level);
     pst.execute();
     pst.close();
+
+    if (type_id == EMPLOYEE_TYPE || type_id == PERSONAL_TYPE) {
+      i = 0;
+      pst = db.prepareStatement(
+          "UPDATE contact " +
+          "set " + (type_id == EMPLOYEE_TYPE ? "employee = ? " : "personal = ? ") +
+          "WHERE contact_id = ? ");
+      pst.setBoolean(++i, true);
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
+    }
     return true;
   }
 
@@ -2275,6 +2299,7 @@ public class Contact extends GenericBean {
     }
     sql.append(
         "startofday = ?, endofday = ?, ");
+
     if (!override) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }

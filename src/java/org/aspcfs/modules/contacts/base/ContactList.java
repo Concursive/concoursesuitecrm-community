@@ -31,7 +31,7 @@ public class ContactList extends Vector {
   private boolean includeEnabledUsersOnly = false;
   private boolean includeNonUsersOnly = false;
   private boolean includeUsersOnly = false;
-  
+
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
   private int typeId = -1;
@@ -101,9 +101,16 @@ public class ContactList extends Vector {
     this.showEmployeeContacts = showEmployeeContacts;
   }
 
-public void setIncludeUsersOnly(boolean includeUsersOnly) {
-	this.includeUsersOnly = includeUsersOnly;
-}
+
+  /**
+   *  Sets the includeUsersOnly attribute of the ContactList object
+   *
+   *@param  includeUsersOnly  The new includeUsersOnly value
+   */
+  public void setIncludeUsersOnly(boolean includeUsersOnly) {
+    this.includeUsersOnly = includeUsersOnly;
+  }
+
 
   /**
    *  Sets the checkExcludedFromCampaign attribute of the ContactList object
@@ -627,9 +634,16 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
     this.buildDetails = tmp;
   }
 
+
+  /**
+   *  Sets the buildTypes attribute of the ContactList object
+   *
+   *@param  tmp  The new buildTypes value
+   */
   public void setBuildTypes(boolean tmp) {
     this.buildTypes = tmp;
   }
+
 
   /**
    *  Sets the SearchValues attribute of the ContactList object
@@ -1161,7 +1175,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
         "LEFT JOIN lookup_department d ON (c.department = d.code) " +
         "WHERE c.contact_id > -1 ");
 
-    createFilter(sqlFilter);
+    createFilter(db, sqlFilter);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -1334,9 +1348,10 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
    *  sqlSelect and sqlCount
    *
    *@param  sqlFilter  Description of Parameter
+   *@param  db         Description of the Parameter
    *@since             1.3
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
@@ -1429,7 +1444,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
       if (includeNonUsersOnly) {
         sqlFilter.append("AND c.contact_id NOT IN (SELECT contact_id FROM access) ");
       }
-      
+
       if (includeUsersOnly) {
         sqlFilter.append("AND c.user_id IN (SELECT user_id FROM access) ");
       }
@@ -1439,30 +1454,18 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
       }
       //Decide which contacts can be shown
       switch (personalId) {
-          //System needs to get all contacts
           case -2:
             break;
           //Typical contact list
           case -1:
-            sqlFilter.append("AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id != 2)) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
+            sqlFilter.append("AND c.personal = ? ");
             break;
           //Typical contact list by a specific user
           default:
-            sqlFilter.append("AND ( ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id != 2)) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) OR " +
-                "( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id = 2)) OR (c.owner = ?) ) ) ");
             break;
       }
       if (ignoreTypeIdList.size() > 0) {
-        Iterator iList = ignoreTypeIdList.iterator();
-        sqlFilter.append("AND ( c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (");
-        while (iList.hasNext()) {
-          String placeHolder = (String) iList.next();
-          sqlFilter.append("?");
-          if (iList.hasNext()) {
-            sqlFilter.append(",");
-          }
-        }
-        sqlFilter.append(") ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
+        sqlFilter.append("AND c.employee = ? ");
       }
 
       //contactIds
@@ -1530,7 +1533,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
                 sqlFilter.append(" (lower(o.name) " + key1 + " '" + key2 + "' OR lower(c.company) " + key1 + " '" + key2 + "' ) ");
 
                 previousKey = key1;
-                processElementType(sqlFilter, elementType);
+                processElementType(db, sqlFilter, elementType);
                 termsProcessed++;
               }
             }
@@ -1575,7 +1578,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
 
                 sqlFilter.append(" (lower(c.namefirst) " + key1 + " '" + key2 + "' )");
                 previousKey = key1;
-                processElementType(sqlFilter, elementType);
+                processElementType(db, sqlFilter, elementType);
                 termsProcessed++;
               }
             }
@@ -1620,7 +1623,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
 
                 sqlFilter.append(" (lower(c.namelast) " + key1 + " '" + key2 + "' )");
                 previousKey = key1;
-                processElementType(sqlFilter, elementType);
+                processElementType(db, sqlFilter, elementType);
                 termsProcessed++;
               }
             }
@@ -1664,7 +1667,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
                 sqlFilter.append(" (c.entered " + key1 + " '" + key2 + "') ");
 
                 previousKey = key1;
-                processElementType(sqlFilter, elementType);
+                processElementType(db, sqlFilter, elementType);
                 termsProcessed++;
               }
             }
@@ -1710,7 +1713,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
 
                 sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode " + key1 + " '" + key2 + "' )) ");
                 previousKey = key1;
-                processElementType(sqlFilter, elementType);
+                processElementType(db, sqlFilter, elementType);
                 termsProcessed++;
               }
             }
@@ -1755,7 +1758,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
 
                 sqlFilter.append(" ( c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id " + key1 + " '" + key2 + "' ) ) ");
                 previousKey = key1;
-                processElementType(sqlFilter, elementType);
+                processElementType(db, sqlFilter, elementType);
                 termsProcessed++;
               }
             }
@@ -1801,7 +1804,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
 
                 sqlFilter.append(" (c.org_id in (SELECT org_id FROM account_type_levels WHERE type_id " + key1 + " '" + key2 + "')) ");
                 previousKey = key1;
-                processElementType(sqlFilter, elementType);
+                processElementType(db, sqlFilter, elementType);
                 termsProcessed++;
               }
             }
@@ -1846,7 +1849,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
 
                 sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,2,3) " + key1 + " '" + key2 + "' )) ");
                 previousKey = key1;
-                processElementType(sqlFilter, elementType);
+                processElementType(db, sqlFilter, elementType);
                 termsProcessed++;
               }
             }
@@ -1890,7 +1893,7 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
 
                 sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and lower(city) " + key1 + " '" + key2 + "' )) ");
                 previousKey = key1;
-                processElementType(sqlFilter, elementType);
+                processElementType(db, sqlFilter, elementType);
                 termsProcessed++;
               }
             }
@@ -1991,20 +1994,15 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
       }
 
       switch (personalId) {
-          case -2:
-            break;
           case -1:
+            pst.setBoolean(++i, false);
             break;
           default:
-            pst.setInt(++i, personalId);
+            //pst.setBoolean(++i, true);
             break;
       }
       if (ignoreTypeIdList.size() > 0) {
-        Iterator iList = ignoreTypeIdList.iterator();
-        while (iList.hasNext()) {
-          int thisType = Integer.parseInt((String) iList.next());
-          pst.setInt(++i, thisType);
-        }
+        pst.setBoolean(++i, false);
       }
     } else {
       if (typeId != -1) {
@@ -2050,23 +2048,28 @@ public void setIncludeUsersOnly(boolean includeUsersOnly) {
    *
    *@param  sqlFilter  Description of the Parameter
    *@param  type       Description of the Parameter
+   *@param  db         Description of the Parameter
    */
-  public void processElementType(StringBuffer sqlFilter, int type) {
+  public void processElementType(Connection db, StringBuffer sqlFilter, int type) {
     switch (type) {
         case SearchCriteriaList.SOURCE_MY_CONTACTS:
           sqlFilter.append(" AND c.owner = " + sclOwnerId + " ");
-          sqlFilter.append(" AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (" + Contact.EMPLOYEE_TYPE + ") ) ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
+          //sqlFilter.append(" AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (" + Contact.EMPLOYEE_TYPE + ") ) ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
+          sqlFilter.append(" AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
           break;
         case SearchCriteriaList.SOURCE_ALL_CONTACTS:
           sqlFilter.append(" AND c.owner in (" + sclOwnerIdRange + ") ");
-          sqlFilter.append(" AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (" + Contact.EMPLOYEE_TYPE + ") ) ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
+          //sqlFilter.append(" AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (" + Contact.EMPLOYEE_TYPE + ") ) ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
+          sqlFilter.append(" AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
           break;
         case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
           sqlFilter.append(" AND c.org_id > 0 ");
-          sqlFilter.append(" AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (" + Contact.EMPLOYEE_TYPE + ") ) ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
+          //sqlFilter.append(" AND ( (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id not in (" + Contact.EMPLOYEE_TYPE + ") ) ) OR (c.contact_id not in (SELECT contact_id from contact_type_levels) ) ) ");
+          sqlFilter.append(" AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
           break;
         case SearchCriteriaList.SOURCE_EMPLOYEES:
-          sqlFilter.append(" AND (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id = " + Contact.EMPLOYEE_TYPE + " ) ) ");
+          //sqlFilter.append(" AND (c.contact_id in (SELECT contact_id from contact_type_levels ctl where ctl.type_id = " + Contact.EMPLOYEE_TYPE + " ) ) ");
+          sqlFilter.append(" AND c.employee = " + DatabaseUtils.getTrue(db) + " ");
           break;
         default:
           break;

@@ -259,6 +259,7 @@ public final class Users extends CFSModule {
       }
       db = this.getConnection(context);
       ContactList contactList = new ContactList();
+      contactList.setOwner(getUserId(context));
       contactList.setPersonalId(getUserId(context));
       contactList.setTypeId(Integer.parseInt(typeId));
       contactList.setIncludeNonUsersOnly(true);

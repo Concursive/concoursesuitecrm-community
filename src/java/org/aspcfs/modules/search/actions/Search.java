@@ -53,6 +53,7 @@ public final class Search extends CFSModule {
 
       if (hasPermission(context, "contacts-internal_contacts-view")) {
         ContactList employeeList = new ContactList();
+        employeeList.setOwner(getUserId(context));
         employeeList.setPersonalId(getUserId(context));
         employeeList.setSearchText(searchCriteria);
         employeeList.setTypeId(1);
