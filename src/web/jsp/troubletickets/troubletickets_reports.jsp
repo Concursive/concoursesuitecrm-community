@@ -3,8 +3,8 @@
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="TicketRptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <form name="listView" method="post" action="/TroubleTickets.do?command=Reports">
 <a href="TroubleTickets.do">Tickets</a> > 
 Reports<br>
@@ -33,18 +33,18 @@ Reports<br>
     </td>
     </dhv:permission>
     <td>
-      <strong>File Subject</strong>
+      <strong>Subject</strong>
     </td>
-    <td align="center">
+    <td>
       <strong>Size</strong>
     </td>
-    <td align="center" nowrap>
+    <td nowrap>
       <strong>Create Date</strong>
     </td>
-    <td align="center" nowrap>
+    <td nowrap>
       <strong>Created By</strong>
     </td>
-    <td align="center">
+    <td nowrap>
       <strong>D/L</strong>
     </td>
   </tr>
@@ -58,7 +58,7 @@ Reports<br>
 %>      
   <tr>
   <dhv:permission name="tickets-tickets-reports-view,tickets-tickets-reports-delete">
-    <td width="8" valign="center" nowrap class="row<%= rowid %>">
+    <td nowrap class="row<%= rowid %>">
       <dhv:permission name="tickets-tickets-reports-view"><a href="TroubleTickets.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="tickets-tickets-reports-view,tickets-tickets-reports-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-reports-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
     </td>
   </dhv:permission>
@@ -68,10 +68,10 @@ Reports<br>
     <td align="right" class="row<%= rowid %>" nowrap>
       <%= thisItem.getRelativeSize() %>k
     </td>
-    <td align="center" class="row<%= rowid %>" nowrap>
+    <td class="row<%= rowid %>" nowrap>
       <%= toHtml(thisItem.getEnteredDateTimeString()) %>
     </td>
-    <td align="center" class="row<%= rowid %>" nowrap>
+    <td class="row<%= rowid %>" nowrap>
       <%= toHtml(thisItem.getEnteredByString()) %>
     </td>
     <td align="right" class="row<%= rowid %>">
