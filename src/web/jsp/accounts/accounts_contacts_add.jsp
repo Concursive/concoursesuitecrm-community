@@ -31,32 +31,42 @@
   }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<form name="addContact" action="Contacts.do?command=Insert&auto-populate=true" method="post">
+<form name="addContact" action="Contacts.do?command=Insert&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>`" method="post">
+<%boolean popUp = false;
+  if(request.getParameter("popup")!=null){
+    popUp = true;
+  }%>
+<dhv:evaluate exp="<%= !popUp %>">
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
 <a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Contacts</a> >
 Add Contact<br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
       <strong><%= toHtml(OrgDetails.getName()) %></strong>
     </td>
   </tr>
+  <dhv:evaluate exp="<%= !popUp %>">
   <tr class="containerMenu">
     <td>
       <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
       <dhv:container name="accounts" selected="contacts" param="<%= param1 %>" />
     </td>
   </tr>
+  </dhv:evaluate>
   <tr>
     <td class="containerBack">
 <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
 <input type=submit value="Save" onClick="return checkForm(this.form)">
+<dhv:evaluate exp="<%= !popUp %>">
 <input type=submit value="Save & Clone" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
+</dhv:evaluate>
 <input type=reset value="Reset">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Contacts.do?command=View'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='<%= popUp ? "javascript:window.close();" : "Contacts.do?command=View" %>'">
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -369,9 +379,11 @@ Add Contact<br>
 </table>
 <br>
 <input type=submit value="Save" onClick="return checkForm(this.form)">
+<dhv:evaluate exp="<%= !popUp %>">
 <input type=submit value="Save & Clone" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
+</dhv:evaluate>
 <input type="reset" value="Reset">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Contacts.do?command=View'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='<%= popUp ? "javascript:window.close();" : "Contacts.do?command=View" %>'">
     </td>
   </tr>
 </table>
