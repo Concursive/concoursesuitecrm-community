@@ -704,13 +704,12 @@ public final class TroubleTickets extends CFSModule {
       }
 
       if (recordInserted) {
-        //Check for and process any system hooks
-        this.getSystemStatus(context).processHook(newTic, db);
-        
         //Prepare the ticket for the response
         newTicket = new Ticket(db, newTic.getId());
         context.getRequest().setAttribute("TicketDetails", newTicket);
         addRecentItem(context, newTicket);
+        
+        processInsertHook(context, newTic);
       } else {
         processErrors(context, newTic.getErrors());
       }
@@ -853,16 +852,13 @@ public final class TroubleTickets extends CFSModule {
       }
 
       newTic.setModifiedBy(getUserId(context));
-      
-      Ticket previousTicket = null;
-      //Example listener implementation
-//      if (thisSystem.hasListener(Ticket)) {
-//        previousTicket = new Ticket(db, newTic.getId());
-//      }
+
+      //Get the previousTicket, update the ticket, then send both to a hook
+      Ticket previousTicket = new Ticket(db, newTic.getId());
       resultCount = newTic.update(db);
-//      if (thisSystem.hasListener(Ticket) && resultCount == 1) {
-//        thisSystem.getListener(Ticket).processUpdate(previousTicket, newTic);
-//      }
+      if (resultCount == 1) {
+        processUpdateHook(context, previousTicket, newTic);
+      }
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -918,6 +914,10 @@ public final class TroubleTickets extends CFSModule {
       db = this.getConnection(context);
       thisTic = new Ticket(db, Integer.parseInt(passedId));
       recordDeleted = thisTic.delete(db);
+      if (recordDeleted) {
+        processDeleteHook(context, thisTic);
+      }
+      
     } catch (Exception e) {
       errorMessage = e;
     } finally {

@@ -70,6 +70,8 @@ public final class ProcessPacket extends CFSModule {
         //Prepare the objectHooks: Inserts and updates can trigger code if specified
         ObjectHookList hooks = new ObjectHookList();
         hooks.buildList(db);
+        ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
+        ConnectionElement ce = auth.getConnectionElement(context);
         
         //2nd connection when transactions need to do additional processing
         dbLookup = auth.getConnection(context);
@@ -87,6 +89,8 @@ public final class ProcessPacket extends CFSModule {
           thisTransaction.setMapping(objectMap);
           thisTransaction.setClientManager(clientManager);
           thisTransaction.setObjectHookList(hooks);
+          thisTransaction.setSqlDriver(sqlDriver);
+          thisTransaction.setCe(ce);
           SyncTable metaMapping = new SyncTable();
           metaMapping.setName("meta");
           metaMapping.setMappedClassName("com.darkhorseventures.utils.TransactionMeta");

@@ -28,7 +28,8 @@ public class Transaction extends ArrayList {
   private SyncClientManager clientManager = null;
   private AuthenticationItem auth = null;
   private ObjectHookList objectHookList = null;
-
+  private ConnectionPool sqlDriver = null;
+  private ConnectionElement ce = null;
 
   /**
    *  Constructor for the Transaction object
@@ -76,6 +77,8 @@ public class Transaction extends ArrayList {
   public void setAuth(AuthenticationItem tmp) { this.auth = tmp; }
 
   public void setObjectHookList(ObjectHookList tmp) { this.objectHookList = tmp; }
+  public void setSqlDriver(ConnectionPool tmp) { this.sqlDriver = tmp; }
+  public void setCe(ConnectionElement tmp) { this.ce = tmp; }
 
 
   /**
@@ -127,6 +130,8 @@ public class Transaction extends ArrayList {
       thisItem.setMapping(mapping);
       thisItem.setAuth(auth);
       thisItem.setObjectHookList(objectHookList);
+      thisItem.setSqlDriver(sqlDriver);
+      thisItem.setCe(ce);
       if (thisItem.getName().equals("meta")) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Transaction-> Meta data found");

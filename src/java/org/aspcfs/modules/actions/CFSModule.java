@@ -678,5 +678,23 @@ public class CFSModule {
     }
     return thisForm;
   }
+  
+  protected void processInsertHook(ActionContext context, Object object) {
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    this.getSystemStatus(context).processInsertHook(object, sqlDriver, ce);
+  }
+  
+  protected void processUpdateHook(ActionContext context, Object previousObject, Object object) {
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    this.getSystemStatus(context).processUpdateHook(previousObject, object, sqlDriver, ce);
+  }
+  
+  protected void processDeleteHook(ActionContext context, Object previousObject) {
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    this.getSystemStatus(context).processDeleteHook(previousObject, sqlDriver, ce);
+  }
 }
 

@@ -5,7 +5,7 @@ import org.w3c.dom.*;
 import java.sql.*;
 import java.lang.reflect.*;
 import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.controller.ObjectHookList;
+import com.darkhorseventures.controller.*;
 import com.darkhorseventures.utils.ObjectUtils;
 import com.darkhorseventures.webutils.PagedListInfo;
 import org.theseus.beans.*;
@@ -53,6 +53,9 @@ public class TransactionItem {
   private HashMap mapping = null;
   private SyncClientMap syncClientMap = null;
   private ObjectHookList objectHookList = null;
+  private ConnectionPool sqlDriver = null;
+  private ConnectionElement ce = null;
+
 
   /**
    *  Constructor for the TransactionItem object
@@ -192,11 +195,66 @@ public class TransactionItem {
   public void setMeta(TransactionMeta tmp) {
     this.meta = tmp;
   }
-  
-  public void setClientManager(SyncClientManager tmp) { this.clientManager = tmp; }
-  public void setAuth(AuthenticationItem tmp) { this.auth = tmp; }
-  public void setMapping(HashMap tmp) { this.mapping = tmp; }
-  public void setObjectHookList(ObjectHookList tmp) { this.objectHookList = tmp; }
+
+
+  /**
+   *  Sets the clientManager attribute of the TransactionItem object
+   *
+   *@param  tmp  The new clientManager value
+   */
+  public void setClientManager(SyncClientManager tmp) {
+    this.clientManager = tmp;
+  }
+
+
+  /**
+   *  Sets the auth attribute of the TransactionItem object
+   *
+   *@param  tmp  The new auth value
+   */
+  public void setAuth(AuthenticationItem tmp) {
+    this.auth = tmp;
+  }
+
+
+  /**
+   *  Sets the mapping attribute of the TransactionItem object
+   *
+   *@param  tmp  The new mapping value
+   */
+  public void setMapping(HashMap tmp) {
+    this.mapping = tmp;
+  }
+
+
+  /**
+   *  Sets the objectHookList attribute of the TransactionItem object
+   *
+   *@param  tmp  The new objectHookList value
+   */
+  public void setObjectHookList(ObjectHookList tmp) {
+    this.objectHookList = tmp;
+  }
+
+
+  /**
+   *  Sets the sqlDriver attribute of the TransactionItem object
+   *
+   *@param  tmp  The new sqlDriver value
+   */
+  public void setSqlDriver(ConnectionPool tmp) {
+    this.sqlDriver = tmp;
+  }
+
+
+  /**
+   *  Sets the ce attribute of the TransactionItem object
+   *
+   *@param  tmp  The new ce value
+   */
+  public void setCe(ConnectionElement tmp) {
+    this.ce = tmp;
+  }
 
 
   /**
@@ -254,42 +312,57 @@ public class TransactionItem {
    *
    *@param  db                Description of Parameter
    *@param  record            Description of Parameter
-   *@param  syncClientMap     Description of Parameter
    *@exception  SQLException  Description of Exception
    */
   public void insertClientMapping(Connection db, Record record) throws SQLException {
     if (record.containsKey("guid")) {
       clientManager.insert(
-        syncClientMap.getClientId(),
-        syncClientMap.getTableId(),
-        new Integer(record.getRecordId()),
-        new Integer((String)record.get("guid"))
-      );
+          syncClientMap.getClientId(),
+          syncClientMap.getTableId(),
+          new Integer(record.getRecordId()),
+          new Integer((String) record.get("guid"))
+          );
       syncClientMap.setRecordId(record.getRecordId());
-      syncClientMap.setClientUniqueId((String)record.get("guid"));
+      syncClientMap.setClientUniqueId((String) record.get("guid"));
       syncClientMap.insert(db, (String) record.get("modified"));
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  record            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void updateClientMapping(Connection db, Record record) throws SQLException {
     if (record.containsKey("guid")) {
       syncClientMap.setRecordId(record.getRecordId());
-      syncClientMap.setClientUniqueId((String)record.get("guid"));
+      syncClientMap.setClientUniqueId((String) record.get("guid"));
       syncClientMap.updateStatusDate(db, (String) record.get("modified"));
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  record            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void deleteClientMapping(Connection db, Record record) throws SQLException {
     if (record.containsKey("guid")) {
       syncClientMap.setRecordId(record.getRecordId());
-      syncClientMap.setClientUniqueId((String)record.get("guid"));
+      syncClientMap.setClientUniqueId((String) record.get("guid"));
       syncClientMap.delete(db);
     }
     clientManager.remove(
-      syncClientMap.getClientId(),
-      syncClientMap.getTableId(),
-      new Integer(record.getRecordId())
-    );
+        syncClientMap.getClientId(),
+        syncClientMap.getTableId(),
+        new Integer(record.getRecordId())
+        );
   }
 
 
@@ -302,8 +375,6 @@ public class TransactionItem {
    *  client systems.
    *
    *@param  db             Description of Parameter
-   *@param  auth           Description of Parameter
-   *@param  mapping        Description of Parameter
    *@param  dbLookup       Description of Parameter
    *@exception  Exception  Description of Exception
    */
@@ -418,7 +489,7 @@ public class TransactionItem {
           //Populate any client GUIDs with the correct server ID
           setGuidParameters(db);
         }
-        
+
         if (action == DELETE) {
           //Set the object's id to be deleted, based on the client guid
           this.setObjectId(db);
@@ -471,7 +542,7 @@ public class TransactionItem {
         } else if (action == UPDATE) {
           //If the result is an Integer == 1, then the update is successful, else a "conflict"
           //since someone else updated it first
-          if (((Integer)result).intValue() == 1) {
+          if (((Integer) result).intValue() == 1) {
             //Update the modified date in client mapping
             if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
               Object updatedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
@@ -485,11 +556,11 @@ public class TransactionItem {
         } else if (action == DELETE) {
           Record thisRecord = addRecords(object, recordList, "delete");
           this.setReferencedTable();
-          if (thisRecord != null && 
+          if (thisRecord != null &&
               syncClientMap.lookupClientId(
-                clientManager, 
-                syncClientMap.getTableId(), 
-                ObjectUtils.getParam(object, "id")
+              clientManager,
+              syncClientMap.getTableId(),
+              ObjectUtils.getParam(object, "id")
               ) != -1) {
             this.deleteClientMapping(dbLookup, thisRecord);
           } else {
@@ -543,11 +614,18 @@ public class TransactionItem {
     }
   }
 
+
+  /**
+   *  Sets the objectId attribute of the TransactionItem object
+   *
+   *@param  db                The new objectId value
+   *@exception  SQLException  Description of the Exception
+   */
   public void setObjectId(Connection db) throws SQLException {
     if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
       SyncTable referencedTable = (SyncTable) mapping.get(name + "List");
       if (referencedTable != null) {
-        String value = (String)ignoredProperties.get("guid");
+        String value = (String) ignoredProperties.get("guid");
         int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
         ObjectUtils.setParam(object, "id", String.valueOf(recordId));
         if (System.getProperty("DEBUG") != null) {
@@ -557,14 +635,13 @@ public class TransactionItem {
     }
   }
 
+
   /**
-   *  Sets the guidParameters attribute of the TransactionItem object.
-   *  When a client is inserting or updating records, the server needs to
-   *  retrieve the ids used by the client from the client/server mapping.
+   *  Sets the guidParameters attribute of the TransactionItem object. When a
+   *  client is inserting or updating records, the server needs to retrieve the
+   *  ids used by the client from the client/server mapping.
    *
    *@param  db                The new guidParameters value
-   *@param  mapping           The new guidParameters value
-   *@param  syncClientMap     The new guidParameters value
    *@exception  SQLException  Description of Exception
    */
   private void setGuidParameters(Connection db) throws SQLException {
@@ -575,11 +652,11 @@ public class TransactionItem {
         if (param != null && param.endsWith("Guid")) {
           String value = (String) ignoredProperties.get(param);
           param = param.substring(0, param.lastIndexOf("Guid"));
-          
+
           if (param.indexOf("^") > -1) {
             String lookupField = param.substring(param.indexOf("^") + 1);
             param = param.substring(0, param.indexOf("^"));
-            
+
             SyncTable referencedTable = (SyncTable) mapping.get(lookupField + "List");
             if (referencedTable != null) {
               int recordId = syncClientMap.lookupServerId(clientManager, referencedTable.getId(), value);
@@ -607,7 +684,7 @@ public class TransactionItem {
 
 
   /**
-   *  Description of the Method
+   *  Processes the object according to the executeMethod
    *
    *@param  db             Description of Parameter
    *@param  executeMethod  Description of Parameter
@@ -615,36 +692,55 @@ public class TransactionItem {
    *@exception  Exception  Description of Exception
    */
   private Object doExecute(Connection db, String executeMethod) throws Exception {
+    //Prepare the objects for execution
     Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
     Object[] dbObject = new Object[]{db};
     Method method = object.getClass().getMethod(executeMethod, dbClass);
-    Object currentObject = null;
-    //TODO: Allow triggers for updates, requires old and new object for hook to use
-    //if (objectHookList != null && action == UPDATE) {
-    //  currentObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
-    //}
-    Object result = (method.invoke(object, dbObject));
+    //Retrieve the previous object before executing an action
+    Object previousObject = null;
     if (objectHookList != null) {
-      switch(action) {
-        case INSERT: objectHookList.processInsert(object, db); break;
-        //case UPDATE: objectHookList.processUpdate(previousObject, object, db); break;
-        default: break;
+      if (action == UPDATE || action == DELETE) {
+        previousObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
+      }
+    }
+    //Execute
+    Object result = (method.invoke(object, dbObject));
+    //Process any hooks
+    if (objectHookList != null) {
+      switch (action) {
+          case INSERT:
+            objectHookList.processInsert(object, sqlDriver, ce);
+            break;
+          case UPDATE:
+            objectHookList.processUpdate(previousObject, object, sqlDriver, ce);
+            break;
+          case DELETE:
+            objectHookList.processDelete(previousObject, sqlDriver, ce);
+            break;
+          default:
+            break;
       }
     }
     return result;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  result  Description of the Parameter
+   */
   private void checkResult(Object result) {
     try {
-      if (result instanceof Boolean && !((Boolean)result).booleanValue()) {
+      if (result instanceof Boolean && !((Boolean) result).booleanValue()) {
         System.out.println("Inserting object failed");
         //TODO: Show error messages from object
         if (object instanceof GenericBean) {
-          HashMap errors = ((GenericBean)object).getErrors();
+          HashMap errors = ((GenericBean) object).getErrors();
           Iterator i = errors.keySet().iterator();
           while (i.hasNext()) {
-            String errorText = (String)errors.get((String)(i.next()));
-            System.out.println("--------> " + errorText); 
+            String errorText = (String) errors.get((String) (i.next()));
+            System.out.println("--------> " + errorText);
           }
         }
       }
@@ -654,7 +750,8 @@ public class TransactionItem {
 
 
   /**
-   *  Description of the Method
+   *  Configures the object with a pagedList, used when a subset of objects in a
+   *  list will be returned
    */
   private void doSetPagedListInfo() {
     try {
@@ -678,8 +775,6 @@ public class TransactionItem {
    *@param  db             The feature to be added to the Records attribute
    *@param  syncType       The feature to be added to the Records attribute
    *@param  dbLookup       The feature to be added to the Records attribute
-   *@param  mapping        The feature to be added to the Records attribute
-   *@param  syncClientMap  The feature to be added to the Records attribute
    *@exception  Exception  Description of Exception
    */
   private void buildRecords(Object object, Connection db, Connection dbLookup, int syncType) throws Exception {
@@ -733,9 +828,7 @@ public class TransactionItem {
    *@param  object            The feature to be added to the Records attribute
    *@param  recordList        The feature to be added to the Records attribute
    *@param  recordAction      The feature to be added to the Records attribute
-   *@param  mapping           The feature to be added to the Records attribute
-   *@param  syncClientMap     The feature to be added to the Records attribute
-   *@param  db                The feature to be added to the Records attribute
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of Exception
    */
   private Record addRecords(Object object, RecordList recordList, String recordAction) throws SQLException {
@@ -760,7 +853,8 @@ public class TransactionItem {
     }
     return null;
   }
-  
+
+
   /**
    *  Adds property names and values to the Record object, based on the supplied
    *  meta data
@@ -768,8 +862,6 @@ public class TransactionItem {
    *@param  thisRecord        The feature to be added to the Fields attribute
    *@param  thisMeta          The feature to be added to the Fields attribute
    *@param  thisObject        The feature to be added to the Fields attribute
-   *@param  mapping           The feature to be added to the Fields attribute
-   *@param  syncClientMap     The feature to be added to the Fields attribute
    *@exception  SQLException  Description of Exception
    */
   private void addFields(Record thisRecord, TransactionMeta thisMeta, Object thisObject) throws SQLException {
@@ -839,7 +931,13 @@ public class TransactionItem {
       }
     }
   }
-  
+
+
+  /**
+   *  Sets the referencedTable attribute of the TransactionItem object
+   *
+   *@return    Description of the Return Value
+   */
   public boolean setReferencedTable() {
     //The client requested an object, but the mapping is stored as the objectList
     if (!name.endsWith("List")) {

@@ -879,6 +879,10 @@ public class Ticket extends GenericBean {
     }
     return tmp;
   }
+  
+  public boolean isClosed() {
+    return closed != null;
+  }
 
 
   /**
@@ -1478,24 +1482,6 @@ public class Ticket extends GenericBean {
         this.update(db);
       } else {
         this.update(db, true);
-      }
-
-      if (this.getAssignedTo() > 0 && !this.getCloseIt() && this.getSendNotification()) {
-        Notification thisNotification = new Notification();
-        thisNotification.setUserToNotify(this.getAssignedTo());
-        thisNotification.setModule("Tickets");
-        thisNotification.setItemId(this.getId());
-        thisNotification.setItemModified(null);
-        thisNotification.setSubject("New Ticket Assigned: " + this.getPaddedId());
-        thisNotification.setFrom("cfs-root@darkhorseventures.com");
-        thisNotification.setMessageToSend(
-            "A new ticket has been added to CFS and assigned to you:<br><br>" +
-            "--- Ticket Details ---<br><br>" +
-            "Ticket # " + this.getPaddedId() + "<br>" +
-            "Issue: " + this.getProblem() + "<br><br>" +
-            "Comment: " + this.getComment() + "<br><br>");
-        thisNotification.setType(Notification.EMAIL);
-        thisNotification.notifyUser(db);
       }
 
       db.commit();
