@@ -12,15 +12,19 @@ Modify Setting
 </tr>
 </table>
 <%-- End Trails --%>
-<font color="red">* </font><b>The HylaFax server application requires Linux or Unix.</b><br>
-Users will have the capability to send faxes using Dark Horse CRM.<br>
+<table class="note"><tr><td>
+<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>Which 
+fax server should Dark Horse CRM use?</b><br />
+Users will have the
+capability to send faxes using Dark Horse CRM.<br />
+<font color="red">* </font>The HylaFax server application requires Linux or Unix.<br />
 The faxing component requires a properly configured
-<a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br>
-Which fax server should Dark Horse CRM use?<br>
+<a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br />
 <ul>
 <li>The specified server must allow this server to send faxes</li>
 <li>Leave blank if faxing will not be used</li>
 </ul>
+</td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
@@ -37,7 +41,7 @@ Which fax server should Dark Horse CRM use?<br>
       </td>
     </tr>
   </table>
-  <br>
+  <br />
   <input type="submit" value="Update">
   <input type="button" value="Cancel" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
 </dhv:permission>

@@ -11,8 +11,12 @@ Modify Timeout
 </tr>
 </table>
 <%-- End Trails --%>
-The session timeout is the time in which a user will automatically be logged out if the specified period of inactivity is reached.<br>
-&nbsp;<br>
+<table class="note"><tr><td>
+<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>What
+should the session timeout be for users?</b><br />
+The session timeout is the time in which a user will automatically be logged out 
+if the specified period of inactivity is reached.
+</td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>

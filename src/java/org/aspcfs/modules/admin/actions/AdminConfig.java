@@ -12,6 +12,9 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.modules.setup.beans.UpdateBean;
+import sun.misc.*;
+import org.w3c.dom.*;
 
 /**
  *  Description of the Class
@@ -107,6 +110,9 @@ public final class AdminConfig extends CFSModule {
     if ("SYSTEM.TIMEZONE".equals(module)) {
       return "ModifyTimeZoneOK";
     }
+    if ("LICENSE".equals(module)) {
+      return "ModifyLicenseOK";
+    }
     return "ModifyError";
   }
 
@@ -155,6 +161,69 @@ public final class AdminConfig extends CFSModule {
     prefs.save();
     prefs.populateContext(context.getServletContext());
     return "UpdateOK";
+  }
+  
+  public String executeCommandUpdateLicense(ActionContext context) {
+    if (!hasPermission(context, "admin-sysconfig-view")) {
+      return ("PermissionError");
+    }
+    //Prepare to change the prefs
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
+    if (prefs == null) {
+      return "ModifyError";
+    }
+    //Process the parameters
+    String process = context.getRequest().getParameter("doLicense");
+    try {
+      //If remote check, then perform steps similar to the initial setup
+      if ("internet".equals(process)) {
+        UpdateBean bean = new UpdateBean();
+        //Send the current key, email address, profile, and crc
+        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
+            (String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
+        XMLUtils xml = new XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, 
+            StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+        //Encode the license for transmission
+        BASE64Encoder encoder = new BASE64Encoder();
+        bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
+        bean.setEmail(XMLUtils.getNodeText(xml.getFirstChild("email")));
+        bean.setProfile(XMLUtils.getNodeText(xml.getFirstChild("profile")));
+        bean.setText(PrivateString.encrypt(key, "5USERBINARY-1.0"));
+        bean.setText2(XMLUtils.getNodeText(xml.getFirstChild("text2")));
+        //Make sure the server received the key ok
+        String response = null;
+        boolean ssl = true;
+        if (ssl) {
+          response = HTTPUtils.sendPacket("https://registration.darkhorsecrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
+        } else {
+          response = HTTPUtils.sendPacket("http://registration.darkhorsecrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
+        }
+        if (response == null) {
+          context.getRequest().setAttribute("actionError",
+              "Unspecified Error: Dark Horse CRM Server did not respond ");
+          return "SendRegERROR";
+        }
+        XMLUtils responseXML = new XMLUtils(response);
+        Element responseNode = responseXML.getFirstChild("response");
+        if (!"0".equals(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "status")))) {
+          context.getRequest().setAttribute("actionError",
+              "Unspecified Error: Dark Horse CRM Server rejected request " +
+              XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "errorText")));
+          return "SendRegERROR";
+        }
+        //Response is good so save the new license
+        
+        
+        
+      }
+      //If manual input, then allow user to input the license code
+      if ("manual".equals(process)) {
+        
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    }
+    return "LicenseCheckOK";
   }
 }
 

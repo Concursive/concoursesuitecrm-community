@@ -12,11 +12,13 @@ Modify Setting
 </tr>
 </table>
 <%-- End Trails --%>
+<table class="note"><tr><td>
+<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>Which 
+email server should Dark Horse CRM use?</b><br />
 Dark Horse CRM sends various notifications to users by email.  Dark Horse CRM can also be used
-to send email to contacts that have been entered into the Contacts and Accounts modules.<br>
-Which email server should Dark Horse CRM use?<br>
-- The specified server must allow this server to relay email<br>
-&nbsp;<br>
+to send email to contacts that have been entered into the Contacts and Accounts modules.
+<ul><li>The specified server must allow this server to relay email</li></ul>
+</td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>

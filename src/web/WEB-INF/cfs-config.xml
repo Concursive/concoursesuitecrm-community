@@ -874,6 +874,8 @@
     <forward name="ModifyFaxOK" resource="/admin/admin_modify_fax.jsp" layout="nav"/>
     <forward name="ModifyUrlOK" resource="/admin/admin_modify_url.jsp" layout="nav"/>
     <forward name="ModifyTimeZoneOK" resource="/admin/admin_modify_timezone.jsp" layout="nav"/>
+    <forward name="ModifyLicenseOK" resource="/admin/admin_modify_license.jsp" layout="nav"/>
+    <forward name="LicenseOK" resource="/admin/admin_modify_license_ok.jsp" layout="nav"/>
   </action>
   <action name="AdminQA" class="org.aspcfs.modules.admin.actions.AdminQA">
     <forward name="QAReportOK" resource="/admin/admin_qa_report.jsp" layout="style"/>

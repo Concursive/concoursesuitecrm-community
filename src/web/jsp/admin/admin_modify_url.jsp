@@ -13,11 +13,16 @@ Modify Setting
 </tr>
 </table>
 <%-- End Trails --%>
-For system emails, what URL should be included to allow the user to return back to the site?<br>
-The URL must be specific and must exist in your DNS.<br>
-If a domain name is not configured, you can specify the IP address, include the full URL to
-get to the Dark Horse CRM web application.<br>
-&nbsp;<br>
+<table class="note"><tr><td>
+<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>Which
+Dark Horse CRM URL should be included in emails to allow the user to return back to the site?</b>
+<ul>
+<li>Typically this is used when a survey is sent to a contact</li>
+<li>The URL must be specific and must exist in your DNS</li>
+<li>If a domain name is not configured, you can specify the IP address, include the full path to
+get to the Dark Horse CRM web application.</li>
+</ul>
+</td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
@@ -33,13 +38,13 @@ get to the Dark Horse CRM web application.<br>
          <input type="text" size="40" name="url" value="<%= toHtmlValue(getPref(getServletContext(), "WEBSERVER.URL")) %>"/><font color="red">*</font>
          <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.forms[0].url.value + '/setup/testpage_ok.jsp','CRM_UrlTest','500','325','yes','yes');"/>
          <%= showAttribute(request, "urlError") %>
-         <br>
+         <br />
          (ex: www.yourcompany.com<%= request.getContextPath() %> or
          crm.yourcompany.com)
       </td>
     </tr>
   </table>
-  <br>
+  <br />
   <input type="submit" value="Update">
   <input type="button" value="Cancel" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
 </dhv:permission>

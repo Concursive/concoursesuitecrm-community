@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Timeout" class="java.lang.String" scope="request"/>
+<jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectTimeZone" %>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
@@ -38,6 +39,17 @@ Configure System
       </td>
     </tr>
 <dhv:evaluate if="<%= getPref(getServletContext(), "WEBSERVER.ASPMODE") == null || !"true".equals(getPref(getServletContext(), "WEBSERVER.ASPMODE")) %>">
+    <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
+      <td align="center">
+        <a href="AdminConfig.do?command=Modify&param=LICENSE">Edit</a>
+      </td>
+      <td>
+         License Information and Details
+      </td>
+      <td>
+         <%= toHtml(APP_TEXT) %>
+      </td>
+    </tr>
     <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
       <td align="center">
         <a href="AdminConfig.do?command=Modify&param=MAILSERVER">Edit</a>

@@ -54,19 +54,19 @@
                 <td width="63%"><img border=0 src="images/pixhp2.gif" width="300" height="210"></td>
               </tr>
             </table>
-            <p><br><br></p>
+            <p><br /><br /></p>
           </td>
           <td width="15%" valign="top" height="266"> 
             <table width="200" border="0" cellspacing="2" cellpadding="2">
               <tr> 
                 <td valign="center">
-                  &nbsp;<br>
+                  &nbsp;<br />
                   &nbsp;
                 </td>
               </tr>
               <tr> 
                 <td valign="center">
-                  <font size="2">Welcome to Dark Horse CRM!</font><br>
+                  <font size="2">Welcome to Dark Horse CRM!</font><br />
                   <img border=0 src="images/prline.gif" width="200" height="5">
                 </td>
               </tr>
@@ -76,7 +76,7 @@
                 </td>
               </tr>
             </table>
-            <br>
+            <br />
           </td>
           <td width="25%" height="266"><img src="images/sidespace.gif" width="97" height="1"></td>
         </tr>

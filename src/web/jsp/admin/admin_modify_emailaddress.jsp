@@ -12,8 +12,10 @@ Modify Setting
 </tr>
 </table>
 <%-- End Trails --%>
-For system emails, what email address should be in the FROM field of the email?<br>
-&nbsp;<br>
+<table class="note"><tr><td>
+<img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/><b>What
+email address should be in the FROM field of all emails sent by Dark Horse CRM?</b>
+</td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>

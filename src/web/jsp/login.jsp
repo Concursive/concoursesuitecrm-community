@@ -76,8 +76,8 @@
               </tr>
               <tr>
                 <td align="center" valign="center" colspan="4">
-                  <font size="2"><strong>Dark Horse CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong><br>
-                  <%= toHtml(APP_TEXT) %><dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br>Licensed To: <%= toHtml(APP_ORGANIZATION) %></dhv:evaluate></font>
+                  <font size="2"><strong>Dark Horse CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong><br />
+                  <%= toHtml(APP_TEXT) %><dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br />Licensed To: <%= toHtml(APP_ORGANIZATION) %></dhv:evaluate></font>
                 </td>
               </tr>
 <%
@@ -87,7 +87,7 @@
 %>              
               <tr> 
                 <td align="center" colspan="4">
-                  <font size="2">This site is configured for secure connections only</font><br>
+                  <font size="2">This site is configured for secure connections only</font><br />
                   <font size="2"><a href="https://<%= getServerUrl(request) %>">Go to Secure Login</a></font>
                 </td>
               </tr>

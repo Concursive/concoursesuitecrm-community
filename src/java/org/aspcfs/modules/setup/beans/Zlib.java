@@ -57,6 +57,7 @@ public class Zlib {
       os = XMLUtils.getNodeText(xml.getFirstChild("os"));
       java = XMLUtils.getNodeText(xml.getFirstChild("java"));
       webserver = XMLUtils.getNodeText(xml.getFirstChild("webserver"));
+      text2 = XMLUtils.getNodeText(xml.getFirstChild("text2"));
       //Extract the key
       BASE64Decoder decoder = new BASE64Decoder();
       key = (Key) ObjectUtils.toObject(decoder.decodeBuffer(keyText));
@@ -400,7 +401,7 @@ public class Zlib {
    *@exception  javax.xml.parsers.ParserConfigurationException  Description of
    *      the Exception
    */
-  private String getCode() throws javax.xml.parsers.ParserConfigurationException {
+  public String getCode() throws javax.xml.parsers.ParserConfigurationException {
     //Build an XML document needed for license
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = dbf.newDocumentBuilder();

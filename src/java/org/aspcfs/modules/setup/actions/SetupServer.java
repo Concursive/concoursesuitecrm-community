@@ -112,4 +112,74 @@ public class SetupServer extends CFSModule {
     }
     return "SubmitProcessOK";
   }
+  
+  public String executeCommandRequestLicense(ActionContext context) {
+    try {
+      //Receive the xml from the request
+      XMLUtils xml = new XMLUtils(context.getRequest());
+      //Create the object from the serialized xml
+      Zlib license = new Zlib(xml);
+      //Prepare the response XML
+      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = dbf.newDocumentBuilder();
+      Document document = builder.newDocument();
+      Element app = document.createElement("aspcfs");
+      document.appendChild(app);
+      Element response = document.createElement("response");
+      app.appendChild(response);
+      //Append the status code
+      Element status = document.createElement("status");
+      //Append the error text
+      Element errorText = document.createElement("errorText");
+      if (license.isValid()) {
+        //Load the license information from the database
+        Connection db = null;
+        try {
+          //get a database connection using the vhost context info
+          AuthenticationItem auth = new AuthenticationItem();
+          db = auth.getConnection(context, false);
+          if (db == null && System.getProperty("DEBUG") != null) {
+            System.out.println("SetupServer-> FATAL: db IS NULL!!!");
+          }
+          //locate a previous registration to send back
+          Registration previousRegistration = RegistrationList.locate(db, license.getEmail(), license.getProfile(), true);
+          //If not found send back error message
+          if (previousRegistration == null) {
+            status.appendChild(document.createTextNode("1"));
+            errorText.appendChild(document.createTextNode("FAILURE"));
+          }
+          //If found then see if it is new
+          if (previousRegistration != null) {
+            status.appendChild(document.createTextNode("0"));
+            errorText.appendChild(document.createTextNode("SUCCESS"));
+            if (!previousRegistration.getText2().equals(license.getText2())) {
+              //New license to send back...
+              license.setNameFirst(previousRegistration.getNameFirst());
+              license.setNameLast(previousRegistration.getNameLast());
+              license.setCompany(previousRegistration.getCompany());
+              license.setEdition(previousRegistration.getEdition());
+              license.setText(previousRegistration.getText());
+              license.setText2(previousRegistration.getText2());
+              //TODO: Package it up with
+              System.out.println(license.getCode());
+            }
+          }
+        } catch (Exception e) {
+          status.appendChild(document.createTextNode("1"));
+          errorText.appendChild(document.createTextNode("FAILURE"));
+        } finally {
+          freeConnection(context, db);
+        }
+      } else {
+        status.appendChild(document.createTextNode("1"));
+        errorText.appendChild(document.createTextNode("FAILURE"));
+      }
+      response.appendChild(status);
+      response.appendChild(errorText);
+      context.getRequest().setAttribute("statusXML", XMLUtils.toString(document, "UTF-8"));
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    }
+    return "UpdateProcessOK";
+  }
 }

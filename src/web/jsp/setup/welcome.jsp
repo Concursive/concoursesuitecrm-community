@@ -17,14 +17,14 @@
   <tr>
     <td>
       In order to begin using Dark Horse CRM, the setup process will guide you through
-      several steps.<br>
-      <br>
+      several steps.<br />
+      <br />
       Although installation can be completed in just a few minutes, you will
-      have the option at any time during the setup to continue at a later time.<br>
-      <br>
+      have the option at any time during the setup to continue at a later time.<br />
+      <br />
       Registering this application with Dark Horse Ventures is required before installation,
       whether you already have a license or not,
-      so we have made the registration process very simple.<br>
+      so we have made the registration process very simple.<br />
       <ul>
       <li>An internet connection is required before continuing</li>
       <li>The freely available version of Dark Horse CRM
@@ -41,10 +41,10 @@
   <tr>
     <td nowrap>
       <input type="radio" name="doReg" value="need" <%= !"true".equals(found) ? "checked" : "" %>/>
-      Request a <b>new</b> license for this installation<br>
+      Request a <b>new</b> license for this installation<br />
       <input type="radio" name="doReg" value="have" <%= !"true".equals(found) ? "disabled" : "checked" %>/>
-      <dhv:evaluate if="<%= !"true".equals(found) %>"><font color="#888888"></dhv:evaluate>Continue setup from a previously started session<dhv:evaluate if="<%= !"true".equals(found) %>"></font></dhv:evaluate><br>
-      <br>
+      <dhv:evaluate if="<%= !"true".equals(found) %>"><font color="#888888"></dhv:evaluate>Continue setup from a previously started session<dhv:evaluate if="<%= !"true".equals(found) %>"></font></dhv:evaluate><br />
+      <br />
       <input type="submit" value="Continue >"/>
     </td>
   </tr>
