@@ -41,6 +41,8 @@ public class PhoneNumberFormatter {
     if (locale != null) {
       if (locale == Locale.US || locale == Locale.CANADA) {
         format(thisNumber);
+      } else {
+        formatInternational(thisNumber);
       }
     }
   }
@@ -102,6 +104,32 @@ public class PhoneNumberFormatter {
       return ("+" + number);
     }
     return number;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  thisNumber  Description of the Parameter
+   */
+  public void formatInternational(PhoneNumber thisNumber) {
+    String[] number = new String[]{thisNumber.getNumber(), null};
+    if (number[0] != null && number[0].length() > 0) {
+      number[0] = number[0].trim();
+      //Split out the extention if there is one
+      extractExtension(number, "ext.");
+      extractExtension(number, "ext");
+      extractExtension(number, "x");
+      thisNumber.setExtension(number[1]);
+      //Format just the number
+      if (number[0].indexOf("+") == -1) {
+        //Add a +, that's all for now
+        if (isMostlyNumbers(number[0])) {
+          number[0] = "+" + number[0];
+        }
+      }
+      thisNumber.setNumber(number[0]);
+    }
   }
 
 

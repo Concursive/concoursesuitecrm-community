@@ -635,6 +635,9 @@ public class Address {
     if ("CANADA".equals(country)) {
       return Locale.CANADA;
     }
+    if ("UNITED KINGDOM".equals(country)) {
+      return Locale.UK;
+    }
     return null;
   }
 
