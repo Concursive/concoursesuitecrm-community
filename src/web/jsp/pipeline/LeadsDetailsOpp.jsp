@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OpportunityDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <%@ include file="initPage.jsp" %>
@@ -11,28 +12,29 @@
       
       	<% 
 	  if (OpportunityDetails.getAccountLink() != -1) { %>
-	  	[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]
+	  	<dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
 	  <%} else { %>
-	  	[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]
+	  	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
 	  <%}%>
       
     </td>
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Details</font></a> | 
-      <a href="LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Calls</font></a> |
-      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Documents</font></a>
+      <a href="Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Details</font></a><dhv:permission name="pipeline-opportunities-calls-view"> | 
+      <a href="LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Calls</font></a></dhv:permission><dhv:permission name="pipeline-opportunities-documents-view"> |
+      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Documents</font></a></dhv:permission>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
 
 <input type=hidden name="command" value="<%= OpportunityDetails.getId() %>">
-<input type=button name="action" value="Modify"	onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit()">
-<input type=button name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';document.oppdet.submit()">
-<br>
-&nbsp;
+
+<dhv:permission name="pipeline-opportunities-edit"><input type=button name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type=button name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br>&nbsp;</dhv:permission>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
@@ -159,10 +161,9 @@
   </tr>
   
 </table>
-&nbsp;
-<br>
-<input type=button name="action" value="Modify"	onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit()">
-<input type=button name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';document.oppdet.submit()">
+<dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br></dhv:permission>
+<dhv:permission name="pipeline-opportunities-edit"><input type=button name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit()"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type=button name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';document.oppdet.submit()"></dhv:permission>
 </td></tr>
 </table>
 </form>

@@ -20,19 +20,26 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#000000">Details</font></a> | 
-      <a href="LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Calls</font></a> |
-      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Documents</font></a>
-   </td>
+      <a href="Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>"><font color="#000000">Details</font></a><dhv:permission name="pipeline-opportunities-calls-view"> | 
+      <a href="LeadsCalls.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#000000">Calls</font></a></dhv:permission><dhv:permission name="pipeline-opportunities-documents-view"> |
+      <a href="LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>"><font color="#0000FF">Documents</font></a></dhv:permission>
+    </td>
   </tr>
   <tr>
     <td class="containerBack">
-      <a href="LeadsDocuments.do?command=Add&oppId=<%= OpportunityDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br>
+    <dhv:permission name="pipeline-opportunities-documents-add"><a href="LeadsDocuments.do?command=Add&oppId=<%= OpportunityDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
+    
       <%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td width="10" align="center">Action</td>
-    <td colspan="2">Item</td>
+    <dhv:permission name="pipeline-opportunities-documents-add" none="true">
+    <td>
+    </dhv:permission>
+    <dhv:permission name="pipeline-opportunities-documents-add">
+    <td colspan="2">
+    </dhv:permission>
+    Item</td>
     <td>Size</td>
     <td>Version</td>
     <td>Submitted</td>
@@ -50,14 +57,19 @@
     <tr class="row<%= rowid %>">
       <td width="10" valign="middle" align="center" rowspan="2" nowrap>
         <a href="LeadsDocuments.do?command=Download&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
-				<a href="LeadsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('LeadsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>');">Del</a>
-			</td>
+	<dhv:permission name="pipeline-opportunities-documents-edit"><a href="LeadsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId()%>">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-documents-edit,pipeline-opportunities-documents-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-documents-delete"><a href="javascript:confirmDelete('LeadsDocuments.do?command=Delete&fid=<%=thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>');">Del</a></dhv:permission>
+	</td>
+	
       <td valign="top" width="100%">
         <a href="LeadsDocuments.do?command=Details&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %></a>
       </td>
+        
+      <dhv:permission name="pipeline-opportunities-documents-add">
       <td align="right" valign="middle" nowrap>
         [<a href="LeadsDocuments.do?command=AddVersion&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
       </td>
+      </dhv:permission>
+      
       <td align="center" valign="middle" nowrap>
         <%= thisFile.getRelativeSize() %> k&nbsp;
       </td>

@@ -7,6 +7,7 @@
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="listView" method="post" action="/ExternalContacts.do?command=Reports">
 <dhv:permission name="contacts-external_contacts-reports-add"><a href="/ExternalContacts.do?command=GenerateForm">Generate new report</a></dhv:permission>
+<dhv:permission name="contacts-external_contacts-reports-add" none="true"><br></dhv:permission>
 <center><%= ContactRptListInfo.getAlphabeticalPageLinks() %></center>
 
 <table width="100%" border="0">

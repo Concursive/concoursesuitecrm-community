@@ -119,7 +119,7 @@ public final class Leads extends CFSModule {
 	    return ("PermissionError");
     	}
 	
-    addModuleBean(context, "Search Leads", "Search Opportunities");
+    addModuleBean(context, "Search Opportunities", "Search Opportunities");
     return ("SearchOK");
   }
 

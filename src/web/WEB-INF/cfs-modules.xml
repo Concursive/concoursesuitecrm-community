@@ -223,7 +223,7 @@
     <graphic width="83" height="36" on="menu-accounts-on.gif" off="menu-accounts-off.gif" rollover=""/>
     
     <submenu name="Add Account">
-      <permission value="accounts-account-add"/>
+      <permission value="accounts-accounts-add"/>
       <long_html value="Add Account"/>
       <short_html value="Add&lt;br&gt;Account"/>
       <link value="/Accounts.do?command=Add"/>

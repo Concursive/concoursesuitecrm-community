@@ -144,9 +144,9 @@
   </tr>
   
 </table>
+<dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"><br></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="submit" name="Modify" value="Modify"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=DeleteOpp&id=<%= OppDetails.getId() %>&orgId=<%= OppDetails.getAccountLink() %>&contactId=<%= OppDetails.getContactLink() %>'"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"><br></dhv:permission>
 </td>
 </tr>
 </table>

@@ -184,7 +184,7 @@
     <td width="100%"><%= toHtml(ContactDetails.getNotes()) %>&nbsp;</td>
   </tr>
 </table>
-<br>
+<dhv:permission name="contacts-external_contacts-delete,contacts-external_contacts-edit"><br></dhv:permission>
 <dhv:permission name="contacts-external_contacts-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
 <dhv:permission name="contacts-external_contacts-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/ExternalContacts.do?command=DeleteContact&id=<%=ContactDetails.getId() %>'"></dhv:permission>
 </td></tr>

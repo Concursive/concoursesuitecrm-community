@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OpportunityList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="OpportunityListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
@@ -21,9 +22,11 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 
   <tr bgcolor="#DEE0FA">
+    <dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete">
     <td valign=center>
       <strong>Action</strong>
     </td>
+    </dhv:permission>
     
     <td valign=center nowrap>
       <strong><a href="/Leads.do?command=ViewOpp&column=x.description">Opportunity</a></strong>
@@ -72,10 +75,12 @@
 		Opportunity thisOpp = (Opportunity)j.next();
 %>      
 	
-		<tr bgcolor="white">
-      <td width=8 valign=center nowrap class="row<%= rowid %>">
-        <a href="/Leads.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>&return=list">Edit</a>|<a href="javascript:confirmDelete('/Leads.do?command=DeleteOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>');">Del</a>
-      </td>
+	<tr bgcolor="white">
+	<dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete">
+	<td width=8 valign=center nowrap class="row<%= rowid %>">
+	<dhv:permission name="pipeline-opportunities-edit"><a href="/Leads.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink()%>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-delete"><a href="javascript:confirmDelete('/Leads.do?command=DeleteOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%=thisOpp.getContactLink() %>');">Del</a></dhv:permission>
+	</td>
+	</dhv:permission>
       
       <td width=35% valign=center class="row<%= rowid %>">
         <a href="/Leads.do?command=DetailsOpp&id=<%=thisOpp.getId()%>">
