@@ -123,7 +123,6 @@ Results
                  <%
                   }
                  %>
-               </dhv:evaluate>
             </dhv:evaluate>
             <%}else{%>
              <tr class="containerHeader">
