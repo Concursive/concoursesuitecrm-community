@@ -201,8 +201,11 @@ function removeValue(index) {
 		}
 		
     for (j=0; j<searchCriteria.length; j++) {
-      searchCriteria[j] = null;
+      //searchCriteria[j] = null;
+      delete searchCriteria[j];
     }
+    
+    searchCriteria = new Array();
     
 		for (i=0; i < tempArray.length; i++){
 			if (tempArray[i] != null) {
@@ -250,9 +253,11 @@ function removeValues(){
 		}
 		
     for (j=0; j<searchCriteria.length; j++) {
-      searchCriteria[j] = null;
+      delete searchCriteria[j];
     }
-		
+    
+    searchCriteria = new Array();
+    
     for (i=0; i < tempArray.length; i++){
 			if (tempArray[i] != null) {
 				searchCriteria[i] = tempArray[i];
@@ -291,8 +296,11 @@ function saveValues(){
 		if (searchCriteria.length != searchList.length) {
           
           for (j=0; j<searchCriteria.length; j++) {
-            searchCriteria[j] = null;
+            //searchCriteria[j] = null;
+            delete searchCriteria[j];
           }
+          
+          searchCriteria = new Array();
       
 			for (count=0; count<(searchList.length); count++) {
 				searchCriteria[count] = searchList.options[count].value;
