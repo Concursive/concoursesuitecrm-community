@@ -211,6 +211,26 @@ In the next client request, add from the previous request (items + offset) to
 get the new offset. So:
 <makeList action="sync" identity="51" offset="50" items="50"/>
 
+---[ CLIENT REQUESTS DELETED RECORDS FOR EACH TABLE ]---
+
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id>
+    <code>BZTST27A</code>
+    <systemId>2</systemId>
+    <clientId>*PUT CLIENT ID HERE*</clientId>
+    <lastAnchor/>
+    <nextAnchor>*INSERT NEXT ANCHOR HERE*</nextAnchor>
+  </authentication>
+  <transaction id="4">
+    <meta>
+      <property>guid</property>
+    </meta>
+    <makeList action="syncDelete"/>
+  </transaction>
+</app>
+
+
 ---[ FINALIZE DATA SYNCHRONIZATION ]---
 
 Client #1 Ends Synchronization
@@ -404,8 +424,8 @@ Client #1 Ends Synchronization
   
   <transaction id="12">
     <meta>
-      <property>guid</property>
-      <property>inventoryGuid</property>
+      <property>accountInventoryGuid</property>
+      <property>optionGuid</property>
     </meta>
     <inventoryOptionList action="sync" identity="1">
       <accountInventoryGuid>*REQUIRED: MUST SPECIFY INVENTORY GUID*</accountInventoryGuid>
@@ -419,6 +439,9 @@ Client #1 Ends Synchronization
   ** to replace a picture for the incorrect vehicle since pictures will 
   ** all have the same filenames.
   
+  <transaction id="20">
+    <inventoryPicture action="insert"/>
+  </transaction>
   
 
 ...Client inserts a vehicle with options and ad runs (MUST HAVE
@@ -452,18 +475,26 @@ SYNC'D ALL TABLES FIRST):
       <comments>additional text</comments>
       <sold>false</sold>
     </accountInventory>
-    <option action="insert">
-      <guid>1</guid>
+  </transaction>
+    
+  <transaction>
+    <inventoryOption action="insert">
       <accountInventoryGuid>10</accountInventoryGuid>
-    </option>
-    <option action="insert">
-      <guid>2</guid>
+      <optionGuid>1</optionGuid>
+    </inventoryOption>
+    
+    <inventoryOption action="insert">
       <accountInventoryGuid>10</accountInventoryGuid>
-    </option>
-    <option action="insert">
-      <guid>3</guid>
+      <optionGuid>2</optionGuid>
+    </inventoryOption>
+    
+    <inventoryOption action="insert">
       <accountInventoryGuid>10</accountInventoryGuid>
-    </option>
+      <optionGuid>3</optionGuid>
+    </inventoryOption>
+  </transaction>  
+  
+  <transaction>  
     <adRun action="insert">
       <guid>1</guid>
       <accountInventoryGuid>10</accountInventoryGuid>
