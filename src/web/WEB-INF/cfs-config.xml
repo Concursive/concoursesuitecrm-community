@@ -15,11 +15,21 @@
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
   </action>
   
+  <!-- Actions for E.D.I.T. transaction processing -->
   <action name="ProcessEditData" class="org.aspcfs.modules.healthcare.edit.actions.ProcessEditData">
     <forward name="ProcessDataOK" resource="/processdata_test.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
   </action>
-  
+  <action name="ProcessCalculation" class="org.aspcfs.modules.healthcare.edit.actions.ProcessCalculation">
+    <forward name="CalculationOK" resource="/errors/error_system.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp"/>
+  </action>  
+  <action name="ProcessTransaction" class="org.aspcfs.modules.healthcare.edit.actions.ProcessTransaction">
+  <bean name="Transaction" class="org.aspcfs.modules.healthcare.edit.base.TransactionRecord" scope="request"/>
+    <forward name="PacketOK" resource="/healthcare/edit/processtransaction.jsp" layout="styleNoSession"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp"/>
+  </action>  
+  <!-- Actions for people taking a survey -->
   <action name="ProcessSurvey" class="org.aspcfs.modules.communications.actions.ProcessSurvey">
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
     <forward name="ViewOK" resource="/communications/display_active_survey.jsp" layout="styleNoSession"/>
@@ -30,22 +40,22 @@
   <action name="ProcessMessage" class="org.aspcfs.modules.communications.actions.ProcessMessage">
     <forward name="PreviewOK" resource="/communications/campaign_messages_preview.jsp"/>
   </action>
-	
+	<!-- Allows a remote system to post XML -->
   <action name="ProcessPacket" class="org.aspcfs.modules.service.actions.ProcessPacket">
     <forward name="PacketOK" resource="/service/system_process_packet.jsp"/>
   </action>
-  
-  <action name="ProcessDocument" class="com.darkhorseventures.service.actions.ProcessDocument">
+  <!-- Allows a remote system to upload files and store in cfs under documents -->
+  <action name="ProcessDocument" class="org.aspcfs.modules.service.actions.ProcessDocument">
     <forward name="UploadOK" resource="/admin/system_process_ok.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
     <forward name="UserError" resource="/errors/error_user.jsp"/>
   </action>
-  
+  <!-- Admin/Cron functions -->
   <action name="ProcessSystem" class="org.aspcfs.modules.admin.actions.ProcessSystem">
     <forward name="ProcessOK" resource="/service/system_process_ok.jsp"/>
     <forward name="ViewCronOK" resource="/service/cron_view.jsp"/>
   </action>
-  
+  <!-- CFS Actions -->
   <action name="Login" class="org.aspcfs.modules.login.actions.Login">
     <bean name="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>

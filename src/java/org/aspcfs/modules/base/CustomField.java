@@ -60,9 +60,9 @@ public class CustomField extends GenericBean implements Cloneable {
 
   //lookup context ids
   public final static int LOOKUP_USERID = 21;
-  
+
   public final static int HTMLAREA = 22;
-  
+
   //Properties for a Field
   private int id = -1;
   private int groupId = -1;
@@ -149,6 +149,16 @@ public class CustomField extends GenericBean implements Cloneable {
    */
   public CustomField(ResultSet rs) throws SQLException {
     buildRecord(rs);
+  }
+
+
+  /**
+   *  Gets the linkItemId attribute of the CustomField object
+   *
+   *@return    The linkItemId value
+   */
+  public int getLinkItemId() {
+    return linkItemId;
   }
 
 

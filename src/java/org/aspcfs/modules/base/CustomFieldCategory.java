@@ -1256,5 +1256,28 @@ public class CustomFieldCategory extends ArrayList {
     return i;
   }
 
+
+  /**
+   *  return the unique CF ids of the fields on the form page for inserting a
+   *  new record in this category.
+   *
+   *@return    The formFieldIds value
+   */
+  public ArrayList getFormFieldIds() {
+    ArrayList a = new ArrayList();
+    Iterator groups = this.iterator();
+    while (groups.hasNext()) {
+      CustomFieldGroup thisGroup = (CustomFieldGroup) groups.next();
+      Iterator fields = thisGroup.iterator();
+      if (fields.hasNext()) {
+        while (fields.hasNext()) {
+          CustomField thisField = (CustomField) fields.next();
+          a.add(new Integer(thisField.getId()));
+        }
+      }
+    }
+    return a;
+  }
+
 }
 

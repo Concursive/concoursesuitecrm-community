@@ -25,7 +25,7 @@ import org.aspcfs.utils.*;
 /**
  *  Description of the Class
  *
- *@author     matt rajkowski
+ *@author     chris
  *@created    January 15, 2003
  *@version    $Id$
  */
