@@ -145,10 +145,8 @@ public final class AccountTickets extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandInsertTicket(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-tickets-add"))) {
       return ("PermissionError");
     }
@@ -165,11 +163,11 @@ public final class AccountTickets extends CFSModule {
     String newContact = context.getRequest().getParameter("contact");
 
     Ticket newTic = (Ticket) context.getFormBean();
-
     newTic.setEnteredBy(getUserId(context));
     newTic.setModifiedBy(getUserId(context));
 
     if (newContact != null && newContact.equals("on")) {
+      //If there are any changes here, also check TroubleTickets where a new contact is created
       nc = new Contact();
       nc.setNameFirst(context.getRequest().getParameter("thisContact_nameFirst"));
       nc.setNameLast(context.getRequest().getParameter("thisContact_nameLast"));
@@ -179,7 +177,6 @@ public final class AccountTickets extends CFSModule {
       nc.setEnteredBy(getUserId(context));
       nc.setModifiedBy(getUserId(context));
       nc.setOwner(getUserId(context));
-      nc.addType(0);
     }
 
     try {
