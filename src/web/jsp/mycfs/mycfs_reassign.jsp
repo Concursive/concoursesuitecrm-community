@@ -30,134 +30,155 @@ Re-assignments<br>
     </form>
   </tr>
 </table>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <form name="adminReassign" action="Reassignments.do?command=DoReassign" method="post">
   <tr class="title">
-    <td valign=center align=left>
+    <td nowrap>
       <strong>Re-assign</strong>
     </td>
-    <td width=150 valign=center align=left nowrap>
+    <td width="150" nowrap>
       <strong>From User</strong>
     </td>
-    <td width=150 valign=center align=left nowrap>
+    <td width="150" nowrap>
       <strong>To User</strong>
     </td>
   </tr>
-  
-  <tr>
-		<td class="row1">
-    Accounts (<%=SourceAccounts.size()%>)
+<% int rowid = 0; %>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      Accounts (<%= SourceAccounts.size() %>)
 		</td>
-    
+    <td valign="top" nowrap>
     <% if (SourceUser.getId() > -1) { %>
-		  <td width=150 valign=center class="row1" nowrap><%=SourceUser.getContact().getNameLastFirst()%>
-      </td>
+      <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  <td width=150 valign=center class="row1" nowrap>None Selected</td>
+		  None Selected
     <%}%>
-    
-		<td width=150 valign=center class="row1" nowrap><%= UserList.getHtmlSelect("ownerToAccounts") %></td>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToAccounts") %>
+    </td>
   </tr>
-  
-  <tr>
-		<td class="row2">
-    Contacts (<%=SourceContacts.size()%>)
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      Contacts (<%= SourceContacts.size() %>)
 		</td>
+    <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
-		  <td width=150 valign=center class="row2" nowrap><%=SourceUser.getContact().getNameLastFirst()%>
-      </td>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  <td width=150 valign=center class="row2" nowrap>None Selected</td>
+		  None Selected
     <%}%>
-		<td width=150 valign=center class="row2" nowrap><%= UserList.getHtmlSelect("ownerToContacts") %></td>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToContacts") %>
+    </td>
   </tr>  
-  
-  <tr>
-		<td class="row1">
-    Opportunities (Open Only) (<%=SourceOpenOpportunities.size()%>)
-		</td> 
-		<% if (SourceUser.getId() > -1) { %>
-		  <td width=150 valign=center class="row1" nowrap><%=SourceUser.getContact().getNameLastFirst()%>
-      </td>
-    <%} else {%>
-		  <td width=150 valign=center class="row1" nowrap>None Selected</td>
-    <%}%>
-		<td width=150 valign=center class="row1" nowrap><%= UserList.getHtmlSelect("ownerToOpenOpps") %></td>
-  </tr>  
-  
-  <tr>
-		<td class="row2">
-    Opportunities (Open &amp; Closed) (<%=SourceOpportunities.size()%>)
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      Opportunities (Open Only) (<%= SourceOpenOpportunities.size() %>)
 		</td>
+    <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
-		  <td width=150 valign=center class="row2" nowrap><%=SourceUser.getContact().getNameLastFirst()%>
-      </td>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  <td width=150 valign=center class="row2" nowrap>None Selected</td>
+		  None Selected
     <%}%>
-		<td width=150 valign=center class="row2" nowrap><%= UserList.getHtmlSelect("ownerToOpenClosedOpps") %></td>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToOpenOpps") %>
+    </td>
   </tr>  
-  
-  <tr>
-		<td class="row1">
-    Project Activities (Incomplete) (<%=SourceAssignments.size()%>)
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      Opportunities (Open &amp; Closed) (<%= SourceOpportunities.size() %>)
 		</td>
+    <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
-		  <td width=150 valign=center class="row1" nowrap><%=SourceUser.getContact().getNameLastFirst()%>
-      </td>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  <td width=150 valign=center class="row1" nowrap>None Selected</td>
+		  None Selected
     <%}%>
-		<td width=150 valign=center class="row1" nowrap><%= UserList.getHtmlSelect("ownerToActivities") %></td>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToOpenClosedOpps") %>
+    </td>
   </tr>  
-  
-  <tr>
-		<td class="row2">
-    Account Revenue (<%=SourceRevenue.size()%>)
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      Project Activities (Incomplete) (<%= SourceAssignments.size() %>)
 		</td>
+    <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
-		  <td width=150 valign=center class="row2" nowrap><%=SourceUser.getContact().getNameLastFirst()%>
-      </td>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  <td width=150 valign=center class="row2" nowrap>None Selected</td>
+		  None Selected
     <%}%>
-		<td width=150 valign=center class="row2" nowrap><%= UserList.getHtmlSelect("ownerToRevenue") %></td>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToActivities") %>
+    </td>
   </tr>  
-  
-  <tr>
-		<td class="row1">
-    Tickets (Open) (<%=SourceOpenTickets.size()%>)
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      Account Revenue (<%= SourceRevenue.size() %>)
 		</td>
+    <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
-		  <td width=150 valign=center class="row1" nowrap><%=SourceUser.getContact().getNameLastFirst()%>
-      </td>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  <td width=150 valign=center class="row1" nowrap>None Selected</td>
+		  None Selected
     <%}%>
-		<td width=150 valign=center class="row1" nowrap><%= UserList.getHtmlSelect("ownerToOpenTickets") %></td>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToRevenue") %>
+    </td>
+  </tr>  
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      Tickets (Open) (<%= SourceOpenTickets.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  None Selected
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToOpenTickets") %>
+    </td>
   </tr> 
-
-  <tr>
-		<td class="row2">
-    Users Reporting-to (<%=SourceUsers.size()%>)
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      Users Reporting-to (<%= SourceUsers.size() %>)
 		</td>
+    <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
-		  <td width=150 valign=center class="row2" nowrap><%=SourceUser.getContact().getNameLastFirst()%>
-      </td>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  <td width=150 valign=center class="row2" nowrap>None Selected</td>
+		  None Selected
     <%}%>
-		<td width=150 valign=center class="row2" nowrap><%= UserList.getHtmlSelect("ownerToUsers") %></td>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToUsers") %>
+    </td>
   </tr>  
-  
 </table>
 &nbsp;<br>
 <dhv:permission name="myhomepage-reassign-edit">
 <input type="submit" value="Update">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=Home'">
 <input type="reset" value="Reset">
-<input type="hidden" name="userId" value="<%=SourceUser.getId()%>">
+<input type="hidden" name="userId" value="<%= SourceUser.getId() %>">
 </dhv:permission>
 </form>
 </body>

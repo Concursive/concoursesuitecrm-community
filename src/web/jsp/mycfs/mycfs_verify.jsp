@@ -4,12 +4,12 @@
 <%@ include file="../initPage.jsp" %>
 <script type="text/javascript">
   function loginAlert(ipAddress){
-    if(confirm('You are already logged into ' + ipAddress + '\n Do you want to log off from that machine? ')){
+    if (confirm('You are already logged in from ' + ipAddress + '.\n Do you want to log off from that machine and continue? ')) {
       window.location.href = 'Login.do?command=LoginConfirm&override=yes';
     }else{
       window.location.href = 'Login.do?command=LoginConfirm&override=no';
     }
   }
 </script>
-<body onLoad="javascript:loginAlert('<%=Session.getIpAddress()%>');">
+<body onLoad="javascript:loginAlert('<%= Session.getIpAddress() %>');">
 

@@ -17,8 +17,8 @@ Password<br>
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td colspan=2 valign=center align=left>
+  <tr class="title">
+    <td colspan="2">
       <strong>Update Password</strong>
     </td>
   </tr>
@@ -26,14 +26,12 @@ Password<br>
   <tr><td nowrap class="formLabel">New Password</td><td><input type="password" name="password1" value=""><font color="red">*</font> <%= showAttribute(request, "password1Error") %></td></tr>
   <tr><td nowrap class="formLabel">Verify New Password</td><td><input type="password" name="password2" value=""><font color="red">*</font> <%= showAttribute(request, "password2Error") %></td></tr>
 </table>
-
 <dhv:permission name="myhomepage-profile-password-edit">
 <br>
-<input type=hidden value="<%=User.getId()%>" name="id">
+<input type="hidden" value="<%= User.getId() %>" name="id">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
 </dhv:permission>
-
 </form>
 </body>
