@@ -8,7 +8,7 @@ import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
 
-public class Model extends GenericBean {
+public class Model {
 
   private int id = -1;
   private int makeId = -1;
@@ -114,7 +114,7 @@ public class Model extends GenericBean {
     pst.close();
 
     if (recordCount == 0) {
-      errors.put("actionError", "Record could not be deleted because it no longer exists.");
+      //errors.put("actionError", "Record could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;

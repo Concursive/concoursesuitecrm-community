@@ -33,12 +33,15 @@ public class VehicleList extends ArrayList {
       "make.make_id, make.make_name, " +
       "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
       "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
-      "FROM autoguide_vehicle v LEFT JOIN autoguide_make make ON v.make_id = make.make_id LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
+      "FROM autoguide_vehicle v " +
+      " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
+      " LEFT JOIN autoguide_model model ON v.model_id = model.model_id ");
     sql.append("WHERE vehicle_id > -1 ");
     createFilter(sql);
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+    int count = 0;
     while (rs.next()) {
       Vehicle thisVehicle = new Vehicle(rs);
       thisVehicle.setMake(new Make(rs));

@@ -8,7 +8,7 @@ import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
 
-public class Vehicle extends GenericBean {
+public class Vehicle {
 
   private int id = -1;
   private int year = -1;
@@ -116,7 +116,7 @@ public class Vehicle extends GenericBean {
     pst.close();
 
     if (recordCount == 0) {
-      errors.put("actionError", "Record could not be deleted because it no longer exists.");
+      //errors.put("actionError", "Record could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
