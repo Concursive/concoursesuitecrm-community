@@ -46,6 +46,11 @@ public class ImportDocuments implements CFSDatabaseReaderImportModule {
     fileItemVersionList.buildList(db);
     mappings.saveList(writer, fileItemVersionList, "insert");
     
+    logger.info("ImportBaseData-> Inserting FileDownloadLogList");
+    FileDownloadLogList downloadLog = new FileDownloadLogList();
+    downloadLog.buildList(db);
+    mappings.saveList(writer, downloadLog, "insert");
+    
     return true;
   }
   
