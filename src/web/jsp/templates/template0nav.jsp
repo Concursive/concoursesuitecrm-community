@@ -19,7 +19,7 @@
 <table border="0" width="100%">
   <tr>
     <th align="left" valign="top">
-      <table border="0" cellpadding="0" cellspacing="0">
+      <table border="0" cellpadding="2" cellspacing="0">
         <tr>
           <th align="left" valign="top">
             <dhv:label name="logo">&nbsp;</dhv:label>
@@ -43,7 +43,7 @@
         </tr>
       </table>
     </th>
-    <th align="right" nowrap>
+    <th align="right" valign="top" nowrap>
       <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="javascript:window.print()" class="s">Print</a>
       |
