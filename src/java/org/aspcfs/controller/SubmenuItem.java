@@ -304,9 +304,35 @@ public class SubmenuItem {
     if (link == null || link.equals("")) {
       return shortHtml;
     } else {
-      return ("<a " + (htmlClass.equals("") ? "" : "class='" + htmlClass + "' ") +
-          "href='" + link + "'>" + shortHtml + "</a>");
+      if (!shortHtml.startsWith("&nbsp;")) {
+        return ("<a " + (htmlClass.equals("") ? "" : "class='" + htmlClass + "' ") +
+            "href='" + link + "'>" + shortHtml + "</a>");
+      } else {
+        int count = 0;
+        String out = new String(shortHtml);
+        while (out.startsWith("&nbsp;")) {
+          ++count;
+          out = out.substring(6);
+        }
+        return (addSpace(count) + "<a " + (htmlClass.equals("") ? "" : "class='" + htmlClass + "' ") +
+            "href='" + link + "'>" + out + "</a>");
+      }
     }
+  }
+
+
+  /**
+   *  Adds a feature to the Space attribute of the SubmenuItem object
+   *
+   *@param  count  The feature to be added to the Space attribute
+   *@return        Description of the Return Value
+   */
+  private String addSpace(int count) {
+    StringBuffer sb = new StringBuffer();
+    for (int i = 0; i < count; i++) {
+      sb.append("&nbsp;");
+    }
+    return sb.toString();
   }
 
 
