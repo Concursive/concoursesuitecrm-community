@@ -417,17 +417,17 @@ public class HelpContent {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean insertHelpContent(Connection db, int linkId) throws SQLException {
-
+  public boolean insertHelpContent(Connection db, int linkId, int tmpCategoryId) throws SQLException {
+	  
     insert = true;
-    PreparedStatement pst = db.prepareStatement(
+   PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_contents " +
         "(link_module_id, category_id, module, section, subsection, title, description, enteredby, modifiedby) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
-
+	
     int i = 0;
     pst.setInt(++i, linkId);
-    pst.setInt(++i, linkId);
+    pst.setInt(++i, tmpCategoryId);
     pst.setString(++i, action);
     pst.setString(++i, section);
     pst.setString(++i, sub);
@@ -435,6 +435,7 @@ public class HelpContent {
     pst.setString(++i, description);
     pst.setInt(++i, 0);
     pst.setInt(++i, 0);
+
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "help_contents_help_id_seq");

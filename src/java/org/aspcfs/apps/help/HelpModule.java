@@ -295,21 +295,20 @@ public class HelpModule {
     insert = true;
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_module " +
-        "(module_id, category_id, module_brief_description, module_detail_description) " +
-        "VALUES (?, ?, ?, ?) ");
-
+        "(category_id, module_brief_description, module_detail_description) " +
+        "VALUES (?, ?, ?) ");
     int i = 0;
-    pst.setInt(++i, categoryId);
     pst.setInt(++i, categoryId);
     pst.setString(++i, briefDescription);
     pst.setString(++i, detailDescription);
-
     pst.execute();
+    id = DatabaseUtils.getCurrVal(db, "help_module_module_id_seq");
     pst.close();
 
     Iterator itr = helpContents.iterator();
     while (itr.hasNext()) {
-      ((HelpContent) itr.next()).insertHelpContent(db, categoryId);
+	  HelpContent tmpHelpContent = (HelpContent) itr.next();
+	  tmpHelpContent.insertHelpContent(db, id, categoryId);
     }
     return true;
   }
@@ -492,4 +491,6 @@ public class HelpModule {
     return module;
   }
 }
+
+
 
