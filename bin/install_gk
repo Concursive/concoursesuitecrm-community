@@ -38,7 +38,7 @@ echo `date`
 
 su - ${CFSDBA} -c "dropdb ${DB}" 
 su - ${CFSDBA} -c "createdb ${DB}"
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/gatekeeper.sql " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/gatekeeper.sql " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/gatekeeper.init " 
 
 echo ok
