@@ -408,7 +408,40 @@ public class Role extends GenericBean {
     db.setAutoCommit(true);
     return resultCount;
   }
+  
+  public HashMap processDependencies(Connection db) throws SQLException {
+    ResultSet rs = null;
+    String sql = "";
+    HashMap dependencyList = new HashMap();
+    try {
+      db.setAutoCommit(false);
+      sql = "SELECT COUNT(*) AS user_count " +
+          "FROM access " +
+          "WHERE role_id = ? " +
+          "AND enabled = " + DatabaseUtils.getTrue(db) + " ";
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        if (rs.getInt("user_count") != 0) {
+          dependencyList.put("Active Users", new Integer(rs.getInt("user_count")));
+        }
+      }
 
+      pst.close();
+      db.commit();
+    }
+    catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    }
+    finally {
+      db.setAutoCommit(true);
+    }
+    return dependencyList;
+  }  
 
   /**
    *  Description of the Method

@@ -161,8 +161,18 @@ public final class Roles extends CFSModule {
       db = this.getConnection(context);
       thisRole = new Role(db, id);
       htmlDialog.setTitle("Confirm");
-      htmlDialog.setShowAndConfirm(false);
-      htmlDialog.setDeleteUrl("javascript:window.location.href='Roles.do?command=DeleteRole&id=" + id + "'");
+      
+      htmlDialog.setRelationships(thisRole.processDependencies(db));
+      
+      if (htmlDialog.getRelationships().size() == 0) {
+        htmlDialog.setShowAndConfirm(false);
+        htmlDialog.setDeleteUrl("javascript:window.location.href='Roles.do?command=DeleteRole&id=" + id + "'");
+      }
+      else {
+        htmlDialog.setHeader("This Role cannot be deleted because at least one User is assigned to it.");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+      }      
+      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
