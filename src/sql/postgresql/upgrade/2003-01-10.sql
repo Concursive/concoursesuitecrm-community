@@ -73,6 +73,7 @@ CREATE TABLE role_permission (
   role_delete BOOLEAN NOT NULL DEFAULT false
 );
 
+
 INSERT INTO role (role, description, enteredby, modifiedby) VALUES ('Administrator', 'Performs system configuration and maintenance', 0, 0);
 INSERT INTO role (role, description, enteredby, modifiedby) VALUES ('Default Role', 'Sample user role', 0, 0);
 
@@ -121,5 +122,34 @@ INSERT INTO permission (category_id, permission, permission_view, permission_add
 INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (5, 'accounts-accounts-reports', true, true, false, true, 'Reports', 80);
 INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (5, 'accounts-dashboard', true, false, false, false, 'Dashboard', 90);
 
+
+INSERT INTO permission_category (category, level) VALUES ('Campaign Manager', 60);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (6, 'campaign', true, false, false, false, 'Access to Campaign Manager module', 10);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (6, 'campaign-dashboard', true, false, false, false, 'Dashboard', 20);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (6, 'campaign-campaigns', true, true, true, true, 'Campaign Records', 30);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (6, 'campaign-campaigns-groups', true, true, true, true, 'Campaign Group Records', 40);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (6, 'campaign-campaigns-messages', true, true, true, true, 'Campaign Message Records', 50);
+
+INSERT INTO permission_category (category, level) VALUES ('Project Management', 70);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (7, 'projects', true, false, false, false, 'Access to Project Management module', 10);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (7, 'projects-personal', true, false, false, false, 'Personal View', 10);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (7, 'projects-enterprise', true, false, false, false, 'Enterprise View', 20);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (7, 'projects-projects', true, true, true, true, 'Project Records', 30);
+
+INSERT INTO permission_category (category, level) VALUES ('Tickets', 80);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (8, 'tickets', true, false, false, false, 'Access to Ticket module', 10);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (8, 'tickets-tickets', true, true, true, true, 'Ticket Records', 20);
+
+INSERT INTO permission_category (category, level) VALUES ('Admin', 90);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (9, 'admin', true, false, false, false, 'Access to Admin module', 10);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (9, 'admin-users', true, true, true, true, 'Users', 20);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (9, 'admin-reassign', true, false, false, false, 'Re-assign Items', 30);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (9, 'admin-roles', true, true, true, true, 'Roles', 40);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (9, 'admin-sysconfig', true, false, true, false, 'System Configuration', 50);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (9, 'admin-sysconfig-lists', true, false, true, false, 'Configure Lookup Lists', 60);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (9, 'admin-sysconfig-folders', true, true, true, true, 'Configure Custom Folders & Fields', 70);
+
+INSERT INTO permission_category (category, level) VALUES ('Help', 100);
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (10, 'help', true, false, false, false, 'Access to Help System', 10);
 
 
