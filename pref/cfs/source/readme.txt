@@ -70,7 +70,6 @@ distributed separately and include:
   batik-all.jar
   bcprov-jdk14-121.jar
   bsh.jar
-  ccp_integration.jar
   commons-beanutils.jar
   commons-collections.jar
   commons-digester.jar
@@ -162,26 +161,27 @@ Project Name                      License
 Batik                             Apache Software License
 Bean Shell                        LGPL
 Bouncy Castle Crypto API          Bouncy Castle Open Source License
+gnu.regexp                        LGPL
 HTMLArea                          BSD style
 HTTPMultiPartParser               iSavvix Public License
+iText                             LGPL
 JFreeChart                        LGPL
 Jakarta Commons                   Apache Software License
 Jasper Reports                    LGPL
 Java Activitation Framework       Sun License
 Java Mail                         Sun License
 Jcrontab                          LGPL
+jTDS                              LGPL
 Kafenio                           LGPL
 Log4J                             Apache Software License
 Lucene                            Apache Software License
 NekoHTML                          Apache style
 PDFBox                            BSD
 POI                               Apache Software License
-TMExtractors                      Apache style
 Team Elements Project Management  Team Elements, LLC Commercial License
+TMExtractors                      Apache style
+Xerces                            Apache Software License
 Ximian Icons                      LGPL
-gnu.regexp                        LGPL
-iText                             LGPL
-jTDS                              LGPL
 ypSlideOutMenu                    Creative Commons Attribution 2.0 license
 
 
