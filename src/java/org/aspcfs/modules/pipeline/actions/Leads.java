@@ -529,6 +529,8 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
 
       shortChildList = thisRec.getShortChildList();
+      shortChildList.buildPipelineValues(db);
+      
       context.getRequest().setAttribute("ShortChildList", shortChildList);
 
       fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
@@ -1722,7 +1724,9 @@ public final class Leads extends CFSModule {
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
 		      return (executeCommandViewOpp(context));
-	      } else {
+	      } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("details")) {
+          return (executeCommandDetailsOpp(context));
+        } else {
           return ("DetailsComponentOK");
 	      }
       } else {

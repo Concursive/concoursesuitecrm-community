@@ -58,7 +58,9 @@ public class User extends GenericBean {
   protected ArrayList permissions = new ArrayList();
   protected UserList childUsers = null;
   protected double YTD = 0;
+  
   protected double pipelineValue = 0;
+  protected boolean pipelineValueIsValid = false;
 
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
@@ -402,6 +404,12 @@ public class User extends GenericBean {
     this.ramr = tmp;
   }
 
+  public boolean getPipelineValueIsValid() {
+    return pipelineValueIsValid;
+  }
+  public void setPipelineValueIsValid(boolean pipelineValueIsValid) {
+    this.pipelineValueIsValid = pipelineValueIsValid;
+  }
 
   /**
    *  Sets the IsValid attribute of the User object
@@ -1934,7 +1942,7 @@ public class User extends GenericBean {
   
   public String getGrossPipelineCurrency(int divisor) {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    double tempValue = (pipelineValue / divisor);
+    double tempValue = (java.lang.Math.round(pipelineValue) / divisor);
     String amountOut = "";
     
     if (tempValue < 1) {
@@ -1968,6 +1976,7 @@ public class User extends GenericBean {
     if (rs.next()) {
       this.setPipelineValue(rs.getDouble("sum"));
     } 
+    this.setPipelineValueIsValid(true);
     rs.close();
     pst.close();    
   }

@@ -310,7 +310,7 @@ public class Opportunity extends OpportunityComponent {
   
   public String getTotalValue(int divisor) {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    double tempValue = (totalValue / divisor);
+    double tempValue = (java.lang.Math.round(totalValue) / divisor);
     String amountOut = "";
 
     if (tempValue < 1) {
@@ -1294,7 +1294,7 @@ public class Opportunity extends OpportunityComponent {
    */
   public String getGuessCurrency(int divisor) {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    double tempValue = (guess / divisor);
+    double tempValue = (java.lang.Math.round(guess) / divisor);
     String amountOut = "";
 
     if (tempValue < 1) {
@@ -2280,6 +2280,7 @@ public class Opportunity extends OpportunityComponent {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
+    systemStatus.getHierarchyList().getUser(userId).setPipelineValueIsValid(false);
   }
 
 

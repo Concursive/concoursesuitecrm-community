@@ -736,10 +736,17 @@ public class UserList extends Vector {
     Iterator x = this.iterator();
     while (x.hasNext()) {
       User tempUser = (User)x.next();
-      //String range = ((UserList)tempUser.getFullChildList(tempUser.getShortChildList(), new UserList())).getUserListIds(tempUser.getId());
       tempUser.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType());
     }
   }
+  
+  public void buildPipelineValues(Connection db) throws SQLException {
+    Iterator x = this.iterator();
+    while (x.hasNext()) {
+      User tempUser = (User)x.next();
+      tempUser.buildGrossPipelineValue(db);
+    }
+  }  
   
   /**
    *  Description of the Method

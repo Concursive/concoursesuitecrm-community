@@ -1940,6 +1940,9 @@ public class OpportunityComponent extends GenericBean {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
+    
+    
+    
   }
   
   public HashMap processDependencies(Connection db) throws SQLException {
