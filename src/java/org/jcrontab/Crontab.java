@@ -187,8 +187,9 @@ public class Crontab {
     }
     connectionPool = null;
     servletContext = null;
+    //NOTE: even though the tasks are done, waits for the cron thread to finish
     try {
-      cron.join(10000);
+      cron.join(iSecondsToWait);
     } catch (Exception e) {
     }
   }
@@ -399,11 +400,7 @@ public class Crontab {
       try {
         iTaskID = iNextTaskID;
         cl = (Class) (loadedClasses.get(strClassName));
-        // If the class was not previously created, then creates it
-        if (cl == null) {
-          cl = Class.forName(strClassName.trim());
-          loadedClasses.put(strClassName, cl);
-        }
+
         // Creates the new task
         newTask = new CronTask();
         newTask.setParams(this, iTaskID, strClassName, strMethodName,
