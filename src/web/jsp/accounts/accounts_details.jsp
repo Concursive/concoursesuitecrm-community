@@ -5,7 +5,11 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <form name="details" action="/Accounts.do" method="post">
 <a href="/Accounts.do">Account Management</a> > 
+<% if (request.getParameter("return") == null) { %>
 <a href="/Accounts.do?command=View">View Accounts</a> >
+<%} else if (request.getParameter("return").equals("dashboard")) {%>
+<a href="/Accounts.do?command=Dashboard">Dashboard</a> >
+<%}%>
 Account Details<br>
 <hr color="#BFBFBB" noshade>
 <a href="/Accounts.do?command=View">Back to Account List</a><br>&nbsp;
@@ -275,10 +279,13 @@ Account Details<br>
     </td>
   </tr>
 </table>
-<input type=hidden name="command" value="">
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br></dhv:permission>
 <dhv:permission name="accounts-accounts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
 <dhv:permission name="accounts-accounts-delete"><input type=button name="action" value="Delete Account" onClick="document.details.command.value='Delete';popURLReturn('/Accounts.do?command=ConfirmDelete&orgId=<%= OrgDetails.getOrgId() %>','/Accounts.do?command=View','Delete','300','200','no','no');"></dhv:permission>
 </td></tr>
 </table>
+<input type=hidden name="command" value="">
+<% if (request.getParameter("return") != null) { %>
+<input type=hidden name="return" value="<%=request.getParameter("return")%>">
+<%}%>
 </form>

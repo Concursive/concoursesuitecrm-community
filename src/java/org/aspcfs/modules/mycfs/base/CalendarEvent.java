@@ -246,7 +246,7 @@ public class CalendarEvent implements Comparable {
     if (category.equalsIgnoreCase("Opportunity")) {
       return "<a href=\"/Leads.do?command=DetailsOpp&id=" + id + "\">";
     } else if (category.equalsIgnoreCase("Account")) {
-      return "<a href=\"/Accounts.do?command=Details&orgId=" + id + "\">";
+      return "<a href=\"/Accounts.do?command=Details&orgId=" + id + "&return=dashboard\">";
     } else if (category.equalsIgnoreCase("Assignment")) {
       return "<a href=\"/ProjectManagementAssignments.do?command=Modify&aid=" + idsub + "&pid=" + id + "\">";
     } else if (category.equalsIgnoreCase("Contact Call")) {

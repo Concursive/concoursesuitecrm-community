@@ -564,8 +564,8 @@ public void setEnabled(boolean enabled) {
    *@param  contactLink  The new ContactLink value
    *@since
    */
-  public void setContactLink(String contactLink) {
-    this.contactLink = Integer.parseInt(contactLink);
+  public void setContactLink(String tmp) {
+    this.contactLink = Integer.parseInt(tmp);
   }
 
 
@@ -575,8 +575,8 @@ public void setEnabled(boolean enabled) {
    *@param  accountLink  The new AccountLink value
    *@since
    */
-  public void setAccountLink(String accountLink) {
-    this.accountLink = Integer.parseInt(accountLink);
+  public void setAccountLink(String tmp) {
+    this.accountLink = Integer.parseInt(tmp);
   }
 
 
@@ -1495,7 +1495,7 @@ public void setEnabled(boolean enabled) {
     if (!isValid(db)) {
       return false;
     }
-
+    
     if (this.getAccountLink() == -1 && this.getContactLink() == -1) {
       throw new SQLException("You must associate an opportunity with an account or contact.");
     }

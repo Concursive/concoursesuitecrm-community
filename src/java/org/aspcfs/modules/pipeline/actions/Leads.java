@@ -60,6 +60,101 @@ public final class Leads extends CFSModule {
     
     return executeCommandDashboard(context);
   }
+  
+  public String executeCommandAddOpp(ActionContext context) {
+	if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+		return ("PermissionError");
+	}
+	
+	Exception errorMessage = null;
+	
+	OrganizationList orgList = new OrganizationList();
+	
+	HtmlSelect busTypeSelect = new HtmlSelect();
+	busTypeSelect.setSelectName("type");
+	busTypeSelect.addItem("N", "New");
+	busTypeSelect.addItem("E", "Existing");
+	busTypeSelect.build();
+	
+	HtmlSelect unitSelect = new HtmlSelect();
+	unitSelect.setSelectName("units");
+	unitSelect.addItem("M", "Months");
+	unitSelect.build();
+	
+	Connection db = null;
+	Statement st = null;
+	ResultSet rs = null;
+	
+	try {
+		db = this.getConnection(context);
+		
+		LookupList stageSelect = new LookupList(db, "lookup_stage");
+		context.getRequest().setAttribute("StageList", stageSelect);
+		
+		orgList.setMinerOnly(false);
+		orgList.buildList(db);
+	} catch (SQLException e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	if (errorMessage == null) {
+		context.getRequest().setAttribute("BusTypeList", busTypeSelect);
+		context.getRequest().setAttribute("UnitTypeList", unitSelect);
+		context.getRequest().setAttribute("OrgList", orgList);
+		addModuleBean(context, "Add Opportunity", "Add Opportunity");
+		return ("AddOK");
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
+  
+  public String executeCommandInsertOpp(ActionContext context) {
+	  
+    if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+	    return ("PermissionError");
+    }
+	
+    Exception errorMessage = null;
+    boolean recordInserted = false;
+
+    Opportunity newOpp = (Opportunity) context.getFormBean();
+    newOpp.setEnteredBy(getUserId(context));
+    newOpp.setOwner(getUserId(context));
+    newOpp.setModifiedBy(getUserId(context));
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      System.out.println("here it is " + newOpp.getDescription() + " " + newOpp.getAccountLink() + ", " + newOpp.getContactLink());
+      recordInserted = newOpp.insert(db, context);
+      if (recordInserted) {
+        newOpp = new Opportunity(db, "" + newOpp.getId());
+        context.getRequest().setAttribute("OpportunityDetails", newOpp);
+        addRecentItem(context, newOpp);
+      } else {
+        processErrors(context, newOpp.getErrors());
+      }
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "Add Opportunity", "Add Opportunity");
+    if (errorMessage == null) {
+      if (recordInserted) {
+        return ("OppDetailsOK");
+      } else {
+        return (executeCommandAddOpp(context));
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 
 
   /**

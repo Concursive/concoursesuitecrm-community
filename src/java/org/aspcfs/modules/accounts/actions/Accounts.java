@@ -877,6 +877,8 @@ public final class Accounts extends CFSModule {
       } else if (resultCount == 1) {
 	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
 		      return (executeCommandView(context));
+	      } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {
+		      return (executeCommandDashboard(context));
 	      } else {
 		      return ("UpdateOK");
 	      }

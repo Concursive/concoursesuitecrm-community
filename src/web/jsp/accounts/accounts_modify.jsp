@@ -54,6 +54,8 @@
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<a href="/Accounts.do?command=View">View Accounts</a> >
+	<%} else if (request.getParameter("return").equals("dashboard")) {%>
+	<a href="/Accounts.do?command=Dashboard">Dashboard</a> >
 	<%}%>
 <%} else {%>
 <a href="/Accounts.do?command=View">View Accounts</a> >
