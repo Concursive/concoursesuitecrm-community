@@ -64,5 +64,52 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
     }
     return true;
   }
+  
+  public static boolean saveCustomLookupList(DataWriter writer, Connection db, PropertyMapList mappings, String mapId) throws SQLException {
+    boolean processOK = true;
+    PropertyMap thisMap = mappings.getMap(mapId);
+    if (thisMap == null) {
+      return false;
+    }
+    //Configure the query
+    CustomLookupList lookupList = new CustomLookupList();
+    lookupList.setTableName(thisMap.getTable());
+    //Set the fields to query
+    Iterator properties = thisMap.iterator();
+    while (properties.hasNext()) {
+      Property thisProperty = (Property)properties.next();
+      lookupList.addField(thisProperty.getField());
+    }
+    lookupList.buildList(db);
+    if (lookupList.size() > 0) {
+      //Insert each record
+      Iterator queryRecords = lookupList.iterator();
+      while (queryRecords.hasNext() && processOK) {
+        CustomLookupElement thisElement = (CustomLookupElement)queryRecords.next();
+        DataRecord thisRecord = new DataRecord();
+        thisRecord.setName(thisMap.getId());
+        thisRecord.setAction("insert");
+        thisRecord.addField("tableName", thisMap.getTable());
+        thisRecord.addField("uniqueField", thisMap.getUniqueField());
+        //Each record has a bunch of fields
+        properties = thisMap.iterator();
+        while (properties.hasNext()) {
+          Property thisProperty = (Property)properties.next();
+          String fieldName = thisProperty.getField();
+          String value = thisElement.getValue(fieldName);
+          if (thisProperty.hasAlias()) {
+            if ("guid".equals(thisProperty.getAlias())) {
+              thisRecord.addField("guid", value);
+            }
+          } else {
+            thisRecord.addField("field", fieldName);
+            thisRecord.addField("data", value);
+          }
+        }
+        processOK = writer.save(thisRecord);
+      }
+    }
+    return processOK;
+  }
 }
 
