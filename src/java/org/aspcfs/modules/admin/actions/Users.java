@@ -166,6 +166,12 @@ public final class Users extends CFSModule {
         "SET owner = ? " +
         "WHERE owner = ? AND closed IS NULL ";
         
+    } else if ("contact".equals(whichTable)) {
+	    sql =
+	    	"UPDATE contact " +
+		"SET owner = ? " +
+		"WHERE owner = ? AND type_id != 2 ";
+    
     } else if (whichTable != null && !whichTable.equals("")) {
       sql =
         "UPDATE " + whichTable + " " +
