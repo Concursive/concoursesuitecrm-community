@@ -308,7 +308,7 @@ public class CustomFieldCategoryList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
         "FROM custom_field_category cfc, module_field_categorylink mfc " +
-        "WHERE cfc.module_id = mfc.category_id AND mfc.module_id = ? ");
+        "WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
 
     createFilter(sqlFilter);
 
@@ -321,9 +321,9 @@ public class CustomFieldCategoryList extends ArrayList {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
-
+      pst.close();
+      
       //Determine column to sort by
       pagedListInfo.setDefaultSort("cfc.level, cfc.category_name, cfc.category_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
