@@ -77,6 +77,10 @@
       <required>yes</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
+    <attribute>
+      <name>lastFirst</name>
+      <required>no</required>
+    </attribute>
   </tag>
   
   <tag>
