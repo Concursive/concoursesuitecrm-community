@@ -1753,6 +1753,12 @@ public class User extends GenericBean {
       if (timeZone != null) {
         pst.setString(++i, timeZone);
       }
+      if (currency != null) {
+        pst.setString(++i, currency);
+      }
+      if (language != null) {
+        pst.setString(++i, language);
+      }
       pst.setInt(++i, getEnteredBy());
       pst.setInt(++i, getModifiedBy());
       pst.execute();
