@@ -7,7 +7,6 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></script>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <body onLoad="javascript:document.forms[0].description.focus();">
-<br>
 <form name="addTask" action="/MyTasks.do?command=Insert&id=<%=Task.getId()%>&auto-populate=true" method="post" onSubmit="return validateTask();">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -111,7 +110,7 @@
   
   <tr class="containerBody">
     <td nowrap class="formLabel">Notes</td>
-    <td width=100%>
+    <td width="100%">
       <textarea name="notes" style="width:50%;" rows=5 value="body"><%=Task.getNotes()%></textarea>
     </td>
   </tr>
@@ -132,15 +131,13 @@
           <td>
             <a href="javascript:document.addTask.contact.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a>
           </td>
-        
         </tr>
       </table>
     </td>
   </tr>
 </table>
-
 <br>
-<input type="submit" value="Insert">
+<input type="submit" value="<%= Task.getId()==-1?"Insert":"Update" %>">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks';">
 </form>
 </body>
