@@ -20,7 +20,7 @@
   </action>
 	
   <action name="ProcessPacket" class="com.darkhorseventures.cfsmodule.ProcessPacket">
-    <forward name="PacketOK" resource="/system_process_message.jsp"/>
+    <forward name="PacketOK" resource="/system_process_packet.jsp"/>
   </action>
   
   <action name="Login" class="com.darkhorseventures.cfsmodule.Login">
