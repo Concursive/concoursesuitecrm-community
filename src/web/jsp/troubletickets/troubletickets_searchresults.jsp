@@ -5,7 +5,7 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <a href="TroubleTickets.do">Tickets</a> > 
-<a href="TroubleTickets.do?command=SearchTickets&reset=true">Search Form</a> >
+<a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
 Search Results
 <hr color="#BFBFBB" noshade>
 <dhv:pagedListStatus title="Current Search Results" object="TicListInfo"/>
