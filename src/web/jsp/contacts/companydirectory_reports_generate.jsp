@@ -50,27 +50,35 @@
     </td>
   </tr>
   
-  <!--tr>
+  <tr>
     <td nowrap valign=top class="formLabel">
-      Fields (select to exclude)
+      Included Fields
     </td>
     <td>
       <select size=5 multiple name="fields">
-      <option value="1">Account Name</option>
-      <option value="2">Account No.</option>
-      <option value="3">URL</option>
-      <option value="4">Ticker</option>
-      <option value="5">Employees</option>
-      <option value="6">Entered</option>
-      <option value="7">Entered By</option>
-      <option value="8">Modified</option>
-      <option value="9">Modified By</option>
-      <option value="10">Owner</option>
-      <option value="11">Contract End Date</option>
-      <option value="12">Notes</option>
+      <option value="type" selected>Contact Type</option>
+      <option value="nameLast" selected>Last Name</option>
+      <option value="nameMiddle" selected>Middle Name</option>
+      <option value="nameFirst" selected>First Name</option>
+      <option value="company" selected>Company</option>
+      <option value="title" selected>Title</option>
+      <option value="department" selected>Department</option>
+      <option value="entered" selected>Entered</option>
+      <option value="enteredBy" selected>Entered By</option>
+      <option value="modified" selected>Modified</option>
+      <option value="modifiedBy" selected>Modified By</option>
+      <option value="owner" selected>Owner</option>
+      <option value="businessEmail" selected>Business Email</option>
+      <option value="businessPhone" selected>Business Phone</option>
+      <option value="businessAddress" selected>Business Address</option>
+      <option value="city" selected>City</option>
+      <option value="state" selected>State</option>
+      <option value="zip" selected>Zip</option>
+      <option value="country" selected>Country</option>
+      <option value="notes" selected>Notes</option>
       </select>
     </td>
-  </tr-->
+  </tr>
   
 </table>
 <br>

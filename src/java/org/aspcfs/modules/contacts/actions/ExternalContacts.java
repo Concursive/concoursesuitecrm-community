@@ -213,125 +213,40 @@ public String executeCommandReports(ActionContext context) {
 	boolean recordInserted = false;
 	Connection db = null;
 	String subject = context.getRequest().getParameter("subject");
-	
-	String[] params = null;
-	String[] names = null;
-	ArrayList newList = null;
-	
-	if (context.getRequest().getParameterValues("fields") != null) {
-		params = context.getRequest().getParameterValues("fields");
-		newList = new ArrayList(Arrays.asList(params));
-	} else {
-		newList = new ArrayList();
-	}
-	
-	Report rep = new Report();
-	rep.setDelimitedCharacter(",");
-	
-	rep.setHeader("CFS Contacts and Resources: " + subject);
-	
-	rep.addColumn("Type");
-	rep.addColumn("Last Name", "Last Name");
-	rep.addColumn("First Name", "First Name");
-	rep.addColumn("Middle Name", "Middle Name");
-	rep.addColumn("Company");
-	rep.addColumn("Title");
-	rep.addColumn("Department");
-	rep.addColumn("Entered");
-	rep.addColumn("Entered By");
-	rep.addColumn("Modified");
-	rep.addColumn("Modified By");
-	rep.addColumn("Owner");
-	rep.addColumn("Business Email");
-	rep.addColumn("Business Phone");
-	rep.addColumn("Business Address");
-	rep.addColumn("City");
-	rep.addColumn("State");
-	rep.addColumn("Zip");
-	rep.addColumn("Country");
-	rep.addColumn("Notes");
 		
-	String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
+	//String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
 	
+	//setup file stuff
 	String filePath = this.getPath(context, "contact-reports");
-	
 	SimpleDateFormat formatter1 = new SimpleDateFormat ("yyyy");
 	String datePathToUse1 = formatter1.format(new java.util.Date());
 	SimpleDateFormat formatter2 = new SimpleDateFormat ("MMdd");
 	String datePathToUse2 = formatter2.format(new java.util.Date());
 	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
-	
-	SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
-	String filenameToUse = formatter.format(new java.util.Date());
-	
-	File f = new File(filePath);
-	f.mkdirs();
 
-    	ContactList contactList = new ContactList();
-	
+    	ContactReport contactReport = new ContactReport();
+	contactReport.setCriteria(context.getRequest().getParameterValues("fields"));
+	contactReport.setFilePath(filePath);
+	contactReport.setEnteredBy(getUserId(context));
+	contactReport.setModifiedBy(getUserId(context));
+	contactReport.setSubject(subject);
+	contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+	contactReport.setPersonalId(this.getUserId(context));
+	contactReport.setOwnerIdRange(this.getUserRange(context));
+		
 	try {
 		db = this.getConnection(context);
-		contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-      		contactList.setPersonalId(this.getUserId(context));
-	        contactList.setOwnerIdRange(this.getUserRange(context));
-        	//contactList.setOwner(this.getUserId(context));
-		contactList.buildList(db);
+        	//contactReport.setOwner(this.getUserId(context));
 		
-		Iterator m = contactList.iterator();
-		while (m.hasNext()) {
-			Contact thisContact = (Contact) m.next();
-			ReportRow thisRow = new ReportRow();
-			
-			thisRow.addCell(thisContact.getTypeName(), tdNumStart);
-			thisRow.addCell(thisContact.getNameLast());
-			thisRow.addCell(thisContact.getNameFirst());
-			thisRow.addCell(thisContact.getNameMiddle());
-			thisRow.addCell(thisContact.getCompany());
-			thisRow.addCell(thisContact.getDepartmentName());
-			thisRow.addCell(thisContact.getTitle());
-			thisRow.addCell(thisContact.getEnteredString());
-			thisRow.addCell(thisContact.getEnteredByName());
-			thisRow.addCell(thisContact.getModifiedString());
-			thisRow.addCell(thisContact.getModifiedByName());
-			thisRow.addCell(thisContact.getOwnerName());
-			thisRow.addCell(thisContact.getEmailAddress("Business"));
-			thisRow.addCell(thisContact.getPhoneNumber("Business"));
-			thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1() + " " + thisContact.getAddress("Business").getStreetAddressLine2());
-			thisRow.addCell(thisContact.getAddress("Business").getCity());
-			thisRow.addCell(thisContact.getAddress("Business").getState());
-			thisRow.addCell(thisContact.getAddress("Business").getZip());
-			thisRow.addCell(thisContact.getAddress("Business").getCountry());
-			thisRow.addCell(thisContact.getNotes());
-			
-			
-						
-			rep.addRow(thisRow);
-		}
-		
-		rep.saveHtml(filePath + filenameToUse + ".html");
-		rep.saveDelimited(filePath + filenameToUse + ".csv");
-
-		File fileLink = new File(filePath + filenameToUse + ".csv");
-		
-		FileItem thisItem = new FileItem();
-		thisItem.setLinkModuleId(Constants.CONTACTS_REPORTS);
-		thisItem.setLinkItemId(0);
-		thisItem.setProjectId(-1);
-		thisItem.setEnteredBy(getUserId(context));
-		thisItem.setModifiedBy(getUserId(context));
-		thisItem.setSubject(subject);
-		thisItem.setClientFilename(filenameToUse + ".csv");
-		thisItem.setFilename(filenameToUse);
-		thisItem.setSize((int)fileLink.length());
-		thisItem.insert(db);
-		
+		//builds list also
+		contactReport.buildReport(db);
+		contactReport.saveAndInsert(db);
 	} catch (Exception e) {
 		errorMessage = e;
 	} finally {
 		this.freeConnection(context, db);
 	}
 
-	
 	if (errorMessage == null) {
 		return executeCommandReports(context);
 	} else {
