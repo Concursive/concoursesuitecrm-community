@@ -35,28 +35,28 @@
     </th>
   </tr>
   <tr>
-    <td><dhv:evaluate if="<%= "Welcome".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
-    <td width="100%">Welcome</td>
+    <td nowrap valign="top"><dhv:evaluate if="<%= "Welcome".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td valign="top" width="100%">Welcome</td>
   </tr>
   <tr>
-    <td><dhv:evaluate if="<%= "Register".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
-    <td>Registration</td>
+    <td nowrap valign="top"><dhv:evaluate if="<%= "Register".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td valign="top">Registration</td>
   </tr>
   <tr>
-    <td><dhv:evaluate if="<%= "Storage".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
-    <td nowrap>Configure Storage</td>
+    <td nowrap valign="top"><dhv:evaluate if="<%= "Storage".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td valign="top">Configure Storage</td>
   </tr>
   <tr>
-    <td><dhv:evaluate if="<%= "Servers".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
-    <td nowrap>Configure Servers</td>
+    <td nowrap valign="top"><dhv:evaluate if="<%= "Servers".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td valign="top">Configure Servers</td>
   </tr>
   <tr>
-    <td><dhv:evaluate if="<%= "Database".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
-    <td nowrap>Configure Database</td>
+    <td nowrap valign="top"><dhv:evaluate if="<%= "Database".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td valign="top">Configure Database</td>
   </tr>
   <tr>
-    <td><dhv:evaluate if="<%= "CRMSetup".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
-    <td nowrap>Configure CRM</td>
+    <td nowrap valign="top"><dhv:evaluate if="<%= "CRMSetup".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
+    <td valign="top">Configure CRM</td>
   </tr>
 </table>
 <br>
@@ -74,7 +74,7 @@
       Centric CRM.<br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.darkhorsecrm.com" target="_blank">Learn more about our products</a><br>
+      <a href="http://www.centriccrm.com" target="_blank">Learn more about our products</a><br>
       &nbsp;
     </td>
   </tr>
@@ -114,7 +114,7 @@
       Remember to make backups of your data.<br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">File Backup Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank">File Backup Help</a><br>
       &nbsp;
     </td>
   </tr>
@@ -131,9 +131,9 @@
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">Sendmail Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank">Sendmail Help</a><br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">HylaFax Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank">HylaFax Help</a><br>
       &nbsp;
     </td>
   </tr>
@@ -150,7 +150,7 @@
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">PostgreSQL Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank">PostgreSQL Help</a><br>
       &nbsp;
     </td>
   </tr>

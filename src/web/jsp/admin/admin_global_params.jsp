@@ -18,7 +18,9 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Timeout" class="java.lang.String" scope="request"/>
+<%-- BEGIN DHV CODE ONLY --%>
 <jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
+<%-- END DHV CODE ONLY --%>
 <jsp:useBean id="countrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectTimeZone" %>
 <%@ page import="org.aspcfs.utils.web.HtmlSelectLanguage" %>
@@ -60,6 +62,7 @@ Configure System
       </td>
     </tr>
 <dhv:evaluate if="<%= getPref(getServletContext(), "WEBSERVER.ASPMODE") == null || !"true".equals(getPref(getServletContext(), "WEBSERVER.ASPMODE")) %>">
+    <%-- BEGIN DHV CODE ONLY --%>
     <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
       <td align="center">
         <a href="AdminConfig.do?command=Modify&param=LICENSE">Edit</a>
@@ -71,6 +74,7 @@ Configure System
          <%= toHtml(APP_TEXT) %>
       </td>
     </tr>
+    <%-- END DHV CODE ONLY --%>
     <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
       <td align="center">
         <a href="AdminConfig.do?command=Modify&param=MAILSERVER">Edit</a>

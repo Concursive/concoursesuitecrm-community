@@ -1616,6 +1616,7 @@
     <forward name="SubmitProcessOK" resource="/service/system_process_packet.jsp"/>
     <forward name="ValidateRETRY" resource="/setup/validate.jsp" layout="dhv"/>
     <forward name="ValidateOK" resource="/setup/validate_success.jsp" layout="dhv"/>
+    <forward name="SkipRegistrationOK" resource="/SetupDirectory.do?command=ConfigureDirectoryCheck"/>
   </action>
   <action name="SetupDirectory" class="org.aspcfs.modules.setup.actions.Setup">
     <forward name="ConfigureDirectoryCheckOK" resource="/setup/configure_directory.jsp" layout="dhv"/>

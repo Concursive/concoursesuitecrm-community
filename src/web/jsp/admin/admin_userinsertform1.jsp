@@ -22,7 +22,9 @@
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="RoleList" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<%-- BEGIN DHV CODE ONLY --%>
 <jsp:useBean id="APP_SIZE" class="java.lang.String" scope="application"/>
+<%-- END DHV CODE ONLY --%>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
@@ -69,7 +71,7 @@ Add User
 </tr>
 </table>
 <%-- End Trails --%>
-<%-- License info --%>
+<%-- BEGIN DHV CODE ONLY --%>
 <dhv:evaluate if="<%= hasText(APP_SIZE) %>">
 <table class="note" cellspacing="0">
   <tr>
@@ -77,7 +79,7 @@ Add User
     <td>The installed license limits this system to <%= APP_SIZE %> active users.</td></tr>
 </table>
 </dhv:evaluate>
-<%-- End license info --%>
+<%-- END DHV CODE ONLY --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 <dhv:formMessage showSpace="false" />
   <tr>

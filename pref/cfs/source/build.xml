@@ -1,0 +1,642 @@
+<!--
+ $Id$
+
+ Notes: 
+   The build process will instruct you to have several environment variables
+   and to customize the build.properties.  The build will fail until all
+   installation conditions are met.
+   
+   Do not edit master.properties in this folder, a copy will be
+   made by the installation and you will be notified of the file to modify.
+   
+   The build process needs write access to the destination web-app folder.
+-->
+<project name="Centric CRM" default="usage" basedir=".">
+  
+  <!-- enable environment variables -->
+  <property environment="env"/>
+  
+  <!-- constants -->
+  <property name="POSTGRESQL" value="postgresql"/>
+  <property name="MSSQL" value="mssql"/>
+  
+  <!-- computed properties -->
+  <property name="fs" value="${file.separator}"/>
+  <property name="lf" value="${line.separator}"/>
+  <property name="base.dir" value="${basedir}"/>
+  <property name="lib.dir" value="${base.dir}${fs}lib"/>
+  <property name="src.dir" value="${base.dir}${fs}src"/>
+  <property name="src.classes.dir" value="${src.dir}${fs}java"/>
+  <property name="src.web.dir" value="${src.dir}${fs}web"/>
+  <property name="src.sql.dir" value="${src.dir}${fs}sql"/>
+  <property name="build.dir" value="${base.dir}${fs}build"/>
+  <property name="build.lib.dir" value="${build.dir}${fs}lib"/>
+  <property name="build.classes.dir" value="${build.dir}${fs}classes"/>
+  <property name="build.jsp.dir" value="${build.dir}${fs}jsp"/>
+  <property name="build.jspclasses.dir" value="${build.dir}${fs}jspclasses"/>
+  <property name="build.sql.dir" value="${build.dir}${fs}sql"/>
+  <property name="build.docs.dir" value="${build.dir}${fs}docs"/>
+  <property name="build.pref.dir" value="${build.dir}${fs}pref"/>
+  <property name="build.web.dir" value="${build.dir}${fs}web"/>
+  <property name="pref.dir" value="${base.dir}${fs}pref"/>
+  <property name="dist.dir" value="${base.dir}${fs}dist"/>
+  
+  <!-- Typical usage -->
+  <target name="usage">
+    <echo message="Further instructions will appear if settings are missing"/>
+    <echo message=""/>
+    <echo message="ant deploy: compile code and create .war file"/>
+    <echo message="ant installdb: install database schema into a new/clean database"/>
+    <echo message="ant docs: generate JavaDocs for all packages"/>
+    <echo message="ant clean: delete the temporary build folder used by the install"/>
+  </target>
+  
+  <!-- Environment variables must be set before continuing -->
+  <target name="init.environment">
+    <tstamp><format property="date.short" pattern="yyyyMMdd-HHmmss"/></tstamp>
+    <tstamp><format property="date.long" pattern="yyyy-MM-dd hh:mm:ss aa"/></tstamp>
+    <!-- log the build -->
+    <record name="${base.dir}/build.log" append="no"/>
+    <fail unless="env.CATALINA_HOME">Initialization aborted ${lf}${lf}SOLUTION: Setup the environment variable CATALINA_HOME to point at your Tomcat installation.</fail>
+    <property name="CATALINA_HOME" value="${env.CATALINA_HOME}"/>
+  </target>
+  
+  <!-- See if servlet API file exists for classpath -->
+  <target name="init.servlet4.exists" depends="init.environment">
+    <available file="${CATALINA_HOME}/common/lib/servlet.jar" 
+               property="build.servlet4.present"/>
+  </target>
+  <target name="init.servlet4.set" depends="init.servlet4.exists" if="build.servlet4.present">
+    <property name="servletJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"/>
+    <echo message="Web Server: Tomcat 4.x"/>
+  </target>
+  <target name="init.servlet5.exists" depends="init.environment">
+    <available file="${CATALINA_HOME}/common/lib/servlet-api.jar" 
+               property="build.servlet5.present"/>
+  </target>
+  <target name="init.servlet5.set" depends="init.servlet5.exists" if="build.servlet5.present">
+    <property name="servletJar" value="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet-api.jar"/>
+    <echo message="Web Server: Tomcat 5.x"/>
+  </target>
+  
+  <!-- See if the properties file exists -->
+  <target name="init.buildfile.exists" depends="init.environment">
+    <available file="${base.dir}/build.properties" 
+               property="build.config.present"/>
+    <available file="${base.dir}/lib/mail.jar" 
+               property="build.lib.present"/>
+  </target>
+  
+  <!-- Create the properties file if not exists -->
+  <target name="init.buildfile.create" depends="init.buildfile.exists" 
+          unless="build.config.present">
+    <copy file="${base.dir}/master.properties" 
+          tofile="${base.dir}/build.properties"
+          overwrite="false"/>
+    <available file="${base.dir}/build.properties" property="build.config.present"/>
+  </target>
+  
+  <!-- Load the properties for this system, stop here if not found -->
+  <target name="init.loadproperties" depends="init.buildfile.create">
+    <!-- IF src build.properties is newer than build.properties, abort now and have user update -->
+    <uptodate property="build.config.uptodate"
+            srcfile="${base.dir}/master.properties"
+            targetfile="${base.dir}/build.properties"/>
+    <fail unless="build.config.uptodate">Initialization aborted${lf}${lf}SOLUTION: Edit the build.properties file since it might be out of date.  Compare your copy with the source template, making any necessary changes, and save the file so it has a new modified date.${lf}${lf}Your File: ${base.dir}${fs}build.properties${lf}Source Template: master.properties</fail>
+    <loadproperties srcFile="${base.dir}/build.properties">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
+          <param type="comment" value="#"/>
+        </filterreader>
+      </filterchain>
+    </loadproperties>
+    <fail unless="build.lib.present">Initialization aborted ${lf}${lf}SOLUTION: Download the 3rd-party libraries and make sure they are available at ${lib.dir}${fs}, these are available as a separate download</fail>
+    <fail unless="build.config.present">Initialization aborted ${lf}${lf}SOLUTION: Make sure this directory has permissions to write files, since the build properties file was not created at ${base.dir}${fs}build.properties</fail>
+    <fail unless="CONTROL">Initialization aborted ${lf}${lf}SOLUTION: Edit the properties file at ${base.dir}${fs}build.properties, make sure to uncomment the control parameter at the top of the file</fail>
+  </target>
+  
+  <!-- Configure classpath as both object and a property -->
+  <target name="init.classpath">
+    <path id="cfs2.classpath">
+      <fileset dir="${CATALINA_HOME}/common/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+    <property name="CLASSPATH" refid="cfs2.classpath" />
+  </target>
+  
+  <!-- Prepare ant for processing -->
+  <target name="init" depends="init.loadproperties,init.classpath,init.servlet4.set,init.servlet5.set" 
+    description="Verify system environment needed by install">
+    <!-- Default properties if not otherwise specified in build.properties -->
+    <property name="DEBUGLEVEL" value="none"/>
+    <!-- Gatekeeper database -->
+    <property name="GATEKEEPER.APPCODE" value=""/>
+    <property name="GATEKEEPER.DBTYPE" value=""/>
+    <property name="GATEKEEPER.DRIVER" value=""/>
+    <property name="GATEKEEPER.URL" value=""/>
+    <property name="GATEKEEPER.USER" value=""/>
+    <property name="GATEKEEPER.PASSWORD" value=""/>
+    <!-- Additional sites/databases -->
+    <property name="SITE.APPCODE" value=""/>
+    <property name="SITE.DBTYPE" value=""/>
+    <property name="SITE.DRIVER" value=""/>
+    <property name="SITE.URL" value=""/>
+    <property name="SITE.USER" value=""/>
+    <property name="SITE.PASSWORD" value=""/>
+    <!-- External Servers -->
+    <property name="MAILSERVER" value="127.0.0.1"/>
+    <property name="FAXSERVER" value="127.0.0.1"/>
+    
+    <!-- Begin output -->
+    <echo message="Project: ${ant.project.name}"/>
+    <echo message="Date: ${date.long}"/>
+    <echo message="User: ${user.name}"/>
+    <echo message="System: ${os.name} ${os.arch} ${os.version}"/>
+    <echo message="Ant version: ${ant.version}"/>
+    <echo message="Java version: ${java.version}"/>
+    <echo message="Source Path: ${base.dir}"/>
+  </target>
+  
+  <target name="taskdef.upgradeDatabase" depends="init">
+    <taskdef name="upgradeDatabase" 
+        classname="org.aspcfs.ant.tasks.UpgradeDatabaseTask">
+        <classpath>
+          <fileset dir="${build.lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+        </classpath>
+    </taskdef>
+  </target>
+  
+  <target name="taskdef.jasper" depends="init">
+    <taskdef name="compileJasperReport" 
+        classname="dori.jasper.ant.JRAntCompileTask">
+        <classpath>
+          <fileset dir="${build.lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+        </classpath>
+    </taskdef>
+  </target>
+  
+  <target name="taskdef.register" depends="init">
+    <taskdef name="register" 
+        classname="org.aspcfs.ant.tasks.RegisterTask">
+        <classpath>
+          <fileset dir="${build.lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+        </classpath>
+    </taskdef>
+  </target>
+  
+  <!-- See if files are up-to-date so only new files are installed during development -->
+  <target name="classes.prepare" depends="init">
+    <uptodate property="classes.uptodate">
+      <srcfiles dir="${src.classes.dir}" includes="**/*.java"/>
+      <mapper type="merge" to="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+    </uptodate>
+  </target>
+  
+  <!-- Check to see if previously compiled classes should be deleted -->
+  <target name="compile.checkdelete" depends="init">
+    <condition property="compile.donotdelete">
+      <isset property="classes.uptodate"/>
+    </condition>
+    <condition property="compile.donotdelete">
+      <and>
+        <not>
+          <isset property="classes.uptodate"/>
+        </not>
+        <isset property="compile.donotdelete.property"/>
+      </and>
+    </condition>
+  </target>
+  
+  <target name="compile.delete"
+          depends="init,compile.checkdelete"
+          unless="compile.donotdelete">
+    <!-- Get rid of any classes in the source dir that shouldn't be there -->
+    <delete>
+        <fileset dir= "${src.classes.dir}" includes="**/*.class"/>
+    </delete>
+    <delete dir="${build.classes.dir}"/>
+    <mkdir dir="${build.classes.dir}"/>
+  </target>
+  
+  <!-- Compile the Java source code -->
+  <target name="compile" 
+          description="Compile all .java source files"
+          depends="init,compile.delete"
+          unless="classes.uptodate">
+    <!-- Compile the code -->
+    <!--
+    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on"
+           debug="true" debuglevel="lines, vars, source">
+    -->
+    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+    </javac>
+  </target>
+  
+  <!-- Generate the .jar files -->
+  <target name="jar" 
+          depends="init"
+          unless="classes.uptodate">
+    <delete dir="${build.lib.dir}"/>
+    <mkdir dir="${build.lib.dir}"/>
+    <!-- darkhorseventures.jar -->
+    <jar jarfile="${build.lib.dir}/darkhorseventures.jar"
+          basedir="${build.classes.dir}"
+          includes="com/darkhorseventures/**/*.class"/>
+    <!-- isavvix.jar -->
+    <jar jarfile="${build.lib.dir}/isavvix.jar"
+          basedir="${build.classes.dir}"
+          includes="com/isavvix/**/*.class"/>
+    <!-- zeroio-iteam.jar -->
+    <jar jarfile="${build.lib.dir}/zeroio-iteam.jar"
+          basedir="${build.classes.dir}"
+          includes="com/zeroio/**/*.class"/>
+    <!-- aspcfs.jar -->
+    <jar jarfile="${build.lib.dir}/aspcfs.jar"
+          basedir="${build.classes.dir}"
+          includes="org/aspcfs/**/*.class"/>
+    <!-- jcrontab.jar -->
+    <jar jarfile="${build.lib.dir}/jcrontab.jar"
+          basedir="${build.classes.dir}"
+          includes="org/jcrontab/**/*.class"/>
+  </target>
+  
+  <target name="build"
+          description="Create .jar files for compiled classes"
+          depends="init,compile,jar">
+    <mkdir dir="${build.lib.dir}"/>
+  </target>
+  
+  <!-- Create a WAR -->
+  <target name="deploy"
+          description="Compile, build, and generate web archive"
+          depends="classes.prepare,build,dist.archive">
+  </target>
+  
+  <target name="dist.archive" depends="taskdef.jasper">
+    <delete dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <!-- Copy the common .jars -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/lib">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <!-- Copy the .jars -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/lib">
+      <fileset dir="${build.lib.dir}">
+        <include name="*.jar"/>
+        <exclude name="aspcfs.jar"/>
+      </fileset>
+    </copy>
+    <!-- aspcfs.jar -->
+    <jar jarfile="${dist.dir}/cfs/WEB-INF/lib/aspcfs.jar"
+          basedir="${build.classes.dir}"
+          includes="org/aspcfs/**/*.class"
+    />
+    <!-- Copy the web data -->
+    <copy todir="${dist.dir}/cfs">
+      <fileset dir="${src.web.dir}/jsp">
+        <include name="**"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}/cfs">
+      <fileset dir="${src.web.dir}/html">
+        <include name="**" />
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}/cfs">
+      <fileset dir="${src.web.dir}">
+        <include name="images/**" />
+        <include name="javascript/**" />
+        <include name="css/**" />
+      </fileset>
+    </copy>
+    <!-- Copy the configuration files -->
+    <copy todir="${dist.dir}/cfs/WEB-INF" verbose="true">
+      <fileset dir="${src.web.dir}/WEB-INF">
+        <include name="*.xml"/>
+        <include name="*.tld"/>
+        <exclude name="web.xml"/>
+      </fileset>
+    </copy>
+    <!-- Copy the default preference files -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup" verbose="true">
+      <fileset dir="${pref.dir}/cfs/system">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <!-- Copy and compile the reports -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/reports"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/reports">
+      <fileset dir="${src.dir}/jasper_reports">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <compileJasperReport
+        srcdir="${dist.dir}/cfs/WEB-INF/reports"
+        destdir="${dist.dir}/cfs/WEB-INF/reports"
+        compiler="dori.jasper.engine.design.JRBshCompiler"/>
+    <delete>
+        <fileset dir= "${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
+    </delete>
+    <!-- Archive the folder -->
+    <war destfile="${dist.dir}/centric.war"
+         webxml="${src.web.dir}/WEB-INF/web.xml"
+         basedir="${dist.dir}/cfs"
+         compress="true"
+         manifest="${pref.dir}/cfs/war/MANIFEST.MF"
+         />
+    <!-- Cleanup files -->
+    <delete dir="${dist.dir}/cfs"/>
+    <echo message=".war file created: ${dist.dir}${fs}centric.war"/>
+  </target>
+  
+  <!-- Remove the build folder -->
+  <target name="clean"
+          description="Delete the temporary build folder used by the install"
+          depends="init">
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+  
+  <target name="install.prepare.dbname" unless="DATABASE.NAME">
+    <!-- Ask for the database name -->
+    <input message="Enter database name: " addproperty="DATABASE.NAME"/>
+    <!-- Display all information about database here, except password -->
+    <echo message="Driver: ${SITE.DRIVER}"/>
+    <echo message="URL: ${SITE.URL}${DATABASE.NAME}"/>
+    <echo message="Username: ${SITE.USER}"/>
+  </target>
+  
+  <!-- Prepare files for any database type -->
+  <target name="install.prepare.init" depends="init,install.prepare.dbname">
+    <!-- Verify database can be overwritten -->
+    <input message="The database '${DATABASE.NAME}' will be modified and must already exist, continue? "
+           validargs="y,n"
+           addproperty="DATABASE.DELETE"/>
+    <condition property="ABORT">
+      <equals arg1="n" arg2="${DATABASE.DELETE}"/>
+    </condition>
+    <fail if="ABORT">Build aborted by user.</fail>
+    <!-- Determine the database to execute the compatible tasks -->
+    <condition property="DBTYPE.POSTGRESQL">
+      <equals arg1="${SITE.DBTYPE}" arg2="${POSTGRESQL}" casesensitive="false" trim="true"/>
+    </condition>
+    <condition property="DBTYPE.MSSQL">
+      <equals arg1="${SITE.DBTYPE}" arg2="${MSSQL}" casesensitive="false" trim="true"/>
+    </condition>
+    <!-- Copy template files to be used -->
+    <delete dir="${build.sql.dir}" failonerror="false"/>
+    <mkdir dir="${build.sql.dir}"/>
+    <copy todir="${build.sql.dir}">
+      <fileset dir="${src.sql.dir}/init">
+        <include name="*.sql" />
+      </fileset>
+    </copy>
+  </target>
+  
+  <!-- Prepare the PostgreSQL files -->
+  <target name="install.check.postgresql" depends="install.prepare.init" if="DBTYPE.POSTGRESQL">
+    <replace dir="${build.sql.dir}" token="@TRUE@" value="true">
+      <include name="*.sql"/>
+    </replace>
+    <replace dir="${build.sql.dir}" token="@FALSE@" value="false">
+      <include name="*.sql"/>
+    </replace>
+  </target>
+  
+  <!-- Prepare the MicrosoftSQL files -->
+  <target name="install.check.mssql" depends="install.prepare.init" if="DBTYPE.MSSQL">
+    <replace dir="${build.sql.dir}" token="@TRUE@" value="1">
+      <include name="*.sql"/>
+    </replace>
+    <replace dir="${build.sql.dir}" token="@FALSE@" value="0">
+      <include name="*.sql"/>
+    </replace>
+  </target>
+  
+  <target name="install.prepare" depends="install.check.postgresql,install.check.mssql">
+    <echo message="SQL files prepared for database type: ${SITE.DBTYPE}"/>
+  </target>
+  
+  <target name="install.database" depends="init,install.prepare">
+    <echo message="Building database"/>
+    <!-- TODO: Optionally create database -->
+    
+    <!-- Create database and initialize data -->
+    <sql
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}"
+        userid="${SITE.USER}"
+        password="${SITE.PASSWORD}">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+      <!-- base data -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_gatekeeper.sql"/>
+      <transaction src="${build.sql.dir}/gatekeeper.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_cdb.sql"/>
+      <transaction src="${build.sql.dir}/cdb.sql"/>
+      <transaction src="${build.sql.dir}/code_tables.sql"/>
+      <transaction src="${build.sql.dir}/access.sql"/>
+      <transaction src="${build.sql.dir}/organization.sql"/>
+      <transaction src="${build.sql.dir}/data.sql"/>
+      <!-- opportunities -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
+      <transaction src="${build.sql.dir}/opportunity.sql"/>
+      <!-- project management -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_project.sql"/>
+      <transaction src="${build.sql.dir}/project.sql"/>
+      <!-- product catalog -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_product.sql"/>
+      <transaction src="${build.sql.dir}/product.sql"/>
+      <!-- service contracts and assets -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_service_contract.sql"/>
+      <transaction src="${build.sql.dir}/service_contract.sql"/>
+      <!-- tickets -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms.sql"/>
+      <transaction src="${build.sql.dir}/tms.sql"/>
+      <!-- quotes, orders -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_quote.sql"/>
+      <transaction src="${build.sql.dir}/quote.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_order.sql"/>
+      <transaction src="${build.sql.dir}/order.sql"/>
+      <!-- custom fields -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_custom_field.sql"/>
+      <!-- communications manager -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_campaign.sql"/>
+      <transaction src="${build.sql.dir}/campaign.sql"/>
+      <!-- help -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
+      <!-- synchronization api -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_sync.sql"/>
+      <transaction src="${build.sql.dir}/sync.sql"/>
+      <!-- revenue manager -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_revenue.sql"/>
+      <transaction src="${build.sql.dir}/revenue.sql"/>
+      <!-- task management -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_task.sql"/>
+      <transaction src="${build.sql.dir}/task.sql"/>
+      <!-- framework data -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_workflow.sql"/>
+      <!-- additional fields -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms_append_fields.sql"/>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_quote_adjustment.sql" />
+    </sql>
+    <delete dir="${build.sql.dir}" failonerror="false"/>
+  </target>
+  
+  <!-- Install permissions -->
+  <target name="install.permissions" depends="init,install.prepare">
+    <echo message="Process file: ${src.sql.dir}${fs}init${fs}permissions.xml"/>
+    <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <sysproperty key="processConfigFile" value="${src.sql.dir}${fs}init${fs}permissions.xml"/>
+      <sysproperty key="driver" value="${SITE.DRIVER}"/>
+      <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}"/>
+      <sysproperty key="user" value="${SITE.USER}"/>
+      <sysproperty key="pass" value="${SITE.PASSWORD}"/>
+      <arg value="${src.sql.dir}${fs}init${fs}permissions-dataimport.xml"/>
+    </java>
+  </target>
+  
+  
+  <!-- Upgrade help contents by deleting all help and then inserting -->
+  <target name="upgradedb.help" depends="init,install.prepare,install.deletehelp,install.help"/>
+  
+  <!-- Upgrade help contents by deleting all help and then inserting -->
+  <target name="install.deletehelp" depends="init,install.prepare">
+    <echo message="Deleting existing help contents..."/>
+    <!-- Delete the old help -->
+    <sql
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}"
+        userid="${SITE.USER}"
+        password="${SITE.PASSWORD}">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+      <transaction>DROP TABLE help_tips;</transaction>
+      <transaction>DROP TABLE help_notes;</transaction>
+      <transaction>DROP TABLE help_business_rules;</transaction>
+      <transaction>DROP TABLE help_faqs;</transaction>
+      <transaction>DROP TABLE help_related_links;</transaction>
+      <transaction>DROP TABLE help_features;</transaction>
+      <transaction>DROP TABLE lookup_help_features;</transaction>
+      <transaction>DROP TABLE help_tableofcontentitem_links;</transaction>
+      <transaction>DROP TABLE help_tableof_contents;</transaction>
+      <transaction>DROP TABLE help_contents;</transaction>
+      <transaction>DROP TABLE help_module;</transaction>
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
+    </sql>
+  </target>
+  
+  <!-- Install help contents into blank database -->
+  <target name="install.help" depends="init,install.prepare">
+    <echo message="Installing help contents from: ${src.sql.dir}${fs}init${fs}help.xml"/>
+    <java classname="org.aspcfs.apps.help.ImportHelp" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${src.sql.dir}${fs}init${fs}help.xml"/>
+      <arg value="${SITE.DRIVER}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}"/>
+      <arg value="${SITE.USER}"/>
+      <arg value="${SITE.PASSWORD}"/>
+    </java>
+  </target>
+  
+  <!-- Copy the default .XML preferences for this system -->
+  <target name="install.copyprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
+    <mkdir dir="${build.web.dir}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
+    <copy todir="${build.web.dir}/WEB-INF/fileLibrary/${DATABASE.NAME}">
+      <fileset dir="${pref.dir}/cfs/system">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <!-- Install the workflow.xml to the database -->
+    <upgradeDatabase
+        sitecode="${SITE.APPCODE}"
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}"
+        user="${SITE.USER}"
+        password="${SITE.PASSWORD}"
+        servletJar="${servletJar}"
+        webPath="${build.web.dir}"
+        baseFile="${src.sql.dir}${fs}init${fs}workflow.bsh"
+        specificDatabase="${DATABASE.NAME}"
+        processSpecifiedDatabaseOnly="true">
+    </upgradeDatabase>
+  </target>
+  <!-- Delete the preferences from this system -->
+  <target name="install.deleteprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
+    <!-- Delete the workflow from the database -->
+    <upgradeDatabase
+        sitecode="${SITE.APPCODE}"
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}"
+        user="${SITE.USER}"
+        password="${SITE.PASSWORD}"
+        servletJar="${servletJar}"
+        webPath="${build.web.dir}"
+        baseFile="${src.sql.dir}${fs}init${fs}workflow-delete.bsh"
+        specificDatabase="${DATABASE.NAME}"
+        processSpecifiedDatabaseOnly="true">
+    </upgradeDatabase>
+  </target>
+  
+  <!-- Installs a new database -->
+  <target name="installdb" depends="install.database,install.permissions,install.help,install.copyprefs"
+    description="Create tables, insert base records and permissions into new database, copy XML files">
+  </target>
+  
+  <!-- Generate Java Docs -->
+  <target name="docs" description="Generate JavaDocs" depends="compile">
+    <mkdir dir="${build.docs.dir}"/>
+    <javadoc sourcepath="${src.classes.dir}"
+          packagenames="com.*,org.*"
+          destdir="${build.docs.dir}"
+          excludepackagenames="javax.servlet">
+      <tag name="created" description="Date file was created"/>
+      <header>Copyright 2004 Dark Horse Ventures, License Applies</header>
+      <footer>Copyright 2004 Dark Horse Ventures</footer>
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <!--
+        <pathelement location="${SRC_LIB}/aspcfs.jar"/>
+        -->
+      </classpath>
+    </javadoc>
+  </target>
+  
+</project>

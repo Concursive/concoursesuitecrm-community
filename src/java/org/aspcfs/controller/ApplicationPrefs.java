@@ -356,7 +356,8 @@ public class ApplicationPrefs {
     addParameter(context, "MailServer", this.get("MAILSERVER"));
     addParameter(context, "FaxServer", this.get("FAXSERVER"));
     addParameter(context, "FaxEnabled", this.get("FAXENABLED"));
-    //Verify the license
+    // BEGIN DHV CODE ONLY
+    // Verify the license
     if (this.has("FILELIBRARY")) {
       String edition = null;
       String crc = null;
@@ -397,6 +398,7 @@ public class ApplicationPrefs {
         }
       }
     }
+    // END DHV CODE ONLY
 
     //initialize the import manager
     if (this.has("IMPORT_QUEUE_MAX")) {

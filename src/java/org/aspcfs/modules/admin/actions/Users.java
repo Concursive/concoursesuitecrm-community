@@ -224,11 +224,12 @@ public final class Users extends CFSModule {
     Connection db = null;
     addModuleBean(context, "Add User", "Add New User");
     try {
+      db = this.getConnection(context);
+      // BEGIN DHV CODE ONLY
       //Load the license and see how many users can be added
       java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
       org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
       String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
-      db = this.getConnection(context);
       //Check the license
       PreparedStatement pst = db.prepareStatement(
           "SELECT count(*) AS user_count " +
@@ -250,6 +251,7 @@ public final class Users extends CFSModule {
       }
       rs.close();
       pst.close();
+      // END DHV CODE ONLY
       //Prepare the role drop-down
       RoleList roleList = new RoleList();
       roleList.setBuildUsers(false);
@@ -293,11 +295,12 @@ public final class Users extends CFSModule {
     User insertedUser = null;
     try {
       synchronized(this) {
+        db = this.getConnection(context);
+        // BEGIN DHV CODE ONLY
         //Load the license and see how many users can be added
         java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
         org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
         String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
-        db = this.getConnection(context);
         //Check the license
         PreparedStatement pst = db.prepareStatement(
             "SELECT count(*) AS user_count " +
@@ -319,6 +322,7 @@ public final class Users extends CFSModule {
         }
         rs.close();
         pst.close();
+        // END DHV CODE ONLY
         //Process the user request form
         User thisUser = (User) context.getFormBean();
         if (context.getRequest().getParameter("typeId") != null) {
@@ -477,11 +481,12 @@ public final class Users extends CFSModule {
     Connection db = null;
     try {
       synchronized(this) {
+        db = this.getConnection(context);
+        // BEGIN DHV CODE ONLY
         //Load the license and see how many users can be added
         java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
         org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
         String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
-        db = this.getConnection(context);
         //Check the license
         PreparedStatement pst = db.prepareStatement(
             "SELECT count(*) AS user_count " +
@@ -503,6 +508,7 @@ public final class Users extends CFSModule {
         }
         rs.close();
         pst.close();
+        // END DHV CODE ONLY
         //Activate the user
         thisUser = new User(db, context.getRequest().getParameter("id"));
         //Reactivate the contact if it was previously de-activated

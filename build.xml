@@ -657,6 +657,97 @@
     <delete dir="${dist.dir}/cfs"/>
   </target>
   
+  <!-- Create sourcecode distribution -->
+  <target name="source"
+          description="Compile, build, and generate source archive"
+          depends="deploy,source.archive">
+  </target>
+  
+  <target name="source.archive">
+    <property name="zip.dir" value="centric_crm"/>
+    <delete dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <!-- Update the build number -->
+    <copy file="${base.dir}/pref/cfs/source/readme.txt" todir="${dist.dir}" verbose="true"/>
+    <buildnumber file="source.number"/>
+    <replace file="${dist.dir}/readme.txt"
+             token="@BUILD.NUMBER@" value="${build.number}"/>
+    <replace file="${dist.dir}/readme.txt"
+             token="@BUILD.DATE@" value="${date.long}"/>
+    <!-- Ignore certain code when zipping -->
+    <mkdir dir="${dist.dir}/src"/>
+    <copy todir="${dist.dir}/src">
+      <fileset dir="${base.dir}/src"/>
+      <filterchain>
+        <filterreader classname="org.aspcfs.ant.filters.StripSection">
+          <param name="beginBlock" value="BEGIN DHV CODE ONLY"/>
+          <param name="endBlock" value="END DHV CODE ONLY"/>
+          <classpath>
+            <fileset dir="${build.lib.dir}">
+              <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${lib.dir}">
+              <include name="*.jar"/>
+            </fileset>
+          </classpath>
+        </filterreader>
+      </filterchain>
+    </copy>
+    <!-- Create the distributable .zip file -->
+    <zip destfile="${dist.dir}/${zip.dir}_source.zip">
+      <!-- main directory -->
+      <zipfileset dir="${dist.dir}" includes="readme.txt" prefix="${zip.dir}"/>
+      <zipfileset dir="pref/cfs/source" includes="build.xml" prefix="${zip.dir}"/>
+      <zipfileset dir="." includes="master.properties" prefix="${zip.dir}" />
+      <!-- sub directories -->
+      <zipfileset dir="pref/apache" prefix="${zip.dir}/pref/apache" />
+      <zipfileset dir="pref/jedit" prefix="${zip.dir}/pref/jedit" />
+      <zipfileset dir="pref/cfs/notifier" prefix="${zip.dir}/pref/cfs/notifier" />
+      <zipfileset dir="pref/cfs/system" prefix="${zip.dir}/pref/cfs/system" />
+      <zipfileset dir="pref/cfs/transfer" prefix="${zip.dir}/pref/cfs/transfer" />
+      <zipfileset dir="pref/cfs/source" includes="MANIFEST.MF" fullpath="${zip.dir}/pref/cfs/war/MANIFEST.MF" />
+      <zipfileset dir="${dist.dir}/src/jasper_reports" prefix="${zip.dir}/src/jasper_reports" />
+      <zipfileset 
+          dir="${dist.dir}/src/java" 
+          excludes="**/Zlib.java, **/NetDescAccountsReader.java, org/aspcfs/modules/media/autoguide/**, **/SendTicketToBPM.java, org/aspcfs/modules/healthcare/edit/**, org/aspcfs/modules/setup/actions/SetupServer.java"
+          prefix="${zip.dir}/src/java"/>
+      <zipfileset 
+          dir="${dist.dir}/src/sql/postgresql" 
+          includes="new_*.sql"
+          excludes="new_autoguide.sql"
+          prefix="${zip.dir}/src/sql/postgresql" />
+      <zipfileset 
+          dir="${dist.dir}/src/sql/mssql" 
+          includes="new_*.sql"
+          excludes="new_autoguide.sql"
+          prefix="${zip.dir}/src/sql/mssql" />
+      <zipfileset 
+          dir="${dist.dir}/src/sql/init" 
+          includes="*.sql" 
+          excludes="autoguide.sql" 
+          prefix="${zip.dir}/src/sql/init" />
+      <zipfileset 
+          dir="${dist.dir}/src/sql/init" 
+          includes="*.xml" 
+          prefix="${zip.dir}/src/sql/init" />
+      <zipfileset 
+          dir="${dist.dir}/src/web" 
+          excludes="jsp/media/autoguide/**, images/virginian*, jsp/healthcare/edit/**, jsp/media/autoguide/**, jsp/admin/admin_modify_license.jsp, jsp/admin/admin_modify_license_error.jsp, jsp/admin/admin_modify_license_ok.jsp, jsp/admin/admin_modify_license_updated.jsp, jsp/errors/error_license.jsp, jsp/setup/register.jsp, jsp/setup/submitted.jsp, jsp/setup/validate.jsp, jsp/setup/validate_success.jsp" 
+          prefix="${zip.dir}/src/web" />
+    </zip>
+    <zip destfile="${dist.dir}/${zip.dir}_libraries.zip">
+      <zipfileset 
+          dir="${dist.dir}" 
+          includes="readme.txt" 
+          fullpath="${zip.dir}/readme-libraries.txt"
+          />
+      <zipfileset 
+          dir="lib"
+          excludes="ccp_integration.jar, ms*.jar" 
+          prefix="${zip.dir}/lib" />
+    </zip>
+  </target>
+  
   <!-- Remove the build folder -->
   <target name="clean"
           description="Delete the temporary build folder used by the install"

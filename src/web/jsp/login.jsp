@@ -1,7 +1,9 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
+<%-- BEGIN DHV CODE ONLY --%>
 <jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
 <jsp:useBean id="APP_ORGANIZATION" class="java.lang.String" scope="application"/>
+<%-- END DHV CODE ONLY --%>
 <%!
   public static String getLongDate(java.util.Date tmp) {
     java.text.SimpleDateFormat formatter1 = new java.text.SimpleDateFormat ("MMMMM d, yyyy");
@@ -63,7 +65,9 @@
                 <table style="border:1px #EFEFEF solid;background: #EFEFEF" align="center" width="50%">
                 <tr><td align="center">
                   <font size="2"><strong>Centric CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong><br />
+<%-- BEGIN DHV CODE ONLY --%>
                   <%= toHtml(APP_TEXT) %><dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br />Licensed To: <%= toHtml(APP_ORGANIZATION) %></dhv:evaluate></font>
+<%-- END DHV CODE ONLY --%>
                 </td></tr>
                 </table>
                 </td>

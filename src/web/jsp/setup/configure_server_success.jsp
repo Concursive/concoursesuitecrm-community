@@ -31,6 +31,7 @@
     <td>
       Settings saved!<br />
       <br />
+      <%-- BEGIN DHV CODE ONLY --%>
       You should send a test email to make certain the mail settings are configured.<br />
       <br />
       <b>Send a test message...</b><br />
@@ -64,6 +65,7 @@
       <br />
       <input type="button" value="Test Email" onClick="javascript:popURL('SetupServerDetails.do?command=TestEmail&from=<%= toHtml(server.getEmailAddress()) %>&to=<%= userAddress %>&server=<%= toHtml(server.getEmail()) %>','CRM_EmailTest','275','325','yes','yes')"><br />
       <br />
+      <%-- END DHV CODE ONLY --%>
       The next step is to configure and verify the Centric CRM database connection.<br>
       <br />
       <input type="button" value="< Back" onClick="javascript:window.location.href='SetupServerDetails.do?command=ConfigureServerCheck'" />

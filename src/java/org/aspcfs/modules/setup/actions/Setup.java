@@ -51,7 +51,7 @@ import java.util.Properties;
 import org.aspcfs.modules.service.base.*;
 
 /**
- *  Actions for setting up Dark Horse CRM the first time
+ *  Actions for setting up Centric CRM the first time
  *
  *@author     matt rajkowski
  *@created    August 12, 2003
@@ -73,6 +73,7 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Welcome");
+    // BEGIN DHV CODE ONLY
     //Check if key exists, if not force user to use a new key
     String path = getPath(context);
     if (path == null) {
@@ -83,6 +84,7 @@ public class Setup extends CFSModule {
     if (thisFile.exists()) {
       context.getRequest().setAttribute("found", "true");
     }
+    // END DHV CODE ONLY
     return "SetupOK";
   }
 
@@ -99,6 +101,7 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Register");
+    // BEGIN DHV CODE ONLY
     String reg = context.getRequest().getParameter("doReg");
     if ("have".equals(reg)) {
       //If user says they want to continue, see if the file exists and that the
@@ -108,7 +111,7 @@ public class Setup extends CFSModule {
         return "ValidateOK";
       }
       return "SetupHaveRegOK";
-    } else {
+    } else if ("need".equals(reg)) {
       RegistrationBean bean = (RegistrationBean) context.getFormBean();
       if (bean.getConfigured() == -1) {
         try {
@@ -124,12 +127,15 @@ public class Setup extends CFSModule {
           HTTPUtils.getServerUrl(context.getRequest())));
       return "SetupNeedRegOK";
     }
+    // END DHV CODE ONLY
+    return "SkipRegistrationOK";
   }
 
 
+  // BEGIN DHV CODE ONLY
   /**
    *  The user has filled out the registration form and it needs to be
-   *  transmitted to the Dark Horse CRM server
+   *  transmitted to the Centric CRM server
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -214,7 +220,7 @@ public class Setup extends CFSModule {
       }
       if (response == null) {
         context.getRequest().setAttribute("actionError",
-            "Unspecified Error: Dark Horse CRM Server did not respond ");
+            "Unspecified Error: Centric CRM Server did not respond ");
         return "SendRegERROR";
       }
       XMLUtils responseXML = new XMLUtils(response);
@@ -222,7 +228,7 @@ public class Setup extends CFSModule {
       TransactionStatus thisStatus = new TransactionStatus(responseNode);
       if (thisStatus.getStatusCode() != 0) {
         context.getRequest().setAttribute("actionError",
-            "Unspecified Error: Dark Horse CRM Server rejected registration " +
+            "Unspecified Error: Centric CRM Server rejected registration " +
             thisStatus.getMessage());
         return "SendRegERROR";
       }
@@ -302,6 +308,7 @@ public class Setup extends CFSModule {
     }
   }
 
+  // END DHV CODE ONLY
 
   /**
    *  Description of the Method
@@ -440,6 +447,7 @@ public class Setup extends CFSModule {
     }
     //Verify the existing files...
     String initPath = context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "init" + fs;
+    // BEGIN DHV CODE ONLY
     //Verify the source input.txt file
     File inputFile = new File(initPath + "input.txt");
     File inputFileDest = new File(userFileLibrary + "init" + fs + "input.txt");
@@ -456,13 +464,16 @@ public class Setup extends CFSModule {
           "The file library path is missing zlib.jar");
       return "ConfigureDirectoryERROR";
     }
+    // END DHV CODE ONLY
     try {
       File destPath = new File(userFileLibrary + "init" + fs);
       destPath.mkdirs();
-      //Copy input.txt to target directory (always do this, since user may have re-registered)
+      // BEGIN DHV CODE ONLY
+      //Copy input.txt to target directory (always do this)
       FileUtils.copyFile(inputFile, inputFileDest, true);
       //Copy zlib.jar to target directory (always do this, since user may have re-registered)
       FileUtils.copyFile(zlibFile, zlibFileDest, true);
+      // END DHV CODE ONLY
       //Add fileLibrary pref to registry so that this page can be skipped in the future
       Prefs.savePref(context.getServletContext().getRealPath("/"), userFileLibrary);
     } catch (Exception e) {
@@ -494,7 +505,18 @@ public class Setup extends CFSModule {
         File dbPref = new File(fileLibrary + "conn.sgml");
         if (dbPref.exists()) {
           String dbInfo = StringUtils.loadText(fileLibrary + "conn.sgml");
-          Key key = PrivateString.loadKey(fileLibrary + "zlib.jar");
+          // Use a key file for storing info
+          Key key = null;
+          synchronized (this) {
+            //Get or make the key file
+            String keyFile = fileLibrary + "zlib.jar";
+            File thisFile = new File(keyFile);
+            if (!thisFile.exists()) {
+              key = PrivateString.generateKeyFile(keyFile);
+            } else {
+              key = PrivateString.loadKey(keyFile);
+            }
+          }
           bean.setConnection(PrivateString.decrypt(key, dbInfo));
         }
       } catch (Exception e) {
@@ -672,7 +694,18 @@ public class Setup extends CFSModule {
         File serverPref = new File(fileLibrary + "srv1.sgml");
         if (serverPref.exists()) {
           String serverInfo = StringUtils.loadText(fileLibrary + "srv1.sgml");
-          Key key = PrivateString.loadKey(fileLibrary + "zlib.jar");
+          // Use a key file for storing info
+          Key key = null;
+          synchronized (this) {
+            //Get or make the key file
+            String keyFile = fileLibrary + "zlib.jar";
+            File thisFile = new File(keyFile);
+            if (!thisFile.exists()) {
+              key = PrivateString.generateKeyFile(keyFile);
+            } else {
+              key = PrivateString.loadKey(keyFile);
+            }
+          }
           bean.setServerInfo(PrivateString.decrypt(key, serverInfo));
         }
       } catch (Exception e) {
@@ -711,12 +744,14 @@ public class Setup extends CFSModule {
       Key key = PrivateString.loadKey(fileLibrary + "zlib.jar");
       String serverInfo = bean.getServerInfo();
       StringUtils.saveText(fileLibrary + "srv1.sgml", PrivateString.encrypt(key, serverInfo));
+      // BEGIN DHV CODE ONLY
       //Access the license to get the email address
       String licenseFile = getPath(context) + "init" + fs + "input.txt";
       String licenseXml = StringUtils.loadText(licenseFile);
       XMLUtils xml = new XMLUtils(PrivateString.decrypt(key, licenseXml));
       String userAddress = XMLUtils.getNodeText(xml.getFirstChild("email"));
       context.getRequest().setAttribute("userAddress", userAddress);
+      // END DHV CODE ONLY
       //Save the known prefs
       ApplicationPrefs prefs = getApplicationPrefs(context);
       prefs.add("WEBSERVER.URL", bean.getUrl());
@@ -752,8 +787,8 @@ public class Setup extends CFSModule {
     message.setHost(context.getRequest().getParameter("server"));
     message.setFrom(context.getRequest().getParameter("from"));
     message.setTo(context.getRequest().getParameter("to"));
-    message.setSubject("Test message from Dark Horse CRM");
-    message.setBody("Congratulations, mail from Dark Horse CRM is working.");
+    message.setSubject("Test message from Centric CRM");
+    message.setBody("Congratulations, mail from Centric CRM is working.");
     int result = message.send();
     if (result == 0) {
       return "SendMailOK";
@@ -788,6 +823,7 @@ public class Setup extends CFSModule {
         finalizePrefs(context);
         return "ConfigureUserOK";
       }
+      // BEGIN DHV CODE ONLY
       if (bean.getConfigured() == -1) {
         //Populate the data from the license
         String licenseFile = getPath(context) + "init" + fs + "input.txt";
@@ -800,6 +836,7 @@ public class Setup extends CFSModule {
         bean.setEmail(XMLUtils.getNodeText(xml.getFirstChild("email")));
         bean.setUsername(bean.getNameFirst().toLowerCase() + "." + bean.getNameLast().toLowerCase());
       }
+      // END DHV CODE ONLY
       return "ConfigureUserCheckOK";
     } catch (Exception e) {
       context.getRequest().setAttribute("actionError",
@@ -1000,6 +1037,7 @@ public class Setup extends CFSModule {
   }
 
 
+  // BEGIN DHV CODE ONLY
   /**
    *  Gets the validLicense attribute of the Setup object
    *
@@ -1035,7 +1073,7 @@ public class Setup extends CFSModule {
       return false;
     }
   }
-
+  // END DHV CODE ONLY
 
   /**
    *  Return whether system is already setup

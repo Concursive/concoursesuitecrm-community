@@ -20,7 +20,9 @@
 <%@ page import="java.util.*,org.aspcfs.modules.admin.base.*,org.aspcfs.modules.contacts.base.Contact" %>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="UserListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<%-- BEGIN DHV CODE ONLY --%>
 <jsp:useBean id="APP_SIZE" class="java.lang.String" scope="application"/>
+<%-- END DHV CODE ONLY --%>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -41,7 +43,7 @@ View Users
 </tr>
 </table>
 <%-- End Trails --%>
-<%-- License info --%>
+<%-- BEGIN DHV CODE ONLY --%>
 <dhv:evaluate if="<%= hasText(APP_SIZE) %>">
 <table class="note" cellspacing="0">
   <tr>
@@ -49,7 +51,7 @@ View Users
     <td>The installed license limits this system to <%= APP_SIZE %> active users.</td></tr>
 </table>
 </dhv:evaluate>
-<%-- End license info --%>
+<%-- END DHV CODE ONLY --%>
 <dhv:permission name="admin-users-add"><a href="Users.do?command=InsertUserForm">Add New User</a></dhv:permission>
 <center><%= UserListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">

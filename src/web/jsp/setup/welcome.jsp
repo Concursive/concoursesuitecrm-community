@@ -17,13 +17,17 @@
   - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%-- BEGIN DHV CODE ONLY --%>
 <jsp:useBean id="found" class="java.lang.String" scope="request"/>
+<%-- END DHV CODE ONLY --%>
 <script language="JavaScript">
   function checkForm(form) {
+    <%-- BEGIN DHV CODE ONLY --%>
     if (form.doReg[0].checked == 0 && form.doReg[1].checked == 0) {
       alert("Please select a registration option to continue");
       return false;
     }
+    <%-- END DHV CODE ONLY --%>
     return true;
   }
 </script>
@@ -40,6 +44,7 @@
       Although installation can be completed in just a few minutes, you will
       have the option at any time during the setup to continue at a later time.<br />
       <br />
+<%-- BEGIN DHV CODE ONLY --%>
       Registering this application with Dark Horse Ventures is required before installation,
       whether you already have a license or not,
       so we have made the registration process very simple.<br />
@@ -63,6 +68,7 @@
       <input type="radio" name="doReg" value="have" <%= !"true".equals(found) ? "disabled" : "checked" %>/>
       <dhv:evaluate if="<%= !"true".equals(found) %>"><font color="#888888"></dhv:evaluate>Continue setup from a previously started session<dhv:evaluate if="<%= !"true".equals(found) %>"></font></dhv:evaluate><br />
       <br />
+<%-- END DHV CODE ONLY --%>
       <input type="submit" value="Continue >"/>
     </td>
   </tr>

@@ -136,7 +136,8 @@ public final class Login extends CFSModule {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
         }
-        //Check the license
+        // BEGIN DHV CODE ONLY
+        //License check
         try {
           File keyFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
           File inputFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt");
@@ -172,9 +173,12 @@ public final class Login extends CFSModule {
         } catch (Exception e) {
           loginBean.setMessage("* Access denied: License is not up-to-date");
         }
+        // END DHV CODE ONLY
       }
       //Query the user record
+      // BEGIN DHV CODE ONLY
       if (continueId) {
+      // END DHV CODE ONLY
         PreparedStatement pst = db.prepareStatement(
             "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.role " +
             "FROM access a, role r " +
@@ -204,7 +208,9 @@ public final class Login extends CFSModule {
         }
         rs.close();
         pst.close();
+      // BEGIN DHV CODE ONLY
       }
+      // END DHV CODE ONLY
       //Perform rest of user initialization if a valid user
       if (userId > -1) {
         thisUser = new UserBean();
@@ -279,10 +285,12 @@ public final class Login extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Login-> Session Size: " + sessionManager.size());
       }
+      // BEGIN DHV CODE ONLY
       // NOTE: This check is no longer valid until portal users are tracked
       //if (userId2 != null && !userId2.equals("-1") && sessionManager.size() > Integer.parseInt(userId2)) {
       //  return "LicenseError";
       //}
+      // END DHV CODE ONLY
       context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
       sessionManager.addUser(context, userId);
     }
