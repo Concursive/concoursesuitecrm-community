@@ -652,6 +652,15 @@
     <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
     <forward name="DeleteERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
   </action>
+  <action name="ProjectManagementLists" class="com.darkhorseventures.cfsmodule.ProjectManagementLists">
+    <bean name="Task" class="com.darkhorseventures.cfsbase.Task" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
+  </action>
   <!-- End Project Management Module -->
   
   
