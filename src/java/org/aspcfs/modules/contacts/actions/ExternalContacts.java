@@ -99,6 +99,46 @@ public final class ExternalContacts extends CFSModule {
     }
   }
   
+  
+  public String executeCommandAddFolderRecord(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Contact thisContact = null;
+
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      String selectedCatId = (String)context.getRequest().getParameter("catId");
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
+        Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.CONTACTS);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      context.getRequest().setAttribute("Category", thisCategory);
+      
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "External Contacts", "Add Folder Record");
+      return ("AddFolderRecordOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  
+  
    public String executeCommandFields(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -443,6 +483,170 @@ public final class ExternalContacts extends CFSModule {
 
     LookupList addressTypeList = new LookupList(db, "lookup_contactaddress_types");
     context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
+  }
+  
+  public String executeCommandModifyFields(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Contact thisContact = null;
+
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      String selectedCatId = (String)context.getRequest().getParameter("catId");
+      String recordId = (String)context.getRequest().getParameter("recId");
+      
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
+        Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.CONTACTS);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setRecordId(Integer.parseInt(recordId));
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      context.getRequest().setAttribute("Category", thisCategory);
+      
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "External Contacts", "Modify Custom Fields");
+      return ("ModifyFieldsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandUpdateFields(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Contact thisContact = null;
+    int resultCount = 0;
+
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+
+      String selectedCatId = (String)context.getRequest().getParameter("catId");
+      String recordId = (String)context.getRequest().getParameter("recId");
+      
+      context.getRequest().setAttribute("catId", selectedCatId);
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
+        Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.CONTACTS);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setRecordId(Integer.parseInt(recordId));
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      thisCategory.setParameters(context);
+      thisCategory.setModifiedBy(this.getUserId(context));
+      resultCount = thisCategory.update(db);
+      if (resultCount == -1) {
+        if (System.getProperty("DEBUG") != null) System.out.println("Contacts-> ModifyField validation error");
+      } else {
+        thisCategory.buildResources(db);
+      }
+      context.getRequest().setAttribute("Category", thisCategory);
+      
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        return ("ModifyFieldsOK");
+      } else if (resultCount == 1) {
+        return ("UpdateFieldsOK");
+      } else {
+        context.getRequest().setAttribute("Error",
+            "<b>This record could not be updated because someone else updated it first.</b><p>" +
+            "You can hit the back button to review the changes that could not be committed, " +
+            "but you must reload the record and make the changes again.");
+        return ("UserError");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandInsertFields(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCode = -1;
+    Contact thisContact = null;
+
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+
+      String selectedCatId = (String)context.getRequest().getParameter("catId");
+      context.getRequest().setAttribute("catId", selectedCatId);
+      CustomFieldCategory thisCategory = new CustomFieldCategory(db, 
+        Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.CONTACTS);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      thisCategory.setParameters(context);
+      thisCategory.setEnteredBy(this.getUserId(context));
+      thisCategory.setModifiedBy(this.getUserId(context));
+      resultCode = thisCategory.insert(db);
+      if (resultCode == -1) {
+        if (System.getProperty("DEBUG") != null) System.out.println("Contacts-> InsertField validation error");
+      }
+      context.getRequest().setAttribute("Category", thisCategory);
+      
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCode == -1) {
+        return ("AddFolderRecordOK");
+      } else {
+        return (this.executeCommandFields(context));
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 }

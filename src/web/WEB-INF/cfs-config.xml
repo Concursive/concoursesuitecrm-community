@@ -95,6 +95,9 @@
     <forward name="FieldsOK" resource="/companydirectory_fields.jsp" layout="nav"/>
     <forward name="FieldRecordListOK" resource="/companydirectory_fields_list.jsp" layout="nav"/>
     <forward name="ContactDetailsModifyOK" resource="/companydirectory_contactmodifyform.jsp" layout="nav"/>
+    <forward name="AddFolderRecordOK" resource="/companydirectory_fields_add.jsp" layout="nav"/>
+    <forward name="ModifyFieldsOK" resource="/companydirectory_fields_modify.jsp" layout="nav"/>
+    <forward name="UpdateFieldsOK" resource="/companydirectory_fields.jsp" layout="nav"/>
     <forward name="ContactDetailsUpdateOK" resource="/ExternalContacts.do?command=ContactDetails"/>
     <forward name="ContactInsertFormOK" resource="/companydirectory_contactinsertform.jsp" layout="nav"/>
     <forward name="ContactDeleteOK" resource="/ExternalContacts.do?command=ListContacts"/>
