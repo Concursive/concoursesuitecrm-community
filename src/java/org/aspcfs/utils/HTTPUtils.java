@@ -8,13 +8,14 @@ import javax.net.ssl.*;
 import javax.servlet.http.*;
 import java.security.cert.CertificateFactory;
 import javax.security.cert.*;
+import java.security.*;
 
 /**
  *  Utilities for working with HTTP
  *
- * @author     matt rajkowski
- * @created    August 29, 2002
- * @version    $Id: HTTPUtils.java,v 1.2.20.1 2002/12/06 21:37:00 mrajkowski Exp
+ *@author     matt rajkowski
+ *@created    August 29, 2002
+ *@version    $Id: HTTPUtils.java,v 1.2.20.1 2002/12/06 21:37:00 mrajkowski Exp
  *      $
  */
 public class HTTPUtils {
@@ -23,8 +24,8 @@ public class HTTPUtils {
    *  Generates acceptable default html text when using an input field on an
    *  html form
    *
-   * @param  s  Description of the Parameter
-   * @return    Description of the Return Value
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
    */
   public static String toHtmlValue(String s) {
     if (s != null) {
@@ -44,49 +45,47 @@ public class HTTPUtils {
 
 
   /**
-   *  Sends a string to the specified URL, intended for communicating
-   *  with web servers.  Use the SSLMessage for secure communication with
-   *  a server application.
+   *  Sends a string to the specified URL, intended for communicating with web
+   *  servers. Use the SSLMessage for secure communication with a server
+   *  application.
    *
-   * @param  address                  Description of the Parameter
-   * @param  xmlPacket                Description of the Parameter
-   * @return                          Description of the Return Value
-   * @exception  java.io.IOException  Description of the Exception
+   *@param  address                  Description of the Parameter
+   *@param  xmlPacket                Description of the Parameter
+   *@return                          Description of the Return Value
+   *@exception  java.io.IOException  Description of the Exception
    */
   public static String sendPacket(String address, String xmlPacket) throws java.io.IOException {
     Exception errorMessage = null;
     try {
+      //The default factory requires a trusted certificate
+      //Accept any certificate using the custom TrustManager
+      X509TrustManager xtm = new HttpsTrustManager();
+      TrustManager mytm[] = {xtm};
+      SSLContext ctx = SSLContext.getInstance("SSL");
+      ctx.init(null, mytm, null);
+      SSLSocketFactory factory = ctx.getSocketFactory();
+      //Get a connection
       URL url = new URL(address);
-      if (address.indexOf("https://") > -1) {
-        //The default factory requires a trusted certificate
-        //SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-        //Accept any certificate using the custom TrustManager
-        X509TrustManager xtm = new HttpsTrustManager();
-        TrustManager mytm[] = {xtm};
-        SSLContext ctx = SSLContext.getInstance("SSL");
-        ctx.init(null, mytm, null);
-        SSLSocketFactory factory = ctx.getSocketFactory();
-        //Post the data
-        HttpsURLConnection https = (HttpsURLConnection) url.openConnection();
-        https.setSSLSocketFactory(factory);
-        https.setRequestMethod("POST");
-        https.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");
-        https.setDoInput(true);
-        https.setDoOutput(true);
-        PrintWriter outStream = new PrintWriter(https.getOutputStream());
-        outStream.println(xmlPacket);
-        outStream.close();
-        return (retrieveHtml(https));
-      } else {
-        HttpURLConnection http = (HttpURLConnection) url.openConnection();
-        http.setRequestMethod("POST");
-        http.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");
-        http.setDoOutput(true);
-        PrintWriter outStream = new PrintWriter(http.getOutputStream());
-        outStream.println(xmlPacket);
-        outStream.close();
-        return (retrieveHtml(http));
+      URLConnection conn = url.openConnection();
+      //Override the default certificates
+      if (conn instanceof HttpsURLConnection) {
+        ((HttpsURLConnection) conn).setSSLSocketFactory(factory);
+        ((HttpsURLConnection) conn).setHostnameVerifier(new HttpsHostnameVerifier());
       }
+      //Backwards compatible if something sets the old system property
+      if (conn instanceof com.sun.net.ssl.HttpsURLConnection) {
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setSSLSocketFactory(factory);
+        ((com.sun.net.ssl.HttpsURLConnection) conn).setHostnameVerifier(new HttpsHostnameVerifierDeprecated());
+      }
+      ((HttpURLConnection) conn).setRequestMethod("POST");
+      conn.setRequestProperty("Content-Type", "text/xml; charset=\"utf-8\"");
+      conn.setDoInput(true);
+      conn.setDoOutput(true);
+      PrintWriter outStream = new PrintWriter(conn.getOutputStream());
+      //Make the socket connection
+      outStream.println(xmlPacket);
+      outStream.close();
+      return (retrieveHtml(conn));
     } catch (java.net.MalformedURLException e) {
       errorMessage = e;
     } catch (java.io.IOException e) {
@@ -106,11 +105,11 @@ public class HTTPUtils {
   /**
    *  Returns the text received from a web post
    *
-   * @param  http                     Description of the Parameter
-   * @return                          Description of the Return Value
-   * @exception  java.io.IOException  Description of the Exception
+   *@param  http                     Description of the Parameter
+   *@return                          Description of the Return Value
+   *@exception  java.io.IOException  Description of the Exception
    */
-  public static String retrieveHtml(HttpURLConnection http) throws java.io.IOException {
+  public static String retrieveHtml(URLConnection http) throws java.io.IOException {
     StringBuffer htmlOutput = new StringBuffer();
     InputStreamReader input = new InputStreamReader(http.getInputStream());
     BufferedReader inStream = new BufferedReader(input);
@@ -127,9 +126,9 @@ public class HTTPUtils {
    *  Downloads a URL into a postscript file. Currently uses html2ps, but for
    *  Windows compatibility may need to use htmldoc after testing.
    *
-   * @param  url           Description of the Parameter
-   * @param  baseFilename  Description of the Parameter
-   * @return               Description of the Return Value
+   *@param  url           Description of the Parameter
+   *@param  baseFilename  Description of the Parameter
+   *@return               Description of the Return Value
    */
   public static int convertUrlToPostscriptFile(String url, String baseFilename) {
     Process process;
@@ -173,9 +172,9 @@ public class HTTPUtils {
   /**
    *  Adds a feature to the LinkParams attribute of the HTTPUtils class
    *
-   * @param  request  The feature to be added to the LinkParams attribute
-   * @param  tmp      The feature to be added to the LinkParams attribute
-   * @return          Description of the Return Value
+   *@param  request  The feature to be added to the LinkParams attribute
+   *@param  tmp      The feature to be added to the LinkParams attribute
+   *@return          Description of the Return Value
    */
   public static String addLinkParams(HttpServletRequest request, String tmp) {
     String params = "";
@@ -187,6 +186,19 @@ public class HTTPUtils {
       }
     }
     return params;
+  }
+
+
+  /**
+   *  Returns the server's url that was specified in the request, excluding the
+   *  scheme
+   *
+   *@param  request  Description of the Parameter
+   *@return          The serverURL value
+   */
+  public static String getServerUrl(HttpServletRequest request) {
+    int port = request.getServerPort();
+    return (request.getServerName() + (port != 80 && port != 443 ? String.valueOf(port) : "") + request.getContextPath());
   }
 }
 
