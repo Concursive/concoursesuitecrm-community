@@ -877,7 +877,7 @@ public class CalendarView {
 	 *@return    Description of the Returned Value
 	 *@since
 	 */
-	public StringBuffer displayEvents() {
+	public StringBuffer displayEvents(int max) {
 		Vector thisDay = null;
 		String val = "";
 		int count = 0;
@@ -894,12 +894,13 @@ public class CalendarView {
 		//tmpCal.set( Integer.parseInt(tmpCal.get(Calendar.YEAR)), Integer.parseInt(tmpCal.get(Calendar.MONTH)), Integer.parseInt(tmpCal.get(Calendar.DAY_OF_MONTH)) );
 		//}
 
-		while (count < 10 &&loopCount < 31) {
+		while (count < max && loopCount < 31) {
 			thisDay = getDaysEvents(tmpCal.get(Calendar.MONTH), tmpCal.get(Calendar.DAY_OF_MONTH), tmpCal.get(Calendar.YEAR));
 			Iterator i = thisDay.iterator();
 
 			if (i.hasNext()) {
-				while (i.hasNext() && count < 10) {
+				html.append("<tr><td class='containerMenu' align=center valign=center>" + (tmpCal.get(Calendar.MONTH)+1) + "-" + tmpCal.get(Calendar.DAY_OF_MONTH) + "-" + tmpCal.get(Calendar.YEAR) + "</td></tr>");
+				while (i.hasNext() && count < max) {
 					CalendarEvent thisEvent = (CalendarEvent) i.next();
 					html.append("<tr><td valign=center>" + thisEvent.getIcon() + "&nbsp;" + thisEvent.getSubject() + "</td></tr>");
 					count++;

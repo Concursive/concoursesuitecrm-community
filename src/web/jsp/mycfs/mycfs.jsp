@@ -37,7 +37,7 @@
     </td></tr>
 
 	<tr><td>
-	<%=CompanyCalendar.displayEvents().toString()%>
+	<%=CompanyCalendar.displayEvents(5).toString()%>
     
     </table>
 

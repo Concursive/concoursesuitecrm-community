@@ -9,9 +9,9 @@ use CGI qw(:standard);
 # Chris S. Price, Dark Horse Ventures
 # 1-10-2001
 #
-# reuters-grab.pl <company_id_name> <dbname>
+# reuters-grab.pl <company webroot folder>
 #
-# file <company_id_name>.conf must be present in directory
+# file site.cfg must be present in <webroot>/database directory
 #
 # $LOGFILE == log destination
 ##########################################################
@@ -78,10 +78,8 @@ sub insert {
 sub main () {
 
 my $site_config = "$ARGV[0]" . "/database/site.cfg";
-
 open LOG, ">>$LOGFILE" or die "Cannot open $LOGFILE for write :$!";
 
-#print LOG "----------------------------\n";
 print LOG `date`;
 print LOG "$0\n";
 print LOG "\nconfiguration: $site_config\n";
@@ -89,24 +87,6 @@ print LOG "database: $DBNAME\n";
 
 open CONF, $site_config or die "Cannot open $site_config for read :$!";
         
-      #  while (<CONF>) {
-      #         if ( /^\*[0-9]/ ) {
-#			print LOG "Processing Entry: $_\n";
-#                        $temp = $_;
-#                        $temp2 = $_;
-
-#                        $temp2 =~ s/^\*//;
-#                        $temp2 =~ s/[0-9]*\|//;
-#                        $temp2 =~ s/[\r\n]//;
-
-#                        $temp =~ s/^\*//;
-#                        $temp =~ s/\|.*//;
-#                        $temp =~ s/[\r\n]//;
-
-#                        &doit( $temp, $temp2 );
-#                }
-#        } 
-
         while (<CONF>) {
                 chomp;
                 next if (/^#/);

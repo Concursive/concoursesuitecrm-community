@@ -289,7 +289,7 @@ public final class MyCFS extends CFSModule {
 			
 			sql.append(" ORDER BY dateentered desc limit 10 ");
 
-			System.out.println(sql.toString());
+			//System.out.println(sql.toString());
 			st = db.createStatement();
 
 			//Execute the main query

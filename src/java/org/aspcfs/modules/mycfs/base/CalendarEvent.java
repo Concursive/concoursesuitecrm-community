@@ -164,9 +164,9 @@ public class CalendarEvent implements Comparable {
 		else if (category.equals("holiday")) {
 			icon = "<img border=0 src=\"/images/event-holiday.gif\" align=texttop width=12 height=12>";
 		} else if (category.equals("Opportunity")) {
-			icon = "<img border=0 src=\"images/alertcall.gif\" align=texttop>";
+			icon = "<img border=0 src=\"images/alertcall.gif\" alt=\"Opportunity\" align=texttop>";
 		} else if (category.equals("Call")) {
-			icon = "<img border=0 src=\"images/alertopp.gif\" align=texttop>";
+			icon = "<img border=0 src=\"images/alertopp.gif\" alt=\"Call\" align=texttop>";
 		}
 	}
 
