@@ -14,9 +14,8 @@ INSERT INTO sync_system (application_name) VALUES ('Street Smart Speakers: Web P
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (1, 'ticket', 'com.darkhorseventures.cfsbase.Ticket');
 
-/* AUTO GUIDE */
+/* AUTO GUIDE
 
-/* 
   THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
  VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 0, false,
@@ -29,9 +28,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        PRIMARY KEY (table_id)
 )'
 );
-*/
 
-/* 
   THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'status_master', null, 0,
@@ -41,9 +38,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
        PRIMARY KEY (record_status_id)
 )'
 );
-*/
 
-/* 
   THE CLIENT SHOULD ALREADY HAVE THIS TABLE CREATED 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'system', null, 70,
