@@ -29,7 +29,7 @@
   
   <tr class="containerBody">
   <td nowrap class="formLabel">
-      Title
+      Description
   </td>
   
   <td>

@@ -19,7 +19,7 @@
   </tr>
   <tr>
   <td nowrap align="left" width="25%">
-      Title&nbsp;
+      Description&nbsp;
       <input type=text name="description" value="" size=30>
       <font color="red">*</font>
       <input type=hidden name="owner" value="<%=User.getUserRecord().getContact().getId()%>">
