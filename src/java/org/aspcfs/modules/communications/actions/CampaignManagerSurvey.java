@@ -82,7 +82,7 @@ public final class CampaignManagerSurvey extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
+    if (!(hasPermission(context, "campaign-campaigns-surveys-add") || hasPermission(context, "campaign-campaigns-surveys-edit"))) {
       return ("PermissionError");
     }
     try {
@@ -450,7 +450,7 @@ public final class CampaignManagerSurvey extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
-    if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
+    if (!(hasPermission(context, "campaign-campaigns-surveys-add") || hasPermission(context, "campaign-campaigns-surveys-edit"))) {
       return ("PermissionError");
     }
 
@@ -518,7 +518,7 @@ public final class CampaignManagerSurvey extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsertAndAdd(ActionContext context) {
-    if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
+    if (!(hasPermission(context, "campaign-campaigns-surveys-add") || hasPermission(context, "campaign-campaigns-surveys-edit"))) {
       return ("PermissionError");
     }
 
