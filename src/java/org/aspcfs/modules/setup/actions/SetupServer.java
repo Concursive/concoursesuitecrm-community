@@ -59,6 +59,8 @@ public class SetupServer extends CFSModule {
           if (previousRegistration != null) {
             previousRegistration.setEnabled(false);
             previousRegistration.updateEnabled(db);
+            license.setEdition(previousRegistration.getEdition());
+            license.setText2(previousRegistration.getText2());
           } else {
             license.setEdition("Free Edition (5-seat binary)");
             license.setText2(StringUtils.randomString(5,5));
@@ -76,13 +78,8 @@ public class SetupServer extends CFSModule {
           registration.setJava(license.getJava());
           registration.setWebserver(license.getWebserver());
           registration.setIp(context.getIpAddress());
-          if (previousRegistration == null) {
-            registration.setEdition(license.getEdition());
-            registration.setText2(license.getText2());
-          } else {
-            registration.setEdition(previousRegistration.getEdition());
-            registration.setText2(previousRegistration.getText2());
-          }
+          registration.setEdition(license.getEdition());
+          registration.setText2(license.getText2());
           registration.insert(db);
           status.appendChild(document.createTextNode("0"));
           errorText.appendChild(document.createTextNode("SUCCESS"));
