@@ -412,10 +412,10 @@ public String getUniqueField() { return uniqueField; }
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("t.problem", null);
+      pagedListInfo.setDefaultSort("t.entered", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY t.problem ");
+      sqlOrder.append("ORDER BY t.entered ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -512,11 +512,11 @@ public String getUniqueField() { return uniqueField; }
       }
 
       if (onlyOpen == true) {
-        sqlFilter.append("AND t.closed IS null ");
+        sqlFilter.append("AND t.closed IS NULL ");
       }
 
       if (onlyClosed == true) {
-        sqlFilter.append("AND t.closed IS NOT null ");
+        sqlFilter.append("AND t.closed IS NOT NULL ");
       }
 
       if (id > -1) {
@@ -529,7 +529,7 @@ public String getUniqueField() { return uniqueField; }
 
       if (department > -1) {
         if (unassignedToo == true) {
-          sqlFilter.append("AND t.department_code in (?, 0, -1) ");
+          sqlFilter.append("AND (t.department_code in (?, 0, -1) OR (t.department_code IS NULL)) ");
         } else {
           sqlFilter.append("AND t.department_code = ? ");
         }
