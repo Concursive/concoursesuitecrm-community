@@ -535,6 +535,8 @@
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
+      <!-- framework data -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_workflow.sql"/>
       <!-- base data -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_cdb.sql"/>
       <transaction src="${build.sql.dir}/cdb.sql"/>
