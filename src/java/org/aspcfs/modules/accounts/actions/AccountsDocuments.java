@@ -312,11 +312,11 @@ public final class AccountsDocuments extends CFSModule {
       if (db != null) this.freeConnection(context, db);
     }
     
-    addModuleBean(context, "View Accounts", "");
     if (errorMessage == null) {
       return ("-none-");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
+      addModuleBean(context, "View Accounts", "");
       return ("SystemError");
     }
   }

@@ -1,7 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-<jsp:useBean id="FileItemList" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
+<jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <a href="/CampaignManager.do?command=Dashboard">Back to Dashboard</a>
 <br>&nbsp;
@@ -88,10 +88,10 @@
   </tr>
   <tr class="title">
     <td width="10" align="center">Action</td>
-    <td colspan="2">Item</td>
+    <td>Item</td>
     <td>Size</td>
     <td>Created</td>
-    <td>Created By</td>
+    <td nowrap>Created By</td>
   </tr>
 <%
   Iterator j = FileItemList.iterator();
@@ -104,13 +104,10 @@
 %>      
     <tr class="row<%= rowid %>">
       <td width="10" valign="middle" align="center" rowspan="2" nowrap>
-        <a href="AccountsDocuments.do?command=Download&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
+        <a href="CampaignManager.do?command=Download&id=<%= Campaign.getId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
 			</td>
       <td valign="top" width="100%">
-        <a href="AccountsDocuments.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %></a>
-      </td>
-      <td align="right" valign="middle" nowrap>
-        [<a href="AccountsDocuments.do?command=AddVersion&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
+        <%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %>
       </td>
       <td align="center" valign="middle" nowrap>
         <%= thisFile.getRelativeSize() %> k&nbsp;
@@ -123,7 +120,7 @@
       </td>
     </tr>
     <tr class="row<%= rowid %>">
-      <td valign="middle" align="left" colspan="5">
+      <td valign="middle" align="left" colspan="4">
         <i><%= toHtml(thisFile.getSubject()) %></i>
       </td>
     </tr>

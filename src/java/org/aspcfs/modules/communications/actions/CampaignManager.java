@@ -9,6 +9,8 @@ import java.util.Iterator;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
+import com.zeroio.iteam.base.*;
+import com.zeroio.webutils.*;
 
 /**
  *  Actions for dealing with Campaigns in the Communications Module, including
@@ -16,7 +18,8 @@ import com.darkhorseventures.webutils.*;
  *
  *@author     w. gillette
  *@created    October 18, 2001
- *@version    $Id$
+ *@version    $Id: CampaignManager.java,v 1.4 2002/03/12 21:42:27 mrajkowski Exp
+ *      $
  */
 public final class CampaignManager extends CFSModule {
 
@@ -54,7 +57,7 @@ public final class CampaignManager extends CFSModule {
 
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
+      submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "Dashboard";
@@ -105,7 +108,7 @@ public final class CampaignManager extends CFSModule {
 
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
+      submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "ManageCampaigns";
@@ -161,7 +164,7 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     boolean recordInserted = false;
 
-    Campaign campaign = (Campaign)context.getFormBean();
+    Campaign campaign = (Campaign) context.getFormBean();
 
     try {
       db = this.getConnection(context);
@@ -264,17 +267,24 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandPreviewGroups(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
 
     try {
       db = this.getConnection(context);
-      
+
       Campaign campaign = new Campaign(db, context.getRequest().getParameter("id"));
       context.getRequest().setAttribute("Campaign", campaign);
-      
+
       SearchCriteriaList thisSCL = new SearchCriteriaList(db, context.getRequest().getParameter("scl"));
       context.getRequest().setAttribute("SCL", thisSCL);
 
@@ -301,14 +311,14 @@ public final class CampaignManager extends CFSModule {
 
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
+      submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "ManageCampaigns";
     }
     context.getRequest().setAttribute("submenu", submenu);
     addModuleBean(context, submenu, "Preview");
-    
+
     if (errorMessage == null) {
       return ("PreviewGroupsOK");
     } else {
@@ -316,21 +326,28 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandToggleRecipient(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
     boolean result = true;
 
-    Campaign newCamp = (Campaign)context.getFormBean();
-    
-    String campaignId = context.getRequest().getParameter("id"); 
+    Campaign newCamp = (Campaign) context.getFormBean();
+
+    String campaignId = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
-    
+
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      thisContact.checkExcludedFromCampaign(db,Integer.parseInt(campaignId));
+      thisContact.checkExcludedFromCampaign(db, Integer.parseInt(campaignId));
       thisContact.toggleExcluded(db, Integer.parseInt(campaignId));
     } catch (Exception e) {
       errorMessage = e;
@@ -338,9 +355,9 @@ public final class CampaignManager extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     context.getRequest().setAttribute("Campaign", newCamp);
-    return("ToggleOK");
+    return ("ToggleOK");
   }
 
 
@@ -402,7 +419,7 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-      
+
       LookupList deliveryList = new LookupList(db, "lookup_delivery_options");
       context.getRequest().setAttribute("DeliveryList", deliveryList);
 
@@ -692,7 +709,7 @@ public final class CampaignManager extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      campaign = (Campaign)context.getFormBean();
+      campaign = (Campaign) context.getFormBean();
       campaign.setModifiedBy(getUserId(context));
       resultCount = campaign.updateDetails(db);
     } catch (Exception e) {
@@ -891,9 +908,92 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Generate a list of Campaign files that can be downloaded.
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandPrepareDownload(ActionContext context) {
-    return ("PrepareDownloadOK");
+    addModuleBean(context, "Dashboard", "Campaign: Downloads");
+    Exception errorMessage = null;
+    Connection db = null;
+
+    try {
+      String campaignId = context.getRequest().getParameter("id");
+      db = this.getConnection(context);
+      Campaign thisCampaign = new Campaign(db, campaignId);
+      FileItemList files = new FileItemList();
+      files.setLinkModuleId(Constants.COMMUNICATIONS);
+      files.setLinkItemId(thisCampaign.getId());
+      files.buildList(db);
+
+      context.getRequest().setAttribute("Campaign", thisCampaign);
+      context.getRequest().setAttribute("FileItemList", files);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("PrepareDownloadOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandDownload(ActionContext context) {
+    Exception errorMessage = null;
+
+    String linkItemId = (String)context.getRequest().getParameter("id");
+    String fileId = (String)context.getRequest().getParameter("fid");
+    FileItem itemToDownload = null;
+    
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      itemToDownload = new FileItem(db, Integer.parseInt(fileId), Integer.parseInt(linkItemId), Constants.COMMUNICATIONS);
+    } catch (Exception e) {
+      errorMessage = e;
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    //Start the download
+    try {
+      String filePath = this.getPath(context, "communications", Integer.parseInt(linkItemId)) + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename();
+      
+      FileDownload fileDownload = new FileDownload();
+      fileDownload.setFullPath(filePath);
+      fileDownload.setDisplayName(itemToDownload.getClientFilename());
+      if (fileDownload.fileExists()) {
+        fileDownload.sendFile(context);
+        //Get a db connection now that the download is complete
+        db = getConnection(context);
+        itemToDownload.updateCounter(db);
+      } else {
+        System.err.println("PMF-> Trying to send a file that does not exist");
+      }
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    if (errorMessage == null) {
+      return ("-none-");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 }
 
