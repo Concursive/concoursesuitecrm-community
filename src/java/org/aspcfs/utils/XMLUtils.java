@@ -136,7 +136,9 @@ public class XMLUtils {
     NodeList nl = e.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
-      if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals(name)) {
+      if (n != null && 
+          n.getNodeType() == Node.ELEMENT_NODE && 
+          ((Element) n).getTagName().equals(name)) {
         return (Element) n;
       }
     }
