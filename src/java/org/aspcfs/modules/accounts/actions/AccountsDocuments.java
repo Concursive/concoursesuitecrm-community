@@ -110,9 +110,6 @@ public final class AccountsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "Upload Document");
     if (errorMessage == null) {
-      if (!hasAuthority(context, thisOrg.getOwner())) {
-        return "PermissionError";
-      }
       return ("AddOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -128,44 +125,32 @@ public final class AccountsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpload(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
+    if (!hasPermission(context, "accounts-accounts-documents-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrg = null;
     boolean recordInserted = false;
-
     try {
       String filePath = this.getPath(context, "accounts");
-
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-
       HashMap parts = multiPart.parseData(
           context.getRequest().getInputStream(), "---------------------------", filePath);
-
-      db = getConnection(context);
-
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
+      db = getConnection(context);
       thisOrg = addOrganization(context, db, id);
-      if (!hasAuthority(context, thisOrg.getOwner())) {
-        return "PermissionError";
-      }
-
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
-
         //Update the database with the resulting file
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
-
+        //Insert a file description record into the database
         FileItem thisItem = new FileItem();
         thisItem.setLinkModuleId(Constants.ACCOUNTS);
         thisItem.setLinkItemId(thisOrg.getOrgId());
@@ -177,7 +162,6 @@ public final class AccountsDocuments extends CFSModule {
         thisItem.setFilename(newFileInfo.getRealFilename());
         thisItem.setVersion(1.0);
         thisItem.setSize(newFileInfo.getSize());
-
         recordInserted = thisItem.insert(db);
         if (!recordInserted) {
           processErrors(context, thisItem.getErrors());
@@ -216,29 +200,23 @@ public final class AccountsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
+    if (!hasPermission(context, "accounts-accounts-documents-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Organization thisOrg = null;
-
     String itemId = (String) context.getRequest().getParameter("fid");
     if (itemId == null) {
       itemId = (String) context.getRequest().getAttribute("fid");
     }
-
     String folderId = context.getRequest().getParameter("folderId");
     if (folderId != null) {
       context.getRequest().setAttribute("folderId", folderId);
     }
-
     Connection db = null;
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
-
       FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       context.getRequest().setAttribute("FileItem", thisFile);
     } catch (Exception e) {
@@ -246,12 +224,8 @@ public final class AccountsDocuments extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "View Accounts", "Upload New Document Version");
     if (errorMessage == null) {
-      if (!hasAuthority(context, thisOrg.getOwner())) {
-        return "PermissionError";
-      }
       return ("AddVersionOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -267,40 +241,29 @@ public final class AccountsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUploadVersion(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
+    if (!hasPermission(context, "accounts-accounts-documents-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrg = null;
-
     boolean recordInserted = false;
     try {
       String filePath = this.getPath(context, "accounts");
-
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-
       HashMap parts = multiPart.parseData(
           context.getRequest().getInputStream(), "---------------------------", filePath);
-
-      db = getConnection(context);
-
       String id = (String) parts.get("id");
       String itemId = (String) parts.get("fid");
       String subject = (String) parts.get("subject");
       String versionId = (String) parts.get("versionId");
+      db = getConnection(context);
       thisOrg = addOrganization(context, db, id);
-      if (!hasAuthority(context, thisOrg.getOwner())) {
-        return "PermissionError";
-      }
-
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
         //Update the database with the resulting file
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
@@ -396,25 +359,18 @@ public final class AccountsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
+    if (!hasPermission(context, "accounts-accounts-documents-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     String itemId = (String) context.getRequest().getParameter("fid");
     String version = (String) context.getRequest().getParameter("ver");
     FileItem thisItem = null;
-
     Connection db = null;
     Organization thisOrg = null;
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
-      if (!hasAuthority(context, thisOrg.getOwner())) {
-        return "PermissionError";
-      }
       thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       if (version != null) {
         thisItem.buildVersionList(db);
@@ -425,7 +381,6 @@ public final class AccountsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
     //Start the download
-
     try {
       if (version == null) {
         FileItem itemToDownload = thisItem;
@@ -495,37 +450,26 @@ public final class AccountsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-documents-edit"))) {
+    if (!hasPermission(context, "accounts-accounts-documents-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     String itemId = (String) context.getRequest().getParameter("fid");
-    
     Connection db = null;
     Organization thisOrg = null;
-    
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
-      
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "View Accounts", "Modify Document Information");
     if (errorMessage == null) {
-      if (!hasAuthority(context, thisOrg.getOwner())) {
-        return "PermissionError";
-      }
       return ("ModifyOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -541,39 +485,28 @@ public final class AccountsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-documents-edit"))) {
+    if (!hasPermission(context, "accounts-accounts-documents-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordInserted = false;
-
     String itemId = (String) context.getRequest().getParameter("fid");
     String subject = (String) context.getRequest().getParameter("subject");
     String filename = (String) context.getRequest().getParameter("clientFilename");
-
     Connection db = null;
     Organization thisOrg = null;
-    
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
-      if (!hasAuthority(context, thisOrg.getOwner())) {
-        return "PermissionError";
-      }
-
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
       recordInserted = thisItem.update(db);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "View Accounts", "");
     if (errorMessage == null) {
       if (recordInserted) {
@@ -596,26 +529,17 @@ public final class AccountsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-documents-delete"))) {
+    if (!hasPermission(context, "accounts-accounts-documents-delete")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordDeleted = false;
-
     String itemId = (String) context.getRequest().getParameter("fid");
-
     Connection db = null;
     Organization thisOrg = null;
-    
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
-      if (!hasAuthority(context, thisOrg.getOwner())) {
-        return "PermissionError";
-      }
-      
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
         recordDeleted = thisItem.delete(db, this.getPath(context, "accounts"));
@@ -625,7 +549,6 @@ public final class AccountsDocuments extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "View Accounts", "Delete Document");
     if (errorMessage == null) {
       if (recordDeleted) {

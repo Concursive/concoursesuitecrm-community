@@ -115,16 +115,12 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDownloadCSVReport(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-reports-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     String itemId = (String) context.getRequest().getParameter("fid");
     FileItem thisItem = null;
-
     Connection db = null;
     try {
       db = getConnection(context);
@@ -134,19 +130,12 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (!hasAuthority(context, thisItem.getEnteredBy())) {
-      return ("PermissionError");
-    }
-
     //Start the download
     try {
       FileItem itemToDownload = null;
       itemToDownload = thisItem;
-
       //itemToDownload.setEnteredBy(this.getUserId(context));
       String filePath = this.getPath(context, "account-reports") + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename() + ".csv";
-
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -166,7 +155,6 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       return ("-none-");
     } else {
@@ -183,25 +171,18 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-reports-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     FileItem thisItem = null;
-
     String projectId = (String) context.getRequest().getParameter("pid");
     String itemId = (String) context.getRequest().getParameter("fid");
-
     Connection db = null;
-
     try {
       db = getConnection(context);
-
       //-1 is the project ID for non-projects
       thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-
       String filePath = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
       String textToShow = this.includeFile(filePath);
       context.getRequest().setAttribute("ReportText", textToShow);
@@ -209,10 +190,6 @@ public final class Accounts extends CFSModule {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
-    }
-
-    if (!hasAuthority(context, thisItem.getEnteredBy())) {
-      return ("PermissionError");
     }
     return ("ReportHtmlOK");
   }
@@ -401,36 +378,24 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-reports-delete"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordDeleted = false;
-
     String projectId = (String) context.getRequest().getParameter("pid");
     String itemId = (String) context.getRequest().getParameter("fid");
-
     Connection db = null;
     try {
       db = getConnection(context);
-
       //-1 is the project ID for non-projects
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-
-      if (!hasAuthority(context, thisItem.getEnteredBy())) {
-        return ("PermissionError");
-      }
-
       recordDeleted = thisItem.delete(db, this.getPath(context, "account-reports"));
-
       String filePath1 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
       java.io.File fileToDelete1 = new java.io.File(filePath1);
       if (!fileToDelete1.delete()) {
         System.err.println("FileItem-> Tried to delete file: " + filePath1);
       }
-
       String filePath2 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
       java.io.File fileToDelete2 = new java.io.File(filePath2);
       if (!fileToDelete2.delete()) {
@@ -441,9 +406,7 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Reports", "Reports del");
-
     if (errorMessage == null) {
       if (recordDeleted) {
         return ("DeleteReportOK");
@@ -906,22 +869,17 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-edit"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     Organization updatedOrg = null;
-
     Organization newOrg = (Organization) context.getFormBean();
-
     newOrg.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOrg.setModifiedBy(getUserId(context));
     newOrg.setEnteredBy(getUserId(context));
-
     //set the name to namelastfirstmiddle if individual
     if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
       newOrg.setName(newOrg.getNameLastFirstMiddle());
@@ -929,16 +887,11 @@ public final class Accounts extends CFSModule {
       //don't want to populate the addresses, etc. if this is an individual account
       newOrg.setRequestItems(context.getRequest());
     }
-
     try {
       String orgId = context.getRequest().getParameter("orgId");
       int tempid = Integer.parseInt(orgId);
       db = this.getConnection(context);
       updatedOrg = new Organization(db, tempid);
-      if (!(hasAuthority(context, updatedOrg.getOwner()))) {
-        return ("PermissionError");
-      }
-
       resultCount = newOrg.update(db);
       if (resultCount == -1) {
         processErrors(context, newOrg.getErrors());
@@ -950,13 +903,11 @@ public final class Accounts extends CFSModule {
           ((Contact) updatedOrg.getPrimaryContact()).update(db);
         }
       }
-
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "View Accounts", "Modify Account");
     if (errorMessage == null) {
       if (resultCount == -1) {
@@ -991,31 +942,22 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-delete"))) {
+    if (!hasPermission(context, "accounts-accounts-delete")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Organization thisOrganization = null;
-
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisOrganization = new Organization(db, Integer.parseInt(context.getRequest().getParameter("orgId")));
-      if (!(hasAuthority(context, thisOrganization.getOwner()))) {
-        return ("PermissionError");
-      }
-
       if (context.getRequest().getParameter("action") != null) {
-
         if (((String) context.getRequest().getParameter("action")).equals("delete")) {
           //TODO: these may have different options later
           thisOrganization.setContactDelete(true);
           thisOrganization.setRevenueDelete(true);
           thisOrganization.setDocumentDelete(true);
-
           recordDeleted = thisOrganization.delete(db, this.getPath(context, "accounts", thisOrganization.getOrgId()));
         } else if (((String) context.getRequest().getParameter("action")).equals("disable")) {
           recordDeleted = thisOrganization.disable(db);
@@ -1026,7 +968,6 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Accounts", "Delete Account");
     if (errorMessage == null) {
       if (recordDeleted) {
@@ -1151,26 +1092,18 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandModify(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-edit"))) {
+    if (!hasPermission(context, "accounts-accounts-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     //Command errors
     int errorCode = 0;
-
     String orgid = context.getRequest().getParameter("orgId");
     context.getRequest().setAttribute("orgId", orgid);
     int tempid = Integer.parseInt(orgid);
-
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-
     //this is how we get the multiple-level heirarchy...recursive function.
-
     User thisRec = thisUser.getUserRecord();
-
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
     userList.setMyId(getUserId(context));
@@ -1178,39 +1111,26 @@ public final class Accounts extends CFSModule {
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
-
     Connection db = null;
     Organization newOrg = null;
-
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, tempid);
-
-      if (!(hasAuthority(context, newOrg.getOwner()))) {
-        return ("PermissionError");
-      }
-
       LookupList industrySelect = new LookupList(db, "lookup_industry");
       industrySelect.addItem(0, "--None--");
       context.getRequest().setAttribute("IndustryList", industrySelect);
-
       LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
       context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
-
       LookupList addrTypeList = new LookupList(db, "lookup_orgaddress_types");
       context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
-
       LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
-
       //if this is an individual account
       if (newOrg.getPrimaryContact() != null) {
         LookupList contactEmailTypeList = new LookupList(db, "lookup_contactemail_types");
         context.getRequest().setAttribute("ContactEmailTypeList", contactEmailTypeList);
-
         LookupList contactAddrTypeList = new LookupList(db, "lookup_contactaddress_types");
         context.getRequest().setAttribute("ContactAddressTypeList", contactAddrTypeList);
-
         LookupList contactPhoneTypeList = new LookupList(db, "lookup_contactphone_types");
         context.getRequest().setAttribute("ContactPhoneTypeList", contactPhoneTypeList);
       }
@@ -1219,7 +1139,6 @@ public final class Accounts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       addModuleBean(context, "View Accounts", "Account Modify");
       context.getRequest().setAttribute("OrgDetails", newOrg);
@@ -1232,7 +1151,6 @@ public final class Accounts extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-
   }
 
 
