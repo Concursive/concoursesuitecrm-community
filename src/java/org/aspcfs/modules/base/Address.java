@@ -22,10 +22,10 @@ public class Address {
   private int contactId = -1;
   private String streetAddressLine1 = "";
   private String streetAddressLine2 = "";
-  private String city = "";
+  private String city = null;
   private String state = null;
-  private String zip = "";
-  private String country = "";
+  private String zip = null;
+  private String country = null;
   private int type = -1;
   private String typeName = null;
   private int enteredBy = -1;
