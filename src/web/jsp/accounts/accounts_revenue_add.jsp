@@ -6,11 +6,11 @@
 <jsp:useBean id="YearList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
-<form name="addRevenue" action="/RevenueManager.do?command=Insert&auto-populate=true" method="post">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/RevenueManager.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Revenue</a> >
+<form name="addRevenue" action="RevenueManager.do?command=Insert&auto-populate=true" method="post">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="RevenueManager.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Revenue</a> >
 Add Revenue<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -28,8 +28,9 @@ Add Revenue<br>
   <tr>
     <td class="containerBack">
 <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
-<input type=submit value="Save">
-<input type=reset value="Reset">
+<input type="submit" value="Save">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=View'">
+<input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -84,8 +85,9 @@ Add Revenue<br>
   
 </table>
 &nbsp;<br>
-<input type=submit value="Save">
-<input type=reset value="Reset">
+<input type="submit" value="Save">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=View'">
+<input type="reset" value="Reset">
     </td>
   </tr>
 </table>
