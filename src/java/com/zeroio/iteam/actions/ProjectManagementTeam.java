@@ -46,8 +46,8 @@ public final class ProjectManagementTeam extends CFSModule {
       //context.getRequest().setAttribute("UserList", userList);
       context.getRequest().setAttribute("UserSize", "" + userList.size());
       
-      LookupList departmentList = new LookupList(db, "lookup_department");
-      //Add in reverse order
+      LookupList departmentList = new LookupList(
+        db, "lookup_department");
       departmentList.addItem(0, "Users without a department");
       context.getRequest().setAttribute("DepartmentList", departmentList);
       

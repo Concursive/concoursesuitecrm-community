@@ -68,7 +68,7 @@
     }
   }
 </script>
-<form method="POST" name="inputForm" action="ProjectManagementAssignments.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
+<form method="POST" name="inputForm" action="ProjectManagementAssignments.do?command=Insert&auto-populate=true<%= ("Requirements".equals(request.getParameter("return"))?"&return=Requirements":"") %>" onSubmit="return checkForm(this);">
   <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td width="2" bgcolor="#000000">&nbsp;</td>
@@ -184,7 +184,7 @@
           &nbsp;
           <input type="submit" value=" Save ">&nbsp;&nbsp;
           &nbsp;&nbsp;
-          <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>';">
+          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&pid=<%= Project.getId() %><%= ("Requirements".equals(request.getParameter("return"))?"&section=Requirements":"&section=Assignments") %>';">
           &nbsp;&nbsp;
         </p>
       </td>

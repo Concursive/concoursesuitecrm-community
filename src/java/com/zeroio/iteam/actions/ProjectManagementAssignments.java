@@ -137,7 +137,11 @@ public final class ProjectManagementAssignments extends CFSModule {
 
     if (errorMessage == null) {
       if (recordInserted) {
-        return ("AddOK");
+        if ("Requirements".equals(context.getRequest().getParameter("return"))) {
+          return ("AddOKRequirements");
+        } else {
+          return ("AddOK");
+        }
       } else {
         return (executeCommandAdd(context));
       }
