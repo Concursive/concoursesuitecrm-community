@@ -31,17 +31,14 @@ public final class TroubleTicketsFolders extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandFields(ActionContext context) {
-    /* if (!(hasPermission(context, "accounts-accounts-folders-view"))) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
-    } */
-    
-    Exception errorMessage = null;
+    }
     Connection db = null;
     Ticket thisTicket = null;
     String recordId = null;
     boolean showRecords = true;
     String selectedCatId = null;
-
     try {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
@@ -115,23 +112,18 @@ public final class TroubleTicketsFolders extends CFSModule {
         context.getRequest().setAttribute("Category", thisCategory);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "ViewTickets", "Custom Fields Details");
-      if (Integer.parseInt(selectedCatId) <= 0) {
-        return ("FieldsEmptyOK");
-      } else if (recordId == null && showRecords) {
-        return ("FieldRecordListOK");
-      } else {
-        return ("FieldsOK");
-      }
+    addModuleBean(context, "ViewTickets", "Custom Fields Details");
+    if (Integer.parseInt(selectedCatId) <= 0) {
+      return ("FieldsEmptyOK");
+    } else if (recordId == null && showRecords) {
+      return ("FieldRecordListOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("FieldsOK");
     }
   }
 
@@ -144,14 +136,11 @@ public final class TroubleTicketsFolders extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAddFolderRecord(ActionContext context) {
-    /* if (!(hasPermission(context, "accounts-accounts-folders-add"))) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
-    } */
-
-    Exception errorMessage = null;
+    }
     Connection db = null;
     Ticket thisTicket = null;
-
     try {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
@@ -168,20 +157,14 @@ public final class TroubleTicketsFolders extends CFSModule {
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
-
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "ViewTickets", "Add Folder Record");
-      return ("AddFolderRecordOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "ViewTickets", "Add Folder Record");
+    return ("AddFolderRecordOK");
   }
 
 
@@ -193,11 +176,9 @@ public final class TroubleTicketsFolders extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandModifyFields(ActionContext context) {
-    /* if (!(hasPermission(context, "accounts-accounts-folders-edit"))) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
-    } */
-
-    Exception errorMessage = null;
+    }
     Connection db = null;
     Ticket thisTicket = null;
 
@@ -220,23 +201,17 @@ public final class TroubleTicketsFolders extends CFSModule {
       thisCategory.setBuildResources(true);
       thisCategory.buildResources(db);
       context.getRequest().setAttribute("Category", thisCategory);
-
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "ViewTickets", "Modify Custom Fields");
-      if (recordId.equals("-1")) {
-        return ("AddFolderRecordOK");
-      } else {
-        return ("ModifyFieldsOK");
-      }
+    addModuleBean(context, "ViewTickets", "Modify Custom Fields");
+    if (recordId.equals("-1")) {
+      return ("AddFolderRecordOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("ModifyFieldsOK");
     }
   }
 
@@ -249,15 +224,12 @@ public final class TroubleTicketsFolders extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandUpdateFields(ActionContext context) {
-    /* if (!(hasPermission(context, "accounts-accounts-folders-edit"))) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
-    } */
-
-    Exception errorMessage = null;
+    }
     Connection db = null;
     Ticket thisTicket = null;
     int resultCount = 0;
-
     try {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
@@ -301,23 +273,18 @@ public final class TroubleTicketsFolders extends CFSModule {
       }
       context.getRequest().setAttribute("Category", thisCategory);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return ("ModifyFieldsOK");
-      } else if (resultCount == 1) {
-        return ("UpdateFieldsOK");
-      } else {
-        context.getRequest().setAttribute("Error", CFSModule.NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
+    if (resultCount == -1) {
+      return ("ModifyFieldsOK");
+    } else if (resultCount == 1) {
+      return ("UpdateFieldsOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", CFSModule.NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
@@ -329,15 +296,12 @@ public final class TroubleTicketsFolders extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandInsertFields(ActionContext context) {
-    /* if (!(hasPermission(context, "accounts-accounts-folders-add"))) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
-    } */
-
-    Exception errorMessage = null;
+    }
     Connection db = null;
     int resultCode = -1;
     Ticket thisTicket = null;
-
     try {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
@@ -377,20 +341,15 @@ public final class TroubleTicketsFolders extends CFSModule {
       }
       context.getRequest().setAttribute("Category", thisCategory);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (resultCode == -1) {
-        return ("AddFolderRecordOK");
-      } else {
-        return (this.executeCommandFields(context));
-      }
+    if (resultCode == -1) {
+      return ("AddFolderRecordOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (this.executeCommandFields(context));
     }
   }
 
@@ -402,14 +361,11 @@ public final class TroubleTicketsFolders extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDeleteFields(ActionContext context) {
-    /* if (!(hasPermission(context, "accounts-accounts-folders-delete"))) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
-    } */
-
-    Exception errorMessage = null;
+    }
     Connection db = null;
     boolean recordDeleted = false;
-
     try {
       String selectedCatId = context.getRequest().getParameter("catId");
       String recordId = context.getRequest().getParameter("recId");
@@ -426,20 +382,13 @@ public final class TroubleTicketsFolders extends CFSModule {
       }
       context.getRequest().setAttribute("recordDeleted", "true");
     } catch (Exception e) {
-      errorMessage = e;
+      addModuleBean(context, "Accounts", "Delete Folder Record");
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      return ("DeleteFieldsOK");
-    } else {
-      addModuleBean(context, "Accounts", "Delete Folder Record");
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("DeleteFieldsOK");
   }
-  
-  
 }
 
