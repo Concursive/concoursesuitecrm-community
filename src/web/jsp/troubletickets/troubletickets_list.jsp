@@ -143,12 +143,7 @@
 			<%=toHtml(openTic.getCompanyName())%><dhv:evaluate exp="<%=!(openTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width=150 nowrap valign="top" class="row<%= rowid %>">
-			<dhv:evaluate exp="<%= opentTic.isAssigned() %>">
         <%= toHtml(openTic.getOwnerName()) %>
-      </dhv:evaluate>
-      <dhv:evaluate exp="<%= !opentTic.isAssigned() %>">
-        <font color="red"><%= toHtml(openTic.getOwnerName()) %></font>
-      </dhv:evaluate>
 		</td>
 	</tr>
   
