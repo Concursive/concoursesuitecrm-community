@@ -889,6 +889,7 @@ public final class ExternalContacts extends CFSModule {
         userList.setIncludeMe(true);
         userList.setExcludeDisabledIfUnselected(true);
         context.getRequest().setAttribute("UserList", userList);
+        context.getRequest().setAttribute("TypeList", thisContact.getTypeList());
         if (thisContact.getOrgId() > -1) {
           Organization thisOrg = new Organization(db, thisContact.getOrgId());
           thisContact.setCompany(thisOrg.getName());
@@ -1071,6 +1072,7 @@ public final class ExternalContacts extends CFSModule {
         return ("ContactDetailsOK");
       } else {
         processErrors(context, thisContact.getErrors());
+        context.getRequest().setAttribute("TypeList", thisContact.getTypeList());
         return (executeCommandInsertContactForm(context));
       }
     } else {
@@ -1478,7 +1480,7 @@ public final class ExternalContacts extends CFSModule {
       context.getSession().removeAttribute("ContactTypeSelectorInfo");
     }
     PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "ContactTypeSelectorInfo");
-    lookupSelectorInfo.setEnableJavaScript(true);
+    lookupSelectorInfo.setEnableJScript(true);
 
     HashMap selectedList = new HashMap();
     HashMap finalElementList = (HashMap) context.getSession().getAttribute("finalElements");
