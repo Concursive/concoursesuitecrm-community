@@ -1,34 +1,60 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfs.troubletickets.component;
+package org.aspcfs.modules.troubletickets.components;
 
-import com.darkhorseventures.controller.*;
+import org.aspcfs.controller.*;
 import java.sql.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.webutils.LookupElement;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.apps.workFlowManager.*;
+import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.troubletickets.base.TicketCategory;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.accounts.base.Organization;
 
+/**
+ *  Description of the Class
+ *
+ *@author     Mathur
+ *@created    January 14, 2003
+ *@version    $Id$
+ */
 public class LoadTicketDetails extends ObjectHookComponent implements ComponentInterface {
 
-  public static final String ORGANIZATION = "ticketOrganization";
-  public static final String CONTACT = "ticketContact";
-  public static final String CATEGORY_LOOKUP = "ticketCategoryLookup";
-  public static final String SUBCATEGORY1_LOOKUP = "ticketSubCategory1Lookup";
-  public static final String SUBCATEGORY2_LOOKUP = "ticketSubCategory2Lookup";
-  public static final String SUBCATEGORY3_LOOKUP = "ticketSubCategory3Lookup";
-  public static final String SEVERITY_LOOKUP = "ticketSeverityLookup";
-  public static final String PRIORITY_LOOKUP = "ticketPriorityLookup";
-  public static final String ENTERED_BY_CONTACT = "ticketModifiedByContact";
-  public static final String MODIFIED_BY_CONTACT = "ticketModifiedByContact";
-  
+  public final static String ORGANIZATION = "ticketOrganization";
+  public final static String CONTACT = "ticketContact";
+  public final static String CATEGORY_LOOKUP = "ticketCategoryLookup";
+  public final static String SUBCATEGORY1_LOOKUP = "ticketSubCategory1Lookup";
+  public final static String SUBCATEGORY2_LOOKUP = "ticketSubCategory2Lookup";
+  public final static String SUBCATEGORY3_LOOKUP = "ticketSubCategory3Lookup";
+  public final static String SEVERITY_LOOKUP = "ticketSeverityLookup";
+  public final static String PRIORITY_LOOKUP = "ticketPriorityLookup";
+  public final static String ENTERED_BY_CONTACT = "ticketModifiedByContact";
+  public final static String MODIFIED_BY_CONTACT = "ticketModifiedByContact";
+
+
+  /**
+   *  Gets the description attribute of the LoadTicketDetails object
+   *
+   *@return    The description value
+   */
   public String getDescription() {
     return "Expands ticket information for use in other components for the current ticket";
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public boolean execute(ComponentContext context) {
     boolean result = false;
-    Ticket thisTicket = (Ticket)context.getThisObject();
-    Ticket previousTicket = (Ticket)context.getPreviousObject();
+    Ticket thisTicket = (Ticket) context.getThisObject();
+    Ticket previousTicket = (Ticket) context.getPreviousObject();
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -81,10 +107,11 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
       }
       result = true;
     } catch (Exception e) {
-      
+
     } finally {
       this.freeConnection(context, db);
     }
     return result;
   }
 }
+

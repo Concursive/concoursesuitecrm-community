@@ -1,15 +1,18 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.troubletickets.base;
 
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.sql.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationReport;
 import java.io.*;
 import java.text.*;
 

@@ -16,7 +16,6 @@ import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
 
-
 /**
  *  Represents a Ticket in CFS
  *
@@ -78,6 +77,7 @@ public class Ticket extends GenericBean {
   private TicketLogList history = new TicketLogList();
   private FileItemList files = new FileItemList();
 
+
   /**
    *  Constructor for the Ticket object, creates an empty Ticket
    *
@@ -109,7 +109,15 @@ public class Ticket extends GenericBean {
   public Ticket(Connection db, int id) throws SQLException {
     queryRecord(db, id);
   }
-    
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
       throw new SQLException("Invalid Ticket Number");
@@ -158,18 +166,33 @@ public class Ticket extends GenericBean {
     this.buildHistory(db);
     this.buildFiles(db);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildHistory(Connection db) throws SQLException {
     history.setTicketId(this.getId());
     history.buildList(db);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildFiles(Connection db) throws SQLException {
     files.clear();
     files.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
     files.setLinkItemId(this.getId());
     files.buildList(db);
   }
+
 
   /**
    *  Gets the sendNotification attribute of the Ticket object
@@ -481,8 +504,26 @@ public class Ticket extends GenericBean {
     this.errorMessage = tmp;
   }
 
-  public void setCampaignId(int tmp) { this.campaignId = tmp; }
-  public void setCampaignId(String tmp) { this.campaignId = Integer.parseInt(tmp); }
+
+  /**
+   *  Sets the campaignId attribute of the Ticket object
+   *
+   *@param  tmp  The new campaignId value
+   */
+  public void setCampaignId(int tmp) {
+    this.campaignId = tmp;
+  }
+
+
+  /**
+   *  Sets the campaignId attribute of the Ticket object
+   *
+   *@param  tmp  The new campaignId value
+   */
+  public void setCampaignId(String tmp) {
+    this.campaignId = Integer.parseInt(tmp);
+  }
+
 
   /**
    *  Sets the History attribute of the Ticket object
@@ -493,7 +534,13 @@ public class Ticket extends GenericBean {
   public void setHistory(TicketLogList history) {
     this.history = history;
   }
-  
+
+
+  /**
+   *  Sets the files attribute of the Ticket object
+   *
+   *@param  tmp  The new files value
+   */
   public void setFiles(FileItemList tmp) {
     this.files = tmp;
   }
@@ -553,13 +600,27 @@ public class Ticket extends GenericBean {
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
   }
-  
+
+
+  /**
+   *  Gets the hasEnabledOwnerAccount attribute of the Ticket object
+   *
+   *@return    The hasEnabledOwnerAccount value
+   */
   public boolean getHasEnabledOwnerAccount() {
     return hasEnabledOwnerAccount;
   }
+
+
+  /**
+   *  Sets the hasEnabledOwnerAccount attribute of the Ticket object
+   *
+   *@param  hasEnabledOwnerAccount  The new hasEnabledOwnerAccount value
+   */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
   }
+
 
   /**
    *  Sets the ContactId attribute of the Ticket object
@@ -913,7 +974,13 @@ public class Ticket extends GenericBean {
     }
     return tmp;
   }
-  
+
+
+  /**
+   *  Gets the closed attribute of the Ticket object
+   *
+   *@return    The closed value
+   */
   public boolean isClosed() {
     return closed != null;
   }
@@ -1130,7 +1197,16 @@ public class Ticket extends GenericBean {
     return departmentName;
   }
 
-  public int getCampaignId() { return campaignId; }
+
+  /**
+   *  Gets the campaignId attribute of the Ticket object
+   *
+   *@return    The campaignId value
+   */
+  public int getCampaignId() {
+    return campaignId;
+  }
+
 
   /**
    *  Gets the History attribute of the Ticket object
@@ -1142,9 +1218,16 @@ public class Ticket extends GenericBean {
     return history;
   }
 
+
+  /**
+   *  Gets the files attribute of the Ticket object
+   *
+   *@return    The files value
+   */
   public FileItemList getFiles() {
     return files;
   }
+
 
   /**
    *  Gets the AgeOf attribute of the Ticket object
@@ -1257,16 +1340,23 @@ public class Ticket extends GenericBean {
       return getProblem();
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getAssignedTo() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
 
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM access " +
-      "WHERE user_id = ? AND enabled = ? ");
+        "SELECT * " +
+        "FROM access " +
+        "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getAssignedTo());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -1456,9 +1546,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Inserts this ticket into the database, and populates this Id.  Inserts
+   *  Inserts this ticket into the database, and populates this Id. Inserts
    *  required fields, then calls update to finish record entry
-   *  
+   *
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
@@ -1664,7 +1754,7 @@ public class Ticket extends GenericBean {
     }
     resultCount = pst.executeUpdate();
     pst.close();
-    
+
     if (this.getCloseIt()) {
       TicketLog thisEntry = new TicketLog();
       thisEntry.setEnteredBy(this.getModifiedBy());
@@ -1679,26 +1769,43 @@ public class Ticket extends GenericBean {
 
     return resultCount;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newOwner          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean reassign(Connection db, int newOwner) throws SQLException {
     int result = -1;
     this.setAssignedTo(newOwner);
     result = this.update(db);
-    
+
     if (result == -1) {
       return false;
     }
-    
+
     return true;
   }
-  
+
+
   //reopen a ticket
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int reopen(Connection db) throws SQLException {
     int resultCount = 0;
 
     db.setAutoCommit(false);
     PreparedStatement pst = null;
-    String sql = 
+    String sql =
         "UPDATE ticket " +
         "SET closed = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? " +
         "WHERE ticketid = ? ";
@@ -1709,7 +1816,7 @@ public class Ticket extends GenericBean {
     pst.setInt(++i, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
-    
+
     TicketLog thisEntry = new TicketLog();
     thisEntry.setEnteredBy(this.getModifiedBy());
     thisEntry.setDepartmentCode(this.getDepartmentCode());
@@ -1773,13 +1880,13 @@ public class Ticket extends GenericBean {
 
     try {
       db.setAutoCommit(false);
-      
+
       if (entered != null) {
         i = this.update(db, false);
       } else {
         i = this.update(db, true);
       }
-      
+
       TicketLog thisEntry = new TicketLog();
       thisEntry.setEnteredBy(this.getModifiedBy());
       thisEntry.setDepartmentCode(this.getDepartmentCode());
@@ -1800,7 +1907,7 @@ public class Ticket extends GenericBean {
         TicketLog thisLog = (TicketLog) hist.next();
         thisLog.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
       }
-      
+
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1811,7 +1918,8 @@ public class Ticket extends GenericBean {
     db.setAutoCommit(true);
     return i;
   }
-  
+
+
   /**
    *  Gets the Valid attribute of the Ticket object
    *
@@ -1931,10 +2039,16 @@ public class Ticket extends GenericBean {
       ageOf = java.lang.Math.round(ageCheck);
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean hasFiles() {
     return (files != null && files.size() > 0);
   }
-  
+
 }
 

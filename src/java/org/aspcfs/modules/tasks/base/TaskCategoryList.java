@@ -2,22 +2,23 @@
 //The createFilter method and the prepareFilter method need to have the same
 //number of parameters if modified.
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.tasks.base;
 
 import java.sql.*;
 import java.text.*;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Queries the task category list depending on the supplied parameters
  *
  *@author     matt rajkowski
  *@created    November 17, 2002
- *@version    $Id$
+ *@version    $Id: TaskCategoryList.java,v 1.3 2002/12/04 13:12:42 mrajkowski
+ *      Exp $
  */
 public class TaskCategoryList extends ArrayList {
   /**
@@ -146,10 +147,10 @@ public class TaskCategoryList extends ArrayList {
     }
     rs.close();
     pst.close();
-    
+
     Iterator categories = this.iterator();
     while (categories.hasNext()) {
-      TaskCategory thisCategory = (TaskCategory)categories.next();
+      TaskCategory thisCategory = (TaskCategory) categories.next();
       thisCategory.buildResources(db);
     }
   }

@@ -4,6 +4,7 @@ import java.util.*;
 import org.w3c.dom.*;
 import java.sql.*;
 import org.aspcfs.controller.objectHookManager.ObjectHookManager;
+import org.aspcfs.utils.XMLUtils;
 
 /**
  *  A Transaction is an array of TransactionItems.  When a system requests

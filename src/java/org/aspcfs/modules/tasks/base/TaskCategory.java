@@ -1,13 +1,20 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.tasks.base;
 
-import com.darkhorseventures.cfsbase.*;
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
-import com.darkhorseventures.utils.DatabaseUtils;
-import org.theseus.actions.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
 
+/**
+ *  Description of the Class
+ *
+ *@author     mrajkowski
+ *@created    January 14, 2003
+ *@version    $Id$
+ */
 public class TaskCategory extends GenericBean {
 
   private int id = -1;
@@ -15,52 +22,285 @@ public class TaskCategory extends GenericBean {
   private boolean defaultItem = false;
   private int level = 0;
   private boolean enabled = true;
-  
+
   private int linkModuleId = -1;
   private int linkItemId = -1;
   private int taskCount = 0;
   private java.sql.Timestamp lastTaskEntered = null;
-  
-  public void setId(int tmp) { this.id = tmp; }
-  public void setId(String tmp) { this.id = Integer.parseInt(tmp); }
-  public void setDescription(String tmp) { this.description = tmp; }
-  public void setDefaultItem(boolean tmp) { this.defaultItem = tmp; }
-  public void setDefaultItem(String tmp) { this.defaultItem = DatabaseUtils.parseBoolean(tmp); }
-  public void setLevel(int tmp) { this.level = tmp; }
-  public void setLevel(String tmp) { this.level = Integer.parseInt(tmp); }
-  public void setEnabled(boolean tmp) { this.enabled = tmp; }
-  public void setEnabled(String tmp) { this.enabled = DatabaseUtils.parseBoolean(tmp); }
-  public void setTaskCount(int tmp) { this.taskCount = tmp; }
-  public void setTaskCount(String tmp) { this.taskCount = Integer.parseInt(tmp); }
-  public void setLastTaskEntered(java.sql.Timestamp tmp) { this.lastTaskEntered = tmp; }
-  public void setLastTaskEntered(String tmp) { this.lastTaskEntered = DatabaseUtils.parseTimestamp(tmp); }
-  public void setLinkModuleId(int tmp) { this.linkModuleId = tmp; }
-  public void setLinkModuleId(String tmp) { this.linkModuleId = Integer.parseInt(tmp); }
-  public void setLinkItemId(int tmp) { this.linkItemId = tmp; }
-  public void setLinkItemId(String tmp) { this.linkItemId = Integer.parseInt(tmp); }
 
-  public int getId() { return id; }
-  public String getDescription() { return description; }
-  public boolean getDefaultItem() { return defaultItem; }
-  public int getLevel() { return level; }
-  public boolean getEnabled() { return enabled; }
-  public int getTaskCount() { return taskCount; }
-  public java.sql.Timestamp getLastTaskEntered() { return lastTaskEntered; }
 
-  public TaskCategory() {}
-  
+  /**
+   *  Sets the id attribute of the TaskCategory object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   *  Sets the id attribute of the TaskCategory object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the description attribute of the TaskCategory object
+   *
+   *@param  tmp  The new description value
+   */
+  public void setDescription(String tmp) {
+    this.description = tmp;
+  }
+
+
+  /**
+   *  Sets the defaultItem attribute of the TaskCategory object
+   *
+   *@param  tmp  The new defaultItem value
+   */
+  public void setDefaultItem(boolean tmp) {
+    this.defaultItem = tmp;
+  }
+
+
+  /**
+   *  Sets the defaultItem attribute of the TaskCategory object
+   *
+   *@param  tmp  The new defaultItem value
+   */
+  public void setDefaultItem(String tmp) {
+    this.defaultItem = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the level attribute of the TaskCategory object
+   *
+   *@param  tmp  The new level value
+   */
+  public void setLevel(int tmp) {
+    this.level = tmp;
+  }
+
+
+  /**
+   *  Sets the level attribute of the TaskCategory object
+   *
+   *@param  tmp  The new level value
+   */
+  public void setLevel(String tmp) {
+    this.level = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the TaskCategory object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the TaskCategory object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the taskCount attribute of the TaskCategory object
+   *
+   *@param  tmp  The new taskCount value
+   */
+  public void setTaskCount(int tmp) {
+    this.taskCount = tmp;
+  }
+
+
+  /**
+   *  Sets the taskCount attribute of the TaskCategory object
+   *
+   *@param  tmp  The new taskCount value
+   */
+  public void setTaskCount(String tmp) {
+    this.taskCount = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the lastTaskEntered attribute of the TaskCategory object
+   *
+   *@param  tmp  The new lastTaskEntered value
+   */
+  public void setLastTaskEntered(java.sql.Timestamp tmp) {
+    this.lastTaskEntered = tmp;
+  }
+
+
+  /**
+   *  Sets the lastTaskEntered attribute of the TaskCategory object
+   *
+   *@param  tmp  The new lastTaskEntered value
+   */
+  public void setLastTaskEntered(String tmp) {
+    this.lastTaskEntered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the linkModuleId attribute of the TaskCategory object
+   *
+   *@param  tmp  The new linkModuleId value
+   */
+  public void setLinkModuleId(int tmp) {
+    this.linkModuleId = tmp;
+  }
+
+
+  /**
+   *  Sets the linkModuleId attribute of the TaskCategory object
+   *
+   *@param  tmp  The new linkModuleId value
+   */
+  public void setLinkModuleId(String tmp) {
+    this.linkModuleId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the linkItemId attribute of the TaskCategory object
+   *
+   *@param  tmp  The new linkItemId value
+   */
+  public void setLinkItemId(int tmp) {
+    this.linkItemId = tmp;
+  }
+
+
+  /**
+   *  Sets the linkItemId attribute of the TaskCategory object
+   *
+   *@param  tmp  The new linkItemId value
+   */
+  public void setLinkItemId(String tmp) {
+    this.linkItemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the id attribute of the TaskCategory object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the description attribute of the TaskCategory object
+   *
+   *@return    The description value
+   */
+  public String getDescription() {
+    return description;
+  }
+
+
+  /**
+   *  Gets the defaultItem attribute of the TaskCategory object
+   *
+   *@return    The defaultItem value
+   */
+  public boolean getDefaultItem() {
+    return defaultItem;
+  }
+
+
+  /**
+   *  Gets the level attribute of the TaskCategory object
+   *
+   *@return    The level value
+   */
+  public int getLevel() {
+    return level;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the TaskCategory object
+   *
+   *@return    The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Gets the taskCount attribute of the TaskCategory object
+   *
+   *@return    The taskCount value
+   */
+  public int getTaskCount() {
+    return taskCount;
+  }
+
+
+  /**
+   *  Gets the lastTaskEntered attribute of the TaskCategory object
+   *
+   *@return    The lastTaskEntered value
+   */
+  public java.sql.Timestamp getLastTaskEntered() {
+    return lastTaskEntered;
+  }
+
+
+  /**
+   *  Constructor for the TaskCategory object
+   */
+  public TaskCategory() { }
+
+
+  /**
+   *  Constructor for the TaskCategory object
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public TaskCategory(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
+  /**
+   *  Constructor for the TaskCategory object
+   *
+   *@param  db                Description of the Parameter
+   *@param  categoryId        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public TaskCategory(Connection db, int categoryId) throws SQLException {
     if (categoryId == -1) {
       throw new SQLException("Category ID not specified");
     }
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM lookup_task_category " +
-      "WHERE code = ? ");
+        "SELECT * " +
+        "FROM lookup_task_category " +
+        "WHERE code = ? ");
     pst.setInt(1, categoryId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -73,12 +313,19 @@ public class TaskCategory extends GenericBean {
     }
     buildResources(db);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildResources(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT max(entered) AS latest, count(task_id) AS count " +
-      "FROM task " +
-      "WHERE category_id = ? ");
+        "SELECT max(entered) AS latest, count(task_id) AS count " +
+        "FROM task " +
+        "WHERE category_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -88,7 +335,15 @@ public class TaskCategory extends GenericBean {
     rs.close();
     pst.close();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insert(Connection db) throws SQLException {
     String sql = null;
     if (!isValid()) {
@@ -110,10 +365,10 @@ public class TaskCategory extends GenericBean {
       pst.close();
       if (linkModuleId == Constants.TASK_CATEGORY_PROJECTS) {
         pst = db.prepareStatement(
-          "INSERT INTO taskcategory_project " +
-          "(category_id, project_id) " +
-          "VALUES " +
-          "(?, ?) ");
+            "INSERT INTO taskcategory_project " +
+            "(category_id, project_id) " +
+            "VALUES " +
+            "(?, ?) ");
         pst.setInt(1, id);
         pst.setInt(2, linkItemId);
         pst.execute();
@@ -129,7 +384,15 @@ public class TaskCategory extends GenericBean {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Record ID was not specified");
@@ -153,22 +416,35 @@ public class TaskCategory extends GenericBean {
     pst.close();
     return resultCount;
   }
-  
+
+
+  /**
+   *  Gets the valid attribute of the TaskCategory object
+   *
+   *@return    The valid value
+   */
   private boolean isValid() {
     if (linkModuleId == -1) {
       return false;
     }
-    
+
     if (linkItemId == -1) {
       return false;
     }
-    
+
     if (description == null || "".equals(description.trim())) {
       return false;
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   private void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("code");
     description = rs.getString("description");
@@ -177,3 +453,4 @@ public class TaskCategory extends GenericBean {
     enabled = rs.getBoolean("enabled");
   }
 }
+

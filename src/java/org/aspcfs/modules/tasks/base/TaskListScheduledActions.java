@@ -1,11 +1,13 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.tasks.base;
 
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
-import org.theseus.beans.*;
+import org.aspcfs.modules.base.ScheduledActions;
+import org.aspcfs.modules.mycfs.base.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.admin.base.User;
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -51,7 +53,6 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
    *
    *@param  db                Description of the Parameter
    *@param  companyCalendar   Description of the Parameter
-   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
@@ -82,7 +83,6 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
    *
    *@param  companyCalendar   Description of the Parameter
    *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {

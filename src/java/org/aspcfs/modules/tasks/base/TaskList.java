@@ -2,15 +2,16 @@
 //The createFilter method and the prepareFilter method need to have the same
 //number of parameters if modified.
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.tasks.base;
 
 import java.sql.*;
 import java.text.*;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Description of the Class
@@ -142,6 +143,7 @@ public class TaskList extends ArrayList {
    *  Return a mapping of number of alerts for each alert category.
    *
    *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
   public HashMap queryRecordCount(Connection db) throws SQLException {
@@ -167,12 +169,12 @@ public class TaskList extends ArrayList {
     prepareFilter(pst);
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
-        System.out.println("TaskList --> Queryin Record Count " + pst.toString());
+      System.out.println("TaskList --> Queryin Record Count " + pst.toString());
     }
     while (rs.next()) {
       String duedate = Task.getAlertDateStringLongYear(rs.getDate("duedate"));
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("TaskList --> Added tuple " + duedate + ":" + rs.getInt("count")) ;
+        System.out.println("TaskList --> Added tuple " + duedate + ":" + rs.getInt("count"));
       }
       events.put(duedate, new Integer(rs.getInt("count")));
     }

@@ -1,39 +1,61 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfs.troubletickets.component;
+package org.aspcfs.modules.troubletickets.components;
 
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 import com.netdecisions.scenarios.util.CCPHTTPProcessInitiator;
 import java.io.*;
-import com.darkhorseventures.controller.*;
-import com.darkhorseventures.cfsbase.*;
 import java.sql.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.webutils.LookupElement;
+import org.aspcfs.controller.*;
+import org.aspcfs.apps.workFlowManager.*;
+import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.LookupElement;
 
+/**
+ *  Description of the Class
+ *
+ *@author     mrajkowksi
+ *@created    January 14, 2003
+ *@version    $Id$
+ */
 public class SendTicketToBPM extends ObjectHookComponent implements ComponentInterface {
-  
-  public static final String BPM_HOST_URL = "bpm.host.url";
-  
+
+  public final static String BPM_HOST_URL = "bpm.host.url";
+
+
+  /**
+   *  Gets the description attribute of the SendTicketToBPM object
+   *
+   *@return    The description value
+   */
   public String getDescription() {
     return "Send ticket information to NetDecisions BPM.";
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public boolean execute(ComponentContext context) {
     boolean result = false;
-    Ticket thisTicket = (Ticket)context.getThisObject();
-    
+    Ticket thisTicket = (Ticket) context.getThisObject();
+
     try {
-      Organization organization = (Organization)context.getAttribute(LoadTicketDetails.ORGANIZATION);
-      Contact contact = (Contact)context.getAttribute(LoadTicketDetails.CONTACT);
-      TicketCategory categoryLookup = (TicketCategory)context.getAttribute(LoadTicketDetails.CATEGORY_LOOKUP);
-      TicketCategory subCategory1Lookup = (TicketCategory)context.getAttribute(LoadTicketDetails.SUBCATEGORY1_LOOKUP);
-      TicketCategory subCategory2Lookup = (TicketCategory)context.getAttribute(LoadTicketDetails.SUBCATEGORY2_LOOKUP);
-      TicketCategory subCategory3Lookup = (TicketCategory)context.getAttribute(LoadTicketDetails.SUBCATEGORY3_LOOKUP);
-      LookupElement severityLookup = (LookupElement)context.getAttribute(LoadTicketDetails.SEVERITY_LOOKUP);
-    
+      Organization organization = (Organization) context.getAttribute(LoadTicketDetails.ORGANIZATION);
+      Contact contact = (Contact) context.getAttribute(LoadTicketDetails.CONTACT);
+      TicketCategory categoryLookup = (TicketCategory) context.getAttribute(LoadTicketDetails.CATEGORY_LOOKUP);
+      TicketCategory subCategory1Lookup = (TicketCategory) context.getAttribute(LoadTicketDetails.SUBCATEGORY1_LOOKUP);
+      TicketCategory subCategory2Lookup = (TicketCategory) context.getAttribute(LoadTicketDetails.SUBCATEGORY2_LOOKUP);
+      TicketCategory subCategory3Lookup = (TicketCategory) context.getAttribute(LoadTicketDetails.SUBCATEGORY3_LOOKUP);
+      LookupElement severityLookup = (LookupElement) context.getAttribute(LoadTicketDetails.SEVERITY_LOOKUP);
+
       //Build an XML document needed for BPM
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = dbf.newDocumentBuilder();
@@ -135,3 +157,4 @@ public class SendTicketToBPM extends ObjectHookComponent implements ComponentInt
     return result;
   }
 }
+
