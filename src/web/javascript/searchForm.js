@@ -11,6 +11,55 @@ function operator(id, operand, text){
 	this.operand = operand
 }
 
+function ShowSpan(thisID)
+{
+	isNS4 = (document.layers) ? true : false;
+	isIE4 = (document.all && !document.getElementById) ? true : false;
+	isIE5 = (document.all && document.getElementById) ? true : false;
+	isNS6 = (!document.all && document.getElementById) ? true : false;
+
+	if (isNS4){
+	elm = document.layers[thisID];
+	}
+	else if (isIE4) {
+	elm = document.all[thisID];
+	}
+	else if (isIE5 || isNS6) {
+	elm = document.getElementById(thisID);
+	elm.style.visibility="visible";
+	}
+	
+	return true;
+   
+}
+
+function setText(obj) {
+	document.searchForm.searchValue.value = obj.options[obj.selectedIndex].value;
+	return true;
+}
+
+function HideSpan(thisID)
+{
+	isNS4 = (document.layers) ? true : false;
+	isIE4 = (document.all && !document.getElementById) ? true : false;
+	isIE5 = (document.all && document.getElementById) ? true : false;
+	isNS6 = (!document.all && document.getElementById) ? true : false;
+
+	if (isNS4){
+	elm = document.layers[thisID];
+	}
+	else if (isIE4) {
+	elm = document.all[thisID];
+	}
+	else if (isIE5 || isNS6) {
+	elm = document.getElementById(thisID);
+	elm.style.visibility="hidden";
+	}
+	
+	return true;
+   
+}
+
 function reset(form){
 	var fieldList = document.searchForm.fieldSelect;
 	var operatorList = document.searchForm.operatorSelect;
@@ -22,9 +71,9 @@ function reset(form){
 }
 function updateOperators(){
 	operatorList = document.searchForm.operatorSelect;
-	fieldSelectIndex = searchField[document.searchForm.fieldSelect.options.selectedIndex].type
+	fieldSelectIndex = searchField[document.searchForm.fieldSelect.selectedIndex].type
 	
-	if (document.searchForm.fieldSelect.options.selectedIndex == 7) {
+	if (document.searchForm.fieldSelect.selectedIndex == 7) {
 		ShowSpan('new0');
 		document.searchForm.searchValue.value = document.searchForm.typeId.options[document.searchForm.typeId.selectedIndex].value;
 	} else {
@@ -90,7 +139,7 @@ function removeValues(){
 	
 	if (searchList.length == 0) {
 		alert("Nothing to remove")
-	}	else if (searchList.options.selectedIndex == -1) {
+	}	else if (searchList.selectedIndex == -1) {
     alert("An item needs to be selected before it can be removed");
   } else {
 		searchCriteria[searchList.selectedIndex] = "skip";
