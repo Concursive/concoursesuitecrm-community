@@ -1422,37 +1422,6 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the campaignMessageRange attribute of the Contact object
-   *
-   *@param  db                Description of Parameter
-   *@return                   The campaignMessageRange value
-   *@exception  SQLException  Description of Exception
-   */
-  public String getCampaignMessageRange(Connection db) throws SQLException {
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT campaign_id from scheduled_recipient " +
-        "WHERE contact_id = ? ");
-    pst.setInt(1, id);
-    ResultSet rs = pst.executeQuery();
-    StringBuffer r = new StringBuffer();
-    while (rs.next()) {
-      if (r.length() > 0) {
-        r.append(", ");
-      }
-      r.append(rs.getInt("campaign_id"));
-    }
-    rs.close();
-    pst.close();
-
-    if (r.length() == 0) {
-      r.append("''");
-    }
-
-    return r.toString();
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@return    Description of the Returned Value
@@ -1679,35 +1648,32 @@ public class Contact extends GenericBean {
     boolean hasAccess = false;
     boolean isEnabled = false;
 
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT * " +
-        "FROM access " +
-        "WHERE contact_id = " + this.getId());
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE contact_id = ?");
+    pst.setInt(1, this.getId());
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       hasAccess = true;
       isEnabled = rs.getBoolean("enabled");
     }
     rs.close();
-    //st.close();
+    pst.close();
 
     if (hasAccess && isEnabled) {
       errors.put("actionError", "This contact has an active user account and could not be deleted.");
       return false;
     } else if ((hasAccess && !isEnabled) || hasRelatedRecords(db)) {
       errors.put("actionError", "Contact disabled from view, since it has a related user account");
-      st.executeUpdate(
-          "UPDATE contact " +
-          "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
-          "WHERE contact_id = " + this.getId());
-      st.close();
+      this.disableContact(db);
       return true;
     } else {
       try {
         db.setAutoCommit(false);
 
         OpportunityList oppList = new OpportunityList();
-        oppList.setContactId(this.getId() + "");
+        oppList.setContactId(this.getId());
         oppList.buildList(db);
         oppList.delete(db);
         oppList = null;
@@ -1725,29 +1691,58 @@ public class Contact extends GenericBean {
         callList.delete(db);
         callList = null;
 
-        st.executeUpdate("DELETE FROM contact_phone WHERE contact_id = " + this.getId());
-        st.executeUpdate("DELETE FROM contact_emailaddress WHERE contact_id = " + this.getId());
-        st.executeUpdate("DELETE FROM contact_address WHERE contact_id = " + this.getId());
-
-        if (this.getCampaignMessageRange(db).equals("") || this.getCampaignMessageRange(db) == null) {
+        pst = db.prepareStatement(
+          "DELETE FROM contact_phone " +
+          "WHERE contact_id = ?");
+        pst.setInt(1, this.getId());
+        pst.executeUpdate();
+        pst.close();
+        
+        pst = db.prepareStatement(
+          "DELETE FROM contact_emailaddress " +
+          "WHERE contact_id = ?");
+        pst.setInt(1, this.getId());
+        pst.executeUpdate();
+        pst.close();
+          
+        pst = db.prepareStatement(
+          "DELETE FROM contact_address " +
+          "WHERE contact_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.executeUpdate();
+        pst.close();
+        
+        //For history, keep this contact if they previouslt received a comm. message
+        if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, this.getId()) > 0) {
           errors.put("actionError", "Contact disabled from view, since it has related message records");
-          st.executeUpdate(
-              "UPDATE contact " +
-              "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
-              "WHERE contact_id = " + this.getId());
-          st.close();
+          this.disableContact(db);
           db.commit();
+          db.setAutoCommit(true);
           return true;
         }
+        
+        //If we're not keeping this contact, get rid of some more data
+        //TODO: Use the ExcludedRecipientList class when it exists
+        pst = db.prepareStatement(
+          "DELETE FROM excluded_recipient " +
+          "WHERE contact_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.executeUpdate();
+        pst.close();
 
-        st.executeUpdate("DELETE FROM contact WHERE contact_id = " + this.getId());
+        pst = db.prepareStatement(
+          "DELETE FROM contact " +
+          "WHERE contact_id = ?");
+        pst.setInt(1, this.getId());
+        pst.executeUpdate();
+        pst.close();
         db.commit();
       } catch (SQLException e) {
         db.rollback();
         System.out.println(e.toString());
       } finally {
         db.setAutoCommit(true);
-        st.close();
+        pst.close();
       }
       return true;
     }
@@ -1766,18 +1761,19 @@ public class Contact extends GenericBean {
       throw new SQLException("ID not specified for lookup.");
     }
 
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT * " +
-        "FROM access " +
-        "WHERE contact_id = " + getId() + " ");
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE contact_id = ? ");
+    pst.setInt(1, this.getId());
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       setHasAccount(true);
     } else {
       setHasAccount(false);
     }
     rs.close();
-    st.close();
+    pst.close();
   }
 
 
@@ -2186,6 +2182,16 @@ public class Contact extends GenericBean {
     }
     return dependencyList;
   }
-
+  
+  public void disableContact(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+      "UPDATE contact " +
+      "SET enabled = ? " +
+      "WHERE contact_id = ?");
+    pst.setBoolean(1, false);
+    pst.setInt(2, this.getId());
+    pst.executeUpdate();
+    pst.close();
+  }
 }
 
