@@ -154,10 +154,10 @@ public final class CompanyDirectory extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      thisEmployee = new Contact(db, employeeId);
+      thisEmployee = (Contact) context.getFormBean();
+      thisEmployee.queryRecord(db, Integer.parseInt(employeeId));
       //enabled user?
       thisEmployee.checkEnabledUserAccount(db);
-      context.getRequest().setAttribute("ContactDetails", thisEmployee);
       addRecentItem(context, thisEmployee);
     } catch (Exception e) {
       errorMessage = e;

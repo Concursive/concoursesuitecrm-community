@@ -805,15 +805,14 @@ public final class ExternalContacts extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      thisContact = new Contact(db, contactId);
+      thisContact = (Contact) context.getFormBean();
+      thisContact.queryRecord(db, Integer.parseInt(contactId));
       if (!(hasAuthority(context, thisContact.getOwner()) || OpportunityHeaderList.isComponentOwner(db, getUserId(context)))) {
         return ("PermissionError");
       }
 
       //check whether or not the owner is an active User
       thisContact.checkEnabledOwnerAccount(db);
-
-      context.getRequest().setAttribute("ContactDetails", thisContact);
       addRecentItem(context, thisContact);
     } catch (Exception e) {
       errorMessage = e;
@@ -844,7 +843,7 @@ public final class ExternalContacts extends CFSModule {
     Connection db = null;
     Contact thisContact = (Contact) context.getFormBean();
     if (thisContact.getId() == -1) {
-      if (!(hasPermission(context, "contacts-external-contacts-add"))) {
+      if (!(hasPermission(context, "contacts-external_contacts-add"))) {
         return ("PermissionError");
       }
       addModuleBean(context, "External Contacts", "Add Contact to Account");
