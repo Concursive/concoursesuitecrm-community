@@ -10,12 +10,13 @@ import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.admin.base.*;
 
 /**
- *  Description of the Class
+ *  Maintains Tickets related to an Account
  *
  *@author     chris
  *@created    August 15, 2001
@@ -236,16 +237,22 @@ public final class AccountTickets extends CFSModule {
     PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicketDetails");
     ticListInfo.setColumnToSortBy("entered");
 
+    PagedListInfo ticTaskListInfo = this.getPagedListInfo(context, "TicketTaskListInfo");
+    ticTaskListInfo.setItemsPerPage(0);
+
     try {
       ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
-      newTic = new Ticket(db, Integer.parseInt(ticketId));
+      newTic = new Ticket();
       if (newTic.getAssignedTo() > 0) {
         newTic.checkEnabledOwnerAccount(db);
       }
       newTic.getHistory().setPagedListInfo(ticListInfo);
+      newTic.getTasks().setPagedListInfo(ticTaskListInfo);
+      newTic.queryRecord(db, Integer.parseInt(ticketId));
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      context.getRequest().setAttribute("TaskList", newTic.getTasks());
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -257,6 +264,51 @@ public final class AccountTickets extends CFSModule {
       addRecentItem(context, newTic);
       addModuleBean(context, "View Accounts", "View Tickets");
       return ("TicketDetailsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Confirm the delete operation showing dependencies
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandConfirmDelete(ActionContext context) {
+    if (!(hasPermission(context, "tickets-tickets-delete"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    Ticket ticket = null;
+    String id = context.getRequest().getParameter("id");
+    int orgId = Integer.parseInt(context.getRequest().getParameter("orgId"));
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      ticket = new Ticket(db, Integer.parseInt(id));
+      DependencyList dependencies = ticket.processDependencies(db);
+      htmlDialog.setTitle("CFS: Confirm Delete");
+      if (dependencies.size() == 0) {
+        htmlDialog.setShowAndConfirm(false);
+        htmlDialog.setDeleteUrl("javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+      } else {
+        htmlDialog.addMessage(dependencies.getHtmlString());
+        htmlDialog.setHeader("This object has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -306,6 +358,7 @@ public final class AccountTickets extends CFSModule {
       if (recordDeleted) {
         deleteRecentItem(context, thisTic);
         context.getRequest().setAttribute("OrgDetails", newOrg);
+        context.getRequest().setAttribute("refreshUrl", "Accounts.do?command=ViewTickets&orgId=" + orgId);
         return ("DeleteTicketOK");
       } else {
         return (executeCommandTicketDetails(context));
