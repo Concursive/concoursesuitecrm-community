@@ -85,7 +85,7 @@ public class WorkflowManager {
       Method method = classRef.getClass().getMethod("execute", new Class[]{context.getClass()});
       result = method.invoke(classRef, new Object[]{context});
     } catch (Exception e) {
-      System.out.println("WorkflowManager-> Exception while trying to execute component " + component.getClassName());
+      System.out.println("WorkflowManager-> Exception while trying to execute component " + component.getClassName() + " error: " + e.getMessage());
     }
     if (result instanceof Boolean) {
       if (System.getProperty("DEBUG") != null) {
