@@ -557,17 +557,13 @@ public class Setup extends CFSModule {
           //Create the database and initial data, combine the following files
           //pg_dump -xOdR  cfs2gk > gatekeeper.sql
           //pg_dump -xOdR  cdb_cfs > postgresql.sql
-          //Add BEGIN WORK; to beginning of file, COMMIT; to end of file
           switch (DatabaseUtils.getType(db)) {
             case DatabaseUtils.POSTGRESQL:
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("Setup-> Installing PostgreSQL Schema");
               }
-              String sql = StringUtils.loadText(
+              DatabaseUtils.executeSQL(db, 
                 context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql.sql");
-              Statement st = db.createStatement();
-              st.execute(sql);
-              st.close();
               break;
             case DatabaseUtils.MSSQL:
               if (System.getProperty("DEBUG") != null) {
@@ -595,13 +591,6 @@ public class Setup extends CFSModule {
           }
         }
         db = getDbConnection(context);
-        //Check the database for up to 90 seconds, the above action returns too soon
-        long waitCount = System.currentTimeMillis() + (300 * 1000);
-        while (!isDatabaseInstalled(db) && waitCount > System.currentTimeMillis()) {
-          synchronized (this) {
-            wait(2000);
-          }
-        }
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Inserting the default tasks");
         }

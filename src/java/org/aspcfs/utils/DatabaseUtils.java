@@ -388,14 +388,17 @@ public class DatabaseUtils {
       if (line.startsWith("--")) {
         continue;
       }
-      if (!"GO".equals(line.trim())) {
-        sql.append(line);
-      }
-      // check for delimeter
-      if (line.trim().endsWith(";") || line.trim().equals("GO")) {
+      sql.append(line);
+      // check for delimiter
+      if (line.endsWith(";")) {
         // Got a transaction, so execute it
         ++tCount;
-        st.execute(sql.toString());
+        st.execute(sql.substring(0, sql.length() - 1));
+        sql.setLength(0);
+      } else if (line.equals("GO")) {
+        // Got a transaction, so execute it
+        ++tCount;
+        st.execute(sql.substring(0, sql.length() - 2));
         sql.setLength(0);
       } else {
         // Continue with another line
@@ -403,7 +406,7 @@ public class DatabaseUtils {
       }
     }
     // Statement didn't end with a delimiter
-    if (sql.length() > 0) {
+    if (sql.toString().trim().length() > 0 && !CRLF.equals(sql.toString().trim())) {
       ++tCount;
       st.execute(sql.toString());
     }

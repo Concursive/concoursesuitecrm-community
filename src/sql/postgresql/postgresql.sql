@@ -1,7 +1,4 @@
 
-BEGIN WORK;
-
-
 SET search_path = public, pg_catalog;
 
 
@@ -8575,6 +8572,4 @@ SELECT pg_catalog.setval ('business_process_ho_trig_id_seq', 2, true);
 
 
 SELECT pg_catalog.setval ('business_process_ho_hook_id_seq', 2, true);
-
-COMMIT;
 
