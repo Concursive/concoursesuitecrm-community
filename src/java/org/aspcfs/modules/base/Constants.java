@@ -17,6 +17,8 @@ package org.aspcfs.modules.base;
  *@version    $Id$
  */
 public final class Constants {
+  public final static String fs = System.getProperty("file.separator");
+  
   //Using int for boolean
   public final static int UNDEFINED = -1;
   public final static int TRUE = 1;

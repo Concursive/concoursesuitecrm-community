@@ -377,7 +377,7 @@ public class CFSModule {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("APPLICATION.PREFS");
     return (prefs.get("FILELIBRARY") +
         (this.getDbName(context) == null ? "" : this.getDbName(context) + fs) +
-        moduleFolderName + fs);
+        (moduleFolderName == null ? "" : moduleFolderName + fs));
   }
 
 
