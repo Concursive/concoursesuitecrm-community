@@ -152,7 +152,7 @@ Add Opportunity<br>
               </td>
               <td>
                 <input type="hidden" name="header_accountLink" id="header_accountLink" value="<%= OppDetails.getHeader().getAccountLink() %>">
-                &nbsp;[<a href="javascript:popAccountsListSingle('header_accountLink','changeaccount');">Select</a>]&nbsp;<font color="red">*</font> <%= showAttribute(request, "orgError") %>
+                &nbsp;[<a href="javascript:document.forms['addOpportunity'].opp_type[0].checked='t';popAccountsListSingle('header_accountLink','changeaccount');" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]&nbsp;<font color="red">*</font> <%= showAttribute(request, "acctContactError") %>
               </td>
             </tr>
        </table>
@@ -169,7 +169,7 @@ Add Opportunity<br>
           </td>
           <td>
             <input type="hidden" name="header_contactLink" id="header_contactLink" value="<%= OppDetails.getHeader().getContactLink() == -1?-1:OppDetails.getHeader().getContactLink() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('header_contactLink','changecontact','reset=true&filters=mycontacts|accountcontacts');">Select</a>]
+            &nbsp;[<a href="javascript:document.forms['addOpportunity'].opp_type[1].checked='t';popContactsListSingle('header_contactLink','changecontact','reset=true&filters=mycontacts|accountcontacts');" onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;">Select</a>]
           </td>
         </tr>
       </table>
