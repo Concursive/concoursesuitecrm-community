@@ -59,8 +59,8 @@ CREATE TABLE ticket_category (
 
 CREATE TABLE ticket (
   ticketid SERIAL PRIMARY KEY,
-  org_id INT NOT NULL REFERENCES organization, 
-  contact_id INT NOT NULL REFERENCES contact(contact_id), 
+  org_id INT defailt -1 REFERENCES organization, 
+  contact_id INT default -1 REFERENCES contact(contact_id), 
   problem TEXT NOT NULL,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
