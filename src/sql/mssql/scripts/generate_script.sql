@@ -21,7 +21,7 @@ CREATE PROC sp_generate_inserts
 (
 	@table_name varchar(776),  		-- The table/view for which the INSERT statements will be generated using the existing data
 	@target_table varchar(776) = NULL, 	-- Use this parameter to specify a different table name into which the data will be inserted
-	@include_column_list bit = 0,		-- Use this parameter to include/ommit column list in the generated INSERT statement 1-on 0-off
+	@include_column_list bit = 1,		-- Use this parameter to include/ommit column list in the generated INSERT statement 1-on 0-off
 	@from varchar(800) = NULL, 		-- Use this parameter to filter the rows based on a filter condition (using WHERE)
 	@include_timestamp bit = 0, 		-- Specify 1 for this parameter, if you want to include the TIMESTAMP/ROWVERSION column's data in the INSERT statement
 	@debug_mode bit = 0,			-- If @debug_mode is set to 1, the SQL statements constructed by this procedure will be printed for later examination
@@ -138,6 +138,21 @@ Example 14: 	To exclude computed columns from the INSERT statement:
 
 SET NOCOUNT ON
 
+DECLARE @Column_Count int
+SET @Column_Count = 0
+
+-- See if the table has any records
+
+DECLARE @SQL varchar(500)
+CREATE TABLE #RecordCount (newcount int)
+SET @SQL = 'INSERT INTO #RecordCount SELECT COUNT(*) AS newcount FROM [' + @owner + '].[' + @table_name + ']'
+EXEC(@SQL)
+SELECT @Column_Count = newcount FROM #RecordCount
+DROP TABLE #RecordCount
+
+IF @Column_Count > 0
+  BEGIN
+
 --Making sure user only uses either @cols_to_include or @cols_to_exclude
 IF ((@cols_to_include IS NOT NULL) AND (@cols_to_exclude IS NOT NULL))
 	BEGIN
@@ -160,7 +175,7 @@ IF ((@cols_to_exclude IS NOT NULL) AND (PATINDEX('''%''',@cols_to_exclude) = 0))
 		PRINT 'Specify column names surrounded by single quotes and separated by commas'
 		PRINT 'Eg: EXEC sp_generate_inserts titles, @cols_to_exclude = "''title_id'',''title''"'
 		RETURN -1 --Failure. Reason: Invalid use of @cols_to_exclude property
-	END
+	END              
 
 
 --Checking to see if the database name is specified along wih the table name
@@ -394,16 +409,14 @@ IF @debug_mode =1
 	END
 		
 PRINT ''
+PRINT '-- Insert default ' + @table_name
 PRINT 'SET NOCOUNT ON'
-PRINT ''
-
 
 --Determining whether to print IDENTITY_INSERT or not
 IF (@IDN <> '')
 	BEGIN
 		PRINT 'SET IDENTITY_INSERT ' + QUOTENAME(COALESCE(@owner,USER_NAME())) + '.' + QUOTENAME(@table_name) + ' ON'
 		PRINT 'GO'
-		PRINT ''
 	END
 
 
@@ -421,13 +434,8 @@ IF @disable_constraints = 1 AND (OBJECT_ID(QUOTENAME(COALESCE(@owner,USER_NAME()
 		PRINT 'GO'
 	END
 
-PRINT ''
-
 --All the hard work pays off here!!! You'll get your INSERT statements, when the next line executes!
 EXEC (@Actual_Values)
-
-PRINT ''
-
 
 IF @disable_constraints = 1 AND (OBJECT_ID(QUOTENAME(COALESCE(@owner,USER_NAME())) + '.' + @table_name, 'U') IS NOT NULL)
 	BEGIN
@@ -443,7 +451,6 @@ IF @disable_constraints = 1 AND (OBJECT_ID(QUOTENAME(COALESCE(@owner,USER_NAME()
 		PRINT 'GO'
 	END
 
-PRINT ''
 IF (@IDN <> '')
 	BEGIN
 		PRINT 'SET IDENTITY_INSERT ' + QUOTENAME(COALESCE(@owner,USER_NAME())) + '.' + QUOTENAME(@table_name) + ' OFF'
@@ -452,6 +459,7 @@ IF (@IDN <> '')
 
 PRINT 'SET NOCOUNT OFF'
 
+END -- the end of the count
 
 SET NOCOUNT OFF
 RETURN 0 --Success. We are done!
