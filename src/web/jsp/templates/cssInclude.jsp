@@ -17,9 +17,8 @@
   }
   //Mozilla: Mac (any version), Linux (1.2)
   if ("moz".equals(User.getBrowserId()) &&
-      ("mac".equals(User.getClientType().getOsString()) ||
       ("linux".equals(User.getClientType().getOsString()) && 
-       User.getBrowserVersion() == 1.2 ))) {
+       User.getBrowserVersion() == 1.2 )) {
 %>
 <link rel="stylesheet" href="css/template0-10pt.css" type="text/css">
 <%
