@@ -82,7 +82,7 @@
         <Logger className="org.apache.catalina.logger.FileLogger"
                 directory="logs"  prefix="cfs_log." suffix=".txt"
                 timestamp="true"/>
-        <Context path="" docBase="cfs" debug="0" 
+        <Context path="" docBase="ROOT" debug="0" 
                  reloadable="true" crossContext="false"/>
       </Host>
       <Valve className="org.apache.catalina.valves.AccessLogValve"
