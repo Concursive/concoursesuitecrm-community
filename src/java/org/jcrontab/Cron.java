@@ -28,7 +28,7 @@ import org.jcrontab.log.Log;
  *  This class represents the Thread that loads the information from the DAO's
  *  and maintains the list of events to execute by the Crontab.
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */
@@ -286,7 +286,7 @@ public class Cron extends Thread {
           (System.currentTimeMillis() / 60000))
            * 60000));
       // Adds to the calendar the iFrec Minutes
-      cal.add(Calendar.MINUTE, iFrec);
+      cal.add(Calendar.SECOND, iFrec);
       CrontabBean ev = new CrontabBean();
       ev.setCalendar(cal);
       ev.setTime(cal.getTime().getTime());
