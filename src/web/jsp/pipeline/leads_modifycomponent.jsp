@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="LeadsComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -60,7 +61,7 @@ function checkForm(form) {
     popUp = true;
   }
 %>
-<dhv:evaluate exp="<%= !popUp %>">
+<dhv:evaluate if="<%= !popUp %>">
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Opportunities</a> >
 <% if ("list".equals(request.getParameter("return"))) {%>
@@ -78,10 +79,38 @@ Modify Component<br>
 <dhv:evaluate if="<%= request.getParameter("return") != null %>">
   <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </dhv:evaluate>
-<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
+<%-- Begin container --%>
+<dhv:evaluate if="<%= !popUp %>">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="containerHeader">
+    <td>
+      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>&nbsp;
+      <dhv:evaluate exp="<%= (opportunityHeader.getAccountEnabled() && opportunityHeader.getAccountLink() > -1) %>">
+        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= opportunityHeader.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
+      </dhv:evaluate>
+      <dhv:evaluate exp="<%= opportunityHeader.getContactLink() > -1 %>">
+        <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= opportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+        <% FileItem thisFile = new FileItem(); %>
+        <%= thisFile.getImageTag()%>
+      </dhv:evaluate>
+    </td>
+  </tr>
+  <tr class="containerMenu">
+    <td>
+      <% String param1 = "id=" + opportunityHeader.getId(); %>      
+      <dhv:container name="opportunities" selected="details" param="<%= param1 %>" />
+    </td>
+  </tr>
+  <tr>
+    <td class="containerBack">
+</dhv:evaluate>
+<%-- Begin the container contents --%>
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% 
   if (request.getParameter("return") != null) {
@@ -278,4 +307,11 @@ Modify Component<br>
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
 <input type="hidden" name="dosubmit" value="true">
+<%-- End container contents --%>
+<dhv:evaluate if="<%= !popUp %>">
+    </td>
+  </tr>
+</table>
+</dhv:evaluate>
+<%-- End container --%>
 </form>

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -70,15 +71,38 @@ Add Component<br>
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr>
+<%-- Begin container --%>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="containerHeader">
     <td>
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId()%>';this.form.dosubmit.value='false';">
-      <input type="reset" value="Reset">
-      <br>
-      <%= showError(request, "actionError") %>  
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>&nbsp;
+      <dhv:evaluate exp="<%= (OpportunityHeader.getAccountEnabled() && OpportunityHeader.getAccountLink() > -1) %>">
+        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= OpportunityHeader.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
+      </dhv:evaluate>
+      <dhv:evaluate exp="<%= OpportunityHeader.getContactLink() > -1 %>">
+        <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= OpportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
+        <% FileItem thisFile = new FileItem(); %>
+        <%= thisFile.getImageTag()%>
+      </dhv:evaluate>
+    </td>
+  </tr>
+  <tr class="containerMenu">
+    <td>
+      <% String param1 = "id=" + OpportunityHeader.getId(); %>      
+      <dhv:container name="opportunities" selected="details" param="<%= param1 %>" />
+    </td>
+  </tr>
+  <tr>
+    <td class="containerBack">
+<%-- Begin the container contents --%>
+<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId()%>';this.form.dosubmit.value='false';">
+<input type="reset" value="Reset">
+<br>
+<%= showError(request, "actionError") %>  
+    <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr class="title">
         <td colspan="2">
           <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
@@ -232,8 +256,10 @@ Add Component<br>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>';this.form.dosubmit.value='false';">
       <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
+<%-- End container contents --%>
     </td>
   </tr>
 </table>
+<%-- End container --%>
 </form>
 </body>
