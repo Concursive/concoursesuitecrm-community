@@ -42,255 +42,216 @@ public final class RevenueManager extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-revenue-view")) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "Revenue", "Revenue");
-
-    Connection db = null;
-    Statement st = null;
-    ResultSet rs = null;
-
-    int errorCode = 0;
+    String errorMessage = null;
+    
+    //Prepare the user id to base all data on
     int idToUse = 0;
-
-    java.util.Date d = new java.util.Date();
-    int y = d.getYear() + 1900;
-
-    String errorMessage = "";
-    String fileName = "";
-    StringBuffer sql = new StringBuffer();
-    String checkFileName = null;
-
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    String overrideId = null;
-
-    if (context.getRequest().getParameter("oid") != null) {
-      overrideId = context.getRequest().getParameter("oid");
-      if (Integer.parseInt(overrideId) == getUserId(context)) {
-        context.getSession().setAttribute("override", null);
-        context.getSession().setAttribute("othername", null);
-        context.getSession().setAttribute("previousId", null);
+    User thisRec = null;
+    //Check if a specific user was selected
+    int overrideId = StringUtils.parseInt(context.getRequest().getParameter("oid"), -1);
+    //Check if the list is being reset
+    if (context.getRequest().getParameter("reset") != null) {
+      overrideId = -1;
+      context.getSession().removeAttribute("override");
+      context.getSession().removeAttribute("othername");
+      context.getSession().removeAttribute("previousId");
+    }
+    //Determine the user whose data is being shown, by default it's the current user
+    if (overrideId > -1) {
+      if (overrideId == getUserId(context)) {
+        context.getSession().removeAttribute("override");
+        context.getSession().removeAttribute("othername");
+        context.getSession().removeAttribute("previousId");
       }
     } else if (context.getSession().getAttribute("override") != null) {
-      overrideId = (String) context.getSession().getAttribute("override");
+      overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("override"), -1);
+    } else {
+      overrideId = thisUser.getUserId();
     }
-
-    User thisRec = null;
-
-    UserList shortChildList = new UserList();
-    UserList fullChildList = new UserList();
-    UserList tempUserList = new UserList();
-    UserList linesToDraw = new UserList();
-
-    RevenueList tempRevList = new RevenueList();
-    RevenueList realFullRevList = new RevenueList();
-
-    OrganizationList displayList = new OrganizationList();
-
-    XYDataset categoryData = null;
-
-    if (context.getRequest().getParameter("reset") != null) {
-      overrideId = null;
-      context.getSession().setAttribute("override", null);
-      context.getSession().setAttribute("othername", null);
-      context.getSession().setAttribute("previousId", null);
-    }
-
-    if (overrideId != null && !(overrideId.equals("null")) && !(Integer.parseInt(overrideId) == getUserId(context))) {
-      idToUse = Integer.parseInt(overrideId);
-      thisRec = thisUser.getUserRecord().getChild(idToUse);
-      context.getSession().setAttribute("override", overrideId);
-      context.getSession().setAttribute("othername", thisRec.getContact().getNameFull());
-      context.getSession().setAttribute("previousId", "" + thisRec.getManagerId());
+    
+    //Check that the user hasAuthority for this oid
+    if (hasAuthority(context, overrideId)) {
+      idToUse = overrideId;
     } else {
       idToUse = thisUser.getUserId();
-      thisRec = thisUser.getUserRecord();
     }
-
+    thisRec = this.getUser(context, idToUse);
+    
+    //Track the id in the request and the session
+    if (idToUse > -1 && idToUse != getUserId(context)) {
+      context.getSession().setAttribute("override", String.valueOf(overrideId));
+      context.getSession().setAttribute("othername", thisRec.getContact().getNameFull());
+      context.getSession().setAttribute("previousId", String.valueOf(thisRec.getManagerId()));
+    }
+    
+    //Check the cache and see if the current graph exists and is valid
+    //TODO: This line invalidates the data no matter what... need to fix
+    thisRec.setRevenueIsValid(false, true);
+    String checkFileName = null;
+    if (thisRec.getRevenueIsValid()) {
+      checkFileName = thisRec.getRevenue().getLastFileName();
+    }
+    
+    //Determine the year to use
+    Calendar cal = Calendar.getInstance();
+    int year = cal.get(Calendar.YEAR);
+    String yearParam = context.getRequest().getParameter("year");
+    if (yearParam == null) {
+      yearParam = (String) context.getSession().getAttribute("year");
+    }
+    if (yearParam != null) {
+      year = Integer.parseInt(yearParam);
+      cal.set(Calendar.YEAR, year);
+      context.getSession().setAttribute("year", yearParam);
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("RevenueManager-> YEAR: " + year);
+    }
+    
+    //Determine the type to show
+    String revenueType = context.getRequest().getParameter("type");
+    if (revenueType == null) {
+      revenueType = (String) context.getSession().getAttribute("type");
+    }
+    
+    UserList fullChildList = new UserList();
+    UserList shortChildList = new UserList();
+    shortChildList = thisRec.getShortChildList();
+    shortChildList.setRevenueYear(year);
+    UserList linesToDraw = new UserList();
+    RevenueList realFullRevList = new RevenueList();
+    Connection db = null;
     try {
       db = this.getConnection(context);
+      //Information about the org currently selected, etc.
       buildFormElements(context, db);
-
-      //graph type select
+      
+      //Build the revenueTypeList combo box
       RevenueTypeList rtl = new RevenueTypeList(db);
-      rtl.addItem(0, "--All--");
+      rtl.addItem(0, "-- All --");
       rtl.setJsEvent("onChange=\"document.forms[0].submit();\"");
       context.getRequest().setAttribute("RevenueTypeList", rtl);
-      //end
 
+      //Generate the account pagedList for the idToUse
       PagedListInfo revenueInfo = this.getPagedListInfo(context, "DBRevenueListInfo");
-      revenueInfo.setLink("/RevenueManager.do?command=Dashboard");
-
-      //read in the year
-      if (context.getRequest().getParameter("year") != null) {
-        y = Integer.parseInt(context.getRequest().getParameter("year"));
-        d.setYear(y - 1900);
-        context.getSession().setAttribute("year", context.getRequest().getParameter("year"));
-      } else if (context.getSession().getAttribute("year") != null) {
-        y = Integer.parseInt((String) context.getSession().getAttribute("year"));
-        d.setYear(y - 1900);
-        context.getSession().setAttribute("year", (String) context.getSession().getAttribute("year"));
+      revenueInfo.setLink("RevenueManager.do?command=Dashboard");
+      OrganizationList displayList = new OrganizationList();
+      if (revenueType != null) {
+        shortChildList.setRevenueType(Integer.parseInt(revenueType));
+        realFullRevList.setType(Integer.parseInt(revenueType));
+        displayList.setRevenueType(Integer.parseInt(revenueType));
+        context.getSession().setAttribute("type", revenueType);
       }
-      //end
-
-      shortChildList = thisRec.getShortChildList();
-      shortChildList.setRevenueYear(y);
-
-      if (context.getRequest().getParameter("type") != null) {
-        shortChildList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
-        realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
-
-        displayList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
-        context.getSession().setAttribute("type", context.getRequest().getParameter("type"));
-      } else if (context.getSession().getAttribute("type") != null) {
-        shortChildList.setRevenueType(Integer.parseInt((String) context.getSession().getAttribute("type")));
-        realFullRevList.setType(Integer.parseInt((String) context.getSession().getAttribute("type")));
-
-        displayList.setRevenueType(Integer.parseInt((String) context.getSession().getAttribute("type")));
-      }
-
-      fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
-      String range = fullChildList.getUserListIds(idToUse);
-
-      //set the revenue YTD for each child in shortchildlist will use full-reporting range
-      shortChildList.buildRevenueYTD(db);
-      context.getRequest().setAttribute("ShortChildList", shortChildList);
-
-      //might need this
-      //thisRec.setRevenueIsValid(false, true);
-
-      realFullRevList.setYear(y);
-      realFullRevList.setOwnerIdRange(range);
-
-      realFullRevList.buildList(db);
-
-      displayList.setRevenueYear(y);
+      displayList.setRevenueYear(year);
       displayList.setBuildRevenueYTD(true);
-
-      //filter out my revenue for displaying on page
-      Iterator z = realFullRevList.iterator();
-
-      while (z.hasNext()) {
-        Revenue tempRev = (Revenue) (z.next());
-        //tempRevList is MY (or user drilled-to) Revs
-        if (tempRev.getOwner() == idToUse) {
-          tempRevList.addElement(tempRev);
-        }
+      displayList.setRevenueOwnerId(idToUse);
+      displayList.buildList(db);
+      Comparator comparator = new OrganizationYTDComparator();
+      java.util.Collections.sort(displayList, comparator);
+      context.getRequest().setAttribute("MyRevList", displayList);
+      
+      //FullChildList is the complete user hierarchy for the selected user and
+      //is needed for the graph
+      if (checkFileName == null) {
+        fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
+        String range = fullChildList.getUserListIds(idToUse);
+        //All of the revenue that make up this graph calculation
+        realFullRevList.setYear(year);
+        realFullRevList.setOwnerIdRange(range);
+        realFullRevList.buildList(db);
       }
 
-      displayList.setRevenueOwnerId(idToUse);
-      //displayList.setPagedListInfo(revenueInfo);
-      displayList.buildList(db);
-
-      Comparator comparator = null;
-      comparator = new OrganizationYTDComparator();
-
-      java.util.Collections.sort(displayList, comparator);
-
-      context.getRequest().setAttribute("MyRevList", displayList);
-
+      //Build the YTD revenue for each child to display in list under graph
+      shortChildList.buildRevenueYTD(db);
     } catch (Exception e) {
-      errorCode = 1;
       errorMessage = e.toString();
+      e.printStackTrace(System.out);
     } finally {
       this.freeConnection(context, db);
     }
 
-    //invalidating...??
-    thisRec.setRevenueIsValid(false, true);
-
-    if (thisRec.getRevenueIsValid() == true) {
-      checkFileName = thisRec.getRevenue().getLastFileName();
-    }
-
     if (checkFileName != null) {
-      System.out.println("This file is valid, and cached: " + checkFileName);
+      //Existing graph is good
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("RevenueManager-> Using cached chart");
+      }
       context.getRequest().setAttribute("GraphFileName", checkFileName);
     } else {
-      System.out.println("Revenue-> Preparing the chart");
-
-      //add up all stuff for children
-
+      //Need to generate a new graph
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("RevenueManager-> Preparing the chart");
+      }
+      //Filter out the selected user for graph
+      RevenueList tempRevList = new RevenueList();
+      Iterator z = realFullRevList.iterator();
+      while (z.hasNext()) {
+        Revenue tempRev = (Revenue) (z.next());
+        if (tempRev.getOwner() == idToUse) {
+          tempRevList.addElement(tempRev);
+        }
+      }
+      //add up all revenue for children
+      UserList tempUserList = new UserList();
       Iterator n = fullChildList.iterator();
-
       while (n.hasNext()) {
         User thisRecord = (User) n.next();
         thisRecord.setRevenueIsValid(false, true);
-        tempUserList = prepareLines(thisRecord, realFullRevList, tempUserList, y);
+        tempUserList = prepareLines(thisRecord, realFullRevList, tempUserList, year);
       }
-
-      linesToDraw = calculateLine(tempUserList, linesToDraw, y);
-
+      linesToDraw = calculateLine(tempUserList, linesToDraw, year);
       //set my own
-
-      tempUserList = prepareLines(thisRec, tempRevList, tempUserList, y);
-
+      tempUserList = prepareLines(thisRec, tempRevList, tempUserList, year);
       //add me up -- keep this
-      linesToDraw = calculateLine(thisRec, linesToDraw, y);
-
-      categoryData = createCategoryDataset(linesToDraw, y);
-
+      linesToDraw = calculateLine(thisRec, linesToDraw, year);
+      XYDataset categoryData = createCategoryDataset(linesToDraw, year);
+      //Prepare the chart
       JFreeChart chart = ChartFactory.createXYChart("", "", "", categoryData, false);
-
       chart.setBackgroundPaint(Color.white);
-
       XYPlot bPlot = chart.getXYPlot();
-
-      VerticalNumberAxis vnAxis = (VerticalNumberAxis) chart.getXYPlot().getVerticalAxis();
+      //Vertical Axis characteristics
+      VerticalNumberAxis vnAxis = (VerticalNumberAxis) bPlot.getVerticalAxis();
       vnAxis.setAutoRangeIncludesZero(true);
       vnAxis.setTickMarksVisible(true);
       bPlot.setRangeAxis(vnAxis);
-
-      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) chart.getXYPlot().getHorizontalAxis();
-
+      //Horizontal Axis characteristics
+      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) bPlot.getHorizontalAxis();
       hnAxis.setAutoRangeIncludesZero(false);
       hnAxis.setAutoTickUnitSelection(false);
+      hnAxis.setAutoRange(false);
       hnAxis.setVerticalTickLabels(true);
       hnAxis.setTickMarksVisible(true);
-      hnAxis.setAutoRange(false);
-
+      //Grid characteristics
       Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
       Paint gridPaint = Color.gray;
-
+      //Horizontal Axis labels
       ValueAxis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
           hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
           hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
-          true, new Integer(0), new Range((d.getYear() + 1900), (d.getYear() + 1901)), false, new DateUnit(Calendar.MONTH, 1),
+          true, new Integer(0), new Range(year, (year + 1)), false, new DateUnit(Calendar.MONTH, 1),
           new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint, false, null, null, null);
-
       myHorizontalDateAxis.setTickMarksVisible(true);
-
       try {
         bPlot.setDomainAxis(myHorizontalDateAxis);
       } catch (AxisNotCompatibleException err1) {
         System.out.println("AxisNotCompatibleException error!");
       }
-
-      //define the chart
+      //Draw the chart and save to file
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Revenue-> Drawing the chart");
+      }
       int width = 275;
       int height = 200;
-
-      System.out.println("Revenue-> Drawing the chart");
       BufferedImage img = draw(chart, width, height);
 
       //Output the chart
       try {
-        String fs = System.getProperty("file.separator");
-
         String realPath = context.getServletContext().getRealPath("/");
         String filePath = realPath + "graphs" + fs;
-
         java.util.Date testDate = new java.util.Date();
-        java.util.Calendar testCal = java.util.Calendar.getInstance();
-        testCal.setTime(testDate);
-        testCal.add(java.util.Calendar.MONTH, +1);
-
-        fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
-
-        thisRec.getRevenue().setLastFileName(fileName);
-
-        context.getRequest().setAttribute("GraphFileName", fileName);
+        String fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
         FileOutputStream foutstream = new FileOutputStream(filePath + fileName);
-
         JPEGImageEncoder encoder =
             JPEGCodec.createJPEGEncoder(foutstream);
         JPEGEncodeParam param =
@@ -298,14 +259,16 @@ public final class RevenueManager extends CFSModule {
         param.setQuality(1.0f, true);
         encoder.encode(img, param);
         foutstream.close();
+        
+        //Update the cached filename
+        thisRec.getRevenue().setLastFileName(fileName);
+        context.getRequest().setAttribute("GraphFileName", fileName);
       } catch (IOException e) {
       }
     }
 
-    if (errorCode == 0) {
-      context.getRequest().setAttribute("UserInfo", thisRec);
-      context.getRequest().setAttribute("FullChildList", fullChildList);
-      context.getRequest().setAttribute("FullRevList", realFullRevList);
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("ShortChildList", shortChildList);
       return ("DashboardOK");
     } else {
       //A System Error occurred
@@ -361,33 +324,28 @@ public final class RevenueManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-revenue-view"))) {
+    if (!hasPermission(context, "accounts-accounts-revenue-view")) {
       return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "View Revenue List");
-
     Exception errorMessage = null;
 
     String orgid = context.getRequest().getParameter("orgId");
-
     PagedListInfo revenueInfo = this.getPagedListInfo(context, "RevenueListInfo");
-    revenueInfo.setLink("/RevenueManager.do?command=View&orgId=" + orgid);
+    revenueInfo.setLink("RevenueManager.do?command=View&orgId=" + orgid);
 
     Connection db = null;
     RevenueList revenueList = new RevenueList();
     Organization thisOrganization = null;
-
     try {
       db = this.getConnection(context);
       revenueList.setPagedListInfo(revenueInfo);
       revenueList.setOrgId(Integer.parseInt(orgid));
-
       if ("all".equals(revenueInfo.getListView())) {
         revenueList.setOwnerIdRange(this.getUserRange(context));
       } else {
         revenueList.setOwner(this.getUserId(context));
       }
-
       revenueList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
     } catch (Exception e) {
@@ -415,8 +373,7 @@ public final class RevenueManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-revenue-delete"))) {
+    if (!hasPermission(context, "accounts-accounts-revenue-delete")) {
       return ("PermissionError");
     }
 
@@ -465,11 +422,9 @@ public final class RevenueManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-revenue-add"))) {
+    if (!hasPermission(context, "accounts-accounts-revenue-add")) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "View Accounts", "Insert Revenue");
     Exception errorMessage = null;
     boolean recordInserted = false;
@@ -488,7 +443,7 @@ public final class RevenueManager extends CFSModule {
       db = this.getConnection(context);
       recordInserted = thisRevenue.insert(db, context);
       if (recordInserted) {
-        newRevenue = new Revenue(db, "" + thisRevenue.getId());
+        newRevenue = new Revenue(db, String.valueOf(thisRevenue.getId()));
         context.getRequest().setAttribute("Revenue", newRevenue);
         thisOrganization = new Organization(db, newRevenue.getOrgId());
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
@@ -503,7 +458,6 @@ public final class RevenueManager extends CFSModule {
 
     if (errorMessage == null) {
       if (recordInserted) {
-        //return ("DetailsOK");
         return ("InsertOK");
       } else {
         return (executeCommandAdd(context));
@@ -522,8 +476,7 @@ public final class RevenueManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-revenue-edit"))) {
+    if (!hasPermission(context, "accounts-accounts-revenue-edit")) {
       return ("PermissionError");
     }
 
@@ -536,7 +489,6 @@ public final class RevenueManager extends CFSModule {
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
 
     //this is how we get the multiple-level heirarchy...recursive function.
-
     User thisRec = thisUser.getUserRecord();
 
     UserList shortChildList = thisRec.getShortChildList();
@@ -565,11 +517,9 @@ public final class RevenueManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-
       if (!hasAuthority(context, thisRevenue.getOwner())) {
         return ("PermissionError");
       }
-
       context.getRequest().setAttribute("Revenue", thisRevenue);
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       return ("ModifyOK");
@@ -587,8 +537,7 @@ public final class RevenueManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-revenue-view"))) {
+    if (!hasPermission(context, "accounts-accounts-revenue-view")) {
       return ("PermissionError");
     }
 
@@ -616,11 +565,9 @@ public final class RevenueManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-
       if (!hasAuthority(context, newRevenue.getOwner())) {
         return ("PermissionError");
       }
-
       context.getRequest().setAttribute("Revenue", newRevenue);
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       return ("DetailsOK");
@@ -639,11 +586,9 @@ public final class RevenueManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-revenue-edit"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
 
     Revenue newRevenue = (Revenue) context.getFormBean();
@@ -703,9 +648,7 @@ public final class RevenueManager extends CFSModule {
         new BufferedImage(width, height,
         BufferedImage.TYPE_INT_RGB);
     Graphics2D g2 = img.createGraphics();
-
     chart.draw(g2, new Rectangle2D.Double((-21), 0, width + 21, height));
-
     g2.dispose();
     return img;
   }
@@ -737,9 +680,6 @@ public final class RevenueManager extends CFSModule {
     rtl.addItem(0, "--None--");
     context.getRequest().setAttribute("RevenueTypeList", rtl);
 
-    //LookupList monthList = new LookupList(db, "lookup_months");
-    //context.getRequest().setAttribute("MonthList", monthList);
-
     HtmlSelect monthList = new HtmlSelect();
     monthList.setTypeUSMonths();
     monthList.setSelectName("month");
@@ -749,11 +689,6 @@ public final class RevenueManager extends CFSModule {
     yearList.setTypeYears(1990);
     yearList.setSelectName("year");
     context.getRequest().setAttribute("YearList", yearList);
-
-    //LookupList yearList = new LookupList(db, "lookup_years");
-    //context.getRequest().setAttribute("YearList", yearList);
-
-
   }
 
 
@@ -776,7 +711,6 @@ public final class RevenueManager extends CFSModule {
         {createDate(2002, 5, 18), new Integer(56)}
         }
         };
-
     return new DefaultXYDataset(data);
   }
 
@@ -790,70 +724,38 @@ public final class RevenueManager extends CFSModule {
    *@param  y             Description of the Parameter
    *@return               Description of the Return Value
    */
-  private UserList prepareLines(User pertainsTo, RevenueList revList, UserList usersToGraph, int y) {
-    java.util.Date d = new java.util.Date();
-    java.util.Calendar rightNow = java.util.Calendar.getInstance();
-    d.setDate(1);
-    d.setYear(y - 1900);
-    rightNow.setTime(d);
-
-    int passedDay = 0;
-    int passedYear = 0;
-    int passedMonth = 0;
-
-    Double revenueAddTerm = new Double(0.0);
-
-    String valKey = "";
-
-    //rightNow.add(java.util.Calendar.MONTH, +1);
-
-    if (pertainsTo.getRevenueIsValid() == false) {
+  private UserList prepareLines(User pertainsTo, RevenueList revList, UserList usersToGraph, int year) {
+    if (!pertainsTo.getRevenueIsValid()) {
       pertainsTo.doRevenueLock();
-      if (pertainsTo.getRevenueIsValid() == false) {
+      if (!pertainsTo.getRevenueIsValid()) {
         try {
-          System.out.println("(RE)BUILDING REVENUE DATA FOR " + pertainsTo.getId());
-
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("RevenueManager-> (RE)BUILDING REVENUE DATA FOR " + pertainsTo.getId());
+          }
           pertainsTo.setRevenue(new GraphSummaryList());
-
           Iterator revIterator = revList.iterator();
           while (revIterator.hasNext()) {
-
             Revenue tempRev = (Revenue) revIterator.next();
-
             if (tempRev.getOwner() == pertainsTo.getId()) {
-
-              passedDay = 0;
-              passedYear = tempRev.getYear();
-              passedMonth = (tempRev.getMonth() - 1);
-
-              valKey = ("" + passedYear) + ("" + passedMonth);
-
-              //get the individual graph values
-              revenueAddTerm = new Double(tempRev.getAmount());
-              //done
-
-              //case: amount date within 12 month range
-              if (passedYear == rightNow.get(java.util.Calendar.YEAR)) {
+              int passedDay = 0;
+              int passedYear = tempRev.getYear();
+              if (passedYear == year) {
+                int passedMonth = (tempRev.getMonth() - 1);
+                String valKey = String.valueOf(passedYear) + String.valueOf(passedMonth);
+                Double revenueAddTerm = new Double(tempRev.getAmount());
                 pertainsTo.setRevenueGraphValues(valKey, revenueAddTerm);
               }
-              //more terms
-
-
             }
           }
           pertainsTo.setRevenueIsValid(true, true);
         } catch (Exception e) {
           System.err.println("Revenue Manager-> Unwanted exception occurred: " + e.toString());
         } finally {
-          pertainsTo.doRevenueUnlock();
         }
-      } else {
-        pertainsTo.doRevenueUnlock();
       }
+      pertainsTo.doRevenueUnlock();
     }
-
     usersToGraph.addElement(pertainsTo);
-
     if (revList.size() == 0) {
       return new UserList();
     } else {
@@ -870,24 +772,18 @@ public final class RevenueManager extends CFSModule {
    *@param  y             Description of the Parameter
    *@return               Description of the Return Value
    */
-  private UserList calculateLine(User primaryNode, UserList currentLines, int y) {
+  private UserList calculateLine(User primaryNode, UserList currentLines, int year) {
     if (currentLines.size() == 0) {
       currentLines.addElement(primaryNode);
       return currentLines;
     }
-
     User thisLine = new User();
-    String[] valKeys = thisLine.getRevenue().getYearRange(12, y);
-
+    String[] valKeys = thisLine.getRevenue().getYearRange(12, year);
     Iterator x = currentLines.iterator();
     User addToMe = (User) x.next();
-
-    int count = 0;
-
-    for (count = 0; count < 12; count++) {
+    for (int count = 0; count < 12; count++) {
       thisLine.getRevenue().setValue(valKeys[count], new Double(primaryNode.getRevenue().getValue(valKeys[count]).doubleValue() + (addToMe.getRevenue().getValue(valKeys[count])).doubleValue()));
     }
-
     currentLines.addElement(thisLine);
     return currentLines;
   }
@@ -901,26 +797,19 @@ public final class RevenueManager extends CFSModule {
    *@param  y             Description of the Parameter
    *@return               Description of the Return Value
    */
-  private UserList calculateLine(UserList toRollUp, UserList currentLines, int y) {
+  private UserList calculateLine(UserList toRollUp, UserList currentLines, int year) {
     if (toRollUp.size() == 0) {
       return new UserList();
     }
-
     User thisLine = new User();
-    String[] valKeys = thisLine.getRevenue().getYearRange(12, y);
-
-    int count = 0;
-
+    String[] valKeys = thisLine.getRevenue().getYearRange(12, year);
     Iterator x = toRollUp.iterator();
-
     while (x.hasNext()) {
       User thisUser = (User) x.next();
-
-      for (count = 0; count < 12; count++) {
+      for (int count = 0; count < 12; count++) {
         thisLine.getRevenue().setValue(valKeys[count], thisUser.getRevenue().getValue(valKeys[count]));
       }
     }
-
     currentLines.addElement(thisLine);
     return currentLines;
   }
@@ -933,40 +822,27 @@ public final class RevenueManager extends CFSModule {
    *@param  y           Description of the Parameter
    *@return             Description of the Return Value
    */
-  private XYDataset createCategoryDataset(UserList passedList, int y) {
-
+  private XYDataset createCategoryDataset(UserList passedList, int year) {
     if (passedList.size() == 0) {
       return createEmptyCategoryDataset();
     }
-
     Object[][][] data;
 
-    java.util.Date d = new java.util.Date();
-    d.setYear(y - 1900);
-
-    java.util.Calendar iteratorDate = java.util.Calendar.getInstance();
-
+    Calendar iteratorDate = Calendar.getInstance();
+    iteratorDate.set(Calendar.YEAR, year);
+    
     data = new Object[passedList.size()][12][2];
-    int count = 0;
     int x = 0;
-
     Iterator n = passedList.iterator();
-
     while (n.hasNext()) {
       User thisUser = (User) n.next();
-
-      String[] valKeys = thisUser.getRevenue().getYearRange(12, y);
-
-      iteratorDate.setTime(d);
-
-      for (count = 0; count < 12; count++) {
-        data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), count, 1);
+      String[] valKeys = thisUser.getRevenue().getYearRange(12, year);
+      for (int count = 0; count < 12; count++) {
+        data[x][count][0] = createDate(iteratorDate.get(Calendar.YEAR), count, 1);
         data[x][count][1] = thisUser.getRevenue().getValue(valKeys[count]);
       }
-
       x++;
     }
-
     return new DefaultXYDataset(data);
   }
 
