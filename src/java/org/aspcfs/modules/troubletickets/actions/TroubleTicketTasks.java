@@ -166,13 +166,9 @@ public final class TroubleTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
-    if (!(hasPermission(context, "tickets-tickets-tasks-edit"))) {
-      return ("PermissionError");
-    }
     addModuleBean(context, "View Tickets", "Add Ticket");
     try {
       db = this.getConnection(context);
@@ -185,21 +181,20 @@ public final class TroubleTicketTasks extends CFSModule {
         thisTask.checkEnabledLinkAccount(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
 
-    if (errorMessage == null) {
-      if (!hasAuthority(context, thisTask.getOwner())) {
+      context.getRequest().setAttribute("Task", thisTask);
+      if (!hasAuthority(context, thisTask.getOwner()) || !(hasPermission(context, "tickets-tickets-tasks-edit"))) {
+        if(hasPermission(context, "tickets-tickets-tasks-view")){
+          return "TaskDetailsOK";
+        }
         return ("PermissionError");
       }
-      context.getRequest().setAttribute("Task", thisTask);
       return ("AddTaskOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
   }
 
 
