@@ -6,7 +6,6 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <form name="oppdet" action="Leads.do?id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
-
 <a href="Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
 	<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
@@ -150,9 +149,10 @@ Opportunity Details<br>
   
 </table>
 <br>
-<dhv:pagedListControl object="LeadsComponentListInfo"/></td></tr>
-</table>
 <% if (request.getParameter("return") != null) { %>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 </form>
+<dhv:pagedListControl object="LeadsComponentListInfo"/></td></tr>
+</table>
+
