@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.Hashtable;
 import com.darkhorseventures.database.*;
 import org.aspcfs.apps.workFlowManager.*;
+import org.jcrontab.Crontab;
 
 /**
  *  Responsible for initialization and cleanup when the web-app is
@@ -19,7 +20,8 @@ import org.aspcfs.apps.workFlowManager.*;
  *      $
  */
 public class ContextListener implements ServletContextListener {
-
+  public static final String fs = System.getProperty("file.separator");
+  
   /**
    *  Constructor for the ContextListener object
    */
@@ -52,6 +54,8 @@ public class ContextListener implements ServletContextListener {
     } catch (Exception e) {
       System.err.println(e.toString());
     }
+    
+    System.out.println("ContextListener-> Initialized");
   }
 
 
@@ -67,6 +71,14 @@ public class ContextListener implements ServletContextListener {
       System.out.println("ContextListener-> Shutting down");
     }
 
+    //Stop the cron first
+    Crontab crontab = (Crontab)context.getAttribute("Crontab");
+    if (crontab != null) {
+      crontab.uninit(100);
+      context.removeAttribute("Crontab");
+      System.out.println("ContextListener-> CRON stopped");
+    }
+    
     WorkflowManager wfManager = (WorkflowManager) context.getAttribute("WorkflowManager");
     if (wfManager != null) {
       context.removeAttribute("WorkflowManager");
