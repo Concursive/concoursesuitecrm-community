@@ -115,7 +115,7 @@ public class ObjectHookManager {
   public void process(ActionContext actionContext, int action, Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
     try {
       WorkflowManager wfManager = (WorkflowManager) actionContext.getServletContext().getAttribute("WorkflowManager");
-      if (wfManager != null) {
+      if (wfManager != null && hookList != null && processList != null) {
         if ((object != null && hookList.has(object)) ||
             (previousObject != null && hookList.has(previousObject))) {
           ComponentContext context = new ComponentContext();

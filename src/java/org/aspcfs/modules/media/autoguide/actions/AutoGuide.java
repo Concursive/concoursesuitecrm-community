@@ -21,7 +21,7 @@ import java.io.*;
 /**
  *  Auto Guide CFS Module
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    April 30, 2002
  *@version    $Id$
  */
@@ -45,15 +45,12 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandList(ActionContext context) {
-    if (!(hasPermission(context, "autoguide-view"))) {
+    if (!hasPermission(context, "autoguide-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     PagedListInfo autoGuideDirectoryInfo = this.getPagedListInfo(context, "AutoGuideDirectoryInfo");
     autoGuideDirectoryInfo.setLink("AutoGuide.do?command=List");
-
     Connection db = null;
     InventoryList inventoryList = new InventoryList();
     try {
@@ -73,7 +70,6 @@ public final class AutoGuide extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Auto Guide", "List");
     if (errorMessage == null) {
       context.getRequest().setAttribute("InventoryList", inventoryList);
@@ -495,26 +491,22 @@ public final class AutoGuide extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandAccountUpdate(ActionContext context) {
-    if (!(hasPermission(context, "accounts-autoguide-inventory-edit"))) {
+    if (!hasPermission(context, "accounts-autoguide-inventory-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
-
     String orgid = context.getRequest().getParameter("orgId");
     int resultCount = 0;
-
     try {
+      //Populate the inventory item
       Inventory thisItem = (Inventory) context.getFormBean();
       thisItem.setRequestItems(context.getRequest());
       thisItem.setModifiedBy(getUserId(context));
-
       db = this.getConnection(context);
       thisItem.generateVehicleId(db);
       resultCount = thisItem.update(db);
       if (resultCount == -1) {
-        //processErrors(context, thisItem.getErrors());
         populateOrganization(context, db, Integer.parseInt(orgid));
       }
     } catch (Exception e) {
@@ -522,7 +514,6 @@ public final class AutoGuide extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (resultCount == -1) {
         return ("ModifyOK");

@@ -18,7 +18,6 @@ if (rs.next()) {
   categoryId = rs.getInt("category_id");
 }
 rs.close();
-//st.close();//this breaks under sql server when there is another statement
 print("My Home Page Category Id: " + categoryId);
 
 //Move and rename the permission

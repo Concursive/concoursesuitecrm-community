@@ -47,6 +47,7 @@ public final class ProcessPacket extends CFSModule {
     LinkedList statusMessages = new LinkedList();
     Connection db = null;
     Connection dbLookup = null;
+    String encoding = "UTF-8";
 
     try {
       //Put the request into an XML document
@@ -57,14 +58,20 @@ public final class ProcessPacket extends CFSModule {
       //There should be an authentication node in the packet
       AuthenticationItem auth = new AuthenticationItem();
       xml.populateObject(auth, xml.getFirstChild("authentication"));
+      encoding = auth.getEncoding();
 
       //Initialize the auth by getting the connection element
       ConnectionElement ce = auth.getConnectionElement(context);
 
+      //TODO: Get rid of using the session for transactions, currently
+      //it's being used for the ConnectionElement only.
+      //Keep this session low (5 minutes)
+      context.getSession().setMaxInactiveInterval(300);
+      
       //Since this module bypasses the user login module, set this "user's"
       //connection info to simulate the login
       context.getSession().setAttribute("ConnectionElement", ce);
-
+      
       if (auth.isAuthenticated(context)) {
         //Environment variables for this packet request
         PacketContext packetContext = new PacketContext();
@@ -233,7 +240,7 @@ public final class ProcessPacket extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ProcessPacket-> Total Records: " + returnedRecordCount);
       }
-      context.getRequest().setAttribute("statusXML", XMLUtils.toString(document));
+      context.getRequest().setAttribute("statusXML", XMLUtils.toString(document, encoding));
     } catch (Exception pce) {
       pce.printStackTrace(System.out);
     }

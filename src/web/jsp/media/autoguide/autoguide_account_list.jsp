@@ -31,7 +31,7 @@ Vehicle Inventory List<br>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">
-    <td align="left">
+    <td align="left" nowrap>
       Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= AutoGuideAccountInfo.getOptionValue("list") %>>List View</option>
         <option <%= AutoGuideAccountInfo.getOptionValue("slides") %>>Ad View</option>
@@ -110,6 +110,9 @@ Vehicle Inventory List<br>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
+					<dhv:evaluate exp="<%= hasText(thisItem.getStyle()) %>">
+						<%= toHtml(thisItem.getStyle()) %>
+					</dhv:evaluate>
         </td>
         <td class="row<%= rowid %>" align="right">
           <%= toHtml(thisItem.getMileageString()) %>

@@ -111,6 +111,11 @@ public class UpgradeDatabaseTask extends Task {
    *@exception  BuildException  Description of the Exception
    */
   public void execute() throws BuildException {
+    String fsEval = System.getProperty("file.separator");
+    if ("\\".equals(fsEval)) {
+      fsEval = "\\\\";
+      servletJar = StringUtils.replace(servletJar, "\\", "\\\\");
+    }
     System.out.println("Checking databases to upgrade");
     try {
       //Create a Connection Pool to facilitate connections
@@ -159,12 +164,12 @@ public class UpgradeDatabaseTask extends Task {
         String scriptFile = baseFile + (baseFile.indexOf(".")>-1?"":".bsh");
         if (new File(scriptFile).exists()) {
           Interpreter script = new Interpreter();
-          script.eval("addClassPath(bsh.cwd + \"/build/lib/aspcfs.jar\")");
-          script.eval("addClassPath(bsh.cwd + \"/build/lib/darkhorseventures.jar\")");
+          script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "aspcfs.jar\")");
+          script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "darkhorseventures.jar\")");
           script.eval("addClassPath(\"" + servletJar + "\")");
           script.set("db", db);
+          System.out.println("Executing: " + scriptFile);
           script.source(scriptFile);
-          System.out.println("BSH Script complete: " + scriptFile);
         }
         //Run the specified sql file
         String sqlFile = baseFile + (baseFile.indexOf(".")>-1?"":".sql");

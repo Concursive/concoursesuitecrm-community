@@ -23,6 +23,7 @@ public class AuthenticationItem {
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private String authCode = "unset";
+  private String encoding = "UTF-8";
 
 
   /**
@@ -133,6 +134,17 @@ public class AuthenticationItem {
 
 
   /**
+   *  Sets the XML encoding attribute of the AuthenticationItem object.  The
+   *  encoding determines the encoding for all XML that will be returned.
+   *
+   *@param  tmp  The new encoding value
+   */
+  public void setEncoding(String tmp) {
+    this.encoding = tmp;
+  }
+
+
+  /**
    *  Gets the id attribute of the AuthenticationItem object
    *
    *@return    The id value
@@ -189,6 +201,17 @@ public class AuthenticationItem {
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
+  }
+
+
+  /**
+   *  Gets the XML encoding attribute of the AuthenticationItem object.  The
+   *  encoding specifies the preferred XML encoding for the client.
+   *
+   *@return    The encoding value
+   */
+  public String getEncoding() {
+    return encoding;
   }
 
 

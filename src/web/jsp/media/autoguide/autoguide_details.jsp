@@ -50,6 +50,12 @@
     <td><%= InventoryItem.getSellingPriceString() %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
+<dhv:evaluate exp="<%= hasText(InventoryItem.getSellingPriceText()) %>">
+  <tr>
+    <td nowrap class="formLabel">Selling Price</td>
+    <td><%= toHtml(InventoryItem.getSellingPriceText()) %>&nbsp;</td>
+  </tr>
+</dhv:evaluate>
 <dhv:evaluate exp="<%= hasText(InventoryItem.getExteriorColor()) %>">
   <tr>
     <td nowrap class="formLabel">Exterior Color</td>
@@ -131,7 +137,7 @@
 </dhv:evaluate>
 </table>
 &nbsp;<br>
-<% String phoneType = "Main"; %>
+<%-- The following is specially formatted to look correctly in an input field and cannot have line breaks --%><% String phoneType = "Main"; %>
 Ad Text:
 <input type="text" name="adtext" size="80" value="<%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %> <%= InventoryItem.getVehicle().getYear() %><dhv:evaluate exp="<%= hasText(InventoryItem.getExteriorColor()) %>"> <%= toHtml(InventoryItem.getExteriorColor()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getMileage() > -1) %>"> <%= InventoryItem.getMileageString() %></dhv:evaluate><dhv:evaluate exp="<%= InventoryItem.hasOptions() %>"> <%
       Iterator options = InventoryItem.getOptions().iterator();
@@ -139,9 +145,9 @@ Ad Text:
         Option thisOption = (Option)options.next();
 %><%= toHtml(thisOption.getName()) %><%= (options.hasNext()?", ":"") %><%
       }
-%></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getComments()) %>"> <%= toHtml(InventoryItem.getComments()) %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getCondition()) %>"> <%= toHtml(InventoryItem.getCondition()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getSellingPrice() > 0) %>"> <%= InventoryItem.getSellingPriceString() %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getOrganization().getPhoneNumber(phoneType)) %>"> <%= toHtml(InventoryItem.getOrganization().getPhoneNumber("Main")) %></dhv:evaluate>"><br>
+%></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getComments()) %>"> <%= toHtml(InventoryItem.getComments()) %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getCondition()) %>"> <%= toHtml(InventoryItem.getCondition()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getSellingPrice() > 0) %>"> <%= InventoryItem.getSellingPriceString() %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getSellingPriceText()) %>"> <%= toHtml(InventoryItem.getSellingPriceText()) %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getOrganization().getPhoneNumber(phoneType)) %>"> <%= toHtml(InventoryItem.getOrganization().getPhoneNumber("Main")) %></dhv:evaluate>"><br>
 <dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
-&nbsp;<br>
+&nbsp;<br><%-- End formatting --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td>

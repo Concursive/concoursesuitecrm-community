@@ -10,11 +10,13 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 /**
- *  Description of the Class
+ *  Provides the sync API with a set of methods for managing the client-server
+ *  record mappings
  *
  *@author     matt rajkowski
  *@created    June 3, 2002
- *@version    $Id$
+ *@version    $Id: SyncClientMap.java,v 1.22 2003/02/07 14:57:34 mrajkowski Exp
+ *      $
  */
 public class SyncClientMap {
 
@@ -71,7 +73,13 @@ public class SyncClientMap {
   public void setClientUniqueId(String tmp) {
     this.clientUniqueId = Integer.parseInt(tmp);
   }
-  
+
+
+  /**
+   *  Sets the clientUniqueId attribute of the SyncClientMap object
+   *
+   *@param  tmp  The new clientUniqueId value
+   */
   public void setClientUniqueId(int tmp) {
     this.clientUniqueId = tmp;
   }
@@ -176,7 +184,8 @@ public class SyncClientMap {
       return insertMap(db, null);
     }
   }
-  
+
+
   /**
    *  Description of the Method
    *
@@ -205,15 +214,22 @@ public class SyncClientMap {
     }
     pst.execute();
     pst.close();
-
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insertConflict(Connection db) throws SQLException {
-    String sql = 
-      "INSERT INTO sync_conflict_log " +
-      "(client_id, table_id, record_id) " +
-      "VALUES (?, ?, ?) ";
+    String sql =
+        "INSERT INTO sync_conflict_log " +
+        "(client_id, table_id, record_id) " +
+        "VALUES (?, ?, ?) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, clientId);
@@ -221,10 +237,10 @@ public class SyncClientMap {
     pst.setInt(++i, recordId);
     pst.execute();
     pst.close();
-
     return true;
   }
-  
+
+
   /**
    *  Description of the Method
    *
@@ -269,20 +285,18 @@ public class SyncClientMap {
    */
   public int lookupClientId(SyncClientManager clientManager, int referenceTable, String serverId) {
     int resultId = -1;
-    
     if (clientManager == null) {
       System.out.println("SyncClientMap-> clientManager is null (needs to be initialized first)");
     }
-    
     if (clientManager.containsKey(new Integer(clientId)) && serverId != null) {
       Hashtable clientLookup = (Hashtable) clientManager.get(new Integer(clientId));
       if (clientLookup.containsKey(new Integer(referenceTable))) {
         Hashtable tableLookup = (Hashtable) clientLookup.get(new Integer(referenceTable));
         Integer serverNum = new Integer(serverId);
         if (tableLookup.containsKey(serverNum)) {
-          Integer value = (Integer)tableLookup.get(serverNum);
+          Integer value = (Integer) tableLookup.get(serverNum);
           if (value != null) {
-            resultId = ((Integer)value).intValue();
+            resultId = ((Integer) value).intValue();
           } else {
             if (System.getProperty("DEBUG") != null) {
               System.out.println("SyncClientMap-> lookupClientId: Null value for table " + referenceTable + " record " + serverId);
@@ -345,13 +359,11 @@ public class SyncClientMap {
     if (clientManager.containsKey(new Integer(clientId)) && clientCuid != null) {
       Hashtable clientLookup = (Hashtable) clientManager.get(new Integer(clientId));
       Hashtable tableLookup = (Hashtable) clientLookup.get(new Integer(referenceTable));
-
       if (tableLookup == null) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("SyncClientMap-> Referenced table is null: " + referenceTable);
         }
       }
-      
       Iterator i = tableLookup.keySet().iterator();
       System.out.println("SyncClientMap-> Table count: " + tableLookup.size());
       while (i.hasNext()) {
@@ -363,7 +375,14 @@ public class SyncClientMap {
     }
     return resultId;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildStatusDate(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -372,7 +391,7 @@ public class SyncClientMap {
         "WHERE client_id = ? " +
         "AND table_id = ? " +
         "AND record_id = ? " +
-        "AND cuid = ? "); 
+        "AND cuid = ? ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, clientId);
@@ -454,6 +473,15 @@ public class SyncClientMap {
     return resultCount;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  timestamp         Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int updateStatusDate(Connection db, String timestamp) throws SQLException {
     if (timestamp != null && !timestamp.trim().equals("")) {
       return updateStatusDate(db, java.sql.Timestamp.valueOf(timestamp));
@@ -461,9 +489,10 @@ public class SyncClientMap {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("NULL TIMESTAMP-> " + getTableId() + " " + getRecordId());
       }
-      return updateStatusDate(db, (java.sql.Timestamp)null);
+      return updateStatusDate(db, (java.sql.Timestamp) null);
     }
   }
+
 
   /**
    *  Description of the Method
@@ -477,7 +506,6 @@ public class SyncClientMap {
     if (clientId == -1 && tableId == -1 && recordId == -1) {
       throw new SQLException("Record ID was not specified");
     }
-
     int resultCount = 0;
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
@@ -547,6 +575,12 @@ public class SyncClientMap {
     statusDate = rs.getTimestamp("status_date");
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public String toString() {
     String lf = System.getProperty("line.separator");
     StringBuffer tmp = new StringBuffer();

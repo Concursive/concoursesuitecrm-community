@@ -136,8 +136,8 @@ public class XMLUtils {
     NodeList nl = e.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
-      if (n != null && 
-          n.getNodeType() == Node.ELEMENT_NODE && 
+      if (n != null &&
+          n.getNodeType() == Node.ELEMENT_NODE &&
           ((Element) n).getTagName().equals(name)) {
         return (Element) n;
       }
@@ -242,7 +242,8 @@ public class XMLUtils {
 
 
   /**
-   *  Gets the nodeText attribute of the XMLUtils class
+   *  Gets the node text of the specified element, can be TEXT or CDATA,
+   *  returned as a String
    *
    *@param  element  Description of Parameter
    *@return          The nodeText value
@@ -274,11 +275,17 @@ public class XMLUtils {
 
 
   /**
-   *  Description of the Method
+   *  Populates the specified object with all of the child nodes of the
+   *  specified element, returning a hashmap of all of the invalid
+   *  fields/values.<p>
+   *
+   *  If a child called "data" is specified, then all of the children of "data"
+   *  will be called by "set"ChildName(string) on the object. If the field
+   *  cannot be set, then the field and value are put in a HashMap.
    *
    *@param  target   Description of Parameter
    *@param  element  Description of Parameter
-   *@return          Description of the Returned Value
+   *@return          HashMap of field names and values that could not be set
    */
   public static HashMap populateObject(Object target, Element element) {
     if (target != null && element != null) {
@@ -315,7 +322,8 @@ public class XMLUtils {
 
 
   /**
-   *  Description of the Method
+   *  Converts a String to an XML String by replacing invalid characters with
+   *  the XML equivalent
    *
    *@param  s  Description of Parameter
    *@return    Description of the Returned Value
@@ -334,19 +342,33 @@ public class XMLUtils {
 
 
   /**
-   *  Converts the XML to a string representation. Properties are based on:
-   *  http://www.ietf.org/rfc/rfc2278.txt
+   *  Convert XML to a string using the default encoding, UTF-8
    *
-   *@param  node  Description of Parameter
-   *@return       Description of the Returned Value
+   *@param  node  Description of the Parameter
+   *@return       Description of the Return Value
    */
   public static String toString(Node node) {
+    return toString(node, "UTF-8");
+  }
+
+
+  /**
+   *  Convert the XML to a string representation using the specified encoding.
+   *  Properties are based on: http://www.ietf.org/rfc/rfc2278.txt
+   *
+   *@param  node      Description of Parameter
+   *@param  encoding  Description of the Parameter
+   *@return           Description of the Returned Value
+   */
+  public static String toString(Node node, String encoding) {
     try {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
+      transformer.setOutputProperty(OutputKeys.ENCODING, encoding);
       //transformer.setOutputProperty(OutputKeys.INDENT, "yes");
       //transformer.setOutputProperty(OutputKeys.ENCODING, "US-ASCII");
-      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-16");
+      //transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-16");
+      //transformer.setOutputProperty(OutputKeys.ENCODING, "Windows-1252");
       //transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
       //transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
 
@@ -363,7 +385,7 @@ public class XMLUtils {
 
 
   /**
-   *  Description of the Method
+   *  Output the XML to System.out
    *
    *@param  node  Description of Parameter
    *@return       Description of the Returned Value
@@ -373,9 +395,7 @@ public class XMLUtils {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
       Source source = new DOMSource(node);
-
       StreamResult result = new StreamResult(System.out);
-
       transformer.transform(source, result);
       return true;
     } catch (Exception e) {

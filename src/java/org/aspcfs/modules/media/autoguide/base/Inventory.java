@@ -19,9 +19,10 @@ import com.zeroio.iteam.base.FileItem;
  *  Represents a vehicle for the purpose of scheduling advertisements, including
  *  details, options and ad run dates
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    May 17, 2002
- *@version    $Id$
+ *@version    $Id: Inventory.java,v 1.30.20.1 2003/04/25 21:14:17 mrajkowski Exp
+ *      $
  */
 public class Inventory {
 
@@ -38,7 +39,9 @@ public class Inventory {
   private String interiorColor = null;
   private double invoicePrice = -1;
   private double sellingPrice = -1;
+  private String sellingPriceText = null;
   private boolean sold = false;
+  private String style = null;
   private String status = null;
   private java.sql.Timestamp entered = null;
   private int enteredBy = -1;
@@ -50,7 +53,7 @@ public class Inventory {
   private AdRunList adRuns = null;
   private int pictureId = -1;
   private FileItem picture = null;
-
+  //options for initially reading the data
   private boolean showIncompleteAdRunsOnly = false;
 
 
@@ -83,7 +86,7 @@ public class Inventory {
         "SELECT i.inventory_id, i.vehicle_id AS inventory_vehicle_id, " +
         "i.account_id, vin, mileage, is_new, " +
         "condition, comments, stock_no, ext_color, int_color, invoice_price, " +
-        "selling_price, sold, i.status, i.entered, i.enteredby, i.modified, i.modifiedby, " +
+        "selling_price, selling_price_text, sold, style, i.status, i.entered, i.enteredby, i.modified, i.modifiedby, " +
         "v.vehicle_id, v.year, v.make_id AS vehicle_make_id, " +
         "v.model_id AS vehicle_model_id, v.entered AS vehicle_entered, " +
         "v.enteredby AS vehicle_enteredby, v.modified AS vehicle_modified, " +
@@ -324,6 +327,16 @@ public class Inventory {
 
 
   /**
+   *  Sets the sellingPriceText attribute of the Inventory object
+   *
+   *@param  tmp  The new sellingPriceText value
+   */
+  public void setSellingPriceText(String tmp) {
+    this.sellingPriceText = tmp;
+  }
+
+
+  /**
    *  Sets the sold attribute of the Inventory object
    *
    *@param  tmp  The new sold value
@@ -340,6 +353,16 @@ public class Inventory {
    */
   public void setSold(String tmp) {
     this.sold = ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+  }
+
+
+  /**
+   *  Sets the style attribute of the Inventory object
+   *
+   *@param  tmp  The new style value
+   */
+  public void setStyle(String tmp) {
+    this.style = tmp;
   }
 
 
@@ -471,6 +494,14 @@ public class Inventory {
   public void setRequestItems(HttpServletRequest request) {
     options = new OptionList(request);
     adRuns = new AdRunList(request);
+    String type = request.getParameter("sellingPriceType");
+    if (type != null) {
+      if ("2".equals(type)) {
+        sellingPrice = -1;
+      } else {
+        sellingPriceText = null;
+      }
+    }
   }
 
 
@@ -685,12 +716,32 @@ public class Inventory {
 
 
   /**
+   *  Gets the sellingPriceText attribute of the Inventory object
+   *
+   *@return    The sellingPriceText value
+   */
+  public String getSellingPriceText() {
+    return sellingPriceText;
+  }
+
+
+  /**
    *  Gets the sold attribute of the Inventory object
    *
    *@return    The sold value
    */
   public boolean getSold() {
     return sold;
+  }
+
+
+  /**
+   *  Gets the style attribute of the Inventory object
+   *
+   *@return    The style value
+   */
+  public String getStyle() {
+    return style;
   }
 
 
@@ -815,8 +866,8 @@ public class Inventory {
 
 
   /**
-   *  Gets the hasPicture attribute of the Inventory object
-   *  used for synchronization... since all properties need a get.
+   *  Gets the hasPicture attribute of the Inventory object used for
+   *  synchronization... since all properties need a get.
    *
    *@return    The hasPicture value
    */
@@ -888,9 +939,9 @@ public class Inventory {
     sql.append(
         "INSERT INTO autoguide_inventory " +
         "(vehicle_id, account_id, vin, mileage, is_new, condition, comments, " +
-        "stock_no, ext_color, int_color, invoice_price, selling_price, sold, " +
-        "status, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "stock_no, ext_color, int_color, invoice_price, selling_price, selling_price_text, sold, " +
+        "style, status, enteredby, modifiedby) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, vehicleId);
@@ -905,7 +956,9 @@ public class Inventory {
     pst.setString(++i, interiorColor);
     pst.setDouble(++i, invoicePrice);
     pst.setDouble(++i, sellingPrice);
+    pst.setString(++i, sellingPriceText);
     pst.setBoolean(++i, sold);
+    pst.setString(++i, style);
     pst.setString(++i, status);
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, enteredBy);
@@ -949,7 +1002,8 @@ public class Inventory {
       String sql =
           "UPDATE autoguide_inventory " +
           "SET vehicle_id = ?, vin = ?, mileage = ?, is_new = ?, condition = ?, comments = ?, " +
-          "stock_no = ?, ext_color = ?, int_color = ?, invoice_price = ?, selling_price = ?, sold = ?, status = ?, " +
+          "stock_no = ?, ext_color = ?, int_color = ?, invoice_price = ?, selling_price = ?, selling_price_text = ?, " +
+          "sold = ?, style = ?, status = ?, " +
           "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
           "WHERE inventory_id = ? " +
           "AND modified = ? ";
@@ -966,7 +1020,9 @@ public class Inventory {
       pst.setString(++i, this.getInteriorColor());
       pst.setDouble(++i, this.getInvoicePrice());
       pst.setDouble(++i, this.getSellingPrice());
+      pst.setString(++i, this.getSellingPriceText());
       pst.setBoolean(++i, this.getSold());
+      pst.setString(++i, this.getStyle());
       pst.setString(++i, this.getStatus());
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getId());
@@ -1190,10 +1246,12 @@ public class Inventory {
     sb.append("Make: " + StringUtils.toString(vehicle.getMake().getName()) + lf);
     sb.append("Model: " + StringUtils.toString(vehicle.getModel().getName()) + lf);
     sb.append("Year: " + vehicle.getYear() + lf);
+    sb.append("Style: " + StringUtils.toString(style) + lf);
     sb.append("Stock No: " + StringUtils.toString(stockNo) + lf);
     sb.append("Mileage: " + StringUtils.toString(this.getMileageString()) + lf);
     sb.append("VIN: " + StringUtils.toString(this.getVin()) + lf);
     sb.append("Selling Price: " + StringUtils.toString(this.getSellingPriceString()) + lf);
+    sb.append("Selling Price Text: " + StringUtils.toString(this.getSellingPriceText()) + lf);
     sb.append("Color: " + StringUtils.toString(this.getExteriorColor()) + lf);
     sb.append("Condition: " + StringUtils.toString(condition) + lf);
     sb.append("Additional Text: " + StringUtils.toString(comments) + lf);
@@ -1209,7 +1267,6 @@ public class Inventory {
       }
     }
     sb.append(lf);
-
     return sb.toString();
   }
 
@@ -1234,7 +1291,9 @@ public class Inventory {
     interiorColor = rs.getString("int_color");
     invoicePrice = rs.getDouble("invoice_price");
     sellingPrice = rs.getDouble("selling_price");
+    sellingPriceText = rs.getString("selling_price_text");
     sold = rs.getBoolean("sold");
+    style = rs.getString("style");
     status = rs.getString("status");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");

@@ -11,6 +11,7 @@
 <body onLoad="javascript:document.forms[0].stockNo.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript">
   function checkForm(form) {
     if (form.dosubmit.value == "false") {
@@ -46,7 +47,6 @@
     var sel = document.forms['addVehicle'].elements['vehicle_year'];
     var value = sel.options[sel.selectedIndex].value;
     var url = "AutoGuide.do?command=UpdateMakeList&year=" + escape(value);
-    
     if (document.forms['addVehicle'].elements['vehicle_makeId'].selectedIndex < 1) {
       window.frames['server_commands'].location.href=url;
     } else {
@@ -60,6 +60,19 @@
     var value2 = sel2.options[sel2.selectedIndex].value;
     var url = "AutoGuide.do?command=UpdateModelList&makeId=" + escape(value) + "&year=" + escape(value2);
     window.frames['server_commands'].location.href=url;
+  }
+  function togglePrice() {
+    var sel = document.forms['addVehicle'].elements['sellingPriceType'];
+    var value = sel.options[sel.selectedIndex].value;
+    if (value == '1') {
+      hideSpan('spanSelling2');
+      showSpan('spanSelling1');
+      document.addVehicle.sellingPrice.focus();
+    } else {
+      hideSpan('spanSelling1');
+      showSpan('spanSelling2');
+      document.addVehicle.sellingPriceText.focus();
+    }
   }
 </script>
 <form name="addVehicle" action="AccountsAutoGuide.do?command=AccountUpdate&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
@@ -87,7 +100,7 @@ Modify Vehicle<br>
   </tr>
   <tr>
     <td class="containerBack">
-<input type="submit" value="Update" name="Save">
+<input type="submit" value="Update">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="id" value="<%= InventoryDetails.getId() %>">
@@ -141,6 +154,15 @@ Modify Vehicle<br>
       <font color=red>*</font> <%= showAttribute(request, "modelIdError") %>
     </td>
   </tr>
+	<tr class="containerBody">
+    <td nowrap class="formLabel">
+      Style
+    </td>
+    <td>
+      <input type="text" size="10" name="style" value="<%= toHtmlValue(InventoryDetails.getStyle()) %>">
+      <%= showAttribute(request, "styleError") %>
+    </td>
+  </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Mileage
@@ -163,8 +185,18 @@ Modify Vehicle<br>
       Selling Price
     </td>
     <td>
-      <input type="text" size="10" name="sellingPrice" value="<%= InventoryDetails.getSellingPriceString() %>">
-      <%= showAttribute(request, "sellingPrice") %>
+      <select size="1" name="sellingPriceType" onChange="togglePrice()">
+        <option value="1"<dhv:evaluate if="<%= !hasText(InventoryDetails.getSellingPriceText()) %>"> selected</dhv:evaluate>>Total</option>
+        <option value="2"<dhv:evaluate if="<%= hasText(InventoryDetails.getSellingPriceText()) %>"> selected</dhv:evaluate>>Custom</option>
+      </select>
+      <span name="spanSelling1" id="spanSelling1"<dhv:evaluate if="<%= hasText(InventoryDetails.getSellingPriceText()) %>"> style="display:none"</dhv:evaluate>>
+        <input type="text" size="10" name="sellingPrice" value="<%= InventoryDetails.getSellingPriceString() %>">
+        <%= showAttribute(request, "sellingPriceError") %>
+      </span>
+      <span name="spanSelling2" id="spanSelling2"<dhv:evaluate if="<%= !hasText(InventoryDetails.getSellingPriceText()) %>"> style="display:none"</dhv:evaluate>>
+        <input type="text" size="20" name="sellingPriceText" value="<%= toHtmlValue(InventoryDetails.getSellingPriceText()) %>">
+        <%= showAttribute(request, "sellingPriceTextError") %>
+      </span>
     </td>
   </tr>
   <tr class="containerBody">
@@ -275,7 +307,7 @@ Modify Vehicle<br>
     ++runCount;
 %>  
   <tr class="containerBody">
-    <td>
+    <td nowrap>
       <input type="hidden" name="adrun<%= runCount %>id" value="<%= adRun.getId() %>">
       Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate" value="<%= toDateString(adRun.getRunDate()) %>">
       <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate');">Date</a> (mm/dd/yyyy)
@@ -293,7 +325,7 @@ Modify Vehicle<br>
   for (; runCount < runCount2 + 5; ++runCount) {
 %>  
   <tr class="containerBody">
-    <td>
+    <td nowrap>
       <input type="hidden" name="adrun<%= runCount %>id" value="-1">
       Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate">
       <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate');">Date</a> (mm/dd/yyyy)

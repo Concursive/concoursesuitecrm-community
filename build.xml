@@ -658,8 +658,8 @@
         url="${GATEKEEPER.URL}"
         user="${GATEKEEPER.USER}"
         password="${GATEKEEPER.PASSWORD}"
-        servletJar="${env.CATALINA_HOME}/common/lib/servlet.jar"
-        baseFile="${src.sql.dir}/${SITE.DBTYPE}/upgrade/${arg1}">
+        servletJar="${env.CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"
+        baseFile="${src.sql.dir}${fs}${SITE.DBTYPE}${fs}upgrade${fs}${arg1}">
     </upgradeDatabase>
   </target>
   

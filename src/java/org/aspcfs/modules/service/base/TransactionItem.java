@@ -38,7 +38,7 @@ public class TransactionItem {
   private final static byte SYNC_END = 7;
   private final static byte SYNC_DELETE = 8;
   private final static byte GET_DATETIME = 9;
-  private final static byte SYNC_DELETE_CACHE = 10;
+  private final static byte CUSTOM_ACTION = 10;
 
   private String name = null;
   private Object object = null;
@@ -151,8 +151,8 @@ public class TransactionItem {
       setAction(this.GET_DATETIME);
     } else if ("syncDelete".equals(tmp)) {
       setAction(this.SYNC_DELETE);
-    } else if ("syncDeleteCache".equals(tmp)) {
-      setAction(this.SYNC_DELETE_CACHE);
+    } else if ("execute".equals(tmp)) {
+      setAction(this.CUSTOM_ACTION);
     }
   }
 
@@ -331,25 +331,24 @@ public class TransactionItem {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("TransactionItem-> Executing transaction");
     }
+    //Validate several requirements
     if ((object == null || name == null) && !"system".equals(name)) {
       appendErrorMessage("Unsupported object specified");
       return;
     }
-
+    //Prepare the SyncClientMap to handle mapping client and server data
     syncClientMap = new SyncClientMap();
     syncClientMap.setClientId(packetContext.getAuthenticationItem().getClientId());
-    if (!"system".equals(name)) {
-      syncClientMap.setTableId(((SyncTable) packetContext.getObjectMap().get(name)).getId());
-    }
-
+    syncClientMap.setTableId(((SyncTable) packetContext.getObjectMap().get(name)).getId());
+    //The record list will be returned to the client
     if (recordList == null) {
       recordList = new RecordList(name);
     }
-
+    //A pagedList will allow a subset of a query to be returned if specified by client
     if (pagedListInfo != null) {
       doSetPagedListInfo();
     }
-
+    //Begin action specific processing
     if (action == GET_DATETIME) {
       Record thisRecord = new Record("info");
       thisRecord.put("dateTime", String.valueOf(new java.sql.Timestamp(new java.util.Date().getTime())));
@@ -400,30 +399,25 @@ public class TransactionItem {
           pst.close();
         }
       }
-    } else if (action == SYNC_DELETE_CACHE) {
-      //Remove deleted items from the cache, now that the client has successfully deleted them
-      String uniqueField = ObjectUtils.getParam(object, "uniqueField");
-      String tableName = ObjectUtils.getParam(object, "tableName");
-      if (uniqueField != null && tableName != null) {
-        PreparedStatement pst = null;
-        ResultSet rs = syncClientMap.buildSyncDeletes(db, pst, uniqueField, tableName, recordList);
-        while (rs.next()) {
-          Record thisRecord = new Record("delete");
-          int cuid = rs.getInt("cuid");
-          int recordId = rs.getInt("record_id");
-          thisRecord.put("guid", String.valueOf(cuid));
-          thisRecord.setRecordId(recordId);
-          this.deleteClientMapping(dbLookup, thisRecord);
-        }
-        rs.close();
-        if (pst != null) {
-          pst.close();
-        }
-      }
+    } else if (action == CUSTOM_ACTION) {
+      //Execute a custom action: instantiate the specified object
+      
+      //execute the object if it implements CustomActionHandler
+      //public boolean process(PacketContext packetContext, Connection db, HashMap values)
+      
+      //Prepare the objects for execution
+      Class[] paramClass = new Class[]{packetContext.getClass(), Class.forName("java.sql.Connection"), ignoredProperties.getClass()};
+      Object[] paramObject = new Object[]{packetContext, db, ignoredProperties};
+      Method method = object.getClass().getMethod("process", paramClass);
+      //Execute
+      Object result = (method.invoke(object, paramObject));
+      checkResult(result);
     } else {
+      //This is a typical insert, update, delete, select record(s) request
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TransactionItem-> Base request");
       }
+      //Determine the method to execute on the object
       String executeMethod = null;
       switch (action) {
           case -1:
@@ -450,18 +444,17 @@ public class TransactionItem {
             break;
       }
       if (executeMethod != null) {
+        //Pre-process several items
         if (action == INSERT || action == UPDATE) {
           //Populate any client GUIDs with the correct server ID
           setGuidParameters(db);
         }
-
         if (action == DELETE) {
           //Set the object's id to be deleted, based on the client guid
           this.setObjectId(db);
           syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
           syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
         }
-
         if (action == UPDATE) {
           //Set the object's id to be updated, based on the client guid
           this.setObjectId(db);
@@ -472,6 +465,7 @@ public class TransactionItem {
           syncClientMap.buildStatusDate(db);
           ObjectUtils.setParam(object, "modified", syncClientMap.getStatusDate());
         }
+        //Execute the action
         Object result = doExecute(db, executeMethod);
         checkResult(result);
         if (System.getProperty("DEBUG") != null) {
@@ -534,7 +528,7 @@ public class TransactionItem {
             }
           }
         } else {
-          //It wasn't an insert or an update...
+          //It wasn't an insert, update, or delete...
           addRecords(object, recordList, null);
         }
       }
@@ -691,14 +685,14 @@ public class TransactionItem {
 
 
   /**
-   *  Description of the Method
+   *  Processes any errors returned by the object, currently for debugging
    *
    *@param  result  Description of the Parameter
    */
   private void checkResult(Object result) {
     try {
       if (result instanceof Boolean && !((Boolean) result).booleanValue()) {
-        System.out.println("Inserting object failed");
+        System.out.println("TransactionItem-> Object failed");
         //TODO: Show error messages from object
         if (object instanceof GenericBean) {
           HashMap errors = ((GenericBean) object).getErrors();

@@ -7,7 +7,7 @@ import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ *  Represents an entry in the sync_table database table
  *
  *@author     matt rajkowski
  *@created    June 24, 2002

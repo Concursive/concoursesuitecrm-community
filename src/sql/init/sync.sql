@@ -221,8 +221,10 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        stock_no             nvarchar(20) NULL,
        ext_color            nvarchar(20) NULL,
        int_color            nvarchar(20) NULL,
+			 style                nvarchar(40) NULL,
        invoice_price        money NULL,
        selling_price        money NULL,
+			 selling_price_text		nvarchar(100) NULL,
        modified             datetime NULL,
        sold                 int NULL,
        modifiedby           int NULL,
@@ -482,6 +484,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
        record_status_id
 )'
 );
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
+ VALUES (2, 'deleteInventoryCache', 'org.aspcfs.modules.media.autoguide.actions.DeleteInventoryCache', 500);
 
 
 /* CFSWriter */

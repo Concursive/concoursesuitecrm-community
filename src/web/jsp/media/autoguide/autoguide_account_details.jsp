@@ -13,6 +13,7 @@
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%=OrgDetails.getOrgId()%>">Vehicle Inventory List</a> >
 Vehicle Details<br>
 <hr color="#BFBFBB" noshade>
+<%-- Account header --%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -27,18 +28,17 @@ Vehicle Details<br>
   </tr>
   <tr>
     <td class="containerBack">
+    <%-- Begin container content --%>
 <dhv:permission name="accounts-autoguide-inventory-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountModify&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-autoguide-inventory-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';confirmSubmit(this.form);"></dhv:permission>
 <dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete"><br>&nbsp;</dhv:permission>
-
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td width="100%" valign="top">
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2" valign="center" align="center">
-	    <strong><%= InventoryItem.getVehicle().getYear() %> <%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %></strong>
+	    <strong><%= InventoryItem.getVehicle().getYear() %> <%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %> <%= toHtml(InventoryItem.getStyle()) %></strong>
 	  </td>
   </tr>
 <dhv:evaluate exp="<%= hasText(InventoryItem.getStockNo()) %>">
@@ -63,6 +63,12 @@ Vehicle Details<br>
   <tr class="containerBody">
     <td nowrap class="formLabel">Selling Price</td>
     <td><%= InventoryItem.getSellingPriceString() %>&nbsp;</td>
+  </tr>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= hasText(InventoryItem.getSellingPriceText()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">Selling Price</td>
+    <td><%= toHtml(InventoryItem.getSellingPriceText()) %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
 <dhv:evaluate exp="<%= hasText(InventoryItem.getExteriorColor()) %>">

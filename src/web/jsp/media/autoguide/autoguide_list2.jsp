@@ -14,7 +14,7 @@
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="AutoGuide.do?command=List">
-    <td align="left">
+    <td align="left" nowrap>
       Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= AutoGuideDirectoryInfo.getOptionValue("list") %>>List View</option>
         <option <%= AutoGuideDirectoryInfo.getOptionValue("slides") %>>Ad View</option>
