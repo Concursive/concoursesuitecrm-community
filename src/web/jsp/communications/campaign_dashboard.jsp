@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="campList" class="com.darkhorseventures.cfsbase.CampaignList" scope="request"/>
 <jsp:useBean id="CampaignDashboardListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
@@ -57,11 +58,15 @@
 		Campaign campaign = (Campaign)j.next();
 	%>      
 	<tr class="containerBody">
+	
     <td width="8" valign="center" align="center" nowrap class="row<%= rowid %>">
       <%= (campaign.hasRun() && !campaign.hasFiles()?"&nbsp":"") %>
-      <%= (campaign.hasRun()?"":"<a href=\"javascript:confirmForward('/CampaignManager.do?command=Cancel&id=" + campaign.getId() +"&notify=true')\">Cancel</a>") %>
+      <dhv:permission name="campaign-campaigns-edit"><%= (campaign.hasRun()?"":"<a href=\"javascript:confirmForward('/CampaignManager.do?command=Cancel&id=" + campaign.getId() +"&notify=true')\">Cancel</a>") %></dhv:permission>
+      <dhv:permission name="campaign-campaigns-edit" none="true">&nbsp;</dhv:permission>
       <%= (campaign.hasFiles()?"<a href=\"/CampaignManager.do?command=PrepareDownload&id=" + campaign.getId() + "\">Download<br>Available</a>":"") %>
     </td>
+
+    
     <td valign="center" width="40%" nowrap class="row<%= rowid %>">
       <a href="CampaignManager.do?command=Details&id=<%=campaign.getId()%>&reset=true"><%=toHtml(campaign.getName())%></a>
       <%= ("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id"))?" <font color=\"red\">(Added)</font>":"") %>

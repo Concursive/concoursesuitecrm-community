@@ -23,12 +23,18 @@
   </tr>
   <tr>
     <td class="containerBack">
-			<a href="AccountsDocuments.do?command=Add&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br>
+<dhv:permission name="accounts-accounts-documents-add"><a href="AccountsDocuments.do?command=Add&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
       <%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td width="10" align="center">Action</td>
-    <td colspan="2">Item</td>
+    <dhv:permission name="accounts-accounts-documents-add">
+    <td colspan="2">
+    </dhv:permission>
+    <dhv:permission name="accounts-accounts-documents-add" none="true">
+    <td>
+    </dhv:permission>
+    Item</td>
     <td>Size</td>
     <td>Version</td>
     <td>Submitted</td>
@@ -46,14 +52,16 @@
     <tr class="row<%= rowid %>">
       <td width="10" valign="middle" align="center" rowspan="2" nowrap>
         <a href="AccountsDocuments.do?command=Download&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
-				<a href="AccountsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId() %>">Edit</a>|<a href="javascript:confirmDelete('AccountsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId() %>');">Del</a>
-			</td>
+	<dhv:permission name="accounts-accounts-documents-edit"><a href="AccountsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId()%>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-documents-edit,accounts-accounts-documents-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-documents-delete"><a href="javascript:confirmDelete('AccountsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId()%>');">Del</a></dhv:permission>
+	</td>
       <td valign="top" width="100%">
         <a href="AccountsDocuments.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %></a>
       </td>
+      <dhv:permission name="accounts-accounts-documents-add">
       <td align="right" valign="middle" nowrap>
         [<a href="AccountsDocuments.do?command=AddVersion&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
       </td>
+      </dhv:permission>
       <td align="center" valign="middle" nowrap>
         <%= thisFile.getRelativeSize() %> k&nbsp;
       </td>
