@@ -2,7 +2,7 @@
 
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
@@ -10,18 +10,18 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
 
-
 /**
- *  Description of the Class
+ *  A collection of Ticket objects, can also be used for querying and filtering
+ *  the tickets that are included in the list.
  *
  *@author     chris
  *@created    December 5, 2001
  *@version    $Id$
  */
-public class TicketList extends Vector {
-  
-  public static final String tableName = "ticket";
-  public static final String uniqueField = "ticketid";
+public class TicketList extends ArrayList {
+
+  public final static String tableName = "ticket";
+  public final static String uniqueField = "ticketid";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
@@ -34,6 +34,7 @@ public class TicketList extends Vector {
   private int orgId = -1;
   private int department = -1;
   private int assignedTo = -1;
+  private int excludeAssignedTo = -1;
   private boolean unassignedToo = false;
   private int severity = 0;
   private int priority = 0;
@@ -85,6 +86,27 @@ public class TicketList extends Vector {
 
 
   /**
+   *  Sets the excludeAssignedTo attribute of the TicketList object
+   *
+   *@param  tmp  The new excludeAssignedTo value
+   */
+  public void setExcludeAssignedTo(int tmp) {
+    this.excludeAssignedTo = tmp;
+  }
+
+
+  /**
+   *  Sets the excludeAssignedTo attribute of the TicketList object
+   *
+   *@param  tmp  The new excludeAssignedTo value
+   */
+  public void setExcludeAssignedTo(String tmp) {
+    this.excludeAssignedTo = Integer.parseInt(tmp);
+  }
+
+
+
+  /**
    *  Sets the unassignedToo attribute of the TicketList object
    *
    *@param  unassignedToo  The new unassignedToo value
@@ -92,13 +114,26 @@ public class TicketList extends Vector {
   public void setUnassignedToo(boolean unassignedToo) {
     this.unassignedToo = unassignedToo;
   }
-  
-public boolean getSendNotification() {
-	return sendNotification;
-}
-public void setSendNotification(boolean sendNotification) {
-	this.sendNotification = sendNotification;
-}
+
+
+  /**
+   *  Gets the sendNotification attribute of the TicketList object
+   *
+   *@return    The sendNotification value
+   */
+  public boolean getSendNotification() {
+    return sendNotification;
+  }
+
+
+  /**
+   *  Sets the sendNotification attribute of the TicketList object
+   *
+   *@param  sendNotification  The new sendNotification value
+   */
+  public void setSendNotification(boolean sendNotification) {
+    this.sendNotification = sendNotification;
+  }
 
 
   /**
@@ -130,8 +165,26 @@ public void setSendNotification(boolean sendNotification) {
     this.severity = Integer.parseInt(tmp);
   }
 
-public String getTableName() { return tableName; }
-public String getUniqueField() { return uniqueField; }
+
+  /**
+   *  Gets the tableName attribute of the TicketList object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the TicketList object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
 
   /**
    *  Sets the priority attribute of the TicketList object
@@ -184,6 +237,7 @@ public String getUniqueField() { return uniqueField; }
     this.orgId = Integer.parseInt(orgId);
   }
 
+
   /**
    *  Sets the PagedListInfo attribute of the TicketList object
    *
@@ -193,7 +247,8 @@ public String getUniqueField() { return uniqueField; }
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
-  
+
+
   /**
    *  Sets the EnteredBy attribute of the TicketList object
    *
@@ -204,12 +259,24 @@ public String getUniqueField() { return uniqueField; }
     this.enteredBy = tmp;
   }
 
+
+  /**
+   *  Gets the description attribute of the TicketList object
+   *
+   *@return    The description value
+   */
   public String getDescription() {
-          return description;
+    return description;
   }
 
+
+  /**
+   *  Sets the description attribute of the TicketList object
+   *
+   *@param  description  The new description value
+   */
   public void setDescription(String description) {
-          this.description = description;
+    this.description = description;
   }
 
 
@@ -253,6 +320,17 @@ public String getUniqueField() { return uniqueField; }
   public int getAssignedTo() {
     return assignedTo;
   }
+
+
+  /**
+   *  Gets the excludeAssignedTo attribute of the TicketList object
+   *
+   *@return    The excludeAssignedTo value
+   */
+  public int getExcludeAssignedTo() {
+    return excludeAssignedTo;
+  }
+
 
 
   /**
@@ -466,19 +544,19 @@ public String getUniqueField() { return uniqueField; }
       }
       ++count;
       Ticket thisTicket = new Ticket(rs);
-      
+
       if (!getSendNotification()) {
-              thisTicket.setSendNotification(false);
+        thisTicket.setSendNotification(false);
       }
-      
-      this.addElement(thisTicket);
+
+      this.add(thisTicket);
     }
     rs.close();
     pst.close();
-    
+
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      Ticket thisTicket = (Ticket)i.next();
+      Ticket thisTicket = (Ticket) i.next();
       thisTicket.buildFiles(db);
       if (thisTicket.getAssignedTo() > -1) {
         thisTicket.checkEnabledOwnerAccount(db);
@@ -500,7 +578,16 @@ public String getUniqueField() { return uniqueField; }
       thisTicket.delete(db);
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newOwner          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
     Iterator i = this.iterator();
@@ -511,13 +598,15 @@ public String getUniqueField() { return uniqueField; }
       }
     }
     return total;
-  }      
+  }
+
 
   /**
    *  Builds a base SQL where statement for filtering records to be used by
    *  sqlSelect and sqlCount
    *
    *@param  sqlFilter  Description of Parameter
+   *@param  db         Description of the Parameter
    *@since             1.2
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
@@ -525,13 +614,13 @@ public String getUniqueField() { return uniqueField; }
       if (enteredBy > -1) {
         sqlFilter.append("AND t.enteredby = ? ");
       }
-      
+
       if (description != null) {
-              if (description.indexOf("%") >= 0) {
-                      sqlFilter.append("AND lower(t.problem) like lower(?) ");
-              } else {
-                      sqlFilter.append("AND lower(t.problem) = lower(?) ");
-              }
+        if (description.indexOf("%") >= 0) {
+          sqlFilter.append("AND lower(t.problem) like lower(?) ");
+        } else {
+          sqlFilter.append("AND lower(t.problem) = lower(?) ");
+        }
       }
 
       if (onlyOpen == true) {
@@ -562,6 +651,10 @@ public String getUniqueField() { return uniqueField; }
         sqlFilter.append("AND t.assigned_to = ? ");
       }
 
+      if (excludeAssignedTo > -1) {
+        sqlFilter.append("AND t.assigned_to <> ? ");
+      }
+
       if (severity > 0) {
         sqlFilter.append("AND t.scode = ? ");
       }
@@ -576,14 +669,14 @@ public String getUniqueField() { return uniqueField; }
     } else {
       if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
         sqlFilter.append(
-          "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) LIKE LOWER(?) OR " +
-          "LOWER(CONVERT(VARCHAR(2000),t.comment)) LIKE LOWER(?) OR " +
-          "LOWER(CONVERT(VARCHAR(2000),t.solution)) LIKE LOWER(?) ) ");
+            "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) LIKE LOWER(?) OR " +
+            "LOWER(CONVERT(VARCHAR(2000),t.comment)) LIKE LOWER(?) OR " +
+            "LOWER(CONVERT(VARCHAR(2000),t.solution)) LIKE LOWER(?) ) ");
       } else {
         sqlFilter.append(
-          "AND ( LOWER(t.problem) LIKE LOWER(?) OR " +
-          "LOWER(t.comment) LIKE LOWER(?) OR " +
-          "LOWER(t.solution) LIKE LOWER(?) ) ");
+            "AND ( LOWER(t.problem) LIKE LOWER(?) OR " +
+            "LOWER(t.comment) LIKE LOWER(?) OR " +
+            "LOWER(t.solution) LIKE LOWER(?) ) ");
       }
     }
   }
@@ -621,6 +714,9 @@ public String getUniqueField() { return uniqueField; }
       if (assignedTo > -1) {
         pst.setInt(++i, assignedTo);
       }
+      if (excludeAssignedTo > -1) {
+        pst.setInt(++i, excludeAssignedTo);
+      }
       if (severity > 0) {
         pst.setInt(++i, severity);
       }
@@ -635,15 +731,25 @@ public String getUniqueField() { return uniqueField; }
 
     return i;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  moduleId          Description of the Parameter
+   *@param  itemId            Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
     int count = 0;
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "SELECT COUNT(*) as itemcount " +
-      "FROM ticket t " +
-      "WHERE ticketid > 0 ");
-    if (moduleId == Constants.ACCOUNTS) {  
+        "SELECT COUNT(*) as itemcount " +
+        "FROM ticket t " +
+        "WHERE ticketid > 0 ");
+    if (moduleId == Constants.ACCOUNTS) {
       sql.append("AND t.org_id = ?");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());

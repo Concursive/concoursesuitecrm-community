@@ -105,7 +105,7 @@
 
 <% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
 
-<dhv:pagedListStatus showExpandLink="true" title="Tickets in My Department" object="OpenInfo"/>
+<dhv:pagedListStatus showExpandLink="true" title="Other Tickets in My Department" object="OpenInfo"/>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">

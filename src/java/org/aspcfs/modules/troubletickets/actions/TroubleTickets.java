@@ -609,7 +609,7 @@ public final class TroubleTickets extends CFSModule {
     }
 
     PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
-    openInfo.setLink("/TroubleTickets.do?command=Home");
+    openInfo.setLink("TroubleTickets.do?command=Home");
 
     if (sectionId == null) {
       if (!openInfo.getExpandedSelection()) {
@@ -629,8 +629,8 @@ public final class TroubleTickets extends CFSModule {
       openList.setPagedListInfo(openInfo);
       openList.setUnassignedToo(true);
       openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+      openList.setExcludeAssignedTo(this.getUserId(context));
       openList.setOnlyOpen(true);
-
       if ("unassigned".equals(openInfo.getListView())) {
         openList.setUnassignedToo(true);
         openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
