@@ -283,40 +283,33 @@ public final class TroubleTickets extends CFSModule {
 
     int errorCode = 0;
     Exception errorMessage = null;
-
     Connection db = null;
-    Statement st = null;
-    ResultSet rs = null;
-
-    TicketList createdByMeList = new TicketList();
-    TicketList assignedToMeList = new TicketList();
-    TicketList openList = new TicketList();
 
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-
+    
     PagedListInfo assignedToMeInfo = this.getPagedListInfo(context, "AssignedToMeInfo");
-    PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
-
     assignedToMeInfo.setLink("/TroubleTickets.do?command=Home");
-    openInfo.setLink("/TroubleTickets.do?command=Home");
-
+    TicketList assignedToMeList = new TicketList();
     assignedToMeList.setPagedListInfo(assignedToMeInfo);
-
-    openList.setPagedListInfo(openInfo);
-
     assignedToMeList.setAssignedTo(getUserId(context));
     assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-
+    assignedToMeList.setOnlyOpen(true);
+    
+    PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
+    openInfo.setLink("/TroubleTickets.do?command=Home");
+    TicketList openList = new TicketList();
+    openList.setPagedListInfo(openInfo);
     openList.setUnassignedToo(true);
     openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-
+    openList.setOnlyOpen(true);
+    
     PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo");
     createdByMeInfo.setLink("/TroubleTickets.do?command=Home");
-
+    TicketList createdByMeList = new TicketList();
     createdByMeList.setPagedListInfo(createdByMeInfo);
-
     createdByMeList.setUnassignedToo(true);
     createdByMeList.setEnteredBy(getUserId(context));
+    createdByMeList.setOnlyOpen(true);
 
     try {
       db = this.getConnection(context);
@@ -331,9 +324,9 @@ public final class TroubleTickets extends CFSModule {
         openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
 
-      createdByMeList.buildList(db);
       assignedToMeList.buildList(db);
       openList.buildList(db);
+      createdByMeList.buildList(db);
 
     } catch (Exception e) {
       errorCode = 1;
@@ -382,10 +375,7 @@ public final class TroubleTickets extends CFSModule {
 
     int errorCode = 0;
     Exception errorMessage = null;
-
     Connection db = null;
-    Statement st = null;
-    ResultSet rs = null;
 
     TicketList ticList = new TicketList();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
@@ -640,8 +630,16 @@ public final class TroubleTickets extends CFSModule {
       }
 
       newTic.setModifiedBy(getUserId(context));
+      
+      Ticket previousTicket = null;
+      //Example listener implementation
+//      if (thisSystem.hasListener(Ticket)) {
+//        previousTicket = new Ticket(db, newTic.getId());
+//      }
       resultCount = newTic.update(db);
-
+//      if (thisSystem.hasListener(Ticket) && resultCount == 1) {
+//        thisSystem.getListener(Ticket).processUpdate(previousTicket, newTic);
+//      }
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
