@@ -137,7 +137,7 @@ Results
                <td align="left" nowrap><%=count%>. <%= toHtml(thisItem.getDescription()) %> </td>
              </tr>
              <tr>
-                  <td valign="center" align="left" width="100%">
+                  <td class="containerBody" valign="center" align="left" width="100%">
                     <a href="javascript:popURLReturn('CampaignManager.do?command=ShowItems&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','no');">View Item Details</a>
                   </td>
              </tr>
