@@ -32,6 +32,7 @@ public class PagedListInfo {
   String listView = null;
   HashMap listFilters = new HashMap();
   private int iteration = 0;
+  String alternateSort = null;
 
 
   /**
@@ -76,7 +77,13 @@ public class PagedListInfo {
     }
     this.itemsPerPage = tmp;
   }
-
+  
+public String getAlternateSort() {
+	return alternateSort;
+}
+public void setAlternateSort(String alternateSort) {
+	this.alternateSort = alternateSort;
+}
 
   /**
    *  Sets the ItemsPerPage attribute of the PagedListInfo object
