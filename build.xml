@@ -332,7 +332,7 @@
   </target>
   
   <!-- Check if keyfile exists -->
-  <target name="keyfile.exists">
+  <target name="keyfile.exists" depends="init">
     <available file="${CFS_HOME}/WEB-INF/keystore" property="keyfile.present"/>
   </target>
   
@@ -354,8 +354,13 @@
         <param name="C"  value="${KEYSTORE.COUNTRY}"/>
       </dname>
     </genkey>
-    <!-- 
-    keytool -certreq -keyalg RSA -file ${CFS_HOME}/WEB-INF/domain.csr -keystore ${CFS_HOME}/WEB-INF/keystore -alias cfs
+    <!-- Prepare a CSR to get signed
+    keytool -certreq -keyalg RSA -alias cfs -file ${CFS_HOME}/WEB-INF/domain.csr -keystore ${CFS_HOME}/WEB-INF/keystore
+    -->
+    <!-- Import the signed certificates
+    keytool -import -trustcacerts -alias root -file GTECyberTrustRoot.crt -keystore ${CFS_HOME}/WEB-INF/keystore
+    keytool -import -trustcacerts -alias comodo -file ComodoSecurityServicesCA.crt -keystore ${CFS_HOME}/WEB-INF/keystore
+    keytool -import -trustcacerts -alias cfs -file domain.crt -keystore ${CFS_HOME}/WEB-INF/keystore
     -->
   </target>
   
