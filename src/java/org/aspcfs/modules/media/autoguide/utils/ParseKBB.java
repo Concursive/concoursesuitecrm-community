@@ -46,7 +46,7 @@ public class ParseKBB {
    *@param  fileName  Description of the Parameter
    */
   public void process(String fileName) {
-    Logger logger = Logger.getLogger("com.darkhorseventures.autoguide");
+    Logger logger = Logger.getLogger("org.aspcfs.modules.media.autoguide");
     java.util.Date startDate = new java.util.Date();
     long startMs = System.currentTimeMillis();
     ConnectionPool sqlDriver = null;
@@ -107,14 +107,14 @@ public class ParseKBB {
     Make make = new Make(makeText);
     if (!make.exists(db)) {
       make.insert(db);
-      Logger logger = Logger.getLogger("com.darkhorseventures.autoguide");
+      Logger logger = Logger.getLogger("org.aspcfs.modules.media.autoguide");
       logger.fine("Inserting Make-> " + make.getName());
     }
 
     Model model = new Model(modelText);
     model.setMakeId(make.getId());
     if (!model.exists(db)) {
-      Logger logger = Logger.getLogger("com.darkhorseventures.autoguide");
+      Logger logger = Logger.getLogger("org.aspcfs.modules.media.autoguide");
       logger.fine("Inserting Model-> " + model.getName());
       //System.out.println("Inserting-> " + make.getName() + " | " + model.getName());
       model.insert(db);
