@@ -48,7 +48,7 @@ public class Setup extends CFSModule {
    */
   public String executeCommandDefault(ActionContext context) {
     if (isAlreadySetup(context)) {
-      return "SetupCompleteOK";
+      return "SetupCompleteError";
     }
     //Check if license exists, if not force user to use a new license
     String path = getPath(context);
@@ -73,6 +73,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandRegister(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     String reg = context.getRequest().getParameter("doReg");
     if ("have".equals(reg)) {
       //If user says they want to continue, see if the file exists and that the
@@ -106,6 +109,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSendReg(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     RegistrationBean bean = (RegistrationBean) context.getFormBean();
     if (context.getParameter("ssl") == null) {
       bean.setSsl(false);
@@ -195,6 +201,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandValidate(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     try {
       //Load the key
       String keyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "init" + fs + "zlib.jar";
@@ -238,6 +247,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureDirectoryCheck(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     //Check the file library pref, if it exists then add to request
     String path = context.getRequest().getParameter("fileLibrary");
     if (path == null) {
@@ -255,6 +267,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureDirectory(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     String fileLibrary = context.getRequest().getParameter("fileLibrary");
     if (fileLibrary == null || fileLibrary.trim().length() == 0) {
       context.getRequest().setAttribute("actionError",
@@ -295,6 +310,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureDirectoryMake(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     try {
       //We have permission to make the directory, so go for it
       String path = context.getRequest().getParameter("fileLibrary");
@@ -328,6 +346,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureDirectoryFinalize(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     //Verify the path again that the user specified
     String userFileLibrary = (String) context.getServletContext().getAttribute("FileLibrary");
     if (System.getProperty("DEBUG") != null) {
@@ -388,6 +409,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureDatabaseCheck(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     DatabaseBean bean = (DatabaseBean) context.getFormBean();
     if (bean.getConfigured() == -1) {
       //Check the database pref, if it exists then add to request for confirm
@@ -413,6 +437,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureDatabase(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     //See if required info is filled in
     DatabaseBean bean = (DatabaseBean) context.getFormBean();
     if (!bean.isValid()) {
@@ -478,6 +505,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public synchronized String executeCommandConfigureDatabaseData(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     //See if the database connection works
     Connection db = null;
     try {
@@ -543,6 +573,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureServerCheck(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     ServerBean bean = (ServerBean) context.getFormBean();
     if (bean.getConfigured() == -1) {
       //Check the server pref, if it exists then add to request for confirmation
@@ -571,6 +604,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureServer(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     //See if required info is filled in
     ServerBean bean = (ServerBean) context.getFormBean();
     if (!bean.isValid()) {
@@ -613,6 +649,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandTestEmail(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     SMTPMessage message = new SMTPMessage();
     message.setHost(context.getRequest().getParameter("server"));
     message.setFrom(context.getRequest().getParameter("from"));
@@ -636,6 +675,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureUserCheck(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     //Check the database to see if an admin user already exists, user id 1
     UserSetupBean bean = (UserSetupBean) context.getFormBean();
     Connection db = null;
@@ -685,6 +727,9 @@ public class Setup extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfigureUser(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
     //See if required info is filled in
     UserSetupBean bean = (UserSetupBean) context.getFormBean();
     if (!bean.isValid()) {
@@ -894,7 +939,7 @@ public class Setup extends CFSModule {
    *@return          The alreadySetup value
    */
   private boolean isAlreadySetup(ActionContext context) {
-    if (context.getAttribute("cfs.setup") != null) {
+    if (context.getServletContext().getAttribute("cfs.setup") != null) {
       return true;
     }
     return false;
