@@ -23,10 +23,8 @@ public class TaskList extends ArrayList {
   protected int enteredBy = -1;
   protected PagedListInfo pagedListInfo = null;
   protected int owner = -1;
-  protected boolean completeEnabled = false;
-  protected boolean complete = false;
-  protected boolean tasksAssignedToMeOnly = false;
-  protected boolean tasksAssignedByMeOnly = false;
+  protected int complete = -1;
+  protected int tasksAssignedByUser = -1;
   protected java.sql.Date alertRangeStart = null;
   protected java.sql.Date alertRangeEnd = null;
   protected int categoryId = -1;
@@ -65,7 +63,7 @@ public class TaskList extends ArrayList {
    *
    *@param  tmp  The new complete value
    */
-  public void setComplete(boolean tmp) {
+  public void setComplete(int tmp) {
     this.complete = tmp;
   }
 
@@ -79,26 +77,7 @@ public class TaskList extends ArrayList {
     this.owner = owner;
   }
 
-
-  /**
-   *  Sets the tasksAssignedToMeOnly attribute of the TaskList object
-   *
-   *@param  tmp  The new tasksAssignedToMeOnly value
-   */
-  public void setTasksAssignedToMeOnly(boolean tmp) {
-    this.tasksAssignedToMeOnly = tmp;
-  }
-
-
-  /**
-   *  Sets the tasksAssignedByMeOnly attribute of the TaskList object
-   *
-   *@param  tmp  The new tasksAssignedByMeOnly value
-   */
-  public void setTasksAssignedByMeOnly(boolean tmp) {
-    this.tasksAssignedByMeOnly = tmp;
-  }
-
+  public void setTasksAssignedByUser(int tmp) { this.tasksAssignedByUser = tmp; }
 
   /**
    *  Sets the alertRangeStart attribute of the Task object
@@ -245,15 +224,15 @@ public class TaskList extends ArrayList {
       sqlFilter.append("AND t.enteredby = ? ");
     }
 
-    if (tasksAssignedToMeOnly) {
+    if (tasksAssignedByUser > 0) {
+      sqlFilter.append("AND t.enteredby = ? AND t.owner NOT IN (SELECT contact_id FROM contact WHERE user_id = ?) AND t.owner IS NOT NULL ");
+    }
+    
+    if (owner > 0) {
       sqlFilter.append("AND t.owner = ? ");
-    } else if (tasksAssignedByMeOnly) {
-      sqlFilter.append("AND t.owner != ? AND t.owner IS NOT NULL ");
-    } else if (owner > 0) {
-      sqlFilter.append("AND (t.owner IS NOT NULL OR t.owner = ?) ");
     }
 
-    if (completeEnabled) {
+    if (complete != -1) {
       sqlFilter.append("AND t.complete = ? ");
     }
 
@@ -289,12 +268,18 @@ public class TaskList extends ArrayList {
       pst.setInt(++i, enteredBy);
     }
 
-    if (tasksAssignedToMeOnly || tasksAssignedByMeOnly || owner > 0) {
+    if (tasksAssignedByUser > 0) {
+      pst.setInt(++i, tasksAssignedByUser);
+      pst.setInt(++i, tasksAssignedByUser);
+    }
+    
+    
+    if (owner > 0) {
       pst.setInt(++i, owner);
     }
 
-    if (completeEnabled) {
-      pst.setBoolean(++i, complete);
+    if (complete != -1) {
+      pst.setBoolean(++i, (complete == Constants.TRUE?true:false));
     }
 
     if (alertRangeStart != null) {
@@ -324,15 +309,16 @@ public class TaskList extends ArrayList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public static int pendingCount(Connection db, int myContactId) throws SQLException {
+  public static int queryPendingCount(Connection db, int myContactId) throws SQLException {
     int toReturn = 0;
     String sql = 
       "SELECT count(*) as taskcount " +
       "FROM task " +
-      "WHERE owner = ? AND complete =" + DatabaseUtils.getFalse(db) + " ";
+      "WHERE owner = ? AND complete = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, myContactId);
+    pst.setBoolean(++i, false);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       toReturn = rs.getInt("taskcount");
@@ -340,31 +326,6 @@ public class TaskList extends ArrayList {
     rs.close();
     pst.close();
     return toReturn;
-  }
-
-
-  /**
-   *  Sets the filterParams attribute of the TaskList object
-   *
-   *@param  userId     The new filterParams value
-   *@param  contactId  The new filterParams value
-   */
-  public void setFilterParams(int userId, int contactId) {
-    String filter1 = pagedListInfo.getFilterValue("listFilter1");
-    String filter2 = pagedListInfo.getFilterValue("listFilter2");
-    this.owner = contactId;
-    if (filter1.equalsIgnoreCase("taskstome")) {
-      tasksAssignedToMeOnly = true;
-      enteredBy = -1;
-    } else if (filter1.equalsIgnoreCase("tasksbyme")) {
-      tasksAssignedByMeOnly = true;
-      enteredBy = userId;
-    }
-
-    if (!filter2.equalsIgnoreCase("all")) {
-      completeEnabled = true;
-      complete = "true".equalsIgnoreCase(filter2);
-    }
   }
 }
 
