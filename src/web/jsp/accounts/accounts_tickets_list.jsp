@@ -86,7 +86,7 @@ Tickets<br>
     
         <td  valign=center class="row<%= rowid %>">
         <a href="/AccountTickets.do?command=TicketDetails&id=<%=thisTic.getId()%>">
-	<%= toHtml(thisTic.getProblem()) %>
+	<%= toHtml(thisTic.getProblemHeader()) %>
 	</a>&nbsp;
 	<% if (thisTic.getCategoryName() != null) { %>
 	[<%=toHtml(thisTic.getCategoryName())%>]
@@ -94,7 +94,7 @@ Tickets<br>
     </td>
 
     <td width=65 valign=center nowrap class="row<%= rowid %>">
-      <%=thisTic.getPriorityName()%>
+      <%=toHtml(thisTic.getPriorityName())%>
     </td>
     <td width=40 valign=center nowrap class="row<%= rowid %>">
       <%=thisTic.getAgeOf()%>
