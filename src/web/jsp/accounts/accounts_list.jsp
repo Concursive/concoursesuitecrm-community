@@ -18,6 +18,11 @@ View Accounts<br>
       <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
         <option <%= OrgListInfo.getOptionValue("all") %>>All Accounts</option>
         <option <%= OrgListInfo.getOptionValue("my") %>>My Accounts </option>
+	
+	<% if (!(OrgListInfo.getSavedCriteria().isEmpty())) { %>
+		<option <%= OrgListInfo.getOptionValue("search") %>>Search Results</option>
+	<%}%>
+	
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>

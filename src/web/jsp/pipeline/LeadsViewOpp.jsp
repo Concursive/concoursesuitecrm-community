@@ -16,6 +16,11 @@ View Opportunities<br>
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= OpportunityListInfo.getOptionValue("my") %>>My Opportunities</option>
         <option <%= OpportunityListInfo.getOptionValue("all") %>>All Opportunities</option>
+	
+	<% if (!(OpportunityListInfo.getSavedCriteria().isEmpty())) { %>
+		<option <%= OpportunityListInfo.getOptionValue("search") %>>Search Results</option>
+	<%}%>
+	
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>

@@ -697,15 +697,29 @@ public final class Accounts extends CFSModule {
     
     String passedName = context.getRequest().getParameter("searchName");
     String passedNumber = context.getRequest().getParameter("searchAccountNumber");
+    
+    //reset the results if it's a new search
+    if ( (passedName != null && !(passedName.equals(""))) || (passedNumber != null && !(passedNumber.equals(""))) ) {
+	    orgListInfo.getSavedCriteria().clear();
+	    orgListInfo.setListView("search");
+    }
 
-    if (passedName != null && !(passedName.trim()).equals("")) {
+    if (passedName != null && !(passedName.equals(""))) {
+      orgListInfo.getSavedCriteria().put("searchName", passedName);
       passedName = "%" + passedName + "%";
       organizationList.setName(passedName);
+    } else if (orgListInfo.getCriteriaValue("searchName") != null && ("search".equals(orgListInfo.getListView()))) {
+	passedName = "%" + orgListInfo.getCriteriaValue("searchName") + "%";
+	organizationList.setName(passedName);
     }
     
-    if (passedNumber != null && !(passedNumber.trim()).equals("")) {
+    if (passedNumber != null && !(passedNumber.equals(""))) {
+      orgListInfo.getSavedCriteria().put("searchAccountNumber", passedNumber);
       passedNumber = "%" + passedNumber + "%";
       organizationList.setAccountNumber(passedNumber);
+    } else if (orgListInfo.getCriteriaValue("searchAccountNumber") != null && ("search".equals(orgListInfo.getListView()))) {
+	passedNumber = "%" + orgListInfo.getCriteriaValue("searchAccountNumber") + "%";
+	organizationList.setAccountNumber(passedNumber);
     }
 
     try {

@@ -36,6 +36,7 @@ public class PagedListInfo {
   boolean showForm = true;
   boolean resetList = true;
   String alternateSort = null;
+  HashMap savedCriteria = new HashMap();
 
 
   /**
@@ -113,6 +114,13 @@ public class PagedListInfo {
     }
     this.itemsPerPage = tmp;
   }
+
+  public HashMap getSavedCriteria() {
+	return savedCriteria;
+}
+public void setSavedCriteria(HashMap savedCriteria) {
+	this.savedCriteria = savedCriteria;
+}
 
 
   /**
@@ -720,7 +728,10 @@ public class PagedListInfo {
   public String getFilterValue(String tmp) {
     return (String) listFilters.get(tmp);
   }
-
+  
+  public String getCriteriaValue(String tmp) {
+	  return (String) savedCriteria.get(tmp);
+  }
 
   /**
    *  Gets the filterKey attribute of the PagedListInfo object
@@ -735,7 +746,6 @@ public class PagedListInfo {
       return -1;
     }
   }
-
 
   /**
    *  Gets the endOfOffset attribute of the PagedListInfo object
