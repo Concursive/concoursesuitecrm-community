@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Created-By: Dark Horse Ventures
+Comment: CFS Web Application 5-license binary Mon Sep 8 10:24:00 EST 2003
+Implementation-Title: CFS 5-license binary
+Implementation-Version: 2.7
+Implementation-Vendor: Dark Horse Ventures
+Implementation-URL: http://www.darkhorseventures.com
+
