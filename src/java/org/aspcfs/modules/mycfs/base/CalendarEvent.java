@@ -355,9 +355,9 @@ public class CalendarEvent implements Comparable {
     if (!icon.equals("")) {
       return icon;
     } else if (category.equals("event")) {
-      return "<img border=0 src=\"/images/event-timed.gif\" alt=\"Event:" + this.getSubject() + "\" align=texttop width=12 height=12>";
+      return "<img border=0 src=\"images/event-timed.gif\" alt=\"Event:" + this.getSubject() + "\" align=texttop width=12 height=12>";
     } else if (category.equalsIgnoreCase("holiday")) {
-      return "<img border=0 src=\"/images/event-holiday.gif\" alt=\"US Bank Holiday:" + this.getSubject() + "\" align=texttop width=12 height=12>";
+      return "<img border=0 src=\"images/event-holiday.gif\" alt=\"US Bank Holiday:" + this.getSubject() + "\" align=texttop width=12 height=12>";
     } else if (category.equalsIgnoreCase("Opportunity")) {
       return "<img border=0 src=\"images/alertopp.gif\" alt=\"Opp:" + this.getSubject() + "\" align=texttop>";
     } else if (category.equalsIgnoreCase("Contact Calls") || category.equalsIgnoreCase("Opportunity Calls")) {
@@ -385,9 +385,9 @@ public class CalendarEvent implements Comparable {
    */
   public static String getIcon(String thisCategory) {
     if (thisCategory.equals("event")) {
-      return "<img border=0 src=\"/images/event-timed.gif\" align=texttop width=12 height=12 title=\"Event\">";
+      return "<img border=0 src=\"images/event-timed.gif\" align=texttop width=12 height=12 title=\"Event\">";
     } else if (thisCategory.equalsIgnoreCase("holiday")) {
-      return "<img border=0 src=\"/images/event-holiday.gif\" align=texttop width=12 height=12 title=\"US Bank Holiday\">";
+      return "<img border=0 src=\"images/event-holiday.gif\" align=texttop width=12 height=12 title=\"US Bank Holiday\">";
     } else if (thisCategory.equalsIgnoreCase("Opportunity")) {
       return "<img border=0 src=\"images/alertopp.gif\" align=texttop title=\"Opportunities\">";
     } else if (thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
