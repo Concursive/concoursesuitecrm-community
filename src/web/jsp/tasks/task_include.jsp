@@ -8,7 +8,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
-      <strong>CFS Task</strong>
+      <strong>Task</strong>
     </td>
   </tr>
   <tr class="containerBody">

@@ -93,7 +93,7 @@
       </table>
     </td>
     <!-- Global Items -->
-    <%= request.getAttribute("GlobalItems") %>
+    <jsp:include page="../globalItems.jsp" flush="true"/>
     <!-- End Global Items -->
   </tr>
 </table>

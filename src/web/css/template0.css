@@ -34,3 +34,31 @@ A:visited:hover{color:#FF3300;}
 .containerOff:hover{color:#FF3300;text-decoration:underline;}
 .containerOff:visited:hover{color:#FF3300;text-decoration:underline;}
 
+.globalItem {
+  color: #fff;
+  margin: 0;
+	padding: 0;
+  padding-bottom: 5px;
+}
+
+.globalItem th {
+  color: #FFF;
+  text-align: left;
+  vertical-align: middle;
+  font-weight: bold;
+  height: 20px;
+  width: 150px;
+  padding-left: 4px;
+  background-repeat: repeat-x;
+  background-position: top left;
+  background-image: url(../images/global_item.gif);
+	background-color: #fefffc;
+  border-right: 1px solid #000;
+	border-left: 1px solid #000;
+  border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
+}
+.globalItem td {
+  color: #000;
+  background-color: #E7E9EB;
+}

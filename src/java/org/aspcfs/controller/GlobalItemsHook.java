@@ -37,29 +37,58 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     int contactId = thisUser.getUserRecord().getContact().getId();
 
     StringBuffer items = new StringBuffer();
-    int itemCount = 0;
-
-    //Site Search
+    //Quick Items
     if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
-      ++itemCount;
       items.append(
-          "<!-- Site Search -->" +
-          "<table border='0' width='150' cellpadding='0' cellspacing='1'>" +
-          "<form action='Search.do?command=SiteSearch' method='post'>" +
-          "<tr><td valign='top'> <img border='0' src='images/sb-search.gif' width='147' height='20'></td></tr>" +
+          "<!-- Quick Action -->" +
+          "<script language='javascript' type='text/javascript' src='javascript/popURL.js'/>" +
+          "<script language='javascript' type='text/javascript' src='javascript/quickAction.js'/>" +
+          "<table class='globalItem'>" +
+          "<tr><th>Quick Actions</th></tr>" +
           "<tr>" +
-          "<td bgcolor='#E7E9EB'><p align='center'>Search this site for...<br>" +
-          "<input type=text size=15 name=search>" +
-          "<input type='submit' value='go' name='Search'>" +
-          "</p>" +
+          "<td align='center'>" +
+          "<select name='quickAction' onChange='javascript:quickAction(this.options[this.selectedIndex].value);this.selectedIndex = 0'>");
+          
+      items.append("<option value='0'>Select...</option>");
+      /* if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
+        items.append("<option value='call'>Add a Call</option>");
+      } */
+      /* if (systemStatus.hasPermission(userId, "pipeline-opportunities-add")) {
+        items.append("<option value='opportunity'>Add an Opportunity</option>");
+      } */
+      if (systemStatus.hasPermission(userId, "myhomepage-tasks-add")) {
+        items.append("<option value='task'>Add a Task</option>");
+      }
+      if (systemStatus.hasPermission(userId, "tickets-tickets-add")) {
+        items.append("<option value='ticket'>Add a Ticket</option>");
+      }
+      /* if (systemStatus.hasPermission(userId, "myhomepage-inbox-add")) {
+        items.append("<option value='message'>Send a Message</option>");
+      } */
+      items.append(
+          "</select>" +
           "</td>" +
           "</tr>" +
           "</form>" +
           "</table>");
-
-      if (itemCount > 0) {
-        items.append("&nbsp;\r\n");
-      }
+    }
+    
+    //Site Search
+    if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
+      items.append(
+          "<!-- Site Search -->" +
+          "<table class='globalItem'>" +
+          "<form action='Search.do?command=SiteSearch' method='post'>" +
+          "<tr><th>Site Search</th></tr>" +
+          "<tr>" +
+          "<td><center>Search this site for...<br>" +
+          "<input type='text' size='14' name='search'>" +
+          "<input type='submit' value='go' name='Search'>" +
+          "</center>" +
+          "</td>" +
+          "</tr>" +
+          "</form>" +
+          "</table>");
     }
 
     //My Items
@@ -68,13 +97,12 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
       Connection db = null;
 
       //Output
-      ++itemCount;
       items.append(
           "<!-- My Items -->" +
-          "<table border='0' width='150' cellpadding='0' cellspacing='1'>" +
-          "<tr><td valign='top'> <img border='0' src='images/sb-myitems.gif' width='147' height='20'></td></tr>" +
+          "<table class='globalItem'>" +
+          "<tr><th>My Items</th></tr>" +
           "<tr>" +
-          "<td bgcolor='#E7E9EB'>");
+          "<td>");
 
       try {
         int myItems = 0;
@@ -209,21 +237,16 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           "</td>" +
           "</tr>" +
           "</table>");
-
-      if (itemCount > 0) {
-        items.append("&nbsp;\r\n");
-      }
     }
 
     //Recent Items
     if (systemStatus.hasPermission(userId, "globalitems-recentitems-view")) {
-      ++itemCount;
       items.append(
           "<!-- Recent Items -->" +
-          "<table border='0' width='150' cellpadding='0' cellspacing='1'>" +
-          "<tr><td valign='top'> <img border='0' src='images/sb-recent.gif' width='147' height='20'></td></tr>" +
+          "<table class='globalItem'>" +
+          "<tr><th>Recent Items</th></tr>" +
           "<tr>" +
-          "<td bgcolor='#E7E9EB'>");
+          "<td>");
 
       ArrayList recentItems = (ArrayList) request.getSession().getAttribute("RecentItems");
       if (recentItems != null) {
@@ -248,7 +271,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
     if (items.length() > 0) {
       //If they have any modules, then create a cell to hold them...
-      return ("<td width=\"150\" valign=\"top\" id=\"rightcol\">" + items.toString() + "</td>");
+      return (items.toString());
     } else {
       //No global items
       return "";
