@@ -725,6 +725,83 @@ public final class MyCFS extends CFSModule {
 
 
   /**
+   *  Sends a reply to a message
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandReplyToMessage(ActionContext context) {
+    Connection db = null;
+    Exception errorMessage = null;
+    CFSNote newNote = null;
+    PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
+    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+      return ("PermissionError");
+    }
+
+    try {
+
+      String msgId = context.getRequest().getParameter("id");
+      db = this.getConnection(context);
+      int myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
+      newNote = new CFSNote(db, Integer.parseInt(msgId), myId, "new");
+      HashMap recipients = newNote.buildRecipientList(db);
+      Iterator i = recipients.keySet().iterator();
+      StringBuffer recipientList = new StringBuffer();
+      while (i.hasNext()) {
+        Object st = i.next();
+        recipientList.append(st);
+        if (i.hasNext()) {
+          recipientList.append(",");
+        }
+      }
+      newNote.setSubject("Reply: " + StringUtils.toString(newNote.getSubject()));
+      newNote.setBody(
+          "\n\n----Original Message----\n" +
+          "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
+          "Sent: " + newNote.getEnteredDateTimeString() + "\n" +
+          "To: " + recipientList.toString() + "\n" +
+          "Subject: " + StringUtils.toString(newNote.getSubject()) +
+          "\n\n" +
+          StringUtils.toString(newNote.getBody()) + "\n\n");
+     
+     //add the sender as a recipient
+     Contact recipient = new Contact(db, newNote.getReplyId());
+     context.getRequest().setAttribute("Recipient", recipient);
+     
+   //Add the recipient to the selectedList
+   HashMap thisList = null;
+    if(context.getSession().getAttribute("finalContacts") != null){
+      thisList = (HashMap) context.getSession().getAttribute("finalContacts");
+      thisList.clear();
+    }else{
+      thisList = new HashMap();
+      context.getSession().setAttribute("finalContacts", thisList);
+    }
+     thisList.put(new Integer(newNote.getReplyId()), "");
+     if(context.getSession().getAttribute("selectedContacts") != null){
+      HashMap tmp = (HashMap) context.getSession().getAttribute("selectedContacts");
+      tmp.clear();
+     }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (context.getAction().getActionName().equals("MyCFSInbox")) {
+        addModuleBean(context, "My Inbox", "");
+      }
+      context.getRequest().setAttribute("Note", newNote);
+      return this.getReturn(context, "ReplyMessage");
+    } 
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+  }
+
+
+  /**
    *  Takes a look at the User Session Object and prepares the MyCFSBean for the
    *  JSP. The bean will contain all the information that the JSP can see.
    *
