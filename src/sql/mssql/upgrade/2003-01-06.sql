@@ -1635,3 +1635,9 @@ UPDATE permission_category
 SET category = 'General Contacts'
 WHERE category = 'Contacts & Resources';
 GO
+
+INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (2, 'myhomepage-tasks', 85, 1, 1, 1, 1, 'My Tasks')
+INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (5, 'accounts-accounts-revenue', 95, 1, 1, 1, 1, 'Revenue')
+INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (6, 'campaign-campaigns-surveys', 60, 1, 1, 1, 1, 'Campaign Survey Records')
+INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (9, 'admin-usage', 45, 1, 0, 0, 0, 'System Usage')
+
