@@ -43,22 +43,33 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandListTasks(ActionContext context) {
-
     Exception errorMessage = null;
     PagedListInfo taskListInfo = this.getPagedListInfo(context, "TaskListInfo");
     int contactId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
-    taskListInfo.setLink("/MyTasks.do?command=ListTasks");
+    taskListInfo.setLink("MyTasks.do?command=ListTasks");
     Connection db = null;
     TaskList taskList = new TaskList();
     if (!taskListInfo.hasListFilters()) {
-      taskListInfo.addFilter(1, "taskstome");
+      taskListInfo.addFilter(1, "my");
       taskListInfo.addFilter(2, "false");
     }
     try {
       db = this.getConnection(context);
       taskList.setPagedListInfo(taskListInfo);
-      taskList.setEnteredBy(getUserId(context));
-      taskList.setFilterParams(getUserId(context), contactId);
+      //Configure the first filter
+      if ("tasksbyme".equals(taskListInfo.getFilterValue("listFilter1"))) {
+        taskList.setTasksAssignedByUser(this.getUserId(context));
+      } else {
+        taskList.setOwner(contactId);
+      }
+      //Configure the second filter
+      if ("all".equals(taskListInfo.getFilterValue("listFilter2"))) {
+        //Don't need to set anything
+      } else if ("false".equals(taskListInfo.getFilterValue("listFilter2"))) {
+        taskList.setComplete(Constants.FALSE);
+      } else {
+        taskList.setComplete(Constants.TRUE);
+      }
       taskList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
