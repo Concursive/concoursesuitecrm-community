@@ -1,10 +1,10 @@
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.webutils.LookupList;
+import com.darkhorseventures.webutils.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Contains a list of contact types built from the database
@@ -14,7 +14,7 @@ import com.darkhorseventures.webutils.LookupList;
  *@version    $Id: ContactTypeList.java,v 1.1 2001/08/29 18:00:17 mrajkowski Exp
  *      $
  */
-public class ContactTypeList extends Vector {
+public class ContactTypeList extends ArrayList {
 
   private final static int EMPLOYEE_TYPE = 1;
   private boolean showEmployees = false;
@@ -22,7 +22,14 @@ public class ContactTypeList extends Vector {
   private String jsEvent = "";
   private int defaultKey = -1;
   private int size = 1;
+  private int category = -1;
   private boolean multiple = false;
+  private boolean showDisabled = true;
+  private int includeDefinedByUser = -1;
+  //includes types already selected by user for ContactTypeList , contactId to be used not userId
+  private int includeSelectedByUser = -1;
+  protected PagedListInfo pagedListInfo = null;
+
 
   /**
    *  Constructor for the ContactTypeList object
@@ -41,6 +48,32 @@ public class ContactTypeList extends Vector {
    */
   public ContactTypeList(Connection db) throws SQLException {
     buildList(db);
+  }
+
+
+  /**
+   *  Constructor for creating a List from code's & description's passed as
+   *  arrays.
+   *
+   *@param  vals              Description of the Parameter
+   *@param  names             Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public ContactTypeList(String[] vals, String[] names) throws SQLException {
+
+    for (int i = 0; i < vals.length; i++) {
+      ContactType thisType = new ContactType();
+      thisType.setDescription(names[i]);
+
+      //as long as it is not a new entry
+
+      if (!(vals[i].startsWith("*"))) {
+        thisType.setId(Integer.parseInt(vals[i]));
+      }
+
+      thisType.setLevel(i);
+      this.add(thisType);
+    }
   }
 
 
@@ -119,6 +152,117 @@ public class ContactTypeList extends Vector {
     this.defaultKey = Integer.parseInt(tmp);
   }
 
+
+  /**
+   *  Sets the category attribute of the ContactTypeList object
+   *
+   *@param  category  The new category value
+   */
+  public void setCategory(int category) {
+    this.category = category;
+  }
+
+
+  /**
+   *  Sets the category attribute of the ContactTypeList object
+   *
+   *@param  category  The new category value
+   */
+  public void setCategory(String category) {
+    this.category = Integer.parseInt(category);
+  }
+
+
+  /**
+   *  Sets the pagedListInfo attribute of the ContactTypeList object
+   *
+   *@param  pagedListInfo  The new pagedListInfo value
+   */
+  public void setPagedListInfo(PagedListInfo pagedListInfo) {
+    this.pagedListInfo = pagedListInfo;
+  }
+
+
+  /**
+   *  Sets the includeDefinedByUser attribute of the ContactTypeList object
+   *
+   *@param  includeDefinedByUser  The new includeDefinedByUser value
+   */
+  public void setIncludeDefinedByUser(int includeDefinedByUser) {
+    this.includeDefinedByUser = includeDefinedByUser;
+  }
+
+
+  /**
+   *  Sets the includeSelectedByUser attribute of the ContactTypeList object
+   *
+   *@param  includeSelectedByUser  The new includeSelectedByUser value
+   */
+  public void setIncludeSelectedByUser(int includeSelectedByUser) {
+    this.includeSelectedByUser = includeSelectedByUser;
+  }
+
+
+  /**
+   *  Sets the showDisabled attribute of the ContactTypeList object
+   *
+   *@param  showDisabled  The new showDisabled value
+   */
+  public void setShowDisabled(boolean showDisabled) {
+    this.showDisabled = showDisabled;
+  }
+
+
+  /**
+   *  Gets the showDisabled attribute of the ContactTypeList object
+   *
+   *@return    The showDisabled value
+   */
+  public boolean getShowDisabled() {
+    return showDisabled;
+  }
+
+
+  /**
+   *  Gets the includeSelectedByUser attribute of the ContactTypeList object
+   *
+   *@return    The includeSelectedByUser value
+   */
+  public int getIncludeSelectedByUser() {
+    return includeSelectedByUser;
+  }
+
+
+  /**
+   *  Gets the typesDefinedByUser attribute of the ContactTypeList object
+   *
+   *@return    The typesDefinedByUser value
+   */
+  public int getIncludeDefinedByUser() {
+    return includeDefinedByUser;
+  }
+
+
+  /**
+   *  Gets the pagedListInfo attribute of the ContactTypeList object
+   *
+   *@return    The pagedListInfo value
+   */
+  public PagedListInfo getPagedListInfo() {
+    return pagedListInfo;
+  }
+
+
+  /**
+   *  Gets the category attribute of the ContactTypeList object
+   *
+   *@return    The category value
+   */
+  public int getCategory() {
+    return category;
+  }
+
+
   /**
    *  Gets the showPersonal attribute of the ContactTypeList object
    *
@@ -183,6 +327,7 @@ public class ContactTypeList extends Vector {
     return defaultKey;
   }
 
+
   /**
    *  Gets the HtmlSelect attribute of the ContactTypeList object
    *
@@ -219,6 +364,7 @@ public class ContactTypeList extends Vector {
    */
   public LookupList getLookupList(String selectName, int defaultKey) {
     LookupList contactTypeSelect = new LookupList();
+    contactTypeSelect.setTableName("lookup_contact_types");
     contactTypeSelect.setJsEvent(jsEvent);
     contactTypeSelect.setSelectSize(this.getSize());
     contactTypeSelect.setMultiple(this.getMultiple());
@@ -249,7 +395,45 @@ public class ContactTypeList extends Vector {
     ContactType thisContactType = new ContactType();
     thisContactType.setId(key);
     thisContactType.setDescription(name);
-    this.add(0, thisContactType);
+    this.add(thisContactType);
+  }
+
+
+  /**
+   *  Gets the enabledElementCount attribute of the ContactTypeList object
+   *
+   *@return    The enabledElementCount value
+   */
+  public int getEnabledElementCount() {
+    int count = 0;
+
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ContactType thisElement = (ContactType) i.next();
+      if (thisElement.getEnabled()) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+
+  /**
+   *  Gets the element attribute of the ContactTypeList object
+   *
+   *@param  code  Description of the Parameter
+   *@return       The element value
+   */
+  public ContactType getElement(int code) {
+    ContactType thisType = null;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ContactType thisElement = (ContactType) i.next();
+      if (thisElement.getId() == code) {
+        thisType = thisElement;
+      }
+    }
+    return thisType;
   }
 
 
@@ -261,29 +445,165 @@ public class ContactTypeList extends Vector {
    *@since                    1.2
    */
   public void buildList(Connection db) throws SQLException {
-    Statement st = null;
+
+    PreparedStatement pst = null;
     ResultSet rs = null;
+    int items = -1;
 
-    StringBuffer sql = new StringBuffer();
-    sql.append("SELECT * FROM lookup_contact_types WHERE code > -1 ");
-    if (!showEmployees) {
-      sql.append("AND code NOT IN (" + EMPLOYEE_TYPE + ") ");
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlCount = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlFilterTail = new StringBuffer();
+    StringBuffer sqlOrder = new StringBuffer();
+
+    //Need to build a base SQL statement for counting records
+    sqlCount.append(
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM lookup_contact_types lct " +
+        "WHERE code > -1 ");
+
+    createFilter(db, sqlFilter);
+    addSqlFilterTail(sqlFilterTail);
+
+    if (pagedListInfo != null) {
+      //Get the total number of records matching filter
+      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString() + sqlFilterTail.toString());
+      items = prepareFilter(pst);
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        int maxRecords = rs.getInt("recordcount");
+        pagedListInfo.setMaxRecords(maxRecords);
+      }
+      pst.close();
+      rs.close();
+
+      //Determine the offset, based on the filter, for the first record to show
+      if (!pagedListInfo.getCurrentLetter().equals("")) {
+        pst = db.prepareStatement(sqlCount.toString() +
+            sqlFilter.toString() +
+            "AND lct.description < ? " + sqlFilterTail.toString());
+        items = prepareFilter(pst);
+        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        rs = pst.executeQuery();
+        if (rs.next()) {
+          int offsetCount = rs.getInt("recordcount");
+          pagedListInfo.setCurrentOffset(offsetCount);
+        }
+        rs.close();
+        pst.close();
+      }
+
+      //Determine column to sort by
+      pagedListInfo.setDefaultSort("lct.description ", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
+    } else {
+      sqlOrder.append("ORDER BY lct.level, lct.description ");
     }
-    if (!showPersonal) {
-      sql.append("AND code != 2 ");
+
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append("lct.* FROM lookup_contact_types lct " +
+        "WHERE lct.code > -1 ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlFilterTail.toString() + sqlOrder.toString());
+    items = prepareFilter(pst);
+    rs = pst.executeQuery();
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
     }
 
-    sql.append("ORDER BY level, description ");
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       ContactType thisContactType = new ContactType(rs);
-      this.addElement(thisContactType);
+      this.add(thisContactType);
     }
     rs.close();
-    st.close();
+    pst.close();
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of the Parameter
+   *@param  db         Description of the Parameter
+   */
+  protected void createFilter(Connection db, StringBuffer sqlFilter) {
+    if (sqlFilter == null) {
+      sqlFilter = new StringBuffer();
+    }
+
+    if (!showEmployees) {
+      sqlFilter.append("AND lct.code NOT IN (" + EMPLOYEE_TYPE + ") ");
+    }
+
+    if (!showPersonal) {
+      sqlFilter.append("AND lct.code != 2 ");
+    }
+
+    if (category != -1) {
+      sqlFilter.append("AND lct.category = ? ");
+    }
+
+    if (!showDisabled) {
+      sqlFilter.append("AND lct.enabled = '" + DatabaseUtils.getTrue(db) + "' ");
+    }
+
+    if (includeDefinedByUser > 0) {
+      sqlFilter.append("AND (lct.user_id = ? OR lct.user_id IS NULL) ");
+    } else {
+      sqlFilter.append("AND lct.user_id IS NULL ");
+    }
+
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
+    int i = 0;
+
+    if (category != -1) {
+      pst.setInt(++i, category);
+    }
+
+    if (includeDefinedByUser > 0) {
+      pst.setInt(++i, includeDefinedByUser);
+    }
+
+    return i;
+  }
+
+
+  /**
+   *  Adds a feature to the SqlFilterTail attribute of the ContactTypeList
+   *  object
+   *
+   *@param  sqlFilterTail  The feature to be added to the SqlFilterTail
+   *      attribute
+   */
+  private void addSqlFilterTail(StringBuffer sqlFilterTail) {
+    if (sqlFilterTail == null) {
+      sqlFilterTail = new StringBuffer();
+    }
+    int i = 0;
+    if (includeSelectedByUser != -1) {
+      sqlFilterTail.append("OR (lct.code in (select type_id from contact_type_levels where contact_id = " + includeSelectedByUser + ") ) ");
+    }
+  }
 }
 

@@ -1,6 +1,6 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="com.darkhorseventures.cfsbase.PermissionCategory" %>
-<jsp:useBean id="ContactTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="ContactTypeList" class="com.darkhorseventures.cfsbase.ContactTypeList" scope="request"/>
 <jsp:useBean id="RevenueTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -16,7 +16,7 @@
 
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
-<a href="Admin.do?command=ConfigDetails&moduleId=<%=PermissionCategory.getId()%>">Configuration Options</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%=PermissionCategory.getId()%>"><%=PermissionCategory.getCategory()%></a> >
 Lookup Lists<br> 
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -64,6 +64,12 @@ Lookup Lists<br>
     <td valign="center" width=200>Revenue Type</td>
     <td width="35" valign="center" align="center"><%=RevenueTypeList.getEnabledElementCount()%></td>
     <td valign="center"><%=RevenueTypeList.getHtmlSelect("typeId",0)%></td>
+  </tr>
+  <tr>
+    <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=3">Edit</a></td></dhv:permission>
+    <td valign="center" width=200>Contact Type</td>
+    <td width="35" valign="center" align="center"><%=ContactTypeList.getEnabledElementCount()%></td>
+    <td valign="center"><%=ContactTypeList.getHtmlSelect("typeId",0)%></td>
   </tr>
 <%} else if (PermissionCategory.getId() == PermissionCategory.PERMISSION_CAT_CONTACTS) { %>
   <tr>

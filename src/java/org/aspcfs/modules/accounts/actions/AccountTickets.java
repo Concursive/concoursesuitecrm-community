@@ -168,7 +168,7 @@ public final class AccountTickets extends CFSModule {
       nc.setEnteredBy(getUserId(context));
       nc.setModifiedBy(getUserId(context));
       nc.setOwner(getUserId(context));
-      nc.setTypeId(0);
+      nc.addType(0);
     }
 
     try {

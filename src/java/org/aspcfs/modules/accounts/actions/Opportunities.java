@@ -41,11 +41,10 @@ public final class Opportunities extends CFSModule {
    */
 
   public String executeCommandView(ActionContext context) {
-	  
-	if (!(hasPermission(context, "accounts-accounts-opportunities-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "accounts-accounts-opportunities-view"))) {
+      return ("PermissionError");
+    }
 
     Exception errorMessage = null;
 
@@ -83,13 +82,20 @@ public final class Opportunities extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandInsertOppComponent(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     Exception errorMessage = null;
     boolean recordInserted = false;
     Organization thisOrg = null;
@@ -97,21 +103,21 @@ public final class Opportunities extends CFSModule {
     Connection db = null;
 
     OpportunityComponent newComponent = (OpportunityComponent) context.getFormBean();
-    
+
     if (context.getRequest().getParameter("orgId") != null) {
       orgId = context.getRequest().getParameter("orgId");
     }
-    
+
     //set types
     newComponent.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newComponent.setOwner(getUserId(context));
     newComponent.setEnteredBy(getUserId(context));
     newComponent.setModifiedBy(getUserId(context));
-    
+
     try {
       db = this.getConnection(context);
       recordInserted = newComponent.insert(db, context);
-      
+
       if (recordInserted) {
         context.getRequest().setAttribute("OppComponentDetails", newComponent);
         addRecentItem(context, newComponent);
@@ -136,14 +142,21 @@ public final class Opportunities extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }  
-  
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandAddOppComponent(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrg = null;
@@ -161,14 +174,14 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       buildFormElements(db, context);
-      
+
       //get the header info
       oppHeader = new OpportunityHeader(db, oppId);
       context.getRequest().setAttribute("OpportunityHeader", oppHeader);
-      
+
       //build the org
       thisOrg = new Organization(db, Integer.parseInt(orgId));
-      context.getRequest().setAttribute("OrgDetails", thisOrg);      
+      context.getRequest().setAttribute("OrgDetails", thisOrg);
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -182,7 +195,7 @@ public final class Opportunities extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }  
+  }
 
 
   /**
@@ -194,11 +207,11 @@ public final class Opportunities extends CFSModule {
    */
 
   public String executeCommandAdd(ActionContext context) {
-	  
-	if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     String orgId = context.getRequest().getParameter("orgId");
     Organization thisOrganization = null;
@@ -224,31 +237,38 @@ public final class Opportunities extends CFSModule {
       return ("SystemError");
     }
   }
-  
-  public void buildFormElements(Connection db, ActionContext context) {
-      Exception errorMessage = null;
 
-      HtmlSelect busTypeSelect = new HtmlSelect();
-      busTypeSelect.setSelectName("type");
-      busTypeSelect.addItem("N", "New");
-      busTypeSelect.addItem("E", "Existing");
-      busTypeSelect.build();
-  
-      HtmlSelect unitSelect = new HtmlSelect();
-      unitSelect.setSelectName("units");
-      unitSelect.addItem("M", "Months");
-      unitSelect.build();    
-      
-      context.getRequest().setAttribute("BusTypeList", busTypeSelect);
-      context.getRequest().setAttribute("UnitTypeList", unitSelect);
-      
-      try {
-        LookupList stageSelect = new LookupList(db, "lookup_stage");
-        context.getRequest().setAttribute("StageList", stageSelect);
-      } catch (SQLException e) {
-        errorMessage = e;
-      } 
-  }  
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db       Description of the Parameter
+   *@param  context  Description of the Parameter
+   */
+  public void buildFormElements(Connection db, ActionContext context) {
+    Exception errorMessage = null;
+
+    HtmlSelect busTypeSelect = new HtmlSelect();
+    busTypeSelect.setSelectName("type");
+    busTypeSelect.addItem("N", "New");
+    busTypeSelect.addItem("E", "Existing");
+    busTypeSelect.build();
+
+    HtmlSelect unitSelect = new HtmlSelect();
+    unitSelect.setSelectName("units");
+    unitSelect.addItem("M", "Months");
+    unitSelect.build();
+
+    context.getRequest().setAttribute("BusTypeList", busTypeSelect);
+    context.getRequest().setAttribute("UnitTypeList", unitSelect);
+
+    try {
+      LookupList stageSelect = new LookupList(db, "lookup_stage");
+      context.getRequest().setAttribute("StageList", stageSelect);
+    } catch (SQLException e) {
+      errorMessage = e;
+    }
+  }
 
 
   /**
@@ -259,18 +279,18 @@ public final class Opportunities extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     Exception errorMessage = null;
     boolean recordInserted = false;
     Organization thisOrganization = null;
     String orgId = null;
     Connection db = null;
     OpportunityHeader resultHeader = null;
-    OpportunityComponentList componentList = null;    
+    OpportunityComponentList componentList = null;
 
     OpportunityBean newOpp = (OpportunityBean) context.getRequest().getAttribute("OppDetails");
 
@@ -289,26 +309,26 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       recordInserted = newOpp.insert(db, context);
-      
+
       if (recordInserted) {
         resultHeader = new OpportunityHeader(db, newOpp.getHeader().getOppId());
         context.getRequest().setAttribute("HeaderDetails", resultHeader);
         //addRecentItem(context, newOpp);
-        
+
         PagedListInfo componentListInfo = this.getPagedListInfo(context, "AccountsComponentListInfo");
-        componentListInfo.setLink("Opportunities.do?command=Details&oppId=" + resultHeader.getOppId() + "&orgId=" + orgId);    
+        componentListInfo.setLink("Opportunities.do?command=Details&oppId=" + resultHeader.getOppId() + "&orgId=" + orgId);
         componentList = new OpportunityComponentList();
         componentList.setPagedListInfo(componentListInfo);
         componentList.setOppId(resultHeader.getOppId());
         componentList.buildList(db);
-        context.getRequest().setAttribute("ComponentList", componentList);          
+        context.getRequest().setAttribute("ComponentList", componentList);
       } else {
         processErrors(context, newOpp.getErrors());
       }
-      
+
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-        
+
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -316,7 +336,7 @@ public final class Opportunities extends CFSModule {
     }
 
     addModuleBean(context, "View Accounts", "Insert an Opportunity");
-    
+
     if (errorMessage == null) {
       if (recordInserted) {
         addRecentItem(context, resultHeader);
@@ -329,13 +349,20 @@ public final class Opportunities extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDetailsComponent(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-view"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     Exception errorMessage = null;
     addModuleBean(context, "View Accounts", "View Opportunity Component Details");
 
@@ -359,11 +386,11 @@ public final class Opportunities extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, thisComponent.getOwner())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       context.getRequest().setAttribute("OppComponentDetails", thisComponent);
       addRecentItem(context, thisComponent);
       return ("DetailsComponentOK");
@@ -371,7 +398,8 @@ public final class Opportunities extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }  
+  }
+
 
   /**
    *  Description of the Method
@@ -381,46 +409,46 @@ public final class Opportunities extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-view"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     addModuleBean(context, "View Accounts", "View Opportunity Details");
     Exception errorMessage = null;
     int oppId = -1;
     Connection db = null;
-    Organization thisOrganization = null;    
+    Organization thisOrganization = null;
     OpportunityHeader thisHeader = null;
     OpportunityComponentList componentList = null;
-    
+
     String orgId = context.getRequest().getParameter("orgId");
-    
+
     if (context.getRequest().getParameter("oppId") != null) {
-        oppId = Integer.parseInt(context.getRequest().getParameter("oppId"));
+      oppId = Integer.parseInt(context.getRequest().getParameter("oppId"));
     }
-    
+
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "AccountsComponentListInfo");
-    componentListInfo.setLink("Opportunities.do?command=Details&oppId=" + oppId + "&orgId=" + orgId);    
-    
+    componentListInfo.setLink("Opportunities.do?command=Details&oppId=" + oppId + "&orgId=" + orgId);
+
     try {
       db = this.getConnection(context);
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, oppId);
-      
+
       //check whether or not the owner is an active User
       //newOpp.checkEnabledOwnerAccount(db);
-      
+
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
       componentList.setOwnerIdRange(this.getUserRange(context));
       componentList.setOppId(thisHeader.getOppId());
       componentList.buildList(db);
-      context.getRequest().setAttribute("ComponentList", componentList);      
+      context.getRequest().setAttribute("ComponentList", componentList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -446,11 +474,11 @@ public final class Opportunities extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
-	  
-	if (!(hasPermission(context, "accounts-accounts-opportunities-delete"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "accounts-accounts-opportunities-delete"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
     OpportunityHeader newOpp = null;
@@ -474,7 +502,7 @@ public final class Opportunities extends CFSModule {
     addModuleBean(context, "View Accounts", "Delete an opportunity");
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl","Opportunities.do?command=View&orgId="+thisOrganization.getId());
+        context.getRequest().setAttribute("refreshUrl", "Opportunities.do?command=View&orgId=" + thisOrganization.getId());
         deleteRecentItem(context, newOpp);
         return ("DeleteOK");
       } else {
@@ -486,7 +514,14 @@ public final class Opportunities extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandConfirmComponentDelete(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -496,7 +531,7 @@ public final class Opportunities extends CFSModule {
     String orgId = null;
 
     if (!(hasPermission(context, "accounts-accounts-opportunities-delete"))) {
-            return ("PermissionError");
+      return ("PermissionError");
     }
 
     if (context.getRequest().getParameter("oppId") != null) {
@@ -504,8 +539,8 @@ public final class Opportunities extends CFSModule {
     }
     if (context.getRequest().getParameter("orgId") != null) {
       orgId = context.getRequest().getParameter("orgId");
-    } 
-    
+    }
+
     try {
       db = this.getConnection(context);
       thisComponent = new OpportunityComponent(db, id);
@@ -525,14 +560,21 @@ public final class Opportunities extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }    
-  
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDeleteComponent(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-delete"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
     OpportunityComponent component = null;
@@ -555,7 +597,7 @@ public final class Opportunities extends CFSModule {
 
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl","Opportunities.do?command=Details&oppId="+component.getOppId()+"&orgId="+orgId);
+        context.getRequest().setAttribute("refreshUrl", "Opportunities.do?command=Details&oppId=" + component.getOppId() + "&orgId=" + orgId);
         deleteRecentItem(context, component);
         return ("ComponentDeleteOK");
       } else {
@@ -566,7 +608,8 @@ public final class Opportunities extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }  
+  }
+
 
   /**
    *  Modify Contact
@@ -575,12 +618,12 @@ public final class Opportunities extends CFSModule {
    *@return          Description of the Returned Value
    *@since
    */
-   public String executeCommandModify(ActionContext context) {
-	  
+  public String executeCommandModify(ActionContext context) {
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     Exception errorMessage = null;
     int oppId = -1;
     addModuleBean(context, "View Accounts", "Modify an Opportunity");
@@ -588,23 +631,23 @@ public final class Opportunities extends CFSModule {
     if (context.getRequest().getParameter("oppId") != null) {
       oppId = Integer.parseInt(context.getRequest().getParameter("oppId"));
     }
-    
+
     String orgId = context.getRequest().getParameter("orgId");
 
     Connection db = null;
     OpportunityHeader thisHeader = null;
     Organization thisOrg = null;
-    
+
     try {
       db = this.getConnection(context);
-      
+
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, oppId);
-      
+
       //check whether or not the owner is an active User
       //thisHeader.checkEnabledOwnerAccount(db);
-      
+
       thisOrg = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrg);
     } catch (Exception e) {
@@ -622,7 +665,14 @@ public final class Opportunities extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -631,26 +681,26 @@ public final class Opportunities extends CFSModule {
     String id = null;
     String orgId = null;
 
-      if (!(hasPermission(context, "accounts-accounts-opportunities-delete"))) {
-              return ("PermissionError");
-      }
+    if (!(hasPermission(context, "accounts-accounts-opportunities-delete"))) {
+      return ("PermissionError");
+    }
 
     if (context.getRequest().getParameter("id") != null) {
       id = context.getRequest().getParameter("id");
     }
     if (context.getRequest().getParameter("orgId") != null) {
       orgId = context.getRequest().getParameter("orgId");
-    } 
-    
+    }
+
     try {
       db = this.getConnection(context);
       thisOpp = new OpportunityHeader(db, id);
-      htmlDialog.setRelationships(thisOpp.processDependencies(db));
-      
-        htmlDialog.setTitle("CFS: Confirm Delete");
-        htmlDialog.setHeader("This object has the following dependencies within CFS:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='Opportunities.do?command=Delete&orgId=" + orgId + "&id=" + id + "'");
-        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      DependencyList dependencies = thisOpp.processDependencies(db);
+      htmlDialog.addMessage(dependencies.getHtmlString());
+      htmlDialog.setTitle("CFS: Confirm Delete");
+      htmlDialog.setHeader("This object has the following dependencies within CFS:");
+      htmlDialog.addButton("Delete All", "javascript:window.location.href='Opportunities.do?command=Delete&orgId=" + orgId + "&id=" + id + "'");
+      htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -663,20 +713,27 @@ public final class Opportunities extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }  
-  
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandModifyComponent(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     Exception errorMessage = null;
     Organization thisOrg = null;
     Connection db = null;
-    OpportunityComponent component = null;    
+    OpportunityComponent component = null;
     addModuleBean(context, "View Accounts", "Modify a Component");
-    
+
     String orgId = context.getRequest().getParameter("orgId");
     String passedId = context.getRequest().getParameter("id");
 
@@ -707,11 +764,11 @@ public final class Opportunities extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, component.getOwner())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       context.getRequest().setAttribute("OppComponentDetails", component);
       addRecentItem(context, component);
       return ("ComponentModifyOK");
@@ -720,37 +777,44 @@ public final class Opportunities extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandUpdateComponent(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     Organization thisOrg = null;
     OpportunityHeader header = null;
-    
+
     OpportunityComponent component = (OpportunityComponent) context.getFormBean();
     component.setTypeList(context.getRequest().getParameterValues("selectedList"));
-    
+
     String orgId = context.getRequest().getParameter("orgId");
 
     try {
       db = this.getConnection(context);
       component.setModifiedBy(getUserId(context));
       resultCount = component.update(db, context);
-      
+
       if (resultCount == 1) {
         component.queryRecord(db, component.getId());
         context.getRequest().setAttribute("OppComponentDetails", component);
       }
-      
+
       thisOrg = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrg);
-        
+
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -763,10 +827,10 @@ public final class Opportunities extends CFSModule {
         return executeCommandModifyComponent(context);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-		      return (executeCommandDetails(context));
-	      } else {
+          return (executeCommandDetails(context));
+        } else {
           return ("DetailsComponentOK");
-	      }
+        }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
@@ -775,7 +839,8 @@ public final class Opportunities extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }  
+  }
+
 
   /**
    *  Description of the Method
@@ -785,17 +850,17 @@ public final class Opportunities extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
-	    return ("PermissionError");
+      return ("PermissionError");
     }
-	
+
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     OpportunityHeader oppHeader = null;
     String oppId = null;
-    
+
     if (context.getRequest().getParameter("oppId") != null) {
       oppId = context.getRequest().getParameter("oppId");
     }
@@ -818,10 +883,10 @@ public final class Opportunities extends CFSModule {
         return executeCommandModify(context);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-		      return (executeCommandView(context));
-	      } else {
-		      return (executeCommandDetails(context));
-	      }
+          return (executeCommandView(context));
+        } else {
+          return (executeCommandDetails(context));
+        }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");

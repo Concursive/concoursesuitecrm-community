@@ -45,8 +45,12 @@
     }
 </script>
 
-<form name="addCall" action="/LeadsCalls.do?command=Update&id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-
+<form name="addCall" action="/LeadsCalls.do?command=Update&id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %><%= (request.getParameter("popup") != null?"&popup=true":"") %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<%boolean popUp = false;
+  if(request.getParameter("popup")!=null){
+    popUp = true;
+  }%>
+<dhv:evaluate exp="<%= !popUp %>">
 <a href="/Leads.do">Pipeline Management</a> > 
 <a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
 <a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
@@ -56,18 +60,20 @@
 <%}%>
 Modify Call<br>
 <hr color="#BFBFBB" noshade>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
       <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;
-      	<dhv:evaluate exp="<%=(OpportunityDetails.getAccountEnabled() && OpportunityDetails.getAccountLink() > -1)%>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
-	</dhv:evaluate>
-	  
-	<dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
-	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
-	</dhv:evaluate>
-  
+      <dhv:evaluate exp="<%= !popUp %>">
+        <dhv:evaluate exp="<%=(OpportunityDetails.getAccountEnabled() && OpportunityDetails.getAccountLink() > -1)%>">
+          <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
+        </dhv:evaluate>
+    
+        <dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
+          <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
+        </dhv:evaluate>
+       </dhv:evaluate>
         <% if (OpportunityDetails.hasFiles()) { %>
       <% FileItem thisFile = new FileItem(); %>
       <%= thisFile.getImageTag()%>
@@ -75,24 +81,33 @@ Modify Call<br>
   
     </td>
   </tr>
+ <dhv:evaluate exp="<%= !popUp %>">
   <tr class="containerMenu">
     <td>
       <% String param1 = "id=" + OpportunityDetails.getId(); %>      
       <dhv:container name="opportunities" selected="calls" param="<%= param1 %>" />
     </td>
   </tr>
+ </dhv:evaluate>
   <tr>
     <td class="containerBack">
+
 <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/LeadsCalls.do?command=View&oppId=<%=OpportunityDetails.getId()%>';this.form.dosubmit.value='false';">
-	<%}%>
-<%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:form.action='/LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>';this.form.dosubmit.value='false';">
-<%}%>
+<dhv:evaluate exp="<%= !popUp %>">
+  <% if (request.getParameter("return") != null) {%>
+    <% if (request.getParameter("return").equals("list")) {%>
+    <input type="submit" value="Cancel" onClick="javascript:this.form.action='/LeadsCalls.do?command=View&oppId=<%=OpportunityDetails.getId()%>';this.form.dosubmit.value='false';">
+    <%}%>
+  <%} else {%>
+  <input type="submit" value="Cancel" onClick="javascript:form.action='/LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>';this.form.dosubmit.value='false';">
+  <%}%>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= popUp %>">
+  <input type="button" value="Cancel" onClick="javascript:window.close();">
+</dhv:evaluate>
+
 
 <input type="reset" value="Reset">
 <br>
@@ -166,13 +181,19 @@ Modify Call<br>
 <br>
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/LeadsCalls.do?command=View&oppId=<%=OpportunityDetails.getId()%>';this.form.dosubmit.value='false';">
-	<%}%>
-<%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:form.action='/LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>';this.form.dosubmit.value='false';">
-<%}%>
+<dhv:evaluate exp="<%= !popUp %>">
+  <% if (request.getParameter("return") != null) {%>
+    <% if (request.getParameter("return").equals("list")) {%>
+    <input type="submit" value="Cancel" onClick="javascript:this.form.action='/LeadsCalls.do?command=View&oppId=<%=OpportunityDetails.getId()%>';this.form.dosubmit.value='false';">
+    <%}%>
+  <%} else {%>
+    <input type="submit" value="Cancel" onClick="javascript:form.action='/LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>';this.form.dosubmit.value='false';">
+  <%}%>
+</dhv:evaluate>
+<dhv:evaluate exp="<%= popUp %>">
+  <input type="button" value="Cancel" onClick="javascript:window.close();">
+</dhv:evaluate>
+
 
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">

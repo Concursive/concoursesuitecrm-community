@@ -77,7 +77,16 @@ public class TaskList extends ArrayList {
     this.owner = owner;
   }
 
-  public void setTasksAssignedByUser(int tmp) { this.tasksAssignedByUser = tmp; }
+
+  /**
+   *  Sets the tasksAssignedByUser attribute of the TaskList object
+   *
+   *@param  tmp  The new tasksAssignedByUser value
+   */
+  public void setTasksAssignedByUser(int tmp) {
+    this.tasksAssignedByUser = tmp;
+  }
+
 
   /**
    *  Sets the alertRangeStart attribute of the Task object
@@ -98,8 +107,25 @@ public class TaskList extends ArrayList {
     this.alertRangeEnd = alertRangeEnd;
   }
 
-  public void setCategoryId(int tmp) { this.categoryId = tmp; }
-  public void setProjectId(int tmp) { this.projectId = tmp; }
+
+  /**
+   *  Sets the categoryId attribute of the TaskList object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the TaskList object
+   *
+   *@param  tmp  The new projectId value
+   */
+  public void setProjectId(int tmp) {
+    this.projectId = tmp;
+  }
 
 
   /**
@@ -111,6 +137,85 @@ public class TaskList extends ArrayList {
     return enteredBy;
   }
 
+
+  /**
+   *  Return a mapping of number of alerts for each alert category.
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public HashMap queryRecordCount(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    HashMap events = new HashMap();
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlTail = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "SELECT duedate, count(*) " +
+        "FROM task t " +
+        "WHERE t.task_id > -1 ");
+
+    sqlFilter.append("AND duedate IS NOT NULL ");
+    sqlTail.append("GROUP BY duedate ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+    if (System.getProperty("DEBUG") != null) {
+        System.out.println("TaskList --> Queryin Record Count " + pst.toString());
+    }
+    while (rs.next()) {
+      String duedate = Task.getAlertDateStringLongYear(rs.getDate("duedate"));
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("TaskList --> Added tuple " + duedate + ":" + rs.getInt("count")) ;
+      }
+      events.put(duedate, new Integer(rs.getInt("count")));
+    }
+    rs.close();
+    pst.close();
+    return events;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildShortList(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "SELECT t.task_id, t.description, t.duedate, t.complete " +
+        "FROM task t " +
+        "WHERE t.task_id > -1 ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      Task thisTask = new Task();
+      thisTask.setId(rs.getInt("task_id"));
+      thisTask.setDescription(rs.getString("description"));
+      thisTask.setDueDate(rs.getDate("duedate"));
+      thisTask.setComplete(rs.getBoolean("complete"));
+      this.add(thisTask);
+    }
+    rs.close();
+    pst.close();
+  }
 
 
   /**
@@ -227,7 +332,7 @@ public class TaskList extends ArrayList {
     if (tasksAssignedByUser > 0) {
       sqlFilter.append("AND t.enteredby = ? AND t.owner NOT IN (SELECT contact_id FROM contact WHERE user_id = ?) AND t.owner IS NOT NULL ");
     }
-    
+
     if (owner > 0) {
       sqlFilter.append("AND t.owner = ? ");
     }
@@ -243,11 +348,11 @@ public class TaskList extends ArrayList {
     if (alertRangeEnd != null) {
       sqlFilter.append("AND t.duedate <= ? ");
     }
-   
+
     if (categoryId > 0) {
       sqlFilter.append("AND t.category_id = ? ");
     }
-   
+
     if (projectId > 0) {
       sqlFilter.append("AND t.task_id IN (SELECT task_id FROM tasklink_project WHERE project_id = ?) ");
     }
@@ -272,14 +377,13 @@ public class TaskList extends ArrayList {
       pst.setInt(++i, tasksAssignedByUser);
       pst.setInt(++i, tasksAssignedByUser);
     }
-    
-    
+
     if (owner > 0) {
       pst.setInt(++i, owner);
     }
 
     if (complete != -1) {
-      pst.setBoolean(++i, (complete == Constants.TRUE?true:false));
+      pst.setBoolean(++i, (complete == Constants.TRUE ? true : false));
     }
 
     if (alertRangeStart != null) {
@@ -293,7 +397,7 @@ public class TaskList extends ArrayList {
     if (categoryId > 0) {
       pst.setInt(++i, categoryId);
     }
-    
+
     if (projectId > 0) {
       pst.setInt(++i, projectId);
     }
@@ -311,10 +415,10 @@ public class TaskList extends ArrayList {
    */
   public static int queryPendingCount(Connection db, int myContactId) throws SQLException {
     int toReturn = 0;
-    String sql = 
-      "SELECT count(*) as taskcount " +
-      "FROM task " +
-      "WHERE owner = ? AND complete = ? ";
+    String sql =
+        "SELECT count(*) as taskcount " +
+        "FROM task " +
+        "WHERE owner = ? AND complete = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, myContactId);

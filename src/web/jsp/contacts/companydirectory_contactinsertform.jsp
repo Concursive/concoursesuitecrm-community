@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.StateSelect,com.darkhorseventures.webutils.CountrySelect" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*" %>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="com.darkhorseventures.cfsbase.ContactTypeList" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -9,6 +9,7 @@
 <jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -24,12 +25,27 @@
         message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
         formTest = false;
       }
+      if(document.forms[0].contactcategory[1].checked && document.forms[0].orgId.value == '-1'){
+       message += "- Make sure you select an account.\r\n";
+			 formTest = false;
+      }
       if (formTest == false) {
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
-      } else {
-        return true;
+      }else {
+        var test = document.addContact.selectedList;
+        if (test != null) {
+          return selectAllOptions(document.addContact.selectedList);
+        }
       }
+    }
+    
+    function setCategoryPopContactType(selectedId, contactId){
+      var category = 'general';
+      if(document.addContact.contactcategory[1].checked){
+        category = 'accounts';
+      }
+      popContactTypeSelectMultiple(selectedId, category, contactId); 
     }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
@@ -47,16 +63,43 @@ Add Contact<br>
   <tr class="title">
     <td colspan=2 valign=center align=left>
       <strong>Add a New Contact</strong>
-    </td>     
+    </td>
   </tr>
-  
   <tr>
     <td nowrap class="formLabel">
-      Contact Type
+      Contact Category
     </td>
     <td>
-      <%=ContactTypeList.getHtmlSelect("typeId", ContactDetails.getTypeId())%>
+      <input type="radio" name="contactcategory" value="1" onclick="javascript:document.forms[0].orgId.selectedIndex = 0;" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
+      <input type="radio" name="contactcategory" value="2" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>> Associated with Account &nbsp; <%= OrgList.getHtmlSelectDefaultNone("orgId", ContactDetails.getOrgId())%>
     </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Contact Type(s)
+    </td>
+    <td valign="center">
+      <select multiple name="selectedList" id="selectedList" size="5">
+        <dhv:evaluate exp="<%= ContactDetails.getTypes().isEmpty() %>">
+        <%if(ContactDetails.getTypes().isEmpty()) {%>
+          <option value="-1">None Selected</option>
+        <%}else{
+            Iterator i = ContactDetails.getTypes().iterator();
+            while (i.hasNext()) {
+              LookupElement thisElt = (LookupElement)i.next();
+            %>
+               <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
+            <%}%>
+         <%}%>
+			</select>
+      <input type="hidden" name="previousSelection" value="">
+      <%-- Check for cloned contact --%>
+      <% if(request.getParameter("id") == null) {%>
+        <a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);">Select</a>
+      <%}else{%>
+          <a href="javascript:setCategoryPopContactType('selectedList', <%= request.getParameter("id") %>);">Select</a>
+      <%}%>
+     </td>
   </tr>
   
   <tr>
@@ -96,16 +139,6 @@ Add Contact<br>
       <font color="red">-</font> <%= showAttribute(request, "lastcompanyError") %>
     </td>
   </tr>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Associated with Account
-    </td>
-    <td valign=center>
-    <%= OrgList.getHtmlSelectDefaultNone("orgId", ContactDetails.getOrgId())%>
-    </td>
-  </tr>  
-  
   <tr>
     <td nowrap class="formLabel">
       Title

@@ -34,7 +34,7 @@ Contact Details<br>
   <tr class="title">
     <td colspan="2">
       <strong>Primary Information</strong>
-      [Category: <%= toHtml(ContactDetails.getTypeName()) %>]
+      [Category: <%= toHtml(ContactDetails.getOrgId() !=-1 ? "Accounts":"General") %>]
     </td>
   </tr>
   <tr class="containerBody">

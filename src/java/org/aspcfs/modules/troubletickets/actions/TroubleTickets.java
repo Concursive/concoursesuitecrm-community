@@ -18,7 +18,8 @@ import java.text.*;
  *
  *@author     matt rajkowski
  *@created    March 15, 2002
- *@version    $Id$
+ *@version    $Id: TroubleTickets.java,v 1.37 2002/12/20 14:07:55 mrajkowski Exp
+ *      $
  */
 public final class TroubleTickets extends CFSModule {
 
@@ -82,7 +83,14 @@ public final class TroubleTickets extends CFSModule {
     }
 
   }
- 
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandGenerateForm(ActionContext context) {
 
     if (!(hasPermission(context, "tickets-tickets-reports-add"))) {
@@ -92,7 +100,14 @@ public final class TroubleTickets extends CFSModule {
     addModuleBean(context, "Reports", "Generate new");
     return ("GenerateFormOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandExportReport(ActionContext context) {
 
     if (!(hasPermission(context, "tickets-tickets-reports-add"))) {
@@ -104,7 +119,7 @@ public final class TroubleTickets extends CFSModule {
     Connection db = null;
     String subject = context.getRequest().getParameter("subject");
     String ownerCriteria = context.getRequest().getParameter("criteria1");
-    
+
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
 
     //setup file stuff
@@ -130,11 +145,11 @@ public final class TroubleTickets extends CFSModule {
       ticketReport.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
     } else if (ownerCriteria.equals("unassigned")) {
       ticketReport.setUnassignedToo(true);
-      ticketReport.setDepartment(thisUser.getUserRecord().getContact().getDepartment());    
+      ticketReport.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
     } else if (ownerCriteria.equals("createdByMe")) {
       ticketReport.setUnassignedToo(true);
       ticketReport.setEnteredBy(getUserId(context));
-    } 
+    }
 
     try {
       db = this.getConnection(context);
@@ -157,7 +172,14 @@ public final class TroubleTickets extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandShowReportHtml(ActionContext context) {
 
     if (!(hasPermission(context, "tickets-tickets-reports-view"))) {
@@ -188,8 +210,14 @@ public final class TroubleTickets extends CFSModule {
 
     return ("ReportHtmlOK");
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandReports(ActionContext context) {
 
     if (!(hasPermission(context, "tickets-tickets-reports-view"))) {
@@ -243,8 +271,14 @@ public final class TroubleTickets extends CFSModule {
     }
 
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDeleteReport(ActionContext context) {
 
     if (!(hasPermission(context, "tickets-tickets-reports-delete"))) {
@@ -343,7 +377,7 @@ public final class TroubleTickets extends CFSModule {
       LookupList sourceList = new LookupList(db, "lookup_ticketsource");
       sourceList.addItem(0, "-- None --");
       context.getRequest().setAttribute("SourceList", sourceList);
-      
+
       if (this.getDbName(context).equals("cdb_voice") || this.getDbName(context).equals("cdb_ds21")) {
         CampaignList campaignList = new CampaignList();
         campaignList.setEnabled(Constants.TRUE);
@@ -376,7 +410,7 @@ public final class TroubleTickets extends CFSModule {
       subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
       subList1.buildList(db);
       context.getRequest().setAttribute("SubList1", subList1);
-      
+
       ContactList contactList = new ContactList();
       contactList.setEmptyHtmlSelectRecord("-- None --");
       contactList.setPersonalId(getUserId(context));
@@ -431,7 +465,7 @@ public final class TroubleTickets extends CFSModule {
       if (context.getRequest().getParameter("refresh") != null && (Integer.parseInt(context.getRequest().getParameter("refresh")) == 1 || Integer.parseInt(context.getRequest().getParameter("refresh")) == 3)) {
         newTic.setSubCat3(0);
       }
-      
+
       context.getRequest().setAttribute("TicketDetails", newTic);
       addRecentItem(context, newTic);
 
@@ -476,12 +510,12 @@ public final class TroubleTickets extends CFSModule {
       ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       newTic = new Ticket(db, Integer.parseInt(ticketId));
-      
+
       //check whether or not the owner is an active User
       if (newTic.getAssignedTo() > -1) {
         newTic.checkEnabledOwnerAccount(db);
       }
-      
+
       newTic.getHistory().setPagedListInfo(ticListInfo);
     } catch (Exception e) {
       errorMessage = e;
@@ -517,28 +551,28 @@ public final class TroubleTickets extends CFSModule {
     int errorCode = 0;
     Exception errorMessage = null;
     Connection db = null;
-    
+
     TicketList assignedToMeList = new TicketList();
     TicketList openList = new TicketList();
     TicketList createdByMeList = new TicketList();
     String sectionId = null;
-    
+
     if (context.getRequest().getParameter("pagedListSectionId") != null) {
       sectionId = context.getRequest().getParameter("pagedListSectionId");
-    } 
-    
+    }
+
     //reset the paged lists
     if (context.getRequest().getParameter("resetList") != null && context.getRequest().getParameter("resetList").equals("true")) {
       context.getSession().removeAttribute("AssignedToMeInfo");
       context.getSession().removeAttribute("OpenInfo");
       context.getSession().removeAttribute("CreatedByMeInfo");
     }
-    
+
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    
+
     PagedListInfo assignedToMeInfo = this.getPagedListInfo(context, "AssignedToMeInfo");
     assignedToMeInfo.setLink("/TroubleTickets.do?command=Home");
-    
+
     if (sectionId == null) {
       if (!assignedToMeInfo.getExpandedSelection()) {
         if (assignedToMeInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -552,22 +586,22 @@ public final class TroubleTickets extends CFSModule {
     } else if (sectionId.equals(assignedToMeInfo.getId())) {
       assignedToMeInfo.setExpandedSelection(true);
     }
-    
+
     if (sectionId == null || assignedToMeInfo.getExpandedSelection() == true) {
       assignedToMeList.setPagedListInfo(assignedToMeInfo);
       assignedToMeList.setAssignedTo(getUserId(context));
       assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       assignedToMeList.setOnlyOpen(true);
-      
+
       if ("assignedToMe".equals(assignedToMeInfo.getListView())) {
         assignedToMeList.setAssignedTo(getUserId(context));
         assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
     }
-    
+
     PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
     openInfo.setLink("/TroubleTickets.do?command=Home");
-    
+
     if (sectionId == null) {
       if (!openInfo.getExpandedSelection()) {
         if (openInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -581,22 +615,22 @@ public final class TroubleTickets extends CFSModule {
     } else if (sectionId.equals(openInfo.getId())) {
       openInfo.setExpandedSelection(true);
     }
-    
+
     if (sectionId == null || openInfo.getExpandedSelection() == true) {
       openList.setPagedListInfo(openInfo);
       openList.setUnassignedToo(true);
       openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       openList.setOnlyOpen(true);
-      
+
       if ("unassigned".equals(openInfo.getListView())) {
         openList.setUnassignedToo(true);
         openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
     }
-    
+
     PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo");
     createdByMeInfo.setLink("/TroubleTickets.do?command=Home");
-    
+
     if (sectionId == null) {
       if (!createdByMeInfo.getExpandedSelection()) {
         if (createdByMeInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -610,7 +644,7 @@ public final class TroubleTickets extends CFSModule {
     } else if (sectionId.equals(createdByMeInfo.getId())) {
       createdByMeInfo.setExpandedSelection(true);
     }
-    
+
     if (sectionId == null || createdByMeInfo.getExpandedSelection() == true) {
       createdByMeList.setPagedListInfo(createdByMeInfo);
       createdByMeList.setUnassignedToo(true);
@@ -624,22 +658,21 @@ public final class TroubleTickets extends CFSModule {
       if (sectionId == null || assignedToMeInfo.getExpandedSelection() == true) {
         assignedToMeList.buildList(db);
       }
-      
+
       if (sectionId == null || openInfo.getExpandedSelection() == true) {
         openList.buildList(db);
       }
-      
+
       if (sectionId == null || createdByMeInfo.getExpandedSelection() == true) {
         createdByMeList.buildList(db);
       }
-    
     } catch (Exception e) {
       errorCode = 1;
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     addModuleBean(context, "ViewTickets", "View Tickets");
     context.getRequest().setAttribute("CreatedByMeList", createdByMeList);
     context.getRequest().setAttribute("AssignedToMeList", assignedToMeList);
@@ -725,17 +758,24 @@ public final class TroubleTickets extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandReopen(ActionContext context) {
 
     if (!(hasPermission(context, "tickets-tickets-edit"))) {
       return ("PermissionError");
-    }    
+    }
     int resultCount = -1;
     Exception errorMessage = null;
     Connection db = null;
     Ticket thisTicket = null;
-    
+
     try {
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(context.getRequest().getParameter("id")));
@@ -746,7 +786,7 @@ public final class TroubleTickets extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-      
+
     if (errorMessage == null) {
       if (resultCount == -1) {
         return (executeCommandDetails(context));
@@ -760,7 +800,7 @@ public final class TroubleTickets extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-    
+
   }
 
 
@@ -803,9 +843,7 @@ public final class TroubleTickets extends CFSModule {
       nc.setModifiedBy(getUserId(context));
       nc.setOwner(getUserId(context));
       if (newTic.getOrgId() == 0) {
-        nc.setTypeId(1);
-      } else {
-        nc.setTypeId(0);
+        nc.addType(Contact.EMPLOYEE_TYPE);
       }
     }
 
@@ -832,7 +870,7 @@ public final class TroubleTickets extends CFSModule {
         newTicket = new Ticket(db, newTic.getId());
         context.getRequest().setAttribute("TicketDetails", newTicket);
         addRecentItem(context, newTicket);
-        
+
         processInsertHook(context, newTic);
       } else {
         processErrors(context, newTic.getErrors());
@@ -1026,11 +1064,11 @@ public final class TroubleTickets extends CFSModule {
 
     Exception errorMessage = null;
     boolean recordDeleted = false;
-    
+
     String passedId = null;
     Ticket thisTic = null;
     Connection db = null;
-    
+
     passedId = context.getRequest().getParameter("id");
 
     try {
@@ -1040,7 +1078,6 @@ public final class TroubleTickets extends CFSModule {
       if (recordDeleted) {
         processDeleteHook(context, thisTic);
       }
-      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1099,7 +1136,7 @@ public final class TroubleTickets extends CFSModule {
     userList.setEmptyHtmlSelectRecord("-- None --");
     userList.setBuildContact(true);
     userList.setExcludeDisabledIfUnselected(true);
-    
+
     if (newTic.getDepartmentCode() > 0) {
       userList.setDepartment(newTic.getDepartmentCode());
       userList.buildList(db);

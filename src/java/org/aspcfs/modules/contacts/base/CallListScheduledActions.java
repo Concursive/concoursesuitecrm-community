@@ -12,7 +12,8 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *
  *@author     akhi_m
  *@created    October 2, 2002
- *@version    $Id$
+ *@version    $Id: CallListScheduledActions.java,v 1.2 2002/10/04 19:25:45
+ *      mrajkowski Exp $
  */
 public class CallListScheduledActions extends CallList implements ScheduledActions {
 
@@ -48,34 +49,64 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
   /**
    *  Description of the Method
    *
-   *@param  companyCalendar  Description of the Parameter
-   *@param  db               Description of the Parameter
-   *@return                  Description of the Return Value
+   *@param  companyCalendar   Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
-  public String calendarAlerts(CalendarView companyCalendar, Connection db) throws SQLException{
+  public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CallListScheduledActions --> Building Call Alerts ");
+    }
     try {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("CallListScheduledActions --> Building Call Alerts ");
-      }
-      PagedListInfo alertPaged = new PagedListInfo();
-      alertPaged.setMaxRecords(20);
-      alertPaged.setColumnToSortBy("alertdate");
       this.setEnteredBy(this.getUserId());
       this.setHasAlertDate(true);
       this.buildList(db);
       Iterator m = this.iterator();
       while (m.hasNext()) {
         Call thisCall = (Call) m.next();
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CallListScheduledActions --> Added Alert " + thisCall.getSubject() + " on " + thisCall.getAlertDateStringLongYear());
+        }
         if (thisCall.getOppId() == -1 && thisCall.getContactId() > -1) {
-          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Contact Calls", thisCall.getContactId(), thisCall.getId());
+          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), CalendarEventList.EVENT_TYPES[5], thisCall.getContactId(), thisCall.getId());
         } else {
-          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Opportunity Calls", thisCall.getOppId(), thisCall.getId());
+          companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), CalendarEventList.EVENT_TYPES[6], thisCall.getOppId(), thisCall.getId());
         }
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Call Calendar Alerts");
     }
-    return "CalendarCallsOK";
+  }
+
+
+  /**
+   *  Build event categories and count of occurance of each category.
+   *
+   *@param  companyCalendar   Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
+
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CallListScheduledActions --> Building Alert Counts ");
+    }
+    try {
+      this.setEnteredBy(this.getUserId());
+      this.setHasAlertDate(true);
+      HashMap dayEvents = this.queryRecordCount(db);
+      Set s = dayEvents.keySet();
+      Iterator i = s.iterator();
+      while (i.hasNext()) {
+        String thisDay = (String) i.next();
+        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[5], thisDay, dayEvents.get(thisDay));
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CallListScheduledActions --> Added Calls for day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
+        }
+      }
+    } catch (SQLException e) {
+      throw new SQLException("Error Building Call Calendar Alert Counts");
+    }
   }
 }
 

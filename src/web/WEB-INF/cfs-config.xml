@@ -216,6 +216,7 @@
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
     <forward name="DeleteReportOK" resource="/ExternalContacts.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/ExternalContacts.do?command=Reports"/>
+    <forward name="PopupContactTypeOK" resource="/companydirectory_contacttype_popup.jsp" layout="style"/>
     <forward name="DefaultError" resource="/CompanyDirectory.do?command=ListEmployees"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
@@ -366,9 +367,11 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/leads_listcalls.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/leads_detailscall.jsp" layout="nav"/>
+    <forward name="ModifyPopupOK" resource="/leads_modifycall.jsp" layout="style"/>
     <forward name="ModifyOK" resource="/leads_modifycall.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/LeadsCalls.do?command=Details"/>
     <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="LeadsDocuments" class="com.darkhorseventures.cfsmodule.LeadsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
@@ -412,6 +415,7 @@
     <forward name="SearchOK" resource="/accounts_search.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/accounts_details.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="DeleteError" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>    
     <forward name="UpdateOK" resource="/Accounts.do?command=Details"/>

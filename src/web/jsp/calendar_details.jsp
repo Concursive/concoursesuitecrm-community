@@ -86,7 +86,7 @@ function switchStyle(E){
           </td>
         </tr>
     </dhv:evaluate>
-    <dhv:evaluate exp="<%= !isToday %>">
+    <dhv:evaluate exp="<%= (!isToday && CalendarInfo.isAgendaView()) || !CalendarInfo.isAgendaView() %>">
         <tr class="weekSelector">
           <td colspan="2" width="100%">
             <strong><%= toFullDateString(thisDay.getDate()) %></strong>
@@ -101,7 +101,7 @@ function switchStyle(E){
        Iterator eventList = thisDay.iterator();
        while (eventList.hasNext()) {
          CalendarEvent thisEvent = (CalendarEvent)eventList.next();
-         if (thisEvent.getCategory().toUpperCase().startsWith(CalendarEventList.EVENT_TYPES[i].toUpperCase())){
+         if (thisEvent.getCategory().toUpperCase().equals(CalendarEventList.EVENT_TYPES[i].toUpperCase())){
            if (firstTime) {
              firstTime = false;
 %>

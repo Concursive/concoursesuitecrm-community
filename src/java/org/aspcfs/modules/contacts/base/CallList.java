@@ -4,8 +4,7 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
-import java.util.Iterator;
+import java.util.*;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.utils.DatabaseUtils;
@@ -18,9 +17,9 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@version    $Id$
  */
 public class CallList extends Vector {
-        
-  public static final String tableName = "call_log";
-  public static final String uniqueField = "call_id";
+
+  public final static String tableName = "call_log";
+  public final static String uniqueField = "call_id";
   protected java.sql.Timestamp lastAnchor = null;
   protected java.sql.Timestamp nextAnchor = null;
   protected int syncType = Constants.NO_SYNC;
@@ -34,7 +33,7 @@ public class CallList extends Vector {
   protected java.sql.Date alertDate = null;
   protected java.sql.Date alertRangeStart = null;
   protected java.sql.Date alertRangeEnd = null;
-  
+
 
 
   /**
@@ -142,18 +141,66 @@ public class CallList extends Vector {
   public void setOppId(String oppId) {
     this.oppId = Integer.parseInt(oppId);
   }
-  
-  public void setAlertRangeStart(java.sql.Date tmp) { this.alertRangeStart = tmp; }
-  public void setAlertRangeStart(String tmp) { 
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the CallList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(java.sql.Date tmp) {
+    this.alertRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the CallList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(String tmp) {
     this.alertRangeStart = java.sql.Date.valueOf(tmp);
   }
-  public void setAlertRangeEnd(java.sql.Date tmp) { this.alertRangeEnd = tmp; }
-  public void setAlertRangeEnd(String tmp) { 
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the CallList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(java.sql.Date tmp) {
+    this.alertRangeEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the CallList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = java.sql.Date.valueOf(tmp);
   }
-  
-  public java.sql.Date getAlertRangeStart() { return alertRangeStart; }
-  public java.sql.Date getAlertRangeEnd() { return alertRangeEnd; }
+
+
+  /**
+   *  Gets the alertRangeStart attribute of the CallList object
+   *
+   *@return    The alertRangeStart value
+   */
+  public java.sql.Date getAlertRangeStart() {
+    return alertRangeStart;
+  }
+
+
+  /**
+   *  Gets the alertRangeEnd attribute of the CallList object
+   *
+   *@return    The alertRangeEnd value
+   */
+  public java.sql.Date getAlertRangeEnd() {
+    return alertRangeEnd;
+  }
 
 
   /**
@@ -188,14 +235,86 @@ public class CallList extends Vector {
     return hasAlertDate;
   }
 
-public String getTableName() { return tableName; }
-public String getUniqueField() { return uniqueField; }
-public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
-public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
-public int getSyncType() { return syncType; }
-public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
-public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
-public void setSyncType(int tmp) { this.syncType = tmp; }
+
+  /**
+   *  Gets the tableName attribute of the CallList object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the CallList object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   *  Gets the lastAnchor attribute of the CallList object
+   *
+   *@return    The lastAnchor value
+   */
+  public java.sql.Timestamp getLastAnchor() {
+    return lastAnchor;
+  }
+
+
+  /**
+   *  Gets the nextAnchor attribute of the CallList object
+   *
+   *@return    The nextAnchor value
+   */
+  public java.sql.Timestamp getNextAnchor() {
+    return nextAnchor;
+  }
+
+
+  /**
+   *  Gets the syncType attribute of the CallList object
+   *
+   *@return    The syncType value
+   */
+  public int getSyncType() {
+    return syncType;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the CallList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the CallList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the CallList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
 
   /**
    *  Gets the PagedListInfo attribute of the CallList object
@@ -244,6 +363,93 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
   /**
    *  Description of the Method
    *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public HashMap queryRecordCount(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    HashMap events = new HashMap();
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlTail = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "SELECT alertdate, count(*) " +
+        "FROM call_log c " +
+        "WHERE call_id > -1 ");
+
+    sqlTail.append("GROUP BY alertdate ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      String alertdate = Call.getAlertDateStringLongYear(rs.getDate("alertdate"));
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("CallList --> Added Days Calls " + alertdate + ":" + rs.getInt("count"));
+      }
+      events.put(alertdate, new Integer(rs.getInt("count")));
+    }
+    rs.close();
+    pst.close();
+    return events;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildShortList(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "c.call_id, c.subject, c.opp_id, c.contact_id, c.opp_id, c.alertdate " +
+        "FROM call_log c, " +
+        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
+        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
+        "WHERE c.enteredby = a1.user_id " +
+        "AND c.modifiedby = a2.user_id ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      Call thisCall = new Call();
+      thisCall.setId(rs.getInt("call_id"));
+      thisCall.setSubject(rs.getString("subject"));
+      thisCall.setContactId(rs.getInt("contact_id"));
+      if (rs.wasNull()) {
+        thisCall.setContactId(-1);
+      }
+      thisCall.setOppId(rs.getInt("opp_id"));
+      if (rs.wasNull()) {
+        thisCall.setOppId(-1);
+      }
+      thisCall.setAlertDate(rs.getDate("alertdate"));
+      this.add(thisCall);
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    *@since
@@ -258,17 +464,17 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-    
+
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-      "SELECT COUNT(*) as recordcount " +
-      "FROM call_log c, " +
-      "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-      "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id), " +
-      "lookup_call_types t " +
-      "WHERE c.call_type_id = t.code " +
-      "AND c.enteredby = a1.user_id " +
-      "AND c.modifiedby = a2.user_id ");
+        "SELECT COUNT(*) as recordcount " +
+        "FROM call_log c, " +
+        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
+        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id), " +
+        "lookup_call_types t " +
+        "WHERE c.call_type_id = t.code " +
+        "AND c.enteredby = a1.user_id " +
+        "AND c.modifiedby = a2.user_id ");
 
     createFilter(sqlFilter);
 
@@ -297,28 +503,29 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     } else {
       sqlSelect.append("SELECT ");
     }
-    
+
     sqlSelect.append(
-      "c.*, t.*, " +
-      "e.namefirst as efirst, e.namelast as elast, " +
-      "m.namefirst as mfirst, m.namelast as mlast, " +
-      "ct.namefirst as ctfirst, ct.namelast as ctlast " +
-      "FROM call_log c " +
-      "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-      "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
-      "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
-      "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
-      "WHERE c.enteredby = a1.user_id " +
-      "AND c.modifiedby = a2.user_id ");
-      
+        "c.*, t.*, " +
+        "e.namefirst as efirst, e.namelast as elast, " +
+        "m.namefirst as mfirst, m.namelast as mlast, " +
+        "ct.namefirst as ctfirst, ct.namelast as ctlast " +
+        "FROM call_log c " +
+        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
+        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
+        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
+        "WHERE c.enteredby = a1.user_id " +
+        "AND c.modifiedby = a2.user_id ");
+
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
+    System.out.println("CallList --> Building List " + pst.toString());
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
+
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -384,7 +591,7 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     if (orgId != -1) {
       sqlFilter.append("AND c.org_id = ? ");
     }
-    
+
     if (alertRangeStart != null) {
       sqlFilter.append("AND c.alertdate >= ? ");
     }
@@ -423,15 +630,16 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     if (orgId != -1) {
       pst.setInt(++i, orgId);
     }
-    
+
     if (alertRangeStart != null) {
       pst.setDate(++i, alertRangeStart);
     }
-    
+
     if (alertRangeEnd != null) {
       pst.setDate(++i, alertRangeEnd);
     }
     return i;
   }
 }
+
 

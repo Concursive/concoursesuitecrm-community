@@ -470,9 +470,11 @@ public final class CampaignManagerMessage extends CFSModule {
       thisMessage = new Message(db, id);
       htmlDialog.setTitle("CFS: Campaign Manager");
 
-      htmlDialog.setRelationships(thisMessage.processDependencies(db));
+      DependencyList dependencies = thisMessage.processDependencies(db);
+      htmlDialog.addMessage(dependencies.getHtmlString());
 
-      if (htmlDialog.getRelationships().size() == 0) {
+
+      if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='CampaignManagerMessage.do?command=Delete&id=" + id + "'");
       } else {

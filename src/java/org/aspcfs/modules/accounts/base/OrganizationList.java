@@ -2,8 +2,7 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
-import java.util.Iterator;
+import java.util.*;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
@@ -174,15 +173,28 @@ public class OrganizationList extends Vector {
   public void setRevenueYear(int tmp) {
     this.revenueYear = tmp;
   }
-public void setAlertRangeStart(java.sql.Date alertRangeStart) {
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the OrganizationList object
+   *
+   *@param  alertRangeStart  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(java.sql.Date alertRangeStart) {
     this.alertRangeStart = alertRangeStart;
   }
 
 
-  
+
+  /**
+   *  Sets the alertRangeEnd attribute of the OrganizationList object
+   *
+   *@param  alertRangeEnd  The new alertRangeEnd value
+   */
   public void setAlertRangeEnd(java.sql.Date alertRangeEnd) {
     this.alertRangeEnd = alertRangeEnd;
   }
+
 
   /**
    *  Gets the revenueType attribute of the OrganizationList object
@@ -497,7 +509,15 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
   public String getHtmlSelectDefaultNone(String selectName) {
     return getHtmlSelectDefaultNone(selectName, -1);
   }
-  
+
+
+  /**
+   *  Gets the htmlSelectDefaultNone attribute of the OrganizationList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelectDefaultNone value
+   */
   public String getHtmlSelectDefaultNone(String selectName, int defaultKey) {
     HtmlSelect orgListSelect = new HtmlSelect();
     orgListSelect.addItem(-1, "-- None --");
@@ -515,9 +535,9 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
     }
 
     return orgListSelect.getHtml(selectName, defaultKey);
-  }  
-  
-  
+  }
+
+
   /**
    *  Description of the Method
    *
@@ -526,6 +546,85 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public HashMap queryRecordCount(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    HashMap events = new HashMap();
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlTail = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "SELECT alertdate, count(*) " +
+        "FROM organization o " +
+        "WHERE o.org_id >= 0 ");
+
+    sqlFilter.append("AND alertdate IS NOT NULL ");
+    sqlTail.append("GROUP BY alertdate ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      String alertdate = Organization.getAlertDateStringLongYear(rs.getDate("alertdate"));
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("OrgList --> Added Event " + alertdate + ":" + rs.getInt("count"));
+      }
+      events.put(alertdate, new Integer(rs.getInt("count")));
+    }
+    rs.close();
+    pst.close();
+    
+    return events;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildShortList(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "SELECT o.org_id, o.name, o.alertdate, o.alert " +
+        "FROM organization o " +
+        "WHERE o.org_id >= 0 ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      Organization thisOrg = new Organization();
+      thisOrg.setOrgId(rs.getInt("org_id"));
+      thisOrg.setName(rs.getString("name"));
+      thisOrg.setAlertDate(rs.getDate("alertdate"));
+      thisOrg.setAlertText(rs.getString("alert"));
+      this.add(thisOrg);
+    }
+    rs.close();
+    pst.close();
   }
 
 
@@ -546,12 +645,12 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
         break;
       }
       Organization thisOrganization = this.getObject(rs);
-      
+
       //if this is an individual account, populate the primary contact record
       if (thisOrganization.getNameLast() != null) {
         thisOrganization.populatePrimaryContact(db);
       }
-      
+
       if (buildRevenueYTD && revenueYear > -1 && revenueOwnerId > -1) {
         thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType(), this.getRevenueOwnerId());
 
@@ -772,7 +871,16 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
       thisOrg.getEmailAddressList().buildList(db);
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newOwner          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
     Iterator i = this.iterator();
@@ -783,7 +891,8 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
       }
     }
     return total;
-  }    
+  }
+
 
   /**
    *  Sets the parameters for the preparedStatement - these items must
@@ -846,4 +955,5 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
   }
 
 }
+
 

@@ -23,26 +23,16 @@ import java.text.*;
 public final class Admin extends CFSModule {
 
   /**
-   *  Constructor for the Admin object
-   *
-   *@since
-   */
-  public Admin() { }
-
-
-  /**
-   *  Default -- calls Home.
+   *  Default action, calls home action.
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    *@since
    */
   public String executeCommandDefault(ActionContext context) {
-
     if (!(hasPermission(context, "admin-view"))) {
       return ("PermissionError");
     }
-
     return executeCommandHome(context);
   }
 
@@ -55,13 +45,26 @@ public final class Admin extends CFSModule {
    *@since
    */
   public String executeCommandHome(ActionContext context) {
-
     if (!(hasPermission(context, "admin-view"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "Admin", "Admin");
     return ("HomeOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandManage(ActionContext context) {
+    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+      return ("PermissionError");
+    }
+    addModuleBean(context, "Configuration", "Management");
+    return "ManagementOK";
   }
 
 
@@ -159,7 +162,6 @@ public final class Admin extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     return "UsageOK";
   }
 
@@ -267,7 +269,6 @@ public final class Admin extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     context.getRequest().setAttribute("PermissionCategory", permCat);
     addModuleBean(context, "Configuration", "Configuration");
     return ("EditListsOK");
@@ -282,15 +283,17 @@ public final class Admin extends CFSModule {
    *@since
    */
   public String executeCommandUpdateList(ActionContext context) {
-
     if (!(hasPermission(context, "admin-sysconfig-lists-edit"))) {
       return ("PermissionError");
     }
 
     Exception errorMessage = null;
     Connection db = null;
-    String tblName = null;
+    String tblName = context.getRequest().getParameter("tableName");
 
+    if ("lookup_contact_types".equals(tblName)) {
+      return executeCommandUpdateContactList(context);
+    }
     String[] params = context.getRequest().getParameterValues("selectedList");
     String[] names = new String[params.length];
     int j = 0;
@@ -304,8 +307,6 @@ public final class Admin extends CFSModule {
 
     try {
       db = this.getConnection(context);
-
-      tblName = context.getRequest().getParameter("tableName");
 
       //begin for all lookup lists
       LookupList compareList = new LookupList(db, tblName);
@@ -352,14 +353,83 @@ public final class Admin extends CFSModule {
 
 
   /**
+   *  Updates the Contact Types list .<br>
+   *  Note : Treated as a special case of Lookup List as it has category &
+   *  userId associated.
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandUpdateContactList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    String category = context.getRequest().getParameter("category");
+    String[] params = context.getRequest().getParameterValues("selectedList");
+    String[] names = new String[params.length];
+    int j = 0;
+
+    StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
+
+    while (st.hasMoreTokens()) {
+      names[j] = (String) st.nextToken();
+      j++;
+    }
+
+    try {
+      db = this.getConnection(context);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Admin -- > Updating Contact Types ");
+      }
+
+      ContactTypeList compareList = new ContactTypeList();
+      compareList.setCategory(category);
+      compareList.setIncludeDefinedByUser(this.getUserId(context));
+      compareList.setShowPersonal(true);
+      compareList.buildList(db);
+
+      ContactTypeList newList = new ContactTypeList(params, names);
+
+      Iterator i = compareList.iterator();
+      while (i.hasNext()) {
+        ContactType thisType = (ContactType) i.next();
+
+        //not there, disable it, leave it
+        if (newList.getElement(thisType.getId()) == null) {
+          thisType.setEnabled(db, false);
+        }
+      }
+
+      Iterator k = newList.iterator();
+      while (k.hasNext()) {
+        ContactType thisType = (ContactType) k.next();
+        thisType.setCategory(category);
+        System.out.println("Admin -- > New List " + thisType.getId() + " Category : " + category);
+        if (thisType.getId() == 0) {
+          thisType.insert(db);
+        } else {
+          thisType.setNewOrder(db);
+        }
+      }
+      //end
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    context.getRequest().setAttribute("moduleId", context.getRequest().getParameter("module"));
+    addModuleBean(context, "Configuration", "Configuration");
+    return (executeCommandEditLists(context));
+  }
+
+
+  /**
    *  Modify a selected list
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandModifyList(ActionContext context) {
-
     if (!(hasPermission(context, "admin-sysconfig-lists-edit"))) {
       return ("PermissionError");
     }
@@ -396,8 +466,13 @@ public final class Admin extends CFSModule {
 
       if (module == PermissionCategory.PERMISSION_CAT_CONTACTS) {
         if (sublist == PermissionCategory.LOOKUP_CONTACTS_TYPE) {
-          selectedList = new LookupList(db, "lookup_contact_types");
+          ContactTypeList contactTypeList = new ContactTypeList();
+          contactTypeList.setCategory(ContactType.GENERAL);
+          contactTypeList.setShowPersonal(true);
+          contactTypeList.buildList(db);
+          selectedList = contactTypeList.getLookupList("contacttype", 0);
           subTitle = "Contacts &amp; Resources: Type";
+          context.getRequest().setAttribute("category", String.valueOf(ContactType.GENERAL));
         } else if (sublist == PermissionCategory.LOOKUP_CONTACTS_EMAIL) {
           selectedList = new LookupList(db, "lookup_contactemail_types");
           subTitle = "Contacts &amp; Resources: Email Type";
@@ -420,6 +495,14 @@ public final class Admin extends CFSModule {
         } else if (sublist == PermissionCategory.LOOKUP_ACCOUNTS_REVENUE_TYPE) {
           selectedList = new LookupList(db, "lookup_revenue_types");
           subTitle = "Account Management: Revenue Type";
+        } else if (sublist == PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE) {
+          ContactTypeList contactTypeList = new ContactTypeList();
+          contactTypeList.setCategory(ContactType.ACCOUNT);
+          contactTypeList.setShowPersonal(true);
+          contactTypeList.buildList(db);
+          selectedList = contactTypeList.getLookupList("contacttype", 0);
+          subTitle = "Account Management: Contact Type";
+          context.getRequest().setAttribute("category", String.valueOf(ContactType.ACCOUNT));
         }
       }
 
@@ -461,18 +544,14 @@ public final class Admin extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandListGlobalParams(ActionContext context) {
-
     if (!(hasPermission(context, "admin-sysconfig-view"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "Configuration", "Configuration");
-
     //get the session timeout
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     int sessionTimeout = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl())).getSessionTimeout();
-    context.getRequest().setAttribute("Timeout", String.valueOf(sessionTimeout/60));
-
+    context.getRequest().setAttribute("Timeout", String.valueOf(sessionTimeout / 60));
     return ("GlobalParamsOK");
   }
 
@@ -484,11 +563,9 @@ public final class Admin extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModifyTimeout(ActionContext context) {
-
     if (!(hasPermission(context, "admin-sysconfig-view"))) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "Configuration", "Configuration");
     return ("ModifyTimeoutOK");
   }
@@ -501,13 +578,10 @@ public final class Admin extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdateTimeout(ActionContext context) {
-
     if (!(hasPermission(context, "admin-sysconfig-view"))) {
       return ("PermissionError");
     }
-
     int timeout = Integer.parseInt(context.getRequest().getParameter("timeout"));
-
     addModuleBean(context, "Configuration", "Configuration");
 
     //get the session timeout
@@ -528,9 +602,7 @@ public final class Admin extends CFSModule {
    *@since
    */
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
-
     int moduleId = Integer.parseInt(context.getRequest().getParameter("moduleId"));
-
     if (moduleId == PermissionCategory.PERMISSION_CAT_LEADS) {
       LookupList stageList = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageList);
@@ -539,6 +611,12 @@ public final class Admin extends CFSModule {
     } else if (moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS) {
       LookupList atl = new LookupList(db, "lookup_account_types");
       LookupList rtl = new LookupList(db, "lookup_revenue_types");
+      ContactTypeList contactTypeList = new ContactTypeList();
+      contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
+      contactTypeList.setCategory(ContactType.ACCOUNT);
+      contactTypeList.setShowPersonal(true);
+      contactTypeList.buildList(db);
+      context.getRequest().setAttribute("ContactTypeList", contactTypeList);
       context.getRequest().setAttribute("AccountTypeList", atl);
       context.getRequest().setAttribute("RevenueTypeList", rtl);
     } else if (moduleId == PermissionCategory.PERMISSION_CAT_CONTACTS) {
@@ -546,9 +624,13 @@ public final class Admin extends CFSModule {
       LookupList contactEmailTypeList = new LookupList(db, "lookup_contactemail_types");
       LookupList contactPhoneTypeList = new LookupList(db, "lookup_contactphone_types");
       LookupList contactAddressTypeList = new LookupList(db, "lookup_contactaddress_types");
-      LookupList ctl = new LookupList(db, "lookup_contact_types");
+      ContactTypeList contactTypeList = new ContactTypeList();
+      contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
+      contactTypeList.setCategory(ContactType.GENERAL);
+      contactTypeList.setShowPersonal(true);
+      contactTypeList.buildList(db);
+      context.getRequest().setAttribute("ContactTypeList", contactTypeList);
       context.getRequest().setAttribute("DepartmentList", departmentList);
-      context.getRequest().setAttribute("ContactTypeList", ctl);
       context.getRequest().setAttribute("ContactEmailTypeList", contactEmailTypeList);
       context.getRequest().setAttribute("ContactPhoneTypeList", contactPhoneTypeList);
       context.getRequest().setAttribute("ContactAddressTypeList", contactAddressTypeList);

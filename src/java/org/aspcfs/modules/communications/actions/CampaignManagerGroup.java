@@ -218,9 +218,11 @@ public final class CampaignManagerGroup extends CFSModule {
       thisSCL = new SearchCriteriaList(db, id);
       htmlDialog.setTitle("CFS: Campaign Manager");
 
-      htmlDialog.setRelationships(thisSCL.processDependencies(db));
 
-      if (htmlDialog.getRelationships().size() == 0) {
+      DependencyList dependencies = thisSCL.processDependencies(db);
+      htmlDialog.addMessage(dependencies.getHtmlString());
+
+      if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='/CampaignManagerGroup.do?command=Delete&id=" + id + "'");
       }

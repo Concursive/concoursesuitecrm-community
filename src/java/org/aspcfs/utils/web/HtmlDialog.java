@@ -10,7 +10,8 @@ import java.text.*;
  *
  *  Usage :<p>
  *
- *  htmlDialog.setRelationships(thisTask.processDependencies(db)); <br>
+ *  DependencyList thisList = thisTask.processDependencies(db);
+ *  htmlDialog.addMessage(thisList.getHtmlString()); <br>
  *  if (htmlDialog.getRelationships().size() == 0) {
  *  htmlDialog.setTitle("Confirm"); htmlDialog.setDeleteUrl("MyTasks.do?command=Delete&id=)
  *  }<br>
@@ -19,6 +20,7 @@ import java.text.*;
  *  htmlDialog.setHeader("Are you sure you want to delete this item:");<br>
  *  htmlDialog.addButton("Delete All", "MyTasks.do?command=Delete&id=");<br>
  *  } <p>
+ *
  *
  *
  *@author     akhi_m
@@ -41,7 +43,7 @@ public class HtmlDialog {
   private String header = "";
   private String deleteUrl = "";
   private LinkedHashMap links = new LinkedHashMap();
-  private HashMap relationships = new HashMap();
+  private StringBuffer message = null;
   private LinkedHashMap buttons = new LinkedHashMap();
   boolean showAndConfirm = true;
 
@@ -59,16 +61,6 @@ public class HtmlDialog {
    */
   public void setText(String tmp) {
     this.text = tmp;
-  }
-
-
-  /**
-   *  Sets the relationships attribute of the HtmlDialog object
-   *
-   *@param  tmp  The new relationships value
-   */
-  public void setRelationships(HashMap tmp) {
-    this.relationships = tmp;
   }
 
 
@@ -145,6 +137,26 @@ public class HtmlDialog {
 
 
   /**
+   *  Sets the message attribute of the HtmlDialog object
+   *
+   *@param  message  The new message value
+   */
+  public void setMessage(StringBuffer message) {
+    this.message = message;
+  }
+
+
+  /**
+   *  Gets the message attribute of the HtmlDialog object
+   *
+   *@return    The message value
+   */
+  public StringBuffer getMessage() {
+    return message;
+  }
+
+
+  /**
    *  Gets the title attribute of the HtmlDialog object
    *
    *@return    The title value
@@ -216,16 +228,6 @@ public class HtmlDialog {
 
 
   /**
-   *  Gets the relationships attribute of the HtmlDialog object
-   *
-   *@return    The relationships value
-   */
-  public HashMap getRelationships() {
-    return relationships;
-  }
-
-
-  /**
    *  Gets the buttons attribute of the HtmlDialog object
    *
    *@return    The buttons value
@@ -256,6 +258,19 @@ public class HtmlDialog {
 
 
   /**
+   *  Adds a feature to the Message attribute of the HtmlDialog object
+   *
+   *@param  msg  The feature to be added to the Message attribute
+   */
+  public void addMessage(String msg) {
+    if (message == null) {
+      message = new StringBuffer();
+    }
+    message.append(msg);
+  }
+
+
+  /**
    *  Gets the buttonString attribute of the HtmlDialog object
    *
    *@return    The buttonString value
@@ -271,27 +286,6 @@ public class HtmlDialog {
       buttonString.append("<input type=button name=\"" + id.toString() + "\" value=\"" + id.toString() + "\" onClick=\"" + st.toString() + "\">");
     }
     return buttonString.toString();
-  }
-
-
-  /**
-   *  Gets the relationshipString attribute of the HtmlDialog object
-   *
-   *@return    The relationshipString value
-   */
-  public String getRelationshipString() {
-    Set s = relationships.keySet();
-    Iterator i = s.iterator();
-    StringBuffer relations = new StringBuffer();
-    relations.append("<br>");
-    while (i.hasNext()) {
-      Object name = i.next();
-      relations.append("&nbsp;&nbsp;");
-      relations.append("- ");
-      relations.append(name + " (" + relationships.get(name) + ")");
-      relations.append("<br>");
-    }
-    return relations.toString();
   }
 
 
@@ -340,11 +334,11 @@ public class HtmlDialog {
           htmlString.append("<strong>" + this.getHeader() + "</strong>");
           break;
         case HtmlDialog.MIDDLE:
-          if (this.getRelationships().size() != 0) {
+          if (this.getMessage() != null) {
             htmlString.append("<table align=center cellpadding=2 cellspacing=0 border=0 width=94%");
             htmlString.append("<tr><td valign=center>");
             htmlString.append("The following Relationships depend on this object:");
-            htmlString.append(this.getRelationshipString());
+            htmlString.append(this.getMessage().toString());
             htmlString.append("</td></tr></table>");
           }
           break;

@@ -33,7 +33,6 @@ Contact Details<br>
 <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
 
-<input type="hidden" name="typeId" value="<%=ContactDetails.getTypeId()%>">
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">

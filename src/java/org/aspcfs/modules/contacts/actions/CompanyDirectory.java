@@ -157,7 +157,9 @@ public final class CompanyDirectory extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, id);
       thisContact.checkUserAccount(db);
-      htmlDialog.setRelationships(thisContact.processDependencies(db));
+      //htmlDialog.setRelationships(thisContact.processDependencies(db));
+      DependencyList dependencies = thisContact.processDependencies(db);
+      htmlDialog.addMessage(dependencies.getHtmlString());
       
       if (!thisContact.hasAccount()) {
         htmlDialog.setTitle("CFS: Confirm Delete");
@@ -207,7 +209,7 @@ public final class CompanyDirectory extends CFSModule {
 
     try {
       Contact thisEmployee = (Contact)context.getFormBean();
-      thisEmployee.setTypeId(Contact.EMPLOYEE_TYPE);
+      thisEmployee.addType(Contact.EMPLOYEE_TYPE);
       thisEmployee.setRequestItems(context.getRequest());
       thisEmployee.setEnteredBy(getUserId(context));
       thisEmployee.setModifiedBy(getUserId(context));
@@ -298,7 +300,7 @@ public final class CompanyDirectory extends CFSModule {
     boolean recordInserted = false;
 
     Contact thisEmployee = (Contact)context.getFormBean();
-    thisEmployee.setTypeId(Contact.EMPLOYEE_TYPE);
+    thisEmployee.addType(Contact.EMPLOYEE_TYPE);
     thisEmployee.setOrgId(0);
     thisEmployee.setRequestItems(context.getRequest());
     thisEmployee.setEnteredBy(getUserId(context));

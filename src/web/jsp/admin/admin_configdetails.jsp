@@ -4,12 +4,12 @@
 <jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 <a href="Admin.do">Setup</a> > 
 <a href="Admin.do?command=Config">Configure Modules</a> >
-Configuration Options<br>
+<%=PermissionCategory.getCategory()%><br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td>
-      <strong><%=PermissionCategory.getCategory()%>: Configuration Options</strong>
+      <strong>Configuration Options</strong>
     </td>
   </tr>
   

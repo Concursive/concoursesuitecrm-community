@@ -195,10 +195,9 @@ public final class Roles extends CFSModule {
       db = this.getConnection(context);
       thisRole = new Role(db, id);
       htmlDialog.setTitle("Confirm");
-
-      htmlDialog.setRelationships(thisRole.processDependencies(db));
-
-      if (htmlDialog.getRelationships().size() == 0) {
+      DependencyList dependencies = thisRole.processDependencies(db);
+      htmlDialog.addMessage(dependencies.getHtmlString());
+      if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='Roles.do?command=DeleteRole&id=" + id + "'");
       } else {

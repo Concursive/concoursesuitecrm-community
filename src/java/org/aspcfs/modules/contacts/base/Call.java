@@ -453,6 +453,19 @@ public void setAlertText(String alertText) {
   }
 
 
+  public static String getAlertDateStringLongYear(java.sql.Date alertDate) {
+    String tmp = "";
+    try {
+      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
+      formatter.applyPattern("M/d/yyyy");
+      return formatter.format(alertDate);
+    }
+    catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+  
+  
   /**
    *  Gets the entered attribute of the Call object
    *

@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.StateSelect,com.darkhorseventures.webutils.CountrySelect" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*" %>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="com.darkhorseventures.cfsbase.ContactTypeList" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -12,6 +12,7 @@
 <%@ include file="initPage.jsp" %>
 
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 
 <script language="JavaScript">
   function doCheck(form) {
@@ -32,15 +33,27 @@
 			message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
 			formTest = false;
 		}
-      
       <%}%>
-      
+      if(document.forms[0].contactcategory[1].checked && document.forms[0].orgId.value == '-1'){
+       message += "- Make sure you select an account.\r\n";
+			 formTest = false;
+      }
       if (formTest == false) {
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
-      } else {
-        return true;
+      }else {
+        var test = document.forms[0].selectedList;
+        if (test != null) {
+          return selectAllOptions(document.forms[0].selectedList);
+        }
       }
+    }
+    function setCategoryPopContactType(selectedId, contactId){
+      var category = 'general';
+      if(document.forms[0].contactcategory[1].checked){
+        category = 'accounts';
+      }
+      popContactTypeSelectMultiple(selectedId, category, contactId); 
     }
 </script>
 
@@ -107,11 +120,35 @@ Modify Contact<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Contact Type
+       Contact Category
     </td>
-    <td valign=center>
-      <%= ContactTypeList.getHtmlSelect("typeId", ContactDetails.getTypeId()) %>
+    <td>
+      <input type="radio" name="contactcategory" value="1" <%= ContactDetails.getOrgId() == -1 ? " checked":""%> onclick="javascript:document.forms[0].orgId.selectedIndex = 0;"> General Contact<br>
+      <input type="radio" name="contactcategory" value="2" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>Associated with Account &nbsp; <%= OrgList.getHtmlSelectDefaultNone("orgId", ContactDetails.getOrgId())%>
     </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel" valign="top">
+      Contact Type(s)
+    </td>
+  	<td valign=center>
+      <select multiple name="selectedList" id="selectedList" size="5">
+      <dhv:evaluate exp="<%=ContactDetails.getTypes().isEmpty()%>">
+        <option value="-1">None Selected</option>
+      </dhv:evaluate>
+      <dhv:evaluate exp="<%=!(ContactDetails.getTypes().isEmpty())%>">
+       <%
+        Iterator i = ContactDetails.getTypes().iterator();
+        while (i.hasNext()) {
+          LookupElement thisElt = (LookupElement)i.next();
+      %>
+        <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
+      <%}%>
+      </dhv:evaluate>
+      </select>
+      <input type="hidden" name="previousSelection" value="">
+      <a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);">Select</a>
+  </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -149,28 +186,6 @@ Modify Contact<br>
       <font color="red">-</font> <%= showAttribute(request, "lastcompanyError") %>
     </td>
   </tr>
-  
-  <dhv:evaluate exp="<%= (ContactDetails.getOrgId() == -1) %>">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Associated with Account
-    </td>
-    <td valign=center>
-    <%= OrgList.getHtmlSelectDefaultNone("orgId")%>
-    </td>
-  </tr>  
-  </dhv:evaluate>
-  
-  <dhv:evaluate exp="<%= (ContactDetails.getOrgId() > -1) %>">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Associated with Account
-    </td>
-    <td valign=center>
-    <%= OrgList.getHtmlSelectDefaultNone("orgId", ContactDetails.getOrgId())%>
-    </td>
-  </tr>  
-  </dhv:evaluate>
   
   <tr class="containerBody">
     <td nowrap class="formLabel">

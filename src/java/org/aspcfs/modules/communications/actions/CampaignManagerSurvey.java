@@ -588,9 +588,10 @@ public final class CampaignManagerSurvey extends CFSModule {
       thisSurvey = new Survey(db, id);
       htmlDialog.setTitle("CFS: Campaign Manager");
 
-      htmlDialog.setRelationships(thisSurvey.processDependencies(db));
+      DependencyList dependencies = thisSurvey.processDependencies(db);
+      htmlDialog.addMessage(dependencies.getHtmlString());
 
-      if (htmlDialog.getRelationships().size() == 0) {
+      if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='CampaignManagerSurvey.do?command=Delete&id=" + id + "'");
       } else {

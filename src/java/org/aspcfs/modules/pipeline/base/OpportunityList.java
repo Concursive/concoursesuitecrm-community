@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 // The createFilter method and the prepareFilter method need to have the same
 // number of parameters if modified.
 
@@ -14,22 +14,22 @@ import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
 
 /**
- *  Contains a list of contacts... currently used to build the list from the
+ *  Contains a list of opportunities... currently used to build the list from the
  *  database with any of the parameters to limit the results.
  *
- *@author     mrajkowski
+ *@author     chris
  *@created    August 29, 2001
  *@version    $Id: OpportunityList.java,v 1.7 2001/10/03 21:26:46 mrajkowski Exp
  *      $
  */
 public class OpportunityList extends Vector {
 
-  public static final int TRUE = 1;
-  public static final int FALSE = 0;
+  public final static int TRUE = 1;
+  public final static int FALSE = 0;
   protected int includeEnabled = 1;
-  
-  public static final String tableName = "opportunity";
-  public static final String uniqueField = "opp_id";
+
+  public final static String tableName = "opportunity";
+  public final static String uniqueField = "opp_id";
   protected java.sql.Timestamp lastAnchor = null;
   protected java.sql.Timestamp nextAnchor = null;
   protected int syncType = Constants.NO_SYNC;
@@ -52,8 +52,9 @@ public class OpportunityList extends Vector {
   protected java.sql.Date closeDateEnd = null;
   protected int stage = -1;
   private boolean queryOpenOnly = false;
-  private boolean buildComponentInfo = false;  
+  private boolean buildComponentInfo = false;
   private int typeId = 0;
+
 
   /**
    *  Constructor for the ContactList object
@@ -93,29 +94,67 @@ public class OpportunityList extends Vector {
   public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
-  
-public int getTypeId() {
-	return typeId;
-}
-public void setTypeId(int typeId) {
-	this.typeId = typeId;
-}
-  
+
+
+  /**
+   *  Gets the typeId attribute of the OpportunityList object
+   *
+   *@return    The typeId value
+   */
+  public int getTypeId() {
+    return typeId;
+  }
+
+
+  /**
+   *  Sets the typeId attribute of the OpportunityList object
+   *
+   *@param  typeId  The new typeId value
+   */
+  public void setTypeId(int typeId) {
+    this.typeId = typeId;
+  }
+
+
+  /**
+   *  Sets the typeId attribute of the OpportunityList object
+   *
+   *@param  typeId  The new typeId value
+   */
   public void setTypeId(String typeId) {
-	this.typeId = Integer.parseInt(typeId);
-}
-  
+    this.typeId = Integer.parseInt(typeId);
+  }
 
+
+
+  /**
+   *  Gets the stage attribute of the OpportunityList object
+   *
+   *@return    The stage value
+   */
   public int getStage() {
-	return stage;
-}
-public void setStage(int stage) {
-	this.stage = stage;
-}
+    return stage;
+  }
 
-public void setStage(String stage) {
-	this.stage = Integer.parseInt(stage);
-}
+
+  /**
+   *  Sets the stage attribute of the OpportunityList object
+   *
+   *@param  stage  The new stage value
+   */
+  public void setStage(int stage) {
+    this.stage = stage;
+  }
+
+
+  /**
+   *  Sets the stage attribute of the OpportunityList object
+   *
+   *@param  stage  The new stage value
+   */
+  public void setStage(String stage) {
+    this.stage = Integer.parseInt(stage);
+  }
 
 
   /**
@@ -127,17 +166,37 @@ public void setStage(String stage) {
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
   }
-  
+
+
+  /**
+   *  Sets the contactId attribute of the OpportunityList object
+   *
+   *@param  tmp  The new contactId value
+   */
   public void setContactId(int tmp) {
     this.contactId = tmp;
   }
 
+
+  /**
+   *  Gets the buildComponentInfo attribute of the OpportunityList object
+   *
+   *@return    The buildComponentInfo value
+   */
   public boolean getBuildComponentInfo() {
     return buildComponentInfo;
   }
+
+
+  /**
+   *  Sets the buildComponentInfo attribute of the OpportunityList object
+   *
+   *@param  buildComponentInfo  The new buildComponentInfo value
+   */
   public void setBuildComponentInfo(boolean buildComponentInfo) {
     this.buildComponentInfo = buildComponentInfo;
   }
+
 
   /**
    *  Sets the Description attribute of the OpportunityList object
@@ -167,13 +226,27 @@ public void setStage(String stage) {
   public void setAccountOwnerIdRange(String accountOwnerIdRange) {
     this.accountOwnerIdRange = accountOwnerIdRange;
   }
-  
+
+
+  /**
+   *  Gets the includeEnabled attribute of the OpportunityList object
+   *
+   *@return    The includeEnabled value
+   */
   public int getIncludeEnabled() {
-	return includeEnabled;
+    return includeEnabled;
   }
+
+
+  /**
+   *  Sets the includeEnabled attribute of the OpportunityList object
+   *
+   *@param  includeEnabled  The new includeEnabled value
+   */
   public void setIncludeEnabled(int includeEnabled) {
-	this.includeEnabled = includeEnabled;
+    this.includeEnabled = includeEnabled;
   }
+
 
   /**
    *  Sets the OwnerIdRange attribute of the OpportunityList object
@@ -183,25 +256,87 @@ public void setStage(String stage) {
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
   }
-  
-  public void setAlertRangeStart(java.sql.Date tmp) { this.alertRangeStart = tmp; }
-  public void setAlertRangeStart(String tmp) { 
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the OpportunityList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(java.sql.Date tmp) {
+    this.alertRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the OpportunityList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(String tmp) {
     this.alertRangeStart = java.sql.Date.valueOf(tmp);
   }
-  public void setAlertRangeEnd(java.sql.Date tmp) { this.alertRangeEnd = tmp; }
-  public void setAlertRangeEnd(String tmp) { 
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the OpportunityList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(java.sql.Date tmp) {
+    this.alertRangeEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the OpportunityList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = java.sql.Date.valueOf(tmp);
   }
-  
-  public java.sql.Date getAlertRangeStart() { return alertRangeStart; }
-  public java.sql.Date getAlertRangeEnd() { return alertRangeEnd; }
-  
+
+
+  /**
+   *  Gets the alertRangeStart attribute of the OpportunityList object
+   *
+   *@return    The alertRangeStart value
+   */
+  public java.sql.Date getAlertRangeStart() {
+    return alertRangeStart;
+  }
+
+
+  /**
+   *  Gets the alertRangeEnd attribute of the OpportunityList object
+   *
+   *@return    The alertRangeEnd value
+   */
+  public java.sql.Date getAlertRangeEnd() {
+    return alertRangeEnd;
+  }
+
+
+  /**
+   *  Gets the queryOpenOnly attribute of the OpportunityList object
+   *
+   *@return    The queryOpenOnly value
+   */
   public boolean getQueryOpenOnly() {
     return queryOpenOnly;
   }
+
+
+  /**
+   *  Sets the queryOpenOnly attribute of the OpportunityList object
+   *
+   *@param  queryOpenOnly  The new queryOpenOnly value
+   */
   public void setQueryOpenOnly(boolean queryOpenOnly) {
     this.queryOpenOnly = queryOpenOnly;
   }
+
 
   /**
    *  Sets the HasAlertDate attribute of the OpportunityList object
@@ -212,6 +347,7 @@ public void setStage(String stage) {
     this.hasAlertDate = tmp;
   }
 
+
   /**
    *  Sets the AlertDate attribute of the OpportunityList object
    *
@@ -220,20 +356,64 @@ public void setStage(String stage) {
   public void setAlertDate(java.sql.Date tmp) {
     this.alertDate = tmp;
   }
-  
+
+
+  /**
+   *  Gets the tableName attribute of the OpportunityList object
+   *
+   *@return    The tableName value
+   */
   public String getTableName() {
     return tableName;
   }
-  
+
+
+  /**
+   *  Gets the uniqueField attribute of the OpportunityList object
+   *
+   *@return    The uniqueField value
+   */
   public String getUniqueField() {
     return uniqueField;
   }
 
-public java.sql.Date getCloseDateStart() { return closeDateStart; }
-public java.sql.Date getCloseDateEnd() { return closeDateEnd; }
-public void setCloseDateStart(java.sql.Date tmp) { this.closeDateStart = tmp; }
 
-public void setCloseDateStart(String tmp) {
+  /**
+   *  Gets the closeDateStart attribute of the OpportunityList object
+   *
+   *@return    The closeDateStart value
+   */
+  public java.sql.Date getCloseDateStart() {
+    return closeDateStart;
+  }
+
+
+  /**
+   *  Gets the closeDateEnd attribute of the OpportunityList object
+   *
+   *@return    The closeDateEnd value
+   */
+  public java.sql.Date getCloseDateEnd() {
+    return closeDateEnd;
+  }
+
+
+  /**
+   *  Sets the closeDateStart attribute of the OpportunityList object
+   *
+   *@param  tmp  The new closeDateStart value
+   */
+  public void setCloseDateStart(java.sql.Date tmp) {
+    this.closeDateStart = tmp;
+  }
+
+
+  /**
+   *  Sets the closeDateStart attribute of the OpportunityList object
+   *
+   *@param  tmp  The new closeDateStart value
+   */
+  public void setCloseDateStart(String tmp) {
     try {
       java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
       closeDateStart = new java.sql.Date(new java.util.Date().getTime());
@@ -241,11 +421,25 @@ public void setCloseDateStart(String tmp) {
     } catch (Exception e) {
       closeDateStart = null;
     }
-}
-    
-public void setCloseDateEnd(java.sql.Date tmp) { this.closeDateEnd = tmp; }
+  }
 
-public void setCloseDateEnd(String tmp) {
+
+  /**
+   *  Sets the closeDateEnd attribute of the OpportunityList object
+   *
+   *@param  tmp  The new closeDateEnd value
+   */
+  public void setCloseDateEnd(java.sql.Date tmp) {
+    this.closeDateEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the closeDateEnd attribute of the OpportunityList object
+   *
+   *@param  tmp  The new closeDateEnd value
+   */
+  public void setCloseDateEnd(String tmp) {
     try {
       java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
       closeDateEnd = new java.sql.Date(new java.util.Date().getTime());
@@ -253,7 +447,8 @@ public void setCloseDateEnd(String tmp) {
     } catch (Exception e) {
       closeDateEnd = null;
     }
-}
+  }
+
 
   /**
    *  Sets the owner attribute of the OpportunityList object
@@ -346,6 +541,86 @@ public void setCloseDateEnd(String tmp) {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public HashMap queryRecordCount(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    HashMap events = new HashMap();
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlTail = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "SELECT alertdate, count(*) " +
+        "FROM opportunity x " +
+        "WHERE x.opp_id > -1 ");
+
+    sqlTail.append("GROUP BY alertdate ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      String alertdate = Call.getAlertDateStringLongYear(rs.getDate("alertdate"));
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("OppList --> Added Days Calls " + alertdate + ":" + rs.getInt("count"));
+      }
+      events.put(alertdate, new Integer(rs.getInt("count")));
+    }
+    rs.close();
+    pst.close();
+    return events;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildShortList(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "SELECT x.opp_id, x.description, org.name as acct_name, x.alertdate, x.alert " +
+        "FROM opportunity x " +
+        "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
+        "WHERE opp_id > -1 ");
+
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      Opportunity thisOpp = new Opportunity();
+      thisOpp.setId(rs.getInt("opp_id"));
+      thisOpp.setDescription(rs.getString("description"));
+      thisOpp.setAccountName(rs.getString("acct_name"));
+      thisOpp.setAlertDate(rs.getDate("alertdate"));
+      thisOpp.setAlertText(rs.getString("alert"));
+      this.add(thisOpp);
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
    *  Builds a list of contacts based on several parameters. The parameters are
    *  set after this object is constructed, then the buildList method is called
    *  to generate the list.
@@ -367,13 +642,13 @@ public void setCloseDateEnd(String tmp) {
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-     "SELECT COUNT(*) AS recordcount " +
-      "FROM opportunity_header x " +
-      "LEFT JOIN opportunity_component oc on (x.opp_id = oc.opp_id) " +
-      "WHERE x.opp_id > -1 ");
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM opportunity_header x " +
+        "LEFT JOIN opportunity_component oc on (x.opp_id = oc.opp_id) " +
+        "WHERE x.opp_id > -1 ");
 
     createFilter(sqlFilter);
-    
+
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -386,7 +661,7 @@ public void setCloseDateEnd(String tmp) {
       }
       pst.close();
       rs.close();
-      
+
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -402,7 +677,7 @@ public void setCloseDateEnd(String tmp) {
         rs.close();
         pst.close();
       }
-      
+
       pagedListInfo.setDefaultSort("x.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
@@ -416,7 +691,7 @@ public void setCloseDateEnd(String tmp) {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-      " x.*, oc.*, y.description as stagename, org.name as acct_name, org.enabled as accountenabled, " +
+        " x.*, oc.*, y.description as stagename, org.name as acct_name, org.enabled as accountenabled, " +
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, oc.description as comp_desc, oc.id as comp_id, " +
         "ct.namelast as last_name, ct.namefirst as first_name, " +
         "ct.company as ctcompany, " +
@@ -430,12 +705,12 @@ public void setCloseDateEnd(String tmp) {
         "LEFT JOIN contact ct_mb ON (x.modifiedby = ct_mb.user_id) " +
         "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
         "lookup_stage y " +
-        "WHERE y.code = oc.stage " +        
+        "WHERE y.code = oc.stage " +
         "AND x.opp_id > 0 ");
     pst = db.prepareStatement(
-      sqlSelect.toString() + 
-      sqlFilter.toString() + 
-      sqlOrder.toString());
+        sqlSelect.toString() +
+        sqlFilter.toString() +
+        sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -456,7 +731,7 @@ public void setCloseDateEnd(String tmp) {
         thisOpp.retrieveComponentCount(db);
         thisOpp.buildTotal(db);
       }
-      this.addElement(thisOpp);
+      this.add(thisOpp);
     }
     rs.close();
     pst.close();
@@ -470,7 +745,7 @@ public void setCloseDateEnd(String tmp) {
    *@since       1.2
    */
   public void addIgnoreTypeId(String tmp) {
-    ignoreTypeIdList.addElement(tmp);
+    ignoreTypeIdList.add(tmp);
   }
 
 
@@ -481,9 +756,18 @@ public void setCloseDateEnd(String tmp) {
    *@since       1.2
    */
   public void addIgnoreTypeId(int tmp) {
-    ignoreTypeIdList.addElement("" + tmp);
+    ignoreTypeIdList.add(String.valueOf(tmp));
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newOwner          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
     Iterator i = this.iterator();
@@ -494,7 +778,8 @@ public void setCloseDateEnd(String tmp) {
       }
     }
     return total;
-  }    
+  }
+
 
   /**
    *  Description of the Method
@@ -509,6 +794,7 @@ public void setCloseDateEnd(String tmp) {
       thisOpportunity.delete(db);
     }
   }
+
 
   /**
    *  Builds a base SQL where statement for filtering records to be used by
@@ -562,15 +848,15 @@ public void setCloseDateEnd(String tmp) {
     if (alertDate != null) {
       sqlFilter.append("AND oc.alertdate = ? ");
     }
-    
+
     if (alertRangeStart != null) {
       sqlFilter.append("AND oc.alertdate >= ? ");
     }
-    
+
     if (alertRangeEnd != null) {
       sqlFilter.append("AND oc.alertdate <= ? ");
     }
-    
+
     if (closeDateStart != null) {
       sqlFilter.append("AND oc.closedate >= ? ");
     }
@@ -593,19 +879,19 @@ public void setCloseDateEnd(String tmp) {
     if (units != null) {
       sqlFilter.append("AND oc.units = ? ");
     }
-    
+
     if (includeEnabled == TRUE || includeEnabled == FALSE) {
       sqlFilter.append("AND oc.enabled = ? ");
     }
-    
+
     if (stage != -1) {
       sqlFilter.append("AND oc.stage = ? ");
     }
-    
+
     if (queryOpenOnly) {
       sqlFilter.append("AND oc.closed IS NULL ");
     }
-    
+
     if (typeId > 0) {
       sqlFilter.append("AND oc.id IN (select ocl.opp_id from opportunity_component_levels ocl where ocl.type_id = ?) ");
     }
@@ -650,19 +936,19 @@ public void setCloseDateEnd(String tmp) {
     if (alertDate != null) {
       pst.setDate(++i, alertDate);
     }
-    
+
     if (alertRangeStart != null) {
       pst.setDate(++i, alertRangeStart);
     }
-    
+
     if (alertRangeEnd != null) {
       pst.setDate(++i, alertRangeEnd);
     }
-    
+
     if (closeDateStart != null) {
       pst.setDate(++i, closeDateStart);
     }
-    
+
     if (closeDateEnd != null) {
       pst.setDate(++i, closeDateEnd);
     }
@@ -674,33 +960,43 @@ public void setCloseDateEnd(String tmp) {
     if (units != null) {
       pst.setString(++i, units);
     }
-    
+
     if (includeEnabled == TRUE) {
       pst.setBoolean(++i, true);
     } else if (includeEnabled == FALSE) {
       pst.setBoolean(++i, false);
     }
-    
+
     if (stage != -1) {
       pst.setInt(++i, stage);
     }
-    
+
     if (typeId > 0) {
       pst.setInt(++i, typeId);
     }
-    
+
     return i;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  moduleId          Description of the Parameter
+   *@param  itemId            Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
     int count = 0;
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "SELECT COUNT(*) as itemcount " +
-      "FROM opportunity_header o " +
-      "LEFT JOIN opportunity_component oc ON (o.opp_id = oc.opp_id) " +
-      "WHERE o.opp_id > 0 ");
-    if (moduleId == Constants.ACCOUNTS) {  
+        "SELECT COUNT(*) as itemcount " +
+        "FROM opportunity_header o " +
+        "LEFT JOIN opportunity_component oc ON (o.opp_id = oc.opp_id) " +
+        "WHERE o.opp_id > 0 ");
+    if (moduleId == Constants.ACCOUNTS) {
       sql.append("AND o.acctlink = ? ");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());

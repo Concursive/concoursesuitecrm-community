@@ -50,11 +50,10 @@ public class Task extends GenericBean {
   private boolean hasLinks = false;
   private String contactName = null;
   private String ownerName = null;
-  private HashMap dependencyList = new HashMap();
-  
+
   private Contact contact = null;
   private Ticket ticket = null;
-  
+
   private boolean hasEnabledOwnerAccount = true;
   private boolean hasEnabledLinkAccount = true;
 
@@ -141,10 +140,46 @@ public class Task extends GenericBean {
     this.enteredBy = enteredBy;
   }
 
-  public boolean getHasEnabledOwnerAccount() { return hasEnabledOwnerAccount; }
-  public boolean getHasEnabledLinkAccount() { return hasEnabledLinkAccount; }
-  public void setHasEnabledOwnerAccount(boolean tmp) { this.hasEnabledOwnerAccount = tmp; }
-  public void setHasEnabledLinkAccount(boolean tmp) { this.hasEnabledLinkAccount = tmp; }
+
+  /**
+   *  Gets the hasEnabledOwnerAccount attribute of the Task object
+   *
+   *@return    The hasEnabledOwnerAccount value
+   */
+  public boolean getHasEnabledOwnerAccount() {
+    return hasEnabledOwnerAccount;
+  }
+
+
+  /**
+   *  Gets the hasEnabledLinkAccount attribute of the Task object
+   *
+   *@return    The hasEnabledLinkAccount value
+   */
+  public boolean getHasEnabledLinkAccount() {
+    return hasEnabledLinkAccount;
+  }
+
+
+  /**
+   *  Sets the hasEnabledOwnerAccount attribute of the Task object
+   *
+   *@param  tmp  The new hasEnabledOwnerAccount value
+   */
+  public void setHasEnabledOwnerAccount(boolean tmp) {
+    this.hasEnabledOwnerAccount = tmp;
+  }
+
+
+  /**
+   *  Sets the hasEnabledLinkAccount attribute of the Task object
+   *
+   *@param  tmp  The new hasEnabledLinkAccount value
+   */
+  public void setHasEnabledLinkAccount(boolean tmp) {
+    this.hasEnabledLinkAccount = tmp;
+  }
+
 
   /**
    *  Sets the enteredBy attribute of the Task object
@@ -238,8 +273,26 @@ public class Task extends GenericBean {
     this.sharing = Integer.parseInt(sharing);
   }
 
-  public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
-  public void setModifiedBy(String tmp) { this.modifiedBy = Integer.parseInt(tmp); }
+
+  /**
+   *  Sets the modifiedBy attribute of the Task object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(int tmp) {
+    this.modifiedBy = tmp;
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the Task object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
 
   /**
    *  Sets the complete attribute of the Task object
@@ -290,8 +343,25 @@ public class Task extends GenericBean {
     this.owner = owner;
   }
 
-  public void setCategoryId(int tmp) { this.categoryId = tmp; }
-  public void setCategoryId(String tmp) { this.setCategoryId(Integer.parseInt(tmp)); }
+
+  /**
+   *  Sets the categoryId attribute of the Task object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the Task object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    this.setCategoryId(Integer.parseInt(tmp));
+  }
 
 
   /**
@@ -473,7 +543,13 @@ public class Task extends GenericBean {
   public java.sql.Timestamp getModified() {
     return modified;
   }
-  
+
+
+  /**
+   *  Gets the modifiedBy attribute of the Task object
+   *
+   *@return    The modifiedBy value
+   */
   public int getModifiedBy() {
     return modifiedBy;
   }
@@ -572,6 +648,24 @@ public class Task extends GenericBean {
 
 
   /**
+   *  Gets the alertDateStringLongYear attribute of the Task class
+   *
+   *@param  dueDate  Description of the Parameter
+   *@return          The alertDateStringLongYear value
+   */
+  public static String getAlertDateStringLongYear(java.sql.Date dueDate) {
+    String tmp = "";
+    try {
+      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
+      formatter.applyPattern("M/d/yyyy");
+      return formatter.format(dueDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+
+  /**
    *  Gets the contactId attribute of the Task object
    *
    *@return    The contactId value
@@ -626,16 +720,23 @@ public class Task extends GenericBean {
     }
     return toReturn;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
 
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM access " +
-      "WHERE user_id = ? AND enabled = ? ");
+        "SELECT * " +
+        "FROM access " +
+        "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -646,17 +747,24 @@ public class Task extends GenericBean {
     }
     rs.close();
     pst.close();
-  }  
-  
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void checkEnabledLinkAccount(Connection db) throws SQLException {
     if (this.getContactId() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
 
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM access " +
-      "WHERE user_id = ? AND enabled = ? ");
+        "SELECT * " +
+        "FROM access " +
+        "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getContactId());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -667,7 +775,7 @@ public class Task extends GenericBean {
     }
     rs.close();
     pst.close();
-  }  
+  }
 
 
   /**
@@ -688,8 +796,17 @@ public class Task extends GenericBean {
   public int getOwner() {
     return owner;
   }
-  
-  public int getCategoryId() { return categoryId; }
+
+
+  /**
+   *  Gets the categoryId attribute of the Task object
+   *
+   *@return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
+  }
+
 
   /**
    *  Gets the ownerName attribute of the Task object
@@ -796,6 +913,12 @@ public class Task extends GenericBean {
     return entered;
   }
 
+
+  /**
+   *  Gets the enteredString attribute of the Task object
+   *
+   *@return    The enteredString value
+   */
   public String getEnteredString() {
     String tmp = "";
     try {
@@ -804,6 +927,7 @@ public class Task extends GenericBean {
     }
     return tmp;
   }
+
 
   /**
    *  Gets the id attribute of the Task object
@@ -883,7 +1007,6 @@ public class Task extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  thisId            Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
@@ -975,7 +1098,7 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
-      
+
       sql = "INSERT INTO tasklink_contact " +
           "(task_id, contact_id) " +
           "VALUES (?, ?) ";
@@ -1003,9 +1126,10 @@ public class Task extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap processDependencies(Connection db) throws SQLException {
+  public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
     String sql = null;
+    DependencyList dependencyList = new DependencyList();
     try {
       sql = "SELECT count(*) as linkcount " +
           "FROM tasklink_contact " +
@@ -1015,8 +1139,13 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        if (rs.getInt("linkcount") != 0) {
-          dependencyList.put("Contacts", new Integer(rs.getInt("linkcount")));
+         int linkcount = rs.getInt("linkcount");
+        if (linkcount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("Contacts");
+          thisDependency.setCount(linkcount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
         }
       }
       rs.close();
@@ -1030,13 +1159,18 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        if (rs.getInt("linkcount") != 0) {
-          dependencyList.put("Tickets", new Integer(rs.getInt("linkcount")));
+        int linkcount = rs.getInt("linkcount") ;
+        if (linkcount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("Tickets");
+          thisDependency.setCount(linkcount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
         }
       }
       rs.close();
       pst.close();
-      
+
       sql = "SELECT count(*) as linkcount " +
           "FROM tasklink_project " +
           "WHERE task_id = ? ";
@@ -1045,8 +1179,13 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        if (rs.getInt("linkcount") != 0) {
-          dependencyList.put("Projects", new Integer(rs.getInt("linkcount")));
+         int linkcount = rs.getInt("linkcount") ;
+        if (linkcount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("Projects");
+          thisDependency.setCount(linkcount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
         }
       }
       rs.close();
@@ -1072,9 +1211,9 @@ public class Task extends GenericBean {
     try {
       db.setAutoCommit(false);
       deleteRelationships(db);
-      String sql = 
-        "DELETE from task " +
-        "WHERE task_id = ? ";
+      String sql =
+          "DELETE from task " +
+          "WHERE task_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(1, this.getId());
       pst.execute();
@@ -1094,7 +1233,6 @@ public class Task extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  pst               Description of the Parameter
    *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
@@ -1118,13 +1256,13 @@ public class Task extends GenericBean {
       pst = db.prepareStatement(sql);
       pst.setInt(1, this.getId());
       pst.execute();
-      
+
       sql = "DELETE from tasklink_project " +
           "WHERE task_id = ? ";
       pst = db.prepareStatement(sql);
       pst.setInt(1, this.getId());
       pst.execute();
-      
+
       if (commit) {
         db.commit();
       }
@@ -1229,7 +1367,6 @@ public class Task extends GenericBean {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
       age = java.lang.Math.round(ageCheck);
     }
-    
   }
 
 
@@ -1255,6 +1392,14 @@ public class Task extends GenericBean {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  projectId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void insertProjectLink(Connection db, int projectId) throws SQLException {
     String sql = "INSERT INTO tasklink_project " +
         "(task_id, project_id) " +

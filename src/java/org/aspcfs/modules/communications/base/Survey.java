@@ -120,6 +120,7 @@ public class Survey extends SurveyBase {
     return tmp;
   }
 
+
   /**
    *  Sets the requestItems attribute of the Survey object
    *
@@ -604,10 +605,10 @@ public class Survey extends SurveyBase {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap processDependencies(Connection db) throws SQLException {
+  public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
     String sql = "";
-    HashMap dependencyList = new HashMap();
+    DependencyList dependencyList = new DependencyList();
     try {
       db.setAutoCommit(false);
       sql = "SELECT COUNT(*) AS survey_count " +
@@ -619,8 +620,13 @@ public class Survey extends SurveyBase {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        if (rs.getInt("survey_count") != 0) {
-          dependencyList.put("Campaigns", new Integer(rs.getInt("survey_count")));
+        int surveycount = rs.getInt("survey_count") ;
+        if (surveycount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("Campaigns");
+          thisDependency.setCount(surveycount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
         }
       }
 

@@ -9,13 +9,20 @@ import java.sql.*;
  *
  *@author     mrajkowski
  *@created    August 29, 2001
- *@version    $Id$
+ *@version    $Id: ContactType.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski Exp
+ *      $
  */
 public class ContactType {
+
+  public final static int GENERAL = 0;
+  public final static int ACCOUNT = 1;
 
   private int id = 0;
   private String description = null;
   private boolean enabled = true;
+  private int category = -1;
+  private int userId = -1;
+  private int level = 0;
 
 
   /**
@@ -23,8 +30,7 @@ public class ContactType {
    *
    *@since    1.1
    */
-  public ContactType() {
-  }
+  public ContactType() { }
 
 
   /**
@@ -38,6 +44,11 @@ public class ContactType {
     id = rs.getInt("code");
     description = rs.getString("description");
     enabled = rs.getBoolean("enabled");
+    category = rs.getInt("category");
+    userId = rs.getInt("user_id");
+    if (rs.wasNull()) {
+      userId = -1;
+    }
   }
 
 
@@ -75,6 +86,76 @@ public class ContactType {
 
 
   /**
+   *  Sets the userId attribute of the ContactType object
+   *
+   *@param  userId  The new user_id value
+   */
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
+
+
+  /**
+   *  Sets the category attribute of the ContactType object
+   *
+   *@param  category  The new category value
+   */
+  public void setCategory(int category) {
+    this.category = category;
+  }
+
+
+  /**
+   *  Sets the category attribute of the ContactType object
+   *
+   *@param  category  The new category value
+   */
+  public void setCategory(String category) {
+    this.category = Integer.parseInt(category);
+  }
+
+
+  /**
+   *  Sets the level attribute of the ContactType object
+   *
+   *@param  level  The new level value
+   */
+  public void setLevel(int level) {
+    this.level = level;
+  }
+
+
+  /**
+   *  Gets the level attribute of the ContactType object
+   *
+   *@return    The level value
+   */
+  public int getLevel() {
+    return level;
+  }
+
+
+  /**
+   *  Gets the userId attribute of the ContactType object
+   *
+   *@return    The userId value
+   */
+  public int getUserId() {
+    return userId;
+  }
+
+
+  /**
+   *  Gets the category attribute of the ContactType object
+   *
+   *@return    The category value
+   */
+  public int getCategory() {
+    return category;
+  }
+
+
+  /**
    *  Gets the Id attribute of the ContactType object
    *
    *@return    The Id value
@@ -104,6 +185,107 @@ public class ContactType {
    */
   public boolean getEnabled() {
     return enabled;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the ContactType object
+   *
+   *@param  db                The new enabled value
+   *@param  tmp               The new enabled value
+   *@exception  SQLException  Description of the Exception
+   */
+  public void setEnabled(Connection db, boolean tmp) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Contact Type ID not specified");
+    }
+    try {
+      db.setAutoCommit(false);
+      PreparedStatement pst = db.prepareStatement(
+          "UPDATE lookup_contact_types " +
+          "SET enabled = ? " +
+          "WHERE code = ? ");
+      int i = 0;
+      pst.setBoolean(++i, tmp);
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+  }
+
+
+  /**
+   *  Inserts a Contact Type in the DB.
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insert(Connection db) throws SQLException {
+    String sql = null;
+
+    try {
+      db.setAutoCommit(false);
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(
+          "INSERT INTO lookup_contact_types " +
+          "(description, level, enabled, category" + (userId > -1 ? ", user_id" : "") + ") " +
+          "VALUES (?, ?, ?, ?" + (userId > -1 ? ", ?" : "") + ") ");
+      pst.setString(++i, this.getDescription());
+      pst.setInt(++i, this.getLevel());
+      pst.setBoolean(++i, true);
+      pst.setInt(++i, category);
+      if (userId > -1) {
+        pst.setInt(++i, userId);
+      }
+      pst.execute();
+      pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return true;
+  }
+
+
+  /**
+   *  Sets the newOrder attribute of the ContactType object
+   *
+   *@param  db                The new newOrder value
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int setNewOrder(Connection db) throws SQLException {
+    int resultCount = 0;
+
+    if (this.getId() == 0) {
+      throw new SQLException("ContactType Id not specified.");
+    }
+
+    PreparedStatement pst = null;
+    int i = 0;
+
+    pst = db.prepareStatement("UPDATE lookup_contact_types " +
+        "SET level = ? " +
+        "WHERE code = ? ");
+    pst.setInt(++i, this.getLevel());
+    pst.setInt(++i, this.getId());
+
+    resultCount = pst.executeUpdate();
+    pst.close();
+
+    return resultCount;
   }
 
 }

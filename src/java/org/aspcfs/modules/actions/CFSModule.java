@@ -659,16 +659,16 @@ public class CFSModule {
     if (itemObject instanceof Contact) {
       Contact thisContact = (Contact) itemObject;
 
-      if (thisContact.getTypeId() == Contact.EMPLOYEE_TYPE) {
+      if (thisContact.hasType(Contact.EMPLOYEE_TYPE)) {
         thisItem = new RecentItem(
             RecentItem.EMPLOYEE,
             thisContact.getNameFirstLast(),
-            "/CompanyDirectory.do?command=EmployeeDetails&empid=" + thisContact.getId());
+            "CompanyDirectory.do?command=EmployeeDetails&empid=" + thisContact.getId());
       } else {
         thisItem = new RecentItem(
             RecentItem.CONTACT,
             thisContact.getNameFirstLast(),
-            "/ExternalContacts.do?command=ContactDetails&id=" + thisContact.getId());
+            "ExternalContacts.do?command=ContactDetails&id=" + thisContact.getId());
       }
 
     } else if (itemObject instanceof Organization) {
@@ -676,20 +676,20 @@ public class CFSModule {
       thisItem = new RecentItem(
           RecentItem.ACCOUNT,
           thisOrganization.getName(),
-          "/Accounts.do?command=Details&orgId=" + thisOrganization.getOrgId());
+          "Accounts.do?command=Details&orgId=" + thisOrganization.getOrgId());
 
     } else if (itemObject instanceof User) {
       User thisUser = (User) itemObject;
       thisItem = new RecentItem(
           RecentItem.USER,
           thisUser.getContact().getNameFirstLast(),
-          "/Users.do?command=UserDetails&id=" + thisUser.getId());
+          "Users.do?command=UserDetails&id=" + thisUser.getId());
     } else if (itemObject instanceof Ticket) {
       Ticket thisTicket = (Ticket) itemObject;
       thisItem = new RecentItem(
           RecentItem.TICKET,
           thisTicket.getPaddedId(),
-          "/TroubleTickets.do?command=Details&id=" + thisTicket.getId());
+          "TroubleTickets.do?command=Details&id=" + thisTicket.getId());
     } else if (itemObject instanceof OpportunityHeader) {
       OpportunityHeader thisOpp = (OpportunityHeader) itemObject;
       thisItem = new RecentItem(
@@ -707,19 +707,19 @@ public class CFSModule {
       thisItem = new RecentItem(
           RecentItem.PROJECT,
           thisProject.getTitle(),
-          "/ProjectManagement.do?command=ProjectCenter&pid=" + thisProject.getId());
+          "ProjectManagement.do?command=ProjectCenter&pid=" + thisProject.getId());
     } else if (itemObject instanceof Campaign) {
       Campaign thisCampaign = (Campaign) itemObject;
       if (thisCampaign.getActive()) {
         thisItem = new RecentItem(
             RecentItem.CAMPAIGN,
             thisCampaign.getSubject(),
-            "/CampaignManager.do?command=Details&id=" + thisCampaign.getId() + "&reset=true");
+            "CampaignManager.do?command=Details&id=" + thisCampaign.getId() + "&reset=true");
       } else {
         thisItem = new RecentItem(
             RecentItem.CAMPAIGN,
             thisCampaign.getSubject(),
-            "/CampaignManager.do?command=ViewDetails&id=" + thisCampaign.getId() + "&reset=true");
+            "CampaignManager.do?command=ViewDetails&id=" + thisCampaign.getId() + "&reset=true");
       }
     }
     return thisItem;

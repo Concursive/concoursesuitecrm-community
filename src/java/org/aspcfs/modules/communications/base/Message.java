@@ -763,10 +763,10 @@ public class Message extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap processDependencies(Connection db) throws SQLException {
+  public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
     String sql = "";
-    HashMap dependencyList = new HashMap();
+    DependencyList dependencyList = new DependencyList();
     try {
       db.setAutoCommit(false);
       sql = "SELECT COUNT(*) AS message_count " +
@@ -779,8 +779,13 @@ public class Message extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        if (rs.getInt("message_count") != 0) {
-          dependencyList.put("Campaigns", new Integer(rs.getInt("message_count")));
+        int msgcount = rs.getInt("message_count");
+        if (msgcount != 0) {
+            Dependency thisDependency = new Dependency();
+            thisDependency.setName("Campaigns");
+            thisDependency.setCount(msgcount);
+            thisDependency.setCanDelete(true);
+            dependencyList.add(thisDependency);
         }
       }
 

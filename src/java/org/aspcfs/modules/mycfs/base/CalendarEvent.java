@@ -281,7 +281,7 @@ public class CalendarEvent implements Comparable {
     } else if (category.equalsIgnoreCase("Contact Calls")) {
       return "<a href=\"javascript:popURL('ExternalContactsCalls.do?command=Modify&id=" + idsub + "&contactId=" + id + "&popup=true&return=Calendar','CFS_Opportunity','550','375','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Call';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     } else if (category.equalsIgnoreCase("Opportunity Calls")) {
-      return "<a href=\"javascript:popURL('LeadsCalls.do?command=Details&id=" + idsub + "&oppId=" + id + "&popup=true&return=Calendar','CFS_Opportunity','550','375','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Call';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
+      return "<a href=\"javascript:popURL('LeadsCalls.do?command=Modify&id=" + idsub + "&oppId=" + id + "&popup=true&return=Calendar','CFS_Opportunity','550','375','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Call';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     } else if (category.equalsIgnoreCase("Tasks")) {
       return "<a href=\"javascript:popURL('MyTasks.do?command=Modify&id=" + id + "&popup=true&return=Calendar','CFS_Task','600','420','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Task';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     }

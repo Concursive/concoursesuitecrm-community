@@ -77,7 +77,9 @@ CREATE TABLE lookup_contact_types (
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  category INT NOT NULL DEFAULT 0,
+  user_id INT references access(user_id)
 );
 
 CREATE TABLE lookup_account_types (
@@ -478,3 +480,10 @@ CREATE TABLE opportunity_component_levels (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE contact_type_levels (
+  contact_id INT NOT NULL REFERENCES contact(contact_id),
+  type_id INT NOT NULL REFERENCES lookup_contact_types(code),
+  level INTEGER not null,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

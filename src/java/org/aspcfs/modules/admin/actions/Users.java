@@ -311,7 +311,7 @@ public final class Users extends CFSModule {
       User thisUser = (User) context.getRequest().getAttribute("UserRecord");
 
       if (context.getRequest().getParameter("typeId") != null) {
-        ((Contact) thisUser.getContact()).setTypeId(context.getRequest().getParameter("typeId"));
+        ((Contact) thisUser.getContact()).addType(context.getRequest().getParameter("typeId"));
       }
 
       thisUser.setEnteredBy(getUserId(context));
@@ -321,7 +321,6 @@ public final class Users extends CFSModule {
       if (recordInserted) {
         insertedUser = new User();
         insertedUser.setBuildContact(true);
-        //thisUser = new User(db, thisUser.getId());
         insertedUser.buildRecord(db, thisUser.getId());
         context.getRequest().setAttribute("UserRecord", insertedUser);
         addRecentItem(context, insertedUser);

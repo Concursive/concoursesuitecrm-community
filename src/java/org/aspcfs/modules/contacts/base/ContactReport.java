@@ -18,7 +18,8 @@ import java.text.*;
  *
  *@author     chris
  *@created    March 7, 2002
- *@version    $Id$
+ *@version    $Id: ContactReport.java,v 1.13 2002/12/20 14:07:55 mrajkowski Exp
+ *      $
  */
 public class ContactReport extends ContactList {
   protected Report rep = new Report();
@@ -491,7 +492,7 @@ public class ContactReport extends ContactList {
             thisRow.addCell(thisContact.getId());
           }
           if (param.equals("type")) {
-            thisRow.addCell(thisContact.getTypeName());
+            thisRow.addCell(thisContact.getTypesNameString());
           }
           if (param.equals("nameLast")) {
             thisRow.addCell(thisContact.getNameLast());
@@ -552,12 +553,9 @@ public class ContactReport extends ContactList {
             thisRow.addCell(thisContact.getNotes());
           }
         }
-
         rep.addRow(thisRow);
       }
-
       writeOut = false;
-
     }
   }
 
@@ -583,8 +581,8 @@ public class ContactReport extends ContactList {
    *@exception  Exception  Description of the Exception
    */
   public boolean saveAndInsert(Connection db) throws Exception {
-    int fileSize = save();
 
+    int fileSize = save();
     if (joinOrgs) {
       thisItem.setLinkModuleId(Constants.DOCUMENTS_ACCOUNTS_REPORTS);
     } else {
@@ -600,7 +598,6 @@ public class ContactReport extends ContactList {
     thisItem.setFilename(filenameToUse);
     thisItem.setSize(fileSize);
     thisItem.insert(db);
-
     return true;
   }
 

@@ -16,6 +16,7 @@ import com.darkhorseventures.webutils.*;
  *
  *@author     matt
  *@created    March 14, 2002
+ *@version    $Id$
  */
 public final class LeadsCalls extends CFSModule {
 
@@ -28,11 +29,11 @@ public final class LeadsCalls extends CFSModule {
    *@since
    */
   public String executeCommandView(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-calls-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-calls-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     String oppId = context.getRequest().getParameter("oppId");
 
@@ -91,11 +92,11 @@ public final class LeadsCalls extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-calls-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-calls-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordInserted = false;
 
@@ -139,11 +140,11 @@ public final class LeadsCalls extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-calls-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-calls-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     String callId = context.getRequest().getParameter("id");
@@ -188,11 +189,11 @@ public final class LeadsCalls extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-calls-delete"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-calls-delete"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -234,11 +235,11 @@ public final class LeadsCalls extends CFSModule {
    */
 
   public String executeCommandModify(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-calls-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-calls-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     String oppId = context.getRequest().getParameter("oppId");
@@ -275,6 +276,9 @@ public final class LeadsCalls extends CFSModule {
       
       addModuleBean(context, "View Opportunities", "Opportunity Calls");
       context.getRequest().setAttribute("CallDetails", thisCall);
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("ModifyPopupOK");
+      }
       return ("ModifyOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -291,11 +295,11 @@ public final class LeadsCalls extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-	  
-	if (!(hasPermission(context, "pipeline-opportunities-calls-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "pipeline-opportunities-calls-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     Call thisCall = (Call) context.getFormBean();
@@ -328,23 +332,23 @@ public final class LeadsCalls extends CFSModule {
       if (resultCount == -1) {
         processErrors(context, thisCall.getErrors());
         context.getRequest().setAttribute("CallDetails", thisCall);
-        return ("ModifyOK");
+        return "ModifyOK";
       } else if (resultCount == 1) {
-	      
-	       if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-		       context.getRequest().removeAttribute("CallDetails");
-		      return (executeCommandView(context));
-	      } else {
-		      return ("UpdateOK");
-	      }
-	      
+        if ("list".equals(context.getRequest().getParameter("return"))) {
+          context.getRequest().removeAttribute("CallDetails");
+          return (executeCommandView(context));
+        } else if ("true".equals(context.getRequest().getParameter("popup"))) {
+          return "PopupCloseOK";
+        } else {
+          return "UpdateOK";
+        }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
+        return "UserError";
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return "SystemError";
     }
   }
 }

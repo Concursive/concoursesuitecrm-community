@@ -2,6 +2,7 @@
 <jsp:useBean id="SelectedList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="SubTitle" class="java.lang.String" scope="request"/>
+<jsp:useBean id="category" class="java.lang.String" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="javascript/editListForm.js"></script>
 <script language="JavaScript" type="text/javascript">
   function doCheck() {
@@ -16,7 +17,7 @@
 </script>
 <form name="modifyList" method="post" action="Admin.do?command=UpdateList" onSubmit="return doCheck();">
 <a href="Admin.do">Setup</a> >
-<a href="Admin.do?command=Config">System Configuration</a> >
+<a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>">Configuration Options</a> >
 <a href="Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 
 Edit List<br>
@@ -79,6 +80,7 @@ Edit List<br>
   <input type=hidden name="moduleId" value="<%=moduleId%>">
   <input type="hidden" name="dosubmit" value="true">
   <input type=hidden name="tableName" value="<%=SelectedList.getTableName()%>">
+  <input type="hidden" name="category" value="<%= category %>">
   <input type="submit" value="Save Changes" onClick="javascript:this.form.dosubmit.value='true';">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/Admin.do?command=EditLists'">
   </td>

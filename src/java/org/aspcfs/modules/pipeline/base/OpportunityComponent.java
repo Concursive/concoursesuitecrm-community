@@ -1796,57 +1796,6 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
-   *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   */
-  public HashMap processDependencies(Connection db) throws SQLException {
-    ResultSet rs = null;
-    String sql = "";
-    HashMap dependencyList = new HashMap();
-
-    try {
-      db.setAutoCommit(false);
-      sql = "SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = ? ";
-
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
-      }
-
-      sql = "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = ? and pf.link_item_id = ? ";
-
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, Constants.PIPELINE);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Documents", new Integer(rs.getInt("documentcount")));
-      }
-
-      pst.close();
-      db.commit();
-
-    }
-    catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    }
-    finally {
-      db.setAutoCommit(true);
-    }
-    return dependencyList;
-  }
-
-
-  /**
    *  Gets the Valid attribute of the Opportunity object
    *
    *@param  db                Description of Parameter

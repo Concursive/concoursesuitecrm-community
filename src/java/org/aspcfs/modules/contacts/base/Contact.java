@@ -10,6 +10,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.DateUtils;
+import com.darkhorseventures.webutils.LookupElement;
+import com.darkhorseventures.webutils.LookupList;
 
 /**
  *  Represents a Contact in CFS
@@ -36,8 +38,8 @@ public class Contact extends GenericBean {
   private String nameMiddle = "";
   private String nameLast = "";
   private String nameSuffix = "";
-  private int typeId = -1;
-  private String typeName = "";
+  //private int typeId = -1;
+  //private String typeName = "";
   private String site = "";
   private String notes = "";
   private String imName = "";
@@ -70,9 +72,12 @@ public class Contact extends GenericBean {
   private boolean orgEnabled = true;
   private boolean hasEnabledOwnerAccount = true;
   private boolean hasEnabledAccount = true;
-  
+
   private boolean primaryContact = false;
   private boolean hasOpportunities = false;
+  private LookupList types = new LookupList();
+  private ArrayList typeList = null;
+
 
   /**
    *  Constructor for the Contact object
@@ -119,14 +124,22 @@ public class Contact extends GenericBean {
     queryRecord(db, contactId);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  obj  Description of the Parameter
+   *@return      Description of the Return Value
+   */
   public boolean equals(Object obj) {
-          if (this.getId() == ((Contact)obj).getId()) {
-                  return true;
-          }
-          
-          return false;
+    if (this.getId() == ((Contact) obj).getId()) {
+      return true;
+    }
+
+    return false;
   }
-  
+
+
   /**
    *  Description of the Method
    *
@@ -158,6 +171,7 @@ public class Contact extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
+      buildTypes(db);
     } else {
       rs.close();
       pst.close();
@@ -185,12 +199,26 @@ public class Contact extends GenericBean {
     this.ownerName = ownerName;
   }
 
+
+  /**
+   *  Sets the hasEnabledOwnerAccount attribute of the Contact object
+   *
+   *@param  hasEnabledOwnerAccount  The new hasEnabledOwnerAccount value
+   */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
   }
+
+
+  /**
+   *  Gets the hasEnabledOwnerAccount attribute of the Contact object
+   *
+   *@return    The hasEnabledOwnerAccount value
+   */
   public boolean getHasEnabledOwnerAccount() {
     return hasEnabledOwnerAccount;
   }
+
 
   /**
    *  Gets the url attribute of the Contact object
@@ -216,13 +244,47 @@ public class Contact extends GenericBean {
   public void setUrl(String url) {
     this.url = url;
   }
-  
+
+
+  /**
+   *  Sets the primaryContact attribute of the Contact object
+   *
+   *@param  primaryContact  The new primaryContact value
+   */
   public void setPrimaryContact(boolean primaryContact) {
     this.primaryContact = primaryContact;
   }
+
+
+  /**
+   *  Sets the typeList attribute of the Contact object
+   *
+   *@param  typeList  The new typeList value
+   */
+  public void setTypeList(ArrayList typeList) {
+    this.typeList = typeList;
+  }
+
+
+  /**
+   *  Gets the typeList attribute of the Contact object
+   *
+   *@return    The typeList value
+   */
+  public ArrayList getTypeList() {
+    return typeList;
+  }
+
+
+  /**
+   *  Gets the primaryContact attribute of the Contact object
+   *
+   *@return    The primaryContact value
+   */
   public boolean getPrimaryContact() {
     return primaryContact;
   }
+
 
   /**
    *  Gets the fullNameAbbr attribute of the Contact object
@@ -259,14 +321,27 @@ public class Contact extends GenericBean {
   public void setCustom1(int custom1) {
     this.custom1 = custom1;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean hasEnabledAccount() {
     return hasEnabledAccount;
   }
-  
+
+
+  /**
+   *  Sets the hasEnabledAccount attribute of the Contact object
+   *
+   *@param  hasEnabledAccount  The new hasEnabledAccount value
+   */
   public void setHasEnabledAccount(boolean hasEnabledAccount) {
     this.hasEnabledAccount = hasEnabledAccount;
   }
+
 
   /**
    *  Sets the custom1 attribute of the Contact object
@@ -277,15 +352,22 @@ public class Contact extends GenericBean {
     this.custom1 = Integer.parseInt(custom1);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
 
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM access " +
-      "WHERE user_id = ? AND enabled = ? ");
+        "SELECT * " +
+        "FROM access " +
+        "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
     System.out.println(pst.toString());
@@ -297,7 +379,8 @@ public class Contact extends GenericBean {
     }
     rs.close();
     pst.close();
-  } 
+  }
+
 
   /**
    *  Sets the Id attribute of the Contact object
@@ -740,29 +823,6 @@ public class Contact extends GenericBean {
   }
 
 
-
-  /**
-   *  Sets the TypeId attribute of the Contact object
-   *
-   *@param  tmp  The new TypeId value
-   *@since       1.2
-   */
-  public void setTypeId(int tmp) {
-    this.typeId = tmp;
-  }
-
-
-  /**
-   *  Sets the TypeId attribute of the Contact object
-   *
-   *@param  tmp  The new TypeId value
-   *@since       1.2
-   */
-  public void setTypeId(String tmp) {
-    this.typeId = Integer.parseInt(tmp);
-  }
-
-
   /**
    *  Sets the Enabled attribute of the Contact object
    *
@@ -854,6 +914,90 @@ public class Contact extends GenericBean {
 
 
   /**
+   *  Sets the typeList attribute of the Contact object
+   *
+   *@param  criteriaString  The new typeList value
+   */
+  public void setTypeList(String[] criteriaString) {
+    if (criteriaString != null) {
+      String[] params = criteriaString;
+      System.out.println("Contact -- > TypeList not null  " + params.toString());
+      typeList = new ArrayList(Arrays.asList(params));
+    } else {
+      typeList = new ArrayList();
+    }
+
+    this.typeList = typeList;
+    System.out.println("Contact -- > TypeList " + typeList.toString());
+  }
+
+
+  /**
+   *  Adds a feature to the Type attribute of the Contact object
+   *
+   *@param  typeId  The feature to be added to the Type attribute
+   */
+  public void addType(int typeId) {
+    if (typeList == null) {
+      typeList = new ArrayList();
+    }
+    typeList.add(String.valueOf(typeId));
+  }
+
+
+  /**
+   *  Adds a feature to the Type attribute of the Contact object
+   *
+   *@param  typeId  The feature to be added to the Type attribute
+   */
+  public void addType(String typeId) {
+    if (typeList == null) {
+      typeList = new ArrayList();
+    }
+    typeList.add(typeId);
+  }
+
+
+  /**
+   *  Gets the typesNameString attribute of the Contact object
+   *
+   *@return    The typesNameString value
+   */
+  public String getTypesNameString() {
+    StringBuffer types = new StringBuffer();
+    Iterator i = getTypes().iterator();
+    while (i.hasNext()) {
+      LookupElement thisElt = (LookupElement) i.next();
+      types.append(thisElt.getDescription());
+      if (i.hasNext()) {
+        types.append(",");
+      }
+    }
+    return types.toString();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  type  Description of the Parameter
+   *@return       Description of the Return Value
+   */
+  public boolean hasType(int type) {
+    boolean gotType = false;
+    Iterator i = getTypes().iterator();
+    while (i.hasNext()) {
+      LookupElement thisElt = (LookupElement) i.next();
+      if (thisElt.getCode() == type) {
+        gotType = true;
+        break;
+      }
+    }
+    return gotType;
+  }
+
+
+  /**
    *  Gets the entered attribute of the Contact object
    *
    *@return    The entered value
@@ -900,6 +1044,26 @@ public class Contact extends GenericBean {
    */
   public void setUserId(String tmp) {
     userId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the types attribute of the Contact object
+   *
+   *@param  types  The new types value
+   */
+  public void setTypes(LookupList types) {
+    this.types = types;
+  }
+
+
+  /**
+   *  Gets the types attribute of the Contact object
+   *
+   *@return    The types value
+   */
+  public LookupList getTypes() {
+    return types;
   }
 
 
@@ -1157,18 +1321,31 @@ public class Contact extends GenericBean {
       return company;
     }
   }
-  
+
+
+  /**
+   *  Gets the affiliation attribute of the Contact object
+   *
+   *@return    The affiliation value
+   */
   public String getAffiliation() {
     if (orgId > -1) {
       return orgName;
     } else {
       return company;
     }
-  }  
+  }
 
+
+  /**
+   *  Gets the companyOnly attribute of the Contact object
+   *
+   *@return    The companyOnly value
+   */
   public String getCompanyOnly() {
-      return company;
-  }  
+    return company;
+  }
+
 
   /**
    *  Gets the Title attribute of the Contact object
@@ -1224,29 +1401,34 @@ public class Contact extends GenericBean {
   public String getPhoneNumber(String thisType) {
     return phoneNumberList.getPhoneNumber(thisType);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   */
   public void resetBaseInfo() {
     this.nameFirst = null;
     this.nameLast = null;
     this.nameMiddle = null;
     this.nameSalutation = null;
     this.nameSuffix = null;
-    this.typeId = -1;
     this.id = -1;
     this.notes = null;
     this.title = null;
   }
 
+
   /**
    *  Gets the phoneNumber attribute of the Contact object
    *
-   *@param  thisType  Description of the Parameter
+   *@param  position  Description of the Parameter
    *@return           The phoneNumber value
    */
   public String getPhoneNumber(int position) {
     return phoneNumberList.getPhoneNumber(position);
   }
-  
+
+
   /**
    *  Gets the EmailAddress attribute of the Contact object
    *
@@ -1450,28 +1632,6 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the TypeId attribute of the Contact object
-   *
-   *@return    The TypeId value
-   *@since     1.1
-   */
-  public int getTypeId() {
-    return typeId;
-  }
-
-
-  /**
-   *  Gets the TypeName attribute of the Contact object
-   *
-   *@return    The TypeName value
-   *@since     1.30?
-   */
-  public String getTypeName() {
-    return typeName;
-  }
-
-
-  /**
    *  Gets the EnteredBy attribute of the Contact object
    *
    *@return    The EnteredBy value
@@ -1566,7 +1726,7 @@ public class Contact extends GenericBean {
       }
       sql.append(
           "INSERT INTO contact " +
-          "(user_id, type_id, namefirst, namelast, owner, primary_contact, ");
+          "(user_id, namefirst, namelast, owner, primary_contact, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1574,7 +1734,7 @@ public class Contact extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1587,11 +1747,6 @@ public class Contact extends GenericBean {
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (userId > -1) {
         pst.setInt(++i, this.getUserId());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
-      if (typeId > 0) {
-        pst.setInt(++i, this.getTypeId());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
@@ -1675,7 +1830,7 @@ public class Contact extends GenericBean {
     try {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
-      
+
       if (this.getPrimaryContact()) {
         Organization thisOrg = new Organization(db, this.getOrgId());
         thisOrg.setNameFirst(this.getNameFirst());
@@ -1731,9 +1886,9 @@ public class Contact extends GenericBean {
     boolean isEnabled = false;
 
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM access " +
-      "WHERE contact_id = ?");
+        "SELECT * " +
+        "FROM access " +
+        "WHERE contact_id = ?");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1776,26 +1931,26 @@ public class Contact extends GenericBean {
         callList = null;
 
         pst = db.prepareStatement(
-          "DELETE FROM contact_phone " +
-          "WHERE contact_id = ?");
+            "DELETE FROM contact_phone " +
+            "WHERE contact_id = ?");
         pst.setInt(1, this.getId());
         pst.executeUpdate();
         pst.close();
-        
+
         pst = db.prepareStatement(
-          "DELETE FROM contact_emailaddress " +
-          "WHERE contact_id = ?");
+            "DELETE FROM contact_emailaddress " +
+            "WHERE contact_id = ?");
         pst.setInt(1, this.getId());
         pst.executeUpdate();
         pst.close();
-          
+
         pst = db.prepareStatement(
-          "DELETE FROM contact_address " +
-          "WHERE contact_id = ? ");
+            "DELETE FROM contact_address " +
+            "WHERE contact_id = ? ");
         pst.setInt(1, this.getId());
         pst.executeUpdate();
         pst.close();
-        
+
         //For history, keep this contact if they previouslt received a comm. message
         if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, this.getId()) > 0) {
           errors.put("actionError", "Contact disabled from view, since it has related message records");
@@ -1804,19 +1959,27 @@ public class Contact extends GenericBean {
           db.setAutoCommit(true);
           return true;
         }
-        
+
         //If we're not keeping this contact, get rid of some more data
         //TODO: Use the ExcludedRecipientList class when it exists
         pst = db.prepareStatement(
-          "DELETE FROM excluded_recipient " +
-          "WHERE contact_id = ? ");
+            "DELETE FROM excluded_recipient " +
+            "WHERE contact_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.executeUpdate();
+        pst.close();
+
+        //delete all types associated with this contact
+        pst = db.prepareStatement(
+            "DELETE FROM contact_type_levels " +
+            "WHERE contact_id = ? ");
         pst.setInt(1, this.getId());
         pst.executeUpdate();
         pst.close();
 
         pst = db.prepareStatement(
-          "DELETE FROM contact " +
-          "WHERE contact_id = ?");
+            "DELETE FROM contact " +
+            "WHERE contact_id = ?");
         pst.setInt(1, this.getId());
         pst.executeUpdate();
         pst.close();
@@ -1832,7 +1995,55 @@ public class Contact extends GenericBean {
     }
   }
   
-   /**
+  /**
+   *  Resets the types for this Contact
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean resetType(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Contact ID not specified");
+    }
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement("DELETE FROM contact_type_levels WHERE contact_id = ? ");
+    pst.setInt(++i, this.getId());
+    pst.execute();
+    pst.close();
+    return true;
+  }
+
+
+  /**
+   *  Inserts Type of Contact.
+   *
+   *@param  db                Description of the Parameter
+   *@param  type_id           Description of the Parameter
+   *@param  level             Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insertType(Connection db, int type_id, int level) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("No Contact ID Specified");
+    }
+    String sql =
+        "INSERT INTO contact_type_levels " +
+        "(contact_id, type_id, level) " +
+        "VALUES (?, ?, ?) ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    pst.setInt(++i, type_id);
+    pst.setInt(++i, level);
+    pst.execute();
+    pst.close();
+    return true;
+  }
+
+
+  /**
    *  Performs a query and sets whether this user has an account or not
    *
    *@param  db                Description of Parameter
@@ -1845,9 +2056,9 @@ public class Contact extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM access " +
-      "WHERE contact_id = ? ");
+        "SELECT * " +
+        "FROM access " +
+        "WHERE contact_id = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1858,16 +2069,52 @@ public class Contact extends GenericBean {
     rs.close();
     pst.close();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildTypes(Connection db) throws SQLException {
+    ResultSet rs = null;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT ctl.type_id " +
+        "FROM contact_type_levels ctl " +
+        "WHERE ctl.contact_id = ? ORDER BY ctl.level ");
+
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setInt(++i, id);
+    rs = pst.executeQuery();
+
+    while (rs.next()) {
+      types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_contact_types"));
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void checkEnabledUserAccount(Connection db) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
     checkUserAccount(db);
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM access " +
-      "WHERE contact_id = ? AND enabled = ? ");
+        "SELECT * " +
+        "FROM access " +
+        "WHERE contact_id = ? AND enabled = ? ");
     pst.setInt(1, this.getId());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -1878,7 +2125,8 @@ public class Contact extends GenericBean {
     }
     rs.close();
     pst.close();
-  }  
+  }
+
 
   /**
    *  Description of the Method
@@ -1958,7 +2206,7 @@ public class Contact extends GenericBean {
         "UPDATE contact " +
         "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
         "namefirst = ?, namelast = ?, " +
-        "namemiddle = ?, namesuffix = ?, type_id = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
+        "namemiddle = ?, namesuffix = ?, notes = ?, owner = ?, custom1 = ?, url = ?, " +
         "org_id = ?, primary_contact = ?, ");
     if (imService > -1) {
       sql.append("imservice = ?, ");
@@ -1996,11 +2244,6 @@ public class Contact extends GenericBean {
     pst.setString(++i, this.getNameLast());
     pst.setString(++i, this.getNameMiddle());
     pst.setString(++i, this.getNameSuffix());
-    if (typeId > 0) {
-      pst.setInt(++i, this.getTypeId());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
     pst.setString(++i, this.getNotes());
     if (owner > -1) {
       pst.setInt(++i, this.getOwner());
@@ -2042,6 +2285,23 @@ public class Contact extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
 
+    //Remove all contact types, add new list
+    if (typeList != null) {
+      System.out.println("Contact -- > Inserting Contact Types ");
+      resetType(db);
+      int lvlcount = 0;
+      for (int k = 0; k < typeList.size(); k++) {
+        String val = (String) typeList.get(k);
+        if (val != null && !(val.equals(""))) {
+          int type_id = Integer.parseInt((String) typeList.get(k));
+          lvlcount++;
+          insertType(db, type_id, lvlcount);
+        } else {
+          lvlcount--;
+        }
+      }
+    }
+
     return resultCount;
   }
 
@@ -2075,10 +2335,6 @@ public class Contact extends GenericBean {
     nameFirst = rs.getString("namefirst");
     nameMiddle = rs.getString("namemiddle");
     nameSuffix = rs.getString("namesuffix");
-    typeId = rs.getInt("type_id");
-    if (rs.wasNull()) {
-      typeId = -1;
-    }
     notes = rs.getString("notes");
     site = rs.getString("site");
     imName = rs.getString("imname");
@@ -2100,12 +2356,9 @@ public class Contact extends GenericBean {
     custom1 = rs.getInt("custom1");
     url = rs.getString("url");
     primaryContact = rs.getBoolean("primary_contact");
-    
+
     //lookup_department table
     departmentName = rs.getString("departmentname");
-
-    //lookup_contact_types table
-    typeName = rs.getString("type_name");
 
     //contact table
     ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
@@ -2122,7 +2375,7 @@ public class Contact extends GenericBean {
    *  Gets the contactType attribute of the Contact class
    *
    *@param  db                Description of the Parameter
-   *@param  id                Description of the Parameter
+   *@param  contactId         Description of the Parameter
    *@return                   The contactType value
    *@exception  SQLException  Description of the Exception
    */
@@ -2138,11 +2391,11 @@ public class Contact extends GenericBean {
 
       db.setAutoCommit(false);
       int i = 0;
-    
+
       PreparedStatement pst = db.prepareStatement(
-        "SELECT user_id, type_id " +
-        "FROM contact " +
-        "where contact_id = ? ");
+          "SELECT user_id, type_id " +
+          "FROM contact " +
+          "where contact_id = ? ");
       pst.setInt(1, contactId);
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -2181,9 +2434,9 @@ public class Contact extends GenericBean {
   private boolean hasRelatedRecords(Connection db) throws SQLException {
     int recordCount = -1;
     PreparedStatement pst = db.prepareStatement(
-      "SELECT count(*) as count " +
-      "FROM opportunity " +
-      "WHERE contactlink = ? ");
+        "SELECT count(*) as count " +
+        "FROM opportunity " +
+        "WHERE contactlink = ? ");
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -2193,22 +2446,32 @@ public class Contact extends GenericBean {
     pst.close();
     return (recordCount > 0);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newOwner          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean reassign(Connection db, int newOwner) throws SQLException {
     int result = -1;
     this.setOwner(newOwner);
     result = this.update(db);
-    
+
     if (result == -1) {
       return false;
     }
-    
+
     return true;
   }
 
+
   /**
-   *  Combines the first and last name of a contact, depending on the
-   *  length of the strings
+   *  Combines the first and last name of a contact, depending on the length of
+   *  the strings
    *
    *@param  nameLast   Description of the Parameter
    *@param  nameFirst  Description of the Parameter
@@ -2230,7 +2493,15 @@ public class Contact extends GenericBean {
     }
     return out.toString().trim();
   }
-  
+
+
+  /**
+   *  Gets the nameFirstLast attribute of the Contact class
+   *
+   *@param  nameFirst  Description of the Parameter
+   *@param  nameLast   Description of the Parameter
+   *@return            The nameFirstLast value
+   */
   public static String getNameFirstLast(String nameFirst, String nameLast) {
     StringBuffer out = new StringBuffer();
     if (nameFirst != null && nameFirst.trim().length() > 0) {
@@ -2250,78 +2521,106 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Makes a list of this a Contact's dependencies to other entities.
    *
    *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap processDependencies(Connection db) throws SQLException {
+  public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
-    String sql = "";
-    HashMap dependencyList = new HashMap();
+    DependencyList dependencyList = new DependencyList();
     try {
       db.setAutoCommit(false);
-      sql = "SELECT count(*) as oppcount " +
+      String sql = "SELECT count(*) as oppcount " +
           "FROM opportunity_header " +
           "WHERE opportunity_header.contactlink = ? ";
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        dependencyList.put("Opportunities", new Integer(rs.getInt("oppcount")));
-        if (rs.getInt("oppcount") > 0) {
+        int oppCount = rs.getInt("oppcount");
+        if (oppCount > 0) {
             this.setHasOpportunities(true);
         }
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Opportunities");
+        thisDependency.setCount(oppCount);
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
       }
-
-      sql = "SELECT count(*) as callcount " +
-          "FROM call_log " +
-          "WHERE call_log.contact_id = ? ";
-
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        //if (rs.getInt("callcount") != 0) {
-        dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
-        //}
-      }
-
-      sql = "SELECT count(*) as foldercount " +
-          "FROM custom_field_record cfr WHERE cfr.link_module_id = " + Constants.CONTACTS +
-          " and cfr.link_item_id = ? ";
-
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        // if (rs.getInt("foldercount") != 0) {
-        dependencyList.put("Folders", new Integer(rs.getInt("foldercount")));
-        // }
-      }
-
+      rs.close();
       pst.close();
-      db.commit();
+
+      i = 0;
+      pst = db.prepareStatement(
+          "SELECT count(*) as callcount " +
+          "FROM call_log " +
+          "WHERE call_log.contact_id = ? ");
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Calls");
+        thisDependency.setCount(rs.getInt("callcount"));
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
+      }
+      rs.close();
+      pst.close();
+
+      i = 0;
+      pst = db.prepareStatement(
+          "SELECT count(*) as foldercount " +
+          "FROM custom_field_record cfr WHERE cfr.link_module_id = " + Constants.CONTACTS +
+          " and cfr.link_item_id = ? ");
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Folders");
+        thisDependency.setCount(rs.getInt("foldercount"));
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
+      }
+      rs.close();
+      pst.close();
+
+      i = 0;
+      pst = db.prepareStatement(
+          "SELECT count(*) as ticketcount " +
+          "FROM ticket WHERE contact_id = ? ");
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Tickets");
+        thisDependency.setCount(rs.getInt("ticketcount"));
+        thisDependency.setCanDelete(false);
+        dependencyList.add(thisDependency);
+      }
+      rs.close();
+      pst.close();
+
     } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
     }
     return dependencyList;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void disableContact(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "UPDATE contact " +
-      "SET enabled = ? " +
-      "WHERE contact_id = ?");
+        "UPDATE contact " +
+        "SET enabled = ? " +
+        "WHERE contact_id = ?");
     pst.setBoolean(1, false);
     pst.setInt(2, this.getId());
     pst.executeUpdate();

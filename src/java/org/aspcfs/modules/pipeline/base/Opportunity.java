@@ -44,7 +44,6 @@ public class Opportunity extends OpportunityComponent {
   private boolean callsDelete = false;
   private boolean documentDelete = false;
   private FileItemList files = new FileItemList();
-  
   private int componentCount = 0;
   private boolean buildComponentCount = false;  
   
@@ -128,7 +127,7 @@ public class Opportunity extends OpportunityComponent {
     }
     rs.close();
     pst.close();
-    
+
     this.buildFiles(db);
   }
 
@@ -162,26 +161,44 @@ public class Opportunity extends OpportunityComponent {
     this.enteredByName = enteredByName;
   }
 
+
+  /**
+   *  Sets the typeList attribute of the Opportunity object
+   *
+   *@param  typeList  The new typeList value
+   */
   public void setTypeList(ArrayList typeList) {
     this.typeList = typeList;
   }
-  
+
+
+  /**
+   *  Sets the typeList attribute of the Opportunity object
+   *
+   *@param  criteriaString  The new typeList value
+   */
   public void setTypeList(String[] criteriaString) {
     if (criteriaString != null) {
       String[] params = criteriaString;
       typeList = new ArrayList(Arrays.asList(params));
-    }
-    else {
+    } else {
       typeList = new ArrayList();
     }
 
     this.typeList = typeList;
-  }  
-  
+  }
+
+
+  /**
+   *  Gets the typeList attribute of the Opportunity object
+   *
+   *@return    The typeList value
+   */
   public ArrayList getTypeList() {
     return typeList;
   }
-  
+
+
   /**
    *  Gets the alertText attribute of the Opportunity object
    *
@@ -201,12 +218,26 @@ public class Opportunity extends OpportunityComponent {
     this.alertText = alertText;
   }
 
+
+  /**
+   *  Sets the hasEnabledOwnerAccount attribute of the Opportunity object
+   *
+   *@param  hasEnabledOwnerAccount  The new hasEnabledOwnerAccount value
+   */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
   }
+
+
+  /**
+   *  Gets the hasEnabledOwnerAccount attribute of the Opportunity object
+   *
+   *@return    The hasEnabledOwnerAccount value
+   */
   public boolean getHasEnabledOwnerAccount() {
     return hasEnabledOwnerAccount;
   }
+
 
   /**
    *  Sets the OpenIt attribute of the Opportunity object
@@ -218,14 +249,27 @@ public class Opportunity extends OpportunityComponent {
     this.openIt = openIt;
   }
 
+
+  /**
+   *  Sets the types attribute of the Opportunity object
+   *
+   *@param  types  The new types value
+   */
   public void setTypes(LookupList types) {
     this.types = types;
   }
-  
+
+
+  /**
+   *  Gets the types attribute of the Opportunity object
+   *
+   *@return    The types value
+   */
   public LookupList getTypes() {
     return types;
-  }  
-  
+  }
+
+
   /**
    *  Sets the alertDate attribute of the Opportunity object
    *
@@ -245,12 +289,26 @@ public class Opportunity extends OpportunityComponent {
     this.alertDate = DateUtils.parseDateString(tmp);
   }
 
+
+  /**
+   *  Gets the notes attribute of the Opportunity object
+   *
+   *@return    The notes value
+   */
   public String getNotes() {
     return notes;
   }
+
+
+  /**
+   *  Sets the notes attribute of the Opportunity object
+   *
+   *@param  notes  The new notes value
+   */
   public void setNotes(String notes) {
     this.notes = notes;
   }
+
 
   /**
    *  Gets the accountEnabled attribute of the Opportunity object
@@ -389,6 +447,16 @@ public class Opportunity extends OpportunityComponent {
    */
   public void setStageDate(String tmp) {
     this.stageDate = DateUtils.parseDateString(tmp);
+  }
+
+
+  /**
+   *  Sets the accountName attribute of the Opportunity object
+   *
+   *@param  accountName  The new accountName value
+   */
+  public void setAccountName(String accountName) {
+    this.accountName = accountName;
   }
 
 
@@ -547,9 +615,9 @@ public class Opportunity extends OpportunityComponent {
     try {
       this.terms = Double.parseDouble(terms);
     } catch (NumberFormatException ne) {
-      errors.put("termsError", terms+" is invalid input for this field");
-    }    
-    
+      errors.put("termsError", terms + " is invalid input for this field");
+    }
+
   }
 
 
@@ -614,7 +682,7 @@ public class Opportunity extends OpportunityComponent {
   public void setLow(String low) {
     low = replace(low, ",", "");
     low = replace(low, "$", "");
-    
+
     this.low = Double.parseDouble(low);
   }
 
@@ -628,11 +696,11 @@ public class Opportunity extends OpportunityComponent {
   public void setGuess(String guess) {
     guess = replace(guess, ",", "");
     guess = replace(guess, "$", "");
-    
+
     try {
       this.guess = Double.parseDouble(guess);
     } catch (NumberFormatException ne) {
-      errors.put("guessError", guess+" is invalid input for this field");
+      errors.put("guessError", guess + " is invalid input for this field");
     }
   }
 
@@ -646,7 +714,7 @@ public class Opportunity extends OpportunityComponent {
   public void setHigh(String high) {
     high = replace(high, ",", "");
     high = replace(high, "$", "");
-    
+
     this.high = Double.parseDouble(high);
   }
 
@@ -683,23 +751,50 @@ public class Opportunity extends OpportunityComponent {
     this.units = units;
   }
 
+
+  /**
+   *  Sets the files attribute of the Opportunity object
+   *
+   *@param  files  The new files value
+   */
   public void setFiles(FileItemList files) {
     this.files = files;
   }
+
+
+  /**
+   *  Gets the files attribute of the Opportunity object
+   *
+   *@return    The files value
+   */
   public FileItemList getFiles() {
     return files;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildFiles(Connection db) throws SQLException {
     files.clear();
     files.setLinkModuleId(Constants.PIPELINE);
     files.setLinkItemId(this.getId());
     files.buildList(db);
-  }  
-  
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean hasFiles() {
     return (files != null && files.size() > 0);
-  }  
+  }
+
 
   /**
    *  Sets the CloseProb attribute of the Opportunity object
@@ -711,13 +806,13 @@ public class Opportunity extends OpportunityComponent {
     if (closeProb != null && closeProb.endsWith("%")) {
       closeProb = closeProb.substring(0, closeProb.length() - 1);
     }
-    
+
     try {
       this.closeProb = ((Double.parseDouble(closeProb)) / 100);
     } catch (NumberFormatException ne) {
-      errors.put("closeProbError", closeProb+" is invalid input for this field");
+      errors.put("closeProbError", closeProb + " is invalid input for this field");
     }
-    
+
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity-> Close prob: " + closeProb);
     }
@@ -741,7 +836,7 @@ public class Opportunity extends OpportunityComponent {
   /**
    *  Sets the ContactLink attribute of the Opportunity object
    *
-   *@param  tmp          The new contactLink value
+   *@param  tmp  The new contactLink value
    *@since
    */
   public void setContactLink(String tmp) {
@@ -752,7 +847,7 @@ public class Opportunity extends OpportunityComponent {
   /**
    *  Sets the AccountLink attribute of the Opportunity object
    *
-   *@param  tmp          The new accountLink value
+   *@param  tmp  The new accountLink value
    *@since
    */
   public void setAccountLink(String tmp) {
@@ -958,16 +1053,23 @@ public class Opportunity extends OpportunityComponent {
     }
     return tmp;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
 
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM access " +
-      "WHERE user_id = ? AND enabled = ? ");
+        "SELECT * " +
+        "FROM access " +
+        "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
@@ -978,7 +1080,8 @@ public class Opportunity extends OpportunityComponent {
     }
     rs.close();
     pst.close();
-  }  
+  }
+
 
   /**
    *  Gets the Closed attribute of the Opportunity object
@@ -1426,8 +1529,8 @@ public class Opportunity extends OpportunityComponent {
 
 
   /**
-   *  Returns the actual name linked to this Opportunity, whether it is
-   *  an Account or a Contact
+   *  Returns the actual name linked to this Opportunity, whether it is an
+   *  Account or a Contact
    *
    *@return    The AccountName value
    *@since
@@ -1958,26 +2061,31 @@ public class Opportunity extends OpportunityComponent {
     return true;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildTypes(Connection db) throws SQLException {
     ResultSet rs = null;
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT otl.type_id " +
         "FROM opportunity_component_levels otl " +
         "WHERE otl.opp_id = ? ORDER BY otl.level ");
-
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    int i=0;
-    pst.setInt(++i, this.getId());    
+    int i = 0;
+    pst.setInt(++i, id);
     rs = pst.executeQuery();
-
     while (rs.next()) {
       types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_opportunity_types"));
     }
-
     rs.close();
+    pst.close();
   }
+
 
   /**
    *  Populates this object from a result set
@@ -2124,7 +2232,7 @@ public class Opportunity extends OpportunityComponent {
         "SET lowvalue = ?, guessvalue = ?, highvalue = ?, closeprob = ?, " +
         "commission = ?, ");
 
-    if ( (this.getStageChange() == true && override == false) ) {
+    if ((this.getStageChange() == true && override == false)) {
       sql.append("stagedate = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
 
@@ -2189,7 +2297,7 @@ public class Opportunity extends OpportunityComponent {
       System.out.println("Opportunity-> ResultCount: " + resultCount);
     }
     pst.close();
-    
+
     //Remove all opp types, add new list
     if (this.getTypeList() != null) {
       resetType(db);
@@ -2200,34 +2308,48 @@ public class Opportunity extends OpportunityComponent {
           int type_id = Integer.parseInt((String) this.getTypeList().get(k));
           lvlcount++;
           insertType(db, type_id, lvlcount);
-        }
-        else {
+        } else {
           lvlcount--;
         }
       }
-    }    
- 
-    
+    }
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity-> Closing PreparedStatement");
     }
     return resultCount;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean resetType(Connection db) throws SQLException {
     if (id == -1) {
       throw new SQLException("ID not specified");
     }
     String sql = "DELETE FROM opportunity_component_levels WHERE opp_id in (SELECT id from opportunity_component oc where oc.opp_id = ?) ";
-    System.out.println(sql.toString());
     int i=0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, this.getId());
     pst.execute();
     pst.close();
     return true;
-  }  
-  
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  type_id           Description of the Parameter
+   *@param  level             Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insertType(Connection db, int type_id, int level) throws SQLException {
     if (id == -1) {
       throw new SQLException("ID not specified");
@@ -2244,7 +2366,8 @@ public class Opportunity extends OpportunityComponent {
     pst.execute();
     pst.close();
     return true;
-  }  
+  }
+
 
   /**
    *  Description of the Method
@@ -2255,16 +2378,25 @@ public class Opportunity extends OpportunityComponent {
   public void invalidateUserData(ActionContext context) {
     invalidateUserData(context, this.getOwner());
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newOwner          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean reassign(Connection db, int newOwner) throws SQLException {
     int result = -1;
     this.setOwner(newOwner);
     result = this.update(db);
-    
+
     if (result == -1) {
       return false;
     }
-    
+
     return true;
   }
 
@@ -2291,21 +2423,24 @@ public class Opportunity extends OpportunityComponent {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap processDependencies(Connection db) throws SQLException {
+  public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
-    String sql = "";
-    HashMap dependencyList = new HashMap();
+    DependencyList dependencyList = new DependencyList();
 
     try {
       db.setAutoCommit(false);
-      sql = "SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = ? ";
+      String sql = "SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = ? ";
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Calls");
+        thisDependency.setCount(rs.getInt("callcount"));
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
       }
 
       sql = "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = ? and pf.link_item_id = ? ";
@@ -2316,7 +2451,11 @@ public class Opportunity extends OpportunityComponent {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        dependencyList.put("Documents", new Integer(rs.getInt("documentcount")));
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Documents");
+        thisDependency.setCount(rs.getInt("documentcount"));
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
       }
       
       sql = "SELECT COUNT(*) as componentcount FROM opportunity_component oc WHERE oc.opp_id = ? ";
@@ -2326,12 +2465,16 @@ public class Opportunity extends OpportunityComponent {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        dependencyList.put("Components", new Integer(rs.getInt("componentcount")));
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Components");
+        thisDependency.setCount(rs.getInt("componentcount"));
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
       }
 
-    pst.close();
-    db.commit();
-    
+      pst.close();
+      db.commit();
+
     } catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);

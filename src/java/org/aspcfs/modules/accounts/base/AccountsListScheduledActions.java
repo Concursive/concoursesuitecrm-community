@@ -12,7 +12,8 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *
  *@author     akhi_m
  *@created    October 2, 2002
- *@version    $Id$
+ *@version    $Id: AccountsListScheduledActions.java,v 1.4 2002/10/16 15:15:55
+ *      mrajkowski Exp $
  */
 public class AccountsListScheduledActions extends OrganizationList implements ScheduledActions {
 
@@ -48,67 +49,168 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
   /**
    *  Description of the Method
    *
-   *@param  companyCalendar  Description of the Parameter
-   *@param  db               Description of the Parameter
-   *@return                  Description of the Return Value
+   *@param  companyCalendar   Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
-  public String calendarAlerts(CalendarView companyCalendar, Connection db) {
+  public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("AccountsListScheduledActions --> Building Account Alerts ");
     }
-    
-    String alertType = companyCalendar.getCalendarInfo().getCalendarDetailsView();
-    if(alertType.equalsIgnoreCase("AccountsAlertDates")){
-      this.addAlertDates(companyCalendar,db);
-    }else if(alertType.equalsIgnoreCase("AccountsContractEndDates")){
-      this.addContractEndDates(companyCalendar,db);
-    }else{
-      this.addAlertDates(companyCalendar,db);
-      this.addContractEndDates(companyCalendar,db);
+    try {
+      String alertType = companyCalendar.getCalendarInfo().getCalendarDetailsView();
+      if (alertType.equalsIgnoreCase("AccountsAlertDates")) {
+        this.addAlertDates(companyCalendar, db);
+      } else if (alertType.equalsIgnoreCase("AccountsContractEndDates")) {
+        this.addContractEndDates(companyCalendar, db);
+      } else {
+        this.addAlertDates(companyCalendar, db);
+        this.addContractEndDates(companyCalendar, db);
+      }
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
     }
-    return ("CalAccountsOK");
   }
-  
-  
-  public void addAlertDates(CalendarView companyCalendar, Connection db){
+
+
+  /**
+   *  Adds a feature to the AlertDates attribute of the
+   *  AccountsListScheduledActions object
+   *
+   *@param  companyCalendar   The feature to be added to the AlertDates
+   *      attribute
+   *@param  db                The feature to be added to the AlertDates
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addAlertDates(CalendarView companyCalendar, Connection db) throws SQLException {
     OrganizationList alertOrgs = new OrganizationList();
     alertOrgs.setOwnerId(this.getUserId());
     alertOrgs.setHasExpireDate(false);
     alertOrgs.setHasAlertDate(true);
-    
-    try {
-      alertOrgs.buildList(db);
-    } catch (SQLException e) {
-      System.out.println("AccountsListScheduledActions --> Alerts SQLException ");
-    }
-
+    alertOrgs.buildList(db);
     Iterator n = alertOrgs.iterator();
     while (n.hasNext()) {
       Organization thisOrg = (Organization) n.next();
-        companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), "Accounts", thisOrg.getOrgId());
+      companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), CalendarEventList.EVENT_TYPES[3], thisOrg.getOrgId());
     }
   }
-  
-  
-  public void addContractEndDates(CalendarView companyCalendar, Connection db){
+
+
+  /**
+   *  Adds a feature to the ContractEndDates attribute of the
+   *  AccountsListScheduledActions object
+   *
+   *@param  companyCalendar   The feature to be added to the ContractEndDates
+   *      attribute
+   *@param  db                The feature to be added to the ContractEndDates
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addContractEndDates(CalendarView companyCalendar, Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("AccountsListScheduledActions --> Building Account Contract End Dates ");
     }
-    OrganizationList contractEndOrgs = new OrganizationList(); 
+    OrganizationList contractEndOrgs = new OrganizationList();
     contractEndOrgs.setOwnerId(this.getUserId());
     contractEndOrgs.setHasAlertDate(false);
     contractEndOrgs.setHasExpireDate(true);
-    try {
-      contractEndOrgs.buildList(db);
-    } catch (SQLException e) {
-      System.out.println("AccountsListScheduledActions --> calendarAlerts SQLException ");
-    }
+    contractEndOrgs.buildShortList(db);
 
     Iterator n = contractEndOrgs.iterator();
     while (n.hasNext()) {
       Organization thisOrg = (Organization) n.next();
-        companyCalendar.addEvent(thisOrg.getContractEndDateStringLongYear(), "", thisOrg.getName() + ": " + "Contract Expiration", "Accounts", thisOrg.getOrgId());
+      companyCalendar.addEvent(thisOrg.getContractEndDateStringLongYear(), "", thisOrg.getName() + ": " + "Contract Expiration", CalendarEventList.EVENT_TYPES[3], thisOrg.getOrgId());
     }
   }
+
+
+  /**
+   *  Adds a feature to the AlertCount attribute of the
+   *  AccountsListScheduledActions object
+   *
+   *@param  companyCalendar   The feature to be added to the AlertCount
+   *      attribute
+   *@param  db                The feature to be added to the AlertCount
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addAlertDateCount(CalendarView companyCalendar, Connection db) throws SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("AccountsListScheduledActions --> Building Alert Date Count ");
+    }
+    OrganizationList alertOrgs = new OrganizationList();
+    alertOrgs.setOwnerId(this.getUserId());
+    alertOrgs.setHasExpireDate(false);
+    alertOrgs.setHasAlertDate(true);
+
+    HashMap dayEvents = alertOrgs.queryRecordCount(db);
+    Set s = dayEvents.keySet();
+    Iterator i = s.iterator();
+    while (i.hasNext()) {
+      String thisDay = (String) i.next();
+      companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[3], thisDay, dayEvents.get(thisDay));
+    }
+  }
+
+
+  /**
+   *  Adds a feature to the ContractEndDates attribute of the
+   *  AccountsListScheduledActions object
+   *
+   *@param  companyCalendar   The feature to be added to the ContractEndDates
+   *      attribute
+   *@param  db                The feature to be added to the ContractEndDates
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addContractEndDateCount(CalendarView companyCalendar, Connection db) throws SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("AccountsListScheduledActions --> Building Account Contract End Dates ");
+    }
+
+    OrganizationList contractEndOrgs = new OrganizationList();
+    contractEndOrgs.setOwnerId(this.getUserId());
+    contractEndOrgs.setHasAlertDate(false);
+    contractEndOrgs.setHasExpireDate(true);
+    HashMap dayEvents = contractEndOrgs.queryRecordCount(db);
+    Set s = dayEvents.keySet();
+    Iterator i = s.iterator();
+    while (i.hasNext()) {
+      String thisDay = (String) i.next();
+      companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[3], thisDay, dayEvents.get(thisDay));
+    }
+
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  companyCalendar  Description of the Parameter
+   *@param  db               Description of the Parameter
+   */
+  public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException{
+
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("AccountsListScheduledActions --> Building Account Alert Count ");
+    }
+
+    try {
+      String alertType = companyCalendar.getCalendarInfo().getCalendarDetailsView();
+      if (alertType.equalsIgnoreCase("AccountsAlertDates")) {
+        this.addAlertDateCount(companyCalendar, db);
+      } else if (alertType.equalsIgnoreCase("AccountsContractEndDates")) {
+        this.addContractEndDateCount(companyCalendar, db);
+      } else {
+        this.addAlertDateCount(companyCalendar, db);
+        this.addContractEndDateCount(companyCalendar, db);
+      }
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
+
+  }
+
 }
 

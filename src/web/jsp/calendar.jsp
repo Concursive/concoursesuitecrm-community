@@ -81,6 +81,7 @@
       CompanyCalendar.setShowSubject(false);
 %>
 <%= CompanyCalendar.getHtml() %>
+
   
 <table bgcolor="#FFFFFF" width="98%" border="0" cellpadding="4" cellspacing="0" border="0">
   <tr>

@@ -106,16 +106,16 @@ public final class MyTasks extends CFSModule {
       db = this.getConnection(context);
       //build loe types
       LookupList estimatedLOETypeList = new LookupList(db, "lookup_task_loe");
-      context.getRequest().setAttribute("EstimatedLOETypeList",estimatedLOETypeList);
+      context.getRequest().setAttribute("EstimatedLOETypeList", estimatedLOETypeList);
       //build task priority levels (descritions)
       LookupList priorityList = new LookupList(db, "lookup_task_priority");
-      context.getRequest().setAttribute("PriorityList",priorityList);
+      context.getRequest().setAttribute("PriorityList", priorityList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     context.getSession().removeAttribute("contactListInfo");
     context.getRequest().setAttribute("Task", new Task());
     if (context.getRequest().getParameter("popup") != null) {
@@ -148,22 +148,22 @@ public final class MyTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, id);
-      
+
       if (thisTask.getOwner() > -1) {
         thisTask.checkEnabledOwnerAccount(db);
       }
-      
+
       if (thisTask.getContactId() > -1) {
         thisTask.checkEnabledLinkAccount(db);
       }
-      
-       //build loe types
+
+      //build loe types
       LookupList estimatedLOETypeList = new LookupList(db, "lookup_task_loe");
-      context.getRequest().setAttribute("EstimatedLOETypeList",estimatedLOETypeList);
-      
+      context.getRequest().setAttribute("EstimatedLOETypeList", estimatedLOETypeList);
+
       //build task priority levels (descritions)
       LookupList priorityList = new LookupList(db, "lookup_task_priority");
-      context.getRequest().setAttribute("PriorityList",priorityList);
+      context.getRequest().setAttribute("PriorityList", priorityList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -171,11 +171,11 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, thisTask.getOwner())) {
         return ("PermissionError");
-      }      
-      
+      }
+
       context.getRequest().setAttribute("Task", thisTask);
       addModuleBean(context, "My Tasks", "Task Home");
       if (context.getRequest().getParameter("popup") != null) {
@@ -319,8 +319,10 @@ public final class MyTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, id);
-      htmlDialog.setRelationships(thisTask.processDependencies(db));
-      if (htmlDialog.getRelationships().size() == 0) {
+      DependencyList dependencies = thisTask.processDependencies(db);
+      htmlDialog.addMessage(dependencies.getHtmlString());
+
+      if (dependencies.size() == 0) {
         htmlDialog.setTitle("Confirm");
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='MyTasks.do?command=Delete&id=" + id + "'");

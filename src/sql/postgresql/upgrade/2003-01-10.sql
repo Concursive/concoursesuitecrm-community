@@ -67,3 +67,24 @@ CREATE TABLE opportunity_component_levels (
 );
   
 
+
+/*
+Contact Types update Author : Mathur ; Dated : 12/17/02
+*/
+
+alter table lookup_contact_types add column user_id INT references access(user_id);
+alter table lookup_contact_types add column category INT;
+alter table lookup_contact_types alter category set DEFAULT 0;
+update lookup_contact_types set category = '0';
+alter table lookup_contact_types add constraint category_not_null CHECK(category IS NOT NULL) ;
+
+CREATE TABLE contact_type_levels (
+  contact_id INT NOT NULL REFERENCES contact(contact_id),
+  type_id INT NOT NULL REFERENCES lookup_contact_types(code),
+  level INTEGER not null,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+/* execute the contact_type_update.pl */
+

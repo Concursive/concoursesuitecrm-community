@@ -95,7 +95,6 @@ public final class ExternalContacts extends CFSModule {
     }
 
   }
-  
 
 
 
@@ -374,15 +373,15 @@ public final class ExternalContacts extends CFSModule {
     ContactList contactList = new ContactList();
 
     ContactTypeList contactTypeList = new ContactTypeList();
-    contactTypeList.setShowPersonal(true);
-
     context.getSession().removeAttribute("ContactMessageListInfo");
 
     try {
       db = this.getConnection(context);
 
+      contactTypeList.setShowPersonal(true);
+      contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
       contactTypeList.buildList(db);
-      contactTypeList.addItem(-1, "All");
+      contactTypeList.addItem(-1, "All Contact Types");
       context.getRequest().setAttribute("ContactTypeList", contactTypeList);
 
       contactList.setPagedListInfo(externalContactsInfo);
@@ -447,11 +446,11 @@ public final class ExternalContacts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       context.getRequest().setAttribute("ContactDetails", thisContact);
       return ("MessageDetailsOK");
     } else {
@@ -756,7 +755,7 @@ public final class ExternalContacts extends CFSModule {
 
       if (action != null && action.equals("modify")) {
         buildFormElements(context, db);
-        
+
         OrganizationList orgList = new OrganizationList();
         orgList.setMinerOnly(false);
         orgList.setShowMyCompany(true);
@@ -770,11 +769,11 @@ public final class ExternalContacts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, thisContact.getOwner())) {
         return ("PermissionError");
       }
-      
+
       if (action != null && action.equals("modify")) {
         addModuleBean(context, "External Contacts", "Modify Contact Details");
         context.getSession().removeAttribute("ContactMessageListInfo");
@@ -810,7 +809,7 @@ public final class ExternalContacts extends CFSModule {
     Exception errorMessage = null;
 
     Contact thisContact = (Contact) context.getFormBean();
-    
+
     if (context.getRequest().getParameter("primaryContact") != null) {
       if (context.getRequest().getParameter("primaryContact").equalsIgnoreCase("true")) {
         thisContact.setPrimaryContact(true);
@@ -822,6 +821,7 @@ public final class ExternalContacts extends CFSModule {
 
     try {
       thisContact.setRequestItems(context.getRequest());
+      thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
       thisContact.setEnteredBy(getUserId(context));
       thisContact.setModifiedBy(getUserId(context));
       db = this.getConnection(context);
@@ -878,11 +878,11 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       buildFormElements(context, db);
-        OrganizationList orgList = new OrganizationList();
-        orgList.setMinerOnly(false);
-        orgList.setShowMyCompany(true);
-        orgList.buildList(db);
-        context.getRequest().setAttribute("OrgList", orgList);      
+      OrganizationList orgList = new OrganizationList();
+      orgList.setMinerOnly(false);
+      orgList.setShowMyCompany(true);
+      orgList.buildList(db);
+      context.getRequest().setAttribute("OrgList", orgList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -898,27 +898,34 @@ public final class ExternalContacts extends CFSModule {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandClone(ActionContext context) {
-	  
+
     if (!(hasPermission(context, "contacts-external_contacts-add"))) {
       return ("PermissionError");
     }
-	
+
     addModuleBean(context, "Add Contact", "Clone Contact");
     Exception errorMessage = null;
     Connection db = null;
-    
+
     String contactId = context.getRequest().getParameter("id");
     Contact cloneContact = null;
-    
+
     try {
       db = this.getConnection(context);
       buildFormElements(context, db);
-        OrganizationList orgList = new OrganizationList();
-        orgList.setMinerOnly(false);
-        orgList.setShowMyCompany(true);
-        orgList.buildList(db);
-        context.getRequest().setAttribute("OrgList", orgList);          
+      OrganizationList orgList = new OrganizationList();
+      orgList.setMinerOnly(false);
+      orgList.setShowMyCompany(true);
+      orgList.buildList(db);
+      context.getRequest().setAttribute("OrgList", orgList);
       cloneContact = new Contact(db, contactId);
       cloneContact.resetBaseInfo();
       context.getRequest().setAttribute("ContactDetails", cloneContact);
@@ -934,7 +941,8 @@ public final class ExternalContacts extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }    
+  }
+
 
   /**
    *  Process the insert form
@@ -954,6 +962,10 @@ public final class ExternalContacts extends CFSModule {
 
     Contact thisContact = (Contact) context.getFormBean();
     thisContact.setRequestItems(context.getRequest());
+    if (context.getRequest().getParameterValues("selectedList") == null) {
+      System.out.println("External Contacts -->  TypeList is NULL");
+    }
+    thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
     thisContact.setEnteredBy(getUserId(context));
     thisContact.setModifiedBy(getUserId(context));
     thisContact.setOwner(getUserId(context));
@@ -1272,7 +1284,8 @@ public final class ExternalContacts extends CFSModule {
       db = this.getConnection(context);
       thisContact = new Contact(db, id);
       thisContact.checkUserAccount(db);
-      htmlDialog.setRelationships(thisContact.processDependencies(db));
+      DependencyList dependencies = thisContact.processDependencies(db);
+      htmlDialog.addMessage(dependencies.getHtmlString());
 
       if (!thisContact.hasAccount()) {
         if (thisContact.getPrimaryContact()) {
@@ -1281,11 +1294,17 @@ public final class ExternalContacts extends CFSModule {
         } else if (thisContact.getHasOpportunities()) {
           htmlDialog.setHeader("Please re-assign or delete any opportunities associated with this contact first.");
           htmlDialog.addButton("OK", "javascript:parent.window.close()");
-        } else {        
-          htmlDialog.setTitle("CFS: Confirm Delete");
-          htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");
-          htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContacts.do?command=DeleteContact&id=" + id + "'");
-          htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        } else {
+          if (dependencies.canDelete()) {
+            htmlDialog.setTitle("CFS: Confirm Delete");
+            htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");
+            htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContacts.do?command=DeleteContact&id=" + id + "'");
+            htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+          } else {
+            htmlDialog.setTitle("CFS: Alert");
+            htmlDialog.setHeader("This contact cannot be deleted because it has the following dependencies within CFS:");
+            htmlDialog.addButton("OK", "javascript:parent.window.close()");
+          }
         }
       } else {
         htmlDialog.setHeader("This contact cannot be deleted because it is associated with a User account.");
@@ -1308,6 +1327,117 @@ public final class ExternalContacts extends CFSModule {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPopupSelector(ActionContext context) {
+
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean listDone = false;
+    String displayFieldId = null;
+    ContactTypeList contactTypeList = null;
+
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("ContactTypeSelectorInfo");
+    }
+    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "ContactTypeSelectorInfo");
+    lookupSelectorInfo.setEnableJavaScript(true);
+
+    HashMap selectedList = new HashMap();
+    HashMap finalElementList = (HashMap) context.getSession().getAttribute("finalElements");
+
+    String category = context.getRequest().getParameter("category");
+    String contactId = context.getRequest().getParameter("contactId");
+
+    if (context.getRequest().getParameter("previousSelection") != null) {
+      int j = 0;
+      StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
+
+      while (st.hasMoreTokens()) {
+        selectedList.put(new Integer(st.nextToken()), "");
+        j++;
+      }
+    } else {
+      //get selected list from the session
+      selectedList = (HashMap) context.getSession().getAttribute("selectedElements");
+    }
+
+    if (context.getRequest().getParameter("displayFieldId") != null) {
+      displayFieldId = context.getRequest().getParameter("displayFieldId");
+    }
+
+    //Flush the selectedList if its a new selection
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      if (context.getSession().getAttribute("finalElements") != null && context.getRequest().getParameter("previousSelection") == null) {
+        selectedList = (HashMap) ((HashMap) context.getSession().getAttribute("finalElements")).clone();
+      }
+    }
+
+    int rowCount = 1;
+
+    while (context.getRequest().getParameter("hiddenelementid" + rowCount) != null) {
+      int elementId = 0;
+      String elementValue = "";
+      elementId = Integer.parseInt(context.getRequest().getParameter("hiddenelementid" + rowCount));
+
+      if (context.getRequest().getParameter("checkelement" + rowCount) != null) {
+        if (context.getRequest().getParameter("elementvalue" + rowCount) != null) {
+          elementValue = context.getRequest().getParameter("elementvalue" + rowCount);
+        }
+
+        if (selectedList.get(new Integer(elementId)) == null) {
+          selectedList.put(new Integer(elementId), elementValue);
+        } else {
+          selectedList.remove(new Integer(elementId));
+          selectedList.put(new Integer(elementId), elementValue);
+        }
+      } else {
+        selectedList.remove(new Integer(elementId));
+      }
+      rowCount++;
+    }
+
+    if ("true".equals(context.getRequest().getParameter("finalsubmit"))) {
+      finalElementList = (HashMap) selectedList;
+      context.getSession().setAttribute("finalElements", finalElementList);
+    }
+
+    try {
+      db = this.getConnection(context);
+      contactTypeList = new ContactTypeList();
+      contactTypeList.setPagedListInfo(lookupSelectorInfo);
+      contactTypeList.setShowPersonal(true);
+      contactTypeList.setShowDisabled(false);
+      contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
+      contactTypeList.setIncludeSelectedByUser(Integer.parseInt(contactId));
+      if ("accounts".equals(category)) {
+        contactTypeList.setCategory(ContactType.ACCOUNT);
+      } else {
+        contactTypeList.setCategory(ContactType.GENERAL);
+      }
+      contactTypeList.buildList(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      context.getRequest().setAttribute("ContactTypeList", contactTypeList);
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      context.getSession().setAttribute("selectedElements", selectedList);
+      context.getRequest().setAttribute("DisplayFieldId", displayFieldId);
+      return ("PopupContactTypeOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
    *  Common method for populating shared form elements
    *
    *@param  context           Description of Parameter
@@ -1317,9 +1447,9 @@ public final class ExternalContacts extends CFSModule {
    */
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
     ContactTypeList contactTypeList = new ContactTypeList();
+    contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
     contactTypeList.setShowPersonal(true);
     contactTypeList.buildList(db);
-    contactTypeList.addItem(0, "--None--");
 
     context.getRequest().setAttribute("ContactTypeList", contactTypeList);
 

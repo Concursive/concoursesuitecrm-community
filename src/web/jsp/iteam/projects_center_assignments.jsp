@@ -1,6 +1,25 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="projectAssignmentsInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
+<%--
+<table border='0' width='100%'  bgcolor='#FFFFFF' cellspacing='0' cellpadding='0'>
+  <tr>
+    <form name="listView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>">
+    <td align="left">
+      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+        <option <%= projectAssignmentsInfo.getOptionValue("open") %>>Open Activities</option>
+        <option <%= projectAssignmentsInfo.getOptionValue("closed") %>>Closed Activities</option>
+        <option <%= projectAssignmentsInfo.getOptionValue("all") %>>All Activities</option>
+      </select>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="projectAssignmentsInfo"/>
+    </td>
+    </form>
+  </tr>
+</table>
+--%>
 <%
   String bgColorVar = "";
   int firstRun = 1;

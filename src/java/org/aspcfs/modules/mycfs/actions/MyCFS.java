@@ -923,8 +923,8 @@ public final class MyCFS extends CFSModule {
       calendarInfo.addAlertType(0, "Task");
       calendarInfo.addAlertType(1, "Call");
       calendarInfo.addAlertType(2, "Opportunity");
-      calendarInfo.addAlertType(3, "Project");
-      calendarInfo.addAlertType(4, "Accounts");
+      //calendarInfo.addAlertType(3, "Project");
+      calendarInfo.addAlertType(3, "Accounts");
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
 
@@ -1031,7 +1031,7 @@ public final class MyCFS extends CFSModule {
           method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarEndDate(context)});
 
           //Add Events
-          method = Class.forName(className).getMethod("calendarAlerts", new Class[]{Class.forName(param1), Class.forName(param2)});
+          method = Class.forName(className).getMethod("buildAlerts", new Class[]{Class.forName(param1), Class.forName(param2)});
           method.invoke(thisInstance, new Object[]{companyCalendar, db});
           if (!selectedAlertType.equalsIgnoreCase("all")) {
             break;
@@ -1074,7 +1074,6 @@ public final class MyCFS extends CFSModule {
       companyCalendar = (CalendarView) context.getRequest().getAttribute("CompanyCalendar");
     } else {
       companyCalendar = new CalendarView(context.getRequest());
-      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
     }
 
     ArrayList alertTypes = calendarInfo.getAlertTypes();
@@ -1106,7 +1105,7 @@ public final class MyCFS extends CFSModule {
         method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarEndDate(context)});
 
         //Add Events
-        method = Class.forName(className).getMethod("calendarAlerts", new Class[]{Class.forName(param1), Class.forName(param2)});
+        method = Class.forName(className).getMethod("buildAlertCount", new Class[]{Class.forName(param1), Class.forName(param2)});
         method.invoke(thisInstance, new Object[]{companyCalendar, db});
       }
     } catch (SQLException e) {
@@ -1116,7 +1115,12 @@ public final class MyCFS extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return ("CalendarOK");
+    
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
+      return "CalendarOK";
+    }
+    return "SystemError";
   }
 
 

@@ -139,6 +139,8 @@ public static String replace(String str, String o, String n) {
   public static String showError(HttpServletRequest request, String errorEntry) {
     if (request.getAttribute(errorEntry) != null) {
       return "&nbsp;<br><img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font><br>&nbsp;<br>";
+    }else if (request.getParameter(errorEntry) != null) {
+      return "&nbsp;<br><img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getParameter(errorEntry)) + "</font><br>&nbsp;<br>";
     } else {
       return "&nbsp;";
     }

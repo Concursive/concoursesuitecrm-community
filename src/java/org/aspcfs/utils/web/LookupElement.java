@@ -34,14 +34,23 @@ public class LookupElement {
    */
   public LookupElement() { }
 
+
+  /**
+   *  Constructor for the LookupElement object
+   *
+   *@param  db                         Description of the Parameter
+   *@param  code                       Description of the Parameter
+   *@param  tableName                  Description of the Parameter
+   *@exception  java.sql.SQLException  Description of the Exception
+   */
   public LookupElement(Connection db, int code, String tableName) throws java.sql.SQLException {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("LookupElement-> Retrieving ID: " + code + " from table: " + tableName);
     }
     String sql =
-      "SELECT code, description, default_item, level, enabled " +
-      "FROM " + tableName + " " +
-      "WHERE code = ? ";
+        "SELECT code, description, default_item, level, enabled " +
+        "FROM " + tableName + " " +
+        "WHERE code = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, code);
     ResultSet rs = pst.executeQuery();
@@ -51,6 +60,7 @@ public class LookupElement {
       throw new java.sql.SQLException("ID not found");
     }
   }
+
 
   /**
    *  Constructor for the LookupElement object
@@ -62,27 +72,42 @@ public class LookupElement {
   public LookupElement(ResultSet rs) throws java.sql.SQLException {
     build(rs);
   }
-    
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                         Description of the Parameter
+   *@exception  java.sql.SQLException  Description of the Exception
+   */
   public void build(ResultSet rs) throws java.sql.SQLException {
     code = rs.getInt("code");
     description = rs.getString("description");
-    
+
     defaultItem = rs.getBoolean("default_item");
     level = rs.getInt("level");
     //startDate = rs.getTimestamp("start_date");
     //endDate = rs.getTimestamp("end_date");
     enabled = rs.getBoolean("enabled");
-    
+
     if (!(this.getEnabled())) {
       description += " (X)";
     }
-    
     //not guaranteed to be here
     //entered = rs.getTimestamp("entered");
     //modified = rs.getTimestamp("modified");
   }
 
-  public void setTableName(String tmp) { this.tableName = tmp; }
+
+  /**
+   *  Sets the tableName attribute of the LookupElement object
+   *
+   *@param  tmp  The new tableName value
+   */
+  public void setTableName(String tmp) {
+    this.tableName = tmp;
+  }
+
 
   /**
    *  Sets the newOrder attribute of the LookupElement object
@@ -129,12 +154,33 @@ public class LookupElement {
   public void setCode(int tmp) {
     this.code = tmp;
   }
+
+
+  /**
+   *  Sets the code attribute of the LookupElement object
+   *
+   *@param  tmp  The new code value
+   */
   public void setCode(String tmp) {
     this.code = Integer.parseInt(tmp);
   }
+
+
+  /**
+   *  Sets the id attribute of the LookupElement object
+   *
+   *@param  tmp  The new id value
+   */
   public void setId(int tmp) {
     this.code = tmp;
   }
+
+
+  /**
+   *  Sets the id attribute of the LookupElement object
+   *
+   *@param  tmp  The new id value
+   */
   public void setId(String tmp) {
     this.code = Integer.parseInt(tmp);
   }
@@ -160,6 +206,13 @@ public class LookupElement {
   public void setDefaultItem(boolean tmp) {
     this.defaultItem = tmp;
   }
+
+
+  /**
+   *  Sets the defaultItem attribute of the LookupElement object
+   *
+   *@param  tmp  The new defaultItem value
+   */
   public void setDefaultItem(String tmp) {
     this.defaultItem = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
   }
@@ -174,6 +227,13 @@ public class LookupElement {
   public void setLevel(int tmp) {
     this.level = tmp;
   }
+
+
+  /**
+   *  Sets the level attribute of the LookupElement object
+   *
+   *@param  tmp  The new level value
+   */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
   }
@@ -189,14 +249,46 @@ public class LookupElement {
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
   }
+
+
+  /**
+   *  Sets the enabled attribute of the LookupElement object
+   *
+   *@param  tmp  The new enabled value
+   */
   public void setEnabled(String tmp) {
     this.enabled = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
   }
-  
-  public void setFieldId(int tmp) { this.fieldId = tmp; }
-  public void setFieldId(String tmp) { this.fieldId = Integer.parseInt(tmp); }
 
-  public String getTableName() { return tableName; }
+
+  /**
+   *  Sets the fieldId attribute of the LookupElement object
+   *
+   *@param  tmp  The new fieldId value
+   */
+  public void setFieldId(int tmp) {
+    this.fieldId = tmp;
+  }
+
+
+  /**
+   *  Sets the fieldId attribute of the LookupElement object
+   *
+   *@param  tmp  The new fieldId value
+   */
+  public void setFieldId(String tmp) {
+    this.fieldId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the tableName attribute of the LookupElement object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
 
 
   /**
@@ -211,8 +303,8 @@ public class LookupElement {
 
 
   /**
-   *  Gets the id attribute of the LookupElement object, id is a required
-   *  name for some CFS reflection parsing
+   *  Gets the id attribute of the LookupElement object, id is a required name
+   *  for some CFS reflection parsing
    *
    *@return    The id value
    */
@@ -264,8 +356,14 @@ public class LookupElement {
   public boolean getEnabled() {
     return enabled;
   }
-  
-  public java.sql.Timestamp getModified() { 
+
+
+  /**
+   *  Gets the modified attribute of the LookupElement object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
     if (modified == null) {
       return (new java.sql.Timestamp(new java.util.Date().getTime()));
     } else {
@@ -273,7 +371,15 @@ public class LookupElement {
     }
   }
 
-  public int getFieldId() { return fieldId; }
+
+  /**
+   *  Gets the fieldId attribute of the LookupElement object
+   *
+   *@return    The fieldId value
+   */
+  public int getFieldId() {
+    return fieldId;
+  }
 
 
 
@@ -338,7 +444,15 @@ public class LookupElement {
     return insert(db);
   }
 
-  public boolean insert(Connection db) throws SQLException {  
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     int i = 0;
 
@@ -349,7 +463,7 @@ public class LookupElement {
     i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getDescription());
-    
+
     pst.setInt(++i, this.getLevel());
     pst.setBoolean(++i, true);
     if (fieldId > -1) {
@@ -360,13 +474,13 @@ public class LookupElement {
 
     String seqName = null;
     if (tableName.length() > 22) {
-      seqName = tableName.substring(0,22);
+      seqName = tableName.substring(0, 22);
     } else {
       seqName = tableName;
     }
-    
+
     code = DatabaseUtils.getCurrVal(db, seqName + "_code_seq");
-    
+
     return true;
   }
 

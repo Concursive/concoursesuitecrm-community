@@ -12,7 +12,8 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *
  *@author     akhi_m
  *@created    October 2, 2002
- *@version    $Id$
+ *@version    $Id: TaskListScheduledActions.java,v 1.4 2002/12/04 13:11:34
+ *      mrajkowski Exp $
  */
 public class TaskListScheduledActions extends TaskList implements ScheduledActions {
 
@@ -48,35 +49,65 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
   /**
    *  Constructor for the calendarActions object
    *
-   *@param  db               Description of the Parameter
-   *@param  companyCalendar  Description of the Parameter
-   *@return                  Description of the Return Value
+   *@param  db                Description of the Parameter
+   *@param  companyCalendar   Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
-  public String calendarAlerts(CalendarView companyCalendar, Connection db) throws SQLException{
+  public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
 
     try {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TaskListScheduledActions --> Getting user Record for " + this.getUserId());
       }
-      User thisUser = new User(db, this.getUserId());
 
       // Add Tasks to calendar
-      this.setOwner(thisUser.getContactId());
-      this.buildList(db);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("TaskListScheduledActions --> Getting Tasks ");
-      }
+      this.setOwner(User.getContactId(db, this.getUserId()));
+      this.buildShortList(db);
       Iterator taskList = this.iterator();
       int taskCount = 0;
       while (taskList.hasNext()) {
         Task thisTask = (Task) taskList.next();
         int status = thisTask.getComplete() ? 1 : 0;
-        companyCalendar.addEvent(thisTask.getAlertDateStringLongYear(), "", thisTask.getDescription(), "Tasks", thisTask.getId(), -1, status);
+        companyCalendar.addEvent(thisTask.getAlertDateStringLongYear(), "", thisTask.getDescription(), CalendarEventList.EVENT_TYPES[0], thisTask.getId(), -1, status);
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Task Calendar Alerts");
     }
-    return "CalendarTasksOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  companyCalendar   Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
+
+    try {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("TaskListScheduledActions --> Building Alert Counts ");
+      }
+
+      // Add Tasks to calendar
+      this.setOwner(User.getContactId(db, this.getUserId()));
+
+      HashMap dayEvents = this.queryRecordCount(db);
+      Set s = dayEvents.keySet();
+      Iterator i = s.iterator();
+      while (i.hasNext()) {
+        String thisDay = (String) i.next();
+        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[0], thisDay, dayEvents.get(thisDay));
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("TaskListScheduledActions --> Addew Tasks for Day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
+        }
+      }
+    } catch (SQLException e) {
+      throw new SQLException("Error Building Task Calendar Alerts");
+    }
   }
 }
 

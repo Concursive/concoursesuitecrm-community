@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.StateSelect,com.darkhorseventures.webutils.CountrySelect" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="com.darkhorseventures.cfsbase.ContactTypeList" scope="request"/>
@@ -10,6 +10,7 @@
 <jsp:useBean id="CountrySelect" class="com.darkhorseventures.webutils.CountrySelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
       formTest = true;
@@ -22,7 +23,10 @@
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
       } else {
-        return true;
+        var test = document.addContact.selectedList;
+        if (test != null) {
+          return selectAllOptions(document.addContact.selectedList);
+        }
       }
     }
 </script>
@@ -63,11 +67,27 @@ Add Contact<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Contact Type
+      Contact Type(s)
     </td>
-    <td valign=center>
-      <%=ContactTypeList.getHtmlSelect("typeId", ContactDetails.getTypeId())%>
-    </td>
+    <td valign="center">
+      <select multiple name="selectedList" id="selectedList" size="5">
+        <dhv:evaluate exp="<%=ContactDetails.getTypes().isEmpty()%>">
+          <option value="-1">None Selected</option>
+        </dhv:evaluate>
+        <dhv:evaluate exp="<%=!(ContactDetails.getTypes().isEmpty())%>">
+           <%
+            Iterator i = ContactDetails.getTypes().iterator();
+            while (i.hasNext()) {
+              LookupElement thisElt = (LookupElement)i.next();
+            %>
+               <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
+            <%}%>
+         </dhv:evaluate>
+			</select>
+      <input type="hidden" name="previousSelection" value="">
+      <input type="hidden" name="category" value="<%= request.getParameter("category") %>">
+      <a href="javascript:popContactTypeSelectMultiple('selectedList', 'accounts', <%= ContactDetails.getId() %>);">Select</a>
+     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">

@@ -57,7 +57,7 @@ public class User extends GenericBean {
   protected Contact contact = new Contact();
   protected UserList childUsers = null;
   protected double YTD = 0;
-  
+
   protected double pipelineValue = 0;
   protected boolean pipelineValueIsValid = false;
 
@@ -197,7 +197,7 @@ public class User extends GenericBean {
    */
   public String getYTDValue() {
     double value_2dp = (double) Math.round(YTD * 100.0) / 100.0;
-    String toReturn = "" + value_2dp;
+    String toReturn = String.valueOf(value_2dp);
     if (toReturn.endsWith(".0")) {
       toReturn = toReturn.substring(0, toReturn.length() - 2);
     }
@@ -291,8 +291,7 @@ public class User extends GenericBean {
       mail.setSubject("CFS password changed");
       mail.setBody("Your CFS User account password has been changed by " + modUser.getUsername() + " (" + modUser.getContact().getNameLastFirst() + ").<br><br>" +
           " Your new CFS password is the following:<br>" + newPassword + "<br><br>" +
-          "It is reccomended that you change your password next time you login to CFS.");
-
+          "It is recomended that you change your password next time you login to CFS.");
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
       }
@@ -415,12 +414,26 @@ public class User extends GenericBean {
     this.ramr = tmp;
   }
 
+
+  /**
+   *  Gets the pipelineValueIsValid attribute of the User object
+   *
+   *@return    The pipelineValueIsValid value
+   */
   public boolean getPipelineValueIsValid() {
     return pipelineValueIsValid;
   }
+
+
+  /**
+   *  Sets the pipelineValueIsValid attribute of the User object
+   *
+   *@param  pipelineValueIsValid  The new pipelineValueIsValid value
+   */
   public void setPipelineValueIsValid(boolean pipelineValueIsValid) {
     this.pipelineValueIsValid = pipelineValueIsValid;
   }
+
 
   /**
    *  Sets the IsValid attribute of the User object
@@ -727,13 +740,27 @@ public class User extends GenericBean {
       this.roleId = Integer.parseInt(tmp);
     }
   }
-  
+
+
+  /**
+   *  Sets the pipelineValue attribute of the User object
+   *
+   *@param  pipelineValue  The new pipelineValue value
+   */
   public void setPipelineValue(double pipelineValue) {
     this.pipelineValue = pipelineValue;
   }
+
+
+  /**
+   *  Gets the pipelineValue attribute of the User object
+   *
+   *@return    The pipelineValue value
+   */
   public double getPipelineValue() {
     return pipelineValue;
   }
+
 
   /**
    *  Sets the Role attribute of the User object
@@ -1930,12 +1957,19 @@ public class User extends GenericBean {
     rs.close();
     pst.close();
   }
-  
+
+
+  /**
+   *  Gets the grossPipelineCurrency attribute of the User object
+   *
+   *@param  divisor  Description of the Parameter
+   *@return          The grossPipelineCurrency value
+   */
   public String getGrossPipelineCurrency(int divisor) {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
     double tempValue = (java.lang.Math.round(pipelineValue) / divisor);
     String amountOut = "";
-    
+
     if (tempValue < 1) {
       if (tempValue == 0.0) {
         amountOut = "0";
@@ -1947,8 +1981,15 @@ public class User extends GenericBean {
     }
 
     return amountOut;
-  }  
-  
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildGrossPipelineValue(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -1966,10 +2007,10 @@ public class User extends GenericBean {
     rs = pst.executeQuery();
     if (rs.next()) {
       this.setPipelineValue(rs.getDouble("sum"));
-    } 
+    }
     this.setPipelineValueIsValid(true);
     rs.close();
-    pst.close();    
+    pst.close();
   }
 
 
@@ -2235,6 +2276,35 @@ public class User extends GenericBean {
 
 
   /**
+   *  Gets the contactId attribute of the User class
+   *
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@return                   The contactId value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int getContactId(Connection db, int userId) throws SQLException {
+    int contactId = -1;
+    if (userId == -1) {
+      throw new SQLException("User Id not specified");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT contact_id " +
+        "FROM access " +
+        "WHERE user_id = ? ");
+    pst.setInt(1, userId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      contactId = rs.getInt("contact_id");
+    }
+    rs.close();
+    pst.close();
+    return contactId;
+  }
+
+
+  /**
    *  Updates the list of users that this user manages.
    *
    *@param  db                Description of Parameter
@@ -2406,8 +2476,8 @@ public class User extends GenericBean {
 
 
   /**
-   *  Returns a comma delimited string of all users in this user's hierarchy
-   *  for querying records.
+   *  Returns a comma delimited string of all users in this user's hierarchy for
+   *  querying records.
    *
    *@return    The idRange value
    */

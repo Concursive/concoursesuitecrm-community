@@ -155,7 +155,7 @@ else{%>
       </select>
             </td>
            <%}%>
-           <td nowrap><%=toHtml(thisContact.getTypeName())%>
+           <td nowrap><%=toHtml(thisContact.getTypesNameString())%>
             <input type=hidden name="contactemail<%=count%>" value=<%=email%>>
             </td>
         </tr>

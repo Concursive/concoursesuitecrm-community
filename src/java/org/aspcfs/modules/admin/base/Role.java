@@ -409,10 +409,10 @@ public class Role extends GenericBean {
     return resultCount;
   }
   
-  public HashMap processDependencies(Connection db) throws SQLException {
+  public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
     String sql = "";
-    HashMap dependencyList = new HashMap();
+    DependencyList dependencyList = new DependencyList();
     try {
       db.setAutoCommit(false);
       sql = "SELECT COUNT(*) AS user_count " +
@@ -424,8 +424,13 @@ public class Role extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        if (rs.getInt("user_count") != 0) {
-          dependencyList.put("Active Users", new Integer(rs.getInt("user_count")));
+        int usercount = rs.getInt("user_count");
+        if (usercount != 0) {
+          Dependency thisDependency = new Dependency();
+        thisDependency.setName("Active Users");
+        thisDependency.setCount(usercount);
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
         }
       }
 

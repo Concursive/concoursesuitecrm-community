@@ -27,6 +27,7 @@ public class PermissionCategory extends GenericBean {
   public static final int PERMISSION_CAT_ACCOUNTS = 1;
   public static final int LOOKUP_ACCOUNTS_TYPE = 1;
   public static final int LOOKUP_ACCOUNTS_REVENUE_TYPE = 2;
+  public static final int LOOKUP_ACCOUNTS_CONTACTS_TYPE = 3;
   
   public static final int PERMISSION_CAT_CONTACTS = 2;
   public static final int LOOKUP_CONTACTS_TYPE = 1;

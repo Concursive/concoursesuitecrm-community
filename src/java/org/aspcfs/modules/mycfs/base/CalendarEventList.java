@@ -2,14 +2,80 @@ package com.darkhorseventures.cfsbase;
 
 import java.util.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author
+ *@created    December 18, 2002
+ *@version    $Id$
+ */
 public class CalendarEventList extends ArrayList {
 
-	private java.util.Date date = null;
-  public final static String[] EVENT_TYPES = {"Tasks","Calls","Opportunity","Accounts","Assignments","Contact Calls","Opportunity Calls","Holiday"};  
-  public CalendarEventList() {}
-  
-  public void setDate(java.util.Date tmp) { this.date = tmp; }
-  public java.util.Date getDate() { return date; }
+  private java.util.Date date = null;
+  private HashMap eventTypes = null;
+  public final static String[] EVENT_TYPES = {"Tasks", "Calls", "Opportunity", "Accounts", "Assignments", "Contact Calls", "Opportunity Calls", "Holiday"};
 
+
+  /**
+   *  Constructor for the CalendarEventList object
+   */
+  public CalendarEventList() { }
+
+
+  /**
+   *  Sets the date attribute of the CalendarEventList object
+   *
+   *@param  tmp  The new date value
+   */
+  public void setDate(java.util.Date tmp) {
+    this.date = tmp;
+  }
+
+
+  /**
+   *  Sets the eventTypes attribute of the CalendarEventList object
+   *
+   *@param  eventTypes  The new eventTypes value
+   */
+  public void setEventTypes(HashMap eventTypes) {
+    this.eventTypes = eventTypes;
+  }
+
+
+  /**
+   *  Gets the eventTypes attribute of the CalendarEventList object
+   *
+   *@return    The eventTypes value
+   */
+  public HashMap getEventTypes() {
+    return eventTypes;
+  }
+
+
+  /**
+   *  Gets the date attribute of the CalendarEventList object
+   *
+   *@return    The date value
+   */
+  public java.util.Date getDate() {
+    return date;
+  }
+
+
+  /**
+   *  Associates a count with a event Type specifying the number of events of that type for that day.
+   *
+   *@param  type   The feature to be added to the EventType attribute
+   *@param  count  The feature to be added to the EventType attribute
+   */
+  public void addEventType(String type, Object count) {
+    if (eventTypes == null) {
+      eventTypes = new HashMap();
+    }
+    if (eventTypes.get(type) != null) {
+      eventTypes.remove(type);
+    }
+    eventTypes.put(type, count);
+  }
 }
 
