@@ -26,6 +26,9 @@ ant upgradedb -Darg1=2004-08-26-partha.sql -Darg2=
 ant upgradedb -Darg1=2004-08-30-partha.sql -Darg2=
 ant upgradedb -Darg1=2004-08-31-partha.bsh -Darg2=
 
+# Rename existing calls permissions
+ant upgradedb -Darg1=2004-10-12.sql -Darg2=
+
 # Manually upgrade the help for each site
 echo ...
 echo Execute 'ant upgradedb.help' for each site manually

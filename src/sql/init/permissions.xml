@@ -45,7 +45,7 @@
       <permission name="contacts-external_contacts" attributes="vaed" description="General Contact Records"/>
       <permission name="contacts-external_contacts-reports" attributes="va-d" description="Export Contact Data"/>
       <permission name="contacts-external_contacts-folders" attributes="vaed" description="Folders"/>
-      <permission name="contacts-external_contacts-calls" attributes="vaed" description="Calls"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed" description="Activities"/>
       <permission name="contacts-external_contacts-messages" attributes="v---" description="Messages"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
       <permission name="contacts-external_contacts-imports" attributes="vaed" description="Imports"/>
@@ -58,7 +58,7 @@
       <permission name="pipeline-opportunities" attributes="vaed" description="Opportunity Records"/>
       <permission name="pipeline-dashboard" attributes="v---" description="Dashboard"/>
       <permission name="pipeline-reports" attributes="va-d" description="Export Opportunity Data"/>
-      <permission name="pipeline-opportunities-calls" attributes="vaed" description="Calls"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed" description="Activities"/>
       <permission name="pipeline-opportunities-documents" attributes="vaed" description="Documents"/>
       <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Stage" description="What are my upcoming opportunities by stage?"/>
       <report file="opportunity_account.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Account" description="What are all the accounts associated with my opportunities?"/>
@@ -78,7 +78,7 @@
       <permission name="accounts-accounts-folders" attributes="vaed" description="Folders"/>
       <permission name="accounts-accounts-contacts" attributes="vaed" description="Contacts"/>
       <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" description="Contact Opportunities"/>
-      <permission name="accounts-accounts-contacts-calls" attributes="vaed" description="Contact Calls"/>
+      <permission name="accounts-accounts-contacts-calls" attributes="vaed" description="Contact Activities"/>
       <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" description="Completed Activities"/>
       <permission name="accounts-accounts-contacts-messages" attributes="vaed" description="Contact Messages"/>
       <permission name="accounts-accounts-opportunities" attributes="vaed" description="Opportunities"/>
@@ -234,20 +234,20 @@
       <permission name="pipeline-opportunities-calls" attributes="vaed"/>
       <permission name="pipeline-opportunities-documents" attributes="vaed"/>
       <permission name="accounts" attributes="v---"/>
-      <permission name="accounts-accounts" attributes="vaed" description="Account Records"/>
-      <permission name="accounts-accounts-folders" attributes="vaed" description="Folders"/>
-      <permission name="accounts-accounts-contacts" attributes="vaed" description="Contacts"/>
-      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" description="Contact Opportunities"/>
-      <permission name="accounts-accounts-contacts-calls" attributes="vaed" description="Contact Calls"/>
-      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" description="Completed Activities"/>
-      <permission name="accounts-accounts-contacts-messages" attributes="vaed" description="Contact Messages"/>
-      <permission name="accounts-accounts-opportunities" attributes="vaed" description="Opportunities"/>
-      <permission name="accounts-accounts-tickets" attributes="vaed" description="Tickets"/>
+      <permission name="accounts-accounts" attributes="vaed" />
+      <permission name="accounts-accounts-folders" attributes="vaed" />
+      <permission name="accounts-accounts-contacts" attributes="vaed" />
+      <permission name="accounts-accounts-contacts-opportunities" attributes="vaed" />
+      <permission name="accounts-accounts-contacts-calls" attributes="vaed" />
+      <permission name="accounts-accounts-contacts-completed-calls" attributes="--e-" />
+      <permission name="accounts-accounts-contacts-messages" attributes="vaed" />
+      <permission name="accounts-accounts-opportunities" attributes="vaed" />
+      <permission name="accounts-accounts-tickets" attributes="vaed" />
       <permission name="accounts-accounts-tickets-tasks" attributes="vaed"/>
       <permission name="accounts-accounts-tickets-folders" attributes="vaed"/>
       <permission name="accounts-accounts-tickets-documents" attributes="vaed"/>
-      <permission name="accounts-accounts-documents" attributes="vaed" description="Documents"/>
-      <permission name="accounts-accounts-reports" attributes="va-d" description="Export Account Data"/>
+      <permission name="accounts-accounts-documents" attributes="vaed" />
+      <permission name="accounts-accounts-reports" attributes="va-d" />
       <permission name="accounts-service-contracts" attributes="vaed" />
       <permission name="accounts-assets" attributes="vaed" />
       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>

@@ -1091,6 +1091,11 @@ ALTER TABLE projects ADD requestDate_timezone VARCHAR(255);
 ALTER TABLE projects ADD est_closedate_timezone VARCHAR(255);
 ALTER TABLE ticket_csstm_form ADD alert_date_timezone VARCHAR(255);
 
+-- Renamed some permissions
+UPDATE permission SET description = 'Activities' WHERE permission = 'pipeline-opportunities-calls';
+UPDATE permission SET description = 'Contact Activities' WHERE permission = 'accounts-accounts-contacts-calls';
+UPDATE permission SET description = 'Activities' WHERE permission = 'contacts-external_contacts-calls';
+
 INSERT [database_version] ([script_filename],[script_version])VALUES('mssql_2004-08-30.sql','2004-08-30');
 
 

@@ -4377,7 +4377,7 @@ INSERT INTO permission VALUES (2, 1, 'accounts-accounts', true, true, true, true
 INSERT INTO permission VALUES (3, 1, 'accounts-accounts-folders', true, true, true, true, 'Folders', 30, true, true, false);
 INSERT INTO permission VALUES (4, 1, 'accounts-accounts-contacts', true, true, true, true, 'Contacts', 40, true, true, false);
 INSERT INTO permission VALUES (5, 1, 'accounts-accounts-contacts-opportunities', true, true, true, true, 'Contact Opportunities', 50, true, true, false);
-INSERT INTO permission VALUES (6, 1, 'accounts-accounts-contacts-calls', true, true, true, true, 'Contact Calls', 60, true, true, false);
+INSERT INTO permission VALUES (6, 1, 'accounts-accounts-contacts-calls', true, true, true, true, 'Contact Activities', 60, true, true, false);
 INSERT INTO permission VALUES (7, 1, 'accounts-accounts-contacts-completed-calls', false, false, true, false, 'Completed Activities', 70, true, true, false);
 INSERT INTO permission VALUES (8, 1, 'accounts-accounts-contacts-messages', true, true, true, true, 'Contact Messages', 80, true, true, false);
 INSERT INTO permission VALUES (9, 1, 'accounts-accounts-opportunities', true, true, true, true, 'Opportunities', 90, true, true, false);
@@ -4403,7 +4403,7 @@ INSERT INTO permission VALUES (28, 2, 'contacts', true, false, false, false, 'Ac
 INSERT INTO permission VALUES (29, 2, 'contacts-external_contacts', true, true, true, true, 'General Contact Records', 20, true, true, false);
 INSERT INTO permission VALUES (30, 2, 'contacts-external_contacts-reports', true, true, false, true, 'Export Contact Data', 30, true, true, false);
 INSERT INTO permission VALUES (31, 2, 'contacts-external_contacts-folders', true, true, true, true, 'Folders', 40, true, true, false);
-INSERT INTO permission VALUES (32, 2, 'contacts-external_contacts-calls', true, true, true, true, 'Calls', 50, true, true, false);
+INSERT INTO permission VALUES (32, 2, 'contacts-external_contacts-calls', true, true, true, true, 'Activities', 50, true, true, false);
 INSERT INTO permission VALUES (33, 2, 'contacts-external_contacts-messages', true, false, false, false, 'Messages', 60, true, true, false);
 INSERT INTO permission VALUES (34, 2, 'contacts-external_contacts-opportunities', true, true, true, true, 'Opportunities', 70, true, true, false);
 INSERT INTO permission VALUES (35, 2, 'contacts-external_contacts-imports', true, true, true, true, 'Imports', 80, true, true, false);
@@ -4413,7 +4413,7 @@ INSERT INTO permission VALUES (38, 4, 'pipeline', true, false, false, false, 'Ac
 INSERT INTO permission VALUES (39, 4, 'pipeline-opportunities', true, true, true, true, 'Opportunity Records', 20, true, true, false);
 INSERT INTO permission VALUES (40, 4, 'pipeline-dashboard', true, false, false, false, 'Dashboard', 30, true, true, false);
 INSERT INTO permission VALUES (41, 4, 'pipeline-reports', true, true, false, true, 'Export Opportunity Data', 40, true, true, false);
-INSERT INTO permission VALUES (42, 4, 'pipeline-opportunities-calls', true, true, true, true, 'Calls', 50, true, true, false);
+INSERT INTO permission VALUES (42, 4, 'pipeline-opportunities-calls', true, true, true, true, 'Activities', 50, true, true, false);
 INSERT INTO permission VALUES (43, 4, 'pipeline-opportunities-documents', true, true, true, true, 'Documents', 60, true, true, false);
 INSERT INTO permission VALUES (44, 5, 'demo', true, true, true, true, 'Access to Demo/Non-working features', 10, true, true, false);
 INSERT INTO permission VALUES (45, 6, 'campaign', true, false, false, false, 'Access to Communications module', 10, true, true, false);
