@@ -1316,7 +1316,8 @@ CREATE TABLE project_requirements (
     modifiedby integer NOT NULL,
     startdate timestamp(3) without time zone,
     startdate_timezone VARCHAR(255),
-    deadline_timezone VARCHAR(255)
+    deadline_timezone VARCHAR(255),
+    due_date_timezone VARCHAR(255)
 );
 
 
