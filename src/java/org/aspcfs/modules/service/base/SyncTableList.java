@@ -13,6 +13,7 @@ public class SyncTableList extends ArrayList {
   private int systemId = -1;
   private boolean buildTextFields = true;
   private boolean buildSyncElementsOnly = false;
+  private boolean buildCreateStatementsOnly = false;
 
   public SyncTableList() { }
 
@@ -25,10 +26,17 @@ public class SyncTableList extends ArrayList {
       (tmp.equalsIgnoreCase("true") || 
       tmp.equalsIgnoreCase("on")); 
   }
+  public void setBuildCreateStatementsOnly(boolean tmp) { this.buildCreateStatementsOnly = tmp; }
+  public void setBuildCreateStatementsOnly(String tmp) { 
+    this.buildCreateStatementsOnly = 
+      (tmp.equalsIgnoreCase("true") || 
+      tmp.equalsIgnoreCase("on")); 
+  }
 
   public int getSystemId() { return systemId; }
   public boolean getBuildTextFields() { return buildTextFields; }
   public boolean getBuildSyncElementsOnly() { return buildSyncElementsOnly; }
+  public boolean getBuildCreateStatementsOnly() { return buildCreateStatementsOnly; }
 
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -76,6 +84,10 @@ public class SyncTableList extends ArrayList {
     
     if (buildSyncElementsOnly) {
       sqlFilter.append("AND sync_item = ? ");
+    }
+    
+    if (buildCreateStatementsOnly) {
+      sqlFilter.append("AND create_statement IS NOT NULL ");
     }
   }
   
