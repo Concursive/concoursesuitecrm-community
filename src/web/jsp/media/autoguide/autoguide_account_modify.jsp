@@ -86,7 +86,7 @@
 </dhv:evaluate>
 Modify Vehicle<br>
 <hr color="#BFBFBB" noshade>
-<%@ include file="accounts_details_header_include.jsp" %>
+<%@ include file="../../accounts/accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
