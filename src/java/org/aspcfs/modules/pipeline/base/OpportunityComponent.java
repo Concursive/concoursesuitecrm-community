@@ -1392,7 +1392,7 @@ public class OpportunityComponent extends GenericBean {
     }
     rs.close();
     pst.close();
-    buildTypes(db);`
+    buildTypes(db);
   }
 
 
