@@ -181,7 +181,7 @@ public class ImportAccountContacts extends CSVReader {
           MOBILE_PHONE = findColumn(thisRecord, new String[]{"Mobile Phone", "Mobile"});
           OTHER_PHONE = findColumn(thisRecord, "Other Phone");
           PAGER = findColumn(thisRecord, "Pager");
-          BUSINESS_EMAIL = findColumn(thisRecord, "Business Email");
+          BUSINESS_EMAIL = findColumn(thisRecord, new String[]{"Business Email", "Email"});
           PERSONAL_EMAIL = findColumn(thisRecord, new String[]{"Home Email", "Personal Email"});
           OTHER_EMAIL = findColumn(thisRecord, "Other Email");
           NOTES = findColumn(thisRecord, "Notes");
