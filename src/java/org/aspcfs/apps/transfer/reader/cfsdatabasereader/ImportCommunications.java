@@ -3,6 +3,7 @@ package com.darkhorseventures.apps.dataimport.cfsdatabasereader;
 import java.sql.*;
 import com.darkhorseventures.apps.dataimport.*;
 import com.darkhorseventures.cfsbase.*;
+import com.darkhorseventures.webutils.*;
 import com.zeroio.iteam.base.*;
 import java.util.*;
 
@@ -60,10 +61,41 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
     }
     
     logger.info("ImportCommunications-> Inserting Saved Criteria Elements");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
-    if (!processOK) {
-      return false;
+    if (1 == 1) {
+      CustomLookupList lookupList = new CustomLookupList();
+      lookupList.setTableName("saved_criteriaelement");
+      lookupList.addField("id");
+      lookupList.addField("field");
+      lookupList.addField("operator");
+      lookupList.addField("operatorid");
+      lookupList.addField("value");
+      lookupList.buildList(db);
+      Iterator queryRecords = lookupList.iterator();
+      while (queryRecords.hasNext() && processOK) {
+        CustomLookupElement thisElement = (CustomLookupElement) queryRecords.next();
+        DataRecord thisRecord = new DataRecord();
+        thisRecord.setName("savedCriteriaElement");
+        thisRecord.setAction("insert");
+        thisRecord.addField("savedCriteriaListId", thisElement.getValue("id"), "searchCriteriaElements", null);
+        thisRecord.addField("fieldId", thisElement.getValue("field"), "searchFieldElement", null);
+        thisRecord.addField("operator", thisElement.getValue("operator"));
+        thisRecord.addField("operatorId", thisElement.getValue("operatorid"), "fieldTypes", null);
+        switch (Integer.parseInt(thisElement.getValue("field"))) {
+          case (8): thisRecord.addField("value", thisElement.getValue("value"), "lookupContactTypes", null); break;
+          case (9): thisRecord.addField("value", thisElement.getValue("value"), "contact", null); break;
+          case (10): thisRecord.addField("value", thisElement.getValue("value"), "lookupAccountTypes", null); break;
+          default: thisRecord.addField("value", thisElement.getValue("value")); break;
+        }
+        processOK = writer.save(thisRecord);
+      }
+      if (!processOK) {
+        return false;
+      }
     }
+//    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
+//    if (!processOK) {
+//      return false;
+//    }
     
     logger.info("ImportCommunications-> Inserting Campaign Records");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaign");
