@@ -214,5 +214,38 @@ function changeDivContent(divName, divContents) {
 		}
 	}
   
-  
+  function switchClass(thisId){
+    if(document.all){
+			// MS IE or equiv.
+      var tdList = document.all.tags("TD");
+      for (i=0; i<tdList.length; i++){
+        if(tdList(i).id == thisId){
+          if(tdList(i).className == "strike"){
+            tdList(i).className = "";
+          }
+          else{
+          tdList(i).className = "strike";
+          }
+        }
+      }
+    }
+      else if(document.getElementById){
+        //Netscape or Mozilla equivalent (DOM not well supported by ie5.5)
+        if(document.getElementById(thisId).getAttribute('class') == "strike"){
+          document.getElementById(thisId).setAttribute('class','');
+        }
+        else{
+          document.getElementById(thisId).setAttribute('class','strike');
+        }
+      }
+    }
+    
+    
+   function loadFrames(){
+     if(document.getElementById){
+			// Netscape 6 or equiv.
+        parent.frames["middleframe"].document.location.href = "loadmiddleframe.jsp";
+        parent.frames["bottomframe"].document.location.href = "loadbottomframe.jsp";
+     }
+   }
   

@@ -489,18 +489,22 @@ public final class MyCFS extends CFSModule {
     boolean listDone = false;
     try {
       db = this.getConnection(context);
+      
+      //parentFieldType is the type of selection required i.e list or single 
       if (context.getRequest().getParameter("parentFieldType") != null) {
         contactListInfo.setParentFieldType(context.getRequest().getParameter("parentFieldType"));
       }
+      //Form on the page which pops up contactList
       if (context.getRequest().getParameter("parentFormName") != null) {
-          contactListInfo.setParentFormName(context.getRequest().getParameter("parentFormName"));
+        contactListInfo.setParentFormName(context.getRequest().getParameter("parentFormName"));
       }
+      //Build Department List if empty
       if (context.getSession().getAttribute("DepartmentList") == null) {
         LookupList departmentList = new LookupList(db, "lookup_department");
         departmentList.addItem(-1, "--All Departments--");
         context.getSession().setAttribute("DepartmentList", departmentList);
       }
-
+      //Build Project List if empty
       if (context.getSession().getAttribute("ProjectListSelect") == null) {
         ProjectList projects = new ProjectList();
         projects.setUserRange(this.getUserRange(context));
@@ -512,6 +516,7 @@ public final class MyCFS extends CFSModule {
         htmlSelect.addItem(-1, "--All Projects--", 0);
         context.getSession().setAttribute("ProjectListSelect", htmlSelect);
       }
+      
       firstFilter = contactListInfo.getListView();
       contactList = new ContactList();
 
@@ -522,38 +527,46 @@ public final class MyCFS extends CFSModule {
        *  Multiple Emails: email as a value of selected entry from comboBox i.e contactemail_rowCount
        */
       int rowCount = 1;
-      while (context.getRequest().getParameter("hiddencontactid" + rowCount) != null) {
-        int contactId = 0;
-        String emailAddress = "";
-        contactId = Integer.parseInt(context.getRequest().getParameter("hiddencontactid" + rowCount));
-        if (context.getRequest().getParameter("checkcontact" + rowCount) != null) {
-          if (context.getRequest().getParameter("contactemail" + rowCount) != null) {
-            emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
-          }
-
-          /*
-           *  If User does not have a emailAddress replace with Name(LastFirst)
-           */
-          if (emailAddress.equals("") || parentFieldType.contains(contactListInfo.getParentFieldType())) {
-            if (context.getRequest().getParameter("hiddenname" + rowCount) != null) {
-              emailAddress = "P:" + context.getRequest().getParameter("hiddenname" + rowCount);
+      if (!parentFieldType.contains(contactListInfo.getParentFieldType())) {
+        while (context.getRequest().getParameter("hiddencontactid" + rowCount) != null) {
+          int contactId = 0;
+          String emailAddress = "";
+          contactId = Integer.parseInt(context.getRequest().getParameter("hiddencontactid" + rowCount));
+          if (context.getRequest().getParameter("checkcontact" + rowCount) != null) {
+            if (context.getRequest().getParameter("contactemail" + rowCount) != null) {
+              emailAddress = context.getRequest().getParameter("contactemail" + rowCount);
             }
-          }
 
-          if (selectedList.get(new Integer(contactId)) == null) {
-            selectedList.put(new Integer(contactId), emailAddress);
+            //If User does not have a emailAddress replace with Name(LastFirst)
+            if (emailAddress.equals("") || parentFieldType.contains(contactListInfo.getParentFieldType())) {
+              if (context.getRequest().getParameter("hiddenname" + rowCount) != null) {
+                emailAddress = "P:" + context.getRequest().getParameter("hiddenname" + rowCount);
+              }
+            }
+
+            if (selectedList.get(new Integer(contactId)) == null) {
+              selectedList.put(new Integer(contactId), emailAddress);
+            } else {
+              selectedList.remove(new Integer(contactId));
+              selectedList.put(new Integer(contactId), emailAddress);
+            }
           } else {
             selectedList.remove(new Integer(contactId));
-            selectedList.put(new Integer(contactId), emailAddress);
           }
-        } else {
-          selectedList.remove(new Integer(contactId));
+          rowCount++;
         }
-        rowCount++;
       }
 
       if (context.getRequest().getParameter("finalsubmit") != null) {
         if (((String) context.getRequest().getParameter("finalsubmit")).equalsIgnoreCase("true")) {
+          //If single selection then get count of row selected & fill HashMap with name & contactId
+          if (parentFieldType.contains(contactListInfo.getParentFieldType())) {
+            rowCount = Integer.parseInt(context.getRequest().getParameter("rowcount"));
+            String emailAddress = context.getRequest().getParameter("hiddenname" + rowCount);
+            int contactId = Integer.parseInt(context.getRequest().getParameter("hiddencontactid" + rowCount));
+            selectedList.clear();
+            selectedList.put(new Integer(contactId), emailAddress);
+          }
           listDone = true;
           finalContactList = (HashMap) selectedList.clone();
         }
@@ -563,9 +576,8 @@ public final class MyCFS extends CFSModule {
         secondFilter = context.getRequest().getParameter("listFilter1");
       }
 
-      /*
-       *  set Filter for retrieving addresses depending on typeOfContact
-       */
+      
+      //  set Filter for retrieving addresses depending on typeOfContact
       if ((firstFilter == null || firstFilter.equals(""))) {
         firstFilter = "all";
       }
@@ -1156,47 +1168,47 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    *@since
    */
-   public String executeCommandUpdateProfile(ActionContext context) {
-	if (!(hasPermission(context, "myhomepage-profile-personal-edit"))) {
-		return ("PermissionError");
-	}
-	
-	Exception errorMessage = null;
-	Connection db = null;
-	int resultCount = 0;
-	
-	Contact thisContact = (Contact) context.getFormBean();
-	thisContact.setRequestItems(context.getRequest());
-	thisContact.setEnteredBy(getUserId(context));
-	thisContact.setModifiedBy(getUserId(context));
-	
-	try {
-		db = this.getConnection(context);
-		resultCount = thisContact.update(db);
-		
-		if (resultCount == -1) {
-			processErrors(context, thisContact.getErrors());
-			buildFormElements(context, db);
-		}
-	} catch (Exception e) {
-		errorMessage = e;
-	} finally {
-		this.freeConnection(context, db);
-	}
-	
-	if (errorMessage == null) {
-		if (resultCount == -1) {
-			return (executeCommandMyCFSProfile(context));
-		} else if (resultCount == 1) {
-			return ("UpdateProfileOK");
-		} else {
-			context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-			return ("UserError");
-		}
-	} else {
-		context.getRequest().setAttribute("Error", errorMessage);
-		return ("SystemError");
-	}
+  public String executeCommandUpdateProfile(ActionContext context) {
+    if (!(hasPermission(context, "myhomepage-profile-personal-edit"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = 0;
+
+    Contact thisContact = (Contact) context.getFormBean();
+    thisContact.setRequestItems(context.getRequest());
+    thisContact.setEnteredBy(getUserId(context));
+    thisContact.setModifiedBy(getUserId(context));
+
+    try {
+      db = this.getConnection(context);
+      resultCount = thisContact.update(db);
+
+      if (resultCount == -1) {
+        processErrors(context, thisContact.getErrors());
+        buildFormElements(context, db);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        return (executeCommandMyCFSProfile(context));
+      } else if (resultCount == 1) {
+        return ("UpdateProfileOK");
+      } else {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 

@@ -98,7 +98,8 @@
 	<input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="highlight(this,'<%=User.getBrowserId()%>');">
   <%}
   else{%>
-  <input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="return keepCount('checkcontact','contactListView')">
+  <%--<input type=checkbox name="checkcontact<%=count%>" value=<%=thisContact.getId()%><%=((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"")%> onClick="return keepCount('checkcontact','contactListView')">--%>
+  <a href="javascript:document.contactListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%=count%>','contactListView');">ADD</a>
   <%}%>
 	<input type=hidden name="hiddencontactid<%=count%>" value=<%=thisContact.getId()%>>
   <input type=hidden name="hiddenname<%=count%>" value="<%=toHtml(thisContact.getNameLastFirst())%>">
@@ -157,7 +158,7 @@ else{%>
       %>
     <br>
     <input type=hidden name="finalsubmit" value="false">
-    
+    <input type=hidden name="rowcount" value="0">
     
     <%
     }
