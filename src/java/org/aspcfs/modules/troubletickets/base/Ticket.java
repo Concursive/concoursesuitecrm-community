@@ -10,6 +10,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.DateUtils;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
 
 /**
  *  Description of the Class
@@ -68,7 +70,7 @@ public class Ticket extends GenericBean {
   private int ageOf = 0;
 
   private TicketLogList history = new TicketLogList();
-
+  private FileItemList files = new FileItemList();
 
   /**
    *  Constructor for the Ticket object, creates an empty Ticket
@@ -149,6 +151,10 @@ public class Ticket extends GenericBean {
 
     history.setTicketId(this.getId());
     history.buildList(db);
+    
+    files.setLinkModuleId(Constants.TICKETS);
+    files.setLinkItemId(this.getId());
+    files.buildList(db);
   }
 
 
@@ -472,6 +478,10 @@ public class Ticket extends GenericBean {
   public void setHistory(TicketLogList history) {
     this.history = history;
   }
+  
+  public void setFiles(FileItemList tmp) {
+    this.files = tmp;
+  }
 
 
   /**
@@ -493,8 +503,7 @@ public class Ticket extends GenericBean {
    *@since
    */
   public void setId(String tmp) {
-    this.id = Integer.parseInt(tmp);
-    history.setTicketId(Integer.parseInt(tmp));
+    this.setId(Integer.parseInt(tmp));
   }
 
 
@@ -1111,6 +1120,9 @@ public class Ticket extends GenericBean {
     return history;
   }
 
+  public FileItemList getFiles() {
+    return files;
+  }
 
   /**
    *  Gets the AgeOf attribute of the Ticket object
@@ -1670,7 +1682,7 @@ public class Ticket extends GenericBean {
       i = this.update(db, false);
 
       //insert a new entry into the ticket log only if there is a comment entered
-      //TODO: OR when a ticket is being re-assigned
+      //TODO: OR when a ticket is being re-assigned, re-prioritized, or re-severitized
       if (this.getComment() != null && !(this.getComment().equals(""))) {
         TicketLog thisEntry = new TicketLog();
         thisEntry.setEnteredBy(this.getModifiedBy());
@@ -1826,5 +1838,10 @@ public class Ticket extends GenericBean {
       ageOf = java.lang.Math.round(ageCheck);
     }
   }
+  
+  public boolean hasFiles() {
+    return (files != null && files.size() > 0);
+  }
+  
 }
 
