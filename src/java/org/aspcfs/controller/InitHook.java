@@ -37,6 +37,10 @@ public class InitHook implements ControllerInitHook {
     if (config.getInitParameter("SiteCode") != null) {
       config.getServletContext().setAttribute("SiteCode", config.getInitParameter("SiteCode"));
     }
+    
+    if (config.getInitParameter("GKDRIVER") != null) {
+      config.getServletContext().setAttribute("GKDRIVER", config.getInitParameter("GKDRIVER"));
+    }
 
     if (config.getInitParameter("GKHOST") != null) {
       config.getServletContext().setAttribute("GKHOST", config.getInitParameter("GKHOST"));
