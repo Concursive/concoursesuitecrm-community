@@ -690,11 +690,11 @@ public class TicketList extends ArrayList implements SyncableList {
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public void delete(Connection db) throws SQLException {
+  public void delete(Connection db, String basePath) throws SQLException {
     Iterator tickets = this.iterator();
     while (tickets.hasNext()) {
       Ticket thisTicket = (Ticket) tickets.next();
-      thisTicket.delete(db);
+      thisTicket.delete(db, basePath);
     }
   }
 

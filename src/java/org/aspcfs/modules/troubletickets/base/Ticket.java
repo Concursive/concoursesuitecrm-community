@@ -21,6 +21,7 @@ import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.actionlist.base.ActionList;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
 import org.aspcfs.modules.actionlist.base.ActionItemLogList;
+import org.aspcfs.modules.base.CustomFieldRecordList;
 
 /**
  *  Represents a Ticket in CFS
@@ -1852,6 +1853,7 @@ public class Ticket extends GenericBean {
   public DependencyList processDependencies(Connection db) throws SQLException {
     String sql = null;
     DependencyList dependencyList = new DependencyList();
+    //Check for action list links
     ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId(), Constants.TICKET_OBJECT);
     if (actionList != null) {
       Dependency thisDependency = new Dependency();
@@ -1860,6 +1862,7 @@ public class Ticket extends GenericBean {
       thisDependency.setCanDelete(true);
       dependencyList.add(thisDependency);
     }
+    //Check for task links
     try {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
@@ -1883,6 +1886,18 @@ public class Ticket extends GenericBean {
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }
+    //Check for documents
+    Dependency docDependency = new Dependency();
+    docDependency.setName("Documents");
+    docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_TICKETS, this.getId()));
+    docDependency.setCanDelete(true);
+    dependencyList.add(docDependency);
+    //Check for folders
+    Dependency folderDependency = new Dependency();
+    folderDependency.setName("Folders");
+    folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.FOLDERS_TICKETS, this.getId()));
+    folderDependency.setCanDelete(true);
+    dependencyList.add(folderDependency);
     return dependencyList;
   }
 
@@ -1895,7 +1910,7 @@ public class Ticket extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  public boolean delete(Connection db) throws SQLException {
+  public boolean delete(Connection db, String baseFilePath) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Ticket ID not specified.");
     }
@@ -1903,15 +1918,31 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(false);
       //delete any related action list items
       ActionItemLog.deleteLink(db, this.getId(), Constants.TICKET_OBJECT);
-
-      //delete all log data
+      
+      //Delete any documents
+      FileItemList fileList = new FileItemList();
+      fileList.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
+      fileList.setLinkItemId(this.getId());
+      fileList.buildList(db);
+      fileList.delete(db, baseFilePath);
+      fileList = null;
+      
+      //Delete any folder data
+      CustomFieldRecordList folderList = new CustomFieldRecordList();
+      folderList.setLinkModuleId(Constants.FOLDERS_TICKETS);
+      folderList.setLinkItemId(this.getId());
+      folderList.buildList(db);
+      folderList.delete(db);
+      folderList = null;
+      
+      //delete all history data
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM ticketlog WHERE ticketid = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
 
-      //delete related tasks
+      //delete related task links
       pst = db.prepareStatement(
           "DELETE FROM tasklink_ticket WHERE ticket_id = ?");
       pst.setInt(1, this.getId());

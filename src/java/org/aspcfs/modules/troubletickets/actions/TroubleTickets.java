@@ -143,7 +143,7 @@ public final class TroubleTickets extends CFSModule {
 
     PagedListInfo thisInfo = new PagedListInfo();
     thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
-    thisInfo.setItemsPerPage(50);
+    thisInfo.setItemsPerPage(0);
     ticketReport.setPagedListInfo(thisInfo);
 
     if (ownerCriteria.equals("assignedToMe")) {
@@ -1114,7 +1114,7 @@ public final class TroubleTickets extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTic = new Ticket(db, Integer.parseInt(passedId));
-      recordDeleted = thisTic.delete(db);
+      recordDeleted = thisTic.delete(db, this.getPath(context, "tickets"));
       if (recordDeleted) {
         processDeleteHook(context, thisTic);
         deleteRecentItem(context, thisTic);

@@ -2158,7 +2158,7 @@ public class Organization extends GenericBean {
       TicketList ticketList = new TicketList();
       ticketList.setOrgId(this.getOrgId());
       ticketList.buildList(db);
-      ticketList.delete(db);
+      ticketList.delete(db, baseFilePath);
       ticketList = null;
 
       if (documentDelete) {

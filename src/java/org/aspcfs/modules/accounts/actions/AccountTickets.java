@@ -291,7 +291,7 @@ public final class AccountTickets extends CFSModule {
       db = this.getConnection(context);
       Organization newOrg = new Organization(db, orgId);
       Ticket thisTic = new Ticket(db, Integer.parseInt(passedId));
-      recordDeleted = thisTic.delete(db);
+      recordDeleted = thisTic.delete(db, this.getPath(context, "tickets"));
       if (recordDeleted) {
         deleteRecentItem(context, thisTic);
         context.getRequest().setAttribute("OrgDetails", newOrg);
