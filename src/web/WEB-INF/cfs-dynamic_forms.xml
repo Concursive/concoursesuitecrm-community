@@ -14,35 +14,35 @@
       </buttonGroup>
       <group name="Step 1: Survey Details">
       <row class="containerBody">
-        <column valign="top"  class="formLabel" width="80" nowrap="true">
+        <column valign="top" class="formLabel">
           <field display="Name" type="label" isStatic="yes"/>
         </column>
-        <column valign="top"  class="formLabel" align="left">
+        <column valign="top">
           <field name="name" display="Name" type="text" parameters="size=50^maxlength=80" required="true"/>
         </column>
       </row>
       <row class="containerBody">
-       <column valign="top" class="formLabel" width="80" nowrap="true">
-          <field display="Description" type="label" width="80" isStatic="yes"/>
+       <column valign="top" class="formLabel">
+          <field display="Description" type="label" isStatic="yes"/>
        </column>
-        <column valign="top" class="formLabel" align="left">
+        <column valign="top">
           <field name="description" display="Description" type="text" parameters="size=50^maxlength=80"/>
       </column>
       </row>
       <row class="containerBody">
-        <column valign="top" class="formLabel" width="80" nowrap="true">
-          <field display="Introduction text" type="label" width="80" isStatic="yes"/>
+        <column valign="top" class="formLabel">
+          <field display="Introduction text" type="label" isStatic="yes"/>
         </column>
-        <column width="80" valign="top" class="formLabel" align="left" nowrap="true">
+        <column valign="top">
           <field display="This is the text the user sees first when they click on the link to take a survey:" type="label" isStatic="yes"/>
           <field name="intro" display="Introduction text" type="htmlarea" parameters="rows=6^columns=40"/>
         </column>
       </row>
       <row class="containerBody">
-       <column valign="top"  class="formLabel" width="80" nowrap="true">
+       <column valign="top" class="formLabel">
           <field display="Thank You Text" type="label" width="80" isStatic="yes"/>
        </column>
-        <column valign="top" class="formLabel" align="left" nowrap="true">
+        <column valign="top">
           <field display="This is the text the user sees after they have submitted a survey:/&amp;lt;br/&amp;gt;" type="label" isStatic="yes"/>
           <field name="outro" type="htmlarea" parameters="rows=6^columns=40"/>
       </column>
@@ -65,7 +65,7 @@
       </buttonGroup>
       <group name="">
         <row class="containerBody">
-          <column valign="top"  align="left" nowrap="true">
+          <column valign="top" align="left" nowrap="true">
             <field display="Add a Question" type="link" jsEvent="javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true&amp;pg=2');"/>
           </column>
        </row>
@@ -112,7 +112,6 @@
       </row>
       </group>
     </tab>
-    
     <tab id="2" name="Page 2" defaultField="questionText" onLoad="javascript:processButton('survey',document.forms['survey'].type.value);"
          returnLinkText="&lt;a href=&quot;CampaignManager.do&quot;&gt;Communications Manager&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Add&amp;auto-populate=true');&quot;&gt;Survey Details&lt;/a&gt; &gt; &lt;a href=&quot;javascript:setActionSubmit('CampaignManagerSurvey.do?command=Modify&amp;auto-populate=true&amp;pg=1');&quot;&gt;Survey Questions&lt;/a&gt; &gt; Survey Question  &lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
       <buttonGroup>
@@ -122,28 +121,28 @@
       </buttonGroup>
       <group name="Survey Question">
         <row class="containerBody">
-          <column valign="top" class="formLabel" width="80" nowrap="true">
+          <column class="formLabel">
             <field display="Question" type="label" isStatic="true"/>
           </column>
-          <column valign="top" class="formLabel" align="left">
+          <column>
             <field name="questionText" parameters="size=50^maxlength=250" display="Question" type="text" required="true" listName="questions" listItemName="surveyQuestion"/>
         </column>
       </row>
       <row class="containerBody">
-          <column valign="top" class="formLabel" width="80" nowrap="true">
+          <column class="formLabel">
             <field display="Question Type" type="label" isStatic="yes"/>
           </column>
-          <column valign="top" class="formLabel" align="left">
+          <column>
             <field name="type" display="Type" type="select" lookupList="lookup_survey_types" required="true" onChange="javascript:processButton('survey',document.forms['survey'].type.value);" listName="questions" listItemName="surveyQuestion"/>
             <field display=" " type="label" isStatic="yes"/>
             <field name="itemsButton" display="Edit Items" type="button" jsEvent="javascript:popItems(document.forms['survey'].questionId.value,document.forms['survey'].items.value);" enabled="no" isStatic="yes"/>
        </column>
       </row>
       <row class="containerBody">
-          <column valign="top" class="formLabel" width="80" nowrap="true">
+          <column class="formLabel">
             <field display="Required" type="label" />
           </column>
-          <column width="80" valign="top" class="formLabel" align="left">
+          <column>
             <field name="required" display="Required" type="checkbox"  listName="questions" listItemName="surveyQuestion"/>
         </column>
       </row>
@@ -163,7 +162,6 @@
       </group>
     </tab>
   </form>
-  
   <!-- View Survey Details -->
   <form name="surveydetails" 
         action="CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true" 
@@ -192,7 +190,6 @@
       </group>
     </tab>
   </form>
-  
   <!-- See a stand-alone Preview of the survey -->
   <form name="surveypreview" 
         returnLinkText="Communications Manager &gt; &lt;a href=&quot;CampaignManagerAttachment.do&quot;&gt;Create Attachments&lt;/a&gt; &gt; &lt;a href=&quot;CampaignManagerSurvey.do?command=View&quot;&gt;Surveys&lt;/a&gt; &gt; Survey Details &gt; Preview&lt;hr color=&quot;#BFBFBB&quot; noshade&gt;">
@@ -206,7 +203,6 @@
       </group>
     </tab>
   </form>
-  
   <!-- Actual survey that is taken by user -->
   <form name="surveyview" 
         action="ProcessSurvey.do?command=Insert&amp;auto-populate=true">
