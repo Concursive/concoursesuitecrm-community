@@ -52,13 +52,13 @@
   <tr>
     <td valign='top'>
       <font color='#000000'>
-        <i>Reply by <%= thisReply.getUser() %> on <%= thisReply.getEnteredDateTimeString() %></i>
+        <i>Reply by <%= toHtml(thisReply.getUser()) %> on <%= thisReply.getEnteredDateTimeString() %></i>
       </font>
     </td>
   </tr>
   <tr>
     <td bgcolor='#FFFFFF'>
-      <%= thisReply.getBody() %>
+      <%= toHtml(thisReply.getBody()) %>
     </td>
   </tr>
 </table>
