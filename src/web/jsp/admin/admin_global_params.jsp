@@ -29,10 +29,7 @@ Configure System<br>
          <%= Timeout %> minutes
       </td>
     </tr>
-<%-- Turn back on after testing
 <dhv:evaluate if="<%= getPref(getServletContext(), "WEBSERVER.ASPMODE") == null || !"true".equals(getPref(getServletContext(), "WEBSERVER.ASPMODE")) %>">
---%>
-<dhv:evaluate if="<%= getPref(getServletContext(), "WEBSERVER.ASPMODE") != null || !"true".equals(getPref(getServletContext(), "WEBSERVER.ASPMODE")) %>">
     <tr class="row<%= (++count % 2 == 0 ? "1":"2") %>">
       <td align="center">
         <a href="AdminConfig.do?command=Modify&param=MAILSERVER">Edit</a>
