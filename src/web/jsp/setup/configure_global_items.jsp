@@ -96,7 +96,7 @@
       Remember to make backups of your data.<br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="#">File Backup Strategy</a><br>
+      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">File Backup Help</a><br>
       &nbsp;
     </td>
   </tr>
@@ -113,9 +113,9 @@
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="#">SendMail Tutorial</a><br>
+      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">Sendmail Help</a><br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="#">HylaFax Tutorial</a><br>
+      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">HylaFax Help</a><br>
       &nbsp;
     </td>
   </tr>
@@ -132,7 +132,7 @@
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="#">PostgreSQL Tutorial</a><br>
+      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">PostgreSQL Help</a><br>
       &nbsp;
     </td>
   </tr>
@@ -149,7 +149,7 @@
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="#">Dark Horse CRM Tutorial</a><br>
+      <a href="http://www.darkhorsecrm.com/Website.do?topic=Resources" target="_blank">Dark Horse CRM Help</a><br>
       &nbsp;
     </td>
   </tr>
