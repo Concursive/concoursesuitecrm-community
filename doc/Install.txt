@@ -93,8 +93,8 @@
     $ rm /usr/bin/javac
     
   # Make the web folders
-    $ mkdir /home/cfs
     $ mkdir /home/webapps
+    $ mkdir /home/webapps/cfs
     
   # Log back in for changes to take affect, then test:
   # Java version should say: 
