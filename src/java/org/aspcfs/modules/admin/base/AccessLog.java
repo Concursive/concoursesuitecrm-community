@@ -37,7 +37,7 @@ public class AccessLog extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT a.*, " +
+        "SELECT a.* " +
         "FROM access_log a " +
         "WHERE a.id = " + id + " ");
     Statement st = null;

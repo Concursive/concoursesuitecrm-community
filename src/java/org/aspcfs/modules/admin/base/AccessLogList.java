@@ -117,7 +117,7 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "a.*, " +
+        "a.* " +
         "FROM access_log a " +
         "WHERE a.id > 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
