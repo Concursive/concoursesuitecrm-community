@@ -45,6 +45,8 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
 
+    writer.setAutoCommit(true);
+    
     logger.info("ImportCommunications-> Inserting Saved Criteria Elements");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
     
@@ -55,10 +57,12 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    /**
     processOK = writer.commit();
     if (!processOK) {
       return false;
     }
+    */
 
     /**
     logger.info("ImportCommunications-> Inserting Campaign Records");
