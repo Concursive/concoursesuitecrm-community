@@ -69,10 +69,6 @@ public final class ProcessCalculation extends CFSModule {
     ConnectionPool sqlDriver = null;
     ConnectionElement connectionElement = null;
     Connection prodDb = null;
-    try {
-      sqlDriver = new ConnectionPool();
-    } catch (SQLException e) {
-    }
     //calculate date to process: yesterday's date by default
     java.sql.Date dateToProcess = null;
     Calendar cal = Calendar.getInstance();
@@ -102,7 +98,11 @@ public final class ProcessCalculation extends CFSModule {
         thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
       }
       //get connections to the remote production database
+      sqlDriver = new ConnectionPool();
       sqlDriver.setMaxConnections(2);
+      sqlDriver.setMaxIdleTimeSeconds(60*10);
+      sqlDriver.setMaxDeadTimeSeconds(60*60);
+      sqlDriver.setAllowShrinking(true);
       if (System.getProperty("DEBUG") != null) {
         sqlDriver.setDebug(true);
       }
@@ -110,7 +110,7 @@ public final class ProcessCalculation extends CFSModule {
           this.getValue(context, ce, "DATABASE.URL"),
           this.getValue(context, ce, "DATABASE.USERNAME"),
           this.getValue(context, ce, "DATABASE.PASSWORD"));
-      connectionElement.setAllowCloseOnIdle(false);
+      connectionElement.setAllowCloseOnIdle(true);
       connectionElement.setDriver(this.getValue(context, ce, "DATABASE.DRIVER"));
       prodDb = sqlDriver.getConnection(connectionElement);
       //build list of yesterday's records on transaction server
@@ -399,14 +399,17 @@ public final class ProcessCalculation extends CFSModule {
         sb.append("Vendor (Payer) ID: " + tempRec.getPayerId() + "<br><br>");
         sb.append(em + "<br><br>");
       }
+      prodDb.close();
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace();
     } finally {
-      if (db != null) {
-        this.freeConnection(context, db);
+      if (sqlDriver != null) {
+        sqlDriver.free(prodDb);
+        sqlDriver.closeAllConnections();
+        sqlDriver = null;
       }
-      sqlDriver.free(prodDb);
+      this.freeConnection(context, db);
     }
     //Mail the final report
     if (ce != null) {
