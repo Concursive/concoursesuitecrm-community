@@ -8,8 +8,12 @@
 <a href="CampaignManagerSurvey.do?command=View">Surveys</a> >
 Survey Details<br>
 <hr color="#BFBFBB" noshade>
+<dhv:permission name="campaign-campaigns-surveys-edit">
 <input type="button" name="action" value="Modify" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
+</dhv:permission>
+<dhv:permission name="campaign-campaigns-surveys-delete">
 <input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
+</dhv:permission>
 <input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','760','510','yes','yes');">
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -182,7 +186,11 @@ Survey Details<br>
     </tr>
   </table>
   <br>
+<dhv:permission name="campaign-campaigns-surveys-edit">
 <input type="button" name="action" value="Modify" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
+</dhv:permission>
+<dhv:permission name="campaign-campaigns-surveys-delete">
 <input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
+</dhv:permission>
 <input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','700','680','yes','yes');">
 
