@@ -1,17 +1,17 @@
 
-INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (0,'Entry level',false,true);
-INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (1,'First level',false,true);
-INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (2,'Second level',false,true);
-INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (3,'Third level',false,true);
-INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (4,'Top level',false,true);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (0,'Entry level',@FALSE@,@TRUE@);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (1,'First level',@FALSE@,@TRUE@);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (2,'Second level',@FALSE@,@TRUE@);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (3,'Third level',@FALSE@,@TRUE@);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (4,'Top level',@FALSE@,@TRUE@);
 
 
 INSERT INTO ticket_severity (description,style,default_item,level,enabled) VALUES 
-  ('Normal','background-color:lightgreen;color:black;',false,0,true);
+  ('Normal','background-color:lightgreen;color:black;',@FALSE@,0,@TRUE@);
 INSERT INTO ticket_severity (description,style,default_item,level,enabled) VALUES 
-  ('Important','background-color:yellow;color:black;',false,1,true);
+  ('Important','background-color:yellow;color:black;',@FALSE@,1,@TRUE@);
 INSERT INTO ticket_severity (description,style,default_item,level,enabled) VALUES 
-  ('Critical','background-color:red;color:black;font-weight:bold;',false,2,true);
+  ('Critical','background-color:red;color:black;font-weight:bold;',@FALSE@,2,@TRUE@);
 
 
 INSERT INTO lookup_ticketsource (level,description) VALUES (1,'Phone');
@@ -20,18 +20,18 @@ INSERT INTO lookup_ticketsource (level,description) VALUES (3,'Letter');
 INSERT INTO lookup_ticketsource (level,description) VALUES (4,'Other');
 
 INSERT INTO ticket_priority (description,style,default_item,level,enabled) VALUES 
-  ('Scheduled','background-color:lightgreen;color:black;',false,0,true);
+  ('Scheduled','background-color:lightgreen;color:black;',@FALSE@,0,@TRUE@);
 INSERT INTO ticket_priority (description,style,default_item,level,enabled) VALUES 
-  ('Next','background-color:yellow;color:black;',false,1,true);
+  ('Next','background-color:yellow;color:black;',@FALSE@,1,@TRUE@);
 INSERT INTO ticket_priority (description,style,default_item,level,enabled) VALUES 
-  ('Immediate','background-color:red;color:black;font-weight:bold;',false,2,true);
+  ('Immediate','background-color:red;color:black;font-weight:bold;',@FALSE@,2,@TRUE@);
 
 
-INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Sales','',false,1,true);
-INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Billing','',false,2,true);
-INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Technical','',false,3,true);
-INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Order','',false,4,true);
-INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Other','',false,5,true);
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Sales','',@FALSE@,1,@TRUE@);
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Billing','',@FALSE@,2,@TRUE@);
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Technical','',@FALSE@,3,@TRUE@);
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Order','',@FALSE@,4,@TRUE@);
+INSERT INTO ticket_category (cat_level,parent_cat_code,description,full_description,default_item,level,enabled) VALUES (0,0,'Other','',@FALSE@,5,@TRUE@);
 
 
 

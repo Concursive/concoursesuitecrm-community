@@ -38,13 +38,13 @@ INSERT INTO lookup_project_status (group_id, level, description, type, graphic) 
 INSERT INTO lookup_project_status (group_id, level, description, type, graphic) VALUES
   (0, 4, 'Closed', 4, 'box-checked.gif');
   
-INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Minute(s)', false, 60);
-INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Hour(s)', true, 3600);
-INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Day(s)', false, 86400);
-INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Week(s)', false, 604800);
-INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Month(s)', false, 18144000);
+INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Minute(s)', @FALSE@, 60);
+INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Hour(s)', @TRUE@, 3600);
+INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Day(s)', @FALSE@, 86400);
+INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Week(s)', @FALSE@, 604800);
+INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (0, 1, 'Month(s)', @FALSE@, 18144000);
 
 INSERT INTO lookup_project_priority (group_id, level, description, type) VALUES (0, 1, 'Low', 10);
-INSERT INTO lookup_project_priority (group_id, level, description, type, default_item) VALUES (0, 2, 'Normal', 20, true);
+INSERT INTO lookup_project_priority (group_id, level, description, type, default_item) VALUES (0, 2, 'Normal', 20, @TRUE@);
 INSERT INTO lookup_project_priority (group_id, level, description, type) VALUES (0, 3, 'High', 30);
 
