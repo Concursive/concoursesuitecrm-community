@@ -21,7 +21,7 @@ For system emails, what email address should be in the FROM field of the email?<
       <td>
          <input type="text" size="40" name="emailAddress" value="<%= toHtmlValue(getPref(getServletContext(), "EMAILADDRESS")) %>"/><font color="red">*</font>
          <%= showAttribute(request, "emailAddressError") %><br>
-         (ex: cfs_system@yourcompany.com)
+         (ex: darkhorse_crm@yourcompany.com)
       </td>
     </tr>
   </table>

@@ -5,7 +5,7 @@
 <a href="Admin.do">Setup</a> > 
 Configure Modules<br>
 <hr color="#BFBFBB" noshade>
-Setup CFS to meet the specific needs of your organization, including configuration of lookup lists and custom fields.  Choose a CFS module to proceed.<br>
+Setup Dark Horse CRM to meet the specific needs of your organization, including configuration of lookup lists and custom fields.  Choose a Dark Horse CRM module to proceed.<br>
 &nbsp;<br>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>

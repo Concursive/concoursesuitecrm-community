@@ -6,10 +6,10 @@
 Modify Setting<br>
 <hr color="#BFBFBB" noshade>
 <font color="red">* </font><b>The HylaFax server application requires Linux or Unix.</b><br>
-Users will have the capability to send faxes using CFS.<br>
+Users will have the capability to send faxes using Dark Horse CRM.<br>
 The faxing component requires a properly configured
 <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br>
-Which fax server should CFS use?<br>
+Which fax server should Dark Horse CRM use?<br>
 - The specified server must allow this server to send faxes<br>
 - Leave blank if faxing will not be used<br>
 &nbsp;<br>

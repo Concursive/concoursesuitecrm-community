@@ -33,7 +33,7 @@ function sendMessage() {
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>New CFS Message</strong>
+      <strong>New Message</strong>
     </th>
   </tr>
   <tr class="containerBody">

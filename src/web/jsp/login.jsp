@@ -12,7 +12,7 @@
 <%@ include file="initPage.jsp" %>
 <html>
 <head>
-<title>Dark Horse Ventures L.L.C. ASPCFS</title>
+<title>Dark Horse CRM</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 <script language="JavaScript">
@@ -77,7 +77,7 @@
               </tr>
               <tr>
                 <td align="center" valign="center" colspan="4">
-                  <font face="Arial, Helvetica, sans-serif" size="2"><strong>ASPCFS <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong></font>
+                  <font face="Arial, Helvetica, sans-serif" size="2"><strong>Dark Horse CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong></font>
                 </td>
               </tr>
 <%

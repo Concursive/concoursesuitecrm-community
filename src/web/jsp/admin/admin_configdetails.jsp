@@ -80,7 +80,7 @@
 <%-- Nothing to configure --%>
 <dhv:evaluate if="<%= count == 0 %>">
   <tr>
-    <td>Nothing to configure in this CFS module.</td>
+    <td>Nothing to configure in this Dark Horse CRM module.</td>
   </tr>
 </dhv:evaluate>
 </table>

@@ -2,7 +2,7 @@
 <%@ include file="../initPage.jsp" %>
 Setup
 <hr color="#BFBFBB" noshade>
-Manage CFS by reviewing system usage, configuring specific modules, and configuring system parameters.<br>
+Manage Dark Horse CRM by reviewing system usage, configuring specific modules, and configuring system parameters.<br>
 &nbsp;<br>
 <dhv:permission name="admin-sysconfig-view,admin-users-view,admin-roles-view">
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">

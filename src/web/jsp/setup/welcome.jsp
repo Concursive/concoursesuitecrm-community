@@ -12,19 +12,19 @@
 <form name="register" action="Setup.do?command=Register" method="post" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th>Welcome to CFS</th>
+    <th>Welcome to Dark Horse CRM</th>
   </tr>
   <tr>
     <td>
-      In order to begin using CFS, the setup process will guide you through
+      In order to begin using Dark Horse CRM, the setup process will guide you through
       several steps.<br>
       <br>
       Although installation can be completed in just a few minutes, you will
       have the option at any time during the setup to continue at a later time.<br>
       <br>
       By registering this application with Dark Horse Ventures:<br>
-      - This system will be entitled to five (5) users that can be added to CFS<br>
-      - The CFS administrator will receive information about software updates
+      - This system will be entitled to five (5) users that can be added to Dark Horse CRM<br>
+      - The Dark Horse CRM administrator will receive information about software updates
       as they become available
       <br>&nbsp;
     </td>

@@ -9,7 +9,7 @@ Modify Setting<br>
 For system emails, what URL should be included to allow the user to return back to the site?<br>
 The URL must be specific and must exist in your DNS.<br>
 If a domain name is not configured, you can specify the IP address, include the full URL to
-get to the CFS web application.<br>
+get to the Dark Horse CRM web application.<br>
 &nbsp;<br>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -20,14 +20,15 @@ get to the CFS web application.<br>
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        CFS URL
+        Dark Horse CRM URL
       </td>
       <td>
          <input type="text" size="40" name="url" value="<%= toHtmlValue(getPref(getServletContext(), "WEBSERVER.URL")) %>"/><font color="red">*</font>
-         <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.forms[0].url.value + '/setup/testpage_ok.jsp','CFS_UrlTest','500','325','yes','yes');"/>
+         <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.forms[0].url.value + '/setup/testpage_ok.jsp','CRM_UrlTest','500','325','yes','yes');"/>
          <%= showAttribute(request, "urlError") %>
          <br>
-         (ex: cfs.yourcompany.com<%= request.getContextPath() %>)
+         (ex: www.yourcompany.com<%= request.getContextPath() %> or
+         crm.yourcompany.com)
       </td>
     </tr>
   </table>

@@ -72,7 +72,7 @@
       <td width="2" align="center" valign="top" bgcolor="<%= currentHighlight %>">&nbsp;</td>
       <td width="418">
         &nbsp;&nbsp;&nbsp;<%= thisAssignment.getStatusGraphicTag() %>&nbsp;
-        <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= thisProject.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true&return=ProjectPersonalView','CFS_Assignment','600','325','yes','no');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
+        <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= thisProject.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true&return=ProjectPersonalView','CRM_Assignment','600','325','yes','no');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
       </td>
       <td width="140" align="left">&nbsp;<%= toHtml(thisAssignment.getStatus()) %></td>
       <td width="100">&nbsp;<%= thisAssignment.getRelativeDueDateString() %></td>
@@ -106,7 +106,7 @@
       <td width="2" align="center" valign="top" bgcolor="<%= currentHighlight %>">&nbsp;</td>
       <td width="418">
         &nbsp;&nbsp;&nbsp;#&nbsp;
-        <a href="javascript:popURL('ProjectManagementIssues.do?command=Details&pid=<%= thisProject.getId() %>&iid=<%= thisIssue.getId() %>&popup=true','CFS_Issue','600','300','yes','yes');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Review this issue';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisIssue.getSubject()) %></a>
+        <a href="javascript:popURL('ProjectManagementIssues.do?command=Details&pid=<%= thisProject.getId() %>&iid=<%= thisIssue.getId() %>&popup=true','CRM_Issue','600','300','yes','yes');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Review this issue';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisIssue.getSubject()) %></a>
       </td>
       <td width="140" align="left">&nbsp;<%= toHtml(thisIssue.getReplyDateTimeString()) %></td>
       <td width="100">&nbsp;<dhv:username id="<%= thisIssue.getModifiedBy() %>" /></td>

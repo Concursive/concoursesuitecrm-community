@@ -5,9 +5,9 @@
 <a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
 Modify Setting<br>
 <hr color="#BFBFBB" noshade>
-CFS sends various notifications to users by email.  CFS can also be used
-to send email to contacts that have been entered into CFS.<br>
-Which email server should CFS use?<br>
+Dark Horse CRM sends various notifications to users by email.  Dark Horse CRM can also be used
+to send email to contacts that have been entered into the Contacts and Accounts modules.<br>
+Which email server should Dark Horse CRM use?<br>
 - The specified server must allow this server to relay email<br>
 &nbsp;<br>
 <dhv:permission name="admin-sysconfig-view">

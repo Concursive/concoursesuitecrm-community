@@ -18,7 +18,7 @@
   
   //Menu link functions
   function details() {
-    popURL('AccountTicketTasks.do?command=Modify&orgId=' + thisOrgId + '&ticketId=' + thisTicId + '&id=' + thisTaskId + '&popup=true','CFS_Task','600','425','yes','yes');
+    popURL('AccountTicketTasks.do?command=Modify&orgId=' + thisOrgId + '&ticketId=' + thisTicId + '&id=' + thisTaskId + '&popup=true','CRM_Task','600','425','yes','yes');
   }
   
   function deleteTask() {

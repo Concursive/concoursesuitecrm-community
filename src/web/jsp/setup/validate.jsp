@@ -18,12 +18,12 @@
   </tr>
   <tr>
     <td>
-      If you have already registered for CFS, you should have received a
+      If you have already registered for Dark Horse CRM, you should have received a
       registration key by email.<br>
       <br>
       This registration key can only be used on the system that requested it.<br>
       <br>
-      If you have misplaced your key or you are installing CFS on a different server then you can
+      If you have misplaced your key or you are installing Dark Horse CRM on a different server, then you can
       <a href="Setup.do?command=Register">request a new key</a>
       to be sent by email.<br>
       &nbsp;

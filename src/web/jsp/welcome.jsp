@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Dark Horse Ventures L.L.C.</title>
+<title>Dark Horse CRM</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ include file="initPage.jsp" %>
 </head>
@@ -70,7 +70,7 @@
               </tr>
               <tr> 
                 <td valign="center">
-                  <font face="Arial, Helvetica, sans-serif" size="2">Welcome to ASPCFS!</font><br>
+                  <font face="Arial, Helvetica, sans-serif" size="2">Welcome to Dark Horse CRM!</font><br>
                   <img border=0 src="images/prline.gif" width="200" height="5">
                 </td>
               </tr>

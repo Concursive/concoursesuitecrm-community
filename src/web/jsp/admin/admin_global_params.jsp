@@ -57,7 +57,7 @@ Configure System<br>
         <a href="AdminConfig.do?command=Modify&param=WEBSERVER.URL">Edit</a>
       </td>
       <td>
-         CFS URL
+         Dark Horse CRM URL
       </td>
       <td>
          <%= toHtml(getPref(getServletContext(), "WEBSERVER.URL")) %>
