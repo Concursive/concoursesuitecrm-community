@@ -2,6 +2,8 @@
 <jsp:useBean id="RoleList" class="com.darkhorseventures.cfsbase.RoleList" scope="request"/>
 <jsp:useBean id="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></SCRIPT>
 <body onLoad="javascript:document.forms[0].username.focus();">
 <form name="details" action="/Users.do?auto-populate=true" method="post">
 <input type=hidden name="command" value="UpdateUser">
@@ -41,6 +43,15 @@
       <%= showAttribute(request, "managerIdError") %>
     </td>
   </tr>
+  
+  <tr>
+    <td width="150">Account Expires On</td>
+    <td>
+    <input type=text size=10 name="expires" value="<%=toHtmlValue(UserRecord.getExpires())%>">
+    <a href="javascript:popCalendar('details', 'expires');">Date</a> (mm/dd/yyyy)
+    </td>
+  </tr>
+  
 </table>
 <br>
 <input type=button name="action" value="Update"	onClick="document.details.command.value='UpdateUser';document.details.submit()">

@@ -36,6 +36,9 @@ public final class Login extends GenericAction {
     String gkUserPw = (String)context.getServletContext().getAttribute("GKUSERPW");
     String siteCode = (String)context.getServletContext().getAttribute("SiteCode");
     String sql;
+    
+    java.util.Date now = new java.util.Date();
+    
 
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
     ConnectionElement ce = null;
@@ -49,6 +52,7 @@ public final class Login extends GenericAction {
       loginBean.setMessage("Connection pool missing!");
       return "LoginRetry";
     }
+    
 
     ///////////////////////////////////////////////////////////
     //	Get connected to gatekeeper database,
@@ -85,6 +89,7 @@ public final class Login extends GenericAction {
     }
 
     sqlDriver.free(db);
+    
 
     if (ce == null) {
       return "LoginRetry";
@@ -106,7 +111,7 @@ public final class Login extends GenericAction {
           if (!((Hashtable)context.getServletContext().getAttribute("SystemStatus")).containsKey(ce.getUrl())) {
             ((Hashtable)context.getServletContext().getAttribute("SystemStatus")).put(ce.getUrl(), new SystemStatus(db));
             System.out.println("Login-> Added new System Status object: " + ce.getUrl());
-          }
+          } 
         }
       }
       
@@ -124,7 +129,13 @@ public final class Login extends GenericAction {
         if (pw == null || !pw.equals(password)) {
           loginBean.setMessage("* Access denied: Invalid password.");
         } else {
-          userId = rs.getInt("user_id");
+	  java.sql.Timestamp expDate = rs.getTimestamp("expires");
+	  
+	  if ( expDate != null && now.after(expDate) ) {
+		  loginBean.setMessage("* Access denied: Account Expired.");
+ 	  } else {
+        	  userId = rs.getInt("user_id");
+          }
         }
       }
       rs.close();
@@ -149,7 +160,7 @@ public final class Login extends GenericAction {
       }
     } catch (Exception e) {
       loginBean.setMessage("* Access: " + e.getMessage());
-      e.printStackTrace(System.out);
+      //e.printStackTrace(System.out);
       thisUser = null;
     }
 

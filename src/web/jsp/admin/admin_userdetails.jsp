@@ -31,6 +31,10 @@
     <td width="150">Last Login</td>
     <td><%= (UserRecord.getLastLogin()) %></td>
   </tr>
+    <tr>
+    <td width="150">Account Expires On</td>
+    <td><%= toHtml(UserRecord.getExpires()) %></td>
+  </tr>
 </table>
 <br>
 <input type=hidden name="command" value="">
