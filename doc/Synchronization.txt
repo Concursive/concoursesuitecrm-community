@@ -290,9 +290,9 @@ Client #1 Ends Synchronization
     <meta>
       <property>guid</property>
       <property>name</property>
-      <property>enteredBy</property>
+      <property>enteredBy^userGuid</property>
       <property>modified</property>
-      <property>modifiedBy</property>
+      <property>modifiedBy^userGuid</property>
     </meta>
     <accountList action="sync" identity="1"/>
   </transaction>
@@ -312,9 +312,9 @@ Client #1 Ends Synchronization
     <meta>
       <property>guid</property>
       <property>name</property>
-      <property>enteredBy</property>
+      <property>enteredBy^userGuid</property>
       <property>modified</property>
-      <property>modifiedBy</property>
+      <property>modifiedBy^userGuid</property>
     </meta>
     <makeList action="sync" identity="1"/>
   </transaction>
@@ -324,9 +324,9 @@ Client #1 Ends Synchronization
       <property>guid</property>
       <property>name</property>
       <property>make.guid</property>
-      <property>enteredBy</property>
+      <property>enteredBy^userGuid</property>
       <property>modified</property>
-      <property>modifiedBy</property>
+      <property>modifiedBy^userGuid</property>
     </meta>
     <modelList action="sync" identity="1"/>
   </transaction>
@@ -337,9 +337,9 @@ Client #1 Ends Synchronization
       <property>year</property>
       <property>make.guid</property>
       <property>model.guid</property>
-      <property>enteredBy</property>
+      <property>enteredBy^userGuid</property>
       <property>modified</property>
-      <property>modifiedBy</property>
+      <property>modifiedBy^userGuid</property>
     </meta>
     <vehicleList action="sync" identity="1">
       <year>*Optionally specify a specific year to receive, or remove this attribute*</year>
