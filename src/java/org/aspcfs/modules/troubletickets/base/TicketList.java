@@ -35,6 +35,8 @@ public class TicketList extends ArrayList {
   private int department = -1;
   private int assignedTo = -1;
   private int excludeAssignedTo = -1;
+  private boolean onlyAssigned = false;
+  private boolean onlyUnassigned = false;
   private boolean unassignedToo = false;
   private int severity = 0;
   private int priority = 0;
@@ -102,6 +104,46 @@ public class TicketList extends ArrayList {
    */
   public void setExcludeAssignedTo(String tmp) {
     this.excludeAssignedTo = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the onlyAssigned attribute of the TicketList object
+   *
+   *@param  tmp  The new onlyAssigned value
+   */
+  public void setOnlyAssigned(boolean tmp) {
+    this.onlyAssigned = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyAssigned attribute of the TicketList object
+   *
+   *@param  tmp  The new onlyAssigned value
+   */
+  public void setOnlyAssigned(String tmp) {
+    this.onlyAssigned = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the onlyUnassigned attribute of the TicketList object
+   *
+   *@param  tmp  The new onlyUnassigned value
+   */
+  public void setOnlyUnassigned(boolean tmp) {
+    this.onlyUnassigned = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyUnassigned attribute of the TicketList object
+   *
+   *@param  tmp  The new onlyUnassigned value
+   */
+  public void setOnlyUnassigned(String tmp) {
+    this.onlyUnassigned = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -329,6 +371,26 @@ public class TicketList extends ArrayList {
    */
   public int getExcludeAssignedTo() {
     return excludeAssignedTo;
+  }
+
+
+  /**
+   *  Gets the onlyAssigned attribute of the TicketList object
+   *
+   *@return    The onlyAssigned value
+   */
+  public boolean getOnlyAssigned() {
+    return onlyAssigned;
+  }
+
+
+  /**
+   *  Gets the onlyUnassigned attribute of the TicketList object
+   *
+   *@return    The onlyUnassigned value
+   */
+  public boolean getOnlyUnassigned() {
+    return onlyUnassigned;
   }
 
 
@@ -614,7 +676,6 @@ public class TicketList extends ArrayList {
       if (enteredBy > -1) {
         sqlFilter.append("AND t.enteredby = ? ");
       }
-
       if (description != null) {
         if (description.indexOf("%") >= 0) {
           sqlFilter.append("AND lower(t.problem) like lower(?) ");
@@ -622,23 +683,18 @@ public class TicketList extends ArrayList {
           sqlFilter.append("AND lower(t.problem) = lower(?) ");
         }
       }
-
       if (onlyOpen == true) {
         sqlFilter.append("AND t.closed IS NULL ");
       }
-
       if (onlyClosed == true) {
         sqlFilter.append("AND t.closed IS NOT NULL ");
       }
-
       if (id > -1) {
         sqlFilter.append("AND t.ticketid = ? ");
       }
-
       if (orgId > -1) {
         sqlFilter.append("AND t.org_id = ? ");
       }
-
       if (department > -1) {
         if (unassignedToo == true) {
           sqlFilter.append("AND (t.department_code in (?, 0, -1) OR (t.department_code IS NULL)) ");
@@ -646,23 +702,24 @@ public class TicketList extends ArrayList {
           sqlFilter.append("AND t.department_code = ? ");
         }
       }
-
       if (assignedTo > -1) {
         sqlFilter.append("AND t.assigned_to = ? ");
       }
-
       if (excludeAssignedTo > -1) {
         sqlFilter.append("AND t.assigned_to <> ? ");
       }
-
+      if (onlyAssigned) {
+        sqlFilter.append("AND t.assigned_to > 0 AND t.assigned_to IS NOT NULL ");
+      }
+      if (onlyUnassigned) {
+        sqlFilter.append("AND (t.assigned_to IS NULL OR t.assigned_to = 0 OR t.assigned_to = -1) ");
+      }
       if (severity > 0) {
         sqlFilter.append("AND t.scode = ? ");
       }
-
       if (priority > 0) {
         sqlFilter.append("AND t.pri_code = ? ");
       }
-
       if (accountOwnerIdRange != null) {
         sqlFilter.append("AND t.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
       }
