@@ -65,7 +65,7 @@ public final class ProcessPacket extends CFSModule {
         
         //Prepare the objectMap: The allowable objects that can be processed for the
         //given systemId
-        HashMap objectMap = this.getObjectMap(context, db, auth.getSystemId());
+        HashMap objectMap = this.getObjectMap(context, db, auth);
         
         //Prepare the objectHooks: Inserts and updates can trigger code if specified
         ObjectHookList hooks = new ObjectHookList();
@@ -235,11 +235,11 @@ public final class ProcessPacket extends CFSModule {
    *@param  systemId  Description of Parameter
    *@return           The objectMap value
    */
-  private HashMap getObjectMap(ActionContext context, Connection db, int systemId) {
-    SyncTableList systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap" + systemId);
+  private HashMap getObjectMap(ActionContext context, Connection db, AuthenticationItem auth) {
+    SyncTableList systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap" + auth.getId());
     if (systemObjectMap == null) {
       synchronized (this) {
-        systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap" + systemId);
+        systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap" + auth.getId());
         if (systemObjectMap == null) {
           systemObjectMap = new SyncTableList();
           systemObjectMap.setBuildTextFields(false);
@@ -248,11 +248,11 @@ public final class ProcessPacket extends CFSModule {
           } catch (SQLException e) {
             e.printStackTrace(System.out);
           }
-          context.getServletContext().setAttribute("SyncObjectMap" + systemId, systemObjectMap);
+          context.getServletContext().setAttribute("SyncObjectMap" + auth.getId(), systemObjectMap);
         }
       }
     }
-    HashMap thisObjectMap = systemObjectMap.getObjectMapping(systemId);
+    HashMap thisObjectMap = systemObjectMap.getObjectMapping(auth.getSystemId());
     return thisObjectMap;
   }
 }
