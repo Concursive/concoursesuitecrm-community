@@ -453,7 +453,7 @@ public final class MyCFS extends CFSModule {
 		Connection db = null;
 		int resultCount = 0;
 		
-		System.out.println("CHRISasdasdaesfsdfsfsdfsdf");
+		System.out.println("CHRIS213as4");
 		
 		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
 		User thisRec = thisUser.getUserRecord();
