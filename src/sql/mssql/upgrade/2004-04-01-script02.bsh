@@ -57,93 +57,105 @@ if (moduleId == -1) {
   if (1 == 1) {
     PreparedStatement pst = db.prepareStatement(
       "INSERT INTO lookup_lists_lookup " +
-      "(module_id, category_id, lookup_id, level, table_name) " +
-      "VALUES (?, ?, ?, ?, ?) ");
+      "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     pst.setInt(1, moduleId);
     pst.setInt(2, 130041100);
     pst.setInt(3, 130041305);
     pst.setInt(4, 10);
     pst.setString(5, "lookup_sc_category");
+    pst.setString(6, "lookupList");
+    pst.setString(7, "Service Contract Category");
     pst.executeUpdate();
     pst.close();
   }
   if (1 == 1) {
     PreparedStatement pst = db.prepareStatement(
       "INSERT INTO lookup_lists_lookup " +
-      "(module_id, category_id, lookup_id, level, table_name) " +
-      "VALUES (?, ?, ?, ?, ?) ");
+      "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     pst.setInt(1, moduleId);
     pst.setInt(2, 130041100);
     pst.setInt(3, 130041306);
     pst.setInt(4, 10);
     pst.setString(5, "lookup_sc_type");
+    pst.setString(6, "lookupList");
+    pst.setString(7, "Service Contract Type");
     pst.executeUpdate();
     pst.close();
   }
   if (1 == 1) {
     PreparedStatement pst = db.prepareStatement(
       "INSERT INTO lookup_lists_lookup " +
-      "(module_id, category_id, lookup_id, level, table_name) " +
-      "VALUES (?, ?, ?, ?, ?) ");
+      "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     pst.setInt(1, moduleId);
     pst.setInt(2, 130041100);
     pst.setInt(3, 116041409);
     pst.setInt(4, 10);
     pst.setString(5, "lookup_response_model");
+    pst.setString(6, "lookupList");
+    pst.setString(7, "Response Time Model");
     pst.executeUpdate();
     pst.close();
   }
   if (1 == 1) {
     PreparedStatement pst = db.prepareStatement(
       "INSERT INTO lookup_lists_lookup " +
-      "(module_id, category_id, lookup_id, level, table_name) " +
-      "VALUES (?, ?, ?, ?, ?) ");
+      "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     pst.setInt(1, moduleId);
     pst.setInt(2, 130041100);
     pst.setInt(3, 116041410);
     pst.setInt(4, 10);
     pst.setString(5, "lookup_phone_model");
+    pst.setString(6, "lookupList");
+    pst.setString(7, "Phone Service Model");
     pst.executeUpdate();
     pst.close();
   }
   if (1 == 1) {
     PreparedStatement pst = db.prepareStatement(
       "INSERT INTO lookup_lists_lookup " +
-      "(module_id, category_id, lookup_id, level, table_name) " +
-      "VALUES (?, ?, ?, ?, ?) ");
+      "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     pst.setInt(1, moduleId);
     pst.setInt(2, 130041100);
     pst.setInt(3, 116041411);
     pst.setInt(4, 10);
     pst.setString(5, "lookup_onsite_model");
+    pst.setString(6, "lookupList");
+    pst.setString(7, "Onsite Service Model");
     pst.executeUpdate();
     pst.close();
   }
   if (1 == 1) {
     PreparedStatement pst = db.prepareStatement(
       "INSERT INTO lookup_lists_lookup " +
-      "(module_id, category_id, lookup_id, level, table_name) " +
-      "VALUES (?, ?, ?, ?, ?) ");
+      "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     pst.setInt(1, moduleId);
     pst.setInt(2, 130041100);
     pst.setInt(3, 116041412);
     pst.setInt(4, 10);
     pst.setString(5, "lookup_email_model");
+    pst.setString(6, "lookupList");
+    pst.setString(7, "Email Service Model");
     pst.executeUpdate();
     pst.close();
   }
   if (1 == 1) {
     PreparedStatement pst = db.prepareStatement(
       "INSERT INTO lookup_lists_lookup " +
-      "(module_id, category_id, lookup_id, level, table_name, description, class_name) " +
+      "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
       "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     pst.setInt(1, moduleId);
     pst.setInt(2, 130041100);
     pst.setInt(3, 308041546);
     pst.setInt(4, 10);
     pst.setString(5, "lookup_hours_reason");
-    pst.setString(6, "Contract Hours Adjustment Reason");
-    pst.setString(7, "lookupList");
+    pst.setString(6, "lookupList");
+    pst.setString(7, "Contract Hours Adjustment Reason");
     pst.executeUpdate();
     pst.close();
   }
