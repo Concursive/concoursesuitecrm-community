@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import com.zeroio.iteam.base.FileItemList;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.webutils.LookupList;
+import com.darkhorseventures.webutils.LookupElement;
 import com.darkhorseventures.utils.DateUtils;
 
 /**
@@ -1150,24 +1151,21 @@ public boolean getEnabled() {
    *@exception  SQLException  Description of Exception
    */
   public void buildTypes(Connection db) throws SQLException {
-    types.setSelectSize(3);
-    types.setMultiple(true);
-
     Statement st = null;
     ResultSet rs = null;
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT atl.*, la.description as type_name " +
+        "SELECT atl.type_id " +
         "FROM account_type_levels atl " +
-        "LEFT JOIN lookup_account_types la ON (atl.type_id = la.code) " +
         "WHERE atl.org_id = " + orgId + " ORDER BY atl.level ");
 
     st = db.createStatement();
     rs = st.executeQuery(sql.toString());
 
     while (rs.next()) {
-      types.appendItem(rs.getInt("type_id"), rs.getString("type_name"));
+      //types.appendItem(new LookupElement(db, rs.getInt("type_id"), "lookup_account_types"));
+      types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_account_types"));
     }
 
     rs.close();
