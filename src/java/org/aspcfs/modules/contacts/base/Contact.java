@@ -1032,7 +1032,7 @@ public class Contact extends GenericBean {
       LookupElement thisElt = (LookupElement) i.next();
       types.append(thisElt.getDescription());
       if (i.hasNext()) {
-        types.append(",");
+        types.append(", ");
       }
     }
     return types.toString();
