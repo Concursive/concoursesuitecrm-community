@@ -13,6 +13,16 @@ VALUES
  @TRUE@
 );
 
+/* Sample cron entry for running the report runner, every day every 5 minutes */
+INSERT INTO events
+(minute, task, extrainfo, enabled)
+VALUES
+('*/2',
+ 'org.aspcfs.apps.reportRunner.ReportRunner#doTask',
+ '${FILEPATH}',
+ @TRUE@
+);
+
 /* Cron entry for cleaning up the server, every day at 12:00am */
 INSERT INTO events
 (minute, hour, task, extrainfo, enabled)
