@@ -2,6 +2,8 @@
 <%@ page import="java.util.*"%>
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="Task" class="com.darkhorseventures.cfsbase.Task" scope="request"/>
+<jsp:useBean id="PriorityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="EstimatedLOETypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
@@ -52,13 +54,7 @@
   <tr class="containerBody">
     <td class="formLabel">Priority</td>
     <td>
-      <select name="priority">
-        <option value="1" <%=(Task.getPriority()==1)?" selected":""%>>1</option>
-        <option value="2" <%=(Task.getPriority()==2)?" selected":""%>>2</option>
-        <option value="3" <%=(Task.getPriority()==3)?" selected":""%>>3</option>
-        <option value="4" <%=(Task.getPriority()==4)?" selected":""%>>4</option>
-        <option value="5" <%=(Task.getPriority()==5)?" selected":""%>>5</option>
-      </select>
+      <%=PriorityList.getHtmlSelect("priority",Task.getPriority()) %>
       </td>
   </tr>
   
@@ -70,6 +66,7 @@
    <tr>
     <td><input type=checkbox name="chk1" value="true" onclick="javascript:setField('complete',document.addTask.chk1.checked,'addTask');" <%=Task.getComplete()?" checked":""%>></td>
     <input type=hidden name="complete" value="<%=Task.getComplete()?"1":"0"%>">
+    <input type="hidden" name="modified" value="<%=Task.getModified()%>">
     <td>Complete</td>
    </tr>
    </table>
@@ -116,7 +113,9 @@
     </td>
     <td>
       <input type=text name="estimatedLOE" value="<%=(Task.getEstimatedLOE()==-1)?"":(new Integer(Task.getEstimatedLOE())).toString()%>">
+      &nbsp;<%=EstimatedLOETypeList.getHtmlSelect("estimatedLOEType",Task.getEstimatedLOEType()) %>
      </td>
+     
   </tr>
   
   <tr class="containerBody">

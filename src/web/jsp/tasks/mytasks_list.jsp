@@ -8,13 +8,13 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></SCRIPT>
 <body onLoad="javascript:document.forms['addTask'].description.focus();">
-<a href="MyCFS.do?command=Home">My Home Page</a> > View Tasks<br>
+<a href="MyCFS.do?command=Home">My Home Page</a> > My Tasks<br>
 <hr color="#BFBFBB" noshade>
-<form name="addTask" action="/MyTasks.do?command=Insert&auto-populate=true" method="post">
+<form name="addTask" action="/MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
  <table cellpadding="4" cellspacing="0" border="1" width="45%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td valign=center align=left colspan="3">
-      <strong>Quickly Add A Task</strong>
+      <strong>Quickly Add a Task</strong>
     </td>
   </tr>
   <tr>
@@ -23,6 +23,7 @@
       <input type=text name="description" value="" size=30>
       <font color="red">*</font>
       <input type=hidden name="owner" value="<%=User.getUserRecord().getContact().getId()%>">
+      <input type="hidden" name="priority" value="1">
       </td>
       <td nowrap align="left" width="20%">
         <input type=checkbox name="chk2"  onclick="javascript:setField('sharing',document.addTask.chk2.checked,'addTask');">
@@ -127,7 +128,7 @@
     <td>
       <%if(thisTask.getComplete()){
       %>
-        <a href="javascript:changeImages('image<%=count%>','/MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%=thisTask.getId()%>+'|0','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%=thisTask.getId()%>+'|1');javascript:switchClass('complete<%=count%>');"><img src="images/box-checked.gif" name="image<%=count%>" id="1" border=0 title="Click to change"></a>
+        <a href="javascript:changeImages('image<%=count%>','/MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%=thisTask.getId()%>+'|0','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%=thisTask.getId()%>+'|1');javascript:switchClass('complete<%=count%>');" onMouseOver="this.style.color='blue';window.status='View Details';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box-checked.gif" name="image<%=count%>" id="1" border=0 title="Click to change"></a>
       <%}
       else{
       %>

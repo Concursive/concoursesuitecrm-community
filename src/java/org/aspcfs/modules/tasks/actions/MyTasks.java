@@ -88,7 +88,23 @@ public final class MyTasks extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("DefaultError");
     }
+    Exception errorMessage = null;
+    Connection db = null;
     addModuleBean(context, "My Tasks", "Task Home");
+    try {
+      db = this.getConnection(context);
+      //build loe types
+      LookupList estimatedLOETypeList = new LookupList(db, "lookup_task_loe");
+      context.getRequest().setAttribute("EstimatedLOETypeList",estimatedLOETypeList);
+      //build task priority levels (descritions)
+      LookupList priorityList = new LookupList(db, "lookup_task_priority");
+      context.getRequest().setAttribute("PriorityList",priorityList);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
     context.getSession().removeAttribute("contactListInfo");
     context.getRequest().setAttribute("Task", new Task());
     if (context.getRequest().getParameter("popup") != null) {
@@ -121,6 +137,14 @@ public final class MyTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, id);
+      
+       //build loe types
+      LookupList estimatedLOETypeList = new LookupList(db, "lookup_task_loe");
+      context.getRequest().setAttribute("EstimatedLOETypeList",estimatedLOETypeList);
+      
+      //build task priority levels (descritions)
+      LookupList priorityList = new LookupList(db, "lookup_task_priority");
+      context.getRequest().setAttribute("PriorityList",priorityList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {

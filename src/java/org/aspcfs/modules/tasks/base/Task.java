@@ -30,6 +30,7 @@ public class Task extends GenericBean {
   private int sharing = -1;
   private int modifiedby = -1;
   private int estimatedLOE = -1;
+  private int estimatedLOEType = -1;
   private int owner = -1;
   private int age = -1;
   private String notes = null;
@@ -73,7 +74,7 @@ public class Task extends GenericBean {
 
     PreparedStatement pst = db.prepareStatement(
         "SELECT t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
-        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedLOE, t.owner, t.completedate, " +
+        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, t.estimatedloetype, t.owner, t.completedate, t.modified, " +
         "c.namelast as lastname,c.namefirst as firstname " +
         "FROM task t,contact c " +
         "WHERE (task_id = ? AND t.owner = c.contact_id) ");
@@ -132,6 +133,16 @@ public class Task extends GenericBean {
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the Task object
+   *
+   *@param  enteredBy  The new enteredBy value
+   */
+  public void setEnteredBy(String enteredBy) {
+    this.enteredBy = Integer.parseInt(enteredBy);
   }
 
 
@@ -291,6 +302,16 @@ public class Task extends GenericBean {
 
 
   /**
+   *  Sets the id attribute of the Task object
+   *
+   *@param  id  The new id value
+   */
+  public void setId(String id) {
+    this.id = Integer.parseInt(id);
+  }
+
+
+  /**
    *  Sets the age attribute of the Task object
    *
    *@param  age  The new age value
@@ -301,12 +322,32 @@ public class Task extends GenericBean {
 
 
   /**
+   *  Sets the age attribute of the Task object
+   *
+   *@param  age  The new age value
+   */
+  public void setAge(String age) {
+    this.age = Integer.parseInt(age);
+  }
+
+
+  /**
    *  Sets the contactId attribute of the Task object
    *
    *@param  contactId  The new contactId value
    */
   public void setContactId(int contactId) {
     this.contactId = contactId;
+  }
+
+
+  /**
+   *  Sets the contactId attribute of the Task object
+   *
+   *@param  contactId  The new contactId value
+   */
+  public void setContactId(String contactId) {
+    this.contactId = Integer.parseInt(contactId);
   }
 
 
@@ -341,6 +382,46 @@ public class Task extends GenericBean {
 
 
   /**
+   *  Sets the ticketId attribute of the Task object
+   *
+   *@param  ticketId  The new ticketId value
+   */
+  public void setTicketId(String ticketId) {
+    this.ticketId = Integer.parseInt(ticketId);
+  }
+
+
+  /**
+   *  Sets the estimatedLOEType attribute of the Task object
+   *
+   *@param  estimatedLOEType  The new estimatedLOEType value
+   */
+  public void setEstimatedLOEType(int estimatedLOEType) {
+    this.estimatedLOEType = estimatedLOEType;
+  }
+
+
+  /**
+   *  Sets the estimatedLOEType attribute of the Task object
+   *
+   *@param  estimatedLOEType  The new estimatedLOEType value
+   */
+  public void setEstimatedLOEType(String estimatedLOEType) {
+    this.estimatedLOEType = Integer.parseInt(estimatedLOEType);
+  }
+
+
+  /**
+   *  Gets the estimatedLOEType attribute of the Task object
+   *
+   *@return    The estimatedLOEType value
+   */
+  public int getEstimatedLOEType() {
+    return estimatedLOEType;
+  }
+
+
+  /**
    *  Sets the completeDate attribute of the Task object
    *
    *@param  completeDate  The new completeDate value
@@ -349,7 +430,17 @@ public class Task extends GenericBean {
     this.completeDate = completeDate;
   }
 
+public void setModified(java.sql.Timestamp modified) {
+	this.modified = modified;
+}
 
+public void setModified(String modified) {
+	this.modified = DatabaseUtils.parseTimestamp(modified);
+}
+
+public java.sql.Timestamp getModified() {
+	return modified;
+}
 
   /**
    *  Gets the completeDate attribute of the Task object
@@ -619,7 +710,6 @@ public class Task extends GenericBean {
   }
 
 
-
   /**
    *  Description of the Method
    *
@@ -637,8 +727,12 @@ public class Task extends GenericBean {
     try {
       db.setAutoCommit(false);
       sql = "INSERT INTO task " +
-          "(enteredby, priority, description, notes, sharing, owner, duedate, estimatedloe, complete, completedate) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
+          "(enteredby, priority, description, notes, sharing, owner, duedate, estimatedloe, " +
+           (estimatedLOEType==-1?"":"estimatedLOEType, ") +
+          "complete, completedate) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, " +
+           (estimatedLOEType==-1?"":"?, ") +
+           "?, ? ) ";
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -649,7 +743,10 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getSharing());
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
-      pst.setInt(++i, this.getEstimatedLOE());
+      if(this.getEstimatedLOEType() != -1){
+        pst.setInt(++i, this.getEstimatedLOE());
+      }
+      pst.setInt(++i, this.getEstimatedLOEType());
       pst.setBoolean(++i, this.getComplete());
       if (this.getComplete()) {
         pst.setTimestamp(++i, new Timestamp(System.currentTimeMillis()));
@@ -662,7 +759,9 @@ public class Task extends GenericBean {
       }
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "task_task_id_seq");
-      if(this.getContactId()!=-1){insertContacts(pst, db);}
+      if (this.getContactId() != -1) {
+        insertContacts(pst, db);
+      }
       pst.close();
       db.commit();
     } catch (SQLException e) {
@@ -702,9 +801,9 @@ public class Task extends GenericBean {
 
       sql = "UPDATE task " +
           "SET enteredby = ?, priority = ?, description = ?, notes = ?, " +
-          "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, " +
+          "sharing = ?, owner = ?, duedate = ?, estimatedloe = ?, estimatedloetype = ?, " +
           "modified = CURRENT_TIMESTAMP, complete = ?, completedate = ? " +
-          "WHERE task_id = ? ";
+          "WHERE task_id = ? AND modified = ? ";
 
       i = 0;
       pst = db.prepareStatement(sql);
@@ -716,6 +815,7 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
       pst.setInt(++i, this.getEstimatedLOE());
+      pst.setInt(++i, this.getEstimatedLOEType());
       pst.setBoolean(++i, this.getComplete());
       if (previousTask.getComplete() && this.getComplete()) {
         pst.setTimestamp(++i, previousTask.getCompleteDate());
@@ -725,6 +825,7 @@ public class Task extends GenericBean {
         pst.setTimestamp(++i, null);
       }
       pst.setInt(++i, thisId);
+      pst.setTimestamp(++i,this.getModified());
 
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Task -> Update Query is " + pst.toString());
@@ -732,7 +833,9 @@ public class Task extends GenericBean {
 
       count = pst.executeUpdate();
       this.id = thisId;
-      if(this.getContactId()!=-1){insertContacts(pst, db);}
+      if (this.getContactId() != -1) {
+        insertContacts(pst, db);
+      }
       pst.close();
       db.commit();
     } catch (SQLException e) {
@@ -839,7 +942,6 @@ public class Task extends GenericBean {
     }
     return dependencyList;
   }
-
 
 
   /**
@@ -994,8 +1096,10 @@ public class Task extends GenericBean {
     sharing = rs.getInt("sharing");
     complete = rs.getBoolean("complete");
     estimatedLOE = rs.getInt("estimatedloe");
+    estimatedLOEType = rs.getInt("estimatedloetype");
     owner = rs.getInt("owner");
     completeDate = rs.getTimestamp("completeDate");
+    modified = rs.getTimestamp("modified");
     ownerName = Contact.getNameLastFirst(rs.getString("lastname"), rs.getString("firstname"));
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
@@ -1013,11 +1117,11 @@ public class Task extends GenericBean {
   protected boolean isValid() throws SQLException {
     errors.clear();
 
-    if (this.getDescription() == null) {
-      errors.put("DescriptionError", "Task Description is required");
+    if (this.getDescription() == null || this.getDescription().equals("")) {
+      errors.put("descriptionError", "Task Description is required");
     }
     if (this.getOwner() == -1) {
-      errors.put("OwnerError", "Owner name is required");
+      errors.put("ownerError", "Owner name is required");
     }
     if (hasErrors()) {
       return false;
