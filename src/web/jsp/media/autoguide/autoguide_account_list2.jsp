@@ -29,10 +29,13 @@
 <table width="100%" border="0">
   <tr>
     <td align="left">
-      View: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+      Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= AutoGuideAccountInfo.getOptionValue("list") %>>List View</option>
         <option <%= AutoGuideAccountInfo.getOptionValue("slides") %>>Ad View</option>
       </select>
+      &nbsp;
+      <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideAccountInfo.getFilterKey("listFilter1")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
   </tr>
