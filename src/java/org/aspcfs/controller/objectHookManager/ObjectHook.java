@@ -3,8 +3,14 @@ package org.aspcfs.controller.objectHookManager;
 import org.aspcfs.apps.workFlowManager.*;
 
 /**
- *  A class that allows hooks to be run in a thread, created by the
- *  WorkflowManager
+ *  A class that coordinates running business processes in a thread with the
+ *  WorkflowManager.<p>
+ *
+ *  A business process can be triggered in 3 ways:<br>
+ *  1. Inserting, updating, deleting, or selecting a hooked object triggers a
+ *  business process<br>
+ *  2. A cron event triggers a business process<br>
+ *  3. An event manually triggers a business process
  *
  *@author     matt rajkowski
  *@created    October 14, 2002
@@ -18,6 +24,7 @@ public class ObjectHook extends Thread {
   private BusinessProcessList businessProcessList = null;
   private int actionId = -1;
   private WorkflowManager manager = null;
+  private String businessProcess = null;
 
 
   /**
@@ -57,6 +64,16 @@ public class ObjectHook extends Thread {
    */
   public void setManager(WorkflowManager tmp) {
     this.manager = tmp;
+  }
+
+
+  /**
+   *  Sets the businessProcess attribute of the ObjectHook object
+   *
+   *@param  tmp  The new businessProcess value
+   */
+  public void setBusinessProcess(String tmp) {
+    this.businessProcess = tmp;
   }
 
 
@@ -101,6 +118,16 @@ public class ObjectHook extends Thread {
 
 
   /**
+   *  Gets the businessProcess attribute of the ObjectHook object
+   *
+   *@return    The businessProcess value
+   */
+  public String getBusinessProcess() {
+    return businessProcess;
+  }
+
+
+  /**
    *  Constructor for the ObjectHook object
    *
    *@param  context  Description of the Parameter
@@ -119,19 +146,24 @@ public class ObjectHook extends Thread {
         //Pause the thread so that the debug output is easier to read
         Thread.sleep(2000);
       }
-      ObjectHookActionList actionList =
-          (ObjectHookActionList) objectHookList.get(context.getClassName());
-      if (actionList != null) {
-        ObjectHookAction thisAction =
-            (ObjectHookAction) actionList.get(new Integer(actionId));
-        if (thisAction != null) {
-          context.setProcessName(thisAction.getProcessName());
-          if (businessProcessList != null) {
-            BusinessProcess thisProcess = (BusinessProcess) businessProcessList.get(thisAction.getProcessName());
-            if (thisProcess != null) {
-              context.setProcess(thisProcess);
-              manager.execute(context);
-            }
+      if (businessProcess == null) {
+        ObjectHookActionList actionList =
+            (ObjectHookActionList) objectHookList.get(context.getClassName());
+        if (actionList != null) {
+          ObjectHookAction thisAction =
+              (ObjectHookAction) actionList.get(new Integer(actionId));
+          if (thisAction != null) {
+            businessProcess = thisAction.getProcessName();
+          }
+        }
+      }
+      if (businessProcess != null) {
+        context.setProcessName(businessProcess);
+        if (businessProcessList != null) {
+          BusinessProcess thisProcess = (BusinessProcess) businessProcessList.get(businessProcess);
+          if (thisProcess != null) {
+            context.setProcess(thisProcess);
+            manager.execute(context);
           }
         }
       }
