@@ -30,61 +30,57 @@ Contacts<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <tr class="title">
   <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete">
-  <td valign=center align=left>
+  <td width="8">
     <strong>Action</strong>
   </td>
   </dhv:permission>
-  <td width=30% valign=center align=left>
+  <td width="30%">
     <strong>Name</strong>
   </td>  
-  <td width=20% valign=center align=left>
+  <td width="20%">
     <strong>Title</strong>
   </td>   
-  <td width=20% valign=center align=left>
+  <td width="20%">
     <strong>Phone</strong>
   </td>
-  <td width=30% valign=center align=left>
+  <td width="30%">
     <strong>Email</strong>
   </td>
 </tr>
 <%
 	Iterator j = ContactList.iterator();
-	
 	if ( j.hasNext() ) {
 		int rowid = 0;
-	       	while (j.hasNext()) {
-		
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-		
-		Contact thisContact = (Contact)j.next();
+    while (j.hasNext()) {
+		  rowid = (rowid != 1?1:2);
+      Contact thisContact = (Contact)j.next();
 %>      
 		<tr class="containerBody">
       <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete">
-      <td width=8 valign=center nowrap class="row<%= rowid %>">
+      <td valign="center" nowrap class="row<%= rowid %>">
         <dhv:permission name="accounts-accounts-contacts-edit"><a href="Contacts.do?command=Modify&orgId=<%= OrgDetails.getOrgId()%>&id=<%=thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-contacts-delete"><a href="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=thisContact.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
       </td>
       </dhv:permission>
-      <td width=30% valign=center class="row<%= rowid %>">
+      <td valign="center" class="row<%= rowid %>">
         <a href="Contacts.do?command=Details&id=<%=thisContact.getId()%>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
       </td>
-      <td width=20% valign=center class="row<%= rowid %>">
+      <td valign="center" class="row<%= rowid %>">
         <%= toHtml(thisContact.getTitle()) %>
       </td>
-      <td width=20% valign=center class="row<%= rowid %>" nowrap>
+      <td valign="center" class="row<%= rowid %>" nowrap>
         <%= toHtml(thisContact.getPhoneNumber("Business")) %>
       </td>
-      <td width=30% valign=center class="row<%= rowid %>">
-        <a href="mailto:<%= toHtml(thisContact.getEmailAddress("Business")) %>"><%= toHtml(thisContact.getEmailAddress("Business")) %></a>
+      <td valign="center" class="row<%= rowid %>">
+        <dhv:evaluate exp="<%= hasText(thisContact.getEmailAddress("Business")) %>">
+          <a href="mailto:<%= toHtml(thisContact.getEmailAddress("Business")) %>"><%= toHtml(thisContact.getEmailAddress("Business")) %></a>
+        </dhv:evaluate>
+        &nbsp;
       </td>
 		</tr>
 <%}%>
 <%} else {%>
 		<tr class="containerBody">
-      <td colspan=5 valign=center>
+      <td colspan="5">
         No contacts found.
       </td>
     </tr>

@@ -4,7 +4,6 @@
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
-
 <form name="modContact" action="Contacts.do?command=Modify&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>" method="post">
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
@@ -32,11 +31,9 @@ Contact Details<br>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
-
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
     </td>     
   </tr>
@@ -70,7 +67,7 @@ Contact Details<br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Email Addresses</strong>
 	  </td>
   </tr>
@@ -85,7 +82,10 @@ Contact Details<br>
       <%= toHtml(thisEmailAddress.getTypeName()) %>
     </td>
     <td>
+      <dhv:evaluate exp="<%= hasText(thisEmailAddress.getEmail()) %>">
       <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
+      </dhv:evaluate>
+      &nbsp;
     </td>
   </tr>
 <%    
@@ -102,7 +102,7 @@ Contact Details<br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Phone Numbers</strong>
 	  </td>
   </tr>
@@ -134,7 +134,7 @@ Contact Details<br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Addresses</strong>
 	  </td>
   </tr>
