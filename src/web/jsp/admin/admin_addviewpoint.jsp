@@ -49,13 +49,12 @@ Add Viewpoint <br>
             <div id="changecontact">None</div>
           </td>
           <td>
-            <font color="red">*</font>
+            <font color="red">*</font><%= showAttribute(request, "ContactError") %>
             <input type="hidden" name="vpContactId" id="contactid" value="-1">
             [<a href="javascript:popContactsListSingle('contactid','changecontact','usersOnly=true&reset=true');">Change Contact</a>]
           </td>
           <td>
             [<a href="javascript:document.forms[0].vpContactId.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a>]
-            <%= showAttribute(request, "ContactError") %>
           </td>
         </tr>
       </table>
