@@ -110,7 +110,7 @@
           &nbsp;
         </td>
         <td class="row<%= rowid %>" nowrap>
-          &nbsp;
+          <%= (thisItem.hasPictureId()?"yes":"&nbsp;") %>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <input type="hidden" name="vehicle<%= itemCount %>id" value="<%= thisItem.getId() %>">

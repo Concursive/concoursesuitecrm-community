@@ -18,6 +18,7 @@ public class InventoryList extends ArrayList {
   private int syncType = Constants.NO_SYNC;
   
   private boolean buildOrganizationInfo = false;
+  private boolean buildPictureId = false;
   private int orgId = -1;
   
   public InventoryList() { }
@@ -38,6 +39,7 @@ public class InventoryList extends ArrayList {
   public String getUniqueField() { return uniqueField; }
   
   public void setBuildOrganizationInfo(boolean tmp) { this.buildOrganizationInfo = tmp; }
+  public void setBuildPictureId(boolean tmp) { this.buildPictureId = tmp; }
 
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -57,15 +59,19 @@ public class InventoryList extends ArrayList {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("InventoryList-> buildList generated items: " + this.size());
     }
-    if (buildOrganizationInfo) {
+    if (buildOrganizationInfo || buildPictureId) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
         Inventory thisItem = (Inventory)i.next();
         if (System.getProperty("DEBUG") != null) {
           System.out.println("InventoryList-> Building info for: " + thisItem.getId());
         }
-        thisItem.buildOrganizationInfo(db);
-        thisItem.buildPictureId(db);
+        if (buildOrganizationInfo) {
+          thisItem.buildOrganizationInfo(db);
+        }
+        if (buildPictureId) {
+          thisItem.buildPictureId(db);
+        }
       }
     }
   }

@@ -1,0 +1,15 @@
+http://www.microsoft.com/mobile/developer/technicalarticles/sqlserverce.asp
+
+* SQL grammar is compatible with SQL Server 2000. This includes SQL Aggregate functions such as MAX, MIN, SUM, COUNT, and AVG.
+* Supported data types include TINYINT, SMALLINT, INTEGER, BIGINT, REAL, NUMERIC, FLOAT, BIT, BINARY, VARBINARY, IMAGE, and the UNICODE character data types NATIONAL CHARACTER, NATIONAL CHARACTER VARYING, NTEXT MONEY, DATETIME, and UNIQUEIDENTIFIER.
+* 32 indexes per table, multicolumn indexes.
+* NULL support.
+* Nested transactions.
+* 128-bit file level encryption.
+* Data Definition Language: Create databases, alter tables, referential integrity, and default values.
+* Data Manipulation Language: INSERT, UPDATE, and DELETE.
+* SELECT: SET Functions (aggregates), INNER/OUTER JOIN, subselect, GROUP BY/HAVING.
+* Scrollable and forward-only cursors.
+* Remote Data Access (RDA) to SQL Server 6.5+.
+* Merge replication with SQL Server 2000.
+

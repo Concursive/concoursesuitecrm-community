@@ -202,7 +202,7 @@ public class Inventory {
     return (adRuns != null && adRuns.size() > 0);
   }
   public int getPictureId() { return pictureId; }
-
+  public boolean hasPictureId() { return pictureId > -1; }
 
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();

@@ -23,7 +23,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'user', 'com.darkhorseventures.cfsbase.User', 20);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'accountInventory', 'com.darkhorseventures.autoguide.base.AccountInventory', 20);
+ VALUES (2, 'accountInventory', 'com.darkhorseventures.autoguide.base.Inventory', 20);
 
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)

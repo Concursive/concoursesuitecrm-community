@@ -39,7 +39,7 @@
   <tr>
     <td class="PhotoDetail">
       <span>
-        <img src="images/vehicle_unavailable.gif" border="0"/><br>
+        <img src="<%= (InventoryItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + InventoryItem.getId() + "&fid=" + InventoryItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/><br>
         &nbsp;<br>
 <dhv:evaluate exp="<%= hasText(InventoryItem.getStockNo()) %>">
         #<%= toHtml(InventoryItem.getStockNo()) %><br>

@@ -62,6 +62,7 @@ public final class AutoGuide extends CFSModule {
       db = this.getConnection(context);
       //inventoryList.setPagedListInfo(autoGuideDirectoryInfo);
       inventoryList.setBuildOrganizationInfo(true);
+      inventoryList.setBuildPictureId(true);
       inventoryList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -198,6 +199,7 @@ public final class AutoGuide extends CFSModule {
       //inventoryList.setPagedListInfo(autoGuideAccountInfo);
       inventoryList.setOrgId(orgId);
       inventoryList.setBuildOrganizationInfo(false);
+      inventoryList.setBuildPictureId(true);
       inventoryList.buildList(db);
       context.getRequest().setAttribute("InventoryList", inventoryList);
     } catch (Exception e) {
@@ -465,7 +467,7 @@ public final class AutoGuide extends CFSModule {
       
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
-      multiPart.setUsePathParam(true);
+      multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
@@ -478,11 +480,12 @@ public final class AutoGuide extends CFSModule {
       //Update the database with the resulting file
       db = getConnection(context);
       
-      FileItem previousItem = new FileItem(db, -1, Integer.parseInt(id), Constants.AUTOGUIDE);
-      if (previousItem.getId() > -1) {
-        previousItem.delete(db, filePath);
-      }
-
+      FileItemList previousFiles = new FileItemList();
+      previousFiles.setLinkModuleId(Constants.AUTOGUIDE);
+      previousFiles.setLinkItemId(Integer.parseInt(id));
+      previousFiles.buildList(db);
+      previousFiles.delete(db, filePath);
+      
       FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
       FileItem thisItem = new FileItem();
       thisItem.setLinkModuleId(Constants.AUTOGUIDE);
@@ -499,7 +502,7 @@ public final class AutoGuide extends CFSModule {
       if (!recordInserted) {
         processErrors(context, thisItem.getErrors());
       } else {
-        //Create a thumbnail
+        //TODO: Create a thumbnail
         //Image image = new ImageReader(newFileInfo.getRealFilename()).image;
         
       }
@@ -519,6 +522,56 @@ public final class AutoGuide extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+  
+  public String executeCommandShowImage(ActionContext context) {
+    Exception errorMessage = null;
+    String linkId = (String)context.getRequest().getParameter("id");
+    String itemId = (String)context.getRequest().getParameter("fid");
+    String version = (String)context.getRequest().getParameter("ver");
+    FileItem thisItem = null;
+    
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(linkId), Constants.AUTOGUIDE);
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    //Start the download
+    try {
+      FileItem itemToDownload = null;
+      if (version == null) {
+        itemToDownload = thisItem;
+      } else {
+        itemToDownload = thisItem.getVersion(Double.parseDouble(version));
+      }
+      
+      itemToDownload.setEnteredBy(this.getUserId(context));
+      String filePath = this.getPath(context, "autoguide") + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
+      
+      FileDownload fileDownload = new FileDownload();
+      fileDownload.setFullPath(filePath);
+      fileDownload.setDisplayName(itemToDownload.getClientFilename());
+      if (fileDownload.fileExists()) {
+        String imageType = "gif"; //TODO: do not hard code this
+        fileDownload.sendFile(context, "image/" + imageType);
+      } else {
+        System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
+      }
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+			if (System.getProperty("DEBUG") != null) System.out.println(se.toString());
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    }
+    
+    return ("-none-");
   }
   
   private void populateOrganization(ActionContext context, Connection db, int orgId) throws SQLException {

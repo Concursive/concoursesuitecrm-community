@@ -97,7 +97,8 @@
     </td>
     <td class="PhotoDetail">
       <span>
-        <img src="images/vehicle_unavailable.gif" border="0"/><br>
+        <img src="<%= (InventoryItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + InventoryItem.getId() + "&fid=" + InventoryItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/>
+        <br>
       </span>
       <a href="javascript:popURL('AutoGuide.do?command=UploadForm&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&return=<%= java.net.URLEncoder.encode("AccountsAutoGuide.do?command=Details&orgId=" + OrgDetails.getOrgId() + "&id=" + InventoryItem.getId()) %>','Photo Upload','500','300','no','no');">Upload Photo</a>
     </td>
