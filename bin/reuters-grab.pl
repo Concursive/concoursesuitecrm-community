@@ -9,9 +9,9 @@ use CGI qw(:standard);
 # Chris S. Price, Dark Horse Ventures
 # 1-10-2001
 #
-# reuters-grab.pl <company webroot folder>
+# reuters-grab.pl <company_id_name> <dbname>
 #
-# file site.cfg must be present in <webroot>/database directory
+# file <company_id_name>.conf must be present in directory
 #
 # $LOGFILE == log destination
 ##########################################################
@@ -59,7 +59,7 @@ sub insert {
 		if ( $test eq 0 ) {
 			#print LOG "FOUND NEW: $head\n";
 			#print LOG "NEW: $head\n\n";
-      			$result = $conn->exec("$query");
+      			$result3 = $conn->exec("$query");
 			
 			$tempcount++;
 		}
@@ -78,8 +78,10 @@ sub insert {
 sub main () {
 
 my $site_config = "$ARGV[0]" . "/database/site.cfg";
+
 open LOG, ">>$LOGFILE" or die "Cannot open $LOGFILE for write :$!";
 
+#print LOG "----------------------------\n";
 print LOG `date`;
 print LOG "$0\n";
 print LOG "\nconfiguration: $site_config\n";
@@ -206,9 +208,9 @@ while ( $_ = <FILE> ) {
 &insert( \@headlines, \@urls, \@dates, $custid );
 
 close (FILE);
-
 `rm -rf out.html`;
 print LOG "----------------------------\n";
+return;
 
 }
 

@@ -209,9 +209,7 @@ while ( $_ = <FILE> ) {
 &insert( \@headlines, \@urls, \@dates, $custid );
 
 close (FILE);
-
 `rm -rf out.html`;
-
 print LOG "----------------------------\n";
 
 return;
