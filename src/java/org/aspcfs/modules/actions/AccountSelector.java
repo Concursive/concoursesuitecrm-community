@@ -14,7 +14,8 @@ import org.aspcfs.modules.base.Filter;
 import org.aspcfs.modules.base.Constants;
 
 /**
- *  Creates a Accounts List for the Account popup with two levels of filters. <br>
+ *  Creates a Accounts List for the Account popup with two levels of filters.
+ *  <br>
  *  Can be used in two variants : Single/Multiple<br>
  *  Single and mutiple define if multiple accounts can be selected or just
  *  single.
@@ -51,7 +52,7 @@ public final class AccountSelector extends CFSModule {
         selectedList.add(String.valueOf(st.nextToken()));
       }
     }
-    
+
     try {
       db = this.getConnection(context);
       int rowCount = 1;
@@ -122,6 +123,19 @@ public final class AccountSelector extends CFSModule {
    *@param  acctList  The new parameters value
    */
   private void setParameters(OrganizationList acctList, ActionContext context) {
+    //Check if a text-based filter was entered
+    String acctName = context.getRequest().getParameter("acctName");
+    String acctNumber = context.getRequest().getParameter("acctNumber");
+    if (acctName != null) {
+      if (!"Account Name".equals(acctName) && !"".equals(acctName.trim())) {
+        acctList.setName("%" + acctName + "%");
+      }
+    }
+    if (acctNumber != null) {
+      if (!"Account Number".equals(acctNumber) && !"".equals(acctNumber.trim())) {
+        acctList.setAccountNumber("%" + acctNumber + "%");
+      }
+    }
 
     boolean showMyCompany = "true".equals((String) context.getRequest().getParameter("showMyCompany"));
     if ("true".equals(context.getRequest().getParameter("reset"))) {
@@ -133,16 +147,16 @@ public final class AccountSelector extends CFSModule {
     if (!acctListInfo.hasListFilters()) {
       acctListInfo.addFilter(1, "0");
     }
-    
+
     //add filters
     FilterList filters = new FilterList();
     filters.setSource(Constants.ACCOUNTS);
     filters.build(context.getRequest());
     context.getRequest().setAttribute("Filters", filters);
-    
+
     //  set Filter for retrieving addresses depending on typeOfContact
     String firstFilter = filters.getFirstFilter(acctListInfo.getListView());
-    
+
     acctList.setPagedListInfo(acctListInfo);
     acctList.setMinerOnly(false);
     acctList.setTypeId(acctListInfo.getFilterKey("listFilter1"));

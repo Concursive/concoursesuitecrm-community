@@ -6,6 +6,33 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
+<SCRIPT LANGUAGE="JavaScript">
+	function init() {
+	<% 
+		String lastName = request.getParameter("lastName") ;
+		String firstName = request.getParameter("firstName");
+		if ((lastName == null && firstName == null) || ("".equals(lastName.trim()) && "".equals(firstName.trim()))) {
+	%>
+			document.contactListView.lastName.value = "Last Name";
+			document.contactListView.firstName.value = "First Name";
+	<%
+		}
+	%>	
+	}
+	
+	function clearSearchFields(clear, field) {
+		if (clear) {
+			// Clear the search fields since clear button was clicked
+			document.contactListView.lastName.value = "Last Name";
+			document.contactListView.firstName.value = "First Name";
+		} else {
+			// One of the search fields recieved focus
+			if (field.value == "Last Name" || field.value == "First Name") {
+				field.value = "" ;
+			}
+		}
+	}
+</SCRIPT>
 <%
   if (!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))) {
     String source = "";
@@ -14,9 +41,21 @@
     }
 %>
 <%-- Navigating the contact list, not the final submit --%>
+<body onLoad="init()">
 <form name="contactListView" method="post" action="ContactsList.do?command=ContactList">
-  <br>
-  <center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>
+  <table cellpadding="6" cellspacing="0" width="100%" border="0">
+		<tr>
+			<td align="center" valign="center" bgcolor="#d3d1d1">
+				<strong>Search</strong>
+				<input type="text" name="lastName" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("lastName")) %>"> <b>, </b>
+				<input type="text" name="firstName" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("firstName")) %>">
+				<input type="submit" value="search">
+				<input type="button" value="clear" onClick="clearSearchFields(true, '')">
+			</td>
+		</tr>
+	</table>
+	&nbsp;<br>
+	<center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">
   
@@ -70,4 +109,5 @@
     }
   }
 %>
+
 

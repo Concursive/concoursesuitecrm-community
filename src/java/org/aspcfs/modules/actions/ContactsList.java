@@ -21,7 +21,8 @@ import com.zeroio.iteam.base.*;
  *
  *@author     akhi_m
  *@created    September 5, 2002
- *@version    $Id$
+ *@version    $Id: ContactsList.java,v 1.16.66.1 2004/01/23 15:33:26 ananth Exp
+ *      $
  */
 public final class ContactsList extends CFSModule {
 
@@ -162,7 +163,7 @@ public final class ContactsList extends CFSModule {
       //Set ContactList Parameters and build the list
       setParameters(contactList, context);
       contactList.buildList(db);
-      
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -194,6 +195,19 @@ public final class ContactsList extends CFSModule {
    */
   private void setParameters(ContactList contactList, ActionContext context) {
 
+    // search for a particular contact
+    String firstName = context.getRequest().getParameter("firstName");
+    String lastName = context.getRequest().getParameter("lastName");
+    if (firstName != null) {
+      if (!"First Name".equals(firstName) && !"".equals(firstName.trim())) {
+        contactList.setFirstName("%" + firstName + "%");
+      }
+    }
+    if (lastName != null) {
+      if (!"Last Name".equals(lastName) && !"".equals(lastName.trim())) {
+        contactList.setLastName("%" + lastName + "%");
+      }
+    }
     if (context.getRequest().getParameter("reset") != null) {
       context.getSession().removeAttribute("ContactListInfo");
     }
@@ -211,7 +225,7 @@ public final class ContactsList extends CFSModule {
     //add filters
     FilterList filters = new FilterList(context.getRequest());
     context.getRequest().setAttribute("Filters", filters);
-    
+
     //  set Filter for retrieving addresses depending on typeOfContact
     String firstFilter = filters.getFirstFilter(contactListInfo.getListView());
 
@@ -251,7 +265,7 @@ public final class ContactsList extends CFSModule {
       contactList.setIncludeNonUsersOnly(true);
     }
   }
-  
+
 }
 
 

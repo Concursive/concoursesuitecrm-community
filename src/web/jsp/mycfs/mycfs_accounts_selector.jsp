@@ -10,14 +10,56 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
+<SCRIPT LANGUAGE="JavaScript">
+	function init() {
+	<% 
+		String acctName = request.getParameter("acctName") ;
+		String acctNumber = request.getParameter("acctNumber");
+		if (acctName == null || "".equals(acctName.trim())){
+	%>
+			document.acctListView.acctName.value = "Account Name";
+	<%
+		}
+		if (acctNumber == null || "".equals(acctNumber.trim())){
+	%>
+		  document.acctListView.acctNumber.value = "Account Number";
+	<%
+		}
+	%>		
+	}
+	
+	function clearSearchFields(clear, field) {
+		if (clear) {
+			// Clear the search fields since clear button was clicked
+			document.acctListView.acctName.value = "Account Name";
+			document.acctListView.acctNumber.value = "Account Number";
+		} else {
+			// The search fields recieved focus
+			if (field.value == "Account Name" || field.value == "Account Number") {
+				field.value = "" ;
+			}
+		}
+	}
+</SCRIPT>
 <%
   if (!"true".equals(request.getParameter("finalsubmit"))) {
      String source = request.getParameter("source");
 %>
 <%-- Navigating the contact list, not the final submit --%>
-<br>
-<center><%= AccountListInfo.getAlphabeticalPageLinks("setFieldSubmit","acctListView") %></center>
+<body onLoad="init()">
 <form name="acctListView" method="post" action="AccountSelector.do?command=ListAccounts">
+	<table cellpadding="6" cellspacing="0" width="100%" border="0">
+		<tr>
+			<td align="center" valign="center" bgcolor="#d3d1d1">
+				<strong>Search</strong>
+				<input type="text" name="acctName" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("acctName")) %>">
+				<input type="text" name="acctNumber" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("acctNumber")) %>">
+				<input type="submit" value="search">
+				<input type="button" value="clear" onClick="clearSearchFields(true, '')">
+			</td>
+		</tr>
+	</table>
+	&nbsp;<br>	
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">
   <table width="100%" border="0">
