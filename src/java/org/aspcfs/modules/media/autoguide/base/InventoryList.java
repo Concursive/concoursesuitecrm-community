@@ -37,6 +37,8 @@ public class InventoryList extends ArrayList {
   private int hasRunDate = -1;
   private int makeId = -1;
   private java.sql.Date adRunDate = null;
+  private java.sql.Date adRunDateStart = null;
+  private java.sql.Date adRunDateEnd = null;
 
   /**
    *  Constructor for the InventoryList object
@@ -196,6 +198,8 @@ public class InventoryList extends ArrayList {
     this.makeId = Integer.parseInt(tmp); 
   }
   public void setAdRunDate(java.sql.Date tmp) { this.adRunDate = tmp; }
+  public void setAdRunDateStart(java.sql.Date tmp) { this.adRunDateStart = tmp; }
+  public void setAdRunDateEnd(java.sql.Date tmp) { this.adRunDateEnd = tmp; }
 
 
   /**
@@ -436,6 +440,16 @@ public class InventoryList extends ArrayList {
         "AND i.inventory_id IN " +
         "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date = ?) ");
     }
+    if (adRunDateStart != null) {
+      sqlFilter.append(
+        "AND i.inventory_id IN " +
+        "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date >= ?) ");
+    }
+    if (adRunDateEnd != null) {
+      sqlFilter.append(
+        "AND i.inventory_id IN " +
+        "(SELECT inventory_id FROM autoguide_ad_run WHERE run_date <= ?) ");
+    }
   }
 
 
@@ -470,6 +484,12 @@ public class InventoryList extends ArrayList {
     }
     if (adRunDate != null) {
       pst.setDate(++i, adRunDate);
+    }
+    if (adRunDateStart != null) {
+      pst.setDate(++i, adRunDateStart);
+    }
+    if (adRunDateEnd != null) {
+      pst.setDate(++i, adRunDateEnd);
     }
     return i;
   }
