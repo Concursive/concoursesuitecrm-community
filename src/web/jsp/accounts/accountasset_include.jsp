@@ -43,11 +43,6 @@
       message += "- Check that Purchase Date is entered correctly\r\n";
       formTest = false;
     }
-    if (!checkNumber(form.purchaseCost.value)) { 
-      message += "- Total Purchase Cost is invalid\r\n";
-      formTest = false;
-    }
-    
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -303,7 +298,8 @@
     </td>
     <td>
       <input type="text" size="10" name="purchaseCost" maxlength="10" value="<%= asset.getPurchaseCost() == -1 ? "" : "" + asset.getPurchaseCost() %>">
-    </td>
+      <%= showAttribute(request, "purchaseCostError") %>
+      </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
