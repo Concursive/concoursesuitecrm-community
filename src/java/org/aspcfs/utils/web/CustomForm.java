@@ -3,11 +3,11 @@ package org.aspcfs.utils.web;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.base.CustomFieldCategory;
 import org.aspcfs.modules.base.CustomField;
+import org.aspcfs.utils.web.CustomColumn;
 import java.util.*;
 import java.sql.*;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.StringUtils;
-
 
 /**
  *  Represents an HTML Form in which items are dynamically added in code

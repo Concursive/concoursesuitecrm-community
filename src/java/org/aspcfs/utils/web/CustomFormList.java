@@ -7,11 +7,13 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.base.CustomField;
+import org.aspcfs.utils.web.CustomColumn;
 import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.controller.SubmenuItem;
-import org.aspcfs.controller.CustomForm;
+import org.aspcfs.utils.web.CustomForm;
 import org.aspcfs.utils.web.HtmlButton;
+
 
 /**
  *  Description of the Class
@@ -206,7 +208,7 @@ public class CustomFormList extends HashMap {
     thisField.setLengthVar(field.getAttribute("lengthVar"));
     thisField.setOnChange(field.getAttribute("onChange"));
     thisField.setJsEvent(field.getAttribute("jsEvent"));
-    
+
     //check if the field is to be populated using a list object
     thisField.setListName(field.getAttribute("listName"));
     thisField.setListItemName(field.getAttribute("listItemName"));

@@ -3,16 +3,25 @@ package org.aspcfs.modules.actions;
 import com.darkhorseventures.framework.actions.*;
 import com.darkhorseventures.database.*;
 import com.darkhorseventures.framework.servlets.*;
-import com.darkhorseventures.framework.hooks.RecentItem;
+import org.aspcfs.controller.RecentItem;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.communications.base.Campaign;
+import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.beans.ModuleBean;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.controller.objectHookManager.*;
+import org.aspcfs.controller.*;
+
 import java.sql.*;
 import java.util.*;
 import java.text.*;
 import java.io.*;
+
 
 /**
  *  Base class for all modules

@@ -1,10 +1,12 @@
-package com.darkhorseventures.controller;
+package org.aspcfs.utils.web;
 
 import java.util.*;
 import java.io.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
-import com.darkhorseventures.utils.ObjectUtils;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.web.HtmlCoreAttributes;
+
 
 /**
  *  Builds a Html Column element ... opeionally builds html from XML input.
@@ -12,9 +14,9 @@ import com.darkhorseventures.utils.ObjectUtils;
  *
  *@author     Akhilesh Mathur
  *@created    October 22, 2002
- *@version    $Id$
- *      Note : Class attribute in the xml has to be defined as elementClass as
- *      class is a reserved word
+ *@version    $Id$ Note
+ *      : Class attribute in the xml has to be defined as elementClass as class
+ *      is a reserved word
  */
 public class CustomColumn extends ArrayList implements HtmlCoreAttributes {
 

@@ -1,25 +1,27 @@
+package org.aspcfs.apps.testDatabase; 
+
 import java.sql.*;
-import com.darkhorseventures.utils.ConnectionPool;
-import com.darkhorseventures.utils.ConnectionElement;
+import com.darkhorseventures.database.*;
 
 /**
  *  Description of the Class
  *
  *@author     mrajkowski
  *@created    July 10, 2001
+ *@version    $Id$
  */
 public class TestDB {
 
-  private int runningConnections = 0;  
+  private int runningConnections = 0;
   private int connectionsToExecute = 0;
-  
+
+
   /**
    *  Constructor for the TestDB object
    *
    *@since
    */
-  public TestDB() {
-  }
+  public TestDB() { }
 
 
   /**
@@ -41,46 +43,50 @@ public class TestDB {
     try {
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(5);
-       //Test a single connection
-       ConnectionElement thisElement = new ConnectionElement(
-           "jdbc:postgresql://12.101.73.29:5432/cdb_ds22", 
-           "postgres", 
-           "");
-       thisElement.setDriver("org.postgresql.Driver");
-       db = sqlDriver.getConnection(thisElement);
-       PreparedStatement pst = db.prepareStatement(
-         "SELECT COUNT(*) AS contactcount FROM contact WHERE type_id not in (?) and namelast < ?");
-       pst.setInt(1, 0);
-       pst.setString(2, "b");
- 
-       ResultSet rs = pst.executeQuery();
-       if (rs.next()) {
-         System.out.println("Records: " + rs.getInt("contactcount"));
-       }
-       rs.close();
-       pst.close();
-       sqlDriver.free(db);       
-      
-      if (1==1) { return; }
-      
+      //Test a single connection
+      ConnectionElement thisElement = new ConnectionElement(
+          "jdbc:postgresql://12.101.73.29:5432/cdb_ds22",
+          "postgres",
+          "");
+      thisElement.setDriver("org.postgresql.Driver");
+      db = sqlDriver.getConnection(thisElement);
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT COUNT(*) AS contactcount FROM contact WHERE type_id not in (?) and namelast < ?");
+      pst.setInt(1, 0);
+      pst.setString(2, "b");
+
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        System.out.println("Records: " + rs.getInt("contactcount"));
+      }
+      rs.close();
+      pst.close();
+      sqlDriver.free(db);
+
+      if (1 == 1) {
+        return;
+      }
+
       connectionsToExecute = 50;
       for (int i = 0; i < connectionsToExecute; i++) {
         ConnectionThread p = new ConnectionThread("cdb_ds21", sqlDriver, i, "D");
         p.start();
-        
+
         ConnectionThread q = new ConnectionThread("cdb_ds21", sqlDriver, i, "B");
         q.start();
-        
+
 //        ConnectionThread r = new ConnectionThread("cdb_ds21", sqlDriver, i, "C");
 //        r.start();
-         
-/*         ConnectionThread s = new ConnectionThread("cdb_dhv", sqlDriver, i, "A");
-        s.start();*/ 
+
+        /*
+         *  ConnectionThread s = new ConnectionThread("cdb_dhv", sqlDriver, i, "A");
+         *  s.start();
+         */
       }
 
       wait();
       while (runningConnections != 0) {
-          
+
       }
       System.out.println("Thead loop complete: 100 connections and queries");
       System.out.println(sqlDriver.toString());
@@ -128,6 +134,7 @@ public class TestDB {
    *
    *@author     mrajkowski
    *@created    July 10, 2001
+   *@version    $Id$
    */
   class ConnectionThread extends Thread {
 
@@ -137,6 +144,14 @@ public class TestDB {
     private String item = null;
 
 
+    /**
+     *  Constructor for the ConnectionThread object
+     *
+     *@param  tmp        Description of the Parameter
+     *@param  sqlDriver  Description of the Parameter
+     *@param  runCount   Description of the Parameter
+     *@param  item       Description of the Parameter
+     */
     ConnectionThread(String tmp, ConnectionPool sqlDriver, int runCount, String item) {
       this.database = tmp;
       this.sqlDriver = sqlDriver;
@@ -154,21 +169,23 @@ public class TestDB {
       try {
         ++runningConnections;
         ConnectionElement thisElement = new ConnectionElement(
-            "jdbc:postgresql://12.101.73.29:5432/" + this.database, 
-            "postgres", 
+            "jdbc:postgresql://12.101.73.29:5432/" + this.database,
+            "postgres",
             "");
         Connection db = sqlDriver.getConnection(thisElement);
         Statement st = db.createStatement();
         ResultSet rs = st.executeQuery("SELECT * FROM EMPLOYEE");
         while (rs.next()) {
-          
+
         }
         rs.close();
         st.close();
-/*         try {
-*           this.sleep(50);
-*         } catch (InterruptedException e) {
-*         } */
+        /*
+         *  try {
+         *  this.sleep(50);
+         *  } catch (InterruptedException e) {
+         *  }
+         */
         sqlDriver.free(db);
         --runningConnections;
         if (this.count == (connectionsToExecute - 1) && this.item.equals("D")) {

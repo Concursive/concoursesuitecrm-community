@@ -1,13 +1,19 @@
-package com.darkhorseventures.apps;
+package org.aspcfs.apps.notifier;
 
 import java.sql.*;
 import java.util.*;
 import java.io.*;
 import java.net.*;
 import java.text.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.cfsmodule.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.Usage;
+import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.actions.*;
+import org.aspcfs.apps.ReportBuilder;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import com.zeroio.iteam.base.*;
@@ -248,7 +254,7 @@ public class Notifier extends ReportBuilder {
    *  need to be sent a message.
    *
    *@param  db             Description of Parameter
-   *@param  dbName         Description of Parameter
+   *@param  siteInfo       Description of the Parameter
    *@return                Description of the Returned Value
    *@exception  Exception  Description of Exception
    */
@@ -418,9 +424,11 @@ public class Notifier extends ReportBuilder {
    *  From a list of fax entries, a script is exported and executed to kick-off
    *  the fax process.
    *
-   *@param  faxLog  Description of Parameter
-   *@param  db      Description of the Parameter
-   *@return         Description of the Returned Value
+   *@param  faxLog         Description of Parameter
+   *@param  db             Description of the Parameter
+   *@param  siteInfo       Description of the Parameter
+   *@return                Description of the Returned Value
+   *@exception  Exception  Description of the Exception
    */
   private boolean outputFaxLog(ArrayList faxLog, Connection db, HashMap siteInfo) throws Exception {
     System.out.println("Notifier-> Outputting fax log");
@@ -465,7 +473,7 @@ public class Notifier extends ReportBuilder {
           //Faxing is enabled
           String baseFilename = baseDirectory + (String) config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
           //Must escape the & for Linux shell script
-          String url = "http://" + (String) siteInfo.get("vhost") + "/ProcessMessage.do?code=" + (String) siteInfo.get("code") + "\\&messageId=" + messageId + (contactId != null?"\\&contactId=" + contactId:"");
+          String url = "http://" + (String) siteInfo.get("vhost") + "/ProcessMessage.do?code=" + (String) siteInfo.get("code") + "\\&messageId=" + messageId + (contactId != null ? "\\&contactId=" + contactId : "");
           if (HTTPUtils.convertUrlToPostscriptFile(url, baseFilename) == 1) {
             continue;
           }
@@ -474,9 +482,9 @@ public class Notifier extends ReportBuilder {
           }
           File psFile = new File(baseFilename + ".ps");
           psFile.delete();
-          
+
           //TODO: Create a wrapper class for HylaFax to simplify and reuse this
-          
+
           //Info for log file which can be parsed later and queried against HylaFax
           out.println("echo \"### SendFax Script, transcript in .log file\"");
           out.println("echo \"# database:" + databaseName + "\"");
@@ -485,11 +493,11 @@ public class Notifier extends ReportBuilder {
           out.println("echo \"# contactId:" + contactId + "\"");
           //Fax command -- only removes file if sendfax is successful
           out.println(
-            "sendfax -n " +
-            "-h " + (String) config.get("FaxServer") + " " +
-            "-d " + faxNumber + " " + 
-            baseFilename + ".tiff > " + baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".log " + 
-            "&& rm " + baseFilename + ".tiff ");
+              "sendfax -n " +
+              "-h " + (String) config.get("FaxServer") + " " +
+              "-d " + faxNumber + " " +
+              baseFilename + ".tiff > " + baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".log " +
+              "&& rm " + baseFilename + ".tiff ");
 
           //Track usage
           //NOTE: Could add a URL post in the script to let the server know the file was actually faxed instead
@@ -515,7 +523,7 @@ public class Notifier extends ReportBuilder {
 
     try {
       java.lang.Process process = java.lang.Runtime.getRuntime().exec(
-        "/bin/sh " + baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".sh");
+          "/bin/sh " + baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".sh");
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
@@ -590,4 +598,6 @@ public class Notifier extends ReportBuilder {
     return true;
   }
 }
+
+
 

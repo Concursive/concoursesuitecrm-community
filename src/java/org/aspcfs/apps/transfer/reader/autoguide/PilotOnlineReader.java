@@ -7,6 +7,7 @@ import java.util.logging.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.media.autoguide.base.*;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.apps.transfer.writer.TextWriter;
 import java.io.*;
 import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
