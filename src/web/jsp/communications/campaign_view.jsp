@@ -44,7 +44,7 @@ Campaign List
     <th width="8" valign="center" align="left">
       <strong>Action</strong>
     </th>
-    <th valign="center" width="100%" align="left">
+    <th valign="center" width="100%" align="left" nowrap>
       <a href="CampaignManager.do?command=View&column=c.name"><strong>Name</strong></a>
       <%= CampaignListInfo.getSortIcon("c.name") %>
     </th>
