@@ -174,5 +174,9 @@
       <name>tdClass</name>
       <required>no</required>
     </attribute>
+    <attribute>
+      <name>showForm</name>
+      <required>no</required>
+    </attribute>
   </tag>
 </taglib>
