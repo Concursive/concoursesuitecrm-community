@@ -313,6 +313,10 @@ public final class Users extends CFSModule {
         context.getRequest().setAttribute("UserRecord", insertedUser);
         updateSystemHierarchyCheck(db, context);
       } else {
+        if(thisUser.getContactId() != -1){
+          thisUser.setContact(new Contact(db, thisUser.getContactId()));
+        }
+        context.getRequest().setAttribute("UserRecord", thisUser);
         processErrors(context, thisUser.getErrors());
       }
     } catch (Exception e) {
