@@ -21,7 +21,7 @@ Message
       <ul>
         <li>Choose a message that will be sent to the campaign groups</li>
         <li>Click "Update Campaign Message" to save changes</li>
-        <li>Messages can be created or edited in the "Create Messages" utility</li>
+        <li>Messages can be created or edited in the <a href="CampaignManagerMessage.do?command=View">Create Messages</a> utility</li>
       </ul>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">

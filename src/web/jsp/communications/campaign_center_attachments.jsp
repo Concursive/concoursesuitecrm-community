@@ -20,7 +20,7 @@ Attachment
       <ul>
         <li>Choose a survey that will be sent to the campaign groups</li>
         <li>Click "Update Campaign Attachment" to save changes</li>
-        <li>Surveys can be created or edited in the "Create Attachments" utility</li>
+        <li>Surveys can be created or edited in the <a href="CampaignManagerAttachment.do">Create Attachments</a> utility</li>
       </ul>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">

@@ -23,7 +23,7 @@ Choose Groups
       <ul>
         <li>Choose groups of recipients that will be sent a message</li>
         <li>Click "Update Campaign Groups" to save changes</li>
-        <li>Groups can be created or edited in the "Build Groups" utility</li>
+        <li>Groups can be created or edited in the <a href="CampaignManagerGroup.do?command=View">Build Groups</a> utility</li>
         <li>Use "Preview Recipients" to selectively remove a specific recipient from this campaign</li>
       </ul>
 <table width="100%" border="0">
