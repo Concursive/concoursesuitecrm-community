@@ -180,7 +180,7 @@ public void setButtonLinks(ArrayList tmp) { this.buttonLinks = tmp; }
 				Iterator fields = thisGroup.iterator();
 					while (fields.hasNext()) {
 						CustomField thisField = (CustomField)fields.next();
-						if (thisField.getType() == CustomField.ROWLIST) {
+						if (thisField.getType() == CustomField.ROWLIST || thisField.getType() == CustomField.ROWLIST_QUESTION) {
 							thisField.setElementData(ObjectUtils.getObject(tmp, thisField.getName()));
 							thisField.setMaxRowItems(ObjectUtils.getParam(tmp, thisField.getLengthVar()));
 						}  

@@ -57,3 +57,5 @@ insert into lookup_survey_types (description) values ('Open-Ended');
 insert into lookup_survey_types (description) values ('Quantitative (no comments)');
 insert into lookup_survey_types (description) values ('Quantitative (with comments)');
 
+alter table campaign add column survey_id int;
+

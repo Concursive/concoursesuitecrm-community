@@ -210,7 +210,11 @@ public final class CampaignManagerSurvey extends CFSModule {
 	
 	try {
 		db = this.getConnection(context);
-		thisSurvey = new Survey(db, context.getRequest().getParameter("id"));
+		
+		if (context.getRequest().getParameter("id") != null)  {
+			thisSurvey = new Survey(db, context.getRequest().getParameter("id"));
+		} 
+		
 		thisForm.populate(thisSurvey);
 	} catch (Exception e) {
 		errorMessage = e;
@@ -233,6 +237,53 @@ public final class CampaignManagerSurvey extends CFSModule {
 			context.getRequest().setAttribute("Survey", thisSurvey);
 			context.getRequest().setAttribute("CustomFormInfo", thisForm);
 			return ("ModifyOK");
+		} else {
+			processErrors(context, thisSurvey.getErrors());
+			return (executeCommandView(context));
+		}
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
+  
+    public String executeCommandPreview(ActionContext context) throws SQLException {
+	if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
+		return ("PermissionError");
+	}
+	
+	Exception errorMessage = null;
+	Survey thisSurvey = null;
+	Connection db = null;
+	
+	CustomForm thisForm = getDynamicForm(context, "surveypreview");
+	thisSurvey = (Survey)context.getFormBean();
+	thisSurvey.setRequestItems(context.getRequest());
+	
+	try {
+		db = this.getConnection(context);
+		thisForm.populate(thisSurvey);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	String submenu = context.getRequest().getParameter("submenu");
+	
+	if (submenu == null)
+		submenu = (String)context.getRequest().getAttribute("submenu");
+	if (submenu == null)
+		submenu = "ManageSurveys";
+	
+	if (errorMessage == null) {
+		context.getRequest().setAttribute("submenu", submenu);
+		addModuleBean(context, submenu, "Add Surveys");
+	
+		if (thisSurvey != null) {
+			context.getRequest().setAttribute("Survey", thisSurvey);
+			context.getRequest().setAttribute("CustomFormInfo", thisForm);
+			return ("PreviewOK");
 		} else {
 			processErrors(context, thisSurvey.getErrors());
 			return (executeCommandView(context));

@@ -418,6 +418,7 @@
     <forward name="ViewOK" resource="/campaign_surveys_view.jsp" layout="nav"/>
     <forward name="AddOK" resource="/campaign_surveys_add.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/campaign_surveys_add.jsp" layout="nav"/>
+    <forward name="PreviewOK" resource="/campaign_surveys_preview.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/campaign_surveys_add.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/CampaignManagerSurvey.do?command=View"/>
     <forward name="DeleteOK" resource="/CampaignManagerSurvey.do?command=View"/>

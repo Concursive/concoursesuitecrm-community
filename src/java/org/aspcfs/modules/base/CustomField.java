@@ -50,6 +50,10 @@ public class CustomField extends GenericBean {
   public final static int HIDDEN = 17;
   public final static int DISPLAYTEXT = 18;
   
+  //survey preview stuff
+  public final static int SURVEY_INTRO = 19;
+  public final static int ROWLIST_QUESTION = 20;
+  
   //Properties for a Field
   private int id = -1;
   private int groupId = -1;
@@ -271,6 +275,10 @@ public void setMaxRowItems(String maxRowItems) {
 		     this.type = HIDDEN;
 	     } else if (tmp.equalsIgnoreCase("displaytext")) {
 		     this.type = DISPLAYTEXT;
+	     } else if (tmp.equalsIgnoreCase("survey_intro")) {
+		     this.type = SURVEY_INTRO;
+	     } else if (tmp.equalsIgnoreCase("rowlist_question")) {
+		     this.type = ROWLIST_QUESTION;
 	     }
      }
   }
@@ -818,20 +826,20 @@ public void setMaxRowItems(String maxRowItems) {
     }
   }
 
-  public String getRowListElement(int index) {
+  public String getRowListElement(int index, boolean editable) {
 	  String hiddenElementName = name + index + "id";
 	  String textElementName = name + index + "text";
 	  SurveyItem tmpResult = null;
 	  
 	  String maxlength = this.getParameter("maxlength");
-          String size = "";
-          if (!maxlength.equals("")) {
-            if (Integer.parseInt(maxlength) > 40) {
-              size = "40";
-            } else {
-              size = maxlength;
-            }
-          }
+	  String size = "";
+	  if (!maxlength.equals("")) {
+	    if (Integer.parseInt(maxlength) > 40) {
+	      size = "40";
+	    } else {
+	      size = maxlength;
+	    }
+	  }
 	  
 	  if (((ArrayList)elementData).size() >= index) {
 		  tmpResult = (SurveyItem)((ArrayList)elementData).get(index-1);
@@ -839,8 +847,12 @@ public void setMaxRowItems(String maxRowItems) {
 		  tmpResult = new SurveyItem();
           }
 	  
-	  return ("<input type=\"hidden\" name=\"" + hiddenElementName + "\" value=\"" + tmpResult.getId() + "\">\n<input type=\"text\" name=\"" + textElementName + "\" " + (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
-              (size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + toHtmlValue(tmpResult.getDescription()) + "\"> ");
+	  if (editable) {
+		  return ("<input type=\"hidden\" name=\"" + hiddenElementName + "\" value=\"" + tmpResult.getId() + "\">\n<input type=\"text\" name=\"" + textElementName + "\" " + (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
+		  	(size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + toHtmlValue(tmpResult.getDescription()) + "\"> ");
+	  } else {
+		  return (toHtmlValue(tmpResult.getDescription()));
+          }
   }
        
   /**
@@ -876,6 +888,8 @@ public void setMaxRowItems(String maxRowItems) {
 	case HIDDEN:
           return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + toHtmlValue(enteredValue) + "\">");
 	case DISPLAYTEXT:
+          return (toHtmlValue(enteredValue));
+	case SURVEY_INTRO:
           return (toHtmlValue(enteredValue));
 	default:
           String maxlength = this.getParameter("maxlength");

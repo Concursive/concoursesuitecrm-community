@@ -154,5 +154,28 @@ public void setEnteredBy(String tmp) { this.enteredBy = Integer.parseInt(tmp); }
     return i;
   }
 
+  public String getHtmlSelect(String selectName, int defaultKey) {
+    HtmlSelect surveyListSelect = new HtmlSelect();
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Survey thisSurvey = (Survey) i.next();
+      surveyListSelect.addItem(
+          thisSurvey.getId(),
+          thisSurvey.getName());
+    }
+    return surveyListSelect.getHtml(selectName, defaultKey);
+  }
+
+  public void addItem(int key, String name) {
+    Survey thisSurvey = new Survey();
+    thisSurvey.setId(key);
+    thisSurvey.setName(name);
+    if (this.size() == 0) {
+      this.add(thisSurvey);
+    } else {
+      this.add(0, thisSurvey);
+    }
+  }
+
 }
 

@@ -428,6 +428,12 @@ public final class CampaignManager extends CFSModule {
       messageList.buildList(db);
       messageList.addItem(0, "--None--");
       context.getRequest().setAttribute("MessageList", messageList);
+      
+      SurveyList surveyList = new SurveyList();
+      surveyList.setEnteredBy(this.getUserId(context));
+      surveyList.buildList(db);
+      surveyList.addItem(0, "--None--");
+      context.getRequest().setAttribute("SurveyList", surveyList);
 
     } catch (Exception e) {
       errorMessage = e;
@@ -648,13 +654,14 @@ public final class CampaignManager extends CFSModule {
 
     String campaignId = context.getRequest().getParameter("id");
     String messageId = context.getRequest().getParameter("messageId");
+    String surveyId = context.getRequest().getParameter("surveyId");
 
     if (messageId != null) {
       try {
-        int msgId = Integer.parseInt(messageId);
         db = this.getConnection(context);
         campaign = new Campaign(db, campaignId);
-        campaign.setMessageId(msgId);
+        campaign.setMessageId(Integer.parseInt(messageId));
+	campaign.setSurveyId(surveyId);
         campaign.setModifiedBy(this.getUserId(context));
         resultCount = campaign.updateMessage(db);
       } catch (Exception e) {

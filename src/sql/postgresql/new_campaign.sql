@@ -11,7 +11,7 @@ CREATE TABLE message (
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   template_id INT,
-	subject VARCHAR(255) DEFAULT NULL,
+  subject VARCHAR(255) DEFAULT NULL,
   body TEXT,
   reply_addr VARCHAR(100),
   url VARCHAR(100),
@@ -94,7 +94,8 @@ CREATE TABLE campaign (
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL
+  modifiedby INT NOT NULL,
+  survey_id int
 );
 
 

@@ -91,8 +91,7 @@ public class Message extends GenericBean {
     rs.close();
     st.close();
   }
-
-
+  
   /**
    *  Constructor for the Message object
    *

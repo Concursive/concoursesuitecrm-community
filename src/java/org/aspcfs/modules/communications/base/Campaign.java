@@ -7,6 +7,7 @@ import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.Template;
 
 /**
  *  Description of the Class
@@ -59,6 +60,7 @@ public class Campaign extends GenericBean {
   private int sendMethodId = -1;
   private String deliveryName = null;
   private int files = 0;
+  private int surveyId = -1;
 
 
   /**
@@ -79,6 +81,15 @@ public class Campaign extends GenericBean {
   public Campaign(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
+public int getSurveyId() {
+	return surveyId;
+}
+public void setSurveyId(int surveyId) {
+	this.surveyId = surveyId;
+}
+public void setSurveyId(String surveyId) {
+	this.surveyId = Integer.parseInt(surveyId);
+}
 
 
   /**
@@ -1515,7 +1526,12 @@ public class Campaign extends GenericBean {
     }
     rs.close();
     pst.close();
-
+    
+	Template template = new Template();
+	template.setText(thisMessageText);
+	template.addParseElement("${survey_url}", "(url goes here)");
+	template.setValueEncoding(Template.HTMLEncoding);
+	  
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET status_id = ?, " +
@@ -1533,7 +1549,8 @@ public class Campaign extends GenericBean {
     pst.setString(++i, QUEUE_TEXT);
     pst.setString(++i, thisMessageReplyTo);
     pst.setString(++i, thisMessageSubject);
-    pst.setString(++i, thisMessageText);
+    //pst.setString(++i, thisMessageText);
+    pst.setString(++i, template.getParsedText());
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
     pst.close();
@@ -1632,6 +1649,7 @@ public class Campaign extends GenericBean {
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET message_id = " + messageId + ", " +
+	"survey_id = " + surveyId + ", " +
         "reply_addr = null, " +
         "subject = null, " +
         "message = null, " +
@@ -1789,6 +1807,7 @@ public class Campaign extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    surveyId = rs.getInt("survey_id");
     
     //message table
     messageName = rs.getString("messageName");
