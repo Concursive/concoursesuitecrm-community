@@ -58,9 +58,11 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
     Connection db = null;
     try {
       db = this.getConnection(context);
-      if (thisTicket.getOrgId() > 0) {
+      if (thisTicket.getOrgId() > -1) {
         Organization organization = new Organization(db, thisTicket.getOrgId());
         context.setAttribute(ORGANIZATION, organization);
+      } else {
+        context.setAttribute(ORGANIZATION, new Organization());
       }
       if (thisTicket.getContactId() > 0) {
         Contact contact = new Contact(db, thisTicket.getContactId());
