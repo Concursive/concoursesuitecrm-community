@@ -49,16 +49,20 @@ public class SurveyQuestionList extends ArrayList {
    */
   public SurveyQuestionList(HttpServletRequest request) {
     String question = null;
+    String type = null;
     if (request.getParameter("questionId") != null) {
       questionId = Integer.parseInt(request.getParameter("questionId"));
     }
     if ((question = request.getParameter("questionText")) != null) {
-      if (!question.equals("")) {
-        SurveyQuestion thisItem = new SurveyQuestion(request);
-        thisItem.setId(questionId);
-        this.add(thisItem);
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println(" SurveyQuestionList -- > Added Question " + questionId + ":" + request.getParameter("questionText"));
+      type = request.getParameter("type");
+      if ((!question.equals("")) && (type != null)){
+        if (Integer.parseInt(type) > 0 ){
+          SurveyQuestion thisItem = new SurveyQuestion(request);
+          thisItem.setId(questionId);
+          this.add(thisItem);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println(" SurveyQuestionList -- > Added Question " + questionId + ":" + request.getParameter("questionText"));
+          }
         }
       }
     }
