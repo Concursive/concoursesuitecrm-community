@@ -1,8 +1,10 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.text.DateFormat,org.aspcfs.modules.admin.base.PermissionCategory, java.util.*" %>
 <jsp:useBean id="rangeSelect" class="java.lang.String" scope="request"/>
-<jsp:useBean id="dateStart" class="java.sql.Date" scope="request"/>
-<jsp:useBean id="dateEnd" class="java.sql.Date" scope="request"/>
+<%
+  java.sql.Date dateStart = (java.sql.Date) request.getAttribute("dateStart");
+  java.sql.Date dateEnd = (java.sql.Date) request.getAttribute("dateEnd");
+%>
 <jsp:useBean id="usageList" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="usageList2" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="applicationVersion" class="java.lang.String" scope="request"/>
