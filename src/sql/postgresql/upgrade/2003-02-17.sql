@@ -1,0 +1,87 @@
+/* MANUAL PROCESS TO UPDATE TASKS WITH CHANGED REFERENTIAL INTEGRITY */
+
+/* dump task */
+
+/* dump tasklink_contact */
+
+/* dump tasklink_project */
+
+DROP TABLE tasklink_ticket;
+DROP TABLE tasklink_contact;
+DROP TABLE tasklink_project;
+DROP TABLE task;
+
+CREATE TABLE task (
+  task_id SERIAL PRIMARY KEY,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  priority INTEGER NOT NULL REFERENCES lookup_task_priority,
+  description VARCHAR(80),
+  duedate DATE,
+  reminderid INT,
+  notes TEXT,
+  sharing INT NOT NULL,
+  complete BOOLEAN DEFAULT false NOT NULL,
+  enabled BOOLEAN DEFAULT false NOT NULL,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT REFERENCES access(user_id),
+  estimatedloe FLOAT,
+  estimatedloetype INTEGER REFERENCES lookup_task_loe,
+  owner INTEGER,
+  completedate TIMESTAMP(3),
+  category_id INTEGER REFERENCES lookup_task_category
+);
+
+/* restore task */
+
+/* update task */
+
+UPDATE task SET owner = contact.user_id FROM contact WHERE task.owner = contact.contact_id;
+
+/* dump task */
+
+DROP TABLE task;
+
+CREATE TABLE task (
+  task_id SERIAL PRIMARY KEY,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  priority INTEGER NOT NULL REFERENCES lookup_task_priority,
+  description VARCHAR(80),
+  duedate DATE,
+  reminderid INT,
+  notes TEXT,
+  sharing INT NOT NULL,
+  complete BOOLEAN DEFAULT false NOT NULL,
+  enabled BOOLEAN DEFAULT false NOT NULL,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT REFERENCES access(user_id),
+  estimatedloe FLOAT,
+  estimatedloetype INTEGER REFERENCES lookup_task_loe,
+  owner INTEGER REFERENCES access(user_id),
+  completedate TIMESTAMP(3),
+  category_id INTEGER REFERENCES lookup_task_category
+);
+
+CREATE TABLE tasklink_contact (
+  task_id INT NOT NULL REFERENCES task,
+  contact_id INT NOT NULL REFERENCES contact(contact_id),
+  notes TEXT
+);
+
+CREATE TABLE tasklink_ticket (
+  task_id INT NOT NULL REFERENCES task,
+  ticket_id INT NOT NULL REFERENCES ticket(ticketid)
+);
+
+CREATE TABLE tasklink_project (
+  task_id INT NOT NULL REFERENCES task,
+  project_id INT NOT NULL REFERENCES projects(project_id)
+);
+
+/* restore task */
+
+/* restore tasklink_contact */
+
+/* restore tasklink_project */
+
