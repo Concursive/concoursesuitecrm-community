@@ -552,4 +552,7 @@ A:visited:hover{color:#FF3300;}
   border-top: 3px #fffef3 solid;
   border-bottom: 1px #333 solid;
 }
-
+.repeatLine {
+  background-repeat: repeat-y;
+  background-image: url(../images/tree/tree2.gif);
+}

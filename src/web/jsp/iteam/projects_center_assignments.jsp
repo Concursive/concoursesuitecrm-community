@@ -31,7 +31,6 @@
 <jsp:useBean id="folders" class="com.zeroio.iteam.base.AssignmentFolderList" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<zeroio:debug value="INCLUDED FILES"/>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="initPopupMenu.jsp" %>
 <%@ include file="projects_center_assignments_menu.jsp" %>
@@ -50,25 +49,20 @@
   </tr>
 </table>
 <br>
-<zeroio:debug value="<%= "Project: " + Project.getId() %>" />
-<zeroio:debug value="<%= "Req: " + requirement.getId() %>" />
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <form name="listView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>&rid=<%= requirement.getId() %>">
     <td>
       <img alt="" src="images/icons/stock_filter-data-by-criteria-16.gif" align="absmiddle">
       <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
-<zeroio:debug value="projectAssignmentsInfo"/>
         <option <%= projectAssignmentsInfo.getOptionValue("all") %>>All Activities</option>
         <option <%= projectAssignmentsInfo.getOptionValue("open") %>>Open Activities</option>
         <option <%= projectAssignmentsInfo.getOptionValue("closed") %>>Closed Activities</option>
       </select>
-<zeroio:debug value="priority list"/>
 <%
     PriorityList.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\"");
     PriorityList.addItem(-1, "All Priorities");
 %>
-<zeroio:debug value="GET SELECT"/>
       <%= PriorityList.getHtmlSelect("listFilter1", projectAssignmentsInfo.getFilterValue("listFilter1")) %>
     </td>
     </form>
@@ -83,11 +77,9 @@
     <td width="8%" align="center"><strong>Start</strong></td>
     <td width="8%" align="center" nowrap><strong>&nbsp;End&nbsp;</strong></td>
   </tr>
-<zeroio:debug value="DO REQUIREMENT"/>
 <%
   Requirement thisRequirement = requirement;
 %>    
-<zeroio:debug value="<%= "REQ: " + requirement.getId() %>"/>
   <tr class="section">
     <td align="center">
       #
@@ -155,6 +147,9 @@
       </table>
     </td>
     <td valign="top">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td valign="top" align="center">
       <%--
       <img alt="" src="images/tree/treespace.gif" border="0" align="absmiddle" height="18" width="19"/>
       --%>
@@ -168,11 +163,11 @@
 %>
       <%-- Show spacing --%>
       <dhv:evaluate if="<%= isClosed.booleanValue() %>">
-        <img alt="" src="images/tree/treespace.gif" border="0" align="absmiddle" height="18" width="19"/>
+        </td><td><img alt="" src="images/tree/treespace.gif" border="0" align="absmiddle" height="18" width="19"/>
       </dhv:evaluate>
       <%-- Show more nodes --%>
       <dhv:evaluate if="<%= !isClosed.booleanValue() %>">
-        <img alt="" src="images/tree/tree2.gif" border="0" align="absmiddle" height="18" width="19"/>
+        </td><td class="repeatLine" valign="top" align="center"><img alt="" src="images/tree/tree2.gif" border="0" align="absmiddle" height="18" width="19"/>
       </dhv:evaluate>
 <%
       }
@@ -184,32 +179,43 @@
 %>
       <%-- Show final node --%>
       <dhv:evaluate if="<%= isClosed.booleanValue() %>">
-        <img alt="" src="images/tree/tree4.gif" border="0" align="absmiddle" height="18" width="19"/>
+        </td><td valign="top" align="center"><img alt="" src="images/tree/tree4.gif" border="0" align="absmiddle" height="18" width="19"/>
       </dhv:evaluate>
       <%-- Show more nodes --%>
       <dhv:evaluate if="<%= !isClosed.booleanValue() %>">
-        <img alt="" src="images/tree/tree3.gif" border="0" align="absmiddle" height="18" width="19"/>
+        </td><td class="repeatLine" valign="top" align="center"><img alt="" src="images/tree/tree3.gif" border="0" align="absmiddle" height="18" width="19"/>
       </dhv:evaluate>
 <%
       } else {
 %>
       <%-- Show Last Node with children --%>
       <dhv:evaluate if="<%= mapItem.getFinalNode() %>">
-        <img alt="" src="images/tree/tree6o.gif" border="0" align="absmiddle" height="18" width="19"/>
+        </td><td><img alt="" src="images/tree/tree6o.gif" border="0" align="absmiddle" height="18" width="19"/>
       </dhv:evaluate>
       <%-- Show Node with children --%>
       <dhv:evaluate if="<%= !mapItem.getFinalNode() %>">
-        <img alt="" src="images/tree/tree5o.gif" border="0" align="absmiddle" height="18" width="19"/>
+        </td><td class="repeatLine" valign="top" align="center"><img alt="" src="images/tree/tree5o.gif" border="0" align="absmiddle" height="18" width="19"/>
       </dhv:evaluate>
 <%
       }
+%>
+      </td>
+      <td valign="top" align="center">
+<%
       if (mapItem.getAssignmentId() > -1) {
         Assignment thisAssignment = (Assignment) assignments.getAssignment(mapItem.getAssignmentId());
 %>
-      <%= thisAssignment.getStatusGraphicTag() %>
-      <a class="rollover" name="a<%= thisAssignment.getId() %>" id="a<%= thisAssignment.getId() %>" href="javascript:displayMenu('a<%= thisAssignment.getId() %>', 'menuActivity',<%= Project.getId() %>,<%= thisRequirement.getId() %>,-1,<%= thisAssignment.getId() %>,<%= mapItem.getId() %>,<%= mapItem.getIndent() %>);"
-         onMouseOver="window.status='Click to show drop-down menu';return true;"
-         onmouseout="window.status='';hideMenu('menuActivity');"><%= toHtml(thisAssignment.getRole()) %></a>
+        <%= thisAssignment.getStatusGraphicTag() %>
+      </td>
+      <td>
+        <a class="rollover" name="a<%= thisAssignment.getId() %>" id="a<%= thisAssignment.getId() %>" href="javascript:displayMenu('a<%= thisAssignment.getId() %>', 'menuActivity',<%= Project.getId() %>,<%= thisRequirement.getId() %>,-1,<%= thisAssignment.getId() %>,<%= mapItem.getId() %>,<%= mapItem.getIndent() %>);"
+           onMouseOver="window.status='Click to show drop-down menu';return true;"
+           onmouseout="window.status='';hideMenu('menuActivity');">
+           <%= toHtml(thisAssignment.getRole()) %>
+        </a>
+      </td>
+      </tr>
+      </table>
     </td>
     <td valign="top" align="center" nowrap>
       <%= toHtml(PriorityList.getValueFromId(thisAssignment.getPriorityId())) %>
@@ -235,13 +241,20 @@
         //Assignment Folder
         AssignmentFolder thisFolder = (AssignmentFolder) folders.getAssignmentFolder(mapItem.getFolderId());
 %>
-      <img border="0" src="images/icons/stock_open-16-19.gif" align="absmiddle">
-      <a class="rollover" name="f<%= thisFolder.getId() %>" id="f<%= thisFolder.getId() %>" href="javascript:displayMenu('f<%= thisFolder.getId() %>', 'menuFolder',<%= Project.getId() %>,<%= thisRequirement.getId() %>,<%= thisFolder.getId() %>,-1,<%= mapItem.getId() %>,<%= mapItem.getIndent() %>);"
-         onMouseOver="window.status='Click to show drop-down menu';return true;"
-         onmouseout="window.status='';hideMenu('menuFolder');"><%= toHtml(thisFolder.getName()) %></a>
-      <dhv:evaluate if="<%= hasText(thisFolder.getDescription()) %>">
-        <a href="javascript:popURL('ProjectManagementAssignmentsFolder.do?command=FolderDetails&pid=<%= Project.getId() %>&folderId=<%= mapItem.getFolderId() %>&popup=true','Folder_Details','650','375','yes','yes');"><img src="images/icons/stock_insert-note-16.gif" border="0" align="absmiddle"/></a>
-      </dhv:evaluate>
+      </td>
+      <td valign="top" align="center">
+        <img border="0" src="images/icons/stock_open-16-19.gif" align="absmiddle">
+      </td>
+      <td>
+        <a class="rollover" name="f<%= thisFolder.getId() %>" id="f<%= thisFolder.getId() %>" href="javascript:displayMenu('f<%= thisFolder.getId() %>', 'menuFolder',<%= Project.getId() %>,<%= thisRequirement.getId() %>,<%= thisFolder.getId() %>,-1,<%= mapItem.getId() %>,<%= mapItem.getIndent() %>);"
+           onMouseOver="window.status='Click to show drop-down menu';return true;"
+           onmouseout="window.status='';hideMenu('menuFolder');"><%= toHtml(thisFolder.getName()) %></a>
+        <dhv:evaluate if="<%= hasText(thisFolder.getDescription()) %>">
+          <a href="javascript:popURL('ProjectManagementAssignmentsFolder.do?command=FolderDetails&pid=<%= Project.getId() %>&folderId=<%= mapItem.getFolderId() %>&popup=true','Folder_Details','650','375','yes','yes');"><img src="images/icons/stock_insert-note-16.gif" border="0" align="absmiddle"/></a>
+        </dhv:evaluate>
+      </td>
+      </tr>
+      </table>
     </td>
     <td>
       &nbsp;
