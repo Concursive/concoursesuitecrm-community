@@ -3,7 +3,7 @@
 <jsp:useBean id="RoleList" class="com.darkhorseventures.cfsbase.RoleList" scope="request"/>
 <jsp:useBean id="RoleListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
 <a href="/Admin.do">Setup</a> >
 View Roles<br>
 <hr color="#BFBFBB" noshade>
@@ -49,7 +49,7 @@ View Roles<br>
       <tr>
         <dhv:permission name="admin-roles-edit,admin-roles-delete">
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="admin-roles-edit"><a href="/Roles.do?command=RoleDetails&id=<%= thisRole.getId() %>">Edit</a></dhv:permission><dhv:permission name="admin-roles-edit,admin-roles-delete" all="true">|</dhv:permission><dhv:permission name="admin-roles-delete"><a href="javascript:confirmDelete('/Roles.do?command=DeleteRole&id=<%= thisRole.getId() %>');">Del</a></dhv:permission>
+          <dhv:permission name="admin-roles-edit"><a href="/Roles.do?command=RoleDetails&id=<%= thisRole.getId() %>">Edit</a></dhv:permission><dhv:permission name="admin-roles-edit,admin-roles-delete" all="true">|</dhv:permission><dhv:permission name="admin-roles-delete"><a href="javascript:popURLReturn('Roles.do?command=ConfirmDelete&id=<%=thisRole.getId()%>','Roles.do?command=ListRoles', 'Delete_role','320','200','yes','no');">Del</a></dhv:permission>
         </td>
         </dhv:permission>
         <td class="row<%= rowid %>"  width="150"><font class="columntext1">

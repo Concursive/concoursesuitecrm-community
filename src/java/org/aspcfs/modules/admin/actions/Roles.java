@@ -143,6 +143,40 @@ public final class Roles extends CFSModule {
     }
   }
   
+  public String executeCommandConfirmDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Role thisRole = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+
+    int id = -1;
+    if (!(hasPermission(context, "admin-roles-delete"))) {
+      return ("DefaultError");
+    }
+
+    if (context.getRequest().getParameter("id") != null) {
+      id = Integer.parseInt(context.getRequest().getParameter("id"));
+    }
+    try {
+      db = this.getConnection(context);
+      thisRole = new Role(db, id);
+      htmlDialog.setTitle("Confirm");
+      htmlDialog.setShowAndConfirm(false);
+      htmlDialog.setDeleteUrl("javascript:window.location.href='Roles.do?command=DeleteRole&id=" + id + "'");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
+  
   public String executeCommandInsertRoleForm(ActionContext context) {
 	  
 	if (!(hasPermission(context, "admin-roles-add"))) {
@@ -246,10 +280,12 @@ public final class Roles extends CFSModule {
     addModuleBean(context, "Roles", "Delete a Role");
     if (errorMessage == null) {
       if (recordDeleted) {
-        return executeCommandListRoles(context);
+        context.getRequest().setAttribute("refreshUrl", "Roles.do?command=ListRoles");
+        return ("DeleteOK");
       } else {
         processErrors(context, thisRole.getErrors());
-        return executeCommandListRoles(context);
+        context.getRequest().setAttribute("refreshUrl", "Roles.do?command=ListRoles");
+        return ("DeleteOK");        
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
