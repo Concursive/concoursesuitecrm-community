@@ -1,27 +1,22 @@
 <?xml version="1.0" standalone="yes"?> 
 <aspcfs>
-  <auth-id>vport</auth-id>
+  <authentication>
+    <auth-id>vport</auth-id>
+    <auth-code>20178A</auth-code>
+  </authentication>
   <ticket>
-    <!-- Source: 1 = phone call -->
-    <source_id>12</source_id>
-    <!-- Organization calling: leave id blank for now -->
-    <org_id>2</org_id>
-    <!-- Contact calling: leave id blank for now -->
-    <contact_id></contact_id>
-    <contact>Freeform text (Caller's name)</contact>
-    <!-- Message/Problem details -->
+    <sourceCode>12</sourceCode>
+    <orgId>2</orgId>
+    <contactId></contactId>
+    <contactName>Freeform text (Caller's name)</contactName>
     <problem>
       First line is return phone #
       Second line is message text
       Any additional lines can be used for the message
     </problem>
-    <!-- Message Category for filing: To be configured -->
-    <cat_code></cat_code>
-    <!-- Message Severity: 1 = normal, 2 = important, 3 = critical -->
-    <severity_code>1</severity_code>
-    <!-- Message assigned to user Id -->
-    <assigned_to>1</assigned_to>
-    <!-- Message comment -->
+    <catCode></catCode>
+    <severityCode>1</severityCode>
+    <assignedTo>1</assignedTo>
     <comment>
       Message taken by and timestamp
     </comment>

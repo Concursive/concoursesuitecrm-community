@@ -22,32 +22,40 @@ public final class ProcessPacket extends CFSModule {
 
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
+    int statusCode = 1;
+    String errorText = null;
+    
     String data = (String)context.getRequest().getParameter("data");
-
     if (data != null) {
       try {
-        Vector cfsObjects = this.parseXML(data);
+        String siteId = null;
+        Vector cfsObjects = new Vector();
+        errorText = this.parseXML(cfsObjects, data);
+        if (System.getProperty("DEBUG") != null) System.out.println("Site: " + siteId);
+        if (System.getProperty("DEBUG") != null) System.out.println("Objects created: " + cfsObjects.size());
+        if (errorText == null && cfsObjects.size() > 0) {
+          statusCode = 0;
+        }
       } catch (Exception e) {
         errorMessage = e;
-        System.out.println(e.toString());
-        return ("PacketERROR");
+        e.printStackTrace(System.out);
+        errorText = "Internal application error";
       }
-      return ("PacketOK");
+      
     } else {
-      return ("PacketERROR");
+      errorText = "\"data\" parameter not found";
     }
+    context.getRequest().setAttribute("statusCode", "" + statusCode);
+    context.getRequest().setAttribute("errorText", errorText);
+    return ("PacketOK");
   }
 
-  private Vector parseXML(String xmlToParse) {
-    Vector objects = new Vector();
+  public static String parseXML(Vector objects, String xmlToParse) {
     try {
-      System.out.println("ProcessPacket-> Parsing data");
+      if (System.getProperty("DEBUG") != null) System.out.println("ProcessPacket-> Parsing data");
       StringReader strXML = new StringReader(xmlToParse);
 
       InputSource isXML = new InputSource(strXML);
-      //DOMParser parser = new DOMParser();
-      //parser.parse(isXML);
-      //Document document = parser.getDocument();
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
       Document document = builder.parse(isXML);
@@ -55,59 +63,25 @@ public final class ProcessPacket extends CFSModule {
       Element element = document.getDocumentElement();
       Element authElement = getFirstElement(element, "auth-id");
       if (authElement != null) {
-        Vector tickets = getElements(element, "ticket");
-        if (tickets.size() > 0) {
-          Iterator iTicket = tickets.iterator();
-          while (iTicket.hasNext()) {
-            Element ticketElement = (Element)iTicket.next();
-            Ticket thisTicket = new Ticket();
-            populateObject(thisTicket, ticketElement);
-            
-            //Ticket thisTicket = populateObject((Element)iTicket.next());
-            
-            //thisTicket.insert(db);
+        //siteId = getNodeText(authElement); 
+        //System.out.println(siteId);
+        Vector cfsElements = getCFSElements(element);
+        if (cfsElements.size() > 0) {
+          Iterator elements = cfsElements.iterator();
+          while (elements.hasNext()) {
+            Object thisObject = createObject((Element)elements.next());
+            //insert the object... but just testing for now
+            if (thisObject != null) objects.add(thisObject);
           }
         }
+      } else {
+        return ("Authentication element not found");
       }
-      
-      /*
-      NodeList rootElements = document.getElementsByTagName("aspcfs");
-      NodeList objectElements = rootElements.item(0);
-      Vector elementList = new Vector();
-      for (int i = 0; i < objectElements.getLength(); i++) {
-        Node n = objectElements.item(i);
-        if (n.getNodeType() == Node.ELEMENT_NODE) {
-          Element e = (Element)n;
-          System.out.println(e.getTagName());
-          
-          NodeList objectElements = aspcfsElement.getChildNodes();
-          for (int j = 0; j < objectElements.getLength(); j++) {
-            Node theObject = (Node)objectElements.item(j);
-            if (theObject.getNodeType() == 1) {
-
-              if ("auth-id".equals(theObject.getNodeName())) {
-                System.out.println("ProcessPacket-> Node Element: " + theObject.getNodeName());
-                //Node thisObject = 
-                  if (theObject.getNodeType() == 3) {
-                    System.out.println("ProcessPacket->     Value: " + theObject.getNodeValue());
-                  }
-
-
-
-                } else if ("ticket".equals(theObject.getNodeName())) {
-                  System.out.println("got a ticket");
-                  //Ticket thisTicket = new Ticket();
-                  //objects.add(thisTicket);
-                }
-              }
-              
-        }
-      }
-      */
     } catch (Exception e) {
       e.printStackTrace();
+      return("Error in XML: " + e.getMessage());
     }
-    return objects;
+    return null;
   }
   
   public static Element getFirstElement(Element e, String name) {
@@ -133,17 +107,62 @@ public final class ProcessPacket extends CFSModule {
     return list;
   }
   
-  public static void populateObject(Object target, Element element) {
+  public static Vector getCFSElements(Element e) {
+    Vector elementList = new Vector();
+    elementList.addAll(getElements(e, "account"));
+    elementList.addAll(getElements(e, "contact"));
+    elementList.addAll(getElements(e, "ticket"));
+    return elementList;
+  }
+  
+  public static Object createObject(Element element) {
+    Object target = null;
     try {
-      Method method = null;
-      String param = "Id";
-      String value = "1";
-      Class[] argTypes = new Class[]{value.getClass()};
-      method = target.getClass().getMethod("set" + param, argTypes);
-      method.invoke(target, new Object[]{value});
+      if (element.getTagName().equals("ticket")) target = new Ticket();
+      //if (element.getTagName().equals("contact")) target = new Contact();
+      
+      if (System.getProperty("DEBUG") != null && target != null) { 
+        System.out.println("ProcessPacket-> New: " + target.getClass().getName());
+      }
+      populateObject(target, element);
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
+    return target;
+  }
+  
+  public static void populateObject(Object target, Element element) {
+    if (target != null) {
+      NodeList objectElements = element.getChildNodes();
+      for (int j = 0; j < objectElements.getLength(); j++) {
+        Node theObject = (Node)objectElements.item(j);
+        if (theObject.getNodeType() == Node.ELEMENT_NODE) {
+          String param = theObject.getNodeName();
+          param = param.substring(0, 1).toUpperCase() + param.substring(1);
+          String value = getNodeText(theObject);
+          try {
+            Method method = null;
+            Class[] argTypes = new Class[]{value.getClass()};
+            method = target.getClass().getMethod("set" + param, argTypes);
+            method.invoke(target, new Object[]{value});
+            if (System.getProperty("DEBUG") != null) System.out.println("ProcessPacket-> set" + param + "(" + value + ")");
+          } catch (Exception e) {
+            if (System.getProperty("DEBUG") != null) System.out.println("ProcessPacket-> set" + param + "(" + value + ") **INVALID"); 
+          }
+        }
+      }
+    }
+  }
+  
+  public static String getNodeText(Node element) {
+    NodeList nodeList = element.getChildNodes();
+    for (int i = 0; i < nodeList.getLength(); i++) {
+      Node thisNode = nodeList.item(i);
+      if (thisNode.getNodeType() == Node.TEXT_NODE) {
+        return thisNode.getNodeValue();
+      }
+    }
+    return null;
   }
 }
 
