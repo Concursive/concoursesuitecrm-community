@@ -499,10 +499,10 @@ public void setIncludeIds(String includeIds) {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("lct.description ", null);
+      pagedListInfo.setDefaultSort("lct.category, lct.user_id, lct.level, lct.description ", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY lct.level, lct.description ");
+      sqlOrder.append("ORDER BY lct.category, lct.user_id, lct.level, lct.description ");
     }
 
     //Need to build a base SQL statement for returning records
