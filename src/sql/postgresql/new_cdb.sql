@@ -584,6 +584,7 @@ CREATE TABLE campaign (
   description VARCHAR(255),
   list_id int,
   message_id int DEFAULT -1,
+	reply_addr VARCHAR(255) DEFAULT NULL,
 	subject VARCHAR(255) DEFAULT NULL,
 	message TEXT DEFAULT NULL,
   status_id INT DEFAULT 0,

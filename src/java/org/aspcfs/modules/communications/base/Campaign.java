@@ -38,6 +38,7 @@ public class Campaign extends GenericBean {
   private int recipientCount = -1;
   private int sentCount = -1;
   private ContactList contactList = null;
+	private String replyTo = null;
 	private String subject = null;
 	private String message = null;
 	private int sendMethodId = -1;
@@ -722,6 +723,17 @@ public class Campaign extends GenericBean {
     return messageId;
   }
 
+	public String getReplyTo() {
+		return replyTo;
+	}
+	
+	public String getMessage() {
+		return message;
+	}
+	
+	public String getSubject() {
+		return subject;
+	}
 
   /**
    *  Gets the groupId attribute of the Campaign object
@@ -1402,17 +1414,19 @@ public class Campaign extends GenericBean {
       throw new SQLException("Campaign ID was not specified");
     }
 		
+		String thisMessageReplyTo = null;
 		String thisMessageSubject = null;
 		String thisMessageText = null;
 		
     PreparedStatement pst = null;
 		pst = db.prepareStatement(
-		  "SELECT subject, body " +
+		  "SELECT subject, body, reply_addr " +
 			"FROM message " +
 			"WHERE id = ? ");
 		pst.setInt(1, this.getMessageId());
 		ResultSet rs = pst.executeQuery();
 		if (rs.next()) {
+			thisMessageReplyTo = rs.getString("reply_addr");
 			thisMessageSubject = rs.getString("subject");
 			thisMessageText = rs.getString("body");
 		}
@@ -1424,6 +1438,7 @@ public class Campaign extends GenericBean {
         "SET status_id = ?, " +
         "status = ?, " +
         "active = true, " +
+				"reply_addr = ?, " +
 				"subject = ?, " +
 				"message = ?, " +
         "modifiedby = " + modifiedBy + ", " +
@@ -1433,6 +1448,7 @@ public class Campaign extends GenericBean {
     int i = 0;
     pst.setInt(++i, QUEUE);
     pst.setString(++i, QUEUE_TEXT);
+		pst.setString(++i, thisMessageReplyTo);
 		pst.setString(++i, thisMessageSubject);
 		pst.setString(++i, thisMessageText);
     pst.setTimestamp(++i, modified);
@@ -1542,6 +1558,7 @@ public class Campaign extends GenericBean {
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET message_id = " + messageId + ", " +
+				"reply_addr = null, " +
 				"subject = null, " +
 				"message = null, " +
         "modifiedby = " + modifiedBy + ", " +
@@ -1684,6 +1701,7 @@ public class Campaign extends GenericBean {
     name = rs.getString("name");
     description = rs.getString("description");
     messageId = rs.getInt("message_id");
+		replyTo = rs.getString("reply_addr");
 		subject = rs.getString("subject");
 		message = rs.getString("message");
 		sendMethodId = rs.getInt("send_method_id");
