@@ -95,6 +95,13 @@
 </tr>
 </table>
 <%-- End Trails --%>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); 
+   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
+<dhv:container name="employees" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td class="containerBack">
   <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
@@ -137,7 +144,7 @@
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
-  <tr>
+  <tr class="containerBody">
       <td class="formLabel" nowrap>Department</td>
       <td>
         <%= DepartmentList.getHtmlSelect("department", ContactDetails.getDepartment()) %>
@@ -165,6 +172,9 @@
     <input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
   <%}%>
 <input type="reset" value="Reset">
+    </td>
+   </tr>
+  </table>
 <input type="hidden" name="empid" value="<%= ContactDetails.getId() %>">
 <input type="hidden" name="orgId" id="orgId" value="<%= ContactDetails.getOrgId() %>">
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">

@@ -90,7 +90,19 @@
     </submenu>
   </container>
   
-  <!-- Submenu used in the Contacts module -->
+  <!-- Submenu used in the Employees module -->
+  <container name="employees">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="CompanyDirectory.do?command=EmployeeDetails&amp;empid=${id}"/>
+    </submenu>
+  </container>
+  
+  <!-- Submenu used in the Account Contacts module -->
   <container name="accountscontacts">
     <separator value=" | "/>
     <long_css on="containerOn" off="containerOff"/>

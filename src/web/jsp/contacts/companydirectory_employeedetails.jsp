@@ -15,11 +15,15 @@ Employee Details
 </tr>
 </table>
 <%-- End Trails --%>
+<%@ include file="contact_details_header_include.jsp" %>
+<% String param1 = "id=" + ContactDetails.getId(); %>
+<dhv:container name="employees" selected="details" param="<%= param1 %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td class="containerBack">
 <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteEmployee&empid=<%=ContactDetails.getId() %>';confirmSubmit(document.details);"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br>&nbsp;</dhv:permission>
-<%@ include file="contact_details_header_include.jsp" %>
-&nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -32,7 +36,7 @@ Employee Details
     while (iemail.hasNext()) {
       ContactEmailAddress thisEmailAddress = (ContactEmailAddress)iemail.next();
 %>    
-  <tr>
+  <tr class="containerBody">
     <td nowrap class="formLabel"><%= toHtml(thisEmailAddress.getTypeName()) %></td>
     <td><a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a></td>
   </tr>
@@ -40,7 +44,7 @@ Employee Details
     }
   } else {
 %>
-  <tr>
+  <tr class="containerBody">
     <td colspan="2"><font color="#9E9E9E">No email addresses entered.</font></td>
   </tr>
 <%}%>
@@ -58,7 +62,7 @@ Employee Details
     while (inumber.hasNext()) {
       ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
 %>    
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap><%= toHtml(thisPhoneNumber.getTypeName()) %></td>
     <td><%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;</td>
   </tr>
@@ -66,7 +70,7 @@ Employee Details
     }
   } else {
 %>
-  <tr>
+  <tr class="containerBody">
     <td colspan="2"><font color="#9E9E9E">No phone numbers entered.</font></td>
   </tr>
 <%}%>
@@ -84,7 +88,7 @@ Employee Details
     while (iaddress.hasNext()) {
       ContactAddress thisAddress = (ContactAddress)iaddress.next();
 %>    
-    <tr>
+    <tr class="containerBody">
       <td class="formLabel" valign="top" nowrap><%= toHtml(thisAddress.getTypeName()) %></td>
       <td><%= toHtml(thisAddress.toString()) %>&nbsp;</td>
     </tr>
@@ -92,7 +96,7 @@ Employee Details
     }
   } else {
 %>
-  <tr>
+  <tr class="containerBody">
     <td colspan="2"><font color="#9E9E9E">No addresses entered.</font></td>
   </tr>
 <%}%>
@@ -104,7 +108,7 @@ Employee Details
 	    <strong>Additional Details</strong>
 	  </th>
   </tr>
-  <tr>
+  <tr class="containerBody">
     <td class="formLabel" nowrap>Notes</td>
     <td><%= toHtml(ContactDetails.getNotes()) %>&nbsp;</td>
   </tr>
@@ -112,5 +116,7 @@ Employee Details
 <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteEmployee&empid=<%=ContactDetails.getId() %>';confirmSubmit(document.details);"></dhv:permission>
+</td></tr>
+</table>
 </form>
 
