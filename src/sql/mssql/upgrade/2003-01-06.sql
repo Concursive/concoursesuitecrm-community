@@ -8,8 +8,15 @@ INSERT INTO autoguide_options (option_name, level) VALUES ('CASS', 225);
 
 /* June 3, 2002 */
 
-ALTER TABLE sync_map DROP map_id;
-ALTER TABLE sync_map ADD status_date DATETIME;
+DROP TABLE sync_map;
+CREATE TABLE sync_map (
+  client_id INT NOT NULL,
+  table_id INT NOT NULL,
+  record_id INT NOT NULL,
+  cuid VARCHAR(50) NOT NULL,
+  complete BIT DEFAULT false,
+  status_date DATETIME
+);
 
 CREATE UNIQUE INDEX idx_sync_map ON sync_map (client_id, table_id, record_id);
 

@@ -357,6 +357,12 @@ public class TransactionItem {
         while (syncRecords.hasNext()) {
           Record thisRecord = (Record) syncRecords.next();
           this.insertClientMapping(db, syncClientMap, thisRecord);
+          //TODO: if the record has a guid from a subobject, then retrieve the
+          //correct cuid for the client...
+          
+          
+          
+          
         }
       }
       //Build updates for client
@@ -441,7 +447,7 @@ public class TransactionItem {
           
           
         }
-        addRecords(object, recordList, null, mapping, syncClientMap, db);
+        addRecords(object, recordList, "processed", mapping, syncClientMap, db);
       }
     }
     if (pagedListInfo != null) {

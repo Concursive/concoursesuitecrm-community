@@ -1163,9 +1163,9 @@ public class Inventory {
       sb.append("Ad Runs: none specified" + lf);
     }
     sb.append(lf);
-    sb.append("Year: " + vehicle.getYear() + lf);
     sb.append("Make: " + StringUtils.toString(vehicle.getMake().getName()) + lf);
     sb.append("Model: " + StringUtils.toString(vehicle.getModel().getName()) + lf);
+    sb.append("Year: " + vehicle.getYear() + lf);
     sb.append("Stock No: " + StringUtils.toString(stockNo) + lf);
     sb.append("Mileage: " + StringUtils.toString(this.getMileageString()) + lf);
     sb.append("VIN: " + StringUtils.toString(this.getVin()) + lf);

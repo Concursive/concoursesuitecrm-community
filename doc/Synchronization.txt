@@ -274,6 +274,9 @@ Client #1 Ends Synchronization
   
   ** The server has no way of sending passwords. **
   ** After the user is validated with a direct sync, record their password **
+  ** On every sync, validate the user's name and password... if it doesn't match
+  ** prompt them for a new password **
+  
   <transaction id="2">
     <meta>
       <property>guid</property>
@@ -359,7 +362,7 @@ Client #1 Ends Synchronization
       <property>guid</property>
       <property>vehicleGuid</property>
       <property>accountGuid</property>
-      <property>enteredBy</property>
+      <property>enteredBy/userGuid</property>
       <property>stockNo</property>
       <property>mileage</property>
       <property>vin</property>
@@ -370,6 +373,7 @@ Client #1 Ends Synchronization
       <property>sold</property>
       <property>modified</property>
       <property>hasPicture</property>
+      <property>owner/userGuid</property>
     </meta>
     <accountInventoryList action="sync" identity="1">
       <accountGuid>*OPTIONAL: SPECIFY AN ACCOUNT ID OR YOU GET ALL ACCOUNTS*</accountGuid>

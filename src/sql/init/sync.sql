@@ -267,8 +267,6 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
                              REFERENCES vehicle (vehicle_id), 
        FOREIGN KEY (account_id)
                              REFERENCES account (account_id), 
-       FOREIGN KEY (modifiedby)
-                             REFERENCES users (user_id), 
        FOREIGN KEY (record_status_id)
                              REFERENCES status_master (record_status_id)
 )'
