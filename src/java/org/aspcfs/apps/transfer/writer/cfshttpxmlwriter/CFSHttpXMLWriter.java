@@ -1,4 +1,4 @@
-package com.darkhorseventures.apps.dataimport.cfshttpxmlwriter;
+package com.darkhorseventures.apps.dataimport.writer.cfshttpxmlwriter;
 
 import com.darkhorseventures.apps.dataimport.*;
 import java.util.*;

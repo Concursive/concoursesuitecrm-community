@@ -1,4 +1,4 @@
-package com.darkhorseventures.apps.dataimport.excelreader;
+package com.darkhorseventures.apps.dataimport.reader.excelreader;
 
 import com.darkhorseventures.apps.dataimport.*;
 import java.util.*;

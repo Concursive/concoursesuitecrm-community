@@ -1,4 +1,4 @@
-package com.darkhorseventures.apps.dataimport.cfsdatabasereader;
+package com.darkhorseventures.apps.dataimport.reader.cfsdatabasereader;
 
 import com.darkhorseventures.apps.dataimport.*;
 import java.sql.*;

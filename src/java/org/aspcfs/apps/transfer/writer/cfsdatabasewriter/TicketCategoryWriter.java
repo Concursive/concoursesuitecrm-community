@@ -1,4 +1,4 @@
-package com.darkhorseventures.apps.dataimport.cfsdatabasewriter;
+package com.darkhorseventures.apps.dataimport.writer.cfsdatabasewriter;
 
 import com.darkhorseventures.apps.dataimport.*;
 import java.util.*;
