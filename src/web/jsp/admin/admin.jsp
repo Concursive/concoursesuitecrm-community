@@ -21,7 +21,7 @@ Manage CFS by reviewing system usage, configuring specific modules, and configur
   &nbsp;
 </dhv:permission>
   
-<dhv:permission name="admin-sysconfig-view">
+<dhv:permission name="admin-sysconfig-view,admin-users-view,admin-roles-view">
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <td>
