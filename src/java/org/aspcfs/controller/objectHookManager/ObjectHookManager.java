@@ -97,6 +97,8 @@ public class ObjectHookManager {
           context.setParameter("FileLibraryPath", fileLibraryPath);
           context.setAttribute("ConnectionPool", sqlDriver);
           context.setAttribute("ConnectionElement", ce);
+          context.setAttribute("ClientSSLKeystore", actionContext.getServletContext().getAttribute("ClientSSLKeystore"));
+          context.setAttribute("ClientSSLKeystorePassword", actionContext.getServletContext().getAttribute("ClientSSLKeystorePassword"));
           if (System.getProperty("DEBUG") != null) {
             System.out.println("ObjectHookList-> Hook thread start");
           }
