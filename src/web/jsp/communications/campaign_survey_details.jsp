@@ -8,7 +8,7 @@
 
 <input type="button" name="action" value="Modify" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
 <input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('/CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
-<input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','760','510','yes','no');">
+<input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','760','510','yes','yes');">
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
