@@ -1144,6 +1144,7 @@ public final class MyCFS extends CFSModule {
 	
 	Contact thisContact = (Contact) context.getFormBean();
 	thisContact.setRequestItems(context.getRequest());
+	thisContact.setEnteredBy(getUserId(context));
 	thisContact.setModifiedBy(getUserId(context));
 	
 	try {

@@ -1445,7 +1445,11 @@ public boolean getEnabled() {
       pst.setBoolean(++i, this.getMiner_only());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-      pst.setInt(++i, this.getOwner());
+      if (owner > -1) {
+	      pst.setInt(++i, this.getOwner());
+      } else {
+	      pst.setNull(++i, java.sql.Types.INTEGER);
+      }
       pst.setInt(++i, this.getDuplicateId());
       pst.setString(++i, this.getNotes());
       pst.setInt(++i, this.getEmployees());
