@@ -55,9 +55,30 @@
       <input type=text size=50 maxlength=255 name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
     </td>
   </tr>
+	
+	<tr>
+    <td valign=center align=right class="formLabel">
+      Reply To
+    </td>
+    <td valign=center>
+      <input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
+			<font color="red">*</font> <%= showAttribute(request, "replyToError") %>
+    </td>
+  </tr>
+	
+	<tr>
+    <td valign=center align=right class="formLabel">
+      Message Subject
+    </td>
+    <td valign=center>
+      <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
+			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %>
+    </td>
+  </tr>
+	
   <tr>
     <td valign=top align=right class="formLabel">
-      Text
+      Message Text
     </td>
     <td valign=center>
 		<dhv:browser id="ie" minVersion="5.5" include="false">
@@ -102,17 +123,6 @@
       <input type=text size=50 name="url" value="<%= toHtmlValue(Message.getUrl()) %>">
     </td>
   </tr>
-  
-  <tr>
-    <td valign=center align=right class="formLabel">
-      Reply To
-    </td>
-    <td valign=center>
-      <input type=text size=50 name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
-			<font color="red">*</font> <%= showAttribute(request, "replyToError") %>
-    </td>
-  </tr>
-	
 </table>
 <br>
 <input type="submit" value="Update" name="Save" onclick="javascript:save();">

@@ -22,8 +22,9 @@ public class Message extends GenericBean {
   private String name = "";
   private String description = "";
   private int templateId = -1;
-  private String messageText = "";
   private String replyTo = "";
+	private String messageSubject = "";
+	private String messageText = "";
   private String url = "";
   private String image = "";
   private int enteredBy = -1;
@@ -190,6 +191,9 @@ public class Message extends GenericBean {
     this.setTemplateId(Integer.parseInt(tmp));
   }
 
+	public void setMessageSubject(String tmp) {
+		this.messageSubject = tmp;
+	}
 
   /**
    *  Sets the text attribute of the Message object
@@ -321,6 +325,10 @@ public class Message extends GenericBean {
   public int getTemplateId() {
     return templateId;
   }
+	
+	public String getMessageSubject() {
+		return messageSubject;
+	}
 
 
   /**
@@ -563,6 +571,10 @@ public class Message extends GenericBean {
       errors.put("nameError", "Message name is required");
     }
 		
+		if (messageSubject == null || messageSubject.trim().equals("")) {
+      errors.put("messageSubjectError", "Message subject is required");
+    }
+		
 		if (replyTo == null || replyTo.trim().equals("")) {
       errors.put("replyToError", "Email address is required");
     }
@@ -596,7 +608,8 @@ public class Message extends GenericBean {
 
     sql.append(
         "UPDATE message " +
-        "SET name=?, description = ?, template_id = ?, body = ?, reply_addr = ?, url = ?, img = ?, " +
+        "SET name=?, description = ?, template_id = ?, subject = ?, " +
+				"body = ?, reply_addr = ?, url = ?, img = ?, " +
         "enabled = ?, " +
         "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
         "WHERE id = ? ");
@@ -609,7 +622,8 @@ public class Message extends GenericBean {
     pst.setString(++i, this.getName());
     pst.setString(++i, this.getDescription());
     pst.setInt(++i, this.getTemplateId());
-    pst.setString(++i, this.getMessageText());
+    pst.setString(++i, this.getMessageSubject());
+		pst.setString(++i, this.getMessageText());
     pst.setString(++i, this.getReplyTo());
     pst.setString(++i, this.getUrl());
     pst.setString(++i, this.getImage());
@@ -641,7 +655,8 @@ public class Message extends GenericBean {
     name = rs.getString("name");
     description = rs.getString("description");
     templateId = rs.getInt("template_id");
-    messageText = rs.getString("body");
+    messageSubject = rs.getString("subject");
+		messageText = rs.getString("body");
     replyTo = rs.getString("reply_addr");
     url = rs.getString("url");
     image = rs.getString("img");

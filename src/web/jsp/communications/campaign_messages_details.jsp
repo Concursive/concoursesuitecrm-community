@@ -32,9 +32,25 @@
       <%= toHtml(MessageDetails.getDescription()) %>&nbsp; 
     </td>
   </tr>
+	<tr>
+    <td class="formLabel" valign="center" align="right">
+      Reply To
+    </td>
+    <td valign=center>
+    	<%= toHtml(MessageDetails.getReplyTo()) %>&nbsp;
+    </td>
+  </tr>
+	<tr>
+    <td class="formLabel" valign="center" align="right">
+      Message Subject
+    </td>
+    <td valign=center>
+    	<%= toHtml(MessageDetails.getMessageSubject()) %>&nbsp;
+    </td>
+  </tr>
   <tr>
     <td class="formLabel" valign=top align=right>
-      Preview
+      Message Text
     </td>
     <td valign=center>
 			<%= (MessageDetails.getMessageText()) %>&nbsp; 
@@ -46,14 +62,6 @@
     </td>
     <td valign=center>
     	<a href="<%= MessageDetails.getUrl() %>" target="_new"><%= MessageDetails.getUrl() %></a>&nbsp;
-    </td>
-  </tr>
-	<tr>
-    <td class="formLabel" valign=center align=right>
-      Reply To
-    </td>
-    <td valign=center>
-    	<%= toHtml(MessageDetails.getReplyTo()) %>&nbsp;
     </td>
   </tr>
 	<tr>
