@@ -149,6 +149,26 @@ public class InitPermissionsAndRoles implements DataReader {
           folderRecord.addField("description", (String) folder.getAttribute("description"));
           writer.save(folderRecord);
         }
+        
+        //Insert any lookups under this category
+        ArrayList lookupList = new ArrayList();
+        XMLUtils.getAllChildren(category, "lookup", folderList);
+        Iterator lookupItems = lookupList.iterator();
+        int lookupLevel = 0;
+        while (lookupItems.hasNext()) {
+          lookupLevel = lookupLevel + 10;
+          Element lookup = (Element) lookupItems.next();
+          DataRecord lookupRecord = new DataRecord();
+          lookupRecord.setName("lookup");
+          lookupRecord.setAction("insert");
+          lookupRecord.addField("moduleId", String.valueOf(categoryId));
+          lookupRecord.addField("lookupId", (String) lookup.getAttribute("constantId"));
+          lookupRecord.addField("className", (String) lookup.getAttribute("className"));
+          lookupRecord.addField("tableName", (String) lookup.getAttribute("tableName"));
+          lookupRecord.addField("level", String.valueOf(lookupLevel));
+          lookupRecord.addField("description", (String) lookup.getAttribute("description"));
+          writer.save(lookupRecord);
+        }
       }
       
       //Read in all of the roles and associate with previously read in permissions so IDs match

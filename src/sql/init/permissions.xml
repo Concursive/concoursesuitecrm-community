@@ -26,6 +26,11 @@
     </category>
     <category id="2" name="Contacts &amp; Resources" folders="true" lookups="true">
       <folder constantId="2" description="Contacts"/>
+      <lookup constantId="1" class="" table="" description="Type"/>
+      <lookup constantId="2" class="" table="" description="Email Types"/>
+      <lookup constantId="3" class="" table="" description="Address Types"/>
+      <lookup constantId="4" class="" table="" description="Phone Types"/>
+      <lookup constantId="5" class="" table="" description="Departments"/>
       <permission name="contacts" attributes="v---" description="Access to Contacts &amp; Resources module"/>
       <permission name="contacts-external_contacts" attributes="vaed" description="External Contact Records"/>
       <permission name="contacts-internal_contacts" attributes="vaed" description="Internal Contact Records"/>

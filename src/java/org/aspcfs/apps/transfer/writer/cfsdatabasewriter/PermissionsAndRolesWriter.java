@@ -258,6 +258,27 @@ public class PermissionsAndRolesWriter implements DataWriter {
         }
         return true;
       }
+      
+      if (record.getName().equals("lookup")) {
+        try {
+          PreparedStatement pst = db.prepareStatement(
+            "INSERT INTO lookup_lists_lookup " +
+            "(module_id, lookup_id, class_name, table_name, level, description) " +
+            "VALUES (?, ?, ?, ?, ?, ?) ");
+          pst.setInt(1, record.getIntValue("moduleId"));
+          pst.setInt(2, record.getIntValue("lookupId"));
+          pst.setString(3, record.getValue("className"));
+          pst.setString(4, record.getValue("tableName"));
+          pst.setInt(5, record.getIntValue("level"));
+          pst.setString(6, record.getValue("description"));
+          pst.executeUpdate();
+          pst.close();
+        } catch (SQLException e) {
+          e.printStackTrace(System.out);
+          return false;
+        }
+        return true;
+      }
 
       if (record.getName().equals("role")) {
         Role thisRole = new Role();
