@@ -15,7 +15,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td align="left" colspan="7">
-      <strong>Tickets Assigned to Me</strong>
+      <strong>Tickets Assigned to Me (Open)</strong>
     </td>
   </tr>
   <tr class="title">
@@ -91,7 +91,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td align="left" colspan="7">
-      <strong>Open/Unassigned Tickets</strong>
+      <strong>Tickets in My Department (Open)</strong>
     </td>
   </tr>
   <tr class="title">
@@ -167,7 +167,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td align="left" colspan="7">
-      <strong>Tickets Created by Me</strong>
+      <strong>Tickets Created by Me (Open)</strong>
     </td>
   </tr>
 
