@@ -900,13 +900,15 @@ public class CustomFieldCategory extends ArrayList {
     pst.setInt(++i, this.getModuleId());
     pst.setString(++i, this.getName());
     pst.setString(++i, this.getDescription());
-    pst.setBoolean(++i, this.getEnabled());
+    
     pst.setBoolean(++i, this.getAllowMultipleRecords());
     pst.setBoolean(++i, this.getReadOnly());
     
         if (entered != null) {
                 pst.setTimestamp(++i, entered);
         }
+        
+        pst.setBoolean(++i, this.getEnabled());
       
     pst.execute();
     pst.close();
