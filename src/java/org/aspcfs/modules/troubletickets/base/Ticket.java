@@ -451,7 +451,7 @@ public class Ticket extends GenericBean {
    *@param  tmp  The new closeNow value
    */
   public void setCloseNow(String tmp) {
-    this.closeIt = ("ON").equalsIgnoreCase(tmp);
+    this.closeIt = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -1441,7 +1441,8 @@ public class Ticket extends GenericBean {
     try {
       db.setAutoCommit(false);
       sql.append(
-          "INSERT INTO TICKET (org_id, contact_id, problem, pri_code, department_code, cat_code, scode, ");
+          "INSERT INTO TICKET (org_id, contact_id, problem, pri_code, " +
+          "department_code, cat_code, scode, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1534,37 +1535,34 @@ public class Ticket extends GenericBean {
    */
   public int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
-
     if (!isValid(db)) {
       return -1;
     }
 
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-
     sql.append(
-        "UPDATE ticket SET department_code = ?, pri_code = ?, scode = ?, cat_code = ?, assigned_to = ?, " +
-        "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, source_code = ?, contact_id = ?, problem = ? ");
-
+        "UPDATE ticket SET department_code = ?, pri_code = ?, scode = ?, " +
+        "cat_code = ?, assigned_to = ?, " +
+        "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, " +
+        "source_code = ?, contact_id = ?, problem = ?, ");
     if (override == false) {
-      sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? ");
+      sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ?, ");
     }
-
-    if (this.getCloseIt() == true) {
-      sql.append(
-          ", closed = CURRENT_TIMESTAMP, solution = ? ");
+    if (this.getCloseIt()) {
+      sql.append("closed = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    } else {
+      if (closed != null) {
+        sql.append("closed = ?, ");
+      }
     }
-
-    sql.append(
-        "WHERE ticketid = ? ");
-
-    //if (!override) {
-    //	sql.append("AND modified = ? ");
-    //}
-
+    sql.append("solution = ? ");
+    sql.append("WHERE ticketid = ? ");
+    if (!override) {
+      sql.append("AND modified = ? ");
+    }
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-
     if (this.getDepartmentCode() > 0) {
       pst.setInt(++i, this.getDepartmentCode());
     } else {
@@ -1620,14 +1618,21 @@ public class Ticket extends GenericBean {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
     pst.setString(++i, this.getProblem());
-    
     if (override == false) {
       pst.setInt(++i, this.getModifiedBy());
     }
-
-    if (this.getCloseIt() == true) {
-      pst.setString(++i, this.getSolution());
-      
+    if (!this.getCloseIt() && closed != null) {
+      pst.setTimestamp(++i, closed);
+    }
+    pst.setString(++i, this.getSolution());
+    pst.setInt(++i, id);
+    if (!override) {
+      pst.setTimestamp(++i, this.getModified());
+    }
+    resultCount = pst.executeUpdate();
+    pst.close();
+    
+    if (this.getCloseIt()) {
       TicketLog thisEntry = new TicketLog();
       thisEntry.setEnteredBy(this.getModifiedBy());
       thisEntry.setDepartmentCode(this.getDepartmentCode());
@@ -1639,46 +1644,28 @@ public class Ticket extends GenericBean {
       thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
     }
 
-    pst.setInt(++i, id);
-
-    //if (!override) {
-    //	pst.setTimestamp(++i, java.sql.Timestamp.valueOf(this.getModified()));
-    //}
-
-    resultCount = pst.executeUpdate();
-    pst.close();
-
     return resultCount;
   }
   
   //reopen a ticket
-  
   public int reopen(Connection db) throws SQLException {
     int resultCount = 0;
 
     db.setAutoCommit(false);
     PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-    
-    sql.append(
-        "UPDATE ticket SET closed = ?, solution = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? ");
-    sql.append(
-        "WHERE ticketid = ? ");
-
+    String sql = 
+        "UPDATE ticket " +
+        "SET closed = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ? " +
+        "WHERE ticketid = ? ";
     int i = 0;
-    pst = db.prepareStatement(sql.toString());
-
-    pst.setNull(++i, java.sql.Types.INTEGER);
-    pst.setString(++i, "");
+    pst = db.prepareStatement(sql);
+    pst.setNull(++i, java.sql.Types.TIMESTAMP);
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
-    
     resultCount = pst.executeUpdate();
     pst.close();
     
-    
     TicketLog thisEntry = new TicketLog();
-    
     thisEntry.setEnteredBy(this.getModifiedBy());
     thisEntry.setDepartmentCode(this.getDepartmentCode());
     thisEntry.setAssignedTo(this.getAssignedTo());
@@ -1689,7 +1676,6 @@ public class Ticket extends GenericBean {
     thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
 
     db.commit();
-    
     return resultCount;
   }
 
