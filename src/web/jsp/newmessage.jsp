@@ -86,7 +86,8 @@ function sendMessage() {
     </td>
   </tr>
 </table>
-<input type=hidden name="return" value="<%=returnUrl%>">
+<input type="hidden" name="return" value="<%=returnUrl%>">
+<input type="hidden" name="noteId" value="<%= Note.getId() %>">
 <br>
 <input type="submit" value="Send">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='<%=returnUrl%>'">
