@@ -771,10 +771,10 @@ public final class Leads extends CFSModule {
       oppList.setPagedListInfo(oppListInfo);
       oppListInfo.setSearchCriteria(oppList);
       
-      if ("my".equals(oppListInfo.getListView())) {
-              oppList.setOwner(this.getUserId(context));
+      if ("all".equals(oppListInfo.getListView())) {
+        oppList.setOwnerIdRange(this.getUserRange(context));
       } else {
-              oppList.setOwnerIdRange(this.getUserRange(context));
+        oppList.setOwner(this.getUserId(context));
       }
 
       oppList.buildList(db);

@@ -387,20 +387,16 @@ public final class ExternalContacts extends CFSModule {
 
       contactList.setPagedListInfo(externalContactsInfo);
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-
       contactList.setPersonalId(this.getUserId(context));
       contactList.setTypeId(externalContactsInfo.getFilterKey("listFilter1"));
 
       externalContactsInfo.setSearchCriteria(contactList);
-
-      if ("my".equals(externalContactsInfo.getListView())) {
-        contactList.setOwner(this.getUserId(context));
-      } else {
+      if ("all".equals(externalContactsInfo.getListView())) {
         contactList.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        contactList.setOwner(this.getUserId(context));
       }
-
       contactList.buildList(db);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
