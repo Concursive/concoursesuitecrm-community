@@ -141,8 +141,8 @@ public class HelpItem extends GenericBean {
         "SELECT * " +
         "FROM help_contents h " +
         "WHERE module = ? " + 
-        (section != null ? "AND section = ? " : "AND section IS NULL") +
-        (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL");
+        (section != null ? "AND section = ? " : "AND section IS NULL ") +
+        (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL ");
     pst = db.prepareStatement(sql);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("HelpItem-> Prepared");
