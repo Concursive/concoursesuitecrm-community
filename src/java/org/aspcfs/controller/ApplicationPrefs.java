@@ -276,10 +276,13 @@ public class ApplicationPrefs {
           //If key and license exists, read in and parse
           java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(this.get("FILELIBRARY") + "init" + fs + "zlib.jar");
           org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(this.get("FILELIBRARY") + "init" + fs + "input.txt")));
+          //The edition will be shown
           edition = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("edition"));
           if (edition != null) {
             context.setAttribute("APP_TEXT", edition);
+            context.setAttribute("APP_SIZE", "5");
           }
+          //The licensed organization will be shown
           String organization = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("company"));
           if (organization != null) {
             context.setAttribute("APP_ORGANIZATION", organization);
