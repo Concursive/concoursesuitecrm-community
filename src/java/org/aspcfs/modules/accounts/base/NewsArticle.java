@@ -35,6 +35,22 @@ public class NewsArticle extends GenericBean {
    *  Constructor for the NewsArticle object
    */
   public NewsArticle() { }
+  
+  public NewsArticle(Connection db, String newsId) throws SQLException {
+    queryRecord(db, Integer.parseInt(newsId));
+  }
+
+
+  /**
+   *  Constructor for the Contact object
+   *
+   *@param  db                Description of the Parameter
+   *@param  contactId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public NewsArticle(Connection db, int newsId) throws SQLException {
+    queryRecord(db, newsId);
+  }
 
 
   /**
@@ -42,27 +58,34 @@ public class NewsArticle extends GenericBean {
    *
    *@param  rs  Description of Parameter
    */
-  public NewsArticle(ResultSet rs) {
-    try {
-      //news table
-      recId = rs.getInt("rec_id");
-      orgId = rs.getInt("org_id");
-      url = rs.getString("url");
-      base = rs.getString("base");
-      headline = rs.getString("headline");
-      dateEntered = rs.getString("dateentered");
-      java.sql.Timestamp tmpDateCreated = rs.getTimestamp("created");
-      if (tmpDateCreated != null) {
-        dateEntered = shortDateTimeFormat.format(tmpDateCreated);
-      } else {
-        dateEntered = "";
-      }
-
-    } catch (SQLException e) {
-      errorMessage = e.toString();
-    }
+  public NewsArticle(ResultSet rs) throws SQLException {
+    buildRecord(rs);
   }
-
+  
+  private void queryRecord(Connection db, int newsId) throws SQLException {
+    if (newsId < 0) {
+      throw new SQLException("News ID not specified.");
+    }
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT n.* " +
+        //"o.name as org_name, o.industry_temp_code as org_industry, o.miner_only as org_mineronly " +
+        "FROM news n " +
+        "LEFT JOIN organization o ON (n.org_id = o.org_id) " +
+        "WHERE n.rec_id = ? ");
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(1, newsId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      rs.close();
+      pst.close();
+      throw new SQLException("News record not found.");
+    }
+    rs.close();
+    pst.close();
+  }
 
   /**
    *  Sets the ErrorMessage attribute of the NewsArticle object
@@ -223,7 +246,20 @@ public class NewsArticle extends GenericBean {
     return url;
   }
 
-
+  protected void buildRecord(ResultSet rs) throws SQLException {
+      recId = rs.getInt("rec_id");
+      orgId = rs.getInt("org_id");
+      url = rs.getString("url");
+      base = rs.getString("base");
+      headline = rs.getString("headline");
+      dateEntered = rs.getString("dateentered");
+      java.sql.Timestamp tmpDateCreated = rs.getTimestamp("created");
+      if (tmpDateCreated != null) {
+        dateEntered = shortDateTimeFormat.format(tmpDateCreated);
+      } else {
+        dateEntered = "";
+      }
+  }
 
 }
 
