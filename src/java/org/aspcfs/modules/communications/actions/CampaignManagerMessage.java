@@ -149,9 +149,9 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       newMessage.setModifiedBy(getUserId(context));
-      //IE5.5+ uses an HTML Editor, all others use a Text Editor
+      //IE5.0+ uses an HTML Editor, all others use a Text Editor
       UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-      if (!("ie".equals(thisUser.getBrowserId()) && thisUser.getBrowserVersion() >= 5.5)) {
+      if (!("ie".equals(thisUser.getBrowserId()) && thisUser.getBrowserVersion() >= 5.0)) {
         newMessage.setMessageText(StringUtils.toHtmlText(newMessage.getMessageText()));
       }
       
