@@ -2,6 +2,7 @@ package org.aspcfs.taglib;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
 /**
@@ -22,6 +23,7 @@ public class PagedListControlHandler extends TagSupport {
   private boolean showForm = true;
   private boolean resetList = true;
   private boolean abbreviate = false;
+  private boolean enableJScript = false;
 
 
   /**
@@ -73,6 +75,7 @@ public class PagedListControlHandler extends TagSupport {
     tdClass = tmp;
   }
 
+
   /**
    *  Sets the showForm attribute of the PagedListControlHandler object
    *
@@ -93,12 +96,47 @@ public class PagedListControlHandler extends TagSupport {
     this.resetList = "true".equalsIgnoreCase(resetList);
   }
 
+
+  /**
+   *  Gets the abbreviate attribute of the PagedListControlHandler object
+   *
+   *@return    The abbreviate value
+   */
   public boolean getAbbreviate() {
     return abbreviate;
   }
+
+
+  /**
+   *  Sets the abbreviate attribute of the PagedListControlHandler object
+   *
+   *@param  abbreviate  The new abbreviate value
+   */
   public void setAbbreviate(boolean abbreviate) {
     this.abbreviate = abbreviate;
   }
+
+
+  /**
+   *  Sets the 
+ attribute of the PagedListControlHandler object
+   *
+   *@param  enableJScript  The new enableJScript value
+   */
+  public void setEnableJScript(boolean enableJScript) {
+    this.enableJScript = enableJScript;
+  }
+
+
+  /**
+   *  Sets the enableJScript attribute of the PagedListControlHandler object
+   *
+   *@param  tmp  The new enableJScript value
+   */
+  public void setEnableJScript(String tmp) {
+    this.enableJScript = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
    *  Description of the Method
@@ -113,8 +151,11 @@ public class PagedListControlHandler extends TagSupport {
       if (pagedListInfo != null) {
         pagedListInfo.setShowForm(showForm);
         pagedListInfo.setResetList(resetList);
+        pagedListInfo.setEnableJScript(enableJScript);
         JspWriter out = this.pageContext.getOut();
-        out.write("<SCRIPT LANGUAGE=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"javascript/pageListInfo.js\"></SCRIPT>");
+        if (enableJScript) {
+          out.write("<SCRIPT LANGUAGE=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"javascript/pageListInfo.js\"></SCRIPT>");
+        }
         out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">");
         out.write(pagedListInfo.getListPropertiesHeader(name));
         out.write("<tr>");
@@ -134,19 +175,19 @@ public class PagedListControlHandler extends TagSupport {
 
         out.write("<font color=\"" + fontColor + "\">");
         out.write("Page " + pagedListInfo.getNumericalPageEntry() + " ");
-        
+
         if (!abbreviate) {
           out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())) + ", ");
         } else {
           out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())));
         }
-        
+
         if (!abbreviate) {
           out.write("Items per page: " + pagedListInfo.getItemsPerPageEntry() + " ");
         } else {
           out.write("&nbsp;&nbsp;");
         }
-        
+
         out.write("<input type=\"submit\" value=\"go\">");
         out.write("</font>");
         out.write("</td>");
