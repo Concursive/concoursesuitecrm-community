@@ -71,7 +71,7 @@
         </dhv:evaluate>
       
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
-          <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= Category.getName() %> #<%= thisRecord.getId() %></a>
+          <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml() %></a>
         </td>
         <td nowrap class="row<%= rowid %>">
           <%= toHtml(thisRecord.getEnteredString()) %>

@@ -170,11 +170,11 @@ public class CustomFieldRecordList extends ArrayList {
     }
   }
   
-  public void buildRecordColumns(Connection db) throws SQLException {
+  public void buildRecordColumns(Connection db, CustomFieldCategory thisCategory) throws SQLException {
     Iterator customRecords = this.iterator();
     while (customRecords.hasNext()) {
       CustomFieldRecord thisRecord = (CustomFieldRecord)customRecords.next();
-      //thisRecord.buildInfo(db);
+      thisRecord.buildColumns(db, thisCategory);
     }
   }
 }

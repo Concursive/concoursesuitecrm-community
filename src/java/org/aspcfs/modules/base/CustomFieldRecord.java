@@ -22,6 +22,10 @@ public class CustomFieldRecord {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private boolean enabled = false;
+  
+  //A single record for display purposes only, maybe will be multiple
+  //records someday
+  private CustomField fieldData = null;
 
   //Properties for related data
   private int linkModuleId = -1;
@@ -219,6 +223,9 @@ public class CustomFieldRecord {
     return modifiedBy;
   }
 
+  public CustomField getFieldData() {
+    return fieldData;
+  }
 
   /**
    *  Description of the Method
@@ -336,5 +343,34 @@ public class CustomFieldRecord {
     enabled = rs.getBoolean("enabled");
   }
 
+  public void buildColumns(Connection db, CustomFieldCategory thisCategory) throws SQLException {
+    //Get the first CustomField, then populate it
+    String sql =
+    "   SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL?"TOP 1 ":"") +
+    "    * " +
+    "   FROM custom_field_info cfi " +
+    "   WHERE cfi.group_id IN " +
+    "     (SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL?"TOP 1 ":"") +
+    "        group_id " +
+    "      FROM custom_field_group " +
+    "      WHERE category_id = ? " +
+    "      AND enabled = " + DatabaseUtils.getTrue(db) + " " +
+    "      ORDER BY level, field_id, field_name " +
+           (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL?"LIMIT 1 ":"") +
+    "     ) " +
+    "   AND enabled = " + DatabaseUtils.getTrue(db) + " " +
+    "   ORDER BY level " +
+        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL?"LIMIT 1 ":"");
+    
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, thisCategory.getId());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      fieldData = new CustomField(rs);
+      fieldData.setRecordId(this.id);
+      fieldData.buildResources(db);
+    }
+  }
+  
 }
 
