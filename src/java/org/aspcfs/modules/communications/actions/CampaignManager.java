@@ -1288,7 +1288,7 @@ public final class CampaignManager extends CFSModule {
    */
   public String executeCommandUpdate(ActionContext context) {
 
-    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
 
@@ -1302,11 +1302,13 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = (Campaign) context.getFormBean();
-      if (!hasAuthority(context, campaign.getEnteredBy())) {
-        return "PermissionError";
+      int enteredBy = Campaign.queryEnteredBy(db, campaign.getId());
+      if (hasAuthority(context, enteredBy)) {
+        campaign.setModifiedBy(getUserId(context));
+        resultCount = campaign.updateDetails(db);
+      } else {
+        resultCount = -1;
       }
-      campaign.setModifiedBy(getUserId(context));
-      resultCount = campaign.updateDetails(db);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1314,7 +1316,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (resultCount == 1) {
+      if (resultCount == -1) {
+        return ("PermissionError");
+      } else if (resultCount == 1) {
         return ("UpdateDetailsOK");
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
