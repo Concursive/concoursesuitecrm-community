@@ -121,7 +121,7 @@
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">Notes</td>
     <td width=100%>
-      <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= (Task.getNotes()) %></TEXTAREA>
+      <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(Task.getNotes()) %></TEXTAREA>
     </td>
   </tr>
 
