@@ -737,7 +737,7 @@ public class TransactionItem {
         if (thisRecord.containsKey("guid")) {
           if (thisRecord.getAction().equals("processed")) {
             thisRecord.put("guid", ignoredProperties.get("guid"));
-          } else {
+          } else if (thisRecord.getAction().equals("insert")) {
             thisRecord.put("guid", String.valueOf(identity++));
           }
         }
