@@ -288,10 +288,10 @@ public class PermissionCategoryList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("pc.level, pc.category", null);
+      pagedListInfo.setDefaultSort("pc.category", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY pc.level, pc.category ");
+      sqlOrder.append("ORDER BY pc.category ");
     }
 
     //Need to build a base SQL statement for returning records
