@@ -8,6 +8,18 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <form name="addCall" action="/LeadsCalls.do?command=Update&id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>&auto-populate=true" method="post">
+
+<a href="/Leads.do">Pipeline Management</a> > 
+<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
+<a href="/LeadsCalls.do?command=View&oppId=<%=OpportunityDetails.getId()%>">Calls</a> >
+<% if (request.getParameter("return") == null) { %>
+	<a href="/LeadsCalls.do?command=Details&id=<%=CallDetails.getId()%>&oppId=<%=OpportunityDetails.getId()%>">Call Details</a> >
+<%}%>
+Modify Call<br>
+<hr color="#BFBFBB" noshade>
+
+
 <a href="/Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -32,7 +44,15 @@
     <td class="containerBack">
 <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
 <input type="submit" value="Update">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/LeadsCalls.do?command=View&oppId=<%=OpportunityDetails.getId()%>'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:form.action='/LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>'">
+<%}%>
+
 <input type="reset" value="Reset">
 <br><%= showAttribute(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -93,9 +113,22 @@
 </table>
 <br>
 <input type="submit" value="Update">
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/LeadsCalls.do?command=View&oppId=<%=OpportunityDetails.getId()%>'">
+	<%}%>
+<%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:form.action='/LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>'">
+<%}%>
+
 <input type="reset" value="Reset">
 <input type="hidden" name="contactId" value="<%=CallDetails.getContactId()%>">
+
+<% if (request.getParameter("return") != null) {%>
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
+<%}%>
+
 </td>
 </tr>
 </table>

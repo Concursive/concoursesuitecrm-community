@@ -6,7 +6,11 @@
 <jsp:useBean id="MyOppList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
+
 <form name=Dashboard action="/Leads.do?command=Dashboard" method=POST>
+<a href="/Leads.do">Pipeline Management</a> > 
+Dashboard<br>
+<hr color="#BFBFBB" noshade>
 <table width=100% border=0 cellspacing=0 cellpadding=3>
   <tr>
     <!-- Left Column -->
@@ -131,7 +135,7 @@
 				Opportunity thisOpp = (Opportunity)n.next();
 %>    
 				<tr>
-          <td width="100%" class="row<%= rowid %>" valign=center><a href="/Leads.do?command=DetailsOpp&id=<%=thisOpp.getId()%>"><%= toHtml(thisOpp.getShortDescription()) %></a></td>
+          <td width="100%" class="row<%= rowid %>" valign=center><a href="/Leads.do?command=DetailsOpp&id=<%=thisOpp.getId()%>&return=dashboard"><%= toHtml(thisOpp.getShortDescription()) %></a></td>
           <!--td class="row<%= rowid %>" valign=center><%= thisOpp.getAccountName() %></td-->
           <td width="55" class="row<%= rowid %>">$<%= ((thisOpp.getGuessCurrency(1000))) %>K</td>
           <!--td class="row<%= rowid %>" valign=center align="right" width=25><%= thisOpp.getCloseProbValue() %></td>

@@ -43,7 +43,7 @@
 <a href="/Accounts.do?command=View">View Accounts</a> >
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Documents</a> >
-Upload Document Version<br>
+Upload New Version<br>
 <hr color="#BFBFBB" noshade>
 
 <a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;
@@ -89,9 +89,8 @@ Upload Document Version<br>
        <strong><%= FileItem.getVersion() %></strong><br>
       New Version: <br>
        &nbsp;&nbsp;
-       <input type="radio" value="<%= FileItem.getVersionNextMajor() %>" checked name="versionId">Major Update <%= FileItem.getVersionNextMajor() %>
-       <input type="radio" value="<%= FileItem.getVersionNextMinor() %>" name="versionId">Minor Update <%= FileItem.getVersionNextMinor() %>
-       <input type="radio" value="<%= FileItem.getVersionNextChanges() %>" name="versionId">Changes <%= FileItem.getVersionNextChanges() %>
+       <strong><%= FileItem.getVersionNextMajor() %></strong><br>
+       <input type="hidden" value="<%= FileItem.getVersionNextMajor() %>" name="versionId">
     </td>
   </tr>
 	<tr class="containerBody">

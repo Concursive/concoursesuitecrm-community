@@ -33,6 +33,14 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
+
+<a href="/Leads.do">Pipeline Management</a> > 
+<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
+<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Documents</a> > 
+Modify Document<br>
+<hr color="#BFBFBB" noshade>
+
 <a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <form method="post" name="inputForm" action="LeadsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">

@@ -21,6 +21,10 @@ import com.darkhorseventures.utils.DatabaseUtils;
  */
 public class OpportunityList extends Vector {
 
+  public static final int TRUE = 1;
+  public static final int FALSE = 0;
+  private int includeEnabled = 1;
+
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
   private int contactId = -1;
@@ -116,7 +120,13 @@ public class OpportunityList extends Vector {
   public void setAccountOwnerIdRange(String accountOwnerIdRange) {
     this.accountOwnerIdRange = accountOwnerIdRange;
   }
-
+  
+  public int getIncludeEnabled() {
+	return includeEnabled;
+  }
+  public void setIncludeEnabled(int includeEnabled) {
+	this.includeEnabled = includeEnabled;
+  }
 
   /**
    *  Sets the OwnerIdRange attribute of the OpportunityList object
@@ -480,6 +490,11 @@ public class OpportunityList extends Vector {
     if (units != null) {
       sqlFilter.append("AND units = ? ");
     }
+    
+    if (includeEnabled == TRUE || includeEnabled == FALSE) {
+      sqlFilter.append("AND x.enabled = ? ");
+    }
+	
   }
 
 
@@ -536,6 +551,12 @@ public class OpportunityList extends Vector {
 
     if (units != null) {
       pst.setString(++i, units);
+    }
+    
+    if (includeEnabled == TRUE) {
+      pst.setBoolean(++i, true);
+    } else if (includeEnabled == FALSE) {
+      pst.setBoolean(++i, false);
     }
 
     return i;

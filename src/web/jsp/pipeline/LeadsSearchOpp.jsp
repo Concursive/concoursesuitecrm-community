@@ -1,6 +1,8 @@
 <body onLoad="javascript:document.forms[0].searchDescription.focus();">
 <form name="searchLeads" action="/Leads.do?command=ViewOpp" method="post">
-<br>
+<a href="/Leads.do">Pipeline Management</a> > 
+Search Opportunities<br>
+<hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 
   <tr bgcolor="#DEE0FA">

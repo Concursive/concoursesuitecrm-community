@@ -6,6 +6,14 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="addCall" action="/LeadsCalls.do?id=<%= CallDetails.getId() %>&oppId=<%= OpportunityDetails.getId() %>" method="post">
+
+<a href="/Leads.do">Pipeline Management</a> > 
+<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
+<a href="/LeadsCalls.do?command=View&oppId=<%=OpportunityDetails.getId()%>">Calls</a> >
+Call Details<br>
+<hr color="#BFBFBB" noshade>
+
 <a href="/Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">

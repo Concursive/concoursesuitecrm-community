@@ -11,6 +11,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.controller.*;
 import com.darkhorseventures.utils.*;
+import com.zeroio.iteam.base.FileItemList;
 
 /**
  *  Description of the Class
@@ -62,6 +63,8 @@ public class Opportunity extends GenericBean {
   private String modifiedByName = "";
   
   private boolean accountEnabled = true;
+  private boolean callsDelete = false;
+  private boolean documentDelete = false;
 
 
   /**
@@ -200,6 +203,11 @@ public void setAccountEnabled(boolean accountEnabled) {
   public void setStageDate(java.sql.Date tmp) {
     this.stageDate = tmp;
   }
+  
+public boolean getCallsDelete() { return callsDelete; }
+public boolean getDocumentDelete() { return documentDelete; }
+public void setCallsDelete(boolean tmp) { this.callsDelete = tmp; }
+public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
 
 
   /**
@@ -1065,7 +1073,7 @@ public void setAccountEnabled(boolean accountEnabled) {
 	String amountOut = "";
 	
 	if (tempValue < 1) {
-		amountOut = "< 1";
+		amountOut = " <1";
         } else {
 		amountOut = numberFormatter.format(guess);
 	}
@@ -1350,6 +1358,45 @@ public void setAccountEnabled(boolean accountEnabled) {
       return false;
     }
   }
+  
+  public boolean delete(Connection db, ActionContext context, String baseFilePath) throws SQLException {
+    if (delete(db, baseFilePath)) {
+      invalidateUserData(context);
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  public boolean disable(Connection db) throws SQLException {
+	if (this.getId() == -1) {
+		throw new SQLException("Opportunity ID not specified");
+	}
+	
+	PreparedStatement pst = null;
+	StringBuffer sql = new StringBuffer();
+	boolean success = false;
+	
+	sql.append(
+		"UPDATE opportunity set enabled = " + DatabaseUtils.getFalse(db) + " " +
+		"WHERE opp_id = ? ");
+
+	sql.append("AND modified = ? ");
+
+	int i = 0;
+	pst = db.prepareStatement(sql.toString());
+	pst.setInt(++i, id);
+	
+	pst.setTimestamp(++i, this.getModified());
+	
+	int resultCount = pst.executeUpdate();
+	pst.close();
+	
+	if (resultCount == 1) 
+		success = true;
+	
+	return success;
+  }
 
 
   /**
@@ -1525,13 +1572,60 @@ public void setAccountEnabled(boolean accountEnabled) {
     if (this.getId() == -1) {
       throw new SQLException("The Opportunity could not be found.");
     }
+    
+    Statement st = null;
 
-    Statement st = db.createStatement();
     try {
       db.setAutoCommit(false);
+
+      st = db.createStatement();
       st.executeUpdate(
-        "DELETE FROM opportunity " +
-        "WHERE opp_id = " + this.getId());
+          "DELETE FROM opportunity WHERE opp_id = " + this.getId());
+      st.close();
+      
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+    } finally {
+      db.setAutoCommit(true);
+      st.close();
+    }
+    return true;
+  }
+  
+  protected boolean delete(Connection db, String baseFilePath) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("The Opportunity could not be found.");
+    }
+    
+    Statement st = null;
+
+    try {
+	    
+      db.setAutoCommit(false);
+
+      if (callsDelete) {
+	      CallList callList = new CallList();
+	      callList.setOppId(this.getId());
+	      callList.buildList(db);
+	      callList.delete(db);
+	      callList = null;
+      }
+
+      if (documentDelete) {
+	      FileItemList fileList = new FileItemList();
+	      fileList.setLinkModuleId(Constants.PIPELINE);
+	      fileList.setLinkItemId(this.getId());
+	      fileList.buildList(db);
+	      fileList.delete(db, baseFilePath);
+	      fileList = null;
+      }
+
+      st = db.createStatement();
+      st.executeUpdate(
+          "DELETE FROM opportunity WHERE opp_id = " + this.getId());
+      st.close();
+      
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1737,6 +1831,46 @@ public void setAccountEnabled(boolean accountEnabled) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
+  }
+  
+    public HashMap canDelete(Connection db)  throws SQLException {
+	  StringBuffer sqlCount = new StringBuffer();
+	  ResultSet rs = null;
+	  PreparedStatement pst = null;
+	  HashMap dependencies = new HashMap();
+	  
+	  dependencies.put(new String("calls"), new Integer(0));
+	  dependencies.put(new String("documents"), new Integer(0));
+	  
+	  //get number of calls
+	  sqlCount.append(
+	  	"SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = " + this.getId() + " ");
+	
+	  pst = db.prepareStatement(sqlCount.toString());
+	  rs = pst.executeQuery();
+	  if (rs.next()) {
+		  dependencies.put(new String("calls"), new Integer(rs.getInt("callcount")));
+          }
+	  
+	  rs.close();
+	  pst.close();
+	  
+	  sqlCount = new StringBuffer();
+	  
+	  //get number of docs
+	  sqlCount.append(
+	  	"SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = " + Constants.PIPELINE + " and pf.link_item_id = " + this.getId() + " ");
+	
+	  pst = db.prepareStatement(sqlCount.toString());
+	  rs = pst.executeQuery();
+	  if (rs.next()) {
+		  dependencies.put(new String("documents"), new Integer(rs.getInt("documentcount")));
+          }
+	  
+	  rs.close();
+	  pst.close();
+	  
+	  return dependencies;
   }
 
 }

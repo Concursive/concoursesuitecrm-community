@@ -248,6 +248,8 @@
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
     <forward name="DeleteReportOK" resource="/Leads.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/Leads.do?command=Reports"/>
+    <forward name="ConfirmDeleteOK" resource="/leads_confirmdelete.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="LeadsCalls" class="com.darkhorseventures.cfsmodule.LeadsCalls">
     <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>

@@ -4,6 +4,15 @@
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+
+<a href="/Leads.do">Pipeline Management</a> > 
+<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
+<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Documents</a> > 
+Document Details<br>
+<hr color="#BFBFBB" noshade>
+
+
 <a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">

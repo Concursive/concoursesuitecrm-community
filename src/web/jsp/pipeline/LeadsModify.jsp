@@ -41,6 +41,20 @@
     }
 </SCRIPT>
 <form name="updateOpp" action="/Leads.do?command=UpdateOpp&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+
+<a href="/Leads.do">Pipeline Management</a> > 
+<% if (request.getParameter("return") == null) { %>
+	<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+	<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
+<%} else {%>
+	<% if (request.getParameter("return").equals("list")) { %>
+		<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+	<%}%>
+<%}%>
+Modify Opportunity<br>
+<hr color="#BFBFBB" noshade>
+
+
 <a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 
 

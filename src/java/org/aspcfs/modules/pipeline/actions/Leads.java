@@ -49,19 +49,16 @@ public final class Leads extends CFSModule {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
-   */
   public String executeCommandDefault(ActionContext context) {
+    /**
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
     context.getRequest().setAttribute("IncludePage", includePage);
     addModuleBean(context, module, module);
     return ("IncludeOK");
+    */
+    
+    return executeCommandDashboard(context);
   }
 
 
@@ -448,7 +445,20 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       newOpp = new Opportunity(db, context.getRequest().getParameter("id"));
-      recordDeleted = newOpp.delete(db, context);
+      
+      if (context.getRequest().getParameter("action") != null) {
+	      
+	      if ( ((String)context.getRequest().getParameter("action")).equals("delete") ) {
+		      //TODO: these may have different options later
+		      newOpp.setCallsDelete(true);
+		      newOpp.setDocumentDelete(true);
+	      	      recordDeleted = newOpp.delete(db, context, this.getPath(context, "leads", newOpp.getId()));
+	      } else if ( ((String)context.getRequest().getParameter("action")).equals("disable") ) {
+		      recordDeleted = newOpp.disable(db);
+	      }
+      }
+      
+      //recordDeleted = newOpp.delete(db, context);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -459,13 +469,16 @@ public final class Leads extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         deleteRecentItem(context, newOpp);
-        return ("OppDeleteOK");
+        //return ("OppDeleteOK");
+	return ("PopupCloseOK");
       } else {
         processErrors(context, newOpp.getErrors());
-        return (executeCommandViewOpp(context));
+        //return (executeCommandViewOpp(context));
+	return ("PopupCloseOK");
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
+      System.out.println(errorMessage);
       return ("SystemError");
     }
   }
@@ -912,6 +925,43 @@ public final class Leads extends CFSModule {
       return ("SystemError");
     }
 
+  }
+  
+  public String executeCommandConfirmDelete(ActionContext context) {
+
+	if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
+		return ("PermissionError");
+	}
+
+    Exception errorMessage = null;
+    boolean recordDeleted = false;
+    Opportunity thisOpportunity = null;
+    HashMap tempMap = null;
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      thisOpportunity = new Opportunity(db, context.getRequest().getParameter("id"));
+      tempMap = thisOpportunity.canDelete(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    context.getRequest().setAttribute("OpportunityDetails", thisOpportunity);
+    context.getRequest().setAttribute("DeleteDetails", tempMap);
+
+    addModuleBean(context, "Opportunities", "Confirm Delete");
+    
+    if (errorMessage == null) {
+        return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      System.out.println(errorMessage);
+      return ("SystemError");
+    }
+    
   }
 
 

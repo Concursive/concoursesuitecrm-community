@@ -4,6 +4,18 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="oppdet" action="/Leads.do?auto-populate=true&id=<%=OpportunityDetails.getId()%>&orgId=<%= OpportunityDetails.getAccountLink() %>&contactId=<%= OpportunityDetails.getContactLink() %>" method="post">
+
+<a href="/Leads.do">Pipeline Management</a> > 
+<% if (request.getParameter("return") == null) { %>
+	<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+<%} else {%>
+	<% if (request.getParameter("return").equals("dashboard")) { %>
+		<a href="/Leads.do?command=Dashboard">Dashboard</a> >
+	<%}%>
+<%}%>
+Opportunity Details<br>
+<hr color="#BFBFBB" noshade>
+
 <a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

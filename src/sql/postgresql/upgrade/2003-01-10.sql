@@ -20,3 +20,6 @@ UPDATE cfsinbox_messagelink
         SET    sent_to = contact.contact_id
         FROM   contact
         WHERE  cfsinbox_messagelink.sent_to = contact.user_id; 
+/*8/19/2002*/
+alter table opportunity add column enabled boolean default 't';
+update opportunity set enabled = 't';

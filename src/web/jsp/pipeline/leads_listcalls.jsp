@@ -14,6 +14,13 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="addCall" action="/LeadsCalls.do?command=Insert&auto-populate=true" method="post">
+
+<a href="/Leads.do">Pipeline Management</a> > 
+<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+<a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
+Calls<br>
+<hr color="#BFBFBB" noshade>
+
 <a href="/Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -154,7 +161,7 @@
     <tr class="containerBody">
       <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete">
       <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="pipeline-opportunities-calls-edit"><a href="/LeadsCalls.do?command=Modify&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId()%>">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-calls-delete"><a href="javascript:confirmDelete('/LeadsCalls.do?command=Delete&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId()%>');">Del</a></dhv:permission>
+          <dhv:permission name="pipeline-opportunities-calls-edit"><a href="/LeadsCalls.do?command=Modify&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-calls-delete"><a href="javascript:confirmDelete('/LeadsCalls.do?command=Delete&id=<%= thisCall.getId() %>&oppId=<%= OpportunityDetails.getId()%>');">Del</a></dhv:permission>
       </td>
       </dhv:permission>
       
