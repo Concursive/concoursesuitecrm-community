@@ -132,7 +132,7 @@ public final class Admin extends CFSModule {
 
 				//not there, disable it, leave it
 				if (newList.getSelectedValue(thisElement.getCode()).equals("") || 
-            newList.getSelectedValue(thisElement.getCode()) == null) {
+            				newList.getSelectedValue(thisElement.getCode()) == null) {
 					thisElement.disableElement(db, tblName);
 				}
 			}

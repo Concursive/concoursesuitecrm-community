@@ -46,7 +46,9 @@ public final class Search extends CFSModule {
       //contactList.setFirstName(searchCriteria);
       //employeeList.setFirstName(searchCriteria);
       
+      contactList.setPersonalId(getUserId(context));
       contactList.setSearchText(searchCriteria);
+      employeeList.setPersonalId(getUserId(context));
       employeeList.setSearchText(searchCriteria);
       
       organizationList.setName(searchCriteria);

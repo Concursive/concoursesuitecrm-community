@@ -112,6 +112,7 @@ public String executeCommandModify(ActionContext context) {
 		context.getRequest().setAttribute("SubList1", subList1);
 		
 		ContactList contactList = new ContactList();
+		contactList.setPersonalId(getUserId(context));
 		//contactList.setTypeId(Integer.parseInt(typeId));
 		contactList.setBuildDetails(false);
 		contactList.setOrgId(newTic.getOrgId());
@@ -579,6 +580,7 @@ public String executeCommandDetails(ActionContext context) {
 		
 		if (newTic != null && newTic.getOrgId() != -1) {
 			contactList.setBuildDetails(false);
+			contactList.setPersonalId(getUserId(context));
 			contactList.setOrgId(newTic.getOrgId());
 			contactList.buildList(db);
 		}

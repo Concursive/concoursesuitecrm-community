@@ -45,6 +45,7 @@ public final class LeadsCalls extends CFSModule {
       context.getRequest().setAttribute("OpportunityDetails", thisOpp);
       
       	ContactList contactList = new ContactList();
+	contactList.setPersonalId(getUserId(context));
 	//contactList.setTypeId(Integer.parseInt(typeId));
 	contactList.setBuildDetails(false);
 	contactList.setOrgId(thisOpp.getAccountLink());

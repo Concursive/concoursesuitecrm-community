@@ -54,7 +54,10 @@ public class ContactList extends Vector {
 
 	private SearchCriteriaList scl = null;
 	private boolean showEmployeeContacts = false;
+
 	private String searchText = "";
+
+	private int personalId = -1;
 
 
 	/**
@@ -75,12 +78,17 @@ public class ContactList extends Vector {
 		this.companyRange = companyRange;
 	}
 
-public boolean getShowEmployeeContacts() {
-	return showEmployeeContacts;
-}
-public void setShowEmployeeContacts(boolean showEmployeeContacts) {
-	this.showEmployeeContacts = showEmployeeContacts;
-}
+
+	/**
+	 *  Sets the ShowEmployeeContacts attribute of the ContactList object
+	 *
+	 *@param  showEmployeeContacts  The new ShowEmployeeContacts value
+	 *@since
+	 */
+	public void setShowEmployeeContacts(boolean showEmployeeContacts) {
+		this.showEmployeeContacts = showEmployeeContacts;
+	}
+
 
 	/**
 	 *  Sets the FirstName attribute of the ContactList object
@@ -92,12 +100,17 @@ public void setShowEmployeeContacts(boolean showEmployeeContacts) {
 		this.firstName = firstName;
 	}
 
-public String getSearchText() {
-	return searchText;
-}
-public void setSearchText(String searchText) {
-	this.searchText = searchText;
-}
+
+	/**
+	 *  Sets the SearchText attribute of the ContactList object
+	 *
+	 *@param  searchText  The new SearchText value
+	 *@since
+	 */
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
+	}
+
 
 	/**
 	 *  Sets the Company attribute of the ContactList object
@@ -129,6 +142,17 @@ public void setSearchText(String searchText) {
 	 */
 	public void setOwner(int owner) {
 		this.owner = owner;
+	}
+
+
+	/**
+	 *  Sets the PersonalId attribute of the ContactList object
+	 *
+	 *@param  personalId  The new PersonalId value
+	 *@since
+	 */
+	public void setPersonalId(int personalId) {
+		this.personalId = personalId;
 	}
 
 
@@ -333,10 +357,43 @@ public void setSearchText(String searchText) {
 		if (outerHash[6].containsKey("=") == true) {
 			this.cityRange = outerHash[6].get(new String("=")).toString();
 		}
-		
+
 		if (outerHash[7].containsKey("=") == true) {
 			this.typeIdRange = outerHash[7].get(new String("=")).toString();
 		}
+	}
+
+
+	/**
+	 *  Gets the PersonalId attribute of the ContactList object
+	 *
+	 *@return    The PersonalId value
+	 *@since
+	 */
+	public int getPersonalId() {
+		return personalId;
+	}
+
+
+	/**
+	 *  Gets the ShowEmployeeContacts attribute of the ContactList object
+	 *
+	 *@return    The ShowEmployeeContacts value
+	 *@since
+	 */
+	public boolean getShowEmployeeContacts() {
+		return showEmployeeContacts;
+	}
+
+
+	/**
+	 *  Gets the SearchText attribute of the ContactList object
+	 *
+	 *@return    The SearchText value
+	 *@since
+	 */
+	public String getSearchText() {
+		return searchText;
 	}
 
 
@@ -818,23 +875,23 @@ public void setSearchText(String searchText) {
 	 *@since             1.3
 	 */
 	private void createFilter(StringBuffer sqlFilter) {
-		if ( searchText == null || (searchText.equals("")) ) {
+		if (searchText == null || (searchText.equals(""))) {
 			if (sqlFilter == null) {
 				sqlFilter = new StringBuffer();
 			}
-	
+
 			if (orgId != -1) {
 				sqlFilter.append("AND c.org_id = ? ");
 			}
-	
+
 			if (owner != -1) {
 				sqlFilter.append("AND c.owner = ? ");
 			}
-	
+
 			if (typeId != -1) {
 				sqlFilter.append("AND c.type_id = ? ");
 			}
-	
+
 			if (firstName != null) {
 				if (firstName.indexOf("%") >= 0) {
 					sqlFilter.append("AND lower(c.namefirst) like lower(?) ");
@@ -843,7 +900,7 @@ public void setSearchText(String searchText) {
 					sqlFilter.append("AND lower(c.namefirst) = lower(?) ");
 				}
 			}
-	
+
 			if (middleName != null) {
 				if (middleName.indexOf("%") >= 0) {
 					sqlFilter.append("AND lower(c.namemiddle) like lower(?) ");
@@ -852,7 +909,7 @@ public void setSearchText(String searchText) {
 					sqlFilter.append("AND lower(c.namemiddle) = lower(?) ");
 				}
 			}
-	
+
 			if (lastName != null) {
 				if (lastName.indexOf("%") >= 0) {
 					sqlFilter.append("AND lower(c.namelast) like lower(?) ");
@@ -861,7 +918,7 @@ public void setSearchText(String searchText) {
 					sqlFilter.append("AND lower(c.namelast) = lower(?) ");
 				}
 			}
-	
+
 			if (title != null) {
 				if (title.indexOf("%") >= 0) {
 					sqlFilter.append("AND lower(c.title) like lower(?) ");
@@ -870,7 +927,7 @@ public void setSearchText(String searchText) {
 					sqlFilter.append("AND lower(c.title) = lower(?) ");
 				}
 			}
-	
+
 			if (company != null) {
 				if (company.indexOf("%") >= 0) {
 					sqlFilter.append("AND lower(c.company) like lower(?) ");
@@ -879,55 +936,59 @@ public void setSearchText(String searchText) {
 					sqlFilter.append("AND lower(c.company) = lower(?) ");
 				}
 			}
-	
+
 			if (companyRange != null) {
 				sqlFilter.append("AND (lower(o.name) in (" + companyRange + ") OR lower(c.company) in (" + companyRange + "))");
 			}
-	
+
 			if (nameFirstRange != null) {
 				sqlFilter.append("AND lower(c.namefirst) in (" + nameFirstRange + ") ");
 			}
-	
+
 			if (nameLastRange != null) {
 				sqlFilter.append("AND lower(c.namelast) in (" + nameLastRange + ") ");
 			}
-			
+
 			if (typeIdRange != null) {
 				sqlFilter.append("AND c.type_id in (" + typeIdRange + ") ");
 			}
-	
+
 			if (zipRange != null) {
 				sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode in (" + zipRange + ")) ");
 			}
-	
+
 			if (areaCodeRange != null) {
 				sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,0,4) in (" + areaCodeRange + ")) ");
 			}
-	
+
 			if (cityRange != null) {
 				sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and lower(city) in (" + cityRange + ")) ");
 			}
-	
+
 			if (dateBefore != null) {
 				sqlFilter.append("AND (c.entered < " + dateBefore + ") ");
 			}
-	
+
 			if (dateAfter != null) {
 				sqlFilter.append("AND (c.entered > " + dateAfter + ") ");
 			}
-	
+
 			if (dateOnOrBefore != null) {
 				sqlFilter.append("AND (c.entered <= " + dateOnOrBefore + ") ");
 			}
-	
+
 			if (dateOnOrAfter != null) {
 				sqlFilter.append("AND (c.entered >= " + dateOnOrAfter + ") ");
 			}
-	
+
 			if (ownerIdRange != null) {
 				sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
 			}
-	
+			
+			if (personalId != -1) {
+				sqlFilter.append("AND (c.type_id != 2 OR (c.type_id = 2 AND c.owner = ?) ) ");
+			}
+
 			if (ignoreTypeIdList.size() > 0) {
 				Iterator iList = ignoreTypeIdList.iterator();
 				sqlFilter.append("AND c.type_id not in (");
@@ -940,17 +1001,23 @@ public void setSearchText(String searchText) {
 				}
 				sqlFilter.append(") ");
 			}
-		} else {
+		}
+		else {
 			if (typeId != -1) {
 				sqlFilter.append("AND c.type_id = ? ");
 			}
-			
+
 			if (ownerIdRange != null) {
 				sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
 			}
-			
+
 			sqlFilter.append("AND ( lower(c.namelast) like lower(?) OR lower(c.namefirst) like lower(?) OR lower(c.company) like lower(?) ) ");
+			
+			if (personalId != -1) {
+				sqlFilter.append("AND (c.type_id != 2 OR (c.type_id = 2 AND c.owner = ?) ) ");
+			}
 		}
+
 	}
 
 
@@ -965,41 +1032,45 @@ public void setSearchText(String searchText) {
 	 */
 	private int prepareFilter(PreparedStatement pst) throws SQLException {
 		int i = 0;
-		
-		if ( searchText == null || (searchText.equals("")) ) {
-		
+
+		if (searchText == null || (searchText.equals(""))) {
+
 			if (orgId != -1) {
 				pst.setInt(++i, orgId);
 			}
-	
+
 			if (owner != -1) {
 				pst.setInt(++i, owner);
 			}
-	
+
 			if (typeId != -1) {
 				pst.setInt(++i, typeId);
 			}
-	
+
 			if (firstName != null) {
 				pst.setString(++i, firstName);
 			}
-	
+
 			if (middleName != null) {
 				pst.setString(++i, middleName);
 			}
-	
+
 			if (lastName != null) {
 				pst.setString(++i, lastName);
 			}
-			
+
 			if (title != null) {
 				pst.setString(++i, title);
 			}
-	
+
 			if (company != null) {
 				pst.setString(++i, company);
 			}
-	
+			
+			if (personalId != -1) {
+				pst.setInt(++i, personalId);
+			}
+
 			if (ignoreTypeIdList.size() > 0) {
 				Iterator iList = ignoreTypeIdList.iterator();
 				while (iList.hasNext()) {
@@ -1007,14 +1078,19 @@ public void setSearchText(String searchText) {
 					pst.setInt(++i, thisType);
 				}
 			}
-		} else {
+		}
+		else {
 			if (typeId != -1) {
 				pst.setInt(++i, typeId);
 			}
+
+			pst.setString(++i, searchText);
+			pst.setString(++i, searchText);
+			pst.setString(++i, searchText);
 			
-			pst.setString(++i, searchText);
-			pst.setString(++i, searchText);
-			pst.setString(++i, searchText);
+			if (personalId != -1) {
+				pst.setInt(++i, personalId);
+			}
 		}
 
 		//System.out.println(pst.toString());

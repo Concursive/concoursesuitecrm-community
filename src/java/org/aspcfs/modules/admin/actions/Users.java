@@ -261,6 +261,7 @@ public final class Users extends CFSModule {
 			context.getRequest().setAttribute("ContactTypeList", contactTypeList);
 
 			ContactList contactList = new ContactList();
+			contactList.setPersonalId(getUserId(context));
 			contactList.setTypeId(Integer.parseInt(typeId));
 			contactList.setCheckUserAccess(true);
 			contactList.setBuildDetails(false);

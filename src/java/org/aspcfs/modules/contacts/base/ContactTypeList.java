@@ -16,6 +16,7 @@ import com.darkhorseventures.webutils.LookupList;
  */
 public class ContactTypeList extends Vector {
 	private boolean showEmployees = false;
+	private boolean showPersonal = false;
 	private String jsEvent = "";
 	private int defaultKey = -1;
 	private int size = 1;
@@ -53,6 +54,12 @@ public class ContactTypeList extends Vector {
 	public void setSize(int size) {
 		this.size = size;
 	}
+public boolean getShowPersonal() {
+	return showPersonal;
+}
+public void setShowPersonal(boolean showPersonal) {
+	this.showPersonal = showPersonal;
+}
 
 
 	/**
@@ -238,11 +245,13 @@ public class ContactTypeList extends Vector {
 		ResultSet rs = null;
 
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT * FROM lookup_contact_types ");
+		sql.append("SELECT * FROM lookup_contact_types WHERE code > -1 ");
 				//"WHERE enabled = true ");
 		if (!showEmployees) {
-			sql.append("WHERE code NOT IN (" + EMPLOYEE_TYPE + ") ");
+			sql.append("AND code NOT IN (" + EMPLOYEE_TYPE + ") ");
 			//sql.append("AND code NOT IN (" + EMPLOYEE_TYPE + ") ");
+		} if (!showPersonal) {
+			sql.append("AND code != 2 ");
 		}
 		
 		sql.append("ORDER BY level, description ");

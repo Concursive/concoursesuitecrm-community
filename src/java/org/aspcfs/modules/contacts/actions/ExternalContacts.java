@@ -73,6 +73,7 @@ public final class ExternalContacts extends CFSModule {
 
       contactList.setPagedListInfo(externalContactsInfo);
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+      contactList.setPersonalId(this.getUserId(context));
       
       if ("all".equals(externalContactsInfo.getListView())) {
         contactList.setOwnerIdRange(this.getUserRange(context));
@@ -350,8 +351,11 @@ public final class ExternalContacts extends CFSModule {
    *@since                    1.3
    */
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
-    ContactTypeList contactTypeList = new ContactTypeList(db);
+    ContactTypeList contactTypeList = new ContactTypeList();
+    contactTypeList.setShowPersonal(true);
+    contactTypeList.buildList(db);
     contactTypeList.addItem(0, "--None--");
+    
     context.getRequest().setAttribute("ContactTypeList", contactTypeList);
 
     LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");
