@@ -32,7 +32,7 @@
 %>
   <tr>
     <td align=right nowrap><%=count%></td>
-    <td><%= toHtml(thisItem.getDescription()) %></td>
+    <td><a href="CampaignManager.do?command=ShowItemDetails&itemId=<%= thisItem.getId() %>"><%= toHtml(thisItem.getDescription()) %></a></td>
     <td width="24" align="center" nowrap>
       <%= toHtml(thisItem.getTotalResponse() + "") %>
     </td>
