@@ -548,7 +548,7 @@
       <sysproperty key="driver" value="${SITE.DRIVER}"/>
       <sysproperty key="url" value="${SITE.URL}${DATABASE.NAME}"/>
       <sysproperty key="user" value="${SITE.USER}"/>
-      <sysproperty key="password" value="${SITE.PASSWORD}"/>
+      <sysproperty key="pass" value="${SITE.PASSWORD}"/>
       <arg value="${src.sql.dir}${fs}init${fs}permissions-dataimport.xml"/>
     </java>
   </target>
