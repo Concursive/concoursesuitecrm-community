@@ -3,7 +3,7 @@
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="details" action="/TroubleTickets.do?command=Modify&auto-populate=true" method="post">
-<a href="TroubleTickets.do?command=Home">Back to Ticket List</a>
+<a href="TroubleTickets.do?command=Home">Back to Ticket List</a><br>&nbsp;
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
@@ -25,10 +25,10 @@
 		<td colspan=2 bgColor="white">
 		
 		<% if (TicketDetails.getClosed() != null) { %>
-		        <input type=button value="Reopen">
+		        <dhv:permission name="tickets-tickets-edit"><input type=button value="Reopen"></dhv:permission>
 		<%} else {%>
-		<input type=submit value="Modfiy">
-		<input type="submit" value="Delete" onClick="javascript:this.form.action='/TroubleTickets.do?command=Delete&id=<%= TicketDetails.getId() %>'">
+		<dhv:permission name="tickets-tickets-edit"><input type=submit value="Modfiy"></dhv:permission>
+		<dhv:permission name="tickets-tickets-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/TroubleTickets.do?command=Delete&id=<%= TicketDetails.getId()%>'"></dhv:permission>
 		<%}%>
 		
 		</td>
@@ -234,10 +234,10 @@
 		<tr>
 		<td colspan=4 bgColor="white">
 		<% if (TicketDetails.getClosed() != null) { %>
-		        <input type=button value="Reopen">
+		        <dhv:permission name="tickets-tickets-edit"><input type=button value="Reopen"></dhv:permission>
 		<%} else {%>
-		<input type=submit value="Modify">
-		<input type="submit" value="Delete" onClick="javascript:this.form.action='/TroubleTickets.do?command=Delete&id=<%= TicketDetails.getId() %>'">
+		<dhv:permission name="tickets-tickets-edit"><input type=submit value="Modify"></dhv:permission>
+		<dhv:permission name="tickets-tickets-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/TroubleTickets.do?command=Delete&id=<%= TicketDetails.getId()%>'"></dhv:permission>
 		<%}%>
 		</td>
 		</tr>
