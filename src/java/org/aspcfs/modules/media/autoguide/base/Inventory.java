@@ -93,11 +93,14 @@ public class Inventory {
         "model.modified, model.modifiedby, " +
         "make.make_id, make.make_name, " +
         "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
-        "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
+        "make.modified AS make_modified, make.modifiedby AS make_modifiedby, " +
+        "files.item_id AS picture_id " +
         "FROM autoguide_inventory i " +
         " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
         " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
         " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
+        " LEFT JOIN project_files files ON " +
+        "   (i.inventory_id = files.link_item_id AND files.link_module_id = " + Constants.AUTOGUIDE + ") " +
         "WHERE i.inventory_id = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, inventoryId);
@@ -865,7 +868,7 @@ public class Inventory {
    *@return    Description of the Returned Value
    */
   public boolean hasPicture() {
-    return (picture != null);
+    return (picture != null || hasPictureId());
   }
 
 
@@ -1229,6 +1232,10 @@ public class Inventory {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     vehicle = new Vehicle(rs);
+    Integer tmpPictureId = new Integer(rs.getInt("picture_id"));
+    if (tmpPictureId != null && tmpPictureId.intValue() > 0) {
+      pictureId = tmpPictureId.intValue();
+    }
   }
 }
 

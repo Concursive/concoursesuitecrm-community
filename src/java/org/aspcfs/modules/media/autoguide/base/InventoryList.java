@@ -371,12 +371,15 @@ public class InventoryList extends ArrayList {
         "model.modified, model.modifiedby, " +
         "make.make_id, make.make_name, " +
         "make.entered AS make_entered, make.enteredby AS make_enteredby, " +
-        "make.modified AS make_modified, make.modifiedby AS make_modifiedby " +
+        "make.modified AS make_modified, make.modifiedby AS make_modifiedby, " +
+        "files.item_id AS picture_id " +
         "FROM autoguide_inventory i " +
         " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
         " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
         " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
         " LEFT JOIN organization o ON i.account_id = o.org_id " +
+        " LEFT JOIN project_files files ON " +
+        "   (i.inventory_id = files.link_item_id AND files.link_module_id = " + Constants.AUTOGUIDE + ") " +
         "WHERE i.inventory_id > -1 " +
         "AND i.account_id IN (SELECT org_id FROM organization) ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());

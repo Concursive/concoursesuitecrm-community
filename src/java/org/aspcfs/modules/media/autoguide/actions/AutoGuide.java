@@ -62,7 +62,7 @@ public final class AutoGuide extends CFSModule {
       populateMakeSelect(context, db, null, "All Makes");
       inventoryList.setPagedListInfo(autoGuideDirectoryInfo);
       inventoryList.setBuildOrganizationInfo(true);
-      inventoryList.setBuildPictureId(true);
+      //inventoryList.setBuildPictureId(true);
       inventoryList.setShowSold(autoGuideDirectoryInfo.getFilterKey("listFilter1"));
       inventoryList.setShowIncompleteAdRunsOnly(true);
       inventoryList.setShowIncompleteInventoryAds(autoGuideDirectoryInfo.getFilterKey("listFilter2"));
@@ -270,7 +270,7 @@ public final class AutoGuide extends CFSModule {
       inventoryList.setPagedListInfo(autoGuideAccountInfo);
       inventoryList.setOrgId(orgId);
       inventoryList.setBuildOrganizationInfo(false);
-      inventoryList.setBuildPictureId(true);
+      //inventoryList.setBuildPictureId(true);
       inventoryList.setShowSold(autoGuideAccountInfo.getFilterKey("listFilter1"));
       inventoryList.buildList(db);
       context.getRequest().setAttribute("InventoryList", inventoryList);
