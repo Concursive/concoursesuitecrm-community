@@ -12,7 +12,6 @@ import java.sql.*;
  *@author     Wesley_S_Gillette
  *@created    November 12, 2001
  *@version    $Id: SearchCriteriaElement.java,v 1.1 2001/11/13 20:36:35
- *      
  */
 public class SearchCriteriaElement {
 
@@ -39,8 +38,8 @@ public class SearchCriteriaElement {
 
 
   /**
-   *  SearchCriteriaElement constructor that parses a delimited string
-   *  and populates the object based on that
+   *  SearchCriteriaElement constructor that parses a delimited string and
+   *  populates the object based on that
    *
    *@param  elementText  delimited string to be parsed
    *@since               1.1
@@ -364,7 +363,8 @@ public class SearchCriteriaElement {
   /**
    *  Inserts this SearchCriteriaElement into the database
    *
-   *@param  listid            unique ID of the SearchCriteriaList that contains this element
+   *@param  listid            unique ID of the SearchCriteriaList that contains
+   *      this element
    *@param  db                db connection
    *@exception  SQLException  SQL Exception
    *@since
@@ -393,13 +393,10 @@ public class SearchCriteriaElement {
       pst.close();
 
       db.commit();
-    }
-    catch (SQLException e) {
+    } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    }
-    finally {
+    } finally {
       db.setAutoCommit(true);
     }
   }

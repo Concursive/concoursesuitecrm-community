@@ -661,7 +661,6 @@ public class Message extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -692,11 +691,10 @@ public class Message extends GenericBean {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 
@@ -746,15 +744,19 @@ public class Message extends GenericBean {
         db.setAutoCommit(false);
       }
       st.executeUpdate("DELETE FROM message WHERE id = " + this.getId());
+      st.close();
       if (commit) {
         db.commit();
       }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.toString());
     } finally {
-      db.setAutoCommit(true);
-      st.close();
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -797,7 +799,6 @@ public class Message extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);

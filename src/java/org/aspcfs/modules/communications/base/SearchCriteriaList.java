@@ -94,7 +94,7 @@ public class SearchCriteriaList extends HashMap {
    *  delimited by a "^", each element is delimited by a "|", and stores the
    *  constructed group.
    *
-   *@param  searchCriteriaText delimited String to be parsed
+   *@param  searchCriteriaText  delimited String to be parsed
    *@since                      1.1
    */
   public SearchCriteriaList(String searchCriteriaText) {
@@ -111,8 +111,7 @@ public class SearchCriteriaList extends HashMap {
 
       if (this.containsKey(thisKey)) {
         thisGroup = (SearchCriteriaGroup) this.get(thisKey);
-      }
-      else {
+      } else {
         thisGroup = new SearchCriteriaGroup();
         thisGroup.getGroupField().setId(thisElement.getFieldId());
         this.put(thisKey, thisGroup);
@@ -429,8 +428,7 @@ public class SearchCriteriaList extends HashMap {
   public String getEnteredString() {
     try {
       return DateFormat.getDateInstance(DateFormat.SHORT).format(entered);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return ("");
   }
@@ -445,8 +443,7 @@ public class SearchCriteriaList extends HashMap {
   public String getEnteredDateTimeString() {
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return ("");
   }
@@ -461,8 +458,7 @@ public class SearchCriteriaList extends HashMap {
   public String getModifiedString() {
     try {
       return DateFormat.getDateInstance(DateFormat.SHORT).format(modified);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return ("");
   }
@@ -477,8 +473,7 @@ public class SearchCriteriaList extends HashMap {
   public String getModifiedDateTimeString() {
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return ("");
   }
@@ -528,8 +523,9 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Builds the HtmlSelect version of the SearchCriteriaList.  The elements of the resulting
-   *  HtmlSelect outline the criteria that is contained within this SearchCriteriaList
+   *  Builds the HtmlSelect version of the SearchCriteriaList. The elements of
+   *  the resulting HtmlSelect outline the criteria that is contained within
+   *  this SearchCriteriaList
    *
    *@param  selectName  Desired name of the resulting HtmlSelect
    *@return             The HtmlSelect value
@@ -542,18 +538,23 @@ public class SearchCriteriaList extends HashMap {
     if (this.getHtmlSelectIdName() != null) {
       selectList.setIdName(this.getHtmlSelectIdName());
     }
-    
+
     LinkedHashMap criteriaList = getCriteriaTextArray();
     Iterator i = criteriaList.keySet().iterator();
     while (i.hasNext()) {
-       String key = (String)i.next();
-       selectList.addItem(key, (String)criteriaList.get(key));
+      String key = (String) i.next();
+      selectList.addItem(key, (String) criteriaList.get(key));
     }
     return selectList.getHtml(selectName, -1);
   }
 
 
-  public LinkedHashMap getCriteriaTextArray(){
+  /**
+   *  Gets the criteriaTextArray attribute of the SearchCriteriaList object
+   *
+   *@return    The criteriaTextArray value
+   */
+  public LinkedHashMap getCriteriaTextArray() {
     String fromString = "";
     LinkedHashMap criteriaList = new LinkedHashMap();
     Iterator i = this.keySet().iterator();
@@ -591,14 +592,11 @@ public class SearchCriteriaList extends HashMap {
 
         if (thisGroup.getGroupField().getDescription().equals("Contact Type") && thisElt.getContactTypeName() != null) {
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName() + fromString;
-        }
-        else if (thisGroup.getGroupField().getDescription().equals("Account Type") && thisElt.getAccountTypeName() != null) {
+        } else if (thisGroup.getGroupField().getDescription().equals("Account Type") && thisElt.getAccountTypeName() != null) {
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getAccountTypeName() + fromString;
-        }
-        else if (thisGroup.getGroupField().getDescription().equals("Contact ID") && thisElt.getContactNameLast() != null) {
+        } else if (thisGroup.getGroupField().getDescription().equals("Contact ID") && thisElt.getContactNameLast() != null) {
           valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + Contact.getNameLastFirst(thisElt.getContactNameLast(), thisElt.getContactNameFirst());
-        }
-        else {
+        } else {
           valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText() + fromString;
         }
 
@@ -607,7 +605,8 @@ public class SearchCriteriaList extends HashMap {
     }
     return criteriaList;
   }
-  
+
+
   /**
    *  Populate this object by querying its record in the database
    *
@@ -628,8 +627,7 @@ public class SearchCriteriaList extends HashMap {
         "WHERE scl.id > -1 ");
     if (id > -1) {
       sql.append("AND scl.id = " + id + " ");
-    }
-    else {
+    } else {
       throw new SQLException("Invalid ID specified.");
     }
     st = db.createStatement();
@@ -637,14 +635,11 @@ public class SearchCriteriaList extends HashMap {
     if (rs.next()) {
       buildRecord(rs);
     }
-    else {
-      rs.close();
-      st.close();
-      throw new SQLException("Saved Criteria record not found.");
-    }
     rs.close();
     st.close();
-
+    if (id == -1) {
+      throw new SQLException("Saved Criteria record not found.");
+    }
     this.buildResources(db);
   }
 
@@ -660,7 +655,6 @@ public class SearchCriteriaList extends HashMap {
     Statement st = null;
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
-
     //The elements
     sql.append(
         "SELECT s.*, t.description as ctype, t2.description as atype, c.namefirst as cnamefirst, c.namelast as cnamelast " +
@@ -677,8 +671,7 @@ public class SearchCriteriaList extends HashMap {
       Integer thisKey = new Integer(thisElement.getFieldId());
       if (this.containsKey(thisKey)) {
         thisGroup = (SearchCriteriaGroup) this.get(thisKey);
-      }
-      else {
+      } else {
         thisGroup = new SearchCriteriaGroup();
         thisGroup.getGroupField().setId(thisElement.getFieldId());
         this.put(thisKey, thisGroup);
@@ -703,7 +696,8 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
-   *  Delete all of this object's associated SearchCriteriaElements from the database
+   *  Delete all of this object's associated SearchCriteriaElements from the
+   *  database
    *
    *@param  listid            unique ID of this SearchCriteriaList
    *@param  db                db connection
@@ -712,27 +706,20 @@ public class SearchCriteriaList extends HashMap {
    */
   public void clearElements(int listid, Connection db) throws SQLException {
     StringBuffer sqlDelete = new StringBuffer();
-
     try {
       db.setAutoCommit(false);
-
       sqlDelete.append(
           "DELETE FROM saved_criteriaelement where id = ? ");
-
       int i = 0;
       PreparedStatement pstDel = db.prepareStatement(sqlDelete.toString());
       pstDel.setInt(++i, listid);
-
       pstDel.execute();
       pstDel.close();
       db.commit();
-    }
-    catch (SQLException e) {
+    } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    }
-    finally {
+    } finally {
       db.setAutoCommit(true);
     }
   }
@@ -747,11 +734,9 @@ public class SearchCriteriaList extends HashMap {
    *@since
    */
   public boolean insert(Connection db) throws SQLException {
-
     if (!isValid()) {
       return false;
     }
-
     StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
@@ -780,8 +765,7 @@ public class SearchCriteriaList extends HashMap {
       pst.setString(++i, this.getGroupName());
       if (this.getContactSource() > -1) {
         pst.setInt(++i, this.getContactSource());
-      }
-      else {
+      } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
       if (entered != null) {
@@ -800,13 +784,10 @@ public class SearchCriteriaList extends HashMap {
       insertGroups(db);
 
       db.commit();
-    }
-    catch (SQLException e) {
+    } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    }
-    finally {
+    } finally {
       db.setAutoCommit(true);
     }
 
@@ -833,14 +814,12 @@ public class SearchCriteriaList extends HashMap {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
       db.commit();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 
@@ -849,7 +828,9 @@ public class SearchCriteriaList extends HashMap {
    *  Update this object's record in the database
    *
    *@param  db                db connection
-   *@param  override          true to update no matter what the last modified date is, false to check whether or not someone has updated this record first
+   *@param  override          true to update no matter what the last modified
+   *      date is, false to check whether or not someone has updated this record
+   *      first
    *@return                   int, how many records were successfully updated
    *@exception  SQLException  SQL Exception
    *@since
@@ -909,7 +890,7 @@ public class SearchCriteriaList extends HashMap {
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
-    String sql = "";
+    String sql = null;
     DependencyList dependencyList = new DependencyList();
     try {
       db.setAutoCommit(false);
@@ -932,17 +913,13 @@ public class SearchCriteriaList extends HashMap {
           dependencyList.add(thisDependency);
         }
       }
-
-      pst.close();
       rs.close();
+      pst.close();
       db.commit();
-    }
-    catch (SQLException e) {
+    } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    }
-    finally {
+    } finally {
       db.setAutoCommit(true);
     }
     return dependencyList;
@@ -1004,7 +981,6 @@ public class SearchCriteriaList extends HashMap {
       rs.next();
       activeCount = rs.getInt("group_count");
       rs.close();
-
       if (commit) {
         db.setAutoCommit(false);
       }
@@ -1014,35 +990,32 @@ public class SearchCriteriaList extends HashMap {
             "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
             "WHERE id = " + this.getId() + " " +
             "AND enabled = " + DatabaseUtils.getTrue(db));
-      }
-      else {
+      } else {
         st.executeUpdate("DELETE FROM saved_criteriaelement WHERE id = " + this.getId() + " ");
         st.executeUpdate("DELETE FROM campaign_list_groups WHERE group_id = " + this.getId());
         st.executeUpdate("DELETE FROM saved_criterialist WHERE id = " + this.getId());
       }
+      st.close();
       if (commit) {
         db.commit();
       }
-    }
-    catch (SQLException e) {
+    } catch (SQLException e) {
       if (commit) {
         db.rollback();
       }
       throw new SQLException(e.toString());
-    }
-    finally {
+    } finally {
       if (commit) {
         db.setAutoCommit(true);
       }
-      st.close();
     }
     return true;
   }
 
 
   /**
-   *  Checks whether or not this list is valid.  A group name is required
-   *  before an SCL can be inserted into the database
+   *  Checks whether or not this list is valid. A group name is required before
+   *  an SCL can be inserted into the database
    *
    *@return    The Valid value
    *@since
@@ -1054,8 +1027,7 @@ public class SearchCriteriaList extends HashMap {
 
     if (hasErrors()) {
       return false;
-    }
-    else {
+    } else {
       return true;
     }
   }

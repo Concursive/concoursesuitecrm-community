@@ -121,7 +121,6 @@ public class CampaignListGroup {
     if (id == -1) {
       throw new SQLException("Campaign List Group not found.");
     }
-
     PreparedStatement pst = db.prepareStatement("SELECT c.* " +
         "FROM campaign_list_groups c " +
         "WHERE c.campaign_id = ? and c.group_id = ? ");
@@ -130,11 +129,12 @@ public class CampaignListGroup {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      throw new SQLException("Campaign List Group not found.");
     }
     rs.close();
+    pst.close();
+    if (id == -1) {
+      throw new SQLException("Campaign List Group not found.");
+    }
   }
 
 
@@ -175,7 +175,6 @@ public class CampaignListGroup {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);

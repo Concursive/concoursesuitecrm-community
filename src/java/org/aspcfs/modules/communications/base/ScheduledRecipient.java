@@ -400,13 +400,12 @@ public class ScheduledRecipient {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Scheduled Recipient not found.");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Scheduled Recipient not found.");
+    }
   }
 
 
@@ -468,7 +467,6 @@ public class ScheduledRecipient {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);

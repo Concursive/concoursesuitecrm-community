@@ -173,7 +173,6 @@ public class Item {
       this.setId(DatabaseUtils.getCurrVal(db, "survey_items_item_id_seq"));
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -207,7 +206,6 @@ public class Item {
       pst.close();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);

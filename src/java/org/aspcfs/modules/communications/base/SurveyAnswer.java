@@ -67,13 +67,12 @@ public class SurveyAnswer {
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Question Answer record not found.");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Question Answer record not found.");
+    }
     buildItems(db, passedId);
   }
 
@@ -560,7 +559,6 @@ public class SurveyAnswer {
       pst.close();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);

@@ -246,7 +246,6 @@ public class ActiveSurveyQuestionItem {
       pst.close();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -280,7 +279,6 @@ public class ActiveSurveyQuestionItem {
       pst.close();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);

@@ -61,11 +61,12 @@ public class CampaignRun {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      throw new SQLException ("Campaign Run ID not found");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException ("Campaign Run ID not found");
+    }
   }
   
   public boolean insert(Connection db) throws SQLException {

@@ -74,13 +74,12 @@ public class Recipient extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Recipient record not found.");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Recipient record not found.");
+    }
   }
 
   public void setId(int tmp) { this.id = tmp; }

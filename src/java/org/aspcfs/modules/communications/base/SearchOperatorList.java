@@ -49,7 +49,6 @@ public class SearchOperatorList extends ArrayList {
     }
     rs.close();
     pst.close();
-
   }
 
 
@@ -81,7 +80,6 @@ public class SearchOperatorList extends ArrayList {
     }
     rs.close();
     pst.close();
-
   }
 
 }

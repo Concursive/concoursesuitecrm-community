@@ -281,13 +281,12 @@ public class SurveyAnswerItem {
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Question AnswerItem record not found.");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Survey Answer Item record not found.");
+    }
   }
 
 
@@ -324,7 +323,6 @@ public class SurveyAnswerItem {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -345,7 +343,6 @@ public class SurveyAnswerItem {
     if (questionId == -1) {
       throw new SQLException("Question ID not specified.");
     }
-
     int count = 0;
     int i = 0;
     try {
@@ -355,7 +352,6 @@ public class SurveyAnswerItem {
           "UPDATE active_survey_answer_avg " +
           "SET total = total + 1 " +
           "WHERE question_id = ? AND item_id =? ");
-
       pst.setInt(++i, questionId);
       pst.setInt(++i, this.getId());
       if (System.getProperty("DEBUG") != null) {

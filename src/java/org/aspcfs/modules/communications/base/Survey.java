@@ -95,14 +95,12 @@ public class Survey extends SurveyBase {
     rs = st.executeQuery(sql);
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Survey record not found.");
     }
     rs.close();
     st.close();
-
+    if (id == -1) {
+      throw new SQLException("Survey record not found.");
+    }
     questions.setSurveyId(this.getId());
     questions.buildList(db);
   }
@@ -468,7 +466,6 @@ public class Survey extends SurveyBase {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -525,6 +522,7 @@ public class Survey extends SurveyBase {
       }
       st.executeUpdate("DELETE FROM survey_questions WHERE survey_id = " + this.getId());
       st.executeUpdate("DELETE FROM survey WHERE survey_id = " + this.getId());
+      st.close();
       if (commit) {
         db.commit();
       }
@@ -537,7 +535,6 @@ public class Survey extends SurveyBase {
       if (commit) {
         db.setAutoCommit(true);
       }
-      st.close();
     }
     return true;
   }
@@ -591,11 +588,10 @@ public class Survey extends SurveyBase {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 
@@ -609,14 +605,13 @@ public class Survey extends SurveyBase {
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
-    String sql = "";
+    String sql = null;
     DependencyList dependencyList = new DependencyList();
     try {
       db.setAutoCommit(false);
       sql = "SELECT COUNT(*) AS survey_count " +
           "FROM campaign_survey_link " +
           "WHERE survey_id = ? ";
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getId());
@@ -636,7 +631,6 @@ public class Survey extends SurveyBase {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);

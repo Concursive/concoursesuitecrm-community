@@ -266,14 +266,12 @@ public class Campaign extends GenericBean {
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Campaign record not found.");
     }
     rs.close();
     pst.close();
-
+    if (id == -1) {
+      throw new SQLException("Campaign record not found.");
+    }
     buildRecipientCount(db);
     buildResponseCount(db);
     buildLastResponse(db);
@@ -862,9 +860,7 @@ public class Campaign extends GenericBean {
       }
       groups.append(rs.getInt("group_id"));
     }
-
     this.setGroupList(groups.toString());
-
     rs.close();
     pst.close();
   }
@@ -1650,7 +1646,6 @@ public class Campaign extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1703,7 +1698,6 @@ public class Campaign extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1776,7 +1770,6 @@ public class Campaign extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -1806,11 +1799,10 @@ public class Campaign extends GenericBean {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 
@@ -1832,28 +1824,33 @@ public class Campaign extends GenericBean {
           "DELETE FROM campaign_list_groups WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-
+      pst.close();
+      
       pst = db.prepareStatement(
           "DELETE FROM scheduled_recipient WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-
+      pst.close();
+      
       pst = db.prepareStatement(
           "DELETE FROM campaign_run WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-
+      pst.close();
+      
       pst = db.prepareStatement(
           "DELETE FROM excluded_recipient WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-
+      pst.close();
+      
       //Delete any inactive survey links
       pst = db.prepareStatement(
           "DELETE FROM campaign_survey_link WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-
+      pst.close();
+      
       //Delete the attached survey
       int activeSurveyId = (ActiveSurvey.getId(db, id));
       if (activeSurveyId > -1) {
@@ -1866,14 +1863,13 @@ public class Campaign extends GenericBean {
       //"DELETE FROM campaign WHERE id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-
+      pst.close();
       db.commit();
     } catch (SQLException e) {
       db.rollback();
       message = e;
     } finally {
       db.setAutoCommit(true);
-      pst.close();
     }
     if (message != null) {
       throw new SQLException(message.getMessage());
@@ -2240,11 +2236,11 @@ public class Campaign extends GenericBean {
 
       pst.close();
       db.commit();
-      db.setAutoCommit(true);
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
     return resultCount;
   }

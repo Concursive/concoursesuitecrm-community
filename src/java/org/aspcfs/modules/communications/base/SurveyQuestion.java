@@ -326,7 +326,6 @@ public class SurveyQuestion {
   public void insert(Connection db, int surveyId) throws SQLException {
     try {
       db.setAutoCommit(false);
-
       int i = 0;
       //calculate the next position for this question
       PreparedStatement pst = db.prepareStatement(
@@ -338,8 +337,8 @@ public class SurveyQuestion {
       if (rs.next()) {
         position = rs.getInt("maxPosition") + 1;
       }
-      pst.close();
       rs.close();
+      pst.close();
       //insert question
       pst = db.prepareStatement(
           "INSERT INTO survey_questions " +
@@ -367,7 +366,6 @@ public class SurveyQuestion {
       }
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -401,7 +399,6 @@ public class SurveyQuestion {
   public void update(Connection db, int thisSurveyId) throws SQLException {
     try {
       db.setAutoCommit(false);
-
       ItemList.delete(db, this.getId());
       PreparedStatement pst = db.prepareStatement(
           "UPDATE survey_questions " +
@@ -426,7 +423,6 @@ public class SurveyQuestion {
       }
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
