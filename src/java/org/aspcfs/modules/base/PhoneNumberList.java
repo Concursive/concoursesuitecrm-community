@@ -87,6 +87,17 @@ public class PhoneNumberList extends Vector {
     }
     return "";
   }
+  
+  protected String getPhoneNumber(int thisType) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      PhoneNumber thisNumber = (PhoneNumber)i.next();
+      if (thisType == thisNumber.getType()) {
+        return thisNumber.getPhoneNumber();
+      }
+    }
+    return "";
+  }
 
 
   /**

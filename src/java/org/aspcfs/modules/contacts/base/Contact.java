@@ -1021,6 +1021,9 @@ public void setUrl(String url) {
     return phoneNumberList.getPhoneNumber(thisType);
   }
 
+  public String getPhoneNumber(int thisType) {
+    return phoneNumberList.getPhoneNumber(thisType);
+  }
 
   /**
    *  Gets the EmailAddress attribute of the Contact object

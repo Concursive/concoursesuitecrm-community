@@ -1,0 +1,48 @@
+/**
+ *  HTML Forms and ASPCFS Form Beans
+ *
+ *@author     mrajkowski
+ *@created    April 8, 2002
+ *@version    $Id$
+ */
+
+When using HTML forms, keep the following in mind if you would like a bean
+to be auto-populated by the ASPCFS Servlet Controller:
+
+Suppose a JavaBean has the following properties, as well as set(String) and 
+get(String) methods for each property:
+
+  public class User()
+    private String username;
+    private Contacts contactObject;
+  
+    public void setId(String thisId) {...}
+    public String getUsername() {...}
+    public Contact getContactObject() {...}
+  
+and suppose the Contact object in this JavaBean has the following:
+
+  public class Contact()
+    private String firstName;
+    private String lastName;
+    public void setFirstName(String thisFirstName) {...}
+    public void setLastName(String thisLastName) {...}
+    
+    
+then the following should be used in the HTML form to set a username,
+firstname, and lastname:
+
+  <input type="text" name="username">
+  <input type="text" name="contactObject_firstName">
+  <input type="text" name="contactObject_lastName">
+  
+The Servlet Controller will perform the following when the http request
+contains the auto-populate request parameter:
+
+  Construct a new User object with the following:
+
+  User.setUsername(String fromInput);
+  User.getContactObject.setFirstName(String fromInput);
+  User.getContactObject.setLastName(String fromInput);
+  
+
