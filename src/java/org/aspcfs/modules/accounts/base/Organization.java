@@ -20,6 +20,7 @@ import com.darkhorseventures.utils.DateUtils;
  *@version    $Id$
  */
 public class Organization extends GenericBean {
+  protected double YTD = 0;
 
   private String errorMessage = "";
   private int orgId = -1;
@@ -57,13 +58,12 @@ public class Organization extends GenericBean {
 
   private LookupList types = new LookupList();
   private ArrayList typeList = null;
-  protected double YTD = 0;
-  
+
   private boolean contactDelete = false;
   private boolean revenueDelete = false;
   private boolean documentDelete = false;
-  
-  
+
+
   /**
    *  Constructor for the Organization object, creates an empty Organization
    *
@@ -119,7 +119,8 @@ public class Organization extends GenericBean {
     if (rs.next()) {
       buildRecord(rs);
       buildTypes(db);
-    } else {
+    }
+    else {
       rs.close();
       st.close();
       throw new SQLException("Account not found");
@@ -155,34 +156,44 @@ public class Organization extends GenericBean {
     if (criteriaString != null) {
       String[] params = criteriaString;
       typeList = new ArrayList(Arrays.asList(params));
-    } else {
+    }
+    else {
       typeList = new ArrayList();
     }
 
     this.typeList = typeList;
   }
-  
-public boolean getContactDelete() { return contactDelete; }
-public boolean getRevenueDelete() { return revenueDelete; }
-public boolean getDocumentDelete() { return documentDelete; }
-public void setContactDelete(boolean tmp) { this.contactDelete = tmp; }
-public void setRevenueDelete(boolean tmp) { this.revenueDelete = tmp; }
-public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
 
-  public HashMap processDependencies(Connection db)  throws SQLException {
-    HashMap dependencyList = new HashMap();
-    try {
-      dependencyList.put("Contacts", new Integer(ContactList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
-	    dependencyList.put("Revenue", new Integer(RevenueList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
-	    dependencyList.put("Opportunities", new Integer(OpportunityList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
-	    dependencyList.put("Tickets", new Integer(TicketList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
-      dependencyList.put("Document", new Integer(FileItemList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
-	    dependencyList.put("Folders", new Integer(CustomFieldRecordList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
-    } catch (SQLException e) {
-      throw new SQLException(e.getMessage());
-    }
-    return dependencyList;
+
+  /**
+   *  Sets the ContactDelete attribute of the Organization object
+   *
+   *@param  tmp  The new ContactDelete value
+   */
+  public void setContactDelete(boolean tmp) {
+    this.contactDelete = tmp;
   }
+
+
+  /**
+   *  Sets the RevenueDelete attribute of the Organization object
+   *
+   *@param  tmp  The new RevenueDelete value
+   */
+  public void setRevenueDelete(boolean tmp) {
+    this.revenueDelete = tmp;
+  }
+
+
+  /**
+   *  Sets the DocumentDelete attribute of the Organization object
+   *
+   *@param  tmp  The new DocumentDelete value
+   */
+  public void setDocumentDelete(boolean tmp) {
+    this.documentDelete = tmp;
+  }
+
 
   /**
    *  Sets the EnteredByName attribute of the Organization object
@@ -242,7 +253,13 @@ public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
   public void setOwner(int owner) {
     this.owner = owner;
   }
-  
+
+
+  /**
+   *  Sets the OwnerId attribute of the Organization object
+   *
+   *@param  owner  The new OwnerId value
+   */
   public void setOwnerId(int owner) {
     this.owner = owner;
   }
@@ -316,7 +333,13 @@ public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
   public void setOwner(String owner) {
     this.owner = Integer.parseInt(owner);
   }
-  
+
+
+  /**
+   *  Sets the OwnerId attribute of the Organization object
+   *
+   *@param  owner  The new OwnerId value
+   */
   public void setOwnerId(String owner) {
     this.owner = Integer.parseInt(owner);
   }
@@ -331,30 +354,17 @@ public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
     this.contractEndDate = contractEndDate;
   }
 
-public double getYTD() {
-	return YTD;
-}
-public void setYTD(double YTD) {
-	this.YTD = YTD;
-}
-  public String getYTDValue() {
-    double value_2dp = (double) Math.round(YTD * 100.0) / 100.0;
-    String toReturn = "" + value_2dp;
-    if (toReturn.endsWith(".0")) {
-      toReturn = toReturn.substring(0, toReturn.length() - 2);
-    } 
-    
-    if (Integer.parseInt(toReturn) == 0) 
-        toReturn = "";
-	
-    return toReturn;
+
+  /**
+   *  Sets the YTD attribute of the Organization object
+   *
+   *@param  YTD  The new YTD value
+   */
+  public void setYTD(double YTD) {
+    this.YTD = YTD;
   }
-  
-  public String getYTDCurrency() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    String amountOut = numberFormatter.format(YTD);
-    return amountOut;
-  }
+
+
   /**
    *  Sets the ContractEndDate attribute of the Organization object
    *
@@ -364,34 +374,7 @@ public void setYTD(double YTD) {
     this.contractEndDate = DateUtils.parseDateString(tmp);
   }
 
-  public void buildRevenueYTD(Connection db, int year, int type, int ownerId) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
 
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT sum(rv.amount) as s " +
-        "FROM revenue rv " +
-        "WHERE rv.org_id = ? AND rv.year = ? AND rv.owner = ? ");
-    if (type > 0) {
-	    sql.append("AND rv.type = ? ");
-    }
-    
-    pst = db.prepareStatement(sql.toString());
-    int i = 0;
-    pst.setInt(++i, orgId);
-    pst.setInt(++i, year);
-    pst.setInt(++i, ownerId);
-    if (type > 0) {
-	    pst.setInt(++i, type);
-    }	    
-    rs = pst.executeQuery();
-    if (rs.next()) {
-	    this.setYTD(rs.getDouble("s"));
-    } 
-    rs.close();
-    pst.close();
-  }
   /**
    *  Sets the alertDate attribute of the Organization object
    *
@@ -443,7 +426,13 @@ public void setYTD(double YTD) {
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
-  
+
+
+  /**
+   *  Sets the ModifiedBy attribute of the Organization object
+   *
+   *@param  modifiedBy  The new ModifiedBy value
+   */
   public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = Integer.parseInt(modifiedBy);
   }
@@ -547,18 +536,37 @@ public void setYTD(double YTD) {
   public void setMiner_only(boolean tmp) {
     this.minerOnly = tmp;
   }
-  
+
+
+  /**
+   *  Sets the Miner_only attribute of the Organization object
+   *
+   *@param  tmp  The new Miner_only value
+   */
   public void setMiner_only(String tmp) {
     this.minerOnly = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
   }
 
+
+  /**
+   *  Sets the MinerOnly attribute of the Organization object
+   *
+   *@param  tmp  The new MinerOnly value
+   */
   public void setMinerOnly(boolean tmp) {
     this.minerOnly = tmp;
   }
-  
+
+
+  /**
+   *  Sets the MinerOnly attribute of the Organization object
+   *
+   *@param  tmp  The new MinerOnly value
+   */
   public void setMinerOnly(String tmp) {
     this.minerOnly = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
   }
+
 
   /**
    *  Sets the AddressList attribute of the Organization object
@@ -579,9 +587,6 @@ public void setYTD(double YTD) {
     this.phoneNumberList = tmp;
   }
 
-public boolean getEnabled() {
-	return enabled;
-}
 
   /**
    *  Sets the EmailAddressList attribute of the Organization object
@@ -601,7 +606,13 @@ public boolean getEnabled() {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the EnteredBy attribute of the Organization object
+   *
+   *@param  tmp  The new EnteredBy value
+   */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
@@ -638,6 +649,88 @@ public boolean getEnabled() {
     phoneNumberList = new OrganizationPhoneNumberList(request);
     addressList = new OrganizationAddressList(request);
     emailAddressList = new OrganizationEmailAddressList(request);
+  }
+
+
+  /**
+   *  Gets the ContactDelete attribute of the Organization object
+   *
+   *@return    The ContactDelete value
+   */
+  public boolean getContactDelete() {
+    return contactDelete;
+  }
+
+
+  /**
+   *  Gets the RevenueDelete attribute of the Organization object
+   *
+   *@return    The RevenueDelete value
+   */
+  public boolean getRevenueDelete() {
+    return revenueDelete;
+  }
+
+
+  /**
+   *  Gets the DocumentDelete attribute of the Organization object
+   *
+   *@return    The DocumentDelete value
+   */
+  public boolean getDocumentDelete() {
+    return documentDelete;
+  }
+
+
+  /**
+   *  Gets the YTD attribute of the Organization object
+   *
+   *@return    The YTD value
+   */
+  public double getYTD() {
+    return YTD;
+  }
+
+
+  /**
+   *  Gets the YTDValue attribute of the Organization object
+   *
+   *@return    The YTDValue value
+   */
+  public String getYTDValue() {
+    double value_2dp = (double) Math.round(YTD * 100.0) / 100.0;
+    String toReturn = "" + value_2dp;
+    if (toReturn.endsWith(".0")) {
+      toReturn = toReturn.substring(0, toReturn.length() - 2);
+    }
+
+    if (Integer.parseInt(toReturn) == 0) {
+      toReturn = "";
+    }
+
+    return toReturn;
+  }
+
+
+  /**
+   *  Gets the YTDCurrency attribute of the Organization object
+   *
+   *@return    The YTDCurrency value
+   */
+  public String getYTDCurrency() {
+    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    String amountOut = numberFormatter.format(YTD);
+    return amountOut;
+  }
+
+
+  /**
+   *  Gets the Enabled attribute of the Organization object
+   *
+   *@return    The Enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
   }
 
 
@@ -710,7 +803,8 @@ public boolean getEnabled() {
     String tmp = "";
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -725,7 +819,8 @@ public boolean getEnabled() {
     String tmp = "";
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -750,7 +845,8 @@ public boolean getEnabled() {
     String tmp = "";
     try {
       return DateFormat.getDateInstance(3).format(contractEndDate);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -768,7 +864,8 @@ public boolean getEnabled() {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
       formatter.applyPattern("M/d/yyyy");
       return formatter.format(contractEndDate);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -785,7 +882,8 @@ public boolean getEnabled() {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
       formatter.applyPattern("M/d/yyyy");
       return formatter.format(entered);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -816,10 +914,11 @@ public boolean getEnabled() {
    */
   public String getAlertDateString() {
     String tmp = "";
-    
+
     try {
       return DateFormat.getDateInstance(3).format(alertDate);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -835,7 +934,8 @@ public boolean getEnabled() {
 
     if (alertDate == null) {
       return out.toString();
-    } else {
+    }
+    else {
       out.append(getAlertText() + " - " + getAlertDateString());
       return out.toString().trim();
     }
@@ -853,7 +953,8 @@ public boolean getEnabled() {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
       formatter.applyPattern("M/d/yyyy");
       return formatter.format(alertDate);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -907,7 +1008,13 @@ public boolean getEnabled() {
   public int getOwner() {
     return owner;
   }
-  
+
+
+  /**
+   *  Gets the OwnerId attribute of the Organization object
+   *
+   *@return    The OwnerId value
+   */
   public int getOwnerId() {
     return owner;
   }
@@ -1086,12 +1193,25 @@ public boolean getEnabled() {
   }
 
 
+  /**
+   *  Gets the Miner_only attribute of the Organization object
+   *
+   *@return    The Miner_only value
+   */
   public boolean getMiner_only() {
     return minerOnly;
   }
+
+
+  /**
+   *  Gets the MinerOnly attribute of the Organization object
+   *
+   *@return    The MinerOnly value
+   */
   public boolean getMinerOnly() {
     return minerOnly;
   }
+
 
   /**
    *  Gets the EnteredBy attribute of the Organization object
@@ -1147,6 +1267,69 @@ public boolean getEnabled() {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public HashMap processDependencies(Connection db) throws SQLException {
+    HashMap dependencyList = new HashMap();
+    try {
+      dependencyList.put("Contacts", new Integer(ContactList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+      dependencyList.put("Revenue", new Integer(RevenueList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+      dependencyList.put("Opportunities", new Integer(OpportunityList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+      dependencyList.put("Tickets", new Integer(TicketList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+      dependencyList.put("Document", new Integer(FileItemList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+      dependencyList.put("Folders", new Integer(CustomFieldRecordList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+    }
+    catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
+    return dependencyList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  year              Description of Parameter
+   *@param  type              Description of Parameter
+   *@param  ownerId           Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void buildRevenueYTD(Connection db, int year, int type, int ownerId) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT sum(rv.amount) as s " +
+        "FROM revenue rv " +
+        "WHERE rv.org_id = ? AND rv.year = ? AND rv.owner = ? ");
+    if (type > 0) {
+      sql.append("AND rv.type = ? ");
+    }
+
+    pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setInt(++i, orgId);
+    pst.setInt(++i, year);
+    pst.setInt(++i, ownerId);
+    if (type > 0) {
+      pst.setInt(++i, type);
+    }
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setYTD(rs.getDouble("s"));
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
   public void buildTypes(Connection db) throws SQLException {
@@ -1170,7 +1353,7 @@ public boolean getEnabled() {
     rs.close();
     st.close();
   }
-  
+
 
   /**
    *  Description of the Method
@@ -1185,10 +1368,10 @@ public boolean getEnabled() {
     if (orgId == -1) {
       throw new SQLException("No Organization ID Specified");
     }
-    String sql = 
-      "INSERT INTO account_type_levels " +
-      "(org_id, type_id, level) " +
-      "VALUES (?, ?, ?) ";
+    String sql =
+        "INSERT INTO account_type_levels " +
+        "(org_id, type_id, level) " +
+        "VALUES (?, ?, ?) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, this.getOrgId());
@@ -1213,71 +1396,90 @@ public boolean getEnabled() {
     }
     Statement st = db.createStatement();
     st.executeUpdate(
-      "DELETE FROM account_type_levels " +
-      "WHERE org_id = " + this.getOrgId());
+        "DELETE FROM account_type_levels " +
+        "WHERE org_id = " + this.getOrgId());
     st.close();
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean disable(Connection db) throws SQLException {
-	if (this.getOrgId() == -1) {
-		throw new SQLException("Organization ID not specified");
-	}
-	
-	PreparedStatement pst = null;
-	StringBuffer sql = new StringBuffer();
-	boolean success = false;
-	
-	sql.append(
-		"UPDATE organization set enabled = " + DatabaseUtils.getFalse(db) + " " +
-		"WHERE org_id = ? ");
+    if (this.getOrgId() == -1) {
+      throw new SQLException("Organization ID not specified");
+    }
 
-	sql.append("AND modified = ? ");
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    boolean success = false;
 
-	int i = 0;
-	pst = db.prepareStatement(sql.toString());
-	pst.setInt(++i, orgId);
-	
-	pst.setTimestamp(++i, this.getModified());
-	
-	int resultCount = pst.executeUpdate();
-	pst.close();
-	
-	if (resultCount == 1) 
-		success = true;
-	
-	return success;
+    sql.append(
+        "UPDATE organization set enabled = " + DatabaseUtils.getFalse(db) + " " +
+        "WHERE org_id = ? ");
+
+    sql.append("AND modified = ? ");
+
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, orgId);
+
+    pst.setTimestamp(++i, this.getModified());
+
+    int resultCount = pst.executeUpdate();
+    pst.close();
+
+    if (resultCount == 1) {
+      success = true;
+    }
+
+    return success;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public boolean enable(Connection db) throws SQLException {
-	if (this.getOrgId() == -1) {
-		throw new SQLException("Organization ID not specified");
-	}
-	
-	PreparedStatement pst = null;
-	StringBuffer sql = new StringBuffer();
-	boolean success = false;
-	
-	sql.append(
-		"UPDATE organization set enabled = " + DatabaseUtils.getTrue(db) + " " +
-		"WHERE org_id = ? ");
+    if (this.getOrgId() == -1) {
+      throw new SQLException("Organization ID not specified");
+    }
 
-	sql.append("AND modified = ? ");
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    boolean success = false;
 
-	int i = 0;
-	pst = db.prepareStatement(sql.toString());
-	pst.setInt(++i, orgId);
-	
-	pst.setTimestamp(++i, this.getModified());
-	
-	int resultCount = pst.executeUpdate();
-	pst.close();
-	
-	if (resultCount == 1) 
-		success = true;
-	
-	return success;
+    sql.append(
+        "UPDATE organization set enabled = " + DatabaseUtils.getTrue(db) + " " +
+        "WHERE org_id = ? ");
+
+    sql.append("AND modified = ? ");
+
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, orgId);
+
+    pst.setTimestamp(++i, this.getModified());
+
+    int resultCount = pst.executeUpdate();
+    pst.close();
+
+    if (resultCount == 1) {
+      success = true;
+    }
+
+    return success;
   }
+
 
   /**
    *  Description of the Method
@@ -1300,10 +1502,10 @@ public boolean getEnabled() {
   public boolean checkIfExists(Connection db, String checkName) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
-    String sqlSelect = 
-      "SELECT name, org_id " +
-      "FROM organization " +
-      "WHERE lower(organization.name) = ? ";
+    String sqlSelect =
+        "SELECT name, org_id " +
+        "FROM organization " +
+        "WHERE lower(organization.name) = ? ";
     int i = 0;
     pst = db.prepareStatement(sqlSelect);
     pst.setString(++i, checkName.toLowerCase());
@@ -1313,7 +1515,8 @@ public boolean getEnabled() {
       rs.close();
       pst.close();
       return true;
-    } else {
+    }
+    else {
       rs.close();
       pst.close();
       return false;
@@ -1333,28 +1536,28 @@ public boolean getEnabled() {
     if (!isValid(db)) {
       return false;
     }
-    
+
     StringBuffer sql = new StringBuffer();
-    
+
     try {
       modifiedBy = enteredBy;
       db.setAutoCommit(false);
       sql.append("INSERT INTO ORGANIZATION (name, industry_temp_code, url, miner_only, owner, duplicate_id, ");
       sql.append("notes, employees, revenue, ticker_symbol, account_number, ");
-              if (entered != null) {
-                      sql.append("entered, ");
-              }
-              if (modified != null) {
-                      sql.append("modified, ");
-              }
+      if (entered != null) {
+        sql.append("entered, ");
+      }
+      if (modified != null) {
+        sql.append("modified, ");
+      }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
-              if (entered != null) {
-                      sql.append("?, ");
-              }
-              if (modified != null) {
-                      sql.append("?, ");
-              }
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      }
       sql.append("?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1363,9 +1566,10 @@ public boolean getEnabled() {
       pst.setString(++i, this.getUrl());
       pst.setBoolean(++i, this.getMinerOnly());
       if (owner > -1) {
-	      pst.setInt(++i, this.getOwner());
-      } else {
-	      pst.setNull(++i, java.sql.Types.INTEGER);
+        pst.setInt(++i, this.getOwner());
+      }
+      else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
       }
       pst.setInt(++i, this.getDuplicateId());
       pst.setString(++i, this.getNotes());
@@ -1373,14 +1577,14 @@ public boolean getEnabled() {
       pst.setDouble(++i, this.getRevenue());
       pst.setString(++i, this.getTicker());
       pst.setString(++i, this.getAccountNumber());
-      
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
-      
+
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
+
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
@@ -1414,11 +1618,13 @@ public boolean getEnabled() {
 
       this.update(db, true);
       db.commit();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    } finally {
+    }
+    finally {
       db.setAutoCommit(true);
     }
 
@@ -1464,7 +1670,8 @@ public boolean getEnabled() {
       }
 
       db.commit();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
@@ -1497,19 +1704,19 @@ public boolean getEnabled() {
         "UPDATE organization " +
         "SET name = ?, industry_temp_code = ?, " +
         "url = ?, notes= ?, ");
-        
-        if (override == false) {
-                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
-        }
-        
-        sql.append("modifiedby = ?, " +
+
+    if (override == false) {
+      sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
+
+    sql.append("modifiedby = ?, " +
         "employees = ?, revenue = ?, ticker_symbol = ?, account_number = ?, ");
-        
-     if (owner > -1) {   
-       sql.append("owner = ?, ");
-     }
-        
-     sql.append("duplicate_id = ?, contract_end = ?, alertdate = ?, alert = ? " +
+
+    if (owner > -1) {
+      sql.append("owner = ?, ");
+    }
+
+    sql.append("duplicate_id = ?, contract_end = ?, alertdate = ?, alert = ? " +
         "WHERE org_id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -1533,13 +1740,15 @@ public boolean getEnabled() {
 
     if (contractEndDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
-    } else {
+    }
+    else {
       pst.setDate(++i, this.getContractEndDate());
     }
 
     if (alertDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
-    } else {
+    }
+    else {
       pst.setDate(++i, this.getAlertDate());
     }
     pst.setString(++i, alertText);
@@ -1549,7 +1758,7 @@ public boolean getEnabled() {
     }
     resultCount = pst.executeUpdate();
     pst.close();
-    
+
     //Remove all account types, add new list
     if (this.getMinerOnly() == false && typeList != null) {
       resetType(db);
@@ -1560,7 +1769,8 @@ public boolean getEnabled() {
           int type_id = Integer.parseInt((String) typeList.get(k));
           lvlcount++;
           insertType(db, type_id, lvlcount);
-        } else {
+        }
+        else {
           lvlcount--;
         }
       }
@@ -1586,11 +1796,11 @@ public boolean getEnabled() {
       db.setAutoCommit(false);
 
       if (contactDelete) {
-	      ContactList contactList = new ContactList();
-	      contactList.setOrgId(this.getOrgId());
-	      contactList.buildList(db);
-	      contactList.delete(db);
-	      contactList = null;
+        ContactList contactList = new ContactList();
+        contactList.setOrgId(this.getOrgId());
+        contactList.buildList(db);
+        contactList.delete(db);
+        contactList = null;
       }
 
       OpportunityList opportunityList = new OpportunityList();
@@ -1606,12 +1816,12 @@ public boolean getEnabled() {
       ticketList = null;
 
       if (documentDelete) {
-	      FileItemList fileList = new FileItemList();
-	      fileList.setLinkModuleId(Constants.ACCOUNTS);
-	      fileList.setLinkItemId(this.getOrgId());
-	      fileList.buildList(db);
-	      fileList.delete(db, baseFilePath);
-	      fileList = null;
+        FileItemList fileList = new FileItemList();
+        fileList.setLinkModuleId(Constants.ACCOUNTS);
+        fileList.setLinkItemId(this.getOrgId());
+        fileList.buildList(db);
+        fileList.delete(db, baseFilePath);
+        fileList = null;
       }
 
       CustomFieldRecordList folderList = new CustomFieldRecordList();
@@ -1620,13 +1830,13 @@ public boolean getEnabled() {
       folderList.buildList(db);
       folderList.delete(db);
       folderList = null;
-      
+
       if (revenueDelete) {
-	      RevenueList revenueList = new RevenueList();
-	      revenueList.setOrgId(this.getOrgId());
-	      revenueList.buildList(db);
-	      revenueList.delete(db);
-	      revenueList = null; 
+        RevenueList revenueList = new RevenueList();
+        revenueList.setOrgId(this.getOrgId());
+        revenueList.buildList(db);
+        revenueList.delete(db);
+        revenueList = null;
       }
 
       CallList callList = new CallList();
@@ -1634,7 +1844,7 @@ public boolean getEnabled() {
       callList.buildList(db);
       callList.delete(db);
       callList = null;
-      
+
       this.resetType(db);
 
       Statement st = db.createStatement();
@@ -1647,12 +1857,14 @@ public boolean getEnabled() {
       st.executeUpdate(
           "DELETE FROM organization WHERE org_id = " + this.getOrgId());
       st.close();
-      
+
       db.commit();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       e.printStackTrace(System.out);
       db.rollback();
-    } finally {
+    }
+    finally {
       db.setAutoCommit(true);
     }
     return true;
@@ -1681,9 +1893,11 @@ public boolean getEnabled() {
           "AND miner_only = " + DatabaseUtils.getTrue(db) + " ");
       st.close();
       db.commit();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       db.rollback();
-    } finally {
+    }
+    finally {
       db.setAutoCommit(true);
     }
   }
@@ -1719,7 +1933,8 @@ public boolean getEnabled() {
 
     if (hasErrors()) {
       return false;
-    } else {
+    }
+    else {
       return true;
     }
   }
@@ -1752,7 +1967,7 @@ public boolean getEnabled() {
     industry = rs.getInt("industry_temp_code");
     owner = rs.getInt("owner");
     if (rs.wasNull()) {
-	    owner = -1; 
+      owner = -1;
     }
     duplicateId = rs.getInt("duplicate_id");
     contractEndDate = rs.getDate("contract_end");

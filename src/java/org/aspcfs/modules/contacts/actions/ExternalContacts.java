@@ -31,7 +31,7 @@ public final class ExternalContacts extends CFSModule {
   }
   
   /**
-   *  Description of the Method
+   *  Show reports page
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -51,17 +51,16 @@ public final class ExternalContacts extends CFSModule {
 
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "ContactRptListInfo");
     rptListInfo.setLink("/ExternalContacts.do?command=Reports");
+    files.setPagedListInfo(rptListInfo);
+    
+    if ("all".equals(rptListInfo.getListView())) {
+      files.setOwnerIdRange(this.getUserRange(context));
+    } else {
+      files.setOwner(this.getUserId(context));
+    }
 
     try {
       db = this.getConnection(context);
-      files.setPagedListInfo(rptListInfo);
-
-      if ("all".equals(rptListInfo.getListView())) {
-        files.setOwnerIdRange(this.getUserRange(context));
-      } else {
-        files.setOwner(this.getUserId(context));
-      }
-
       files.buildList(db);
 
       Iterator i = files.iterator();
@@ -89,7 +88,6 @@ public final class ExternalContacts extends CFSModule {
     }
 
   }
-
 
   /**
    *  Description of the Method

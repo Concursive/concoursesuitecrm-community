@@ -14,7 +14,7 @@ import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
 
 /**
- *  Description of the Class
+ *  Represents a Ticket in CFS
  *
  *@author     chris
  *@created    November 8, 2001
@@ -1424,8 +1424,9 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
-   *
+   *  Inserts this ticket into the database, and populates this Id.  Inserts
+   *  required fields, then calls update to finish record entry
+   *  
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
@@ -1525,7 +1526,7 @@ public class Ticket extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Update this ticket in the database
    *
    *@param  db                Description of Parameter
    *@param  override          Description of Parameter
