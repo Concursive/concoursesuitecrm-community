@@ -3,11 +3,11 @@
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="Role" class="org.aspcfs.modules.admin.base.Role" scope="request"/>
 <jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
+<form action='Roles.do?command=UpdateRole&auto-populate=true' method='post'>
 <a href="Admin.do">Setup</a> >
 <a href="Roles.do">View Roles</a> >
 Update Role
 <hr color="#BFBFBB" noshade>
-<form action='Roles.do?command=UpdateRole&auto-populate=true' method='post'>
 <input type="hidden" name="id" value="<%= Role.getId() %>">
 <input type="hidden" name="modified" value="<%= Role.getModified() %>">
 <dhv:permission name="admin-roles-edit">
@@ -18,24 +18,24 @@ Update Role
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td colspan=2 valign=center align=left>
+  <tr class="title">
+    <td colspan="2">
 	    <strong>Update Role</strong>
 	  </td>
   </tr>
   <tr>
-    <td width="150">Role Name</td>
+    <td class="formLabel">Role Name</td>
     <td><input type="text" name="role" maxlength="80" size="30" value="<%= toHtmlValue(Role.getRole()) %>"><font color="red">*</font> <%= showAttribute(request, "roleError") %></td>
   </tr>
   <tr>
-    <td width="150">Description</td>
-    <td><input type="text" name="description" maxlength="255" size="60" value="<%= toHtmlValue(Role.getDescription()) %>"><font color="red">*</font> <%= showAttribute(request, "descriptionError") %></td>
+    <td class="formLabel">Description</td>
+    <td nowrap><input type="text" name="description" maxlength="255" size="60" value="<%= toHtmlValue(Role.getDescription()) %>"><font color="red">*</font> <%= showAttribute(request, "descriptionError") %></td>
   </tr>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td valign=center align=left colspan=5>
+  <tr class="title">
+    <td colspan="5">
 	    <strong>Permissions</strong>
 	  </td>
   </tr>
@@ -51,10 +51,10 @@ Update Role
     <td>
       <%= toHtml(thisPermission.getCategoryName()) %>
     </td>
-    <td width=40 align="center">Access/<br>View</td>
-    <td width=40 align="center">Add</td>
-    <td width=40 align="center">Edit</td>
-    <td width=40 align="center">Delete</td>
+    <td width="40" align="center">Access/<br>View</td>
+    <td width="40" align="center">Add</td>
+    <td width="40" align="center">Edit</td>
+    <td width="40" align="center">Delete</td>
   </tr>
 <%
    }    

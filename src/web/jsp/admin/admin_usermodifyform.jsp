@@ -14,11 +14,10 @@
   <%}%>
 <%} else {%>
 <a href="Users.do?command=ListUsers">View Users</a> >
-<a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>">User Details</a> >
+<a href="Users.do?command=UserDetails&id=<%= UserRecord.getId() %>">User Details</a> >
 <%}%>
 Modify User<br>
 <hr color="#BFBFBB" noshade>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -33,21 +32,18 @@ Modify User<br>
   </tr>
   <tr>
     <td class="containerBack">
-
 <% if (request.getParameter("return") != null) {%>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
-
-<input type=submit value="Update">
-
+<input type="submit" value="Update">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type=submit value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers'">
 	<%}%>
 <%} else {%>
-<input type=submit value="Cancel" onClick="javascript:this.form.action='Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
 <%}%>
-<input type=submit value="Disable" onClick="javascript:this.form.action='Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
+<input type="submit" value="Disable" onClick="javascript:this.form.action='Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
 <br>
 <input type="hidden" name="id" value="<%= UserRecord.getId() %>">
 <input type="hidden" name="contactId" value="<%= UserRecord.getContactId() %>">
@@ -55,19 +51,17 @@ Modify User<br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Modify Primary Information</strong>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Unique Username</td>
+    <td class="formLabel">Unique Username</td>
     <td>
       <input type="text" name="username" value="<%= toHtmlValue(UserRecord.getUsername()) %>">
       <font color=red>*</font> <%= showAttribute(request, "usernameError") %>
     </td>
   </tr>
-  <!--tr><td width="150">Password</td><td><input type="password" name="password1" value="<%= toHtmlValue(UserRecord.getPassword()) %>"><font color=red>*</font> <%= showAttribute(request, "password1Error") %></td></tr>
-  <tr><td width="150">Type password again</td><td><input type="password" name="password2" value="<%= toHtmlValue(UserRecord.getPassword()) %>"><font color=red>*</font> <%= showAttribute(request, "password2Error") %></td></tr-->
   <tr class="containerBody">
     <td nowrap class="formLabel">Role (User Group)</td>
     <td>
@@ -82,51 +76,49 @@ Modify User<br>
       <%= showAttribute(request, "managerIdError") %>
     </td>
   </tr>
-  
-    <tr class="containerBody">
+<dhv:permission name="demo-view">
+  <tr class="containerBody">
     <td nowrap class="formLabel">Alias User</td>
     <td>
       <%= UserList.getHtmlSelect("alias", UserRecord.getAlias()) %>
     </td>
   </tr>
-  
+</dhv:permission>  
   <tr class="containerBody">
     <td nowrap class="formLabel">Expire Date</td>
     <td>
-    <input type=text size=10 name="expires" value="<%=toHtmlValue(UserRecord.getExpiresString())%>">
-    <a href="javascript:popCalendar('details', 'expires');">Date</a> (mm/dd/yyyy)
+      <input type="text" size="10" name="expires" value="<%=toHtmlValue(UserRecord.getExpiresString())%>">
+      <a href="javascript:popCalendar('details', 'expires');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
-  
   <tr class="containerBody">
     <td nowrap class="formLabel">Generate new password</td>
     <td>
-    <table border="0" cellpadding="0" cellspacing="0">
-    <tr><td valign="center">
-    <input type="checkbox" name="generatePass">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td valign="center">
+            <input type="checkbox" name="generatePass">
+          </td>
+          <td width="8"></td>
+          <td valign="center">
+            Note: New password will be emailed to the following address:
+            <%= UserRecord.getContact().getEmailAddress("Business") %>
+          </td>
+        </tr>
+      </table>
     </td>
-    <td width="8"></td>
-    <td valign="center">
-    Note: New password will be emailed to the following address:
-    <%=UserRecord.getContact().getEmailAddress("Business")%>
-    </td>
-    </tr>
-    </table>
-    </td>
-  </tr>  
-
-  
+  </tr>
 </table>
 <br>
-<input type=submit value="Update">
+<input type="submit" value="Update">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type=submit value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers'">
 	<%}%>
 <%} else {%>
-<input type=submit value="Cancel" onClick="javascript:this.form.action='Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
 <%}%>
-<input type=submit value="Disable" onClick="javascript:this.form.action='Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
+<input type="submit" value="Disable" onClick="javascript:this.form.action='Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
   </td>
   </tr>
 </table>

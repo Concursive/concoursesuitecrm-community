@@ -4,15 +4,15 @@
 <jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="Viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint" scope="request"/>
-<script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/submit.js"></script>
-<a href="/Admin.do">Setup</a> >
-<a href="/Users.do?command=ListUsers">View Users</a> >
-<a href="/Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
-<a href="/Viewpoints.do?command=ListViewpoints&userId=<%= request.getParameter("userId") %>">Viewpoints</a> >
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/submit.js"></script>
+<form action='Viewpoints.do?command=InsertViewpoint&auto-populate=true' method='post'>
+<a href="Admin.do">Setup</a> >
+<a href="Users.do?command=ListUsers">View Users</a> >
+<a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
+<a href="Viewpoints.do?command=ListViewpoints&userId=<%= request.getParameter("userId") %>">Viewpoints</a> >
 Add Viewpoint <br>
 <hr color="#BFBFBB" noshade>
-<form action='Viewpoints.do?command=InsertViewpoint&auto-populate=true' method='post'>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -21,41 +21,41 @@ Add Viewpoint <br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + UserRecord.getId(); %>      
+      <% String param1 = "id=" + UserRecord.getId(); %>
       <dhv:container name="users" selected="viewpoints" param="<%= param1 %>" />
     </td>
   </tr>
   <tr>
     <td class="containerBack">
-  <br>
-  <input type="submit" value="Add" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
-  <input type="reset" value="Reset"><br>
-<%= showError(request, "actionError") %>
-<input type="hidden" name="userId" value="<%= UserRecord.getId() %>">
-
+      <input type="submit" value="Add" name="Save">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
+      <input type="reset" value="Reset"><br>
+      <%= showError(request, "actionError") %>
+      <input type="hidden" name="userId" value="<%= UserRecord.getId() %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA" class="title">
-    <td colspan="2" valign="center" align="left">
+  <tr class="title">
+    <td colspan="2">
 	    <strong>Select a Contact</strong>
 	  </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" align="right">
+    <td class="formLabel">
       Contact
     </td>
-    <td align="left" valign="bottom">
+    <td valign="bottom">
       <table>
         <tr>
           <td>
             <div id="changecontact">None</div>
           </td>
           <td>
+            <font color="red">*</font>
             <input type="hidden" name="vpContactId" id="contactid" value="-1">
-            &nbsp;<a href="javascript:popContactsListSingle('contactid','changecontact','usersOnly=true&reset=true');">Change Contact</a>
+            [<a href="javascript:popContactsListSingle('contactid','changecontact','usersOnly=true&reset=true');">Change Contact</a>]
           </td>
           <td>
-            <a href="javascript:document.forms[0].vpContactId.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a><font color="red">*</font> <%= showAttribute(request, "ContactError") %>
+            [<a href="javascript:document.forms[0].vpContactId.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a>]
+            <%= showAttribute(request, "ContactError") %>
           </td>
         </tr>
       </table>
@@ -65,7 +65,7 @@ Add Viewpoint <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td nowrap colspan="2" align="left">
+    <td nowrap colspan="2">
       <strong>Select Permissions</strong>
     </td>
   </tr>
@@ -81,11 +81,11 @@ Add Viewpoint <br>
     <td>
       <%= toHtml(thisPermission.getCategoryName()) %>
     </td>
-    <td width=40 align="center">Access</td>
+    <td width="40" align="center">Access</td>
   </tr>
 <%
-   }    
-%>    
+   }
+%>
   <tr class="containerBody">
     <td>
       <input type="hidden" name="permission<%= idCount %>id" value="<%= thisPermission.getId() %>">

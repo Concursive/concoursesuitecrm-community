@@ -4,13 +4,13 @@
 <jsp:useBean id="Viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint" scope="request"/>
 <jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
-<a href="/Admin.do">Setup</a> >
-<a href="/Users.do?command=ListUsers">View Users</a> >
-<a href="/Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
-<a href="/Viewpoints.do?command=ListViewpoints&userId=<%= request.getParameter("userId") %>">Viewpoints</a> >
+<form action="Viewpoints.do?command=UpdateViewpoint&auto-populate=true" method="post">
+<a href="Admin.do">Setup</a> >
+<a href="Users.do?command=ListUsers">View Users</a> >
+<a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
+<a href="Viewpoints.do?command=ListViewpoints&userId=<%= request.getParameter("userId") %>">Viewpoints</a> >
 Update Viewpoint <br>
 <hr color="#BFBFBB" noshade>
-<form action='Viewpoints.do?command=UpdateViewpoint&auto-populate=true' method='post'>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -25,21 +25,20 @@ Update Viewpoint <br>
   </tr>
   <tr>
     <td class="containerBack">
-    
 <dhv:permission name="admin-roles-edit">
   <input type="submit" value="Update" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
   <input type="reset" value="Reset">
-</dhv:permission><br>
+  <br>
+</dhv:permission>
 <%= showError(request, "actionError") %>
 <input type="hidden" name="userId" value="<%= UserRecord.getId() %>">
 <input type="hidden" name="vpUserId" value="<%= Viewpoint.getVpUserId() %>">
 <input type="hidden" name="id" value="<%= Viewpoint.getId() %>">
 <input type="hidden" name="modified" value="<%= Viewpoint.getModified() %>">
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA" class="title">
-    <td colspan="2" valign="center" align="left">
+  <tr class="title">
+    <td colspan="2">
 	    <strong>Update Viewpoint</strong>
 	  </td>
   </tr>
@@ -58,8 +57,8 @@ Update Viewpoint <br>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA" class="title">
-    <td valign=center align=left colspan=5>
+  <tr class="title">
+    <td colspan="5">
 	    <strong>Permissions</strong>
 	  </td>
   </tr>
@@ -75,7 +74,7 @@ Update Viewpoint <br>
     <td>
       <%= toHtml(thisPermission.getCategoryName()) %>
     </td>
-    <td width=40 align="center">Access</td>
+    <td width="40" align="center">Access</td>
   </tr>
 <%
    }    

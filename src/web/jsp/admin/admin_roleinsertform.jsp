@@ -9,26 +9,27 @@
 Add Role<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Add" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
+  <tr class="title">
     <td colspan="2">
 	    <strong>Add a Role</strong>
 	  </td>
   </tr>
   <tr>
-    <td width="100">Role Name</td>
+    <td class="formLabel">Role Name</td>
     <td><input type="text" name="role" maxlength="80" value="<%= toHtmlValue(Role.getRole()) %>"><font color="red">*</font> <%= showAttribute(request, "roleError") %></td>
   </tr>
   <tr>
-    <td width="100">Description</td>
-    <td><input type="text" name="description" size="60" maxlength="255" value="<%= toHtmlValue(Role.getDescription()) %>"><font color="red">*</font> <%= showAttribute(request, "descriptionError") %></td>
-  </tr></table>
+    <td class="formLabel">Description</td>
+    <td nowrap><input type="text" name="description" size="60" maxlength="255" value="<%= toHtmlValue(Role.getDescription()) %>"><font color="red">*</font> <%= showAttribute(request, "descriptionError") %></td>
+  </tr>
+</table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
+  <tr class="title">
     <td colspan="5">
 	    <strong>Configure permissions for this role</strong>
 	  </td>
@@ -41,16 +42,14 @@ Add Role<br>
     Permission thisPermission = (Permission)i.next();
     if (PermissionList.isNewCategory(thisPermission.getCategoryName())) {
 %>
-  <tr bgcolor="#E5E5E5">
     <tr bgcolor="#E5E5E5">
-    <td>
-      <%= toHtml(thisPermission.getCategoryName()) %>
-    </td>
-    <td width=40 align="center">Access/<br>View</td>
-    <td width=40 align="center">Add</td>
-    <td width=40 align="center">Edit</td>
-    <td width=40 align="center">Delete</td>
-  </tr>
+      <td>
+        <%= toHtml(thisPermission.getCategoryName()) %>
+      </td>
+      <td width="40" align="center">Access/<br>View</td>
+      <td width="40" align="center">Add</td>
+      <td width="40" align="center">Edit</td>
+      <td width="40" align="center">Delete</td>
   </tr>
 <%
    }

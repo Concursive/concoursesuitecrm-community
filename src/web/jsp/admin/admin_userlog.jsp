@@ -8,7 +8,6 @@
 <a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>">User Details</a> >
 Login History<br>
 <hr color="#BFBFBB" noshade>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -23,51 +22,39 @@ Login History<br>
   </tr>
   <tr>
     <td class="containerBack">
-    
-<dhv:pagedListStatus object="AccessLogInfo"/>
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td><b>Username</b></td>
-    <td><b>Login IP Address</b></td>
-    <td><b>Date/Time</b></td>
-  </tr>
-  
-  <%
+      <dhv:pagedListStatus object="AccessLogInfo"/>
+        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+          <tr class="title">
+            <td><b>Username</b></td>
+            <td nowrap><b>Login IP Address</b></td>
+            <td nowrap><b>Date/Time</b></td>
+          </tr>
+<%
 	Iterator k = AccessLog.iterator();
-	
 	if ( k.hasNext() ) {
 		int rowid = 0;
 		while (k.hasNext()) {
-		if (rowid != 1) {
-			rowid = 1;
-		} else {
-			rowid = 2;
-		}
-	
-		AccessLog thisLog = (AccessLog)k.next();
+		  rowid = (rowid != 1?1:2);
+      AccessLog thisLog = (AccessLog)k.next();
 %>   
 	<tr>
 		<td valign="top" nowrap class="row<%= rowid %>">
-			<%=toHtml(thisLog.getUsername())%>
+			<%= toHtml(thisLog.getUsername()) %>
 		</td>
 		<td valign="top" nowrap class="row<%= rowid %>">
-			<%=toHtml(thisLog.getIp())%>
+			<%= toHtml(thisLog.getIp()) %>
 		</td>
 		<td nowrap valign="top" class="row<%= rowid %>">
-    <%=toHtml(thisLog.getEnteredString())%>
+      <%= toHtml(thisLog.getEnteredString()) %>
 		</td>
-	</tr> 
-  
+	</tr>
   <%}%>
-  
 <%} else {%>
-  <tr bgcolor="white"><td colspan=3 valign=center>No login history found.</td></tr>
+  <tr bgcolor="containerBody"><td colspan="3">No login history found.</td></tr>
 <%}%>
-  
   </table>
   <br>
   <dhv:pagedListControl object="AccessLogInfo"/>
 </td>
 </tr>
-</table>  
+</table>
