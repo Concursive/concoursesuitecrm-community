@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="UserInfo" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <jsp:useBean id="ShortChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="FullChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
@@ -67,7 +67,7 @@ Dashboard<br>
           </td>
           
           <td width=125 valign=center>
-           Department
+           Title
           </td>
         </tr>
 <%
@@ -88,7 +88,7 @@ Dashboard<br>
             <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
           </td>
           <td width=125 class="row<%= rowid %>" valign=center>
-            <%= toHtml(thisRec.getContact().getDepartmentName()) %>
+            <%= toHtml(thisRec.getContact().getTitle()) %>
           </td>
         </tr>
     
@@ -124,6 +124,8 @@ Dashboard<br>
         </tr>
 <%
 	Iterator n = MyOppList.iterator();
+  FileItem thisFile = new FileItem();
+  
 		if ( n.hasNext() ) {
 			int rowid = 0;
 			while (n.hasNext()) {
@@ -137,7 +139,11 @@ Dashboard<br>
 				Opportunity thisOpp = (Opportunity)n.next();
 %>    
 				<tr>
-          <td width="100%" class="row<%= rowid %>" valign=center><a href="/Leads.do?command=DetailsOpp&id=<%=thisOpp.getId()%>&return=dashboard"><%= toHtml(thisOpp.getShortDescription()) %></a></td>
+          <td width="100%" class="row<%= rowid %>" valign=center><a href="/Leads.do?command=DetailsOpp&id=<%=thisOpp.getId()%>&return=dashboard"><%= toHtml(thisOpp.getAccountName()) %>:&nbsp;<%= toHtml(thisOpp.getShortDescription()) %></a>
+                <% if (thisOpp.hasFiles()) { %>
+      <%= thisFile.getImageTag()%>
+      <%}%>    
+          </td>
           <!--td class="row<%= rowid %>" valign=center><%= thisOpp.getAccountName() %></td-->
           <td width="55" class="row<%= rowid %>">$<%= ((thisOpp.getGuessCurrency(1000))) %>K</td>
           <!--td class="row<%= rowid %>" valign=center align="right" width=25><%= thisOpp.getCloseProbValue() %></td>
