@@ -52,6 +52,22 @@ public class CampaignRun {
   
   public CampaignRun() {}
   
+  public CampaignRun(Connection db, int id) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM campaign_run " +
+      "WHERE id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      throw new SQLException ("Campaign Run ID not found");
+    }
+    rs.close();
+    pst.close();
+  }
+  
   public boolean insert(Connection db) throws SQLException {
     if (campaignId == -1) {
       throw new SQLException("Campaign ID not specified");
@@ -86,5 +102,16 @@ public class CampaignRun {
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "campaign_run_id_seq");
     return true;
+  }
+  
+  public void buildRecord(ResultSet rs) throws SQLException {
+    id = rs.getInt("id");
+    campaignId = rs.getInt("campaign_id");
+    status = rs.getInt("status");
+    runDate = rs.getTimestamp("run_date");
+    totalContacts = rs.getInt("total_contacts");
+    totalSent = rs.getInt("total_sent");
+    totalReplied = rs.getInt("total_replied");
+    totalBounced = rs.getInt("total_bounced");
   }
 }
