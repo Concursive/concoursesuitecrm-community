@@ -1,14 +1,13 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
-import org.theseus.beans.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
-import org.theseus.actions.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 
 /**
  *  When a user goes to the "Folders" section of a module, there are several

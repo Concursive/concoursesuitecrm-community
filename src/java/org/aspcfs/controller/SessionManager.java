@@ -1,10 +1,11 @@
-package com.darkhorseventures.framework.servlets;
+package org.aspcfs.controller;
 
 import java.util.HashMap;
 import javax.servlet.http.HttpSession;
 import com.darkhorseventures.framework.actions.ActionContext;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 
 /**
  *  Handles all sessions running on the web server

@@ -1,4 +1,4 @@
-package com.darkhorseventures.webutils;
+package org.aspcfs.utils.web;
 
 import java.util.*;
 import java.text.*;
@@ -61,7 +61,7 @@ public class HtmlButton {
   /**
    *  Sets the onChange attribute of the HtmlButton object
    *
-   *@param  onClick   The new onClick value
+   *@param  onClick  The new onClick value
    */
   public void setOnClick(String onClick) {
     this.onClick = onClick;
@@ -183,7 +183,7 @@ public class HtmlButton {
       this.setValue(button.getAttribute("display"));
       this.setOnClick(button.getAttribute("onClick") != null ? button.getAttribute("onclick") : "");
       this.setType(Integer.parseInt(button.getAttribute("type")));
-      this.setEnabled(button.getAttribute("enabled").equalsIgnoreCase("no")?false:true);
+      this.setEnabled(button.getAttribute("enabled").equalsIgnoreCase("no") ? false : true);
     }
   }
 
@@ -194,7 +194,7 @@ public class HtmlButton {
    *@return    Description of the Return Value
    */
   public String toString() {
-    return "<input type=\"" + this.getTypeString() + "\" name=\"" + this.getName() + "\" value=\"" + this.getValue() + "\" onClick=\"" + this.getOnClick() + "\"" +  (this.getEnabled()?"":" disabled") + ">";
+    return "<input type=\"" + this.getTypeString() + "\" name=\"" + this.getName() + "\" value=\"" + this.getValue() + "\" onClick=\"" + this.getOnClick() + "\"" + (this.getEnabled() ? "" : " disabled") + ">";
   }
 }
 

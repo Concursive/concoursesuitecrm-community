@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import java.io.*;
 import java.net.*;
@@ -90,8 +90,8 @@ public class HTTPUtils {
 
 
   /**
-   *  Downloads a URL into a postscript file.  Currently uses html2ps, but
-   *  for Windows compatibility may need to use htmldoc after testing.
+   *  Downloads a URL into a postscript file. Currently uses html2ps, but for
+   *  Windows compatibility may need to use htmldoc after testing.
    *
    *@param  url           Description of the Parameter
    *@param  baseFilename  Description of the Parameter
@@ -104,26 +104,26 @@ public class HTTPUtils {
     byte buffer[];
     int bytes;
     String command[] = null;
-    
+
     File osCheckFile = new File("/bin/sh");
     if (osCheckFile.exists()) {
       //Linux
       command = new String[]{"/bin/sh", "-c", "/usr/bin/htmldoc --quiet " +
-        "-f " + baseFilename + ".ps " +
-        "--webpage " +
-        "-t ps " +
-        "--header ... " +
-        "--footer ... " +
-        url};
+          "-f " + baseFilename + ".ps " +
+          "--webpage " +
+          "-t ps " +
+          "--header ... " +
+          "--footer ... " +
+          url};
     } else {
       //Windows
       command = new String[]{"htmldoc", "--quiet " +
-        "-f " + baseFilename + ".ps " +
-        "--webpage " +
-        "-t ps3 " +
-        "--header ... " +
-        "--footer ... " +
-        url};
+          "-f " + baseFilename + ".ps " +
+          "--webpage " +
+          "-t ps3 " +
+          "--header ... " +
+          "--footer ... " +
+          url};
     }
     runtime = Runtime.getRuntime();
     try {

@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import java.util.*;
 
@@ -7,12 +7,13 @@ import java.util.*;
  *
  *@author     Matt Rajkowski
  *@created    March 15, 2002
+ *@version    $Id$
  */
 public class Template {
 
-  public static final int HTMLEncoding = 1;
-  public static final int XMLEncoding = 2;
-  
+  public final static int HTMLEncoding = 1;
+  public final static int XMLEncoding = 2;
+
   HashMap parseElements = null;
   String text = null;
   int valueEncoding = -1;
@@ -22,13 +23,37 @@ public class Template {
    *  Constructor for the Template object
    */
   public Template() { }
-  
+
+
+  /**
+   *  Constructor for the Template object
+   *
+   *@param  theText  Description of the Parameter
+   */
   public Template(String theText) {
     text = theText;
   }
 
-  public void setValueEncoding(int tmp) { this.valueEncoding = tmp; }
-  public int getValueEncoding() { return valueEncoding; }
+
+  /**
+   *  Sets the valueEncoding attribute of the Template object
+   *
+   *@param  tmp  The new valueEncoding value
+   */
+  public void setValueEncoding(int tmp) {
+    this.valueEncoding = tmp;
+  }
+
+
+  /**
+   *  Gets the valueEncoding attribute of the Template object
+   *
+   *@return    The valueEncoding value
+   */
+  public int getValueEncoding() {
+    return valueEncoding;
+  }
+
 
   /**
    *  Sets the parseElements attribute of the Template object
@@ -119,11 +144,18 @@ public class Template {
     }
     parseElements.put(key, value);
   }
-  
+
+
+  /**
+   *  Gets the value attribute of the Template object
+   *
+   *@param  key  Description of the Parameter
+   *@return      The value value
+   */
   public String getValue(String key) {
     String value = null;
     int keyIndex = text.indexOf("${" + key + "=");
-    if ( keyIndex > -1) {
+    if (keyIndex > -1) {
       StringBuffer parsedValue = new StringBuffer();
       boolean start = false;
       boolean end = false;
@@ -148,6 +180,12 @@ public class Template {
     return value;
   }
 
+
+  /**
+   *  Gets the variables attribute of the Template object
+   *
+   *@return    The variables value
+   */
   public ArrayList getVariables() {
     ArrayList variables = new ArrayList();
     if (text != null) {

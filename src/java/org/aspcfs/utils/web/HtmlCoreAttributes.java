@@ -1,4 +1,4 @@
-package com.darkhorseventures.controller;
+package org.aspcfs.utils.web;
 
 /**
  *  Description of the Interface
@@ -19,7 +19,7 @@ public interface HtmlCoreAttributes {
   /**
    *  Sets the class attribute of the ScheduledActions object
    *
-   *@param  rowClass   The new rowClass value
+   *@param  rowClass  The new rowClass value
    */
   public void setElementClass(String rowClass);
 

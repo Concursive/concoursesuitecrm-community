@@ -11,8 +11,8 @@ import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
 import com.darkhorseventures.framework.servlets.*;
 import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.controller.*;
-import org.aspcfs.modules.utils.*;
+import org.aspcfs.controller.*;
+import org.aspcfs.utils.*;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.*;
 

@@ -1,4 +1,4 @@
-package com.darkhorseventures.framework.servlets;
+package org.aspcfs.controller;
 
 import javax.servlet.http.HttpSession;
 import com.darkhorseventures.framework.actions.ActionContext;

@@ -1,13 +1,13 @@
-package com.darkhorseventures.controller;
+package org.aspcfs.utils.web;
 
-import com.darkhorseventures.cfsbase.CustomFieldCategory;
-import com.darkhorseventures.cfsbase.CustomField;
-import com.darkhorseventures.controller.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.base.CustomFieldCategory;
+import org.aspcfs.modules.base.CustomField;
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.utils.ObjectUtils;
-import com.darkhorseventures.utils.StringUtils;
-import org.theseus.actions.ActionContext;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.StringUtils;
+
 
 /**
  *  Represents an HTML Form in which items are dynamically added in code

@@ -1,13 +1,11 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.login.actions;
 
+import com.darkhorseventures.actions.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
-import org.theseus.actions.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.controller.*;
 import java.util.Hashtable;
+import org.aspcfs.modules.actions.CFSModule;
 
 /**
  *  The CFS Login module.

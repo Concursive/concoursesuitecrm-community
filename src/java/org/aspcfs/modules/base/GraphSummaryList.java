@@ -1,6 +1,6 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
-import org.theseus.beans.*;
+import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
@@ -10,7 +10,8 @@ import java.text.*;
  *
  *@author     chris
  *@created    October 30, 2001
- *@version    $Id$
+ *@version    $Id: GraphSummaryList.java,v 1.7 2003/01/09 18:07:35 mrajkowski
+ *      Exp $
  */
 public class GraphSummaryList extends Hashtable {
 
@@ -55,8 +56,8 @@ public class GraphSummaryList extends Hashtable {
   /**
    *  Sets the Value attribute of the GraphSummaryList object
    *
-   *@param  which  The new Value value
-   *@param  val    The new Value value
+   *@param  val        The new Value value
+   *@param  yearMonth  The new value value
    */
   public void setValue(String yearMonth, Double val) {
     if (!this.values.containsKey(yearMonth)) {

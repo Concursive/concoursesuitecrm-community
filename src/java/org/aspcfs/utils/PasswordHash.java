@@ -1,20 +1,23 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
+
 import java.security.*;
 import java.io.*;
+
 /**
  *  Description of the Class
  *
+ *@author     matt rajkowski
  *@created    August 16, 2001
- *@version    $Id$
+ *@version    $Id: PasswordHash.java,v 1.1.1.1 2002/01/14 19:49:27 mrajkowski
+ *      Exp $
  */
 public class PasswordHash {
 
   /**
    *  Default constructor.
-   *
-  */
-  public PasswordHash () {
-  }
+   */
+  public PasswordHash() { }
+
 
   /**
    *  Takes a string and turns it into a one-way string hash
@@ -27,7 +30,7 @@ public class PasswordHash {
     try {
       MessageDigest md;
       //MD5, SHA, SHA-1
-      md = MessageDigest.getInstance("MD5"); 
+      md = MessageDigest.getInstance("MD5");
       byte[] output = md.digest(inString.getBytes());
       StringBuffer sb = new StringBuffer(2 * output.length);
       for (int i = 0; i < output.length; ++i) {
@@ -45,30 +48,25 @@ public class PasswordHash {
 
 
   /**
-   *  Command line utility. When run as an application, this
-   *  member uses the encrypt method to display the encrypted
-   *  version of a line of input.
+   *  Command line utility. When run as an application, this member uses the
+   *  encrypt method to display the encrypted version of a line of input.
    *
    *@param  args  Not used.
    */
   public static void main(String args[]) {
-
     PasswordHash hasher = new PasswordHash();
-
     try {
-		String text;
-		if (args.length == 0) {
-      		System.out.print("Password: ");
-      		BufferedReader in =
-      		    new BufferedReader(new InputStreamReader(System.in));
-      		text = in.readLine();
-      		System.out.println("Hash: " + hasher.encrypt(text));
-		}
-		else {
-			text = args [0];
-      		System.out.println(hasher.encrypt(text));
-		}
-
+      String text;
+      if (args.length == 0) {
+        System.out.print("Password: ");
+        BufferedReader in =
+            new BufferedReader(new InputStreamReader(System.in));
+        text = in.readLine();
+        System.out.println("Hash: " + hasher.encrypt(text));
+      } else {
+        text = args[0];
+        System.out.println(hasher.encrypt(text));
+      }
     } catch (Exception ex) {
       System.out.println(ex);
     }

@@ -1,11 +1,11 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 
 /**
  *  Represents a group of CustomField records

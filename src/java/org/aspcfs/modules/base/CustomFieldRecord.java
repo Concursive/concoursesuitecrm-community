@@ -4,7 +4,7 @@ package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
 import java.text.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 
 /**
  *  Represents all of the data that is entered for a CustomFieldCategory

@@ -9,16 +9,17 @@
  *  If you do not want this formatting for a ten or eleven digit number,
  *  enter a '+' before the number, e.g., +49 8178 94 07-0.
  */
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.base;
 
-import org.theseus.beans.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.controller.SystemStatus;
 import java.util.*;
 import java.text.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.controller.SystemStatus;
+
 
 /**
  *  Represents a CustomField, used for both the definition of a custom field and
