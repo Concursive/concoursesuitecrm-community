@@ -26,7 +26,7 @@
       <permission name="myhomepage-profile-password" attributes="--e-" description="Password"/>
       <permission name="myhomepage-action-lists" attributes="vaed" description="My Action Lists"/>
     </category>
-    <category id="2" name="General Contacts" folders="true" lookups="true">
+    <category id="2" name="General Contacts" folders="true" lookups="true" reports="true">
       <folder constantId="2" description="Contacts"/>
       <lookup constantId="1" class="contactType" table="lookup_contact_types" description="Types"/>
       <lookup constantId="2" class="lookupList" table="lookup_contactemail_types" description="Email Types"/>
@@ -40,6 +40,7 @@
       <permission name="contacts-external_contacts-calls" attributes="vaed" description="Calls"/>
       <permission name="contacts-external_contacts-messages" attributes="v---" description="Messages"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
+      <report file="contacts_user.xml" type="user" permission="contacts" title="Contacts" description="Who are my contacts?"/>
     </category>
     <category id="4" name="Pipeline Management" folders="false" lookups="true" viewpoints="true" reports="true">
       <lookup constantId="1" class="lookupList" table="lookup_stage" description="Stage"/>
@@ -77,6 +78,7 @@
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="What accounts are expiring?"/>
       <report file="accounts_current.xml" type="user" permission="accounts-accounts" title="Current Accounts" description="What are my current accounts?"/>
+      <report file="accounts_contacts.xml" type="user" permission="accounts-accounts-contacts" title="Account Contacts" description="Who are the contacts in each account?"/>
     </category>
     <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
