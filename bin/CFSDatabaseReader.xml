@@ -457,7 +457,7 @@
       <property>sendMethodId</property>
       <property>surveyId</property>
       </map>
-      <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement" uniqueField="id">
+      <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
       <property lookup="searchCriteriaList" field="id"/>
       <property field="field"/>
       <property field="operator"/>
