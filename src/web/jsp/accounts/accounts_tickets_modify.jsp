@@ -134,7 +134,11 @@ function ShowSpan(thisID)
       Contact
 		</td>
     <td valign=center>
-      <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
+      <% if ( TicketDetails.getThisContact() == null ) {%>
+        <%= ContactList.getHtmlSelect("contactId", 0 ) %>
+      <%} else {%>
+        <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
+      <%}%>
       <font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
 		</td>
   </tr>

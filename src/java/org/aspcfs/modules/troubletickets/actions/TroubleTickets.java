@@ -137,6 +137,7 @@ public final class TroubleTickets extends CFSModule {
       context.getRequest().setAttribute("SubList1", subList1);
 
       ContactList contactList = new ContactList();
+      contactList.setEmptyHtmlSelectRecord("-- None --");
       contactList.setPersonalId(getUserId(context));
       //contactList.setTypeId(Integer.parseInt(typeId));
       contactList.setBuildDetails(false);
@@ -398,7 +399,11 @@ public final class TroubleTickets extends CFSModule {
       nc.setEnteredBy(getUserId(context));
       nc.setModifiedBy(getUserId(context));
       nc.setOwner(getUserId(context));
-      nc.setTypeId(0);
+      if ( newTic.getOrgId() == 0 ) {
+	      nc.setTypeId(1);
+      } else {
+	      nc.setTypeId(0);
+      }
     }
 
     try {

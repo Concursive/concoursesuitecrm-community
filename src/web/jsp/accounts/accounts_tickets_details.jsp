@@ -128,7 +128,7 @@
 </table>
 &nbsp;
 <%
-  if (TicketDetails.getThisContact().getId() != -1) {
+  if (TicketDetails.getThisContact() != null ) {
 %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">

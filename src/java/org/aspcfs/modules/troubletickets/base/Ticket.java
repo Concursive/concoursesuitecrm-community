@@ -141,13 +141,42 @@ public class Ticket extends GenericBean {
     rs.close();
     st.close();
 
-    if (this.getContactId() > 0) {
+    if (this.getContactId() > 0 && checkContactRecord(db, this.getContactId())) {
       thisContact = new Contact(db, "" + this.getContactId());
+    } else {
+      thisContact = null;
     }
+    
     history.setTicketId(this.getId());
     history.buildList(db);
   }
-
+  
+  public boolean checkContactRecord(Connection db, int id) throws SQLException {
+	if (id != -1) {
+		PreparedStatement pst = null;
+		StringBuffer sql = new StringBuffer();
+		sql.append(
+			"SELECT contact_id from contact c " +
+			"WHERE c.contact_id = " + id + " ");
+	
+			Statement st = null;
+			ResultSet rs = null;
+			st = db.createStatement();
+			rs = st.executeQuery(sql.toString());
+	
+			if (rs.next()) {
+				rs.close();
+				st.close();
+				return true;
+			} else {
+				rs.close();
+				st.close();
+				return false;
+			}
+	}  else {
+		return false;
+	}
+  }
 
   /**
    *  Sets the closed attribute of the Ticket object

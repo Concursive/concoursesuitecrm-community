@@ -145,7 +145,7 @@
 	</td>
   </tr>
 <%
-  if (TicketDetails.getThisContact().getId() != -1) {
+  if (TicketDetails.getThisContact() != null ) {
 %>
   <tr>
   	<td>

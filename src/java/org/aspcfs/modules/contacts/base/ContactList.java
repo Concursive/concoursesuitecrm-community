@@ -39,6 +39,7 @@ public class ContactList extends Vector {
   private String ownerIdRange = null;
   private String accountOwnerIdRange = null;
   private boolean withAccountsOnly = false;
+  private String emptyHtmlSelectRecord = null;
 
   //ranges
   private String companyRange = null;
@@ -154,6 +155,14 @@ public class ContactList extends Vector {
    */
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
+  }
+
+  public String getEmptyHtmlSelectRecord() {
+	return emptyHtmlSelectRecord;
+  }
+  
+  public void setEmptyHtmlSelectRecord(String emptyHtmlSelectRecord) {
+	this.emptyHtmlSelectRecord = emptyHtmlSelectRecord;
   }
 
 
@@ -686,6 +695,11 @@ public class ContactList extends Vector {
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect contactListSelect = new HtmlSelect();
+    
+    if (emptyHtmlSelectRecord != null) {
+      contactListSelect.addItem(-1, emptyHtmlSelectRecord);
+    }
+    
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Contact thisContact = (Contact) i.next();

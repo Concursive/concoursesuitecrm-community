@@ -365,6 +365,7 @@ public final class AccountTickets extends CFSModule {
       if (newTic != null && newTic.getOrgId() != -1) {
         contactList.setBuildDetails(false);
         contactList.setOrgId(newTic.getOrgId());
+	contactList.setEmptyHtmlSelectRecord("-- None --");
         contactList.buildList(db);
       }
 
