@@ -75,7 +75,7 @@ Reports<br>
       <%=toHtml(thisItem.getEnteredDateTimeString())%>
     </td>
     <td class="row<%= rowid %>" nowrap>
-      <%=toHtml(thisItem.getEnteredByString())%>
+      <dhv:username id="<%= thisItem.getEnteredBy() %>"/>
     </td>
     <td align="right" class="row<%= rowid %>">
       <%= thisItem.getDownloads() %>

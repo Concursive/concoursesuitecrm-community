@@ -52,58 +52,42 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandReports(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-reports-view"))) {
+    if (!hasPermission(context, "accounts-accounts-reports-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
-    Connection db = null;
-
-    FileItemList files = new FileItemList();
-    //want to show accounts reports only
-    files.setLinkModuleId(Constants.DOCUMENTS_ACCOUNTS_REPORTS);
-    files.setLinkItemId(-1);
-
+    //Set the menu: the user is in the Reports module
+    addModuleBean(context, "Reports", "ViewReports");
+    //Retrieve the paged list that will be used for paging through reports
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "RptListInfo");
     rptListInfo.setLink("Accounts.do?command=Reports");
-
-    try {
-      db = this.getConnection(context);
-      files.setPagedListInfo(rptListInfo);
-
-      if ("all".equals(rptListInfo.getListView())) {
-        files.setOwnerIdRange(this.getUserRange(context));
-      } else {
-        files.setOwner(this.getUserId(context));
-      }
-
-      files.buildList(db);
-
-      Iterator i = files.iterator();
-      while (i.hasNext()) {
-        FileItem thisItem = (FileItem) i.next();
-        Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
-        Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
-        thisItem.setEnteredByString(enteredBy.getNameFirstLast());
-        thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
-      }
-
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "Reports", "ViewReports");
-      context.getRequest().setAttribute("FileList", files);
-      return ("ReportsOK");
+    //Prepare the file list for accounts
+    FileItemList files = new FileItemList();
+    files.setLinkModuleId(Constants.DOCUMENTS_ACCOUNTS_REPORTS);
+    files.setPagedListInfo(rptListInfo);
+    //Check the combo box value from the report list for filtering reports
+    if ("all".equals(rptListInfo.getListView())) {
+      //Show only the reports that this user or someone below this user created
+      files.setOwnerIdRange(this.getUserRange(context));
     } else {
+      //Show only this user's reports
+      files.setOwner(this.getUserId(context));
+    }
+    Connection db = null;
+    try {
+      //Get a connection from the connection pool for this user
+      db = this.getConnection(context);
+      //Generate the list of files based on the above criteria
+      files.buildList(db);
+      context.getRequest().setAttribute("FileList", files);
+    } catch (Exception errorMessage) {
+      //An error occurred, go to generic error message page
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      //Always free the database connection
+      this.freeConnection(context, db);
     }
-
+    return ("ReportsOK");
   }
 
 
