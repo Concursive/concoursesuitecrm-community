@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="org.aspcfs.modules.PermissionCategory, java.util.*" %>
+<%@ page import="org.aspcfs.modules.admin.base.PermissionCategory, java.util.*" %>
 <jsp:useBean id="rangeSelect" class="java.lang.String" scope="request"/>
 <jsp:useBean id="dateStart" class="java.sql.Date" scope="request"/>
 <jsp:useBean id="dateEnd" class="java.sql.Date" scope="request"/>

@@ -1,8 +1,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="org.aspcfs.modules.Permission, java.util.*" %>
+<%@ page import="org.aspcfs.modules.admin.base.Permission, java.util.*" %>
 <%@ include file="../initPage.jsp" %>
-<jsp:useBean id="Role" class="org.aspcfs.modules.Role" scope="request"/>
-<jsp:useBean id="PermissionList" class="org.aspcfs.modules.PermissionList" scope="request"/>
+<jsp:useBean id="Role" class="org.aspcfs.modules.admin.base.Role" scope="request"/>
+<jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
 <body onLoad="javascript:document.forms[0].role.focus();">
 <form action='Roles.do?command=InsertRole&auto-populate=true' method='post'>
 <a href="Admin.do">Setup</a> >

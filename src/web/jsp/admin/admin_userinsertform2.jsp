@@ -1,15 +1,15 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Contact" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
-<jsp:useBean id="RoleList" class="org.aspcfs.modules.RoleList" scope="request"/>
+<jsp:useBean id="RoleList" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></SCRIPT>
 <body onLoad="javascript:document.forms[0].username.focus();">
-<form name="addUser" action="/Users.do?command=AddUser&auto-populate=true" method="post">
-<a href="/Admin.do">Setup</a> >
-<a href="/Users.do?command=InsertUserForm">Add User (Step 1)</a> > 
+<form name="addUser" action="Users.do?command=AddUser&auto-populate=true" method="post">
+<a href="Admin.do">Setup</a> >
+<a href="Users.do?command=InsertUserForm">Add User (Step 1)</a> > 
 Add User (Step 2)<br>
 <hr color="#BFBFBB" noshade>
 <input type="hidden" name="typeId" value="<%= request.getParameter("typeId") %>">
