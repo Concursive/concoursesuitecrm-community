@@ -597,52 +597,7 @@ public class OrganizationReport extends OrganizationList {
         }
       } else {
         ReportRow thisRow = new ReportRow();
-
-        Iterator y = criteria.iterator();
-        while (y.hasNext()) {
-          String param = (String) y.next();
-
-          if (param.equals("id")) {
-            thisRow.addCell(thisOrg.getOrgId());
-          }
-          if (param.equals("accountName")) {
-            thisRow.addCell(thisOrg.getName());
-          }
-          if (param.equals("accountNumber")) {
-            thisRow.addCell(thisOrg.getAccountNumber());
-          }
-          if (param.equals("url")) {
-            thisRow.addCell(thisOrg.getUrl());
-          }
-          if (param.equals("ticker")) {
-            thisRow.addCell(thisOrg.getTicker());
-          }
-          if (param.equals("employees")) {
-            thisRow.addCell(thisOrg.getEmployees());
-          }
-          if (param.equals("entered")) {
-            thisRow.addCell(thisOrg.getEnteredString());
-          }
-          if (param.equals("enteredBy")) {
-            thisRow.addCell(thisOrg.getEnteredByName());
-          }
-          if (param.equals("modified")) {
-            thisRow.addCell(thisOrg.getModifiedString());
-          }
-          if (param.equals("modifiedBy")) {
-            thisRow.addCell(thisOrg.getModifiedByName());
-          }
-          if (param.equals("owner")) {
-            thisRow.addCell(thisOrg.getOwnerName());
-          }
-          if (param.equals("contractEndDate")) {
-            thisRow.addCell(thisOrg.getContractEndDateString());
-          }
-          if (param.equals("notes")) {
-            thisRow.addCell(thisOrg.getNotes());
-          }
-        }
-
+        addDataRow(thisRow, thisOrg);
         rep.addRow(thisRow);
       }
     }
