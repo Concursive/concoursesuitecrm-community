@@ -1361,7 +1361,7 @@ public final class ExternalContacts extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPopupSelector(ActionContext context) {
-    if (!(hasPermission(context, "contacts-external_contacts-delete"))) {
+    if (!(hasPermission(context, "contacts-external_contacts-view"))) {
       return ("PermissionError");
     }
     Connection db = null;
