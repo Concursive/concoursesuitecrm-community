@@ -50,7 +50,7 @@ public class TicketCategoryDraftList extends ArrayList {
   /**
    *  Sets the HtmlJsEvent attribute of the TicketCategoryDraftList object
    *
-   *@param  HtmlJsEvent  The new HtmlJsEvent value
+   *@param  htmlJsEvent  The new htmlJsEvent value
    *@since
    */
   public void setHtmlJsEvent(String htmlJsEvent) {
@@ -257,17 +257,20 @@ public class TicketCategoryDraftList extends ArrayList {
       while (i.hasNext()) {
         TicketCategoryDraft thisCat = (TicketCategoryDraft) i.next();
         String elementText = thisCat.getDescription();
+        HashMap colorAttribute = new HashMap();
         if (!(thisCat.getEnabled())) {
-          elementText += " *";
+          colorAttribute.put("style", "color: red");
+        }else if(thisCat.getActualCatId() == -1){
+          colorAttribute.put("style", "color: blue");
         }
         catListSelect.addItem(
-            thisCat.getId(),
-            elementText);
+              thisCat.getId(),
+              elementText, colorAttribute);
       }
     } else {
-      catListSelect.addItem(-1, "--None--");
+      catListSelect.addItem(-1, "---------None---------");
     }
-    
+
     catListSelect.setJsEvent(this.getHtmlJsEvent());
     catListSelect.setBuilt(false);
     return catListSelect.getHtml(selectName, defaultKey);
