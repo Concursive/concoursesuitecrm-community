@@ -860,7 +860,7 @@ public final class Accounts extends CFSModule {
       if (resultCount == -1) {
         processErrors(context, newOrg.getErrors());
         processWarnings(context, newOrg.getWarnings());
-      } else {
+      } else if (resultCount == 1) {
         //if this is an individual account, populate and update the primary contact
         if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
           ((Contact) newOrg.getPrimaryContact()).update(db);
