@@ -10,6 +10,7 @@ import org.aspcfs.utils.PrivateString;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.FileUtils;
+import org.aspcfs.utils.DatabaseUtils;
 import java.io.*;
 import java.security.*;
 import com.sun.crypto.provider.*;
@@ -552,37 +553,17 @@ public class Setup extends CFSModule {
     try {
       db = getDbConnection(context);
       if (!isDatabaseInstalled(db)) {
-        try {
-          //Create the database and initial data, combine the following files
-          //pg_dump -xOdR  cfs2gk > gatekeeper.sql
-          //pg_dump -xOdR  cdb_cfs > postgresql.sql
-          //Add BEGIN WORK; to beginning of file, COMMIT; to end of file
-          String sql = StringUtils.loadText(
-              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql.sql");
-          Statement st = db.createStatement();
-          st.execute(sql);
-          st.close();
-        } catch (SQLException cre) {
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println(cre.getMessage());
-          }
-        }
-        if (db != null) {
-          try {
-            db.close();
-          } catch (Exception cle) {
-          }
-        }
-        db = getDbConnection(context);
-        //Check the database for up to 90 seconds, the above action returns too soon
-        long waitCount = System.currentTimeMillis() + (300 * 1000);
-        while (!isDatabaseInstalled(db) && waitCount > System.currentTimeMillis()) {
-          synchronized (this) {
-            wait(2000);
-          }
-        }
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("Inserting the default tasks");
+        // Create the database and initial data, combine the following files
+        //   pg_dump -xOdR  cfs2gk > gatekeeper.sql
+        //   pg_dump -xOdR  cdb_cfs > postgresql.sql
+        //   Add BEGIN WORK; to beginning of file, COMMIT; to end of file
+        DatabaseUtils.executeSQL(db,
+            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql.sql");
+        // Check the database
+        if (!isDatabaseInstalled(db)) {
+          context.getRequest().setAttribute("actionError",
+            "Database was not installed by this software properly.");
+          return "ConfigureDatabaseCreateERROR";
         }
       }
       return "ConfigureDatabaseCreateOK";

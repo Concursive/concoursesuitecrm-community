@@ -6,6 +6,7 @@ package org.aspcfs.utils;
 import java.sql.*;
 import java.text.*;
 import java.util.*;
+import java.io.*;
 
 /**
  *  Useful methods for working with multiple databases and database fields
@@ -25,6 +26,7 @@ public class DatabaseUtils {
   public final static String MSSQL_DRIVER = "sqlserver";
   public final static String ORACLE_DRIVER = "oracle";
 
+  public final static String CRLF = System.getProperty("line.separator");
 
   /**
    *  Gets the true attribute of the DatabaseUtils class
@@ -361,6 +363,48 @@ public class DatabaseUtils {
     } else {
       pst.setDate(paramCount, value);
     }
+  }
+
+
+  /**
+   *  Reads in a text file of SQL statements and executes them
+   *
+   *@param  db                Description of the Parameter
+   *@param  filename          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   *@exception  IOException   Description of the Exception
+   */
+  public static void executeSQL(Connection db, String filename) throws SQLException, IOException {
+    // Read the file and execute each statement
+    StringBuffer sql = new StringBuffer();
+    BufferedReader in = new BufferedReader(new FileReader(filename));
+    String line = null;
+    Statement st = db.createStatement();
+    while ((line = in.readLine()) != null) {
+      // SQL Comment
+      if (line.startsWith("//")) {
+        continue;
+      }
+      // SQL Comment
+      if (line.startsWith("--")) {
+        continue;
+      }
+      sql.append(line);
+      // check for delimeter
+      if (line.trim().endsWith(";")) {
+        // Got a transaction, so execute it
+        st.execute(sql.toString());
+        sql.setLength(0);
+      } else {
+        // Continue with another line
+        sql.append(CRLF);
+      }
+    }
+    // Statement didn't end with a delimiter
+    if (sql.length() > 0) {
+      st.execute(sql.toString());
+    }
+    st.close();
   }
 }
 
