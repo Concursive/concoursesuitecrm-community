@@ -175,4 +175,16 @@ public class XMLUtils {
       }
     }
   }
+  
+  public static String toXMLValue(String s) {
+    if (s != null) {
+      String xmlReady = s.trim();
+      xmlReady = StringHelper.replace(xmlReady, "\"", "&quot;");
+      xmlReady = StringHelper.replace(xmlReady, "<", "&lt;");
+      xmlReady = StringHelper.replace(xmlReady, ">", "&gt;");
+      return(xmlReady);
+    } else {
+      return("");
+    }
+  }
 }

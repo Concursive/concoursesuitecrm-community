@@ -1206,17 +1206,21 @@ public final class Accounts extends CFSModule {
       } else {
         if (this.getDbName(context).equals("cdb_matt") &&
             thisCategory.hasField(4)) {
+          Template template = new Template();
+          template.setText(includeFile(this.getPath(context, "triggers") + "new_folder_item.template"));
+          template.addParseElement("$instructions", thisCategory.getFieldValue(4));
+          template.setValueEncoding(Template.XMLEncoding);
           Notification thisNotification = new Notification(Notification.SSL);
           thisNotification.setHost("127.0.0.1");
           thisNotification.setPort(44444);
-          thisNotification.setMessageToSend(thisCategory.getFieldValue(4));
+          thisNotification.setMessageToSend(template.getParsedText());
           thisNotification.send();
         } else if (this.getDbName(context).equals("cdb_vport") &&
             thisCategory.hasField(11)) {
-          MessageTemplate template = new MessageTemplate();
-          template.setText("Some text $field");
-          template.addParseElement("$field", thisCategory.getFieldValue(11));
-          
+          Template template = new Template();
+          template.setText(includeFile(this.getPath(context, "triggers") + "new_folder_item.template"));
+          template.addParseElement("$instructions", thisCategory.getFieldValue(11));
+          template.setValueEncoding(Template.XMLEncoding);
           Notification thisNotification = new Notification(Notification.SSL);
           thisNotification.setHost("151.204.139.251");
           thisNotification.setPort(44444);
