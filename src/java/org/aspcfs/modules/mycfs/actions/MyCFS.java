@@ -652,7 +652,6 @@ public final class MyCFS extends CFSModule {
     if (selectedList == null) {
       selectedList = new HashMap();
     }
-
     CFSNote thisNote = new CFSNote();
     thisNote.setEnteredBy(getUserId(context));
     thisNote.setModifiedBy(getUserId(context));
@@ -810,9 +809,9 @@ public final class MyCFS extends CFSModule {
       }
       newNote = new CFSNote();
       if (noteType == Constants.CFSNOTE) {
-        /*
-         *  For a sent message myId is a user_id else its a contactId
-         */
+        
+        //For a sent message myId is a user_id else its a contactId
+        
         if (inboxInfo.getListView().equals("sent")) {
           myId = getUserId(context);
         } else {
@@ -841,6 +840,8 @@ public final class MyCFS extends CFSModule {
             StringUtils.toString(newNote.getBody()) + "\n\n");
       } else if (noteType == Constants.CONTACTS_CALLS) {
         Call thisCall = new Call(db, msgId);
+        //add Contact Info for trails
+        context.getRequest().setAttribute("ContactDetails", new Contact(db, thisCall.getContactId()));
         newNote.setBody(
             "Contact Name: " + StringUtils.toString(thisCall.getContactName()) + "\n" +
             "Type: " + StringUtils.toString(thisCall.getCallType()) + "\n" +
