@@ -349,8 +349,7 @@ public class ContactTypeList extends ArrayList {
    *@since              1.1
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
-    LookupList contactTypeSelect = new LookupList();
-    contactTypeSelect = getLookupList(selectName, defaultKey);
+    LookupList contactTypeSelect = getLookupList(selectName, defaultKey);
     return contactTypeSelect.getHtmlSelect(selectName, defaultKey);
   }
 

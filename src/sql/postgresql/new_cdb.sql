@@ -475,3 +475,14 @@ CREATE TABLE contact_type_levels (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE lookup_lists_lookup(
+  id SERIAL PRIMARY KEY,
+  module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
+  lookup_id INT NOT NULL,
+  class_name VARCHAR(20),
+  table_name VARCHAR(60),
+  level INTEGER DEFAULT 0,
+  description TEXT,
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+);

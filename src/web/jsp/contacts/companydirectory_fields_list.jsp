@@ -74,9 +74,8 @@ List of Folder Records<br>
           </td>
         </dhv:permission>
         </dhv:evaluate>
-        
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
-          <a href="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
+          <a href="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData() != null ? thisRecord.getFieldData().getValueHtml(false) : "&nbsp;" %></a>
         </td>
         <td nowrap class="row<%= rowid %>">
           <%= toHtml(thisRecord.getEnteredString()) %>

@@ -295,7 +295,11 @@ public final class Admin extends CFSModule {
     }
     context.getRequest().setAttribute("PermissionCategory", permCat);
     addModuleBean(context, "Configuration", "Configuration");
-    return ("EditListsOK");
+    if(errorMessage == null){
+      return ("EditListsOK");
+    }
+    context.getRequest().setAttribute("Error", errorMessage);
+    return  "SystemError";
   }
 
 
@@ -627,45 +631,20 @@ public final class Admin extends CFSModule {
    */
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
     int moduleId = Integer.parseInt(context.getRequest().getParameter("moduleId"));
-    if (moduleId == PermissionCategory.PERMISSION_CAT_LEADS) {
-      LookupList stageList = new LookupList(db, "lookup_stage");
-      context.getRequest().setAttribute("StageList", stageList);
-      LookupList typeList = new LookupList(db, "lookup_opportunity_types");
-      context.getRequest().setAttribute("OpportunityTypeList", typeList);
-    } else if (moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS) {
-      LookupList atl = new LookupList(db, "lookup_account_types");
-      LookupList rtl = new LookupList(db, "lookup_revenue_types");
+    LookupListList thisList = new LookupListList(db, moduleId);
+    if (moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS || moduleId == PermissionCategory.PERMISSION_CAT_CONTACTS) {
       ContactTypeList contactTypeList = new ContactTypeList();
       contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
-      contactTypeList.setCategory(ContactType.ACCOUNT);
+      contactTypeList.setCategory((moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS ? ContactType.ACCOUNT : ContactType.GENERAL));
       contactTypeList.setShowPersonal(true);
       contactTypeList.buildList(db);
-      context.getRequest().setAttribute("ContactTypeList", contactTypeList);
-      context.getRequest().setAttribute("AccountTypeList", atl);
-      context.getRequest().setAttribute("RevenueTypeList", rtl);
-    } else if (moduleId == PermissionCategory.PERMISSION_CAT_CONTACTS) {
-      LookupList departmentList = new LookupList(db, "lookup_department");
-      LookupList contactEmailTypeList = new LookupList(db, "lookup_contactemail_types");
-      LookupList contactPhoneTypeList = new LookupList(db, "lookup_contactphone_types");
-      LookupList contactAddressTypeList = new LookupList(db, "lookup_contactaddress_types");
-      ContactTypeList contactTypeList = new ContactTypeList();
-      contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
-      contactTypeList.setCategory(ContactType.GENERAL);
-      contactTypeList.setShowPersonal(true);
-      contactTypeList.buildList(db);
-      context.getRequest().setAttribute("ContactTypeList", contactTypeList);
-      context.getRequest().setAttribute("DepartmentList", departmentList);
-      context.getRequest().setAttribute("ContactEmailTypeList", contactEmailTypeList);
-      context.getRequest().setAttribute("ContactPhoneTypeList", contactPhoneTypeList);
-      context.getRequest().setAttribute("ContactAddressTypeList", contactAddressTypeList);
-    } else if (moduleId == PermissionCategory.PERMISSION_CAT_TICKETS) {
-      LookupList sourceList = new LookupList(db, "lookup_ticketsource");
-      LookupList severityList = new LookupList(db, "ticket_severity");
-      LookupList priorityList = new LookupList(db, "ticket_priority");
-      context.getRequest().setAttribute("SeverityList", severityList);
-      context.getRequest().setAttribute("PriorityList", priorityList);
-      context.getRequest().setAttribute("SourceList", sourceList);
+      int category = (moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS ? PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE : PermissionCategory.LOOKUP_CONTACTS_TYPE);
+      LookupListElement thisElement = thisList.getElement(category);
+      if(thisElement != null){
+        thisElement.setLookupList(contactTypeList.getLookupList("list", 0));
+      }
     }
+    context.getRequest().setAttribute("LookupLists", thisList);
   }
 }
 

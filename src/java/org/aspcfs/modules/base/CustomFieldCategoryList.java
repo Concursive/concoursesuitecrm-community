@@ -305,8 +305,8 @@ public class CustomFieldCategoryList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
-        "FROM custom_field_category cfc " +
-        "WHERE cfc.module_id = ? ");
+        "FROM custom_field_category cfc, module_field_categorylink mfc " +
+        "WHERE cfc.module_id = mfc.category_id AND mfc.module_id = ? ");
 
     createFilter(sqlFilter);
 
@@ -323,10 +323,10 @@ public class CustomFieldCategoryList extends ArrayList {
       rs.close();
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("level, category_name, category_id", null);
+      pagedListInfo.setDefaultSort("cfc.level, cfc.category_name, cfc.category_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY level, category_name, category_id ");
+      sqlOrder.append("ORDER BY cfc.level, cfc.category_name, cfc.category_id ");
     }
     
     //Need to build a base SQL statement for returning records
@@ -337,8 +337,8 @@ public class CustomFieldCategoryList extends ArrayList {
     }
     sqlSelect.append(
       "* " +
-      "FROM custom_field_category cfc " +
-      "WHERE cfc.module_id = ? ");
+      "FROM custom_field_category cfc, module_field_categorylink mfc " +
+      "WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);

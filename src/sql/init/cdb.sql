@@ -67,3 +67,9 @@ insert into lookup_industry (description) values ('Real Estate');
 insert into lookup_industry (description) values ('Retail');
 insert into lookup_industry (description) values ('Telecommunications');
 insert into lookup_industry (description) values ('Transportation');
+
+insert into lookup_opportunity_types (description, level) values ('Type 1', 0);
+insert into lookup_opportunity_types (description, level) values ('Type 2', 1);
+insert into lookup_opportunity_types (description, level) values ('Type 3', 2);
+insert into lookup_opportunity_types (description, level) values ('Type 4', 3);
+

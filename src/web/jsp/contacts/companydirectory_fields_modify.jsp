@@ -32,10 +32,14 @@ Modify Folder Record
   <tr>
     <td class="containerBack">
 <strong><%= Category.getName() %></strong><br>
+
+
+<dhv:evaluate exp="<%= !Category.isEmpty() %>">
+  &nbsp;<br>
+  <input type="submit" value="Update" onClick="javascript:this.form.action='ExternalContacts.do?command=UpdateFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'"><br>
 &nbsp;<br>
-<input type="submit" value="Update" onClick="javascript:this.form.action='ExternalContacts.do?command=UpdateFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'"><br>
-&nbsp;<br>
+</dhv:evaluate>
 <%
   Iterator groups = Category.iterator();
   while (groups.hasNext()) {
@@ -77,9 +81,13 @@ Modify Folder Record
 </table>
 &nbsp;
 <%}%>
+
+<dhv:evaluate exp="<%= !Category.isEmpty() %>">
 <br>
 <input type="submit" value="Update" onClick="javascript:this.form.action='ExternalContacts.do?command=UpdateFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'">
 </td></tr>
+</dhv:evaluate>
+
 </table>
 </form>

@@ -81,7 +81,6 @@ public class CustomRow extends ArrayList implements HtmlCoreAttributes {
    */
   public void setMultiple(String multiple) {
     this.multiple = "true".equalsIgnoreCase(multiple);
-    System.out.println("CustomRow --> Set MULTIPLE ROW ++++***********" + this.multiple);
   }
 
 

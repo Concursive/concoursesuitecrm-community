@@ -730,13 +730,9 @@ public final class AdminFields extends CFSModule {
   private void addCategoryList(ActionContext context, Connection db) throws SQLException {
     int moduleId = -1;
     PermissionCategory permCat = null;
-    
-    if (context.getRequest().getParameter("modId") != null) {
-      moduleId = Integer.parseInt(context.getRequest().getParameter("modId"));
-    }
-    
     CustomFieldCategoryList categoryList = new CustomFieldCategoryList();
     if (context.getRequest().getParameter("modId") != null) {
+      moduleId = Integer.parseInt(context.getRequest().getParameter("modId"));
       //to get the module name on the jsp
       permCat = new PermissionCategory(db, Integer.parseInt(context.getRequest().getParameter("modId")));
       categoryList.setLinkModuleId(moduleId);

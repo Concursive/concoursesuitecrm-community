@@ -2010,7 +2010,6 @@ public class ContactList extends Vector {
 
       if (personalId != -1) {
         pst.setInt(++i, personalId);
-        pst.setInt(++i, personalId);
       }
     }
 

@@ -18,6 +18,7 @@ import com.darkhorseventures.utils.ObjectUtils;
  *@created    January 7, 2003
  *@version    $Id$
  */
+
 public class OpportunityComponentList extends Vector {
 
   public final static String tableName = "opportunity_component";
@@ -251,7 +252,6 @@ public class OpportunityComponentList extends Vector {
     this.closeDateEnd = tmp;
   }
 
-
   /**
    *  Sets the closeDateEnd attribute of the OpportunityComponentList object
    *
@@ -379,7 +379,7 @@ public class OpportunityComponentList extends Vector {
 
 
   /**
-   *  Description of the Method
+   *  Builds a subset of attributes of the Opprtunity primarily for the Calendar.
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -402,7 +402,6 @@ public class OpportunityComponentList extends Vector {
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
     prepareFilter(pst);
-    System.out.println("OppCompList -- > " + pst.toString());
     rs = pst.executeQuery();
     while (rs.next()) {
       OpportunityComponent thisOpp = new OpportunityComponent();

@@ -5,8 +5,7 @@
 <jsp:useBean id="LeadsComponentListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
-<form name="oppdet" action="Leads.do?id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
-<a href="Leads.do">Pipeline Management</a> > 
+  <a href="Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
 	<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
 <%} else {%>
@@ -25,11 +24,11 @@ Opportunity Details<br>
       <% FileItem thisFile = new FileItem(); %>
       <strong><%= toHtml(HeaderDetails.getDescription()) %></strong>&nbsp;
       	<dhv:evaluate exp="<%=(HeaderDetails.getAccountEnabled() && HeaderDetails.getAccountLink() > -1)%>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%=HeaderDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
-	</dhv:evaluate>
+          <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%=HeaderDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
+        </dhv:evaluate>
         <% if (HeaderDetails.hasFiles()) {%>
         <%= thisFile.getImageTag() %>
-        <%}%>       
+        <%}%>
   
 	  
 	<dhv:evaluate exp="<%=(HeaderDetails.getContactLink() > -1)%>">
@@ -45,7 +44,7 @@ Opportunity Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-
+<form name="oppdet" action="Leads.do?id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='Leads.do?command=ModifyOpp&oppId=<%=HeaderDetails.getId()%>';submit();"></dhv:permission>
 <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%=HeaderDetails.getOppId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="pipeline-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='LeadsComponents.do?command=AddOppComponent&id=<%=HeaderDetails.getId()%>';submit();"></dhv:permission>
@@ -76,6 +75,7 @@ Opportunity Details<br>
     </td>
   </tr> 
 </table>
+</form>
 <br>
 <dhv:pagedListStatus showExpandLink="false" title="<%= showError(request, "actionError") %>" object="LeadsComponentListInfo"/>
  <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -152,7 +152,11 @@ Opportunity Details<br>
 <% if (request.getParameter("return") != null) { %>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
-</form>
-<dhv:pagedListControl object="LeadsComponentListInfo"/></td></tr>
+<dhv:pagedListControl object="LeadsComponentListInfo"/>
+</td></tr>
 </table>
+
+
+
+
 

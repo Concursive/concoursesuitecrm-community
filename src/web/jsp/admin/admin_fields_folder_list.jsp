@@ -2,16 +2,16 @@
 <%@ page import="java.util.*,java.text.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
-<jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="details" action="AdminFieldsFolder.do?command=ListFolders" method="post">
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
-<a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="Admin.do?command=ConfigDetails&moduleId=<%=PermissionCategory.getId()%>"><%= PermissionCategory.getCategory() %></a> >
 Custom Folders<br>
 <hr color="#BFBFBB" noshade>
   <dhv:permission name="admin-sysconfig-folders-add">
-    <a href="AdminFieldsFolder.do?command=AddFolder&modId=<%= ModId %>">Add a Folder to this Module</a><br>
+    <a href="AdminFieldsFolder.do?command=AddFolder&modId=<%= PermissionCategory.getId() %>">Add a Folder to this Module</a><br>
     <% if (request.getAttribute("actionError") == null) { %>
     &nbsp;<br>
     <%}%>
@@ -50,15 +50,15 @@ Custom Folders<br>
     <tr class="row<%= rowId %>">
       <dhv:permission name="admin-sysconfig-folders-edit">
       <td align="center">
-        <a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= thisCategory.getId() %>">Edit</a>
+        <a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>">Edit</a>
       </td>
       </dhv:permission>
       <td align="left" width="100%" nowrap>
-        <dhv:permission name="admin-sysconfig-folders-view"><a href="AdminFieldsFolder.do?command=ModifyFolder&modId=<%= ModId %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a><%= (thisCategory.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif'>":"") %></dhv:permission>
+        <dhv:permission name="admin-sysconfig-folders-view"><a href="AdminFieldsFolder.do?command=ModifyFolder&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getName()) %></a><%= (thisCategory.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif'>":"") %></dhv:permission>
       </td>
       <td align="center" nowrap>
         <dhv:permission name="admin-sysconfig-folders-edit">
-          <a href="AdminFieldsFolder.do?command=ToggleFolder&modId=<%= ModId %>&catId=<%= thisCategory.getId() %>"></dhv:permission>
+          <a href="AdminFieldsFolder.do?command=ToggleFolder&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>"></dhv:permission>
           <%= (thisCategory.getEnabled()? "Yes" : "No") %>
           <dhv:permission name="admin-sysconfig-folders-edit"></a></dhv:permission>
       </td>
