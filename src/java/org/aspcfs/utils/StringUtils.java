@@ -554,5 +554,49 @@ public class StringUtils {
     }
     return lo + i;
   }
+
+
+  /**
+   *  Mimics the Javascript ESCAPE function
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
+  public static String jsEscape(String s) {
+    if (s != null) {
+      String jsReady = s.trim();
+      jsReady = replace(jsReady, "%", "%25");
+      jsReady = replace(jsReady, "\r", "%0A");
+      jsReady = replace(jsReady, "\"", "%22");
+      jsReady = replace(jsReady, "\\", "%5C");
+      jsReady = replace(jsReady, "!", "%21");
+      jsReady = replace(jsReady, "@", "%40");
+      jsReady = replace(jsReady, "#", "%23");
+      jsReady = replace(jsReady, "$", "%24");
+      jsReady = replace(jsReady, "^", "%5E");
+      jsReady = replace(jsReady, "&", "%26");
+      jsReady = replace(jsReady, "'", "%27");
+      jsReady = replace(jsReady, "(", "%28");
+      jsReady = replace(jsReady, ")", "%29");
+      jsReady = replace(jsReady, "=", "%3D");
+      jsReady = replace(jsReady, " ", "%20");
+      jsReady = replace(jsReady, "|", "%7C");
+      jsReady = replace(jsReady, ",", "%2C");
+      jsReady = replace(jsReady, ":", "%3A");
+      jsReady = replace(jsReady, ";", "%3B");
+      jsReady = replace(jsReady, "<", "%3C");
+      jsReady = replace(jsReady, ">", "%3E");
+      jsReady = replace(jsReady, "?", "%3F");
+      jsReady = replace(jsReady, "[", "%5B");
+      jsReady = replace(jsReady, "]", "%5D");
+      jsReady = replace(jsReady, "{", "%7B");
+      jsReady = replace(jsReady, "}", "%7D");
+      jsReady = replace(jsReady, "`", "%60");
+      jsReady = replace(jsReady, "~", "%7E");
+      return (jsReady);
+    } else {
+      return ("");
+    }
+  }
 }
 
