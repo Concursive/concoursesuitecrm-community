@@ -65,7 +65,7 @@ public class ContainerMenuHandler extends TagSupport {
   public void setParam(String tmp) {
     params = new HashMap();
     StringTokenizer tokens = new StringTokenizer(tmp, "|");
-    while(tokens.hasMoreTokens()){
+    while (tokens.hasMoreTokens()) {
       String pair = tokens.nextToken();
       String param = pair.substring(0, pair.indexOf("="));
       String value = pair.substring(pair.indexOf("=") + 1);
@@ -77,7 +77,15 @@ public class ContainerMenuHandler extends TagSupport {
     }
   }
 
-  public void setAppendToUrl(String tmp) { this.appendToUrl = tmp; }
+
+  /**
+   *  Sets the appendToUrl attribute of the ContainerMenuHandler object
+   *
+   *@param  tmp  The new appendToUrl value
+   */
+  public void setAppendToUrl(String tmp) {
+    this.appendToUrl = tmp;
+  }
 
 
   /**
