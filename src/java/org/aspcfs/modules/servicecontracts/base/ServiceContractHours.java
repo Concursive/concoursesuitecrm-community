@@ -38,7 +38,7 @@ public class ServiceContractHours extends GenericBean {
 
   private int id = -1;
   private int serviceContractId = -1;
-  private double adjustmentHours = -1;
+  private double adjustmentHours = 0;
   private int adjustmentReason = -1;
   private String adjustmentNotes = null;
   private java.sql.Timestamp entered = null;
