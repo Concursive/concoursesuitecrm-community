@@ -20,6 +20,7 @@ import org.w3c.dom.*;
 import com.zeroio.iteam.base.*;
 import java.util.*;
 import java.util.zip.*;
+import java.lang.reflect.*;
 
 
 /**
@@ -34,6 +35,8 @@ import java.util.zip.*;
 public class Notifier extends ReportBuilder {
 
   private HashMap config = new HashMap();
+  private ArrayList taskList = new ArrayList();
+  
   /**
    *  Description of the Field
    */
@@ -55,67 +58,99 @@ public class Notifier extends ReportBuilder {
     }
     
     Notifier thisNotifier = new Notifier();
+    if (args.length > 1) {
+      //Task was specified on command line
+      for (int taskCount = 1; taskCount < args.length; taskCount++) {
+        thisNotifier.getTaskList().add(args[taskCount]);
+      }
+    } else {
+      //Temporary default list of tasks
+      thisNotifier.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners");
+      thisNotifier.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients");
+      //thisNotifier.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCallOwners");
+    }
+    
     AppUtils.loadConfig(filename, thisNotifier.config);
     thisNotifier.baseName = (String) thisNotifier.config.get("GATEKEEPER.URL");
     thisNotifier.dbUser = (String) thisNotifier.config.get("GATEKEEPER.USER");
     thisNotifier.dbPass = (String) thisNotifier.config.get("GATEKEEPER.PASSWORD");
 
-    if (thisNotifier.baseName.equals("debug")) {
-      thisNotifier.sendAdminReport("Notifier manual sendmail test");
-    } else {
-      try {
-        Class.forName((String) thisNotifier.config.get("GATEKEEPER.DRIVER"));
+    try {
+      Class.forName((String) thisNotifier.config.get("GATEKEEPER.DRIVER"));
+      ArrayList siteList = new ArrayList();
 
-        ArrayList siteList = new ArrayList();
-
-        Connection dbSites = DriverManager.getConnection(
-            thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
-        PreparedStatement pstSites = dbSites.prepareStatement(
-            "SELECT * " +
-            "FROM sites " +
-            "WHERE enabled = ? ");
-        pstSites.setBoolean(1, true);
-        ResultSet rsSites = pstSites.executeQuery();
-        while (rsSites.next()) {
-          HashMap siteInfo = new HashMap();
-          siteInfo.put("sitecode", rsSites.getString("sitecode"));
-          siteInfo.put("vhost", rsSites.getString("vhost"));
-          siteInfo.put("host", rsSites.getString("dbhost"));
-          siteInfo.put("name", rsSites.getString("dbname"));
-          siteInfo.put("port", rsSites.getString("dbport"));
-          siteInfo.put("user", rsSites.getString("dbuser"));
-          siteInfo.put("password", rsSites.getString("dbpw"));
-          siteInfo.put("driver", rsSites.getString("driver"));
-          siteInfo.put("code", rsSites.getString("code"));
-          siteList.add(siteInfo);
-        }
-        rsSites.close();
-        pstSites.close();
-        dbSites.close();
-
-        Iterator i = siteList.iterator();
-        while (i.hasNext()) {
-          HashMap siteInfo = (HashMap) i.next();
-          Class.forName((String) siteInfo.get("driver"));
-          Connection db = DriverManager.getConnection(
-              (String) siteInfo.get("host") + ":" +
-              (String) siteInfo.get("port") + "/" +
-              (String) siteInfo.get("name"),
-              (String) siteInfo.get("user"),
-              (String) siteInfo.get("password"));
-          thisNotifier.baseName = (String) siteInfo.get("sitecode");
-          thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db, siteInfo));
-          //thisNotifier.output.append(thisNotifier.buildCallAlerts(db, siteInfo));
-          thisNotifier.output.append(thisNotifier.buildCommunications(db, siteInfo));
-          db.close();
-        }
-        System.out.println(thisNotifier.output.toString());
-        //thisNotifier.sendAdminReport(thisNotifier.output.toString());
-        java.util.Date end = new java.util.Date();
-      } catch (Exception exc) {
-        exc.printStackTrace(System.out);
-        System.err.println("Notifier-> BuildReport Error: " + exc.toString());
+      Connection dbSites = DriverManager.getConnection(
+          thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
+      PreparedStatement pstSites = dbSites.prepareStatement(
+          "SELECT * " +
+          "FROM sites " +
+          "WHERE enabled = ? ");
+      pstSites.setBoolean(1, true);
+      ResultSet rsSites = pstSites.executeQuery();
+      while (rsSites.next()) {
+        HashMap siteInfo = new HashMap();
+        siteInfo.put("sitecode", rsSites.getString("sitecode"));
+        siteInfo.put("vhost", rsSites.getString("vhost"));
+        siteInfo.put("host", rsSites.getString("dbhost"));
+        siteInfo.put("name", rsSites.getString("dbname"));
+        siteInfo.put("port", rsSites.getString("dbport"));
+        siteInfo.put("user", rsSites.getString("dbuser"));
+        siteInfo.put("password", rsSites.getString("dbpw"));
+        siteInfo.put("driver", rsSites.getString("driver"));
+        siteInfo.put("code", rsSites.getString("code"));
+        siteList.add(siteInfo);
       }
+      rsSites.close();
+      pstSites.close();
+      dbSites.close();
+
+      Iterator i = siteList.iterator();
+      while (i.hasNext()) {
+        HashMap siteInfo = (HashMap) i.next();
+        Class.forName((String) siteInfo.get("driver"));
+        Connection db = DriverManager.getConnection(
+            (String) siteInfo.get("host") + ":" +
+            (String) siteInfo.get("port") + "/" +
+            (String) siteInfo.get("name"),
+            (String) siteInfo.get("user"),
+            (String) siteInfo.get("password"));
+        thisNotifier.baseName = (String) siteInfo.get("sitecode");
+        
+        //TODO: The intent is to move these all out as separate tasks and
+        //have a TaskContext with an interface
+        if (thisNotifier.getTaskList().size() == 1) {
+          Iterator classes = thisNotifier.getTaskList().iterator();
+          while (classes.hasNext()) {
+            try {
+              //Construct the object, which executes the task
+              Class thisClass = Class.forName((String)classes.next());
+              Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), HashMap.class};
+              Constructor constructor = thisClass.getConstructor(paramClass);
+              Object[] paramObject = new Object[]{db, siteInfo};
+              Object theTask = constructor.newInstance(paramObject);
+              theTask = null;
+            } catch (Exception e) {
+              e.printStackTrace(System.out);
+            }
+          }
+        }
+        if (thisNotifier.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyOpportunityOwners")) {
+          thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db, siteInfo));
+        }
+        if (thisNotifier.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients")) {
+          thisNotifier.output.append(thisNotifier.buildCommunications(db, siteInfo));
+        }
+        if (thisNotifier.getTaskList().contains("org.aspcfs.apps.notifier.task.NotifyCallOwners")) {
+          thisNotifier.output.append(thisNotifier.buildCallAlerts(db, siteInfo));
+        }
+        db.close();
+      }
+      System.out.println(thisNotifier.output.toString());
+      //thisNotifier.sendAdminReport(thisNotifier.output.toString());
+      java.util.Date end = new java.util.Date();
+    } catch (Exception exc) {
+      exc.printStackTrace(System.out);
+      System.err.println("Notifier-> BuildReport Error: " + exc.toString());
     }
   }
 
@@ -618,6 +653,10 @@ public class Notifier extends ReportBuilder {
     return ("<a href=\"" + schema + "://" + (String) siteInfo.get("vhost") + "/" + url + "\">" + 
       "View in CFS" +
       "</a>");
+  }
+  
+  public ArrayList getTaskList() {
+    return taskList;
   }
 }
 
