@@ -106,10 +106,10 @@
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
       <permission name="autoguide-adruns" attributes="--e-" description="Ad Run complete status"/>
     </category>
-    <category id="420041017" name="Quotes" folders="false" lookups="false" reports="false">
+    <category id="420041017" name="Quotes" folders="false" lookups="false" reports="false" enabled="false">
       <permission name="quotes" attributes="vaed" description="Access to Quotes module"/>
     </category>
-    <category id="420041018" name="Orders" folders="false" lookups="false" reports="true">
+    <category id="420041018" name="Orders" folders="false" lookups="false" reports="true" enabled="false">
       <permission name="orders" attributes="vaed" description="Access to Orders module"/>
     </category>
     <category id="330041409" name="Product Catalog" folders="true" lookups="false" reports="false" categories="false">
@@ -208,9 +208,22 @@
       <permission name="myhomepage-profile-personal" attributes="v-e-"/>
       <permission name="myhomepage-profile-settings" attributes="v-e-"/>
       <permission name="myhomepage-profile-password" attributes="--e-"/>
+      <permission name="myhomepage-action-lists" attributes="vaed"/>
       <permission name="myhomepage-reassign" attributes="v-e-"/>
       <permission name="contacts" attributes="v---"/>
       <permission name="contacts-external_contacts" attributes="vaed"/>
+      <permission name="contacts-external_contacts-reports" attributes="va-d"/>
+      <permission name="contacts-external_contacts-folders" attributes="vaed"/>
+      <permission name="contacts-external_contacts-calls" attributes="vaed"/>
+      <permission name="contacts-external_contacts-messages" attributes="v---"/>
+      <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed"/>
+      <permission name="pipeline" attributes="v---"/>
+      <permission name="pipeline-opportunities" attributes="vaed"/>
+      <permission name="pipeline-dashboard" attributes="v---"/>
+      <permission name="pipeline-reports" attributes="va-d"/>
+      <permission name="pipeline-opportunities-calls" attributes="vaed"/>
+      <permission name="pipeline-opportunities-documents" attributes="vaed"/>
       <permission name="accounts" attributes="v---"/>
       <permission name="accounts-accounts" attributes="vaed" description="Account Records"/>
       <permission name="accounts-accounts-folders" attributes="vaed" description="Folders"/>
@@ -230,6 +243,8 @@
       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>
       <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
       <permission name="portal-user" attributes="vaed" />
+      <permission name="product-catalog" attributes="v---"/>
+      <permission name="product-catalog-product" attributes="vaed"/>
       <permission name="campaign" attributes="v---"/>
       <permission name="campaign-dashboard" attributes="v---"/>
       <permission name="campaign-campaigns" attributes="vaed"/>
@@ -277,6 +292,7 @@
        <permission name="contacts-external_contacts-calls" attributes="vaed"/>
        <permission name="contacts-external_contacts-messages" attributes="v---"/>
        <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
        <permission name="pipeline" attributes="v---"/>
        <permission name="pipeline-opportunities" attributes="vaed"/>
        <permission name="pipeline-dashboard" attributes="v---"/>
@@ -302,6 +318,9 @@
        <permission name="accounts-assets" attributes="vaed" />
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="vae-"/>
+       <permission name="portal-user" attributes="vaed" />
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -340,6 +359,7 @@
        <permission name="contacts-external_contacts-calls" attributes="vaed"/>
        <permission name="contacts-external_contacts-messages" attributes="v---"/>
        <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
        <permission name="pipeline" attributes="v---"/>
        <permission name="pipeline-opportunities" attributes="vaed"/>
        <permission name="pipeline-dashboard" attributes="v---"/>
@@ -366,6 +386,9 @@
        <permission name="accounts-assets" attributes="vae-" />
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="portal-user" attributes="v---" />
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -402,6 +425,7 @@
        <permission name="contacts-external_contacts-calls" attributes="vaed"/>
        <permission name="contacts-external_contacts-messages" attributes="vaed"/>
        <permission name="contacts-external_contacts-opportunities" attributes="v---"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
        <permission name="pipeline" attributes="v---"/>
        <permission name="pipeline-opportunities" attributes="vae-"/>
        <permission name="pipeline-dashboard" attributes="v---"/>
@@ -428,6 +452,9 @@
        <permission name="accounts-assets" attributes="v---" />
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="portal-user" attributes="v---" />
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -474,6 +501,9 @@
        <permission name="accounts-assets" attributes="vaed" />
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
+       <permission name="portal-user" attributes="vaed" />
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -520,6 +550,9 @@
        <permission name="accounts-assets" attributes="vae-" />
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="vae-"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="vae-"/>
+       <permission name="portal-user" attributes="vaed" />
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -558,6 +591,7 @@
        <permission name="contacts-external_contacts-calls" attributes="vaed"/>
        <permission name="contacts-external_contacts-messages" attributes="v---"/>
        <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
        <permission name="pipeline" attributes="v---"/>
        <permission name="pipeline-opportunities" attributes="vaed"/>
        <permission name="pipeline-dashboard" attributes="v---"/>
@@ -584,6 +618,8 @@
        <permission name="accounts-assets" attributes="v---" />
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -621,6 +657,7 @@
        <permission name="contacts-external_contacts-calls" attributes="vaed"/>
        <permission name="contacts-external_contacts-messages" attributes="v---"/>
        <permission name="contacts-external_contacts-opportunities" attributes="vaed"/>
+       <permission name="contacts-external_contacts-imports" attributes="vaed"/>
        <permission name="pipeline" attributes="v---"/>
        <permission name="pipeline-opportunities" attributes="v---"/>
        <permission name="pipeline-dashboard" attributes="v---"/>
@@ -645,6 +682,8 @@
        <permission name="accounts-assets" attributes="v---" />
        <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
@@ -675,6 +714,8 @@
        <permission name="myhomepage-profile-personal" attributes="v-e-"/>
        <permission name="myhomepage-profile-settings" attributes="v-e-"/>
        <permission name="myhomepage-profile-password" attributes="--e-"/>
+       <permission name="product-catalog" attributes="v---"/>
+       <permission name="product-catalog-product" attributes="v---"/>
        <permission name="campaign" attributes="v---"/>
        <permission name="campaign-dashboard" attributes="v---"/>
        <permission name="campaign-campaigns" attributes="vaed"/>
