@@ -4,16 +4,10 @@
  */
 function checkEmail(emailin) {
   if (emailin.length > 0){
-    if ((emailin.length < 6) ||
-        (emailin.indexOf('@',0) < 1) ||
-        (emailin.lastIndexOf('@') != emailin.indexOf('@',0)) ||
-        (emailin.lastIndexOf('@') > (emailin.length - 5)) ||
-        (emailin.lastIndexOf('.') > (emailin.length - 3)) ||
-        (emailin.indexOf('..',0) > -1) ||
-        (emailin.indexOf('@.',0) > -1) ||
-        (emailin.indexOf('.@',0) > -1) ||
-        (emailin.indexOf(',',0) > -1)) {
-        return false;
+  var i = emailin.search(/^([a-zA-Z0-9_\.\-])+@\w+([\.\-_]?\w+)*/);
+  if (i == -1  || emailin.indexOf('.', 0) == -1 || emailin.lastIndexOf('.') >= (emailin.length - 2) || 
+        emailin.lastIndexOf('.') < (emailin.length - 5)) {
+      return false;
     }
   }
   return true;
