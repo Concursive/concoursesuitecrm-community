@@ -50,25 +50,6 @@ public class LookupList extends HtmlSelect {
     buildList(db);
   }
 
-<<<<<<< LookupList.java
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT * " +
-        "FROM " + table + " " +
-	"ORDER BY level, description ");
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
-    while (rs.next()) {
-      LookupElement thisElement = new LookupElement(rs);
-      this.add(thisElement);
-    }
-    rs.close();
-    st.close();
-  }
-=======
->>>>>>> 1.9
-
   /**
    *  Constructor for the LookupList object
    *
