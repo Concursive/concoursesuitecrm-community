@@ -15,6 +15,7 @@ import org.aspcfs.modules.login.beans.LoginBean;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.utils.StringUtils;
 import java.io.File;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  The CFS Login module.
@@ -184,7 +185,6 @@ public final class Login extends CFSModule {
           }
           thisUser.setConnectionElement(ce);
           thisUser.setClientType(context.getRequest());
-          thisUser.setTemplate("template0");
           thisUser.setIdRange(userRecord.getIdRange());
           thisUser.setUserRecord(userRecord);
           //Log that the user attempted login (does not necessarily mean logged in
@@ -241,8 +241,14 @@ public final class Login extends CFSModule {
     }
     context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
     sessionManager.addUser(context, userId);
-    if (getPortalUserPermittedOrgId(context) != -1){
-      return "PortalLoginOK";
+    // TODO: Replace this so it does not need to be maintained
+    // NOTE: Make sure to update this similar code in the following method
+    if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
+      return "LoginOK";
+    } else if (thisUser.getRoleType() == Constants.ROLETYPE_CUSTOMER) {
+      return "CustomerPortalLoginOK";
+    } else if (thisUser.getRoleType() == Constants.ROLETYPE_PRODUCTS) {
+      return "ProductsPortalLoginOK";
     }
     return "LoginOK";
   }
@@ -274,8 +280,14 @@ public final class Login extends CFSModule {
         UserSession currentSession = sessionManager.replaceUserSession(context, thisUser.getActualUserId());
         context.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
       }
-      if (getPortalUserPermittedOrgId(context) != -1){
-        return "PortalLoginOK";
+      // TODO: Replace this so it does not need to be maintained
+      // NOTE: Make sure to update this similar code in the previous method
+      if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
+        return "LoginOK";
+      } else if (thisUser.getRoleType() == Constants.ROLETYPE_CUSTOMER) {
+        return "CustomerPortalLoginOK";
+      } else if (thisUser.getRoleType() == Constants.ROLETYPE_PRODUCTS) {
+        return "ProductsPortalLoginOK";
       }
     } else {
       //logout user from current session

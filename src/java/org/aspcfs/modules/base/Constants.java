@@ -36,6 +36,9 @@ public final class Constants {
   public final static int FOLDERS_ACCOUNTS = 1;
   public final static int FOLDERS_CONTACTS = 2;
   public final static int FOLDERS_TICKETS = 11072003;
+  public final static int FOLDERS_PRODUCT_CATALOG = 200403191;
+  public final static int FOLDERS_PRODUCT_CATEGORY = 200403192;
+  public final static int FOLDERS_PRODUCT_OPTION = 200403193;
   
   //Documents (Migrate the unsorted to this format)
   public final static int DOCUMENTS_ACCOUNTS = 1;
@@ -51,7 +54,11 @@ public final class Constants {
   public final static int DOCUMENTS_AUTOGUIDE_PHOTOS = 14;
   public final static int DOCUMENTS_COMMUNICATIONS_FILE_ATTACHMENTS = 16;
   public final static int DOCUMENTS_COMMUNICATIONS = 17;
-
+  public final static int DOCUMENTS_PRODUCT_CATALOG = 200403194;
+  public final static int DOCUMENTS_PRODUCT_CATEGORY = 200403195;
+  public final static int DOCUMENTS_PRODUCT_OPTION = 200403196;
+  public final static int DOCUMENTS_CUSTOMER_PRODUCT = 423200418;
+  
   //Unsorted -- used for folders, documents, and other
   //TODO: Cleanup this list once modules have been updated
   public final static int ACCOUNTS = 1;
@@ -100,7 +107,6 @@ public final class Constants {
   //Action Lists 
   public final static int ACTIONLISTS_CONTACTS = 2;
   
-
   //User types
   //Users who use CRM with its complete license
   public final static int ROLETYPE_REGULAR = 0; 
@@ -108,5 +114,7 @@ public final class Constants {
   // Restricted to access accounts of their organization
   public final static int ROLETYPE_CUSTOMER = 1; 
    
+  // Restricted to access AdsJet products and services
+  public final static int ROLETYPE_PRODUCTS = 420041011;
 }
 

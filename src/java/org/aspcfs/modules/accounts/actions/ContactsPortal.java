@@ -174,7 +174,7 @@ public final class ContactsPortal extends CFSModule {
       setOrganization(context, db, thisContact.getOrgId());
 
       RoleList roleList = new RoleList();
-      roleList.setRoleType(Constants.ROLETYPE_CUSTOMER);
+      roleList.setExcludeRoleType(Constants.ROLETYPE_REGULAR);
       roleList.buildList(db);
       roleList.setEmptyHtmlSelectRecord("--None--");
       context.getRequest().setAttribute("roleList", roleList);

@@ -31,6 +31,7 @@ public class RoleList extends ArrayList {
   private boolean buildUsers = false;
   private boolean buildUserCount = false;
   private int roleType = -1;
+  private int excludeRoleType = -1;
 
 
   /**
@@ -108,6 +109,7 @@ public class RoleList extends ArrayList {
     this.roleType = Integer.parseInt(tmp);
   }
 
+  public void setExcludeRoleType(int tmp) { this.excludeRoleType = tmp; }
 
   /**
    *  Gets the htmlSelect attribute of the RoleList object
@@ -136,10 +138,10 @@ public class RoleList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Role thisRole = (Role) i.next();
-      roleListSelect.addItem(
-          thisRole.getId(),
-          thisRole.getRole());
-    }
+        roleListSelect.addItem(
+            thisRole.getId(),
+            thisRole.getRole());
+      }
     return roleListSelect.getHtml(selectName, defaultKey);
   }
 
@@ -249,7 +251,9 @@ public class RoleList extends ArrayList {
     if (roleType != -1) {
       sqlFilter.append("AND role_type = ? ");
     }
-    
+    if (excludeRoleType != -1) {
+      sqlFilter.append("AND role_type <> ? ");
+    }
     if (enabledState > -1) {
       sqlFilter.append("AND enabled = ? ");
     }
@@ -267,6 +271,9 @@ public class RoleList extends ArrayList {
     int i = 0;
     if (roleType != -1) {
       pst.setInt(++i, roleType);
+    }
+    if (excludeRoleType != -1) {
+      pst.setInt(++i, excludeRoleType);
     }
     if (enabledState > -1) {
       pst.setBoolean(++i, enabledState == Constants.TRUE);
