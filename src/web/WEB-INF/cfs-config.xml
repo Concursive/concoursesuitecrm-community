@@ -43,6 +43,7 @@
   
   <action name="ProcessSystem" class="org.aspcfs.modules.admin.actions.ProcessSystem">
     <forward name="ProcessOK" resource="/service/system_process_ok.jsp"/>
+    <forward name="ViewCronOK" resource="/service/cron_view.jsp"/>
   </action>
   
   <action name="Login" class="org.aspcfs.modules.login.actions.Login">
