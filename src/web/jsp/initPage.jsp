@@ -1,5 +1,4 @@
 <%@ page import="java.util.StringTokenizer" %>
-<%@ page import="java.util.StringBuffer" %>
 <%!
 
 public static String replace(String str, String o, String n) {
