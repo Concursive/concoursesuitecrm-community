@@ -26,6 +26,7 @@ public class OrganizationList extends Vector {
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
+  
   private Boolean minerOnly = null;
   private int enteredBy = -1;
   private String name = null;
@@ -59,6 +60,10 @@ public class OrganizationList extends Vector {
   
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+  
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
   }
 
   /**

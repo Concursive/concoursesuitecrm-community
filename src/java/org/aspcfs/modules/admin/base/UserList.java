@@ -28,6 +28,7 @@ public class UserList extends Vector {
   private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
+  
   private int roleId = -1;
   private int managerId = -1;
   private User managerUser = null;
@@ -108,6 +109,10 @@ public class UserList extends Vector {
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+  
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
   }
 
 
