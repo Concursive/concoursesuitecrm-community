@@ -1,0 +1,176 @@
+/**
+ *  Getting Started: Methods and Procedures
+ *
+ *@author     matt rajkowski
+ *@created    January 9, 2003
+ *@version    $Id$
+ */
+
+What is ASPCFS?
+  - A web application for various business processes
+    - Account management
+    - Contact management
+    - Sales pipeline management
+    - Communications management
+    - Case management
+    - Document management
+    - Call management
+    - Project management
+  - Why does it do all those things?
+    - Central information repository
+    - Streamlines productivity, reporting
+  - Target customers/users
+    - Large and small businesses
+  
+What language is ASPCFS written in?
+  - Java J2SE, J2EE
+  - Servlets, JSP, Taglibs, JavaBeans
+  - JDBC, JavaMail
+  - SQL
+  - XML
+  
+What programming methodology is used?
+  - MVC
+    - Layout
+    - Modules (business rules)
+    - JSPs (presentation)
+    - JavaBeans
+  - Database Independence
+  - Iterative
+  - Reusability
+  - Sun coding conventions and documentation
+  - Database conventions
+  - HTML standards compatible with Internet Explorer 5+, Mozilla 1.0+
+  
+What are the developer system requirements?
+  - Hardware
+    - 256 MB memory
+  - Software
+    - Java 1.4
+  - Operating System
+    - Red Hat Linux
+    - Windows
+  - Web Server
+    - Tomcat 4.1
+  - Database Server
+    - Postgresql 7.2
+    - SQL Server 2000
+
+What developer tools are used?
+  - Tomcat 4.1
+  - Ant 1.5
+  - SmartCVS 2.2
+  - JEdit 1.4
+  - NetBeans
+  - ArgoUML
+  - Dia
+  - Acrobat Reader
+  - Open Office
+
+What about using open-source libraries and components in ASPCFS?
+  - Depends on license
+
+How do I install ASPCFS?
+  - Configure web and database server
+  - Get a copy of the source code
+  - Run the database install script
+  - Run the web build/deploy script
+
+What are the components and capabilities of ASPCFS?
+  - Web Framework
+    - Security
+      - SSL
+      - User can only access their own data, unless otherwise allowed
+      - Single session sign-on
+      - Auto-logout
+      - Encrypted passwords
+    - Roles
+    - Permissions based on roles
+    - Contact information
+    - User information and hierarchy
+    - Menus: Top-level, sub-menus, and container menus
+    - Global Items: My Items, Recent Items
+    - Global Search
+    - Web-based XML API
+    - Object Hook Manager
+    - Synchronization
+    - Modules
+    - Pages
+    - Connection Pool
+    - System Preferences
+    - Scheduled actions
+    - Usage
+  - Notification Manager
+    - Email
+    - Fax
+  - Work Flow Manager
+    - Multi-threaded
+    - Standalone and integrated (hooks)
+  - Data Import and Export (Reader/Writer)
+
+What references are available?
+  - module specifications
+  - module diagrams
+  - database schema
+  - JavaDocs
+  - context objects
+  - directory structure
+
+What is the development process?
+  - Requirements
+  - Functional Specifications
+  - Analysis and Design
+    - UML: use-cases
+    - Database Schemas
+    - Sitemaps
+    - Project Plan
+  - Coding
+  - Testing
+
+What is the development process?
+  - Using CVS
+  - Using the framework (DOs and DO NOTs)
+  - Using databases
+    - Upgrade scripts
+  
+How do I add a module to ASPCFS?
+  - code module, extend com.darkhorseventures.cfsmodule.CFSModule
+    - use a database connection in a module
+  - code beans, extend GenericBean
+    - auto-populate a JavaBean
+    - sync a bean
+  - code JSPs
+    - html initPage.jsp  toHtml() toText() toHtmlValue()
+    - beans
+    - tag-libs
+    - javascript
+  - cfs-config.xml
+  - cfs-modules.xml
+  - cfs-container_menus.xml
+  - cfs-dynamic_forms.xml
+  - SystemStatus object
+  - PagedListInfo object
+  - hooks and components
+  - HtmlDialog object
+  - Lookup Lists, also database table records
+  - Action permissions, also database table records
+  - Record-level permissions
+  - Adding and modifying module specific tables
+  - Utils classes
+
+What...
+  - Implementing a file library
+  - Tracking processes
+  - 
+  
+CVS Rules
+  - Checking code out
+  - Creating branches
+  - Creating tags
+    - Release tags
+    - Feature tags
+  - Checking code in
+
+Community Developer Site
+
+  
