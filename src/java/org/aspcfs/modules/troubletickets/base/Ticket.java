@@ -1931,6 +1931,29 @@ public class Ticket extends GenericBean {
       thisDependency.setCanDelete(true);
       dependencyList.add(thisDependency);
     }
+    try {
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT count(*) as linkcount " +
+          "FROM tasklink_ticket " +
+          "WHERE ticket_id = ? ");
+      pst.setInt(++i, this.getId());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        int linkcount = rs.getInt("linkcount");
+        if (linkcount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("Tasks");
+          thisDependency.setCount(linkcount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
+        }
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
     return dependencyList;
   }
 
@@ -1951,12 +1974,21 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(false);
       //delete any related action list items
       ActionItemLog.deleteLink(db, this.getId(), Constants.TICKET_OBJECT);
+      
       //delete all log data
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM ticketlog WHERE ticketid = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
+      
+      //delete related tasks
+      pst = db.prepareStatement(
+          "DELETE FROM tasklink_ticket WHERE ticket_id = ?");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      
       //delete the ticket
       pst = db.prepareStatement(
           "DELETE FROM ticket WHERE ticketid = ?");
