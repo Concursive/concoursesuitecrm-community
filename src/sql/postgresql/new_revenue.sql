@@ -1,3 +1,11 @@
+/**
+ *  PostgreSQL Table Creation
+ *
+ *@author     chris price
+ *
+ *@version    $Id$
+ */
+
 CREATE TABLE lookup_revenue_types (
   code SERIAL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -18,13 +26,13 @@ CREATE TABLE lookup_revenuedetail_types (
 
 CREATE TABLE revenue (
   id serial PRIMARY KEY,
-  org_id int references organization(org_id),
-  transaction_id int default -1,
-  month int default -1,
-  year int default -1,
-  amount float default 0,
-  type int references lookup_revenue_types(code),
-  owner int references access(user_id),
+  org_id INT REFERENCES organization(org_id),
+  transaction_id INT DEFAULT -1,
+  month INT DEFAULT -1,
+  year INT DEFAULT -1,
+  amount FLOAT DEFAULT 0,
+  type INT REFERENCES lookup_revenue_types(code),
+  owner INT REFERENCES access(user_id),
   description VARCHAR(255),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
@@ -34,10 +42,10 @@ CREATE TABLE revenue (
 
 CREATE TABLE revenue_detail (
   id serial PRIMARY KEY,
-  revenue_id int references revenue(id),
-  amount float default 0,
-  type int references lookup_revenue_types(code),
-  owner int references access(user_id),
+  revenue_id INT REFERENCES revenue(id),
+  amount FLOAT DEFAULT 0,
+  type INT REFERENCES lookup_revenue_types(code),
+  owner INT REFERENCES access(user_id),
   description VARCHAR(255),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),

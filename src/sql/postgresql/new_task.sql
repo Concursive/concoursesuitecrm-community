@@ -1,3 +1,11 @@
+/**
+ *  PostgreSQL Table Creation
+ *
+ *@author     a mathur
+ *@created    September 2, 2002
+ *@version    $Id$
+ */
+ 
 CREATE TABLE task (
   task_id SERIAL PRIMARY KEY,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -10,7 +18,7 @@ CREATE TABLE task (
   sharing INT NOT NULL,
   complete BOOLEAN DEFAULT false NOT NULL,
   enabled BOOLEAN DEFAULT false NOT NULL,
-  modified DATE,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT REFERENCES access(user_id),
   estimatedloe INTEGER DEFAULT -1 ,
   owner INTEGER NOT NULL,

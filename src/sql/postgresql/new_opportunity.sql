@@ -25,7 +25,7 @@ CREATE TABLE opportunity (
 	type char(1),
 	alertdate date,
 	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	enteredby INT NOT NULL REFERENCES access(user_id) ,
+	enteredby INT NOT NULL REFERENCES access(user_id),
 	modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	modifiedby INT NOT NULL REFERENCES access(user_id),
 	custom1 int default -1,
@@ -47,10 +47,10 @@ CREATE TABLE lookup_call_types (
 
 CREATE TABLE call_log (
   call_id SERIAL PRIMARY KEY,
-  org_id int default -1 references organization(org_id),
-  contact_id int default -1 references contact(contact_id),
-  opp_id int default -1 references opportunity(opp_id),
-  call_type_id int references lookup_call_types(code),
+  org_id INT REFERENCES organization(org_id),
+  contact_id INT REFERENCES contact(contact_id),
+  opp_id INT REFERENCES opportunity(opp_id),
+  call_type_id INT REFERENCES lookup_call_types(code),
   length INTEGER,
   subject VARCHAR(255),
   notes TEXT,
@@ -58,9 +58,9 @@ CREATE TABLE call_log (
   alertdate DATE,
   followup_notes TEXT,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL references access(user_id),
+  enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id),
+  modifiedby INT NOT NULL REFERENCES access(user_id),
   alert varchar(100) default null
 );
 

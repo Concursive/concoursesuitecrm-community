@@ -1,3 +1,11 @@
+/**
+ *  PostgreSQL Table Creation
+ *
+ *@version    $Id$
+ */
+ 
+ 
+ 
 CREATE TABLE access (
   user_id SERIAL PRIMARY KEY,
   username VARCHAR(80) NOT NULL, 
@@ -21,6 +29,10 @@ CREATE TABLE access (
   enabled boolean NOT NULL DEFAULT true
 );
 
+DROP SEQUENCE access_user_id_seq;
+CREATE SEQUENCE access_user_id_seq start 0 increment 1 maxvalue 2147483647 minvalue 0 cache 1 ;
+
+
 CREATE TABLE lookup_industry (
   code SERIAL PRIMARY KEY,
   order_id INT,
@@ -39,9 +51,7 @@ CREATE TABLE access_log (
   browser VARCHAR(255)
 );
 
-DROP SEQUENCE access_user_id_seq;
-CREATE SEQUENCE access_user_id_seq start 0 increment 1 maxvalue 2147483647 minvalue 0 cache 1 ;
- 
+
 CREATE TABLE system_prefs (
   category VARCHAR(255) UNIQUE NOT NULL,
   data TEXT DEFAULT '' NOT NULL
@@ -99,8 +109,7 @@ CREATE TABLE lookup_orgaddress_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
-)
-;
+);
 
 CREATE TABLE lookup_orgemail_types (
   code SERIAL PRIMARY KEY,
@@ -110,23 +119,6 @@ CREATE TABLE lookup_orgemail_types (
   enabled BOOLEAN DEFAULT true
 )
 ;
-
-/*
-CREATE TABLE note (
-  id serial PRIMARY KEY,
-  org_id int not null default -1,
-  contact_id int not null default -1,
-  opp_id int not null default -1,
-  subject varchar(80),
-  body text,
-  dateentered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL references access(user_id),
-  lastmodified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id), 
-  enabled BOOLEAN DEFAULT true
-)
-;
-*/
 
 CREATE TABLE lookup_orgphone_types (
   code SERIAL PRIMARY KEY,
@@ -255,7 +247,7 @@ CREATE TABLE contact (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id),
   enabled BOOLEAN DEFAULT true,
-  owner INT references access(user_id),
+  owner INT REFERENCES access(user_id),
   custom1 int default -1,
   custom2 int default -1,
   custom_data TEXT,
@@ -307,7 +299,6 @@ CREATE TABLE role_permission (
   role_edit BOOLEAN NOT NULL DEFAULT false,
   role_delete BOOLEAN NOT NULL DEFAULT false
 );
-
 
 
 CREATE TABLE lookup_stage (
@@ -463,11 +454,10 @@ CREATE TABLE cfsinbox_messagelink (
 );
 
 CREATE TABLE account_type_levels (
-  org_id int not null references organization(org_id),
-  type_id int not null references lookup_account_types(code),
+  org_id INT NOT NULL REFERENCES organization(org_id),
+  type_id INT NOT NULL REFERENCES lookup_account_types(code),
   level INTEGER not null,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-)
-;
+);
 

@@ -45,7 +45,7 @@ CREATE TABLE campaign (
 
 CREATE TABLE campaign_run (
   id serial PRIMARY KEY,
-  campaign_id INTEGER NOT NULL DEFAULT -1 REFERENCES campaign(campaign_id),
+  campaign_id INTEGER NOT NULL REFERENCES campaign(campaign_id),
   status INTEGER NOT NULL DEFAULT 0,
   run_date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   total_contacts INTEGER DEFAULT 0,
@@ -56,13 +56,13 @@ CREATE TABLE campaign_run (
 
 CREATE TABLE excluded_recipient (
   id serial PRIMARY KEY,
-  campaign_id INT NOT NULL DEFAULT -1 REFERENCES campaign(campaign_id),
+  campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
   contact_id INT NOT NULL REFERENCES contact(contact_id)
 );
 
 CREATE TABLE campaign_list_groups (
-  campaign_id int not null REFERENCES campaign(campaign_id),
-  group_id int not null REFERENCES saved_criterialist(id)
+  campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
+  group_id INT NOT NULL REFERENCES saved_criterialist(id)
 );
 
 CREATE TABLE scheduled_recipient (
@@ -92,7 +92,7 @@ CREATE TABLE survey (
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   intro TEXT,
-  itemLength int default -1,
+  itemLength INT DEFAULT -1,
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   enabled BOOLEAN NOT NULL DEFAULT true,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -106,15 +106,12 @@ CREATE TABLE campaign_survey_link (
   survey_id INT REFERENCES survey(survey_id)
 );
 
-/* survey_question_question_id_seq */
 CREATE TABLE survey_questions (
   question_id serial PRIMARY KEY,
   survey_id INT NOT NULL REFERENCES survey(survey_id),
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   description VARCHAR(255)
 );
-
-
 
 CREATE TABLE active_survey (
   active_survey_id serial PRIMARY KEY,
@@ -131,10 +128,9 @@ CREATE TABLE active_survey (
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 
-/* active_survey_q_question_id_seq */
 CREATE TABLE active_survey_questions (
   question_id SERIAL PRIMARY KEY,
-  active_survey_id INT default -1 REFERENCES active_survey(active_survey_id),
+  active_survey_id INT REFERENCES active_survey(active_survey_id),
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   description VARCHAR(255),
   average float default 0.00,
@@ -147,7 +143,6 @@ CREATE TABLE active_survey_questions (
   total7 int default 0
 );
 
-/* active_survey_r_response_id_seq */
 CREATE TABLE active_survey_responses (
   response_id SERIAL PRIMARY KEY,
   active_survey_id INT NOT NULL REFERENCES active_survey(active_survey_id),
@@ -157,7 +152,6 @@ CREATE TABLE active_survey_responses (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-/* active_survey_ans_answer_id_seq */
 CREATE TABLE active_survey_answers (
   answer_id SERIAL primary key,
   response_id INT NOT NULL REFERENCES active_survey_responses(response_id),
@@ -194,9 +188,9 @@ CREATE TABLE message (
   subject VARCHAR(255) DEFAULT NULL,
   body TEXT,
   reply_addr VARCHAR(100),
-  url VARCHAR(100),
-  img VARCHAR(80),  
-  enabled BOOLEAN NOT NULL DEFAULT 't',
+  url VARCHAR(255),
+  img VARCHAR(80),
+  enabled BOOLEAN NOT NULL DEFAULT true,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -210,7 +204,7 @@ CREATE TABLE message_template (
   template_file varchar(80),
   num_imgs INT,
   num_urls INT,
-  enabled BOOLEAN NOT NULL DEFAULT 't',
+  enabled BOOLEAN NOT NULL DEFAULT true,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -224,11 +218,4 @@ CREATE TABLE saved_criteriaelement (
   operatorid INTEGER NOT NULL references field_types(id),
   value VARCHAR(80) NOT NULL
 );
-
-
- 
-
-
-
-
 

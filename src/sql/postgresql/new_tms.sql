@@ -7,11 +7,10 @@
  */
  
 CREATE TABLE ticket_level (
-  code serial PRIMARY KEY
-  ,description VARCHAR(300) NOT NULL UNIQUE
-  ,default_item BOOLEAN DEFAULT false
-  ,level INTEGER DEFAULT 0
-  ,enabled BOOLEAN DEFAULT true
+  code serial PRIMARY KEY,
+  description VARCHAR(300) NOT NULL UNIQUE,
+  default_item BOOLEAN DEFAULT false,
+  enabled BOOLEAN DEFAULT true
 );
 
 
@@ -74,10 +73,10 @@ CREATE TABLE ticket (
   subcat_code1 INT,
   subcat_code2 INT,
   subcat_code3 INT,
-  assigned_to int REFERENCES access,
+  assigned_to INT REFERENCES access,
   comment TEXT,
   solution TEXT,
-  scode INT REFERENCES ticket_severity(code), 
+  scode INT REFERENCES ticket_severity(code),
   critical TIMESTAMP,
   notified TIMESTAMP,
   custom_data TEXT
@@ -86,13 +85,13 @@ CREATE TABLE ticket (
 CREATE INDEX "ticket_cidx" ON "ticket" USING btree ("assigned_to", "closed");
 
 CREATE TABLE ticketlog (
-  id serial primary key
-  ,ticketid int REFERENCES ticket(ticketid)
-  ,assigned_to int REFERENCES access(user_id)
-  ,comment text
+  id serial PRIMARY KEY
+  ,ticketid INT REFERENCES ticket(ticketid)
+  ,assigned_to INT REFERENCES access(user_id)
+  ,comment TEXT
   ,closed BOOLEAN
-  ,pri_code int REFERENCES ticket_priority(code)
-  ,level_code int 
+  ,pri_code INT REFERENCES ticket_priority(code)
+  ,level_code INT 
   ,department_code INT REFERENCES lookup_department(code)
   ,cat_code INT
   ,scode INT REFERENCES ticket_severity(code)
