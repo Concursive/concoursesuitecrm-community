@@ -485,6 +485,7 @@ public final class Accounts extends CFSModule {
       db = this.getConnection(context);
 
       LookupList industrySelect = new LookupList(db, "lookup_industry");
+      industrySelect.addItem(0, "--None--");
       context.getRequest().setAttribute("IndustryList", industrySelect);
 
       LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");
@@ -974,6 +975,7 @@ public final class Accounts extends CFSModule {
       newOrg = new Organization(db, tempid);
 
       LookupList industrySelect = new LookupList(db, "lookup_industry");
+      industrySelect.addItem(0, "--None--");
       context.getRequest().setAttribute("IndustryList", industrySelect);
 
       LookupList phoneTypeList = new LookupList(db, "lookup_orgphone_types");

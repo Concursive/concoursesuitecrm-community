@@ -33,13 +33,15 @@
     </dhv:permission>
     
     <td valign=center align=left bgcolor="#DEE0FA">
-      <strong>File Subject</strong>
+      <strong><a href="/Accounts.do?command=Reports&column=subject">File Subject</a></strong>
+      <%= RptListInfo.getSortIcon("subject") %>
     </td>
     <td valign=center align=left bgcolor="#DEE0FA">
       <strong>Size</strong>
     </td>
     <td valign=center align=left bgcolor="#DEE0FA">
-      <strong>Create Date</strong>
+      <strong><a href="/Accounts.do?command=Reports&column=entered">Create Date</a></strong>
+      <%= RptListInfo.getSortIcon("entered") %>
     </td>
      <td valign=center align=left bgcolor="#DEE0FA">
       <strong>Created By</strong>

@@ -313,9 +313,11 @@ public class HtmlSelect extends ArrayList {
 		java.util.Date d = new java.util.Date();
 		java.util.Calendar iteratorDate = java.util.Calendar.getInstance();
 		
-		while (bottomLimitYear<=iteratorDate.get(java.util.Calendar.YEAR)) {
-			this.addItem("" + bottomLimitYear);
-			bottomLimitYear++;
+		int counter = iteratorDate.get(java.util.Calendar.YEAR);
+		
+		while (counter >= bottomLimitYear) {
+			this.addItem("" + counter);
+			counter--;
 		}
 		
 		this.setDefaultValue("" + iteratorDate.get(java.util.Calendar.YEAR));

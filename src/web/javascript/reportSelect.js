@@ -13,12 +13,15 @@
 	
 	function addValue(){
 		var searchList = document.generate.selectedList;
-		searchText = document.generate.fields[document.generate.fields.selectedIndex].value;
-	
-		var newOption = document.generate.fields[document.generate.fields.selectedIndex].text;
-		searchList.options[searchList.options.length] = new Option(newOption, (searchText));
 		
-		document.generate.fields[document.generate.fields.selectedIndex] = null;
+		if (document.generate.fields.selectedIndex >= 0) {
+			searchText = document.generate.fields[document.generate.fields.selectedIndex].value;
+			var newOption = document.generate.fields[document.generate.fields.selectedIndex].text;
+			searchList.options[searchList.options.length] = new Option(newOption, (searchText));		
+			document.generate.fields[document.generate.fields.selectedIndex] = null;
+		} else {
+			alert ("You must first select an item to add");
+		}
 		
 		return true;
 	}

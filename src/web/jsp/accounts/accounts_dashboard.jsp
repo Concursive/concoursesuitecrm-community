@@ -5,7 +5,7 @@
 <%@ include file="initPage.jsp" %>
 <table bgcolor="#FFFFFF" border="0" width="100%">
 <tr>
-<form name="monthBean" action="MyCFS.do?command=Home" method="post">
+<form name="monthBean" action="Accounts.do?command=Dashboard" method="post">
 <td valign="top" bgcolor="#FFFFFF" width="300">
 <%  
       CompanyCalendar.setBorderSize(1);
