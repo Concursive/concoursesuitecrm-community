@@ -111,6 +111,7 @@ CREATE TABLE lookup_orgemail_types (
 )
 ;
 
+/*
 CREATE TABLE note (
   id serial PRIMARY KEY,
   org_id int not null default -1,
@@ -125,6 +126,7 @@ CREATE TABLE note (
   enabled BOOLEAN DEFAULT true
 )
 ;
+*/
 
 CREATE TABLE lookup_orgphone_types (
   code SERIAL PRIMARY KEY,
