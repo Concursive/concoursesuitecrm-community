@@ -11,12 +11,14 @@ View Users<br>
 <center><%= UserListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
-    <form name="listView" method="post" action="Users.do?command=ListUsers">
+    <form name="userForm" method="post" action="Users.do?command=ListUsers">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+      <select name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= UserListInfo.getOptionValue("enabled") %>>Active Users</option>
-        <option <%= UserListInfo.getOptionValue("aliases") %>>Aliased Users</option>
         <option <%= UserListInfo.getOptionValue("disabled") %>>Inactive Users</option>
+        <dhv:permission name="demo-view">
+        <option <%= UserListInfo.getOptionValue("aliases") %>>Aliased Users</option>
+        </dhv:permission>
       </select>
     </td>
     <td>
@@ -26,30 +28,26 @@ View Users<br>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr>
+  <tr class="title">
     <dhv:permission name="admin-users-edit,admin-users-delete">
-    <td width="8" valign=center align=center bgcolor="#DEE0FA">
+    <td>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td bgcolor="#DEE0FA"><b><font class="column">
-      <a href="Users.do?command=ListUsers&column=c.namelast">
-      Name</a></font></b>
+    <td nowrap>
+      <b><a href="Users.do?command=ListUsers&column=c.namelast">Name</a></b>
       <%= UserListInfo.getSortIcon("c.namelast") %>
     </td>
-    <td bgcolor="#DEE0FA"><b><font class="column">
-      <a href="Users.do?command=ListUsers&column=username">
-      Username</a></font></b>
+    <td nowrap>
+      <b><a href="Users.do?command=ListUsers&column=username">Username</a></b>
       <%= UserListInfo.getSortIcon("username") %>
     </td>
-    <td bgcolor="#DEE0FA"><b><font class="column">
-      <a href="Users.do?command=ListUsers&column=role">
-      Role</a></font></b>
+    <td nowrap>
+      <b><a href="Users.do?command=ListUsers&column=role">Role</a></b>
       <%= UserListInfo.getSortIcon("role") %>
     </td>
-    <td bgcolor="#DEE0FA"><b><font class="column">
-      <a href="Users.do?command=ListUsers&column=mgr_namelast">
-      Reports To</a></font></b>
+    <td nowrap>
+      <b><a href="Users.do?command=ListUsers&column=mgr_namelast">Reports To</a></b>
       <%= UserListInfo.getSortIcon("mgr_namelast") %>
     </td>
   </tr>
@@ -58,42 +56,36 @@ View Users<br>
   if (i.hasNext()) {
     int rowid = 0;
     while (i.hasNext()) {
-      if (rowid != 1) {
-        rowid = 1;
-      } else {
-        rowid = 2;
-      }
-      User thisUser = (User)i.next();
-      Contact thisContact = (Contact)thisUser.getContact();
+      rowid = (rowid != 1?1:2);
+      User thisUser = (User) i.next();
+      Contact thisContact = (Contact) thisUser.getContact();
 %>      
-      <tr>
+      <tr class="row<%= rowid %>" width="8">
         <dhv:permission name="admin-users-edit,admin-users-delete">
-        <td width="8" valign=center align=center nowrap class="row<%= rowid %>">
-          
+        <td valign="center" align="center" nowrap>
           <dhv:evaluate exp="<%=(thisUser.getEnabled())%>">
           <dhv:permission name="admin-users-edit"><a href="Users.do?command=ModifyUser&id=<%= thisUser.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="admin-users-edit,admin-users-delete" all="true">|</dhv:permission><dhv:permission name="admin-users-delete"><a href="Users.do?command=DisableUserConfirm&id=<%= thisUser.getId() %>&return=list">Disable</a></dhv:permission>
           </dhv:evaluate>
           <dhv:evaluate exp="<%=!(thisUser.getEnabled())%>">
           <dhv:permission name="admin-users-edit"><a href="Users.do?command=EnableUser&id=<%= thisUser.getId() %>&return=list">Enable</a></dhv:permission>
           </dhv:evaluate>
-        
         </td>
         </dhv:permission>
-        <td class="row<%= rowid %>"><font class="columntext1">
-          <a href="Users.do?command=UserDetails&id=<%= thisUser.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a></font>
+        <td>
+          <a href="Users.do?command=UserDetails&id=<%= thisUser.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
         </td>
-        <td class="row<%= rowid %>">
+        <td>
           <%= toHtml(thisUser.getUsername()) %>
         </td>
-        <td class="row<%= rowid %>">
+        <td>
           <%= toHtml(thisUser.getRole()) %>
         </td>
-        <td class="row<%= rowid %>">
-          <%= toHtml(thisUser.getManager()) %>
+        <td>
+          <dhv:username id="<%= thisUser.getManagerId() %>"/>
           <dhv:evaluate exp="<%=!(thisUser.getManagerUserEnabled())%>"><font color="red">*</font></dhv:evaluate>
         </td>
       </tr>
-<%      
+<%
     }
   } else {
 %>  
