@@ -427,7 +427,7 @@ CREATE TABLE contact_phone (
 
 CREATE TABLE notification (
   notification_id SERIAL PRIMARY KEY,
-  notify_user INT NOT NULL REFERENCES access(user_id),
+  notify_user INT NOT NULL,
   module VARCHAR(255) NOT NULL,
   item_id INT NOT NULL,
   item_modified TIMESTAMP,
