@@ -30,11 +30,17 @@ Contact Details
       <br />   <br />
       <input type="hidden" name="id" value="<%=ContactDetails.getId()%>" />
       <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>" />
-<table cellpadding="4" cellspacing="0" border="0" width="100%" >
-  <tr>
-    <td><%=ContactDetails.getNameLastFirst()%> does not have an email address.</td>
-  </tr>
-  <tr>
-    <td>An Email address is required for the contact before portal access information can be granted or modified.</td>
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" >
+        <tr>
+          <td>
+            <img src="images/error.gif" border="0" align="absmiddle"/>
+            <%=ContactDetails.getNameLastFirst()%> does not have an email address
+          </td>
+        </tr>
+        <tr>
+          <td>An email address is required for the contact before portal access information can be granted or modified.</td>
+        </tr>
+      </table>
+    </td>
   </tr>
 </table>
