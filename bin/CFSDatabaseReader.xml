@@ -444,25 +444,27 @@
       <property lookup="user">modifiedBy</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaign" table="campaign" uniqueField="id">
-      <property alias="guid">id</property>
-      <property>name</property>
-      <property>description</property>
-      <property>messageId</property>
-      <property>groupId</property>
-      <property>runId</property>
-      <property>statusId</property>
-      <property lookup="user">owner</property>
+      <property alias="guid" field="id"/>
+      <property field="name"/>
+      <property field="description"/>
+      <property field="list_id"/>
+      <property field="message_id"/>
+      <property field="reply_addr"/>
+      <property field="subject"/>
+      <property field="message"/>
+      <property field="status_id"/>
+      <property field="status"/>
+      <property field="active"/>
+      <property field="active_date"/>
+      <property field="send_method_id"/>
+      <property field="inactive_date"/>
+      <property field="approval_date"/>
+      <property field="approved_by"/>
+      <property field="entered"/>
+      <property field="modified"/>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
-      <property>activeDate</property>
-      <property>status</property>
-      <property>active</property>
-      <property>subject</property>
-      <property>message</property>
-      <property>replyTo</property>
-      <property>sendMethodId</property>
-      <property>surveyId</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
       <property lookup="searchCriteriaList" field="id"/>
