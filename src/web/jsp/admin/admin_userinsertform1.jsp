@@ -20,10 +20,11 @@ function checkForm(form) {
       message += "- Check that a Username is entered\r\n";
       formTest = false;
     }
-    if ((form.password1.value == "") || (form.password2.value == "")) { 
+    if ((form.password1.value == "") || (form.password2.value == "") || (form.password1.value != form.password2.value)) { 
       message += "- Check that both Passwords are entered correctly\r\n";
       formTest = false;
     }
+    
     if (form.roleId.value == "-1") { 
       message += "- Check that a Role is selected\r\n";
       formTest = false;
@@ -135,6 +136,7 @@ Add User<br>
     </td>
   </tr>
 </table>
+<br>
 <input type="submit" value="Add User">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers';this.form.submit()">
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
