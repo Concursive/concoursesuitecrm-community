@@ -10,13 +10,19 @@ import java.text.*;
 import org.theseus.actions.*;
 
 /**
- *  Description of the Class
+ *  When a user goes to the "Folders" section of a module, there are several 
+ *  categories of folders.  Each of these CustomFieldCategory objects then has
+ *  groups of fields.
  *
  *@author     mrajkowski
  *@created    January 16, 2002
- *@version    $Id$
+ *@version    $Id: CustomFieldCategory.java,v 1.3 2002/03/15 22:29:34 mrajkowski
+ *      Exp $
  */
 public class CustomFieldCategory extends Vector {
+
+  public final static int TRUE = 1;
+  public final static int FALSE = 0;
   protected Hashtable errors = new Hashtable();
 
   //Properties of a Category
@@ -41,9 +47,6 @@ public class CustomFieldCategory extends Vector {
   private int includeEnabled = -1;
   private int includeScheduled = -1;
   private boolean buildResources = false;
-
-  public final static int TRUE = 1;
-  public final static int FALSE = 0;
 
 
   /**
@@ -350,7 +353,7 @@ public class CustomFieldCategory extends Vector {
   public void setParameters(ActionContext context) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      CustomFieldGroup thisGroup = (CustomFieldGroup)i.next();
+      CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
       thisGroup.setParameters(context);
     }
   }
@@ -564,21 +567,28 @@ public class CustomFieldCategory extends Vector {
   public CustomFieldGroup getGroup(int tmp) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      CustomFieldGroup thisGroup = (CustomFieldGroup)i.next();
+      CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
       if (thisGroup.getId() == tmp) {
         return thisGroup;
       }
     }
     return new CustomFieldGroup();
   }
-  
+
+
+  /**
+   *  Gets the fieldValue attribute of the CustomFieldCategory object
+   *
+   *@param  fieldId  Description of Parameter
+   *@return          The fieldValue value
+   */
   public String getFieldValue(int fieldId) {
     Iterator groups = this.iterator();
     while (groups.hasNext()) {
-      CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
+      CustomFieldGroup thisGroup = (CustomFieldGroup) groups.next();
       Iterator fields = thisGroup.iterator();
       while (fields.hasNext()) {
-        CustomField thisField = (CustomField)fields.next();
+        CustomField thisField = (CustomField) fields.next();
         if (thisField.getId() == fieldId) {
           return thisField.getEnteredValue();
         }
@@ -586,14 +596,21 @@ public class CustomFieldCategory extends Vector {
     }
     return null;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  fieldId  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public boolean hasField(int fieldId) {
     Iterator groups = this.iterator();
     while (groups.hasNext()) {
-      CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
+      CustomFieldGroup thisGroup = (CustomFieldGroup) groups.next();
       Iterator fields = thisGroup.iterator();
       while (fields.hasNext()) {
-        CustomField thisField = (CustomField)fields.next();
+        CustomField thisField = (CustomField) fields.next();
         if (thisField.getId() == fieldId) {
           return true;
         }
@@ -645,7 +662,7 @@ public class CustomFieldCategory extends Vector {
     if (buildResources) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
-        CustomFieldGroup thisGroup = (CustomFieldGroup)i.next();
+        CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
         thisGroup.setLinkModuleId(this.linkModuleId);
         thisGroup.setLinkItemId(this.linkItemId);
         thisGroup.setRecordId(this.recordId);
@@ -691,9 +708,11 @@ public class CustomFieldCategory extends Vector {
 
       Iterator i = this.iterator();
       while (i.hasNext()) {
-        CustomFieldGroup thisGroup = (CustomFieldGroup)i.next();
+        CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
         int groupResult = thisGroup.insert(db);
-        if (groupResult != 1) catResult = groupResult;
+        if (groupResult != 1) {
+          catResult = groupResult;
+        }
       }
       if (catResult == 1) {
         db.commit();
@@ -736,10 +755,12 @@ public class CustomFieldCategory extends Vector {
 
       Iterator i = this.iterator();
       while (i.hasNext()) {
-        CustomFieldGroup thisGroup = (CustomFieldGroup)i.next();
+        CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
         thisGroup.setRecordId(thisRecord.getId());
         int groupResult = thisGroup.insert(db);
-        if (groupResult != 1) catResult = groupResult;
+        if (groupResult != 1) {
+          catResult = groupResult;
+        }
       }
       if (catResult == 1) {
         db.commit();
@@ -926,8 +947,8 @@ public class CustomFieldCategory extends Vector {
    *@since                    1.1
    */
   private void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("category_id");
     moduleId = rs.getInt("module_id");
+    id = rs.getInt("category_id");
     name = rs.getString("category_name");
     level = rs.getInt("level");
     description = rs.getString("description");
@@ -956,10 +977,8 @@ public class CustomFieldCategory extends Vector {
       sqlFilter.append("AND (CURRENT_TIMESTAMP < cfg.start_date OR (CURRENT_TIMESTAMP > cfg.end_date AND cfg.end_date IS NOT NULL)) ");
     }
 
-    if (includeEnabled == TRUE) {
-      sqlFilter.append("AND cfg.enabled = true ");
-    } else if (includeEnabled == FALSE) {
-      sqlFilter.append("AND cfg.enabled = false ");
+    if (includeEnabled == TRUE || includeEnabled == FALSE) {
+      sqlFilter.append("AND cfg.enabled = ? ");
     }
   }
 
@@ -974,6 +993,13 @@ public class CustomFieldCategory extends Vector {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
+    if (includeEnabled == TRUE) {
+      pst.setBoolean(++i, true);
+    } else if (includeEnabled == FALSE) {
+      pst.setBoolean(++i, false);
+    }
+
     return i;
   }
 

@@ -4,7 +4,15 @@ package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
 import java.text.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
+/**
+ *  Represents all of the data that is entered for a CustomFieldCategory
+ *
+ *@author     matt rajkowski
+ *@created    March 22, 2002
+ *@version    $Id$
+ */
 public class CustomFieldRecord {
 
   //Properties for a Field
@@ -20,26 +28,129 @@ public class CustomFieldRecord {
   private int linkItemId = -1;
   private int categoryId = -1;
 
+
+  /**
+   *  Constructor for the CustomFieldRecord object
+   */
   public CustomFieldRecord() { }
 
 
+  /**
+   *  Constructor for the CustomFieldRecord object
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public CustomFieldRecord(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 
-  public void setId(int tmp) { this.id = tmp; }
-  public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
-  public void setEnteredBy(int tmp) { this.enteredBy = tmp; }
-  public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
-  public void setModifiedBy(int tmp) { this.modifiedBy = tmp; }
 
-  
-  public void setLinkModuleId(int tmp) { this.linkModuleId = tmp; }
-  public void setLinkItemId(int tmp) { this.linkItemId = tmp; }
-  public void setCategoryId(int tmp) { this.categoryId = tmp; }
-  
-  public int getId() { return id; }
-  public java.sql.Timestamp getEntered() { return entered; }
+  /**
+   *  Sets the id attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(int tmp) {
+    this.modifiedBy = tmp;
+  }
+
+
+  /**
+   *  Sets the linkModuleId attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new linkModuleId value
+   */
+  public void setLinkModuleId(int tmp) {
+    this.linkModuleId = tmp;
+  }
+
+
+  /**
+   *  Sets the linkItemId attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new linkItemId value
+   */
+  public void setLinkItemId(int tmp) {
+    this.linkItemId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Gets the id attribute of the CustomFieldRecord object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the entered attribute of the CustomFieldRecord object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the enteredString attribute of the CustomFieldRecord object
+   *
+   *@return    The enteredString value
+   */
   public String getEnteredString() {
     String tmp = "";
     try {
@@ -48,8 +159,33 @@ public class CustomFieldRecord {
     }
     return tmp;
   }
-  public int getEnteredBy() { return enteredBy; }
-  public java.sql.Timestamp getModified() { return modified; }
+
+
+  /**
+   *  Gets the enteredBy attribute of the CustomFieldRecord object
+   *
+   *@return    The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the CustomFieldRecord object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Gets the modifiedDateTimeString attribute of the CustomFieldRecord object
+   *
+   *@return    The modifiedDateTimeString value
+   */
   public String getModifiedDateTimeString() {
     String tmp = "";
     try {
@@ -58,28 +194,24 @@ public class CustomFieldRecord {
     }
     return tmp;
   }
-  public int getModifiedBy() { return modifiedBy; }
+
+
+  /**
+   *  Gets the modifiedBy attribute of the CustomFieldRecord object
+   *
+   *@return    The modifiedBy value
+   */
+  public int getModifiedBy() {
+    return modifiedBy;
+  }
 
 
   /**
    *  Description of the Method
    *
-   *@param  rs                Description of Parameter
+   *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
-   *@since                    1.1
    */
-  private void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("record_id");
-    linkModuleId = rs.getInt("link_module_id");
-    linkItemId = rs.getInt("link_item_id");
-    categoryId = rs.getInt("category_id");
-    entered = rs.getTimestamp("entered");
-    enteredBy = rs.getInt("enteredby");
-    modified = rs.getTimestamp("modified");
-    modifiedBy = rs.getInt("modifiedby");
-    enabled = rs.getBoolean("enabled");
-  }
-
   public void insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -95,21 +227,22 @@ public class CustomFieldRecord {
     pst.setInt(++i, modifiedBy);
     pst.execute();
     pst.close();
-    
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("select currval('custom_field_reco_record_id_seq')");
-    if (rs.next()) {
-      this.setId(rs.getInt(1));
-    }
-    rs.close();
-    st.close();
+
+    id = DatabaseUtils.getCurrVal(db, "custom_field_reco_record_id_seq");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void delete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "DELETE FROM custom_field_data " +
-      "WHERE record_id IN (SELECT record_id FROM custom_field_record WHERE link_module_id = ? ");
+        "DELETE FROM custom_field_data " +
+        "WHERE record_id IN (SELECT record_id FROM custom_field_record WHERE link_module_id = ? ");
     if (categoryId > -1) {
       sql.append("AND category_id = ? ");
     }
@@ -117,7 +250,7 @@ public class CustomFieldRecord {
       sql.append("AND link_item_id = ? ");
     }
     sql.append(") ");
-    
+
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, linkModuleId);
@@ -129,11 +262,11 @@ public class CustomFieldRecord {
     }
     pst.execute();
     pst.close();
-    
+
     sql.setLength(0);
     sql.append(
-      "DELETE FROM custom_field_record " +
-      "WHERE link_module_id = ? ");
+        "DELETE FROM custom_field_record " +
+        "WHERE link_module_id = ? ");
     if (categoryId > -1) {
       sql.append("AND category_id = ? ");
     }
@@ -153,6 +286,26 @@ public class CustomFieldRecord {
     pst.close();
     System.out.println("CustomFieldRecord-> Delete Complete");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   *@since                    1.1
+   */
+  private void buildRecord(ResultSet rs) throws SQLException {
+    linkModuleId = rs.getInt("link_module_id");
+    linkItemId = rs.getInt("link_item_id");
+    categoryId = rs.getInt("category_id");
+    id = rs.getInt("record_id");
+    entered = rs.getTimestamp("entered");
+    enteredBy = rs.getInt("enteredby");
+    modified = rs.getTimestamp("modified");
+    modifiedBy = rs.getInt("modifiedby");
+    enabled = rs.getBoolean("enabled");
+  }
+
 }
 

@@ -9,11 +9,14 @@ import java.sql.*;
 /**
  *  Represents a group of CustomField records
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    January 11, 2002
- *@version    $Id$
+ *@version    $Id: CustomFieldGroup.java,v 1.4 2002/01/23 16:05:11 mrajkowski
+ *      Exp $
  */
 public class CustomFieldGroup extends Vector {
+  public final static int TRUE = 1;
+  public final static int FALSE = 0;
   protected Hashtable errors = new Hashtable();
 
   //Properties for a Group
@@ -34,8 +37,6 @@ public class CustomFieldGroup extends Vector {
   private int includeEnabled = -1;
   private int includeScheduled = -1;
   private boolean buildResources = false;
-  public final static int TRUE = 1;
-  public final static int FALSE = 0;
 
 
   /**
@@ -254,7 +255,7 @@ public class CustomFieldGroup extends Vector {
   public void setParameters(ActionContext context) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      CustomField thisField = (CustomField)i.next();
+      CustomField thisField = (CustomField) i.next();
       thisField.setParameters(context);
     }
   }
@@ -368,11 +369,18 @@ public class CustomFieldGroup extends Vector {
   public Hashtable getErrors() {
     return errors;
   }
-  
+
+
+  /**
+   *  Gets the field attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  Description of Parameter
+   *@return      The field value
+   */
   public CustomField getField(int tmp) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      CustomField thisField = (CustomField)i.next();
+      CustomField thisField = (CustomField) i.next();
       if (thisField.getId() == tmp) {
         return thisField;
       }
@@ -426,7 +434,7 @@ public class CustomFieldGroup extends Vector {
     if (buildResources) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
-        CustomField thisField = (CustomField)i.next();
+        CustomField thisField = (CustomField) i.next();
         thisField.buildResources(db);
       }
     }
@@ -437,6 +445,7 @@ public class CustomFieldGroup extends Vector {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    *@since
    */
@@ -444,10 +453,12 @@ public class CustomFieldGroup extends Vector {
     int result = 1;
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      CustomField thisField = (CustomField)i.next();
+      CustomField thisField = (CustomField) i.next();
       thisField.setRecordId(recordId);
       int fieldResult = thisField.insert(db);
-      if (fieldResult != 1) result = fieldResult;
+      if (fieldResult != 1) {
+        result = fieldResult;
+      }
     }
     return result;
   }
@@ -508,13 +519,21 @@ public class CustomFieldGroup extends Vector {
     pst.close();
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int updateLevel(Connection db) throws SQLException {
     int result = 1;
     String sql =
-      "UPDATE custom_field_group " +
-      "SET level = ? " +
-      "WHERE group_id = ? ";
+        "UPDATE custom_field_group " +
+        "SET level = ? " +
+        "WHERE group_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, this.getLevel());
@@ -526,8 +545,8 @@ public class CustomFieldGroup extends Vector {
 
 
   /**
-   *  Deletes the CustomField Group, any associated fields, and any
-   *  data stored in those fields.
+   *  Deletes the CustomField Group, any associated fields, and any data stored
+   *  in those fields.
    *
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
@@ -536,7 +555,9 @@ public class CustomFieldGroup extends Vector {
    */
   public boolean deleteGroup(Connection db) throws SQLException {
     boolean result = false;
-    if (System.getProperty("DEBUG") != null) System.out.println("CustomFieldGroup-> deleteGroup Id:" + id);
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CustomFieldGroup-> deleteGroup Id:" + id);
+    }
     if (id == -1) {
       return result;
     }
@@ -560,7 +581,7 @@ public class CustomFieldGroup extends Vector {
       pst.setInt(++i, id);
       pst.execute();
       pst.close();
-      
+
       sql =
           "DELETE FROM custom_field_info " +
           "WHERE group_id = ? ";
@@ -594,8 +615,8 @@ public class CustomFieldGroup extends Vector {
 
 
   /**
-   * Deletes the CustomField Group, any associated fields... not the 
-   * associated record data.
+   *  Deletes the CustomField Group, any associated fields... not the associated
+   *  record data.
    *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
@@ -621,6 +642,11 @@ public class CustomFieldGroup extends Vector {
   }
 
 
+  /**
+   *  Gets the groupValid attribute of the CustomFieldGroup object
+   *
+   *@return    The groupValid value
+   */
   private boolean isGroupValid() {
     if (categoryId == -1) {
       errors.put("actionError", "Form data is missing");
@@ -640,8 +666,8 @@ public class CustomFieldGroup extends Vector {
    *@since                    1.1
    */
   private void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("group_id");
     categoryId = rs.getInt("category_id");
+    id = rs.getInt("group_id");
     name = rs.getString("group_name");
     level = rs.getInt("level");
     description = rs.getString("description");
@@ -652,6 +678,11 @@ public class CustomFieldGroup extends Vector {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of Parameter
+   */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
@@ -663,16 +694,28 @@ public class CustomFieldGroup extends Vector {
       sqlFilter.append("AND (CURRENT_TIMESTAMP < cfi.start_date OR (CURRENT_TIMESTAMP > cfi.end_date AND cfi.end_date IS NOT NULL)) ");
     }
 
-    if (includeEnabled == TRUE) {
-      sqlFilter.append("AND cfi.enabled = true ");
-    } else if (includeEnabled == FALSE) {
-      sqlFilter.append("AND cfi.enabled = false ");
+    if (includeEnabled == TRUE || includeEnabled == FALSE) {
+      sqlFilter.append("AND cfi.enabled = ? ");
     }
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
+    if (includeEnabled == TRUE) {
+      pst.setBoolean(++i, true);
+    } else if (includeEnabled == FALSE) {
+      pst.setBoolean(++i, false);
+    }
+
     return i;
   }
 

@@ -9,16 +9,18 @@ import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
  *
  *@author     matt
  *@created    December 28, 2001
- *@version    $Id$
+ *@version    $Id: CustomFieldCategoryList.java,v 1.4 2002/03/13 15:36:32 chris
+ *      Exp $
  */
 public class CustomFieldCategoryList extends Vector {
-  
+
   private PagedListInfo pagedListInfo = null;
 
   //Properties for building the list
@@ -29,6 +31,7 @@ public class CustomFieldCategoryList extends Vector {
   private boolean allSelectOption = false;
 
   private String jsEvent = null;
+
 
   /**
    *  Constructor for the CustomFieldCategoryList object
@@ -48,9 +51,35 @@ public class CustomFieldCategoryList extends Vector {
     this.pagedListInfo = tmp;
   }
 
-  public void setLinkModuleId(int tmp) { this.linkModuleId = tmp; }
-  public void setIncludeEnabled(int tmp) { this.includeEnabled = tmp; }
-  public void setIncludeScheduled(int tmp) { this.includeScheduled = tmp; }
+
+  /**
+   *  Sets the linkModuleId attribute of the CustomFieldCategoryList object
+   *
+   *@param  tmp  The new linkModuleId value
+   */
+  public void setLinkModuleId(int tmp) {
+    this.linkModuleId = tmp;
+  }
+
+
+  /**
+   *  Sets the includeEnabled attribute of the CustomFieldCategoryList object
+   *
+   *@param  tmp  The new includeEnabled value
+   */
+  public void setIncludeEnabled(int tmp) {
+    this.includeEnabled = tmp;
+  }
+
+
+  /**
+   *  Sets the includeScheduled attribute of the CustomFieldCategoryList object
+   *
+   *@param  tmp  The new includeScheduled value
+   */
+  public void setIncludeScheduled(int tmp) {
+    this.includeScheduled = tmp;
+  }
 
 
   /**
@@ -63,7 +92,26 @@ public class CustomFieldCategoryList extends Vector {
     this.buildResources = tmp;
   }
 
-  public void setJsEvent(String tmp) { this.jsEvent = tmp; }
+
+  /**
+   *  Sets the jsEvent attribute of the CustomFieldCategoryList object
+   *
+   *@param  tmp  The new jsEvent value
+   */
+  public void setJsEvent(String tmp) {
+    this.jsEvent = tmp;
+  }
+
+
+  /**
+   *  Sets the allSelectOption attribute of the CustomFieldCategoryList object
+   *
+   *@param  allSelectOption  The new allSelectOption value
+   */
+  public void setAllSelectOption(boolean allSelectOption) {
+    this.allSelectOption = allSelectOption;
+  }
+
 
   /**
    *  Gets the PagedListInfo attribute of the CustomFieldCategoryList object
@@ -75,16 +123,45 @@ public class CustomFieldCategoryList extends Vector {
     return pagedListInfo;
   }
 
-  public int getLinkModuleId() { return linkModuleId; }
-  public int getIncludeEnabled() { return includeEnabled; }
-  public int getIncludeScheduled() { return includeScheduled; }
-  
-	public boolean getAllSelectOption() {
-		return allSelectOption;
-	}
-	public void setAllSelectOption(boolean allSelectOption) {
-		this.allSelectOption = allSelectOption;
-	}
+
+  /**
+   *  Gets the linkModuleId attribute of the CustomFieldCategoryList object
+   *
+   *@return    The linkModuleId value
+   */
+  public int getLinkModuleId() {
+    return linkModuleId;
+  }
+
+
+  /**
+   *  Gets the includeEnabled attribute of the CustomFieldCategoryList object
+   *
+   *@return    The includeEnabled value
+   */
+  public int getIncludeEnabled() {
+    return includeEnabled;
+  }
+
+
+  /**
+   *  Gets the includeScheduled attribute of the CustomFieldCategoryList object
+   *
+   *@return    The includeScheduled value
+   */
+  public int getIncludeScheduled() {
+    return includeScheduled;
+  }
+
+
+  /**
+   *  Gets the allSelectOption attribute of the CustomFieldCategoryList object
+   *
+   *@return    The allSelectOption value
+   */
+  public boolean getAllSelectOption() {
+    return allSelectOption;
+  }
 
 
   /**
@@ -97,18 +174,32 @@ public class CustomFieldCategoryList extends Vector {
     return buildResources;
   }
 
-  public String getJsEvent() { return jsEvent; }
-  
+
+  /**
+   *  Gets the jsEvent attribute of the CustomFieldCategoryList object
+   *
+   *@return    The jsEvent value
+   */
+  public String getJsEvent() {
+    return jsEvent;
+  }
+
+
+  /**
+   *  Gets the defaultCategoryId attribute of the CustomFieldCategoryList object
+   *
+   *@return    The defaultCategoryId value
+   */
   public int getDefaultCategoryId() {
     int tmpDefault = -1;
     int count = 0;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       ++count;
-      CustomFieldCategory thisCategory = (CustomFieldCategory)i.next();
+      CustomFieldCategory thisCategory = (CustomFieldCategory) i.next();
       if (count == 1) {
         //If there is no default, use the first entry
-        tmpDefault = thisCategory.getId(); 
+        tmpDefault = thisCategory.getId();
       }
       if (thisCategory.getDefaultItem()) {
         return thisCategory.getId();
@@ -116,53 +207,82 @@ public class CustomFieldCategoryList extends Vector {
     }
     return tmpDefault;
   }
-  
+
+
+  /**
+   *  Gets the defaultCategory attribute of the CustomFieldCategoryList object
+   *
+   *@return    The defaultCategory value
+   */
   public CustomFieldCategory getDefaultCategory() {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      CustomFieldCategory thisCategory = (CustomFieldCategory)i.next();
+      CustomFieldCategory thisCategory = (CustomFieldCategory) i.next();
       if (thisCategory.getDefaultItem()) {
         return thisCategory;
       }
     }
     return new CustomFieldCategory();
   }
-  
+
+
+  /**
+   *  Gets the category attribute of the CustomFieldCategoryList object
+   *
+   *@param  tmp  Description of Parameter
+   *@return      The category value
+   */
   public CustomFieldCategory getCategory(int tmp) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      CustomFieldCategory thisCategory = (CustomFieldCategory)i.next();
+      CustomFieldCategory thisCategory = (CustomFieldCategory) i.next();
       if (thisCategory.getId() == tmp) {
         return thisCategory;
       }
     }
     return new CustomFieldCategory();
   }
-  
-  
+
+
+  /**
+   *  Gets the htmlSelect attribute of the CustomFieldCategoryList object
+   *
+   *@param  selectName  Description of Parameter
+   *@param  defaultKey  Description of Parameter
+   *@return             The htmlSelect value
+   */
   public String getHtmlSelect(String selectName, String defaultKey) {
     return this.getHtmlSelect(selectName, Integer.parseInt(defaultKey));
   }
 
+
+  /**
+   *  Gets the htmlSelect attribute of the CustomFieldCategoryList object
+   *
+   *@param  selectName  Description of Parameter
+   *@param  defaultKey  Description of Parameter
+   *@return             The htmlSelect value
+   */
   public String getHtmlSelect(String selectName, int defaultKey) {
-		HtmlSelect thisSelect = new HtmlSelect();
-		
-		if (allSelectOption) {
-			thisSelect.addItem(0, "All Folders");
-		}
-		
-		Iterator i = this.iterator();
-		while (i.hasNext()) {
-			CustomFieldCategory thisCategory = (CustomFieldCategory) i.next();
-			thisSelect.addItem(thisCategory.getId(), thisCategory.getName());
-		}
-		
-		if (jsEvent != null) {
-			thisSelect.setJsEvent(this.jsEvent);
-		}
-		
-		return thisSelect.getHtml(selectName, defaultKey);
-	}
+    HtmlSelect thisSelect = new HtmlSelect();
+
+    if (allSelectOption) {
+      thisSelect.addItem(0, "All Folders");
+    }
+
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      CustomFieldCategory thisCategory = (CustomFieldCategory) i.next();
+      thisSelect.addItem(thisCategory.getId(), thisCategory.getName());
+    }
+
+    if (jsEvent != null) {
+      thisSelect.setJsEvent(this.jsEvent);
+    }
+
+    return thisSelect.getHtml(selectName, defaultKey);
+  }
+
 
   /**
    *  Description of the Method
@@ -181,14 +301,6 @@ public class CustomFieldCategoryList extends Vector {
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
-    //Need to build a base SQL statement for returning records
-    sqlSelect.append(
-        "SELECT * " +
-        "FROM custom_field_category cfc " +
-    //"LEFT JOIN custom_field_group cfg ON (cfc.category_id = cfg.category_id) " +
-    //"LEFT JOIN custom_field_info cfi ON (cfg.group_id = cfi.group_id) " +
-        "WHERE cfc.module_id = " + linkModuleId + " ");
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
@@ -211,29 +323,39 @@ public class CustomFieldCategoryList extends Vector {
       rs.close();
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
-        pagedListInfo.setColumnToSortBy("level, category_name, category_id");
-        //pagedListInfo.setSortOrder("desc");
-      }
-      sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
-      if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-        sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-      }
-
-      //Determine items per page
-      if (pagedListInfo.getItemsPerPage() > 0) {
-        sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
-      }
-
-      sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
+      pagedListInfo.setDefaultSort("level, category_name, category_id", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY level, category_name, category_id ");
     }
+    
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+      "* " +
+      "FROM custom_field_category cfc " +
+      "WHERE cfc.module_id = " + linkModuleId + " ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+    
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+    
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       CustomFieldCategory thisCategory = new CustomFieldCategory(rs);
       this.addElement(thisCategory);
     }
@@ -243,7 +365,7 @@ public class CustomFieldCategoryList extends Vector {
     if (buildResources) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
-        CustomFieldCategory thisCategory = (CustomFieldCategory)i.next();
+        CustomFieldCategory thisCategory = (CustomFieldCategory) i.next();
         thisCategory.setLinkModuleId(linkModuleId);
         thisCategory.setIncludeEnabled(this.includeEnabled);
         thisCategory.setIncludeScheduled(this.includeScheduled);
@@ -254,6 +376,11 @@ public class CustomFieldCategoryList extends Vector {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of Parameter
+   */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
@@ -265,16 +392,28 @@ public class CustomFieldCategoryList extends Vector {
       sqlFilter.append("AND (CURRENT_TIMESTAMP < cfc.start_date OR (CURRENT_TIMESTAMP > cfc.end_date AND cfc.end_date IS NOT NULL)) ");
     }
 
-    if (includeEnabled == Constants.TRUE) {
-      sqlFilter.append("AND cfc.enabled = true ");
-    } else if (includeEnabled == Constants.FALSE) {
-      sqlFilter.append("AND cfc.enabled = false ");
+    if (includeEnabled == Constants.TRUE || includeEnabled == Constants.FALSE) {
+      sqlFilter.append("AND cfc.enabled = ? ");
     }
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
+    if (includeEnabled == Constants.TRUE) {
+      pst.setBoolean(++i, true);
+    } else if (includeEnabled == Constants.FALSE) {
+      pst.setBoolean(++i, false);
+    }
+
     return i;
   }
 }

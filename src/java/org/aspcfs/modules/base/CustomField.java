@@ -1,19 +1,21 @@
-//Copyright 2001 Dark Horse Ventures
-//TODO: Currency entry using k, m, b for 50,000, etc.
-//TODO: Phone numbers -- When you enter phone numbers in various phone fields, 
-//preserve whatever phone number format you enter. 
-//However, if your Locale is set to English (United States) or English (Canada), 
-//ten digit phone numbers and eleven digit numbers that start with '1' are 
-//automatically formatted as (800) 555-1212 when you save the record. 
-//If you do not want this formatting for a ten or eleven digit number, 
-//enter a '+' before the number, e.g., +49 8178 94 07-0.
-
+/*
+ *  Copyright 2001 Dark Horse Ventures
+ *  TODO: Currency entry using k, m, b for 50,000, etc.
+ *  TODO: Phone numbers -- When you enter phone numbers in various phone fields,
+ *  preserve whatever phone number format you enter.
+ *  However, if your Locale is set to English (United States) or English (Canada),
+ *  ten digit phone numbers and eleven digit numbers that start with '1' are
+ *  automatically formatted as (800) 555-1212 when you save the record.
+ *  If you do not want this formatting for a ten or eleven digit number,
+ *  enter a '+' before the number, e.g., +49 8178 94 07-0.
+ */
 package com.darkhorseventures.cfsbase;
 
 import org.theseus.beans.*;
 import org.theseus.actions.*;
 import java.sql.*;
 import com.darkhorseventures.webutils.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 import java.util.*;
 import java.text.*;
 
@@ -26,6 +28,23 @@ import java.text.*;
  *@version    $Id$
  */
 public class CustomField extends GenericBean {
+
+  //Types of custom fields
+  public final static int TEXT = 1;
+  public final static int SELECT = 2;
+  public final static int TEXTAREA = 3;
+  public final static int CHECKBOX = 4;
+  //public final static int RADIOBOX = 5;
+  //public final static int LISTSELECT = 6;
+  //public final static int MULTILISTSELECT = 7;
+  public final static int DATE = 8;
+  public final static int INTEGER = 9;
+  public final static int FLOAT = 10;
+  public final static int PERCENT = 11;
+  public final static int CURRENCY = 12;
+  public final static int EMAIL = 13;
+  public final static int URL = 14;
+  public final static int PHONE = 15;
 
   //Properties for a Field
   private int id = -1;
@@ -51,23 +70,6 @@ public class CustomField extends GenericBean {
   private int enteredNumber = 0;
   private double enteredDouble = 0;
   private Object elementData = null;
-
-  //Types of custom fields
-  public final static int TEXT = 1;
-  public final static int SELECT = 2;
-  public final static int TEXTAREA = 3;
-  public final static int CHECKBOX = 4;
-  //public final static int RADIOBOX = 5;
-  //public final static int LISTSELECT = 6;
-  //public final static int MULTILISTSELECT = 7;
-  public final static int DATE = 8;
-  public final static int INTEGER = 9;
-  public final static int FLOAT = 10;
-  public final static int PERCENT = 11;
-  public final static int CURRENCY = 12;
-  public final static int EMAIL = 13;
-  public final static int URL = 14;
-  public final static int PHONE = 15;
 
 
   /**
@@ -171,9 +173,6 @@ public class CustomField extends GenericBean {
     this.level = tmp;
   }
 
-public int getRecordId() {
-	return recordId;
-}
 
   /**
    *  Sets the Type attribute of the CustomField object
@@ -372,7 +371,7 @@ public int getRecordId() {
         thisElement.setCode(count);
         thisElement.setLevel(count);
         thisElement.setDefaultItem(false);
-        ((LookupList)elementData).add(thisElement);
+        ((LookupList) elementData).add(thisElement);
       }
     }
   }
@@ -389,24 +388,34 @@ public int getRecordId() {
     if (newValue != null) {
       newValue = newValue.trim();
       switch (type) {
-        case SELECT:
-          selectedItemId = Integer.parseInt(newValue);
-          enteredValue = ((LookupList)elementData).getSelectedValue(selectedItemId);
-          break;
-        case CHECKBOX:
-          if ("ON".equalsIgnoreCase(newValue)) {
-            selectedItemId = 1;
-            enteredValue = "Yes";
-          } else {
-            selectedItemId = 0;
-            enteredValue = "No";
-          }
-          break;
-        default:
-          enteredValue = newValue;
-          break;
+          case SELECT:
+            selectedItemId = Integer.parseInt(newValue);
+            enteredValue = ((LookupList) elementData).getSelectedValue(selectedItemId);
+            break;
+          case CHECKBOX:
+            if ("ON".equalsIgnoreCase(newValue)) {
+              selectedItemId = 1;
+              enteredValue = "Yes";
+            } else {
+              selectedItemId = 0;
+              enteredValue = "No";
+            }
+            break;
+          default:
+            enteredValue = newValue;
+            break;
       }
     }
+  }
+
+
+  /**
+   *  Gets the recordId attribute of the CustomField object
+   *
+   *@return    The recordId value
+   */
+  public int getRecordId() {
+    return recordId;
   }
 
 
@@ -419,9 +428,9 @@ public int getRecordId() {
   public String getLookupList() {
     StringBuffer sb = new StringBuffer();
     if (elementData != null) {
-      Iterator i = ((LookupList)elementData).iterator();
+      Iterator i = ((LookupList) elementData).iterator();
       while (i.hasNext()) {
-        LookupElement thisElement = (LookupElement)i.next();
+        LookupElement thisElement = (LookupElement) i.next();
         sb.append(thisElement.getDescription());
         if (i.hasNext()) {
           sb.append("\r\n");
@@ -628,16 +637,16 @@ public int getRecordId() {
    */
   public boolean getLengthRequired() {
     switch (type) {
-      case TEXT:
-        return true;
-      case INTEGER:
-        return true;
-      case FLOAT:
-        return true;
-      case CURRENCY:
-        return true;
-      default:
-        return false;
+        case TEXT:
+          return true;
+        case INTEGER:
+          return true;
+        case FLOAT:
+          return true;
+        case CURRENCY:
+          return true;
+        default:
+          return false;
     }
   }
 
@@ -650,10 +659,10 @@ public int getRecordId() {
    */
   public boolean getLookupListRequired() {
     switch (type) {
-      case SELECT:
-        return true;
-      default:
-        return false;
+        case SELECT:
+          return true;
+        default:
+          return false;
     }
   }
 
@@ -667,7 +676,7 @@ public int getRecordId() {
    */
   public String getParameter(String tmp) {
     if (parameters.containsKey(tmp.toLowerCase())) {
-      return (String)parameters.get(tmp.toLowerCase());
+      return (String) parameters.get(tmp.toLowerCase());
     } else {
       return "";
     }
@@ -685,34 +694,34 @@ public int getRecordId() {
       return toHtml(enteredValue);
     }
     switch (type) {
-      case URL:
-        return "<a href=\"" + ((enteredValue.indexOf(":") > -1) ? "" : "http://") + enteredValue + "\" target=\"_new\">" + enteredValue + "</a>";
-      case EMAIL:
-        if (enteredValue.indexOf("@") > 0) {
-          return "<a href=\"mailto:" + enteredValue + "\">" + enteredValue + "</a>";
-        } else {
-          return toHtml(enteredValue);
-        }
-      case SELECT:
-        if (elementData != null) {
-          return toHtml(((LookupList)elementData).getSelectedValue(selectedItemId));
-        } else {
-          return toHtml(enteredValue);
-        }
-      case CHECKBOX:
-        return (selectedItemId == 1 ? "Yes" : "No");
-      case CURRENCY:
-        try {
-          double thisAmount = Double.parseDouble(enteredValue);
-          NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-          return ("$" + numberFormatter.format(thisAmount));
-        } catch (Exception e) {
-          return ("$" + toHtml(enteredValue));
-        }
-      case PERCENT:
-        return (toHtml(enteredValue) + "%");
-      default:
-        return (toHtml(enteredValue));
+        case URL:
+          return "<a href=\"" + ((enteredValue.indexOf(":") > -1) ? "" : "http://") + enteredValue + "\" target=\"_new\">" + enteredValue + "</a>";
+        case EMAIL:
+          if (enteredValue.indexOf("@") > 0) {
+            return "<a href=\"mailto:" + enteredValue + "\">" + enteredValue + "</a>";
+          } else {
+            return toHtml(enteredValue);
+          }
+        case SELECT:
+          if (elementData != null) {
+            return toHtml(((LookupList) elementData).getSelectedValue(selectedItemId));
+          } else {
+            return toHtml(enteredValue);
+          }
+        case CHECKBOX:
+          return (selectedItemId == 1 ? "Yes" : "No");
+        case CURRENCY:
+          try {
+            double thisAmount = Double.parseDouble(enteredValue);
+            NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+            return ("$" + numberFormatter.format(thisAmount));
+          } catch (Exception e) {
+            return ("$" + toHtml(enteredValue));
+          }
+        case PERCENT:
+          return (toHtml(enteredValue) + "%");
+        default:
+          return (toHtml(enteredValue));
     }
   }
 
@@ -726,33 +735,33 @@ public int getRecordId() {
    */
   public String getHtmlElement() {
     switch (type) {
-      case TEXTAREA:
-        return ("<textarea cols=\"70\" rows=\"8\" name=\"" + "cf" + id + "\">" + toString(enteredValue) + "</textarea>");
-      case SELECT:
-        ((LookupList)elementData).addItem(-1, "-- None --");
-        return ((LookupList)elementData).getHtmlSelect("cf" + id, selectedItemId);
-      case CHECKBOX:
-        return ("<input type=\"checkbox\" name=\"" + "cf" + id + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
-      case DATE:
-        return ("<input type=\"text\" name=\"" + "cf" + id + "\" value=\"" + toHtmlValue(enteredValue) + "\"> " +
-            "<a href=\"javascript:popCalendar('forms[0]', 'cf" + id + "');\">Date</a> (mm/dd/yyyy)");
-      case PERCENT:
-        return ("<input type=\"text\" name=\"" + "cf" + id + "\" size=\"8\" value=\"" + toHtmlValue(enteredValue) + "\"> " + "%");
-      default:
-        String maxlength = this.getParameter("maxlength");
-        String size = "";
-        if (!maxlength.equals("")) {
-          if (Integer.parseInt(maxlength) > 40) {
-            size = "40";
-          } else {
-            size = maxlength;
+        case TEXTAREA:
+          return ("<textarea cols=\"70\" rows=\"8\" name=\"" + "cf" + id + "\">" + toString(enteredValue) + "</textarea>");
+        case SELECT:
+          ((LookupList) elementData).addItem(-1, "-- None --");
+          return ((LookupList) elementData).getHtmlSelect("cf" + id, selectedItemId);
+        case CHECKBOX:
+          return ("<input type=\"checkbox\" name=\"" + "cf" + id + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
+        case DATE:
+          return ("<input type=\"text\" name=\"" + "cf" + id + "\" value=\"" + toHtmlValue(enteredValue) + "\"> " +
+              "<a href=\"javascript:popCalendar('forms[0]', 'cf" + id + "');\">Date</a> (mm/dd/yyyy)");
+        case PERCENT:
+          return ("<input type=\"text\" name=\"" + "cf" + id + "\" size=\"8\" value=\"" + toHtmlValue(enteredValue) + "\"> " + "%");
+        default:
+          String maxlength = this.getParameter("maxlength");
+          String size = "";
+          if (!maxlength.equals("")) {
+            if (Integer.parseInt(maxlength) > 40) {
+              size = "40";
+            } else {
+              size = maxlength;
+            }
           }
-        }
-        return ("<input type=\"text\" " +
-            "name=\"" + "cf" + id + "\" " +
-            (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
-            (size.equals("") ? "" : "size=\"" + size + "\" ") +
-            "value=\"" + toHtmlValue(enteredValue) + "\">");
+          return ("<input type=\"text\" " +
+              "name=\"" + "cf" + id + "\" " +
+              (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
+              (size.equals("") ? "" : "size=\"" + size + "\" ") +
+              "value=\"" + toHtmlValue(enteredValue) + "\">");
     }
   }
 
@@ -810,36 +819,36 @@ public int getRecordId() {
    */
   public String getTypeString(int dataType, boolean dynamic) {
     switch (dataType) {
-      case TEXT:
-        if ((getParameter("maxlength") == null || getParameter("maxlength").equals("")) || !dynamic) {
-          return "Text (up to 255 characters)";
-        } else {
-          return "Text (" + getParameter("maxlength") + ")";
-        }
-      case TEXTAREA:
-        return "Text Area (unlimited)";
-      case SELECT:
-        return "Lookup List";
-      case CHECKBOX:
-        return "Check Box";
-      case DATE:
-        return "Date";
-      case INTEGER:
-        return "Number";
-      case FLOAT:
-        return "Decimal Number";
-      case PERCENT:
-        return "Percent";
-      case CURRENCY:
-        return "Currency";
-      case EMAIL:
-        return "Email Address";
-      case URL:
-        return "URL";
-      case PHONE:
-        return "Phone Number";
-      default:
-        return "";
+        case TEXT:
+          if ((getParameter("maxlength") == null || getParameter("maxlength").equals("")) || !dynamic) {
+            return "Text (up to 255 characters)";
+          } else {
+            return "Text (" + getParameter("maxlength") + ")";
+          }
+        case TEXTAREA:
+          return "Text Area (unlimited)";
+        case SELECT:
+          return "Lookup List";
+        case CHECKBOX:
+          return "Check Box";
+        case DATE:
+          return "Date";
+        case INTEGER:
+          return "Number";
+        case FLOAT:
+          return "Decimal Number";
+        case PERCENT:
+          return "Percent";
+        case CURRENCY:
+          return "Currency";
+        case EMAIL:
+          return "Email Address";
+        case URL:
+          return "URL";
+        case PHONE:
+          return "Phone Number";
+        default:
+          return "";
     }
   }
 
@@ -902,10 +911,10 @@ public int getRecordId() {
     if (!this.isValid()) {
       return -1;
     }
-    String sql = 
-      "INSERT INTO custom_field_data " +
-      "(record_id, field_id, selected_item_id, entered_value, entered_number, entered_float ) " +
-      "VALUES (?, ?, ?, ?, ?, ?) ";
+    String sql =
+        "INSERT INTO custom_field_data " +
+        "(record_id, field_id, selected_item_id, entered_value, entered_number, entered_float ) " +
+        "VALUES (?, ?, ?, ?, ?, ?) ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, recordId);
@@ -918,14 +927,24 @@ public int getRecordId() {
     pst.close();
     return result;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int updateLevel(Connection db) throws SQLException {
-    if (id < 0) return 0;
+    if (id < 0) {
+      return 0;
+    }
     int result = 1;
-    String sql = 
-      "UPDATE custom_field_info " +
-      "SET level = ?, group_id = ? " +
-      "WHERE field_id = ? ";
+    String sql =
+        "UPDATE custom_field_info " +
+        "SET level = ?, group_id = ? " +
+        "WHERE field_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, level);
@@ -968,25 +987,18 @@ public int getRecordId() {
       pst.close();
 
       if (type == SELECT) {
-        Statement st = db.createStatement();
-        ResultSet rs = st.executeQuery(
-            "select currval('custom_field_info_field_id_seq')");
-        if (rs.next()) {
-          id = rs.getInt(1);
-        }
-        rs.close();
-        st.close();
+        id = DatabaseUtils.getCurrVal(db, "custom_field_info_field_id_seq");
 
         sql =
             "INSERT INTO custom_field_lookup " +
             "(field_id, description, default_item, level, enabled) " +
             "values (?, ?, ?, ?, ? ) ";
-        Iterator lookupItems = ((LookupList)elementData).iterator();
+        Iterator lookupItems = ((LookupList) elementData).iterator();
         int count = 0;
         while (lookupItems.hasNext()) {
           i = 0;
           ++count;
-          LookupElement thisElement = (LookupElement)lookupItems.next();
+          LookupElement thisElement = (LookupElement) lookupItems.next();
           pst = db.prepareStatement(sql);
           pst.setInt(++i, id);
           pst.setString(++i, thisElement.getDescription());
@@ -1150,7 +1162,7 @@ public int getRecordId() {
       }
     }
     if (type == SELECT &&
-        (elementData == null || (((LookupList)elementData).size() == 0))
+        (elementData == null || (((LookupList) elementData).size() == 0))
         ) {
       errors.put("lookupListError", "Items are required");
     }
@@ -1269,8 +1281,8 @@ public int getRecordId() {
     StringBuffer parameterData = new StringBuffer();
     Iterator params = (parameters.keySet()).iterator();
     while (params.hasNext()) {
-      String key = (String)params.next();
-      parameterData.append(key + "|" + (String)parameters.get(key));
+      String key = (String) params.next();
+      parameterData.append(key + "|" + (String) parameters.get(key));
       if (params.hasNext()) {
         parameterData.append("^");
       }
@@ -1287,8 +1299,8 @@ public int getRecordId() {
    *@since                    1.1
    */
   private void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("field_id");
     groupId = rs.getInt("group_id");
+    id = rs.getInt("field_id");
     name = rs.getString("field_name");
     level = rs.getInt("level");
     type = rs.getInt("field_type");

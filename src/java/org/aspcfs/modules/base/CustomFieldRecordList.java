@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 public class CustomFieldRecordList extends Vector {
   
@@ -66,13 +67,6 @@ public class CustomFieldRecordList extends Vector {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    //Need to build a base SQL statement for returning records
-    sqlSelect.append(
-        "SELECT * " +
-        "FROM custom_field_record cfr " +
-        "WHERE cfr.link_module_id = " + linkModuleId + " " +
-        "AND cfr.link_item_id = " + linkItemId + " ");
-        
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
@@ -95,29 +89,40 @@ public class CustomFieldRecordList extends Vector {
       rs.close();
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
-        pagedListInfo.setColumnToSortBy("entered");
-        pagedListInfo.setSortOrder("desc");
-      }
-      sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
-      if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-        sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-      }
-
-      //Determine items per page
-      if (pagedListInfo.getItemsPerPage() > 0) {
-        sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
-      }
-
-      sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
+      pagedListInfo.setDefaultSort("entered", "desc");
+      pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY entered DESC ");
     }
+    
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "* " +
+        "FROM custom_field_record cfr " +
+        "WHERE cfr.link_module_id = " + linkModuleId + " " +
+        "AND cfr.link_item_id = " + linkItemId + " ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+    
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+    
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       CustomFieldRecord thisRecord = new CustomFieldRecord(rs);
       this.addElement(thisRecord);
     }
