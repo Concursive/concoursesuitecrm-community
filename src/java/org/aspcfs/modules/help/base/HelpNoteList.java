@@ -21,6 +21,7 @@ public class HelpNoteList extends ArrayList {
   private int linkHelpId = -1;
   private boolean completeOnly = false;
   private int enteredBy = -1;
+  private boolean incompleteOnly = false;
   private boolean ignoreDone = false;
 
 
@@ -72,8 +73,37 @@ public class HelpNoteList extends ArrayList {
   public int getEnteredBy() {
     return enteredBy;
   }
-  
-  public void setIgnoreDone(boolean tmp) { this.ignoreDone = tmp; }
+
+
+  /**
+   *  Sets the ignoreDone attribute of the HelpNoteList object
+   *
+   *@param  tmp  The new ignoreDone value
+   */
+  public void setIgnoreDone(boolean tmp) {
+    this.ignoreDone = tmp;
+  }
+
+
+  /**
+   *  Sets the incompleteOnly attribute of the HelpNoteList object
+   *
+   *@param  tmp  The new incompleteOnly value
+   */
+  public void setIncompleteOnly(boolean tmp) {
+    this.incompleteOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the incompleteOnly attribute of the HelpNoteList object
+   *
+   *@param  tmp  The new incompleteOnly value
+   */
+  public void setIncompleteOnly(String tmp) {
+    this.incompleteOnly = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
    *  Gets the pagedListInfo attribute of the HelpNoteList object
@@ -103,8 +133,26 @@ public class HelpNoteList extends ArrayList {
   public boolean getCompleteOnly() {
     return completeOnly;
   }
-  
-  public boolean getIgnoreDone() { return ignoreDone; }
+
+
+  /**
+   *  Gets the ignoreDone attribute of the HelpNoteList object
+   *
+   *@return    The ignoreDone value
+   */
+  public boolean getIgnoreDone() {
+    return ignoreDone;
+  }
+
+
+  /**
+   *  Gets the incompleteOnly attribute of the HelpNoteList object
+   *
+   *@return    The incompleteOnly value
+   */
+  public boolean getIncompleteOnly() {
+    return incompleteOnly;
+  }
 
 
   /**
@@ -162,7 +210,7 @@ public class HelpNoteList extends ArrayList {
     }
 
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("hf.modified", "DESC");
+    pagedListInfo.setDefaultSort("hf.note_id", null);
     pagedListInfo.appendSqlTail(db, sqlOrder);
 
     //Need to build a base SQL statement for returning records
@@ -215,7 +263,10 @@ public class HelpNoteList extends ArrayList {
     }
 
     if (completeOnly) {
-      sqlFilter.append("AND t.complete = ? ");
+      sqlFilter.append("AND hf.completedate IS NOT NULL ");
+    }
+    if (incompleteOnly) {
+      sqlFilter.append("AND hf.completedate IS NULL ");
     }
     if (ignoreDone) {
       sqlFilter.append("AND hf.description NOT LIKE 'DONE:%' ");
@@ -235,12 +286,8 @@ public class HelpNoteList extends ArrayList {
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
     }
-
     if (linkHelpId != -1) {
       pst.setInt(++i, linkHelpId);
-    }
-    if (completeOnly) {
-      pst.setBoolean(++i, true);
     }
     return i;
   }

@@ -32,6 +32,9 @@ public class AdminQA extends CFSModule {
       while (i.hasNext()) {
         HelpItem item = (HelpItem) i.next();
         item.getNotes().setIgnoreDone(true);
+        if ("true".equals(context.getRequest().getParameter("incompleteOnly"))) {
+          item.getNotes().setIncompleteOnly(true);
+        }
         item.buildNotes(db);
       }
       context.getRequest().setAttribute("contents", contents);

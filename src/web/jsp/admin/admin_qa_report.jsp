@@ -29,7 +29,7 @@
 %>
 <table border="0" width="100%" cellpadding="4" cellspacing="0">
   <tr>
-    <th colspan="2"><%= toHtml(thisItem.getModule()) %></th>
+    <th colspan="2"><%= thisItem.getId() %>. <%= toHtml(thisItem.getModule()) %></th>
   </tr>
 </dhv:evaluate>
 <%
@@ -48,7 +48,7 @@
       </td>
       <td width="75%" style="border: 1px solid #777">
 </dhv:evaluate>
-        <%= itemCount %>.
+        <%= thisNote.getId() %>.
 <dhv:evaluate if="<%= thisNote.getComplete() %>">
         <img src="images/box-checked.gif" border="0"/>
 </dhv:evaluate>
