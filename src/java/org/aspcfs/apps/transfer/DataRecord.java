@@ -65,11 +65,25 @@ public class DataRecord extends ArrayList {
   public void addField(String thisName, String thisValue) {
     this.add(new DataField(thisName, thisValue));
   }
-  
+
+
+  /**
+   *  Adds a feature to the Field attribute of the DataRecord object
+   *
+   *@param  thisName   The feature to be added to the Field attribute
+   *@param  thisValue  The feature to be added to the Field attribute
+   */
   public void addField(String thisName, int thisValue) {
     this.addField(thisName, String.valueOf(thisValue));
   }
 
+
+  /**
+   *  Adds a feature to the Field attribute of the DataRecord object
+   *
+   *@param  thisName   The feature to be added to the Field attribute
+   *@param  thisValue  The feature to be added to the Field attribute
+   */
   public void addField(String thisName, double thisValue) {
     this.addField(thisName, String.valueOf(thisValue));
   }

@@ -7,12 +7,13 @@ import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
 
 /**
- *  A BusinessProcessComponent is a definition of where and when a class will
- *  be executed within a BusinessProcess hierarchy.
+ *  A BusinessProcessComponent is a definition of where and when a class will be
+ *  executed within a BusinessProcess hierarchy.
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
- *@version    $Id$
+ *@version    $Id: BusinessProcessComponent.java,v 1.3 2003/01/13 21:41:16
+ *      mrajkowski Exp $
  */
 public class BusinessProcessComponent {
 

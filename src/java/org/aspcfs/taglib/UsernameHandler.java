@@ -1,10 +1,12 @@
-package com.darkhorseventures.taglib;
+package org.aspcfs.taglib;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.controller.*;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.controller.SystemStatus;
+import com.darkhorseventures.database.ConnectionElement;
+
 import java.util.*;
 
 /**
@@ -13,7 +15,8 @@ import java.util.*;
  *
  *@author     matt
  *@created    December 14, 2001
- *@version    $Id$
+ *@version    $Id: UsernameHandler.java,v 1.3 2002/12/23 16:12:28 mrajkowski Exp
+ *      $
  */
 public class UsernameHandler extends TagSupport {
 
@@ -30,9 +33,16 @@ public class UsernameHandler extends TagSupport {
     this.userId = Integer.parseInt(tmp);
   }
 
+
+  /**
+   *  Sets the id attribute of the UsernameHandler object
+   *
+   *@param  tmp  The new id value
+   */
   public void setId(int tmp) {
     this.userId = tmp;
   }
+
 
   /**
    *  Description of the Method
@@ -44,11 +54,11 @@ public class UsernameHandler extends TagSupport {
   public int doStartTag() throws JspException {
     try {
 
-      ConnectionElement ce = (ConnectionElement)pageContext.getSession().getAttribute("ConnectionElement");
+      ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
       if (ce == null) {
         System.out.println("UsernameHandler-> ConnectionElement is null");
       }
-      SystemStatus systemStatus = (SystemStatus)((Hashtable)pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
       if (systemStatus == null) {
         System.out.println("UsernameHandler-> SystemStatus is null");
       }
@@ -65,10 +75,16 @@ public class UsernameHandler extends TagSupport {
     }
     return SKIP_BODY;
   }
-  
-  public int doEndTag() {	
-      return EVAL_PAGE;	
-   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public int doEndTag() {
+    return EVAL_PAGE;
+  }
 
 }
 

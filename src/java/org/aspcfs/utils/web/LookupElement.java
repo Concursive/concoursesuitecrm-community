@@ -10,7 +10,8 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     mrajkowski
  *@created    September 5, 2001
- *@version    $Id$
+ *@version    $Id: LookupElement.java,v 1.13 2003/01/13 14:42:24 mrajkowski Exp
+ *      $
  */
 public class LookupElement {
 

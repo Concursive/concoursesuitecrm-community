@@ -1,11 +1,15 @@
-package com.darkhorseventures.framework.hooks;
+package org.aspcfs.controller;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.framework.servlets.ControllerHook;
-import com.darkhorseventures.database.*;
 import java.util.Hashtable;
 import java.sql.*;
+import com.darkhorseventures.framework.servlets.ControllerHook;
+import com.darkhorseventures.database.*;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.login.beans.LoginBean;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.login.beans.UserBean;
 
 /**
  *  Every request to the ServletController executes this code.

@@ -7,7 +7,8 @@ import java.util.logging.*;
  *
  *@author     matt rajkowski
  *@created    September 3, 2002
- *@version    $Id$
+ *@version    $Id: DataImportHandler.java,v 1.4 2003/01/13 19:16:01 mrajkowski
+ *      Exp $
  */
 public interface DataImportHandler {
   public static Logger logger = Logger.getLogger(Transfer.class.getName());

@@ -1,4 +1,4 @@
-package com.darkhorseventures.framework.hooks;
+package org.aspcfs.controller;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -9,7 +9,9 @@ import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.servlets.ControllerMainMenuHook;
-import com.darkhorseventures.framework.servlets.SystemStatus;
+import org.aspcfs.modules.beans.ModuleBean;
+import org.aspcfs.modules.login.beans.UserBean;
+
 
 /**
  *  When a template requiring navigation is requested, this class generates the

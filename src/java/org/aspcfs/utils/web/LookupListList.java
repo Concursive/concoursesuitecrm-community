@@ -1,19 +1,19 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.webutils;
+package org.aspcfs.utils.web;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  LookupListList is a list of lookuplists for a particular module.
  *
  *@author     Mathur
  *@created    December 18, 2002
- *@version    $Id$
+ *@version    $Id: LookupListList.java,v 1.2 2003/01/10 16:17:48 mrajkowski Exp
+ *      $
  */
 public class LookupListList extends HtmlSelect {
   protected int moduleId = -1;

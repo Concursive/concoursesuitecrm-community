@@ -1,11 +1,12 @@
-package com.darkhorseventures.controller;
+package org.aspcfs.controller;
 
 /**
  *  All base object hooks to be executed need to implement this class
  *
  *@author     matt rajkowski
  *@created    October 14, 2002
- *@version    $Id$
+ *@version    $Id: BaseObjectHook.java,v 1.2 2002/10/21 19:47:58 mrajkowski Exp
+ *      $
  */
 public interface BaseObjectHook {
   /**
@@ -39,7 +40,13 @@ public interface BaseObjectHook {
    *@param  tmp  The new currentObject value
    */
   public void setCurrentObject(Object tmp);
-  
+
+
+  /**
+   *  Sets the fileLibraryPath attribute of the BaseObjectHook object
+   *
+   *@param  tmp  The new fileLibraryPath value
+   */
   public void setFileLibraryPath(String tmp);
 
 

@@ -1,5 +1,6 @@
 package org.aspcfs.apps.transfer.writer.cfsdatabasewriter;
 
+import com.darkhorseventures.database.*;
 import org.aspcfs.apps.transfer.*;
 import java.util.*;
 import java.util.logging.*;

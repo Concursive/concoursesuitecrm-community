@@ -1,5 +1,5 @@
 //Public domain code from Google
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import java.util.*;
 import java.text.*;
@@ -9,34 +9,30 @@ import java.text.*;
  *
  *@author     mrajkowski
  *@created    September 25, 2001
- *@version    $Id$
+ *@version    $Id: CurrencyFormat.java,v 1.1.1.1 2002/01/14 19:49:27 mrajkowski
+ *      Exp $
  */
 public class CurrencyFormat {
-  
+
   //double dollarAmount = 0.00;
   Locale[] locales = NumberFormat.getAvailableLocales();
   DecimalFormatSymbols currencySymbols = new DecimalFormatSymbols(Locale.US);
-  
+
+
   /**
    *  The main program for the CurrencyFormat class
    *
-   *@param  arg  The command line arguments
    *@since
    */
-  public CurrencyFormat() {
+  public CurrencyFormat() { }
 
-    //Locale[] locales = NumberFormat.getAvailableLocales();
-    /* for (int i = 0; i < locales.length; ++i) {
-      if (locales[i].getCountry().length() == 0) {
-        // skip language-only
-        continue;
-      }
-      System.out.println(formatCurrency(dollarAmount,
-          currencySymbols, locales[i]));
-    } */
 
-  }
-  
+  /**
+   *  Gets the currency attribute of the CurrencyFormat object
+   *
+   *@param  dollarAmount  Description of the Parameter
+   *@return               The currency value
+   */
   public String getCurrency(double dollarAmount) {
     return formatCurrency(dollarAmount, currencySymbols, Locale.US);
   }

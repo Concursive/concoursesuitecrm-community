@@ -4,6 +4,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.framework.servlets.ControllerDestroyHook;
 import com.darkhorseventures.database.*;
+import org.aspcfs.apps.workFlowManager.WorkflowManager;
 import java.sql.*;
 
 /**

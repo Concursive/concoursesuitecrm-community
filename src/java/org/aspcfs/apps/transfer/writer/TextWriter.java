@@ -6,6 +6,13 @@ import java.util.logging.*;
 import org.aspcfs.utils.*;
 import java.io.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     mrajkowski
+ *@created    January 15, 2003
+ *@version    $Id$
+ */
 public class TextWriter implements DataWriter {
   private String lastResponse = null;
   private String filename = null;
@@ -13,45 +20,163 @@ public class TextWriter implements DataWriter {
   private String fieldSeparator = null;
   private boolean showColumnNames = true;
   private PrintWriter out = null;
-  
+
   private int recordCount = 0;
-  
+
+
+  /**
+   *  Sets the filename attribute of the TextWriter object
+   *
+   *@param  tmp  The new filename value
+   */
   public void setFilename(String tmp) {
     this.filename = tmp;
   }
-  
-  public void setOverwrite(boolean tmp) { this.overwrite = tmp; }
-  public void setOverwrite(String tmp) { this.overwrite = "true".equals(tmp); }
-  public void setFieldSeparator(String tmp) { this.fieldSeparator = tmp; }
-  public void setShowColumnNames(boolean tmp) { this.showColumnNames = tmp; }
-  public void setShowColumnNames(String tmp) { this.showColumnNames = "true".equals(tmp); }
 
-  public void setAutoCommit(boolean flag) {}
-  
+
+  /**
+   *  Sets the overwrite attribute of the TextWriter object
+   *
+   *@param  tmp  The new overwrite value
+   */
+  public void setOverwrite(boolean tmp) {
+    this.overwrite = tmp;
+  }
+
+
+  /**
+   *  Sets the overwrite attribute of the TextWriter object
+   *
+   *@param  tmp  The new overwrite value
+   */
+  public void setOverwrite(String tmp) {
+    this.overwrite = "true".equals(tmp);
+  }
+
+
+  /**
+   *  Sets the fieldSeparator attribute of the TextWriter object
+   *
+   *@param  tmp  The new fieldSeparator value
+   */
+  public void setFieldSeparator(String tmp) {
+    this.fieldSeparator = tmp;
+  }
+
+
+  /**
+   *  Sets the showColumnNames attribute of the TextWriter object
+   *
+   *@param  tmp  The new showColumnNames value
+   */
+  public void setShowColumnNames(boolean tmp) {
+    this.showColumnNames = tmp;
+  }
+
+
+  /**
+   *  Sets the showColumnNames attribute of the TextWriter object
+   *
+   *@param  tmp  The new showColumnNames value
+   */
+  public void setShowColumnNames(String tmp) {
+    this.showColumnNames = "true".equals(tmp);
+  }
+
+
+  /**
+   *  Sets the autoCommit attribute of the TextWriter object
+   *
+   *@param  flag  The new autoCommit value
+   */
+  public void setAutoCommit(boolean flag) { }
+
+
+  /**
+   *  Gets the version attribute of the TextWriter object
+   *
+   *@return    The version value
+   */
   public double getVersion() {
     return 1.0d;
   }
 
 
+  /**
+   *  Gets the name attribute of the TextWriter object
+   *
+   *@return    The name value
+   */
   public String getName() {
     return "Text Writer";
   }
 
 
+  /**
+   *  Gets the description attribute of the TextWriter object
+   *
+   *@return    The description value
+   */
   public String getDescription() {
     return "Generates a text representation of data as specified";
   }
 
 
+  /**
+   *  Gets the lastResponse attribute of the TextWriter object
+   *
+   *@return    The lastResponse value
+   */
   public String getLastResponse() {
     return lastResponse;
   }
-  
-  public String getFilename() { return filename; }
-  public boolean getOverwrite() { return overwrite; }
-  public String getFieldSeparator() { return fieldSeparator; }
-  public boolean getShowColumnNames() { return showColumnNames; }
 
+
+  /**
+   *  Gets the filename attribute of the TextWriter object
+   *
+   *@return    The filename value
+   */
+  public String getFilename() {
+    return filename;
+  }
+
+
+  /**
+   *  Gets the overwrite attribute of the TextWriter object
+   *
+   *@return    The overwrite value
+   */
+  public boolean getOverwrite() {
+    return overwrite;
+  }
+
+
+  /**
+   *  Gets the fieldSeparator attribute of the TextWriter object
+   *
+   *@return    The fieldSeparator value
+   */
+  public String getFieldSeparator() {
+    return fieldSeparator;
+  }
+
+
+  /**
+   *  Gets the showColumnNames attribute of the TextWriter object
+   *
+   *@return    The showColumnNames value
+   */
+  public boolean getShowColumnNames() {
+    return showColumnNames;
+  }
+
+
+  /**
+   *  Gets the configured attribute of the TextWriter object
+   *
+   *@return    The configured value
+   */
   public boolean isConfigured() {
     if (filename == null) {
       return false;
@@ -67,6 +192,12 @@ public class TextWriter implements DataWriter {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  record  Description of the Parameter
+   *@return         Description of the Return Value
+   */
   public boolean save(DataRecord record) {
     ++recordCount;
     try {
@@ -101,19 +232,42 @@ public class TextWriter implements DataWriter {
   }
 
 
-  public boolean commit() { 
-    return false; 
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean commit() {
+    return false;
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean rollback() {
     return false;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  record  Description of the Parameter
+   *@return         Description of the Return Value
+   */
   public boolean load(DataRecord record) {
     return false;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public boolean close() {
     if (out != null) {
       out.close();

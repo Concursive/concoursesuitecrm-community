@@ -67,7 +67,7 @@ public class Transfer {
         }
       } catch (NullPointerException nl) {
       }
-      
+
       //Make sure the config has valid entries
       String readerClass = (String) xml.getFirstElement(xml.getDocumentElement(), "reader").getAttribute("class");
       String writerClass = (String) xml.getFirstElement(xml.getDocumentElement(), "writer").getAttribute("class");

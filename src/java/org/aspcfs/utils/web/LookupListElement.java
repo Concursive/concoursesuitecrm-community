@@ -1,17 +1,18 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.webutils;
+package org.aspcfs.utils.web;
 
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 
 /**
  *  Represents an item from a LookupListLookup table.
  *
  *@author     Mathur
  *@created    December 18, 2002
- *@version    $Id$
+ *@version    $Id: LookupListElement.java,v 1.2 2003/01/10 16:17:48 mrajkowski
+ *      Exp $
  */
 
 public class LookupListElement {
@@ -32,7 +33,7 @@ public class LookupListElement {
    *@param  rs                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public LookupListElement(ResultSet rs) throws SQLException { 
+  public LookupListElement(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 

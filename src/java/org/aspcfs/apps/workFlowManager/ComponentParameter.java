@@ -5,12 +5,13 @@ import org.w3c.dom.Element;
 import org.aspcfs.utils.*;
 
 /**
- *  Represents a key=value pair preference that will be used for either a 
+ *  Represents a key=value pair preference that will be used for either a
  *  BusinessProcess definition or a BusinessProcess component.
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
- *@version    $Id$
+ *@version    $Id: ComponentParameter.java,v 1.3 2003/01/13 21:41:16 mrajkowski
+ *      Exp $
  */
 public class ComponentParameter {
 

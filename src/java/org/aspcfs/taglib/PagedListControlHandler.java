@@ -1,8 +1,8 @@
-package com.darkhorseventures.taglib;
+package org.aspcfs.taglib;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
-import com.darkhorseventures.webutils.PagedListInfo;
+import org.aspcfs.utils.web.PagedListInfo;
 
 /**
  *  Provides a visual control panel (html form) that allows the user to jump to

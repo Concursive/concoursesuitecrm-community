@@ -4,6 +4,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.framework.servlets.ControllerInitHook;
 import com.darkhorseventures.database.*;
+import org.aspcfs.utils.web.CustomFormList;
 import java.sql.*;
 import java.util.Hashtable;
 

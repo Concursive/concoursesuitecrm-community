@@ -1,4 +1,4 @@
-package com.darkhorseventures.framework.hooks;
+package org.aspcfs.controller;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -6,6 +6,9 @@ import java.util.*;
 import java.sql.*;
 import com.darkhorseventures.database.*;
 import com.darkhorseventures.framework.servlets.ControllerGlobalItemsHook;
+import org.aspcfs.modules.tasks.base.TaskList;
+import org.aspcfs.modules.mycfs.base.CFSNoteList;
+import org.aspcfs.modules.login.beans.UserBean;
 
 /**
  *  Configures globally available items for CFS.

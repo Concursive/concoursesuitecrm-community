@@ -1,4 +1,4 @@
-package com.darkhorseventures.taglib;
+package org.aspcfs.taglib;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
@@ -8,7 +8,8 @@ import javax.servlet.jsp.tagext.*;
  *
  *@author     Matt Rajkowski
  *@created    April 2, 2002
- *@version    $Id$
+ *@version    $Id: EvaluateHandler.java,v 1.2 2002/10/28 19:00:42 mrajkowski Exp
+ *      $
  */
 public class EvaluateHandler extends TagSupport {
   private boolean result = false;
@@ -35,14 +36,27 @@ public class EvaluateHandler extends TagSupport {
     }
     result = "true".equalsIgnoreCase(tmp);
   }
-  
+
+
+  /**
+   *  Sets the if attribute of the EvaluateHandler object
+   *
+   *@param  tmp  The new if value
+   */
   public final void setIf(boolean tmp) {
     this.setExp(tmp);
   }
 
+
+  /**
+   *  Sets the if attribute of the EvaluateHandler object
+   *
+   *@param  tmp  The new if value
+   */
   public final void setIf(String tmp) {
     this.setExp(tmp);
   }
+
 
   /**
    *  Description of the Method

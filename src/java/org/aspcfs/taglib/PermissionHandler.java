@@ -1,10 +1,10 @@
-package com.darkhorseventures.taglib;
+package org.aspcfs.taglib;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.controller.*;
-import com.darkhorseventures.utils.ConnectionElement;
+import org.aspcfs.controller.*;
+import org.aspcfs.modules.login.beans.UserBean;
+import com.darkhorseventures.database.ConnectionElement;
 import java.util.StringTokenizer;
 import java.util.Hashtable;
 

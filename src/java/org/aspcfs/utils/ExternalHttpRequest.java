@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -28,8 +28,7 @@ public class ExternalHttpRequest {
    *
    *@since    1.0
    */
-  public ExternalHttpRequest() {
-  }
+  public ExternalHttpRequest() { }
 
 
   /**
@@ -42,7 +41,7 @@ public class ExternalHttpRequest {
   public ExternalHttpRequest(String link) {
     try {
       URL url = new URL(link);
-      HttpURLConnection http = (HttpURLConnection)url.openConnection();
+      HttpURLConnection http = (HttpURLConnection) url.openConnection();
       retrieveHtml(http);
     } catch (java.net.MalformedURLException e) {
       errorCode = 1;
@@ -62,9 +61,10 @@ public class ExternalHttpRequest {
    *  The 'command' parameter is ignored because that is used by the servlet
    *  controller.
    *
-   *@param  request  Description of Parameter
-   *@param  link     Description of Parameter
-   *@since           1.0
+   *@param  request   Description of Parameter
+   *@param  link      Description of Parameter
+   *@param  username  Description of the Parameter
+   *@since            1.0
    */
   public ExternalHttpRequest(HttpServletRequest request, String link, String username) {
 
@@ -72,12 +72,12 @@ public class ExternalHttpRequest {
     Enumeration parameters = request.getParameterNames();
     StringBuffer parameterList = new StringBuffer();
 
-	if (username != null) {
-	parameterList.append ("ckname="+username);
-	}
+    if (username != null) {
+      parameterList.append("ckname=" + username);
+    }
 
     while (parameters.hasMoreElements()) {
-      String param = (String)parameters.nextElement();
+      String param = (String) parameters.nextElement();
       if (param.equals("command")) {
         //Throw it away because the servlet controller uses this only
       } else {
@@ -95,7 +95,7 @@ public class ExternalHttpRequest {
       if (request.getMethod().equals("POST")) {
         //Post to the page
         url = new URL(link);
-        http = (HttpURLConnection)url.openConnection();
+        http = (HttpURLConnection) url.openConnection();
         http.setRequestMethod("POST");
         http.setDoOutput(true);
         PrintWriter outStream = new PrintWriter(http.getOutputStream());
@@ -108,7 +108,7 @@ public class ExternalHttpRequest {
         } else {
           url = new URL(link);
         }
-        http = (HttpURLConnection)url.openConnection();
+        http = (HttpURLConnection) url.openConnection();
       }
 
       retrieveHtml(http);

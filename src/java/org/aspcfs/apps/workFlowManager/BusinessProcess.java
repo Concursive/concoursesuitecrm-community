@@ -8,12 +8,13 @@ import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
 
 /**
- *  Contains a mapping of BusinessComponent objects that can be executed in
- *  a hierarchical order by the WorkflowManager
+ *  Contains a mapping of BusinessComponent objects that can be executed in a
+ *  hierarchical order by the WorkflowManager
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
- *@version    $Id$
+ *@version    $Id: BusinessProcess.java,v 1.3 2003/01/13 21:41:16 mrajkowski Exp
+ *      $
  */
 public class BusinessProcess extends HashMap {
   private String name = null;

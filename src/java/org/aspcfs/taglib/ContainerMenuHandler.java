@@ -1,15 +1,15 @@
 //Copyright 2002 Dark Horse Ventures
-package com.darkhorseventures.taglib;
+package org.aspcfs.taglib;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.UserBean;
-import com.darkhorseventures.utils.XMLUtils;
-import com.darkhorseventures.utils.Template;
-import com.darkhorseventures.utils.ConnectionElement;
-import com.darkhorseventures.controller.SubmenuItem;
-import com.darkhorseventures.controller.SystemStatus;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.utils.XMLUtils;
+import org.aspcfs.utils.Template;
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SubmenuItem;
+import org.aspcfs.controller.SystemStatus;
 import java.io.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
@@ -19,7 +19,8 @@ import org.xml.sax.*;
  *
  *@author     matt rajkowski
  *@created    May 7, 2002
- *@version    $Id$
+ *@version    $Id: ContainerMenuHandler.java,v 1.6 2002/12/23 16:12:28
+ *      mrajkowski Exp $
  */
 public class ContainerMenuHandler extends TagSupport {
   private String name = null;
@@ -104,8 +105,8 @@ public class ContainerMenuHandler extends TagSupport {
           SubmenuItem thisItem = (SubmenuItem) i.next();
           if (thisItem.getPermission() == null ||
               (thisItem.getPermission() != null && thisItem.getPermission().equals("")) ||
-              (thisUser != null && systemStatus != null && 
-               systemStatus.hasPermission(thisUser.getUserId(), thisItem.getPermission()))) {
+              (thisUser != null && systemStatus != null &&
+              systemStatus.hasPermission(thisUser.getUserId(), thisItem.getPermission()))) {
             if (itemOutput) {
               this.pageContext.getOut().write(" | ");
             }

@@ -1,19 +1,19 @@
-package com.darkhorseventures.taglib;
+package org.aspcfs.taglib;
 
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.controller.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.controller.*;
 import java.util.*;
 
 /**
  *  This Class evaluates a Contact ID and returns a Contact Name from request
  *  scope.
  *
- *@author     Mathur
+ *@author     matt rajkowski
  *@created    November 22, 2002
- *@version    $Id$
+ *@version    $Id: ContactNameHandler.java,v 1.1 2002/11/25 16:07:13 akhi_m Exp
+ *      $
  */
 public class ContactNameHandler extends TagSupport {
 
@@ -64,7 +64,7 @@ public class ContactNameHandler extends TagSupport {
 
       HashMap contacts = (HashMap) pageContext.getRequest().getAttribute(listName);
       if (contacts.get(new Integer(contactId)) != null) {
-        this.pageContext.getOut().write((String)contacts.get(new Integer(contactId)));
+        this.pageContext.getOut().write((String) contacts.get(new Integer(contactId)));
       } else {
         System.out.println("ContactnameHandler-> Contact Record not found");
       }
