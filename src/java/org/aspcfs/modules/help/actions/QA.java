@@ -199,9 +199,8 @@ public final class QA extends CFSModule {
     String target = context.getRequest().getParameter("target");
     if (resultCount == 1) {
       if("loop".equals(target)){
-        context.getRequest().setAttribute("redirectUrl", "QA.do?command=PrepareFeature&linkHelpId=" + thisFeature.getLinkHelpId() + "&target=" + target);
+        context.getRequest().setAttribute("redirectUrl", "HelpFeatures.do?command=PrepareFeature&linkHelpId=" + thisFeature.getLinkHelpId() + "&target=" + target);
         return this.getReturn(context, "FeatureReInsert");
-        
       }
       return this.getReturn(context, "FeatureUpdate");
     } else if (recordInserted) {
@@ -371,10 +370,18 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+    String target = context.getRequest().getParameter("target");
     if (resultCount == 1) {
+      if("loop".equals(target)){
+        context.getRequest().setAttribute("redirectUrl", "HelpRules.do?command=PrepareRule&linkHelpId=" + thisRule.getLinkHelpId() + "&target=" + target);
+        return this.getReturn(context, "RuleReInsert");
+      }
       return this.getReturn(context, "RuleUpdate");
     } else if (recordInserted) {
+      if("loop".equals(target)){
+        context.getRequest().setAttribute("redirectUrl", "HelpRules.do?command=PrepareRule&linkHelpId=" + thisRule.getLinkHelpId() + "&target=" + target);
+        return this.getReturn(context, "RuleReInsert");
+      }
       return this.getReturn(context, "RuleInsert");
     }
     if (thisRule.getId() > 0) {
@@ -537,9 +544,19 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    
+    String target = context.getRequest().getParameter("target");
     if (resultCount == 1) {
+      if("loop".equals(target)){
+        context.getRequest().setAttribute("redirectUrl", "HelpTips.do?command=PrepareTip&linkHelpId=" + thisTip.getLinkHelpId() + "&target=" + target);
+        return this.getReturn(context, "TipReInsert");
+      }
       return this.getReturn(context, "TipUpdate");
     } else if (recordInserted) {
+      if("loop".equals(target)){
+        context.getRequest().setAttribute("redirectUrl", "HelpTips.do?command=PrepareTip&linkHelpId=" + thisTip.getLinkHelpId() + "&target=" + target);
+        return this.getReturn(context, "TipReInsert");
+      }
       return this.getReturn(context, "TipInsert");
     }
     if (thisTip.getId() > 0) {
@@ -646,9 +663,18 @@ public final class QA extends CFSModule {
       this.freeConnection(context, db);
     }
 
+    String target = context.getRequest().getParameter("target");
     if (resultCount == 1) {
+      if("loop".equals(target)){
+        context.getRequest().setAttribute("redirectUrl", "HelpNotes.do?command=PrepareNote&linkHelpId=" + thisNote.getLinkHelpId() + "&target=" + target);
+        return this.getReturn(context, "NoteReInsert");
+      }
       return this.getReturn(context, "NoteUpdate");
     } else if (recordInserted) {
+      if("loop".equals(target)){
+        context.getRequest().setAttribute("redirectUrl", "HelpNotes.do?command=PrepareNote&linkHelpId=" + thisNote.getLinkHelpId() + "&target=" + target);
+        return this.getReturn(context, "NoteReInsert");
+      }
       return this.getReturn(context, "NoteInsert");
     }
     if (thisNote.getId() > 0) {

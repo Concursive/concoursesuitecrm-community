@@ -940,6 +940,7 @@
     <forward name="RuleModifyPopupOK" resource="/qa/qa_rule_form.jsp" layout="style"/>
     <forward name="RuleDeleteOK" resource="/qa/qa.jsp" layout="style"/>
     <forward name="RuleInsertPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="RuleReInsertPopupOK" resource="/redirectpopupandreload.jsp" layout="style"/>
     <forward name="RuleUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
   
@@ -949,6 +950,7 @@
     <forward name="NoteModifyPopupOK" resource="/qa/qa_note_form.jsp" layout="style"/>
     <forward name="NoteDeleteOK" resource="/qa/qa.jsp" layout="style"/>
     <forward name="NoteInsertPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="NoteReInsertPopupOK" resource="/redirectpopupandreload.jsp" layout="style"/>
     <forward name="NoteUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
   
@@ -958,6 +960,7 @@
     <forward name="TipModifyPopupOK" resource="/qa/qa_tip_form.jsp" layout="style"/>
     <forward name="TipDeleteOK" resource="/qa/qa.jsp" layout="style"/>
     <forward name="TipInsertPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="TipReInsertPopupOK" resource="/redirectpopupandreload.jsp" layout="style"/>
     <forward name="TipUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
   
