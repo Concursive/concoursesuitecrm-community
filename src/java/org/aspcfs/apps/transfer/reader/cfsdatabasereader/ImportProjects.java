@@ -24,7 +24,7 @@ public class ImportProjects implements CFSDatabaseReaderImportModule {
     writer.setAutoCommit(false);
     processOK = mappings.saveList(writer, projectList, "insert");
     if (!processOK) {
-      return false;
+      return true;
     }
     
     return true;
