@@ -6,9 +6,10 @@
 <jsp:useBean id="IndSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></script>
 <%@ include file="../initPage.jsp" %>
-<% 
+<%
+  //returnPage specifies the source of the request ( Accounts/ Home Page ) 
   String returnPage = request.getParameter("return");
-   CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage!=null?returnPage + "CalendarInfo" :"CalendarInfo");
+   CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage != null ?returnPage + "CalendarInfo" :"CalendarInfo");
    if(CalendarInfo==null){
        CalendarInfo = new CalendarBean();
        session.setAttribute(returnPage!=null?returnPage + "CalendarInfo":"CalendarInfo",CalendarInfo);
@@ -37,7 +38,7 @@
   <%-- Calendar and Details --%>
   <tr valign="top">
     <td valign="top" width="320">
-      <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="320" height="400" src="MyCFS.do?command=MonthView&source=Calendar<%=returnPage!=null?"&return="+returnPage:""%>">
+      <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="320" height="400" src="MyCFS.do?command=MonthView&source=Calendar<%= returnPage != null ? "&return="+returnPage : "" %>">
       </iframe>
     </td>
     <td valign="top" height="100%" width="100%">
@@ -52,12 +53,18 @@
               <tr class="title">
                 <td width="60%" valign="center">
                  <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&alertsView='+document.getElementById('alerts').value);">
-                   <option value="All" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all")?" selected":"" %>>All Scheduled Actions</option>
-                   <option value="Call" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("call")?" selected":"" %>>Calls</option>
-                   <option value="Task" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("task")?" selected":"" %>>Tasks</option>
-                   <option value="Project" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("project")?" selected":"" %>>Projects</option>
-                   <option value="Opportunity" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("opportunity")?" selected":"" %>>Opportunities</option>
-                   <option value="Accounts" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("accounts")?" selected":"" %>>Accounts</option>
+                  <option value="all" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all") ? " selected":"" %>>All Scheduled Actions</option>
+                   <% 
+                    Iterator alertTypes = CalendarInfo.getAlertTypes().iterator();
+                    
+                    while(alertTypes.hasNext()){
+                    AlertType thisAlert = (AlertType)alertTypes.next();
+                    boolean isSelected = CalendarInfo.getCalendarDetailsView().equalsIgnoreCase(thisAlert.getName());
+                   %>
+                      <option value="<%= thisAlert.getName() %>" <%= isSelected ? " selected":"" %>><%= thisAlert.getDisplayName() %></option>
+                   <%
+                    }
+                   %>
                  </select>
                 </td>
                 <td valign="center" align="right">
@@ -134,5 +141,4 @@
 	<%}%>
 </table>
 </dhv:permission>
-
 
