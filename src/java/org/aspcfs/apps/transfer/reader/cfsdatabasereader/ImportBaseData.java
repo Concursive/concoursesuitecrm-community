@@ -125,7 +125,12 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       logger.info("ImportBaseData-> Inserting " + emailList.size() + " Contact emails");
       
       Iterator emails = emailList.iterator();
-      mappings.saveList(writer, emailList, "insert");
+      while (emails.hasNext()) {
+              ContactEmailAddress thisAddress = (ContactEmailAddress)emails.next();
+              DataRecord anotherRecord = mappings.createDataRecord(thisAddress, "insert");
+              writer.save(anotherRecord);
+      }
+      
     }
   }
   
