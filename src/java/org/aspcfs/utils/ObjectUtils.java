@@ -90,9 +90,37 @@ public class ObjectUtils {
     }
   }
 
+
+  /**
+   *  Constructs an object with a null constructor
+   *
+   *@param  theClass  Description of the Parameter
+   *@return           Description of the Return Value
+   */
+  public static Object constructObject(Class theClass) {
+    try {
+      Class[] paramClass = null;
+      Constructor constructor = theClass.getConstructor(paramClass);
+      Object[] paramObject = null;
+      return constructor.newInstance(paramObject);
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+
+  /**
+   *  Constructs a new object in which the object loads itself from a database
+   *  given a parameter
+   *
+   *@param  theClass   Description of the Parameter
+   *@param  parameter  Description of the Parameter
+   *@param  db         Description of the Parameter
+   *@return            Description of the Return Value
+   */
   public static Object constructObject(Class theClass, Object parameter, Connection db) {
     try {
-      Class[] paramClass = new Class[]{parameter.getClass(),Class.forName("java.sql.Connection")};
+      Class[] paramClass = new Class[]{parameter.getClass(), Class.forName("java.sql.Connection")};
       Constructor constructor = theClass.getConstructor(paramClass);
       Object[] paramObject = new Object[]{parameter, db};
       return constructor.newInstance(paramObject);
@@ -101,8 +129,10 @@ public class ObjectUtils {
     }
   }
 
+
   /**
-   *  Description of the Method
+   *  Constructs a new object in which the object loads itself from a database
+   *  given an id for the object
    *
    *@param  theClass  Description of Parameter
    *@param  db        Description of Parameter
@@ -119,7 +149,19 @@ public class ObjectUtils {
       return null;
     }
   }
-  
+
+
+  /**
+   *  Constructs a new object in which the object loads itself from a database
+   *  given an id for the object and a String typically used as a tableName
+   *  for a lookupElement object
+   *
+   *@param  theClass   Description of the Parameter
+   *@param  db         Description of the Parameter
+   *@param  objectId   Description of the Parameter
+   *@param  tableName  Description of the Parameter
+   *@return            Description of the Return Value
+   */
   public static Object constructObject(Class theClass, Connection db, int objectId, String tableName) {
     try {
       Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), int.class, Class.forName("java.lang.String")};
@@ -130,14 +172,25 @@ public class ObjectUtils {
       return null;
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  theClass     Description of the Parameter
+   *@param  db           Description of the Parameter
+   *@param  objectId     Description of the Parameter
+   *@param  tableName    Description of the Parameter
+   *@param  uniqueField  Description of the Parameter
+   *@return              Description of the Return Value
+   */
   public static Object constructObject(Class theClass, Connection db, int objectId, String tableName, String uniqueField) {
     try {
       Class[] paramClass = new Class[]{
-         Class.forName("java.sql.Connection"), 
-         int.class, 
-         Class.forName("java.lang.String"),
-         Class.forName("java.lang.String")};
+          Class.forName("java.sql.Connection"),
+          int.class,
+          Class.forName("java.lang.String"),
+          Class.forName("java.lang.String")};
       Constructor constructor = theClass.getConstructor(paramClass);
       Object[] paramObject = new Object[]{db, new Integer(objectId), tableName, uniqueField};
       return constructor.newInstance(paramObject);
