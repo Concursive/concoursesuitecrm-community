@@ -122,18 +122,18 @@ function HideSpan(thisID)
     <td colspan=4>
       <select name="type" onchange='update();'>
       <option value="1">All Accounts</option>
-<dhv:permission name="accounts-accounts-contacts">      
+<dhv:permission name="accounts-accounts-contacts-view">      
       <option value="2">Accounts w/Contacts</option>
 </dhv:permission>
-<dhv:permission name="accounts-accounts-tickets">      
+<dhv:permission name="accounts-accounts-tickets-view">      
       <option value="3">Accounts w/Tickets</option>
 </dhv:permission>
-<dhv:permission name="accounts-accounts-documents">
+<dhv:permission name="accounts-accounts-documents-view">
 <% if (CategoryList.size() > 0) {%>      
       <option value="4">Accounts w/Folders</option>
 <% } %>
 </dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities">
+<dhv:permission name="accounts-accounts-opportunities-view">
       <option value="5">Accounts w/Opportunities</option>
 </dhv:permission>
       </select>
