@@ -46,6 +46,7 @@
     </map>
     <map class="org.aspcfs.modules.contacts.base.Contact" id="contact">
       <property alias="guid">id</property>
+      <property>accessType</property>
       <property lookup="account">orgId</property>
       <property>title</property>
       <property>department</property>
