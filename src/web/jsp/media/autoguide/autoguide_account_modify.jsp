@@ -7,7 +7,7 @@
 <jsp:useBean id="ModelSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="OptionList" class="org.aspcfs.autoguide.base.OptionList" scope="request"/>
 <jsp:useBean id="adRunTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<%@ include file="../initPage.jsp" %>
+<%@ include file="../../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].stockNo.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>

@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.autoguide.base.*" %>
 <jsp:useBean id="InventoryItem" class="org.aspcfs.autoguide.base.Inventory" scope="request"/>
-<%@ include file="../initPage.jsp" %>
+<%@ include file="../../initPage.jsp" %>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <script language="JavaScript">
   function checkFileForm(form) {
