@@ -428,7 +428,7 @@ public class Role extends GenericBean {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  public synchronized boolean insert(Connection db) throws SQLException {
+  public boolean insert(Connection db) throws SQLException {
 
     if (!isValid(db)) {
       return false;

@@ -1223,7 +1223,7 @@ public class User extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  public synchronized int updatePassword(Connection db, ActionContext context, String currPass) throws SQLException {
+  public int updatePassword(Connection db, ActionContext context, String currPass) throws SQLException {
     if (!isValidChangePass(context, currPass)) {
       return -1;
     } else {
@@ -1235,18 +1235,14 @@ public class User extends GenericBean {
 
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
-
-      sql.append("UPDATE access ");
-
-      sql.append("SET password = ?  ");
-      sql.append("WHERE user_id = ? ");
-
+      sql.append(
+          "UPDATE access " +
+          "SET password = ? " +
+          "WHERE user_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
-
       pst.setString(++i, encryptPassword(password1));
       pst.setInt(++i, getId());
-
       resultCount = pst.executeUpdate();
       pst.close();
 
@@ -1265,7 +1261,7 @@ public class User extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since                    1.1
    */
-  public synchronized boolean insert(Connection db, ActionContext context) throws SQLException {
+  public boolean insert(Connection db, ActionContext context) throws SQLException {
 
     if (!isValid(db, context)) {
       return false;

@@ -244,6 +244,7 @@
     <forward name="ReportsOK" resource="/accounts_reports.jsp" layout="nav"/>
     <forward name="ModifyFieldsOK" resource="/accounts_fields_modify.jsp" layout="nav"/>
     <forward name="UpdateFieldsOK" resource="/accounts_fields.jsp" layout="nav"/>
+    <forward name="DeleteFieldsOK" resource="/Accounts.do?command=Fields"/>
     <forward name="GenerateFormOK" resource="/accounts_reports_generate.jsp" layout="nav"/>
     <forward name="DeleteReportOK" resource="/Accounts.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/Accounts.do?command=Reports"/>

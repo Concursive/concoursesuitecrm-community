@@ -39,6 +39,7 @@ public class CustomFieldCategory extends Vector {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private boolean enabled = false;
+  private boolean allowMultipleRecords = false;
 
   //Properties for building a list
   private int linkModuleId = -1;
@@ -369,6 +370,16 @@ public class CustomFieldCategory extends Vector {
     return id;
   }
 
+  public void setAllowMultipleRecords(boolean tmp) { 
+    this.allowMultipleRecords = tmp; 
+  }
+  public void setAllowMultipleRecords(String tmp) { 
+    this.allowMultipleRecords = ("ON").equalsIgnoreCase(tmp);
+  }
+  public boolean getAllowMultipleRecords() { 
+    return allowMultipleRecords; 
+  }
+
 
   /**
    *  Gets the ModuleId attribute of the CustomFieldCategory object
@@ -674,6 +685,24 @@ public class CustomFieldCategory extends Vector {
     }
   }
 
+  public void buildRecordId(Connection db) throws SQLException {
+    String sql =
+        "SELECT record_id " +
+        "FROM custom_field_record " +
+        "WHERE link_module_id = ? " +
+        "AND link_item_id = ? " +
+        "AND category_id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, linkModuleId);
+    pst.setInt(2, linkItemId);
+    pst.setInt(3, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordId = rs.getInt(1);
+    }
+    rs.close();
+    pst.close();
+  }
 
   /**
    *  Description of the Method
@@ -740,8 +769,26 @@ public class CustomFieldCategory extends Vector {
    *@since
    */
   public int insert(Connection db) throws SQLException {
+    /* A duplicate record for this category cannot be inserted
+       if someone else already inserted one.
+       TODO: Return an error message
+     */
+    if (!allowMultipleRecords) {
+      synchronized (this) {
+        this.buildRecordId(db);
+        if (recordId > -1) {
+          return -1;
+        } else {
+          return doInsert(db);
+        }
+      }
+    } else {
+      return doInsert(db);
+    }
+  }
+    
+  private int doInsert(Connection db) throws SQLException {
     int resultId = -1;
-
     try {
       int catResult = 1;
       db.setAutoCommit(false);
@@ -795,13 +842,14 @@ public class CustomFieldCategory extends Vector {
 
     String sql =
         "INSERT INTO custom_field_category " +
-        "(module_id, category_name, description, enabled) VALUES (?, ?, ?, ?)";
+        "(module_id, category_name, description, enabled, multiple_records) VALUES (?, ?, ?, ?, ?)";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(++i, this.getModuleId());
     pst.setString(++i, this.getName());
     pst.setString(++i, this.getDescription());
     pst.setBoolean(++i, this.getEnabled());
+    pst.setBoolean(++i, this.getAllowMultipleRecords());
     pst.execute();
     pst.close();
     return true;
@@ -851,13 +899,15 @@ public class CustomFieldCategory extends Vector {
 
     String sql =
         "UPDATE custom_field_category " +
-        "SET category_name = ?, description = ?, enabled = ? " +
+        "SET category_name = ?, description = ?, enabled = ?, " +
+        "multiple_records = ? " +
         "WHERE module_id = ? AND category_id = ? ";
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setString(++i, this.getName());
     pst.setString(++i, this.getDescription());
     pst.setBoolean(++i, this.getEnabled());
+    pst.setBoolean(++i, this.getAllowMultipleRecords());
     pst.setInt(++i, this.getModuleId());
     pst.setInt(++i, this.getId());
     pst.execute();
@@ -957,6 +1007,7 @@ public class CustomFieldCategory extends Vector {
     defaultItem = rs.getBoolean("default_item");
     entered = rs.getTimestamp("entered");
     enabled = rs.getBoolean("enabled");
+    allowMultipleRecords = rs.getBoolean("multiple_records");
   }
 
 

@@ -36,6 +36,14 @@ Existing Folder<br>
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
+            Records
+          </td>
+          <td>
+            <input type="checkbox" value="ON" name="allowMultipleRecords" <%= Category.getAllowMultipleRecords()?"checked":"" %>>records can have multiple records
+          </td>
+        </tr>
+        <tr class="containerBody">
+          <td class="formLabel">
             Enabled
           </td>
           <td>

@@ -3,6 +3,7 @@
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
+<jsp:useBean id="Record" class="com.darkhorseventures.cfsbase.CustomFieldRecord" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="details" action="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>" method="post">
 <a href="/Accounts.do?command=View">Back to Account List</a><br>&nbsp;
@@ -24,10 +25,20 @@
   </tr>
   <tr>
     <td class="containerBack">
-<a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">Back to <%= Category.getName() %> Records</a><br>
+<% if (Category.getAllowMultipleRecords()) { %>
+<a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">Back to <%= Category.getName() %> Records</a>
+<% } else { 
+     CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
+%>
+  <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %>
+<% } %>
+<br>
 &nbsp;<br>
-<dhv:permission name="accounts-accounts-folders-edit"><input type="submit" value="Modify" onClick="javascript:this.form.action='/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>'"><br>&nbsp;<br></dhv:permission>
-
+<dhv:permission name="accounts-accounts-folders-edit"><input type="submit" value="Modify" onClick="javascript:this.form.action='/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>'"></dhv:permission>
+<dhv:permission name="accounts-accounts-folders-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>'"></dhv:permission>
+<dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
+<br>&nbsp;<br>
+</dhv:permission>
 <%
   Iterator groups = Category.iterator();
   while (groups.hasNext()) {
@@ -67,8 +78,33 @@
 </table>
 &nbsp;
 <%}%>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td colspan=2 valign=center align=left>
+      <strong>Record Information</strong>
+    </td>     
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Entered
+    </td>
+    <td>
+      <dhv:username id="<%= Record.getEnteredBy() %>" />&nbsp;-&nbsp;<%= Record.getEnteredString() %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Modified
+    </td>
+    <td>
+      <dhv:username id="<%= Record.getModifiedBy() %>" />&nbsp;-&nbsp;<%= toHtml(Record.getModifiedDateTimeString()) %>
+    </td>
+  </tr>
+</table>
+&nbsp;
 <br>
 <dhv:permission name="accounts-accounts-folders-edit"><input type="submit" value="Modify" onClick="javascript:this.form.action='/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>'"></dhv:permission>
+<dhv:permission name="accounts-accounts-folders-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>'"></dhv:permission>
 </td></tr>
 </table>
 </form>

@@ -34,6 +34,20 @@ public class CustomFieldRecord {
    */
   public CustomFieldRecord() { }
 
+  public CustomFieldRecord(Connection db, int recordId) throws SQLException {
+    String sql =
+        "SELECT * " +
+        "FROM custom_field_record cfr " +
+        "WHERE record_id = ? ";
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(1, recordId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+  }
 
   /**
    *  Constructor for the CustomFieldRecord object
@@ -233,12 +247,13 @@ public class CustomFieldRecord {
 
 
   /**
-   *  Description of the Method
+   *  When a CustomFieldCategory is deleted, then all of the associated
+   *  data needs to go.
    *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public void delete(Connection db) throws SQLException {
+  public boolean delete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "DELETE FROM custom_field_data " +
@@ -248,6 +263,9 @@ public class CustomFieldRecord {
     }
     if (linkItemId > -1) {
       sql.append("AND link_item_id = ? ");
+    }
+    if (id > -1) {
+      sql.append("AND record_id = ? ");
     }
     sql.append(") ");
 
@@ -259,6 +277,9 @@ public class CustomFieldRecord {
     }
     if (linkItemId > -1) {
       pst.setInt(++i, linkItemId);
+    }
+    if (id > -1) {
+      pst.setInt(++i, id);
     }
     pst.execute();
     pst.close();
@@ -273,6 +294,9 @@ public class CustomFieldRecord {
     if (linkItemId > -1) {
       sql.append("AND link_item_id = ? ");
     }
+    if (id > -1) {
+      sql.append("AND record_id = ? ");
+    }
     pst = db.prepareStatement(sql.toString());
     i = 0;
     pst.setInt(++i, linkModuleId);
@@ -282,11 +306,16 @@ public class CustomFieldRecord {
     if (linkItemId > -1) {
       pst.setInt(++i, linkItemId);
     }
+    if (id > -1) {
+      pst.setInt(++i, id);
+    }
     pst.execute();
     pst.close();
-    System.out.println("CustomFieldRecord-> Delete Complete");
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CustomFieldRecord-> Delete Complete");
+    }
+    return true;
   }
-
 
   /**
    *  Description of the Method
