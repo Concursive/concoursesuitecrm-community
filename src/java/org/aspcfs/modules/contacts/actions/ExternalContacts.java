@@ -1325,7 +1325,7 @@ public final class ExternalContacts extends CFSModule {
           htmlDialog.setHeader("This contact cannot be deleted because it is also an individual account.");
           htmlDialog.addButton("OK", "javascript:parent.window.close()");
         } else if (thisContact.getHasOpportunities()) {
-          htmlDialog.setHeader("Please re-assign or delete any opportunities associated with this contact first.");
+          htmlDialog.setHeader("Please reassign or delete any opportunities associated with this contact first.");
           htmlDialog.addButton("OK", "javascript:parent.window.close()");
         } else {
           if (dependencies.canDelete()) {

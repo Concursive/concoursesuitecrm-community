@@ -472,7 +472,7 @@ public final class Users extends CFSModule {
         pst.close();
         //Activate the user
         thisUser = new User(db, context.getRequest().getParameter("id"));
-        //Re-activate the contact if it was previously de-activated
+        //Reactivate the contact if it was previously de-activated
         Contact thisContact = new Contact(db, thisUser.getContactId());
         if (!thisContact.getEnabled()) {
           thisContact.enable(db);

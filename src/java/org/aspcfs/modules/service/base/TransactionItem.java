@@ -495,7 +495,7 @@ public class TransactionItem {
             break;
       }
       if (executeMethod != null) {
-        //Pre-process several items
+        //Preprocess several items
         if (action == INSERT || action == UPDATE) {
           //Populate any client GUIDs with the correct server ID
           setGuidParameters(db);

@@ -99,7 +99,7 @@ public final class ProcessPacket extends CFSModule {
         packetContext.setConnectionPool(sqlDriver);
         packetContext.setConnectionElement(ce);
 
-        //Initialize the systemStatus for this request to re-use objects, if not already initialized
+        //Initialize the systemStatus for this request to reuse objects, if not already initialized
         SystemStatus systemStatus = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
 
         //Prepare the objectHooks that are cached

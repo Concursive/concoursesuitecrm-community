@@ -425,7 +425,7 @@ public class Role extends GenericBean {
       pst.setInt(++i, id);
       resultCount = pst.executeUpdate();
       pst.close();
-      //Re-insert the permissions for this role
+      //Reinsert the permissions for this role
       deletePermissions(db);
       insertPermissions(db);
       db.commit();

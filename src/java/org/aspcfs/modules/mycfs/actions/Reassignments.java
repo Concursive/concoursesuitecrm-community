@@ -20,7 +20,7 @@ import java.util.*;
 import com.zeroio.iteam.base.*;
 
 /**
- *  Handles re-assigning user data
+ *  Handles reassigning user data
  *
  *@author     chris
  *@created    December 4, 2002
@@ -29,7 +29,7 @@ import com.zeroio.iteam.base.*;
 public final class Reassignments extends CFSModule {
 
   /**
-   *  Shows the re-assignments page<br>
+   *  Shows the reassignments page<br>
    *  TODO: Reduce the object/database overhead for generating the counts
    *
    *@param  context  Description of Parameter
@@ -136,7 +136,7 @@ public final class Reassignments extends CFSModule {
 
 
   /**
-   *  Performs the actual re-assignments
+   *  Performs the actual reassignments
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -219,14 +219,14 @@ public final class Reassignments extends CFSModule {
     }
     try {
       db = getConnection(context);
-      //Re-Assign accounts
+      //Reassign accounts
       if (targetIdAccounts > -1) {
         sourceAccounts = new OrganizationList();
         sourceAccounts.setOwnerId(userId);
         sourceAccounts.buildList(db);
         sourceAccounts.reassignElements(db, targetIdAccounts);
       }
-      //Re-Assign contacts
+      //Reassign contacts
       if (targetIdContacts > -1) {
         sourceContacts = new ContactList();
         sourceContacts.setOwner(userId);
@@ -235,7 +235,7 @@ public final class Reassignments extends CFSModule {
         sourceContacts.buildList(db);
         sourceContacts.reassignElements(db, targetIdContacts);
       }
-      //Re-Assign opportunities
+      //Reassign opportunities
       if (targetIdOpenOpps > -1) {
         sourceOpenOpps = new OpportunityComponentList();
         sourceOpenOpps.setOwner(userId);
@@ -244,7 +244,7 @@ public final class Reassignments extends CFSModule {
         sourceOpenOpps.reassignElements(db, targetIdOpenOpps);
         invalidateUserInMemory(targetIdOpenOpps, context);
       }
-      //Re-Assign opportunities
+      //Reassign opportunities
       if (targetIdOpps > -1) {
         sourceOpps = new OpportunityComponentList();
         sourceOpps.setOwner(userId);
@@ -252,7 +252,7 @@ public final class Reassignments extends CFSModule {
         sourceOpps.reassignElements(db, targetIdOpps);
         invalidateUserInMemory(targetIdOpps, context);
       }
-      //Re-Assign revenue
+      //Reassign revenue
       if (targetIdRevenue > -1) {
         sourceRevenue = new RevenueList();
         sourceRevenue.setOwner(userId);
@@ -260,7 +260,7 @@ public final class Reassignments extends CFSModule {
         sourceRevenue.reassignElements(db, targetIdRevenue);
         invalidateUserInMemory(targetIdRevenue, context);
       }
-      //Re-Assign open tickets
+      //Reassign open tickets
       if (targetIdOpenTickets > -1) {
         sourceOpenTickets = new TicketList();
         sourceOpenTickets.setAssignedTo(userId);
@@ -268,7 +268,7 @@ public final class Reassignments extends CFSModule {
         sourceOpenTickets.buildList(db);
         sourceOpenTickets.reassignElements(db, targetIdOpenTickets);
       }
-      //Re-Assign users
+      //Reassign users
       if (targetIdUsers > -1) {
         sourceUsers = new UserList();
         sourceUsers.setManagerId(userId);
@@ -277,7 +277,7 @@ public final class Reassignments extends CFSModule {
         thisRec.setBuildHierarchy(true);
         thisRec.buildResources(db);
       }
-      //Re-Assign Assignments
+      //Reassign Assignments
       if (targetIdAssignments > -1) {
         sourceAssignments = new AssignmentList();
         sourceAssignments.setAssignmentsForUser(userId);
