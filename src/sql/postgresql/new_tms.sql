@@ -59,7 +59,7 @@ CREATE TABLE ticket_category (
 
 CREATE TABLE ticket (
   ticketid SERIAL PRIMARY KEY,
-  org_id INT defailt -1, 
+  org_id INT default -1, 
   contact_id INT default -1, 
   problem TEXT NOT NULL,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
