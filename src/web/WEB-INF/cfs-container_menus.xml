@@ -29,6 +29,21 @@
       <permission value="accounts-accounts-opportunities-view"/>
       <link value="Opportunities.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
+    <submenu name="quotes">
+      <long_html value="Quotes"/>
+      <permission value="accounts-quotes"/>
+      <link value="AccountQuotes.do?command=View&amp;orgId=${orgId}"/>
+    </submenu>
+    <submenu name="orders">
+      <long_html value="Orders"/>
+      <permission value="accounts-orders"/>
+      <link value="AccountOrders.do?command=View&amp;orgId=${orgId}"/>
+    </submenu>
+    <submenu name="products">
+      <long_html value="Products"/>
+      <permission value="accounts-products"/>
+      <link value="AccountsProducts.do?command=List&amp;orgId=${orgId}"/>
+    </submenu>
     <submenu name="revenue">
       <long_html value="Revenue"/>
       <permission value="accounts-accounts-revenue-view"/>

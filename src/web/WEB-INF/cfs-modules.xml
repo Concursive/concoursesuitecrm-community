@@ -53,7 +53,7 @@
       <short_html value="Tasks"/>
       <link value="MyTasks.do"/>
     </submenu>
-    
+
     <submenu name="My Action Lists">
      <permission value="myhomepage-action-lists-view"/>
       <long_html value="Action Lists"/>
@@ -186,6 +186,8 @@
     <action name="ContactsPortal"/>
     <action name="Opportunities"/>
     <action name="OpportunitiesComponents"/>
+    <action name="AccountOrders"/>
+    <action name="AccountsProducts"/>
     <action name="RevenueManager"/>
     <action name="AccountTickets"/>
     <action name="AccountsDocuments"/>
@@ -201,6 +203,7 @@
     <action name="AccountsAssets"/>
     <action name="AccountTicketActivityLog"/>
     <action name="AccountTicketMaintenanceNotes"/>
+    <action name="AccountQuotes"/>
     <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
@@ -257,6 +260,56 @@
       <long_html value="View Ad Runs"/>
       <short_html value="View Ad Runs"/>
       <link value="AutoGuide.do"/>
+    </submenu>
+  </menu>
+  
+  <menu>
+    <action name="Quotes"/>
+    <page title="Quotes"/>
+    <permission value="quotes-view"/>
+    <long_html value="Quotes"/>
+    <short_html value="Quotes"/>
+    <link value="Quotes.do?command=List"/>
+    <graphic width="83" height="36" on="menu-quotes-on.gif" off="menu-quotes-off.gif" rollover=""/>
+    <submenu name="View">
+      <permission value=""/>
+      <long_html value="View"/>
+      <short_html value="View"/>
+      <link value="Quotes.do?command=List"/>
+    </submenu>
+    <submenu name="Search">
+      <permission value=""/>
+      <long_html value="Search"/>
+      <short_html value="Search"/>
+      <link value="Quotes.do?command=SearchForm"/>
+    </submenu>
+  </menu>
+  
+  <menu>
+    <action name="Orders"/>
+    <page title="Orders"/>
+    <permission value="orders-view"/>
+    <long_html value="Orders"/>
+    <short_html value="Orders"/>
+    <link value="Orders.do?command=SearchForm"/>
+    <graphic width="83" height="36" on="menu-orders-on.gif" off="menu-orders-off.gif" rollover=""/>
+    <submenu name="View">
+      <permission value=""/>
+      <long_html value="View"/>
+      <short_html value="View"/>
+      <link value="Orders.do?command=List"/>
+    </submenu>
+    <submenu name="Add">
+      <permission value=""/>
+      <long_html value="Add"/>
+      <short_html value="Add"/>
+      <link value="Orders.do?command=Add"/>
+    </submenu>
+    <submenu name="Search">
+      <permission value=""/>
+      <long_html value="Search"/>
+      <short_html value="Search"/>
+      <link value="Orders.do?command=SearchForm"/>
     </submenu>
   </menu>
   

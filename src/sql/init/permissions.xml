@@ -26,6 +26,9 @@
       <report file="task_date.xml" type="user" permission="myhomepage-tasks" title="Task list by due date" description="What are the tasks due withing a date range?"/>
       <report file="task_nodate.xml" type="user" permission="myhomepage-tasks" title="Task list" description="What are all the tasks in the system?"/>
     </category>
+    <category id="420041014" name="Products and Services" folders="false" lookups="false" reports="false" enabled="false">
+      <permission name="products" attributes="v---" description="Access to Products and Services module"/>
+    </category>
     <category id="1111031131" name="Employees" folders="false" lookups="true" reports="true">
       <lookup constantId="1111031132" class="lookupList" table="lookup_department" description="Departments"/>
       <permission name="employees" attributes="v---" description="Access to Employee module"/>
@@ -98,6 +101,15 @@
     <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
       <permission name="autoguide-adruns" attributes="--e-" description="Ad Run complete status"/>
+    </category>
+    <category id="420041017" name="Quotes" folders="false" lookups="false" reports="false" enabled="false">
+      <permission name="quotes" attributes="vaed" description="Access to Quotes module"/>
+    </category>
+    <category id="420041018" name="Orders" folders="false" lookups="false" reports="false" enabled="false">
+      <permission name="orders" attributes="vaed" description="Access to Orders module"/>
+    </category>
+    <category id="330041409" name="Product Catalog" folders="true" lookups="false" reports="false" categories="false">
+      <folder constantId="200403192" description="Product Catalog Categories"/>
     </category>
     <category id="6" name="Communications" folders="false" lookups="false" reports="true">
       <permission name="campaign" attributes="v---" description="Access to Communications module"/>
@@ -667,6 +679,11 @@
        <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
        <permission name="accounts-accounts-contacts" attributes="v---"/>
        <permission name="accounts-accounts-tickets" attributes="va--"/>
+    </role>
+    <role name="Products and Services Customer" description="Products and Services portal user" type="420041011" enabled="false">
+       <permission name="myhomepage" attributes="v---"/>
+       <permission name="myhomepage-dashboard" attributes="v---"/>
+       <permission name="products" attributes="v---"/>
     </role>
     <!--
     <role name="Marketing assistant" description="">

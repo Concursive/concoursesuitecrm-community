@@ -15,6 +15,52 @@
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
   </action>
   
+  <action name="ProcessFileItemImage" class="org.aspcfs.modules.communications.actions.ProcessFileItemImage">
+    <forward name="SystemError" resource="/errors/error_system.jsp"/>
+  </action>
+  
+  <!-- Orders -->
+  <action name="Orders" class="org.aspcfs.modules.orders.actions.Orders">
+    <forward name="SearchOK" resource="/orders/orders_search.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/orders/orders_list.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/orders/orders_details.jsp" layout="nav"/>
+  </action>
+  
+  <!-- Accounts Orders-->
+  <action name="AccountOrders" class="org.aspcfs.modules.accounts.actions.AccountOrders">
+    <forward name="ListOK" resource="/accounts/accounts_orders_list.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/accounts/accounts_orders_details.jsp" layout="nav"/>
+  </action>  
+
+  <!-- Accounts Products -->
+  <action name="AccountsProducts" class="org.aspcfs.modules.accounts.actions.AccountsProducts">
+    <forward name="ListOK" resource="/accounts/accounts_products_list.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/accounts/accounts_products_details.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/accounts/accounts_products_upload.jsp" layout="nav"/>
+    <forward name="UploadOK" resource="/AccountsProducts.do?command=View" />
+    <forward name="SVGDetailsOK" resource="/accounts/accounts_product_svg_details.jsp" layout="nav" />
+  </action>  
+
+  <!-- Quotes -->
+  <action name="Quotes" class="org.aspcfs.modules.quotes.actions.Quotes">
+    <bean name="QuoteNotesBean" class="org.aspcfs.modules.quotes.beans.QuoteNotesBean" scope="request"/>
+    <forward name="SearchOK" resource="/quotes/quotes_search.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/quotes/quotes_list.jsp" layout="nav"/>
+    <forward name="DisplayOK" resource="/quotes/quotes_display.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/quotes/quotes_add.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/quotes/quotes_details.jsp" layout="nav"/>
+    <forward name="CustomerDisplayOK" resource="/quotes/quotes_modify.jsp" layout="style"/>
+  </action>
+  
+  <!-- Products Catalog Dialog -->
+  <action name="ProductsCatalog" class="org.aspcfs.modules.products.actions.ProductsCatalog">
+    <forward name="CategoryListOK" resource="/products/product_category_list.jsp" layout="style"/>
+    <forward name="ProductListOK" resource="/products/product_product_list.jsp" layout="style"/>
+    <forward name="CategoriesOK" resource="/products/product_categories.jsp" layout="style"/>
+    <forward name="ProductsOK" resource="/products/product_products.jsp" layout="style"/>
+  </action>
+  
+  
   <!-- Actions for E.D.I.T. transaction processing -->
   <action name="ProcessEditData" class="org.aspcfs.modules.healthcare.edit.actions.ProcessEditData">
     <forward name="ProcessDataOK" resource="/processdata_test.jsp"/>
@@ -63,7 +109,8 @@
     <forward name="LoginVerifyOK" resource="/mycfs/mycfs_verify.jsp"/>
     <forward name="LoginRetry" resource="/index.jsp"/>
     <forward name="LicenseError" resource="/errors/error_license.jsp" layout="dhv"/>
-    <forward name="PortalLoginOK" resource="/Accounts.do?command=Search" />
+    <forward name="CustomerPortalLoginOK" resource="/Accounts.do?command=Search" />
+    <forward name="ProductsPortalLoginOK" resource="/MyCFS.do?command=Home" />
  </action>
   
   <!-- MyCFS Module -->
@@ -873,8 +920,7 @@
     <forward name="UpdateCategoryOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
   </action>
   <!-- End Project Management Module -->
-  
-  
+
   <!-- Ticket Module -->
   <action name="TroubleTickets" class="org.aspcfs.modules.troubletickets.actions.TroubleTickets">
     <bean name="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
