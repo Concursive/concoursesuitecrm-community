@@ -48,7 +48,7 @@ public class VehicleList extends ArrayList {
       this.add(thisVehicle);
     }
     rs.close();
-    pst.close();
+    if (pst != null) pst.close();
   }
   
   public Vehicle getObject(ResultSet rs) throws SQLException {

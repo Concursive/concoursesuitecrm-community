@@ -209,20 +209,6 @@ public final class AutoGuide extends CFSModule {
     }
     Exception errorMessage = null;
 
-/*     HtmlSelect busTypeSelect = new HtmlSelect();
-    busTypeSelect.setSelectName("type");
-    busTypeSelect.addItem("N", "New");
-    busTypeSelect.addItem("E", "Existing");
-    busTypeSelect.build();
- */
-/*     HtmlSelect unitSelect = new HtmlSelect();
-    unitSelect.setSelectName("units");
-    unitSelect.addItem("M", "Months");
-    //unitSelect.addItem("D", "Days");
-    //unitSelect.addItem("W", "Weeks");
-    //unitSelect.addItem("Y", "Years");
-    unitSelect.build();
- */
     int orgId = Integer.parseInt(context.getRequest().getParameter("orgId"));
     Connection db = null;
     try {
@@ -235,6 +221,25 @@ public final class AutoGuide extends CFSModule {
       yearSelect.addItem(-1, "--None--", 0);
       context.getRequest().setAttribute("YearSelect", yearSelect);
       
+      HtmlSelect makeSelect = new HtmlSelect();
+      makeSelect.addItem(-1, "--None--");
+      MakeList makeList = new MakeList();
+      PreparedStatement pst = null;
+      ResultSet rs = makeList.queryList(db, pst);
+      while (rs.next()) {
+        Make thisMake = makeList.getObject(rs);
+        makeSelect.addItem(thisMake.getId(), thisMake.getName());
+      }
+      rs.close();
+      context.getRequest().setAttribute("MakeSelect", makeSelect);
+      
+      HtmlSelect modelSelect = new HtmlSelect();
+      modelSelect.addItem(-1, "--None--");
+      context.getRequest().setAttribute("ModelSelect", modelSelect);
+      
+      if (pst != null) {
+        pst.close();
+      }
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -244,6 +249,33 @@ public final class AutoGuide extends CFSModule {
     if (errorMessage == null) {
       addModuleBean(context, "View Accounts", "Add Vehicle");
       return ("AddOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandUpdateModelList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      int makeId = Integer.parseInt(context.getRequest().getParameter("makeId"));
+      db = this.getConnection(context);
+      ModelList modelList = new ModelList();
+      if (makeId > -1) {
+        modelList.setMakeId(makeId);
+        modelList.buildList(db);
+      }
+      context.getRequest().setAttribute("ModelList", modelList);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "View Accounts", "Add Vehicle");
+      return ("ModelListOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");

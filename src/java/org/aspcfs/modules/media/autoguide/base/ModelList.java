@@ -16,6 +16,7 @@ public class ModelList extends ArrayList {
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
+  private int makeId = -1;
   
   public ModelList() { }
 
@@ -29,6 +30,9 @@ public class ModelList extends ArrayList {
   }
   public void setSyncType(int tmp) { this.syncType = tmp; }
   public void setSyncType(String tmp) { this.syncType = Integer.parseInt(tmp); }
+  public void setMakeId(int tmp) { this.makeId = tmp; }
+  public void setMakeId(String tmp) { this.makeId = Integer.parseInt(tmp); }
+  public int getMakeId() { return makeId; }
   
   public String getTableName() { return tableName; }
   public String getUniqueField() { return uniqueField; }
@@ -45,7 +49,7 @@ public class ModelList extends ArrayList {
       this.add(thisModel);
     }
     rs.close();
-    pst.close();
+    if (pst != null) pst.close();
   }
   
   public Model getObject(ResultSet rs) throws SQLException {
@@ -90,6 +94,9 @@ public class ModelList extends ArrayList {
       sqlFilter.append("AND model.entered < ? ");
       sqlFilter.append("AND model.modified < ? ");
     }
+    if (makeId > -1) {
+      sqlFilter.append("AND make.make_id = ? ");
+    }
   }
   
   private int prepareFilter(PreparedStatement pst) throws SQLException {
@@ -104,6 +111,9 @@ public class ModelList extends ArrayList {
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, nextAnchor);
+    }
+    if (makeId > -1) {
+      pst.setInt(++i, makeId);
     }
     return i;
   }

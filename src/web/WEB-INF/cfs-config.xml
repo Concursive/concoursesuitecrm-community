@@ -186,6 +186,7 @@
     <forward name="List2OK" resource="/autoguide_list2.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/autoguide_details.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/AutoGuide.do?command=List"/>
+    <forward name="ModelListOK" resource="/autoguide_modellist.jsp"/>
   </action>
   
   <!-- Pipeline Management Module -->

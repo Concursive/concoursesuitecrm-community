@@ -45,7 +45,7 @@ public class MakeList extends ArrayList {
       this.add(thisMake);
     }
     rs.close();
-    pst.close();
+    if (pst != null) pst.close();
   }
   
   public Make getObject(ResultSet rs) throws SQLException {

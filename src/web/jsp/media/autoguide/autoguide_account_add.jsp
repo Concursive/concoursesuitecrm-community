@@ -2,6 +2,8 @@
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="InventoryDetails" class="com.darkhorseventures.autoguide.base.AccountInventory" scope="request"/>
 <jsp:useBean id="YearSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="MakeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="ModelSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="Vehicle" class="com.darkhorseventures.autoguide.base.Vehicle" scope="request"/>
 <jsp:useBean id="Make" class="com.darkhorseventures.autoguide.base.Make" scope="request"/>
 <jsp:useBean id="Model" class="com.darkhorseventures.autoguide.base.Model" scope="request"/>
@@ -11,23 +13,30 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
-      formTest = true;
-      message = "";
-      if ((!form.closeDate.value == "") && (!checkDate(form.closeDate.value))) { 
-        message += "- Check that Est. Close Date is entered correctly\r\n";
-        formTest = false;
-      }
-      if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-        message += "- Check that Alert Date is entered correctly\r\n";
-        formTest = false;
-      }
-      if (formTest == false) {
-        alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-        return false;
-      } else {
-        return true;
-      }
+    formTest = true;
+    message = "";
+    if ((!form.closeDate.value == "") && (!checkDate(form.closeDate.value))) { 
+      message += "- Check that Est. Close Date is entered correctly\r\n";
+      formTest = false;
     }
+    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
+      message += "- Check that Alert Date is entered correctly\r\n";
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    } else {
+      return true;
+    }
+  }
+    
+  function updateList() {
+    var sel = document.forms['addVehicle'].elements['makeId'];
+    var value = sel.options[sel.selectedIndex].value;
+    var url = "AutoGuide.do?command=UpdateModelList&makeId=" + escape(value);
+    window.frames['server_commands'].location.href=url;
+  }
 </script>
 <form name="addVehicle" action="AccountsAutoGuide.do?command=AccountInsert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">Back to Vehicle List</a><br>&nbsp;
@@ -79,8 +88,11 @@
       Make
     </td>
     <td>
-      <input type="text" size="5" name="make" value="<%= toHtmlValue(Make.getName()) %>">
-      <font color=red>*</font> <%= showAttribute(request, "makeError") %>
+      <% MakeSelect.setJsEvent("onchange=\"updateList();\""); %>
+      <%= MakeSelect.getHtml("makeId") %>
+      <font color=red>*</font> <%= showAttribute(request, "makeIdError") %>
+      <%= showAttribute(request, "modelError") %>
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </td>
   </tr>
   <tr class="containerBody">
@@ -88,8 +100,8 @@
       Model
     </td>
     <td>
-      <input type="text" size="10" name="model" value="<%= toHtmlValue(Model.getName()) %>">
-      <%= showAttribute(request, "modelError") %>
+      <%= ModelSelect.getHtml("modelId") %>
+      <%= showAttribute(request, "modelIdError") %>
     </td>
   </tr>
   <tr class="containerBody">
