@@ -9,6 +9,7 @@ import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.autoguide.base.*;
 import com.darkhorseventures.apps.dataimport.writer.TextWriter;
 import java.io.*;
+import com.darkhorseventures.apps.dataimport.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
 
 /**
  *  Queries vehicle data from the Auto Guide database, grabs and resizes any
@@ -32,9 +33,14 @@ public class PilotOnlineReader implements DataReader {
   private String pictureDestinationPath = null;
   private String ftpData = null;
   private String ftpPictures = null;
+  private String logUrl = null;
+  private String logId = null;
+  private String logCode = null;
+  private int logSystemId = -1;
+  private int logClientId = -1;
 
   private ArrayList picturesToProcess = new ArrayList();
-
+  private ArrayList processLog = new ArrayList();
 
   /**
    *  Sets the driver attribute of the PilotOnlineReader object
@@ -122,6 +128,16 @@ public class PilotOnlineReader implements DataReader {
   public void setFtpPictures(String tmp) {
     this.ftpPictures = tmp;
   }
+
+  public void setLogUrl(String tmp) { this.logUrl = tmp; }
+  public void setLogId(String tmp) { this.logId = tmp; }
+  public void setLogCode(String tmp) { this.logCode = tmp; }
+
+  public void setLogSystemId(int tmp) { this.logSystemId = tmp; }
+  public void setLogSystemId(String tmp) { this.logSystemId = Integer.parseInt(tmp); }
+  
+  public void setLogClientId(int tmp) { this.logClientId = tmp; }
+  public void setLogClientId(String tmp) { this.logClientId = Integer.parseInt(tmp); }
 
 
   /**
@@ -220,7 +236,7 @@ public class PilotOnlineReader implements DataReader {
    *@return    The name value
    */
   public String getName() {
-    return "Pilot Online Reader";
+    return "Pilot Online Reader/FTP";
   }
 
 
@@ -292,7 +308,8 @@ public class PilotOnlineReader implements DataReader {
    */
   public boolean execute(DataWriter writer) {
     boolean processOK = true;
-
+    processLog.add("INFO: PilotOnlineReader-> Started " + new java.util.Date());
+    
     //Connect to database
     ConnectionPool sqlDriver = null;
     Connection db = null;
@@ -306,14 +323,15 @@ public class PilotOnlineReader implements DataReader {
       connectionElement.setDriver(driver);
       db = sqlDriver.getConnection(connectionElement);
     } catch (SQLException e) {
-      logger.info("Could not get database connection" + e.toString());
-      return false;
+      processLog.add("ERROR: Could not get database connection: " + e.toString());
+      processOK = false;
     }
 
     //Process the vehicle data
     try {
       OrganizationList organizationList = new OrganizationList();
       organizationList.buildList(db);
+      processLog.add("INFO: Processing organizations/vehicles: " + organizationList.size());
       Iterator organizations = organizationList.iterator();
       while (organizations.hasNext()) {
         Organization dealer = (Organization) organizations.next();
@@ -374,11 +392,11 @@ public class PilotOnlineReader implements DataReader {
             thisRecord.addField("pictureFilename", "");
           }
           writer.save(thisRecord);
-          //logger.info(writer.getLastResponse());
         }
       }
     } catch (Exception ex) {
       ex.printStackTrace(System.out);
+      processLog.add("ERROR: Querying organizations/vehicles-> " + ex.getMessage());
       processOK = false;
     } finally {
       writer.close();
@@ -389,6 +407,7 @@ public class PilotOnlineReader implements DataReader {
 
     //Process the vehicle pictures
     if (processOK && picturesToProcess.size() > 0) {
+      processLog.add("INFO: Processing pictures (resize/copy): " + picturesToProcess.size());
       try {
         Iterator pictures = picturesToProcess.iterator();
         while (pictures.hasNext()) {
@@ -405,29 +424,68 @@ public class PilotOnlineReader implements DataReader {
         }
       } catch (Exception e) {
         e.printStackTrace(System.out);
+        processLog.add("ERROR: Processing pictures-> " + e.getMessage());
         processOK = false;
       }
     }
 
     if (processOK) {
+      processLog.add("INFO: FTP Sending pictures");
       NCFTPApp ftp = new NCFTPApp();
       ftp.setDeleteSourceFilesAfterSend(true);
       ftp.setMakeRemoteDir(true);
       ftp.addFile(pictureDestinationPath + "*.jpg");
       processOK = (ftp.put(ftpPictures) == 0);
       if (!processOK) {
-        logger.info(ftp.getStdErr());
+        processLog.add("ERROR: FTP Sending pictures-> " + ftp.getStdErr());
       }
     }
 
     if (processOK) {
+      processLog.add("INFO: FTP Sending data");
       NCFTPApp ftp = new NCFTPApp();
       ftp.setDeleteSourceFilesAfterSend(true);
       ftp.setMakeRemoteDir(true);
       ftp.addFile(((TextWriter) writer).getFilename());
       processOK = (ftp.put(ftpData) == 0);
       if (!processOK) {
-        logger.info(ftp.getStdErr());
+        processLog.add("ERROR: FTP Sending data-> " + ftp.getStdErr());
+      }
+    }
+    
+    processLog.add("INFO: PilotOnlineReader-> Finished " + new java.util.Date());
+    
+    if (logUrl != null) {
+      try {
+        CFSHttpXMLWriter serverLog = new CFSHttpXMLWriter();
+        serverLog.setUrl(logUrl);
+        serverLog.setId(logId);
+        serverLog.setCode(logCode);
+        serverLog.setSystemId(logSystemId);
+        serverLog.setClientId(logClientId);
+        //Add the record
+        DataRecord logRecord = new DataRecord();
+        logRecord.setName("processLog");
+        logRecord.setAction("insert");
+        logRecord.addField("name", this.getName());
+        logRecord.addField("version", this.getVersion());
+        logRecord.addField("systemId", logSystemId);
+        logRecord.addField("clientId", logClientId);
+        logRecord.addField("status", (processOK?0:1));
+        //Add the data to the record
+        StringBuffer logText = new StringBuffer();
+        Iterator logData = processLog.iterator();
+        while (logData.hasNext()) {
+          String logItem = (String)logData.next();
+          logText.append(logItem);
+          if (logData.hasNext()) {
+            logText.append(System.getProperty("line.separator"));
+          }
+        }
+        logRecord.addField("message", logText.toString());
+        serverLog.save(logRecord);
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
 
