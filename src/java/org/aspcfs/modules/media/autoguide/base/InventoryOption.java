@@ -5,23 +5,21 @@ package com.darkhorseventures.autoguide.base;
 import java.sql.*;
 
 /**
- *  Represents an available option that any vehicle object has
+ *  Represents an available option that an Inventory object has
  *
  *@author     matt rajkowski
- *@created    May 17, 2002
+ *@created    June 16, 2002
  *@version    $Id$
  */
-public class Option {
-  private int id = -1;
+public class InventoryOption {
   private int inventoryId = -1;
-  private String name = null;
-  private java.sql.Timestamp entered = null;
-  private java.sql.Timestamp modified = null;
+  private int optionId = -1;
+
 
   /**
    *  Constructor for the Option object
    */
-  public Option() { }
+  public InventoryOption() { }
 
 
   /**
@@ -30,18 +28,18 @@ public class Option {
    *@param  rs                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public Option(ResultSet rs) throws SQLException {
+  public InventoryOption(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 
 
   /**
-   *  Sets the id attribute of the Option object
+   *  Sets the optionId attribute of the InventoryOption object
    *
-   *@param  tmp  The new id value
+   *@param  tmp  The new optionId value
    */
-  public void setId(int tmp) {
-    this.id = tmp;
+  public void setOptionId(int tmp) {
+    this.optionId = tmp;
   }
 
 
@@ -53,26 +51,27 @@ public class Option {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the accountInventoryId attribute of the InventoryOption object, used
+   *  for the XML API
+   *
+   *@param  tmp  The new accountInventoryId value
+   */
   public void setAccountInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
-  }
-  public void setOptionId(String tmp) {
-    this.id = Integer.parseInt(tmp);
   }
 
 
   /**
-   *  Sets the name attribute of the Option object
+   *  Sets the optionId attribute of the InventoryOption object
    *
-   *@param  tmp  The new name value
+   *@param  tmp  The new optionId value
    */
-  public void setName(String tmp) {
-    this.name = tmp;
+  public void setOptionId(String tmp) {
+    this.optionId = Integer.parseInt(tmp);
   }
-
-  public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
-  public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
 
   /**
@@ -80,28 +79,18 @@ public class Option {
    *
    *@return    The id value
    */
-  public int getId() {
-    return id;
+  public int getOptionId() {
+    return optionId;
   }
 
 
   /**
-   *  Gets the name attribute of the Option object
+   *  Gets the accountInventoryId attribute of the InventoryOption object
    *
-   *@return    The name value
+   *@return    The accountInventoryId value
    */
-  public String getName() {
-    return name;
-  }
-  
-  public java.sql.Timestamp getEntered() { return entered; }
-  public java.sql.Timestamp getModified() { return modified; }
-
   public int getAccountInventoryId() {
     return this.inventoryId;
-  }
-  public int getOptionId() {
-    return this.id;
   }
 
 
@@ -119,7 +108,7 @@ public class Option {
         "VALUES (?, ?)");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, inventoryId);
-    pst.setInt(2, id);
+    pst.setInt(2, optionId);
     pst.execute();
     pst.close();
   }
@@ -138,7 +127,7 @@ public class Option {
         "WHERE inventory_id = ? AND option_id = ? ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, inventoryId);
-    pst.setInt(2, id);
+    pst.setInt(2, optionId);
     pst.execute();
     pst.close();
   }
@@ -151,10 +140,8 @@ public class Option {
    *@exception  SQLException  Description of Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    id = rs.getInt("option_id");
-    name = rs.getString("option_name");
-    entered = rs.getTimestamp("entered");
-    modified = rs.getTimestamp("modified");
+    inventoryId = rs.getInt("inventory_id");
+    optionId = rs.getInt("option_id");
   }
 }
 

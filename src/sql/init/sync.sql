@@ -69,7 +69,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'accountInventory', 'com.darkhorseventures.autoguide.base.Inventory', 6);
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'option', 'com.darkhorseventures.autoguide.base.Option', 8);
+ VALUES (2, 'inventoryOption', 'com.darkhorseventures.autoguide.base.InventoryOption', 8);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'adRun', 'com.darkhorseventures.autoguide.base.AdRun', 10);
@@ -330,7 +330,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'inventoryOptionList', 'com.darkhorseventures.autoguide.base.OptionList', 350, true,
+ VALUES (2, 'inventoryOptionList', 'com.darkhorseventures.autoguide.base.InventoryOptionList', 350, true,
 'CREATE TABLE inventory_options (
        inventory_id         int NOT NULL,
        option_id            int NOT NULL,

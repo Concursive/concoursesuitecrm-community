@@ -710,13 +710,17 @@ public class TransactionItem {
         }
         thisRecord.put(thisField, thisValue);
       }
-      thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
-      if (thisRecord.containsKey("guid")) {
-        if (thisRecord.getAction().equals("processed")) {
-          thisRecord.put("guid", ignoredProperties.get("guid"));
-        } else {
-          thisRecord.put("guid", String.valueOf(identity++));
+      try {
+        thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
+        if (thisRecord.containsKey("guid")) {
+          if (thisRecord.getAction().equals("processed")) {
+            thisRecord.put("guid", ignoredProperties.get("guid"));
+          } else {
+            thisRecord.put("guid", String.valueOf(identity++));
+          }
         }
+      } catch (java.lang.NumberFormatException e) {
+        //This object doesn't have an id, might have multiple keys
       }
     }
   }

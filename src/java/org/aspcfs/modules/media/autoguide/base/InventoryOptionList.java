@@ -10,26 +10,27 @@ import com.darkhorseventures.cfsbase.Constants;
 import javax.servlet.http.*;
 
 /**
- *  A list of possible options a Vehicle can have
+ *  A collection of options a specific Inventory object has
  *
  *@author     matt rajkowski
- *@created    May 17, 2002
+ *@created    June 16, 2002
  *@version    $Id$
  */
-public class OptionList extends ArrayList {
+public class InventoryOptionList extends ArrayList {
 
-  public static String tableName = "autoguide_options";
-  public static String uniqueField = "option_id";
+/*   public static String tableName = "autoguide_inventory_options";
+  public static String uniqueField = "inventory_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
+ */  
   private int inventoryId = -1;
 
 
   /**
    *  Constructor for the OptionList object
    */
-  public OptionList() { }
+  public InventoryOptionList() { }
 
 
   /**
@@ -38,7 +39,7 @@ public class OptionList extends ArrayList {
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public OptionList(Connection db) throws SQLException {
+  public InventoryOptionList(Connection db) throws SQLException {
     buildList(db);
   }
 
@@ -48,79 +49,45 @@ public class OptionList extends ArrayList {
    *
    *@param  request  Description of Parameter
    */
-  public OptionList(HttpServletRequest request) {
+  public InventoryOptionList(HttpServletRequest request) {
     int i = 0;
     String thisId = null;
     while ((thisId = request.getParameter("option" + (++i) + "id")) != null) {
       String checked = request.getParameter("option" + thisId);
       if ("on".equalsIgnoreCase(checked)) {
-        Option thisOption = new Option();
-        thisOption.setId(Integer.parseInt(thisId));
+        InventoryOption thisOption = new InventoryOption();
+        thisOption.setOptionId(Integer.parseInt(thisId));
+        thisOption.setInventoryId(inventoryId);
         this.add(thisOption);
       }
     }
   }
 
-
-  /**
-   *  Sets the lastAnchor attribute of the OptionList object
-   *
-   *@param  tmp  The new lastAnchor value
-   */
+/* 
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
   }
 
-
-  /**
-   *  Sets the lastAnchor attribute of the OptionList object
-   *
-   *@param  tmp  The new lastAnchor value
-   */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
   }
 
-
-  /**
-   *  Sets the nextAnchor attribute of the OptionList object
-   *
-   *@param  tmp  The new nextAnchor value
-   */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
   }
 
-
-  /**
-   *  Sets the nextAnchor attribute of the OptionList object
-   *
-   *@param  tmp  The new nextAnchor value
-   */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
   }
 
-
-  /**
-   *  Sets the syncType attribute of the OptionList object
-   *
-   *@param  tmp  The new syncType value
-   */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
   }
 
-
-  /**
-   *  Sets the syncType attribute of the OptionList object
-   *
-   *@param  tmp  The new syncType value
-   */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
   }
-
+ */
 
   /**
    *  Sets the inventoryId attribute of the OptionList object
@@ -133,7 +100,7 @@ public class OptionList extends ArrayList {
 
 
   /**
-   *  Sets the inventoryId attribute of the OptionList object
+   *  Sets the inventoryId attribute of the InventoryOptionList object
    *
    *@param  tmp  The new inventoryId value
    */
@@ -143,7 +110,7 @@ public class OptionList extends ArrayList {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the OptionList object
+   *  Sets the accountInventoryId attribute of the InventoryOptionList object
    *
    *@param  tmp  The new accountInventoryId value
    */
@@ -153,7 +120,7 @@ public class OptionList extends ArrayList {
 
 
   /**
-   *  Sets the accountInventoryId attribute of the OptionList object
+   *  Sets the accountInventoryId attribute of the InventoryOptionList object
    *
    *@param  tmp  The new accountInventoryId value
    */
@@ -162,31 +129,15 @@ public class OptionList extends ArrayList {
   }
 
 
-  /**
-   *  Gets the tableName attribute of the OptionList object
-   *
-   *@return    The tableName value
-   */
-  public String getTableName() {
+/*   public String getTableName() {
     return tableName;
   }
 
-
-  /**
-   *  Gets the uniqueField attribute of the OptionList object
-   *
-   *@return    The uniqueField value
-   */
   public String getUniqueField() {
     return uniqueField;
   }
-
-
-  /**
-   *  Gets the inventoryId attribute of the OptionList object
-   *
-   *@return    The inventoryId value
-   */
+ */
+ 
   public int getInventoryId() {
     return inventoryId;
   }
@@ -199,8 +150,8 @@ public class OptionList extends ArrayList {
    *@return                   The object value
    *@exception  SQLException  Description of Exception
    */
-  public Option getObject(ResultSet rs) throws SQLException {
-    Option thisOption = new Option(rs);
+  public InventoryOption getObject(ResultSet rs) throws SQLException {
+    InventoryOption thisOption = new InventoryOption(rs);
     return thisOption;
   }
 
@@ -214,8 +165,8 @@ public class OptionList extends ArrayList {
   public boolean hasOption(int optionId) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      Option thisOption = (Option) i.next();
-      if (thisOption.getId() == optionId) {
+      InventoryOption thisOption = (InventoryOption) i.next();
+      if (thisOption.getOptionId() == optionId) {
         return true;
       }
     }
@@ -244,7 +195,7 @@ public class OptionList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      Option thisOption = this.getObject(rs);
+      InventoryOption thisOption = this.getObject(rs);
       this.add(thisOption);
     }
     rs.close();
@@ -267,15 +218,12 @@ public class OptionList extends ArrayList {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT o.option_id, o.option_name, o.entered, o.modified " +
-        "FROM autoguide_options o ");
-    if (inventoryId > -1) {
-      sql.append(
-          ", autoguide_inventory_options io ");
-    }
-    sql.append("WHERE o.option_id > -1 ");
+        "SELECT io.inventory_id, io.option_id " +
+        "FROM autoguide_inventory_options io " +
+        " LEFT JOIN autoguide_options o ON (io.option_id = o.option_id) " +
+        "WHERE io.option_id > -1 ");
     createFilter(sql);
-    sql.append("ORDER BY level, o.option_name ");
+    sql.append("ORDER BY o.level, o.option_name ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
@@ -292,7 +240,7 @@ public class OptionList extends ArrayList {
   public void insert(Connection db) throws SQLException {
     Iterator optionList = this.iterator();
     while (optionList.hasNext()) {
-      Option thisOption = (Option) optionList.next();
+      InventoryOption thisOption = (InventoryOption) optionList.next();
       thisOption.setInventoryId(inventoryId);
       thisOption.insert(db);
     }
@@ -320,7 +268,7 @@ public class OptionList extends ArrayList {
   public void delete(Connection db) throws SQLException {
     Iterator optionList = this.iterator();
     while (optionList.hasNext()) {
-      Option thisOption = (Option) optionList.next();
+      InventoryOption thisOption = (InventoryOption) optionList.next();
       thisOption.setInventoryId(inventoryId);
       thisOption.delete(db);
     }
@@ -336,6 +284,7 @@ public class OptionList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+/*     
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         sqlFilter.append("AND o.entered > ? ");
@@ -347,9 +296,7 @@ public class OptionList extends ArrayList {
       sqlFilter.append("AND o.entered < ? ");
       sqlFilter.append("AND o.modified < ? ");
     }
-    if (inventoryId > -1) {
-      sqlFilter.append("AND o.option_id = io.option_id AND io.inventory_id = ? ");
-    }
+ */
   }
 
 
@@ -362,6 +309,7 @@ public class OptionList extends ArrayList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+/*     
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         pst.setTimestamp(++i, lastAnchor);
@@ -373,9 +321,7 @@ public class OptionList extends ArrayList {
       pst.setTimestamp(++i, lastAnchor);
       pst.setTimestamp(++i, nextAnchor);
     }
-    if (inventoryId > -1) {
-      pst.setInt(++i, inventoryId);
-    }
+ */
     return i;
   }
 }
