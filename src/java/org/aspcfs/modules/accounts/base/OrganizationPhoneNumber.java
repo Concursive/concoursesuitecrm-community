@@ -113,8 +113,8 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     if (enteredBy == -1) {
             this.setEnteredBy(0);
     }
-    pst.setInt(++i, modifiedBy);
-    if (modifiedBy == -1) {
+    pst.setInt(++i, this.getModifiedBy());
+    if (this.getModifiedBy() == -1) {
             this.setModifiedBy(0);
     }
     
@@ -138,9 +138,9 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     }
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
-    pst.setInt(++i, modifiedBy);
+    pst.setInt(++i, this.getModifiedBy());
     
-    if (modifiedBy == -1) {
+    if (this.getModifiedBy() == -1) {
             this.setModifiedBy(0);
     }
     
