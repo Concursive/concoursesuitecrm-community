@@ -16,15 +16,15 @@ function newOpt(param, value) {
 }
 
 function page_init() {
-
+<% int index =  Integer.parseInt((String)request.getParameter("index")); %>
+<dhv:include name="organization.phoneNumbers" none="true">
   var phone1 = parent.document.forms['addAccount'].elements['phone1type'];
-  phone1.options.length = 0;
+    phone1.options.length = 0;
   var phone2 = parent.document.forms['addAccount'].elements['phone2type'];
-  phone2.options.length = 0;
+    phone2.options.length = 0;
   var phone1Index = 0;
   var phone2Index = 0;
 <%
-  int index =  Integer.parseInt((String)request.getParameter("index"));
   Iterator phone1Iterator = OrgPhoneTypeList.iterator();
   while (phone1Iterator.hasNext()) {
     LookupElement thisElt = (LookupElement)phone1Iterator.next();
@@ -53,7 +53,9 @@ function page_init() {
 %>
   phone1.selectedIndex = phone1Index;
   phone2.selectedIndex = phone2Index;
+</dhv:include>
 
+<dhv:include name="organization.addresses" none="true">
   var addr1 = parent.document.forms['addAccount'].elements['address1type'];
   addr1.options.length = 0;
   var addr2 = parent.document.forms['addAccount'].elements['address2type'];
@@ -89,7 +91,9 @@ function page_init() {
 %>
   addr1.selectedIndex = addr1Index;
   addr2.selectedIndex = addr2Index;
+</dhv:include>
 
+<dhv:include name="organization.emailAddresses" none="true">
   var email1 = parent.document.forms['addAccount'].elements['email1type'];
   email1.options.length = 0;
   var email2 = parent.document.forms['addAccount'].elements['email2type'];
@@ -125,6 +129,7 @@ function page_init() {
 %>
  email1.selectedIndex = email1Index;
  email2.selectedIndex = email2Index;
+ </dhv:include>
 }
 </script>
 </body>

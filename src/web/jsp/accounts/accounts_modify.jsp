@@ -49,14 +49,22 @@
       elm3 = document.getElementById("nameLast1");
       elm4 = document.getElementById("orgname1");
       elm5 = document.getElementById("ticker1");
-      elm1.style.color = "#000000";
-      document.addAccount.nameFirst.style.background = "#ffffff";
-      elm2.style.color = "#000000";
-      document.addAccount.nameMiddle.style.background = "#ffffff";
-      elm3.style.color = "#000000";
-      document.addAccount.nameLast.style.background = "#ffffff";
-      elm4.style.color = "#000000";
-      document.addAccount.name.style.background = "#ffffff";
+      if (elm1) {
+        elm1.style.color = "#000000";
+        document.addAccount.nameFirst.style.background = "#ffffff";
+      }
+      if (elm2) {
+        elm2.style.color = "#000000";
+        document.addAccount.nameMiddle.style.background = "#ffffff";
+      }
+      if (elm3) {
+        elm3.style.color = "#000000";
+        document.addAccount.nameLast.style.background = "#ffffff";
+      }
+      if (elm4) {
+        elm4.style.color = "#000000";
+        document.addAccount.name.style.background = "#ffffff";
+      }
       if (elm5) {
         elm5.style.color = "#000000";
         document.addAccount.ticker.style.background = "#ffffff";
@@ -74,9 +82,11 @@
         indSelected = 1;
         orgSelected = 0;        
         resetFormElements();
-        elm4.style.color="#cccccc";
-        document.addAccount.name.style.background = "#cccccc";
-        document.addAccount.name.value = "";
+        if (elm4) {
+          elm4.style.color="#cccccc";
+          document.addAccount.name.style.background = "#cccccc";
+          document.addAccount.name.value = "";
+        }
         if (elm5) {
           elm5.style.color="#cccccc";
           document.addAccount.ticker.style.background = "#cccccc";
@@ -85,16 +95,22 @@
       } else {
         indSelected = 0;
         orgSelected = 1;
-        resetFormElements();        
-        elm1.style.color = "#cccccc";
-        document.addAccount.nameFirst.style.background = "#cccccc";
-        document.addAccount.nameFirst.value = "";
-        elm2.style.color = "#cccccc";  
-        document.addAccount.nameMiddle.style.background = "#cccccc";
-        document.addAccount.nameMiddle.value = ""; 
-        elm3.style.color = "#cccccc";      
-        document.addAccount.nameLast.style.background = "#cccccc";
-        document.addAccount.nameLast.value = "";     
+        resetFormElements();
+        if (elm1) {
+          elm1.style.color = "#cccccc";
+          document.addAccount.nameFirst.style.background = "#cccccc";
+          document.addAccount.nameFirst.value = "";
+        }
+        if (elm2) {
+          elm2.style.color = "#cccccc";  
+          document.addAccount.nameMiddle.style.background = "#cccccc";
+          document.addAccount.nameMiddle.value = "";
+        }
+        if (elm3) {
+          elm3.style.color = "#cccccc";      
+          document.addAccount.nameLast.style.background = "#cccccc";
+          document.addAccount.nameLast.value = "";
+        }
       }
     }
   }
@@ -149,12 +165,12 @@
       message += "- Check that Alert Date is entered correctly\r\n";
       formTest = false;
     }
-    <dhv:include name="organization.contractEndDate" none="true">
+  <dhv:include name="organization.contractEndDate" none="true">
     if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
       message += "- Check that Contract End Date is entered correctly\r\n";
       formTest = false;
     }
-    </dhv:include>
+  </dhv:include>
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -163,16 +179,20 @@
       message += "- Please specify an alert description\r\n";
       formTest = false;
     }
+  <dhv:include name="organization.phoneNumbers" none="true">
 <%
     for (int i=1; i<=(OrgDetails.getPhoneNumberList().size()+1); i++) {
 %>
-  <dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
+  <dhv:evaluate if="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
       message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
     }
 <%
     }
-
+%>
+  </dhv:include>
+  <dhv:include name="organization.emailAddresses" none="true">
+<%
     for (int i=1; i<=(OrgDetails.getEmailAddressList().size()+1); i++) {
 %>
   <dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkEmail(form.email<%=i%>address.value)) { 
@@ -182,6 +202,7 @@
 <%
     }
 %>
+  </dhv:include>
     if (!checkURL(form.url.value)) { 
       message += "- URL entered is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
@@ -323,22 +344,23 @@ Modify Account
       </table>
     </td>
   </tr>
-  </dhv:include>
+</dhv:include>
   <tr class="containerBody">
     <td class="formLabel">
       Classification
     </td>
     <td>
-      <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() != null) %>">
+      <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() != null) %>">
         Individual
         <input type="hidden" name="form_type" value="individual">
       </dhv:evaluate>
-      <dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() == null) %>">
+      <dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() == null) %>">
         Organization
         <input type="hidden" name="form_type" value="organization">
       </dhv:evaluate>        
     </td>
   </tr>
+  <dhv:evaluate if="<%= OrgDetails.getPrimaryContact() == null %>">
   <tr class="containerBody">
     <td nowrap class="formLabel" name="orgname1" id="orgname1">
       Organization Name
@@ -347,6 +369,8 @@ Modify Account
       <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="35" maxlength="80" name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
     </td>
   </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= OrgDetails.getPrimaryContact() != null %>">
   <tr class="containerBody">
     <td name="nameFirst1" id="nameFirst1" nowrap class="formLabel">
       First Name
@@ -370,18 +394,19 @@ Modify Account
     <td>
       <input onFocus="if (orgSelected == 1) { tabNext(this) }" type="text" size="35" name="nameLast" value="<%= toHtmlValue(OrgDetails.getNameLast()) %>"><font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
-  </tr>  
+  </tr>
+  </dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       <dhv:label name="organization.accountNumber">Account Number</dhv:label>
     </td>
     <td>
-      <input type="text" size="50" name="accountNumber" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
+      <input type="text" size="50" name="accountNumber" maxlength="50" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      URL
+      Web Site URL
     </td>
     <td>
       <input type="text" size="50" name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
@@ -456,7 +481,12 @@ Modify Account
     </td>
   </tr>
 </table>
-&nbsp;<br>
+<br>
+<%
+  boolean noneSelected = false;
+%>
+<dhv:include name="organization.phoneNumbers" none="true">
+<%-- Phone Numbers --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -534,7 +564,7 @@ Modify Account
   </tr>
 </dhv:evaluate>
 </table>
-&nbsp;<br>  
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -874,7 +904,10 @@ Modify Account
   </tr>
   </dhv:evaluate>
 </table>
-&nbsp;<br>  
+<br />
+</dhv:include>
+<dhv:include name="organization.emailAddresses" none="true">
+<%-- Email Addresses --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -948,7 +981,8 @@ Modify Account
   </tr>
 </dhv:evaluate>
 </table>
-&nbsp;<br>
+<br />
+</dhv:include>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -964,7 +998,7 @@ Modify Account
     </td>
   </tr>
 </table>
-<br>
+<br />
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>

@@ -41,7 +41,7 @@ Account Details
   <tr>
     <th colspan="2">
       <strong>Primary Information</strong>
-    </th>     
+    </th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -153,7 +153,8 @@ Account Details
   </tr>
 </dhv:evaluate>
 </table>
-&nbsp;
+<br />
+<dhv:include name="organization.phoneNumbers" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -213,7 +214,9 @@ Account Details
 <%}%>
 </dhv:evaluate>
 </table>
-&nbsp;
+<br />
+</dhv:include>
+<dhv:include name="organization.addresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -273,7 +276,9 @@ Account Details
 <%}%>
 </dhv:evaluate>
 </table>
-&nbsp;
+<br />
+</dhv:include>
+<dhv:include name="organization.emailAddresses" none="true">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -333,7 +338,8 @@ Account Details
 <%}%>
 </dhv:evaluate>
 </table>
-&nbsp;
+<br />
+</dhv:include>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -349,7 +355,7 @@ Account Details
     </td>
   </tr>
 </table>
-&nbsp;
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
