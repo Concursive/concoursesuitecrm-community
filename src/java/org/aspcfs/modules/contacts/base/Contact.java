@@ -1850,9 +1850,13 @@ public class Contact extends GenericBean {
       sql.append("employmentType = ?, ");
     }
     sql.append(
-        "startofday = ?, endofday = ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ? ");
-    sql.append("WHERE contact_id = ? ");
+        "startofday = ?, endofday = ?, ");
+        
+        if (modified == null) {
+                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+        }
+        
+    sql.append("modifiedby = ? WHERE contact_id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
     }

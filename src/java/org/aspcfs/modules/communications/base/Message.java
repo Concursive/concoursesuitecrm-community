@@ -515,7 +515,7 @@ public java.sql.Timestamp getModified() {
       if (modified != null) {
           sql.append("modified, ");
       }
-      sql.append("enteredBy, modifiedBy ) ");          
+      sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ");
         if (entered != null) {
                 sql.append("?, ");
@@ -700,9 +700,14 @@ public java.sql.Timestamp getModified() {
         "UPDATE message " +
         "SET name=?, description = ?, template_id = ?, subject = ?, " +
         "body = ?, reply_addr = ?, url = ?, img = ?, " +
-        "enabled = ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-        "WHERE id = ? ");
+        "enabled = ?, ");
+        
+        if (modified == null) {
+                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+        }
+        
+        sql.append("modifiedby = ? " +
+            "WHERE id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
     }

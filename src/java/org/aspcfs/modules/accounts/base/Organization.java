@@ -1587,8 +1587,13 @@ public boolean getEnabled() {
     sql.append(
         "UPDATE organization " +
         "SET name = ?, industry_temp_code = ?, " +
-        "url = ?, notes= ?, " +
-        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ?, " +
+        "url = ?, notes= ?, ");
+        
+        if (modified == null) {
+                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+        }
+        
+        sql.append("modifiedby = ?, " +
         "employees = ?, revenue = ?, ticker_symbol = ?, account_number = ?, ");
         
      if (owner > -1) {   
