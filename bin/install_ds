@@ -123,7 +123,7 @@ echo "finished"
 # Additional initializations
 echo -n "Inserting permissions and roles... "
 (
-su - $SUDO_USER -c "java -cp .:${CLASSPATH}:${BASE}/bin/Notifier.jar -Ddriver=org.postgresql.Driver -Durl=jdbc:postgresql://127.0.0.1:5432/${DB} -Duser=postgres -DprocessConfigFile=${BASE}/database/permissions.xml com.darkhorseventures.apps.dataimport.DataImport ${BASE}/database/permissions-dataimport.xml"
+java -cp .:${CLASSPATH}:${BASE}/bin/Notifier.jar -Ddriver=org.postgresql.Driver -Durl=jdbc:postgresql://127.0.0.1:5432/${DB} -Duser=postgres -DprocessConfigFile=${BASE}/database/permissions.xml com.darkhorseventures.apps.dataimport.DataImport ${BASE}/database/permissions-dataimport.xml
 ) >>${LOG} 2>&1 
 echo "finished"
 
