@@ -250,7 +250,6 @@ public class ActiveSurveyQuestionList extends ArrayList {
     pst.close();
 
     //build items & comments
-    if (buildResults) {
       Iterator thisList = this.iterator();
       while (thisList.hasNext()) {
         ActiveSurveyQuestion thisQuestion = (ActiveSurveyQuestion) thisList.next();
@@ -260,8 +259,7 @@ public class ActiveSurveyQuestionList extends ArrayList {
           itemList.setQuestionId(thisQuestion.getId());
           itemList.buildList(db);
           thisQuestion.setItemList(itemList);
-        } else if (type == SurveyQuestion.QUANT_COMMENTS || type == SurveyQuestion.OPEN_ENDED) {
-          //thisQuestion.buildComments(db);
+        } else if (buildResults && (type == SurveyQuestion.QUANT_COMMENTS || type == SurveyQuestion.OPEN_ENDED)) {
           SurveyAnswerList answerList = new SurveyAnswerList();
           answerList.setQuestionId(thisQuestion.getId());
           answerList.setHasComments(Constants.TRUE);
@@ -270,7 +268,6 @@ public class ActiveSurveyQuestionList extends ArrayList {
           answerList.buildList(db);
           thisQuestion.setAnswerList(answerList);
         }
-      }
     }
   }
 
