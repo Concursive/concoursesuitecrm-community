@@ -102,8 +102,9 @@ public class OpportunityBean extends GenericBean {
   public boolean insert(Connection db, ActionContext context) throws SQLException {
     boolean headerInserted = false;
     boolean componentInserted = false;
-
-    if (!component.isValid(db) || !header.isValid(db)) {
+    boolean isComponentValid = component.isValid();
+    boolean isHeaderValid = header.isValid();
+    if (!isComponentValid || !isHeaderValid) {
       return false;
     }
     try {
