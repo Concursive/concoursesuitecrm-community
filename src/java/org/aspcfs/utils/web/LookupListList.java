@@ -107,25 +107,5 @@ public class LookupListList extends HtmlSelect {
       thisLookup.buildLookupList(db, userId);
     }
   }
-
-
-  /**
-   *  Scans the list for a LookupListElement entry.
-   *
-   *@param  lookupId  Description of the Parameter
-   *@return           The element value
-   */
-  public LookupListElement getElement(int lookupId) {
-    LookupListElement thisElement = null;
-    Iterator i = this.iterator();
-    while (i.hasNext()) {
-      LookupListElement le = (LookupListElement) i.next();
-      if (le.getLookupId() == lookupId) {
-        thisElement = le;
-        break;
-      }
-    }
-    return thisElement;
-  }
 }
 
