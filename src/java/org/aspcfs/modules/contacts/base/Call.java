@@ -1817,7 +1817,6 @@ public class Call extends GenericBean {
     alertCallTypeId = DatabaseUtils.getInt(rs, "alert_call_type_id");
     alertText = rs.getString("alert");
     followupNotes = rs.getString("followup_notes");
-    resultId = DatabaseUtils.getInt(rs, "result_id");
     alertDateTimeZone = rs.getString("alertdate_timezone");
     //lookup_call_types table
     callTypeId = DatabaseUtils.getInt(rs, "code");
