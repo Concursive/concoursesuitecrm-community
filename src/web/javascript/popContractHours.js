@@ -28,7 +28,6 @@ function setHours(hiddenValues, hiddenFields, displayValues, displayFields){
   for(i = 0; ; i++){
     if (!hiddenFields[i])
       break;
-    alert(hiddenValues[i]);
     if (hiddenFields[i] == "adjustmentNotes") {
       opener.document.getElementById(hiddenFields[i]).value = unescape(hiddenValues[i]);
     } else {
