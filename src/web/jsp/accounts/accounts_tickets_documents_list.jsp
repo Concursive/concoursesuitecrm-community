@@ -26,7 +26,7 @@ Documents<br>
         <br><font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
       </dhv:evaluate>
       <br><br>
-      <dhv:permission name="accounts-accounts-tickets-edit"><a href="AccountTicketsDocuments.do?command=Add&tId=<%= TicketDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-documents-add"><a href="AccountTicketsDocuments.do?command=Add&tId=<%= TicketDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountTicketDocumentListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
@@ -38,7 +38,7 @@ Documents<br>
         <th align="center"><strong>Ext</strong></th>
         <th align="center"><strong>Size</strong></th>
         <th align="center"><strong>Version</strong></th>
-        <dhv:permission name="accounts-accounts-tickets-edit">
+        <dhv:permission name="accounts-accounts-tickets-documents-add">
           <th>&nbsp;</th>
         </dhv:permission>
         <th align="center"><strong>Submitted</strong></th>
@@ -54,7 +54,7 @@ Documents<br>
             <tr class="row<%= rowid %>">
               <td width="10" valign="middle" align="center" nowrap>
                 <a href="AccountTicketsDocuments.do?command=Download&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
-                <dhv:permission name="accounts-accounts-tickets-edit"><a href="AccountTicketsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&tId=<%= TicketDetails.getId()%>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-edit" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-edit"><a href="javascript:confirmDelete('AccountTicketsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&tId=<%= TicketDetails.getId()%>');">Del</a></dhv:permission>
+                <dhv:permission name="accounts-accounts-tickets-documents-edit"><a href="AccountTicketsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&tId=<%= TicketDetails.getId()%>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-documents-edit,accounts-accounts-tickets-documents-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-documents-delete"><a href="javascript:confirmDelete('AccountTicketsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&tId=<%= TicketDetails.getId()%>');">Del</a></dhv:permission>
               </td>
               <td valign="middle" width="100%">
                 <a href="AccountTicketsDocuments.do?command=Details&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>
@@ -66,7 +66,7 @@ Documents<br>
               <td align="right" valign="middle" nowrap>
                 <%= thisFile.getVersion() %>&nbsp;
               </td>
-            <dhv:permission name="accounts-accounts-tickets-edit">
+            <dhv:permission name="accounts-accounts-tickets-documents-add">
               <td align="right" valign="middle" nowrap>
                 [<a href="AccountTicketsDocuments.do?command=AddVersion&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
               </td>
