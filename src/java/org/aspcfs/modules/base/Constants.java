@@ -16,6 +16,14 @@ public final class Constants {
   public final static int TRUE = 1;
   public final static int FALSE = 0;
 
+  //Basic Objects in CFS
+  public final static int TICKET_OBJECT = 42420030;
+  public final static int CALL_OBJECT = 42420031;
+  public final static int OPPORTUNITY_OBJECT = 42420032;
+  public final static int TASK_OBJECT = 42420033;
+  public final static int ACCOUNT_OBJECT = 42420034;
+  public final static int MESSAGE_OBJECT = 42420035;
+  public final static int CAMPAIGN_OBJECT = 51320031;
   //Folders
   public final static int FOLDERS_ACCOUNTS = 1;
   public final static int FOLDERS_CONTACTS = 2;
@@ -75,5 +83,10 @@ public final class Constants {
   public final static int TASK_CATEGORY_PROJECTS = 4;
 
   //TODO: Add lookup lists here...
+  
+  //Action Lists 
+  public final static int ACTIONLISTS_CONTACTS = 2;
+  
+  
 }
 
