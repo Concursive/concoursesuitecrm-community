@@ -160,12 +160,16 @@ public class DatabaseUtils {
     return null;
   }
   
-  public static int getInt(ResultSet rs, String column) throws SQLException {
+  public static int getInt(ResultSet rs, String column, int defaultValue) throws SQLException {
     int fieldValue = rs.getInt(column);
     if (rs.wasNull()) {
-      fieldValue = -1;
+      fieldValue = defaultValue;
     }
     return fieldValue;
+  }
+  
+  public static int getInt(ResultSet rs, String column) throws SQLException {
+    return DatabaseUtils.getInt(rs, column, -1);
   }
   
   public static void setInt(PreparedStatement pst, int paramCount, int value) throws SQLException {
