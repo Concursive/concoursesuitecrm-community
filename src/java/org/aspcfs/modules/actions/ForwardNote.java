@@ -120,7 +120,7 @@ public final class ForwardNote extends CFSModule {
 				mail.setTo(tempUser.getContact().getEmailAddress("Business"));
 				
 				mail.setSubject(tempNote.getSubject());
-				mail.setBody("This message was sent to your CFS Inbox by " + tempNote.getSentName() + "<br><br>" + tempNote.getBody());
+				mail.setBody("The following message was sent to your CFS Inbox by " + tempNote.getSentName() + ".  This copy has been sent to your email account at the request of the sender.<br><br>" + tempNote.getBody());
 				
 				if (mail.send() == 2) {
 					System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
