@@ -290,7 +290,7 @@ public class OpportunityList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND description < ? ");
+            "AND x.description < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -302,7 +302,7 @@ public class OpportunityList extends Vector {
         pst.close();
       }
       
-      pagedListInfo.setDefaultSort("description", null);
+      pagedListInfo.setDefaultSort("x.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     }
 

@@ -1521,38 +1521,40 @@ public class Opportunity extends GenericBean {
     owner = rs.getInt("owner");
     description = rs.getString("description");
     accountLink = rs.getInt("acctLink");
-    accountName = rs.getString("acct_name");
-    contactName = rs.getString("first_name") + " " + rs.getString("last_name");
-    contactCompanyName = rs.getString("ctcompany");
-    ownerName = rs.getString("o_namelast") + ", " + rs.getString("o_namefirst");
-    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
-    modifiedByName = rs.getString("mb_namelast") + ", " + rs.getString("mb_namefirst");
     contactLink = rs.getInt("contactLink");
     closeDate = rs.getDate("closedate");
-
     closeProb = rs.getDouble("closeprob");
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity-> Close Prob: " + closeProb);
     }
     terms = rs.getInt("terms");
+    units = rs.getString("units");
     low = rs.getDouble("lowvalue");
     guess = rs.getDouble("guessvalue");
     high = rs.getDouble("highvalue");
     stage = rs.getInt("stage");
-
     stageDate = rs.getDate("stagedate");
     commission = rs.getDouble("commission");
     type = rs.getString("type");
     alertDate = rs.getDate("alertdate");
-
-    stageName = rs.getString("stagename");
-    terms = rs.getDouble("terms");
-    units = rs.getString("units");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
-    closed = rs.getString("closed");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    closed = rs.getString("closed");
+    
+    stageName = rs.getString("stagename");
+    
+    accountName = rs.getString("acct_name");
+    
+    String contactNameLast = rs.getString("last_name");
+    String contactNameFirst = rs.getString("first_name");
+    
+    contactName = contactNameFirst + " " + contactNameLast;
+    contactCompanyName = rs.getString("ctcompany");
+    ownerName = rs.getString("o_namelast") + ", " + rs.getString("o_namefirst");
+    enteredByName = rs.getString("eb_namelast") + ", " + rs.getString("eb_namefirst");
+    modifiedByName = rs.getString("mb_namelast") + ", " + rs.getString("mb_namefirst");
   }
 
 
