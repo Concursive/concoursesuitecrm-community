@@ -78,6 +78,11 @@ ant upgradedb -Darg1=2004-06-04-script02.bsh -Darg2=
 # Default data for new capabilities
 ant upgradedb -Darg1=2004-06-04-script03.sql -Darg2=
 
+# Added for final release of 2.8
+ant upgradedb -Darg1=2004-06-21.bsh -Darg2=
+ant upgradedb -Darg1=2004-06-22.sql -Darg2=
+ant upgradedb -Darg1=2004-06-23.sql -Darg2=
+
 
 # Manually upgrade the help for each site
 echo ...
