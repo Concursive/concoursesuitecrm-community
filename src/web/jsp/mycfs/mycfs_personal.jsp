@@ -11,6 +11,13 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 <script language="JavaScript">
+  function doCheck(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    } else {
+      return(checkForm(form));
+    }
+  }
   function checkForm(form) {
       formTest = true;
       message = "";
@@ -38,10 +45,10 @@
     }
 </script>
 
-<form action="/MyCFSProfile.do?command=UpdateProfile&auto-populate=true" method="post">
+<form action="/MyCFSProfile.do?command=UpdateProfile&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <dhv:permission name="myhomepage-profile-personal-edit">
-<input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
+<input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 </dhv:permission>
 
@@ -293,8 +300,9 @@
 </table>
 <dhv:permission name="myhomepage-profile-personal-edit">
 <br>
-<input type="submit" value="Update" name="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
+<input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
 </dhv:permission>
 </form>
