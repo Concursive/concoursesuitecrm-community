@@ -3,7 +3,7 @@
 <jsp:useBean id="ProjectList" class="com.zeroio.iteam.base.ProjectList" scope="request"/>
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<body bgcolor='#FFFFFF' onLoad="document.inputForm.title.focus()">
+<body bgcolor="#FFFFFF" onLoad="document.inputForm.title.focus()">
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
 <script language="JavaScript">
@@ -45,7 +45,7 @@
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="100%" colspan="2" bgcolor="#808080" rowspan="2">
         <font color="#FFFFFF">
-        &nbsp;<img border='0' src='images/task.gif'>
+        &nbsp;<img border="0" src="images/task.gif">
         <b>New Project Information</b>
         </font>
       </td>

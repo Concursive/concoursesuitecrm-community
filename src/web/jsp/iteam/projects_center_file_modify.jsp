@@ -38,7 +38,7 @@
   <tr>
     <td width='2' bgcolor='#000000'>&nbsp;</td>
     <td width="100%" bgcolor="#000000" rowspan="2" valign="middle">
-      <font color='#FFFFFF'>&nbsp;<img border="0" src="images/file.gif" align="absmiddle"><b>File Sharing - Update file information</b></font>
+      <font color="#FFFFFF">&nbsp;<img border="0" src="images/file.gif" align="absmiddle"><b>File Sharing - Update file information</b></font>
     </td>
     <td width='2' bgcolor='#000000'>&nbsp;</td>
   </tr>
@@ -93,9 +93,9 @@
     <td width="2">&nbsp;</td>
     <td width="100%" height="30" align="center">
       <p align="center">
-        <input type='submit' value=' Update ' name="update">
+        <input type="submit" value=" Update " name="update">
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>';">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>';">
         <input type="hidden" name="dosubmit" value="true">
         <input type="hidden" name="pid" value="<%= Project.getId() %>">
         <input type="hidden" name="fid" value="<%= FileItem.getId() %>">

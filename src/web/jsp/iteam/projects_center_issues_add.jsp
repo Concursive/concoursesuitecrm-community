@@ -67,7 +67,7 @@
       <td width='100%' colspan='2'>
         &nbsp;Issue
         Subject:<br>
-        &nbsp;&nbsp;<input type='text' name='subject' size='57' maxlength='50' value='<%= toHtmlValue(Issue.getSubject()) %>'><font color=red>*</font> <%= showAttribute(request, "subjectError") %><br>
+        &nbsp;&nbsp;<input type="text" name="subject" size="57" maxlength="50" value="<%= toHtmlValue(Issue.getSubject()) %>"><font color=red>*</font> <%= showAttribute(request, "subjectError") %><br>
         &nbsp;
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
@@ -78,7 +78,7 @@
         &nbsp;Issue
         Description:<br>
         &nbsp;
-        <textarea rows='8' name='body' cols='70'><%= Issue.getBody() %></textarea><font color=red>*</font> <%= showAttribute(request, "bodyError") %><br>
+        <textarea rows="8" name="body" cols="70"><%= Issue.getBody() %></textarea><font color=red>*</font> <%= showAttribute(request, "bodyError") %><br>
         &nbsp;
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
@@ -94,13 +94,13 @@
       <td width='50%' bgcolor='#808080' height='30'>
         <p align='left'>
           &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues<%= ((Issue.getCategoryId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= Issue.getCategoryId() %>';">
+          <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues<%= ((Issue.getCategoryId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= Issue.getCategoryId() %>';">
         </p>
       </td>
-      <td width='2' bgcolor='#808080'>&nbsp;</td>
+      <td width="2" bgcolor="#808080">&nbsp;</td>
     </tr>
   </table>
-  <input type='hidden' name='pid' value='<%= Project.getId() %>'>
+  <input type="hidden" name="pid" value="<%= Project.getId() %>">
   <input type="hidden" name="dosubmit" value="true">
 </form>  
 </body>

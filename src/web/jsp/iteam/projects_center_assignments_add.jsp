@@ -7,7 +7,7 @@
 <jsp:useBean id="StatusList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="LoeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<body bgcolor='#FFFFFF' onLoad="document.inputForm.role.focus();">
+<body bgcolor="#FFFFFF" onLoad="document.inputForm.role.focus();">
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
 <script language="JavaScript">
@@ -89,7 +89,7 @@
         &nbsp;<br>
         &nbsp;Activity Description:<br>
         &nbsp;
-        <input type='text' name='role' size='57' maxlength='150' value='<%= toHtmlValue(Assignment.getRole()) %>'><font color=red>*</font> <%= showAttribute(request, "roleError") %>
+        <input type="text" name="role" size="57" maxlength="150" value="<%= toHtmlValue(Assignment.getRole()) %>"><font color=red>*</font> <%= showAttribute(request, "roleError") %>
         <br>
       </td>
       <td width="2" bgcolor="#000000">&nbsp;</td>

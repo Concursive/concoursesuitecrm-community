@@ -34,6 +34,7 @@
       <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
     </td>     
   </tr>
+<dhv:evaluate exp="<%= hasText(ContactDetails.getTitle()) %>">
   <tr class="containerBody">
     <td class="formLabel">
       Title
@@ -42,6 +43,7 @@
       <%= toHtml(ContactDetails.getTitle()) %>
     </td>
   </tr>
+</dhv:evalute>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Entered

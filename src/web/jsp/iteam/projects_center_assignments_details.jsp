@@ -7,7 +7,7 @@
 <jsp:useBean id="StatusList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="LoeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<body bgcolor='#FFFFFF' onLoad="document.inputForm.role.focus();">
+<body bgcolor="#FFFFFF" onLoad="document.inputForm.role.focus();">
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
 <script language="JavaScript">
@@ -83,7 +83,7 @@
       <td width="100%" colspan="4">&nbsp;<br>
         &nbsp;Activity Description:<br>
         &nbsp;
-        <input type='text' name='role' size='57' maxlength='150' value='<%= toHtmlValue(Assignment.getRole()) %>'><font color=red>*</font>
+        <input type="text" name="role" size="57" maxlength="150" value="<%= toHtmlValue(Assignment.getRole()) %>"><font color=red>*</font>
         <br>
         &nbsp;
       </td>
@@ -162,9 +162,9 @@
       <td width="100%" bgcolor="#000000" height="30" colspan="4">
         <p align="center">
           &nbsp;
-          <input type='submit' value=' Update ' onClick="javascript:this.form.dosubmit.value='true';">&nbsp;&nbsp;
+          <input type="submit" value=" Update " onClick="javascript:this.form.dosubmit.value='true';">&nbsp;&nbsp;
           &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>';">
+          <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>';">
           &nbsp;&nbsp;
         </p>
       </td>

@@ -1,7 +1,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<body bgcolor='#FFFFFF' onLoad="document.inputForm.subject.focus();">
+<body bgcolor="#FFFFFF" onLoad="document.inputForm.subject.focus();">
 <script language="JavaScript">
   function checkFileForm(form) {
     if (form.dosubmit.value == "false") {
@@ -41,7 +41,7 @@
   <tr>
     <td width='2' bgcolor='#000000'>&nbsp;</td>
     <td width="100%" bgcolor="#000000" rowspan="2" valign="middle">
-      <font color='#FFFFFF'>&nbsp;<img border="0" src="images/file.gif" align="absmiddle"><b>File Sharing</b></font>
+      <font color="#FFFFFF">&nbsp;<img border="0" src="images/file.gif" align="absmiddle"><b>File Sharing</b></font>
     </td>
     <td width='2' bgcolor='#000000'>&nbsp;</td>
   </tr>
@@ -102,9 +102,9 @@
     <td width="2">&nbsp;</td>
     <td width="100%" height="30" align="center">
       <p align="center">
-        <input type='submit' value=' Upload ' name="upload">
+        <input type="submit" value=" Upload " name="upload">
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>';">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>';">
         <input type="hidden" name="dosubmit" value="true">
         <input type="hidden" name="pid" value="<%= Project.getId() %>">
       </p>
