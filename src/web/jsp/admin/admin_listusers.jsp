@@ -4,11 +4,11 @@
 <jsp:useBean id="UserListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="listView" method="post" action="/Users.do?command=ListUsers">
 <dhv:permission name="admin-users-add"><a href="/Users.do?command=InsertUserForm">Add New User</a></dhv:permission>
-<center><%= UserListInfo.getAlphabeticalPageLinks() %></center>
+<center><%= UserListInfo.getAlphabeticalPageLinks() %><br>&nbsp;</center>
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="/Users.do?command=ListUsers">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= UserListInfo.getOptionValue("enabled") %>>Enabled Users</option>
@@ -17,6 +17,7 @@
       </select>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -91,6 +92,20 @@
 <%  
   }
 %>
-</table><br>
-[<%= UserListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= UserListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= UserListInfo.getNumericalPageLinks() %>
-</form>
+</table>
+<br>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <%= UserListInfo.getListPropertiesHeader("2") %>
+  <tr>
+    <td valign="middle" align="center" class="row1">
+      <font color="#666666">
+      [<%= UserListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= UserListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
+      Page <%= UserListInfo.getNumericalPageEntry() %>
+      of <%= UserListInfo.getNumberOfPages() %>,
+      Items per page: <%= UserListInfo.getItemsPerPageEntry() %>
+      <input type="submit" value="go">
+      </font>
+    </td>
+  </tr>
+  <%= UserListInfo.getListPropertiesFooter() %>
+</table>

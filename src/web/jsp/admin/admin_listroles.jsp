@@ -72,6 +72,19 @@
   }
 %>
 </table>
-&nbsp;<br>
-[<%= RoleListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= RoleListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= RoleListInfo.getNumericalPageLinks() %>
-
+<br>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <%= RoleListInfo.getListPropertiesHeader("2") %>
+  <tr>
+    <td valign="middle" align="center" class="row1">
+      <font color="#666666">
+      [<%= RoleListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= RoleListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
+      Page <%= RoleListInfo.getNumericalPageEntry() %>
+      of <%= RoleListInfo.getNumberOfPages() %>,
+      Items per page: <%= RoleListInfo.getItemsPerPageEntry() %>
+      <input type="submit" value="go">
+      </font>
+    </td>
+  </tr>
+  <%= RoleListInfo.getListPropertiesFooter() %>
+</table>

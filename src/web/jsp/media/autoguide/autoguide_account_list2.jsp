@@ -8,7 +8,6 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
-<form name="listView" method="post" action="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">
 <a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -26,9 +25,10 @@
     <td class="containerBack">
 <dhv:permission name="accounts-autoguide-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
 <dhv:permission name="accounts-autoguide-inventory-add" none="true"><br></dhv:permission>
-<center><%= AutoGuideAccountInfo.getNumericalPageLinks() %></center>
+<center>&nbsp;</center>
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">
     <td align="left">
       Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= AutoGuideAccountInfo.getOptionValue("list") %>>List View</option>
@@ -39,6 +39,7 @@
 			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideAccountInfo.getFilterKey("listFilter1")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 
@@ -91,8 +92,21 @@
 <%}%>
 </table>
 <br>
-[<%= AutoGuideAccountInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= AutoGuideAccountInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= AutoGuideAccountInfo.getNumericalPageLinks() %>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <%= AutoGuideAccountInfo.getListPropertiesHeader("2") %>
+  <tr>
+    <td valign="middle" align="center">
+      <font color="#666666">
+      [<%= AutoGuideAccountInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %>|<%= AutoGuideAccountInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
+      Page <%= AutoGuideAccountInfo.getNumericalPageEntry() %>
+      of <%= AutoGuideAccountInfo.getNumberOfPages() %>,
+      Items per page: <%= AutoGuideAccountInfo.getItemsPerPageEntry() %>
+      <input type="submit" value="go">
+      </font>
+    </td>
+  </tr>
+  <%= AutoGuideAccountInfo.getListPropertiesFooter() %>
+</table>
 </td>
 </tr>
 </table>
-</form>
