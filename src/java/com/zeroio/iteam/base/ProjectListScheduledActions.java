@@ -1,7 +1,8 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.projects.base;
 
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.CalendarView;
+import com.darkhorseventures.database.ConnectionPool;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.base.ScheduledActions; 
 import java.util.*;
 import com.zeroio.iteam.base.*;
 import java.sql.*;

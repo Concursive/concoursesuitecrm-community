@@ -1,4 +1,4 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.utils;
 
 // JavaMail docs at http://developer.java.sun.com/developer/onlineTraining/JavaMail/contents.html
 
