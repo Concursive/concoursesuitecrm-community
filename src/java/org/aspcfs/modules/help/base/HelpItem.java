@@ -140,7 +140,8 @@ public class HelpItem extends GenericBean {
     String sql =
         "SELECT * " +
         "FROM help_contents h " +
-        "WHERE module = ? AND section = ? " +
+        "WHERE module = ? " + 
+        (section != null ? "AND section = ? " : "") +
         (subsection != null ? "AND subsection = ? " : "");
     pst = db.prepareStatement(sql);
     if (System.getProperty("DEBUG") != null) {
@@ -148,7 +149,9 @@ public class HelpItem extends GenericBean {
     }
     int i = 0;
     pst.setString(++i, module);
-    pst.setString(++i, section);
+    if(section != null){
+      pst.setString(++i, section);
+    }
     if (subsection != null) {
       pst.setString(++i, subsection);
     }
