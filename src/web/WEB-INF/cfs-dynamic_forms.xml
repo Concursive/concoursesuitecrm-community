@@ -34,7 +34,7 @@
           <field display="Introduction text" type="label" isStatic="yes"/>
         </column>
         <column valign="top">
-          <field display="This is the text the user sees first when they click on the link to take a survey:" type="label" isStatic="yes"/>
+          <field display="This is the text the user sees first when they click on the link to take a survey:/&amp;lt;br/&amp;gt;" type="label" isStatic="yes"/>
           <field name="intro" display="Introduction text" type="htmlarea" parameters="rows=6^columns=40"/>
         </column>
       </row>
