@@ -83,7 +83,7 @@ Dashboard<br>
 %>
         <tr>
           <td class="row<%= rowid %>" valign=center nowrap>
-            <a href="/Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLast()) %>, <%= toHtml(thisRec.getContact().getNameFirst()) %></a>
+            <a href="/Leads.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
           </td>
           <td width=125 class="row<%= rowid %>" valign=center>
             <%= toHtml(thisRec.getContact().getDepartmentName()) %>

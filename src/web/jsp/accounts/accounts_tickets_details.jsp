@@ -150,7 +150,7 @@ Ticket Details<br>
       Name
 		</td>
 		<td>
-      <%=toHtml(TicketDetails.getThisContact().getNameLast())%>, <%=toHtml(TicketDetails.getThisContact().getNameFirst())%>
+      <%=toHtml(TicketDetails.getThisContact().getNameLastFirst())%>
 		</td>
   </tr>
 	<tr class="containerBody">

@@ -23,7 +23,7 @@
 
 <table bgcolor="#FFFFFF" border="0" width="100%" class="tableBorder" cellspacing="0">
 <tr valign="top" class="title">
-   <td width="100%" align="center" colspan="2"> <strong><div id="userName"> User: <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLast() + "," + User.getUserRecord().getContact().getNameFirst()) %></div></strong></td>
+   <td width="100%" align="center" colspan="2"> <strong><div id="userName"> User: <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst()) %></div></strong></td>
 </tr>
 <tr style="visibility:hidden"><td></td></tr>
 <tr valign="top">
@@ -38,7 +38,7 @@
           <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr>
               <td width="60%" valign="center">
-               <strong>Account Alerts</strong>
+               <strong>&nbsp;Account Alerts</strong>
               </td>
               <td valign="center" align="right">
               <% if(NewUserList.size()!=0){%>

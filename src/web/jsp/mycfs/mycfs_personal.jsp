@@ -68,7 +68,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
-      <strong>Details for: <%= toHtml(EmployeeBean.getNameFirst()) %> <%= toHtml(EmployeeBean.getNameLast()) %></strong>
+      <strong>Details for: <%= toHtml(EmployeeBean.getNameFirstLast()) %></strong>
     </td>
   </tr>
   <tr><td nowrap class="formLabel">First Name</td><td><input type="text" name="nameFirst" value="<%= toHtmlValue(EmployeeBean.getNameFirst()) %>"></td></tr>

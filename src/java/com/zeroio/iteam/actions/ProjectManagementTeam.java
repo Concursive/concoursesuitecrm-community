@@ -64,7 +64,7 @@ public final class ProjectManagementTeam extends CFSModule {
       Iterator iName = userList.iterator();
       while (iName.hasNext()) {
         User thisUser = (User)iName.next();
-        vector1.append(thisUser.getContact().getNameFirst() + " " + thisUser.getContact().getNameLast());
+        vector1.append(thisUser.getContact().getNameFull());
         vector2.append(thisUser.getContact().getDepartment());
         vector3.append(thisUser.getId());
         

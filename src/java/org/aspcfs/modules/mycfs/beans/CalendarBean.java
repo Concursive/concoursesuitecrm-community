@@ -151,7 +151,7 @@ public class CalendarBean {
     try {
       int thisContactId = (new User(db, selectedUserId)).getContactId();
       Contact thisContact = new Contact(db, thisContactId);
-      this.setSelectedUserName(thisContact.getNameLast() + "," + thisContact.getNameFirst());
+      this.setSelectedUserName(thisContact.getNameLastFirst());
     } catch (SQLException e) {
       errorMessage = e;
       System.out.println(" *** ERROR *** \t CalendarBean -- > setSelectedUserName");

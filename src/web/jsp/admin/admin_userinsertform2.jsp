@@ -16,7 +16,7 @@
 	    <strong>Insert a new user record</strong>
     </td>
   </tr>
-  <tr><td nowrap class="formLabel">Contact Name</td><td><%= toHtml(Contact.getNameFirst()) %> <%= toHtml(Contact.getNameLast()) %></td></tr>
+  <tr><td nowrap class="formLabel">Contact Name</td><td><%= toHtml(Contact.getNameFirstLast()) %></td></tr>
   <tr><td nowrap class="formLabel">Department</td><td><%= toHtml(Contact.getDepartmentName()) %></td></tr>
   <tr><td nowrap class="formLabel">Unique Username</td><td><input type="text" name="username" value="<%= toHtmlValue(UserRecord.getUsername()) %>"><font color=red>*</font> <%= showAttribute(request, "usernameError") %></td></tr>
   <tr><td nowrap class="formLabel">Password</td><td><input type="password" name="password1"><font color=red>*</font> <%= showAttribute(request, "password1Error") %></td></tr>

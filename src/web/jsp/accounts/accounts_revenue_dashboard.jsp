@@ -116,7 +116,7 @@ Revenue Dashboard<br>
 	
 	<tr>
 	<td width=100% class="row<%= rowid %>" valign=center nowrap>
-	<a href="/RevenueManager.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLast()) %>, <%= toHtml(thisRec.getContact().getNameFirst()) %></a>
+	<a href="/RevenueManager.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
 	</td>
 	<td width=55 nowrap class="row<%= rowid %>" valign=center>
 	$<%=toHtml(thisRec.getYTDCurrency())%>

@@ -27,7 +27,7 @@
     if (thisContact == null) thisContact = new Contact();
 %>    
   <tr>
-    <td align='left'<%= bgColorVar %>><b><font color='black'><%= toHtml(thisContact.getNameFirst()) %> <%= toHtml(thisContact.getNameLast()) %></font></b></td>
+    <td align='left'<%= bgColorVar %>><b><font color='black'><%= toHtml(thisContact.getNameFull()) %></font></b></td>
     <td align='left'<%= bgColorVar %>><font color='black'><%= toHtml(thisContact.getOrgName()) %><br><%= toHtml(thisContact.getDepartmentName()) %></font></td>
     <td align='left'<%= bgColorVar %>><font color='black'><a href='mailto:<%= thisContact.getEmailAddress("Business") %>'><%= thisContact.getEmailAddress("Business") %></a>&nbsp;</font></td>
     <td align='left'<%= bgColorVar %>><font color='black'><%= thisMember.getEnteredString() %></font></td>

@@ -72,7 +72,7 @@ Contacts<br>
       </td>
       </dhv:permission>
       <td width=30% valign=center class="row<%= rowid %>">
-        <a href="/Contacts.do?command=Details&id=<%=thisContact.getId()%>"><%= toHtml(thisContact.getNameLast()) %>, <%= toHtml(thisContact.getNameFirst()) %></a>
+        <a href="/Contacts.do?command=Details&id=<%=thisContact.getId()%>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
       </td>
       <td width=20% valign=center class="row<%= rowid %>">
         <%= toHtml(thisContact.getTitle()) %>

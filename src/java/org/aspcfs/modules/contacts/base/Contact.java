@@ -1084,24 +1084,12 @@ public class Contact extends GenericBean {
    *@since
    */
   public String getNameLastFirst() {
-    StringBuffer out = new StringBuffer();
-
-    if (nameLast != null && nameLast.length() > 0) {
-      out.append(nameLast);
-    }
-
-    if (nameFirst != null && nameFirst.length() > 0) {
-      if (nameLast.length() > 0) {
-        out.append(", ");
-      }
-      out.append(nameFirst);
-    }
-
-    if (out.toString().length() == 0) {
+    String toReturn = Contact.getNameLastFirst(nameLast, nameFirst);
+    if (toReturn == null) {
       return company;
+    } else {
+      return toReturn;
     }
-
-    return out.toString().trim();
   }
 
 
@@ -2107,7 +2095,8 @@ public class Contact extends GenericBean {
 
 
   /**
-   *  Gets the nameLastFirst attribute of the Contact class
+   *  Combines the first and last name of a contact, depending on the
+   *  length of the strings
    *
    *@param  nameLast   Description of the Parameter
    *@param  nameFirst  Description of the Parameter

@@ -68,7 +68,7 @@
         </td>
         </dhv:permission>
         <td class="row<%= rowid %>"><font class="columntext1">
-          <a href="/Users.do?command=UserDetails&id=<%= thisUser.getId() %>"><%= toHtml(thisContact.getNameLast()) %>, <%= toHtml(thisContact.getNameFirst()) %></a></font>
+          <a href="/Users.do?command=UserDetails&id=<%= thisUser.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a></font>
         </td>
         <td class="row<%= rowid %>">
           <%= toHtml(thisUser.getUsername()) %>

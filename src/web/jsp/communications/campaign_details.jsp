@@ -200,7 +200,7 @@ Campaign Details
       <%= count %>
     </td>
     <td nowrap>
-      <%= toHtml(thisContact.getNameLast()) %>, <%= toHtml(thisContact.getNameFirst()) %>
+      <%= toHtml(thisContact.getNameLastFirst()) %>
     </td>
     <td width=100% nowrap>
       <%= toHtml(thisContact.getCompany()) %>

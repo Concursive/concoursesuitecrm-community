@@ -25,9 +25,9 @@
       <a href="/Login.do?command=Logout" class="s"> Logout</a> |
       <a href="javascript:popLEFT('/Help.do?module=<%= request.getAttribute("moduleAction") %>&section=<%= request.getParameter("command") %>&sub=<%= request.getParameter("section") %>','CFS_Help','375','450','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a><br>
 <%
-  if (!User.getUserRecord().getContact().getNameFull().equals("")) {
+  if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
 %>      
-      User: <b class="highlight"><%= User.getNameFirst() %> <%= User.getNameLast() %></b> /
+      User: <b class="highlight"><%= User.getUserRecord().getContact().getNameFirstLast() %></b> /
 <%}%>      
       <b class="highlight"><%= User.getRole() %></b>
 <%

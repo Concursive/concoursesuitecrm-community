@@ -47,7 +47,7 @@ if (i.hasNext()) {
 %>      
       <tr>
         <td class="row<%= rowid %>" nowrap>
-          <a href="/ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLast()) %>, <%= toHtml(thisContact.getNameFirst()) %></a>
+          <a href="/ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
           <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
           <%= ((thisContact.getOrgId() > 0)?"<a href=\"/Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[Account]</a>":"") %>
         </td>
@@ -107,7 +107,7 @@ if (i.hasNext()) {
 %>      
       <tr>
         <td class="row<%= rowid %>"><font class="columntext1">
-          <a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLast()) %>, <%= toHtml(thisEmployee.getNameFirst()) %></a></font>
+          <a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a></font>
           <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
         </td>
         <td class="row<%= rowid %>">

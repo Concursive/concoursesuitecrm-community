@@ -94,7 +94,7 @@
 		To
 		</td>
 		<td width=100%>
-		<%= toHtml(User.getNameFirst()) %> <%= toHtml(User.getNameLast()) %>&nbsp;
+		<%= toHtml(User.getNameFirstLast()) %>&nbsp;
 		</td>
 		</tr>
 		<tr class="containerBody">
