@@ -68,3 +68,12 @@ MVC Modules:
     user or process to use.
 
 
+==========================
+HTML Style Guide
+
+Displaying contact names:
+- Always use thisContact."getNameLastFirst" or "getNameFirstLast" or 
+  "Contact.getNameLastFirst(last, first)" when displaying names.  This will
+  ensure name are retrieved correctly.
+  
+
