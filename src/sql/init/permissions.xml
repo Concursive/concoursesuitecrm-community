@@ -26,11 +26,11 @@
     </category>
     <category id="2" name="Contacts &amp; Resources" folders="true" lookups="true">
       <folder constantId="2" description="Contacts"/>
-      <lookup constantId="1" class="" table="" description="Type"/>
-      <lookup constantId="2" class="" table="" description="Email Types"/>
-      <lookup constantId="3" class="" table="" description="Address Types"/>
-      <lookup constantId="4" class="" table="" description="Phone Types"/>
-      <lookup constantId="5" class="" table="" description="Departments"/>
+      <lookup constantId="1" class="contacttype" table="lookup_contact_types" description="Types"/>
+      <lookup constantId="2" class="lookuplist" table="lookup_contactemail_types" description="Email Types"/>
+      <lookup constantId="3" class="lookuplist" table="lookup_contactaddress_types" description="Address Types"/>
+      <lookup constantId="4" class="lookuplist" table="lookup_contactphone_types" description="Phone Types"/>
+      <lookup constantId="5" class="lookuplist" table="lookup_department" description="Departments"/>
       <permission name="contacts" attributes="v---" description="Access to Contacts &amp; Resources module"/>
       <permission name="contacts-external_contacts" attributes="vaed" description="External Contact Records"/>
       <permission name="contacts-internal_contacts" attributes="vaed" description="Internal Contact Records"/>
@@ -41,6 +41,8 @@
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
     </category>
     <category id="4" name="Pipeline Management" folders="false" lookups="true">
+      <lookup constantId="1" class="lookuplist" table="lookup_stage" description="Stage"/>
+      <lookup constantId="2" class="lookuplist" table="lookup_opportunity_types" description="Opportunity Types"/>
       <permission name="pipeline" attributes="v---" description="Access to Pipeline Management module"/>
       <permission name="pipeline-opportunities" attributes="vaed" description="Opportunity Records"/>
       <permission name="pipeline-dashboard" attributes="v---" description="Dashboard"/>
@@ -50,6 +52,9 @@
     </category>
     <category id="1" name="Account Management" folders="true" lookups="true">
       <folder constantId="1" description="Accounts"/>
+      <lookup constantId="1" class="lookuplist" table="lookup_account_types" description="Account Types"/>
+      <lookup constantId="2" class="lookuplist" table="lookup_revenue_types" description="Revenue Types"/>
+      <lookup constantId="3" class="contacttype" table="lookup_contact_types" description="Contact Types"/>
       <permission name="accounts" attributes="v---" description="Access to Account Management module"/>
       <permission name="accounts-accounts" attributes="vaed" description="Account Records"/>
       <permission name="accounts-accounts-folders" attributes="vae-" description="Folders"/>
@@ -81,6 +86,9 @@
       <permission name="projects-projects" attributes="vaed" description="Project Records"/>
     </category>
     <category id="8" name="Tickets" folders="false" lookups="true">
+      <lookup constantId="1" class="lookuplist" table="lookup_ticketsource" description="Ticket Source"/>
+      <lookup constantId="2" class="lookuplist" table="ticket_severity" description="Ticket Severity"/>
+      <lookup constantId="3" class="lookuplist" table="ticket_priority" description="Ticket Priority"/>
       <permission name="tickets" attributes="v---" description="Access to Ticket module"/>
       <permission name="tickets-tickets" attributes="vaed" description="Ticket Records"/>
     </category>
