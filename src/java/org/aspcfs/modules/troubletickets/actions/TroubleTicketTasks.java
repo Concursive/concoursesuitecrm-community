@@ -173,9 +173,6 @@ public final class TroubleTicketTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, Integer.parseInt(id));
-      if (!hasAuthority(context, thisTask.getOwner())) {
-        return ("PermissionError");
-      }
       thisTask.checkEnabledOwnerAccount(db);
       if (thisTask.getContactId() > -1) {
         thisTask.checkEnabledLinkAccount(db);
