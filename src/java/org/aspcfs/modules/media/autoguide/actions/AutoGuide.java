@@ -190,8 +190,7 @@ public final class AutoGuide extends CFSModule {
       db = this.getConnection(context);
       Inventory inventoryItem = new Inventory(db, id);
       AdRun thisAdRun = inventoryItem.getAdRuns().getAdRun(adId);
-      thisAdRun.setCompletedBy(getUserId(context));
-      thisAdRun.markIncomplete(db);
+      thisAdRun.markIncomplete(db, this.getUserRange(context));
       addModuleBean(context, "Auto Guide", "Details");
     } catch (Exception e) {
       errorMessage = e;

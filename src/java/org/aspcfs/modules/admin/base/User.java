@@ -108,7 +108,8 @@ public class User extends GenericBean {
     buildRecord(db, Integer.parseInt(userId));
     buildResources(db);
   }
-  
+
+
   /**
    *  Constructor for the User object
    *
@@ -220,13 +221,16 @@ public class User extends GenericBean {
   public void setAlias(String tmp) {
     alias = Integer.parseInt(tmp);
   }
-  
-public Vector getPermissions() {
-	return permissions;
-}
-public void setPermissions(Vector permissions) {
-	this.permissions = permissions;
-}
+
+
+  /**
+   *  Sets the permissions attribute of the User object
+   *
+   *@param  permissions  The new permissions value
+   */
+  public void setPermissions(Vector permissions) {
+    this.permissions = permissions;
+  }
 
 
   /**
@@ -722,6 +726,16 @@ public void setPermissions(Vector permissions) {
 
 
   /**
+   *  Gets the permissions attribute of the User object
+   *
+   *@return    The permissions value
+   */
+  public Vector getPermissions() {
+    return permissions;
+  }
+
+
+  /**
    *  Gets the expires attribute of the User object
    *
    *@return    The expires value
@@ -860,7 +874,7 @@ public void setPermissions(Vector permissions) {
    *@since
    */
   public boolean getIsValid() {
-    if (this.gmr.getIsValid() == true && this.ramr.getIsValid() == true && 
+    if (this.gmr.getIsValid() == true && this.ramr.getIsValid() == true &&
         this.cgmr.getIsValid() == true && this.cramr.getIsValid() == true) {
       return true;
     } else {
@@ -1191,6 +1205,18 @@ public void setPermissions(Vector permissions) {
 
 
   /**
+   *  Returns whether this user is above the specified userId.  If the
+   *  specified userId is a child of this user, returns true.
+   *
+   *@param  userId  Description of Parameter
+   *@return         The managerOf value
+   */
+  public boolean isManagerOf(int userId) {
+    return (this.getChild(userId) != null);
+  }
+
+
+  /**
    *  Sets the opportunityLock to true, causing any other requests to this
    *  method to block until released.
    *
@@ -1254,7 +1280,15 @@ public void setPermissions(Vector permissions) {
       return resultCount;
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int select(Connection db) throws SQLException {
     buildRecord(db, this.id);
     if (expires != null && (new java.util.Date()).after(expires)) {
@@ -1291,7 +1325,7 @@ public void setPermissions(Vector permissions) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Beginning insert");
       }
-      
+
       StringBuffer sql = new StringBuffer();
       sql.append(
           "INSERT INTO access " +
@@ -1325,13 +1359,13 @@ public void setPermissions(Vector permissions) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Getting interval value");
       }
-      
+
       id = DatabaseUtils.getCurrVal(db, "access_user_id_seq");
 
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Updating contact");
       }
-      
+
       Statement st = db.createStatement();
       st.executeUpdate(
           "UPDATE contact " +
@@ -1339,7 +1373,7 @@ public void setPermissions(Vector permissions) {
           "WHERE contact_id = " + contact.getId());
       st.close();
       db.commit();
-      
+
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> User inserted & contact record updated");
       }
@@ -1442,39 +1476,47 @@ public void setPermissions(Vector permissions) {
       pst.executeUpdate();
       pst.close();
     }
-    
+
     insertLogRecord(db);
-    
+
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void insertLogRecord(Connection db) throws SQLException {
-	  if (this.id > -1) {
-		try {
-			db.setAutoCommit(false);
-		
-			StringBuffer sql = new StringBuffer();
-			sql.append(
-			"INSERT INTO access_log " +
-			"(user_id, username, ip) " +
-			"VALUES (?, ?, ?) ");
-		
-			int i = 0;
-			PreparedStatement pst = db.prepareStatement(sql.toString());
-			pst.setInt(++i, id);
-      pst.setString(++i, getUsername());
-			pst.setString(++i, getIp());
-			pst.execute();
-			pst.close();
-			db.commit();
-		} catch (SQLException e) {
-			db.rollback();
-			db.setAutoCommit(true);
-			throw new SQLException(e.getMessage());
-		}
-	}
-	
-	db.setAutoCommit(true);
-  }	
+    if (this.id > -1) {
+      try {
+        db.setAutoCommit(false);
+
+        StringBuffer sql = new StringBuffer();
+        sql.append(
+            "INSERT INTO access_log " +
+            "(user_id, username, ip) " +
+            "VALUES (?, ?, ?) ");
+
+        int i = 0;
+        PreparedStatement pst = db.prepareStatement(sql.toString());
+        pst.setInt(++i, id);
+        pst.setString(++i, getUsername());
+        pst.setString(++i, getIp());
+        pst.execute();
+        pst.close();
+        db.commit();
+      } catch (SQLException e) {
+        db.rollback();
+        db.setAutoCommit(true);
+        throw new SQLException(e.getMessage());
+      }
+    }
+
+    db.setAutoCommit(true);
+  }
+
 
   /**
    *  Description of the Method
@@ -1524,8 +1566,8 @@ public void setPermissions(Vector permissions) {
       sql.append("AND a.user_id = ? ");
     } else {
       sql.append(
-        "AND lower(username) = ? " +
-        "AND password = ? ");
+          "AND lower(username) = ? " +
+          "AND password = ? ");
     }
     pst = db.prepareStatement(sql.toString());
     int i = 0;
@@ -1547,6 +1589,114 @@ public void setPermissions(Vector permissions) {
     rs.close();
     pst.close();
     buildResources(db);
+  }
+
+
+  /**
+   *  Method added in for SSS and other ASP customers newPassword: Updates the
+   *  User's password with a new one. Does not verify the current one since this
+   *  method is intended for those who have forgotten their password and need a
+   *  new one.
+   *
+   *@param  db                Description of Parameter
+   *@param  context           Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   *@since                    1.1
+   */
+  public int newPassword(Connection db, ActionContext context) throws SQLException {
+    int resultCount = -1;
+
+    if (this.getId() == -1) {
+      throw new SQLException("User ID was not specified");
+    }
+
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "UPDATE access " +
+        "SET password = ? " +
+        "WHERE user_id = ? ");
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setString(++i, encryptPassword(password1));
+    pst.setInt(++i, getId());
+    resultCount = pst.executeUpdate();
+    pst.close();
+
+    return resultCount;
+  }
+
+
+  /**
+   *  Method added in for SSS and other ASP customers insert: Does the usual
+   *  insert, just without an ActionContext passed to the method.
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   *@since                    1.1
+   */
+
+  public boolean insertNoContext(Connection db) throws SQLException {
+    try {
+      db.setAutoCommit(false);
+
+      System.out.println("User-> Beginning insert");
+
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          "INSERT INTO access " +
+          "(username, password, contact_id, alias, " +
+          "manager_id, role_id, enteredby, modifiedby, expires ) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst.setString(++i, getUsername());
+      pst.setString(++i, encryptPassword(password1));
+      pst.setInt(++i, contact.getId());
+      pst.setInt(++i, getAlias());
+      if (getAlias() > -1) {
+        pst.setInt(++i, -1);
+      } else {
+        pst.setInt(++i, getManagerId());
+      }
+      pst.setInt(++i, getRoleId());
+      pst.setInt(++i, getEnteredBy());
+      pst.setInt(++i, getModifiedBy());
+
+      if (expires == null) {
+        pst.setNull(++i, java.sql.Types.DATE);
+      } else {
+        pst.setDate(++i, this.getExpires());
+      }
+      pst.execute();
+      pst.close();
+
+      System.out.println("User-> Getting interval value");
+
+      id = DatabaseUtils.getCurrVal(db, "access_user_id_seq");
+
+      System.out.println("User-> Updating contact");
+
+      Statement st = db.createStatement();
+      st.executeUpdate(
+          "UPDATE contact " +
+          "SET user_id = " + id + " " +
+          "WHERE contact_id = " + contact.getId());
+      st.close();
+      db.commit();
+
+      System.out.println("User-> User inserted & contact record updated");
+
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    }
+    db.setAutoCommit(true);
+    return true;
   }
 
 
@@ -1736,6 +1886,7 @@ public void setPermissions(Vector permissions) {
     return duplicate;
   }
 
+
   /**
    *  Updates this user's permissions from the database
    *
@@ -1802,8 +1953,8 @@ public void setPermissions(Vector permissions) {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "UPDATE access " +
-      "SET username = ?, manager_id = ?, role_id = ?, expires = ?, alias = ?  ");
+        "UPDATE access " +
+        "SET username = ?, manager_id = ?, role_id = ?, expires = ?, alias = ?  ");
     if (password1 != null) {
       sql.append("password = ?, ");
     }
@@ -1852,110 +2003,6 @@ public void setPermissions(Vector permissions) {
   private String encryptPassword(String tmp) {
     PasswordHash passwordHash = new PasswordHash();
     return passwordHash.encrypt(tmp);
-  }
-  
-   /**
-   *  Method added in for SSS and other ASP customers
-   *  newPassword: Updates the User's password with a new one.  Does
-   *  not verify the current one since this method is intended for those
-   *  who have forgotten their password and need a new one.
-   *
-   *@param  tmp  Description of Parameter
-   *@return      Description of the Returned Value
-   *@since       1.1
-   */
-  public int newPassword(Connection db, ActionContext context) throws SQLException {
-      int resultCount = -1;
-
-      if (this.getId() == -1) {
-	throw new SQLException("User ID was not specified");
-      }
-
-      PreparedStatement pst = null;
-      StringBuffer sql = new StringBuffer();
-      sql.append(
-	  "UPDATE access " +
-	  "SET password = ? " +
-	  "WHERE user_id = ? ");
-      int i = 0;
-      pst = db.prepareStatement(sql.toString());
-      pst.setString(++i, encryptPassword(password1));
-      pst.setInt(++i, getId());
-      resultCount = pst.executeUpdate();
-      pst.close();
-
-      return resultCount;
-  }
-  
-   /**
-   *  Method added in for SSS and other ASP customers
-   *  insert: Does the usual insert, just without an ActionContext
-   *  passed to the method.
-   *
-   *@param  tmp  Description of Parameter
-   *@return      Description of the Returned Value
-   *@since       1.1
-   */
-  
-  public boolean insertNoContext(Connection db) throws SQLException {
-    try {
-      db.setAutoCommit(false);
-
-        System.out.println("User-> Beginning insert");
-      
-      StringBuffer sql = new StringBuffer();
-      sql.append(
-          "INSERT INTO access " +
-          "(username, password, contact_id, alias, " +
-          "manager_id, role_id, enteredby, modifiedby, expires ) " +
-          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
-
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setString(++i, getUsername());
-      pst.setString(++i, encryptPassword(password1));
-      pst.setInt(++i, contact.getId());
-      pst.setInt(++i, getAlias());
-      if (getAlias() > -1) {
-        pst.setInt(++i, -1);
-      } else {
-        pst.setInt(++i, getManagerId());
-      }
-      pst.setInt(++i, getRoleId());
-      pst.setInt(++i, getEnteredBy());
-      pst.setInt(++i, getModifiedBy());
-
-      if (expires == null) {
-        pst.setNull(++i, java.sql.Types.DATE);
-      } else {
-        pst.setDate(++i, this.getExpires());
-      }
-      pst.execute();
-      pst.close();
-
-      System.out.println("User-> Getting interval value");
-      
-      id = DatabaseUtils.getCurrVal(db, "access_user_id_seq");
-
-      System.out.println("User-> Updating contact");
-      
-      Statement st = db.createStatement();
-      st.executeUpdate(
-          "UPDATE contact " +
-          "SET user_id = " + id + " " +
-          "WHERE contact_id = " + contact.getId());
-      st.close();
-      db.commit();
-      
-      System.out.println("User-> User inserted & contact record updated");
- 
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    }
-    db.setAutoCommit(true);
-    return true;
   }
 }
 

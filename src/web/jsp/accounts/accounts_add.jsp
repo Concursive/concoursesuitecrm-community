@@ -59,22 +59,20 @@
       <%= AccountTypeList.getHtmlSelect("selectedList", 0) %>
     </td>
   </tr>
-  
-    <tr>
-    <td nowrap class="formLabel">
-      Acct. Number
-    </td>
-    <td>
-      <input type=text size=50 name="accountNumber" maxlength=50>
-    </td>
-  </tr>
-
   <tr>
     <td nowrap class="formLabel">
       Name
     </td>
     <td>
       <input type=text size=35 name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Acct. Number
+    </td>
+    <td>
+      <input type=text size=50 name="accountNumber" maxlength=50>
     </td>
   </tr>
   <tr>

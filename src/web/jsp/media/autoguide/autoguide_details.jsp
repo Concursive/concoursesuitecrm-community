@@ -3,6 +3,7 @@
 <jsp:useBean id="InventoryItem" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <%@ include file="initPage.jsp" %>
+<%@ include file="initPageIsManagerOf.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
@@ -120,7 +121,7 @@
 <dhv:evaluate exp="<%= !thisAdRun.isComplete() %>">
       <a href="javascript:confirmForward('AutoGuide.do?command=MarkComplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');">Set this item as completed</a>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= thisAdRun.isComplete() && thisAdRun.getCompletedBy() == User.getUserId() %>">
+<dhv:evaluate exp="<%= thisAdRun.isComplete() && (thisAdRun.getCompletedBy() == User.getUserId() || isManagerOf(pageContext, User.getUserId(), thisAdRun.getCompletedBy())) %>">
       <a href="javascript:confirmForward('AutoGuide.do?command=MarkIncomplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');"><font color="#8F8F8F">Set this item as incomplete</font></a>
 </dhv:evaluate>
 </dhv:permission>

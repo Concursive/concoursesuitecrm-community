@@ -39,7 +39,7 @@ public class TransactionItem {
   private String name = null;
   private Object object = null;
   private int action = -1;
-  private int identity = -1;
+  private int identity = 1;
   private PagedListInfo pagedListInfo = null;
   private StringBuffer errorMessage = new StringBuffer();
   private RecordList recordList = null;

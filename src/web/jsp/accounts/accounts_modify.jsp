@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.controller.*,com.darkhorseventures.utils.*" %>
 <jsp:useBean id="IndustryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -7,7 +7,9 @@
 <jsp:useBean id="OrgPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
+<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <%@ include file="initPage.jsp" %>
+<%@ include file="initPageIsManagerOf.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 
@@ -68,14 +70,16 @@
     <strong>Modify Primary Information</strong>
     </td>     
   </tr>
+<dhv:evaluate exp="<%= OrgDetails.getOwner() == User.getUserId() || isManagerOf(pageContext, User.getUserId(), OrgDetails.getOwner()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Reassign To
+      Account Owner
     </td>
     <td valign=center>
       <%= UserList.getHtmlSelect("owner", OrgDetails.getOwner() ) %>
     </td>
   </tr>
+</dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Account Type(s)
@@ -91,18 +95,18 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Acct. Number
-    </td>
-    <td>
-      <input type=text size=50 name="accountNumber" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
       Name
     </td>
     <td>
       <input type=text size=35 name="name" value="<%= toHtmlValue(OrgDetails.getName()) %>"><font color="red">*</font> <%= showAttribute(request, "nameError") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Acct. Number
+    </td>
+    <td>
+      <input type=text size=50 name="accountNumber" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
     </td>
   </tr>
   <tr class="containerBody">

@@ -21,6 +21,11 @@ public class UserList extends Vector {
   public final static int TRUE = 1;
   public final static int FALSE = 0;
 
+  public final static String tableName = "access";
+  public final static String uniqueField = "user_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
   private int roleId = -1;
@@ -63,6 +68,46 @@ public class UserList extends Vector {
     this.managerUser = parentUser;
     this.buildHierarchy = doHierarchy;
     buildList(db);
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the UserList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the UserList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the UserList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the UserList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
   }
 
 
@@ -119,13 +164,16 @@ public class UserList extends Vector {
   public void setDepartment(String department) {
     this.department = Integer.parseInt(department);
   }
-  
-public String getUsername() {
-	return username;
-}
-public void setUsername(String username) {
-	this.username = username;
-}
+
+
+  /**
+   *  Sets the username attribute of the UserList object
+   *
+   *@param  username  The new username value
+   */
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
 
   /**
@@ -257,6 +305,16 @@ public void setUsername(String username) {
    */
   public void setManagerUser(User tmp) {
     this.managerUser = tmp;
+  }
+
+
+  /**
+   *  Gets the username attribute of the UserList object
+   *
+   *@return    The username value
+   */
+  public String getUsername() {
+    return username;
   }
 
 
@@ -484,6 +542,30 @@ public void setUsername(String username) {
 
 
   /**
+   *  Gets the object attribute of the UserList object
+   *
+   *@param  rs                Description of Parameter
+   *@return                   The object value
+   *@exception  SQLException  Description of Exception
+   */
+  public User getObject(ResultSet rs) throws SQLException {
+    User thisUser = new User(rs);
+    return thisUser;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
+
+
+  /**
    *  Generates the user list from the database
    *
    *@param  db                Description of Parameter
@@ -491,8 +573,39 @@ public void setUsername(String username) {
    *@since                    1.4
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+    while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.isEndOfOffset(db)) {
+        break;
+      }
+      User thisUser = new User(rs);
+      if (thisUser.getContactId() > -1) {
+        thisUser.setContact(new Contact(rs));
+      }
+      if (managerUser != null) {
+        thisUser.setManagerId(managerUser.getId());
+        thisUser.setManagerUser(managerUser);
+      }
+      this.add(thisUser);
+    }
+    rs.close();
+    if (pst != null) {
+      pst.close();
+    }
+    buildResources(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  pst               Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
 
@@ -582,33 +695,12 @@ public void setUsername(String username) {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
-    int count = 0;
-    while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
-      User thisUser = new User(rs);
-      if (thisUser.getContactId() > -1) {
-        thisUser.setContact(new Contact(rs));
-      }
-      if (managerUser != null) {
-        thisUser.setManagerId(managerUser.getId());
-        thisUser.setManagerUser(managerUser);
-      }
-      this.add(thisUser);
-    }
-    rs.close();
-    pst.close();
 
-    buildResources(db);
+    return rs;
   }
 
 
@@ -669,11 +761,22 @@ public void setUsername(String username) {
     if (enabled > -1) {
       sqlFilter.append("AND a.enabled = ? ");
     }
-    
+
     if (username != null) {
-	    sqlFilter.append("AND a.username = ? ");
+      sqlFilter.append("AND a.username = ? ");
     }
-    
+
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND a.entered > ? ");
+      }
+      sqlFilter.append("AND a.entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND a.modified > ? ");
+      sqlFilter.append("AND a.entered < ? ");
+      sqlFilter.append("AND a.modified < ? ");
+    }
   }
 
 
@@ -702,7 +805,17 @@ public void setUsername(String username) {
     if (username != null) {
       pst.setString(++i, username);
     }
-
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 }

@@ -31,6 +31,7 @@ public class LookupElement {
    */
   public LookupElement() { }
 
+
   /**
    *  Constructor for the LookupElement object
    *
@@ -47,57 +48,16 @@ public class LookupElement {
     //endDate = rs.getTimestamp("end_date");
     enabled = rs.getBoolean("enabled");
   }
-  
-  public int disableElement(Connection db, String tableName) throws SQLException {
-    int resultCount = 0;
 
-    if (this.getCode() == 0) {
-      throw new SQLException("Element Code not specified.");
-    }
 
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-
-    sql.append(
-        "UPDATE " + tableName + " " +
-        "SET enabled = false " +
-        "WHERE code = ? ");
-	
-    int i = 0;
-    pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, this.getCode());	
-    resultCount = pst.executeUpdate();
-    pst.close();
-
-    return resultCount;
-  }
-  
-  public boolean insertElement(Connection db, String tableName) throws SQLException {
-    return insertElement(db, tableName, -1);
-  }
-  
-  public boolean insertElement(Connection db, String tableName, int fieldId) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    int i=0;
-
-    sql.append(
-    "INSERT INTO " + tableName + " " +
-    "(description, level, enabled" + (fieldId > -1?", field_id":"") + ") " +
-    "VALUES (?, ?, ?" + (fieldId > -1?", ?":"") + ") ");
-    i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setString(++i, this.getDescription());
-    pst.setInt(++i, this.getLevel());
-    pst.setBoolean(++i, true);
-    if (fieldId > -1) {
-      pst.setInt(++i, fieldId);
-    }
-    pst.execute();
-    pst.close();
-			
-		return true;
-}
-  
+  /**
+   *  Sets the newOrder attribute of the LookupElement object
+   *
+   *@param  db                The new newOrder value
+   *@param  tableName         The new newOrder value
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int setNewOrder(Connection db, String tableName) throws SQLException {
     int resultCount = 0;
 
@@ -112,15 +72,15 @@ public class LookupElement {
         "UPDATE " + tableName + " " +
         "SET level = ? " +
         "WHERE code = ? ");
-	
-	int i = 0;
-	
-	pst = db.prepareStatement(sql.toString());
-	pst.setInt(++i, this.getLevel());
-	pst.setInt(++i, this.getCode());
-	
-	resultCount = pst.executeUpdate();
-	pst.close();
+
+    int i = 0;
+
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, this.getLevel());
+    pst.setInt(++i, this.getCode());
+
+    resultCount = pst.executeUpdate();
+    pst.close();
 
     return resultCount;
   }
@@ -135,7 +95,8 @@ public class LookupElement {
   public void setCode(int tmp) {
     this.code = tmp;
   }
-  
+
+
   /**
    *  Sets the Description attribute of the LookupElement object
    *
@@ -193,6 +154,17 @@ public class LookupElement {
 
 
   /**
+   *  Gets the id attribute of the LookupElement object, id is a required
+   *  name for some CFS reflection parsing
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return code;
+  }
+
+
+  /**
    *  Gets the Description attribute of the LookupElement object
    *
    *@return    The Description value
@@ -234,6 +206,84 @@ public class LookupElement {
    */
   public boolean getEnabled() {
     return enabled;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  tableName         Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public int disableElement(Connection db, String tableName) throws SQLException {
+    int resultCount = 0;
+
+    if (this.getCode() == 0) {
+      throw new SQLException("Element Code not specified.");
+    }
+
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+
+    sql.append(
+        "UPDATE " + tableName + " " +
+        "SET enabled = false " +
+        "WHERE code = ? ");
+
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, this.getCode());
+    resultCount = pst.executeUpdate();
+    pst.close();
+
+    return resultCount;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  tableName         Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean insertElement(Connection db, String tableName) throws SQLException {
+    return insertElement(db, tableName, -1);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  tableName         Description of Parameter
+   *@param  fieldId           Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean insertElement(Connection db, String tableName, int fieldId) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    int i = 0;
+
+    sql.append(
+        "INSERT INTO " + tableName + " " +
+        "(description, level, enabled" + (fieldId > -1 ? ", field_id" : "") + ") " +
+        "VALUES (?, ?, ?" + (fieldId > -1 ? ", ?" : "") + ") ");
+    i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setString(++i, this.getDescription());
+    pst.setInt(++i, this.getLevel());
+    pst.setBoolean(++i, true);
+    if (fieldId > -1) {
+      pst.setInt(++i, fieldId);
+    }
+    pst.execute();
+    pst.close();
+
+    return true;
   }
 
 }

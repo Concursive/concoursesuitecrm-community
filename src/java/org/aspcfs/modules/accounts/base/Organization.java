@@ -1347,8 +1347,13 @@ public class Organization extends GenericBean {
         "SET name = ?, industry_temp_code = ?, " +
         "url = ?, notes= ?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ?, " +
-        "employees = ?, revenue = ?, ticker_symbol = ?, account_number = ?, owner = ?, " +
-        "duplicate_id = ?, contract_end = ?, alertdate = ?, alert = ? " +
+        "employees = ?, revenue = ?, ticker_symbol = ?, account_number = ?, ");
+        
+     if (owner > -1) {   
+       sql.append("owner = ?, ");
+     }
+        
+     sql.append("duplicate_id = ?, contract_end = ?, alertdate = ?, alert = ? " +
         "WHERE org_id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -1365,7 +1370,9 @@ public class Organization extends GenericBean {
     pst.setDouble(++i, revenue);
     pst.setString(++i, ticker);
     pst.setString(++i, accountNumber);
-    pst.setInt(++i, this.getOwner());
+    if (owner > -1) {
+      pst.setInt(++i, this.getOwner());
+    }
     pst.setInt(++i, this.getDuplicateId());
 
     if (contractEndDate == null) {

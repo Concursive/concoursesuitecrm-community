@@ -548,18 +548,17 @@ public class AdRun {
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public void markIncomplete(Connection db) throws SQLException {
+  public void markIncomplete(Connection db, String intHierarchyList) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE autoguide_ad_run " +
         "SET complete_date = ?, completedby = ? " +
-        "WHERE ad_run_id = ? AND completedby = ? ");
+        "WHERE ad_run_id = ? AND completedby IN (" + intHierarchyList + ") ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setNull(++i, java.sql.Types.DATE);
     pst.setInt(++i, -1);
     pst.setInt(++i, id);
-    pst.setInt(++i, completedBy);
     pst.execute();
     pst.close();
   }
