@@ -549,6 +549,7 @@
   
   <menu>
     <action name="Admin"/>
+    <action name="AdminConfig"/>
     <action name="AdminFields"/>
     <action name="AdminFieldsFolder"/>
     <action name="AdminFieldsGroup"/>

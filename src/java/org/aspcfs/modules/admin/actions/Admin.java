@@ -520,60 +520,6 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Action that prepares a list of the editable global parameters
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandListGlobalParams(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-view"))) {
-      return ("PermissionError");
-    }
-    addModuleBean(context, "Configuration", "Configuration");
-    //get the session timeout
-    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-    int sessionTimeout = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl())).getSessionTimeout();
-    context.getRequest().setAttribute("Timeout", String.valueOf(sessionTimeout / 60));
-    return ("GlobalParamsOK");
-  }
-
-
-  /**
-   *  Action that routes to the modify timeout page
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandModifyTimeout(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-view"))) {
-      return ("PermissionError");
-    }
-    addModuleBean(context, "Configuration", "Configuration");
-    return ("ModifyTimeoutOK");
-  }
-
-
-  /**
-   *  Action that updates the global session timeout from form data
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandUpdateTimeout(ActionContext context) {
-    if (!hasPermission(context, "admin-sysconfig-view")) {
-      return ("PermissionError");
-    }
-    int timeout = Integer.parseInt(context.getRequest().getParameter("timeout"));
-    addModuleBean(context, "Configuration", "Configuration");
-    //get the session timeout and update
-    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-    SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-    thisSystem.setSessionTimeout(timeout * 60);
-    return executeCommandListGlobalParams(context);
-  }
-
-
-  /**
    *  Build all the necessarry form elements (lists)
    *
    *@param  context           Description of Parameter

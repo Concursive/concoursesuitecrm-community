@@ -831,10 +831,18 @@
     <forward name="UpdateListOK" resource="/admin/admin_editlists.jsp" layout="nav"/>
     <forward name="ConfigDetailsOK" resource="/admin/admin_configdetails.jsp" layout="nav"/>
     <forward name="UsageOK" resource="/admin/admin_usage.jsp" layout="nav"/>
-    <forward name="GlobalParamsOK" resource="/admin/admin_global_params.jsp" layout="nav"/>
-    <forward name="ModifyTimeoutOK" resource="/admin/admin_modify_timeout.jsp" layout="nav"/>
     <forward name="WorkflowOK" resource="/admin/admin_workflow_list.jsp" layout="nav"/>
     <forward name="WorkflowDetailsOK" resource="/admin/admin_workflow_details.jsp" layout="nav"/>
+  </action>
+  <action name="AdminConfig" class="org.aspcfs.modules.admin.actions.AdminConfig">
+    <forward name="GlobalParamsOK" resource="/admin/admin_global_params.jsp" layout="nav"/>
+    <forward name="ModifyError" resource="/AdminConfig.do?command=ListGlobalParams"/>
+    <forward name="UpdateOK" resource="/AdminConfig.do?command=ListGlobalParams"/>
+    <forward name="ModifyTimeoutOK" resource="/admin/admin_modify_timeout.jsp" layout="nav"/>
+    <forward name="ModifyEmailOK" resource="/admin/admin_modify_email.jsp" layout="nav"/>
+    <forward name="ModifyEmailAddressOK" resource="/admin/admin_modify_emailaddress.jsp" layout="nav"/>
+    <forward name="ModifyFaxOK" resource="/admin/admin_modify_fax.jsp" layout="nav"/>
+    <forward name="ModifyUrlOK" resource="/admin/admin_modify_url.jsp" layout="nav"/>
   </action>
   <action name="AdminQA" class="org.aspcfs.modules.admin.actions.AdminQA">
     <forward name="QAReportOK" resource="/admin/admin_qa_report.jsp" layout="nav"/>

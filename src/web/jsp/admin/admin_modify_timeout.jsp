@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<form name="modifyTimeout" action="Admin.do?command=UpdateTimeout" method="post">
+<form name="modifyTimeout" action="AdminConfig.do?command=UpdateTimeout" method="post">
 <a href="Admin.do">Setup</a> >
-<a href="Admin.do?command=ListGlobalParams"> Global Parameters</a> >
+<a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
 Modify Timeout<br>
 <hr color="#BFBFBB" noshade>
 The session timeout is the time in which a user will automatically be logged out if the specified period of inactivity is reached.<br>
@@ -14,7 +14,7 @@ The session timeout is the time in which a user will automatically be logged out
       </th>
     </tr>
     <tr class="containerBody">
-      <td align="center" width="12">
+      <td class="formLabel">
         Timeout 
       </td>
       <%  String[] timeouts = { "5", "10", "15", "30", "45", "60", "90"} ;
@@ -31,6 +31,6 @@ The session timeout is the time in which a user will automatically be logged out
   </table>
   <br>
   <input type="submit" value="Update">
-  &nbsp;<input type="button" value="Cancel" onClick="javascript:window.location.href='Admin.do?command=ListGlobalParams';">
+  &nbsp;<input type="button" value="Cancel" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
 </dhv:permission>
 </form>

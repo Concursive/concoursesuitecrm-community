@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ include file="../initPage.jsp" %>
 Setup
 <hr color="#BFBFBB" noshade>
 Manage CFS by reviewing system usage, configuring specific modules, and configuring system parameters.<br>
@@ -27,13 +28,13 @@ Manage CFS by reviewing system usage, configuring specific modules, and configur
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>
-        <strong>Global Parameters</strong>
+        <strong>Global Parameters and Server Configuration</strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td>
         <ul>
-          <li><a href="Admin.do?command=ListGlobalParams">Configure global parameters</a></li>
+          <li><a href="AdminConfig.do?command=ListGlobalParams">Configure System</a></li>
         </ul>
       </td>
     </tr>

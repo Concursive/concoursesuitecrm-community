@@ -1,4 +1,5 @@
 <%@ page import="java.util.StringTokenizer" %>
+<%@ page import="org.aspcfs.controller.ApplicationPrefs" %>
 <%!
 
 public static String replace(String str, String o, String n) {
@@ -221,5 +222,14 @@ public static String replace(String str, String o, String n) {
   
   public static String getServerUrl(HttpServletRequest request) {
     return request.getServerName() + getServerPort(request) + request.getContextPath();
+  }
+  
+  public static String getPref(ServletContext context, String param) {
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getAttribute("APPLICATION.PREFS");
+    if (prefs != null) {
+      return prefs.get(param);
+    } else {
+      return null;
+    }
   }
 %>
