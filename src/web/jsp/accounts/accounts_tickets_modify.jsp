@@ -111,8 +111,6 @@ Modify Ticket<br>
     </td>
   </tr>
 <%}%>
-  
-  
   <tr class="containerMenu">
     <td>
       <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
@@ -189,11 +187,12 @@ Modify Ticket<br>
 		<td valign=top>
       <textarea name="problem" cols=55 rows=3><%= toString(TicketDetails.getProblem()) %></textarea>
       <font color="red">*</font> <%= showAttribute(request, "problemError") %>
-      <input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
-      <input type=hidden name=id value="<%=TicketDetails.getId()%>">
-      <input type=hidden name=companyName value="<%=toHtml(TicketDetails.getCompanyName())%>">
-      <input type=hidden name="close" value="">
-      <input type=hidden name=refresh value="-1">
+      <input type="hidden" name="modified" value="<%= TicketDetails.getModified() %>">
+      <input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
+      <input type="hidden" name="id" value="<%=TicketDetails.getId()%>">
+      <input type="hidden" name="companyName" value="<%=toHtml(TicketDetails.getCompanyName())%>">
+      <input type="hidden" name="close" value="">
+      <input type="hidden" name="refresh" value="-1">
 		</td>
   </tr>
   
