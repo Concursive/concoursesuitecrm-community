@@ -438,6 +438,16 @@ public class TransactionRecord extends GenericBean {
 
 
   /**
+   *  Sets the transactionID attribute of the TransactionRecord object
+   *
+   *@param  transactionId  The new transactionID value
+   */
+  public void setTransactionID(String transactionId) {
+    this.setTransactionId(transactionId);
+  }
+
+
+  /**
    *  Sets the entered attribute of the User object
    *
    *@param  tmp  The new entered value
