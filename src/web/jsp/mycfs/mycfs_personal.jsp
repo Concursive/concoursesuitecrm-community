@@ -17,6 +17,7 @@
 <input type="hidden" name="modified" value="<%= EmployeeBean.getModified().toString() %>">
 <input type="hidden" name="orgId" value="<%= EmployeeBean.getOrgId() %>">
 <input type="hidden" name="typeId" value="<%= EmployeeBean.getTypeId() %>">
+<input type="hidden" name="department" value="<%=EmployeeBean.getDepartment()%>">
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
@@ -35,7 +36,7 @@
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
-  <tr><td nowrap class="formLabel">Department</td><td><%= DepartmentList.getHtmlSelect("department", EmployeeBean.getDepartment()) %></td></tr>
+  <tr><td nowrap class="formLabel">Department</td><td><%=EmployeeBean.getDepartmentName() %></td></tr>
   <tr>
     <td nowrap class="formLabel">Title</td>
     <td><input type="text" name="title" value="<%= toHtmlValue(EmployeeBean.getTitle()) %>"></td>
