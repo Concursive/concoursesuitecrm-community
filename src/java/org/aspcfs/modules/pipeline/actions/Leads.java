@@ -947,10 +947,9 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
-
     //Prepare the paged list
     PagedListInfo searchOppListInfo = this.getPagedListInfo(context, "SearchOppListInfo");
-
+    searchOppListInfo.setLink("Leads.do?command=Search");
     //Prepare viewpoints
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
     int vpUserId = viewpointInfo.getVpUserId(this.getUserId(context));
