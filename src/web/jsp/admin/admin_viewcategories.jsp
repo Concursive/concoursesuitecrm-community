@@ -37,7 +37,6 @@ function loadTopCategories() {
 function editCategory(level){
   var categoryId = -1;
   var tmpLevel = parseInt(level) -1;
-  
   if(tmpLevel > -1){
     categoryId =  document.getElementById('level' + tmpLevel).options[document.getElementById('level' + tmpLevel).selectedIndex].value;
   }
@@ -88,25 +87,27 @@ function activate(){
             %>
             
             <%= CategoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %><br>
-            <input type="button" value="Edit" id="edit0" onClick="javascript:editCategory('0');">
+            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit0" onClick="javascript:editCategory('0');"></dhv:permission>
           </td>
           <td align="center">
             Level 2 <br>
             <% value = ((selectedCategories.get(new Integer(1)) != null) ? ((Integer) selectedCategories.get(new Integer(1))).intValue() : -1);
             SubList1.getCatListSelect().setSelectSize(10);
+            SubList1.getCatListSelect().addAttribute("onChange", "javascript:loadCategories('1');");
             SubList1.getCatListSelect().addAttribute("style", "width: 150px");
             %>
             <%= SubList1.getHtmlSelect("level1", value) %><br>
-            <input type="button" value="Edit" id="edit1" onClick="javascript:editCategory('1');" disabled>
+            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit1" onClick="javascript:editCategory('1');" disabled></dhv:permission>
           </td>
           <td align="center">
             Level 3<br>
             <% value = ((selectedCategories.get(new Integer(2)) != null) ? ((Integer) selectedCategories.get(new Integer(2))).intValue() : -1);
             SubList2.getCatListSelect().setSelectSize(10);
+            SubList2.getCatListSelect().addAttribute("onChange", "javascript:loadCategories('2');");
             SubList2.getCatListSelect().addAttribute("style", "width: 150px");
             %>
             <%= SubList2.getHtmlSelect("level2", value) %><br>
-            <input type="button" value="Edit" id="edit2" onClick="javascript:editCategory('2');" disabled>
+            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit2" onClick="javascript:editCategory('2');" disabled></dhv:permission>
           </td>
           <td align="center">
             Level 4<br>
@@ -115,16 +116,15 @@ function activate(){
               SubList3.getCatListSelect().addAttribute("style", "width: 150px");
             %>
             <%= SubList3.getHtmlSelect("level3", -1) %><br>
-            <input type="button" value="Edit" id="edit3" onClick="javascript:editCategory('3');" disabled>
+            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit3" onClick="javascript:editCategory('3');" disabled></dhv:permission>
           </td>
         </tr>
       </table>
     </td>
   </tr>
 </table>
-<br>
-<input type="button" value="Revert to Active List" onClick="javascript:confirmReset('AdminCategories.do?command=Reset&moduleId=<%= PermissionCategory.getId() %>', 'You will lose all the changes made to the draft. Proceed ?');">
-<input type="button" value="Activate Now" onClick="javascript:activate();">
+<dhv:permission name="admin-sysconfig-categories-edit"><br><input type="button" value="Revert to Active List" onClick="javascript:confirmReset('AdminCategories.do?command=Reset&moduleId=<%= PermissionCategory.getId() %>', 'You will lose all the changes made to the draft. Proceed ?');">
+<input type="button" value="Activate Now" onClick="javascript:activate();"></dhv:permission>
 <%-- script to enable edit buttons if any categories are selected --%>
 <script>
 <%
