@@ -396,7 +396,11 @@ public class TransactionItem {
           //Object updatedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
           //syncClientMap.update(db, ObjectUtils.getParam(updatedObject, "modified"));
         }
-        addRecords(object, recordList, "processed");
+        if (action == INSERT || action == UPDATE) {
+          addRecords(object, recordList, "processed");
+        } else {
+          addRecords(object, recordList, null);
+        }
       }
     }
     if (pagedListInfo != null) {
