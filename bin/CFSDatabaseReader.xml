@@ -605,7 +605,7 @@
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="accountTypeLevels" table="account_type_levels">
       <property lookup="account" field="id"/>
       <property lookup="lookupAccountTypes" field="type_id"/>
-      <property lookup="level" field="contact_id"/>
+      <property field="level"/>
     </map>
   </mappings>
 </CFSDatabaseReader>
