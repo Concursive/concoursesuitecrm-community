@@ -5,7 +5,7 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="modContact" action="/Contacts.do?command=Modify&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>" method="post">
-<a href="/Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Contact List</a><br>&nbsp;
+<a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -156,7 +156,7 @@
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit"><input type='submit' value="Modify"	name="Modify"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-delete"><input type='submit' value="Delete" onClick="javascript:this.form.action='/Contacts.do?command=Delete&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>'"></dhv:permission>
- </td>
+  </td>
   </tr>
 </table>
 </form>

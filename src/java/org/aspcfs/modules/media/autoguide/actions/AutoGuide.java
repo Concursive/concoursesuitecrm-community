@@ -48,7 +48,7 @@ public final class AutoGuide extends CFSModule {
     autoGuideDirectoryInfo.setLink("AutoGuide.do?command=List");
 
     Connection db = null;
-    AccountInventoryList inventoryList = new AccountInventoryList();
+    InventoryList inventoryList = new InventoryList();
     try {
       db = this.getConnection(context);
       //inventoryList.setPagedListInfo(autoGuideDirectoryInfo);
@@ -97,15 +97,24 @@ public final class AutoGuide extends CFSModule {
         System.out.println("AutoGuide-> Details for ID: " + id);
       }
       db = this.getConnection(context);
-      AccountInventory inventoryItem = new AccountInventory(db, id);
+      Inventory inventoryItem = new Inventory(db, id);
       context.getRequest().setAttribute("InventoryItem", inventoryItem);
+      
+      String orgId = context.getRequest().getParameter("orgId");
+      if (orgId == null) {
+        addModuleBean(context, "Auto Guide", "Details");
+      } else {
+        addModuleBean(context, "Accounts", "Vehicle Details");
+        Organization thisOrganization = new Organization(db, Integer.parseInt(orgId));
+        context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "Auto Guide", "Details");
+    
     if (errorMessage == null) {
       return ("DetailsOK");
     } else {
@@ -137,7 +146,7 @@ public final class AutoGuide extends CFSModule {
         System.out.println("AutoGuide-> Delete ID: " + id);
       }
       db = this.getConnection(context);
-      AccountInventory inventoryItem = new AccountInventory(db, id);
+      Inventory inventoryItem = new Inventory(db, id);
       inventoryItem.delete(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -174,7 +183,7 @@ public final class AutoGuide extends CFSModule {
 
     int orgId = Integer.parseInt(context.getRequest().getParameter("orgId"));
     Connection db = null;
-    AccountInventoryList inventoryList = new AccountInventoryList();
+    InventoryList inventoryList = new InventoryList();
     try {
       db = this.getConnection(context);
       Organization org = new Organization(db, orgId);
@@ -266,7 +275,7 @@ public final class AutoGuide extends CFSModule {
     Exception errorMessage = null;
     boolean recordInserted = false;
 
-    AccountInventory thisItem = (AccountInventory)context.getFormBean();
+    Inventory thisItem = (Inventory)context.getFormBean();
     thisItem.setRequestItems(context.getRequest());
     thisItem.setEnteredBy(getUserId(context));
     thisItem.setModifiedBy(getUserId(context));
@@ -277,7 +286,7 @@ public final class AutoGuide extends CFSModule {
       thisItem.generateVehicleId(db);
       recordInserted = thisItem.insert(db);
       if (recordInserted) {
-        thisItem = new AccountInventory(db, thisItem.getId());
+        thisItem = new Inventory(db, thisItem.getId());
         context.getRequest().setAttribute("InventoryDetails", thisItem);
         //addRecentItem(context, thisItem);
       }
@@ -343,6 +352,80 @@ public final class AutoGuide extends CFSModule {
       this.freeConnection(context, db);
     }
     return ("ModelListOK");
+  }
+  
+  public String executeCommandAccountModify(ActionContext context) {
+/*     if (!(hasPermission(context, "contacts-external_contacts-edit"))) {
+      return ("PermissionError");
+    }
+ */
+    Exception errorMessage = null;
+    String orgId = context.getRequest().getParameter("orgId");
+    String id = context.getRequest().getParameter("id");
+    
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      
+      Inventory thisItem = new Inventory(db, Integer.parseInt(id));
+      context.getRequest().setAttribute("InventoryDetails", thisItem);
+      
+      Organization thisOrganization = new Organization(db, Integer.parseInt(orgId));
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      
+      ArrayList yearList = VehicleList.buildYearList(db); 
+      HtmlSelect yearSelect = new HtmlSelect(yearList);
+      yearSelect.addItem(-1, "--None--", 0);
+      context.getRequest().setAttribute("YearSelect", yearSelect);
+      
+      HtmlSelect makeSelect = new HtmlSelect();
+      makeSelect.addItem(-1, "--None--");
+      MakeList makeList = new MakeList();
+      makeList.setYear(thisItem.getVehicle().getYear());
+      PreparedStatement pst = null;
+      ResultSet rs = makeList.queryList(db, pst);
+      while (rs.next()) {
+        Make thisMake = makeList.getObject(rs);
+        makeSelect.addItem(thisMake.getId(), thisMake.getName());
+      }
+      rs.close();
+      if (pst != null) {
+        pst.close();
+      }
+      context.getRequest().setAttribute("MakeSelect", makeSelect);
+      
+      HtmlSelect modelSelect = new HtmlSelect();
+      modelSelect.addItem(-1, "--None--");
+      ModelList modelList = new ModelList();
+      modelList.setYear(thisItem.getVehicle().getYear());
+      modelList.setMakeId(thisItem.getVehicle().getMakeId());
+      rs = modelList.queryList(db, pst);
+      while (rs.next()) {
+        Model thisModel = modelList.getObject(rs);
+        modelSelect.addItem(thisModel.getId(), thisModel.getName());
+      }
+      rs.close();
+      if (pst != null) {
+        pst.close();
+      }
+      context.getRequest().setAttribute("ModelSelect", modelSelect);
+      
+      OptionList options = new OptionList(db);
+      context.getRequest().setAttribute("OptionList", options);
+      
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "View Accounts", "Modify Vehicle");
+    if (errorMessage == null) {
+      return ("ModifyOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 }
 

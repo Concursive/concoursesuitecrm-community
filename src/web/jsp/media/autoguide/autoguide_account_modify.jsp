@@ -49,7 +49,7 @@
     window.frames['server_commands'].location.href=url;
   }
 </script>
-<form name="addVehicle" action="AccountsAutoGuide.do?command=AccountInsert&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<form name="addVehicle" action="AccountsAutoGuide.do?command=AccountUpdate&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <input type="hidden" name="accountId" value="<%= OrgDetails.getOrgId() %>"/>
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">Back to Vehicle List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -66,15 +66,17 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type="submit" value="Save">
+<input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>'">
 <input type="reset" value="Reset">
+<input type="hidden" name="id" value="<%= InventoryDetails.getId() %>">
+<input type="hidden" name="modified" value="<%= InventoryDetails.getModified() %>">
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong>Add a New Vehicle Record</strong>
+      <strong>Modify Existing Vehicle Record</strong>
     </td>     
   </tr>
   <tr class="containerBody">
@@ -210,7 +212,7 @@
   <tr class="containerBody">
     <td width="34%">
       <input type="hidden" name="option<%= itemCount %>id" value="<%= option1.getId() %>">
-      <input type="checkbox" name="option<%= option1.getId() %>"><%= option1.getName() %>
+      <input type="checkbox" name="option<%= option1.getId() %>"<%= (InventoryDetails.hasOption(option1.getId())?" selected":"") %>><%= option1.getName() %>
     </td>
     <td width="33%">
 <%
@@ -218,7 +220,7 @@
       ++itemCount;
 %>
       <input type="hidden" name="option<%= itemCount %>id" value="<%= option2.getId() %>">
-      <input type="checkbox" name="option<%= option2.getId() %>"><%= option2.getName() %>
+      <input type="checkbox" name="option<%= option2.getId() %>"<%= (InventoryDetails.hasOption(option2.getId())?" selected":"") %>><%= option2.getName() %>
 <%  }  %>&nbsp;
     </td>
     <td width="33%">
@@ -227,7 +229,7 @@
       ++itemCount;
 %>
       <input type="hidden" name="option<%= itemCount %>id" value="<%= option3.getId() %>">
-      <input type="checkbox" name="option<%= option3.getId() %>"><%= option3.getName() %>
+      <input type="checkbox" name="option<%= option3.getId() %>"<%= (InventoryDetails.hasOption(option3.getId())?" selected":"") %>><%= option3.getName() %>
 <%  }  %>&nbsp;
     </td>
   </tr>
@@ -264,7 +266,7 @@
 </table>
 &nbsp;
 <br>
-<input type="submit" value="Save">
+<input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>'">
 <input type="reset" value="Reset">
     </td>

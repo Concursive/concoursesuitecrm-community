@@ -13,7 +13,7 @@ import com.darkhorseventures.utils.StringUtils;
 import com.darkhorseventures.cfsbase.Organization;
 import javax.servlet.http.*;
 
-public class AccountInventory {
+public class Inventory {
 
   private int id = -1;
   private int vehicleId = -1;
@@ -38,14 +38,15 @@ public class AccountInventory {
   private Organization organization = null;
   private OptionList options = null;
   private AdRunList adRuns = null;
+  private boolean sold = false;
   
-  public AccountInventory() { }
+  public Inventory() { }
 
-  public AccountInventory(ResultSet rs) throws SQLException {
+  public Inventory(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
   
-  public AccountInventory(Connection db, int inventoryId) throws SQLException {
+  public Inventory(Connection db, int inventoryId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(  
       "SELECT i.inventory_id, i.vehicle_id AS inventory_vehicle_id, " +
@@ -73,7 +74,7 @@ public class AccountInventory {
     if (rs.next()) {
       buildRecord(rs);
     } else {
-      System.out.println("AccountInventory-> * RECORD NOT FOUND: " + inventoryId);
+      System.out.println("Inventory-> * RECORD NOT FOUND: " + inventoryId);
     }
     rs.close();
     pst.close();
@@ -134,13 +135,21 @@ public class AccountInventory {
     adRuns = new AdRunList(request);
   }
   public void setAdRuns(AdRunList tmp) { this.adRuns = tmp; }
-  
+  public void setSold(boolean tmp) { this.sold = tmp; }
+
   public int getId() { return id; }
   public int getVehicleId() { return vehicleId; }
   public int getAccountId() { return accountId; }
   public String getVin() { return vin; }
   public int getAdType() { return adType; }
   public int getMileage() { return mileage; }
+  public String getMileageString() { 
+    if (mileage > -1) {
+      return String.valueOf(mileage);
+    } else {
+      return "";
+    }
+  }
   public boolean getIsNew() { return isNew; }
   public String getCondition() { return condition; }
   public String getComments() { return comments; }
@@ -154,8 +163,12 @@ public class AccountInventory {
   }
   public double getSellingPrice() { return sellingPrice; }
   public String getSellingPriceString() {
-    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-    return ("$" + numberFormatter.format(sellingPrice));
+    if (sellingPrice > 0) {
+      NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+      return ("$" + numberFormatter.format(sellingPrice));
+    } else {
+      return "";
+    }
   }
   public String getStatus() { return status; }
   public java.sql.Timestamp getEntered() { return entered; }
@@ -171,10 +184,15 @@ public class AccountInventory {
   public boolean hasOptions() { 
     return (options != null && options.size() > 0); 
   }
+  public boolean hasOption(int optionId) {
+    return (options != null && options.hasOption(optionId));
+  }
   public AdRunList getAdRuns() { return adRuns; }
   public boolean hasAdRuns() {
     return (adRuns != null && adRuns.size() > 0);
   }
+  public boolean getSold() { return sold; }
+
 
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
@@ -363,7 +381,7 @@ public class AccountInventory {
 
   public void buildOrganizationInfo(Connection db) throws SQLException {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AccountInventory-> Building org info: " + accountId);
+      System.out.println("Inventory-> Building org info: " + accountId);
     }
     if (accountId == -1) {
       accountId = 0;

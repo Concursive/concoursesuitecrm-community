@@ -1,6 +1,6 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.autoguide.base.*" %>
-<jsp:useBean id="InventoryItem" class="com.darkhorseventures.autoguide.base.AccountInventory" scope="request"/>
+<jsp:useBean id="InventoryItem" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <a href="AutoGuide.do?command=List">Back to Vehicle List</a><p>
 <form action='/AutoGuide.do?command=Details&id=<%= InventoryItem.getId() %>&action=modify' method='post'>
@@ -32,7 +32,7 @@
 <dhv:evaluate exp="<%= (InventoryItem.getMileage() > -1) %>">
   <tr>
     <td nowrap class="formLabel">Mileage</td>
-    <td><%= InventoryItem.getMileage() %>&nbsp;</td>
+    <td><%= InventoryItem.getMileageString() %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
 <dhv:evaluate exp="<%= (InventoryItem.getCondition() != null) %>">

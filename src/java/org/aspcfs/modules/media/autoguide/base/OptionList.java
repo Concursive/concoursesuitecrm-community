@@ -52,6 +52,17 @@ public class OptionList extends ArrayList {
   public String getTableName() { return tableName; }
   public String getUniqueField() { return uniqueField; }
   public int getInventoryId() { return inventoryId; }
+  
+  public boolean hasOption(int optionId) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Option thisOption = (Option)i.next();
+      if (thisOption.getId() == optionId) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   public void select(Connection db) throws SQLException {
     buildList(db);

@@ -1,6 +1,6 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.autoguide.base.*" %>
-<jsp:useBean id="InventoryList" class="com.darkhorseventures.autoguide.base.AccountInventoryList" scope="request"/>
+<jsp:useBean id="InventoryList" class="com.darkhorseventures.autoguide.base.InventoryList" scope="request"/>
 <jsp:useBean id="AutoGuideDirectoryInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
@@ -67,7 +67,7 @@
 				rowid = 2;
 			}
 			
-		AccountInventory thisItem = (AccountInventory)i.next();
+		Inventory thisItem = (Inventory)i.next();
 %>
       <tr>
         <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete">

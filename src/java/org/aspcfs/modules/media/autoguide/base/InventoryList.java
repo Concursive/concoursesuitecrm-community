@@ -9,7 +9,7 @@ import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.cfsbase.Constants;
 
-public class AccountInventoryList extends ArrayList {
+public class InventoryList extends ArrayList {
 
   public static String tableName = "autoguide_account_inventory";
   public static String uniqueField = "inventory_id";
@@ -20,7 +20,7 @@ public class AccountInventoryList extends ArrayList {
   private boolean buildOrganizationInfo = false;
   private int orgId = -1;
   
-  public AccountInventoryList() { }
+  public InventoryList() { }
 
   public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
   public void setLastAnchor(String tmp) {
@@ -47,7 +47,7 @@ public class AccountInventoryList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = queryList(db, pst);
     while (rs.next()) {
-      AccountInventory thisItem = this.getObject(rs);
+      Inventory thisItem = this.getObject(rs);
       this.add(thisItem);
     }
     rs.close();
@@ -55,22 +55,22 @@ public class AccountInventoryList extends ArrayList {
       pst.close();
     }
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("AccountInventoryList-> buildList generated items: " + this.size());
+      System.out.println("InventoryList-> buildList generated items: " + this.size());
     }
     if (buildOrganizationInfo) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
-        AccountInventory thisItem = (AccountInventory)i.next();
+        Inventory thisItem = (Inventory)i.next();
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("AccountInventoryList-> Building info for: " + thisItem.getId());
+          System.out.println("InventoryList-> Building info for: " + thisItem.getId());
         }
         thisItem.buildOrganizationInfo(db);
       }
     }
   }
   
-  public AccountInventory getObject(ResultSet rs) throws SQLException {
-    return (new AccountInventory(rs));
+  public Inventory getObject(ResultSet rs) throws SQLException {
+    return (new Inventory(rs));
   }
    
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {

@@ -230,9 +230,9 @@ public final class Contacts extends CFSModule {
    */
   public String executeCommandModify(ActionContext context) {
 	  
-	if (!(hasPermission(context, "accounts-accounts-contacts-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-edit"))) {
 	    return ("PermissionError");
-    	}
+    }
 	
     addModuleBean(context, "View Accounts", "Modify Contact");
     Exception errorMessage = null;
