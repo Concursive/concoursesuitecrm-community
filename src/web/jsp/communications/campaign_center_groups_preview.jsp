@@ -18,10 +18,6 @@
         <li>A recipient can be removed from this campaign</li>
         <li>The removed recipient will not be deleted from the group or from other campaigns</li>
       </ul>
-<%--
-<a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>">Back to Group List</a>
-<br>&nbsp;
---%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan="4" valign="center" align="left">
@@ -90,3 +86,4 @@
   </td>
   </tr>
 </table>
+<input type="button" value="Close Window" onClick="javascript:window.close()">

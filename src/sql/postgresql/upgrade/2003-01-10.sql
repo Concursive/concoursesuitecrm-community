@@ -10,5 +10,6 @@ INSERT INTO permission (category_id, permission, permission_view, permission_add
 update search_fields set searchable='f' where field='contactId';
 
 //10-08-02
-alter table saved_criteriaelement add column source integer default -1;
+alter table saved_criteriaelement add column source integer;
+alter table saved_criteriaelement alter column source set default -1;
 

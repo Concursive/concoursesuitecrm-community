@@ -228,7 +228,7 @@ Group Details
     </td>
     
     <td width=100% valign=center>
-    <%= ContactSource.getHtml("contactSource", SCL.getContactSource()) %>
+    <%= ContactSource.getHtml("contactSource", -1) %>
     </td>
     
     </tr> 

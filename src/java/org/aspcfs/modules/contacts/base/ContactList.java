@@ -48,20 +48,22 @@ public class ContactList extends Vector {
   private boolean withProjectsOnly = false;
   private String emptyHtmlSelectRecord = null;
   
-  //ranges
-  private String companyRange = null;
-  private String nameFirstRange = null;
-  private String nameLastRange = null;
-  private String zipRange = null;
-  private String areaCodeRange = null;
-  private String cityRange = null;
-  private String typeIdRange = null;
-  private String contactIdRange = null;
+  private int sclOwnerId = -1;
+  private String sclOwnerIdRange = null;
   
-  private String dateBefore = null;
-  private String dateAfter = null;
-  private String dateOnOrBefore = null;
-  private String dateOnOrAfter = null;
+  private HashMap companyHash = null;
+  private HashMap nameFirstHash = null;
+  private HashMap nameLastHash = null;
+  private HashMap dateHash = null;
+  private HashMap zipHash = null;
+  private HashMap areaCodeHash = null;
+  private HashMap cityHash = null;
+  private HashMap typeIdHash = null;
+  private HashMap contactIdHash = null;
+  
+  boolean firstCriteria = true;
+  
+  private String contactIdRange = null;
   
   private SearchCriteriaList scl = null;
   private boolean showEmployeeContacts = false;
@@ -77,18 +79,6 @@ public class ContactList extends Vector {
    *@since    1.1
    */
   public ContactList() { }
-  
-  
-  /**
-   *  Sets the CompanyRange attribute of the ContactList object
-   *
-   *@param  companyRange  The new CompanyRange value
-   *@since
-   */
-  public void setCompanyRange(String companyRange) {
-    this.companyRange = companyRange;
-  }
-  
   
   /**
    *  Sets the ShowEmployeeContacts attribute of the ContactList object
@@ -131,7 +121,34 @@ public class ContactList extends Vector {
     this.firstName = firstName;
   }
   
+  public HashMap getNameFirstHash() {
+    return nameFirstHash;
+  }
+  public void setNameFirstHash(HashMap nameFirstHash) {
+    this.nameFirstHash = nameFirstHash;
+  }
   
+  public HashMap getDateHash() {
+    return dateHash;
+  }
+  public void setDateHash(HashMap dateHash) {
+    this.dateHash = dateHash;
+  }
+
+  public HashMap getZipHash() {
+    return zipHash;
+  }
+  public void setZipHash(HashMap zipHash) {
+    this.zipHash = zipHash;
+  }
+  
+  public void setContactIdHash(HashMap contactIdHash) {
+    this.contactIdHash = contactIdHash;
+  }
+  public HashMap getContactIdHash() {
+    return contactIdHash;
+  }
+
   /**
    *  Sets the SearchText attribute of the ContactList object
    *
@@ -142,7 +159,13 @@ public class ContactList extends Vector {
     this.searchText = searchText;
   }
   
-  
+  public boolean getFirstCriteria() {
+    return firstCriteria;
+  }
+  public void setFirstCriteria(boolean firstCriteria) {
+    this.firstCriteria = firstCriteria;
+  }
+
   /**
    *  Sets the Company attribute of the ContactList object
    *
@@ -153,6 +176,12 @@ public class ContactList extends Vector {
     this.company = company;
   }
   
+  public HashMap getCityHash() {
+    return cityHash;
+  }
+  public void setCityHash(HashMap cityHash) {
+    this.cityHash = cityHash;
+  }
   
   /**
    *  Sets the OwnerIdRange attribute of the ContactList object
@@ -226,28 +255,12 @@ public class ContactList extends Vector {
     this.personalId = personalId;
   }
   
-  
-  /**
-   *  Sets the TypeIdRange attribute of the ContactList object
-   *
-   *@param  typeIdRange  The new TypeIdRange value
-   *@since
-   */
-  public void setTypeIdRange(String typeIdRange) {
-    this.typeIdRange = typeIdRange;
+  public HashMap getNameLastHash() {
+    return nameLastHash;
   }
-  
-  
-  /**
-   *  Sets the NameFirstRange attribute of the ContactList object
-   *
-   *@param  nameFirstRange  The new NameFirstRange value
-   *@since
-   */
-  public void setNameFirstRange(String nameFirstRange) {
-    this.nameFirstRange = nameFirstRange;
+  public void setNameLastHash(HashMap nameLastHash) {
+    this.nameLastHash = nameLastHash;
   }
-  
   
   /**
    *  Sets the Scl attribute of the ContactList object
@@ -259,6 +272,10 @@ public class ContactList extends Vector {
    */
   public void setScl(SearchCriteriaList scl, int thisOwnerId, String thisUserRange) {
     this.scl = scl;
+    this.sclOwnerId = thisOwnerId;
+    this.sclOwnerIdRange = thisUserRange;
+    this.setPersonalId(-2);
+    
     buildQuery(thisOwnerId, thisUserRange);
   }
   
@@ -284,7 +301,18 @@ public class ContactList extends Vector {
     this.lastName = tmp;
   }
   
+  public HashMap getCompanyHash() {
+    return companyHash;
+  }
+  public void setCompanyHash(HashMap companyHash) {
+    this.companyHash = companyHash;
+  }
   
+  public int getSclOwnerId() { return sclOwnerId; }
+  public String getSclOwnerIdRange() { return sclOwnerIdRange; }
+  public void setSclOwnerId(int tmp) { this.sclOwnerId = tmp; }
+  public void setSclOwnerIdRange(String tmp) { this.sclOwnerIdRange = tmp; }
+
   /**
    *  Sets the PagedListInfo attribute of the ContactList object
    *
@@ -293,17 +321,6 @@ public class ContactList extends Vector {
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
-  }
-  
-  
-  /**
-   *  Sets the ZipRange attribute of the ContactList object
-   *
-   *@param  zipRange  The new ZipRange value
-   *@since
-   */
-  public void setZipRange(String zipRange) {
-    this.zipRange = zipRange;
   }
   
   
@@ -372,72 +389,22 @@ public class ContactList extends Vector {
     this.buildDetails = tmp;
   }
   
-  
-  /**
-   *  Sets the NameLastRange attribute of the ContactList object
-   *
-   *@param  nameLastRange  The new NameLastRange value
-   *@since
-   */
-  public void setNameLastRange(String nameLastRange) {
-    this.nameLastRange = nameLastRange;
-  }
-  
-  
   /**
    *  Sets the SearchValues attribute of the ContactList object
    *
    *@param  outerHash  The new SearchValues value
    *@since
    */
-  public void setSearchValues(Hashtable[] outerHash) {
-    if (outerHash[0].containsKey("=") == true) {
-      this.companyRange = outerHash[0].get(new String("=")).toString();
-    }
-    
-    if (outerHash[1].containsKey("=") == true) {
-      this.nameFirstRange = outerHash[1].get(new String("=")).toString();
-    }
-    
-    if (outerHash[2].containsKey("=") == true) {
-      this.nameLastRange = outerHash[2].get(new String("=")).toString();
-    }
-    
-    if (outerHash[3].containsKey("<") == true) {
-      this.dateBefore = outerHash[3].get(new String("<")).toString();
-    }
-    
-    if (outerHash[3].containsKey(">") == true) {
-      this.dateAfter = outerHash[3].get(new String(">")).toString();
-    }
-    
-    if (outerHash[3].containsKey("<=") == true) {
-      this.dateOnOrBefore = outerHash[3].get(new String("<=")).toString();
-    }
-    
-    if (outerHash[3].containsKey(">=") == true) {
-      this.dateOnOrAfter = outerHash[3].get(new String(">=")).toString();
-    }
-    
-    if (outerHash[4].containsKey("=") == true) {
-      this.zipRange = outerHash[4].get(new String("=")).toString();
-    }
-    
-    if (outerHash[5].containsKey("=") == true) {
-      this.areaCodeRange = outerHash[5].get(new String("=")).toString();
-    }
-    
-    if (outerHash[6].containsKey("=") == true) {
-      this.cityRange = outerHash[6].get(new String("=")).toString();
-    }
-    
-    if (outerHash[7].containsKey("=") == true) {
-      this.typeIdRange = outerHash[7].get(new String("=")).toString();
-    }
-    
-    if (outerHash[8].containsKey("=") == true) {
-      this.contactIdRange = outerHash[8].get(new String("=")).toString();
-    }
+  public void setSearchValues(HashMap[] outerHash) {
+    this.companyHash = outerHash[0];
+    this.nameFirstHash = outerHash[1];
+    this.nameLastHash = outerHash[2];
+    this.dateHash = outerHash[3];
+    this.zipHash = outerHash[4];
+    this.areaCodeHash = outerHash[5];
+    this.cityHash = outerHash[6];
+    this.typeIdHash = outerHash[7];
+    this.contactIdHash = outerHash[8];
   }
   
   
@@ -501,7 +468,13 @@ public class ContactList extends Vector {
     return pagedListInfo;
   }
   
-  
+  public HashMap getTypeIdHash() {
+    return typeIdHash;
+  }
+  public void setTypeIdHash(HashMap typeIdHash) {
+    this.typeIdHash = typeIdHash;
+  }
+
   /**
    *  Gets the PersonalId attribute of the ContactList object
    *
@@ -519,6 +492,13 @@ public class ContactList extends Vector {
     this.includeEnabled = includeEnabled;
   }
   
+  public HashMap getAreaCodeHash() {
+    return areaCodeHash;
+  }
+  public void setAreaCodeHash(HashMap areaCodeHash) {
+    this.areaCodeHash = areaCodeHash;
+  }
+
   
   /**
    *  Gets the ShowEmployeeContacts attribute of the ContactList object
@@ -540,18 +520,6 @@ public class ContactList extends Vector {
   public String getSearchText() {
     return searchText;
   }
-  
-  
-  /**
-   *  Gets the TypeIdRange attribute of the ContactList object
-   *
-   *@return    The TypeIdRange value
-   *@since
-   */
-  public String getTypeIdRange() {
-    return typeIdRange;
-  }
-  
   
   /**
    *  Gets the OwnerIdRange attribute of the ContactList object
@@ -583,40 +551,6 @@ public class ContactList extends Vector {
     return withAccountsOnly;
   }
   
-  
-  /**
-   *  Gets the ZipRange attribute of the ContactList object
-   *
-   *@return    The ZipRange value
-   *@since
-   */
-  public String getZipRange() {
-    return zipRange;
-  }
-  
-  
-  /**
-   *  Gets the CompanyRange attribute of the ContactList object
-   *
-   *@return    The CompanyRange value
-   *@since
-   */
-  public String getCompanyRange() {
-    return companyRange;
-  }
-  
-  
-  /**
-   *  Gets the NameFirstRange attribute of the ContactList object
-   *
-   *@return    The NameFirstRange value
-   *@since
-   */
-  public String getNameFirstRange() {
-    return nameFirstRange;
-  }
-  
-  
   /**
    *  Gets the Scl attribute of the ContactList object
    *
@@ -626,18 +560,6 @@ public class ContactList extends Vector {
   public SearchCriteriaList getScl() {
     return scl;
   }
-  
-  
-  /**
-   *  Gets the NameLastRange attribute of the ContactList object
-   *
-   *@return    The NameLastRange value
-   *@since
-   */
-  public String getNameLastRange() {
-    return nameLastRange;
-  }
-  
   
   /**
    *  Gets the EmailNotNull attribute of the ContactList object
@@ -770,69 +692,28 @@ public class ContactList extends Vector {
   }
   
   public void buildQuery(int thisOwnerId, String thisUserRange) {
-    
-    switch (scl.getContactSource()) {
-      case SearchCriteriaList.SOURCE_MY_CONTACTS:
-        this.setOwner(thisOwnerId);
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        break;
-      case SearchCriteriaList.SOURCE_ALL_CONTACTS:
-        this.setOwnerIdRange(thisUserRange);
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        break;        
-      case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        this.setWithAccountsOnly(true);
-        break;
-        /**
-      case SearchCriteriaList.SOURCE_MY_ACCOUNTS:
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        this.setAccountOwnerIdRange("" + thisOwnerId);
-        break;
-      case SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY:
-        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        this.setAccountOwnerIdRange(thisUserRange);
-        break;
-        */
-      case SearchCriteriaList.SOURCE_EMPLOYEES:
-        this.setTypeId(Contact.EMPLOYEE_TYPE);
-        break;
-      default:
-        break;
-    }
-    
+   
     String fieldName = "";
     String readyToGo = "";
     
-    Hashtable[] outerHash = null;
+    HashMap[] outerHash = null;
     
     //ONE FOR EACH IN THE FIELD LIST
-    Hashtable company = null;
-    Hashtable namefirst = null;
-    Hashtable namelast = null;
-    Hashtable entered = null;
-    Hashtable zip = null;
-    Hashtable areacode = null;
-    Hashtable city = null;
-    Hashtable typeId = null;
-    Hashtable contactId = null;
+    HashMap company = new HashMap();
+    HashMap namefirst = new HashMap();
+    HashMap namelast = new HashMap();
+    HashMap entered = new HashMap();
+    HashMap zip = new HashMap();
+    HashMap areacode = new HashMap();
+    HashMap city = new HashMap();
+    HashMap typeId = new HashMap();
+    HashMap contactId = new HashMap();
     
     int count = 0;
     
-    //CREATE EACH
-    company = new Hashtable();
-    namefirst = new Hashtable();
-    namelast = new Hashtable();
-    entered = new Hashtable();
-    zip = new Hashtable();
-    areacode = new Hashtable();
-    city = new Hashtable();
-    typeId = new Hashtable();
-    contactId = new Hashtable();
-    
     //THIS CORRESPONDS TO THE FIELD LIST
     
-    outerHash = new Hashtable[]{
+    outerHash = new HashMap[]{
       company,
       namefirst,
       namelast,
@@ -861,10 +742,11 @@ public class ContactList extends Vector {
         SearchCriteriaElement thisElement = (SearchCriteriaElement) j.next();
         
         readyToGo = replace(thisElement.getText().toLowerCase(), '\'', "\\'");
-        String check = (String) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
+        //String check = (String) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
+        HashMap tempHash = (HashMap) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
         
         //only if we have string data to deal with
-        if (check == null || thisElement.getDataType().equals("date")) {
+        if (tempHash == null || tempHash.size() == 0 || thisElement.getDataType().equals("date")) {
           if (thisElement.getDataType().equals("date")) {
             int month = 0;
             int day = 0;
@@ -885,14 +767,28 @@ public class ContactList extends Vector {
               tmpCal.add(java.util.Calendar.DATE, +1);
             }
             
+            HashMap tempTable = new HashMap();
+            
             String backToString = (tmpCal.get(Calendar.MONTH) + 1) + "/" + tmpCal.get(Calendar.DAY_OF_MONTH) + "/" + tmpCal.get(Calendar.YEAR);
-            outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), ("'" + backToString + "'"));
+            tempTable.put(backToString, thisElement.getSourceId()+"");
+            
+            //outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), ("'" + backToString + "'"));
+            outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), tempTable);
           } else {
-            outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), ("'" + readyToGo + "'"));
+            //first entry
+            HashMap tempTable = new HashMap();
+            tempTable.put(readyToGo, thisElement.getSourceId()+"");
+            //outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), ("'" + readyToGo + "'"));
+            outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), tempTable);
           }
         } else {
-          check = check + ", '" + readyToGo + "'";
-          outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), check);
+          //check = check + ", '" + readyToGo + "'";
+          
+          tempHash.put(readyToGo, thisElement.getSourceId()+"");
+          outerHash[(thisElement.getFieldId() - 1)].remove(thisElement.getOperator());
+          outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), tempHash);
+          
+          //outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), check);
         }
         //end of that
         
@@ -990,21 +886,21 @@ public class ContactList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-    "c.*, d.description as departmentname, t.description as type_name, " +
-    "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
-    "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-    "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-    "o.name as org_name,o.enabled as orgenabled " +
-    "FROM contact c " +
-    "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
-    "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-    "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-    "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
-    "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
-    "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
-    "WHERE c.contact_id > -1 ");
-    
+        "c.*, d.description as departmentname, t.description as type_name, " +
+        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
+        "o.name as org_name,o.enabled as orgenabled " +
+        "FROM contact c " +
+        "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
+        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+        "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
+        "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
+        "WHERE c.contact_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    System.out.println(sqlFilter.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     
@@ -1027,37 +923,7 @@ public class ContactList extends Vector {
     pst.close();
     buildResources(db);
     
-    if (this.getScl() != null) {
-            //System.out.println("Chris Test: " + this.getContactIdRange() + this.size());
-            joinGlobalContacts(db);
-    }
-    
   }
-  
-  //going to try to do this another way
-  
-  public void joinGlobalContacts(Connection db) throws SQLException {
-    Iterator i = this.getScl().keySet().iterator();
-    while (i.hasNext()) {
-      Integer group = (Integer) i.next();
-      SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.getScl().get(group);
-      
-      Iterator j = thisGroup.iterator();
-      
-      while (j.hasNext()) {
-        SearchCriteriaElement thisElement = (SearchCriteriaElement) j.next();
-        
-        if (thisElement.getFieldId() == 9) {
-                Contact newContact = new Contact(db, thisElement.getText());
-                if (!(this.contains(newContact))) {
-                        this.add(newContact);
-                }
-        }
-      }
-    }
-  }
-  
-  
   
   /**
    *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
@@ -1223,51 +1089,6 @@ public class ContactList extends Vector {
         }
       }
       
-      if (companyRange != null) {
-        sqlFilter.append("AND (lower(o.name) in (" + companyRange + ") OR lower(c.company) in (" + companyRange + "))");
-      }
-      
-      if (nameFirstRange != null) {
-        sqlFilter.append("AND lower(c.namefirst) in (" + nameFirstRange + ") ");
-      }
-      
-      if (nameLastRange != null) {
-        sqlFilter.append("AND lower(c.namelast) in (" + nameLastRange + ") ");
-      }
-      
-      if (typeIdRange != null) {
-        sqlFilter.append("AND c.type_id in (" + typeIdRange + ") ");
-      }
-      
-      if (zipRange != null) {
-        sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode in (" + zipRange + ")) ");
-      }
-      
-      if (areaCodeRange != null) {
-        //TODO: Update this with the new phone number logic
-        sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,0,4) in (" + areaCodeRange + ")) ");
-      }
-      
-      if (cityRange != null) {
-        sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and lower(city) in (" + cityRange + ")) ");
-      }
-      
-      if (dateBefore != null) {
-        sqlFilter.append("AND (c.entered < " + dateBefore + ") ");
-      }
-      
-      if (dateAfter != null) {
-        sqlFilter.append("AND (c.entered > " + dateAfter + ") ");
-      }
-      
-      if (dateOnOrBefore != null) {
-        sqlFilter.append("AND (c.entered <= " + dateOnOrBefore + ") ");
-      }
-      
-      if (dateOnOrAfter != null) {
-        sqlFilter.append("AND (c.entered >= " + dateOnOrAfter + ") ");
-      }
-      
       if (ownerIdRange != null) {
         sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
       }
@@ -1287,7 +1108,6 @@ public class ContactList extends Vector {
       if (accountOwnerIdRange != null) {
         sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
       }
-      
       //Decide which contacts can be shown
       switch (personalId) {
         //System needs to get all contacts
@@ -1299,7 +1119,6 @@ public class ContactList extends Vector {
           sqlFilter.append("AND ( (c.type_id != 2 OR c.type_id is NULL) OR (c.type_id = 2 AND c.owner = ?) ) ");
           break;
       }
-      
       if (ignoreTypeIdList.size() > 0) {
         Iterator iList = ignoreTypeIdList.iterator();
         sqlFilter.append("AND (c.type_id not in (");
@@ -1312,6 +1131,320 @@ public class ContactList extends Vector {
         }
         sqlFilter.append(") OR c.type_id is NULL) ");
       }
+      
+      //contactIds
+      if (contactIdHash != null && contactIdHash.size() > 0) {
+          boolean newTerm = true;
+          
+          HashMap innerHash = (HashMap)contactIdHash.get("=");
+          if (innerHash != null) {
+            int termsProcessed = 0;
+            Iterator inner = innerHash.keySet().iterator();
+            
+               while(inner.hasNext()) {
+                  String key2 = (String)inner.next();
+                  
+                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                    sqlFilter.append(" (c.contact_id  = '" + key2 + "' ) ");
+                    termsProcessed++;
+              }
+              
+              if (!newTerm) {
+                sqlFilter.append(") ");
+              }
+          }
+       }
+      
+      //loop on the types 
+      
+      for(int y=1; y<(SearchCriteriaList.CONTACT_SOURCE_ELEMENTS+1); y++) {
+        boolean newTerm = true;
+        int termsProcessed = 0;
+        
+        //company names
+        if (companyHash != null && companyHash.size() > 0) {
+          Iterator outer = companyHash.keySet().iterator();
+          
+          while(outer.hasNext()) {
+            
+            termsProcessed = 0;
+            String key1 = (String)outer.next();
+            HashMap innerHash = (HashMap)companyHash.get(key1);
+            
+            Iterator inner = innerHash.keySet().iterator();
+            
+               while(inner.hasNext()) {
+                  String key2 = (String)inner.next();
+                  int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
+                  
+                  //equals is the only operator supported right now
+                  if (elementType == y && key1.equals("=")) {
+                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                     if (termsProcessed == 0) {
+                      sqlFilter.append("(");
+                    }
+                    sqlFilter.append(" (lower(o.name) = '" + key2 + "' OR lower(c.company) = '" + key2 + "' ) ");
+                    processElementType(sqlFilter, elementType);
+                    termsProcessed++;
+                  }
+                }
+              }
+              if (termsProcessed > 0) {
+                sqlFilter.append(")");
+              }
+        }
+            
+        //first names
+        if (nameFirstHash != null && nameFirstHash.size() > 0) {
+          Iterator outer = nameFirstHash.keySet().iterator();
+          
+          while(outer.hasNext()) {
+            
+            termsProcessed = 0;
+            String key1 = (String)outer.next();
+            HashMap innerHash = (HashMap)nameFirstHash.get(key1);
+            
+            Iterator inner = innerHash.keySet().iterator();
+            
+               while(inner.hasNext()) {
+                  String key2 = (String)inner.next();
+                  int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
+                  
+                  //equals is the only operator supported right now
+                  if (elementType == y && key1.equals("=")) {
+                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                     if (termsProcessed == 0) {
+                      sqlFilter.append("(");
+                    }
+                    sqlFilter.append(" (lower(c.namefirst) = '" + key2 + "' )");
+                    processElementType(sqlFilter, elementType);
+                    termsProcessed++;
+                  }
+                }
+              }
+              if (termsProcessed > 0) {
+                sqlFilter.append(")");
+              }
+        }
+            
+        //last names
+        if (nameLastHash != null && nameLastHash.size() > 0) {
+          Iterator outer = nameLastHash.keySet().iterator();
+          
+          while(outer.hasNext()) {
+            
+            termsProcessed = 0;
+            String key1 = (String)outer.next();
+            HashMap innerHash = (HashMap)nameLastHash.get(key1);
+            
+            Iterator inner = innerHash.keySet().iterator();
+            
+               while(inner.hasNext()) {
+                  String key2 = (String)inner.next();
+                  int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
+                  
+                  //equals is the only operator supported right now
+                  if (elementType == y && key1.equals("=")) {
+                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                     if (termsProcessed == 0) {
+                      sqlFilter.append("(");
+                    }
+                    sqlFilter.append(" (lower(c.namelast) = '" + key2 + "' )");
+                    processElementType(sqlFilter, elementType);
+                    termsProcessed++;
+                  }
+                }
+              }
+              
+              if (termsProcessed > 0) {
+                sqlFilter.append(") ");
+              }              
+              
+         }         
+            
+        //Entered Dates
+        if (dateHash != null && dateHash.size() > 0) {
+          Iterator outer = dateHash.keySet().iterator();
+          
+          while(outer.hasNext()) {
+            
+            termsProcessed = 0;
+            String key1 = (String)outer.next();
+            HashMap innerHash = (HashMap)dateHash.get(key1);
+            
+            Iterator inner = innerHash.keySet().iterator();
+            
+               while(inner.hasNext()) {
+                  String key2 = (String)inner.next();
+                  int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
+                  
+                  if (elementType == y && (key1.equals("<") || key1.equals(">") || key1.equals("<=") || key1.equals(">="))) {
+                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                     if (termsProcessed == 0) {
+                      sqlFilter.append("(");
+                    }
+                    if (key1.equals("<")) {
+                      sqlFilter.append(" (c.entered < '" + key2 + "') ");
+                    } else if (key1.equals(">")) {
+                      sqlFilter.append(" (c.entered > '" + key2 + "') ");
+                    } else if (key1.equals("<=")) {
+                      sqlFilter.append(" (c.entered <= '" + key2 + "') ");
+                    } else if (key1.equals(">=")) {
+                      sqlFilter.append(" (c.entered >= '" + key2 + "') ");
+                    }
+                    
+                    processElementType(sqlFilter, elementType);
+                    termsProcessed++;
+                  }
+                }
+              }
+
+              if (termsProcessed > 0) {
+                sqlFilter.append(")");
+              }
+            }               
+            
+        //zip codes
+        if (zipHash != null && zipHash.size() > 0) {
+          Iterator outer = zipHash.keySet().iterator();
+          
+          while(outer.hasNext()) {
+            
+            termsProcessed = 0;
+            String key1 = (String)outer.next();
+            HashMap innerHash = (HashMap)zipHash.get(key1);
+            
+            Iterator inner = innerHash.keySet().iterator();
+            
+               while(inner.hasNext()) {
+                  String key2 = (String)inner.next();
+                  int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
+                  
+                  //equals is the only operator supported right now
+                  if (elementType == y && key1.equals("=")) {
+                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                     if (termsProcessed == 0) {
+                      sqlFilter.append("(");
+                    }
+                    sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode = '" + key2 + "' )) ");
+                    processElementType(sqlFilter, elementType);
+                    termsProcessed++;
+                  }
+                }
+              }
+              if (termsProcessed > 0) {
+                sqlFilter.append(")");
+              }
+            }
+            
+        //contact types
+        if (typeIdHash != null && typeIdHash.size() > 0) {
+          Iterator outer = typeIdHash.keySet().iterator();
+          
+          while(outer.hasNext()) {
+            
+            termsProcessed = 0;
+            String key1 = (String)outer.next();
+            HashMap innerHash = (HashMap)typeIdHash.get(key1);
+            
+            Iterator inner = innerHash.keySet().iterator();
+            
+               while(inner.hasNext()) {
+                  String key2 = (String)inner.next();
+                  int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
+                  
+                  //equals is the only operator supported right now
+                  if (elementType == y && key1.equals("=")) {
+                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                     if (termsProcessed == 0) {
+                      sqlFilter.append("(");
+                    }
+                    sqlFilter.append(" (c.type_id  = '" + key2 + "' ) ");
+                    processElementType(sqlFilter, elementType);
+                    termsProcessed++;
+                  }
+                }
+              }
+
+              if (termsProcessed > 0) {
+                sqlFilter.append(") ");
+              }              
+            }          
+            
+        //area codes
+        if (areaCodeHash != null && areaCodeHash.size() > 0) {
+          Iterator outer = areaCodeHash.keySet().iterator();
+          
+          while(outer.hasNext()) {
+            
+            termsProcessed = 0;
+            String key1 = (String)outer.next();
+            HashMap innerHash = (HashMap)areaCodeHash.get(key1);
+            
+            Iterator inner = innerHash.keySet().iterator();
+            
+               while(inner.hasNext()) {
+                  String key2 = (String)inner.next();
+                  int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
+                  
+                  //equals is the only operator supported right now
+                  if (elementType == y && key1.equals("=")) {
+                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                     if (termsProcessed == 0) {
+                      sqlFilter.append("(");
+                    }
+                    sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,2,3) = '" + key2 + "' )) ");
+                    processElementType(sqlFilter, elementType);
+                    termsProcessed++;
+                  }
+                }
+              }
+              if (termsProcessed > 0) {
+                sqlFilter.append(")");
+              }
+            }    
+            
+        //cities
+        if (cityHash != null && cityHash.size() > 0) {
+          Iterator outer = cityHash.keySet().iterator();
+          
+          while(outer.hasNext()) {
+            
+            termsProcessed = 0;
+            String key1 = (String)outer.next();
+            HashMap innerHash = (HashMap)cityHash.get(key1);
+            
+            Iterator inner = innerHash.keySet().iterator();
+            
+               while(inner.hasNext()) {
+                  String key2 = (String)inner.next();
+                  int elementType = Integer.parseInt(((String)innerHash.get(key2)).toString());
+                  
+                  //equals is the only operator supported right now
+                  if (elementType == y && key1.equals("=")) {
+                    newTerm = processElementHeader(sqlFilter, newTerm, termsProcessed);
+                    if (termsProcessed == 0) {
+                      sqlFilter.append("(");
+                    }
+                    sqlFilter.append(" (c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and lower(city) = '" + key2 + "' )) ");
+                    processElementType(sqlFilter, elementType);
+                    termsProcessed++;
+                  }
+                }
+              }
+              
+              if (termsProcessed > 0) {
+                sqlFilter.append(")");
+              }
+              
+            }  
+   
+            if (!newTerm) {
+              sqlFilter.append(") ");
+            }
+            
+      }
+      
     } else {
       if (typeId != -1) {
         sqlFilter.append("AND c.type_id = ? ");
@@ -1390,13 +1523,11 @@ public class ContactList extends Vector {
       if (company != null) {
         pst.setString(++i, company);
       }
-      
       switch (personalId) {
         case -2: break;
         case -1: break;
         default: pst.setInt(++i, personalId); break;
       }
-      
       if (ignoreTypeIdList.size() > 0) {
         Iterator iList = ignoreTypeIdList.iterator();
         while (iList.hasNext()) {
@@ -1419,6 +1550,45 @@ public class ContactList extends Vector {
     }
     
     return i;
+  }
+  
+  public void processElementType(StringBuffer sqlFilter, int type) {
+        switch(type) {
+        case SearchCriteriaList.SOURCE_MY_CONTACTS:
+          sqlFilter.append(" AND c.owner = " + sclOwnerId + " ");
+          sqlFilter.append(" AND (c.type_id not in (" + Contact.EMPLOYEE_TYPE + ") OR c.type_id is null) ");
+          break;
+        case SearchCriteriaList.SOURCE_ALL_CONTACTS:
+          sqlFilter.append(" AND c.owner in (" + sclOwnerIdRange + ") ");
+          sqlFilter.append(" AND (c.type_id not in (" + Contact.EMPLOYEE_TYPE + ") OR c.type_id is null) ");
+          break;        
+        case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+          sqlFilter.append(" AND c.org_id > 0 ");
+          sqlFilter.append(" AND (c.type_id not in (" + Contact.EMPLOYEE_TYPE + ") OR c.type_id is null) ");
+          break;
+        case SearchCriteriaList.SOURCE_EMPLOYEES:
+          sqlFilter.append(" AND (c.type_id = " + Contact.EMPLOYEE_TYPE + ") ");
+          break;
+        default:
+        break;
+        }
+  }
+  
+  public boolean processElementHeader(StringBuffer sqlFilter, boolean newTerm, int termsProcessed) {
+        if (firstCriteria && newTerm) {
+          sqlFilter.append(" AND (");
+          firstCriteria = false;
+          newTerm = false;
+        } else if (newTerm && !(firstCriteria)) {
+          sqlFilter.append(" OR (");
+          newTerm = false;
+        } else if (termsProcessed > 0) {
+          sqlFilter.append(" OR ");
+        } else {
+          sqlFilter.append(" AND ");
+        }  
+        
+        return newTerm;
   }
   
 }

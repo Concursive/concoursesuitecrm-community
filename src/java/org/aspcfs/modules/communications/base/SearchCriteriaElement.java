@@ -54,9 +54,9 @@ public class SearchCriteriaElement {
     if (st.hasMoreTokens()) {
       text = (String) st.nextToken();
     }
-    //if (st.hasMoreTokens()) {
-    //  sourceId = Integer.parseInt((String) st.nextToken());
-    //}    
+    if (st.hasMoreTokens()) {
+      sourceId = Integer.parseInt((String) st.nextToken());
+    }    
   }
 
   public int getSourceId() {

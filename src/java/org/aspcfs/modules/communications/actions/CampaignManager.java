@@ -384,8 +384,9 @@ public final class CampaignManager extends CFSModule {
 
       if ("true".equals(context.getRequest().getParameter("reset"))) {
         context.getSession().removeAttribute("CampaignCenterPreviewInfo");
+        this.deletePagedListInfo(context, "CampaignCenterPreviewInfo");
       }
-      this.deletePagedListInfo(context, "CampaignCenterPreviewInfo");
+      
       PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignCenterPreviewInfo");
       pagedListInfo.setLink("CampaignManager.do?command=PreviewGroups&id=" + campaign.getId() + "&scl=" + thisSCL.getId());
 

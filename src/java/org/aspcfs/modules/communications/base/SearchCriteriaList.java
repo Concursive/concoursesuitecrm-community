@@ -23,6 +23,8 @@ public class SearchCriteriaList extends HashMap {
   public final static int SOURCE_ALL_CONTACTS = 2;
   public final static int SOURCE_ALL_ACCOUNTS = 3;
   public final static int SOURCE_EMPLOYEES = 4;
+  
+  public final static int CONTACT_SOURCE_ELEMENTS = 4;
 
   protected HashMap errors = new HashMap();
   private int id = -1;
@@ -506,7 +508,7 @@ public java.sql.Timestamp getModified() {
   public String getHtmlSelect(String selectName) {
     HtmlSelect selectList = new HtmlSelect();
     selectList.setSelectSize(10);
-    //String fromString = "";
+    String fromString = "";
     
     if (this.getHtmlSelectIdName() != null) {
             selectList.setIdName(this.getHtmlSelectIdName());
@@ -520,10 +522,14 @@ public java.sql.Timestamp getModified() {
 
       while (j.hasNext()) {
         SearchCriteriaElement thisElt = (SearchCriteriaElement) (j.next());
-        //String keyString = thisElt.getFieldIdAsString() + "*" + thisElt.getOperatorIdAsString() + "*" + thisElt.getText() + "*" + thisElt.getSourceId();
         String keyString = thisElt.getFieldIdAsString() + "*" + thisElt.getOperatorIdAsString() + "*" + thisElt.getText();
         
-        /**
+        if (thisElt.getSourceId() > -1) {
+          keyString += "*" + thisElt.getSourceId();
+        }
+        
+        //String keyString = thisElt.getFieldIdAsString() + "*" + thisElt.getOperatorIdAsString() + "*" + thisElt.getText();
+        
         switch (thisElt.getSourceId()) {
           case SearchCriteriaList.SOURCE_MY_CONTACTS:
             fromString = " [My Contacts]";
@@ -533,22 +539,22 @@ public java.sql.Timestamp getModified() {
             break;
           case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
             fromString = " [Account Contacts]";
+            break;
           case SearchCriteriaList.SOURCE_EMPLOYEES:
             fromString = " [Employees]";
             break;
           default:
             break;
         }
-        */
         
         if (thisGroup.getGroupField().getDescription().equals("Contact Type") && thisElt.getContactTypeName() != null) {
-          //valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName() + fromString;
-          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName();
+          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName() + fromString;
+          //valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getContactTypeName();
         } else if (thisGroup.getGroupField().getDescription().equals("Contact ID") && thisElt.getContactNameLast() != null) {
           valueString = "Contact Name (" + thisElt.getOperatorDisplayText() + ") " + Contact.getNameLastFirst(thisElt.getContactNameLast(), thisElt.getContactNameFirst());
         } else {
-          //valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText() + fromString;
-          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText();
+          valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText() + fromString;
+          //valueString = thisGroup.getGroupField().getDescription() + " (" + thisElt.getOperatorDisplayText() + ") " + thisElt.getText();
         }
 
         selectList.addItem(keyString, valueString);
