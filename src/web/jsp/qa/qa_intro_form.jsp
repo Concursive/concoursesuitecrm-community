@@ -47,8 +47,12 @@
 </dhv:evaluate>
   <input type="hidden" name="id" value="<%= Help.getId() %>">
   <input type="hidden" name="module" value="<%= toString(Help.getModule()) %>">
-  <input type="hidden" name="section" value="<%= toString(Help.getSection()) %>">
-  <input type="hidden" name="subsection" value="<%= toString(Help.getSubsection()) %>">
+  <dhv:evaluate if="<%= !"".equals(toString(Help.getSection())) %>">
+    <input type="hidden" name="section" value="<%= Help.getSection() %>">
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= !"".equals(toString(Help.getSubsection())) %>">
+    <input type="hidden" name="subsection" value="<%= toString(Help.getSubsection()) %>">
+  </dhv:evaluate>
   <%= addHiddenParams(request, "popup") %>
 </form>  
 </body>
