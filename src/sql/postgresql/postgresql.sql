@@ -1,4 +1,5 @@
 --- NOTICE Add BEGIN WORK and COMMIT as well as the CFS2GK tables
+--- ALSO update the database_version manually
 
 BEGIN WORK;
 
@@ -4720,7 +4721,7 @@ INSERT INTO report VALUES (19, 15, NULL, 'employees.xml', 1, 'Employees', 'Who a
 -- Name: database_version; Type: TABLE DATA; Schema: public; Owner: matt
 --
 
-INSERT INTO database_version VALUES (1, 'att/source/dhv/cfs2/src/sql/init/workflow.bsh', 'att/source/dhv/cfs2/src/sql/init/workflow', '2003-12-23 04:28:53.016');
+INSERT INTO database_version VALUES (1, 'postgresql.sql', '2003-12-23', '2003-12-23 04:28:53.016');
 
 
 --
