@@ -83,13 +83,18 @@
      
 	<table width=285 cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
 	
-	<tr bgcolor="#DEE0FA">
+	<!--tr bgcolor="#DEE0FA">
           <td width=100% valign=center colspan=1>
 	    Reporting Staff
           </td>
 	  <td width=55 valign=center colspan=1>
 	    YTD
           </td>
+        </tr-->
+	
+	        <tr bgcolor="#DEE0FA">
+	<td>Reporting Staff</td>
+          <td>YTD</td>
         </tr>
 	
 	<%
