@@ -502,9 +502,7 @@
       <property field="status_id"/>
       <property field="status"/>
       <property field="status_date"/>
-      <property field="zone"/>
       <property field="scheduled_date"/>
-      <property field="zone"/>
       <property field="sent_date"/>
       <property field="reply_date"/>
       <property field="bounce_date"/>

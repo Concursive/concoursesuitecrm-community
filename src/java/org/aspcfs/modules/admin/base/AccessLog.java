@@ -29,6 +29,14 @@ public class AccessLog extends GenericBean {
   }
 
   public AccessLog(Connection db, int id) throws SQLException {
+          queryRecord(db, id);
+  }
+  
+  public AccessLog(Connection db, int id) throws SQLException {
+          queryRecord(db, Integer.parseInt(id));
+  }  
+  
+  public void queryRecord(Connection db, int id) throws SQLException {
 
     if (id == -1) {
       throw new SQLException("Invalid Access Log ID");
