@@ -8,6 +8,7 @@
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -30,9 +31,19 @@
         return true;
       }
     }
+    function update(countryObj, stateObj) {
+  var country = document.forms['addEmployee'].elements[countryObj].value;
+   if(country == "UNITED STATES" || country == "CANADA"){
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
+   }else{
+      hideSpan('state1' + stateObj);
+      showSpan('state2' + stateObj);
+    }
+  }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<form action="CompanyDirectory.do?command=InsertEmployee&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="addEmployee" action="CompanyDirectory.do?command=InsertEmployee&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 Add Employee<br>
 <hr color="#BFBFBB" noshade>
@@ -179,6 +190,14 @@ Add Employee<br>
   </tr>
   <tr>
     <td class="formLabel" nowrap>
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address1line3" maxlength="80">
+    </td>
+  </tr>
+  <tr>
+    <td class="formLabel" nowrap>
       City
     </td>
     <td>
@@ -190,8 +209,13 @@ Add Employee<br>
       State/Province
     </td>
     <td>
-      <%=StateSelect.getHtml("address1state")%>
-      <!--input type=text size=12 name="address1state" maxlength=80-->
+      <span name="state11" ID="state11">
+        <%= StateSelect.getHtml("address1state") %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state21" ID="state21" style="display:none">
+        <input type="text" size="25" name="<%= "address1otherState" %>">
+      </span>
     </td>
   </tr>
   <tr>
@@ -207,8 +231,8 @@ Add Employee<br>
       Country
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address1country', '1');\"");%>
       <%= CountrySelect.getHtml("address1country") %>
-      <!--input type=text size=28 name="address1country" maxlength=80-->
     </td>
   </tr>
   <tr><td colspan="2">&nbsp;</td></tr>
@@ -238,6 +262,14 @@ Add Employee<br>
   </tr>
   <tr>
     <td class="formLabel" nowrap>
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address2line3" maxlength="80">
+    </td>
+  </tr>
+  <tr>
+    <td class="formLabel" nowrap>
       City
     </td>
     <td>
@@ -249,8 +281,13 @@ Add Employee<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address2state") %>
-      <!--input type=text size=12 name="address2state" maxlength=80-->
+      <span name="state12" ID="state12">
+        <%= StateSelect.getHtml("address2state") %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state22" ID="state22" style="display:none">
+        <input type="text" size="25" name="<%= "address2otherState" %>">
+      </span>
     </td>
   </tr>
   <tr>
@@ -267,7 +304,6 @@ Add Employee<br>
     </td>
     <td>
       <%= CountrySelect.getHtml("address2country") %>
-      <!--input type=text size=28 name="address2country" maxlength=80-->
     </td>
   </tr>
 </table>

@@ -12,6 +12,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if(document.forms['addContact'].contactcategory[0].checked && document.forms['addContact'].contactcategory[0].value == '3'){
@@ -50,6 +51,16 @@
       category = 'accounts';
     }
     popContactTypeSelectMultiple(selectedId, category, contactId); 
+  }
+  function update(countryObj, stateObj) {
+  var country = document.forms['addContact'].elements[countryObj].value;
+   if(country == "UNITED STATES" || country == "CANADA"){
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
+   }else{
+      hideSpan('state1' + stateObj);
+      showSpan('state2' + stateObj);
+    }
   }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
@@ -309,6 +320,14 @@ Add Contact<br>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine3()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap>
       City
     </td>
     <td>
@@ -320,7 +339,13 @@ Add Contact<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
+        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
+      </span>
       <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
@@ -337,6 +362,7 @@ Add Contact<br>
       Country
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
@@ -377,6 +403,14 @@ Add Contact<br>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap>
       City
     </td>
     <td>
@@ -388,7 +422,13 @@ Add Contact<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address" + acount + "state") %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>">
+        <%= StateSelect.getHtml("address" + acount + "state") %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
+      </span>
       <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
@@ -405,6 +445,7 @@ Add Contact<br>
       Country
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country") %>
       <% CountrySelect = new CountrySelect(); %>
     </td>

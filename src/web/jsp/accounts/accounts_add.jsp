@@ -13,6 +13,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
   indSelected = 0;
   orgSelected = 1;
@@ -197,6 +198,17 @@
         }
       j++;
       if (j >= theform.elements.length) { j=0; }
+    }
+  }
+  
+  function update(countryObj, stateObj) {
+  var country = document.forms['addAccount'].elements[countryObj].value;
+   if(country == "UNITED STATES" || country == "CANADA"){
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
+   }else{
+      hideSpan('state1' + stateObj);
+      showSpan('state2' + stateObj);
     }
   }
 </script>
@@ -514,6 +526,14 @@ Add Account<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine3()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       City
     </td>
     <td>
@@ -525,7 +545,13 @@ Add Account<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
+        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
+      </span>
       <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
@@ -542,6 +568,7 @@ Add Account<br>
       Country
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
@@ -582,6 +609,14 @@ Add Account<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       City
     </td>
     <td>
@@ -593,8 +628,13 @@ Add Account<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address" + acount + "state") %>
-      <% StateSelect = new StateSelect(); %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>">
+        <%= StateSelect.getHtml("address" + acount + "state") %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
+      </span>
     </td>
   </tr>
   <tr class="containerBody">
@@ -610,6 +650,7 @@ Add Account<br>
       Country
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country") %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
@@ -656,6 +697,14 @@ Add Account<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine3()) %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       City
     </td>
     <td>
@@ -667,7 +716,13 @@ Add Account<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
+        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
+      </span>
       <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
@@ -684,6 +739,7 @@ Add Account<br>
       Country
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
@@ -723,6 +779,14 @@ Add Account<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       City
     </td>
     <td>
@@ -734,7 +798,13 @@ Add Account<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address" + acount + "state") %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>">
+        <%= StateSelect.getHtml("address" + acount + "state") %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
+      </span>
       <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
@@ -751,6 +821,7 @@ Add Account<br>
       Country
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country") %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
@@ -789,6 +860,14 @@ Add Account<br>
   </tr>
   <tr>
     <td nowrap class="formLabel">
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address1line3" maxlength="80">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
       City
     </td>
     <td>
@@ -800,7 +879,13 @@ Add Account<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address1state") %>
+      <span name="state11" ID="state11">
+        <%= StateSelect.getHtml("address1state") %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state21" ID="state21" style="display:none">
+        <input type="text" size="25" name="<%= "address1otherState" %>">
+      </span>
     </td>
   </tr>
   <tr>
@@ -816,6 +901,7 @@ Add Account<br>
       Country
     </td>
     <td>
+    <% CountrySelect.setJsEvent("onChange=\"javascript:update('address1country', '1');\"");%>
     <%= CountrySelect.getHtml("address1country") %>
     </td>
   </tr>
@@ -848,6 +934,13 @@ Add Account<br>
   </tr>
   <tr>
     <td nowrap class="formLabel">
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address2line3" maxlength="80">
+    </td>
+  </tr>
+    <td nowrap class="formLabel">
       City
     </td>
     <td>
@@ -859,7 +952,13 @@ Add Account<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address2state") %>
+      <span name="state12" ID="state12">
+        <%= StateSelect.getHtml("address2state") %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state22" ID="state22" style="display:none">
+        <input type="text" size="25" name="<%= "address2otherState" %>">
+      </span>
     </td>
   </tr>
   <tr>

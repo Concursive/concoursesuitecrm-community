@@ -9,6 +9,7 @@
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -37,8 +38,18 @@
       return true;
     }
   }
+  function update(countryObj, stateObj) {
+  var country = document.forms['modEmployee'].elements[countryObj].value;
+   if(country == "UNITED STATES" || country == "CANADA"){
+      hideSpan('state2' + stateObj);
+      showSpan('state1' + stateObj);
+   }else{
+      hideSpan('state1' + stateObj);
+      showSpan('state2' + stateObj);
+    }
+  }
 </script>
-<form action="CompanyDirectory.do?command=UpdateEmployee&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="modEmployee" action="CompanyDirectory.do?command=UpdateEmployee&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -223,6 +234,14 @@ Modify Employee<br>
   </tr>
   <tr>
     <td class="formLabel" nowrap>
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine3()) %>">
+    </td>
+  </tr>
+  <tr>
+    <td class="formLabel" nowrap>
       City
     </td>
     <td>
@@ -234,7 +253,13 @@ Modify Employee<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+        <%= StateSelect.getHtml("address" + acount + "state", thisAddress.getState()) %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="<%= (!"UNITED STATES".equals(thisAddress.getCountry()) && !"CANADA".equals(thisAddress.getCountry())) ? "" : " display:none" %>">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>"  value="<%= toHtmlValue(thisAddress.getState()) %>">
+      </span>
       <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
@@ -251,6 +276,7 @@ Modify Employee<br>
       Country
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
@@ -287,6 +313,14 @@ Modify Employee<br>
     </td>
   </tr>
   <tr>
+  <tr>
+    <td class="formLabel" nowrap>
+      Address Line 3
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80">
+    </td>
+  </tr>
     <td class="formLabel" nowrap>
       City
     </td>
@@ -299,7 +333,13 @@ Modify Employee<br>
       State/Province
     </td>
     <td>
-      <%= StateSelect.getHtml("address" + acount + "state") %>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>">
+        <%= StateSelect.getHtml("address" + acount + "state") %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
+      </span>
       <% StateSelect = new StateSelect(); %>
     </td>
   </tr>
@@ -316,6 +356,7 @@ Modify Employee<br>
       Country
     </td>
     <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country") %>
       <% CountrySelect = new CountrySelect(); %>
     </td>
