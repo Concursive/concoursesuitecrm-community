@@ -38,7 +38,7 @@ public final class ExternalContactsOpps extends CFSModule {
     addModuleBean(context, "External Contacts", "Opportunities");
 
     PagedListInfo oppPagedListInfo = this.getPagedListInfo(context, "OpportunityPagedListInfo");
-    oppPagedListInfo.setLink("/Opportunities.do?command=View&contactId=" + contactId);
+    oppPagedListInfo.setLink("/ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId);
 
     Connection db = null;
     OpportunityList oppList = new OpportunityList();

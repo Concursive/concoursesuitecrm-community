@@ -318,17 +318,6 @@ public final class MyCFS extends CFSModule {
 			alertPaged.setMaxRecords(5);
 			alertPaged.setColumnToSortBy("alertdate");
 
-			OpportunityList alertOpps = new OpportunityList();
-			alertOpps.setPagedListInfo(alertPaged);
-			alertOpps.setEnteredBy(alertsDD);
-			alertOpps.setHasAlertDate(true);
-			alertOpps.buildList(db);
-			Iterator n = alertOpps.iterator();
-			while (n.hasNext()) {
-				Opportunity thisOpp = (Opportunity) n.next();
-				companyCalendar.addEvent(thisOpp.getAlertDate(), "", thisOpp.getDescription(), "Opportunity");
-			}
-
 			CallList alertCalls = new CallList();
 			alertCalls.setPagedListInfo(alertPaged);
 			alertCalls.setEnteredBy(alertsDD);
@@ -358,6 +347,20 @@ public final class MyCFS extends CFSModule {
 					com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
 					companyCalendar.addEvent(thisAssignment.getDueDate(), thisAssignment.getRole(), "Assignment");
 				}
+			}
+			
+			OpportunityList alertOpps = new OpportunityList();
+			alertOpps.setPagedListInfo(alertPaged);
+			alertOpps.setEnteredBy(alertsDD);
+			alertOpps.setHasAlertDate(true);
+			alertOpps.buildList(db);
+			
+			System.out.println("size of opps: " + alertOpps.size());
+			
+			Iterator n = alertOpps.iterator();
+			while (n.hasNext()) {
+				Opportunity thisOpp = (Opportunity) n.next();
+				companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "", thisOpp.getDescription(), "Opportunity");
 			}
 
 			context.getRequest().setAttribute("CompanyCalendar", companyCalendar);

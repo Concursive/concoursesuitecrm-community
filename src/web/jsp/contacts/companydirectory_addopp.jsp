@@ -91,7 +91,7 @@
       Est. Close Date
     </td>
     <td>
-      <input type=text size=10 name="closeDate" value="<%= toHtmlValue(OppDetails.getCloseDate()) %>">
+      <input type=text size=10 name="closeDate" value="<%= toHtmlValue(OppDetails.getCloseDateString()) %>">
       <a href="javascript:popCalendar('addOpportunity', 'closeDate');">Date</a> (mm/dd/yyyy)
       <font color=red>*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
@@ -151,7 +151,7 @@
       Est. Commission
     </td>
     <td>
-      <input type=text size=5 name="commission">%
+      <input type=text size=5 name="commission" value="<%= OppDetails.getCommission()*100 %>">%
       <input type=hidden name="contactLink" value="<%=request.getParameter("contactId")%>">
       <input type=hidden name="contactId" value="<%=request.getParameter("contactId")%>">
     </td>
@@ -162,7 +162,7 @@
       Alert Date
     </td>
     <td>
-      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppDetails.getAlertDate()) %>">
+      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppDetails.getAlertDateString()) %>">
       <a href="javascript:popCalendar('addOpportunity', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>

@@ -109,7 +109,7 @@
       </td>
       
       <td width=10% valign=center nowrap class="row<%= rowid %>">
-        <%= toHtml(thisOpp.getCloseDate()) %>
+        <%= toHtml(thisOpp.getCloseDateString()) %>
       </td>
       
       <td width=8 class="row<%= rowid %>">

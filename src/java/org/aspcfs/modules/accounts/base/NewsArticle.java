@@ -13,63 +13,23 @@ import java.text.*;
  */
 public class NewsArticle extends GenericBean {
 
-	/**
-	 *  Description of the Field
-	 */
+
 	protected String errorMessage = "";
-	/**
-	 *  Description of the Field
-	 */
-	protected int rec_id = -1;
-	/**
-	 *  Description of the Field
-	 */
-	protected int org_id = -1;
-	/**
-	 *  Description of the Field
-	 */
+	protected int recId = -1;
+	protected int orgId = -1;
 	protected String base = "";
-	/**
-	 *  Description of the Field
-	 */
 	protected String headline = "";
-	/**
-	 *  Description of the Field
-	 */
+	
 	protected String dateEntered = "";
-	/**
-	 *  Description of the Field
-	 */
 	protected String dateCreated = "";
 	
-	/**
-	 *  Description of the Field
-	 */
 	protected String url = "";
-
-	/**
-	 *  Description of the Field
-	 */
+	
 	protected SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
-	/**
-	 *  Description of the Field
-	 */
 	protected SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h:mm a");
-	/**
-	 *  Description of the Field
-	 */
 	protected SimpleDateFormat shortDateTimeFormat = new SimpleDateFormat("M/d/yyyy h:mm a");
-	/**
-	 *  Description of the Field
-	 */
 	protected SimpleDateFormat longDateTimeFormat = new SimpleDateFormat("MMMMM d, yyyy hh:mm a");
-	/**
-	 *  Description of the Field
-	 */
 	protected SimpleDateFormat longDateFormat = new SimpleDateFormat("MMMMM d, yyyy");
-	/**
-	 *  Description of the Field
-	 */
 	protected SimpleDateFormat longTimeFormat = new SimpleDateFormat("hh:mm a");
 
 
@@ -87,8 +47,8 @@ public class NewsArticle extends GenericBean {
 	 */
 	public NewsArticle(ResultSet rs) {
 		try {
-			rec_id = rs.getInt("rec_id");
-			org_id = rs.getInt("org_id");
+			recId = rs.getInt("rec_id");
+			orgId = rs.getInt("org_id");
 			base = rs.getString("base");
 			headline = rs.getString("headline");
 			dateEntered = rs.getString("dateentered");
@@ -117,32 +77,6 @@ public class NewsArticle extends GenericBean {
 	public void setErrorMessage(String tmp) {
 		this.errorMessage = tmp;
 	}
-
-
-	/**
-	 *  Sets the Rec_id attribute of the NewsArticle object
-	 *
-	 *@param  tmp  The new Rec_id value
-	 */
-	public void setRec_id(int tmp) {
-		this.rec_id = tmp;
-	}
-
-
-	/**
-	 *  Sets the Org_id attribute of the NewsArticle object
-	 *
-	 *@param  tmp  The new Org_id value
-	 */
-	public void setOrg_id(int tmp) {
-		this.org_id = tmp;
-	}
-	
-	/**
-	 *  Sets the Org_id attribute of the NewsArticle object
-	 *
-	 *@param  tmp  The new Org_id value
-	 */
 	 
 	public void setUrl(String tmp) { this.url = tmp; }
 
@@ -154,7 +88,11 @@ public class NewsArticle extends GenericBean {
 	public void setBase(String tmp) {
 		this.base = tmp;
 	}
-
+	
+	public int getRecId() { return recId; }
+	public int getOrgId() { return orgId; }
+	public void setRecId(int tmp) { this.recId = tmp; }
+	public void setOrgId(int tmp) { this.orgId = tmp; }
 
 	/**
 	 *  Sets the Headline attribute of the NewsArticle object
@@ -194,27 +132,6 @@ public class NewsArticle extends GenericBean {
 	public String getErrorMessage() {
 		return errorMessage;
 	}
-
-
-	/**
-	 *  Gets the Rec_id attribute of the NewsArticle object
-	 *
-	 *@return    The Rec_id value
-	 */
-	public int getRec_id() {
-		return rec_id;
-	}
-
-
-	/**
-	 *  Gets the Org_id attribute of the NewsArticle object
-	 *
-	 *@return    The Org_id value
-	 */
-	public int getOrg_id() {
-		return org_id;
-	}
-
 
 	/**
 	 *  Gets the Base attribute of the NewsArticle object

@@ -26,7 +26,6 @@ public class Opportunity extends GenericBean {
 	private String description = "";
 	private int accountLink = -1;
 	private int contactLink = -1;
-	private String closeDate = "";
 	private double closeProb = 0;
 	private double terms = 0;
 	private double low = 0;
@@ -35,21 +34,24 @@ public class Opportunity extends GenericBean {
 	private String units = "";
 	private int stage = -1;
 	private String stageName = "";
-	private String stageDate = "";
+	
 	private double commission = 0;
 	private String type = "";
-	private String alertDate = "";
-	private String entered = "";
+	
+	private java.sql.Date alertDate = null;
+	private java.sql.Date closeDate = null;
+	private java.sql.Date stageDate = null;
+	
+	private java.sql.Timestamp entered = null;
+	private java.sql.Timestamp modified = null;
+
 	private int enteredBy = -1;
-	private String modified = "";
-	private java.sql.Timestamp modifiedDate = null;
 	private int modifiedBy = -1;
 	private boolean enabled = true;
 	private boolean stageChange = false;
 	private boolean closeIt = false;
 	private boolean openIt = false;
 	private String closed = null;
-
 	private String accountName = "";
 	private String contactName = "";
 	private String contactCompanyName = "";
@@ -139,18 +141,148 @@ public class Opportunity extends GenericBean {
 		this.enteredByName = enteredByName;
 	}
 
-public boolean getOpenIt() {
-	return openIt;
-}
-public void setOpenIt(boolean openIt) {
-	this.openIt = openIt;
-}
-public String getContactCompanyName() {
-	return contactCompanyName;
-}
-public void setContactCompanyName(String contactCompanyName) {
-	this.contactCompanyName = contactCompanyName;
-}
+
+	/**
+	 *  Sets the OpenIt attribute of the Opportunity object
+	 *
+	 *@param  openIt  The new OpenIt value
+	 *@since
+	 */
+	public void setOpenIt(boolean openIt) {
+		this.openIt = openIt;
+	}
+public java.sql.Date getAlertDate() { return alertDate; }
+public java.sql.Date getCloseDate() { return closeDate; }
+public java.sql.Date getStageDate() { return stageDate; }
+
+  public String getAlertDateString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateInstance(3).format(alertDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+  
+    public String getAlertDateStringLongYear() {
+    String tmp = "";
+    try {
+      SimpleDateFormat formatter = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.LONG);
+      formatter.applyPattern("M/d/yyyy");
+      return formatter.format(alertDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+  
+    public String getCloseDateString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateInstance(3).format(closeDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+  
+    public String getStageDateString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateInstance(3).format(stageDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+
+public void setAlertDate(java.sql.Date tmp) { this.alertDate = tmp; }
+public void setCloseDate(java.sql.Date tmp) { this.closeDate = tmp; }
+public void setStageDate(java.sql.Date tmp) { this.stageDate = tmp; }
+
+  public void setAlertDate(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
+      alertDate = new java.sql.Date(new java.util.Date().getTime());
+      alertDate.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      alertDate = null;
+    }
+  }
+  
+    public void setCloseDate(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
+      closeDate = new java.sql.Date(new java.util.Date().getTime());
+      closeDate.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      closeDate = null;
+    }
+  }
+  
+    public void setStageDate(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
+      stageDate = new java.sql.Date(new java.util.Date().getTime());
+      stageDate.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      stageDate = null;
+    }
+  }
+
+
+	/**
+	 *  Sets the ContactCompanyName attribute of the Opportunity object
+	 *
+	 *@param  contactCompanyName  The new ContactCompanyName value
+	 *@since
+	 */
+	public void setContactCompanyName(String contactCompanyName) {
+		this.contactCompanyName = contactCompanyName;
+	}
+
+
+	/**
+	 *  Sets the Entered attribute of the Opportunity object
+	 *
+	 *@param  tmp  The new Entered value
+	 *@since
+	 */
+	public void setEntered(java.sql.Timestamp tmp) {
+		this.entered = tmp;
+	}
+
+
+	/**
+	 *  Sets the Modified attribute of the Opportunity object
+	 *
+	 *@param  tmp  The new Modified value
+	 *@since
+	 */
+	public void setModified(java.sql.Timestamp tmp) {
+		this.modified = tmp;
+	}
+
+
+	/**
+	 *  Sets the Entered attribute of the Opportunity object
+	 *
+	 *@param  tmp  The new Entered value
+	 *@since
+	 */
+	public void setEntered(String tmp) {
+		this.entered = java.sql.Timestamp.valueOf(tmp);
+	}
+
+
+	/**
+	 *  Sets the Modified attribute of the Opportunity object
+	 *
+	 *@param  tmp  The new Modified value
+	 *@since
+	 */
+	public void setModified(String tmp) {
+		this.modified = java.sql.Timestamp.valueOf(tmp);
+	}
+
 
 	/**
 	 *  Sets the Owner attribute of the Opportunity object
@@ -172,12 +304,17 @@ public void setContactCompanyName(String contactCompanyName) {
 	public void setStageChange(boolean stageChange) {
 		this.stageChange = stageChange;
 	}
-public String getClosed() {
-	return closed;
-}
-public void setClosed(String closed) {
-	this.closed = closed;
-}
+
+
+	/**
+	 *  Sets the Closed attribute of the Opportunity object
+	 *
+	 *@param  closed  The new Closed value
+	 *@since
+	 */
+	public void setClosed(String closed) {
+		this.closed = closed;
+	}
 
 
 	/**
@@ -214,28 +351,6 @@ public void setClosed(String closed) {
 
 
 	/**
-	 *  Sets the AlertDate attribute of the Opportunity object
-	 *
-	 *@param  alertDate  The new AlertDate value
-	 *@since
-	 */
-	public void setAlertDate(String alertDate) {
-		this.alertDate = alertDate;
-	}
-
-
-	/**
-	 *  Sets the Entered attribute of the Opportunity object
-	 *
-	 *@param  entered  The new Entered value
-	 *@since
-	 */
-	public void setEntered(String entered) {
-		this.entered = entered;
-	}
-
-
-	/**
 	 *  Sets the StageName attribute of the Opportunity object
 	 *
 	 *@param  stageName  The new StageName value
@@ -254,17 +369,6 @@ public void setClosed(String closed) {
 	 */
 	public void setTerms(String terms) {
 		this.terms = Double.parseDouble(terms);
-	}
-
-
-	/**
-	 *  Sets the Modified attribute of the Opportunity object
-	 *
-	 *@param  modified  The new Modified value
-	 *@since
-	 */
-	public void setModified(String modified) {
-		this.modified = modified;
 	}
 
 
@@ -313,17 +417,6 @@ public void setClosed(String closed) {
 
 
 	/**
-	 *  Sets the StageDate attribute of the Opportunity object
-	 *
-	 *@param  stageDate  The new StageDate value
-	 *@since
-	 */
-	public void setStageDate(String stageDate) {
-		this.stageDate = stageDate;
-	}
-
-
-	/**
 	 *  Sets the Low attribute of the Opportunity object
 	 *
 	 *@param  low  The new Low value
@@ -364,17 +457,6 @@ public void setClosed(String closed) {
 	 */
 	public void setModifiedByName(String modifiedByName) {
 		this.modifiedByName = modifiedByName;
-	}
-
-
-	/**
-	 *  Sets the CloseDate attribute of the Opportunity object
-	 *
-	 *@param  closeDate  The new CloseDate value
-	 *@since
-	 */
-	public void setCloseDate(String closeDate) {
-		this.closeDate = closeDate;
 	}
 
 
@@ -456,6 +538,106 @@ public void setClosed(String closed) {
 
 
 	/**
+	 *  Sets the CloseIt attribute of the Opportunity object
+	 *
+	 *@param  closeIt  The new CloseIt value
+	 *@since
+	 */
+	public void setCloseIt(boolean closeIt) {
+		this.closeIt = closeIt;
+	}
+
+
+	/**
+	 *  Gets the OpenIt attribute of the Opportunity object
+	 *
+	 *@return    The OpenIt value
+	 *@since
+	 */
+	public boolean getOpenIt() {
+		return openIt;
+	}
+
+
+	/**
+	 *  Gets the ContactCompanyName attribute of the Opportunity object
+	 *
+	 *@return    The ContactCompanyName value
+	 *@since
+	 */
+	public String getContactCompanyName() {
+		return contactCompanyName;
+	}
+
+
+	/**
+	 *  Gets the Entered attribute of the Opportunity object
+	 *
+	 *@return    The Entered value
+	 *@since
+	 */
+	public java.sql.Timestamp getEntered() {
+		return entered;
+	}
+
+
+	/**
+	 *  Gets the Modified attribute of the Opportunity object
+	 *
+	 *@return    The Modified value
+	 *@since
+	 */
+	public java.sql.Timestamp getModified() {
+		return modified;
+	}
+
+
+	/**
+	 *  Gets the ModifiedString attribute of the Opportunity object
+	 *
+	 *@return    The ModifiedString value
+	 *@since
+	 */
+	public String getModifiedString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+		}
+		catch (NullPointerException e) {
+		}
+		return tmp;
+	}
+
+
+	/**
+	 *  Gets the EnteredString attribute of the Opportunity object
+	 *
+	 *@return    The EnteredString value
+	 *@since
+	 */
+	public String getEnteredString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+		}
+		catch (NullPointerException e) {
+		}
+		return tmp;
+	}
+
+
+	/**
+	 *  Gets the Closed attribute of the Opportunity object
+	 *
+	 *@return    The Closed value
+	 *@since
+	 */
+	public String getClosed() {
+		return closed;
+	}
+
+
+	/**
 	 *  Gets the StageChange attribute of the Opportunity object
 	 *
 	 *@return    The StageChange value
@@ -485,17 +667,6 @@ public void setClosed(String closed) {
 	 */
 	public String getEnteredByName() {
 		return enteredByName;
-	}
-
-
-	/**
-	 *  Gets the Entered attribute of the Opportunity object
-	 *
-	 *@return    The Entered value
-	 *@since
-	 */
-	public String getEntered() {
-		return entered;
 	}
 
 
@@ -557,17 +728,6 @@ public void setClosed(String closed) {
 
 
 	/**
-	 *  Gets the AlertDate attribute of the Opportunity object
-	 *
-	 *@return    The AlertDate value
-	 *@since
-	 */
-	public String getAlertDate() {
-		return alertDate;
-	}
-
-
-	/**
 	 *  Gets the StageName attribute of the Opportunity object
 	 *
 	 *@return    The StageName value
@@ -577,7 +737,7 @@ public void setClosed(String closed) {
 		if (this.getClosed() != null) {
 			this.setStageName("Closed");
 		}
-		
+
 		return stageName;
 	}
 
@@ -591,40 +751,6 @@ public void setClosed(String closed) {
 	public String getType() {
 		return type;
 	}
-
-
-	/**
-	 *  Gets the StageDate attribute of the Opportunity object
-	 *
-	 *@return    The StageDate value
-	 *@since
-	 */
-	public String getStageDate() {
-		return stageDate;
-	}
-
-
-	/**
-	 *  Gets the Modified attribute of the Opportunity object
-	 *
-	 *@return    The Modified value
-	 *@since
-	 */
-	public String getModified() {
-		return modified;
-	}
-
-
-	/**
-	 *  Gets the ModifiedDate attribute of the Opportunity object
-	 *
-	 *@return    The ModifiedDate value
-	 *@since
-	 */
-	public java.sql.Timestamp getModifiedDate() {
-		return modifiedDate;
-	}
-
 
 	/**
 	 *  Gets the Id attribute of the Opportunity object
@@ -669,12 +795,17 @@ public void setClosed(String closed) {
 	public int getModifiedBy() {
 		return modifiedBy;
 	}
-public boolean getCloseIt() {
-	return closeIt;
-}
-public void setCloseIt(boolean closeIt) {
-	this.closeIt = closeIt;
-}
+
+
+	/**
+	 *  Gets the CloseIt attribute of the Opportunity object
+	 *
+	 *@return    The CloseIt value
+	 *@since
+	 */
+	public boolean getCloseIt() {
+		return closeIt;
+	}
 
 
 	/**
@@ -824,17 +955,6 @@ public void setCloseIt(boolean closeIt) {
 
 
 	/**
-	 *  Gets the CloseDate attribute of the Opportunity object
-	 *
-	 *@return    The CloseDate value
-	 *@since
-	 */
-	public String getCloseDate() {
-		return closeDate;
-	}
-
-
-	/**
 	 *  Gets the ContactLink attribute of the Opportunity object
 	 *
 	 *@return    The ContactLink value
@@ -902,9 +1022,10 @@ public void setCloseIt(boolean closeIt) {
 		if (accountName != null) {
 			return accountName;
 		}
-		else if ( !(contactName.equals(" ")) )  {
+		else if (!(contactName.equals(" "))) {
 			return this.getContactName();
-		} else {
+		}
+		else {
 			return this.getContactCompanyName();
 		}
 	}
@@ -1047,9 +1168,9 @@ public void setCloseIt(boolean closeIt) {
 		out.append("===========================================\r\n");
 		out.append("Id: " + id + "\r\n");
 		out.append("Opportunity: " + description + "\r\n");
-		out.append("Close Date: " + closeDate + "\r\n");
-		out.append("Stage Date: " + stageDate + "\r\n");
-		out.append("Alert Date: " + alertDate + "\r\n");
+		out.append("Close Date: " + getCloseDateString() + "\r\n");
+		out.append("Stage Date: " + getStageDateString() + "\r\n");
+		out.append("Alert Date: " + getAlertDateString() + "\r\n");
 
 		return out.toString();
 	}
@@ -1082,7 +1203,7 @@ public void setCloseIt(boolean closeIt) {
 			}
 		}
 
-		if (closeDate == null || closeDate.trim().equals("")) {
+		if (closeDate == null || getCloseDateString().trim().equals("")) {
 			errors.put("closeDateError", "Close Date cannot be left blank");
 		}
 
@@ -1127,7 +1248,7 @@ public void setCloseIt(boolean closeIt) {
 		if (this.getAccountLink() == -1 && this.getContactLink() == -1) {
 			throw new SQLException("You must associate an opportunity with an account or contact.");
 		}
-		
+
 		this.setStageChange(true);
 
 		try {
@@ -1146,7 +1267,7 @@ public void setCloseIt(boolean closeIt) {
 			pst.setInt(++i, this.getEnteredBy());
 			pst.setInt(++i, this.getModifiedBy());
 			pst.setInt(++i, this.getOwner());
-			pst.setDate(++i, convertStringToSqlDate(this.getCloseDate(), DateFormat.SHORT));
+			pst.setDate(++i, this.getCloseDate());
 			pst.setInt(++i, this.getStage());
 			pst.setString(++i, this.getDescription());
 
@@ -1258,55 +1379,28 @@ public void setCloseIt(boolean closeIt) {
 		enteredByName = rs.getString("eb_name");
 		modifiedByName = rs.getString("mb_name");
 		contactLink = rs.getInt("contactLink");
-		java.sql.Date thisCloseDate = rs.getDate("closedate");
-		if (thisCloseDate != null) {
-			closeDate = shortDateFormat.format(thisCloseDate);
-		}
-		else {
-			closeDate = "";
-		}
+		closeDate = rs.getDate("closedate");
+		
 		closeProb = rs.getDouble("closeprob");
 		terms = rs.getInt("terms");
 		low = rs.getDouble("lowvalue");
 		guess = rs.getDouble("guessvalue");
 		high = rs.getDouble("highvalue");
 		stage = rs.getInt("stage");
-		java.sql.Date thisStageDate = rs.getDate("stagedate");
-		if (thisStageDate != null) {
-			stageDate = shortDateFormat.format(thisStageDate);
-		}
-		else {
-			stageDate = "";
-		}
+		
+		stageDate = rs.getDate("stagedate");
 		commission = rs.getDouble("commission");
 		type = rs.getString("type");
-		java.sql.Date thisAlertDate = rs.getDate("alertdate");
-		if (thisAlertDate != null) {
-			alertDate = shortDateFormat.format(thisAlertDate);
-		}
-		else {
-			alertDate = "";
-		}
+		alertDate = rs.getDate("alertdate");
+				
 		stageName = rs.getString("stagename");
 		terms = rs.getDouble("terms");
 		units = rs.getString("units");
-
-		java.sql.Timestamp tmpDateCreated = rs.getTimestamp("entered");
-		if (tmpDateCreated != null) {
-			entered = shortDateTimeFormat.format(tmpDateCreated);
-		}
-		else {
-			entered = "";
-		}
-
+		entered = rs.getTimestamp("entered");
 		enteredBy = rs.getInt("enteredby");
 		closed = rs.getString("closed");
-
-		java.sql.Timestamp tmpLastModified = rs.getTimestamp("modified");
-		modified = tmpLastModified.toString();
-
+		modified = rs.getTimestamp("modified");
 		modifiedBy = rs.getInt("modifiedby");
-		//enabled = rs.getBoolean("enabled");
 	}
 
 
@@ -1329,22 +1423,23 @@ public void setCloseIt(boolean closeIt) {
 				"UPDATE opportunity " +
 				"SET lowvalue = ?, guessvalue = ?, highvalue = ?, closeprob = ?, " +
 				"commission = ?, ");
-				
-				if (this.getStageChange() == true) {
-					sql.append( "stagedate = CURRENT_TIMESTAMP, ");
-				}
-				
-		sql.append(     "type = ?, stage = ?, description = ?, " +
+
+		if (this.getStageChange() == true) {
+			sql.append("stagedate = CURRENT_TIMESTAMP, ");
+		}
+
+		sql.append("type = ?, stage = ?, description = ?, " +
 				"closedate = ?, alertdate = ?, terms = ?, units = ?, owner = ?, modifiedby = ?, modified = CURRENT_TIMESTAMP ");
-				
-				if (this.getCloseIt() == true) {
-					sql.append(
-						", closed = CURRENT_TIMESTAMP ");
-				} else if (this.getOpenIt() == true) {
-					sql.append(
-						", closed = ? ");
-				}
-				
+
+		if (this.getCloseIt() == true) {
+			sql.append(
+					", closed = CURRENT_TIMESTAMP ");
+		}
+		else if (this.getOpenIt() == true) {
+			sql.append(
+					", closed = ? ");
+		}
+
 		sql.append("WHERE opp_id = ? ");
 
 		if (!override) {
@@ -1358,34 +1453,37 @@ public void setCloseIt(boolean closeIt) {
 		pst.setDouble(++i, this.getHigh());
 		pst.setDouble(++i, this.getCloseProb());
 		pst.setDouble(++i, this.getCommission());
-
-
 		pst.setString(++i, this.getType());
 		pst.setInt(++i, this.getStage());
 		pst.setString(++i, this.getDescription());
-		pst.setDate(++i, convertStringToSqlDate(this.getCloseDate(), DateFormat.SHORT));
-		if (alertDate == null || alertDate.equals("")) {
+		
+		if (closeDate == null) {
 			pst.setNull(++i, java.sql.Types.DATE);
+		} else {
+			pst.setDate(++i, this.getCloseDate());
 		}
-		else {
-			pst.setDate(++i, convertStringToSqlDate(this.getAlertDate(), DateFormat.SHORT));
+		
+		if (alertDate == null) {
+			pst.setNull(++i, java.sql.Types.DATE);
+		} else {
+			pst.setDate(++i, this.getAlertDate());
 		}
+		
 		pst.setDouble(++i, this.getTerms());
 		pst.setString(++i, this.getUnits());
 		pst.setInt(++i, this.getOwner());
 		pst.setInt(++i, this.getModifiedBy());
-		
+
 		if (this.getOpenIt() == true) {
 			pst.setNull(++i, java.sql.Types.DATE);
 		}
-		
+
 		pst.setInt(++i, this.getId());
 
 		if (!override) {
-			pst.setTimestamp(++i, java.sql.Timestamp.valueOf(this.getModified()));
+			pst.setTimestamp(++i, this.getModified());
 		}
-		
-	
+
 		resultCount = pst.executeUpdate();
 		pst.close();
 

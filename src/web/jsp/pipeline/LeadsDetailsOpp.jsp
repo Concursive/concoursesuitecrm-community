@@ -72,7 +72,7 @@
       Est. Close Date
     </td>
     <td>
-      <%= OpportunityDetails.getCloseDate() %>&nbsp;
+      <%= OpportunityDetails.getCloseDateString() %>&nbsp;
     </td>
   </tr>
   
@@ -117,7 +117,7 @@
       Current Stage Date
     </td>
     <td>
-      <%= toHtml(OpportunityDetails.getStageDate()) %>&nbsp;
+      <%= toHtml(OpportunityDetails.getStageDateString()) %>&nbsp;
     </td>
   </tr>
   
@@ -136,7 +136,7 @@
       Alert Date
     </td>
     <td>
-      <%= toHtml(OpportunityDetails.getAlertDate()) %>&nbsp;
+      <%= toHtml(OpportunityDetails.getAlertDateString()) %>&nbsp;
     </td>
   </tr>
   
@@ -145,7 +145,7 @@
       Entered
     </td>
     <td>
-      <%= OpportunityDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= OpportunityDetails.getEntered() %>
+      <%= OpportunityDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= OpportunityDetails.getEnteredString() %>
     </td>
   </tr>
   
@@ -154,7 +154,7 @@
       Modified
     </td>
     <td>
-      <%= OpportunityDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= OpportunityDetails.getModified() %>
+      <%= OpportunityDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= OpportunityDetails.getModifiedString() %>
     </td>
   </tr>
   

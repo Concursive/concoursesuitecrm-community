@@ -128,7 +128,7 @@
           <td class="row<%= rowid %>" valign=center><%= thisOpp.getAccountName() %></td>
           <td class="row<%= rowid %>" valign=center align="right">$<%= ((thisOpp.getGuess()/1000)) %>K</td>
           <td class="row<%= rowid %>" valign=center align="right" width=25><%= ((int)(thisOpp.getCloseProb()*100)) %></td>
-          <td class="row<%= rowid %>" valign=center align="right"  width=90><%= toHtml(thisOpp.getCloseDate()) %></td>
+          <td class="row<%= rowid %>" valign=center align="right"  width=90><%= toHtml(thisOpp.getCloseDateString()) %></td>
           <td class="row<%= rowid %>" valign=center align="right" width=25><%= thisOpp.getTermsString() %></td>
         </tr>
 <%    }

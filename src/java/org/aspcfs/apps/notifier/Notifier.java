@@ -69,7 +69,7 @@ public class Notifier extends ReportBuilder {
       thisNotification.setUserToNotify(thisOpportunity.getOwner());
       thisNotification.setModule("Opportunities");
       thisNotification.setItemId(thisOpportunity.getId());
-      thisNotification.setItemModified(thisOpportunity.getModifiedDate());
+      thisNotification.setItemModified(thisOpportunity.getModified());
       if (thisNotification.isNew(db)) {
         System.out.println("Notifier-> ...it's new");
         thisNotification.setSiteCode(baseName);

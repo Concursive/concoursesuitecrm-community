@@ -105,7 +105,7 @@
     Est. Close Date
   </td>
   <td valign=center>
-    <input type=text size=10 name="closeDate" value="<%= toHtmlValue(OppDetails.getCloseDate()) %>">
+    <input type=text size=10 name="closeDate" value="<%= toHtmlValue(OppDetails.getCloseDateString()) %>">
     <a href="javascript:popCalendar('updateOpp', 'closeDate');">Date</a> (mm/dd/yyyy)
     <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
   </td>
@@ -183,7 +183,7 @@
     Alert Date
   </td>
   <td valign=center>
-    <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppDetails.getAlertDate()) %>">
+    <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppDetails.getAlertDateString()) %>">
     <a href="javascript:popCalendar('updateOpp', 'alertDate');">Date</a> (mm/dd/yyyy)
   </td>
 </tr>

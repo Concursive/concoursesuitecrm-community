@@ -948,7 +948,8 @@ public class CalendarView {
    *@param  category   The feature to be added to the Event attribute
    *@since
    */
-  public void addEvent(String eventDate, String eventTime, String subject, String category) {
+  public void addEvent(String eventDate, String eventTime, String subject, String category) { 
+    System.out.println("date is now: " + category + " " + eventDate);
     //Create a calendar event object
     CalendarEvent tmp = new CalendarEvent();
     StringTokenizer st = new StringTokenizer(eventDate, "/");

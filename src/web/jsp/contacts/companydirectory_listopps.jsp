@@ -73,7 +73,7 @@
         $<%= thisOpp.getGuessCurrency() %>
       </td>
       <td width=20% valign=center nowrap class="row<%= rowid %>">
-        <%= toHtml(thisOpp.getCloseDate()) %>
+        <%= toHtml(thisOpp.getCloseDateString()) %>
       </td>
       <td width=20% valign=center class="row<%= rowid %>">
         <%= thisOpp.getStageName() %>

@@ -691,7 +691,7 @@ public final class Leads extends CFSModule {
 
             if (tempOpp.getOwner() == pertainsTo.getId()) {
 
-              myDate = new java.util.Date(tempOpp.getCloseDate());
+              myDate = tempOpp.getCloseDate();
               readDate.setTime(myDate);
 
               readDateAdjusted.setTime(myDate);

@@ -55,7 +55,7 @@
       Est. Close Date
     </td>
     <td>
-      <%= OppDetails.getCloseDate() %>&nbsp;
+      <%= OppDetails.getCloseDateString() %>&nbsp;
     </td>
   </tr>
   
@@ -100,7 +100,7 @@
       Current Stage Date
     </td>
     <td>
-      <%= toHtml(OppDetails.getStageDate()) %>&nbsp;
+      <%= toHtml(OppDetails.getStageDateString()) %>&nbsp;
     </td>
   </tr>
   
@@ -118,7 +118,7 @@
       Alert Date
     </td>
     <td>
-      <%= toHtml(OppDetails.getAlertDate()) %>&nbsp;
+      <%= toHtml(OppDetails.getAlertDateString()) %>&nbsp;
     </td>
   </tr>
   
@@ -127,7 +127,7 @@
       Entered
     </td>
     <td>
-      <%= OppDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= OppDetails.getEntered() %>
+      <%= OppDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= OppDetails.getEnteredString() %>
     </td>
   </tr>
   
@@ -136,7 +136,7 @@
       Modified
     </td>
     <td>
-      <%= OppDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= OppDetails.getModified() %>
+      <%= OppDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= OppDetails.getModifiedString() %>
     </td>
   </tr>
   

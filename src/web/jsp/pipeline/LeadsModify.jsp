@@ -114,7 +114,7 @@ Reassign To
     Est. Close Date
   </td>
   <td valign=center>
-    <input type=text size=10 name="closeDate" value="<%= toHtmlValue(OpportunityDetails.getCloseDate()) %>">
+    <input type=text size=10 name="closeDate" value="<%= toHtmlValue(OpportunityDetails.getCloseDateString()) %>">
     <a href="javascript:popCalendar('updateOpp', 'closeDate');">Date</a> (mm/dd/yyyy)
     <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
   </td>
@@ -190,7 +190,7 @@ Reassign To
     Alert Date
   </td>
   <td colspan=1 valign=center>
-    <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OpportunityDetails.getAlertDate()) %>">
+    <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OpportunityDetails.getAlertDateString()) %>">
     <a href="javascript:popCalendar('updateOpp', 'alertDate');">Date</a> (mm/dd/yyyy)
   </td>
 </tr>
