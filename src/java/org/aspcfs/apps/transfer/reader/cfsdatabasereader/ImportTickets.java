@@ -36,7 +36,7 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
-    
+    /**
     logger.info("ImportTickets-> Inserting Ticket Log");
     TicketLogList ticketLogList = new TicketLogList();
     ticketLogList.setDoSystemMessages(false);
@@ -47,7 +47,7 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }    
-    
+    */
     //update owners
     
     writer.setAutoCommit(true);
