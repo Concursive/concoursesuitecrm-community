@@ -1,11 +1,16 @@
 /*
+  !!!!!!!!!!!!!!!! workflow.xml MUST be updated by hand before !!!!!!!!!!!!!!!!
+  !!!!!!!!!!!!!!!! executing this script!   [Read below]       !!!!!!!!!!!!!!!!
+
   This is a beanshell script that performs maintenance on a given database 
   connection (db) from ant upgradedb
   
   June 19, 2003
   - Copies the workflow.xml for the current site into the database
   
-  NOTE: workflow.xml MUST be updated first with the following attributes:
+  NOTE 1: If CDATA is used, it must appear NEXT to the node without a line break
+  
+  NOTE 2: workflow.xml MUST be updated first with the following attributes:
   
     <process ... type="OBJECT_EVENT" module="Tickets">
     <process ... type="SCHEDULED_EVENT" module="Tickets">
