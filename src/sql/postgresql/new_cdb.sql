@@ -656,6 +656,12 @@ CREATE TABLE scheduled_recipient (
   bounce_date TIMESTAMP DEFAULT NULL
 );
 
+CREATE TABLE excluded_recipient (
+  id serial PRIMARY KEY,
+  campaign_id INT NOT NULL DEFAULT -1,
+  contact_id INT NOT NULL
+);
+
 CREATE TABLE campaign_list_groups (
   campaign_id int not null,
   group_id int not null

@@ -1,6 +1,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-<jsp:useBean id="sclList" class="com.darkhorseventures.cfsbase.SearchCriteriaListList" scope="request"/>
+<jsp:useBean id="SCL" class="com.darkhorseventures.cfsbase.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <jsp:useBean id="CampaignCenterPreviewInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
@@ -26,7 +26,7 @@
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
-    <td colspan="3" valign="center" align="left">
+    <td colspan="4" valign="center" align="left">
       <strong>List of Matching Contacts</strong>
     </td>     
   </tr>
@@ -39,6 +39,9 @@
     </td>
     <td width="50%" nowrap>
       Company
+    </td>
+    <td align="center">
+      Enabled
     </td>
   </tr>
 <%
@@ -68,6 +71,9 @@
     <td nowrap>
       <%= toHtml(thisContact.getCompany()) %>
     </td>
+    <td align="center" nowrap>
+      <a href="/CampaignManager.do?command=ToggleRecipient&scl=<%=SCL.getId()%>&id=<%= Campaign.getId() %>&contactId=<%= thisContact.getId() %>"><%= (thisContact.excludedFromCampaign()? "No" : "Yes") %></a>
+    </td>
   </tr>
   <%}%>
 </table>
@@ -75,7 +81,7 @@
 [<%= CampaignCenterPreviewInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignCenterPreviewInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignCenterPreviewInfo.getNumericalPageLinks() %>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="3" valign="center">
+    <td colspan="4" valign="center">
       No contacts matched query.
     </td>
   </tr>

@@ -289,6 +289,7 @@ public final class CampaignManager extends CFSModule {
       contacts.setPagedListInfo(pagedListInfo);
       contacts.setOwner(campaign.getEnteredBy());
       contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+      contacts.setCheckExcludedFromCampaign(campaign.getId());
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
 
@@ -306,6 +307,32 @@ public final class CampaignManager extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+  
+  public String executeCommandToggleRecipient(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean result = true;
+
+    Campaign newCamp = (Campaign)context.getFormBean();
+    
+    String campaignId = context.getRequest().getParameter("id"); 
+    String contactId = context.getRequest().getParameter("contactId");
+    
+    try {
+      db = this.getConnection(context);
+      Contact thisContact = new Contact(db, contactId);
+      thisContact.checkExcludedFromCampaign(db,Integer.parseInt(campaignId));
+      thisContact.toggleExcluded(db, Integer.parseInt(campaignId));
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    context.getRequest().setAttribute("Campaign", newCamp);
+    return("ToggleOK");
   }
 
 

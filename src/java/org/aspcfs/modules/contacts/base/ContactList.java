@@ -36,6 +36,7 @@ public class ContactList extends Vector {
 	private boolean emailNotNull = false;
 	private Vector ignoreTypeIdList = new Vector();
 	private boolean checkUserAccess = false;
+	private int checkExcludedFromCampaign = -1;
 	private boolean buildDetails = true;
 	private int owner = -1;
 	private String ownerIdRange = null;
@@ -91,6 +92,12 @@ public class ContactList extends Vector {
 		this.showEmployeeContacts = showEmployeeContacts;
 	}
 
+	public int getCheckExcludedFromCampaign() {
+		return checkExcludedFromCampaign;
+	}
+	public void setCheckExcludedFromCampaign(int checkExcludedFromCampaign) {
+		this.checkExcludedFromCampaign = checkExcludedFromCampaign;
+	}
 
 	/**
 	 *  Sets the FirstName attribute of the ContactList object
@@ -889,6 +896,9 @@ public class ContactList extends Vector {
 			if (checkUserAccess) {
 				thisContact.checkUserAccount(db);
 			}
+			if (checkExcludedFromCampaign > -1) {
+				thisContact.checkExcludedFromCampaign(db, checkExcludedFromCampaign);
+			}
 		}
 	}
 
@@ -1027,6 +1037,7 @@ public class ContactList extends Vector {
 				}
 				sqlFilter.append(") ");
 			}
+
 		}
 		else {
 			if (typeId != -1) {

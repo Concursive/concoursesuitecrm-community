@@ -46,7 +46,7 @@
     </td>     
   </tr>
   <tr class="containerBody">
-    <td class="formLabel" valign="top" nowrap>
+    <td class="formLabel" valign="center" nowrap>
       Run Date
     </td>
     <td width="100%">

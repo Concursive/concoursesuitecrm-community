@@ -46,6 +46,7 @@ public class Contact extends GenericBean {
   private int modifiedBy = -1;
   private boolean enabled = true;
   private boolean hasAccount = false;
+  private boolean excludedFromCampaign = false;
   private int owner = -1;
 
   private ContactEmailAddressList emailAddressList = new ContactEmailAddressList();
@@ -131,7 +132,6 @@ public class Contact extends GenericBean {
     emailAddressList.setContactId(this.getId());
     emailAddressList.buildList(db);
   }
-
 
   /**
    *  Sets the OwnerName attribute of the Contact object
@@ -394,7 +394,41 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
   public void setPhoneNumberList(ContactPhoneNumberList tmp) {
     this.phoneNumberList = tmp;
   }
-
+  
+  public boolean excludedFromCampaign() {
+    return excludedFromCampaign;
+  }
+  public void setExcludedFromCampaign(boolean excludedFromCampaign) {
+    this.excludedFromCampaign = excludedFromCampaign; 
+  }
+  
+  public boolean toggleExcluded(Connection db, int campaignId) throws SQLException {
+	if (id == -1) {
+	return false;
+	}
+	
+	String sql = "";
+	
+	if (this.excludedFromCampaign()) {
+		sql =
+		"DELETE FROM excluded_recipient " +
+		"WHERE campaign_id = ? AND contact_id = ? ";
+	} else {
+		sql =
+		"INSERT INTO excluded_recipient " +
+		"(campaign_id, contact_id) VALUES (?, ?) ";
+	}
+	
+	int i = 0;
+	PreparedStatement pst = db.prepareStatement(sql);
+	pst.setInt(++i, campaignId);
+	pst.setInt(++i, this.getId());
+	pst.execute();
+	pst.close();
+    
+	this.excludedFromCampaign = !excludedFromCampaign;
+	return true;
+  }
 
   /**
    *  Sets the AddressList attribute of the Contact object
@@ -1431,6 +1465,25 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
       setHasAccount(true);
     } else {
       setHasAccount(false);
+    }
+    rs.close();
+    st.close();
+  }
+  
+  public void checkExcludedFromCampaign(Connection db, int campaignId) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
+
+    Statement st = db.createStatement();
+    ResultSet rs = st.executeQuery(
+        "SELECT * " +
+        "FROM excluded_recipient " +
+        "WHERE contact_id = " + getId() + " AND campaign_id = " + campaignId + " ");
+    if (rs.next()) {
+      setExcludedFromCampaign(true);
+    } else {
+      setExcludedFromCampaign(false);
     }
     rs.close();
     st.close();

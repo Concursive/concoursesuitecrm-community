@@ -260,7 +260,7 @@
   <!-- Campaign Module -->
   <action name="CampaignManager" class="com.darkhorseventures.cfsmodule.CampaignManager">
     <bean name="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-		<forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="DashboardOK" resource="/campaign_dashboard.jsp" layout="nav"/>
@@ -284,6 +284,7 @@
     <forward name="ActivateOK" resource="/CampaignManager.do?command=Dashboard"/>
     <forward name="DetailsOK" resource="/campaign_details.jsp" layout="nav"/>
     <forward name="PreviewGroupsOK" resource="/campaign_center_groups_preview.jsp" layout="nav"/>
+    <forward name="ToggleOK" resource="/CampaignManager.do?command=PreviewGroups"/>
   </action>
   <action name="CampaignManagerGroup" class="com.darkhorseventures.cfsmodule.CampaignManagerGroup">
     <bean name="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
