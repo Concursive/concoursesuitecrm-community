@@ -355,7 +355,7 @@ public class Zlib {
    */
   public boolean isValid() {
     try {
-      if ("5USERBINARY-1.0".equals(text)) {
+      if (text.startsWith("5USERBINARY") || text.startsWith("ENTERPRISE") || text.startsWith("UPGRADE")) {
         return true;
       }
     } catch (Exception e) {

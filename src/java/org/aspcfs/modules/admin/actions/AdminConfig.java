@@ -189,7 +189,7 @@ public final class AdminConfig extends CFSModule {
         bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
         bean.setEmail(XMLUtils.getNodeText(xml.getFirstChild("email")));
         bean.setProfile(XMLUtils.getNodeText(xml.getFirstChild("profile")));
-        bean.setText(PrivateString.encrypt(key, "5USERBINARY-1.0"));
+        bean.setText(PrivateString.encrypt(key, "UPGRADE-1.0"));
         bean.setText2(XMLUtils.getNodeText(xml.getFirstChild("text2")));
         //Make sure the server received the key ok
         String response = null;

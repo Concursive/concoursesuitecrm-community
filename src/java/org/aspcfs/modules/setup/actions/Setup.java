@@ -167,7 +167,7 @@ public class Setup extends CFSModule {
         }
       } catch (Exception io) {
       }
-      //Encode the license for transmission
+      //Encode the key for transmission
       BASE64Encoder encoder = new BASE64Encoder();
       bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
       bean.setText(PrivateString.encrypt(key, "5USERBINARY-1.0"));
