@@ -1,15 +1,17 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
-<jsp:useBean id="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+<jsp:useBean id="HeaderDetails" class="com.darkhorseventures.cfsbase.OpportunityHeader" scope="request"/>
+<jsp:useBean id="ComponentList" class="com.darkhorseventures.cfsbase.OpportunityComponentList" scope="request"/>
+<jsp:useBean id="AccountsComponentListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="oppdet" action="/Opportunities.do?id=<%=OppDetails.getId()%>&orgId=<%= OppDetails.getAccountLink() %>&contactId=<%= OppDetails.getContactLink() %>" method="post">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
+<form name="oppdet" action="Opportunities.do?command=ModifyOpp&id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
 Opportunity Details<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -26,164 +28,118 @@ Opportunity Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-<input type=hidden name="command" value="<%= OppDetails.getId() %>">
-<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='Modify';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" name="action" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=OppDetails.getId()%>','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='Opportunities.do?command=Modify&oppId=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=HeaderDetails.getOppId()%>','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=AddOppComponent&id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
-      <strong><%= toHtml(OppDetails.getDescription()) %></strong>
-      <% if (OppDetails.hasFiles()) { %>
       <% FileItem thisFile = new FileItem(); %>
-      <%= thisFile.getImageTag()%>
-      <%}%>  
+      <strong><%= toHtml(HeaderDetails.getDescription()) %></strong>
+        <% if (HeaderDetails.hasFiles()) {%>
+        <%= thisFile.getImageTag() %>
+        <%}%>         
     </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Owner
-    </td>
-    <td valign=center width=100%>
-      <%= OppDetails.getOwnerName() %>
-      <dhv:evaluate exp="<%=!(OppDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
-    </td>
-  </tr>
+  </tr> 
   
-  <dhv:evaluate exp="<%= hasText(OppDetails.getTypes().valuesAsString()) %>">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Opportunity Type(s)
-    </td>
-    <td>  
-      <%= toHtml(OppDetails.getTypes().valuesAsString()) %>
-     </td>
-  </tr>
-  </dhv:evaluate>  
-  
-  <dhv:evaluate exp="<%= hasText(OppDetails.getNotes()) %>">
-  <tr class="containerBody">
-    <td valign="top" nowrap class="formLabel">Additional Notes</td>
-    <td valign="top"><%= toHtml(OppDetails.getNotes()) %></td>
-  </tr>
-  </dhv:evaluate>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Prob. of Close
-    </td>
-    <td valign=center width=100%>
-      <%= OppDetails.getCloseProbValue() %>%
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Est. Close Date
-    </td>
-    <td>
-      <%= OppDetails.getCloseDateString() %>&nbsp;
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Low Estimate
-    </td>
-    <td>
-      $<%= OppDetails.getLowCurrency() %>&nbsp;
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Best Guess
-    </td>
-    <td>
-      $<%= OppDetails.getGuessCurrency() %>&nbsp;
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      High Estimate
-    </td>
-    <td>
-      $<%= OppDetails.getHighCurrency() %>&nbsp;
-    </td>
-  </tr>
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Est. Term (months)
-    </td>
-    <td>
-      <%= OppDetails.getTerms() %>
-    </td>
-  </tr>  
-  
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Current Stage
-    </td>
-    <td>
-      <%= toHtml(OppDetails.getStageName()) %>&nbsp;
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Current Stage Date
-    </td>
-    <td>
-      <%= toHtml(OppDetails.getStageDateString()) %>&nbsp;
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Est. Commission
-    </td>
-    <td>
-      <%= OppDetails.getCommissionValue() %>%
-    </td>
-  </tr>
-<dhv:evaluate exp="<%= hasText(OppDetails.getAlertText()) %>">
-   <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Alert Description
-    </td>
-    <td valign=center colspan=1>
-       <%= toHtml(OppDetails.getAlertText()) %>
-    </td>
-  </tr>
-</dhv:evaluate>
-
-<dhv:evaluate exp="<%= (OppDetails.getAlertDate() != null) %>">
-   <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Alert Date
-    </td>
-    <td valign=center colspan=1>
-       <%= OppDetails.getAlertDateStringLongYear() %>
-    </td>
-  </tr>
-</dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Entered
     </td>
     <td>
-      <%= OppDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= OppDetails.getEnteredString() %>
+      <%= HeaderDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= HeaderDetails.getEnteredString() %>
     </td>
   </tr>
-  <tr class="containerBody">
+  
+      <tr class="containerBody">
     <td nowrap class="formLabel">
       Modified
     </td>
     <td>
-      <%= OppDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= OppDetails.getModifiedString() %>
+      <%= HeaderDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= HeaderDetails.getModifiedString() %>
+    </td>
+  </tr>    
+  </table>
+  <br>
+  
+<dhv:pagedListStatus showExpandLink="false" title="<%= showError(request, "actionError") %>" object="AccountsComponentListInfo"/>
+<center><%= AccountsComponentListInfo.getAlphabeticalPageLinks() %></center>
+<br>  
+ <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
+    <td valign=center align=left>
+      <strong>Action</strong>
+    </td>
+    </dhv:permission>
+    <td valign=center align=left>
+	<strong><a href="Opportunities.do?command=Details&oppId=<%=HeaderDetails.getId()%>&orgId=<%=OrgDetails.getId()%>&column=description">Component</a></strong>
+	<%= AccountsComponentListInfo.getSortIcon("description") %>
+    </td>
+    <td valign=center align=left>
+	<strong><a href="Opportunities.do?command=Details&oppId=<%=HeaderDetails.getId()%>&orgId=<%=OrgDetails.getId()%>&column=guessvalue">Guess Amount</a></strong>
+	<%= AccountsComponentListInfo.getSortIcon("guessvalue") %>
+    </td>
+    <td valign=center align=left>
+      	<strong><a href="Opportunities.do?command=Details&oppId=<%=HeaderDetails.getId()%>&orgId=<%=OrgDetails.getId()%>&column=closedate">Close Date</a></strong>
+	<%= AccountsComponentListInfo.getSortIcon("closedate") %>
+    </td>
+    <td valign=center align=left>
+      	<strong><a href="Opportunities.do?command=Details&oppId=<%=HeaderDetails.getId()%>&orgId=<%=OrgDetails.getId()%>&column=stage">Current Stage</a></strong>
+	<%= AccountsComponentListInfo.getSortIcon("stage") %>
+    </td>  
+  </tr>
+  
+<%
+	Iterator j = ComponentList.iterator();
+	
+	if ( j.hasNext() ) {
+		int rowid = 0;
+	    while (j.hasNext()) {
+		
+        if (rowid != 1) {
+          rowid = 1;
+        } else {
+          rowid = 2;
+        }
+		
+		OpportunityComponent thisOpp = (OpportunityComponent)j.next();
+%>      
+  <tr class="containerBody">
+    <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
+    <td width=8 valign=center nowrap class="row<%= rowid %>">
+    <dhv:permission name="accounts-accounts-opportunities-edit"><a href="OpportunitiesComponents.do?command=ModifyComponent&id=<%= thisOpp.getId() %>&orgId=<%=OrgDetails.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%=OrgDetails.getId()%>&oppId=<%=thisOpp.getId()%>','Opportunities.do?command=ViewOpps&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+    </td>
+    </dhv:permission>
+    <td width=100% valign=center class="row<%= rowid %>">
+      <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%=OrgDetails.getId()%>&id=<%=thisOpp.getId()%>">
+      <%= toHtml(thisOpp.getDescription()) %></a>
+    </td>
+    <td width=125 valign=center nowrap class="row<%= rowid %>">
+      $<%= thisOpp.getGuessCurrency() %>
+    </td>
+    <td width=125 valign=center nowrap class="row<%= rowid %>">
+      <%= toHtml(thisOpp.getCloseDateString()) %>
+    </td>
+    <td width=125 valign=center nowrap class="row<%= rowid %>">
+      <%= toHtml(thisOpp.getStageName()) %>
+    </td>		
+  </tr>
+<%}%>
+<%} else {%>
+  <tr class="containerBody">
+    <td colspan=5 valign=center>
+      No opportunity components found.
     </td>
   </tr>
+<%}%>
+  
 </table>
-<dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">&nbsp;<br></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='Modify';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" name="action" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=OppDetails.getId()%>','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<br>
+<dhv:pagedListControl object="AccountsComponentListInfo"/>
 </td>
-  </tr>
+</tr>
 </table>
 </form>
+

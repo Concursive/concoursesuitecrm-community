@@ -73,6 +73,7 @@ public class Organization extends GenericBean {
   private String nameSuffix = null;  
   
   private Contact primaryContact = null;
+  private boolean hasOpportunities = false;
 
   /**
    *  Constructor for the Organization object, creates an empty Organization
@@ -716,6 +717,12 @@ public class Organization extends GenericBean {
     return revenueDelete;
   }
 
+  public boolean getHasOpportunities() {
+    return hasOpportunities;
+  }
+  public void setHasOpportunities(boolean hasOpportunities) {
+    this.hasOpportunities = hasOpportunities;
+  }
 
   /**
    *  Gets the DocumentDelete attribute of the Organization object
@@ -1335,9 +1342,14 @@ public class Organization extends GenericBean {
     try {
       dependencyList.put("Contacts", new Integer(ContactList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
       dependencyList.put("Revenue", new Integer(RevenueList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+      
+      if (OpportunityList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()) > 0) {
+        this.setHasOpportunities(true);
+      }
+      
       dependencyList.put("Opportunities", new Integer(OpportunityList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
       dependencyList.put("Tickets", new Integer(TicketList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
-      dependencyList.put("Document", new Integer(FileItemList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
+      dependencyList.put("Documents", new Integer(FileItemList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
       dependencyList.put("Folders", new Integer(CustomFieldRecordList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId())));
     }
     catch (SQLException e) {
@@ -1920,13 +1932,13 @@ public class Organization extends GenericBean {
         contactList.delete(db);
         contactList = null;
       }
-
+/**
       OpportunityList opportunityList = new OpportunityList();
       opportunityList.setOrgId(this.getOrgId());
       opportunityList.buildList(db);
       opportunityList.delete(db);
       opportunityList = null;
-
+*/
       TicketList ticketList = new TicketList();
       ticketList.setOrgId(this.getOrgId());
       ticketList.buildList(db);

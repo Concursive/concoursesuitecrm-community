@@ -26,6 +26,7 @@ public class RecentItem implements Serializable {
   public final static int PROJECT = 6;
   public final static int TICKET = 7;
   public final static int USER = 8;
+  public final static int COMPONENT = 9;
 
   //Constants used for appending to the display name
   //These could be links to graphics at some point
@@ -37,6 +38,7 @@ public class RecentItem implements Serializable {
   private final static String PROJECT_TEXT = "Project: ";
   private final static String TICKET_TEXT = "Ticket: ";
   private final static String USER_TEXT = "U: ";
+  private final static String COMPONENT_TEXT = "OC: ";
 
 
   /**
@@ -169,6 +171,8 @@ public class RecentItem implements Serializable {
         return TICKET_TEXT;
       case USER:
         return USER_TEXT;
+      case COMPONENT:
+        return COMPONENT_TEXT;        
       default:
         return "";
     }

@@ -13,22 +13,9 @@ import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.utils.ObjectUtils;
 
-/**
- *  Contains a list of contacts... currently used to build the list from the
- *  database with any of the parameters to limit the results.
- *
- *@author     mrajkowski
- *@created    August 29, 2001
- *@version    $Id: OpportunityList.java,v 1.7 2001/10/03 21:26:46 mrajkowski Exp
- *      $
- */
-public class OpportunityList extends Vector {
-
-  public static final int TRUE = 1;
-  public static final int FALSE = 0;
-  protected int includeEnabled = 1;
+public class OpportunityHeaderList extends Vector {
   
-  public static final String tableName = "opportunity";
+  public static final String tableName = "opportunity_header";
   public static final String uniqueField = "opp_id";
   protected java.sql.Timestamp lastAnchor = null;
   protected java.sql.Timestamp nextAnchor = null;
@@ -44,72 +31,30 @@ public class OpportunityList extends Vector {
   protected java.sql.Date alertDate = null;
   protected int owner = -1;
   protected String ownerIdRange = null;
-  protected String units = null;
   protected String accountOwnerIdRange = null;
   protected java.sql.Date alertRangeStart = null;
   protected java.sql.Date alertRangeEnd = null;
   protected java.sql.Date closeDateStart = null;
   protected java.sql.Date closeDateEnd = null;
-  protected int stage = -1;
   private boolean queryOpenOnly = false;
+  
+  private boolean buildTotalValues = false;
 
-  /**
-   *  Constructor for the ContactList object
-   *
-   *@since    1.1
-   */
-  public OpportunityList() { }
+  public OpportunityHeaderList() { }
 
 
-  /**
-   *  Sets the PagedListInfo attribute of the ContactList object
-   *
-   *@param  tmp  The new PagedListInfo value
-   *@since       1.1
-   */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
 
-
-  /**
-   *  Sets the OrgId attribute of the ContactList object
-   *
-   *@param  tmp  The new OrgId value
-   *@since       1.1
-   */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
   }
 
-
-  /**
-   *  Sets the orgId attribute of the OpportunityList object
-   *
-   *@param  tmp  The new orgId value
-   */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
 
-  public int getStage() {
-	return stage;
-}
-public void setStage(int stage) {
-	this.stage = stage;
-}
-
-public void setStage(String stage) {
-	this.stage = Integer.parseInt(stage);
-}
-
-
-  /**
-   *  Sets the TypeId attribute of the ContactList object
-   *
-   *@param  tmp  The new TypeId value
-   *@since       1.1
-   */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
   }
@@ -118,48 +63,25 @@ public void setStage(String stage) {
     this.contactId = tmp;
   }
 
-
-  /**
-   *  Sets the Description attribute of the OpportunityList object
-   *
-   *@param  description  The new Description value
-   */
   public void setDescription(String description) {
     this.description = description;
   }
 
-
-  /**
-   *  Sets the EnteredBy attribute of the OpportunityList object
-   *
-   *@param  tmp  The new EnteredBy value
-   */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
+  
+  public void setBuildTotalValues(boolean buildTotalValues) {
+    this.buildTotalValues = buildTotalValues;
+  }
+  public boolean getBuildTotalValues() {
+    return buildTotalValues;
+  }
 
-
-  /**
-   *  Sets the accountOwnerIdRange attribute of the OpportunityList object
-   *
-   *@param  accountOwnerIdRange  The new accountOwnerIdRange value
-   */
   public void setAccountOwnerIdRange(String accountOwnerIdRange) {
     this.accountOwnerIdRange = accountOwnerIdRange;
   }
   
-  public int getIncludeEnabled() {
-	return includeEnabled;
-  }
-  public void setIncludeEnabled(int includeEnabled) {
-	this.includeEnabled = includeEnabled;
-  }
-
-  /**
-   *  Sets the OwnerIdRange attribute of the OpportunityList object
-   *
-   *@param  ownerIdRange  The new OwnerIdRange value
-   */
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
   }
@@ -183,20 +105,10 @@ public void setStage(String stage) {
     this.queryOpenOnly = queryOpenOnly;
   }
 
-  /**
-   *  Sets the HasAlertDate attribute of the OpportunityList object
-   *
-   *@param  tmp  The new HasAlertDate value
-   */
   public void setHasAlertDate(boolean tmp) {
     this.hasAlertDate = tmp;
   }
 
-  /**
-   *  Sets the AlertDate attribute of the OpportunityList object
-   *
-   *@param  tmp  The new AlertDate value
-   */
   public void setAlertDate(java.sql.Date tmp) {
     this.alertDate = tmp;
   }
@@ -235,91 +147,30 @@ public void setCloseDateEnd(String tmp) {
     }
 }
 
-  /**
-   *  Sets the owner attribute of the OpportunityList object
-   *
-   *@param  tmp  The new owner value
-   */
   public void setOwner(int tmp) {
     this.owner = tmp;
   }
 
-
-  /**
-   *  Sets the Units attribute of the OpportunityList object
-   *
-   *@param  units  The new Units value
-   */
-  public void setUnits(String units) {
-    this.units = units;
-  }
-
-
-  /**
-   *  Gets the accountOwnerIdRange attribute of the OpportunityList object
-   *
-   *@return    The accountOwnerIdRange value
-   */
   public String getAccountOwnerIdRange() {
     return accountOwnerIdRange;
   }
 
-
-  /**
-   *  Gets the OwnerIdRange attribute of the OpportunityList object
-   *
-   *@return    The OwnerIdRange value
-   */
   public String getOwnerIdRange() {
     return ownerIdRange;
   }
 
-
-  /**
-   *  Gets the ListSize attribute of the OpportunityList object
-   *
-   *@return    The ListSize value
-   */
   public int getListSize() {
     return this.size();
   }
 
-
-  /**
-   *  Gets the Units attribute of the OpportunityList object
-   *
-   *@return    The Units value
-   */
-  public String getUnits() {
-    return units;
-  }
-
-
-  /**
-   *  Gets the EnteredBy attribute of the OpportunityList object
-   *
-   *@return    The EnteredBy value
-   */
   public int getEnteredBy() {
     return enteredBy;
   }
 
-
-  /**
-   *  Gets the HasAlertDate attribute of the OpportunityList object
-   *
-   *@return    The HasAlertDate value
-   */
   public boolean getHasAlertDate() {
     return hasAlertDate;
   }
 
-
-  /**
-   *  Gets the Description attribute of the OpportunityList object
-   *
-   *@return    The Description value
-   */
   public String getDescription() {
     return description;
   }
@@ -349,7 +200,6 @@ public void setCloseDateEnd(String tmp) {
     sqlCount.append(
      "SELECT COUNT(*) AS recordcount " +
       "FROM opportunity_header x " +
-      "LEFT JOIN opportunity_component oc on (x.opp_id = oc.opp_id) " +
       "WHERE x.opp_id > -1 ");
 
     createFilter(sqlFilter);
@@ -396,22 +246,17 @@ public void setCloseDateEnd(String tmp) {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-      " x.*, oc.*, y.description as stagename, org.name as acct_name, org.enabled as accountenabled, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, oc.description as comp_desc, oc.id as comp_id, " +
+      " x.*, org.name as acct_name, org.enabled as accountenabled, " +
         "ct.namelast as last_name, ct.namefirst as first_name, " +
         "ct.company as ctcompany, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
         "FROM opportunity_header x " +
-        "LEFT JOIN opportunity_component oc ON (x.opp_id = oc.opp_id) " +
         "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
         "LEFT JOIN contact ct_eb ON (x.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_owner ON (oc.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_mb ON (x.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
-        "lookup_stage y " +
-        "WHERE y.code = oc.stage " +        
-        "AND x.opp_id > 0 ");
+        "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id) " +
+        "WHERE x.opp_id > -1 ");
     pst = db.prepareStatement(
       sqlSelect.toString() + 
       sqlFilter.toString() + 
@@ -429,55 +274,29 @@ public void setCloseDateEnd(String tmp) {
         break;
       }
       ++count;
-      Opportunity thisOpp = new Opportunity(rs);
-      thisOpp.buildFiles(db);
-      thisOpp.buildTypes(db);
-      this.addElement(thisOpp);
+      OpportunityHeader thisOppHeader = new OpportunityHeader(rs);
+      thisOppHeader.retrieveComponentCount(db);
+      
+      if (buildTotalValues) {
+        thisOppHeader.buildTotal(db);
+      }
+      
+      thisOppHeader.buildFiles(db);
+      this.addElement(thisOppHeader);
     }
     rs.close();
     pst.close();
   }
 
 
-  /**
-   *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
-   *
-   *@param  tmp  The feature to be added to the IgnoreTypeId attribute
-   *@since       1.2
-   */
   public void addIgnoreTypeId(String tmp) {
     ignoreTypeIdList.addElement(tmp);
   }
 
-
-  /**
-   *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
-   *
-   *@param  tmp  The feature to be added to the IgnoreTypeId attribute
-   *@since       1.2
-   */
   public void addIgnoreTypeId(int tmp) {
     ignoreTypeIdList.addElement("" + tmp);
   }
-  
-  public int reassignElements(Connection db, int newOwner) throws SQLException {
-    int total = 0;
-    Iterator i = this.iterator();
-    while (i.hasNext()) {
-      Opportunity thisOpp = (Opportunity) i.next();
-      if (thisOpp.reassign(db, newOwner)) {
-        total++;
-      }
-    }
-    return total;
-  }    
 
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   */
   public void delete(Connection db) throws SQLException {
     Iterator opportunities = this.iterator();
     while (opportunities.hasNext()) {
@@ -486,13 +305,6 @@ public void setCloseDateEnd(String tmp) {
     }
   }
 
-  /**
-   *  Builds a base SQL where statement for filtering records to be used by
-   *  sqlSelect and sqlCount
-   *
-   *@param  sqlFilter  Description of Parameter
-   *@since             1.3
-   */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
@@ -508,10 +320,6 @@ public void setCloseDateEnd(String tmp) {
 
     if (enteredBy != -1) {
       sqlFilter.append("AND x.enteredby = ? ");
-    }
-
-    if (hasAlertDate == true) {
-      sqlFilter.append("AND oc.alertdate IS NOT NULL ");
     }
 
     if (ignoreTypeIdList.size() > 0) {
@@ -535,53 +343,10 @@ public void setCloseDateEnd(String tmp) {
       }
     }
 
-    if (alertDate != null) {
-      sqlFilter.append("AND oc.alertdate = ? ");
-    }
-    
-    if (alertRangeStart != null) {
-      sqlFilter.append("AND oc.alertdate >= ? ");
-    }
-    
-    if (alertRangeEnd != null) {
-      sqlFilter.append("AND oc.alertdate <= ? ");
-    }
-    
-    if (closeDateStart != null) {
-      sqlFilter.append("AND oc.closedate >= ? ");
-    }
-    if (closeDateEnd != null) {
-      sqlFilter.append("AND oc.closedate <= ? ");
-    }
-
-    if (owner != -1) {
-      sqlFilter.append("AND oc.owner = ? ");
-    }
-
-    if (ownerIdRange != null) {
-      sqlFilter.append("AND oc.owner in (" + this.ownerIdRange + ") ");
-    }
-
     if (accountOwnerIdRange != null) {
       sqlFilter.append("AND x.acctlink IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
 
-    if (units != null) {
-      sqlFilter.append("AND oc.units = ? ");
-    }
-    
-    if (includeEnabled == TRUE || includeEnabled == FALSE) {
-      sqlFilter.append("AND oc.enabled = ? ");
-    }
-    
-    if (stage != -1) {
-      sqlFilter.append("AND oc.stage = ? ");
-    }
-    
-    if (queryOpenOnly) {
-      sqlFilter.append("AND oc.closed IS NULL ");
-    }
-	
   }
 
 
@@ -620,44 +385,6 @@ public void setCloseDateEnd(String tmp) {
       pst.setString(++i, description);
     }
 
-    if (alertDate != null) {
-      pst.setDate(++i, alertDate);
-    }
-    
-    if (alertRangeStart != null) {
-      pst.setDate(++i, alertRangeStart);
-    }
-    
-    if (alertRangeEnd != null) {
-      pst.setDate(++i, alertRangeEnd);
-    }
-    
-    if (closeDateStart != null) {
-      pst.setDate(++i, closeDateStart);
-    }
-    
-    if (closeDateEnd != null) {
-      pst.setDate(++i, closeDateEnd);
-    }
-
-    if (owner != -1) {
-      pst.setInt(++i, owner);
-    }
-
-    if (units != null) {
-      pst.setString(++i, units);
-    }
-    
-    if (includeEnabled == TRUE) {
-      pst.setBoolean(++i, true);
-    } else if (includeEnabled == FALSE) {
-      pst.setBoolean(++i, false);
-    }
-    
-    if (stage != -1) {
-      pst.setInt(++i, stage);
-    }
-
     return i;
   }
   
@@ -668,7 +395,7 @@ public void setCloseDateEnd(String tmp) {
       "SELECT COUNT(*) as itemcount " +
       "FROM opportunity_header o " +
       "LEFT JOIN opportunity_component oc ON (o.opp_id = oc.opp_id) " +
-      "WHERE o.opp_id > 0 ");
+      "WHERE opp_id > 0 ");
     if (moduleId == Constants.ACCOUNTS) {  
       sql.append("AND o.acctlink = ? ");
     }

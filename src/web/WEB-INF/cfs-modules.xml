@@ -84,6 +84,7 @@
     <action name="CompanyDirectory"/>
     <action name="ExternalContacts"/>
     <action name="ExternalContactsOpps"/>
+    <action name="ExternalContactsOppComponents"/>
     <action name="ExternalContactsCalls"/>
     <action name="ExternalContactsCallsForward"/>
     <action name="ExternalContactsPrototype"/>
@@ -160,6 +161,7 @@
   <menu>
     <action name="Leads"/>
     <action name="LeadsCalls"/>
+    <action name="LeadsComponents"/>
     <action name="LeadsDocuments"/>
     <action name="LeadsPrototype"/>
     <page title="Pipeline Management"/>
@@ -168,13 +170,6 @@
     <short_html value="Pipeline"/>
     <link value="Leads.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-pipeline-on.gif" off="menu-pipeline-off.gif" rollover=""/>
-    
-    <!--submenu name="Add Record">
-      <permission value="pipeline-leads-add"/>
-      <long_html value="Add Lead"/>
-      <short_html value="Add&lt;br&gt;Lead"/>
-      <link value="/Leads.do?module=Add%20Record&amp;include=pipeline_addrecord.htm"/>
-    </submenu-->
     
     <submenu name="Add Opportunity">
       <permission value="pipeline-opportunities-add"/>
@@ -236,6 +231,7 @@
     <action name="Accounts"/>
     <action name="Contacts"/>
     <action name="Opportunities"/>
+    <action name="OpportunitiesComponents"/>
     <action name="RevenueManager"/>
     <action name="AccountTickets"/>
 		<action name="AccountsDocuments"/>

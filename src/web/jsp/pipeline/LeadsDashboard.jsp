@@ -4,7 +4,7 @@
 <jsp:useBean id="ShortChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="FullChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="FullOppList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
-<jsp:useBean id="MyOppList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
+<jsp:useBean id="OppList" class="com.darkhorseventures.cfsbase.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 
@@ -123,7 +123,7 @@ Dashboard<br>
           <td valign="right" width=25>Term</td-->
         </tr>
 <%
-	Iterator n = MyOppList.iterator();
+	Iterator n = OppList.iterator();
   FileItem thisFile = new FileItem();
   
 		if ( n.hasNext() ) {
@@ -136,19 +136,16 @@ Dashboard<br>
 					rowid = 2;
 				}
 	          	
-				Opportunity thisOpp = (Opportunity)n.next();
+				OpportunityHeader thisOpp = (OpportunityHeader)n.next();
 %>    
 				<tr>
-          <td width="100%" class="row<%= rowid %>" valign=center><a href="/Leads.do?command=DetailsOpp&id=<%=thisOpp.getId()%>&return=dashboard"><%= toHtml(thisOpp.getAccountName()) %>:&nbsp;<%= toHtml(thisOpp.getShortDescription()) %></a>
-                <% if (thisOpp.hasFiles()) { %>
-      <%= thisFile.getImageTag()%>
-      <%}%>    
+          <td width="100%" class="row<%= rowid %>" valign=center><a href="Leads.do?command=DetailsOpp&oppId=<%=thisOpp.getId()%>&return=dashboard"><%= toHtml(thisOpp.getAccountName()) %>:&nbsp;<%= toHtml(thisOpp.getDescription()) %></a>
+          (<%=thisOpp.getComponentCount()%>)
+        <% if (thisOpp.hasFiles()) {%>
+        <%= thisFile.getImageTag() %>
+        <%}%>             
           </td>
-          <!--td class="row<%= rowid %>" valign=center><%= thisOpp.getAccountName() %></td-->
-          <td width="55" class="row<%= rowid %>">$<%= ((thisOpp.getGuessCurrency(1000))) %>K</td>
-          <!--td class="row<%= rowid %>" valign=center align="right" width=25><%= thisOpp.getCloseProbValue() %></td>
-          <td class="row<%= rowid %>" valign=center align="right"  width=90><%= toHtml(thisOpp.getCloseDateString()) %></td>
-          <td class="row<%= rowid %>" valign=center align="right" width=25><%= thisOpp.getTermsString() %></td-->
+          <td width="55" class="row<%= rowid %>">$<%= toHtml(thisOpp.getTotalValueCurrency()) %></td>
         </tr>
 <%    }
 	  } else {

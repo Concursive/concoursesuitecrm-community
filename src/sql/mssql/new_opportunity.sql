@@ -66,3 +66,4 @@ CREATE TABLE call_log (
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" ("alertdate", "enteredby");
+

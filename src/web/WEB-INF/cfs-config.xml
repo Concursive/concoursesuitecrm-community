@@ -220,7 +220,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <action name="ExternalContactsOpps" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
-    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.OpportunityBean" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -230,11 +230,26 @@
     <forward name="ListOppsOK" resource="/companydirectory_listopps.jsp" layout="nav"/>
     <forward name="AddOppOK" resource="/companydirectory_addopp.jsp" layout="nav"/>
     <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
-    <forward name="OppModifyOK" resource="/companydirectory_modifyopp.jsp" layout="nav"/>
-    <forward name="OppUpdateOK" resource="/ExternalContactsOpps.do?command=DetailsOpp"/>
+    <forward name="ModifyOppOK" resource="/companydirectory_modifyopp.jsp" layout="nav"/>
     <forward name="DetailsOppOK" resource="/companydirectory_detailsopp.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
+  
+  <action name="ExternalContactsOppComponents" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
+    <bean name="OppComponentDetails" class="com.darkhorseventures.cfsbase.OpportunityComponent" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="AddOppComponentOK" resource="/companydirectory_addoppcomponent.jsp" layout="nav"/>
+    <forward name="DetailsOppOK" resource="/companydirectory_detailsopp.jsp" layout="nav"/>
+    <forward name="DetailsComponentOK" resource="/companydirectory_detailsoppcomponent.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ComponentModifyOK" resource="/companydirectory_modifycomponent.jsp" layout="nav"/>
+    <forward name="ComponentUpdateOK" resource="ExternalContactsOppComponents.do?command=DetailsComponent"/>
+  </action>
+  
   <action name="ExternalContactsCalls" class="com.darkhorseventures.cfsmodule.ExternalContactsCalls">
     <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
@@ -303,7 +318,7 @@
   
   <!-- Pipeline Management Module -->
   <action name="Leads" class="com.darkhorseventures.cfsmodule.Leads">
-    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.OpportunityBean" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -327,6 +342,20 @@
     <forward name="ModifyOppPopupOK" resource="/LeadsModify.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
+  <action name="LeadsComponents" class="com.darkhorseventures.cfsmodule.Leads">
+    <bean name="LeadsComponentDetails" class="com.darkhorseventures.cfsbase.OpportunityComponent" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="AddOppComponentOK" resource="/leads_addoppcomponent.jsp" layout="nav"/>
+    <forward name="OppDetailsOK" resource="/LeadsDetailsOpp.jsp" layout="nav"/>
+    <forward name="DetailsComponentOK" resource="/leads_detailsoppcomponent.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ComponentModifyOK" resource="/leads_modifycomponent.jsp" layout="nav"/>
+    <forward name="ComponentUpdateOK" resource="LeadsComponents.do?command=DetailsComponent"/>
+  </action>    
   <action name="LeadsCalls" class="com.darkhorseventures.cfsmodule.LeadsCalls">
     <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
@@ -431,7 +460,7 @@
     <forward name="InsertOK" resource="/RevenueManager.do?command=View"/>
   </action>
   <action name="Opportunities" class="com.darkhorseventures.cfsmodule.Opportunities">
-    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.OpportunityBean" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -443,8 +472,23 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="AddOK" resource="/accounts_opportunities_add.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/accounts_opportunities_modify.jsp" layout="nav"/>
-    <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
   </action>
+  
+  <action name="OpportunitiesComponents" class="com.darkhorseventures.cfsmodule.Opportunities">
+    <bean name="OppComponentDetails" class="com.darkhorseventures.cfsbase.OpportunityComponent" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="AddOppComponentOK" resource="/accounts_opportunities_addoppcomponent.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/accounts_opportunities_details.jsp" layout="nav"/>
+    <forward name="DetailsComponentOK" resource="/accounts_opportunities_detailsoppcomponent.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ComponentModifyOK" resource="/accounts_opportunities_modifycomponent.jsp" layout="nav"/>
+    <forward name="ComponentUpdateOK" resource="ExternalContactsOppComponents.do?command=DetailsComponent"/>
+  </action>  
+  
   <action name="AccountTickets" class="com.darkhorseventures.cfsmodule.AccountTickets">
     <bean name="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
     <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
@@ -745,17 +789,6 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <!--
-    <forward name="ViewOK" resource="/leads_documents_list.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/leads_documents_upload.jsp" layout="nav"/>
-    <forward name="UploadOK" resource="/LeadsDocuments.do?command=View"/>
-    <forward name="AddVersionOK" resource="/leads_documents_upload_version.jsp" layout="nav"/>
-    <forward name="DetailsOK" resource="/leads_documents_details.jsp" layout="nav"/>
-    <forward name="ModifyOK" resource="/leads_documents_modify.jsp" layout="nav"/>
-    <forward name="UpdateOK" resource="/LeadsDocuments.do?command=View"/>
-    <forward name="DeleteOK" resource="/LeadsDocuments.do?command=View"/>
-    <forward name="DeleteERROR" resource="/LeadsDocuments.do?command=View"/>
-    -->
   </action>
   <!-- End Ticket Module -->
   

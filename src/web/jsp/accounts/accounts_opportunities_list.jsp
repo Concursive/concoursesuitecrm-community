@@ -1,7 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
-<jsp:useBean id="OpportunityList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
+<jsp:useBean id="OpportunityList" class="com.darkhorseventures.cfsbase.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="OpportunityPagedInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
@@ -35,21 +35,18 @@ Opportunities<br>
     </td>
     </dhv:permission>
     <td valign=center align=left>
-	<strong><a href="/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=description">Description</a></strong>
-	<%= OpportunityPagedInfo.getSortIcon("description") %>
+      <strong><a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>&column=description">Opportunity Name</a></strong>
+      <%= OpportunityPagedInfo.getSortIcon("description") %>
     </td>
+    
     <td valign=center align=left>
-	<strong><a href="/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=guessvalue">Guess Amount</a></strong>
-	<%= OpportunityPagedInfo.getSortIcon("guessvalue") %>
+      <strong>Best Guess Total</strong>
     </td>
+    
     <td valign=center align=left>
-      	<strong><a href="/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=closedate">Close Date</a></strong>
-	<%= OpportunityPagedInfo.getSortIcon("closedate") %>
+      <strong><a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>&column=modified">Last Modified</a></strong>
+      <%= OpportunityPagedInfo.getSortIcon("modified") %>
     </td>
-    <td valign=center align=left>
-      	<strong><a href="/Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=stage">Current Stage</a></strong>
-	<%= OpportunityPagedInfo.getSortIcon("stage") %>
-    </td>  
   </tr>
 
 <%
@@ -66,30 +63,28 @@ Opportunities<br>
           rowid = 2;
         }
 		
-		Opportunity thisOpp = (Opportunity)j.next();
+		OpportunityHeader thisOpp = (OpportunityHeader)j.next();
 %>      
   <tr class="containerBody">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-opportunities-edit"><a href="/Opportunities.do?command=Modify&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%=thisOpp.getContactLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=thisOpp.getId()%>','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+          <dhv:permission name="accounts-accounts-opportunities-edit"><a href="Opportunities.do?command=Modify&oppId=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=thisOpp.getId()%>','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-    <td width=100% valign=center class="row<%= rowid %>">
-      <a href="/Opportunities.do?command=Details&id=<%=thisOpp.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">
-      <%= toHtml(thisOpp.getDescription()) %></a>
-      <% if (thisOpp.hasFiles()) { %>
-      <%= thisFile.getImageTag()%>
-      <%}%>
-    </td>
-    <td width=125 valign=center nowrap class="row<%= rowid %>">
-      $<%= thisOpp.getGuessCurrency() %>
-    </td>
-    <td width=125 valign=center nowrap class="row<%= rowid %>">
-      <%= toHtml(thisOpp.getCloseDateString()) %>
-    </td>
-    <td width=125 valign=center nowrap class="row<%= rowid %>">
-      <%= toHtml(thisOpp.getStageName()) %>
-    </td>		
+      <td width=40% valign=center class="row<%= rowid %>">
+        <a href="Opportunities.do?command=Details&oppId=<%=thisOpp.getOppId()%>&orgId=<%= OrgDetails.getId() %>">
+        <%= toHtml(thisOpp.getDescription()) %></a>
+        (<%=thisOpp.getComponentCount()%>)
+        <% if (thisOpp.hasFiles()) {%>
+        <%= thisFile.getImageTag() %>
+        <%}%>        
+      </td>  
+      <td width="115" valign=center class="row<%= rowid %>">
+        $<%= toHtml(thisOpp.getTotalValueCurrency()) %>
+      </td>      
+      <td valign=center class="row<%= rowid %>">
+        <%= toHtml(thisOpp.getModifiedString()) %>
+      </td>   
   </tr>
 <%}%>
 <%} else {%>

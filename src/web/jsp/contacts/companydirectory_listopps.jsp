@@ -1,7 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<jsp:useBean id="OpportunityList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
+<jsp:useBean id="OpportunityHeaderList" class="com.darkhorseventures.cfsbase.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="OpportunityPagedListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
@@ -36,23 +36,22 @@ Opportunities<br>
     </dhv:permission>
   
     <td valign=center align=left>
-      <strong>Opportunity Name</strong>
+      <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>&column=description">Opportunity Name</a></strong>
+      <%= OpportunityPagedListInfo.getSortIcon("description") %>
     </td>
     
     <td valign=center align=left>
-      <strong>Best Guess Amount</strong>
+      <strong>Best Guess Total</strong>
     </td>
     
     <td valign=center align=left>
-      <strong>Close Date</strong>
+      <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>&column=modified">Last Modified</a></strong>
+      <%= OpportunityPagedListInfo.getSortIcon("modified") %>
     </td>
-      
-    <td valign=center align=left>
-      <strong>Current Stage</strong>
-    </td>  
+    
   </tr>
 <%
-	Iterator j = OpportunityList.iterator();
+	Iterator j = OpportunityHeaderList.iterator();
   FileItem thisFile = new FileItem();
 	
 	if ( j.hasNext() ) {
@@ -65,30 +64,29 @@ Opportunities<br>
           rowid = 2;
         }
 		
-		Opportunity thisOpp = (Opportunity)j.next();
+		OpportunityHeader thisOpp = (OpportunityHeader)j.next();
 %>      
     <tr class="containerBody">
       <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
       <td width=8 valign=center nowrap class="row<%= rowid %>">
-      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOpps.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink()%>&contactId=<%= thisOpp.getContactLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%=ContactDetails.getId()%>&id=<%=thisOpp.getId()%>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOpps.do?command=ModifyOpp&oppId=<%= thisOpp.getOppId() %>&contactId=<%= thisOpp.getContactLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%=ContactDetails.getId()%>&id=<%=thisOpp.getOppId()%>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
       </td>
       </dhv:permission>
       <td width=40% valign=center class="row<%= rowid %>">
-        <a href="ExternalContactsOpps.do?command=DetailsOpp&id=<%=thisOpp.getId()%>&contactId=<%= ContactDetails.getId() %>">
+        <a href="ExternalContactsOpps.do?command=DetailsOpp&oppId=<%=thisOpp.getOppId()%>&contactId=<%= ContactDetails.getId() %>">
         <%= toHtml(thisOpp.getDescription()) %></a>
-      <% if (thisOpp.hasFiles()) { %>
-      <%= thisFile.getImageTag()%>
-      <%}%>        
-      </td>
-      <td width=20% valign=center nowrap class="row<%= rowid %>">
-        $<%= thisOpp.getGuessCurrency() %>
-      </td>
-      <td width=20% valign=center nowrap class="row<%= rowid %>">
-        <%= toHtml(thisOpp.getCloseDateString()) %>
-      </td>
-      <td width=20% valign=center class="row<%= rowid %>">
-        <%= thisOpp.getStageName() %>
-      </td>		
+        (<%=thisOpp.getComponentCount()%>)
+        
+        <% if (thisOpp.hasFiles()) {%>
+        <%= thisFile.getImageTag() %>
+        <%}%>
+      </td>  
+      <td width="115" valign=center class="row<%= rowid %>">
+        $<%= toHtml(thisOpp.getTotalValueCurrency()) %>
+      </td>      
+      <td valign=center class="row<%= rowid %>">
+        <%= toHtml(thisOpp.getModifiedString()) %>
+      </td>       
     </tr>
 <%
     }

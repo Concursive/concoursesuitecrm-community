@@ -645,12 +645,18 @@ public class CFSModule {
           RecentItem.TICKET,
           thisTicket.getPaddedId(),
           "/TroubleTickets.do?command=Details&id=" + thisTicket.getId());
-    } else if (itemObject instanceof Opportunity) {
-      Opportunity thisOpp = (Opportunity) itemObject;
+    } else if (itemObject instanceof OpportunityHeader) {
+      OpportunityHeader thisOpp = (OpportunityHeader) itemObject;
       thisItem = new RecentItem(
           RecentItem.OPPORTUNITY,
           thisOpp.getShortDescription(),
-          "/Leads.do?command=DetailsOpp&id=" + thisOpp.getId());
+          "Leads.do?command=DetailsOpp&id=" + thisOpp.getId());
+    } else if (itemObject instanceof OpportunityComponent) {
+      OpportunityComponent thisComponent = (OpportunityComponent) itemObject;
+      thisItem = new RecentItem(
+          RecentItem.COMPONENT,
+          thisComponent.getShortDescription(),
+          "LeadsComponents.do?command=DetailsComponent&id=" + thisComponent.getId());
     } else if (itemObject instanceof com.zeroio.iteam.base.Project) {
       com.zeroio.iteam.base.Project thisProject = (com.zeroio.iteam.base.Project) itemObject;
       thisItem = new RecentItem(

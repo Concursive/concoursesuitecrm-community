@@ -410,14 +410,14 @@ public class User extends GenericBean {
    *@since
    */
   public void setIsValid(boolean isValid, boolean dataAlso) {
-    if (dataAlso == true) {
+    if (dataAlso) {
       this.gmr.setIsValid(isValid);
       this.ramr.setIsValid(isValid);
       this.cgmr.setIsValid(isValid);
       this.cramr.setIsValid(isValid);
     }
 
-    if (isValid == false) {
+    if (!isValid) {
       this.gmr.setLastFileName("");
       this.ramr.setLastFileName("");
       this.cgmr.setLastFileName("");

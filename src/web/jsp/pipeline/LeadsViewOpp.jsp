@@ -38,13 +38,13 @@ View Opportunities<br>
     </dhv:permission>
     
     <td valign=center nowrap>
-      <strong><a href="/Leads.do?command=ViewOpp&column=x.description">Opportunity</a></strong>
-      <%= OpportunityListInfo.getSortIcon("x.description") %>
-    </td>
-    
-    <td valign=center nowrap>
       <strong><a href="/Leads.do?command=ViewOpp&column=acct_name">Organization</a></strong>
       <%= OpportunityListInfo.getSortIcon("acct_name") %>
+    </td>    
+    
+    <td valign=center nowrap>
+      <strong><a href="/Leads.do?command=ViewOpp&column=x.description">Component</a></strong>
+      <%= OpportunityListInfo.getSortIcon("x.description") %>
     </td>
     
     <td valign=center nowrap>
@@ -53,18 +53,18 @@ View Opportunities<br>
     </td>
     
     <td valign=center nowrap>
-      <strong><a href="/Leads.do?command=ViewOpp&column=closeprob">Close Prob.</a></strong>
+      <strong><a href="/Leads.do?command=ViewOpp&column=closeprob">Prob.</a></strong>
       <%= OpportunityListInfo.getSortIcon("closeprob") %>
     </td>
     
     <td valign=center nowrap>
-      <strong><a href="/Leads.do?command=ViewOpp&column=closedate">Revenue Start</a></strong>
+      <strong><a href="/Leads.do?command=ViewOpp&column=closedate">Start</a></strong>
       <%= OpportunityListInfo.getSortIcon("closedate") %>
     </td>
     
-    <td valign=center nowrap>
+    <!--td valign=center nowrap>
       <strong>Term</strong>
-    </td>
+    </td-->
     
   </tr>
 
@@ -88,22 +88,14 @@ View Opportunities<br>
 	<tr bgcolor="white">
 	<dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete">
 	<td width=8 valign=center nowrap class="row<%= rowid %>">
-	<dhv:permission name="pipeline-opportunities-edit"><a href="/Leads.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink()%>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-delete"><a href="javascript:popURLReturn('/Leads.do?command=ConfirmDelete&id=<%=thisOpp.getId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+	<dhv:permission name="pipeline-opportunities-edit"><a href="/Leads.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink()%>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-delete"><a href="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%=thisOpp.getOppId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
 	</td>
 	</dhv:permission>
-      
-      <td width=35% valign=center class="row<%= rowid %>">
-        <a href="/Leads.do?command=DetailsOpp&id=<%=thisOpp.getId()%>">
-        <%= toHtml(thisOpp.getDescription()) %></a>
-      <% if (thisOpp.hasFiles()) { %>
-      <%= thisFile.getImageTag()%>
-      <%}%>        
-      </td>
-      
+  
       <td width=30% valign=center class="row<%= rowid %>">
 
       <dhv:evaluate exp="<%=(thisOpp.getAccountEnabled() && thisOpp.getAccountLink() > -1)%>">
-      <a href="/Opportunities.do?command=View&orgId=<%= thisOpp.getAccountLink() %>">
+      <a href="Opportunities.do?command=View&orgId=<%= thisOpp.getAccountLink() %>">
       </dhv:evaluate>
      
       <%= toHtml(thisOpp.getAccountName()) %><dhv:evaluate exp="<%=!(thisOpp.getAccountEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
@@ -111,23 +103,28 @@ View Opportunities<br>
       <dhv:evaluate exp="<%=(thisOpp.getAccountEnabled() && thisOpp.getAccountLink() > -1)%>">
       </a>
       </dhv:evaluate>
+      </td>  
+      
+      <td width=35% valign=center class="row<%= rowid %>">
+        <a href="LeadsComponents.do?command=DetailsComponent&id=<%=thisOpp.getComponentId()%>">
+        <%= toHtml(thisOpp.getComponentDescription()) %></a>
+      <% if (thisOpp.hasFiles()) { %>
+      <%= thisFile.getImageTag()%>
+      <%}%>        
       </td>
       
-      <td width=15% valign=center nowrap class="row<%= rowid %>">
+      <td width=80 valign=center nowrap class="row<%= rowid %>">
         $<%= thisOpp.getGuessCurrency() %>
       </td>
       
-      <td width=10% class="row<%= rowid %>">
+      <td width=25 class="row<%= rowid %>">
         <%= thisOpp.getCloseProbValue() %>%
       </td>
       
-      <td width=10% valign=center nowrap class="row<%= rowid %>">
+      <td width=80 valign=center nowrap class="row<%= rowid %>">
         <%= toHtml(thisOpp.getCloseDateString()) %>
       </td>
-      
-      <td width=8 class="row<%= rowid %>">
-        <%= thisOpp.getTermsString() %>
-      </td>
+
     </tr>
 <%
     }

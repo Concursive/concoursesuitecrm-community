@@ -1268,6 +1268,9 @@ public final class ExternalContacts extends CFSModule {
         if (thisContact.getPrimaryContact()) {
           htmlDialog.setHeader("This contact cannot be deleted because it is also an individual account.");
           htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        } else if (thisContact.getHasOpportunities()) {
+          htmlDialog.setHeader("Please re-assign or delete any opportunities associated with this contact first.");
+          htmlDialog.addButton("OK", "javascript:parent.window.close()");
         } else {        
           htmlDialog.setTitle("CFS: Confirm Delete");
           htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");

@@ -45,7 +45,7 @@ public class OpportunityListScheduledActions extends OpportunityList implements 
       }
       PagedListInfo alertPaged2 = new PagedListInfo();
       alertPaged2.setItemsPerPage(0);
-      alertPaged2.setColumnToSortBy("x.alertdate");
+      alertPaged2.setColumnToSortBy("oc.alertdate");
       this.setPagedListInfo(alertPaged2);
       this.setOwner(this.getUserId());
       this.setHasAlertDate(true);

@@ -72,6 +72,7 @@ public class Contact extends GenericBean {
   private boolean hasEnabledAccount = true;
   
   private boolean primaryContact = false;
+  private boolean hasOpportunities = false;
 
   /**
    *  Constructor for the Contact object
@@ -199,7 +200,14 @@ public class Contact extends GenericBean {
   public String getUrl() {
     return url;
   }
-
+  
+  public boolean getHasOpportunities() {
+    return hasOpportunities;
+  }
+  public void setHasOpportunities(boolean hasOpportunities) {
+    this.hasOpportunities = hasOpportunities;
+  }
+  
   /**
    *  Sets the url attribute of the Contact object
    *
@@ -1745,13 +1753,15 @@ public class Contact extends GenericBean {
     } else {
       try {
         db.setAutoCommit(false);
-
+        
+        /**
         OpportunityList oppList = new OpportunityList();
         oppList.setContactId(this.getId());
         oppList.buildList(db);
         oppList.delete(db);
         oppList = null;
-
+        */
+        
         CustomFieldRecordList folderList = new CustomFieldRecordList();
         folderList.setLinkModuleId(Constants.CONTACTS);
         folderList.setLinkItemId(this.getId());
@@ -1821,9 +1831,8 @@ public class Contact extends GenericBean {
       return true;
     }
   }
-
-
-  /**
+  
+   /**
    *  Performs a query and sets whether this user has an account or not
    *
    *@param  db                Description of Parameter
@@ -2254,17 +2263,18 @@ public class Contact extends GenericBean {
     try {
       db.setAutoCommit(false);
       sql = "SELECT count(*) as oppcount " +
-          "FROM opportunity " +
-          "WHERE opportunity.contactlink = ? ";
+          "FROM opportunity_header " +
+          "WHERE opportunity_header.contactlink = ? ";
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        //if (rs.getInt("oppcount") != 0) {
         dependencyList.put("Opportunities", new Integer(rs.getInt("oppcount")));
-        // }
+        if (rs.getInt("oppcount") > 0) {
+            this.setHasOpportunities(true);
+        }
       }
 
       sql = "SELECT count(*) as callcount " +

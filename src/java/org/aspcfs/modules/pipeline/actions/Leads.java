@@ -50,66 +50,84 @@ public final class Leads extends CFSModule {
 
 
   public String executeCommandDefault(ActionContext context) {
-    /**
-    String module = context.getRequest().getParameter("module");
-    String includePage = context.getRequest().getParameter("include");
-    context.getRequest().setAttribute("IncludePage", includePage);
-    addModuleBean(context, module, module);
-    return ("IncludeOK");
-    */
-    
     return executeCommandDashboard(context);
   }
   
   public String executeCommandAddOpp(ActionContext context) {
-	if (!(hasPermission(context, "pipeline-opportunities-add"))) {
-		return ("PermissionError");
-	}
-	
-	Exception errorMessage = null;
-	
-	OrganizationList orgList = new OrganizationList();
-	
-	HtmlSelect busTypeSelect = new HtmlSelect();
-	busTypeSelect.setSelectName("type");
-	busTypeSelect.addItem("N", "New");
-	busTypeSelect.addItem("E", "Existing");
-	busTypeSelect.build();
-	
-	HtmlSelect unitSelect = new HtmlSelect();
-	unitSelect.setSelectName("units");
-	unitSelect.addItem("M", "Months");
-	unitSelect.build();
-	
-	Connection db = null;
-	Statement st = null;
-	ResultSet rs = null;
-	
-	try {
-		db = this.getConnection(context);
-		
-		LookupList stageSelect = new LookupList(db, "lookup_stage");
-		context.getRequest().setAttribute("StageList", stageSelect);
-		
-		orgList.setMinerOnly(false);
-		orgList.buildList(db);
-	} catch (SQLException e) {
-		errorMessage = e;
-	} finally {
-		this.freeConnection(context, db);
-	}
-	
-	if (errorMessage == null) {
-		context.getRequest().setAttribute("BusTypeList", busTypeSelect);
-		context.getRequest().setAttribute("UnitTypeList", unitSelect);
-		context.getRequest().setAttribute("OrgList", orgList);
-		addModuleBean(context, "Add Opportunity", "Add Opportunity");
-		return ("AddOK");
-	} else {
-		context.getRequest().setAttribute("Error", errorMessage);
-		return ("SystemError");
-	}
+    if (!(hasPermission(context, "pipeline-opportunities-add"))) {
+      return ("PermissionError");
+    }
+    
+    Exception errorMessage = null;
+    OrganizationList orgList = new OrganizationList();
+    Connection db = null;
+    
+    try {
+      db = this.getConnection(context);
+      buildFormElements(db, context);
+      orgList.setMinerOnly(false);
+      orgList.buildList(db);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("OrgList", orgList);
+      addModuleBean(context, "Add Opportunity", "Add Opportunity");
+      return ("AddOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
+  
+  public String executeCommandInsertOppComponent(ActionContext context) {
+	  
+    if (!(hasPermission(context, "pipeline-opportunities-add"))) {
+	    return ("PermissionError");
+    }
+	
+    Exception errorMessage = null;
+    boolean recordInserted = false;
+    Connection db = null;
+
+    OpportunityComponent newComponent = (OpportunityComponent) context.getFormBean();
+    
+    //set types
+    newComponent.setTypeList(context.getRequest().getParameterValues("selectedList"));
+    newComponent.setOwner(getUserId(context));
+    newComponent.setEnteredBy(getUserId(context));
+    newComponent.setModifiedBy(getUserId(context));
+    
+    try {
+      db = this.getConnection(context);
+      recordInserted = newComponent.insert(db, context);
+      
+      if (recordInserted) {
+        context.getRequest().setAttribute("LeadsComponentDetails", newComponent);
+        addRecentItem(context, newComponent);
+      } else {
+        processErrors(context, newComponent.getErrors());
+      }
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (recordInserted) {
+        return (executeCommandDetailsOpp(context));
+      } else {
+        return (executeCommandAddOppComponent(context));
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
   
   public String executeCommandInsertOpp(ActionContext context) {
 	  
@@ -120,37 +138,48 @@ public final class Leads extends CFSModule {
     Exception errorMessage = null;
     boolean recordInserted = false;
     Contact linkedContact = null;
+    OpportunityHeader resultHeader = null;
+    OpportunityComponentList componentList = null;     
+    Connection db = null;
     
+    OpportunityBean newOpp = (OpportunityBean) context.getRequest().getAttribute("OppDetails");
     String association = context.getRequest().getParameter("opp_type");
-    Opportunity newOpp = (Opportunity) context.getFormBean();
     
     //set types
-    newOpp.setTypeList(context.getRequest().getParameterValues("selectedList"));
-    newOpp.setEnteredBy(getUserId(context));
-    newOpp.setOwner(getUserId(context));
-    newOpp.setModifiedBy(getUserId(context));
+    newOpp.getComponent().setTypeList(context.getRequest().getParameterValues("selectedList"));
+    newOpp.getComponent().setOwner(getUserId(context));
+    newOpp.getComponent().setEnteredBy(getUserId(context));
+    newOpp.getComponent().setModifiedBy(getUserId(context));
+    newOpp.getHeader().setEnteredBy(getUserId(context));
+    newOpp.getHeader().setModifiedBy(getUserId(context));
     
-    if (association.equals("contact")) {
-      newOpp.setAccountLink("-1");
-    } else if (association.equals("org")) {
-      newOpp.setContactLink("-1");
+    if (newOpp.getHeader().getAccountLink() > -1) {
+      newOpp.getHeader().setContactLink("-1");
+    } else if (newOpp.getHeader().getContactLink() > -1) {
+      newOpp.getHeader().setAccountLink("-1");
     }
-
-    Connection db = null;
+    
     try {
       db = this.getConnection(context);
       
       //set the name for displaying on the form in case there are any errors
-      if (newOpp.getContactLink() > -1) {
-        linkedContact = new Contact(db, newOpp.getContactLink());
-        newOpp.setContactName(linkedContact.getNameLastFirst());
+      if (newOpp.getHeader().getContactLink() > -1) {
+        linkedContact = new Contact(db, newOpp.getHeader().getContactLink());
+        newOpp.getHeader().setContactName(linkedContact.getNameLastFirst());
       }
       
       recordInserted = newOpp.insert(db, context);
       if (recordInserted) {
-        newOpp = new Opportunity(db, "" + newOpp.getId());
-        context.getRequest().setAttribute("OpportunityDetails", newOpp);
-        addRecentItem(context, newOpp);
+        resultHeader = new OpportunityHeader(db, newOpp.getHeader().getOppId());
+        context.getRequest().setAttribute("HeaderDetails", resultHeader);
+        
+        PagedListInfo componentListInfo = this.getPagedListInfo(context, "LeadsComponentListInfo");
+        componentListInfo.setLink("Opportunities.do?command=DetailsOpp&oppId=" + resultHeader.getOppId());    
+        componentList = new OpportunityComponentList();
+        componentList.setPagedListInfo(componentListInfo);
+        componentList.setOppId(resultHeader.getOppId());
+        componentList.buildList(db);
+        context.getRequest().setAttribute("ComponentList", componentList); 
       } else {
         processErrors(context, newOpp.getErrors());
       }
@@ -163,6 +192,7 @@ public final class Leads extends CFSModule {
     addModuleBean(context, "Add Opportunity", "Add Opportunity");
     if (errorMessage == null) {
       if (recordInserted) {
+        addRecentItem(context, resultHeader);
         return ("OppDetailsOK");
       } else {
         return (executeCommandAddOpp(context));
@@ -173,35 +203,40 @@ public final class Leads extends CFSModule {
     }
   }
 
-
-  /**
-   *  DetailsOpp: Show details of selected opportunity
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
-   */
   public String executeCommandDetailsOpp(ActionContext context) {
 	  
-	if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+    if (!(hasPermission(context, "pipeline-opportunities-view"))) {
 	    return ("PermissionError");
-    	}
+    }
 	
     addModuleBean(context, "View Opportunities", "View Opportunity Details");
     Exception errorMessage = null;
-
-    String oppId = context.getRequest().getParameter("id");
-
+    int oppId = -1;
     Connection db = null;
-    Opportunity newOpp = null;
-
+    OpportunityHeader thisHeader = null;
+    OpportunityComponentList componentList = null;
+    
+    if (context.getRequest().getParameter("oppId") != null) {
+        oppId = Integer.parseInt(context.getRequest().getParameter("oppId"));
+    } else if (context.getRequest().getParameter("id") != null) {
+        oppId = Integer.parseInt(context.getRequest().getParameter("id"));
+    }
+    
+    PagedListInfo componentListInfo = this.getPagedListInfo(context, "LeadsComponentListInfo");
+    componentListInfo.setLink("Leads.do?command=Details&oppId=" + oppId);    
+    
     try {
       db = this.getConnection(context);
-      newOpp = new Opportunity(db, oppId);
+      thisHeader = new OpportunityHeader(db, oppId);
       
       //check whether or not the owner is an active User
-      newOpp.checkEnabledOwnerAccount(db);
+      //newOpp.checkEnabledOwnerAccount(db);
       
+      componentList = new OpportunityComponentList();
+      componentList.setPagedListInfo(componentListInfo);
+      componentList.setOppId(thisHeader.getOppId());
+      componentList.buildList(db);
+      context.getRequest().setAttribute("ComponentList", componentList);      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -209,15 +244,76 @@ public final class Leads extends CFSModule {
     }
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("OpportunityDetails", newOpp);
-      addRecentItem(context, newOpp);
+      context.getRequest().setAttribute("HeaderDetails", thisHeader);
+      addRecentItem(context, thisHeader);
       return ("OppDetailsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-  }
+  }  
+  
+  public String executeCommandAddOppComponent(ActionContext context) {
+	  
+    if (!(hasPermission(context, "pipeline-opportunities-add"))) {
+	    return ("PermissionError");
+    }
+	
+    Exception errorMessage = null;
+    Connection db = null;
+    String oppId = null;
+    OpportunityHeader oppHeader = null;
 
+    if (context.getRequest().getParameter("id") != null) {
+      oppId = context.getRequest().getParameter("id");
+    }
+
+    try {
+      db = this.getConnection(context);
+      buildFormElements(db, context);
+      
+      //get the header info
+      oppHeader = new OpportunityHeader(db, oppId);
+      context.getRequest().setAttribute("OpportunityHeader", oppHeader);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "View Opportunities", "Add Opportunity Component");
+      return ("AddOppComponentOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
+  
+  public void buildFormElements(Connection db, ActionContext context) {
+      Exception errorMessage = null;
+
+      HtmlSelect busTypeSelect = new HtmlSelect();
+      busTypeSelect.setSelectName("type");
+      busTypeSelect.addItem("N", "New");
+      busTypeSelect.addItem("E", "Existing");
+      busTypeSelect.build();
+  
+      HtmlSelect unitSelect = new HtmlSelect();
+      unitSelect.setSelectName("units");
+      unitSelect.addItem("M", "Months");
+      unitSelect.build();    
+      
+      context.getRequest().setAttribute("BusTypeList", busTypeSelect);
+      context.getRequest().setAttribute("UnitTypeList", unitSelect);
+      
+      try {
+        LookupList stageSelect = new LookupList(db, "lookup_stage");
+        context.getRequest().setAttribute("StageList", stageSelect);
+      } catch (SQLException e) {
+        errorMessage = e;
+      } 
+  }  
 
   /**
    *  Description of the Method
@@ -268,13 +364,13 @@ public final class Leads extends CFSModule {
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
-    Opportunity thisOpp = null;
+    OpportunityHeader thisOpp = null;
     HtmlDialog htmlDialog = new HtmlDialog();
     String id = null;
 
-        if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
-                return ("PermissionError");
-        }
+    if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
+            return ("PermissionError");
+    }
 
     if (context.getRequest().getParameter("id") != null) {
       id = context.getRequest().getParameter("id");
@@ -282,14 +378,15 @@ public final class Leads extends CFSModule {
     
     try {
       db = this.getConnection(context);
-      thisOpp = new Opportunity(db, id);
+      thisOpp = new OpportunityHeader(db, id);
       htmlDialog.setRelationships(thisOpp.processDependencies(db));
       
-        htmlDialog.setTitle("CFS: Confirm Delete");
-        htmlDialog.setHeader("The opportunity you are requesting to delete has the following dependencies within CFS:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + "&action=delete'");
-        //htmlDialog.addButton("Disable Only", "javascript:window.location.href='/Leads.do?command=DeleteOpp&id=" + id + "&action=disable'");
-        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      htmlDialog.setTitle("CFS: Confirm Delete");
+      htmlDialog.setRelationships(thisOpp.processDependencies(db));
+      htmlDialog.setTitle("CFS: Confirm Delete");
+      htmlDialog.setHeader("This object has the following dependencies within CFS:");
+      htmlDialog.addButton("Delete All", "javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + "'");
+      htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -374,6 +471,8 @@ public final class Leads extends CFSModule {
     OpportunityList fullOppList = new OpportunityList();
     OpportunityList tempOppList = new OpportunityList();
     OpportunityList realFullOppList = new OpportunityList();
+    
+    OpportunityHeaderList headerList = new OpportunityHeaderList();
 
     XYDataset categoryData = null;
 
@@ -423,7 +522,6 @@ public final class Leads extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      System.out.println("Leads-> Got user record of" + idToUse);
 
       shortChildList = thisRec.getShortChildList();
       context.getRequest().setAttribute("ShortChildList", shortChildList);
@@ -437,6 +535,11 @@ public final class Leads extends CFSModule {
       realFullOppList.setUnits("M");
       realFullOppList.setOwnerIdRange(range);
       realFullOppList.buildList(db);
+      
+      headerList.setOwner(idToUse);
+      headerList.setBuildTotalValues(true);
+      headerList.buildList(db);
+      context.getRequest().setAttribute("OppList", headerList);
 
       //filter out my opportunities for displaying on page
 
@@ -453,7 +556,6 @@ public final class Leads extends CFSModule {
         }
       }
 
-      context.getRequest().setAttribute("MyOppList", tempOppList);
     } catch (Exception e) {
       errorCode = 1;
       errorMessage = e.toString();
@@ -605,42 +707,26 @@ public final class Leads extends CFSModule {
    */
   public String executeCommandDeleteOpp(ActionContext context) {
 	  
-	if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
+    if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
 	    return ("PermissionError");
-    	}
+    }
 	
     Exception errorMessage = null;
     boolean recordDeleted = false;
-    Opportunity newOpp = null;
-
-    //String tempcontact = context.getRequest().getParameter("contactLink");
-    //String tempaccount = context.getRequest().getParameter("accountLink");
-
+    OpportunityHeader newOpp = null;
     Connection db = null;
+    
     try {
       db = this.getConnection(context);
-      newOpp = new Opportunity(db, context.getRequest().getParameter("id"));
-      
-      if (context.getRequest().getParameter("action") != null) {
-	      
-	      if ( ((String)context.getRequest().getParameter("action")).equals("delete") ) {
-		      //TODO: these may have different options later
-		      newOpp.setCallsDelete(true);
-		      newOpp.setDocumentDelete(true);
-	      	recordDeleted = newOpp.delete(db, context, this.getPath(context, "leads", newOpp.getId()));
-	      } else if ( ((String)context.getRequest().getParameter("action")).equals("disable") ) {
-		      recordDeleted = newOpp.disable(db);
-	      }
-      }
-      
-      //recordDeleted = newOpp.delete(db, context);
+      newOpp = new OpportunityHeader(db, context.getRequest().getParameter("id"));
+      recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities", newOpp.getId()));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "Opportunities", "Delete an opportunity");
+    addModuleBean(context, "View Opportunities", "Delete an opportunity");
     if (errorMessage == null) {
       if (recordDeleted) {
         context.getRequest().setAttribute("refreshUrl","Leads.do?command=ViewOpp");
@@ -652,40 +738,94 @@ public final class Leads extends CFSModule {
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
-      System.out.println(errorMessage);
       return ("SystemError");
     }
   }
-
-
-  /**
-   *  Modify Opportunity
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
-   */
-  public String executeCommandModifyOpp(ActionContext context) {
+  
+  public String executeCommandDeleteComponent(ActionContext context) {
 	  
-	if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+    if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
 	    return ("PermissionError");
-    	}
+    }
 	
-    addModuleBean(context, "View Opportunities", "Modify an Opportunity");
     Exception errorMessage = null;
+    boolean recordDeleted = false;
+    OpportunityComponent component = null;
+    Connection db = null;
 
-    HtmlSelect busTypeSelect = new HtmlSelect();
-    busTypeSelect.setSelectName("type");
-    busTypeSelect.addItem("N", "New");
-    busTypeSelect.addItem("E", "Existing");
+    try {
+      db = this.getConnection(context);
+      component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
+      recordDeleted = component.delete(db, context, this.getPath(context, "opportunities", component.getId()));
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
 
-    HtmlSelect unitSelect = new HtmlSelect();
-    unitSelect.setSelectName("units");
-    unitSelect.addItem("Y", "Years");
-    unitSelect.addItem("M", "Months");
-    unitSelect.addItem("W", "Weeks");
-    unitSelect.addItem("D", "Days");
+    if (errorMessage == null) {
+      if (recordDeleted) {
+        context.getRequest().setAttribute("refreshUrl","Leads.do?command=DetailsOpp&oppId="+component.getOppId());
+        deleteRecentItem(context, component);
+        return ("ComponentDeleteOK");
+      } else {
+        processErrors(context, component.getErrors());
+        return (executeCommandViewOpp(context));
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
+  
+  public String executeCommandConfirmComponentDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    OpportunityComponent thisComponent = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
 
+    if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
+            return ("PermissionError");
+    }
+
+    if (context.getRequest().getParameter("oppId") != null) {
+      id = context.getRequest().getParameter("oppId");
+    }
+    
+    try {
+      db = this.getConnection(context);
+      thisComponent = new OpportunityComponent(db, id);
+      htmlDialog.setTitle("CFS: Pipeline Management");
+      htmlDialog.setShowAndConfirm(false);
+      htmlDialog.setDeleteUrl("javascript:window.location.href='LeadsComponents.do?command=DeleteComponent&id=" + id + "'");      
+      htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
+  
+  public String executeCommandModifyComponent(ActionContext context) {
+	  
+    if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+	    return ("PermissionError");
+    }
+	
+    Exception errorMessage = null;
+    Connection db = null;
+    OpportunityComponent component = null;    
+    addModuleBean(context, "View Opportunities", "Opportunities");
+    
+    String passedId = context.getRequest().getParameter("id");
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
 
     //this is how we get the multiple-level heirarchy...recursive function.
@@ -700,27 +840,10 @@ public final class Leads extends CFSModule {
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
 
-    int tempId = -1;
-    String passedId = context.getRequest().getParameter("id");
-    tempId = Integer.parseInt(passedId);
-
-    Connection db = null;
-    Opportunity newOpp = (Opportunity) context.getFormBean();
-
     try {
       db = this.getConnection(context);
-      StringBuffer sql = new StringBuffer();
-
-      if (newOpp.getId() < 1) {
-        newOpp = new Opportunity(db, "" + tempId);
-      }
-
-      LookupList stageSelect = new LookupList(db, "lookup_stage");
-      context.getRequest().setAttribute("StageList", stageSelect);
-
-      busTypeSelect.setDefaultKey(newOpp.getType());
-      unitSelect.setDefaultKey(newOpp.getUnits());
-
+      buildFormElements(db, context);
+      component = new OpportunityComponent(db, passedId);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -728,15 +851,51 @@ public final class Leads extends CFSModule {
     }
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("OpportunityDetails", newOpp);
-      addRecentItem(context, newOpp);
-      context.getRequest().setAttribute("BusTypeList", busTypeSelect);
-      context.getRequest().setAttribute("UnitTypeList", unitSelect);
-      if(context.getRequest().getParameter("popup")!=null){
-        return ("ModifyOppPopupOK");
-      }else{
+      context.getRequest().setAttribute("LeadsComponentDetails", component);
+      addRecentItem(context, component);
+      return ("ComponentModifyOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
+
+  public String executeCommandModifyOpp(ActionContext context) {
+	  
+    if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+	    return ("PermissionError");
+    }
+	
+    Exception errorMessage = null;
+    int oppId = -1;
+    addModuleBean(context, "View Opportunities", "Modify Opportunity");
+
+    if (context.getRequest().getParameter("oppId") != null) {
+      oppId = Integer.parseInt(context.getRequest().getParameter("oppId"));
+    }
+
+    Connection db = null;
+    OpportunityHeader thisHeader = null;
+    
+    try {
+      db = this.getConnection(context);
+      
+      thisHeader = new OpportunityHeader();
+      thisHeader.setBuildComponentCount(true);
+      thisHeader.queryRecord(db, oppId);
+      
+      //check whether or not the owner is an active User
+      //thisHeader.checkEnabledOwnerAccount(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("HeaderDetails", thisHeader);
+      addRecentItem(context, thisHeader);
       return ("ModifyOppOK");
-      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1106,6 +1265,7 @@ public final class Leads extends CFSModule {
    *@since
    */
   public String executeCommandUpdateOpp(ActionContext context) {
+	  
     if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
 	    return ("PermissionError");
     }
@@ -1113,13 +1273,19 @@ public final class Leads extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-    Opportunity newOpp = (Opportunity) context.getFormBean();
-    newOpp.setTypeList(context.getRequest().getParameterValues("selectedList"));
+    OpportunityHeader oppHeader = null;
+    String oppId = null;
+    
+    if (context.getRequest().getParameter("oppId") != null) {
+      oppId = context.getRequest().getParameter("oppId");
+    }
 
     try {
       db = this.getConnection(context);
-      newOpp.setModifiedBy(getUserId(context));
-      resultCount = newOpp.update(db, context);
+      oppHeader = new OpportunityHeader(db, oppId);
+      oppHeader.setModifiedBy(getUserId(context));
+      oppHeader.setDescription(context.getRequest().getParameter("description"));
+      resultCount = oppHeader.update(db);
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -1128,18 +1294,14 @@ public final class Leads extends CFSModule {
 
     if (errorMessage == null) {
       if (resultCount == -1) {
-        processErrors(context, newOpp.getErrors());
+        processErrors(context, oppHeader.getErrors());
         return executeCommandModifyOpp(context);
       } else if (resultCount == 1) {
-        if (context.getRequest().getParameter("popup")!=null) {
-          return ("PopupCloseOK");
-        } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandViewOpp(context));
-        } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {
-          return (executeCommandDashboard(context));
-        } else {
-          return ("UpdateOppOK");
-        }
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+		      return (executeCommandViewOpp(context));
+	      } else {
+		      return (executeCommandDetailsOpp(context));
+	      }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
@@ -1149,7 +1311,40 @@ public final class Leads extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandDetailsComponent(ActionContext context) {
+	  
+    if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+	    return ("PermissionError");
+    }
+	
+    Exception errorMessage = null;
+    addModuleBean(context, "View Opportunities", "Component Details");
 
+    String componentId = context.getRequest().getParameter("id");
+
+    Connection db = null;
+    OpportunityComponent thisComponent = null;
+
+    try {
+      db = this.getConnection(context);
+      thisComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
+      thisComponent.checkEnabledOwnerAccount(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("LeadsComponentDetails", thisComponent);
+      addRecentItem(context, thisComponent);
+      return ("DetailsComponentOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
 
   /**
    *  Description of the Method
@@ -1471,6 +1666,55 @@ public final class Leads extends CFSModule {
 
     return new DefaultXYDataset(data);
   }
+  
+  public String executeCommandUpdateComponent(ActionContext context) {
+	  
+    if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+	    return ("PermissionError");
+    }
+	
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = 0;
+    OpportunityHeader header = null;
+    
+    OpportunityComponent component = (OpportunityComponent) context.getFormBean();
+    component.setTypeList(context.getRequest().getParameterValues("selectedList"));
+    
+    try {
+      db = this.getConnection(context);
+      component.setModifiedBy(getUserId(context));
+      resultCount = component.update(db, context);
+      
+      if (resultCount == 1) {
+        component.queryRecord(db, component.getId());
+        context.getRequest().setAttribute("OppComponentDetails", component);
+      }
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        processErrors(context, component.getErrors());
+        return executeCommandModifyComponent(context);
+      } else if (resultCount == 1) {
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+		      return (executeCommandDetailsOpp(context));
+	      } else {
+          return ("DetailsComponentOK");
+	      }
+      } else {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }   
 
 }
 
