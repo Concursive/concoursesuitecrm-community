@@ -9,6 +9,7 @@ import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  Collection of Inventory objects
@@ -18,7 +19,7 @@ import org.aspcfs.modules.base.Constants;
  *@version    $Id: InventoryList.java,v 1.22 2002/10/24 20:51:01 mrajkowski Exp
  *      $
  */
-public class InventoryList extends ArrayList {
+public class InventoryList extends ArrayList implements SyncableList {
 
   public static String tableName = "autoguide_inventory";
   public static String uniqueField = "inventory_id";

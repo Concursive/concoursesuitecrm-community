@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  Collection of Make objects
@@ -16,7 +17,7 @@ import org.aspcfs.modules.base.Constants;
  *@created    May 17, 2002
  *@version    $Id$
  */
-public class MakeList extends ArrayList {
+public class MakeList extends ArrayList implements SyncableList {
 
   public static String tableName = "autoguide_make";
   public static String uniqueField = "make_id";

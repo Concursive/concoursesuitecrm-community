@@ -9,6 +9,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  A collection of Ticket objects, can also be used for querying and filtering
@@ -18,14 +19,14 @@ import org.aspcfs.modules.base.Constants;
  *@created    December 5, 2001
  *@version    $Id$
  */
-public class TicketList extends ArrayList {
-
+public class TicketList extends ArrayList implements SyncableList {
+  //sync api
   public final static String tableName = "ticket";
   public final static String uniqueField = "ticketid";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
-
+  //filters
   private PagedListInfo pagedListInfo = null;
   private int enteredBy = -1;
   private boolean onlyOpen = false;
@@ -42,7 +43,7 @@ public class TicketList extends ArrayList {
   private int priority = 0;
   private String accountOwnerIdRange = null;
   private String description = null;
-
+  //search filters
   private String searchText = "";
   private boolean sendNotification = true;
 
@@ -53,6 +54,64 @@ public class TicketList extends ArrayList {
    *@since
    */
   public TicketList() { }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the TicketList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the TicketList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(String tmp) {
+    try {
+      this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+    } catch (Exception e) {
+      this.lastAnchor = null;
+    }
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the TicketList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the TicketList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(String tmp) {
+    try {
+      this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+    } catch (Exception e) {
+      this.nextAnchor = null;
+    }
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the TicketList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
 
 
   /**
@@ -723,6 +782,24 @@ public class TicketList extends ArrayList {
       if (accountOwnerIdRange != null) {
         sqlFilter.append("AND t.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
       }
+      //Sync API
+      if (syncType == Constants.SYNC_INSERTS) {
+        if (lastAnchor != null) {
+          sqlFilter.append("AND t.entered > ? ");
+        }
+        sqlFilter.append("AND t.entered < ? ");
+      } else if (syncType == Constants.SYNC_UPDATES) {
+        sqlFilter.append("AND t.modified > ? ");
+        sqlFilter.append("AND t.entered < ? ");
+        sqlFilter.append("AND t.modified < ? ");
+      } else if (syncType == Constants.SYNC_QUERY) {
+        if (lastAnchor != null) {
+          sqlFilter.append("AND t.entered > ? ");
+        }
+        if (nextAnchor != null) {
+          sqlFilter.append("AND t.entered < ? ");
+        }
+      }
     } else {
       if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
         sqlFilter.append(
@@ -750,9 +827,7 @@ public class TicketList extends ArrayList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
     if (searchText == null || (searchText.equals(""))) {
-
       if (enteredBy > -1) {
         pst.setInt(++i, enteredBy);
       }
@@ -780,12 +855,29 @@ public class TicketList extends ArrayList {
       if (priority > 0) {
         pst.setInt(++i, priority);
       }
+      //Sync API
+      if (syncType == Constants.SYNC_INSERTS) {
+        if (lastAnchor != null) {
+          pst.setTimestamp(++i, lastAnchor);
+        }
+        pst.setTimestamp(++i, nextAnchor);
+      } else if (syncType == Constants.SYNC_UPDATES) {
+        pst.setTimestamp(++i, lastAnchor);
+        pst.setTimestamp(++i, lastAnchor);
+        pst.setTimestamp(++i, nextAnchor);
+      } else if (syncType == Constants.SYNC_QUERY) {
+        if (lastAnchor != null) {
+          pst.setTimestamp(++i, lastAnchor);
+        }
+        if (nextAnchor != null) {
+          pst.setTimestamp(++i, nextAnchor);
+        }
+      }
     } else {
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);
     }
-
     return i;
   }
 

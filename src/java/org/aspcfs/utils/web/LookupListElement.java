@@ -30,12 +30,21 @@ public class LookupListElement {
   protected java.sql.Timestamp entered = null;
   protected LookupList lookupList = null;
 
+
+  /**
+   *  Constructor for the LookupListElement object
+   *
+   *@param  db                Description of the Parameter
+   *@param  moduleId          Description of the Parameter
+   *@param  lookupId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public LookupListElement(Connection db, int moduleId, int lookupId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM lookup_lists_lookup " +
-      "WHERE module_id = ? " +
-      "AND lookup_id = ? ");
+        "SELECT * " +
+        "FROM lookup_lists_lookup " +
+        "WHERE module_id = ? " +
+        "AND lookup_id = ? ");
     pst.setInt(1, moduleId);
     pst.setInt(2, lookupId);
     ResultSet rs = pst.executeQuery();
@@ -46,6 +55,7 @@ public class LookupListElement {
     pst.close();
   }
 
+
   /**
    *  Constructor for the LookupListElement object
    *
@@ -55,7 +65,8 @@ public class LookupListElement {
   public LookupListElement(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
   /**
    *  Sets the moduleId attribute of the LookupListElement object
    *
@@ -65,9 +76,16 @@ public class LookupListElement {
     this.moduleId = moduleId;
   }
 
+
+  /**
+   *  Sets the categoryId attribute of the LookupListElement object
+   *
+   *@param  categoryId  The new categoryId value
+   */
   public void setCategoryId(int categoryId) {
     this.categoryId = categoryId;
   }
+
 
   /**
    *  Sets the lookupId attribute of the LookupListElement object
@@ -167,7 +185,13 @@ public class LookupListElement {
   public int getModuleId() {
     return moduleId;
   }
-  
+
+
+  /**
+   *  Gets the categoryId attribute of the LookupListElement object
+   *
+   *@return    The categoryId value
+   */
   public int getCategoryId() {
     return categoryId;
   }
@@ -226,7 +250,9 @@ public class LookupListElement {
   /**
    *  Builds the lookupList for a module
    *
-   *@param  db  Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void buildLookupList(Connection db, int userId) throws SQLException {
     if (className.equals("lookupList")) {

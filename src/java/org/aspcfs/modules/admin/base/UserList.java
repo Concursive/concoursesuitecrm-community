@@ -11,6 +11,7 @@ import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  A list of User objects.
@@ -19,7 +20,7 @@ import org.aspcfs.modules.contacts.base.Contact;
  *@created    September 19, 2001
  *@version    $Id$
  */
-public class UserList extends Vector {
+public class UserList extends Vector implements SyncableList {
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;

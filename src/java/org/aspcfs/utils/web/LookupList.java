@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.sql.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  A generic class that contains a list of LookupElement objects.
@@ -14,7 +15,7 @@ import org.aspcfs.utils.DatabaseUtils;
  *@version    $Id$
  *@version    $Id$
  */
-public class LookupList extends HtmlSelect {
+public class LookupList extends HtmlSelect implements SyncableList {
   public static String uniqueField = "code";
   public String tableName = null;
 

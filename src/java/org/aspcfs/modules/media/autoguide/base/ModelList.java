@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  Collection of Model objects
@@ -16,7 +17,7 @@ import org.aspcfs.modules.base.Constants;
  *@created    May 17, 2002
  *@version    $Id$
  */
-public class ModelList extends ArrayList {
+public class ModelList extends ArrayList implements SyncableList {
 
   public static String tableName = "autoguide_model";
   public static String uniqueField = "model_id";

@@ -69,6 +69,7 @@ public final class Constants {
   public final static int SYNC_INSERTS = 2;
   public final static int SYNC_UPDATES = 3;
   public final static int SYNC_DELETES = 4;
+  public final static int SYNC_QUERY = 5;
 
   //Not sure
   public final static int CAMPAIGN_CONTACT_ID = 9;

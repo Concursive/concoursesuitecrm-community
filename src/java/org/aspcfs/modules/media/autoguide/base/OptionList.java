@@ -9,6 +9,7 @@ import java.sql.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  A list of possible options a Vehicle can have
@@ -17,7 +18,7 @@ import org.aspcfs.modules.base.Constants;
  *@created    May 17, 2002
  *@version    $Id$
  */
-public class OptionList extends ArrayList {
+public class OptionList extends ArrayList implements SyncableList {
 
   public static String tableName = "autoguide_options";
   public static String uniqueField = "option_id";

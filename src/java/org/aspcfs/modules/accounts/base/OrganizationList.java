@@ -9,6 +9,7 @@ import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  Contains a list of organizations... currently used to build the list from
@@ -19,7 +20,7 @@ import org.aspcfs.modules.base.Constants;
  *@version    $Id: OrganizationList.java,v 1.2 2001/08/31 17:33:32 mrajkowski
  *      Exp $
  */
-public class OrganizationList extends Vector {
+public class OrganizationList extends Vector implements SyncableList {
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;

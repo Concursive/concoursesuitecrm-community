@@ -9,6 +9,7 @@ import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  Represents a list of vehicles
@@ -17,7 +18,7 @@ import org.aspcfs.modules.base.Constants;
  *@created    May 17, 2002
  *@version    $Id$
  */
-public class VehicleList extends ArrayList {
+public class VehicleList extends ArrayList implements SyncableList {
 
   public final static String tableName = "autoguide_vehicle";
   public final static String uniqueField = "vehicle_id";

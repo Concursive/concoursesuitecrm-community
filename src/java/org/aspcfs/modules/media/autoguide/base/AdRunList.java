@@ -9,6 +9,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.Constants;
 import javax.servlet.http.*;
+import org.aspcfs.modules.base.SyncableList;
 
 /**
  *  Represents a list of ads (AdRun)
@@ -17,7 +18,7 @@ import javax.servlet.http.*;
  *@created    May 17, 2002
  *@version    $Id$
  */
-public class AdRunList extends ArrayList {
+public class AdRunList extends ArrayList implements SyncableList {
 
   public static String tableName = "autoguide_ad_run";
   public static String uniqueField = "ad_run_id";

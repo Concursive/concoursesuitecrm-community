@@ -11,7 +11,6 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.base.Constants;
 
-
 /**
  *  Description of the Class
  *

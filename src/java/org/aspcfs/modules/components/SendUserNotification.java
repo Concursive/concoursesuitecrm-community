@@ -26,6 +26,14 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
   public final static String FROM = "notification.from";
   public final static String REPLY_TO = "notification.replyTo";
   public final static String BODY = "notification.body";
+  //Comma-separated email addresses
+  public final static String EMAIL_TO = "notification.to";
+  //Comma-separated user ids
+  public final static String USER_TO = "notification.users.to";
+  //Comma-separated contact ids
+  public final static String CONTACT_TO = "notification.contacts.to";
+  //Comma-separated department ids
+  public final static String DEPARTMENT_TO = "notification.departments.to";
 
 
   /**

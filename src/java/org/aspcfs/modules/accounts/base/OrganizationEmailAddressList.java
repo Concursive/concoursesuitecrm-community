@@ -12,6 +12,7 @@ import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.base.EmailAddressList;
 import org.aspcfs.modules.base.Constants;
+
 /**
  *  Contains a list of email addresses... currently used to build the list from
  *  the database with any of the parameters to limit the results.

@@ -16,13 +16,14 @@ import javax.servlet.http.*;
  *
  *@author     chris price
  *@created    December 5, 2001
- *@version    $Id$
+ *@version    $Id: TicketLogList.java,v 1.11 2003/03/07 14:47:27 mrajkowski Exp
+ *      $
  */
 public class TicketLogList extends Vector {
 
   private PagedListInfo pagedListInfo = null;
   private int ticketId = -1;
-  
+
   public final static String tableName = "ticketlog";
   public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
@@ -53,7 +54,7 @@ public class TicketLogList extends Vector {
 
       if (thisEntry.isValid()) {
         this.addElement(thisEntry);
-      } 
+      }
     }
   }
 
@@ -76,12 +77,26 @@ public class TicketLogList extends Vector {
   public void setTicketId(int tmp) {
     this.ticketId = tmp;
   }
-public boolean getDoSystemMessages() {
-	return doSystemMessages;
-}
-public void setDoSystemMessages(boolean doSystemMessages) {
-	this.doSystemMessages = doSystemMessages;
-}
+
+
+  /**
+   *  Gets the doSystemMessages attribute of the TicketLogList object
+   *
+   *@return    The doSystemMessages value
+   */
+  public boolean getDoSystemMessages() {
+    return doSystemMessages;
+  }
+
+
+  /**
+   *  Sets the doSystemMessages attribute of the TicketLogList object
+   *
+   *@param  doSystemMessages  The new doSystemMessages value
+   */
+  public void setDoSystemMessages(boolean doSystemMessages) {
+    this.doSystemMessages = doSystemMessages;
+  }
 
 
   /**
@@ -101,7 +116,7 @@ public void setDoSystemMessages(boolean doSystemMessages) {
       if (current.getAssignedTo() != prev.getAssignedTo()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        
+
         if (tempLog.getAssignedToName() != null) {
           tempLog.setEntryText("[ Re-assigned to " + tempLog.getAssignedToName() + " ]");
         } else {
@@ -130,33 +145,104 @@ public void setDoSystemMessages(boolean doSystemMessages) {
         tempLog.setEntryText("[ Severity changed to " + tempLog.getSeverityName() + " ]");
         this.addElement(tempLog);
       }
-      
+
       if (current.getClosed() && !prev.getClosed()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
         tempLog.setEntryText("[ Ticket Re-opened ]");
         this.addElement(tempLog);
       }
-      
+
       if (!current.getClosed() && prev.getClosed()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
         tempLog.setEntryText("[ Ticket Closed ]");
         this.addElement(tempLog);
       }
-      
+
       return true;
     }
   }
-  
-public String getTableName() { return tableName; }
-public String getUniqueField() { return uniqueField; }
-public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
-public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
-public int getSyncType() { return syncType; }
-public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
-public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
-public void setSyncType(int tmp) { this.syncType = tmp; }
+
+
+  /**
+   *  Gets the tableName attribute of the TicketLogList object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the TicketLogList object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   *  Gets the lastAnchor attribute of the TicketLogList object
+   *
+   *@return    The lastAnchor value
+   */
+  public java.sql.Timestamp getLastAnchor() {
+    return lastAnchor;
+  }
+
+
+  /**
+   *  Gets the nextAnchor attribute of the TicketLogList object
+   *
+   *@return    The nextAnchor value
+   */
+  public java.sql.Timestamp getNextAnchor() {
+    return nextAnchor;
+  }
+
+
+  /**
+   *  Gets the syncType attribute of the TicketLogList object
+   *
+   *@return    The syncType value
+   */
+  public int getSyncType() {
+    return syncType;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the TicketLogList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the TicketLogList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the TicketLogList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
 
 
   /**
@@ -246,11 +332,11 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
+
     int count = 0;
     while (rs.next()) {
 
@@ -262,16 +348,16 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
 
       ++count;
       TicketLog thisTicketLog = new TicketLog(rs);
-      
+
       if (doSystemMessages) {
-                systemResult = this.setSystemMessages(thisTicketLog, prevTicketLog);
-                if (thisTicketLog.getEntryText() != null && !(thisTicketLog.getEntryText().equals(""))) {
-                        this.addElement(thisTicketLog);
-                } 
+        systemResult = this.setSystemMessages(thisTicketLog, prevTicketLog);
+        if (thisTicketLog.getEntryText() != null && !(thisTicketLog.getEntryText().equals(""))) {
+          this.addElement(thisTicketLog);
+        }
       } else {
-              this.addElement(thisTicketLog);
+        this.addElement(thisTicketLog);
       }
-      
+
       prevTicketLog = thisTicketLog;
     }
     rs.close();
@@ -304,11 +390,9 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
     if (ticketId > -1) {
       pst.setInt(++i, ticketId);
     }
-
     return i;
   }
 
