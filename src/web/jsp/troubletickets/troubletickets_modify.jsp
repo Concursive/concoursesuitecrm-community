@@ -258,8 +258,11 @@ Modify Ticket
       </td>
       <td>
         <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
-        <input type="checkbox" name="closeNow">Close ticket<br>
+        <input type="checkbox" name="closeNow">Close ticket
+        <%--
+        <br>
         <input type="checkbox" name="kbase">Add this solution to Knowledge Base
+        --%>
 <%-- Added for voice demo, will show a list of surveys that can be emailed... --%>
 <%--
 <%
