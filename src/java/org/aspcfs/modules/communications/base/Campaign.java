@@ -166,9 +166,9 @@ public class Campaign extends GenericBean {
     this.sentCount = tmp;
   }
 
-public int getSendMethodId() {
-	return sendMethodId;
-}
+  public int getSendMethodId() {
+    return sendMethodId;
+  }
 
   /**
    *  Sets the MessageName attribute of the Campaign object

@@ -3,7 +3,7 @@
 <html>
 <head>
 <title>Calendar</title>
-<link rel="stylesheet" href="css/template0<%= User.getBrowserId() %>.css" type="text/css">
+<link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
 <link rel="stylesheet" href="css/template0.css" type="text/css">
 
 <% String formName = request.getParameter("form"); %>

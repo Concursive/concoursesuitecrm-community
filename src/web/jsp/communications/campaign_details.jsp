@@ -58,7 +58,7 @@
       Delivery
     </td>
     <td width="100%">
-      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><%= (Campaign.hasDetails()?"<font color='green'>" + toHtml(Campaign.getDeliveryName())  + "</font>":"<font color='red'>Not Specified</font>") %></a>
+      <%= (Campaign.hasDetails()?"<font color='green'>" + toHtml(Campaign.getDeliveryName())  + "</font>":"<font color='red'>Not Specified</font>") %>
     </td>
   </tr>
   

@@ -203,10 +203,13 @@ public class ContactReport extends ContactList {
 		if (displayCountry) { rep.addColumn("Country"); }
 		if (displayNotes) { rep.addColumn("Notes"); }
 	}
+  
+  public void buildData(Connection db) throws SQLException {
+		this.buildList(db);
+    this.buildReportData(db);
+  }
 	
 	public void buildReportData(Connection db) throws SQLException {
-		this.buildList(db);
-				
 		boolean writeOut = false;
 		Organization tempOrg = null;
 		
@@ -255,19 +258,11 @@ public class ContactReport extends ContactList {
 	public void buildReportFull(Connection db) throws SQLException {
 		buildReportBaseInfo();
 		buildReportHeaders();
-		buildReportData(db);
+		buildData(db);
 	}
 	
 	public boolean saveAndInsert(Connection db) throws Exception {
-		SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
-		filenameToUse = formatter.format(new java.util.Date());
-		File f = new File(filePath);
-		f.mkdirs();
-		
-		File fileLink = new File(filePath + filenameToUse + ".csv");
-		
-		rep.saveHtml(filePath + filenameToUse + ".html");
-		rep.saveDelimited(filePath + filenameToUse + ".csv");
+		int fileSize = save();
 		
 		if (joinOrgs) { thisItem.setLinkModuleId(Constants.ACCOUNTS_REPORTS); }
 		else {
@@ -281,9 +276,22 @@ public class ContactReport extends ContactList {
 		thisItem.setSubject(subject);
 		thisItem.setClientFilename(filenameToUse + ".csv");
 		thisItem.setFilename(filenameToUse);
-		thisItem.setSize((int)fileLink.length());
+		thisItem.setSize(fileSize);
 		thisItem.insert(db);
 		
 		return true;
 	}
+  
+  public int save() throws Exception {
+    SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
+		filenameToUse = formatter.format(new java.util.Date());
+		File f = new File(filePath);
+		f.mkdirs();
+		
+		File fileLink = new File(filePath + filenameToUse + ".csv");
+		
+		rep.saveHtml(filePath + filenameToUse + ".html");
+		rep.saveDelimited(filePath + filenameToUse + ".csv");
+    return ((int)fileLink.length());
+  }
 }
