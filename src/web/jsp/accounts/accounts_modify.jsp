@@ -299,7 +299,7 @@ Modify Account<br>
 %>
   <tr class="containerBody">
     <td>
-      <%= OrgPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Other") %>
+      <%= OrgPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Main") %>
       <!--input type=text size=3 name="phone<%= icount %>ac" maxlength=3>-
       <input type=text size=3 name="phone<%= icount %>pre" maxlength=3>-
       <input type=text size=4 name="phone<%= icount %>number" maxlength=4>ext. -->
@@ -397,7 +397,7 @@ Modify Account<br>
       &nbsp;
     </td>
     <td>
-      <%= OrgAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Auxiliary") %>
+      <%= OrgAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Primary") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -480,7 +480,7 @@ Modify Account<br>
 %>
   <tr class="containerBody">
     <td>
-      <%= OrgEmailTypeList.getHtmlSelect("email" + (++ecount) + "type", "Auxiliary") %>
+      <%= OrgEmailTypeList.getHtmlSelect("email" + (++ecount) + "type", "Primary") %>
       <input type=text size=40 name="email<%= ecount %>address" maxlength=255>
     </td>
   </tr>
