@@ -93,7 +93,7 @@
       if(mode  == "Add >"){
         tmpList.options[tmpList.length] = new Option(text);
       }else{
-        if(tmpList.options[tmpList.selectedIndex].enabled){
+        if(tmpList.options[tmpList.selectedIndex].enabled == 'true'){
           tmpList.options[tmpList.selectedIndex].text = text;
         }else{
           tmpList.options[tmpList.selectedIndex].text = text + "*";
