@@ -9,7 +9,7 @@ import org.aspcfs.controller.*;
 /**
  *  Contains information that a JSP template can access when displaying the page
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    July 13, 2001
  *@version    $Id$
  */
@@ -17,6 +17,7 @@ public class ModuleBean {
 
   private String name = "";
   private String currentAction = "";
+  private String menuKey = null;
   private String submenuKey = "";
   private ArrayList menuItems = new ArrayList();
 
@@ -48,6 +49,26 @@ public class ModuleBean {
    */
   public void setCurrentAction(String tmp) {
     this.currentAction = tmp;
+  }
+
+
+  /**
+   *  Sets the menuKey attribute of the ModuleBean object
+   *
+   *@param  tmp  The new menuKey value
+   */
+  public void setMenuKey(String tmp) {
+    this.menuKey = tmp;
+  }
+
+
+  /**
+   *  Sets the submenuKey attribute of the ModuleBean object
+   *
+   *@param  tmp  The new submenuKey value
+   */
+  public void setSubmenuKey(String tmp) {
+    this.submenuKey = tmp;
   }
 
 
@@ -92,6 +113,16 @@ public class ModuleBean {
    */
   public String getCurrentAction() {
     return currentAction;
+  }
+
+
+  /**
+   *  Gets the menuKey attribute of the ModuleBean object
+   *
+   *@return    The menuKey value
+   */
+  public String getMenuKey() {
+    return menuKey;
   }
 
 
