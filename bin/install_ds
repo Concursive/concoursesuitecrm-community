@@ -76,13 +76,13 @@ su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_project.sql "
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_help.sql "
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_campaign.sql "
 
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/code_tables.init " 
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/access.init " 
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/permissions.init " 
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/data.init " 
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/employee.init " 
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/organization.init "
-su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/project.init "
+#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/code_tables.init " 
+#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/access.init " 
+#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/permissions.init " 
+#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/data.init " 
+#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/employee.init " 
+#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/organization.init "
+#su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/project.init "
  
 
 
