@@ -4,9 +4,7 @@
 
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.util.Hashtable;
+import java.util.*;
 import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.HtmlSelect;
@@ -217,12 +215,16 @@ public class TicketCategoryList extends Vector {
     while (i.hasNext()) {
       TicketCategory thisCat = (TicketCategory) i.next();
       String elementText = thisCat.getDescription();
-      if (!(thisCat.getEnabled())) {
-        elementText += " *";
+      if (thisCat.getEnabled()) {
+        catListSelect.addItem(
+            thisCat.getId(),
+            elementText);
+      } else if (!(thisCat.getEnabled()) && thisCat.getId() == defaultKey) {
+        elementText += "*";
+        catListSelect.addItem(
+            thisCat.getId(),
+            elementText);
       }
-      catListSelect.addItem(
-          thisCat.getId(),
-          elementText);
     }
 
     if (!(this.getHtmlJsEvent().equals(""))) {
@@ -289,10 +291,10 @@ public class TicketCategoryList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("tc.cat_level, tc.level", null);
+      pagedListInfo.setDefaultSort("tc.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY tc.cat_level, tc.level");
+      sqlOrder.append("ORDER BY tc.description");
     }
 
     //Need to build a base SQL statement for returning records
