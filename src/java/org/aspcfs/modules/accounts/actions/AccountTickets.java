@@ -145,6 +145,9 @@ public final class AccountTickets extends CFSModule {
     String newContact = context.getRequest().getParameter("contact");
     //Process the submitted ticket
     Ticket newTic = (Ticket) context.getFormBean();
+    if (newTic.getAssignedTo() > -1 && newTic.getAssignedDate() == null){
+      newTic.setAssignedDate(new java.sql.Timestamp(System.currentTimeMillis()));
+    }
     newTic.setEnteredBy(getUserId(context));
     newTic.setModifiedBy(getUserId(context));
     //Insert a new contact if specified
@@ -520,7 +523,9 @@ public final class AccountTickets extends CFSModule {
     boolean smartCommentsResult = true;
 
     Ticket newTic = (Ticket) context.getFormBean();
-
+    if (newTic.getAssignedTo() > -1 && newTic.getAssignedDate() == null){
+      newTic.setAssignedDate(new java.sql.Timestamp(System.currentTimeMillis()));
+    }
     if (context.getRequest().getParameter("close").equals("1")) {
       newTic.setCloseIt(true);
     }

@@ -601,6 +601,7 @@ public final class TroubleTickets extends CFSModule {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
     }
+    context.getSession().removeAttribute("searchTickets");
     Connection db = null;
     TicketList assignedToMeList = new TicketList();
     TicketList openList = new TicketList();
@@ -796,6 +797,7 @@ public final class TroubleTickets extends CFSModule {
     }
     addModuleBean(context, "SearchTickets", "Search Tickets");
     context.getRequest().setAttribute("TicList", ticList);
+    context.getSession().setAttribute("searchTickets","yes");
     addModuleBean(context, "SearchTickets", "Search Tickets");
     return ("ResultsOK");
   }
@@ -863,6 +865,9 @@ public final class TroubleTickets extends CFSModule {
     Ticket newTic = (Ticket) context.getFormBean();
     newTic.setEnteredBy(getUserId(context));
     newTic.setModifiedBy(getUserId(context));
+    if (newTic.getAssignedTo() > -1 && newTic.getAssignedDate() == null){
+      newTic.setAssignedDate(new java.sql.Timestamp(System.currentTimeMillis()));
+    }
 
     if (newContact != null && newContact.equals("on")) {
       //If there are any changes here, also check AccountTickets where a new contact is created
@@ -1015,6 +1020,9 @@ public final class TroubleTickets extends CFSModule {
     boolean catInserted = false;
     boolean smartCommentsResult = true;
     Ticket newTic = (Ticket) context.getFormBean();
+    if (newTic.getAssignedTo() > -1 && newTic.getAssignedDate() == null){
+      newTic.setAssignedDate(new java.sql.Timestamp(System.currentTimeMillis()));
+    }
     try {
       db = this.getConnection(context);
       for (catCount = 0; catCount < 4; catCount++) {
