@@ -343,7 +343,8 @@ public final class ExternalContactsCalls extends CFSModule {
         context.getRequest().setAttribute("CallDetails", thisCall);
         return ("ModifyOK");
       } else if (resultCount == 1) {
-              if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+              context.getRequest().removeAttribute("CallDetails");
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
 		      return (executeCommandView(context));
 	      } else {
 		      return ("UpdateOK");
