@@ -10,6 +10,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.actionlist.base.ActionItemLog;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Description of the Class
@@ -20,14 +22,38 @@ import org.aspcfs.modules.contacts.base.Contact;
  */
 public class CFSNote extends GenericBean {
 
+  /**
+   *  Description of the Field
+   */
   public final static int CALL = 1;
+  /**
+   *  Description of the Field
+   */
   public final static int NEW = 0;
+  /**
+   *  Description of the Field
+   */
   public final static int READ = 1;
+  /**
+   *  Description of the Field
+   */
   public final static int OLD = 2;
+  /**
+   *  Description of the Field
+   */
   public final static int DELETE = 3;
+  /**
+   *  Description of the Field
+   */
   public final static int SENDER = 1;
+  /**
+   *  Description of the Field
+   */
   public final static int RECIPIENT = 2;
 
+  /**
+   *  Description of the Field
+   */
   public String sentToList = "";
   private int id = -1;
   private String subject = "";
@@ -46,7 +72,13 @@ public class CFSNote extends GenericBean {
   private String currentView = "none";
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
+  /**
+   *  Description of the Field
+   */
   protected HashMap recipientList;
+
+  //action list properties
+  private int actionId = -1;
 
 
   /**
@@ -340,6 +372,38 @@ public class CFSNote extends GenericBean {
     this.currentView = currentView;
   }
 
+
+
+  /**
+   *  Sets the actionId attribute of the CFSNote object
+   *
+   *@param  actionId  The new actionId value
+   */
+  public void setActionId(int actionId) {
+    this.actionId = actionId;
+  }
+
+
+
+  /**
+   *  Sets the actionId attribute of the CFSNote object
+   *
+   *@param  actionId  The new actionId value
+   */
+  public void setActionId(String actionId) {
+    this.actionId = Integer.parseInt(actionId);
+  }
+
+
+
+  /**
+   *  Gets the actionId attribute of the CFSNote object
+   *
+   *@return    The actionId value
+   */
+  public int getActionId() {
+    return actionId;
+  }
 
 
   /**
@@ -700,12 +764,49 @@ public class CFSNote extends GenericBean {
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "cfsinbox_message_id_seq");
       this.update(db, true);
+      if (actionId > 0) {
+        updateLog(db);
+      }
       db.commit();
     } catch (SQLException e) {
       db.rollback();
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
+    }
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean updateLog(Connection db) throws SQLException {
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      ActionItemLog thisLog = new ActionItemLog();
+      thisLog.setEnteredBy(this.getEnteredBy());
+      thisLog.setModifiedBy(this.getModifiedBy());
+      thisLog.setItemId(this.getActionId());
+      thisLog.setLinkItemId(this.getId());
+      thisLog.setType(Constants.MESSAGE_OBJECT);
+      thisLog.insert(db);
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     }
     return true;
   }
@@ -723,9 +824,9 @@ public class CFSNote extends GenericBean {
     try {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO cfsinbox_messagelink " +
-        "(id, sent_to, sent_from) " +
-        "VALUES (?, ?, ?) ");
+          "INSERT INTO cfsinbox_messagelink " +
+          "(id, sent_to, sent_from) " +
+          "VALUES (?, ?, ?) ");
       pst.setInt(++i, this.getId());
       pst.setInt(++i, this.getSentTo());
       pst.setInt(++i, this.getEnteredBy());
@@ -1004,7 +1105,7 @@ public class CFSNote extends GenericBean {
       //contact table
       sentName = rs.getString("sent_namefirst") + " " + rs.getString("sent_namelast");
     } else {
-       //outbox case
+      //outbox case
       this.setId(rs.getInt("id"));
       subject = rs.getString("subject");
       body = rs.getString("body");
