@@ -73,76 +73,77 @@ Add Opportunity<br>
   </tr>
   <tr>
     <td class="containerBack">
-  <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
-<br>
-<%= showError(request, "actionError") %>  
+      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>';this.form.dosubmit.value='false';">
+      <input type="reset" value="Reset">
+      <br>
+      <%= showError(request, "actionError") %>  
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Opportunity details</strong>
     </td>     
   </tr>
-
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Description
     </td>
-    <td width="100%">
-      <input type=text size=50 name="header_description" value="<%= toHtmlValue(oppDetails.getHeader().getDescription()) %>">
+    <td>
+      <input type="text" size="50" name="header_description" value="<%= toHtmlValue(oppDetails.getHeader().getDescription()) %>">
       <font color=red>*</font> <%= showAttribute(request, "descriptionError") %>
     </td>
   </tr>
-  
-  </table>
+</table>
 &nbsp;<br>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Add a Component</strong>
     </td>     
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Assign To
     </td>
     <td valign="center">
       <%= UserList.getHtmlSelect("component_owner") %>
     </td>
   </tr>
-  
   <tr class="containerBody">
-  <td class="formLabel" valign="top">
-    Component<br>Type(s)
-  </td>
-  <td valign=center>
-    <select multiple name="selectedList" id="selectedList" size="5">
-    <option value="-1">None Selected</option>
-    </select>
-    <input type="hidden" name="previousSelection" value="">
-    <a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>
-  </td>
+    <td class="formLabel" valign="top">
+      Component<br>Type(s)
+    </td>
+    <td valign="center">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+            <select multiple name="selectedList" id="selectedList" size="5">
+              <option value="-1">None Selected</option>
+            </select>
+            <input type="hidden" name="previousSelection" value="">
+          </td>
+          <td valign="top">
+            &nbsp;[<a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>]
+          </td>
+        </tr>
+      </table>
+    </td>
   </tr>    
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Component Description
     </td>
-    <td width="100%">
-      <input type=text size=50 name="component_description" value="<%= toHtmlValue(oppDetails.getComponent().getDescription()) %>">
+    <td>
+      <input type="text" size="50" name="component_description" value="<%= toHtmlValue(oppDetails.getComponent().getDescription()) %>">
       <font color=red>*</font> <%= showAttribute(request, "componentDescriptionError") %>
     </td>
   </tr>  
-  
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">Additional Notes</td>
-    <td><TEXTAREA NAME='component_notes' ROWS=3 COLS=50><%= toString(oppDetails.getComponent().getNotes()) %></TEXTAREA></td>
+    <td><TEXTAREA NAME="component_notes" ROWS="3" COLS="50"><%= toString(oppDetails.getComponent().getNotes()) %></TEXTAREA></td>
   </tr>  
-
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Source
     </td>
     <td>
@@ -150,58 +151,52 @@ Add Opportunity<br>
       <%= busTypeList.getHtml() %>
     </td>
   </tr>
-
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Prob. of Close
     </td>
     <td>
-      <input type=text size=5 name="component_closeProb" value="<%= oppDetails.getComponent().getCloseProbValue() %>">%
+      <input type="text" size="5" name="component_closeProb" value="<%= oppDetails.getComponent().getCloseProbValue() %>">%
       <font color=red>*</font> <%= showAttribute(request, "closeProbError") %>
     </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Est. Close Date
     </td>
     <td>
-      <input type=text size=10 name="component_closeDate" value="<%= toHtmlValue(oppDetails.getComponent().getCloseDateString()) %>">
+      <input type="text" size="10" name="component_closeDate" value="<%= toHtmlValue(oppDetails.getComponent().getCloseDateString()) %>">
       <a href="javascript:popCalendar('addOpportunity', 'component_closeDate');">Date</a> (mm/dd/yyyy)
       <font color=red>*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Low Estimate
     </td>
     <td>
-      <input type=text size=10 name="component_low" value="<%= toHtmlValue(oppDetails.getComponent().getLowAmount()) %>">
+      <input type="text" size="10" name="component_low" value="<%= toHtmlValue(oppDetails.getComponent().getLowAmount()) %>">
     </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Best Guess Estimate
     </td>
     <td>
-      <input type=text size=10 name="component_guess" value="<%= toHtmlValue(oppDetails.getComponent().getGuessAmount()) %>">
+      <input type="text" size="10" name="component_guess" value="<%= toHtmlValue(oppDetails.getComponent().getGuessAmount()) %>">
       <font color=red>*</font> <%= showAttribute(request, "guessError") %>
     </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       High Estimate
     </td>
     <td>
-      <input type=text size=10 name="component_high" value="<%= toHtmlValue(oppDetails.getComponent().getHighAmount()) %>">
+      <input type="text" size="10" name="component_high" value="<%= toHtmlValue(oppDetails.getComponent().getHighAmount()) %>">
     </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Est. Term
     </td>
     <td>
@@ -211,42 +206,38 @@ Add Opportunity<br>
       <font color="red">*</font> <%= showAttribute(request, "termsError") %>
     </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Current Stage
     </td>
     <td>
       <%= stageList.getHtmlSelect("component_stage", oppDetails.getComponent().getStage()) %>
-      <input type=checkbox name="closeNow">Close this component
+      <input type="checkbox" name="closeNow">Close this component
     </td>
   </tr>
-    
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Est. Commission
     </td>
     <td>
-      <input type=text size=5 name="component_commission" value="<%= oppDetails.getComponent().getCommissionValue() %>">%
-      <input type=hidden name="header_contactLink" value="<%=request.getParameter("contactId")%>">
-      <input type=hidden name="contactId" value="<%=request.getParameter("contactId")%>">
+      <input type="text" size="5" name="component_commission" value="<%= oppDetails.getComponent().getCommissionValue() %>">%
+      <input type="hidden" name="header_contactLink" value="<%=request.getParameter("contactId")%>">
+      <input type="hidden" name="contactId" value="<%=request.getParameter("contactId")%>">
     </td>
   </tr>
-  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Alert Description
     </td>
-    <td valign=center>
-      <input type=text size=50 name="component_alertText" value="<%= toHtmlValue(oppDetails.getComponent().getAlertText()) %>"><br>
+    <td valign="center">
+      <input type="text" size="50" name="component_alertText" value="<%= toHtmlValue(oppDetails.getComponent().getAlertText()) %>"><br>
     </td>
   </tr>
-  
    <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Alert Date
     </td>
-    <td valign=center>
+    <td valign="center">
       <input type="text" size="10" name="component_alertDate" value="<%= toHtmlValue(oppDetails.getComponent().getAlertDateString()) %>">
       <a href="javascript:popCalendar('addOpportunity', 'component_alertDate');">Date</a> (mm/dd/yyyy)
     </td>

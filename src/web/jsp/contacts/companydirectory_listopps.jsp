@@ -46,18 +46,18 @@ Opportunities<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
-    <td valign=center align=left>
+    <td>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td valign=center align=left>
+    <td nowrap>
       <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>&column=x.description">Opportunity Name</a></strong>
       <%= ExternalOppsPagedListInfo.getSortIcon("x.description") %>
     </td>
-    <td valign=center align=left>
+    <td nowrap>
       <strong>Best Guess Total</strong>
     </td>
-    <td valign=center align=left>
+    <td nowrap>
       <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>&column=x.modified">Last Modified</a></strong>
       <%= ExternalOppsPagedListInfo.getSortIcon("x.modified") %>
     </td>
@@ -68,20 +68,16 @@ Opportunities<br>
 	if ( j.hasNext() ) {
 		int rowid = 0;
 	    while (j.hasNext()) {
-        if (rowid != 1) {
-          rowid = 1;
-        } else {
-          rowid = 2;
-        }
-		OpportunityHeader oppHeader = (OpportunityHeader)j.next();
+        rowid = (rowid != 1?1:2);
+        OpportunityHeader oppHeader = (OpportunityHeader)j.next();
 %>      
     <tr class="containerBody">
       <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
-      <td width=8 valign=center nowrap class="row<%= rowid %>">
-      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= oppHeader.getContactLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= contactDetails.getId() %>&headerId=<%= oppHeader.getId() %>&popup=true','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+      <td width="8" valign="top" align="center" class="row<%= rowid %>" nowrap>
+        <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= oppHeader.getContactLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= contactDetails.getId() %>&headerId=<%= oppHeader.getId() %>&popup=true','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
       </td>
       </dhv:permission>
-      <td width=40% valign=center class="row<%= rowid %>">
+      <td width="100%" valign="top" class="row<%= rowid %>">
         <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= contactDetails.getId() %>">
         <%= toHtml(oppHeader.getDescription()) %></a>
         (<%= oppHeader.getComponentCount() %>)
@@ -89,10 +85,10 @@ Opportunities<br>
         <%= thisFile.getImageTag() %>
 </dhv:evaluate>
       </td>  
-      <td width="115" valign=center class="row<%= rowid %>">
+      <td valign="top" align="center" class="row<%= rowid %>" nowrap>
         $<%= toHtml(oppHeader.getTotalValueCurrency()) %>
       </td>      
-      <td valign=center class="row<%= rowid %>">
+      <td valign="top" align="center" class="row<%= rowid %>" nowrap>
         <%= toHtml(oppHeader.getModifiedString()) %>
       </td>       
     </tr>
@@ -101,7 +97,7 @@ Opportunities<br>
 	} else {
 %>
     <tr class="containerBody">
-      <td colspan="6" valign=center>
+      <td colspan="6">
         No opportunities found.
       </td>
     </tr>

@@ -9,15 +9,12 @@
 View Contacts<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="contacts-external_contacts-add">
-<a href="ExternalContacts.do?command=InsertContactForm">Add a Contact</a>
+  <a href="ExternalContacts.do?command=InsertContactForm">Add a Contact</a>
 </dhv:permission>
-
 <dhv:permission name="contacts-external_contacts-add" none="true">
-<br>
+  <br>
 </dhv:permission>
-
 <center><%= ExternalContactsInfo.getAlphabeticalPageLinks() %></center>
-
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="ExternalContacts.do?command=ListContacts">
@@ -39,19 +36,18 @@ View Contacts<br>
     </form>
   </tr>
 </table>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete">
-    <td valign=center align=left class="title">
+    <td valign="center">
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td>
+    <td nowrap>
       <strong><a href="ExternalContacts.do?command=ListContacts&column=c.namelast">Name</a></strong>
       <%= ExternalContactsInfo.getSortIcon("c.namelast") %>
     </td>
-    <td>
+    <td nowrap>
       <strong><a href="ExternalContacts.do?command=ListContacts&column=c.company">Company</a></strong>
       <%= ExternalContactsInfo.getSortIcon("c.company") %>
     </td>
@@ -69,22 +65,15 @@ View Contacts<br>
   </tr>
 <%    
 	Iterator i = ContactList.iterator();
-	
 	if (i.hasNext()) {
 	int rowid = 0;
-	
 		while (i.hasNext()) {
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-			
-		Contact thisContact = (Contact)i.next();
+			rowid = (rowid != 1?1:2);
+      Contact thisContact = (Contact)i.next();
 %>      
       <tr>
         <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete">
-          <td width=8 valign=center nowrap class="row<%= rowid %>">
+          <td width="8" valign="top" class="row<%= rowid %>" nowrap>
             <%if(thisContact.getEnabled()) {%>
              <dhv:permission name="contacts-external_contacts-edit"><a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId()%>&cmd=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-delete"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
             <%}else{%>
@@ -116,7 +105,7 @@ View Contacts<br>
     }
   } else {%>  
   <tr>
-    <td class="row2" valign="center" colspan="5">
+    <td class="row2" colspan="5">
       No contacts found.
     </td>
   </tr>

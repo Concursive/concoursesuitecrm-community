@@ -61,7 +61,7 @@ Add Folder Record
       <td valign="center" nowrap class="formLabel">
         <%= thisField.getNameHtml() %>
       </td>
-      <td valign="center" width="100%">
+      <td valign="center">
         <%= thisField.getHtmlElement() %> <font color="red"><%= (thisField.getRequired()?"*":"") %></font>
         <font color='#006699'><%= toHtml(thisField.getError()) %></font>
         <%= toHtml(thisField.getAdditionalText()) %>
@@ -72,7 +72,7 @@ Add Folder Record
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No fields available.</font>
       </td>
     </tr>
@@ -88,11 +88,10 @@ Add Folder Record
     </dhv:evaluate>
 <%}else{%>
   <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No groups available.</font>
       </td>
     </tr>
 <%}%>
-
 </table>
 </form>

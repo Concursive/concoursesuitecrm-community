@@ -61,7 +61,7 @@ Folder Record Details
 %>    
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong><%= thisGroup.getName() %></strong>
 	  </td>
   </tr>
@@ -73,10 +73,10 @@ Folder Record Details
 %>    
     <tr class="containerBody">
       <%-- Do not use toHtml() here, it's done by CustomField --%>
-      <td valign="top" nowrap class="formLabel">
+      <td valign="top" class="formLabel" nowrap>
         <%= thisField.getNameHtml() %>
       </td>
-      <td valign="top" width="100%">
+      <td valign="top">
         <%= thisField.getValueHtml() %>
       </td>
     </tr>
@@ -85,7 +85,7 @@ Folder Record Details
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No fields available.</font>
       </td>
     </tr>
@@ -95,7 +95,7 @@ Folder Record Details
 <%}%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Record Information</strong>
     </td>     
   </tr>

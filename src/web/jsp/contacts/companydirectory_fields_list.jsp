@@ -44,7 +44,6 @@ List of Folder Records<br>
           </td>
         </dhv:permission>
         </dhv:evaluate>
-        
         <td align="left">
           <strong>Record</strong>
         </td>

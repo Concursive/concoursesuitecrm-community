@@ -62,7 +62,7 @@ Modify Folder Record
       <td valign="center" nowrap class="formLabel">
         <%= thisField.getNameHtml() %>
       </td>
-      <td valign="center" width="100%">
+      <td valign="center">
         <%= thisField.getHtmlElement() %> <font color="red"><%= (thisField.getRequired()?"*":"") %></font>
         <font color='#006699'><%= toHtml(thisField.getError()) %></font>
         <%= toHtml(thisField.getAdditionalText()) %>
@@ -73,7 +73,7 @@ Modify Folder Record
   } else {
 %>
     <tr class="containerBody">
-      <td colspan=2>
+      <td colspan="2">
         <font color="#9E9E9E">No fields available.</font>
       </td>
     </tr>
@@ -81,13 +81,11 @@ Modify Folder Record
 </table>
 &nbsp;
 <%}%>
-
 <dhv:evaluate exp="<%= !Category.isEmpty() %>">
 <br>
 <input type="submit" value="Update" onClick="javascript:this.form.action='ExternalContacts.do?command=UpdateFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= Category.getRecordId() %>'">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'">
 </td></tr>
 </dhv:evaluate>
-
 </table>
 </form>

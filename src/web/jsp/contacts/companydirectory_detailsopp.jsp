@@ -6,6 +6,7 @@
 <jsp:useBean id="ComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<form name="oppdet" action="ExternalContactsOpps.do?command=ModifyOpp&id=<%= headerDetails.getId() %>&orgId=<%= headerDetails.getAccountLink() %>&contactId=<%= headerDetails.getContactLink() %>" method="post">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= contactDetails.getId() %>">Contact Details</a> >
@@ -26,7 +27,6 @@ Opportunity Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-<form name="oppdet" action="ExternalContactsOpps.do?command=ModifyOpp&id=<%= headerDetails.getId() %>&orgId=<%= headerDetails.getAccountLink() %>&contactId=<%= headerDetails.getContactLink() %>" method="post">
 <dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= headerDetails.getContactLink() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= contactDetails.getId() %>&headerId=<%= headerDetails.getId() %>&popup=true','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"></dhv:permission>
@@ -41,7 +41,7 @@ Opportunity Details<br>
     </td>
   </tr>  
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Entered
     </td>
     <td>
@@ -49,7 +49,7 @@ Opportunity Details<br>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Modified
     </td>
     <td>
@@ -57,33 +57,32 @@ Opportunity Details<br>
     </td>
   </tr>    
 </table>
-</form>
 <br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ComponentListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong>Action</strong>
     </td>
     </dhv:permission>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.description">Component</a></strong>
       <%= ComponentListInfo.getSortIcon("oc.description") %>
     </td>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.closed">Status</a></strong>
       <%= ComponentListInfo.getSortIcon("oc.closed") %>
     </td>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.guessvalue">Guess Amount</a></strong>
       <%= ComponentListInfo.getSortIcon("oc.guessvalue") %>
     </td>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=oc.closedate">Close Date</a></strong>
       <%= ComponentListInfo.getSortIcon("oc.closedate") %>
     </td>
-    <td valign=center align=left nowrap>
+    <td nowrap>
       <strong><a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= contactDetails.getId() %>&column=stagename">Current Stage</a></strong>
       <%= ComponentListInfo.getSortIcon("stagename") %>
     </td>  
@@ -98,40 +97,39 @@ Opportunity Details<br>
 %>      
   <tr class="containerBody">
     <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
-    <td width=8 valign=top nowrap class="row<%= rowid %>">
+    <td width="8" valign="top" nowrap class="row<%= rowid %>">
       <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOppComponents.do?command=ModifyComponent&id=<%= oppComponent.getId() %>&contactId=<%= contactDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= contactDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-    <td width=100% valign=top class="row<%= rowid %>">
-      <a href="ExternalContactsOppComponents.do?command=DetailsComponent&contactId=<%= contactDetails.getId() %>&id=<%=oppComponent.getId()%>">
+    <td width="100%" valign="top" class="row<%= rowid %>">
+      <a href="ExternalContactsOppComponents.do?command=DetailsComponent&contactId=<%= contactDetails.getId() %>&id=<%= oppComponent.getId() %>">
       <%= toHtml(oppComponent.getDescription()) %></a>
     </td>
-    <td valign=top nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= oppComponent.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
     </td>
-    <td valign=top nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap class="row<%= rowid %>">
       $<%= oppComponent.getGuessCurrency() %>
     </td>
-    <td valign=top nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getCloseDateString()) %>
     </td>
-    <td valign=top nowrap class="row<%= rowid %>">
+    <td valign="top" nowrap class="row<%= rowid %>">
       <%= toHtml(oppComponent.getStageName()) %>
     </td>		
   </tr>
 <%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan=6 valign=center>
+    <td colspan="6">
       No opportunity components found.
     </td>
   </tr>
 <%}%>
-  
 </table>
 <br>
 <dhv:pagedListControl object="ComponentListInfo"/>
 </td>
 </tr>
 </table>
-
+</form>

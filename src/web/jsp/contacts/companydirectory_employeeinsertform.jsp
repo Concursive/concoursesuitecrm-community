@@ -46,37 +46,37 @@ Add Employee<br>
 <input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
 	    <strong>Add a New Employee Record</strong>
 	  </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">First Name</td>
+    <td class="formLabel" nowrap>First Name</td>
     <td>
       <input type="text" name="nameFirst" value="<%= toHtmlValue(EmployeeBean.getNameFirst()) %>">
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">Middle Name</td>
+    <td class="formLabel" nowrap>Middle Name</td>
     <td>
       <input type="text" name="nameMiddle" value="<%= toHtmlValue(EmployeeBean.getNameMiddle()) %>">
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">Last Name</td>
+    <td class="formLabel" nowrap>Last Name</td>
     <td>
       <input type="text" name="nameLast" value="<%= toHtmlValue(EmployeeBean.getNameLast()) %>">
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">Department</td>
+    <td class="formLabel" nowrap>Department</td>
     <td>
       <%= DepartmentList.getHtmlSelect("department", EmployeeBean.getDepartment()) %>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">Title</td>
+    <td class="formLabel" nowrap>Title</td>
     <td>
       <input type="text" name="title" value="<%= toHtmlValue(EmployeeBean.getTitle()) %>">
     </td>
@@ -162,7 +162,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Address Line 1
     </td>
     <td>
@@ -170,7 +170,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Address Line 2
     </td>
     <td>
@@ -178,7 +178,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       City
     </td>
     <td>
@@ -186,7 +186,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       State/Province
     </td>
     <td>
@@ -195,7 +195,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Zip/Postal Code
     </td>
     <td>
@@ -203,7 +203,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Country
     </td>
     <td>
@@ -221,7 +221,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Address Line 1
     </td>
     <td>
@@ -229,7 +229,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Address Line 2
     </td>
     <td>
@@ -237,7 +237,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       City
     </td>
     <td>
@@ -245,7 +245,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       State/Province
     </td>
     <td>
@@ -254,7 +254,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Zip/Postal Code
     </td>
     <td>
@@ -262,7 +262,7 @@ Add Employee<br>
     </td>
   </tr>
   <tr>
-    <td nowrap class="formLabel">
+    <td class="formLabel" nowrap>
       Country
     </td>
     <td>

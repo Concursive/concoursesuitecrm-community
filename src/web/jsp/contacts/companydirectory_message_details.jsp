@@ -3,10 +3,10 @@
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<a href="/ExternalContacts.do">General Contacts</a> > 
-<a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
-<a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
-<a href="/ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">Messages</a> >
+<a href="ExternalContacts.do">General Contacts</a> > 
+<a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+<a href="ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">Messages</a> >
 Message Details
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -25,8 +25,8 @@ Message Details
     <td class="containerBack">
     <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td colspan=2 valign=center align=left>
+  <tr class="title">
+    <td colspan="2">
       <strong>Selected message</strong>
     </td>
   </tr>
@@ -34,25 +34,23 @@ Message Details
     <td class="formLabel">
       Campaign
     </td>
-    <td width="100%">
+    <td>
 			<%=toHtml(Campaign.getName())%>
     </td>
   </tr>
-  
-    <tr class="containerBody">
+  <tr class="containerBody">
     <td class="formLabel">
       Reply To
     </td>
-    <td width="100%">
+    <td>
 			<%=toHtml(Campaign.getReplyTo())%>
     </td>
   </tr>
-  
   <tr class="containerBody">
     <td class="formLabel">
       Message Subject
     </td>
-    <td width="100%">
+    <td>
 			<%=toHtml(Campaign.getMessageName())%>
     </td>
   </tr>
@@ -60,7 +58,7 @@ Message Details
     <td class="formLabel" valign="top">
       Message Text
     </td>
-    <td valign=center>
+    <td>
 			<%= (Campaign.getMessage()) %>&nbsp; 
     </td>
   </tr>

@@ -30,63 +30,56 @@ Calls<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete">
-    <td valign=center align=left>
+    <td>
       <strong>Action</strong>
     </td>
    </dhv:permission> 
-    <td valign=center align=left>
+    <td>
       <strong>Subject</strong>
     </td>
-    <td valign=center align=left>
+    <td>
       <strong>Type</strong>
     </td>
-    <td valign=center align=center>
+    <td>
       <strong>Length</strong>
     </td>
-    <td valign=center align=center>
+    <td>
       <strong>Date</strong>
     </td>
   </tr>
 <%
 	Iterator j = CallList.iterator();
-	
 	if ( j.hasNext() ) {
 		int rowid = 0;
 	    while (j.hasNext()) {
-		
-        if (rowid != 1) {
-          rowid = 1;
-        } else {
-          rowid = 2;
-        }
-		
-		Call thisCall = (Call)j.next();
+		    rowid = (rowid != 1?1:2);
+        Call thisCall = (Call)j.next();
 %>      
     <tr class="containerBody">
       <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete">
-      <td width=8 valign=center nowrap class="row<%= rowid %>">
+      <td width="8" valign="center" nowrap class="row<%= rowid %>">
           <dhv:permission name="contacts-external_contacts-calls-edit"><a href="ExternalContactsCalls.do?command=Modify&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-calls-delete"><a href="javascript:confirmDelete('ExternalContactsCalls.do?command=Delete&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>');">Del</a></dhv:permission>
       </td>
       </dhv:permission>
-      <td width="100%" valign=center class="row<%= rowid %>">
+      <td width="100%" valign="center" class="row<%= rowid %>">
         <a href="ExternalContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %>">
         <%= toHtml(thisCall.getSubject()) %>
         </a>
       </td>
-      <td valign=center nowrap class="row<%= rowid %>">
+      <td valign="center" nowrap class="row<%= rowid %>">
         <%= toHtml(thisCall.getCallType()) %>
       </td>
-      <td align=center valign=center nowrap class="row<%= rowid %>">
+      <td align="center" valign="center" nowrap class="row<%= rowid %>">
         <%= toHtml(thisCall.getLengthText()) %>
       </td>
-      <td valign=center nowrap class="row<%= rowid %>">
+      <td valign="center" nowrap class="row<%= rowid %>">
         <%= toHtml(thisCall.getEnteredString()) %>
       </td>
     </tr>
  <%}%>
 <%} else {%>
 		<tr class="containerBody">
-      <td colspan=5 valign=center>
+      <td colspan="5">
         No calls found.
       </td>
     </tr>

@@ -15,7 +15,7 @@ View Employees<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
-    <td valign="center" align="left">
+    <td>
       <strong>Action</strong>
     </td>
   </dhv:permission>

@@ -36,10 +36,9 @@
     <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'">
 <br>
 <%= showError(request, "actionError") %>
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Distribution information</strong>
     </td>
   </tr>
@@ -47,7 +46,7 @@
     <td nowrap class="formLabel">
       Send To
     </td>
-    <td width=100%>
+    <td>
       <% if (request.getParameter("sentTo") == null) { %>
       <%= UserList.getHtmlSelect("sentTo") %>
       <%} else {%>
@@ -55,31 +54,25 @@
       <%}%>
     </td>
   </tr>
-  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Forward Subject
     </td>
-    <td width=100%>
-      <input type=text name="fwdsubject" size=40>
+    <td>
+      <input type="text" name="fwdsubject" size="40">
       <font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %>
     </td>
   </tr>
-  
 </table>
-
 <br>&nbsp;
-
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="2" valign=center align=left>
+    <td colspan="2">
       <strong>Snapshot</strong>
     </td>
   </tr>
-  
-    <tr class="containerBody">
-
-	<td colspan=2 width=100%>
+  <tr class="containerBody">
+	<td colspan="2">
 		<dhv:browser id="ie" minVersion="5.5">
 		  <input type="hidden" name="msgBody" value="">
 	<iframe id="edit" frameborder="0" class="richEdit" style="border: 1px solid #cccccc; width: 100%; height: 100%;" onblur="return false">
@@ -87,72 +80,64 @@
 	<jsp:include page="../templates/cssInclude.jsp" flush="true"/>
 	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr class="title">
-	<td colspan=2 valign=center align=left>
-	<strong>Forward: Call Details</strong>
-	</td>
+    <td colspan="2">
+      <strong>Forward: Call Details</strong>
+    </td>
 	</tr>
 	<tr class="containerBody">
-	<td nowrap class="formLabel">
-	Type
-	</td>
-	<td width=100%>
-	<%= toHtml(CallDetails.getCallType()) %>
-	</td>
+    <td nowrap class="formLabel">
+      Type
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getCallType()) %>
+    </td>
 	</tr>
 	<tr class="containerBody">
-	<td nowrap class="formLabel">
-	Length
-	</td>
-	<td>
-	<%= toHtml(CallDetails.getLengthText()) %>
-	</td>
+    <td nowrap class="formLabel">
+      Length
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getLengthText()) %>
+    </td>
 	</tr>
 	<tr class="containerBody">
-	<td nowrap class="formLabel">
-	Subject
-	</td>
-	<td>
-	<%= toHtml(CallDetails.getSubject()) %>
-	</td>
+    <td nowrap class="formLabel">
+      Subject
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getSubject()) %>
+    </td>
+  </tr>
+	<tr class="containerBody">
+    <td nowrap class="formLabel">
+      Notes
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getNotes()) %>
+    </td>
 	</tr>
 	<tr class="containerBody">
-	<td nowrap class="formLabel">
-	Notes
-	</td>
-	<td>
-	<%= toHtml(CallDetails.getNotes()) %>
-	</td>
+    <td nowrap class="formLabel">
+      Entered
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getEnteredName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getEnteredString()) %>
+    </td>
 	</tr>
-	
 	<tr class="containerBody">
-	<td nowrap class="formLabel">
-	Entered
-	</td>
-	<td>
-	<%= toHtml(CallDetails.getEnteredName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getEnteredString()) %>
-	</td>
+    <td nowrap class="formLabel">
+      Modified
+    </td>
+    <td>
+      <%= toHtml(CallDetails.getModifiedName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getModifiedString()) %>
+    </td>
 	</tr>
-	
-	<tr class="containerBody">
-	<td nowrap class="formLabel">
-	Modified
-	</td>
-	<td>
-	<%= toHtml(CallDetails.getModifiedName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getModifiedString()) %>
-	</td>
-	</tr>
-	
-	
-	
 	</table>
 	</body>
 	</iframe>
 			</dhv:browser>
     </td>
   </tr>
-  
-
-  
 </table>
 <br>
 <input type="submit" value="Forward" onclick="javascript:save();">
@@ -161,6 +146,4 @@
 </tr>
 </table>
 </form>
-
-
 

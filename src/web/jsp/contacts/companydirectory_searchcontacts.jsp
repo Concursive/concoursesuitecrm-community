@@ -5,59 +5,54 @@
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].searchFirstName.focus();">
-<form name="searchContact" action="/ExternalContacts.do?command=ListContacts&auto-populate=true" method="post">
-<a href="/ExternalContacts.do">General Contacts</a> > 
+<form name="searchContact" action="ExternalContacts.do?command=ListContacts&auto-populate=true" method="post">
+<a href="ExternalContacts.do">General Contacts</a> > 
 Search Contacts<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2">
       <strong>Search Contacts</strong>
     </td>     
   </tr>
-  
   <tr>
     <td nowrap class="formLabel">
       First Name
     </td>
     <td>
-      <input type=text size=35 name="searchFirstName" value="">
+      <input type="text" size="35" name="searchFirstName" value="">
     </td>
   </tr>
-  
   <tr>
     <td nowrap class="formLabel">
       Middle Name
     </td>
     <td>
-      <input type=text size=35 name="searchMiddleName" value="">
+      <input type="text" size="35" name="searchMiddleName" value="">
     </td>
   </tr>
-  
   <tr>
     <td nowrap class="formLabel">
       Last Name
     </td>
     <td>
-      <input type=text size=35 name="searchLastName" value="">
+      <input type="text" size="35" name="searchLastName" value="">
     </td>
   </tr>
-  
   <tr>
     <td nowrap class="formLabel">
       Company
     </td>
     <td>
-      <input type=text size=35 name="searchCompany" value="">
+      <input type="text" size="35" name="searchCompany" value="">
     </td>
   </tr>
-  
   <tr>
     <td nowrap class="formLabel">
       Title
     </td>
     <td>
-      <input type=text size=35 name="searchTitle" value="">
+      <input type="text" size="35" name="searchTitle" value="">
     </td>
   </tr>
 </table>
