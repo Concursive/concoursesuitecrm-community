@@ -885,7 +885,7 @@ public final class CampaignManager extends CFSModule {
     }
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignCenterGroupInfo");
     pagedListInfo.setLink("CampaignManager.do?command=AddGroups");
-    pagedListInfo.setEnableJavaScript(true);
+    pagedListInfo.setEnableJScript(true);
     String campaignId = context.getRequest().getParameter("id");
     Campaign campaign = null;
     try {
