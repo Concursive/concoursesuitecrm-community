@@ -17,7 +17,7 @@
 
 	<tag>
     <name>browser</name> 
-    <tag-class>com.darkhorseventures.taglib.BrowserHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.BrowserHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
       Access the User session and determine if browser matches id.
@@ -46,7 +46,7 @@
 	
   <tag>
     <name>permission</name> 
-    <tag-class>com.darkhorseventures.taglib.PermissionHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.PermissionHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
       Access the User session and determine if permission is valid.
@@ -67,7 +67,7 @@
   
   <tag>
     <name>username</name> 
-    <tag-class>com.darkhorseventures.taglib.UsernameHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.UsernameHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
       Access the Application scope and retrieve user's name from id.
@@ -81,7 +81,7 @@
   
   <tag>
     <name>contactname</name> 
-    <tag-class>com.darkhorseventures.taglib.ContactNameHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.ContactNameHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
       Access the request scope and retrieve contact's name from id.
@@ -99,7 +99,7 @@
   
   <tag>
     <name>include</name> 
-    <tag-class>com.darkhorseventures.taglib.FieldHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.FieldHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
       Access the SystemStatus and determine if block should be included.
@@ -120,7 +120,7 @@
   
   <tag>
     <name>label</name> 
-    <tag-class>com.darkhorseventures.taglib.LabelHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.LabelHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
       Access the SystemStatus and determine if custom label should be used.
@@ -133,7 +133,7 @@
   
   <tag>
     <name>evaluate</name> 
-    <tag-class>com.darkhorseventures.taglib.EvaluateHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.EvaluateHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
       Include if the supplied parameter evaluates to true
@@ -152,7 +152,7 @@
   
   <tag>
     <name>container</name> 
-    <tag-class>com.darkhorseventures.taglib.ContainerMenuHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.ContainerMenuHandler</tag-class>
     <body-content>JSP</body-content>
     <display-name>
       Displays the specified container menu from the config
@@ -176,7 +176,7 @@
   
   <tag>
     <name>pagedListControl</name> 
-    <tag-class>com.darkhorseventures.taglib.PagedListControlHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.PagedListControlHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
       Displays a control panel(form) for the PagedListInfo specified.
@@ -217,7 +217,7 @@
   
   <tag>
     <name>pagedListStatus</name> 
-    <tag-class>com.darkhorseventures.taglib.PagedListStatusHandler</tag-class>
+    <tag-class>org.aspcfs.taglib.PagedListStatusHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
       Displays the status of the PagedListInfo specified.
@@ -267,7 +267,7 @@
   
   <tag>
     <name>group</name>
-    <tag-class>com.darkhorseventures.taglib.Group</tag-class>
+    <tag-class>org.aspcfs.taglib.Group</tag-class>
     <body-content>empty</body-content>
     <display-name>
       Displays a group of fields for the CustomGroup object specified.

@@ -1,20 +1,20 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
-<jsp:useBean id="OrgListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<jsp:useBean id="TypeSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
-<a href="/Accounts.do">Account Management</a> > 
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
+<jsp:useBean id="OrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<a href="Accounts.do">Account Management</a> > 
 View Accounts<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="accounts-accounts-add"><a href="/Accounts.do?command=Add">Add an Account</a></dhv:permission>
+<dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add">Add an Account</a></dhv:permission>
 <dhv:permission name="accounts-accounts-add" none="true"><br></dhv:permission>
 <center><%= OrgListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
-    <form name="listView" method="post" action="/Accounts.do?command=View">
+    <form name="listView" method="post" action="Accounts.do?command=View">
     <td align="left" valign="bottom">
       <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
         <option <%= OrgListInfo.getOptionValue("all") %>>All Accounts</option>
@@ -44,7 +44,7 @@ View Accounts<br>
     </td>
     </dhv:permission>
     <td width=30% valign=center align=left>
-      <strong><a href="/Accounts.do?command=View&column=o.name">Account Name</a></strong>
+      <strong><a href="Accounts.do?command=View&column=o.name">Account Name</a></strong>
       <%= OrgListInfo.getSortIcon("o.name") %>
     </td>
     <td width=20% valign=center align=left nowrap>
@@ -69,16 +69,16 @@ View Accounts<br>
     <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
       <dhv:evaluate exp="<%=(thisOrg.getEnabled())%>">
-      	<dhv:permission name="accounts-accounts-edit"><a href="/Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:popURLReturn('/Accounts.do?command=ConfirmDelete&id=<%=thisOrg.getId()%>','Accounts.do?command=View', 'Delete_account','330','200','yes','no');">Del</a></dhv:permission>
+      	<dhv:permission name="accounts-accounts-edit"><a href="Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=thisOrg.getId()%>','Accounts.do?command=View', 'Delete_account','330','200','yes','no');">Del</a></dhv:permission>
       </dhv:evaluate>
       <dhv:evaluate exp="<%=!(thisOrg.getEnabled())%>">
-        <dhv:permission name="accounts-accounts-edit"><a href="/Accounts.do?command=Enable&orgId=<%= thisOrg.getOrgId() %>&return=list">Enable</a></dhv:permission>
+        <dhv:permission name="accounts-accounts-edit"><a href="Accounts.do?command=Enable&orgId=<%= thisOrg.getOrgId() %>&return=list">Enable</a></dhv:permission>
       </dhv:evaluate>
       </td>
     </dhv:permission>
     
 		<td width="30%" class="row<%= rowid %>">
-      <a href="/Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>
+      <a href="Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>
 		</td>
 		<td width=20% valign=center class="row<%= rowid %>" nowrap>
     <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
