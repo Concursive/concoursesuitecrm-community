@@ -2,7 +2,6 @@
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="finalContacts" class="java.util.HashMap" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<a href="<%= request.getParameter("return") %>">Back</a>
 <p>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
