@@ -139,7 +139,7 @@ listOfOperators[2] = numberOperators
     </td>
     <td width="100%">
       <%= ContactSource.getHtml("contactSource", SCL.getContactSource()) %>
-      <a href="javascript:popURL('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a>
+      <a href="javascript:popURLCampaign('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a>
     </td>
   </tr>
 </table>

@@ -23,6 +23,8 @@ public class SearchCriteriaElement {
   String dataType = null;
   String operatorDisplayText = null;
   String contactTypeName = null;
+  String contactNameFirst = null;
+  String contactNameLast = null;
 
   /**
    *  Description of the Method
@@ -37,6 +39,12 @@ public String getContactTypeName() {
 public void setContactTypeName(String contactTypeName) {
 	this.contactTypeName = contactTypeName;
 }
+
+public String getContactNameFirst() { return contactNameFirst; }
+public String getContactNameLast() { return contactNameLast; }
+public void setContactNameFirst(String tmp) { this.contactNameFirst = tmp; }
+public void setContactNameLast(String tmp) { this.contactNameLast = tmp; }
+
 
   /**
    *  Description of the Method
@@ -303,6 +311,8 @@ public void setContactTypeName(String contactTypeName) {
     operator = rs.getString("operator");
     text = rs.getString("value");
     contactTypeName = rs.getString("ctype");
+    contactNameFirst = rs.getString("cnamefirst");
+    contactNameLast = rs.getString("cnamelast");
   }
 
 }
