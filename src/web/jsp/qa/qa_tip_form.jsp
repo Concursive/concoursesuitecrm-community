@@ -36,6 +36,11 @@ function validate() {
    </td>
 </tr>
 </table>
+<br>
+Where do you want to go after this action?<br>
+<input type="radio" name="target" value="loop" <%= "loop".equals(request.getParameter("target")) ? " checked" : "" %>>&nbsp;Add another feature&nbsp;&nbsp;
+<input type="radio" name="target" value="return" <%= "loop".equals(request.getParameter("target")) ? "" : " checked" %>>&nbsp;Return to QA Page
+<br><br>
 <dhv:evaluate if="<%= Tip.getId() > 0 %>">
   <input type="hidden" name="modified" value="<%= Tip.getModified() %>">
 </dhv:evaluate>
