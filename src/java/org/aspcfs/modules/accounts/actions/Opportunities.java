@@ -4,8 +4,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import java.util.Vector;
-import java.sql.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.actions.CFSModule;
