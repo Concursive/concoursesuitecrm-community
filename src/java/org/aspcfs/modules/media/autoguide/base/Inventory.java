@@ -808,6 +808,17 @@ public class Inventory {
 
 
   /**
+   *  Gets the hasPicture attribute of the Inventory object
+   *  used for synchronization... since all properties need a get.
+   *
+   *@return    The hasPicture value
+   */
+  public boolean getHasPicture() {
+    return hasPicture();
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@return    Description of the Returned Value
