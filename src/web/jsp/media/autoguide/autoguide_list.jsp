@@ -42,23 +42,31 @@
     </td>
     </dhv:permission>
 --%>
-    <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Account</a></strong>
+    <td nowrap>
+      <strong><a href="AutoGuide.do?command=List&column=o.name">Account</a></strong>
+      <%= AutoGuideDirectoryInfo.getSortIcon("o.name") %>
     </td>
-    <td>
+    <td nowrap>
       <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Stock No</a></strong>
+      <%= AutoGuideDirectoryInfo.getSortIcon("i.stock_no") %>
     </td>
-    <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Year</a></strong>
+    <td nowrap>
+      <strong><a href="AutoGuide.do?command=List&column=v.year">Year</a></strong>
+      <%= AutoGuideDirectoryInfo.getSortIcon("v.year") %>
     </td>
-    <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Make</a></strong>
+    <td nowrap>
+      <strong><a href="AutoGuide.do?command=List&column=make.make_name">Make</a></strong>
+      <%= AutoGuideDirectoryInfo.getSortIcon("make.make_name") %>
     </td>
-    <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Model</a></strong>
+    <td nowrap>
+      <strong><a href="AutoGuide.do?command=List&column=model.model_name">Model</a></strong>
+      <%= AutoGuideDirectoryInfo.getSortIcon("model.model_name") %>
     </td>
-    <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.stock_no">Next Incomplete Ad</a></strong>
+    <td nowrap>
+      <strong>Next Incomplete Ad</strong>
+      <%-- Can't sort by ad run because there can be many ad runs per vehicle --%>
+      <%-- <strong><a href="AutoGuide.do?command=List&column=ad.run_date">Next Incomplete Ad</a></strong>
+      <%= AutoGuideDirectoryInfo.getSortIcon("ad.run_date") %> --%>
     </td>
   </tr>
 <%    
