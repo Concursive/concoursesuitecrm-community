@@ -37,10 +37,10 @@ Issue #2: Cascading Style Sheets
 
 Issue #3: JavaScript
 - Most browsers fall into either the IE version x camp (mainly IE) or the
-  Netscape version x camp.  In JavaScript, a simple check can determine
-  the browsers capability.
+  Netscape version x camp.
 Solution:
-- ClientType can return the camp the browser falls under: 
+- In JavaScript, a simple check can determine
+  the browsers capability.
   IE 3, 4, 5, 5.5, 6
   NS 4, 6 (Includes Mozilla and variants)
 
