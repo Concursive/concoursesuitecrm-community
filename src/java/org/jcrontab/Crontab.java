@@ -179,13 +179,17 @@ public class Crontab {
       stopping = true;
       cron.stopInTheNextMinute();
       CronTask[] tasks = getAllTasks();
-
       for (int i = tasks.length - 1; i >= 0; i--) {
         tasks[i].join(iSecondsToWait);
       }
-
     } catch (InterruptedException e) {
       Log.error(e.toString(), e);
+    }
+    connectionPool = null;
+    servletContext = null;
+    try {
+      cron.join(10000);
+    } catch (Exception e) {
     }
   }
 
