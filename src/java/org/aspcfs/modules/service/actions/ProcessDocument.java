@@ -105,7 +105,9 @@ public final class ProcessDocument extends CFSModule {
           String finalFilePath = newFilePath + this.getDatePath(newFileInfo.getRealFilename());
           File renamedPath = new File(finalFilePath);
           renamedPath.mkdirs();
-          System.out.println("ProcessDocument-> Final path: " + finalFilePath);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("ProcessDocument-> Final path: " + finalFilePath);
+          }
           File renamedFile = new File(finalFilePath + newFileInfo.getRealFilename());
           uploadedFile.renameTo(renamedFile);
 
