@@ -29,7 +29,7 @@ public class Task extends GenericBean {
   private int reminderId = -1;
   private int sharing = -1;
   private int modifiedby = -1;
-  private int estimatedLOE = -1;
+  private double estimatedLOE = -1;
   private int estimatedLOEType = -1;
   private int owner = -1;
   private int age = -1;
@@ -254,7 +254,7 @@ public class Task extends GenericBean {
    *
    *@param  estimatedLOE  The new estimatedLOE value
    */
-  public void setEstimatedLOE(int estimatedLOE) {
+  public void setEstimatedLOE(double estimatedLOE) {
     this.estimatedLOE = estimatedLOE;
   }
 
@@ -265,7 +265,7 @@ public class Task extends GenericBean {
    *@param  estimatedLOE  The new estimatedLOE value
    */
   public void setEstimatedLOE(String estimatedLOE) {
-    this.estimatedLOE = Integer.parseInt(estimatedLOE);
+    this.estimatedLOE = Double.parseDouble(estimatedLOE);
   }
 
 
@@ -569,7 +569,7 @@ public java.sql.Timestamp getModified() {
    *
    *@return    The estimatedLOE value
    */
-  public int getEstimatedLOE() {
+  public double getEstimatedLOE() {
     return estimatedLOE;
   }
   
@@ -754,7 +754,7 @@ public java.sql.Timestamp getModified() {
       pst.setInt(++i, this.getSharing());
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
-      pst.setInt(++i, this.getEstimatedLOE());
+      pst.setDouble(++i, this.getEstimatedLOE());
       if(this.getEstimatedLOEType() != -1){
         pst.setInt(++i, this.getEstimatedLOEType());
       }
@@ -826,7 +826,7 @@ public java.sql.Timestamp getModified() {
       pst.setInt(++i, this.getSharing());
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getDueDate());
-      pst.setInt(++i, this.getEstimatedLOE());
+      pst.setDouble(++i, this.getEstimatedLOE());
       if(this.getEstimatedLOEType()!=-1){
         pst.setInt(++i, this.getEstimatedLOEType());
       }
@@ -1109,7 +1109,7 @@ public java.sql.Timestamp getModified() {
     notes = rs.getString("notes");
     sharing = rs.getInt("sharing");
     complete = rs.getBoolean("complete");
-    estimatedLOE = rs.getInt("estimatedloe");
+    estimatedLOE = rs.getDouble("estimatedloe");
     estimatedLOEType = rs.getInt("estimatedloetype");
     if(rs.wasNull()){
       estimatedLOEType = -1;
