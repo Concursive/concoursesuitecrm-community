@@ -34,7 +34,7 @@ public class SearchCriteriaElement {
    *
    *@since    1.1
    */
-  public SearchCriteriaElement() { }
+  public SearchCriteriaElement(){}
 
 
   /**
@@ -45,6 +45,7 @@ public class SearchCriteriaElement {
    *@since               1.1
    */
   public SearchCriteriaElement(String elementText) {
+	  
     StringTokenizer st = new StringTokenizer(elementText, "[*|]");
     if (st.hasMoreTokens()) {
       fieldId = Integer.parseInt((String) st.nextToken());
@@ -58,6 +59,7 @@ public class SearchCriteriaElement {
     if (st.hasMoreTokens()) {
       sourceId = Integer.parseInt((String) st.nextToken());
     }
+     
   }
 
 
@@ -69,6 +71,7 @@ public class SearchCriteriaElement {
    *@since
    */
   public SearchCriteriaElement(ResultSet rs) throws SQLException {
+	  
     buildRecord(rs);
   }
 
@@ -383,6 +386,7 @@ public class SearchCriteriaElement {
       pst.setInt(++i, this.getOperatorId());
       pst.setString(++i, this.getText());
       pst.setInt(++i, this.getSourceId());
+      
       pst.execute();
       pst.close();
       db.commit();
@@ -405,14 +409,14 @@ public class SearchCriteriaElement {
     StringBuffer tmp = new StringBuffer();
     tmp.append("=[ SearchCriteriaElement ]=====================\r\n");
     tmp.append("FieldId: " + fieldId + "\r\n");
-    tmp.append("OperatorId: " + operatorId + "\r\n");
     tmp.append("Operator: " + operator + "\r\n");
+    tmp.append("OperatorId: " + operatorId + "\r\n");
     tmp.append("Operator Text: " + operatorDisplayText + "\r\n");
     tmp.append("Text: " + text + "\r\n");
     return tmp.toString();
   }
-
-
+  
+  
   /**
    *  Populates object from ResultSet data
    *
@@ -421,10 +425,10 @@ public class SearchCriteriaElement {
    *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    //saved_criteriaelement table
+    //saved_criteriaelement table 
     fieldId = rs.getInt("field");
-    operatorId = rs.getInt("operatorid");
     operator = rs.getString("operator");
+    operatorId = rs.getInt("operatorid");
     text = rs.getString("value");
     sourceId = rs.getInt("source");
     //lookup_contact_types table

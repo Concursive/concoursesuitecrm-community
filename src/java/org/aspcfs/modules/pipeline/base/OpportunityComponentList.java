@@ -348,7 +348,7 @@ public class OpportunityComponentList extends ArrayList {
     StringBuffer sqlTail = new StringBuffer();
     createFilter(sqlFilter);
     sqlSelect.append(
-        "SELECT alertdate, count(*) " +
+        "SELECT alertdate, count(*) as nocols " +
         "FROM opportunity_component oc " +
         "WHERE oc.opp_id > -1 ");
     sqlTail.append("GROUP BY alertdate ");
@@ -357,7 +357,8 @@ public class OpportunityComponentList extends ArrayList {
     rs = pst.executeQuery();
     while (rs.next()) {
       String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("alertdate"));
-      events.put(alertDate, new Integer(rs.getInt("count")));
+      int temp = rs.getInt("nocols");
+      events.put(alertDate, new Integer(temp));
     }
     rs.close();
     pst.close();

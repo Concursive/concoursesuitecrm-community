@@ -2529,7 +2529,7 @@ public class Contact extends GenericBean {
     employeeId = rs.getString("employee_id");
     employmentType = rs.getInt("employmenttype");
     startOfDay = rs.getString("startofday");
-    endOfDay = rs.getString("endofDay");
+    endOfDay = rs.getString("endofday");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
@@ -2540,13 +2540,10 @@ public class Contact extends GenericBean {
     url = rs.getString("url");
     primaryContact = rs.getBoolean("primary_contact");
     employee = rs.getBoolean("employee");
+    orgName = rs.getString("org_name");
     accessType = rs.getInt("access_type");
-
     //lookup_department table
     departmentName = rs.getString("departmentname");
-
-    //organization table
-    orgName = rs.getString("org_name");
   }
 
 

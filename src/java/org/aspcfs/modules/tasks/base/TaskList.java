@@ -177,8 +177,9 @@ public class TaskList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
     createFilter(sqlFilter);
+    
     sqlSelect.append(
-        "SELECT duedate, count(*) " +
+        "SELECT duedate, count(*) as nocols " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
     sqlFilter.append("AND duedate IS NOT NULL ");
@@ -191,7 +192,8 @@ public class TaskList extends ArrayList {
     }
     while (rs.next()) {
       String dueDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("duedate"));
-      events.put(dueDate, new Integer(rs.getInt("count")));
+     int temp = rs.getInt("nocols");
+      events.put(dueDate, new Integer(temp));
     }
     rs.close();
     pst.close();

@@ -365,17 +365,18 @@ public class CallList extends ArrayList {
     createFilter(sqlFilter);
 
     sqlSelect.append(
-        "SELECT alertdate, count(*) " +
+        "SELECT alertdate, count(*) as nocols " +
         "FROM call_log c " +
         "WHERE call_id > -1 ");
 
     sqlTail.append("GROUP BY alertdate ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
-    prepareFilter(pst);
+    prepareFilter(pst);    
     rs = pst.executeQuery();
     while (rs.next()) {
       String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("alertdate"));
-      events.put(alertDate, new Integer(rs.getInt("count")));
+      int tempcount=rs.getInt("nocols"); 
+      events.put(alertDate, new Integer(tempcount));
     }
     rs.close();
     pst.close();

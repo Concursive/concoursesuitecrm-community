@@ -641,15 +641,15 @@ public class HelpItem extends GenericBean {
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("help_id");
+    moduleId = rs.getInt("link_module_id");
     module = rs.getString("module");
     section = rs.getString("section");
     subsection = rs.getString("subsection");
-    description = rs.getString("description");
     title = rs.getString("title");
+    description = rs.getString("description");
     nextContent = rs.getInt("nextcontent");
     prevContent = rs.getInt("prevcontent");
     upContent = rs.getInt("upcontent");
-    moduleId = rs.getInt("link_module_id");
     enteredBy = rs.getInt("enteredby");
     entered = rs.getTimestamp("entered");
     modifiedBy = rs.getInt("modifiedby");

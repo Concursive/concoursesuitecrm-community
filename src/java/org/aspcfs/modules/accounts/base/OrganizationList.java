@@ -375,7 +375,7 @@ public class OrganizationList extends Vector implements SyncableList {
   }
 
 
-  /**
+  /**Building Alert Counts 
    *  Sets the revenueOwnerId attribute of the OrganizationList object
    *
    *@param  revenueOwnerId  The new revenueOwnerId value
@@ -594,7 +594,7 @@ public class OrganizationList extends Vector implements SyncableList {
     createFilter(sqlFilter);
 
     sqlSelect.append(
-        "SELECT " + sqlDate + ", count(*) " +
+        "SELECT " + sqlDate + ", count(*) as nocols " +
         "FROM organization o " +
         "WHERE o.org_id >= 0 ");
 
@@ -604,7 +604,8 @@ public class OrganizationList extends Vector implements SyncableList {
     rs = pst.executeQuery();
     while (rs.next()) {
       String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp(sqlDate.trim()));
-      events.put(alertDate, new Integer(rs.getInt("count")));
+     int temp = rs.getInt("nocols");
+      events.put(alertDate, new Integer(temp));
     }
     rs.close();
     pst.close();
