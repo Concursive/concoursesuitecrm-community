@@ -38,7 +38,11 @@
 </script>
 
 <body onLoad="javascript:document.forms[0].name.focus();">
+
 <form name="addAccount" action="/Accounts.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<a href="/Accounts.do">Account Management</a> > 
+Add Account<br>
+<hr color="#BFBFBB" noshade>
 <input type="submit" value="Insert" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View'">
 <input type="reset" value="Reset">

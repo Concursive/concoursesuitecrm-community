@@ -3,6 +3,9 @@
 <jsp:useBean id="NewUserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="orgAlertPaged" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
+<a href="/Accounts.do">Account Management</a> > 
+Dashboard<br>
+<hr color="#BFBFBB" noshade>
 <table bgcolor="#FFFFFF" border="0" width="100%">
 <tr>
 <form name="monthBean" action="Accounts.do?command=Dashboard" method="post">

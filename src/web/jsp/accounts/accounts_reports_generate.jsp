@@ -103,7 +103,12 @@ function HideSpan(thisID)
 </script>
 
 <body onLoad="javascript:HideSpans();javascript:document.forms[0].subject.focus();">
+
 <form name="generate" action="/Accounts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
+<a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=Reports">Reports</a> >
+Generate New Report<br>
+<hr color="#BFBFBB" noshade>
 <input type="submit" value="Generate">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Reports';javascript:this.form.submit();">
 <br>
@@ -111,7 +116,7 @@ function HideSpan(thisID)
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=5 valign=center align=left>
-      <strong>Generate a New Report</strong>
+      <strong>Generate New Report</strong>
     </td>     
   </tr>
   

@@ -5,6 +5,9 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
+<a href="/Accounts.do">Account Management</a> > 
+Reports<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="accounts-accounts-reports-add"><a href="/Accounts.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:permission name="accounts-accounts-reports-add" none="true"><br></dhv:permission>
 <center><%= RptListInfo.getAlphabeticalPageLinks() %></center>

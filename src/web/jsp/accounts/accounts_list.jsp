@@ -4,6 +4,9 @@
 <jsp:useBean id="OrgListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<a href="/Accounts.do">Account Management</a> > 
+View Accounts<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="accounts-accounts-add"><a href="/Accounts.do?command=Add">Add an Account</a></dhv:permission>
 <dhv:permission name="accounts-accounts-add" none="true"><br></dhv:permission>
 <center><%= OrgListInfo.getAlphabeticalPageLinks() %></center>

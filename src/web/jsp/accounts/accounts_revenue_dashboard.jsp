@@ -10,6 +10,9 @@
 <jsp:useBean id="YearList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name=Dashboard action="/RevenueManager.do?command=Dashboard" method=POST>
+<a href="/Accounts.do">Account Management</a> > 
+Revenue Dashboard<br>
+<hr color="#BFBFBB" noshade>
 <table width=100% border=0 cellspacing=0 cellpadding=3>
   <tr>
     <!-- Left Column -->

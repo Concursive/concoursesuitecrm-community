@@ -8,6 +8,11 @@
 <jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="modContact" action="/Contacts.do?command=Update&action=Modify&auto-populate=true&orgId=<%=ContactDetails.getOrgId()%>" method="post">
+<a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="/Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
+Modify Contact<br>
+<hr color="#BFBFBB" noshade>
 <a href="/Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">

@@ -87,6 +87,11 @@ function ShowSpan(thisID)
 //  End -->
 </script>
 <body onLoad="HideSpans();">
+<a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
+Modify Ticket<br>
+<hr color="#BFBFBB" noshade>
 <a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Back to Ticket List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>

@@ -5,6 +5,12 @@
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="/javascript/confirmDelete.js"></script>
+
+<a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+Documents<br>
+<hr color="#BFBFBB" noshade>
+
 <a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">

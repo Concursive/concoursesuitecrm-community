@@ -30,11 +30,15 @@ public final class Accounts extends CFSModule {
    *@since
    */
   public String executeCommandDefault(ActionContext context) {
+    /**
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
     context.getRequest().setAttribute("IncludePage", includePage);
     addModuleBean(context, module, module);
     return ("IncludeOK");
+    */
+    
+    return executeCommandDashboard(context);
   }
 
 

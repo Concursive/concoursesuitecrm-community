@@ -4,6 +4,13 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
+
+<a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
+<a href="/Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Tickets</a> >
+Ticket Details<br>
+<hr color="#BFBFBB" noshade>
+
 <a href="Accounts.do?command=ViewTickets&orgId=<%= TicketDetails.getOrgId() %>">Back to Ticket List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">

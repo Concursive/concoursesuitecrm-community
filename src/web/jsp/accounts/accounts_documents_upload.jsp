@@ -37,6 +37,13 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
+
+<a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="/AccountsDocuments.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Documents</a> >
+Upload Document<br>
+<hr color="#BFBFBB" noshade>
+
 <a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <form method="post" name="inputForm" action="AccountsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">

@@ -30,6 +30,11 @@
     }
 </script>
 <form name="updateOpp" action="/Opportunities.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<a href="/Accounts.do">Account Management</a> > 
+<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="/Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
+Modify Opportunity<br>
+<hr color="#BFBFBB" noshade>
 <a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Opportunities List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
