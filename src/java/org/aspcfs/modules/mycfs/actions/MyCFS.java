@@ -633,7 +633,8 @@ public final class MyCFS extends CFSModule {
       String msgId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       int myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
-      newNote = new CFSNote(db, Integer.parseInt(msgId), myId, "new");
+      String listView = inboxInfo.getListView();
+      newNote = new CFSNote(db, Integer.parseInt(msgId), myId, listView);
       HashMap recipients = newNote.buildRecipientList(db);
       Iterator i = recipients.keySet().iterator();
       StringBuffer recipientList = new StringBuffer();
