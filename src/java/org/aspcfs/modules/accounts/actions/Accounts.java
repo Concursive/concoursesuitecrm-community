@@ -548,8 +548,6 @@ public final class Accounts extends CFSModule {
 
       //check whether or not the owner is an active User
       newOrg.checkEnabledOwnerAccount(db);
-
-      addRecentItem(context, newOrg);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -557,6 +555,7 @@ public final class Accounts extends CFSModule {
     }
 
     if (errorMessage == null) {
+      addRecentItem(context, newOrg);
       String action = context.getRequest().getParameter("action");
       if (action != null && action.equals("modify")) {
         //If user is going to the modify form

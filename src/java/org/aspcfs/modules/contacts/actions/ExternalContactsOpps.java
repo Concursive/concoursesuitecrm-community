@@ -462,6 +462,11 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisComponent.getOwner())) {
+        return ("PermissionError");
+      }      
+      
       context.getRequest().setAttribute("OppComponentDetails", thisComponent);
       addRecentItem(context, thisComponent);
       return ("DetailsComponentOK");
@@ -685,6 +690,10 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, component.getOwner())) {
+        return ("PermissionError");
+      }      
+      
       context.getRequest().setAttribute("OppComponentDetails", component);
       addRecentItem(context, component);
       return ("ComponentModifyOK");

@@ -430,7 +430,7 @@ public final class ExternalContacts extends CFSModule {
     addModuleBean(context, "External Contacts", "Message Details");
     Connection db = null;
     Contact thisContact = null;
-    Message newMessage = null;
+    Campaign campaign = null;
 
     String campaignId = context.getRequest().getParameter("id");
 
@@ -438,7 +438,7 @@ public final class ExternalContacts extends CFSModule {
       db = this.getConnection(context);
       String contactId = context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, contactId);
-      Campaign campaign = new Campaign(db, campaignId);
+      campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
     } catch (Exception e) {
       errorMessage = e;
@@ -447,6 +447,11 @@ public final class ExternalContacts extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }       
+      
       context.getRequest().setAttribute("ContactDetails", thisContact);
       return ("MessageDetailsOK");
     } else {
@@ -765,6 +770,11 @@ public final class ExternalContacts extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
+      
       if (action != null && action.equals("modify")) {
         addModuleBean(context, "External Contacts", "Modify Contact Details");
         context.getSession().removeAttribute("ContactMessageListInfo");

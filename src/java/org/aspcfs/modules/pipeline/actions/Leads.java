@@ -866,6 +866,11 @@ public final class Leads extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, component.getOwner())) {
+        return ("PermissionError");
+      }      
+      
       context.getRequest().setAttribute("LeadsComponentDetails", component);
       addRecentItem(context, component);
       if (context.getRequest().getParameter("popup") != null) {
@@ -1363,6 +1368,11 @@ public final class Leads extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisComponent.getOwner())) {
+        return ("PermissionError");
+      }      
+      
       context.getRequest().setAttribute("LeadsComponentDetails", thisComponent);
       addRecentItem(context, thisComponent);
       return ("DetailsComponentOK");

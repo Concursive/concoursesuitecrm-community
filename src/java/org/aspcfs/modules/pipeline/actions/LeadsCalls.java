@@ -165,6 +165,11 @@ public final class LeadsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisCall.getEnteredBy())) {
+        return ("PermissionError");
+      }      
+      
       context.getRequest().setAttribute("CallDetails", thisCall);
       addModuleBean(context, "View Opportunities", "Opportunity Calls");
       return ("DetailsOK");
@@ -263,6 +268,11 @@ public final class LeadsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisCall.getEnteredBy())) {
+        return ("PermissionError");
+      }      
+      
       addModuleBean(context, "View Opportunities", "Opportunity Calls");
       context.getRequest().setAttribute("CallDetails", thisCall);
       return ("ModifyOK");

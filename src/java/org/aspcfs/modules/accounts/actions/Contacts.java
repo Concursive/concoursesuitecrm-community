@@ -258,6 +258,11 @@ public final class Contacts extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, newContact.getOwner())) {
+        return ("PermissionError");
+      }       
+      
       context.getRequest().setAttribute("ContactDetails", newContact);
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       return ("DetailsOK");
@@ -361,6 +366,11 @@ public final class Contacts extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, newContact.getOwner())) {
+        return ("PermissionError");
+      }       
+      
       context.getRequest().setAttribute("ContactDetails", newContact);
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       return ("ModifyOK");

@@ -334,7 +334,8 @@ public final class CampaignManagerGroup extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
-
+    SearchCriteriaList scl = null;
+    
     String passedId = context.getRequest().getParameter("id");
 
     // building the search field and operator lists
@@ -343,7 +344,7 @@ public final class CampaignManagerGroup extends CFSModule {
       buildFormElements(context, db);
 
       if (passedId != null) {
-        SearchCriteriaList scl = new SearchCriteriaList(db, passedId);
+        scl = new SearchCriteriaList(db, passedId);
         context.getRequest().setAttribute("SCL", scl);
       }
     }
@@ -365,6 +366,11 @@ public final class CampaignManagerGroup extends CFSModule {
     addModuleBean(context, submenu, "Modify Criteria");
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, scl.getEnteredBy())) {
+        return ("PermissionError");
+      }       
+      
       return ("ModifyOK");
     }
     else {
@@ -463,10 +469,11 @@ public final class CampaignManagerGroup extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    SearchCriteriaList thisSCL = null;
 
     try {
       db = this.getConnection(context);
-      SearchCriteriaList thisSCL = new SearchCriteriaList(db, context.getRequest().getParameter("id"));
+      thisSCL = new SearchCriteriaList(db, context.getRequest().getParameter("id"));
       context.getRequest().setAttribute("SCL", thisSCL);
       context.getRequest().setAttribute("id", "" + thisSCL.getId());
 
@@ -490,6 +497,11 @@ public final class CampaignManagerGroup extends CFSModule {
     addModuleBean(context, "ManageGroups", "Preview");
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisSCL.getEnteredBy())) {
+        return ("PermissionError");
+      }       
+      
       return ("PreviewOK");
     }
     else {

@@ -90,14 +90,9 @@ public final class ExternalContactsCalls extends CFSModule {
 
     Exception errorMessage = null;
     boolean recordInserted = false;
-/* <<<<<<< ExternalContactsCalls.java
-    
-=======
 
     String contactId = context.getRequest().getParameter("contactId");
->>>>>>> 1.9.2.1 */
     Contact thisContact = null;
-    //Call thisCall = (Call)context.getRequest().getAttribute("CallDetails");
     Call thisCall = (Call) context.getFormBean();
     thisCall.setEnteredBy(getUserId(context));
     thisCall.setModifiedBy(getUserId(context));
@@ -161,6 +156,11 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisCall.getEnteredBy())) {
+        return ("PermissionError");
+      }      
+      
       context.getRequest().setAttribute("CallDetails", thisCall);
       return ("DetailsOK");
     } else {
@@ -304,6 +304,11 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisCall.getEnteredBy())) {
+        return ("PermissionError");
+      }      
+      
       context.getRequest().setAttribute("CallDetails", thisCall);
       if (context.getRequest().getParameter("popup") != null) {
         return ("ModifyPopupOK");

@@ -115,6 +115,11 @@ public final class CampaignManagerMessage extends CFSModule {
     addModuleBean(context, submenu, "Modify Message");
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, newMessage.getEnteredBy())) {
+        return ("PermissionError");
+      }       
+      
       context.getRequest().setAttribute("Message", newMessage);
       return ("ModifyOK");
     } else {
@@ -216,6 +221,11 @@ public final class CampaignManagerMessage extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, newMessage.getEnteredBy())) {
+        return ("PermissionError");
+      }       
+      
       context.getRequest().setAttribute("MessageDetails", newMessage);
       return ("DetailsOK");
     } else {

@@ -526,6 +526,11 @@ public final class RevenueManager extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisRevenue.getOwner())) {
+        return ("PermissionError");
+      }        
+      
       context.getRequest().setAttribute("Revenue", thisRevenue);
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       return ("ModifyOK");
@@ -565,6 +570,11 @@ public final class RevenueManager extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, newRevenue.getOwner())) {
+        return ("PermissionError");
+      }          
+      
       context.getRequest().setAttribute("Revenue", newRevenue);
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       return ("DetailsOK");

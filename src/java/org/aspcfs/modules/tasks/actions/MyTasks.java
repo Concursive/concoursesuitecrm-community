@@ -171,6 +171,11 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisTask.getOwner())) {
+        return ("PermissionError");
+      }      
+      
       context.getRequest().setAttribute("Task", thisTask);
       addModuleBean(context, "My Tasks", "Task Home");
       if (context.getRequest().getParameter("popup") != null) {

@@ -214,6 +214,11 @@ public final class CampaignManagerSurvey extends CFSModule {
     }
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
+        return ("PermissionError");
+      }       
+      
       context.getRequest().setAttribute("submenu", submenu);
       addModuleBean(context, submenu, "Add Surveys");
 
@@ -267,6 +272,11 @@ public final class CampaignManagerSurvey extends CFSModule {
     context.getRequest().setAttribute("submenu", submenu);
 
     if (errorMessage == null) {
+      
+      if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
+        return ("PermissionError");
+      }       
+      
       addModuleBean(context, submenu, "Add Surveys");
       return ("DetailsOK");
     } else {
