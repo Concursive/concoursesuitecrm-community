@@ -65,7 +65,7 @@ public final class ExternalContacts extends CFSModule {
     files.setLinkItemId(-1);
 
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "ContactRptListInfo");
-    rptListInfo.setLink("/ExternalContacts.do?command=Reports");
+    rptListInfo.setLink("ExternalContacts.do?command=Reports");
     files.setPagedListInfo(rptListInfo);
 
     if ("all".equals(rptListInfo.getListView())) {
@@ -354,7 +354,7 @@ public final class ExternalContacts extends CFSModule {
 
     PagedListInfo thisInfo = new PagedListInfo();
     thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
-    thisInfo.setItemsPerPage(50);
+    thisInfo.setItemsPerPage(0);
     contactReport.setPagedListInfo(thisInfo);
 
     if (ownerCriteria.equals("my")) {
@@ -377,6 +377,7 @@ public final class ExternalContacts extends CFSModule {
       contactReport.buildReportFull(db);
       contactReport.setEnteredBy(getUserId(context));
       contactReport.setModifiedBy(getUserId(context));
+      //TODO: set owner, enteredby, and modified names
       contactReport.saveAndInsert(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -526,7 +527,7 @@ public final class ExternalContacts extends CFSModule {
 
       context.getSession().removeAttribute("ContactMessageListInfo");
       PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ContactMessageListInfo");
-      pagedListInfo.setLink("/ExternalContacts.do?command=ViewMessages&contactId=" + contactId);
+      pagedListInfo.setLink("ExternalContacts.do?command=ViewMessages&contactId=" + contactId);
 
       thisContact = new Contact(db, contactId);
       if (!hasAuthority(context, thisContact.getOwner())) {
@@ -676,7 +677,7 @@ public final class ExternalContacts extends CFSModule {
           //The user didn't request a specific record, so show a list
           //of records matching this category that the user can choose from
           PagedListInfo folderListInfo = this.getPagedListInfo(context, "ContactFolderInfo");
-          folderListInfo.setLink("/ExternalContacts.do?command=Fields&contactId=" + contactId + "&catId=" + selectedCatId);
+          folderListInfo.setLink("ExternalContacts.do?command=Fields&contactId=" + contactId + "&catId=" + selectedCatId);
 
           CustomFieldRecordList recordList = new CustomFieldRecordList();
           recordList.setLinkModuleId(Constants.CONTACTS);

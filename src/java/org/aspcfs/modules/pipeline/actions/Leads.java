@@ -1217,7 +1217,7 @@ public final class Leads extends CFSModule {
 
     PagedListInfo thisInfo = new PagedListInfo();
     thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
-    thisInfo.setItemsPerPage(50);
+    thisInfo.setItemsPerPage(0);
     oppReport.setPagedListInfo(thisInfo);
 
     if (ownerCriteria.equals("my")) {
@@ -1270,7 +1270,7 @@ public final class Leads extends CFSModule {
     files.setLinkItemId(-1);
 
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "LeadRptListInfo");
-    rptListInfo.setLink("/Leads.do?command=Reports");
+    rptListInfo.setLink("Leads.do?command=Reports");
 
     try {
       db = this.getConnection(context);

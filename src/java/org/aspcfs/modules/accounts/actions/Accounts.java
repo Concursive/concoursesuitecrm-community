@@ -66,7 +66,7 @@ public final class Accounts extends CFSModule {
     files.setLinkItemId(-1);
 
     PagedListInfo rptListInfo = this.getPagedListInfo(context, "RptListInfo");
-    rptListInfo.setLink("/Accounts.do?command=Reports");
+    rptListInfo.setLink("Accounts.do?command=Reports");
 
     try {
       db = this.getConnection(context);
@@ -697,7 +697,7 @@ public final class Accounts extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo orgListInfo = this.getPagedListInfo(context, "OrgListInfo");
-    orgListInfo.setLink("/Accounts.do?command=View");
+    orgListInfo.setLink("Accounts.do?command=View");
 
     //NOTE: For any new container menu item...
     //Need to reset any sub PagedListInfos since this is a new account
@@ -1212,7 +1212,7 @@ public final class Accounts extends CFSModule {
           //The user didn't request a specific record, so show a list
           //of records matching this category that the user can choose from
           PagedListInfo folderListInfo = this.getPagedListInfo(context, "AccountFolderInfo");
-          folderListInfo.setLink("/Accounts.do?command=Fields&orgId=" + orgId + "&catId=" + selectedCatId);
+          folderListInfo.setLink("Accounts.do?command=Fields&orgId=" + orgId + "&catId=" + selectedCatId);
 
           CustomFieldRecordList recordList = new CustomFieldRecordList();
           recordList.setLinkModuleId(Constants.ACCOUNTS);
