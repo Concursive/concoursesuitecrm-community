@@ -29,12 +29,14 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer; 
     this.mappings = mappings;
-    logger.info("BaseDataImport-> Processing 1st user");
     
     //Loop through created items until complete, in the following order
     UserList userList = new UserList();
     User baseUser = new User(db, "0");
     userList.add(baseUser);
+    
+    logger.info("BaseDataImport-> Processing 1st user: " + baseUser.getUsername());
+    
     writer.setAutoCommit(false);
     this.saveUserList(db, userList);
     writer.commit();
@@ -54,12 +56,12 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     Iterator users = userList.iterator();
     while (users.hasNext()) {
       User thisUser = (User)users.next();
-      DataRecord thisRecord = mappings.createDataRecord(thisUser, "user");
-      thisRecord.removeField("contactId");
+      DataRecord thisRecord = mappings.createDataRecord(thisUser, "insert");
+      /* thisRecord.removeField("contactId");
       thisRecord.removeField("roleId");
       thisRecord.removeField("managerId");
       thisRecord.removeField("assistant");
-      thisRecord.removeField("alias");
+      thisRecord.removeField("alias"); */
       writer.save(thisRecord);
       //TODO:saveUserList(db, 
     }

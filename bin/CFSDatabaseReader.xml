@@ -61,7 +61,7 @@
     <map class="com.darkhorseventures.cfsbase.User" id="user">
       <property alias="guid">id</property>
       <property>username</property>
-      <property>password</property>
+      <property>encryptedPassword</property>
       <property lookup="contact">contactId</property>
       <property lookup="role">roleId</property>
       <property lookup="user">managerId</property>

@@ -186,6 +186,7 @@ public class CFSHttpXMLWriter implements DataWriter {
     DataRecord clientRecord = new DataRecord();
     clientRecord.setName("syncClient");
     clientRecord.setAction("insert");
+    clientRecord.addField("id", "-1");
     clientRecord.addField("type", "Java CFS Http XML Writer");
     clientRecord.addField("version", String.valueOf(this.getVersion()));
     this.save(clientRecord);
@@ -193,7 +194,7 @@ public class CFSHttpXMLWriter implements DataWriter {
     try {
       logger.info(lastResponse);
       XMLUtils responseXML = new XMLUtils(lastResponse, true);
-      clientId = Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstChild("id")));
+      clientId = Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstElement("id")));
       logger.info("CFSHttpXMLWriter-> Client ID: " + clientId);
     } catch (Exception e) {
       e.printStackTrace(System.err);
@@ -210,6 +211,7 @@ public class CFSHttpXMLWriter implements DataWriter {
    *@return       Description of the Return Value
    */
   public boolean save(DataRecord record) {
+    logger.info("Writer adding record to transaction: " + record.getName());
     transaction.add(record);
     if (autoCommit) {
       return commit();
@@ -248,15 +250,21 @@ public class CFSHttpXMLWriter implements DataWriter {
         auth.appendChild(authClientId);
       }
       
-      //Add the object
+      //Process the records to be submitted
       Iterator dataRecordItems = transaction.iterator();
       while (dataRecordItems.hasNext()) {
         DataRecord record = (DataRecord)dataRecordItems.next();
         
+        //Begin the transaction
         Element transaction = document.createElement("transaction");
         transaction.setAttribute("id", String.valueOf(++transactionCount));
         app.appendChild(transaction);
         
+        //Add the meta node: fields that will be returned
+        Element meta = document.createElement("meta");
+        transaction.appendChild(meta);
+        
+        //Add the object node
         Element object = document.createElement(record.getName());
         object.setAttribute("action", record.getAction());
         transaction.appendChild(object);
@@ -264,11 +272,25 @@ public class CFSHttpXMLWriter implements DataWriter {
         Iterator fieldItems = record.iterator();
         while (fieldItems.hasNext()) {
           DataField thisField = (DataField)fieldItems.next();
-          Element field = document.createElement(thisField.getName());
-          if (thisField.hasValueLookup()) {
-            object.setAttribute("lookup", thisField.getValueLookup());
+          
+          //Add the property to the meta node
+          Element property = document.createElement("property");
+          property.appendChild(document.createTextNode(thisField.getName()));
+          meta.appendChild(property);
+            
+          //Add the field to the object node
+          Element field = null;
+          if (thisField.hasAlias()) {
+            field = document.createElement(thisField.getAlias());
+          } else {
+            field = document.createElement(thisField.getName());
           }
-          field.appendChild(document.createTextNode(thisField.getValue()));
+          if (thisField.hasValueLookup()) {
+            field.setAttribute("lookup", thisField.getValueLookup());
+          }
+          if (thisField.hasValue()) {
+            field.appendChild(document.createTextNode(thisField.getValue()));
+          }
           object.appendChild(field);
         }
       }
@@ -276,7 +298,6 @@ public class CFSHttpXMLWriter implements DataWriter {
       lastResponse = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
       this.transaction.clear();
       this.setAutoCommit(true);
-      //System.out.println(response);
     } catch (Exception ex) {
       logger.info(ex.toString());
       return false;

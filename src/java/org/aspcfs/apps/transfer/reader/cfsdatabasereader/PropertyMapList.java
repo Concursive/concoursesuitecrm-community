@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import com.darkhorseventures.apps.dataimport.*;
 import com.darkhorseventures.utils.*;
+import java.util.logging.*;
 
 public class PropertyMapList extends HashMap {
+  public static Logger logger = Logger.getLogger(DataImport.class.getName());
+  
   public DataRecord createDataRecord(Object object, String action) {
     if (this.containsKey(object.getClass().getName())) {
       PropertyMap thisMap = (PropertyMap)this.get(object.getClass().getName());
@@ -16,21 +19,11 @@ public class PropertyMapList extends HashMap {
       Iterator properties = thisMap.iterator();
       while (properties.hasNext()) {
         Property thisProperty = (Property)properties.next();
-        
-        String propertyName = thisProperty.getName();
-        if (thisProperty.hasAlias()) {
-          propertyName = thisProperty.getAlias();
-        }
-        
-        if (thisProperty.hasLookupValue()) {
-          record.addField(propertyName, ObjectUtils.getParam(object, thisProperty.getName()), thisProperty.getLookupValue());
-        } else {
-          record.addField(propertyName, ObjectUtils.getParam(object, thisProperty.getName()));
-        }
-        
+        record.addField(thisProperty.getName(), ObjectUtils.getParam(object, thisProperty.getName()), thisProperty.getLookupValue(), thisProperty.getAlias());
       }
       return record;
     } else {
+      logger.info("PropertyMapList-> Object mapping not found");
       return null;
     }
   }

@@ -30,8 +30,8 @@ public class DataRecord extends ArrayList {
     this.add(new DataField(thisName, thisValue));
   }
   
-  public void addField(String thisName, String thisValue, String thisLookupValue) {
-    this.add(new DataField(thisName, thisValue, thisLookupValue));
+  public void addField(String thisName, String thisValue, String thisLookupValue, String thisAlias) {
+    this.add(new DataField(thisName, thisValue, thisLookupValue, thisAlias));
   }
   
   public boolean removeField(String fieldName) {
