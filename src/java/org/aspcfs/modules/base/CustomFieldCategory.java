@@ -888,12 +888,10 @@ public class CustomFieldCategory extends ArrayList {
                 if (entered != null) {
                         sql.append("entered, ");
                 }
-    sql.append("enteredBy, modifiedBy ) "); 
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
                 if (entered != null) {
                         sql.append("?, ");
                 }
-    sql.append("?, ?) ");
     
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -907,8 +905,6 @@ public class CustomFieldCategory extends ArrayList {
         if (entered != null) {
                 pst.setTimestamp(++i, entered);
         }
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
       
     pst.execute();
     pst.close();

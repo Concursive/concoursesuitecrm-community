@@ -395,15 +395,35 @@ public class CustomFieldRecord {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO custom_field_record " +
-        "(link_module_id, link_item_id, category_id, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?) ");
+        "(link_module_id, link_item_id, category_id, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }
+      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("VALUES (?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }
+      sql.append("?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, linkModuleId);
     pst.setInt(++i, linkItemId);
     pst.setInt(++i, categoryId);
-    pst.setInt(++i, enteredBy);
-    pst.setInt(++i, modifiedBy);
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
 
