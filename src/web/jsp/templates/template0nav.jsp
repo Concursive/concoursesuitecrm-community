@@ -42,7 +42,7 @@
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <%= request.getAttribute("MainMenu") %>
-    <td><img border="0" src="images/menu-edge.gif" width="100%" height="36"></td>
+    <td width="100%" nowrap><img border="0" src="images/menu-edge.gif" width="100%" height="36"></td>
   </tr>
 </table>
 <!-- Sub Menu -->

@@ -169,7 +169,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
     String[] theMenus = new String[2];
     //TODO: Update the CFS templates to work with the following commented out line instead
     //theMenus[0] = menu.toString();
-    theMenus[0] = "<td width=" + menuWidth + ">" + menu.toString() + "</td>";
+    theMenus[0] = "<td width=\"" + menuWidth + "\" nowrap>" + menu.toString() + "</td>";
     theMenus[1] = smallMenu.toString();
     request.setAttribute("MainMenu", theMenus[0]);
     request.setAttribute("MainMenuWidth", String.valueOf(menuWidth));
