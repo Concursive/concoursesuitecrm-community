@@ -106,13 +106,7 @@ public class TransactionItem {
     }
     
     if (executeMethod != null && object != null) {
-        java.sql.Connection conn = db;
-        //Class c = Class.forName("java.sql.Connection").newInstance();
-        //Class[] argTypes = new Class[]{c.getClass()};
-        System.out.println("Class: " + conn.getClass().getName());
-        System.out.println("Object: " + object.getClass().getName());
-        Method method = object.getClass().getMethod("insert", new Class[]{conn.getClass()});
-        System.out.println("step2");        
+        Method method = object.getClass().getDeclaredMethod(executeMethod.trim(), new Class[]{Class.forName("java.sql.Connection")});
         method.invoke(object, new Object[]{db});
         if (System.getProperty("DEBUG") != null) System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
     } else {

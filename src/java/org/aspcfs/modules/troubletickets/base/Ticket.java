@@ -1171,7 +1171,7 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
 			this.update(db);
       
-      if (this.getAssignedTo() > -1 && !this.getCloseIt()) {
+      if (this.getAssignedTo() > 0 && !this.getCloseIt()) {
         Notification thisNotification = new Notification();
         thisNotification.setUserToNotify(this.getAssignedTo());
         thisNotification.setModule("Tickets");
