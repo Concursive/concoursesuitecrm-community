@@ -93,19 +93,17 @@
     </td>
 	</tr>
 <%}%>
-</table>
-	<br>
-	[<%= TicListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= TicListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] 
-	&nbsp;<%= TicListInfo.getNumericalPageLinks() %>
 <%} else {%>
   <tr class="containerBody">
     <td colspan=6 valign=center>
       No tickets found.
     </td>
   </tr>
-</table>
 <%}%>
-
+</table>
+	<br>
+	[<%= TicListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= TicListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] 
+	&nbsp;<%= TicListInfo.getNumericalPageLinks() %>
 <br>
 </td></tr>
 </table>

@@ -116,14 +116,13 @@
         <%= thisOpp.getTermsString() %>
       </td>
     </tr>
+<%
+    }
+  } else {%>
+  <tr bgcolor="white"><td colspan=7 valign=center>No opportunities found.</td></tr>
 <%}%>
-	
 </table>
 <br>
 [<%= OpportunityListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= OpportunityListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= OpportunityListInfo.getNumericalPageLinks() %>
-<%} else {%>
-  <tr bgcolor="white"><td colspan=7 valign=center>No opportunities found.</td></tr>
-</table>
-	<%}%>
 </form>
 

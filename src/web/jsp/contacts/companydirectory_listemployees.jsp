@@ -7,11 +7,6 @@
 <dhv:permission name="contacts-internal_contacts-add"><a href="/CompanyDirectory.do?command=InsertEmployeeForm">Add an Employee</a></dhv:permission>
 <center><%= CompanyDirectoryInfo.getAlphabeticalPageLinks() %></center>
 <%= showAttribute(request, "actionError") %>
-<%
-  Iterator i = EmployeeList.iterator();
-  if (i.hasNext()) {
-    int rowid = 0;
-%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td valign=center align=left>
@@ -39,7 +34,10 @@
       <strong>Business Phone</strong>
     </td>
   </tr>
-<%    
+<%
+  Iterator i = EmployeeList.iterator();
+  if (i.hasNext()) {
+    int rowid = 0;
     while (i.hasNext()) {
       if (rowid != 1) {
         rowid = 1;
@@ -68,13 +66,16 @@
       </tr>
 <%      
     }
-%>
-</table><br>
-[<%= CompanyDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CompanyDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= CompanyDirectoryInfo.getNumericalPageLinks() %>
-<%
   } else {
-%>  
-No Employees found.
+%>
+  <tr>
+    <td class="row2" colspan="5">
+      No Employees found.
+    </td>
+  </tr>
 <%  
   }
 %>
+</table>
+<br>
+[<%= CompanyDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CompanyDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= CompanyDirectoryInfo.getNumericalPageLinks() %>

@@ -72,17 +72,16 @@
       <%= toHtml(thisMessage.getModifiedDateTimeString()) %>
     </td>
   </tr>
-<%}%>
-</table>
-<br>
-[<%= CampaignMessageListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignMessageListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignMessageListInfo.getNumericalPageLinks() %>
-
-<%} else {%>
+<%
+    }
+  } else {%>
   <tr class="containerBody">
     <td colspan="5" valign="center">
       No messages found.
     </td>
   </tr>
-</table>
 <%}%>
+</table>
+<br>
+[<%= CampaignMessageListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignMessageListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignMessageListInfo.getNumericalPageLinks() %>
 </form>

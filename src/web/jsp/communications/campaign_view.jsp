@@ -82,16 +82,14 @@
     </td>
 	</tr>
 	<%}%>
-</table>
-<br>
-[<%= CampaignListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= CampaignListInfo.getNumericalPageLinks() %>
-
 <%} else {%>
   <tr class="containerBody">
     <td colspan=7 valign=center>
       No incomplete campaigns found.
     </td>
   </tr>
-</table>
 <%}%>
+</table>
+<br>
+[<%= CampaignListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= CampaignListInfo.getNumericalPageLinks() %>
 </form>

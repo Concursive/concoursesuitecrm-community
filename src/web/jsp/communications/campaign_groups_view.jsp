@@ -65,16 +65,14 @@
     </td>
   </tr>
 	<%}%>
-</table>
-<br>
-[<%= CampaignGroupListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignGroupListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignGroupListInfo.getNumericalPageLinks() %>
-	
 <%} else {%>
 	<tr class="containerBody">
     <td colspan=4 valign=center>
       No groups found.
     </td>
   </tr>
-</table>
 <%}%>
+</table>
+<br>
+[<%= CampaignGroupListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignGroupListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= CampaignGroupListInfo.getNumericalPageLinks() %>
 </form>

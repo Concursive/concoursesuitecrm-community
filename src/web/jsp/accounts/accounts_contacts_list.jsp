@@ -80,17 +80,16 @@
       </td>
 		</tr>
 <%}%>
-	</table>
-	<br>
-	[<%= ContactListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= ContactListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
 <%} else {%>
 		<tr class="containerBody">
       <td colspan=5 valign=center>
         No contacts found.
       </td>
     </tr>
-		</table>
 <%}%>
+	</table>
+	<br>
+	[<%= ContactListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= ContactListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
 </td>
 </tr>
 </table>

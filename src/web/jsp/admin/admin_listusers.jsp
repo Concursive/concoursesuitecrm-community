@@ -18,12 +18,6 @@
     </td>
   </tr>
 </table>
-<%
-  Iterator i = UserList.iterator();
-  
-  if (i.hasNext()) {
-    int rowid = 0;
-%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td valign=center align=left bgcolor="#DEE0FA">
@@ -50,7 +44,10 @@
       <%= UserListInfo.getSortIcon("mgr_namelast") %>
     </td>
   </tr>
-<%    
+<%
+  Iterator i = UserList.iterator();
+  if (i.hasNext()) {
+    int rowid = 0;
     while (i.hasNext()) {
       if (rowid != 1) {
         rowid = 1;
@@ -79,14 +76,16 @@
       </tr>
 <%      
     }
-%>
-</table><br>
-[<%= UserListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= UserListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= UserListInfo.getNumericalPageLinks() %>
-<%
   } else {
 %>  
-No users found.
+<tr>
+    <td class="row2" valign="center" colspan="5">
+      No users found.
+    </td>
+  </tr>
 <%  
   }
 %>
+</table><br>
+[<%= UserListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= UserListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= UserListInfo.getNumericalPageLinks() %>
 </form>

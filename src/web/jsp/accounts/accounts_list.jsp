@@ -63,12 +63,10 @@
 		<td width=30% valign=center class="row<%= rowid %>" nowrap><a href="mailto:<%= toHtml(thisOrg.getEmailAddress("Primary")) %>"><%= toHtml(thisOrg.getEmailAddress("Primary")) %></a></td>
   </tr>
 <%}%>
-	
+<%} else {%>
+  <tr bgcolor="white"><td colspan=5 valign=center>No accounts found.</td></tr>
+<%}%>
 </table>
 <br>
 [<%= OrgListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= OrgListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= OrgListInfo.getNumericalPageLinks() %>
-<%} else {%>
-  <tr bgcolor="white"><td colspan=5 valign=center>No accounts found.</td></tr>
-</table>
-<%}%>
 </form>

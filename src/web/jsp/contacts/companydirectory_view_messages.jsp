@@ -104,18 +104,16 @@
     </td-->
 	</tr>
 	<%}%>
-</table>
-<br>
-[<%= ContactMessageListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= ContactMessageListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= ContactMessageListInfo.getNumericalPageLinks() %>
-
 <%} else {%>
   <tr class="containerBody">
     <td colspan=7 valign=center>
       No messages found.
     </td>
   </tr>
-</table>
 <%}%>
+</table>
+<br>
+[<%= ContactMessageListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= ContactMessageListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= ContactMessageListInfo.getNumericalPageLinks() %>
 <br>
 </td></tr>
 </table>

@@ -78,17 +78,15 @@
     </td>
 	</tr>
 	<%}%>
-</table>
-<br>
-[<%= CampaignDashboardListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignDashboardListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= CampaignDashboardListInfo.getNumericalPageLinks() %>
-
 <%} else {%>
   <tr class="containerBody">
-    <td colspan=6 valign=center>
+    <td colspan="6" valign="center">
       No running campaigns found.
     </td>
   </tr>
-</table>
 <%}%>
+</table>
+<br>
+[<%= CampaignDashboardListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= CampaignDashboardListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]  <%= CampaignDashboardListInfo.getNumericalPageLinks() %>
 </form>
 

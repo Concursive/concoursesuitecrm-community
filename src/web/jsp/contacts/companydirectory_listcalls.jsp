@@ -142,7 +142,6 @@
       </td>
     </tr>
 <%}%>
-	
 	</table>
 <%} else {%>
 		<tr class="containerBody">

@@ -126,7 +126,7 @@
 %>
   <tr class="containerBody">
     <td>
-      <%= ContactEmailTypeList.getHtmlSelect("email" + (++ecount) + "type", "Other") %>
+      <%= ContactEmailTypeList.getHtmlSelect("email" + (++ecount) + "type", "Business") %>
       <input type=text size=40 name="email<%= ecount %>address" maxlength=255>
     </td>
   </tr>
@@ -162,7 +162,7 @@
 %>
   <tr class="containerBody">
     <td>
-      <%= ContactPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Other") %>
+      <%= ContactPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Business") %>
       <input type=text size=3 name="phone<%= icount %>ac" maxlength=3>-
       <input type=text size=3 name="phone<%= icount %>pre" maxlength=3>-
       <input type=text size=4 name="phone<%= icount %>number" maxlength=4>ext.
@@ -255,7 +255,7 @@
       &nbsp;
     </td>
     <td>
-      <%= ContactAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Other") %>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + (++acount) + "type", "Business") %>
     </td>
   </tr>
   <tr class="containerBody">

@@ -80,18 +80,16 @@
     </td>		
   </tr>
 <%}%>
-	
-</table>
-<br>
-[<%= OpportunityPagedInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= OpportunityPagedInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= OpportunityPagedInfo.getNumericalPageLinks() %>
 <%} else {%>
   <tr class="containerBody">
     <td colspan=5 valign=center>
       No opportunities found.
     </td>
   </tr>
-</table>
 <%}%>
+</table>
+<br>
+[<%= OpportunityPagedInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= OpportunityPagedInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= OpportunityPagedInfo.getNumericalPageLinks() %>
 </td>
 </tr>
 </table>

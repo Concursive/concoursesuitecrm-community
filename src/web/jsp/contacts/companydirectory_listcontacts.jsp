@@ -78,16 +78,14 @@
         </td>
       </tr>
 <%}%>
-</table>
-<br>
-[<%= ExternalContactsInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= ExternalContactsInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= ExternalContactsInfo.getNumericalPageLinks() %>
-
 <%} else {%>  
   <tr>
     <td class="row2" valign="center" colspan="5">
       No contacts found.
     </td>
   </tr>
-</table>
 <%}%>
+</table>
+<br>
+[<%= ExternalContactsInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= ExternalContactsInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= ExternalContactsInfo.getNumericalPageLinks() %>
 </form>
