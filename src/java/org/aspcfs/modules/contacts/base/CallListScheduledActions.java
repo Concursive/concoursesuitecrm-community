@@ -38,6 +38,7 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
   private ActionContext context = null;
   private CFSModule module = null;
+  private int userId = -1;
 
 
   /**
@@ -67,6 +68,26 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
+   *  Sets the userId attribute of the CallListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(int tmp) {
+    this.userId = tmp;
+  }
+
+
+  /**
+   *  Sets the userId attribute of the CallListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(String tmp) {
+    this.userId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the context attribute of the QuoteListScheduledActions object
    *
    *@return    The context value
@@ -87,6 +108,16 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
+   *  Gets the userId attribute of the CallListScheduledActions object
+   *
+   *@return    The userId value
+   */
+  public int getUserId() {
+    return userId;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  companyCalendar   Description of the Parameter
@@ -99,7 +130,7 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
     }
     try {
       //get the userId
-      int userId = module.getUserId(context);
+      //int userId = module.getUserId(context);
 
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
@@ -156,7 +187,7 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
     }
     try {
       //get the userId
-      int userId = module.getUserId(context);
+      //int userId = module.getUserId(context);
 
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();

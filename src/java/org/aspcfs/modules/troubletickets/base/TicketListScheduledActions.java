@@ -99,6 +99,16 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
 
 
   /**
+   *  Sets the userId attribute of the TicketListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(String tmp) {
+    this.userId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the userId attribute of the TicketListScheduledActions object
    *
    *@return    The userId value
@@ -179,7 +189,8 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
     // List 1//currently non-functional
     try {
       //get User
-      User thisUser = module.getUser(context, module.getUserId(context));
+      //User thisUser = module.getUser(context, module.getUserId(context));
+      User thisUser = module.getUser(context, userId);
 
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 
@@ -203,7 +214,7 @@ public class TicketListScheduledActions extends TicketList implements ScheduledA
       this.setOnlyWithProducts(false);
 
       //get the userId
-      int userId = module.getUserId(context);
+      //int userId = module.getUserId(context);
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 
       //set the search criteria for the first list

@@ -39,7 +39,7 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
   private ActionContext context = null;
   private CFSModule module = null;
-
+  private int userId = -1;
 
 
   /**
@@ -69,6 +69,26 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
+   *  Sets the userId attribute of the TaskListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(int tmp) {
+    this.userId = tmp;
+  }
+
+
+  /**
+   *  Sets the userId attribute of the TaskListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(String tmp) {
+    this.userId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the context attribute of the QuoteListScheduledActions object
    *
    *@return    The context value
@@ -89,18 +109,30 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
-   *  Constructor for the calendarActions object
+   *  Gets the userId attribute of the TaskListScheduledActions object
    *
-   *@param  db                Description of the Parameter
+   *@return    The userId value
+   */
+  public int getUserId() {
+    return userId;
+  }
+
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  companyCalendar   Description of the Parameter
+   *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
 
     try {
       //get the userId
-      int userId = module.getUserId(context);
-
+      /*
+       *  int userId = module.getUserId(context);
+	   */
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TaskListScheduledActions-> Building Task Alerts for user " + userId);
       }
@@ -139,10 +171,9 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TaskListScheduledActions-> Building Alert Count ");
       }
-
-      //get the user
-      int userId = module.getUserId(context);
-
+      /*  get the user
+       *  int userId = module.getUserId(context);
+       */
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 

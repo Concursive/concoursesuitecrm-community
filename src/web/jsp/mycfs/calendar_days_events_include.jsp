@@ -56,6 +56,8 @@
         CalendarEvent thisEvent = (CalendarEvent) tmpList.get(0);
     %>
         <img border="0" src="images/event-holiday.gif" align="texttop" title="Holidays"><%= "US Bank Holiday: " + thisEvent.getSubject() %>
+    <% }else if (category.equals("System Alerts")) { %>
+        <img border="0" src="images/box-hold.gif" align="texttop" title="System Alerts">User login expires
     <% }  %>
   </td>
  </tr>

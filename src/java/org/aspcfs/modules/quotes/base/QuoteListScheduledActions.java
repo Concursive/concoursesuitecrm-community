@@ -35,9 +35,9 @@ import java.sql.*;
  */
 public class QuoteListScheduledActions extends QuoteList implements ScheduledActions {
 
-  private int userId = -1;
   private ActionContext context = null;
   private CFSModule module = null;
+  private int userId = -1;
 
 
   /**
@@ -67,6 +67,26 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
 
 
   /**
+   *  Sets the userId attribute of the QuoteListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(int tmp) {
+    this.userId = tmp;
+  }
+
+
+  /**
+   *  Sets the userId attribute of the QuoteListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(String tmp) {
+    this.userId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the context attribute of the QuoteListScheduledActions object
    *
    *@return    The context value
@@ -83,6 +103,16 @@ public class QuoteListScheduledActions extends QuoteList implements ScheduledAct
    */
   public CFSModule getModule() {
     return module;
+  }
+
+
+  /**
+   *  Gets the userId attribute of the QuoteListScheduledActions object
+   *
+   *@return    The userId value
+   */
+  public int getUserId() {
+    return userId;
   }
 
 

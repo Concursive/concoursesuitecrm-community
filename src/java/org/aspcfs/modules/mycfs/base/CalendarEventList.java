@@ -107,7 +107,8 @@ public class CalendarEventList extends HashMap {
     } else {
       categoryEvents = addCategoryEventList(eventType);
     }
-    if (eventType.equalsIgnoreCase(EVENT_TYPES[7])) {
+    if ((eventType.equalsIgnoreCase(EVENT_TYPES[7])) ||
+        (eventType.equalsIgnoreCase(EVENT_TYPES[9]))){
       ((ArrayList) categoryEvents).add(event);
     } else {
       ObjectUtils.invokeMethod(categoryEvents, "addEvent", event);
@@ -177,6 +178,8 @@ public class CalendarEventList extends HashMap {
     } else if (eventType.equals(EVENT_TYPES[12])) {
       thisList = new TicketEventList();
     } else if (eventType.equals(EVENT_TYPES[7])) {
+      thisList = new ArrayList();
+    } else if (eventType.equals(EVENT_TYPES[9])) {
       thisList = new ArrayList();
     }
     this.put(eventType, thisList);

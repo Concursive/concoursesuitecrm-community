@@ -40,6 +40,7 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
   private ActionContext context = null;
   private CFSModule module = null;
+  private int userId = -1;
 
 
   /**
@@ -69,6 +70,26 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
+   *  Sets the userId attribute of the AccountsListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(int tmp) {
+    this.userId = tmp;
+  }
+
+
+  /**
+   *  Sets the userId attribute of the AccountsListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(String tmp) {
+    this.userId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the context attribute of the QuoteListScheduledActions object
    *
    *@return    The context value
@@ -89,6 +110,16 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
 
 
   /**
+   *  Gets the userId attribute of the AccountsListScheduledActions object
+   *
+   *@return    The userId value
+   */
+  public int getUserId() {
+    return userId;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  companyCalendar   Description of the Parameter
@@ -101,7 +132,7 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     }
     try {
       //get the userId
-      int userId = module.getUserId(context);
+      //int userId = module.getUserId(context);
 
       String alertType = companyCalendar.getCalendarInfo().getCalendarDetailsView();
       this.setOwnerId(userId);
@@ -174,7 +205,7 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
       Organization thisOrg = (Organization) n.next();
       String endDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisOrg.getContractEndDate());
       companyCalendar.addEvent(endDate, CalendarEventList.EVENT_TYPES[3], thisOrg);
-    } 
+    }
   }
 
 
@@ -191,7 +222,7 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     }
 
     //get the userId
-    int userId = module.getUserId(context);
+    //int userId = module.getUserId(context);
 
     String alertType = companyCalendar.getCalendarInfo().getCalendarDetailsView();
     boolean anyAlert = false;

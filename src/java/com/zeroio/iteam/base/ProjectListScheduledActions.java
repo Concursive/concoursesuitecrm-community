@@ -39,6 +39,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
 
   private ActionContext context = null;
   private CFSModule module = null;
+  private int userId = -1;
 
 
   /**
@@ -68,6 +69,26 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
 
 
   /**
+   *  Sets the userId attribute of the ProjectListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(int tmp) {
+    this.userId = tmp;
+  }
+
+
+  /**
+   *  Sets the userId attribute of the ProjectListScheduledActions object
+   *
+   *@param  tmp  The new userId value
+   */
+  public void setUserId(String tmp) {
+    this.userId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the context attribute of the QuoteListScheduledActions object
    *
    *@return    The context value
@@ -88,6 +109,16 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
 
 
   /**
+   *  Gets the userId attribute of the ProjectListScheduledActions object
+   *
+   *@return    The userId value
+   */
+  public int getUserId() {
+    return userId;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  companyCalendar   Description of the Parameter
@@ -100,9 +131,10 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
         System.out.println("ProjectListScheduledActions-> Building Project Alerts ");
       }
 
-      //get the userId
-      int userId = module.getUserId(context);
-
+      /*
+       *  /get the userId
+       *  int userId = module.getUserId(context);
+       */
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 
@@ -153,10 +185,10 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       System.out.println("ProjectListScheduledActions-> Building Alert Counts ");
     }
     try {
-
-      //get the userId
-      int userId = module.getUserId(context);
-
+      /*
+       *  /get the userId
+       *  int userId = module.getUserId(context);
+       */
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 

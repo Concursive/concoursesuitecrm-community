@@ -778,6 +778,8 @@ public final class MyCFS extends CFSModule {
         calendarInfo.addAlertType("Ticket", "org.aspcfs.modules.troubletickets.base.TicketListScheduledActions", "Tickets");
       }
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
+    }else{
+      calendarInfo.setSelectedUserId(-1);
     }
     return "HomeOK";
   }
@@ -808,10 +810,16 @@ public final class MyCFS extends CFSModule {
       companyCalendar.addHolidays();
 
       //check if the user's account is expiring
-      User thisUser = this.getUser(context, this.getUserId(context));
+      
+      int userId = this.getUserId(context);
+      if (context.getRequest().getParameter("userId") != null){
+        userId = Integer.parseInt(context.getRequest().getParameter("userId"));
+      }
+      
+      User thisUser = this.getUser(context, userId);
       if (thisUser.getExpires() != null) {
         String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
-        companyCalendar.addEvent(expiryDate, "Your user login expires", CalendarEventList.EVENT_TYPES[9]);
+        companyCalendar.addEvent(expiryDate, CalendarEventList.EVENT_TYPES[9],"Your user login expires");
       }
 
       //create events depending on alert type
@@ -832,6 +840,10 @@ public final class MyCFS extends CFSModule {
           method = Class.forName(thisAlert.getClassName()).getMethod("setContext", new Class[]{Class.forName("com.darkhorseventures.framework.actions.ActionContext")});
           method.invoke(thisInstance, new Object[]{context});
 
+          //set userId
+          method = Class.forName(thisAlert.getClassName()).getMethod("setUserId", new Class[]{Class.forName("java.lang.String")});
+          method.invoke(thisInstance, new Object[]{String.valueOf(userId)});
+          
           //set Start and End Dates
           method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Timestamp")});
           java.sql.Timestamp startDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarStartDate(context)));
@@ -887,7 +899,11 @@ public final class MyCFS extends CFSModule {
       companyCalendar = new CalendarView(calendarInfo);
       //companyCalendar.updateParams();
       //check if the user's account is expiring
-      User thisUser = this.getUser(context, this.getUserId(context));
+      int userId = this.getUserId(context);
+      if (context.getRequest().getParameter("userId") != null){
+        userId = Integer.parseInt(context.getRequest().getParameter("userId"));
+      }
+      User thisUser = this.getUser(context, userId);
       if (thisUser.getExpires() != null) {
         String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
         companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[9], expiryDate, new Integer(1));
@@ -908,6 +924,10 @@ public final class MyCFS extends CFSModule {
         method = Class.forName(thisAlert.getClassName()).getMethod("setContext", new Class[]{Class.forName("com.darkhorseventures.framework.actions.ActionContext")});
         method.invoke(thisInstance, new Object[]{context});
 
+        //set userId
+        method = Class.forName(thisAlert.getClassName()).getMethod("setUserId", new Class[]{Class.forName("java.lang.String")});
+        method.invoke(thisInstance, new Object[]{String.valueOf(userId)});
+        
         //set Start and End Dates
         java.sql.Timestamp startDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarStartDate(context)));
         method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Timestamp")});

@@ -136,7 +136,7 @@
 <br />
 <center><%= request.getAttribute("MainMenuSmall") %></center>
 <br />
-<center><zeroio:tz timestamp="<%= new java.util.Date() %>" timeFormat="<%= DateFormat.LONG %>"/></center>
+<center><zeroio:tz timestamp="<%= new java.util.Date() %>" timeFormat="<%= DateFormat.LONG %>" timeZone="<%= User.getTimeZone() %>" /></center>
 <center>&#169; Copyright 2000-2004 Dark Horse Ventures, LLC &#149; All rights reserved.</center>
 <br />
 <center><a target="_blank" href="http://www.centriccrm.com"><img src="images/centric/Power3sm.gif" border="0" alt="Visit www.CentricCRM.com" /></a></center>
