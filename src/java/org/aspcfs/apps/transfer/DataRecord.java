@@ -65,6 +65,11 @@ public class DataRecord extends ArrayList {
   public void addField(String thisName, String thisValue) {
     this.add(new DataField(thisName, thisValue));
   }
+  
+  public void addField(String thisName, int thisValue) {
+    this.addField(thisName, String.valueOf(thisValue));
+  }
+
 
 
   /**
