@@ -30,6 +30,7 @@
   <property name="build.jspclasses.dir" value="${build.dir}${fs}jspclasses"/>
   <property name="build.sql.dir" value="${build.dir}${fs}sql"/>
   <property name="build.docs.dir" value="${build.dir}${fs}docs"/>
+  <property name="pref.dir" value="${base.dir}${fs}pref"/>
   <property name="dist.dir" value="${base.dir}${fs}dist"/>
 
   <!-- Typical usage -->
@@ -329,7 +330,7 @@
     <mkdir dir="${CFS_HOME}/graphs"/>
   </target>
   
-  <!-- Try to generate .java/.class files out of the web-app .jsps -->
+  <!-- Generate .java/.class files out of the web-app .jsps -->
   <target name="test" depends="init,deploy">
     <delete dir="${build.jsp.dir}"/>
     <delete dir="${build.jspclasses.dir}"/>
@@ -575,9 +576,8 @@
   
   
   <!-- MISC STUFF TO GO THROUGH -->
-  <!-- Install permissions -->
-  <target name="nd" depends="init">
-    <echo message="ND Code"/>
+  <!-- Run Net Decisions import (one-time process) -->
+  <target name="run.netdecisions" depends="init">
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
@@ -588,22 +588,10 @@
     </java>
   </target>
   
-  
-  
-  
-  <!-- separate app installation stuff -->
-  <target name="check-apps-configuration">
-    <available file="${CFS_HOME}/WEB-INF/notifier.xml" property="apps.config.present"/>
-  </target>
-  
-  <target name="apps-configuration" depends="check-apps-configuration"
-          unless="apps.config.present">
-    <echo message="Installing App configuration files"/>
-    <copy todir="${CFS_HOME}/WEB-INF">
-      <fileset dir="${SRC_BIN}">
-        <include name="notifier.xml" />
-      </fileset>
-    </copy>
+  <!-- Run the CFS Notifier -->
+  <target name="run.notifier" depends="init">
+    <record name="${CFS_HOME}/WEB-INF/notifier.log" append="no"/>
+    <copy file="${pref.dir}/cfs/notifier/notifier.xml" todir="${CFS_HOME}/WEB-INF"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@FILELIBRARY@" value="${CFS_HOME}/WEB-INF/fileLibrary"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
@@ -616,189 +604,19 @@
              token="@GATEKEEPER.PASSWORD@" value="${GATEKEEPER.PASSWORD}"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@MAILSERVER@" value="${MAILSERVER}"/>
-  </target>
-  
-  <target name="apps" description="Java applications that get installed."
-      depends="compile,apps-configuration"
-      unless="classes.uptodate">
-    
-    <echo message="Installing Apps"/>
-    <echo message=" Site code: ${SITECODE}"/>
-    <echo message=" Destination: ${CFS_HOME}"/>
-    <echo message=" Source: ${SRC_BIN}"/>
-    
-    <javac srcdir="${SRC_BIN}/com/darkhorseventures" verbose="off">
+    <java classname="org.aspcfs.apps.notifier.Notifier" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
-        <pathelement location="${SRC_BIN}"/>
-        <pathelement location="${SRC_LIB}/darkhorseventures-framework.jar"/>
-        <pathelement location="${SRC_LIB}/darkhorseventures.jar"/>
-        <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
-        <pathelement location="${SRC_LIB}/jakarta-poi-1.5.0.jar"/>
-        <pathelement location="${SRC_LIB}/ccp_integration.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
       </classpath>
-    </javac>
-    <delete file="${SRC_BIN}/Notifier.jar"/>
-    <jar jarfile="${SRC_BIN}/Notifier.jar" 
-          basedir="${SRC_BIN}"
-          includes="com/darkhorseventures/**/*.class"
-          manifest="${SRC_BIN}/com/darkhorseventures/apps/notifier.mf"/>
-    <delete>
-      <fileset dir= "${SRC_BIN}/com/darkhorseventures" includes="**/*.class"/>
-    </delete>
-    <copy todir="${CFS_HOME}" >
-      <fileset dir="${SRC_BIN}">
-        <include name="Notifier.jar" />
-        <include name="notifier" />
-        <include name="html2ps" />
-        <include name="dataImport" />
-        <include name="dataImport-config.xml" />
-        <include name="CFSDatabaseReader.xml" />
-      </fileset>
-    </copy>
-    <chmod perm="a+x" >
-      <fileset dir="${CFS_HOME}">
-        <include name="notifier" />
-        <include name="html2ps" />
-        <include name="dataImport" />
-      </fileset>
-    </chmod>
-    <copy todir="${CFS_HOME}\scripts" >
-      <fileset dir="${SRC}\scripts">
-        <include name="env.*" />
-      </fileset>
-    </copy>
+      <arg value="${CFS_HOME}${fs}WEB-INF${fs}notifier.xml"/>
+    </java>
   </target>
   
-  <target name="check-site-configuration">
-     <uptodate property="webxml.uptodate" 
-               srcfile="${SRC_APP}/WEB-INF/web.xml"
-               targetfile="${CFS_HOME}/WEB-INF/web.xml" >
-     </uptodate>
-  </target>
   
-  <!-- Deploy jars to CFS_HOME -->
-  <target name="deploy-jars" 
-          description="Install library files to site." 
-          depends="compile">
-    <echo message="Installing JAR files"/>
-    <echo message=" Source: ${SRC_APP}${fs}WEB-INF${fs}lib${fs}*.jar"/>
-    <echo message=" Destination: ${CFS_HOME}"/>
-    <!-- Need to delete jar files that are no longer in source lib -->
-    <!-- Fails under windows because Tomcat has these in-use
-    <delete quiet="true">
-      <fileset dir= "${CFS_HOME}/WEB-INF/lib" includes="*.jar"/>
-    </delete>
-    -->
-    <copy todir="${CFS_HOME}/WEB-INF/lib" >
-      <fileset dir="${SRC_APP}">
-        <include name="WEB-INF/lib/*.jar" />
-      </fileset>
-    </copy>
-  </target>
   
-  <!-- Deploy rest of site files to CFS_HOME -->
-  <target name="deploy-site" 
-          description="Install files to site" 
-          depends="init" unless="site.uptodate">
-    <echo message="Installing site"/>
-    <echo message=" Source: ${SRC_APP}"/>
-    <echo message=" Destination: ${CFS_HOME}"/>
-    <!-- Site files, except web.xml -->
-    <copy todir="${CFS_HOME}" >
-      <fileset dir="${SRC_APP}">
-        <include name="*" />
-        <include name="images/**" />
-        <include name="javascript/**" />
-        <include name="WEB-INF/*.xml" />
-        <include name="css/**" />
-        <include name="WEB-INF/*.tld" />
-        <exclude name="WEB-INF/web.xml" />
-      </fileset>
-    </copy>
-    <!-- Directory needed to support graphs -->
-    <mkdir dir="${CFS_HOME}/graphs"/>
-  </target>
-
-  <!-- Distribute the web app -->
-  <target name="dist" 
-          description="Installs changes to site"
-          depends="deploy-jars,deploy-site">
-    <echo message="Cleaning up files"/>
-  </target>
-
-  <!-- Test code -->
-  <target name="installdb.old" description="Creates a new database">
-    <echo message="Building database"/>
-    
-    <!-- Prepare files for any database type -->
-    <delete dir="${SRC}/tmp" failonerror="false"/>
-    <mkdir dir="${SRC}/tmp"/>
-    <copy todir="${SRC}/tmp">
-      <fileset dir="${SRC}/database">
-        <include name="*.init" />
-      </fileset>
-    </copy>
-    
-    <!-- Only needed for MSSQL -->
-    <replace dir="${SRC}/tmp" token="true" value="1">
-      <include name="*.init"/>
-    </replace>
-    <replace dir="${SRC}/tmp" token="false" value="0">
-      <include name="*.init"/>
-    </replace>
   
-    <!-- Create database and initialize data -->
-    <sql
-        driver="com.microsoft.jdbc.sqlserver.SQLServerDriver"
-        url="jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor"
-        userid="dhv_appuser"
-        password="@pus3r">
-        <!--driver="org.postgresql.Driver"-->
-        <!--url="org.postgresql.Driver"-->
-      <classpath>
-        <path refid="cfs2.classpath"/>
-      </classpath>
-        
-      <transaction src="database/${DBTYPE}/new_cdb.sql"/>
-      <transaction src="database/code_tables.init"/>
-      <transaction src="database/access.init"/>
-      <transaction src="database/organization.init"/>
-      <transaction src="${SRC}/tmp/permissions.init"/>
-      <transaction src="${SRC}/tmp/data.init"/>
-      
-      <transaction src="database/${DBTYPE}/new_cfs2.sql"/>
-      
-      <transaction src="database/${DBTYPE}/new_opportunity.sql"/>
-      <transaction src="${SRC}/tmp/opportunity.init"/>
-      
-      <transaction src="database/${DBTYPE}/new_tms.sql"/>
-      <transaction src="${SRC}/tmp/tms.init"/>
-      
-      <transaction src="database/${DBTYPE}/new_custom_field.sql"/>
-      
-      <transaction src="database/${DBTYPE}/new_project.sql"/>
-      <transaction src="${SRC}/tmp/project.init"/>
-      
-      <transaction src="database/${DBTYPE}/new_campaign.sql"/>
-      <transaction src="${SRC}/tmp/campaign.init"/>
-      
-      <transaction src="database/${DBTYPE}/new_help.sql"/>
-      
-      <transaction src="database/${DBTYPE}/new_sync.sql"/>
-      <transaction src="${SRC}/tmp/sync.init"/>
-      
-      <transaction src="database/${DBTYPE}/new_autoguide.sql"/>
-      <transaction src="${SRC}/tmp/autoguide.init"/>
-      
-      <transaction src="database/${DBTYPE}/new_revenue.sql"/>
-      <transaction src="${SRC}/tmp/revenue.init"/>
-      
-      <transaction src="database/${DBTYPE}/new_task.sql"/>
-      <transaction src="${SRC}/tmp/task.init"/>
-    </sql>
-    <delete dir="${SRC}/tmp" failonerror="false"/>
-  </target>
   
   <!-- Test code -->
   <target name="upgradedb" description="Upgrades an existing database">
