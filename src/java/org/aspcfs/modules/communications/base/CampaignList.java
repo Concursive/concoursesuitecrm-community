@@ -5,15 +5,19 @@ import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ *  Represents the combination of a Message, Recipients, and Schedule details.
  *
  *@author     Wesley_S_Gillette
  *@created    November 16, 2001
  *@version    $Id$
  */
 public class CampaignList extends Vector {
+
+  public final static int TRUE = 1;
+  public final static int FALSE = 0;
 
   private PagedListInfo pagedListInfo = null;
   private String name = "";
@@ -28,9 +32,6 @@ public class CampaignList extends Vector {
   private String ownerIdRange = null;
   private String idRange = null;
   private int ready = -1;
-
-  public final static int TRUE = 1;
-  public final static int FALSE = 0;
 
 
   /**
@@ -105,7 +106,13 @@ public class CampaignList extends Vector {
   public void setActive(int tmp) {
     this.active = tmp;
   }
-  
+
+
+  /**
+   *  Sets the ready attribute of the CampaignList object
+   *
+   *@param  tmp  The new ready value
+   */
   public void setReady(int tmp) {
     this.ready = tmp;
   }
@@ -131,9 +138,36 @@ public class CampaignList extends Vector {
   public void setCompleteOnly(boolean tmp) {
     this.completeOnly = tmp;
   }
-  
-  public void setOwner(int tmp) { this.owner = tmp; }
-  public void setOwnerIdRange(String tmp) { this.ownerIdRange = tmp; }
+
+
+  /**
+   *  Sets the owner attribute of the CampaignList object
+   *
+   *@param  tmp  The new owner value
+   */
+  public void setOwner(int tmp) {
+    this.owner = tmp;
+  }
+
+
+  /**
+   *  Sets the ownerIdRange attribute of the CampaignList object
+   *
+   *@param  tmp  The new ownerIdRange value
+   */
+  public void setOwnerIdRange(String tmp) {
+    this.ownerIdRange = tmp;
+  }
+
+
+  /**
+   *  Sets the idRange attribute of the CampaignList object
+   *
+   *@param  idRange  The new idRange value
+   */
+  public void setIdRange(String idRange) {
+    this.idRange = idRange;
+  }
 
 
   /**
@@ -146,12 +180,16 @@ public class CampaignList extends Vector {
     return pagedListInfo;
   }
 
-public String getIdRange() {
-	return idRange;
-}
-public void setIdRange(String idRange) {
-	this.idRange = idRange;
-}
+
+  /**
+   *  Gets the idRange attribute of the CampaignList object
+   *
+   *@return    The idRange value
+   */
+  public String getIdRange() {
+    return idRange;
+  }
+
 
   /**
    *  Gets the name attribute of the CampaignList object
@@ -201,7 +239,7 @@ public void setIdRange(String idRange) {
     HtmlSelect campaignListSelect = new HtmlSelect();
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      Campaign thisCampaign = (Campaign)i.next();
+      Campaign thisCampaign = (Campaign) i.next();
       campaignListSelect.addItem(
           thisCampaign.getId(),
           thisCampaign.getName());
@@ -283,12 +321,6 @@ public void setIdRange(String idRange) {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
 
-    sqlSelect.append(
-        "SELECT c.*, msg.name as messageName, dt.description as delivery " +
-        "FROM campaign c " +
-        "LEFT JOIN message msg ON (c.message_id = msg.id) " +
-        "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
-        "WHERE c.id > -1 ");
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM campaign c " +
@@ -326,29 +358,41 @@ public void setIdRange(String idRange) {
       }
 
       //Determine column to sort by
-      if (pagedListInfo.getColumnToSortBy() == null || pagedListInfo.getColumnToSortBy().equals("")) {
-        pagedListInfo.setColumnToSortBy("modified");
-        pagedListInfo.setSortOrder("desc");
-      }
-      sqlOrder.append("ORDER BY " + pagedListInfo.getColumnToSortBy() + " ");
-      if (pagedListInfo.getSortOrder() != null && !pagedListInfo.getSortOrder().equals("")) {
-        sqlOrder.append(pagedListInfo.getSortOrder() + " ");
-      }
-
-      //Determine items per page
-      if (pagedListInfo.getItemsPerPage() > 0) {
-        sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
-      }
-
-      sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
+      pagedListInfo.setDefaultSort("c.modified", "desc");
+      pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY modified desc ");
+      sqlOrder.append("ORDER BY c.modified desc ");
     }
+
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append(
+        "c.*, msg.name as messageName, dt.description as delivery " +
+        "FROM campaign c " +
+        "LEFT JOIN message msg ON (c.message_id = msg.id) " +
+        "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
+        "WHERE c.id > -1 ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
+
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       Campaign thisCamp = new Campaign(rs);
       this.addElement(thisCamp);
     }
@@ -374,41 +418,37 @@ public void setIdRange(String idRange) {
       sqlFilter.append("AND c.active_date = ? ");
     }
 
-    if (enabled == FALSE) {
-      sqlFilter.append("AND c.enabled = false ");
-    } else if (enabled == TRUE) {
-      sqlFilter.append("AND c.enabled = true ");
+    if (enabled == FALSE || enabled == TRUE) {
+      sqlFilter.append("AND c.enabled = ? ");
     }
 
-    if (active == FALSE) {
-      sqlFilter.append("AND c.active = false ");
-    } else if (active == TRUE) {
-      sqlFilter.append("AND c.active = true ");
+    if (active == FALSE || active == TRUE) {
+      sqlFilter.append("AND c.active = ? ");
     }
 
     if (incompleteOnly) {
-      sqlFilter.append("AND ( c.message_id < 1 OR c.id NOT IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) OR active_date IS NULL OR active = false) ");
+      sqlFilter.append("AND ( c.message_id < 1 OR c.id NOT IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) OR active_date IS NULL OR active = ?) ");
     }
 
     if (completeOnly) {
-      sqlFilter.append("AND ( c.message_id > 0 AND c.id IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) AND active_date IS NOT NULL AND active = true) ");
+      sqlFilter.append("AND ( c.message_id > 0 AND c.id IN (SELECT DISTINCT campaign_id FROM campaign_list_groups) AND active_date IS NOT NULL AND active = ?) ");
     }
-    
+
     if (owner > -1) {
       sqlFilter.append("AND c.enteredby = " + owner + " ");
     }
-    
+
     if (ownerIdRange != null) {
-			sqlFilter.append("AND c.enteredBy IN (" + ownerIdRange + ") ");
-		}
+      sqlFilter.append("AND c.enteredBy IN (" + ownerIdRange + ") ");
+    }
 
     if (idRange != null) {
-			sqlFilter.append("AND c.id IN (" + idRange + ") ");
-    } 
-    
+      sqlFilter.append("AND c.id IN (" + idRange + ") ");
+    }
+
     if (ready == TRUE) {
-			sqlFilter.append("AND c.status_id IN (" + Campaign.QUEUE + ", " + Campaign.STARTED + ") ");
-		}
+      sqlFilter.append("AND c.status_id IN (" + Campaign.QUEUE + ", " + Campaign.STARTED + ") ");
+    }
   }
 
 
@@ -426,6 +466,26 @@ public void setIdRange(String idRange) {
     if (activeDate != null) {
       pst.setDate(++i, activeDate);
     }
+    
+    if (enabled == FALSE) {
+      pst.setBoolean(++i, false);
+    } else if (enabled == TRUE) {
+      pst.setBoolean(++i, true);
+    }
+    
+    if (active == FALSE) {
+      pst.setBoolean(++i, false);
+    } else if (active == TRUE) {
+      pst.setBoolean(++i, true);
+    }
+    
+    if (incompleteOnly) {
+      pst.setBoolean(++i, false);
+    }
+    
+    if (completeOnly) {
+      pst.setBoolean(++i, true);
+    }
 
     return i;
   }
@@ -442,7 +502,7 @@ public void setIdRange(String idRange) {
     Iterator i = this.iterator();
 
     while (i.hasNext()) {
-      Campaign thisCampaign = (Campaign)i.next();
+      Campaign thisCampaign = (Campaign) i.next();
       thisCampaign.buildRecipientCount(db);
       thisCampaign.setGroupList(db);
       thisCampaign.buildFileCount(db);

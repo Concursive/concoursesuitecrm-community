@@ -37,13 +37,13 @@
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	<tr class="title">
+  <tr class="title">
     <td width=8 valign=center align=left>
       <strong>Action</strong>
     </td>
     <td valign=center width="65%" align=left>
-      <a href="/ExternalContacts.do?command=ViewMessages&column=name&contactId=<%=ContactDetails.getId()%>"><strong>Name</strong></a>
-      <%= ContactMessageListInfo.getSortIcon("name") %>
+      <a href="/ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%=ContactDetails.getId()%>"><strong>Name</strong></a>
+      <%= ContactMessageListInfo.getSortIcon("c.name") %>
     </td>  
     <td valign=center width="20%" align=left>
       <a href="/ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%=ContactDetails.getId()%>"><strong>Run Date</strong></a>
@@ -61,22 +61,20 @@
     <td valign=center width="15%" align=left>
       <strong>Status</strong>
     </td>
-	<%
-	Iterator j = campList.iterator();
-	
-	if ( j.hasNext() ) {
-		int rowid = 0;
-	while (j.hasNext()) {
-	
-		if (rowid != 1) {
-			rowid = 1;
-		} else {
-			rowid = 2;
-		}
-	
-		Campaign campaign = (Campaign)j.next();
-	%>      
-	<tr class="containerBody">
+<%
+    Iterator j = campList.iterator();
+    
+    if ( j.hasNext() ) {
+      int rowid = 0;
+      while (j.hasNext()) {
+        if (rowid != 1) {
+          rowid = 1;
+        } else {
+          rowid = 2;
+        }
+        Campaign campaign = (Campaign)j.next();
+%>
+  <tr class="containerBody">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
       <%= (campaign.hasRun()?"&nbsp;":"<font color=\"#787878\">Cancel</font>") %>
     </td>

@@ -12,14 +12,14 @@ CREATE TABLE search_fields (
   description VARCHAR(255),
   searchable BIT NOT NULL DEFAULT 1,
   field_typeID int NOT NULL DEFAULT -1,
-	table_name varchar(80),
+  table_name varchar(80),
   object_class varchar(80)
 );
 
 CREATE TABLE field_types (
   id INT IDENTITY PRIMARY KEY,
   data_typeID int NOT NULL DEFAULT -1,
-	data_type VARCHAR(20),
+  data_type VARCHAR(20),
   operator VARCHAR(50),
   display_text varchar(50)
 );

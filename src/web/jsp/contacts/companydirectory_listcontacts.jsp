@@ -33,8 +33,8 @@
       <%= ExternalContactsInfo.getSortIcon("c.namelast") %>
     </td>
     <td>
-      <strong><a href="/ExternalContacts.do?command=ListContacts&column=company">Company</a></strong>
-      <%= ExternalContactsInfo.getSortIcon("company") %>
+      <strong><a href="/ExternalContacts.do?command=ListContacts&column=c.company">Company</a></strong>
+      <%= ExternalContactsInfo.getSortIcon("c.company") %>
     </td>
     <td>
       <strong>Phone: Business</strong>

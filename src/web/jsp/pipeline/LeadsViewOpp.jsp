@@ -25,17 +25,17 @@
       <strong>Action</strong>
     </td>
     
-    <td valign=center>
-      <strong><a href="/Leads.do?command=ViewOpp&column=description">Opportunity</a></strong>
-      <%= OpportunityListInfo.getSortIcon("description") %>
+    <td valign=center nowrap>
+      <strong><a href="/Leads.do?command=ViewOpp&column=x.description">Opportunity</a></strong>
+      <%= OpportunityListInfo.getSortIcon("x.description") %>
     </td>
     
-    <td valign=center>
+    <td valign=center nowrap>
       <strong><a href="/Leads.do?command=ViewOpp&column=acct_name">Organization</a></strong>
       <%= OpportunityListInfo.getSortIcon("acct_name") %>
     </td>
     
-    <td valign=center>
+    <td valign=center nowrap>
       <strong><a href="/Leads.do?command=ViewOpp&column=guessvalue">Amount</a></strong>
       <%= OpportunityListInfo.getSortIcon("guessvalue") %>
     </td>
@@ -50,7 +50,7 @@
       <%= OpportunityListInfo.getSortIcon("closedate") %>
     </td>
     
-    <td valign=center>
+    <td valign=center nowrap>
       <strong>Term</strong>
     </td>
     

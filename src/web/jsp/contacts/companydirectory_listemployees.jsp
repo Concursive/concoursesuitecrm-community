@@ -25,10 +25,10 @@
       <%= CompanyDirectoryInfo.getSortIcon("departmentname") %>
     </td>
     <td>
-      <a href="/CompanyDirectory.do?command=ListEmployees&column=title">
+      <a href="/CompanyDirectory.do?command=ListEmployees&column=c.title">
         <strong>Title</strong>
       </a>
-      <%= CompanyDirectoryInfo.getSortIcon("title") %>
+      <%= CompanyDirectoryInfo.getSortIcon("c.title") %>
     </td>
     <td nowrap>
       <strong>Business Phone</strong>

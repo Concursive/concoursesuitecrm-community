@@ -6,6 +6,7 @@ import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -1070,7 +1071,8 @@ public class Campaign extends GenericBean {
   public void buildRecipientCount(Connection db) throws SQLException {
     Statement st = db.createStatement();
     ResultSet rs = st.executeQuery(
-        "SELECT count(id) FROM scheduled_recipient sr " +
+        "SELECT count(id) " +
+        "FROM scheduled_recipient sr " +
         "WHERE campaign_id = " + id + " ");
 
     if (rs.next()) {
@@ -1095,11 +1097,9 @@ public class Campaign extends GenericBean {
         "FROM project_files pf " +
         "WHERE link_module_id = " + Constants.COMMUNICATIONS + " " +
         "AND link_item_id = " + id + " ");
-
     if (rs.next()) {
       files = (rs.getInt(1));
     }
-
     rs.close();
     st.close();
   }
@@ -1164,7 +1164,9 @@ public class Campaign extends GenericBean {
       groupContacts.setCheckExcludedFromCampaign(this.getId());
       groupContacts.buildList(db);
 
-      System.out.println("Campaign-> GroupContacts has " + groupContacts.size() + " items");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Campaign-> GroupContacts has " + groupContacts.size() + " items");
+      }
       Iterator j = groupContacts.iterator();
       while (j.hasNext()) {
         Contact thisContact = (Contact) j.next();
@@ -1208,23 +1210,17 @@ public class Campaign extends GenericBean {
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getName());
       pst.setInt(++i, this.getMessageId());
-
       pst.execute();
       pst.close();
 
-      Statement st = db.createStatement();
-      ResultSet rs = st.executeQuery("select currval('campaign_id_seq')");
-      if (rs.next()) {
-        this.setId(rs.getInt(1));
-      }
-
-      rs.close();
-      st.close();
+      id = DatabaseUtils.getCurrVal(db, "campaign_id_seq");
 
       this.update(db, true);
 
       if (this.getGroupList() != null && !this.getGroupList().equals("")) {
-        System.out.println("Campaign-> GroupList: " + this.getGroupList());
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Campaign-> GroupList: " + this.getGroupList());
+        }
         StringBuffer groupSql = new StringBuffer();
         StringTokenizer strt = new StringTokenizer(this.getGroupList(), "*");
         PreparedStatement pstx = null;
@@ -1241,7 +1237,6 @@ public class Campaign extends GenericBean {
           pstx = db.prepareStatement(groupSql.toString());
           pstx.setInt(++j, this.getId());
           pstx.setInt(++j, Integer.parseInt(tmpString));
-
           pstx.execute();
           pstx.close();
         }
@@ -1300,7 +1295,6 @@ public class Campaign extends GenericBean {
             pstx = db.prepareStatement(groupSql.toString());
             pstx.setInt(++j, this.getId());
             pstx.setInt(++j, Integer.parseInt(tmpString));
-
             pstx.execute();
             pstx.close();
           }
@@ -1315,7 +1309,6 @@ public class Campaign extends GenericBean {
       st.close();
 
       db.commit();
-
     } catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
@@ -1351,7 +1344,6 @@ public class Campaign extends GenericBean {
               "DELETE FROM campaign_list_groups " +
               "WHERE campaign_id = ? " +
               "AND group_id = ? ");
-
           int j = 0;
           pstx = db.prepareStatement(groupSql.toString());
           pstx.setInt(++j, this.getId());
@@ -1366,7 +1358,6 @@ public class Campaign extends GenericBean {
             "SET modified = CURRENT_TIMESTAMP " +
             "WHERE id = " + id);
         st.close();
-
       }
       db.commit();
     } catch (SQLException e) {
@@ -1424,10 +1415,14 @@ public class Campaign extends GenericBean {
 
     try {
       db.setAutoCommit(false);
-      st.executeUpdate("DELETE FROM campaign WHERE id = " + this.getId());
-      st.executeUpdate("DELETE FROM campaign_list_groups WHERE campaign_id = " + this.getId());
-      st.executeUpdate("DELETE FROM scheduled_recipient WHERE campaign_id = " + this.getId());
-      st.executeUpdate("DELETE FROM campaign_run WHERE campaign_id = " + this.getId());
+      st.executeUpdate(
+        "DELETE FROM campaign WHERE id = " + this.getId());
+      st.executeUpdate(
+        "DELETE FROM campaign_list_groups WHERE campaign_id = " + this.getId());
+      st.executeUpdate(
+        "DELETE FROM scheduled_recipient WHERE campaign_id = " + this.getId());
+      st.executeUpdate(
+        "DELETE FROM campaign_run WHERE campaign_id = " + this.getId());
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1557,19 +1552,16 @@ public class Campaign extends GenericBean {
    *@since                    1.17
    */
   public int insertRun(Connection db) throws SQLException {
-
     int returnCode = -1;
     if (!isValid(db)) {
       return -1;
     }
 
     StringBuffer sql = new StringBuffer();
-
     sql.append(
         "INSERT INTO campaign_run " +
         "(campaign_id, total_contacts, total_sent) " +
         "VALUES (?, ?, ?) ");
-
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getId());
@@ -1578,14 +1570,8 @@ public class Campaign extends GenericBean {
     pst.execute();
     pst.close();
 
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("SELECT currval('campaign_run_id_seq')");
-    if (rs.next()) {
-      returnCode = rs.getInt(1);
-    }
-    rs.close();
-    st.close();
-
+    returnCode = DatabaseUtils.getCurrVal(db, "campaign_run_id_seq");
+    
     return returnCode;
   }
 
@@ -1766,7 +1752,6 @@ public class Campaign extends GenericBean {
     pst.setString(++i, this.getStatus());
     pst.setInt(++i, this.getMessageId());
     pst.setInt(++i, this.getId());
-
     resultCount = pst.executeUpdate();
     pst.close();
 
@@ -1782,25 +1767,30 @@ public class Campaign extends GenericBean {
    *@since                    1.5
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //campaign table
     this.setId(rs.getInt("id"));
     name = rs.getString("name");
     description = rs.getString("description");
+    groupId = rs.getInt("list_id");
     messageId = rs.getInt("message_id");
     replyTo = rs.getString("reply_addr");
     subject = rs.getString("subject");
     message = rs.getString("message");
-    sendMethodId = rs.getInt("send_method_id");
-    groupId = rs.getInt("list_id");
     statusId = rs.getInt("status_id");
-    enabled = rs.getBoolean("enabled");
-    activeDate = rs.getDate("active_date");
     status = rs.getString("status");
     active = rs.getBoolean("active");
+    activeDate = rs.getDate("active_date");
+    sendMethodId = rs.getInt("send_method_id");
+    enabled = rs.getBoolean("enabled");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    
+    //message table
     messageName = rs.getString("messageName");
+    
+    //lookup_delivery_options table
     deliveryName = rs.getString("delivery");
   }
 }
