@@ -48,7 +48,16 @@
 
 <form name="addAccount" action="/Accounts.do?command=Update&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <a href="/Accounts.do">Account Management</a> > 
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<a href="/Accounts.do?command=View">View Accounts</a> >
+	<%}%>
+<%} else {%>
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<%}%>
+
+
 Modify Account<br>
 <hr color="#BFBFBB" noshade>
 <a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;

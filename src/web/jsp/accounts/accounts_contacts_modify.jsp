@@ -11,6 +11,11 @@
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
+
+<% if (request.getParameter("return") == null) {%>
+	<a href="/Contacts.do?command=Details&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+<%}%>
+
 Modify Contact<br>
 <hr color="#BFBFBB" noshade>
 <a href="/Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Contact List</a><br>&nbsp;

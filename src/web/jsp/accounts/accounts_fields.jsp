@@ -13,7 +13,7 @@
 Folders<br>
 <%} else {%>
 <a href="/Accounts.do?command=Fields&orgId=<%=OrgDetails.getOrgId()%>">Folders</a> >
-Folder Record Details<br>
+Record Details<br>
 <%}%>
 
 <hr color="#BFBFBB" noshade>

@@ -307,9 +307,10 @@ public final class AccountTickets extends CFSModule {
         newTic = new Ticket(db, Integer.parseInt(ticketId));
       } else {
         newTic = (Ticket) context.getFormBean();
-        newTic.getHistory().setTicketId(newTic.getId());
-        newTic.getHistory().buildList(db);
       }
+      
+      newTic.getHistory().setTicketId(newTic.getId());
+      newTic.getHistory().buildList(db);
 
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);

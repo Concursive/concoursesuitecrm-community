@@ -33,6 +33,11 @@
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
+
+<% if (request.getParameter("return") == null) {%>
+	<a href="/Opportunities.do?command=Details&id=<%=OppDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Opportunity Details</a> >
+<%}%>
+
 Modify Opportunity<br>
 <hr color="#BFBFBB" noshade>
 <a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Opportunities List</a><br>&nbsp;

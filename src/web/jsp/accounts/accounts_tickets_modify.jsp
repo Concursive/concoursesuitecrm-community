@@ -90,6 +90,11 @@ function ShowSpan(thisID)
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
+
+<% if (request.getParameter("return") == null) {%>
+<a href="/AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getId()%>">Ticket Details</a> >
+<%}%>
+
 Modify Ticket<br>
 <hr color="#BFBFBB" noshade>
 <a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Back to Ticket List</a><br>&nbsp;
@@ -121,17 +126,22 @@ Modify Ticket<br>
 <form name="details" action="/AccountTickets.do?command=UpdateTicket&auto-populate=true" method="post">    
 <% if (TicketDetails.getClosed() != null) { %>
   <input type=button value="Reopen">
+  <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
   <%} else {%> 
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
   <%}%>
+  <%}%>
 <%} else {%>
   <input type=submit value="Update">
+    <% if (request.getParameter("return") != null) {%>
+
     <% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
   <%} else {%> 
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+  <%}%>
   <%}%>
   <%= showAttribute(request, "closedError") %>
 <%}%>
@@ -369,19 +379,23 @@ Modify Ticket<br>
 <br>
 <% if (TicketDetails.getClosed() != null) { %>
   <input type=button value="Reopen">
-  
+    <% if (request.getParameter("return") != null) {%>
+
   <% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
   <%} else {%> 
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
   <%}%>
-  
+  <%}%>
 <%} else {%>
   <input type=submit value="Update">
+    <% if (request.getParameter("return") != null) {%>
+
   <% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
   <%} else {%> 
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+  <%}%>
   <%}%>
 <%}%>
   </td>

@@ -65,6 +65,11 @@ Add Account<br>
     </td>
     <td>
       <%= AccountTypeList.getHtmlSelect("selectedList", 0) %>
+    <span>
+    PC based browsers:  Click on first item, press "Shift" and drag with your mouse for multiple consecutive selections. 
+    For multiple non-consecutive selections, hold down "Ctrl" and click on each item you want to select. To de-select an item, 
+    press "Ctrl" and click on the item. 
+    </span>
     </td>
   </tr>
   <tr>

@@ -9,7 +9,12 @@
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/Accounts.do?command=Fields&orgId=<%=OrgDetails.getOrgId()%>">Folders</a> >
-Modify Folder Record
+
+<% if (request.getParameter("return") == null) {%>
+	<a href="/Accounts.do?command=Fields&orgId=<%=OrgDetails.getOrgId()%>&catId=<%=Category.getId()%>&recId=<%=Category.getRecordId()%>">Record Details</a> >
+<%}%>
+
+Modify Record
 <hr color="#BFBFBB" noshade>
 <a href="/Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

@@ -11,6 +11,11 @@
 <a href="/Accounts.do">Account Management</a> > 
 <a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="/RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Revenue</a> >
+
+<% if (request.getParameter("return") == null) {%>
+	<a href="/RevenueManager.do?command=Details&id=<%=Revenue.getId()%>">Revenue Details</a> >
+<%}%>
+
 Modify Revenue<br>
 <hr color="#BFBFBB" noshade>
 <a href="/RevenueManager.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Back to Revenue List</a><br>&nbsp;
