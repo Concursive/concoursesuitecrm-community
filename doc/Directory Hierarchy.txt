@@ -81,5 +81,41 @@ webapps/
         images/
         WEB-INF/
           web.xml
-    
 
+** Class Hierarchy **
+com
+  darkhorseventures
+    cfs
+      modules
+        accounts
+          base
+            Organization.java
+            OrganizationList.java
+          actions
+            Accounts.java
+            AccountsDocuments.java
+          utils
+            
+        common
+          CFSModule.java
+          LookupSelector.java
+          ModuleBean.java
+
+package com.darkhorseventures.cfs.modules.accounts.actions;
+import com.darkhorseventures.cfs.modules.accounts.base.*;
+--
+common
+
+accounts
+admin
+communications
+contacts
+help
+login
+mycfs
+pipeline
+prototype
+tasks
+troubletickets
+projects
+search
