@@ -27,7 +27,7 @@ FROM ticketlog t
 LEFT JOIN access a ON (t.enteredby = a.user_id)
 LEFT JOIN contact c ON (a.contact_id = c.contact_id)
 WHERE t.ticketid = $P{ticketid} 
-AND t.comment <> '']]></queryString>
+AND t.comment NOT LIKE '']]></queryString>
 	<field name="firstname" class="java.lang.String"/>
 	<field name="lastname" class="java.lang.String"/>
 	<field name="comment" class="java.lang.String"/>
