@@ -318,6 +318,8 @@ public class CalendarEvent implements Comparable {
       return "<a href=\"javascript:popURL('LeadsCalls.do?command=Modify&id=" + idsub + "&headerId=" + id + "&popup=true&return=Calendar','CRM_Opportunity','550','375','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Call';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     } else if (category.equalsIgnoreCase("Tasks")) {
       return "<a href=\"javascript:popURL('MyTasks.do?command=Modify&id=" + id + "&popup=true&return=Calendar','CRM_Task','600','420','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Task';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
+    } else if (category.equalsIgnoreCase("Quotes pending your approval")) {
+      return "<a href=\"javascript:popURL('Quotes.do?command=CustomerDisplay&quoteId=" + id + "&popup=true&return=Calendar','CRM_Quote','600','400','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Review this Quote';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
     }
     return link;
   }
@@ -372,6 +374,10 @@ public class CalendarEvent implements Comparable {
       } else {
         return "<a href=\"javascript:changeImages('image" + this.getId() + "','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+" + this.getId() + "+'|1','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+" + this.getId() + "+'|1');\"><img src=\"images/box.gif\" name=\"image" + this.getId() + "\" id=\"0\" border=0 title=\"Click to change\"></a>";
       }
+    } else if (category.equalsIgnoreCase("Ad quotes pending your approval")) {
+      return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" alt=\"Ad Quote:" + this.getSubject() + "\" align=texttop>";
+    } else if (category.equalsIgnoreCase("Ad requests you have made that are in progress")) {
+      return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" alt=\"Ad Request:" + this.getSubject() + "\" align=texttop>";
     }
     return icon;
   }
@@ -429,7 +435,7 @@ public class CalendarEvent implements Comparable {
     } else if (thisCategory.equalsIgnoreCase("Tasks")) {
       return "Tasks";
     }
-    return "";
+    return thisCategory;
   }
 
 

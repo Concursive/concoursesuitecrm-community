@@ -14,7 +14,7 @@ public class CalendarEventList extends ArrayList {
   private java.util.Date date = null;
   private HashMap eventTypes = null;
   //anything added to this array should be added at the end 
-  public final static String[] EVENT_TYPES = {"Tasks", "Calls", "Opportunity", "Account Alerts", "Account Contract Alerts", "Contact Calls", "Opportunity Calls", "Holiday", "Assignments", "System Alerts"};
+  public final static String[] EVENT_TYPES = {"Tasks", "Calls", "Opportunity", "Account Alerts", "Account Contract Alerts", "Contact Calls", "Opportunity Calls", "Holiday", "Assignments", "System Alerts", "Quotes pending your approval", "Requests you have made that are in progress"};
 
 
   /**
