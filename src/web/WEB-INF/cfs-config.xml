@@ -571,6 +571,7 @@
     <forward name="AddGroupsOK" resource="/communications/campaign_center_groups_add.jsp" layout="nav"/>
     <forward name="InsertGroupsOK" resource="/CampaignManager.do?command=ViewDetails"/>
     <forward name="ItemListOK" resource="/communications/campaign_survey_items.jsp" layout="style"/>
+    <forward name="ItemDetailsOK" resource="/communications/campaign_survey_item_details.jsp" layout="style"/>
     <forward name="RemoveGroupsOK" resource="/CampaignManager.do?command=ViewGroups"/>
     <forward name="ResultsOK" resource="/communications/campaign_results.jsp" layout="nav"/>
     <forward name="AddMessageOK" resource="/communications/campaign_center_message_add.jsp" layout="nav"/>
