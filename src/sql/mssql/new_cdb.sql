@@ -7,7 +7,7 @@
  */
 
 CREATE TABLE access (
-  user_id INT IDENTITY(0,1) PRIMARY KEY,
+  user_id INT IDENTITY PRIMARY KEY,
   username VARCHAR(80) NOT NULL, 
   password VARCHAR(80),
   contact_id INT DEFAULT -1,
@@ -181,7 +181,7 @@ CREATE TABLE lookup_contactphone_types (
 ;
 
 CREATE TABLE organization (
-  org_id INT IDENTITY(0,1) PRIMARY KEY,
+  org_id INT IDENTITY PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
   account_number VARCHAR(50),
   account_group INT,

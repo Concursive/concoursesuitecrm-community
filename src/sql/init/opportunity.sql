@@ -12,3 +12,8 @@ INSERT INTO lookup_call_types (description, default_item, level) VALUES ('Phone 
 INSERT INTO lookup_call_types (description, default_item, level) VALUES ('Fax', @FALSE@, 20);
 INSERT INTO lookup_call_types (description, default_item, level) VALUES ('In-Person', @FALSE@, 30);
 
+insert into lookup_opportunity_types (description, level) values ('Type 1', 0);
+insert into lookup_opportunity_types (description, level) values ('Type 2', 1);
+insert into lookup_opportunity_types (description, level) values ('Type 3', 2);
+insert into lookup_opportunity_types (description, level) values ('Type 4', 3);
+

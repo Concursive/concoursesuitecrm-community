@@ -78,10 +78,10 @@ CREATE UNIQUE INDEX idx_autog_inv_opt ON autoguide_inventory_options (inventory_
 CREATE TABLE autoguide_ad_run (
   ad_run_id SERIAL PRIMARY KEY,
   inventory_id INTEGER NOT NULL,
-  run_date DATETIME NOT NULL,
+  run_date TIMESTAMP(3) NOT NULL,
   ad_type VARCHAR(20) NULL,
   include_photo BOOLEAN DEFAULT false,
-  complete_date DATETIME NULL,
+  complete_date TIMESTAMP(3) NULL,
   completedby INT DEFAULT -1,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
@@ -95,6 +95,6 @@ CREATE TABLE autoguide_ad_run_types (
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT false,
-  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -10,7 +10,7 @@
 CREATE TABLE module_field_categorylink (
   id SERIAL PRIMARY KEY,
   module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
-  category_id INT NOT NULL,
+  category_id INT UNIQUE NOT NULL,
   level INTEGER DEFAULT 0,
   description TEXT,
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
@@ -19,7 +19,7 @@ CREATE TABLE module_field_categorylink (
 /* Each module can have multiple categories or folders of custom data */
 CREATE TABLE custom_field_category (
   module_id INTEGER NOT NULL REFERENCES module_field_categorylink(category_id),
-  category_id SERIAL,
+  category_id SERIAL PRIMARY KEY,
   category_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
   description TEXT,
@@ -37,7 +37,7 @@ CREATE INDEX "custom_field_cat_idx" ON "custom_field_category" USING btree ("mod
 /* Each category can have multiple groups of fields */
 CREATE TABLE custom_field_group (
   category_id INTEGER NOT NULL REFERENCES custom_field_category(category_id),
-  group_id SERIAL,
+  group_id SERIAL PRIMARY KEY,
   group_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
   description TEXT,
@@ -53,7 +53,7 @@ CREATE INDEX "custom_field_grp_idx" ON "custom_field_group" USING btree ("catego
 /* Each folder has defined custom fields */
 CREATE TABLE custom_field_info (
   group_id INTEGER NOT NULL REFERENCES custom_field_group(group_id),
-  field_id SERIAL,
+  field_id SERIAL PRIMARY KEY,
   field_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
   field_type INTEGER NOT NULL,

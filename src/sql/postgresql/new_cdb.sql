@@ -27,10 +27,6 @@ CREATE TABLE access (
   enabled boolean NOT NULL DEFAULT true
 );
 
-DROP SEQUENCE access_user_id_seq;
-CREATE SEQUENCE access_user_id_seq start 0 increment 1 maxvalue 2147483647 minvalue 0 cache 1 ;
-
-
 CREATE TABLE lookup_industry (
   code SERIAL PRIMARY KEY,
   order_id INT,
@@ -41,7 +37,7 @@ CREATE TABLE lookup_industry (
 );
 
 CREATE TABLE access_log (
-  id serial,
+  id SERIAL PRIMARY KEY,
   user_id INT NOT NULL references access(user_id),
   username VARCHAR(80) NOT NULL,
   ip VARCHAR(15),
@@ -217,9 +213,6 @@ CREATE TABLE organization (
   namemiddle varchar(80),
   namesuffix varchar(80)
 );
-
-DROP SEQUENCE organization_org_id_seq;
-CREATE SEQUENCE organization_org_id_seq start 0 increment 1 maxvalue 2147483647 minvalue 0 cache 1 ;
 
 CREATE TABLE contact (
   contact_id serial PRIMARY KEY,
