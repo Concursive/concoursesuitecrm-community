@@ -58,7 +58,11 @@ public class CFSModule {
     ConnectionElement ce = (ConnectionElement)context.getSession().getAttribute("ConnectionElement");
     return sqlDriver.getConnection(ce);
   }
-
+  
+  protected Connection getDefaultConnection(ActionContext context) throws SQLException {
+    ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
+    return sqlDriver.getConnection();
+  }
 
   /**
    *  Gets the UserId attribute of the CFSModule object
