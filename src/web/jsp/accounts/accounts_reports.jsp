@@ -40,14 +40,14 @@ Reports<br>
     <td>
       <strong>Size</strong>
     </td>
-    <td nowrap>
+    <td align="center" nowrap>
       <strong><a href="Accounts.do?command=Reports&column=entered">Create Date</a></strong>
       <%= RptListInfo.getSortIcon("entered") %>
     </td>
-     <td>
+     <td align="center" nowrap>
       <strong>Created By</strong>
     </td>
-    <td>
+    <td nowrap>
       <strong>D/L</strong>
     </td>
   </tr>
@@ -61,23 +61,23 @@ Reports<br>
 %>
   <tr>
     <dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete">
-      <td width="8" valign="center" nowrap class="row<%= rowid %>">
+      <td width="8" nowrap class="row<%= rowid %>">
         <dhv:permission name="accounts-accounts-reports-view"><a href="Accounts.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-reports-delete"><a href="javascript:confirmDelete('/Accounts.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
       </td>
     </dhv:permission>
-    <td width="40%" class="row<%= rowid %>">
+    <td width="100%" class="row<%= rowid %>">
       <a href="javascript:popURL('Accounts.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
     </td>
-    <td width="20" class="row<%= rowid %>">
+    <td align="right" class="row<%= rowid %>">
       <%= thisItem.getRelativeSize() %>k
     </td>
-    <td width="30%" class="row<%= rowid %>">
+    <td align="center" class="row<%= rowid %>" nowrap>
       <%=toHtml(thisItem.getEnteredDateTimeString())%>
     </td>
-    <td width="30%" class="row<%= rowid %>">
+    <td align="center" class="row<%= rowid %>" nowrap>
       <%=toHtml(thisItem.getEnteredByString())%>
     </td>
-    <td width="8" class="row<%= rowid %>">
+    <td align="right" class="row<%= rowid %>">
       <%= thisItem.getDownloads() %>
     </td>
  </tr>
