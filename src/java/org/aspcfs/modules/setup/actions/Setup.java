@@ -246,7 +246,14 @@ public class Setup extends CFSModule {
       //Check the request
       String license = context.getRequest().getParameter("license");
       if (license == null) {
-        context.getRequest().setAttribute("actionError", "The entered key did not validate, try entering it again.");
+        context.getRequest().setAttribute("actionError", 
+            "The entered key did not validate, try entering it again.");
+        return "ValidateRETRY";
+      }
+      //See if <license> and </license> are included
+      if (license != null && (license.indexOf("<license>") == -1 || license.indexOf("</license>") == -1)) {
+        context.getRequest().setAttribute("actionError", 
+            "The entered key did not validate because the key did not start with <license> and did not end with </license>, try entering it again.");
         return "ValidateRETRY";
       }
       //Decode the license into XML
