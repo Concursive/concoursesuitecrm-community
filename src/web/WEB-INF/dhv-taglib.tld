@@ -453,4 +453,50 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  
+  <tag>
+    <name>fileItemImage</name> 
+    <tag-class>org.aspcfs.taglib.FileItemHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Grant permission to a FileItem and allow user to display with the
+      resulting image tag
+    </display-name>
+    <attribute>
+      <name>id</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>path</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>version</name>
+      <required>no</required>
+    </attribute>
+  </tag>
+  <tag>
+    <name>svgText</name> 
+    <tag-class>org.aspcfs.taglib.SVGTextHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Generates an image at runtime based on the specified SVG template and properties
+    </display-name>
+    <attribute>
+      <name>template</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>text</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
 </taglib>
