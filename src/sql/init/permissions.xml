@@ -156,7 +156,7 @@
       <report file="ticket_summary_date.xml" type="user" permission="tickets-tickets" title="Ticket counts by Department" description="How many tickets are there in the system on a particular date?"/>
       <report file="ticket_summary_range.xml" type="user" permission="tickets-tickets" title="Ticket activity by Department" description="How many tickets exist within a date range?"/>
       <report file="open_calls_report.xml" type="user" permission="tickets-tickets" title="Open Calls" description="Which tickets are open?"/>
-      <report file="contract_review_report.xml" type="user" permission="tickets-tickets" title="Contract Review" description="What is the date status for each contract?"/>
+      <report file="contract_review_report.xml" type="user" permission="tickets-tickets" title="Contract Review" description="What is the expiration date for each contract?"/>
       <report file="call_history_report.xml" type="user" permission="tickets-tickets" title="Call History" description="How have tickets been resolved?"/>
       <report file="assets_under_contract_report.xml" type="user" permission="tickets-tickets" title="Assets Under Contract" description="Which assets are covered by contracts?"/>
       <report file="activity_log_report.xml" type="user" permission="tickets-tickets" title="Contract Activity Summary" description="What is the hourly summary for each contract?"/>
