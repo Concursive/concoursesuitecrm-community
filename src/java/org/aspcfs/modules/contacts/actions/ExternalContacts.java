@@ -964,6 +964,12 @@ public final class ExternalContacts extends CFSModule {
     addModuleBean(context, "External Contacts", "Add a new contact");
     if (errorMessage == null) {
       if (recordInserted) {
+        if (context.getRequest().getParameter("saveAndNew") != null) {
+          if (context.getRequest().getParameter("saveAndNew").equals("true")) {
+            context.getRequest().removeAttribute("ContactDetails");
+            return (executeCommandInsertContactForm(context));
+          }
+        }
         return ("ContactDetailsOK");
       } else {
         processErrors(context, thisContact.getErrors());

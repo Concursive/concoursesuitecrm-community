@@ -38,6 +38,7 @@
 Add Contact<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
@@ -371,8 +372,10 @@ Add Contact<br>
 </table>
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="saveAndNew" value="">
 </form>
 </body>
