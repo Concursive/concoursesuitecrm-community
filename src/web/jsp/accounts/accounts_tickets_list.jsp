@@ -36,16 +36,16 @@
       	<strong>Status</strong>
     </td>
     <td>
-      <b><dhv:label name="tickets-problem">Issue</dhv:label></b>
+      <strong><dhv:label name="tickets-problem"><a href="/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=problem">Issue</a></dhv:label></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("problem") %>
     </td>
     <td>
-      <b>Priority</b>
+    <strong><a href="/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=pri_code">Priority</a></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("pri_code") %>
     </td>
     <td>
-      <b>Age</b>
+    <strong><a href="/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=entered">Age</a></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("entered") %>
     </td>
     <td valign=center align=left>
-      <strong>Last Modified</strong>
+    <strong><a href="/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=modified">Last Modified</a></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("modified") %>
     </td>
 
   </tr>
@@ -79,7 +79,7 @@
 <%}%>
     </td>
     
-        <td width=100% valign=center class="row<%= rowid %>">
+        <td  valign=center class="row<%= rowid %>">
         <a href="/AccountTickets.do?command=TicketDetails&id=<%=thisTic.getId()%>">
 	<%= toHtml(thisTic.getProblem()) %>
 	</a>&nbsp;
@@ -88,14 +88,14 @@
 	<%}%>
     </td>
 
-    <td width=10 valign=center nowrap class="row<%= rowid %>">
+    <td width=65 valign=center nowrap class="row<%= rowid %>">
       <%=thisTic.getPriorityName()%>
     </td>
-    <td width=8 valign=center nowrap class="row<%= rowid %>">
+    <td width=40 valign=center nowrap class="row<%= rowid %>">
       <%=thisTic.getAgeOf()%>
     </td>
     
-        <td width=150 nowrap valign=center class="row<%= rowid %>">
+        <td width=160 nowrap valign=center class="row<%= rowid %>">
 <% if (thisTic.getClosed() == null) { %>
       <%=thisTic.getModifiedDateTimeString()%>
 <%} else {%>
