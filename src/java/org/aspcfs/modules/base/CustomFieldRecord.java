@@ -468,7 +468,7 @@ public class CustomFieldRecord {
     if (id > -1) {
       pst.setInt(++i, id);
     }
-    pst.execute();
+    pst.executeUpdate();
     pst.close();
 
     sql.setLength(0);
@@ -496,7 +496,7 @@ public class CustomFieldRecord {
     if (id > -1) {
       pst.setInt(++i, id);
     }
-    pst.execute();
+    pst.executeUpdate();
     pst.close();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("CustomFieldRecord-> Delete Complete");
