@@ -6,12 +6,12 @@
  *@version    $Id$
  */
 
- CREATE TABLE lookup_call_priority (
+CREATE TABLE lookup_call_priority (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BIT DEFAULT 0,
   level INT DEFAULT 0,
-  enabled BOOLEAN DEFAULT true,
+  enabled BIT DEFAULT 1,
   weight INT NOT NULL
 )
 ;

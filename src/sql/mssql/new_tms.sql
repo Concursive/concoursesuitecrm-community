@@ -109,9 +109,9 @@ CREATE TABLE ticket (
 
 CREATE INDEX "ticket_cidx" ON "ticket" ("assigned_to", "closed");
 CREATE INDEX "ticketlist_entered" ON "ticket" (entered);
-CREATE INDEX "ticket_problem_idx" ON "ticket" (problem);
-CREATE INDEX "ticket_comment_idx" ON "ticket" (comment);
-CREATE INDEX "ticket_solution_idx" ON "ticket" (solution);
+--CREATE INDEX "ticket_problem_idx" ON "ticket" (problem);
+--CREATE INDEX "ticket_comment_idx" ON "ticket" (comment);
+--CREATE INDEX "ticket_solution_idx" ON "ticket" (solution);
 
 CREATE TABLE project_ticket_count (
   project_id INT UNIQUE NOT NULL REFERENCES projects(project_id),
@@ -152,7 +152,8 @@ CREATE TABLE ticket_csstm_form(
   modifiedby INT NOT NULL REFERENCES access(user_id),
   enabled BIT DEFAULT 1,
   travel_towards_sc BIT DEFAULT 1,
-  labor_towards_sc BIT DEFAULT 1
+  labor_towards_sc BIT DEFAULT 1,
+  alert_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE ticket_activity_item(
@@ -163,7 +164,8 @@ CREATE TABLE ticket_activity_item(
   travel_hours INT,
   travel_minutes INT,
   labor_hours INT,
-  labor_minutes INT
+  labor_minutes INT,
+  activity_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE ticket_sun_form(

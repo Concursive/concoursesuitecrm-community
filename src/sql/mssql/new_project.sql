@@ -62,7 +62,7 @@ CREATE TABLE lookup_project_category (
   description VARCHAR(80) NOT NULL,
   default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true,
+  enabled BIT DEFAULT 1,
   group_id INTEGER NOT NULL DEFAULT 0
 );
 
@@ -106,7 +106,9 @@ CREATE TABLE projects (
   documents_label VARCHAR(50) NULL,
   est_closedate DATETIME,
   budget FLOAT,
-  budget_currency VARCHAR(5)
+  budget_currency VARCHAR(5),
+  requestdate_timezone VARCHAR(255),
+  est_closedate_timezone VARCHAR(255)
 );
 
 CREATE INDEX "projects_idx"
@@ -135,7 +137,10 @@ CREATE TABLE project_requirements (
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
-  startdate DATETIME NULL
+  startdate DATETIME NULL,
+  startdate_timezone VARCHAR(255),
+  deadline_timezone VARCHAR(255),
+  due_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE project_assignments_folder (
@@ -178,9 +183,6 @@ CREATE TABLE project_assignments (
   percent_complete INTEGER NULL
 );
 
-CREATE INDEX "project_assignments_idx" ON "project_assignments"
-  ("activity_id");
-  
 CREATE INDEX "project_assignments_cidx" ON "project_assignments" 
   ("complete_date", "user_assign_id");
   
@@ -341,7 +343,9 @@ CREATE TABLE project_news (
   read_count INTEGER NOT NULL DEFAULT 0,
   enabled BIT DEFAULT 1,
   status INTEGER DEFAULT NULL,
-  html BIT NOT NULL DEFAULT 1
+  html BIT NOT NULL DEFAULT 1,
+  start_date_timezone VARCHAR(255),
+  end_date_timezone VARCHAR(255)
 );
 
 CREATE TABLE project_requirements_map (
