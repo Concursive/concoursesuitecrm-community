@@ -81,7 +81,7 @@ public class RevenueList extends Vector {
       pagedListInfo.setDefaultSort("r.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY r.amount desc ");
+      sqlOrder.append("ORDER BY r.description ");
     }
     
     

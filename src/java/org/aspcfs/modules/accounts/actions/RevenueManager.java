@@ -89,6 +89,7 @@ public final class RevenueManager extends CFSModule {
       //CHANGE THIS LATER
       PagedListInfo revenueInfo = this.getPagedListInfo(context, "DBRevenueListInfo");
       revenueInfo.setLink("/RevenueManager.do?command=Dashboard");
+      revenueInfo.setDefaultSort("r.amount desc", null);
       //END
       
       shortChildList = thisRec.getShortChildList();
