@@ -1122,8 +1122,6 @@ CREATE TABLE quote_notes (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL
 );
 
--- TODO: UPDATE THE LEVELS
-
 INSERT INTO lookup_asset_status VALUES (1, 'In use', false, 10, true);
 INSERT INTO lookup_asset_status VALUES (2, 'Not in use', false, 20, true);
 INSERT INTO lookup_asset_status VALUES (3, 'Requires maintenance', false, 30, true);
