@@ -15,7 +15,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@version    $Id: OpportunityListScheduledActions.java,v 1.6 2002/12/18
  *      21:05:57 chris Exp $
  */
-public class OpportunityListScheduledActions extends OpportunityList implements ScheduledActions {
+public class OpportunityListScheduledActions extends OpportunityComponentList implements ScheduledActions {
 
   private int userId = -1;
 
@@ -58,10 +58,6 @@ public class OpportunityListScheduledActions extends OpportunityList implements 
       if (System.getProperty("DEBUG") != null) {
         System.out.println("OpportunityListScheduledActions -> Building opportunity alerts");
       }
-      PagedListInfo alertPaged2 = new PagedListInfo();
-      alertPaged2.setItemsPerPage(0);
-      alertPaged2.setColumnToSortBy("oc.alertdate");
-      this.setPagedListInfo(alertPaged2);
       this.setOwner(this.getUserId());
       this.setHasAlertDate(true);
       this.buildShortList(db);
@@ -70,12 +66,12 @@ public class OpportunityListScheduledActions extends OpportunityList implements 
       }
       Iterator n = this.iterator();
       while (n.hasNext()) {
-        Opportunity thisOpp = (Opportunity) n.next();
+        OpportunityComponent thisOpp = (OpportunityComponent) n.next();
         companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "",
-            thisOpp.getAccountName() + ": " +
+            ((thisOpp.getAccountName() != null && !thisOpp.getAccountName().equals("")) ? thisOpp.getAccountName() + ": " : "") +
             thisOpp.getDescription() +
             " (" + thisOpp.getAlertText() + ")",
-            "Opportunity", thisOpp.getComponentId());
+            "Opportunity", thisOpp.getId());
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Opportunity Calendar Alerts");

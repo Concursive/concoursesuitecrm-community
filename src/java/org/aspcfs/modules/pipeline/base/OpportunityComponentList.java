@@ -137,6 +137,77 @@ public void setCloseDateEnd(String tmp) {
     return hasAlertDate;
   }
 
+  
+  public HashMap queryRecordCount(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    HashMap events = new HashMap();
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlTail = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "SELECT alertdate, count(*) " +
+        "FROM opportunity_component oc " +
+        "WHERE oc.opp_id > -1 ");
+
+    sqlTail.append("GROUP BY alertdate ");
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
+    prepareFilter(pst);
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      String alertdate = Call.getAlertDateStringLongYear(rs.getDate("alertdate"));
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("OppList --> Added Days Calls " + alertdate + ":" + rs.getInt("count"));
+      }
+      events.put(alertdate, new Integer(rs.getInt("count")));
+    }
+    rs.close();
+    pst.close();
+    return events;
+  }
+  
+  
+  public void buildShortList(Connection db) throws SQLException {
+
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+
+    createFilter(sqlFilter);
+
+    sqlSelect.append(
+        "SELECT oc.id, oc.opp_id, oc.description, org.name as acct_name, oc.alertdate, oc.alert " +
+        "FROM opportunity_component oc  " +
+        "LEFT JOIN opportunity_header oh ON (oc.opp_id = oh.opp_id) " +
+        "LEFT JOIN organization org ON (oh.acctlink = org.org_id) " + 
+        "WHERE oc.opp_id > -1 ");
+
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
+    prepareFilter(pst);
+    System.out.println("OppCompList -- > " + pst.toString());
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      OpportunityComponent thisOpp = new OpportunityComponent();
+      thisOpp.setOppId(rs.getInt("opp_id"));
+      thisOpp.setId(rs.getInt("id"));
+      thisOpp.setDescription(rs.getString("description"));
+      thisOpp.setAccountName(rs.getString("acct_name"));
+      thisOpp.setAlertDate(rs.getDate("alertdate"));
+      thisOpp.setAlertText(rs.getString("alert"));
+      this.add(thisOpp);
+    }
+    rs.close();
+    pst.close();
+  }
+  
+  
   /**
    *  Builds a list of contacts based on several parameters. The parameters are
    *  set after this object is constructed, then the buildList method is called

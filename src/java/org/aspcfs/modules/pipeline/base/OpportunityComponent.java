@@ -22,6 +22,7 @@ import com.zeroio.iteam.base.FileItemList;
  *
  *@author     chris
  *@created    September 13, 2001
+ *@version    $Id$
  */
 
 public class OpportunityComponent extends GenericBean {
@@ -57,6 +58,7 @@ public class OpportunityComponent extends GenericBean {
   protected String ownerName = null;
   protected String enteredByName = null;
   protected String modifiedByName = null;
+  protected String accountName = null;
 
   protected boolean hasEnabledOwnerAccount = true;
   protected ArrayList typeList = null;
@@ -133,8 +135,7 @@ public class OpportunityComponent extends GenericBean {
     if (criteriaString != null) {
       String[] params = criteriaString;
       typeList = new ArrayList(Arrays.asList(params));
-    }
-    else {
+    } else {
       typeList = new ArrayList();
     }
 
@@ -421,8 +422,7 @@ public class OpportunityComponent extends GenericBean {
   public void setTerms(String terms) {
     try {
       this.terms = Double.parseDouble(terms);
-    }
-    catch (NumberFormatException ne) {
+    } catch (NumberFormatException ne) {
       errors.put("termsError", terms + " is invalid input for this field");
     }
 
@@ -519,8 +519,7 @@ public class OpportunityComponent extends GenericBean {
 
     try {
       this.guess = Double.parseDouble(guess);
-    }
-    catch (NumberFormatException ne) {
+    } catch (NumberFormatException ne) {
       errors.put("guessError", guess + " is invalid input for this field");
     }
   }
@@ -586,8 +585,7 @@ public class OpportunityComponent extends GenericBean {
 
     try {
       this.closeProb = ((Double.parseDouble(closeProb)) / 100);
-    }
-    catch (NumberFormatException ne) {
+    } catch (NumberFormatException ne) {
       errors.put("closeProbError", closeProb + " is invalid input for this field");
     }
 
@@ -640,6 +638,26 @@ public class OpportunityComponent extends GenericBean {
    */
   public void setCloseNow(String tmp) {
     this.closeIt = ("ON".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+  }
+
+
+  /**
+   *  Sets the accountName attribute of the OpportunityComponent object
+   *
+   *@param  accountName  The new accountName value
+   */
+  public void setAccountName(String accountName) {
+    this.accountName = accountName;
+  }
+
+
+  /**
+   *  Gets the accountName attribute of the OpportunityComponent object
+   *
+   *@return    The accountName value
+   */
+  public String getAccountName() {
+    return accountName;
   }
 
 
@@ -743,8 +761,7 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateInstance(3).format(alertDate);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -761,8 +778,7 @@ public class OpportunityComponent extends GenericBean {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
       formatter.applyPattern("M/d/yyyy");
       return formatter.format(alertDate);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -777,8 +793,7 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateInstance(3).format(closeDate);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -793,8 +808,7 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateInstance(3).format(stageDate);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -843,8 +857,7 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -860,8 +873,7 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
-    }
-    catch (NullPointerException e) {
+    } catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -955,8 +967,7 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + tmp;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    }
-    else {
+    } else {
       return toReturn;
     }
   }
@@ -1075,8 +1086,7 @@ public class OpportunityComponent extends GenericBean {
   public String getShortDescription() {
     if (description.length() <= 40) {
       return description;
-    }
-    else {
+    } else {
       return description.substring(0, 40) + "...";
     }
   }
@@ -1104,8 +1114,7 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + thisAmount;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    }
-    else {
+    } else {
       return toReturn;
     }
   }
@@ -1146,8 +1155,7 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + thisAmount;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    }
-    else {
+    } else {
       return toReturn;
     }
   }
@@ -1179,8 +1187,7 @@ public class OpportunityComponent extends GenericBean {
 
     if (tempValue < 1) {
       amountOut = "<1";
-    }
-    else {
+    } else {
       amountOut = numberFormatter.format(tempValue);
     }
 
@@ -1210,8 +1217,7 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + thisAmount;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    }
-    else {
+    } else {
       return toReturn;
     }
   }
@@ -1266,8 +1272,7 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + value_2dp;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    }
-    else {
+    } else {
       return toReturn;
     }
   }
@@ -1332,8 +1337,7 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + value_2dp;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    }
-    else {
+    } else {
       return toReturn;
     }
   }
@@ -1367,8 +1371,7 @@ public class OpportunityComponent extends GenericBean {
     if (rs.next()) {
       buildRecord(rs);
       buildTypes(db);
-    }
-    else {
+    } else {
       rs.close();
       pst.close();
       throw new SQLException("Opportunity Component record not found.");
@@ -1399,8 +1402,7 @@ public class OpportunityComponent extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       this.setHasEnabledOwnerAccount(true);
-    }
-    else {
+    } else {
       this.setHasEnabledOwnerAccount(false);
     }
     rs.close();
@@ -1421,8 +1423,7 @@ public class OpportunityComponent extends GenericBean {
     if (insert(db)) {
       invalidateUserData(context);
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -1473,8 +1474,7 @@ public class OpportunityComponent extends GenericBean {
     if (delete(db)) {
       invalidateUserData(context);
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -1493,8 +1493,7 @@ public class OpportunityComponent extends GenericBean {
     if (delete(db, baseFilePath)) {
       invalidateUserData(context);
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -1659,8 +1658,7 @@ public class OpportunityComponent extends GenericBean {
       id = DatabaseUtils.getCurrVal(db, "opportunity_component_id_seq");
       this.update(db, true);
       db.commit();
-    }
-    catch (SQLException e) {
+    } catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
@@ -1791,7 +1789,6 @@ public class OpportunityComponent extends GenericBean {
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
 
-
   }
 
 
@@ -1812,12 +1809,10 @@ public class OpportunityComponent extends GenericBean {
 
     if (closeProb == 0 && !(errors.containsKey("closeProbError"))) {
       errors.put("closeProbError", "Close Probability cannot be left blank");
-    }
-    else {
+    } else {
       if (closeProb > 100) {
         errors.put("closeProbError", "Close Probability cannot be greater than 100%");
-      }
-      else if (closeProb < 0) {
+      } else if (closeProb < 0) {
         errors.put("closeProbError", "Close Probability cannot be less than 0%");
       }
     }
@@ -1832,8 +1827,7 @@ public class OpportunityComponent extends GenericBean {
 
     if (terms == 0 && !(errors.containsKey("termsError"))) {
       errors.put("termsError", "Terms needs to be entered");
-    }
-    else {
+    } else {
       if (terms < 0) {
         errors.put("termsError", "Terms cannot be less than 0");
       }
@@ -1844,8 +1838,7 @@ public class OpportunityComponent extends GenericBean {
         System.out.println("Opportunity Component-> Cannot insert: object is not valid");
       }
       return false;
-    }
-    else {
+    } else {
       return true;
     }
   }
@@ -1874,8 +1867,7 @@ public class OpportunityComponent extends GenericBean {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
       db.commit();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
@@ -1911,11 +1903,9 @@ public class OpportunityComponent extends GenericBean {
       st.close();
 
       db.commit();
-    }
-    catch (SQLException e) {
+    } catch (SQLException e) {
       db.rollback();
-    }
-    finally {
+    } finally {
       db.setAutoCommit(true);
       st.close();
     }
@@ -1961,11 +1951,9 @@ public class OpportunityComponent extends GenericBean {
       st.close();
       this.updateHeaderModified(db);
       db.commit();
-    }
-    catch (SQLException e) {
+    } catch (SQLException e) {
       db.rollback();
-    }
-    finally {
+    } finally {
       db.setAutoCommit(true);
       st.close();
     }
@@ -2047,8 +2035,7 @@ public class OpportunityComponent extends GenericBean {
         int currentStage = rs.getInt("stage");
         if (currentStage != stage || this.getCloseIt()) {
           this.setStageChange(true);
-        }
-        else {
+        } else {
           this.setStageChange(false);
         }
       }
@@ -2081,8 +2068,7 @@ public class OpportunityComponent extends GenericBean {
     if (this.getCloseIt() == true) {
       sql.append(
           ", closed = CURRENT_TIMESTAMP ");
-    }
-    else if (this.getOpenIt() == true) {
+    } else if (this.getOpenIt() == true) {
       sql.append(
           ", closed = ? ");
     }
@@ -2106,15 +2092,13 @@ public class OpportunityComponent extends GenericBean {
 
     if (closeDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
-    }
-    else {
+    } else {
       pst.setDate(++i, this.getCloseDate());
     }
 
     if (alertDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
-    }
-    else {
+    } else {
       pst.setDate(++i, this.getAlertDate());
     }
 
@@ -2152,8 +2136,7 @@ public class OpportunityComponent extends GenericBean {
             int type_id = Integer.parseInt((String) typeList.get(k));
             lvlcount++;
             insertType(db, type_id, lvlcount);
-          }
-          else {
+          } else {
             lvlcount--;
           }
         }
