@@ -430,6 +430,12 @@ public class Parameter extends GenericBean {
       LookupList select = new LookupList(db, name);
       select.addItem(-1, "All");
       request.setAttribute(name, select);
+    } else if (name.startsWith("boolean_") && !name.endsWith("_where")) {
+      HtmlSelect select = new HtmlSelect();
+      select.addItem("-1", "Any");
+      select.addItem("1", "Yes");
+      select.addItem("0", "No");
+      request.setAttribute(name, select);
     }
   }
 
@@ -462,6 +468,14 @@ public class Parameter extends GenericBean {
         return select.getHtmlSelect(name, Integer.parseInt(value));
       } else {
         return select.getHtmlSelect(name, -1);
+      }
+    } else if (name.startsWith("boolean_") && !name.endsWith("_where")) {
+      //Html Selects
+      HtmlSelect select = (HtmlSelect) request.getAttribute(name);
+      if (value != null) {
+        return select.getHtml(name, Integer.parseInt(value));
+      } else {
+        return select.getHtml(name, -1);
       }
     } else if (name.startsWith("percent_") && !name.endsWith("_max") && !name.endsWith("_min")) {
       //Percent drop-down

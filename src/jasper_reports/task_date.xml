@@ -35,13 +35,13 @@
 		<parameterDescription><![CDATA[Due Date to]]></parameterDescription>
 		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2003-12-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
-	<parameter name="completed" isForPrompting="true" class="java.lang.Integer">
-		<parameterDescription><![CDATA[""]]></parameterDescription>
+	<parameter name="boolean_completed" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Completed?]]></parameterDescription>
 		<defaultValueExpression><![CDATA[new Integer(-1)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="completed_p" isForPrompting="false" class="java.lang.String">
-		<parameterDescription><![CDATA[""]]></parameterDescription>
-		<defaultValueExpression><![CDATA[$P{completed}.intValue() == -1 ? " ": $P{completed}.intValue() == 0 ? " AND t.completedate is not null " : " AND t.completedate is null "]]></defaultValueExpression>
+	<parameter name="boolean_completed_where" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[AND t.completedate IS NOT NULL]]></parameterDescription>
+		<defaultValueExpression><![CDATA["AND t.completedate IS NULL"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT t.task_id as task_id, 
 t.description as desc, 
@@ -67,7 +67,7 @@ WHERE t.task_id > -1
 AND t.owner IN ($P!{userid_range})
 AND t.duedate >= $P{date_start}
 AND t.duedate <= $P{date_end}
-$P!{completed_p}
+$P!{boolean_completed_where}
 ORDER BY t.duedate, priority;]]></queryString>
 	<field name="task_id" class="java.lang.Integer"/>
 	<field name="desc" class="java.lang.String"/>

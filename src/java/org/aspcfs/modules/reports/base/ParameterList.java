@@ -121,6 +121,22 @@ public class ParameterList extends ArrayList {
           }
           addParam(param.getName(), param.getValue());
         }
+        //HtmlSelect boolean
+        if (param.getName().startsWith("boolean_")) {
+          Parameter whereParam = this.getParameter(param.getName() + "_where");
+          if (whereParam != null) {
+            if ("1".equals(param.getValue())) {
+              //Replace the default with the description value
+              addParam(whereParam.getName(), whereParam.getDescription());
+            } else if ("0".equals(param.getValue())) {
+              //Leave the default
+            } else {
+              //Blank out the default
+              addParam(whereParam.getName(), "");
+            }
+          }
+          addParam(param.getName(), param.getValue());
+        }
         //Percent lookup uses a range from the HtmlSelectProbabilityRange object
         if (param.getName().startsWith("percent_")) {
           //The range will be specified as -0.01|1.01 for the query
