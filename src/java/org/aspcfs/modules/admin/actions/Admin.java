@@ -3,7 +3,6 @@ package org.aspcfs.modules.admin.actions;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
-import java.util.Vector;
 import java.util.*;
 import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.database.ConnectionElement;
@@ -16,6 +15,8 @@ import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import com.zeroio.iteam.base.*;
 import java.text.*;
+import org.aspcfs.apps.workFlowManager.*;
+import org.aspcfs.controller.objectHookManager.*;
 
 /**
  *  Administrative commands executor.
@@ -485,19 +486,20 @@ public final class Admin extends CFSModule {
       selectedList = thisList.getLookupList();
 
       switch (thisList.getCategoryId()) {
-        case PermissionCategory.PERMISSION_CAT_CONTACTS:
-          if (lookupId == PermissionCategory.LOOKUP_CONTACTS_TYPE) {
-            context.getRequest().setAttribute("category", String.valueOf(ContactType.GENERAL));
-          }
-          break;
-        case PermissionCategory.PERMISSION_CAT_ACCOUNTS:
-          if (lookupId == PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE) {
-            context.getRequest().setAttribute("category", String.valueOf(ContactType.ACCOUNT));
-          }
-          break;
-        default: break;
+          case PermissionCategory.PERMISSION_CAT_CONTACTS:
+            if (lookupId == PermissionCategory.LOOKUP_CONTACTS_TYPE) {
+              context.getRequest().setAttribute("category", String.valueOf(ContactType.GENERAL));
+            }
+            break;
+          case PermissionCategory.PERMISSION_CAT_ACCOUNTS:
+            if (lookupId == PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE) {
+              context.getRequest().setAttribute("category", String.valueOf(ContactType.ACCOUNT));
+            }
+            break;
+          default:
+            break;
       }
-      
+
       context.getRequest().setAttribute("moduleId", String.valueOf(moduleId));
       context.getRequest().setAttribute("SelectedList", selectedList);
       context.getRequest().setAttribute("SubTitle", thisList.getDescription());
@@ -593,6 +595,97 @@ public final class Admin extends CFSModule {
     thisList.setModuleId(moduleId);
     thisList.buildList(db);
     context.getRequest().setAttribute("LookupLists", thisList);
+  }
+
+
+  /**
+   *  This action maps the current system workflow processes to the request so
+   *  that a user can select one to view.
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandWorkflow(ActionContext context) {
+    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+      return ("PermissionError");
+    }
+    addModuleBean(context, "Configuration", "Workflow");
+    context.getRequest().setAttribute("hookManager", this.getSystemStatus(context).getHookManager());
+    return "WorkflowOK";
+  }
+
+
+  /**
+   *  This action prepares the selected workflow process components to be
+   *  viewed.
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandWorkflowDetails(ActionContext context) {
+    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+      return ("PermissionError");
+    }
+    addModuleBean(context, "Configuration", "Workflow");
+    ObjectHookManager hookManager = this.getSystemStatus(context).getHookManager();
+    BusinessProcessList processList = hookManager.getProcessList();
+    String param = context.getRequest().getParameter("process");
+    if (processList == null || param == null) {
+      return ("SystemError");
+    }
+    //Take all of the components for the selected process and assign
+    //a step id so that the workflow can be conveyed visually
+    Iterator i = processList.values().iterator();
+    while (i.hasNext()) {
+      BusinessProcess process = (BusinessProcess) i.next();
+      if (process.getName().equals(param)) {
+        LinkedHashMap steps = new LinkedHashMap();
+        //Put the starting component in place
+        BusinessProcessComponent component = process.getComponent(process.getStartId());
+        steps.put(new Integer(component.getId()), component);
+        //Now put each child result in the list
+        addChildren(steps, component);
+        context.getRequest().setAttribute("steps", steps);
+        context.getRequest().setAttribute("process", process);
+        return "WorkflowDetailsOK";
+      }
+    }
+    return ("SystemError");
+  }
+
+
+  /**
+   *  Adds children to the step/component list... children are either a result
+   *  of the parent component being true or false after execution.
+   *
+   *@param  map        The feature to be added to the Children attribute
+   *@param  component  The feature to be added to the Children attribute
+   */
+  private void addChildren(LinkedHashMap map, BusinessProcessComponent component) {
+    //Add the children that are a result of the parent being true
+    ArrayList trueChildren = component.getTrueChildren();
+    if (trueChildren != null) {
+      Iterator trueList = trueChildren.iterator();
+      while (trueList.hasNext()) {
+        BusinessProcessComponent thisComponent = (BusinessProcessComponent) trueList.next();
+        if (!map.containsKey(new Integer(thisComponent.getId()))) {
+          map.put(new Integer(thisComponent.getId()), thisComponent);
+        }
+        addChildren(map, thisComponent);
+      }
+    }
+    //Add the children that are a result of the parent being false
+    ArrayList falseChildren = component.getFalseChildren();
+    if (falseChildren != null) {
+      Iterator falseList = falseChildren.iterator();
+      while (falseList.hasNext()) {
+        BusinessProcessComponent thisComponent = (BusinessProcessComponent) falseList.next();
+        if (!map.containsKey(new Integer(thisComponent.getId()))) {
+          map.put(new Integer(thisComponent.getId()), thisComponent);
+        }
+        addChildren(map, thisComponent);
+      }
+    }
   }
 }
 

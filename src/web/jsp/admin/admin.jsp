@@ -34,6 +34,7 @@ Manage CFS by reviewing system usage, configuring specific modules, and configur
           <dhv:permission name="admin-users-view"><li><a href="Users.do?command=ListUsers">Modify Users</a></li></dhv:permission>
           <dhv:permission name="admin-roles-view"><li><a href="Roles.do?command=ListRoles">Modify Roles</a></li></dhv:permission>
           <dhv:permission name="admin-sysconfig-view"><li><a href="Admin.do?command=Config">Configure Modules</a></li></dhv:permission>
+          <dhv:permission name="admin-object-workflow-view"><li><a href="Admin.do?command=Workflow">Configure Object Workflow</a></li></dhv:permission>
         </ul>
       </td>
     </tr>

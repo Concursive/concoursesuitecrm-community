@@ -100,6 +100,7 @@
       <permission name="admin-sysconfig" attributes="v-e-" description="System Configuration"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-" description="Configure Lookup Lists"/>
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configure Custom Folders &amp; Fields"/>
+      <permission name="admin-object-workflow" attributes="vaed" description="Configure Object Workflow"/>
     </category>
     <category id="10" name="Help" folders="false" lookups="false">
       <permission name="help" attributes="v---" description="Access to Help System"/>
@@ -123,7 +124,6 @@
       <permission name="contacts" attributes="v---"/>
       <permission name="contacts-external_contacts" attributes="vaed"/>
       <permission name="contacts-internal_contacts" attributes="vaed"/>
-      
       <permission name="admin" attributes="v---"/>
       <permission name="admin-users" attributes="vaed"/>
       <permission name="admin-roles" attributes="vaed"/>
@@ -131,9 +131,8 @@
       <permission name="admin-usage" attributes="v---"/>
       <permission name="admin-sysconfig-lists" attributes="v-e-"/>
       <permission name="admin-sysconfig-folders" attributes="vaed"/>
-      
+      <permission name="admin-object-workflow" attributes="vaed"/>
       <permission name="help" attributes="v---"/>
-      
       <permission name="globalitems-search" attributes="v---"/>
       <permission name="globalitems-myitems" attributes="v---"/>
       <permission name="globalitems-recentitems" attributes="v---"/>
