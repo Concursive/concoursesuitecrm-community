@@ -1,4 +1,4 @@
-package org.aspcfs.apps.notifier.task;
+package org.aspcfs.modules.media.autoguide.tasks;
 
 import java.sql.*;
 import org.aspcfs.modules.base.Constants;
