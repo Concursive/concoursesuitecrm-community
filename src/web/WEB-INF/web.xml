@@ -115,6 +115,30 @@
         <param-value>118c0f0bb67a6058a911342a059bae03</param-value>
     </init-param>
     <init-param>
+        <param-name>CONNECTION_POOL.DEBUG</param-name>
+        <param-value>@CONNECTION_POOL.DEBUG@</param-value>
+    </init-param>
+    <init-param>
+        <param-name>CONNECTION_POOL.TEST_CONNECTIONS</param-name>
+        <param-value>@CONNECTION_POOL.TEST_CONNECTIONS@</param-value>
+    </init-param>
+    <init-param>
+        <param-name>CONNECTION_POOL.ALLOW_SHRINKING</param-name>
+        <param-value>@CONNECTION_POOL.ALLOW_SHRINKING@</param-value>
+    </init-param>
+    <init-param>
+        <param-name>CONNECTION_POOL.MAX_CONNECTIONS</param-name>
+        <param-value>@CONNECTION_POOL.MAX_CONNECTIONS@</param-value>
+    </init-param>
+    <init-param>
+        <param-name>CONNECTION_POOL.MAX_IDLE_TIME.SECONDS</param-name>
+        <param-value>@CONNECTION_POOL.MAX_IDLE_TIME.SECONDS@</param-value>
+    </init-param>
+    <init-param>
+        <param-name>CONNECTION_POOL.MAX_DEAD_TIME.SECONDS</param-name>
+        <param-value>@CONNECTION_POOL.MAX_DEAD_TIME.SECONDS@</param-value>
+    </init-param>
+    <init-param>
         <param-name>PreloadXSL</param-name>
         <param-value>false</param-value>
     </init-param>

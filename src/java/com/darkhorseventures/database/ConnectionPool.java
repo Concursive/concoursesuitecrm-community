@@ -4,22 +4,26 @@ import java.sql.*;
 import java.util.*;
 
 /**
- *  A class for preallocating, recycling, and managing JDBC connections. <P>
+ *  A class for recycling, and managing JDBC connections. <P>
  *
  *  Taken from Core Servlets and JavaServer Pages http://www.coreservlets.com/.
  *  &copy; 2000 Marty Hall; may be freely used or adapted. <P>
  *
- *  The ConnectionPool class can either be configured once so that all calls to
- *  getConnection() use the same database URL, or a ConnectionElement can be
- *  supplied to request a specic database.<P>
+ *  The ConnectionPool class requires a ConnectionElement to be supplied for
+ *  each request to getConnection(connectionElement). This allows the
+ *  ConnectionPool to work in an ASP setting in which multiple databases are
+ *  cached by the pool.<P>
  *
- *  Store busy connections with a connection key and conn element value
+ *  Busy connections are stored with a connection key and a connection element
+ *  value.<br>
  *  .free(connection) removes the connection from busy and then puts it on the
- *  avail list with a new conn element. <P>
+ *  available list with a new connection element. <P>
  *
- *  Store available connections with a conn element and connection value
- *  .getConnection(url, user, pw) returns the connection, removes from avail
- *  conn, and then puts it on the busy list with a new connection element.
+ *  Available connections are stored with a connection element and connection
+ *  value.<br>
+ *  .getConnection(connectionElement) returns the connection, removes it from
+ *  the available connections, and then puts it on the busy list with a new
+ *  connection element.
  *
  *@author     Matt Rajkowski
  *@created    December 12, 2000
@@ -27,7 +31,7 @@ import java.util.*;
  *      $
  */
 public class ConnectionPool implements Runnable {
-  //Useful Constants
+  //Internal Constants
   public final static int BUSY_CONNECTION = 1;
   public final static int AVAILABLE_CONNECTION = 2;
   //Thread properties for creating a new connection
@@ -47,16 +51,15 @@ public class ConnectionPool implements Runnable {
   private boolean allowShrinking = false;
   private boolean testConnections = false;
   private boolean forceClose = false;
-  private Timer cleanupTimer = null;
   private int maxIdleTime = 60000;
   private int maxDeadTime = 300000;
+  private Timer cleanupTimer = null;
 
 
   /**
    *  Constructor for the ConnectionPool object. <p>
    *
-   *  Since connection parameters have not been defined, every getConnection
-   *  statement will require a URL, username, and password to be specified.
+   *  Instantiates the pool and background timer with default settings.
    *
    *@exception  SQLException  Description of Exception
    *@since                    1.2
@@ -68,55 +71,11 @@ public class ConnectionPool implements Runnable {
   }
 
 
-
   /**
-   *  Sets the driver attribute of the ConnectionPool object
+   *  Sets whether connection pool statistics and connection information are
+   *  output
    *
-   *@param  tmp  The new driver value
-   */
-  public void setDriver(String tmp) {
-    this.driver = tmp;
-  }
-
-
-  /**
-   *  Sets the Url attribute of the ConnectionPool object
-   *
-   *@param  tmp  The new Url value
-   *@since       1.0
-   */
-  public void setUrl(String tmp) {
-    this.url = tmp;
-  }
-
-
-  /**
-   *  Sets the Username attribute of the ConnectionPool object
-   *
-   *@param  tmp  The new Username value
-   *@since       1.0
-   */
-  public void setUsername(String tmp) {
-    this.username = tmp;
-  }
-
-
-  /**
-   *  Sets the Password attribute of the ConnectionPool object
-   *
-   *@param  tmp  The new Password value
-   *@since       1.0
-   */
-  public void setPassword(String tmp) {
-    this.password = tmp;
-  }
-
-
-  /**
-   *  Sets the Debug attribute of the ConnectionPool object
-   *
-   *@param  tmp  The new Debug value
-   *@since       1.0
+   *@param  tmp  The new debug value
    */
   public void setDebug(boolean tmp) {
     this.debug = tmp;
@@ -124,7 +83,30 @@ public class ConnectionPool implements Runnable {
 
 
   /**
-   *  Sets the allowShrinking attribute of the ConnectionPool object
+   *  Sets the debug attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new debug value
+   */
+  public void setDebug(String tmp) {
+    this.debug = "true".equals(tmp);
+  }
+
+
+  /**
+   *  Sets the behavior of connection requests. If all connections are busy,
+   *  then the thread requesting the connection will either wait or throw an
+   *  exception if waitIfBusy is false
+   *
+   *@param  tmp  The new waitIfBusy value
+   */
+  public void setWaitIfBusy(boolean tmp) {
+    this.waitIfBusy = tmp;
+  }
+
+
+  /**
+   *  Sets whether a background process is allowed to close unused connections
+   *  after the maxIdleTime has been reached
    *
    *@param  tmp  The new allowShrinking value
    */
@@ -134,7 +116,20 @@ public class ConnectionPool implements Runnable {
 
 
   /**
-   *  Sets the testConnections attribute of the ConnectionPool object
+   *  Sets the allowShrinking attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new allowShrinking value
+   */
+  public void setAllowShrinking(String tmp) {
+    this.allowShrinking = "true".equals(tmp);
+  }
+
+
+
+  /**
+   *  Sets whether connections will be tested, by executing a simple query,
+   *  before being handed out. If the test fails, then a new connection is
+   *  attempted without throwing an exception.
    *
    *@param  tmp  The new testConnections value
    */
@@ -144,7 +139,19 @@ public class ConnectionPool implements Runnable {
 
 
   /**
-   *  Sets the ForceClose attribute of the ConnectionPool object
+   *  Sets the testConnections attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new testConnections value
+   */
+  public void setTestConnections(String tmp) {
+    this.testConnections = "true".equals(tmp);
+  }
+
+
+
+  /**
+   *  Sets whether connections are immediately closed, instead of pooled for
+   *  later use
    *
    *@param  tmp  The new ForceClose value
    *@since       1.1
@@ -155,10 +162,10 @@ public class ConnectionPool implements Runnable {
 
 
   /**
-   *  Sets the MaxConnections attribute of the ConnectionPool object
+   *  Sets the maximum number of connections that can be open at once, if the
+   *  max is reached, then behavior is determined by the waitIfBusy property
    *
-   *@param  tmp  The new MaxConnections value
-   *@since       1.1
+   *@param  tmp  The new maxConnections value
    */
   public void setMaxConnections(int tmp) {
     this.maxConnections = tmp;
@@ -166,12 +173,77 @@ public class ConnectionPool implements Runnable {
 
 
   /**
-   *  Gets the url attribute of the ConnectionPool object
+   *  Sets the maxConnections attribute of the ConnectionPool object
    *
-   *@return    The url value
+   *@param  tmp  The new maxConnections value
    */
-  public String getUrl() {
-    return url;
+  public void setMaxConnections(String tmp) {
+    this.maxConnections = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the maximum number of milliseconds a connection can remain idle for
+   *  until shrinking occurs.
+   *
+   *@param  tmp  The new maxIdleTime value
+   */
+  public void setMaxIdleTime(int tmp) {
+    this.maxIdleTime = tmp;
+  }
+
+
+  /**
+   *  Sets the maxIdleTime attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new maxIdleTime value
+   */
+  public void setMaxIdleTime(String tmp) {
+    this.maxIdleTime = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the maxIdleTimeSeconds attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new maxIdleTimeSeconds value
+   */
+  public void setMaxIdleTimeSeconds(String tmp) {
+    this.maxIdleTime = 1000 * Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the maximum number of milliseconds a connection can checked out and
+   *  remain busy for. If the connection is not returned, or not renewed, then
+   *  it will be closed. The connection might be in use, or some process may
+   *  have forget to return it. This prevents an application from completely
+   *  being unusable if the connection is not returned.
+   *
+   *@param  tmp  The new maxDeadTime value
+   */
+  public void setMaxDeadTime(int tmp) {
+    this.maxDeadTime = tmp;
+  }
+
+
+  /**
+   *  Sets the maxDeadTime attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new maxDeadTime value
+   */
+  public void setMaxDeadTime(String tmp) {
+    this.maxDeadTime = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the maxDeadTimeSeconds attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new maxDeadTimeSeconds value
+   */
+  public void setMaxDeadTimeSeconds(String tmp) {
+    this.maxDeadTime = 1000 * Integer.parseInt(tmp);
   }
 
 
@@ -203,6 +275,37 @@ public class ConnectionPool implements Runnable {
   public String getDriver() {
     return driver;
   }
+
+
+  /**
+   *  Gets the maxConnections attribute of the ConnectionPool object
+   *
+   *@return    The maxConnections value
+   */
+  public int getMaxConnections() {
+    return maxConnections;
+  }
+
+
+  /**
+   *  Gets the maxIdleTime attribute of the ConnectionPool object
+   *
+   *@return    The maxIdleTime value
+   */
+  public int getMaxIdleTime() {
+    return maxIdleTime;
+  }
+
+
+  /**
+   *  Gets the maxDeadTime attribute of the ConnectionPool object
+   *
+   *@return    The maxDeadTime value
+   */
+  public int getMaxDeadTime() {
+    return maxDeadTime;
+  }
+
 
 
   /**
@@ -380,7 +483,7 @@ public class ConnectionPool implements Runnable {
           }
           //NOTE: This is currently here because the getConnection() would be broken
           //without it.  When getConnection() grabs this it will just recycle it right
-          //away.  Needs to be fixed some day.
+          //away.  Needs to be fixed since a NullPointer exception would be raised.
           availableConnections.put(thisElement, "Database Error");
         }
         connectionPending = false;
@@ -659,10 +762,11 @@ public class ConnectionPool implements Runnable {
     connectionPending = true;
     try {
       Thread connectThread = new Thread(this);
-      this.setUrl(thisElement.getUrl());
-      this.setUsername(thisElement.getUsername());
-      this.setPassword(thisElement.getPassword());
-      this.setDriver(thisElement.getDriver());
+      //NOTE: Currently thread safe due to connectionPending property
+      this.url = thisElement.getUrl();
+      this.username = thisElement.getUsername();
+      this.password = thisElement.getPassword();
+      this.driver = thisElement.getDriver();
       connectThread.start();
     } catch (OutOfMemoryError oome) {
       // Give up on new connection
