@@ -521,9 +521,12 @@ public final class MyCFS extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("MyCFS-> Building opportunity alerts");
       }
+      PagedListInfo alertPaged2 = new PagedListInfo();
+      alertPaged2.setMaxRecords(20);
+      alertPaged2.setColumnToSortBy("x.alertdate");
       
       OpportunityList alertOpps = new OpportunityList();
-      alertOpps.setPagedListInfo(alertPaged);
+      alertOpps.setPagedListInfo(alertPaged2);
       alertOpps.setEnteredBy(alertsDD);
       alertOpps.setHasAlertDate(true);
       alertOpps.buildList(db);
