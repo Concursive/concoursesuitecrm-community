@@ -32,7 +32,7 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("DefaultError");
     }
     return (this.executeCommandListTasks(context));
@@ -98,8 +98,7 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandNew(ActionContext context) {
-
-    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("DefaultError");
     }
     Exception errorMessage = null;
@@ -140,7 +139,7 @@ public final class MyTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     int id = -1;
-    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("DefaultError");
     }
     context.getSession().removeAttribute("contactListInfo");
@@ -200,7 +199,7 @@ public final class MyTasks extends CFSModule {
     Connection db = null;
     int id = -1;
     boolean done = false;
-    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("DefaultError");
     }
 
@@ -245,7 +244,7 @@ public final class MyTasks extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     int id = -1;
-    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("DefaultError");
     }
 
@@ -280,35 +279,16 @@ public final class MyTasks extends CFSModule {
    *  Description of the Method
    *
    *@param  context  Description of the Parameter
-   *@return          Description of the Return Value public String
-   *      executeCommandInsert(ActionContext context) { Exception errorMessage =
-   *      null; Connection db = null; boolean done = false; if
-   *      (!(hasPermission(context, "myhomepage-inbox-view"))) { return
-   *      ("DefaultError"); } try { db = this.getConnection(context); Task
-   *      newTask = (Task) context.getFormBean();
-   *      newTask.setEnteredBy(getUserId(context)); if (!newTask.insert(db)) {
-   *      processErrors(context, newTask.getErrors()); } } catch (Exception e) {
-   *      errorMessage = e; } finally { this.freeConnection(context, db); } if
-   *      (errorMessage == null) { if (context.getRequest().getParameter("popup")
-   *      != null) { return ("PopupCloseOK"); } else { return ("InsertTaskOK");
-   *      } } else { context.getRequest().setAttribute("Error", errorMessage);
-   *      return ("SystemError"); } }
-   */
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-
     Exception errorMessage = null;
     Connection db = null;
     Task thisTask = null;
     HtmlDialog htmlDialog = new HtmlDialog();
 
     int id = -1;
-    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("DefaultError");
     }
 
@@ -354,13 +334,12 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-
     Exception errorMessage = null;
     Connection db = null;
     Task thisTask = null;
     int id = -1;
     int action = -1;
-    if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+    if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("DefaultError");
     }
 

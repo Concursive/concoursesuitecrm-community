@@ -55,7 +55,6 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandInbox(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
@@ -164,7 +163,6 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandCFSNoteDelete(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
@@ -213,7 +211,6 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandCFSNoteTrash(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
@@ -369,7 +366,6 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandCFSNoteDetails(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
@@ -424,7 +420,6 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandNewMessage(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
@@ -462,7 +457,6 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandContactList(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
@@ -778,7 +772,6 @@ public final class MyCFS extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandForwardMessage(ActionContext context) {
-
     Connection db = null;
     Exception errorMessage = null;
     int myId = -1;

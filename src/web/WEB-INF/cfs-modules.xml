@@ -52,7 +52,7 @@
     </submenu>
     
     <submenu name="My Tasks">
-     <permission value="myhomepage-miner-view"/>
+     <permission value="myhomepage-tasks-view"/>
       <long_html value="My Tasks"/>
       <short_html value="My&lt;br&gt;Tasks"/>
       <link value="MyTasks.do"/>
