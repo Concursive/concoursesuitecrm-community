@@ -65,6 +65,16 @@
     </td>
   </tr>
   <tr class="containerBody">
+    <td width=50 valign="center" nowrap class="formLabel">
+      Test
+    </td>
+    <td width=100% valign=center>
+    <select>
+    <option value="">--None--</option>
+    </select>
+    </td>
+  </tr>
+  <tr class="containerBody">
     <td width=50 valign="top" nowrap class="formLabel">
       Preview
     </td>

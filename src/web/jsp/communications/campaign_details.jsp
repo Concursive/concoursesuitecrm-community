@@ -92,7 +92,7 @@
   </tr>
   
   <tr class="title">
-    <td width="24" align=right nowrap>Count</td>
+    <td width="24" align=right nowrap>&nbsp;&nbsp;Item</td>
     <td>Text</td>
     <td width="24" nowrap>Avg.</td>
     <td width="24" nowrap >1</td>
