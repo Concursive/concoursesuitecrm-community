@@ -7,7 +7,7 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import javax.servlet.*;
@@ -23,7 +23,7 @@ import org.aspcfs.utils.web.HtmlSelect;
  *@created    January 15, 2003
  *@version    $Id$
  */
-public class FileItemVersionList extends Vector {
+public class FileItemVersionList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
   private int itemId = -1;

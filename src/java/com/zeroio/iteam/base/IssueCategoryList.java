@@ -7,7 +7,7 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import javax.servlet.*;
@@ -21,7 +21,7 @@ import org.aspcfs.utils.DatabaseUtils;
  *@created    January 15, 2003
  *@version    $Id$
  */
-public class IssueCategoryList extends Vector {
+public class IssueCategoryList extends ArrayList {
 
   private Project project = null;
   private int projectId = -1;
@@ -76,7 +76,7 @@ public class IssueCategoryList extends Vector {
       IssueCategory thisCategory = new IssueCategory(rs);
       thisCategory.setProject(project);
       thisCategory.setProjectId(projectId);
-      this.addElement(thisCategory);
+      this.add(thisCategory);
     }
     rs.close();
     pst.close();

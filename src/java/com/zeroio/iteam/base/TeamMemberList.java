@@ -23,7 +23,7 @@ import org.aspcfs.utils.web.HtmlSelect;
  *@created    July 23, 2001
  *@version    $Id$
  */
-public class TeamMemberList extends Vector {
+public class TeamMemberList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
   private String emptyHtmlSelectRecord = null;
@@ -235,7 +235,7 @@ public class TeamMemberList extends Vector {
       ++count;
       TeamMember thisTeamMember = new TeamMember(rs);
       thisTeamMember.setProject(project);
-      this.addElement(thisTeamMember);
+      this.add(thisTeamMember);
     }
     rs.close();
     pst.close();
