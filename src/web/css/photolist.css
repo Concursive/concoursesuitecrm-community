@@ -1,0 +1,29 @@
+.PhotoList
+{
+	border-top: #ffd98d 1px solid;
+	font-size: x-small;
+	vertical-align: baseline;
+	border-bottom: #ffd98d 1px solid;
+	text-align: center;
+}
+.PhotoList img
+{
+	border-right: #597ccc 1px solid;
+	border-top: #597ccc 1px solid;
+	border-left: #597ccc 1px solid;
+	border-bottom: #597ccc 1px solid;
+}
+.PhotoListAdditionalRow
+{
+	font-size: x-small;
+	vertical-align: baseline;
+	border-bottom: #ffd98d 1px solid;
+	text-align: center;
+}
+.PhotoListAdditionalRow img
+{
+	border-right: #597ccc 1px solid;
+	border-top: #597ccc 1px solid;
+	border-left: #597ccc 1px solid;
+	border-bottom: #597ccc 1px solid;
+}

@@ -152,7 +152,7 @@
     <long_html value="Auto Guide"/>
     <short_html value="Auto Guide"/>
     <link value="AutoGuide.do"/>
-    <graphic width="83" height="36" on="menu-none-on.gif" off="menu-none-off.gif" rollover=""/>
+    <graphic width="83" height="36" on="menu-autoguide-on.gif" off="menu-autoguide-off.gif" rollover=""/>
   </menu>
   
   <menu>

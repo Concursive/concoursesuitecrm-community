@@ -62,7 +62,11 @@ public final class AutoGuide extends CFSModule {
     addModuleBean(context, "Auto Guide", "List");
     if (errorMessage == null) {
       context.getRequest().setAttribute("InventoryList", inventoryList);
-      return ("ListOK");
+      if ("slides".equals(autoGuideDirectoryInfo.getListView())) {
+        return ("List2OK");
+      } else {
+        return ("ListOK");
+      }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
