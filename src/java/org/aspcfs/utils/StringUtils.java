@@ -504,6 +504,26 @@ public class StringUtils {
 
 
   /**
+   *  Converts a delimited String to an ArrayList
+   *
+   *@param  str        Description of the Parameter
+   *@param  tokenizer  Description of the Parameter
+   *@return            Description of the Return Value
+   */
+  public static ArrayList toArrayList(String str, String tokenizer) {
+    ArrayList convertedList = null;
+    StringTokenizer tokens = new StringTokenizer(str, tokenizer);
+    while (tokens.hasMoreTokens()) {
+      if (convertedList == null) {
+        convertedList = new ArrayList();
+      }
+      convertedList.add(tokens.nextToken());
+    }
+    return convertedList;
+  }
+
+
+  /**
    *  Replaces all occurances of the matching pattern in the source string
    *
    *@param  source       Description of the Parameter

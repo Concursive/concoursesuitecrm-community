@@ -204,11 +204,12 @@ public class HttpMultiPartParser {
   /**
    *  Convenience method to read HTTP header lines
    *
-   *@param  sis              Description of Parameter
-   *@return                  The Line value
-   *@exception  IOException  Description of Exception
+   *@param  sis                     Description of Parameter
+   *@param  stripNextLineCharacter  Description of the Parameter
+   *@return                         The Line value
+   *@exception  IOException         Description of Exception
    */
-  private synchronized String getLine(ServletInputStream sis)
+  private synchronized String getLine(ServletInputStream sis, boolean stripNextLineCharacter)
        throws IOException {
     byte b[] = new byte[1024];
     int read = sis.readLine(b, 0, b.length);
@@ -217,12 +218,27 @@ public class HttpMultiPartParser {
     if (read != -1) {
       line = new String(b, 0, read);
 
-      if ((index = line.indexOf('\n')) >= 0) {
-        line = line.substring(0, index - 1);
+      if (stripNextLineCharacter) {
+        if ((index = line.indexOf('\n')) >= 0) {
+          line = line.substring(0, index - 1);
+        }
       }
     }
     b = null;
     return line;
+  }
+
+
+  /**
+   *  Gets the line attribute of the HttpMultiPartParser object
+   *
+   *@param  sis              Description of the Parameter
+   *@return                  The line value
+   *@exception  IOException  Description of the Exception
+   */
+  private synchronized String getLine(ServletInputStream sis)
+       throws IOException {
+    return getLine(sis, true);
   }
 
 
@@ -445,8 +461,11 @@ public class HttpMultiPartParser {
         if (line == null) {
           return dataTable;
         }
-        dataTable.put(paramName, line);
-        line = getLine(is);
+        String paramValue = line;
+        while ((line = getLine(is, false)) != null && !line.startsWith(boundary)) {
+          paramValue += line;
+        }
+        dataTable.put(paramName, paramValue);
         continue;
       }
       // Either save contents in memory or to a local file

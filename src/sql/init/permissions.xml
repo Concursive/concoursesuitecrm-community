@@ -48,6 +48,7 @@
       <permission name="contacts-external_contacts-calls" attributes="vaed" description="Calls"/>
       <permission name="contacts-external_contacts-messages" attributes="v---" description="Messages"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
+      <permission name="contacts-external_contacts-imports" attributes="vaed" description="Imports"/>
       <report file="contacts_user.xml" type="user" permission="contacts" title="Contacts" description="Who are my contacts?"/>
     </category>
     <category id="4" name="Pipeline" folders="false" lookups="true" viewpoints="true" reports="true">

@@ -580,7 +580,7 @@ public class HtmlSelect extends ArrayList {
    *
    *@param  category  The feature to be added to the Group attribute
    */
-  protected void addGroup(String category) {
+  public void addGroup(String category) {
     HtmlOption thisGroup = new HtmlOption();
     thisGroup.setGroup(true);
     thisGroup.setText(category);

@@ -388,6 +388,27 @@
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="IncludeStyleContainerOK" resource="/includepage.jsp" layout="styleContainer"/>
   </action>
+  
+  <action name="ExternalContactsImports" class="org.aspcfs.modules.contacts.actions.ExternalContactsImports">
+    <bean name="ImportDetails" class="org.aspcfs.modules.contacts.base.ContactImport" scope="request"/>
+    <forward name="ViewOK" resource="/contacts/companydirectory_listimports.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/contacts/companydirectory_detailsimport.jsp" layout="nav"/>
+    <forward name="NewOK" resource="/contacts/companydirectory_newimport.jsp" layout="nav"/>
+    <forward name="SaveOK" resource="/contacts/companydirectory_confirm_importupload.jsp" layout="nav"/>
+    <forward name="InitValidateOK" resource="/contacts/companydirectory_validateimport.jsp" layout="nav"/>
+    <forward name="ValidateOK" resource="/contacts/companydirectory_validateimport.jsp" layout="nav"/>
+    <forward name="ProcessOK" resource="/ExternalContactsImports.do?command=View"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp"/>
+    <forward name="CancelOK" resource="/ExternalContactsImports.do?command=View"/>
+    <forward name="CancelDetailsOK" resource="/ExternalContactsImports.do?command=Details"/>
+    <forward name="ApproveOK" resource="/ExternalContactsImports.do?command=Details"/>
+    <forward name="ViewResultsOK" resource="/contacts/companydirectory_importresults.jsp" layout="nav"/>
+    <forward name="ContactDetailsOK" resource="/contacts/companydirectory_importcontact_details.jsp" layout="nav"/>
+    <forward name="DeleteContactOK" resource="/ExternalContactsImports.do?command=ViewResults"/>
+    <forward name="DeleteContactFailedListOK" resource="/ExternalContactsImports.do?command=ViewResults" layout="nav"/>
+    <forward name="DeleteContactFailedDetailsOK" resource="/contacts/companydirectory_importcontact_details.jsp" layout="nav"/>
+  </action>
   <!-- End Contacts & Resources Module -->
   
   <!-- Auto Guide Module -->

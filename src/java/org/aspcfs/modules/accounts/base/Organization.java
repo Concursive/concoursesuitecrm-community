@@ -54,6 +54,7 @@ public class Organization extends GenericBean {
   private String accountNumber = "";
   private int owner = -1;
   private int duplicateId = -1;
+  private int importId = -1;
 
   private OrganizationAddressList addressList = new OrganizationAddressList();
   private OrganizationPhoneNumberList phoneNumberList = new OrganizationPhoneNumberList();
@@ -310,6 +311,36 @@ public class Organization extends GenericBean {
    */
   public void setOwner(int owner) {
     this.owner = owner;
+  }
+
+
+  /**
+   *  Sets the importId attribute of the Organization object
+   *
+   *@param  tmp  The new importId value
+   */
+  public void setImportId(int tmp) {
+    this.importId = tmp;
+  }
+
+
+  /**
+   *  Sets the importId attribute of the Organization object
+   *
+   *@param  tmp  The new importId value
+   */
+  public void setImportId(String tmp) {
+    this.importId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the importId attribute of the Organization object
+   *
+   *@return    The importId value
+   */
+  public int getImportId() {
+    return importId;
   }
 
 
@@ -1815,6 +1846,35 @@ public class Organization extends GenericBean {
   /**
    *  Description of the Method
    *
+   *@param  db                Description of the Parameter
+   *@param  lookupName        Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int lookupAccount(Connection db, String lookupName) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    int lookupId = -1;
+    String sqlSelect =
+        "SELECT org_id " +
+        "FROM organization " +
+        "WHERE lower(organization.name) = ? ";
+    int i = 0;
+    pst = db.prepareStatement(sqlSelect);
+    pst.setString(++i, lookupName.toLowerCase());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      lookupId = rs.getInt("org_id");
+    }
+    rs.close();
+    pst.close();
+    return lookupId;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
@@ -2218,7 +2278,7 @@ public class Organization extends GenericBean {
       callList.buildList(db);
       callList.delete(db);
       callList = null;
-      
+
       //Save for next to last since other records related to contacts
       if (contactDelete) {
         ContactList contactList = new ContactList();
@@ -2278,6 +2338,65 @@ public class Organization extends GenericBean {
     } finally {
       db.setAutoCommit(true);
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  thisImportId      Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static boolean deleteImportedRecords(Connection db, int thisImportId) throws SQLException {
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM organization_emailaddress " +
+          "WHERE org_id IN (SELECT org_id from organization o where import_id = ? AND o.org_id = organization_emailaddress.org_id) ");
+      pst.setInt(1, thisImportId);
+      pst.executeUpdate();
+      pst.close();
+
+      pst = db.prepareStatement(
+          "DELETE FROM organization_phone " +
+          "WHERE org_id IN (SELECT org_id from organization o where import_id = ? AND o.org_id = organization_phone.org_id)");
+      pst.setInt(1, thisImportId);
+      pst.executeUpdate();
+      pst.close();
+
+      pst = db.prepareStatement(
+          "DELETE FROM organization_address " +
+          "WHERE org_id IN (SELECT org_id from organization o where import_id = ? AND o.org_id = organization_address.org_id) ");
+      pst.setInt(1, thisImportId);
+      pst.executeUpdate();
+      pst.close();
+
+      pst = db.prepareStatement(
+          "DELETE FROM organization " +
+          "WHERE import_id = ?");
+      pst.setInt(1, thisImportId);
+      pst.executeUpdate();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return true;
   }
 
 
@@ -2357,6 +2476,9 @@ public class Organization extends GenericBean {
     nameMiddle = rs.getString("nameMiddle");
     nameSuffix = rs.getString("nameSuffix");
 
+    //import information
+    importId = rs.getInt("import_id");
+
     //contact table
     ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
     enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
@@ -2416,7 +2538,8 @@ public class Organization extends GenericBean {
     }
     return out.toString().trim();
   }
-  
+
+
   /**
    *  Gets the properties that are TimeZone sensitive for a Call
    *

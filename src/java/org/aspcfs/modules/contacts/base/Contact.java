@@ -64,6 +64,8 @@ public class Contact extends GenericBean {
   private String url = null;
   private int userId = -1;
   private int accessType = -1;
+  private int statusId = -1;
+  private int importId = -1;
 
   private ContactEmailAddressList emailAddressList = new ContactEmailAddressList();
   private ContactPhoneNumberList phoneNumberList = new ContactPhoneNumberList();
@@ -250,6 +252,66 @@ public class Contact extends GenericBean {
    */
   public void setAccessType(String accessType) {
     this.accessType = Integer.parseInt(accessType);
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the Contact object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(int tmp) {
+    this.statusId = tmp;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the Contact object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(String tmp) {
+    this.statusId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the importId attribute of the Contact object
+   *
+   *@param  tmp  The new importId value
+   */
+  public void setImportId(int tmp) {
+    this.importId = tmp;
+  }
+
+
+  /**
+   *  Sets the importId attribute of the Contact object
+   *
+   *@param  tmp  The new importId value
+   */
+  public void setImportId(String tmp) {
+    this.importId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the statusId attribute of the Contact object
+   *
+   *@return    The statusId value
+   */
+  public int getStatusId() {
+    return statusId;
+  }
+
+
+  /**
+   *  Gets the importId attribute of the Contact object
+   *
+   *@return    The importId value
+   */
+  public int getImportId() {
+    return importId;
   }
 
 
@@ -1044,6 +1106,11 @@ public class Contact extends GenericBean {
 
 
 
+  public boolean isApproved(){
+    return (statusId == Import.PROCESSED_UNAPPROVED ? false : true);
+  }
+  
+  
   /**
    *  Since dynamic fields cannot be auto-populated, passing the request to this
    *  method will populate the indicated fields.
@@ -1920,6 +1987,12 @@ public class Contact extends GenericBean {
       if (employee) {
         sql.append("employee, ");
       }
+      if (statusId > -1) {
+        sql.append("status_id, ");
+      }
+      if (importId > -1) {
+        sql.append("import_id, ");
+      }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
 
@@ -1930,6 +2003,12 @@ public class Contact extends GenericBean {
         sql.append("?, ");
       }
       if (employee) {
+        sql.append("?, ");
+      }
+      if (statusId > -1) {
+        sql.append("?, ");
+      }
+      if (importId > -1) {
         sql.append("?, ");
       }
       sql.append("?, ?) ");
@@ -1954,6 +2033,12 @@ public class Contact extends GenericBean {
       }
       if (employee) {
         pst.setBoolean(++i, true);
+      }
+      if (statusId > -1) {
+        pst.setInt(++i, this.getStatusId());
+      }
+      if (importId > -1) {
+        pst.setInt(++i, this.getImportId());
       }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
@@ -2558,6 +2643,8 @@ public class Contact extends GenericBean {
     employee = rs.getBoolean("employee");
     orgName = rs.getString("org_name");
     accessType = rs.getInt("access_type");
+    statusId = DatabaseUtils.getInt(rs, "status_id");
+    importId = DatabaseUtils.getInt(rs, "import_id");
     //lookup_department table
     departmentName = rs.getString("departmentname");
   }
@@ -2838,6 +2925,50 @@ public class Contact extends GenericBean {
     pst.setInt(2, this.getId());
     pst.executeUpdate();
     pst.close();
+  }
+
+
+  /**
+   *  Approves all records for a specific import
+   *
+   *@param  db                Description of the Parameter
+   *@param  importId          Description of the Parameter
+   *@param  status            Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int updateImportStatus(Connection db, int importId, int status) throws SQLException {
+    int count = 0;
+    boolean commit = true;
+
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      String sql = "UPDATE contact " +
+          "SET status_id = ? " +
+          "WHERE import_id = ? ";
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, status);
+      pst.setInt(++i, importId);
+      count = pst.executeUpdate();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return count;
   }
 
 

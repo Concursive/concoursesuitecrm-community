@@ -170,5 +170,17 @@ public class FileUtils {
     // The directory is now empty so delete it
     return dir.delete();
   }
+
+
+  /**
+   *  Checks to see if the file specified exists
+   *
+   *@param  fullPath  Description of the Parameter
+   *@return           Description of the Return Value
+   */
+  public static boolean fileExists(String fullPath) {
+    File thisFile = new File(fullPath);
+    return thisFile.exists();
+  }
 }
 

@@ -90,6 +90,22 @@ public class FileItem extends GenericBean {
 
 
   /**
+   *  Constructor for the FileItem object when the linkItemId is programmed to
+   *  have only ONE fileItem
+   *
+   *@param  db                Description of the Parameter
+   *@param  moduleItemId      Description of the Parameter
+   *@param  moduleId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public FileItem(Connection db, int moduleItemId, int moduleId) throws SQLException {
+    this.linkModuleId = moduleId;
+    this.linkItemId = moduleItemId;
+    queryRecord(db, -1);
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -673,6 +689,17 @@ public class FileItem extends GenericBean {
    */
   public double getVersion() {
     return version;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  version  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public boolean hasVersion(double version) {
+    return (getVersion(version) != null ? true : false);
   }
 
 

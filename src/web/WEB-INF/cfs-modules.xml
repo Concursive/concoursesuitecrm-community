@@ -106,6 +106,7 @@
     <action name="ExternalContactsCalls"/>
     <action name="ExternalContactsCallsForward"/>
     <action name="ExternalContactsPrototype"/>
+    <action name="ExternalContactsImports"/>
     <page title="Contacts"/>
     <permission value="contacts-view"/>
     <long_html value="Contacts"/>
@@ -132,6 +133,13 @@
       <long_html value="Export"/>
       <short_html value="Export"/>
       <link value="ExternalContacts.do?command=Reports"/>
+    </submenu>
+    
+    <submenu name="Imports">
+      <permission value="contacts-external_contacts-imports-view"/>
+      <long_html value="Import"/>
+      <short_html value="Import"/>
+      <link value="ExternalContactsImports.do?command=View"/>
     </submenu>
   </menu>
   

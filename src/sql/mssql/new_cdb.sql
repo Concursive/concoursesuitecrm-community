@@ -211,7 +211,8 @@ CREATE TABLE organization (
   namelast varchar(80),
   namefirst varchar(80),
   namemiddle varchar(80),
-  namesuffix varchar(80)
+  namesuffix varchar(80),
+  import_id INT
 );
 
 CREATE INDEX "orglist_name" ON "organization" (name);
@@ -251,12 +252,15 @@ CREATE TABLE contact (
   primary_contact BIT DEFAULT 0,
   employee BIT DEFAULT 0,
   org_name VARCHAR(255),
-  access_type INT REFERENCES lookup_access_types(code)
+  access_type INT REFERENCES lookup_access_types(code),
+  status_id INT,
+  import_id INT
 );
 
 CREATE INDEX "contact_user_id_idx" ON "contact" ("user_id");
 CREATE INDEX "contactlist_namecompany" ON "contact" (namelast, namefirst, company);
 CREATE INDEX "contactlist_company" ON "contact" (company, namelast, namefirst);
+CREATE INDEX "contact_import_id_idx" ON "contact" ("import_id");
 
 CREATE TABLE role (
   role_id INT IDENTITY PRIMARY KEY,
@@ -622,6 +626,28 @@ CREATE TABLE action_item_log (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+
+CREATE TABLE import(
+  import_id INT IDENTITY PRIMARY KEY,
+  type INT NOT NULL,
+  name VARCHAR(250) NOT NULL,
+  description TEXT,
+  source_type INT,
+  source VARCHAR(1000),
+  record_delimiter VARCHAR(10),
+  column_delimiter VARCHAR(10),
+  total_imported_records INT,
+  total_failed_records INT,
+  status_id INT,
+  file_type INT,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id)
+);
+
+CREATE INDEX "import_entered_idx" ON "import" (entered);
+CREATE INDEX "import_name_idx" ON "import" (name);
 
 CREATE TABLE database_version (
   version_id INT IDENTITY PRIMARY KEY,

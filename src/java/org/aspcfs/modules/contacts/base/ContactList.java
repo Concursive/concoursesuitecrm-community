@@ -12,6 +12,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Import;
 import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.admin.base.AccessType;
@@ -31,7 +32,7 @@ public class ContactList extends Vector {
   public final static int TRUE = 1;
   public final static int FALSE = 0;
   //EXCLUDE_PERSONAL excludes all personal contacts, IGNORE_PERSONAL ignores personal contacts. By default the
-  //list excludes personal contacts 
+  //list excludes personal contacts
   public final static int EXCLUDE_PERSONAL = -1;
   public final static int IGNORE_PERSONAL = -2;
   private int includeEnabled = TRUE;
@@ -93,9 +94,14 @@ public class ContactList extends Vector {
   //access type filters
   private int ruleId = -1;
   private int personalId = EXCLUDE_PERSONAL;
-  
+
   //objects for speed up
   AccessTypeList accessTypes = null;
+
+  //import filters
+  private int importId = -1;
+  private int statusId = -1;
+  private boolean excludeUnapprovedContacts = true;
 
 
   /**
@@ -145,12 +151,26 @@ public class ContactList extends Vector {
     this.employeesOnly = employeesOnly;
   }
 
-public void setExcludeAccountContacts(boolean excludeAccountContacts) {
-	this.excludeAccountContacts = excludeAccountContacts;
-}
-public boolean getExcludeAccountContacts() {
-	return excludeAccountContacts;
-}
+
+  /**
+   *  Sets the excludeAccountContacts attribute of the ContactList object
+   *
+   *@param  excludeAccountContacts  The new excludeAccountContacts value
+   */
+  public void setExcludeAccountContacts(boolean excludeAccountContacts) {
+    this.excludeAccountContacts = excludeAccountContacts;
+  }
+
+
+  /**
+   *  Gets the excludeAccountContacts attribute of the ContactList object
+   *
+   *@return    The excludeAccountContacts value
+   */
+  public boolean getExcludeAccountContacts() {
+    return excludeAccountContacts;
+  }
+
 
   /**
    *  Gets the employeesOnly attribute of the ContactList object
@@ -1013,6 +1033,96 @@ public boolean getExcludeAccountContacts() {
 
 
   /**
+   *  Sets the importId attribute of the ContactList object
+   *
+   *@param  tmp  The new importId value
+   */
+  public void setImportId(int tmp) {
+    this.importId = tmp;
+  }
+
+
+  /**
+   *  Sets the excludeUnapprovedContacts attribute of the ContactList object
+   *
+   *@param  tmp  The new excludeUnapprovedContacts value
+   */
+  public void setExcludeUnapprovedContacts(boolean tmp) {
+    this.excludeUnapprovedContacts = tmp;
+  }
+
+
+  /**
+   *  Sets the excludeUnapprovedContacts attribute of the ContactList object
+   *
+   *@param  tmp  The new excludeUnapprovedContacts value
+   */
+  public void setExcludeUnapprovedContacts(String tmp) {
+    this.excludeUnapprovedContacts = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the excludeUnapprovedContacts attribute of the ContactList object
+   *
+   *@return    The excludeUnapprovedContacts value
+   */
+  public boolean getExcludeUnapprovedContacts() {
+    return excludeUnapprovedContacts;
+  }
+
+
+  /**
+   *  Sets the importId attribute of the ContactList object
+   *
+   *@param  tmp  The new importId value
+   */
+  public void setImportId(String tmp) {
+    this.importId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the ContactList object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(int tmp) {
+    this.statusId = tmp;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the ContactList object
+   *
+   *@param  tmp  The new statusId value
+   */
+  public void setStatusId(String tmp) {
+    this.statusId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the importId attribute of the ContactList object
+   *
+   *@return    The importId value
+   */
+  public int getImportId() {
+    return importId;
+  }
+
+
+  /**
+   *  Gets the statusId attribute of the ContactList object
+   *
+   *@return    The statusId value
+   */
+  public int getStatusId() {
+    return statusId;
+  }
+
+
+  /**
    *  Gets the EmailNotNull attribute of the ContactList object
    *
    *@return    The EmailNotNull value
@@ -1609,10 +1719,22 @@ public boolean getExcludeAccountContacts() {
       sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
 
-    if(excludeAccountContacts){
+    if (excludeAccountContacts) {
       sqlFilter.append("AND c.org_id IS NULL ");
     }
-    
+
+    if (importId != -1) {
+      sqlFilter.append("AND import_id = ? ");
+    }
+
+    if (statusId != -1) {
+      sqlFilter.append("AND status_id = ? ");
+    }
+
+    if (excludeUnapprovedContacts) {
+      sqlFilter.append("AND (status_id IS NULL OR status_id = ?) ");
+    }
+
     //TODO: Use cached AccessTypeList to get the public codes for Account & General contacts
     if (allContacts) {
       sqlFilter.append(
@@ -2160,6 +2282,18 @@ public boolean getExcludeAccountContacts() {
 
     if (employeesOnly) {
       pst.setBoolean(++i, true);
+    }
+
+    if (importId != -1) {
+      pst.setInt(++i, importId);
+    }
+
+    if (statusId != -1) {
+      pst.setInt(++i, statusId);
+    }
+
+    if (excludeUnapprovedContacts) {
+      pst.setInt(++i, Import.PROCESSED_APPROVED);
     }
 
     if (allContacts) {

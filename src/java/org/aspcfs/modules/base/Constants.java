@@ -116,5 +116,10 @@ public final class Constants {
    
   // Restricted to access AdsJet products and services
   public final static int ROLETYPE_PRODUCTS = 420041011;
+
+  //Import
+  public final static int IMPORT_CONTACTS = 33020041;
+  public final static int IMPORT_LEADS = 33020042;
+  public final static int IMPORT_ACCOUNT_CONTACTS = 33020043;
 }
 
