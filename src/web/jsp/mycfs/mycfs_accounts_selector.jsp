@@ -36,7 +36,7 @@
         <%= TypeSelect.getHtmlSelect("listFilter1", AccountListInfo.getFilterKey("listFilter1")) %>
       </td>
       <td>
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountListInfo"/>
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountListInfo" showHiddenParams="true" enableJScript="true"/>
       </td>
     </tr>
   </table>
@@ -101,7 +101,6 @@
     <input type="hidden" name="hiddenFieldId" value="<%= request.getParameter("hiddenFieldId") %>">
     <input type="hidden" name="listType" value="<%= (request.getParameter("listType") != null ? request.getParameter("listType") : "") %>">
   </table>
-  <br>
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','acctListView');">
   <input type="button" value="Cancel" onClick="javascript:window.close()">
@@ -110,7 +109,6 @@
 <%}else{%>
   <input type="button" value="Cancel" onClick="javascript:window.close()">
 <%}%>
-<dhv:pagedListControl object="AccountListInfo" showForm="false" resetList="false"/>
 </form>
 <%} else { %>
 <%-- The final submit --%>
