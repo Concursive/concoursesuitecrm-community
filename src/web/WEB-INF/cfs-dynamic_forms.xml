@@ -12,7 +12,7 @@
         <button type="2" name="save" display="Save" onclick="javascript:this.form.clickFrom.value='save';this.form.action='CampaignManagerSurvey.do?command=Insert&amp;auto-populate=true'"/>
         <button type="2" name="cancel" display="Cancel" onclick="javascript:this.form.clickFrom.value='back';this.form.action='CampaignManagerSurvey.do?command=ViewReturn&amp;auto-populate=true'"/>
       </buttonGroup>
-      <group name="Step1: Survey Details">
+      <group name="Step 1: Survey Details">
       <row class="containerBody">
         <column valign="top"  class="formLabel" width="80" nowrap="true">
           <field display="Name" type="label" isStatic="yes"/>
@@ -68,12 +68,12 @@
           </column>
        </row>
       </group>
-      <group name="Step2: Survey Questions">
+      <group name="Step 2: Survey Questions">
         <row elementClass="title">
-           <column valign="top"  align="center" width="100" nowrap="true">
+           <column valign="top"  align="center" width="50" nowrap="true">
               <field display="Action" type="label" isStatic="yes"/>
            </column>
-           <column valign="top"  align="left" nowrap="true">
+           <column valign="top"  align="left" width="100%">
               <field display="Description" type="label" isStatic="yes"/>
            </column>
            <column valign="top"  align="left" nowrap="true">
@@ -81,16 +81,19 @@
            </column>
         </row>
         <row multiple="true" listName="questions" listId="id">
-          <column width="100" align="center" valign="center">
+          <column align="center" valign="top" nowrap="true">
             <field display="Edit" type="link" jsEvent="javascript:editQuestion($id);"/>
+            <field display="|" type="label" isStatic="yes"/>
             <field display="Del" type="link" jsEvent="javascript:delQuestion($id);"/>
+            <field display="|" type="label" isStatic="yes"/>
             <field display="Up" type="link" jsEvent="javascript:moveQuestion($id,'U');"/>
+            <field display="|" type="label" isStatic="yes"/>
             <field display="Down" type="link" jsEvent="javascript:moveQuestion($id,'D');"/>
           </column>
           <column>
             <field name="description" type="displaytext"/>
           </column>
-          <column>
+          <column nowrap="true">
             <field name="typeString" type="displaytext"/>
           </column>
       </row>
@@ -130,6 +133,7 @@
           </column>
           <column valign="top" class="formLabel" align="left">
             <field name="type" display="Type" type="select" lookupList="lookup_survey_types" required="true" onChange="javascript:processButton('survey',document.forms['survey'].type.value);" listName="questions" listItemName="surveyQuestion"/>
+            <field display=" " type="label" isStatic="yes"/>
             <field name="itemsButton" display="Edit Items" type="button" jsEvent="javascript:popItems(document.forms['survey'].questionId.value,document.forms['survey'].items.value);" enabled="no" isStatic="yes"/>
        </column>
       </row>
