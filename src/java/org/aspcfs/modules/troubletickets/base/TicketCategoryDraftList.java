@@ -333,10 +333,10 @@ public class TicketCategoryDraftList extends ArrayList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("tc.cat_level, tc.level", null);
+      pagedListInfo.setDefaultSort("tc.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY tc.cat_level, tc.level");
+      sqlOrder.append("ORDER BY tc.description");
     }
 
     //Need to build a base SQL statement for returning records
