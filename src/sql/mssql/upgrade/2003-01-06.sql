@@ -96,7 +96,13 @@ ALTER TABLE contact ALTER COLUMN owner INT NULL
 ALTER TABLE contact ADD primary_contact BIT NULL
 
 ALTER TABLE permission_category ADD [folders] [bit] NULL DEFAULT 0
+UPDATE permission_category SET folders = 0
+ALTER TABLE permission_category ALTER COLUMN [folders] [bit] NOT NULL
+
 ALTER TABLE permission_category ADD [lookups] [bit] NULL DEFAULT 0
+UPDATE permission_category SET lookups = 0
+ALTER TABLE permission_category ALTER COLUMN [lookups] [bit] NOT NULL
+
 
 DROP TABLE news
 GO
@@ -1606,19 +1612,19 @@ INSERT INTO module_field_categorylink (module_id, category_id) VALUES (5, 1);
 INSERT INTO module_field_categorylink (module_id, category_id) VALUES (3, 2);
 GO
 
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (5, 1, 'lookuplist', 'lookup_account_types', 1, 'Account Types');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (5, 2, 'lookuplist', 'lookup_revenue_types', 2, 'Revenue Types');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (5, 3, 'contacttype', '', 3, 'Contact Types');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 1, 'contacttype', '', 1, 'Contact Types');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 2, 'lookuplist', 'lookup_contactemail_types', 2, 'Contact Email Type');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 3, 'lookuplist', 'lookup_contactaddress_types', 3, 'Contact Address Type');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 4, 'lookuplist', 'lookup_contactphone_types', 4, 'Contact Phone Type');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 5, 'lookuplist', 'lookup_department', 5, 'Department');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (4, 1, 'lookuplist', 'lookup_stage', 1, 'Stage');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (4, 2, 'lookuplist', 'lookup_opportunity_types', 2, 'Opportunity Type');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (8, 1, 'lookuplist', 'lookup_ticketsource', 1, 'Ticket Source');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (8, 2, 'lookuplist', 'ticket_severity', 2, 'Ticket Severity');
-INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (8, 3, 'lookuplist', 'ticket_priority', 3, 'Ticket Priority');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (5, 1, 'lookupList', 'lookup_account_types', 1, 'Account Types');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (5, 2, 'lookupList', 'lookup_revenue_types', 2, 'Revenue Types');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (5, 3, 'contactType', '', 3, 'Contact Types');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 1, 'contactType', '', 1, 'Contact Types');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 2, 'lookupList', 'lookup_contactemail_types', 2, 'Contact Email Type');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 3, 'lookupList', 'lookup_contactaddress_types', 3, 'Contact Address Type');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 4, 'lookupList', 'lookup_contactphone_types', 4, 'Contact Phone Type');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 5, 'lookupList', 'lookup_department', 5, 'Department');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (4, 1, 'lookupList', 'lookup_stage', 1, 'Stage');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (4, 2, 'lookupList', 'lookup_opportunity_types', 2, 'Opportunity Type');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (8, 1, 'lookupList', 'lookup_ticketsource', 1, 'Ticket Source');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (8, 2, 'lookupList', 'ticket_severity', 2, 'Ticket Severity');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (8, 3, 'lookupList', 'ticket_priority', 3, 'Ticket Priority');
 GO
 
 UPDATE permission 
@@ -1640,4 +1646,12 @@ INSERT INTO permission (category_id, permission, level, permission_view, permiss
 INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (5, 'accounts-accounts-revenue', 95, 1, 1, 1, 1, 'Revenue')
 INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (6, 'campaign-campaigns-surveys', 60, 1, 1, 1, 1, 'Campaign Survey Records')
 INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (9, 'admin-usage', 45, 1, 0, 0, 0, 'System Usage')
+GO
+
+/* VERIFY THESE ENTRIES AS WELL */
+UPDATE lookup_lists_lookup SET category_id = 1 WHERE module_id = 5
+UPDATE lookup_lists_lookup SET category_id = 2 WHERE module_id = 3
+UPDATE lookup_lists_lookup SET category_id = 4 WHERE module_id = 4
+UPDATE lookup_lists_lookup SET category_id = 8 WHERE module_id = 8
+GO
 

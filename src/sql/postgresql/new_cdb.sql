@@ -492,5 +492,6 @@ CREATE TABLE lookup_lists_lookup(
   table_name VARCHAR(60),
   level INTEGER DEFAULT 0,
   description TEXT,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  category_id INT NOT NULL
 );

@@ -147,18 +147,18 @@ ALTER TABLE custom_field_category ADD FOREIGN KEY (module_id) REFERENCES module_
 insert into module_field_categorylink (module_id, category_id) VALUES (1, 1);
 insert into module_field_categorylink (module_id, category_id) VALUES (2, 2);
 
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (1, 1, 'lookuplist', 'lookup_account_types', 1, 'Account Types');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (1, 2, 'lookuplist', 'lookup_revenue_types', 2, 'Revenue Types');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (1, 3, 'contacttype', '', 3, 'Contact Types');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 1, 'contacttype', '', 1, 'Contact Types');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 2, 'lookuplist', 'lookup_contactemail_types', 2, 'Contact Email Type');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 3, 'lookuplist', 'lookup_contactaddress_types', 3, 'Contact Address Type');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 4, 'lookuplist', 'lookup_contactphone_types', 4, 'Contact Phone Type');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 5, 'lookuplist', 'lookup_department', 5, 'Department');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (4, 1, 'lookuplist', 'lookup_stage', 1, 'Stage');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (4, 2, 'lookuplist', 'lookup_opportunity_types', 2, 'Opportunity Type');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (8, 1, 'lookuplist', 'lookup_ticketsource', 1, 'Ticket Source');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (8, 2, 'lookuplist', 'ticket_severity', 2, 'Ticket Severity');
-insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (8, 3, 'lookuplist', 'ticket_priority', 3, 'Ticket Priority');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (1, 1, 'lookupList', 'lookup_account_types', 1, 'Account Types');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (1, 2, 'lookupList', 'lookup_revenue_types', 2, 'Revenue Types');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (1, 3, 'contactType', '', 3, 'Contact Types');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 1, 'contactType', '', 1, 'Contact Types');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 2, 'lookupList', 'lookup_contactemail_types', 2, 'Contact Email Type');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 3, 'lookupList', 'lookup_contactaddress_types', 3, 'Contact Address Type');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 4, 'lookupList', 'lookup_contactphone_types', 4, 'Contact Phone Type');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (2, 5, 'lookupList', 'lookup_department', 5, 'Department');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (4, 1, 'lookupList', 'lookup_stage', 1, 'Stage');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (4, 2, 'lookupList', 'lookup_opportunity_types', 2, 'Opportunity Type');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (8, 1, 'lookupList', 'lookup_ticketsource', 1, 'Ticket Source');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (8, 2, 'lookupList', 'ticket_severity', 2, 'Ticket Severity');
+insert into lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) values (8, 3, 'lookupList', 'ticket_priority', 3, 'Ticket Priority');
 
 
