@@ -606,10 +606,10 @@ public final class Accounts extends CFSModule {
     UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
 
     newUserList.setMyId(getUserId(context));
-    newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+    newUserList.setMyValue(thisUser.getUserRecord().getContact().getNameLastFirst());
     newUserList.setIncludeMe(true);
 
-    newUserList.setJsEvent("onChange = javascript:document.forms[0].action='/Accounts.do?command=Dashboard';document.forms[0].submit()");
+    newUserList.setJsEvent("onChange = \"javascript:fillFrame('calendar','MyCFS.do?command=MonthView&source=Calendar&userId='+document.getElementById('userId').value); javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=CalendarDetails&userId='+document.getElementById('userId').value);javascript:changeDivContent('userName','User:' + document.getElementById('userId').options[document.getElementById('userId').selectedIndex].firstChild.nodeValue);\"");
     HtmlSelect userListSelect = newUserList.getHtmlSelectObj("userId", getUserId(context));
     userListSelect.addAttribute("id", "userId");
     CalendarView companyCalendar = new CalendarView(context.getRequest());
