@@ -639,11 +639,6 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'opportunityList', 'com.darkhorseventures.cfsbase.OpportunityList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticket', 'com.darkhorseventures.cfsbase.Ticket');
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketList', 'com.darkhorseventures.cfsbase.TicketList');
- 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'project', 'com.zeroio.iteam.base.Project');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'projectList', 'com.zeroio.iteam.base.ProjectList');
