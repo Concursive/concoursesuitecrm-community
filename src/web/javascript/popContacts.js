@@ -219,16 +219,18 @@ function setParentList(recipientEmails,recipientIds,listType,displayFieldId,hidd
       //remove contacts that have been un-checked
       removeOptions(displayFieldId, recipientIds);
       
+      /**
       for(i=0; i < recipientEmails.length; i++) {
           var newCriteria = "9|1|" + recipientIds[i];
           
           //don't insert duplicate options
           if (!(checkKey(displayFieldId, recipientIds[i]))) {
                   opener.insertOption("Contact Name (is) " + recipientEmails[i],recipientIds[i],displayFieldId);
-                  //opener.searchCriteria[opener.searchCriteria.length] = newCriteria;
+                  opener.searchCriteria[opener.searchCriteria.length] = newCriteria;
           }
           
 			}
+      */
       
 		} else if(listType == "single"){
         opener.document.getElementById(hiddenFieldId).value = recipientIds[i];
