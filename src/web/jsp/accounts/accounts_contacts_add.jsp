@@ -87,7 +87,7 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td class="containerBack">
-  <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
+  <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
   <input type="submit" value="Save" onClick="return checkForm(this.form)">
   <dhv:evaluate exp="<%= !popUp %>">
   <input type="submit" value="Save & Clone" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
@@ -100,10 +100,10 @@
   <tr>
     <th colspan="2">
       <strong>Add a New Contact</strong>
-    </th>     
+    </th>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td nowrap class="formLabel" valign="top">
       Contact Type(s)
     </td>
     <td>
