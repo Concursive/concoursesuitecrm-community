@@ -31,6 +31,7 @@ public class AdminQA extends CFSModule {
       PagedListInfo pagedListInfo = new PagedListInfo();
       pagedListInfo.setItemsPerPage(0);
       pagedListInfo.setDefaultSort("module, section, subsection", null);
+      contents.setPagedListInfo(pagedListInfo);
       contents.buildList(db);
       Iterator i = contents.iterator();
       while (i.hasNext()) {
