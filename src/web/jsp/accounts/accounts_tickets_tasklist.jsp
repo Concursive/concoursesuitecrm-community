@@ -27,7 +27,7 @@ Tasks<br>
         <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
           <br><font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
         </dhv:evaluate><br>
-        <dhv:permission name="accounts-accounts-tickets-edit">
+        <dhv:permission name="accounts-accounts-tickets-tasks-add">
         <br>
         <%-- display all tasks --%>
         <a  href="javascript:popURL('AccountTicketTasks.do?command=Add&orgId=<%= TicketDetails.getOrgId() %>&ticketId=<%= TicketDetails.getId() %>&popup=true','Task','600','425','yes','yes');">Add a Task</a><br>
@@ -35,7 +35,7 @@ Tasks<br>
         &nbsp;<br>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
           <tr>
-          <dhv:permission name="accounts-accounts-tickets-edit">
+          <dhv:permission name="accounts-accounts-tickets-tasks-delete">
           <th align="center" nowrap>
             <strong>Action</strong>
           </th>
@@ -70,7 +70,7 @@ Tasks<br>
             Task thisTask = (Task) j.next();
       %>
         <tr class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-tickets-edit">
+          <dhv:permission name="accounts-accounts-tickets-tasks-delete">
           <td align="center" valign="top">
             <a href="javascript:popURL('AccountTicketTasks.do?command=ConfirmDelete&id=<%= thisTask.getId() %>&popup=true', 'Delete_task','320','200','yes','no');">Del</a>
           </td>
@@ -81,7 +81,7 @@ Tasks<br>
           <td>
           <table cellpadding="0" cellspacing="0" class="empty">
             <tr <%= thisTask.getComplete()?"class=\"strike\"":"class=\"\""%> id="complete<%=count%>">
-            <dhv:permission name="accounts-accounts-tickets-edit">
+            <dhv:permission name="accounts-accounts-tickets-tasks-edit">
               <td>
         <% boolean hasAuthority = false; %> 
         <dhv:hasAuthority owner="<%= thisTask.getOwner() %>">
