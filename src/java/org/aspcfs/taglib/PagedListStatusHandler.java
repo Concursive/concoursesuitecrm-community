@@ -67,7 +67,7 @@ public class PagedListStatusHandler extends TagSupport {
         JspWriter out = this.pageContext.getOut();
         
         //Draw the header of the PagedList table
-        out.write("<table align=\"center\" width=\"100%\" cellpadding=\"2\" cellspacing=\"2\" border=\"0\">");
+        out.write("<table align=\"center\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
         out.write("<tr>");
         //Display the title
         out.write("<td width=\"50%\" valign=\"bottom\" " +
