@@ -60,7 +60,7 @@
    %>      
   <tr class="row<%= rowid %>">
     <td nowrap align=center>
-          <a href="/MyTasksForward.do?command=ForwardMessage&forwardType=15&id=<%=thisTask.getId()%>&return=/MyTasks.do?command=ListTasks&sendUrl=/MyTasksForward.do?command=SendMessage">Fwd</a>|<a href="javascript:popURLReturn('/MyTasks.do?command=ConfirmDelete&id=<%=thisTask.getId()%>','MyTasks.do?command=ListTasks', 'Delete_message','225','110','yes','no');">Del</a>
+          <a href='javascript:window.location.href="/MyTasksForward.do?command=ForwardMessage&forwardType=15&id=<%=thisTask.getId()%>&return=" +escape("MyTasks.do?command=ListTasks")+ "&sendUrl="+ escape("MyTasksForward.do?command=SendMessage");'>Fwd</a>|<a href="javascript:popURLReturn('/MyTasks.do?command=ConfirmDelete&id=<%=thisTask.getId()%>','MyTasks.do?command=ListTasks', 'Delete_message','225','110','yes','no');">Del</a>
     </td>
     
     <td nowrap align=center>
