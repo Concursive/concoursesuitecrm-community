@@ -1,6 +1,7 @@
 package com.darkhorseventures.utils;
 
 import java.sql.*;
+import org.theseus.actions.*;
 
 public class AuthenticationItem {
 
@@ -15,6 +16,50 @@ public class AuthenticationItem {
   public String getId() { return id; }
   public String getCode() { return code; }
   
+  public Connection getConnection(ActionContext context) throws SQLException {
+    String gkHost = (String)context.getServletContext().getAttribute("GKHOST");
+    String gkUser = (String)context.getServletContext().getAttribute("GKUSER");
+    String gkUserPw = (String)context.getServletContext().getAttribute("GKUSERPW");
+    String siteCode = (String)context.getServletContext().getAttribute("SiteCode");
+    String serverName = context.getRequest().getServerName();
+    
+    if (id.equals(serverName)) {
+      ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
+      ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
+      ConnectionElement ce = null;
+      
+      String sql = 
+        "SELECT * FROM sites " +
+        "WHERE sitecode = ? " +
+        "AND vhost = ? ";
+      Connection db = sqlDriver.getConnection(gk);
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setString(1, siteCode);
+      pst.setString(2, serverName);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        String dbName = rs.getString("dbname");
+        ce = new ConnectionElement(
+            rs.getString("dbhost") + ":" + rs.getInt("dbport") +
+            "/" + dbName,
+            rs.getString("dbuser"),
+            rs.getString("dbpw")
+            );
+        ce.setDbName(dbName);
+      }
+      rs.close();
+      pst.close();
+      sqlDriver.free(db);
+      
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("AuthenticationItem-> Site: " + id + "/" + code);
+      }
+      
+      return sqlDriver.getConnection(ce);
+    } else {
+      return null;
+    }
+  }
   
 }
 

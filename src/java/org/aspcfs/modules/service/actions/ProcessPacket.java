@@ -22,8 +22,8 @@ public final class ProcessPacket extends CFSModule {
 
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
-    int statusCode = 1;
-    String errorText = null;
+    ArrayList statusMessages = new ArrayList();
+    Connection db = null;
 
     try {
       XMLUtils xml = new XMLUtils(context.getRequest());
@@ -33,42 +33,50 @@ public final class ProcessPacket extends CFSModule {
 
       AuthenticationItem auth = new AuthenticationItem();
       xml.populateObject(auth, xml.getFirstChild("authentication"));
-
-      //if (auth.isValid(context)) {
-      if (auth != null) {
-        String siteId = auth.getId();
-        String code = auth.getCode();
-        System.out.println(siteId + "/" + code);
-
+      db = auth.getConnection(context); 
+      if (db != null) {
         Vector transactionList = new Vector();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
         while (trans.hasNext()) {
+          Element thisElement = (Element)trans.next();
           Transaction thisTransaction = new Transaction();
           thisTransaction.addMapping("account", "com.darkhorseventures.cfsbase.Account");
           thisTransaction.addMapping("contact", "com.darkhorseventures.cfsbase.Contact");
           thisTransaction.addMapping("ticket", "com.darkhorseventures.cfsbase.Ticket");
-          thisTransaction.build((Element)trans.next());
+          thisTransaction.build(thisElement);
+          int statusCode = thisTransaction.execute(db);
+          StatusMessage thisStatus = new StatusMessage();
+          thisStatus.setStatusCode(statusCode);
+          thisStatus.setId(thisTransaction.getId());
+          thisStatus.setMessage(thisTransaction.getErrorMessage());
+          statusMessages.add(thisStatus);
         }
 
-        if (errorText == null && transactionList.size() > 0) {
-          statusCode = 0;
+        if (statusMessages.size() == 0 && transactionList.size() == 0) {
+          StatusMessage thisStatus = new StatusMessage();
+          thisStatus.setStatusCode(1);
+          thisStatus.setMessage("No transactions found");
+          statusMessages.add(thisStatus);
         }
-        if (errorText == null && transactionList.size() == 0) {
-          errorText = "No transactions found";
-        }
-
       } else {
-        errorText = "Authentication element not found";
+        StatusMessage thisStatus = new StatusMessage();
+        thisStatus.setStatusCode(1);
+        thisStatus.setMessage("Not authorized");
+        statusMessages.add(thisStatus);
       }
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace();
-      errorText = "Error: " + e.getMessage();
+      StatusMessage thisStatus = new StatusMessage();
+      thisStatus.setStatusCode(1);
+      thisStatus.setMessage("Error: " + e.getMessage());
+      statusMessages.add(thisStatus);
+    } finally {
+      if (db != null) this.freeConnection(context, db);
     }
 
-    context.getRequest().setAttribute("statusCode", "" + statusCode);
-    context.getRequest().setAttribute("errorText", errorText);
+    context.getRequest().setAttribute("statusMessages", statusMessages);
     return ("PacketOK");
   }
 }

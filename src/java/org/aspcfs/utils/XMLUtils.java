@@ -154,9 +154,9 @@ public class XMLUtils {
             Class[] argTypes = new Class[]{value.getClass()};
             method = target.getClass().getMethod("set" + param, argTypes);
             method.invoke(target, new Object[]{value});
-            if (System.getProperty("DEBUG") != null) System.out.println("ProcessPacket-> set" + param + "(" + value + ")");
+            if (System.getProperty("DEBUG") != null) System.out.println("XMLUtils-> set" + param + "(" + value + ")");
           } catch (Exception e) {
-            if (System.getProperty("DEBUG") != null) System.out.println("ProcessPacket-> set" + param + "(" + value + ") **INVALID"); 
+            if (System.getProperty("DEBUG") != null) System.out.println("XMLUtils-> set" + param + "(" + value + ") **INVALID"); 
           }
         }
       }

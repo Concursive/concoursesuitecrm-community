@@ -2,6 +2,9 @@ package com.darkhorseventures.utils;
 
 import java.util.*;
 import org.w3c.dom.*;
+import java.sql.*;
+import java.lang.reflect.*;
+import com.darkhorseventures.cfsbase.*;
 
 public class TransactionItem {
 
@@ -12,31 +15,35 @@ public class TransactionItem {
 
   private Object object = null;
   private int action = -1;
+  private StringBuffer errorMessage = new StringBuffer();
   
   public TransactionItem() {}
   
   public TransactionItem(Element objectElement, Hashtable mapping) {
-    this.setAction(objectElement);
-    this.setObject(objectElement, mapping);
-    XMLUtils.populateObject(object, objectElement);
+    try {
+      this.setAction(objectElement);
+      this.setObject(objectElement, mapping);
+      XMLUtils.populateObject(object, objectElement);
+    } catch (Exception e) {
+      if (System.getProperty("DEBUG") != null) { 
+        System.out.println("TransactionItem-> Cannot create: " + objectElement.getTagName());
+      }
+      errorMessage.append("Invalid element: " + objectElement.getTagName() + System.getProperty("line.separator"));
+    }
   }
   
   public void setObject(Object tmp) {
     object = tmp;
   }
   
-  public void setObject(Element element, Hashtable mapping) {
-    try {
-      String elementTag = element.getTagName();
-      if (mapping.containsKey(elementTag)) {
-        //Create the object
-        object = Class.forName((String)mapping.get(elementTag)).newInstance();
-        if (System.getProperty("DEBUG") != null) { 
-          System.out.println("TransactionItem-> New: " + object.getClass().getName());
-        }
+  public void setObject(Element element, Hashtable mapping) throws Exception {
+    String elementTag = element.getTagName();
+    if (mapping.containsKey(elementTag)) {
+      //Create the object
+      object = Class.forName((String)mapping.get(elementTag)).newInstance();
+      if (System.getProperty("DEBUG") != null) { 
+        System.out.println("TransactionItem-> New: " + object.getClass().getName());
       }
-    } catch (Exception e) {
-      e.printStackTrace(System.out);
     }
   }
   
@@ -66,8 +73,55 @@ public class TransactionItem {
     }
   }
   
+  public String getErrorMessage() {
+    return (errorMessage.toString());
+  }
+  
   public boolean isValid() {
-    return (object != null && action > -1);
+    if (object == null) {
+      errorMessage.append("Invalid object" + System.getProperty("line.separator"));
+    }
+    
+    if (action == -1) {
+      errorMessage.append("Action not specified" + System.getProperty("line.separator"));
+    }
+    
+    return (errorMessage.length() == 0);
   }
 
+  public void execute(Connection db) throws Exception {
+    String executeMethod = null;
+    switch(action) {
+      case INSERT:
+        executeMethod = "insert";
+        break;
+      case UPDATE:
+        executeMethod = "update";
+        break;
+      case DELETE:
+        executeMethod = "delete";
+        break;
+      default:
+        break;
+    }
+    
+    if (executeMethod != null && object != null) {
+        java.sql.Connection conn = db;
+        //Class c = Class.forName("java.sql.Connection").newInstance();
+        //Class[] argTypes = new Class[]{c.getClass()};
+        System.out.println("Class: " + conn.getClass().getName());
+        System.out.println("Object: " + object.getClass().getName());
+        Method method = object.getClass().getMethod("insert", new Class[]{conn.getClass()});
+        System.out.println("step2");        
+        method.invoke(object, new Object[]{db});
+        if (System.getProperty("DEBUG") != null) System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
+    } else {
+      errorMessage.append("Action not specified" + System.getProperty("line.separator"));
+    }
+  }
+  
+  public boolean hasError() {
+    return (errorMessage.length() > 0);
+  }
+  
 }

@@ -88,7 +88,7 @@ public final class Login extends GenericAction {
       loginBean.setMessage("* Gatekeeper: " + e.getMessage());
     }
 
-    sqlDriver.free(db);
+    if (db != null) sqlDriver.free(db);
     
 
     if (ce == null) {
@@ -170,7 +170,7 @@ public final class Login extends GenericAction {
       thisUser = null;
     }
 
-    sqlDriver.free(db);
+    if (db != null) sqlDriver.free(db);
 
     if (thisUser == null) {
       return "LoginRetry";
