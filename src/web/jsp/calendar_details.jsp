@@ -34,7 +34,7 @@ function initialize_menus(){
 %>
 <%-- Preload image rollovers for drop-down menu --%>
 <script type="text/javascript">
-loadImages('select');
+loadImages('select-arrow');
 
 function changeUserName(id){
   alert(window.parent.getElementById(id).innerHtml);
@@ -70,25 +70,33 @@ function reloadCalendar(){
     <td valign="top" align="center" width="100%" nowrap>
       <a href="javascript:window.parent.frames['calendar'].resetCalendar();javascript:window.location.href='MyCFS.do?command=AgendaView&inline=true&&source=calendardetails<%=returnPage != null ? "&return=" + returnPage : "" %>';">Back To Next 7 Days View</a>
     </td>
-    <table style="visibility:none" border="0" height="6"><tr height='2' style="visibility:none"><td></td></tr></table>
+  </tr>
+  <tr>
+    <td><table style="visibility:none" border="0" height="6"><tr height='2' style="visibility:none"><td></td></tr></table></td>
   </tr>
 </dhv:evaluate>
 <%-- Display the days, always starting with today in Agenda View --%>
   <tr>
-    <td width="100%" valign="top">
+    <td width="100%" valign="top" align="left">
       <table width="100%" cellspacing="0" cellpadding="0" border="0">
 <dhv:evaluate exp="<%= CalendarInfo.isAgendaView() %>">      
-        <tr class="weekSelector">
-          <td colspan="2" width="100%">
-            <strong><%
-              Calendar tmpCal = Calendar.getInstance();
-              tmpCal.setTimeZone(timeZone);
-              int currDay = tmpCal.get(Calendar.DAY_OF_MONTH);
-              int currMonth = tmpCal.get(Calendar.MONTH) + 1;
-              int currYear = tmpCal.get(Calendar.YEAR);
-              DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
-               %>
-            <%= toFullDateString(formatter.parse(currMonth  + "/" + currDay + "/" + currYear)) %> <font color="#006699">(Today)</font></strong>
+        <tr>
+          <td colspan="2">
+            <table border="0" width="100%">
+              <tr>
+                <td width="100%" class="dayName">
+                    <strong><%
+                      Calendar tmpCal = Calendar.getInstance();
+                      tmpCal.setTimeZone(timeZone);
+                      int currDay = tmpCal.get(Calendar.DAY_OF_MONTH);
+                      int currMonth = tmpCal.get(Calendar.MONTH) + 1;
+                      int currYear = tmpCal.get(Calendar.YEAR);
+                      DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
+                       %>
+                    <%= toFullDateString(formatter.parse(currMonth  + "/" + currDay + "/" + currYear)) %> <font color="#006699">(Today)</font></strong>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
 </dhv:evaluate>
@@ -111,36 +119,42 @@ function reloadCalendar(){
 %>
     <dhv:evaluate exp="<%= (CalendarInfo.isAgendaView() && !isToday && count == 0) %>">
         <tr>
-          <td valign="top" nowrap>
-            &nbsp;
+          <td>
+            <img src="images/select-arrow-trans.gif"  border="0" />
           </td>
           <td valign="top">
             There are currently no items pending for you.
           </td>
         </tr>
         <tr style="visibility:none">
-          <td style="visibility:none">
-            <br>
+          <td style="visibility:none" colspan="2">
+            <br />
           </td>
         </tr>
     </dhv:evaluate>
     <dhv:evaluate exp="<%= (!isToday && CalendarInfo.isAgendaView()) || !CalendarInfo.isAgendaView() %>">
-        <tr class="weekSelector">
-          <td colspan="2" width="100%">
-            <strong><%= toFullDateString(thisDay.getDate()) %></strong>
+        <tr>
+          <td colspan="2">
+            <table border="0" width="100%">
+              <tr>
+                <td width="100%" class="dayName">
+                  <strong><%= toFullDateString(thisDay.getDate()) %></strong>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
     </dhv:evaluate>
     <tr>
-        <td colspan="2" width="100%">
-          <%-- draw the events for the day --%>
-          <%@ include file="mycfs/calendar_days_events_include.jsp" %>
-        </td>
+      <td colspan="2" width="100%">
+        <%-- draw the events for the day --%>
+        <%@ include file="mycfs/calendar_days_events_include.jsp" %>
+      </td>
     </tr>
     <dhv:evaluate if="<%= days.hasNext() %>">
     <tr style="visibility:none">
-      <td style="visibility:none">
-        <br>
+      <td style="visibility:none" colspan="2">
+        <br />
       </td>
     </tr>
     </dhv:evaluate>
@@ -150,8 +164,8 @@ function reloadCalendar(){
    } else {
 %>
         <tr>
-          <td valign="top" nowrap>
-            &nbsp;
+          <td>
+            <img src="images/select-arrow-trans.gif"  border="0" />
           </td>
           <td valign="top">
             There are currently no items pending for you.

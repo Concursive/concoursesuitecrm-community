@@ -25,15 +25,16 @@
 
 <%-- include pending accounts --%>
 <dhv:evaluate if="<%= orgEventList.getAlertOrgs().size() > 0 %>">
-<table border="0">
+<table border="0" id="alertorgdetails<%= toFullDateString(thisDay.getDate()) %>" width="100%">
+  <%-- title row --%>
   <tr>
-    <td colspan="6" nowrap>
-      <%-- event name --%>
-      <img border="0" src="images/accounts.gif" align="texttop" title="Accounts"><a href="javascript:changeImages('alertorgsimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertorgdetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="alertorgsimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details"><dhv:label name="accounts.account.alerts">Account Alerts</dhv:label></a>&nbsp;(<%= orgEventList.getAlertOrgs().size() %>)
+    <td>&nbsp;</td>
+    <td colspan="3" nowrap class="eventName">
+      <img border="0" src="images/accounts.gif" align="absmiddle" title="Accounts" />
+      <dhv:label name="accounts.account.alerts">Account Alerts</dhv:label>
+      (<%= orgEventList.getAlertOrgs().size() %>)
     </td>
   </tr>
-</table>
-<table border="0" id="alertorgdetails<%= toFullDateString(thisDay.getDate()) %>" style="<%= firstEvent ? "display:" : "display:none"%>">
   <%-- include account details --%>
   <%
     Iterator j = orgEventList.getAlertOrgs().iterator();
@@ -41,9 +42,9 @@
   %>
     <tr>
       <th>
-        &nbsp
+        &nbsp;
       </th>
-      <th class="weekSelector" width="100%">
+      <th class="weekSelector">
         <strong>Alert</strong>
       </th>
       <th class="weekSelector" nowrap>
@@ -59,18 +60,19 @@
       menuCount++;
     %>
     <tr>
-     <td>
+     <td valign="top">
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayAccountMenu('select<%= menuCount %>','menuAccount', '<%= thisOrg.getOrgId() %>');"
-         onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuAccount');"><img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayAccountMenu('select-arrow<%= menuCount %>','menuAccount', '<%= thisOrg.getOrgId() %>');"
+         onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuAccount');"><img
+         src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0"></a>
      </td>
-     <td nowrap>
+     <td width="100%" valign="top">
        <%= toHtml(thisOrg.getAlertText()) %>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <%= thisOrg.getName() %>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <dhv:username id="<%= thisOrg.getEnteredBy() %>"/>
      </td>
     </tr>
@@ -80,15 +82,16 @@
 </dhv:evaluate>
 
 <dhv:evaluate if="<%= orgEventList.getContractEndOrgs().size() > 0 %>">
-<table border="0">
+<table border="0" id="alertcontractorgdetails<%= toFullDateString(thisDay.getDate()) %>" width="100%">
+  <%-- title row --%>
   <tr>
-    <td colspan="6" nowrap>
-      <%-- event name --%>
-      <img border="0" src="images/accounts.gif" align="texttop" title="Accounts"><a href="javascript:changeImages('alertcontractorgsimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertcontractorgdetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="alertcontractorgsimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details"><dhv:label name="accounts.accountContractEndAlerts">Account Contract End Alerts</dhv:label></a>&nbsp;(<%= orgEventList.getContractEndOrgs().size() %>)
+    <td>&nbsp;</td>
+    <td colspan="2" nowrap class="eventName">
+      <img border="0" src="images/accounts.gif" align="absmiddle" title="Accounts" />
+      <dhv:label name="accounts.accountContractEndAlerts">Account Contract End Alerts</dhv:label>
+      (<%= orgEventList.getContractEndOrgs().size() %>)
     </td>
   </tr>
-</table>
-<table border="0" id="alertcontractorgdetails<%= toFullDateString(thisDay.getDate()) %>" style="<%= firstEvent ? "display:" : "display:none"%>">
   <%-- include account details --%>
   <%
     Iterator j = orgEventList.getContractEndOrgs().iterator();
@@ -96,12 +99,12 @@
   %>
     <tr>
       <th>
-        &nbsp
+        &nbsp;
       </th>
-      <th class="weekSelector" nowrap>
+      <th class="weekSelector" nowrap width="100%">
         <strong>Account Name</strong>
       </th>
-      <th class="weekSelector" nowrap>
+      <th class="weekSelector">
         <strong>Owner</strong>
       </th>
     </tr>
@@ -111,17 +114,18 @@
       menuCount++;
     %>
     <tr>
-     <td>
+      <td valign="top">
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayAccountMenu('select<%= menuCount %>','menuAccount', '<%= thisOrg.getOrgId() %>');"
-         onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuAccount');"><img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
-     </td>
-     <td nowrap>
+       <a href="javascript:displayAccountMenu('select-arrow<%= menuCount %>','menuAccount', '<%= thisOrg.getOrgId() %>');"
+         onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuAccount');"><img
+         src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
+      </td>
+      <td valign="top">
        <%= thisOrg.getName() %>
-     </td>
-     <td nowrap>
-       <dhv:username id="<%= thisOrg.getEnteredBy() %>"/>
-     </td>
+      </td>
+      <td nowrap valign="top">
+        <dhv:username id="<%= thisOrg.getEnteredBy() %>"/>
+      </td>
     </tr>
    <% }
    } %>

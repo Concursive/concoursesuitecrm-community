@@ -27,15 +27,16 @@
 
 <%-- include alert activities --%>
 <dhv:evaluate if="<%= oppEventList.getAlertOpps().size() > 0 %>">
-<table border="0">
+<table border="0" id="alertoppdetails<%= toFullDateString(thisDay.getDate()) %>" width="100%">
+  <%-- title row --%>
   <tr>
-    <td colspan="6" nowrap>
-      <%-- event name --%>
-      <img border="0" src="images/alertopp.gif" align="texttop" title="Opportunities"><a href="javascript:changeImages('alertoppsimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertoppdetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="alertoppsimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Opportunities</a>&nbsp;(<%= oppEventList.getAlertOpps().size() %>)
+    <td>&nbsp;</td>
+    <td colspan="4" nowrap class="eventName">
+      <img border="0" src="images/alertopp.gif" align="absmiddle" title="Opportunities" />
+      Opportunities</a>
+      (<%= oppEventList.getAlertOpps().size() %>)
     </td>
   </tr>
-</table>
-<table border="0" id="alertoppdetails<%= toFullDateString(thisDay.getDate()) %>" style="<%= firstEvent ? "display:" : "display:none"%>">
   <%-- include opportunity details --%>
   <%
     Iterator j = oppEventList.getAlertOpps().iterator();
@@ -43,15 +44,15 @@
   %>
     <tr>
       <th>
-        &nbsp
+        &nbsp;
       </th>
-      <th class="weekSelector" nowrap>
+      <th class="weekSelector" width="100%">
         <strong>Alert</strong>
       </th>
-      <th class="weekSelector" nowrap>
+      <th class="weekSelector">
         <strong>Component</strong>
       </th>
-      <th class="weekSelector" width="100%" nowrap>
+      <th class="weekSelector" nowrap>
         <strong>Guess Amount</strong>
       </th>
       <th class="weekSelector" nowrap>
@@ -64,21 +65,22 @@
       menuCount++;
     %>
     <tr>
-     <td>
+     <td valign="top">
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayOppMenu('select<%= menuCount %>','menuOpp', '<%= alertOpp.getId() %>');"
-       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayOppMenu('select-arrow<%= menuCount %>','menuOpp', '<%= alertOpp.getId() %>');"
+       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuOpp');"><img
+       src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
      </td>
-     <td nowrap>
+     <td valign="top">
        <%= toHtml(alertOpp.getAlertText()) %>
      </td>
-     <td nowrap>
+     <td valign="top">
        <%= toString(alertOpp.getDescription()) %>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <zeroio:currency value="<%= alertOpp.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/> 
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <zeroio:tz timestamp="<%= alertOpp.getCloseDate() %>" dateOnly="true" default="&nbsp;"/>
      </td>
     </tr>

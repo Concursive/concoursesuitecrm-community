@@ -26,24 +26,23 @@
                             
 <%-- include pending activities --%>
 <dhv:evaluate if="<%= callEventList.getPendingCalls().size() > 0 %>">
-<table border="0">
+<table border="0" id="pendingcalldetails<%= toFullDateString(thisDay.getDate()) %>" width="100%">
+  <%-- title row --%>
   <tr>
-    <td colspan="6" nowrap>
-      <%-- event name --%>
-      <img border="0" src="images/box-hold.gif" align="texttop" title="Activities"><a href="javascript:changeImages('pendingcallsimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('pendingcalldetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="pendingcallsimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Pending Activities</a>&nbsp;(<%= callEventList.getPendingCalls().size() %>)
+    <td>&nbsp;</td>
+    <td colspan="6" nowrap class="eventName">
+      <img border="0" src="images/box-hold.gif" align="absmiddle" title="Activities" />
+      Pending Activities
+      (<%= callEventList.getPendingCalls().size() %>)
     </td>
   </tr>
-</table>
-<table border="0" id="pendingcalldetails<%= toFullDateString(thisDay.getDate()) %>" style="<%= firstEvent ? "display:" : "display:none"%>">
   <%-- include call details --%>
   <%
     Iterator j = callEventList.getPendingCalls().iterator();
     if(j.hasNext()){
   %>
     <tr>
-      <th>
-        &nbsp
-      </th>
+      <th>&nbsp;</th>
       <th class="weekSelector" nowrap>
         <strong>Due</strong>
       </th>
@@ -69,23 +68,23 @@
       menuCount++;
     %>
     <tr <%= toString(pendingCall.getPriorityString()).startsWith("H") ? "class=\"highlightRow\"" : ""%>>
-     <td>
+     <td valign="top">
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayCallMenu('select<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getContactId() %>', '<%= pendingCall.getId() %>','pending');" 
+       <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= pendingCall.getContactOrgId() %>', '<%= pendingCall.getContactId() %>', '<%= pendingCall.getId() %>','pending');" 
           onMouseOver="over(0, <%= menuCount %>);" 
-          onmouseout="out(0, <%= menuCount %>);hideMenu('menuCall');">
-          <img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
+          onmouseout="out(0, <%= menuCount %>);hideMenu('menuCall');"><img
+          src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <zeroio:tz timestamp="<%= pendingCall.getAlertDate() %>" timeOnly="true"/>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <%= StringUtils.trimToSize(toString(pendingCall.getOrgName()), 20) %>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <%= toString(pendingCall.getContactName()) %>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
         <% if (pendingCall.getContact().getPhoneNumberList().size() > 1) { %>
             <%= pendingCall.getContact().getPhoneNumberList().getHtmlSelect("contactphone", -1) %>
         <% } else if (pendingCall.getContact().getPhoneNumberList().size() == 1) { 
@@ -95,10 +94,10 @@
         <%}%>
         &nbsp;
       </td>
-     <td nowrap>
+     <td valign="top">
        <%= StringUtils.trimToSize(toHtml(pendingCall.getAlertText()), 30) %>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <%= StringUtils.trimToSizeNoDots(toString(pendingCall.getPriorityString()), 1) %>
      </td>
     </tr>
@@ -109,15 +108,16 @@
 
 <%-- include completed activities --%>
 <dhv:evaluate if="<%= callEventList.getCompletedCalls().size() > 0 %>">
-<table border="0">
+<table border="0" id="completedcalldetails<%= toFullDateString(thisDay.getDate()) %>" width="100%">
+  <%-- title row --%>
   <tr>
-    <td colspan="6" nowrap>
-      <%-- event name --%>
-      <img border="0" src="images/alertcall.gif" align="texttop" title="Activities"><a href="javascript:changeImages('completedcallsimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('completedcalldetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="completedcallsimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Completed Activities</a>&nbsp;(<%= callEventList.getCompletedCalls().size() %>)
+    <td>&nbsp;</td>
+    <td colspan="4" nowrap class="eventName">
+      <img border="0" src="images/alertcall.gif" align="absmiddle" title="Completed Activities" />
+      Completed Activities
+      (<%= callEventList.getCompletedCalls().size() %>)
     </td>
   </tr>
-</table>
-<table border="0" id="completedcalldetails<%= toFullDateString(thisDay.getDate()) %>" style="<%= firstEvent ? "display:" : "display:none"%>">
   <%-- include call details --%>
   <%
     Iterator k = callEventList.getCompletedCalls().iterator();
@@ -127,13 +127,13 @@
       <th>
         &nbsp;
       </th>
-      <th class="weekSelector" nowrap>
+      <th class="weekSelector">
         <strong>Time</strong>
       </th>
       <td class="weekSelector" nowrap>
-       <strong><dhv:label name="accounts.account">Account</dhv:label></strong>
-     </td>
-     <th class="weekSelector" nowrap>
+        <strong><dhv:label name="accounts.account">Account</dhv:label></strong>
+      </td>
+      <th class="weekSelector">
         <strong>Contact</strong>
       </th>
       <th class="weekSelector" width="100%">
@@ -146,24 +146,24 @@
     menuCount++;
   %>
   <tr>
-   <td>
+   <td valign="top">
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-     <a href="javascript:displayCallMenu('select<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
+     <a href="javascript:displayCallMenu('select-arrow<%= menuCount %>','menuCall','<%= completedCall.getContactOrgId() %>','<%= completedCall.getContactId() %>', '<%= completedCall.getId() %>', '');" 
         onMouseOver="over(0, <%= menuCount %>)" 
         onMouseOut="out(0, <%= menuCount %>);hideMenu('menuCall');"><img 
-        src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
+        src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0"></a>
    </td>
-   <td nowrap>
+   <td nowrap valign="top">
      <zeroio:tz timestamp="<%= completedCall.getCompleteDate() %>" timeOnly="true"/>
    </td>
-   <td nowrap>
-       <%= StringUtils.trimToSize(toString(completedCall.getOrgName()), 20) %>
+   <td nowrap valign="top">
+     <%= StringUtils.trimToSize(toString(completedCall.getOrgName()), 20) %>
    </td>
-   <td nowrap>
+   <td nowrap valign="top">
      <%= toString(completedCall.getContactName()) %>
    </td>
-   <td nowrap>
-   <%= StringUtils.trimToSize(toHtml(completedCall.getSubject()), 30) %>
+   <td valign="top">
+     <%= StringUtils.trimToSize(toHtml(completedCall.getSubject()), 30) %>
    </td>
   </tr>
   <% 

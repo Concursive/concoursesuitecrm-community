@@ -24,15 +24,16 @@
 %>
 <%-- include pending tasks --%>
 <dhv:evaluate if="<%= taskEventList.getPendingTasks().size() > 0 %>">
-<table border="0">
+<table border="0" id="pendingtaskdetails<%= toFullDateString(thisDay.getDate()) %>" width="100%">
+  <%-- title row --%>
   <tr>
-    <td colspan="6" nowrap>
-      <%-- event name --%>
-      <img border="0" src="images/box.gif" align="texttop" title="Tasks"><a href="javascript:changeImages('pendingtasksimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('pendingtaskdetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="pendingtasksimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Incomplete Tasks</a>&nbsp;(<%= taskEventList.getPendingTasks().size() %>)
+    <td>&nbsp;</td>
+    <td colspan="3" nowrap class="eventName">
+      <img border="0" src="images/box.gif" align="absmiddle" title="Incomplete Tasks" />
+      Incomplete Tasks
+      (<%= taskEventList.getPendingTasks().size() %>)
     </td>
   </tr>
-</table>
-<table border="0" id="pendingtaskdetails<%= toFullDateString(thisDay.getDate()) %>" style="<%= firstEvent ? "display:" : "display:none"%>">
   <%-- include task details --%>
   <%
     Iterator j = taskEventList.getPendingTasks().iterator();
@@ -40,7 +41,7 @@
   %>
     <tr>
       <th>
-        &nbsp
+        &nbsp;
       </th>
       <th class="weekSelector" width="100%">
         <strong>Description</strong>
@@ -58,20 +59,21 @@
       menuCount++;
     %>
     <tr>
-     <td>
-       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayTaskMenu('select<%= menuCount %>','menuTask', '<%= Constants.TASKS %>', '<%=  pendingTask.getId() %>', '<%= pendingTask.getContactId() %>', '<%= ((pendingTask.getContactId()!=-1) && pendingTask.getContact().getEmployee())?"yes":"no" %>');"
-       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTask');"><img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
-     </td>
-     <td nowrap>
-       <%= toHtml(pendingTask.getDescription()) %>
-     </td>
-     <td nowrap>
-       <%= pendingTask.getPriority() %>
-     </td>
-     <td nowrap>
-       <%= pendingTask.getAge() %> 
-     </td>
+      <td>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+        <a href="javascript:displayTaskMenu('select-arrow<%= menuCount %>','menuTask', '<%= Constants.TASKS %>', '<%=  pendingTask.getId() %>', '<%= pendingTask.getContactId() %>', '<%= ((pendingTask.getContactId()!=-1) && pendingTask.getContact().getEmployee())?"yes":"no" %>');"
+        onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTask');"><img
+        src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
+      </td>
+      <td nowrap>
+        <%= toHtml(pendingTask.getDescription()) %>
+      </td>
+      <td nowrap>
+        <%= pendingTask.getPriority() %>
+      </td>
+      <td nowrap>
+        <%= pendingTask.getAge() %> 
+      </td>
     </tr>
    <% }
    } %>

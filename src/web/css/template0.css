@@ -322,6 +322,17 @@ A:visited:hover{color:#FF3300;}
   font-weight: bold;
   text-align: center;
 }
+.dayName {
+  color: #000000;
+  text-align: left;
+  border-bottom: 1px solid #000;
+}
+.eventName {
+  background: #CCCCCC;
+  color: #000000;
+  font-weight: bold;
+  text-align: left;
+}
 .weekName {
   background: #CCCCCC;
   color: #000000;

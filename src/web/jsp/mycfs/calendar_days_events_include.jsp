@@ -23,7 +23,7 @@
   String[] EVENT_TYPES = {"Tasks", "Calls", "Opportunities", "Account Alerts", "Account Contract Alerts", "Contact Calls", "Opportunity Calls", "Holiday", "Assignments", "System Alerts", "Quotes", "Tickets","Ticket Requests","Pending Calls"};
 %>
 
-<table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
 <%-- Iterate through all event types in order specified in the EVENT_TYPES --%>
 <%
   for (int i = 0; i< Array.getLength(EVENT_TYPES); i++) {
@@ -55,9 +55,30 @@
         ArrayList tmpList = (ArrayList) thisDay.get(category);
         CalendarEvent thisEvent = (CalendarEvent) tmpList.get(0);
     %>
-        <img border="0" src="images/event-holiday.gif" align="texttop" title="Holidays"><%= "US Bank Holiday: " + thisEvent.getSubject() %>
+      <table border="0" width="100%">
+        <tr>
+          <td>
+            <img src="images/select-arrow-trans.gif" border="0" />
+          </td>
+          <td width="100%">
+            <img border="0" src="images/event-holiday.gif" align="absmiddle" title="Holidays" />
+            US Bank Holiday:
+            <%= thisEvent.getSubject() %>
+          </td>
+        </tr>
+      </table>
     <% }else if (category.equals("System Alerts")) { %>
-        <img border="0" src="images/box-hold.gif" align="texttop" title="System Alerts">User login expires
+      <table border="0" width="100%">
+        <tr>
+          <td>
+            <img src="images/select-arrow-trans.gif" border="0" />
+          </td>
+          <td width="100%">
+            <img border="0" src="images/box-hold.gif" align="absmiddle" title="System Alerts" />
+            User login expires
+          </td>
+        </tr>
+      </table>
     <% }  %>
   </td>
  </tr>

@@ -271,6 +271,12 @@ public class DateTimeHandler extends TagSupport {
             } else {
               formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
             }
+          } else if (timeOnly) {
+            if ((showTimeZone) && (timeZone != null)) {
+              formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()) + " z");
+            } else {
+              formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
+            }
           } else {
             SimpleDateFormat dateFormatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
                 dateFormat, locale);

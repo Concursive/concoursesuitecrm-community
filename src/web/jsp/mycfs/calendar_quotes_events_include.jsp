@@ -25,15 +25,16 @@
 
 <%-- include quotes --%>
 <dhv:evaluate if="<%= quoteEventList.getTodaysQuotes().size() > 0 %>">
-<table border="0">
+<table border="0" id="todaysquotesdetails<%= toFullDateString(thisDay.getDate()) %>" width="100%">
+  <%-- title row --%>
   <tr>
-    <td colspan="6" nowrap>
-      <%-- event name --%>
-      <img border="0" src="images/box.gif" align="texttop" title="Quotes"><a href="javascript:changeImages('todaysquotesimage<%=toFullDateString(thisDay.getDate()) %>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('todaysquotesdetails<%=toFullDateString(thisDay.getDate()) %>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%= firstEvent ? "images/arrowdown.gif" : "images/arrowright.gif"%>" name="todaysquotesimage<%=toFullDateString(thisDay.getDate())%>" id="<%= firstEvent ? "0" : "1"%>" border="0" title="Click To View Details">Quotes pending your approval</a>&nbsp;(<%= quoteEventList.getTodaysQuotes().size() %>)
+    <td>&nbsp;</td>
+    <td colspan="3" nowrap class="eventName">
+      <img border="0" src="images/box.gif" align="absmiddle" title="Quotes" />
+      Quotes pending your approval
+      (<%= quoteEventList.getTodaysQuotes().size() %>)
     </td>
   </tr>
-</table>
-<table border="0" id="todaysquotesdetails<%= toFullDateString(thisDay.getDate()) %>" style="<%= firstEvent ? "display:" : "display:none"%>">
   <%-- include quote details --%>
   <%
     Iterator j = quoteEventList.getTodaysQuotes().iterator();
@@ -41,12 +42,12 @@
   %>
     <tr>
       <th>
-        &nbsp
+        &nbsp;
       </th>
       <th class="weekSelector" nowrap>
         <strong>Quote #</strong>
       </th>
-      <th class="weekSelector" nowrap>
+      <th class="weekSelector">
         <strong>Due</strong>
       </th>
       <th class="weekSelector" width="100%">
@@ -59,18 +60,19 @@
       menuCount++;
     %>
     <tr>
-     <td>
+     <td valign="top">
        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayQuoteMenu('select<%= menuCount %>','menuQuote', '<%=  thisQuote.getId() %>', '<%= thisQuote.getContactId() %>');"
-       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuQuote');"><img src="images/select.gif" name="select<%= menuCount %>" id="select<%= menuCount %>" align="absmiddle" border="0"></a>
+       <a href="javascript:displayQuoteMenu('select-arrow<%= menuCount %>','menuQuote', '<%=  thisQuote.getId() %>', '<%= thisQuote.getContactId() %>');"
+       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuQuote');"><img
+       src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <%= thisQuote.getId() %>
      </td>
-     <td nowrap>
+     <td nowrap valign="top">
        <dhv:tz timestamp="<%= thisQuote.getExpirationDate() %>" timeOnly="true"/>
      </td>
-     <td nowrap>
+     <td valign="top">
        <%= StringUtils.trimToSizeNoDots(toString(thisQuote.getShortDescription()), 30) %>
      </td>
     </tr>

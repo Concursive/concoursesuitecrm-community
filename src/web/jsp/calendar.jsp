@@ -94,7 +94,7 @@
       CompanyCalendar.setShowSubject(false);
 %>
 <%= CompanyCalendar.getHtml() %>
-<dhv:include name="calendar.legend" none="true">
+<dhv:include name="calendar.legend">
 <table bgcolor="#FFFFFF" width="98%" border="0" cellpadding="4" cellspacing="0">
   <tr>
     <td>
