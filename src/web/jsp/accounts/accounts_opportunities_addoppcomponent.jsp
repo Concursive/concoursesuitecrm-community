@@ -1,11 +1,10 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
-<jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
-<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
@@ -46,14 +45,14 @@
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
     } else {
-      var test = document.addOpportunity.selectedList;
+      var test = document.opportunityForm.selectedList;
       if (test != null) {
-        return selectAllOptions(document.addOpportunity.selectedList);
+        return selectAllOptions(document.opportunityForm.selectedList);
       }
     }
   }
 </script>
-<form name="addOpportunity" action="OpportunitiesComponents.do?command=InsertOppComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="opportunityForm" action="OpportunitiesComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
@@ -77,167 +76,26 @@ Add Component<br>
     <td class="containerBack">
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-      <input type="reset" value="Reset">
-      <br>
-      <%= showError(request, "actionError") %>  
-      <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      <tr class="title">
-        <td colspan="2">
-          <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
-        </td>     
-      </tr>
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Assign To
-        </td>
-        <td valign="center">
-          <%= UserList.getHtmlSelect("owner", OppComponentDetails.getOwner() ) %>
-        </td>
-      </tr>
-      <tr class="containerBody">
-        <td class="formLabel" valign="top">
-          Component<br>Type(s)
-        </td>
-        <td>
-          <table border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td>
-                <select multiple name="selectedList" id="selectedList" size="5">
-                  <dhv:lookupHtml listName="TypeList" lookupName="TypeSelect"/>
-                </select>
-                <input type="hidden" name="previousSelection" value="">
-              </td>
-              <td valign="top">
-                &nbsp;[<a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>]
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>    
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Component Description
-        </td>
-        <td>
-          <input type="text" size="50" name="description" value="<%= toHtmlValue(OppComponentDetails.getDescription()) %>">
-          <font color="red">*</font> <%= showAttribute(request, "componentDescriptionError") %>
-        </td>
-      </tr>  
-      <tr class="containerBody">
-        <td valign="top" nowrap class="formLabel">Additional Notes</td>
-        <td><TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(OppComponentDetails.getNotes()) %></TEXTAREA></td>
-      </tr>  
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Source
-        </td>
-        <td>
-          <% BusTypeList.setDefaultKey(OppComponentDetails.getType());%>
-          <%= BusTypeList.getHtml() %>
-        </td>
-      </tr>
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Prob. of Close
-        </td>
-        <td>
-          <input type="text" size="5" name="closeProb" value="<%= OppComponentDetails.getCloseProbValue() %>">%
-          <font color="red">*</font> <%= showAttribute(request, "closeProbError") %>
-        </td>
-      </tr>
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Est. Close Date
-        </td>
-        <td>
-          <input type="text" size="10" name="closeDate" value="<%= toHtmlValue(OppComponentDetails.getCloseDateString()) %>">
-          <a href="javascript:popCalendar('addOpportunity', 'closeDate');">Date</a> (mm/dd/yyyy)
-          <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
-        </td>
-      </tr>
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Low Estimate
-        </td>
-        <td>
-          <input type="text" size="10" name="low" value="<%= toHtmlValue(OppComponentDetails.getLowAmount()) %>">
-        </td>
-      </tr>
-      
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Best Guess Estimate
-        </td>
-        <td>
-          <input type="text" size="10" name="guess" value="<%= toHtmlValue(OppComponentDetails.getGuessAmount()) %>">
-          <font color="red">*</font> <%= showAttribute(request, "guessError") %>
-        </td>
-      </tr>
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          High Estimate
-        </td>
-        <td>
-          <input type="text" size="10" name="high" value="<%= toHtmlValue(OppComponentDetails.getHighAmount()) %>">
-        </td>
-      </tr>
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Est. Term
-        </td>
-        <td>
-          <input type="text" size="5" name="terms" value="<%= toHtmlValue(OppComponentDetails.getTermsString()) %>">
-          <%= UnitTypeList.getHtml("units", (OppComponentDetails.getUnits() != null ? OppComponentDetails.getUnits() : "")) %>
-          <font color="red">*</font> <%= showAttribute(request, "termsError") %>
-        </td>
-      </tr>
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Current Stage
-        </td>
-        <td>
-          <%= StageList.getHtmlSelect("stage", OppComponentDetails.getStage()) %>
-          <input type="checkbox" name="closeNow" <%= OppComponentDetails.getCloseIt() ? " checked" : ""%>>Close this component
-        </td>
-      </tr>
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Est. Commission
-        </td>
-        <td>
-          <input type="text" size="5" name="commission" value="<%= OppComponentDetails.getCommissionValue() %>">%
-          <input type="hidden" name="accountLink" value="<%=request.getParameter("orgId")%>">
-          <input type="hidden" name="headerId" value="<%= OpportunityHeader.getId() %>">
-          <input type="hidden" name="id" value="<%= OpportunityHeader.getId() %>">
-          <input type="hidden" name="orgId" value="<%=request.getParameter("orgId")%>">
-        </td>
-      </tr>
-      <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Alert Description
-        </td>
-        <td valign=center>
-          <input type="text" size="50" name="alertText" value="<%= toHtmlValue(OppComponentDetails.getAlertText()) %>"><br>
-        </td>
-      </tr>
-       <tr class="containerBody">
-        <td nowrap class="formLabel">
-          Alert Date
-        </td>
-        <td>
-          <input type="text" size="10" name="alertDate" value="<%= toHtmlValue(OppComponentDetails.getAlertDateString()) %>">
-          <a href="javascript:popCalendar('addOpportunity', 'alertDate');">Date</a> (mm/dd/yyyy)
-        </td>
-      </tr>
-    </table>
-    &nbsp;
-    <br>
-    <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-    <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-    <input type="reset" value="Reset">
-    <input type="hidden" name="dosubmit" value="true">
-  </td>
-</tr>
+<input type="reset" value="Reset">
+<br>
+<%= showError(request, "actionError") %>  
+
+<%--  include basic opportunity form --%>
+<%@ include file="../pipeline/opportunity_form.jsp" %>
+
+&nbsp;
+<br>
+
+<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+<input type="hidden" name="orgId" value="<%=request.getParameter("orgId")%>">
+<input type="reset" value="Reset">
+<input type="hidden" name="dosubmit" value="true">
+<input type="hidden" name="headerId" value="<%= OpportunityHeader.getId() %>">
+<%-- End container contents --%>
+    </td>
+  </tr>
 </table>
+<%-- End container --%>
 </form>
 </body>

@@ -4,6 +4,14 @@
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+  <%
+    String entity = "pipeline";
+    if("contact".equals(request.getParameter("entity"))){
+        entity = "contact";
+    }else if("account".equals(request.getParameter("entity"))){
+        entity = "account";
+    }
+%>
 <dhv:evaluate if="<%= OpportunityHeader.getId() == -1 %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">

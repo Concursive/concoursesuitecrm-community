@@ -53,15 +53,6 @@
     }
   }
 </script>
-<%
-    String entity = "pipeline";
-    if("contact".equals(request.getParameter("entity"))){
-        entity = "contact";
-    }else if("account".equals(request.getParameter("entity"))){
-        entity = "account";
-    }
-%>
-<% if("pipeline".equals(entity)){ %> 
 <form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
@@ -106,57 +97,6 @@ Add Component<br>
 <%-- Begin the container contents --%>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId()%>';this.form.dosubmit.value='false';">
-<% }else if("contact".equals(entity)){ %>
-<form name="opportunityForm" action="ExternalContactsOppComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<a href="ExternalContacts.do">General Contacts</a> > 
-<a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
-<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
-<a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">Opportunities</a> >
-<a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
-Add Component<br>
-<hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>      
-      <dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" />
-    </td>
-  </tr>
-  <tr>
-    <td class="containerBack">
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-<% }else if("account".equals(entity)){  %>
-<form name="opportunityForm" action="OpportunitiesComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<a href="Accounts.do">Account Management</a> > 
-<a href="Accounts.do?command=View">View Accounts</a> >
-<a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
-<a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Opportunities</a> >
-<a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>">Opportunity Details</a> >
-Add Component<br>
-<hr color="#BFBFBB" noshade>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td>
-      <strong><%= toHtml(OrgDetails.getName()) %></strong>
-    </td>
-  </tr>
-  <tr class="containerMenu">
-    <td>
-      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-      <dhv:container name="accounts" selected="opportunities" param="<%= param1 %>" />
-    </td>
-  </tr>
-  <tr>
-    <td class="containerBack">
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-<% } %>
 
 <input type="reset" value="Reset">
 <br>
@@ -167,19 +107,8 @@ Add Component<br>
 
 &nbsp;
 <br>
-
-<% if("pipeline".equals(entity)){ %>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>';this.form.dosubmit.value='false';">
-<% }else if("contact".equals(entity)){ %>
-<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&id=<%= OpportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-<input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
-<% }else if("account".equals(entity)){ %>
-<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-<input type="hidden" name="orgId" value="<%=request.getParameter("orgId")%>">
-<% } %>
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="headerId" value="<%= OpportunityHeader.getId() %>">
