@@ -5,10 +5,26 @@
     <param-name>DatabaseDriver</param-name>
     <param-value>org.postgresql.Driver</param-value>
   </init-param>
+  <init-param>
+      <param-name>GKHOST</param-name>
+      <param-value>@GKHOST@</param-value>
+  </init-param>
+  <init-param>
+      <param-name>GKUSER</param-name>
+      <param-value>@GKUSER@</param-value>
+  </init-param>
+  <init-param>
+      <param-name>GKUSERPW</param-name>
+      <param-value>@GKUSERPW@</param-value>
+  </init-param>
   <!-- Web address for CFS Web Server to retrieve messages from -->
   <init-param>
     <param-name>CFSWebServer</param-name>
     <param-value>127.0.0.1</param-value>
+  </init-param>
+  <init-param>
+    <param-name>FileLibrary</param-name>
+    <param-value>@FILELIBRARY@</param-value>
   </init-param>
   <!-- Remote Hylafax fax server -->
   <init-param>

@@ -262,6 +262,14 @@ determined user is ${USER}
         <include name="notifier.xml" />
       </fileset>
     </copy>
+    <replace file="${DEST_BIN}/notifier.xml"
+             token="@FILELIBRARY@" value="${DEST_DOCROOT}/../fileLibrary"/>
+    <replace file="${DEST_BIN}/notifier.xml"
+             token="@GKHOST@" value="${GKHOST}"/>
+    <replace file="${DEST_BIN}/notifier.xml"
+             token="@GKUSER@" value="${GKUSER}"/>
+    <replace file="${DEST_BIN}/notifier.xml"
+             token="@GKUSERPW@" value="${GKUSERPW}"/>
   </target>
   
   <target name="apps" description="Java applications that get installed."
