@@ -420,6 +420,26 @@ public class CalendarView {
 
 
   /**
+   *  Gets the startOfWeekDate attribute of the CalendarView object
+   *
+   *@return    The startOfWeekDate value
+   */
+  public java.util.Date getStartOfWeekDate() {
+    Calendar thisCal = Calendar.getInstance();
+    thisCal.set(this.getYear(cal),this.getStartMonthOfWeek()-1,this.getStartDayOfWeek());
+    return thisCal.getTime();
+  }
+  
+  
+  public java.util.Date getEndOfWeekDate() {
+    Calendar thisCal = Calendar.getInstance();
+    thisCal.set(this.getYear(cal),this.getStartMonthOfWeek()-1,this.getStartDayOfWeek());
+    thisCal.add(java.util.Calendar.DATE, + 6);
+    return thisCal.getTime();
+  }
+
+
+  /**
    *  Gets the startDayOfWeek attribute of the CalendarView object
    *
    *@return    The startDayOfWeek value
@@ -427,6 +447,7 @@ public class CalendarView {
   public int getStartDayOfWeek() {
     return startDayOfWeek;
   }
+
 
 
   /**
@@ -1187,13 +1208,13 @@ public class CalendarView {
         dayCount = 7;
       } else if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
         dayCount = 1;
-        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected()-1, calendarInfo.getDaySelected());
+        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected() - 1, calendarInfo.getDaySelected());
       } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
         dayCount = 7;
-        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek()-1, calendarInfo.getStartDayOfWeek());
+        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek() - 1, calendarInfo.getStartDayOfWeek());
       }
     }
-    
+
     while (count < max && loopCount < dayCount) {
       thisDay = getDaysEvents(tmpCal.get(Calendar.MONTH), tmpCal.get(Calendar.DAY_OF_MONTH), tmpCal.get(Calendar.YEAR));
 
@@ -1388,7 +1409,7 @@ public class CalendarView {
   public void addHolidaysByRange() {
     ArrayList thisDay = null;
     CalendarView tempView = new CalendarView();
-    
+
     if (calendarInfo != null) {
       tempView.setYear(calendarInfo.getYearSelected());
       tempView.addHolidays();
@@ -1398,10 +1419,10 @@ public class CalendarView {
         dayCount = 7;
       } else if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
         dayCount = 1;
-        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected()-1, calendarInfo.getDaySelected());
+        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected() - 1, calendarInfo.getDaySelected());
       } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
         dayCount = 7;
-        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek()-1, calendarInfo.getStartDayOfWeek());
+        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek() - 1, calendarInfo.getStartDayOfWeek());
       }
       for (int j = 0; j < dayCount; j++) {
         thisDay = tempView.getDaysEvents(tmpCal.get(Calendar.MONTH), tmpCal.get(Calendar.DAY_OF_MONTH), tmpCal.get(Calendar.YEAR));
@@ -1415,7 +1436,6 @@ public class CalendarView {
             if (thisEvent.getCategory().equalsIgnoreCase("holiday")) {
               this.addEvent(thisEvent);
               if (System.getProperty("DEBUG") != null) {
-                System.out.println("*******CalendarView -> Holiday Event added*******");
               }
             }
           }
