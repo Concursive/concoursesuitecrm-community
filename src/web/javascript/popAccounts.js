@@ -5,8 +5,8 @@ function popAccountsListSingle(hiddenFieldId, displayFieldId) {
 
 function popAccountsListSingle(hiddenFieldId, displayFieldId, params) {
   title  = 'Accounts';
-  width  =  '700';
-  height =  '450';
+  width  =  '550';
+  height =  '400';
   resize =  'yes';
   bars   =  'no';
   var posx = (screen.width - width)/2;
