@@ -9,8 +9,7 @@
 <html>
 <head>
 <title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
-<link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
-<link rel="stylesheet" href="css/template0.css" type="text/css">
+<jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
 <body leftmargin=0 rightmargin=0 margin=0 marginwidth=0 topmargin=0 marginheight=0>
 <table border="0" width="100%">
