@@ -308,7 +308,6 @@ public class AccountsAssets extends CFSModule {
     Asset thisAsset = null;
     try {
 
-      System.out.println("Trying to delete");
       //Get a connection from the connection pool for this user
       db = this.getConnection(context);
       setOrganization(context, db);
