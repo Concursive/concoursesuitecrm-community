@@ -1740,7 +1740,9 @@ public final class Leads extends CFSModule {
 		      return (executeCommandViewOpp(context));
 	      } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("details")) {
           return (executeCommandDetailsOpp(context));
-        } else {
+        }else if(context.getRequest().getParameter("popup") != null){
+          return "PopupCloseOK";
+        }else {
           return ("DetailsComponentOK");
 	      }
       } else {

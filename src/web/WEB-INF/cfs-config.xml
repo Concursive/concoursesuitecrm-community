@@ -358,6 +358,7 @@
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ComponentModifyOK" resource="/leads_modifycomponent.jsp" layout="nav"/>
     <forward name="ComponentUpdateOK" resource="LeadsComponents.do?command=DetailsComponent"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>    
   <action name="LeadsCalls" class="com.darkhorseventures.cfsmodule.LeadsCalls">
     <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
