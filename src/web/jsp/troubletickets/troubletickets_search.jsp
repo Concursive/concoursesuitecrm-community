@@ -2,9 +2,11 @@
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="TicketTypeSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <body onLoad="javascript:document.forms[0].searchcodeId.focus();">
 <form name="searchTicket" action="TroubleTickets.do?command=SearchTickets" method="post">
 <a href="TroubleTickets.do">Tickets</a> > 
@@ -77,6 +79,24 @@ Search Form<br>
     <td>
       <%= TicketTypeSelect.getHtml() %>
       <input type="hidden" name="search" value="1">
+    </td>
+	</tr>
+  <tr>
+    <td class="formLabel">
+      Assigned To
+    </td>
+    <td>
+      <table class="empty">
+        <tr>
+          <td>
+            <div id="changeowner">&nbsp;None&nbsp;</div>
+          </td>
+          <td>
+            <input type="hidden" name="searchcodeAssignedTo" id="ownerid">
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true');">Change Owner</a>]
+          </td>
+        </tr>
+      </table>
     </td>
 	</tr>
 </table>
