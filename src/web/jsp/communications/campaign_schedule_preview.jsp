@@ -27,22 +27,22 @@ Schedule
   <tr class="title">
     <td colspan="2">
       <strong>Delivery Options</strong>
-    </td>     
+    </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
       Run Date
     </td>
     <td>
-      <%= toHtmlValue(Campaign.getActiveDateString()) %>
+      <%= toHtml(Campaign.getActiveDateString()) %>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
       Delivery Method
     </td>
-    <td>
-      <%= Campaign.getDeliveryName() %>
+    <td valign="top">
+      <%= toHtml(Campaign.getDeliveryName()) %>
     </td>
   </tr>
 </table>

@@ -2,10 +2,8 @@
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="ItemList" class="org.aspcfs.modules.communications.base.ActiveSurveyQuestionItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<br>
 View Items<br>
 <hr color="#BFBFBB" noshade>
-<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="3">
@@ -46,3 +44,5 @@ View Items<br>
   <%}
 %>
 </table>
+<br>
+<input type="button" value="Close Window" onClick="javascript:window.close();">

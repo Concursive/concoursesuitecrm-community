@@ -94,7 +94,7 @@ Results
              <dhv:evaluate exp="<%=((type != SurveyQuestion.QUANT_NOCOMMENTS))%>">
                 <tr class="title">
                   <td colspan="8" valign="center" align="left">
-                    Most recent user comments &nbsp; <a href="javascript:popURLReturn('CampaignManager.do?command=ShowComments&reset=true&surveyId=<%=SurveyQuestionList.getId()%>&questionId=<%=thisItem.getId()%>&type=<%=thisItem.getType()==1?"open":"quant"%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','400','yes','yes');">Show All...</a>
+                    Most recent user comments &nbsp; <a href="javascript:popURLReturn('CampaignManager.do?command=ShowComments&reset=true&surveyId=<%= SurveyQuestionList.getId() %>&questionId=<%= thisItem.getId() %>&type=<%= thisItem.getType()==1?"open":"quant" %>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','400','yes','yes');">Show All...</a>
                   </td>
                 </tr>
                 <%
@@ -107,10 +107,10 @@ Results
                  %>
                     <tr class="containerBody">
                       <td colspan="7" valign="center" align="left" width="85%">
-                        <%=toHtml(thisAnswer.getComments())%>
+                        <%= toHtml(thisAnswer.getComments()) %>
                       </td>
                       <td valign="center" align="left">
-                        <%=contacts.get(new Integer(thisAnswer.getContactId()))%>
+                        <%= contacts.get(new Integer(thisAnswer.getContactId())) %>
                       </td>
                     </tr>
                  <%}
@@ -132,7 +132,7 @@ Results
              </tr>
              <tr>
                   <td class="containerBody" valign="center" align="left" width="100%">
-                    <a href="javascript:popURLReturn('CampaignManager.do?command=ShowItems&questionId=<%=thisItem.getId()%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','no');">View Item Details</a>
+                    <a href="javascript:popURLReturn('CampaignManager.do?command=ShowItems&questionId=<%= thisItem.getId() %>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Items','600','450','yes','no');">View Item Details</a>
                   </td>
              </tr>
             <%}%>
