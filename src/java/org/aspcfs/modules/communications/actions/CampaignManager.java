@@ -1587,6 +1587,57 @@ public final class CampaignManager extends CFSModule {
   }
 
 
+  public String executeCommandResponseDetails(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    Campaign campaign = null;
+
+    String id = context.getRequest().getParameter("id");
+    String contactId = context.getRequest().getParameter("contactId");
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("ResponseDetailsListInfo");
+    }
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ResponseDetailsListInfo");
+    pagedListInfo.setLink("/CampaignManager.do?command=ResponseDetails&id=" + id);
+    try {
+      db = this.getConnection(context);
+      campaign = new Campaign(db, id);
+      context.getRequest().setAttribute("Campaign", campaign);
+
+      int surveyId = -1;
+      if ((surveyId = ActiveSurvey.getId(db, campaign.getId())) > 0) {
+        ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
+        thisList.setActiveSurveyId(surveyId);
+        thisList.setSurveyId(surveyId);
+        thisList.setPagedListInfo(pagedListInfo);
+        thisList.buildList(db);
+        thisList.buildResponse(db, Integer.parseInt(contactId));
+        context.getRequest().setAttribute("ResponseDetails", thisList);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
+      addModuleBean(context, "Dashboard", "Campaign: Response Details");
+      return ("ResponseDetailsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  
   /**
    *  Description of the Method
    *
