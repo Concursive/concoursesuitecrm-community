@@ -1,6 +1,8 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<jsp:useBean id="product" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
+<jsp:useBean id="customerProduct" class="org.aspcfs.modules.products.base.CustomerProduct" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="TroubleTickets.do?command=Modify&auto-populate=true" method="post">
@@ -32,7 +34,7 @@ Ticket Details
         <input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">
       <%}%>
       </dhv:permission>
-    <%}%>
+      <%}%>
 <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete"><br>&nbsp;<br></dhv:permission>
 <%-- Ticket Information --%>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -65,6 +67,41 @@ Ticket Details
       <%= toHtml(TicketDetails.getAssetSerialNumber()) %>
 		</td>
   </tr>
+<%
+  if(TicketDetails.getProductId() != -1){
+%>
+  <tr class="containerBody">
+		<td nowrap class="formLabel">
+      Product
+		</td>
+		<td>
+      <%= toHtml(product.getName()) %> of <%= toHtml(product.getCategoryName()) %>
+<%
+    if(!product.getShortDescription().equals("")){
+%>
+    / <%= toHtml(product.getShortDescription()) %>
+<%
+    }
+%>
+		</td>
+  </tr>
+<%
+  }
+%>
+<%
+  if(TicketDetails.getCustomerProductId() != -1){
+%>
+  <tr class="containerBody">
+		<td nowrap class="formLabel">
+      Customer Product
+		</td>
+		<td>
+      <%= toHtml(customerProduct.getDescription()) %> <input type="button" value="Display" onClick="javascript:popURL('Publish.do?command=DisplayCustomerProduct&adId=<%= customerProduct.getId() %>&ticketId=<%= TicketDetails.getId() %>','Customer Product','500','200','yes','yes');"/>
+		</td>
+  </tr>
+<%
+}
+%>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
       <dhv:label name="ticket.issue">Issue</dhv:label>

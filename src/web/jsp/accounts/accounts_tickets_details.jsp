@@ -2,6 +2,8 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.*, org.aspcfs.modules.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<jsp:useBean id="product" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
+<jsp:useBean id="customerProduct" class="org.aspcfs.modules.products.base.CustomerProduct" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
@@ -69,6 +71,41 @@ Ticket Details
                 <%= toHtml(TicketDetails.getAssetSerialNumber()) %>
               </td>
             </tr>
+<%
+  if(TicketDetails.getProductId() != -1){
+%>
+            <tr class="containerBody">
+              <td nowrap class="formLabel">
+                Product
+              </td>
+              <td>
+                <%= toHtml(product.getName()) %> of <%= toHtml(product.getCategoryName()) %>
+<%
+    if(!product.getShortDescription().equals("")){
+%>
+                / <%= toHtml(product.getShortDescription()) %>
+<%
+    }
+%>
+              </td>
+            </tr>
+<%
+  }
+%>
+<%
+  if(TicketDetails.getCustomerProductId() != -1){
+%>
+            <tr class="containerBody">
+              <td nowrap class="formLabel">
+                Customer Product
+              </td>
+              <td>
+                <%= toHtml(customerProduct.getDescription()) %> <input type="button" value="Display" onClick="javascript:popURL('Publish.do?command=DisplayCustomerProduct&adId=<%= customerProduct.getId() %>&ticketId=<%= TicketDetails.getId() %>','Customer Product','500','200','yes','yes');"/>
+              </td>
+            </tr>
+<%
+}
+%>
             <tr class="containerBody">
               <td valign="top" class="formLabel">
                 <dhv:label name="ticket.issue">Issue</dhv:label>
