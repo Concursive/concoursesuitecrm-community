@@ -29,33 +29,33 @@
 <div id="menuReportContainer" class="menu">
   <div id="menuReportContent">
     <table id="menuReportTable" class="pulldown" width="170">
-      <dhv:permission name="tickets-tickets-reports-view">
+      <dhv:permission name="tickets-reports-view">
       <tr>
         <td>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          <a href="javascript:details()">View Data</a>
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="tickets-tickets-reports-delete">
+      <dhv:permission name="tickets-reports-view">
+      <tr>
+        <td>
+          <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </td>
+        <td width="100%">
+          <a href="javascript:download()">Download as .CSV File</a>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="tickets-reports-delete">
       <tr>
         <td>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
           <a href="javascript:deleteReport()">Delete</a>
-        </td>
-      </tr>
-      </dhv:permission>
-      <dhv:permission name="tickets-tickets-reports-view">
-      <tr>
-        <td>
-          <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
-        <td width="100%">
-          <a href="javascript:download()">Download</a>
         </td>
       </tr>
       </dhv:permission>

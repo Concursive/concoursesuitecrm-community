@@ -31,8 +31,8 @@ Export Data<br>
     <form name="listView" method="post" action="LeadsReports.do?command=ExportList">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= LeadRptListInfo.getOptionValue("my") %>>My Exports</option>
-        <option <%= LeadRptListInfo.getOptionValue("all") %>>All Exports</option>
+        <option <%= LeadRptListInfo.getOptionValue("my") %>>My Exported Data</option>
+        <option <%= LeadRptListInfo.getOptionValue("all") %>>All Exported Data</option>
       </select>
     </td>
     <td>
@@ -99,7 +99,7 @@ Export Data<br>
 <br>
 <dhv:pagedListControl object="LeadRptListInfo"/>
 <%} else {%>
-  <tr class="containerBody"><td colspan="6">No reports found.</td></tr>
+  <tr class="containerBody"><td colspan="6">No exported data found.</td></tr>
 </table>
 <%}%>
 

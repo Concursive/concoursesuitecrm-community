@@ -35,7 +35,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          <a href="javascript:details()">View Data</a>
         </td>
       </tr>
       </dhv:permission>
@@ -45,7 +45,7 @@
           <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
-          <a href="javascript:download()">Download</a>
+          <a href="javascript:download()">Download as .CSV File</a>
         </td>
       </tr>
       </dhv:permission>

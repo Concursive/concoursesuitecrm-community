@@ -13,6 +13,7 @@ import org.aspcfs.modules.pipeline.base.*;
 import java.text.*;
 import org.aspcfs.modules.contacts.base.Contact;
 import java.util.*;
+import org.aspcfs.utils.DateUtils;
 
 /**
  *  Actions for working with Pipeline Management reports. Code originally from
@@ -119,12 +120,7 @@ public final class LeadsReports extends CFSModule {
     String subject = context.getRequest().getParameter("subject");
     String ownerCriteria = context.getRequest().getParameter("criteria1");
     //Prepare the filepath to store the file
-    String filePath = this.getPath(context, "lead-reports");
-    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
-    String datePathToUse1 = formatter1.format(new java.util.Date());
-    SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
-    String datePathToUse2 = formatter2.format(new java.util.Date());
-    filePath += datePathToUse1 + fs + datePathToUse2 + fs;
+    String filePath = this.getPath(context, "lead-reports") + DateUtils.getDatePath(new java.util.Date());
     //Prepare the exported data report
     OpportunityReport oppReport = new OpportunityReport();
     oppReport.setCriteria(context.getRequest().getParameterValues("selectedList"));

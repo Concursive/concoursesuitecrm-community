@@ -473,7 +473,7 @@
       <link value="TroubleTickets.do?command=SearchTicketsForm"/>
     </submenu>
     <submenu name="Reports">
-      <permission value="tickets-tickets-reports-view"/>
+      <permission value="tickets-reports-view"/>
       <long_html value="Export"/>
       <short_html value="Export"/>
       <link value="TroubleTickets.do?command=Reports"/>

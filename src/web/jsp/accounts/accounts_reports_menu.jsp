@@ -32,30 +32,30 @@
       <dhv:permission name="accounts-accounts-reports-view">
       <tr>
         <td>
-          &nbsp;
+          <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
-        </td>
-      </tr>
-      </dhv:permission>
-      <dhv:permission name="accounts-accounts-reports-delete">
-      <tr>
-        <td>
-          &nbsp;
-        </td>
-        <td width="100%">
-          <a href="javascript:deleteReport()">Delete</a>
+          <a href="javascript:details()">View Data</a>
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-reports-view">
       <tr>
         <td>
-          &nbsp;
+          <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
-          <a href="javascript:download()">Download</a>
+          <a href="javascript:download()">Download as .CSV File</a>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-reports-delete">
+      <tr>
+        <td>
+          <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </td>
+        <td width="100%">
+          <a href="javascript:deleteReport()">Delete</a>
         </td>
       </tr>
       </dhv:permission>

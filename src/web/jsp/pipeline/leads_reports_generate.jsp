@@ -43,7 +43,7 @@ New Export<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr class="containerBody">
     <th colspan="5">
-      <strong>Generate a New Report</strong>
+      <strong>Export Data</strong>
     </th>     
   </tr>
   <tr class="containerBody">

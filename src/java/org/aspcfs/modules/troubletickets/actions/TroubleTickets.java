@@ -101,7 +101,7 @@ public final class TroubleTickets extends CFSModule {
    */
   public String executeCommandGenerateForm(ActionContext context) {
 
-    if (!(hasPermission(context, "tickets-tickets-reports-add"))) {
+    if (!(hasPermission(context, "tickets-reports-add"))) {
       return ("PermissionError");
     }
 
@@ -117,7 +117,7 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandExportReport(ActionContext context) {
-    if (!hasPermission(context, "tickets-tickets-reports-add")) {
+    if (!hasPermission(context, "tickets-reports-add")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -184,7 +184,7 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandShowReportHtml(ActionContext context) {
-    if (!hasPermission(context, "tickets-tickets-reports-view")) {
+    if (!hasPermission(context, "tickets-reports-view")) {
       return ("PermissionError");
     }
     //Parameters
@@ -211,7 +211,7 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandReports(ActionContext context) {
-    if (!hasPermission(context, "tickets-tickets-reports-view")) {
+    if (!hasPermission(context, "tickets-reports-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -259,7 +259,7 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDeleteReport(ActionContext context) {
-    if (!hasPermission(context, "tickets-tickets-reports-delete")) {
+    if (!hasPermission(context, "tickets-reports-delete")) {
       return ("PermissionError");
     }
     boolean recordDeleted = false;
@@ -304,7 +304,7 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDownloadCSVReport(ActionContext context) {
-    if (!(hasPermission(context, "tickets-tickets-reports-view"))) {
+    if (!(hasPermission(context, "tickets-reports-view"))) {
       return ("PermissionError");
     }
     Exception errorMessage = null;

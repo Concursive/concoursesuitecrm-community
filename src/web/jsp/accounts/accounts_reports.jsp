@@ -14,9 +14,9 @@
   loadImages('select');
 </script>
 <a href="Accounts.do">Account Management</a> >
-Reports<br>
+Export Data<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="accounts-accounts-reports-add"><a href="Accounts.do?command=GenerateForm">Generate new report</a></dhv:permission>
+<dhv:permission name="accounts-accounts-reports-add"><a href="Accounts.do?command=GenerateForm">Generate new export</a></dhv:permission>
 <dhv:permission name="accounts-accounts-reports-add" none="true"><br></dhv:permission>
 <center><%= RptListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
@@ -24,8 +24,8 @@ Reports<br>
     <form name="listView" method="post" action="Accounts.do?command=Reports">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= RptListInfo.getOptionValue("my") %>>My Reports</option>
-        <option <%= RptListInfo.getOptionValue("all") %>>All Reports</option>
+        <option <%= RptListInfo.getOptionValue("my") %>>My Exported Data</option>
+        <option <%= RptListInfo.getOptionValue("all") %>>All Exported Data</option>
       </select>
     </td>
     <td>
@@ -94,7 +94,7 @@ Reports<br>
 <dhv:pagedListControl object="RptListInfo"/>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="6">No reports found.</td>
+    <td colspan="6">No exported data found.</td>
   </tr>
 </table>
 <%}%>

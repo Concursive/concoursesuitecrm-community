@@ -24,8 +24,8 @@
 <body onLoad="javascript:document.forms[0].subject.focus();">
 <form name="generate" action="TroubleTickets.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
 <a href="TroubleTickets.do">Tickets</a> > 
-<a href="TroubleTickets.do?command=Reports">Reports</a> >
-Generate New Report<br>
+<a href="TroubleTickets.do?command=Reports">Export Data</a> >
+New Export<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Generate">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Reports';javascript:this.form.submit();">
@@ -34,7 +34,7 @@ Generate New Report<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="5">
-      <strong>Generate a New Report</strong>
+      <strong>Export Data</strong>
     </th>
   </tr>
   <tr>
@@ -121,7 +121,7 @@ Generate New Report<br>
       <select size="5" name="selectedList" multiple>
         <option value="ticketid" >Ticket ID</option>
         <option value="organization" >Organization Name</option>
-        <option value="problem" >Issue</option>
+        <option value="problem"><dhv:label name="tickets-problem">Issue</dhv:label></option>
       </select>
     </td>
     <td width="25">

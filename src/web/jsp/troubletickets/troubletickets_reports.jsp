@@ -15,17 +15,17 @@
 </script>
 <form name="listView" method="post" action="TroubleTickets.do?command=Reports">
 <a href="TroubleTickets.do">Tickets</a> > 
-Reports<br>
+Export Data<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="tickets-tickets-reports-add"><a href="TroubleTickets.do?command=GenerateForm">Generate new report</a></dhv:permission>
-<dhv:permission name="tickets-tickets-reports-add" none="true"><br></dhv:permission>
+<dhv:permission name="tickets-reports-add"><a href="TroubleTickets.do?command=GenerateForm">Generate new export</a></dhv:permission>
+<dhv:permission name="tickets-reports-add" none="true"><br></dhv:permission>
 <center><%= TicketRptListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= TicketRptListInfo.getOptionValue("my") %>>My Reports</option>
-        <option <%= TicketRptListInfo.getOptionValue("all") %>>All Reports</option>
+        <option <%= TicketRptListInfo.getOptionValue("my") %>>My Exported Data</option>
+        <option <%= TicketRptListInfo.getOptionValue("all") %>>All Exported Data</option>
       </select>
     </td>
     <td>
@@ -92,7 +92,7 @@ Reports<br>
 <%} else {%>
   <tr class="containerBody">
     <td colspan="6">
-      No reports found.
+      No exported data found.
     </td>
   </tr>
 </table>

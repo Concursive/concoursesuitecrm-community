@@ -14,9 +14,9 @@
   loadImages('select');
 </script>
 <a href="ExternalContacts.do">General Contacts</a> > 
-Reports<br>
+Export Data<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="contacts-external_contacts-reports-add"><a href="ExternalContacts.do?command=GenerateForm">Generate new report</a></dhv:permission>
+<dhv:permission name="contacts-external_contacts-reports-add"><a href="ExternalContacts.do?command=GenerateForm">Generate new export</a></dhv:permission>
 <dhv:permission name="contacts-external_contacts-reports-add" none="true"><br></dhv:permission>
 <center><%= ContactRptListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
@@ -24,8 +24,8 @@ Reports<br>
     <form name="listView" method="post" action="ExternalContacts.do?command=Reports">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= ContactRptListInfo.getOptionValue("my") %>>My Reports</option>
-        <option <%= ContactRptListInfo.getOptionValue("all") %>>All Reports</option>
+        <option <%= ContactRptListInfo.getOptionValue("my") %>>My Exported Data</option>
+        <option <%= ContactRptListInfo.getOptionValue("all") %>>All Exported Data</option>
       </select>
     </td>
     <td>
@@ -94,7 +94,7 @@ Reports<br>
 <dhv:pagedListControl object="ContactRptListInfo" tdClass="row1"/>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="6">No reports found.</td>
+    <td colspan="6">No exported data found.</td>
   </tr>
 </table>
 <%}%>

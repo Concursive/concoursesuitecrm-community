@@ -33,8 +33,8 @@
 <body onLoad="javascript:document.forms[0].subject.focus()">
 <form name="generate" action="ExternalContacts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
 <a href="ExternalContacts.do">General Contacts</a> > 
-<a href="ExternalContacts.do?command=Reports">Reports</a> >
-Generate New Report<br>
+<a href="ExternalContacts.do?command=Reports">Export Data</a> >
+New Export<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Generate">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Reports';javascript:this.form.submit();">
@@ -43,7 +43,7 @@ Generate New Report<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="5">
-      <strong>Generate a New Report</strong>
+      <strong>Export Data</strong>
     </th>
   </tr>
   <tr>
@@ -105,7 +105,8 @@ Generate New Report<br>
   </tr>
   <tr>
     <td nowrap valign="top" class="formLabel">
-      Select fields to include
+      Select fields<br>
+      to include
     </td>
     <td width="50%">
       <select size="5" name="fields">
