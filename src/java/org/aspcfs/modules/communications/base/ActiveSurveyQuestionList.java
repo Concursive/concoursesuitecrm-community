@@ -312,13 +312,14 @@ public class ActiveSurveyQuestionList extends ArrayList {
    *@param  contactId         Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void buildResponse(Connection db, int contactId) throws SQLException {
+  public void buildResponse(Connection db, int contactId, int responseId) throws SQLException {
     Iterator thisList = this.iterator();
     while (thisList.hasNext()) {
       ActiveSurveyQuestion thisQuestion = (ActiveSurveyQuestion) thisList.next();
       SurveyAnswerList answers = new SurveyAnswerList();
       answers.setQuestionId(thisQuestion.getId());
       answers.setContactId(contactId);
+      answers.setResponseId(responseId);
       answers.buildList(db);
       thisQuestion.setAnswerList(answers);
     }

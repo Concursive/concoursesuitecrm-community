@@ -1599,6 +1599,7 @@ public final class CampaignManager extends CFSModule {
 
     String id = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
+    String responseId = context.getRequest().getParameter("responseId");
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("ResponseDetailsListInfo");
     }
@@ -1613,10 +1614,9 @@ public final class CampaignManager extends CFSModule {
       if ((surveyId = ActiveSurvey.getId(db, campaign.getId())) > 0) {
         ActiveSurveyQuestionList thisList = new ActiveSurveyQuestionList();
         thisList.setActiveSurveyId(surveyId);
-        thisList.setActiveSurveyId(surveyId);
         thisList.setPagedListInfo(pagedListInfo);
         thisList.buildList(db);
-        thisList.buildResponse(db, Integer.parseInt(contactId));
+        thisList.buildResponse(db, Integer.parseInt(contactId), Integer.parseInt(responseId));
         context.getRequest().setAttribute("ResponseDetails", thisList);
       }
     } catch (Exception e) {
