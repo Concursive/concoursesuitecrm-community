@@ -67,7 +67,7 @@ public class PagedListStatusHandler extends TagSupport {
         JspWriter out = this.pageContext.getOut();
         
         //Draw the header of the PagedList table
-        out.write("<table align=\"center\" width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\">");
+        out.write("<table align=\"center\" width=\"100%\" cellpadding=\"2\" cellspacing=\"2\" border=\"0\">");
         out.write("<tr>");
         //Display the title
         out.write("<td width=\"50%\" valign=\"bottom\" " +
@@ -79,7 +79,7 @@ public class PagedListStatusHandler extends TagSupport {
         
         //Display expansion link
         if (showExpandLink) {
-          out.write(" (" +pagedListInfo.getExpandLink("Show more", "Return to multiple list") + ")");
+          out.write(" (" +pagedListInfo.getExpandLink("Show more", "Return to overview") + ")");
         }
         out.write("</td>");
         
@@ -94,7 +94,7 @@ public class PagedListStatusHandler extends TagSupport {
             pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
             "|" +
             pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
-            "] ");
+            "]");
           out.write("<br>");
         }
         
@@ -109,6 +109,11 @@ public class PagedListStatusHandler extends TagSupport {
           out.write(" of " + pagedListInfo.getMaxRecords() + " total");
         } else {
           out.write("No records to display");
+        }
+        
+        //Display refresh icon
+        if (pagedListInfo.hasLink()) {
+          out.write(" " + pagedListInfo.getRefreshTag("<img src=\"images/refresh.gif\" border=\"0\" align=\"absbottom\">"));
         }
         
         //Close the cell
