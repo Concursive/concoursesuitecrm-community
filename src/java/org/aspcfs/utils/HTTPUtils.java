@@ -198,7 +198,7 @@ public class HTTPUtils {
    */
   public static String getServerUrl(HttpServletRequest request) {
     int port = request.getServerPort();
-    return (request.getServerName() + (port != 80 && port != 443 ? String.valueOf(port) : "") + request.getContextPath());
+    return (request.getServerName() + (port != 80 && port != 443 ? ":" + String.valueOf(port) : "") + request.getContextPath());
   }
 }
 
