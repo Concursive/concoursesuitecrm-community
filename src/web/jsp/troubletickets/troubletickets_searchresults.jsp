@@ -4,29 +4,13 @@
 <jsp:useBean id="TicListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-
 <a href="/TroubleTickets.do">Tickets</a> > 
-<a href="/TroubleTickets.do?command=SearchTickets&reset=true">Search Tickets (New Search)</a> >
+<a href="/TroubleTickets.do?command=SearchTickets&reset=true">Search Form</a> >
 Search Results
 <hr color="#BFBFBB" noshade>
 <!--dhv:permission name="tickets-tickets-view"><a href="/TroubleTickets.do?command=SearchTickets&reset=true">New Search</a></dhv:permission>
 <br-->
-
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td align="left" valign="top">
-    <% if (!(TicListInfo.getSavedCriteria().isEmpty())) { %>
-      <font size="-1">Last Search Results</font>
-      <%= showAttribute(request, "actionError") %>
-    <%}%>
-    </td>
-    <!--td align="right" valign="top">
-      <dhv:pagedListStatus object="TicListInfo"/>
-    </td-->
-  </tr>
-</table>
-
-    
+<dhv:pagedListStatus title="Current Search Results" object="TicListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
