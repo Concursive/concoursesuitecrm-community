@@ -62,7 +62,7 @@ Call Details
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" width=100%>
+    <td nowrap class="formLabel" width="100%" valign="top">
       Notes
     </td>
     <td>
