@@ -99,6 +99,8 @@ Account Details<br>
     </td>
   </tr>
 </dhv:evaluate>
+
+<dhv:include name="accounts-employees" none="true">
 <dhv:evaluate exp="<%= (OrgDetails.getEmployees() > 0) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -109,6 +111,9 @@ Account Details<br>
     </td>
   </tr>
 </dhv:evaluate>
+</dhv:include>
+
+<dhv:include name="accounts-revenue" none="true">
 <dhv:evaluate exp="<%= (OrgDetails.getRevenue() > 0) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -119,6 +124,8 @@ Account Details<br>
     </td>
   </tr>
 </dhv:evaluate>
+</dhv:include>
+
 <dhv:evaluate exp="<%= hasText(OrgDetails.getTicker()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">

@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="IndustryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -124,7 +125,8 @@ Add Account<br>
     </td>
   </tr>
   
-    <tr>
+  <dhv:include name="accounts-employees" none="true">
+  <tr>
     <td nowrap class="formLabel">
       No. of Employees
     </td>
@@ -132,8 +134,10 @@ Add Account<br>
       <input type=text size=10 name="employees">
     </td>
   </tr>
+  </dhv:include>
   
-      <tr>
+  <dhv:include name="accounts-revenue" none="true">
+  <tr>
     <td nowrap class="formLabel">
       Revenue
     </td>
@@ -141,6 +145,7 @@ Add Account<br>
       <input type=text size=10 name="revenue">
     </td>
   </tr>
+  </dhv:include>
   
         <tr>
     <td nowrap class="formLabel">

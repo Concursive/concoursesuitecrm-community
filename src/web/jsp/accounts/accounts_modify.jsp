@@ -5,7 +5,6 @@
 <jsp:useBean id="OrgEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="OrgPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <jsp:useBean id="StateSelect" class="com.darkhorseventures.webutils.StateSelect" scope="request"/>
@@ -209,6 +208,7 @@ Modify Account<br>
       <%=IndustryList.getHtmlSelect("industry",OrgDetails.getIndustry())%>
     </td>
   </tr>
+  <dhv:include name="accounts-employees" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       No. of Employees
@@ -217,6 +217,9 @@ Modify Account<br>
       <input type=text size=10 name="employees" value="<%= OrgDetails.getEmployees() %>">
     </td>
   </tr>
+  </dhv:include>
+  
+  <dhv:include name="accounts-revenue" none="true">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Revenue
@@ -225,6 +228,8 @@ Modify Account<br>
       <input type=text size=10 name="revenue" value="<%= OrgDetails.getRevenue() %>">
     </td>
   </tr>
+  </dhv:include>
+  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Ticker Symbol
