@@ -145,7 +145,7 @@ function popAccountsListMultipleCampaign(displayFieldId,highLightedId) {
     }
   }
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('/AccountSelector.do?command=ListAccounts&previousSelection=' + selectedIds + '&listType=list&campaign=true&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId, title, params);
+  var newwin=window.open('AccountSelector.do?command=ListAccounts&previousSelection=' + selectedIds + '&listType=list&campaign=true&flushtemplist=true&selectedIds='+highLightedId+'&displayFieldId='+displayFieldId, title, params);
   if (newwin != null) {
     if (newwin.opener == null)
       newwin.opener = self;

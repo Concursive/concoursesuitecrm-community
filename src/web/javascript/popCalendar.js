@@ -5,7 +5,7 @@
  */
 function popCalendar(formname, element) {
   var theDate = eval("document." + formname + "." + element + ".value");
-  var filename = ('/month.jsp?action=popup&form=' + formname + '&element=' + element + '&date=' + theDate);
+  var filename = ('month.jsp?action=popup&form=' + formname + '&element=' + element + '&date=' + theDate);
   var posx = 0;
   var posy = 0;
   
