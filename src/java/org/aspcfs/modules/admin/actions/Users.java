@@ -164,7 +164,7 @@ public final class Users extends CFSModule {
       sql =
         "UPDATE opportunity " +
         "SET owner = ? " +
-        "WHERE owner = ? AND closed IS NOT NULL ";
+        "WHERE owner = ? AND closed IS NULL ";
         
     } else if (whichTable != null && !whichTable.equals("")) {
       sql =
