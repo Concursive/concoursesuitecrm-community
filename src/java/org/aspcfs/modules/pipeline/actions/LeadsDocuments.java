@@ -329,7 +329,7 @@ public final class LeadsDocuments extends CFSModule {
       }
       
       itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "opportunities", opportunityId) + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename();
+      String filePath = this.getPath(context, "opportunities", opportunityId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
       
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);

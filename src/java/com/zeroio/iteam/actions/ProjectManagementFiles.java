@@ -347,7 +347,7 @@ public final class ProjectManagementFiles extends CFSModule {
       }
       
       itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "projects", itemToDownload.getProjectId()) + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename();
+      String filePath = this.getPath(context, "projects", itemToDownload.getProjectId()) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
       
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);

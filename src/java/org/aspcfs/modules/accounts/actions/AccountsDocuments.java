@@ -324,7 +324,7 @@ public final class AccountsDocuments extends CFSModule {
       }
       
       itemToDownload.setEnteredBy(this.getUserId(context));
-      String filePath = this.getPath(context, "accounts", orgId) + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename();
+      String filePath = this.getPath(context, "accounts", orgId) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
       
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);

@@ -1073,7 +1073,7 @@ public final class CampaignManager extends CFSModule {
 
     //Start the download
     try {
-      String filePath = this.getPath(context, "communications", Integer.parseInt(linkItemId)) + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename();
+      String filePath = this.getPath(context, "communications", Integer.parseInt(linkItemId)) + getDatePath(itemToDownload.getModified()) + itemToDownload.getFilename();
       
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
