@@ -74,6 +74,7 @@
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="HeadlineOK" resource="/mycfs/mycfs_headlines.jsp" layout="nav"/>
     <forward name="MyProfileOK" resource="/mycfs/mycfs_profile.jsp" layout="nav"/>
+    <forward name="MaintenanceModeOK" resource="/mycfs/maintenance.jsp" layout="nav"/>
   </action>
   <action name="MyCFSProfile" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="EmployeeBean" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
@@ -104,6 +105,18 @@
     <forward name="ListAccountsOK" resource="/mycfs/mycfs_accounts_selector.jsp" layout="style"/>
    </action>
    
+  <action name="ServiceContractSelector" class="org.aspcfs.modules.actions.ServiceContractSelector">
+    <forward name="ListServiceContractsOK" resource="/mycfs/mycfs_servicecontract_selector.jsp" layout="style"/>
+   </action>
+
+  <action name="AssetSelector" class="org.aspcfs.modules.actions.AssetSelector">
+    <forward name="ListAssetsOK" resource="/mycfs/mycfs_asset_selector.jsp" layout="style"/>
+   </action>
+
+  <action name="ServiceContractHoursAdjustor" class="org.aspcfs.modules.actions.ServiceContractHoursAdjustor">
+    <forward name="AdjustHoursOK" resource="/mycfs/mycfs_sc_hours_adjustor.jsp" layout="style"/>
+   </action>
+
   <action name="LookupSelector" class="org.aspcfs.modules.actions.LookupSelector">
     <forward name="PopLookupOK" resource="/lookup_selector.jsp" layout="style"/>
    </action>
@@ -441,9 +454,10 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="DeleteError" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
-    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>    
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
     <forward name="UpdateOK" resource="/Accounts.do?command=Details"/>
     <forward name="InsertOK" resource="/accounts/accounts_details.jsp" layout="nav"/>
+    <forward name="InsertAndAddContactOK" resource="/Contacts.do?command=Prepare"/>
     <forward name="FieldRecordListOK" resource="/accounts/accounts_fields_list.jsp" layout="nav"/>
     <forward name="AddFolderRecordOK" resource="/accounts/accounts_fields_add.jsp" layout="nav"/>
     <forward name="FieldsEmptyOK" resource="/accounts/accounts_nofields.jsp" layout="nav"/>
@@ -516,6 +530,28 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
+
+  <action name="AccountsServiceContracts" class="org.aspcfs.modules.accounts.actions.AccountsServiceContracts">
+    <bean name="serviceContract" class="org.aspcfs.modules.servicecontracts.base.ServiceContract" scope="request"/>
+    <forward name="AccountsServiceContractsListOK" resource="/accounts/accounts_sc_list.jsp" layout="nav"/>
+    <forward name="AccountsServiceContractsAddOK" resource="/accounts/accounts_sc_add.jsp" layout="nav"/>
+    <forward name="AccountsServiceContractsViewOK" resource="/accounts/accounts_sc_details.jsp" layout="nav"/>
+    <forward name="AccountsServiceContractsModifyOK" resource="/accounts/accounts_sc_modify.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="AccountsServiceContractsHoursOK" resource="/accounts/accounts_sc_hours_list.jsp" layout="style"/>
+  </action>
+
+  <action name="AccountsAssets" class="org.aspcfs.modules.accounts.actions.AccountsAssets">
+    <bean name="asset" class="org.aspcfs.modules.assets.base.Asset" scope="request"/>
+    <forward name="AccountsAssetsListOK" resource="/accounts/accounts_asset_list.jsp" layout="nav"/>
+    <forward name="AccountsAssetsAddOK" resource="/accounts/accounts_asset_add.jsp" layout="nav"/>
+    <forward name="AccountsAssetsViewOK" resource="/accounts/accounts_asset_details.jsp" layout="nav"/>
+    <forward name="AccountsAssetsModifyOK" resource="/accounts/accounts_asset_modify.jsp" layout="nav"/>
+    <forward name="CategoryJSListOK" resource="/js_categorylist.jsp"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
   
   <action name="RevenueManager" class="org.aspcfs.modules.accounts.actions.RevenueManager">
     <bean name="Revenue" class="org.aspcfs.modules.accounts.base.Revenue" scope="request"/>
@@ -566,6 +602,43 @@
     <forward name="DepartmentJSListOK" resource="/troubletickets/troubletickets_js_departmentlist.jsp"/>
     <forward name="OrganizationJSListOK" resource="/troubletickets/troubletickets_js_contactlist.jsp"/>
     <forward name="ViewHistoryOK" resource="/accounts/accounts_tickets_history.jsp" layout="nav"/>
+  </action>
+  <action name="AccountTicketForms" class="org.aspcfs.modules.accounts.actions.AccountTicketForms">
+    <bean name="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+    <forward name="ListSunOK" resource="/accounts/accounts_tickets_activity_log.jsp" layout="nav"/>
+    <forward name="ViewSunOK" resource="/accounts/accounts_tickets_view_sun_container.jsp" layout="nav"/>
+    <forward name="AddSunOK" resource="/accounts/accounts_tickets_add_sun_container.jsp" layout="nav"/>
+    <forward name="ModifySunOK" resource="/accounts/accounts_tickets_update_sun_container.jsp" layout="nav"/>
+    <forward name="ListTMOK" resource="/accounts/accounts_tickets_activity_log.jsp" layout="nav"/>
+    <forward name="ViewTMOK" resource="/accounts/accounts_tickets_view_TM_container.jsp" layout="nav"/>
+    <forward name="AddTMOK" resource="/accounts/accounts_tickets_add_TM_container.jsp" layout="nav"/>
+    <forward name="ModifyTMOK" resource="/accounts/accounts_tickets_update_TM_container.jsp" layout="nav"/>
+    <forward name="ListCSSOK" resource="/accounts/accounts_tickets_activity_log.jsp" layout="nav"/>
+    <forward name="ViewCSSOK" resource="/accounts/accounts_tickets_view_CSS_container.jsp" layout="nav"/>
+    <forward name="AddCSSOK" resource="/accounts/accounts_tickets_add_CSS_container.jsp" layout="nav"/>
+    <forward name="ModifyCSSOK" resource="/accounts/accounts_tickets_update_CSS_container.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="FormERROR" resource="/accounts/accounts_tickets_form_invalidnote.jsp" layout="nav"/>
+    <forward name="PermissionError" resource="/accounts/accounts_tickets_form_permission_error.jsp" layout="nav"/>
+  </action>
+  <action name="AccountTicketActivityLog" class="org.aspcfs.modules.accounts.actions.AccountTicketActivityLog">
+    <forward name="ListOK" resource="/accounts/accounts_tickets_activity_log.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/accounts/accounts_tickets_view_activity.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/accounts/accounts_tickets_add_activity.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/accounts/accounts_tickets_update_activity.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="PermissionError" resource="/accounts/accounts_tickets_form_permission_error.jsp" layout="nav"/>
+  </action>
+  <action name="AccountTicketMaintenanceNotes" class="org.aspcfs.modules.accounts.actions.AccountTicketMaintenanceNotes">
+    <forward name="ListOK" resource="/accounts/accounts_tickets_maintenance_notes.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/accounts/accounts_tickets_view_maintenancenote.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/accounts/accounts_tickets_add_maintenancenote.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/accounts/accounts_tickets_update_maintenancenote.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="PermissionError" resource="/accounts/accounts_tickets_form_permission_error.jsp" layout="nav"/>
   </action>
   <action name="AccountTicketTasks" class="org.aspcfs.modules.accounts.actions.AccountTicketTasks">
     <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>
@@ -814,6 +887,60 @@
     <forward name="DeleteReportERROR" resource="/TroubleTickets.do?command=Reports"/>
     <forward name="ViewHistoryOK" resource="/troubletickets/troubletickets_history.jsp" layout="nav"/>
   </action>
+
+  <action name="TroubleTicketsForms" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketsForms">
+    <bean name="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request" />
+    <forward name="ListSunOK" resource="/troubletickets/troubletickets_activity_log.jsp" layout="nav"/>
+    <forward name="AddSunOK" resource="/troubletickets/troubletickets_add_sun_container.jsp" layout="nav"/>
+    <forward name="ViewSunOK" resource="/troubletickets/troubletickets_view_sun_container.jsp" layout="nav"/>
+    <forward name="ModifySunOK" resource="/troubletickets/troubletickets_update_sun_container.jsp" layout="nav"/>
+    <forward name="ListTMOK" resource="/troubletickets/troubletickets_activity_log.jsp" layout="nav"/>
+    <forward name="AddTMOK" resource="/troubletickets/troubletickets_add_TM_container.jsp" layout="nav"/>
+    <forward name="ViewTMOK" resource="/troubletickets/troubletickets_view_TM_container.jsp" layout="nav"/>
+    <forward name="ModifyTMOK" resource="/troubletickets/troubletickets_update_TM_container.jsp" layout="nav"/>
+    <forward name="ListCSSOK" resource="/troubletickets/troubletickets_activity_log.jsp" layout="nav"/>
+    <forward name="AddCSSOK" resource="/troubletickets/troubletickets_add_CSS_container.jsp" layout="nav"/>
+    <forward name="ViewCSSOK" resource="/troubletickets/troubletickets_view_CSS_container.jsp" layout="nav"/>
+    <forward name="ModifyCSSOK" resource="/troubletickets/troubletickets_update_CSS_container.jsp" layout="nav"/>
+    <forward name="ViewSunFormOK" resource="/troubletickets/troubletickets_view_sun_form.jsp" layout="style"/>
+    <forward name="ViewCSSFormOK" resource="/troubletickets/troubletickets_view_css_form.jsp" layout="style"/>
+    <forward name="ViewTMFormOK" resource="/troubletickets/troubletickets_view_tandm_form.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="FormERROR" resource="/troubletickets/troubletickets_form_invalidnote.jsp" layout="nav"/>
+    <forward name="PrintFormERROR" resource="/troubletickets/troubletickets_invalid_form.jsp" layout="style"/>
+    <forward name="PermissionError" resource="/troubletickets/troubletickets_form_permission_error.jsp" layout="nav"/>
+    <forward name="PrintPermissionError" resource="/troubletickets/troubletickets_invalid_form_printpermission.jsp" layout="style"/>
+  </action>
+
+  <action name="TroubleTicketActivityLog" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketActivityLog">
+    <bean name="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request" />
+    <forward name="ListOK" resource="/troubletickets/troubletickets_activity_log.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/troubletickets/troubletickets_add_activity.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/troubletickets/troubletickets_view_activity.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/troubletickets/troubletickets_update_activity.jsp" layout="nav"/>
+    <forward name="PrintFormOK" resource="/troubletickets/troubletickets_view_tandm_form.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="PrintPermissionError" resource="/troubletickets/troubletickets_invalid_form_printpermission.jsp" layout="style"/>
+    <forward name="PrintFormERROR" resource="/troubletickets/troubletickets_invalid_form.jsp" layout="style"/>
+    <forward name="FormERROR" resource="/troubletickets/troubletickets_form_invalidnote.jsp" layout="nav"/>
+  </action>
+
+  <action name="TroubleTicketMaintenanceNotes" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketMaintenanceNotes">
+    <bean name="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request" />
+    <forward name="ListOK" resource="/troubletickets/troubletickets_maintenance_notes.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/troubletickets/troubletickets_add_maintenancenote.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/troubletickets/troubletickets_view_maintenancenote.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/troubletickets/troubletickets_update_maintenancenote.jsp" layout="nav"/>
+    <forward name="PrintFormOK" resource="/troubletickets/troubletickets_view_sun_form.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="PrintPermissionError" resource="/troubletickets/troubletickets_invalid_form_printpermission.jsp" layout="style"/>
+    <forward name="PrintFormERROR" resource="/troubletickets/troubletickets_invalid_form.jsp" layout="style"/>
+    <forward name="FormERROR" resource="/troubletickets/troubletickets_form_invalidnote.jsp" layout="nav"/>
+  </action>
+
   <action name="TroubleTicketsDocuments" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ViewOK" resource="/troubletickets/troubletickets_documents_list.jsp" layout="nav"/>
@@ -931,6 +1058,7 @@
     <forward name="MoveFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
   </action>
   <action name="AdminCategories" class="org.aspcfs.modules.admin.actions.AdminCategories">
+    <forward name="ShowOK" resource="/admin/admin_showcategories.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/admin/admin_viewcategories.jsp" layout="nav"/>
     <forward name="ViewActiveOK" resource="/admin/admin_view_activecategories.jsp" layout="nav"/>
     <forward name="CategoryJSListOK" resource="/admin/admin_js_categorylist.jsp"/>

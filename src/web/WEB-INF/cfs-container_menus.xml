@@ -34,6 +34,16 @@
       <permission value="accounts-accounts-revenue-view"/>
       <link value="RevenueManager.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
+    <submenu name="servicecontracts">
+      <long_html value="Service Contracts"/>
+      <permission value="accounts-service-contracts-view"/>
+      <link value="AccountsServiceContracts.do?command=List&amp;orgId=${orgId}"/>
+    </submenu>
+    <submenu name="assets">
+      <long_html value="Assets"/>
+      <permission value="accounts-assets-view"/>
+      <link value="AccountsAssets.do?command=List&amp;orgId=${orgId}"/>
+    </submenu>
     <submenu name="tickets">
       <long_html value="Tickets"/>
       <permission value="accounts-accounts-tickets-view"/>
@@ -216,6 +226,16 @@
       <permission value="tickets-tickets-view"/>
       <link value="TroubleTickets.do?command=Details&amp;id=${id}"/>
     </submenu>
+    <submenu name="activitylog">
+      <long_html value="Activity Log"/>
+      <permission value="tickets-activity-log-view"/>
+      <link value="TroubleTicketActivityLog.do?command=List&amp;id=${id}"/>
+    </submenu>
+    <submenu name="maintenancenotes">
+      <long_html value="Maintenance Notes"/>
+      <permission value="tickets-maintenance-report-view"/>
+      <link value="TroubleTicketMaintenanceNotes.do?command=List&amp;id=${id}"/>
+    </submenu>
     <submenu name="tasks">
       <long_html value="Tasks"/>
       <permission value="tickets-tickets-tasks-view"/>
@@ -247,6 +267,16 @@
       <long_html value="Details"/>
       <permission value=""/>
       <link value="AccountTickets.do?command=TicketDetails&amp;id=${id}"/>
+    </submenu>
+    <submenu name="activitylog">
+      <long_html value="Activity Log"/>
+      <permission value="accounts-accounts-tickets-activity-log-view"/>
+      <link value="AccountTicketActivityLog.do?command=List&amp;id=${id}"/>
+    </submenu>
+    <submenu name="maintenancenotes">
+      <long_html value="Maintenance Notes"/>
+      <permission value="accounts-accounts-tickets-maintenance-report-view"/>
+      <link value="AccountTicketMaintenanceNotes.do?command=List&amp;id=${id}"/>
     </submenu>
     <submenu name="tasks">
       <long_html value="Tasks"/>
@@ -327,12 +357,12 @@
     <submenu name="active categories">
       <long_html value="Active Categories"/>
       <permission value="admin-view"/>
-      <link value="AdminCategories.do?command=ViewActive&amp;moduleId=${moduleId}"/>
+      <link value="AdminCategories.do?command=ViewActive&amp;moduleId=${moduleId}&amp;constantId=${constantId}"/>
     </submenu>
     <submenu name="draft categories">
       <long_html value="Draft Categories"/>
       <permission value="admin-view"/>
-      <link value="AdminCategories.do?command=View&amp;moduleId=${moduleId}"/>
+      <link value="AdminCategories.do?command=View&amp;moduleId=${moduleId}&amp;constantId=${constantId}"/>
     </submenu>
   </container>
   <!-- Submenu in Pipeline Management Reports -->
