@@ -33,6 +33,8 @@ public class OpportunityList extends Vector {
   private String ownerIdRange = null;
   private String units = null;
   private String accountOwnerIdRange = null;
+  private java.sql.Date alertRangeStart = null;
+  private java.sql.Date alertRangeEnd = null;
 
 
   /**
@@ -124,6 +126,18 @@ public class OpportunityList extends Vector {
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
   }
+  
+  public void setAlertRangeStart(java.sql.Date tmp) { this.alertRangeStart = tmp; }
+  public void setAlertRangeStart(String tmp) { 
+    this.alertRangeStart = java.sql.Date.valueOf(tmp);
+  }
+  public void setAlertRangeEnd(java.sql.Date tmp) { this.alertRangeEnd = tmp; }
+  public void setAlertRangeEnd(String tmp) { 
+    this.alertRangeEnd = java.sql.Date.valueOf(tmp);
+  }
+  
+  public java.sql.Date getAlertRangeStart() { return alertRangeStart; }
+  public java.sql.Date getAlertRangeEnd() { return alertRangeEnd; }
 
 
   /**
@@ -443,6 +457,13 @@ public class OpportunityList extends Vector {
     if (alertDate != null) {
       sqlFilter.append("AND x.alertdate = ? ");
     }
+    
+    if (alertRangeStart != null) {
+      sqlFilter.append("AND x.alertdate >= ? ");
+    }
+    if (alertRangeEnd != null) {
+      sqlFilter.append("AND x.alertdate <= ? ");
+    }
 
     if (owner != -1) {
       sqlFilter.append("AND x.owner = ? ");
@@ -499,6 +520,14 @@ public class OpportunityList extends Vector {
 
     if (alertDate != null) {
       pst.setDate(++i, alertDate);
+    }
+    
+    if (alertRangeStart != null) {
+      pst.setDate(++i, alertRangeStart);
+    }
+    
+    if (alertRangeEnd != null) {
+      pst.setDate(++i, alertRangeEnd);
     }
 
     if (owner != -1) {

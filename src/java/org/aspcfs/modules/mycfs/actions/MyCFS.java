@@ -513,9 +513,10 @@ public final class MyCFS extends CFSModule {
       alertPaged.setColumnToSortBy("alertdate");
 
       CallList alertCalls = new CallList();
-      alertCalls.setPagedListInfo(alertPaged);
       alertCalls.setEnteredBy(alertsDD);
       alertCalls.setHasAlertDate(true);
+      alertCalls.setAlertRangeStart(companyCalendar.getCalendarStartDate());
+      alertCalls.setAlertRangeEnd(companyCalendar.getCalendarEndDate());
       alertCalls.buildList(db);
       Iterator m = alertCalls.iterator();
       while (m.hasNext()) {
@@ -544,7 +545,6 @@ public final class MyCFS extends CFSModule {
         Iterator assignmentList = thisProject.getAssignments().iterator();
         while (assignmentList.hasNext()) {
           com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
-          //companyCalendar.addEvent(thisAssignment.getDueDate(), thisAssignment.getRole(), "Assignment", thisAssignment.getProjectId(), thisAssignment.getId());
           if (thisAssignment.getDueDate() != null) {
             CalendarEvent thisEvent = new CalendarEvent();
             thisEvent.setDate(thisAssignment.getDueDate());
@@ -562,13 +562,15 @@ public final class MyCFS extends CFSModule {
         System.out.println("MyCFS-> Building opportunity alerts");
       }
       PagedListInfo alertPaged2 = new PagedListInfo();
-      alertPaged2.setMaxRecords(20);
+      alertPaged2.setItemsPerPage(0);
       alertPaged2.setColumnToSortBy("x.alertdate");
       
       OpportunityList alertOpps = new OpportunityList();
       alertOpps.setPagedListInfo(alertPaged2);
       alertOpps.setEnteredBy(alertsDD);
       alertOpps.setHasAlertDate(true);
+      alertOpps.setAlertRangeStart(companyCalendar.getCalendarStartDate());
+      alertOpps.setAlertRangeEnd(companyCalendar.getCalendarEndDate());
       alertOpps.buildList(db);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("MyCFS-> size of opps: " + alertOpps.size());

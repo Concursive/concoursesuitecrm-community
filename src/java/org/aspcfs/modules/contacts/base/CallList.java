@@ -26,6 +26,8 @@ public class CallList extends Vector {
   private int enteredBy = -1;
   private boolean hasAlertDate = false;
   private java.sql.Date alertDate = null;
+  private java.sql.Date alertRangeStart = null;
+  private java.sql.Date alertRangeEnd = null;
 
 
   /**
@@ -133,6 +135,18 @@ public class CallList extends Vector {
   public void setOppId(String oppId) {
     this.oppId = Integer.parseInt(oppId);
   }
+  
+  public void setAlertRangeStart(java.sql.Date tmp) { this.alertRangeStart = tmp; }
+  public void setAlertRangeStart(String tmp) { 
+    this.alertRangeStart = java.sql.Date.valueOf(tmp);
+  }
+  public void setAlertRangeEnd(java.sql.Date tmp) { this.alertRangeEnd = tmp; }
+  public void setAlertRangeEnd(String tmp) { 
+    this.alertRangeEnd = java.sql.Date.valueOf(tmp);
+  }
+  
+  public java.sql.Date getAlertRangeStart() { return alertRangeStart; }
+  public java.sql.Date getAlertRangeEnd() { return alertRangeEnd; }
 
 
   /**
@@ -355,6 +369,13 @@ public class CallList extends Vector {
     if (orgId != -1) {
       sqlFilter.append("AND c.org_id = ? ");
     }
+    
+    if (alertRangeStart != null) {
+      sqlFilter.append("AND c.alertdate >= ? ");
+    }
+    if (alertRangeEnd != null) {
+      sqlFilter.append("AND c.alertdate <= ? ");
+    }
   }
 
 
@@ -386,6 +407,14 @@ public class CallList extends Vector {
 
     if (orgId != -1) {
       pst.setInt(++i, orgId);
+    }
+    
+    if (alertRangeStart != null) {
+      pst.setDate(++i, alertRangeStart);
+    }
+    
+    if (alertRangeEnd != null) {
+      pst.setDate(++i, alertRangeEnd);
     }
     return i;
   }

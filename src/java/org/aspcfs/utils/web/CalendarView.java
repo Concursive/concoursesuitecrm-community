@@ -520,6 +520,26 @@ public class CalendarView {
     beginOfMonth.set(tmp.get(Calendar.YEAR), tmp.get(Calendar.MONTH), 0);
     return beginOfMonth.get(Calendar.DAY_OF_WEEK);
   }
+  
+  public java.sql.Date getCalendarStartDate() {
+    int displayMonth = calPrev.get(Calendar.MONTH) + 1;
+    int displayYear = calPrev.get(Calendar.YEAR);
+    int displayDay = (this.getEndCell(calPrev) - this.getStartCell(cal) + 2  - this.getStartCell(calPrev));
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CalendarView-> Start Day: " + displayMonth + "/" + displayDay + "/" + displayYear);
+    }
+    return (java.sql.Date.valueOf(displayYear + "-" + displayMonth + "-" + displayDay));
+  }
+  
+  public java.sql.Date getCalendarEndDate() {
+    int displayMonth = calNext.get(Calendar.MONTH) + 1;
+    int displayYear = calNext.get(Calendar.YEAR);
+    int displayDay = numberOfCells - getEndCell(cal) - 1;
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CalendarView-> End Day: " + displayMonth + "/" + displayDay + "/" + displayYear);
+    }
+    return (java.sql.Date.valueOf(displayYear + "-" + displayMonth + "-" + displayDay));
+  }
 
 
   /**
@@ -632,21 +652,23 @@ public class CalendarView {
     StringBuffer html = new StringBuffer();
 
     //Begin the whole table
-    html.append("<table width='98%' align='center' cellspacing='0' cellpadding='0' border='0' bgcolor='#ffffff'>");
-    html.append("<tr><td>");
+    html.append(
+       "<table width='98%' align='center' cellspacing='0' cellpadding='0' border='0' bgcolor='#ffffff'>" +
+       "<tr><td>");
 
     //Space at top to match CFS
     if (headerSpace) {
-      html.append("<table width=100% align=center cellspacing=0 cellpadding=0 border=0>");
-      html.append("<tr><td>&nbsp;</td></tr>");
-      html.append("</table>");
+      html.append(
+        "<table width=100% align=center cellspacing=0 cellpadding=0 border=0>" +
+        "<tr><td>&nbsp;</td></tr>" +
+        "</table>");
     }
 
     String monthArrowPrev = "";
     String monthArrowNext = "";
     if (monthArrows) {
-      monthArrowPrev = "<INPUT TYPE=\"IMAGE\" NAME=\"prev\" ALIGN=\"MIDDLE\" SRC=\"/images/prev.gif\">";
-      monthArrowNext = "<INPUT TYPE=\"IMAGE\" NAME=\"next\" ALIGN=\"MIDDLE\" SRC=\"/images/next.gif\">";
+      monthArrowPrev = "<INPUT TYPE=\"IMAGE\" NAME=\"prev\" ALIGN=\"MIDDLE\" SRC=\"images/prev.gif\">";
+      monthArrowNext = "<INPUT TYPE=\"IMAGE\" NAME=\"next\" ALIGN=\"MIDDLE\" SRC=\"images/next.gif\">";
     }
 
     //If popup, then use small formats of each class
@@ -660,8 +682,9 @@ public class CalendarView {
     }
 
     //Display Calendar
-    html.append("<center><table width='" + tableWidth + "'" + borderSize + cellSpacing + cellPadding + " class='" + pre + "calendar' bordercolorlight='#000000' bordercolor='#FFFFFF'>");
-    html.append("<tr>");
+    html.append(
+      "<center><table width='" + tableWidth + "'" + borderSize + cellSpacing + cellPadding + " class='" + pre + "calendar' bordercolorlight='#000000' bordercolor='#FFFFFF'>" +
+      "<tr>");
 
     //Display Previous Month Arrow
     if (monthArrows) {
