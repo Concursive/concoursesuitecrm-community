@@ -27,10 +27,10 @@ public final class ProcessSurvey extends CFSModule {
 	String passedId = context.getRequest().getParameter("id");
 	
 	try {
-		StringTokenizer st = new StringTokenizer(passedId, "|");
-		String dbName = st.nextToken();
-		String surveyId = st.nextToken();
+		AuthenticationItem auth = new AuthenticationItem();
+		db = auth.getConnection(context);
 		
+		/**
 		System.out.println("Getting driver");
 		sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
 		ConnectionElement ce = new ConnectionElement();
@@ -41,8 +41,9 @@ public final class ProcessSurvey extends CFSModule {
 		System.out.println("Getting connection" + dbName);
 		db = sqlDriver.getConnection(ce);
 		System.out.println("Got connection");
-      
-		thisSurvey = new Survey(db, surveyId);
+		*/
+		
+		thisSurvey = new Survey(db, passedId);
 		thisForm.populate(thisSurvey);
 	} catch (Exception e) {
 		errorMessage = e;
