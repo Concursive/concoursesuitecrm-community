@@ -343,6 +343,33 @@ public class ActiveSurveyQuestion {
 
 
   /**
+   *  Returns a HashMap of Item Objects with count of each selected as values.
+   *
+   *@param  answerList  Description of the Parameter
+   *@return             The itemListResponse value
+   */
+  public HashMap getItemListResponse(SurveyAnswerList answerList) {
+    HashMap itemListResponse = new HashMap();
+    Iterator answers = answerList.iterator();
+    while (answers.hasNext()) {
+      SurveyAnswer thisAnswer = (SurveyAnswer) answers.next();
+      Iterator itemList = thisAnswer.getItemList().iterator();
+      while (itemList.hasNext()) {
+        ActiveSurveyQuestionItem thisItem = ((SurveyAnswerItem) itemList.next()).getItem();
+        if (itemListResponse.containsKey((Object) thisItem)) {
+          Integer count = (Integer) itemListResponse.get((Object) thisItem);
+          itemListResponse.remove((Object) thisItem);
+          itemListResponse.put(thisItem, new Integer(count.intValue() + 1));
+        } else {
+          itemListResponse.put(thisItem, new Integer(0));
+        }
+      }
+    }
+    return itemListResponse;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
