@@ -62,6 +62,10 @@
     <echo message="ant clean: delete the temporary build folder used by the install"/>
     <echo message="ant docs: generate JavaDocs for all packages"/>
   </target>
+    
+  <target name="cdall" depends="init,deploy,installdb,test">
+    <echo>Install Complete</echo>
+  </target>
   
   <!-- Environment variables must be set before continuing -->
   <target name="init.environment">
