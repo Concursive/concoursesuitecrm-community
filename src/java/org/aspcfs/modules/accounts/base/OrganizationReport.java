@@ -571,7 +571,7 @@ public class OrganizationReport extends OrganizationList {
 
           ReportRow thisRow = new ReportRow();
           addDataRow(thisRow, thisOrg);
-          thisRow.addCell(thisCat.getName());
+          //thisRow.addCell(thisCat.getName());
 
           CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
           Iterator grp = thisCat.iterator();

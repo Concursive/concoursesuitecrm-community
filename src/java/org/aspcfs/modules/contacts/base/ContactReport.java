@@ -622,7 +622,7 @@ public class ContactReport extends ContactList {
 
           ReportRow thisRow = new ReportRow();
           addDataRow(thisRow, thisContact);
-          thisRow.addCell(thisCat.getName());
+          //thisRow.addCell(thisCat.getName());
 
           CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
           Iterator grp = thisCat.iterator();
