@@ -1,0 +1,33 @@
+<application>
+  <!-- Form used in the survey module -->
+  <form name="survey" action="Accounts.do?command=something&amp;orgId=${orgId}" cancel="Accounts.do?command=list">
+    <tab name="Page 1">
+      <group name="Details">
+        <field name="name" type="text" additionalText="9 Digit SSN" parameters="width|10^maxlength|9"/>
+      </group>
+      <group name="Another">
+        <field name="contact_namelast" type="text" required="true" parameters="width|10^maxlength|20"/>
+        <field name="contact_namefirst" type="text" required="true" parameters="width|10^maxlength|20"/>
+      </group>
+    </tab>
+    <tab name="Page 2">
+      <group name="Questions">
+        <field name="question${id}" type="textlist" parameters="width|10^maxlength|9"/>
+      </group>
+    </tab>
+  </form>
+  
+  <!-- Form used in the Account module on the details menu -->
+  <form name="account-details" action="Accounts.do?command=something&amp;orgId=${orgId}" cancel="Accounts.do?command=list">
+    <tab name="Page 1">
+      <group name="Details">
+        <field name="name" type="text" additionalText="9 Digit SSN" parameters="width|10^maxlength|9"/>
+      </group>
+      <group name="Another">
+        <field name="contact_namelast" type="text" required="true" parameters="width|10^maxlength|20"/>
+        <field name="contact_namefirst" type="text" required="true" parameters="width|10^maxlength|20"/>
+      </group>
+    </tab>
+  </form>
+  
+</application>

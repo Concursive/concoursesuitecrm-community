@@ -1,0 +1,57 @@
+/**
+ *  Dynamic Form generation (DRAFT)
+ *
+ *@author     mrajkowski
+ *@created    May 28, 2002
+ *@version    $Id$
+ */
+
+In the InitHook, set the XML file to be used...
+
+  <param-name>HTMLForms</param-name>
+  <param-value>cfs-webforms.xml</param-value>
+
+Create 3 new objects...
+CustomFormList extends HashMap 
+CustomForm extends CustomFieldCategory
+CustomFieldTab extends ArrayList
+  
+In the InitHook, read in the XML file to create a new CustomFormList and store it
+in the servlet context.  When a form is needed, it can be grabbed from the context
+by the servlet or jsp.
+  
+CustomFormList forms = new CustomFormList("xmlconfig.xml");
+- Read in XML to create CustomForm objects that get added to CustomFormList
+  this.put("form name", CustomForm object)
+- Creates CustomForm objects for each form 
+- Creates CustomFieldTab objects for each CF
+- Creates CustomFieldGroup objects for each CFT
+- Creates CustomField objects for each CFG
+
+
+Using the form...
+
+Populate the form data...
+
+When the form is retrieved, it should be a clone of the cached form.  This is
+necessary because other requests might need the same form.
+
+CustomFormList forms = (CustomFormList)context.getServletContext()... get ("HTMLForms");
+CustomForm thisForm = forms.getForm("name");
+
+** getForm should return a clone of the form, not the existing reference.
+
+
+After the form is retrieved, default values need to be set.  There will probably
+need to be a method like:  thisForm.setValues(request);
+
+The form will then go through each field and auto-populate from the beans in the request,
+based on the current tab.  If there are other tabs, then they will be added as hidden
+fields.
+
+Now that the form is completely built, add it to the request and either:
+
+Call .jsp with the dynamic form building code... 
+-or-
+Call specific .jsp that accesses the getHtml() method...
+
