@@ -1,12 +1,13 @@
-package com.darkhorseventures.utils;
+package org.aspcfs.modules.login.base;
 
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.database.*;
 
 /**
- *  When a module needs to get a connection to the database, it must first
- *  be authenticated.  Used by the Login module, XML transactions, and
- *  any of the Process modules that do not go through login.
+ *  When a module needs to get a connection to the database, it must first be
+ *  authenticated. Used by the Login module, XML transactions, and any of the
+ *  Process modules that do not go through login.
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
@@ -41,8 +42,8 @@ public class AuthenticationItem {
 
 
   /**
-   *  Sets the code attribute of the AuthenticationItem object, this is
-   *  manually set by the module
+   *  Sets the code attribute of the AuthenticationItem object, this is manually
+   *  set by the module
    *
    *@param  tmp  The new code value
    */
@@ -192,8 +193,8 @@ public class AuthenticationItem {
 
 
   /**
-   *  Gets the connection attribute of the AuthenticationItem object using
-   *  the context to validate
+   *  Gets the connection attribute of the AuthenticationItem object using the
+   *  context to validate
    *
    *@param  context           Description of the Parameter
    *@return                   The connection value

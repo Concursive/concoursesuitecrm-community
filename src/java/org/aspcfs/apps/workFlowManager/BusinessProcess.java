@@ -1,11 +1,11 @@
 //Copyright 2002 Dark Horse Ventures
-package com.darkhorseventures.controller;
+package org.aspcfs.apps.workFlowManager;
 
 import java.util.*;
 import org.w3c.dom.Element;
 import java.sql.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.Constants;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Contains a mapping of BusinessComponent objects that can be executed in

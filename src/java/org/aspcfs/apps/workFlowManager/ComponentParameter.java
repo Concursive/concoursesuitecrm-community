@@ -1,8 +1,8 @@
 //Copyright 2002 Dark Horse Ventures
-package com.darkhorseventures.controller;
+package org.aspcfs.apps.workFlowManager;
 
 import org.w3c.dom.Element;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 
 /**
  *  Represents a key=value pair preference that will be used for either a 

@@ -1,4 +1,4 @@
-package com.darkhorseventures.framework.servlets;
+package org.aspcfs.controller;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextAttributeEvent;
@@ -7,6 +7,7 @@ import javax.servlet.ServletContextListener;
 import java.sql.*;
 import java.util.Hashtable;
 import com.darkhorseventures.database.*;
+import org.aspcfs.apps.workFlowManager.*;
 
 /**
  *  Responsible for initialization and cleanup when the web-app is

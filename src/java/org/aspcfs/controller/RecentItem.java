@@ -1,4 +1,4 @@
-package com.darkhorseventures.framework.hooks;
+package org.aspcfs.controller;
 
 import java.io.*;
 
@@ -154,26 +154,26 @@ public class RecentItem implements Serializable {
    */
   private String getDisplayLabel() {
     switch (type) {
-      case ACCOUNT:
-        return ACCOUNT_TEXT;
-      case CONTACT:
-        return CONTACT_TEXT;
-      case EMPLOYEE:
-        return EMPLOYEE_TEXT;
-      case OPPORTUNITY:
-        return OPPORTUNITY_TEXT;
-      case CAMPAIGN:
-        return CAMPAIGN_TEXT;
-      case PROJECT:
-        return PROJECT_TEXT;
-      case TICKET:
-        return TICKET_TEXT;
-      case USER:
-        return USER_TEXT;
-      case COMPONENT:
-        return COMPONENT_TEXT;        
-      default:
-        return "";
+        case ACCOUNT:
+          return ACCOUNT_TEXT;
+        case CONTACT:
+          return CONTACT_TEXT;
+        case EMPLOYEE:
+          return EMPLOYEE_TEXT;
+        case OPPORTUNITY:
+          return OPPORTUNITY_TEXT;
+        case CAMPAIGN:
+          return CAMPAIGN_TEXT;
+        case PROJECT:
+          return PROJECT_TEXT;
+        case TICKET:
+          return TICKET_TEXT;
+        case USER:
+          return USER_TEXT;
+        case COMPONENT:
+          return COMPONENT_TEXT;
+        default:
+          return "";
     }
   }
 }

@@ -1,10 +1,10 @@
 //Copyright 2002 Dark Horse Ventures
-package com.darkhorseventures.controller;
+package org.aspcfs.controller.objectHookManager;
 
 import java.util.*;
 import org.w3c.dom.Element;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.Constants;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Maintains a list of action mappings for the class trigger... Ex. A ticket

@@ -1,8 +1,8 @@
 //Copyright 2002 Dark Horse Ventures
-package com.darkhorseventures.controller;
+package org.aspcfs.apps.workFlowManager;
 
 import java.util.*;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 
 /**
  *  When a BusinessProcess is executed, a ComponentContext is created for that

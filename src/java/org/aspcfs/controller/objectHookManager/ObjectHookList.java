@@ -1,10 +1,10 @@
-package com.darkhorseventures.controller;
+package org.aspcfs.controller.objectHookManager;
 
 import java.util.*;
 import org.w3c.dom.Element;
 import java.sql.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.Constants;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.base.Constants;
 import java.io.*;
 
 /**

@@ -1,15 +1,16 @@
-package com.darkhorseventures.controller;
+package org.aspcfs.controller.objectHookManager;
 
 import org.w3c.dom.Element;
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 
 /**
- *  When a hook is triggered, the ObjectHookManager must check to see if
- *  a correspending mapping to the action that triggered the event occurs.
+ *  When a hook is triggered, the ObjectHookManager must check to see if a
+ *  correspending mapping to the action that triggered the event occurs.
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
- *@version    $Id$
+ *@version    $Id: ObjectHookAction.java,v 1.2 2002/11/14 13:32:16 mrajkowski
+ *      Exp $
  */
 public class ObjectHookAction {
   /**

@@ -1,4 +1,4 @@
-package com.darkhorseventures.framework.hooks;
+package org.aspcfs.controller;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -17,11 +17,13 @@ public class DestroyHook implements ControllerDestroyHook {
 
   ServletConfig config = null;
 
+
   /**
    *  When the ServletController is initialized, this code creates a reference
    *  to the servlet config.
    *
    *@param  config  The new Config value
+   *@return         Description of the Return Value
    *@since          1.0
    */
   public String executeControllerDestroyInit(ServletConfig config) {
@@ -31,8 +33,8 @@ public class DestroyHook implements ControllerDestroyHook {
 
 
   /**
-   *  Closes and removes the attributes that will need to be reloaded when
-   *  the framework starts back up, working backwards from the InitHook.
+   *  Closes and removes the attributes that will need to be reloaded when the
+   *  framework starts back up, working backwards from the InitHook.
    *
    *@return    Description of the Returned Value
    */
@@ -42,20 +44,20 @@ public class DestroyHook implements ControllerDestroyHook {
         System.out.println("DestroyHook-> Shutting down");
       }
       //Remove the workflow manager
-      WorkflowManager wfManager = 
-        (WorkflowManager)config.getServletContext().getAttribute("WorkflowManager");
+      WorkflowManager wfManager =
+          (WorkflowManager) config.getServletContext().getAttribute("WorkflowManager");
       if (wfManager != null) {
         config.getServletContext().removeAttribute("WorkflowManager");
       }
-      
+
       config.getServletContext().removeAttribute("SystemStatus");
       config.getServletContext().removeAttribute("DynamicFormList");
       config.getServletContext().removeAttribute("DynamicFormConfig");
       config.getServletContext().removeAttribute("ContainerMenuConfig");
-      
+
       //Shutdown the ConnectionPool
       ConnectionPool cp =
-        (ConnectionPool)config.getServletContext().getAttribute("ConnectionPool");
+          (ConnectionPool) config.getServletContext().getAttribute("ConnectionPool");
       if (cp != null) {
         cp.closeAllConnections();
         cp.destroy();

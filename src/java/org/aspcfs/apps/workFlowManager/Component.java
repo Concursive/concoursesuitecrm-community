@@ -1,7 +1,7 @@
 //Copyright 2002 Dark Horse Ventures
-package com.darkhorseventures.controller;
+package org.aspcfs.apps.workFlowManager;
 
-import com.darkhorseventures.utils.*;
+import org.aspcfs.utils.*;
 
 /**
  *  Components should extend this class for basic component functionality

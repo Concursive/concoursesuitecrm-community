@@ -1,7 +1,10 @@
-package com.darkhorseventures.controller;
+package org.aspcfs.controller.objectHookManager;
+
+import org.aspcfs.apps.workFlowManager.*;
 
 /**
- *  A class that allows hooks to be run in a thread, created by the WorkflowManager
+ *  A class that allows hooks to be run in a thread, created by the
+ *  WorkflowManager
  *
  *@author     matt rajkowski
  *@created    October 14, 2002

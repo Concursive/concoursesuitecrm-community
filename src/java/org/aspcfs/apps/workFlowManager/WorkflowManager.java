@@ -1,13 +1,31 @@
-package com.darkhorseventures.controller;
+package org.aspcfs.apps.workFlowManager;
 
 import java.lang.reflect.*;
 import java.util.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     matt rajkowski
+ *@created    January 13, 2003
+ *@version    $Id$
+ */
 public class WorkflowManager {
   Map classes = new HashMap();
-  
-  public WorkflowManager() {}
-  
+
+
+  /**
+   *  Constructor for the WorkflowManager object
+   */
+  public WorkflowManager() { }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context        Description of the Parameter
+   *@exception  Exception  Description of the Exception
+   */
   public void execute(ComponentContext context) throws Exception {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("WorkflowManager-> Executing Business Process");
@@ -25,13 +43,22 @@ public class WorkflowManager {
       System.out.println("WorkflowManager-> Business Process End");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context         Description of the Parameter
+   *@param  bpc             Description of the Parameter
+   *@param  previousResult  Description of the Parameter
+   *@exception  Exception   Description of the Exception
+   */
   private void processChildren(ComponentContext context, BusinessProcessComponent bpc, boolean previousResult) throws Exception {
     if (previousResult == true) {
       if (bpc.getTrueChildren() != null) {
         Iterator i = bpc.getTrueChildren().iterator();
         while (i.hasNext()) {
-          BusinessProcessComponent child = (BusinessProcessComponent)i.next();
+          BusinessProcessComponent child = (BusinessProcessComponent) i.next();
           boolean result = executeComponent(context, child);
           processChildren(context, child, result);
         }
@@ -40,14 +67,23 @@ public class WorkflowManager {
       if (bpc.getFalseChildren() != null) {
         Iterator i = bpc.getFalseChildren().iterator();
         while (i.hasNext()) {
-          BusinessProcessComponent child = (BusinessProcessComponent)i.next();
+          BusinessProcessComponent child = (BusinessProcessComponent) i.next();
           boolean result = executeComponent(context, child);
           processChildren(context, child, result);
         }
       }
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context        Description of the Parameter
+   *@param  component      Description of the Parameter
+   *@return                Description of the Return Value
+   *@exception  Exception  Description of the Exception
+   */
   private boolean executeComponent(ComponentContext context, BusinessProcessComponent component) throws Exception {
     if (System.getProperty("DEBUG") != null) {
       System.out.print("WorkflowManager-> Executing: " + component.getClassName() + component.getDescription() + "? ");
@@ -68,7 +104,7 @@ public class WorkflowManager {
         System.out.println("WorkflowManager-> Illegal Argument Exception. MESSAGE = " + iae.getMessage());
       }
     }
-    
+
     //Now we are ready to call upon the method in the component class instance we have..
     Object result = null;
     try {
@@ -78,7 +114,7 @@ public class WorkflowManager {
       if (classRef == null) {
         System.out.println("WorkflowManager-> Class ref is null");
       }
-      
+
       //Add configuration data from component definitions into the context,
       //overriding any global parameters
       this.populateComponentParameters(context, component);
@@ -89,39 +125,52 @@ public class WorkflowManager {
     }
     if (result instanceof Boolean) {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println(((Boolean)result).booleanValue());
+        System.out.println(((Boolean) result).booleanValue());
       }
-      return ((Boolean)result).booleanValue();
+      return ((Boolean) result).booleanValue();
     } else if (result instanceof Integer) {
       //NOTE: Supported, but not used yet
       if (System.getProperty("DEBUG") != null) {
-        System.out.println(((Integer)result).intValue());
+        System.out.println(((Integer) result).intValue());
       }
-      return (((Integer)result).intValue() == 1);
+      return (((Integer) result).intValue() == 1);
     } else {
       System.out.println("WorkflowManager-> Component did not return an acceptable result");
       return false;
     }
   }
-  
-  private void populateProcessParameters (ComponentContext context) {
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   */
+  private void populateProcessParameters(ComponentContext context) {
     BusinessProcess thisProcess = context.getProcess();
     if (thisProcess.hasParameters()) {
       Iterator i = thisProcess.getParameters().iterator();
       while (i.hasNext()) {
-        ComponentParameter thisParameter = (ComponentParameter)i.next();
+        ComponentParameter thisParameter = (ComponentParameter) i.next();
         if (thisParameter.getEnabled()) {
           context.setParameter(thisParameter.getName(), thisParameter.getValue());
         }
       }
     }
   }
-  
-  private void populateComponentParameters (ComponentContext context, BusinessProcessComponent component) {
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context    Description of the Parameter
+   *@param  component  Description of the Parameter
+   */
+  private void populateComponentParameters(ComponentContext context, BusinessProcessComponent component) {
     if (component.hasParameters()) {
       Iterator i = component.getParameters().iterator();
       while (i.hasNext()) {
-        ComponentParameter thisParameter = (ComponentParameter)i.next();
+        ComponentParameter thisParameter = (ComponentParameter) i.next();
         if (thisParameter.getEnabled()) {
           context.setParameter(thisParameter.getName(), thisParameter.getValue());
         }
@@ -129,3 +178,4 @@ public class WorkflowManager {
     }
   }
 }
+

@@ -1,4 +1,4 @@
-package com.darkhorseventures.framework.servlets;
+package org.aspcfs.controller;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSessionAttributeListener;
