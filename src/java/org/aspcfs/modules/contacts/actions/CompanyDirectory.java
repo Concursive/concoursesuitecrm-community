@@ -103,6 +103,42 @@ public final class CompanyDirectory extends CFSModule {
     }
 
     Exception errorMessage = null;
+    Connection db = null;
+    Contact thisEmployee = null;
+    String employeeId = context.getRequest().getParameter("empid");
+    String action = context.getRequest().getParameter("action");
+
+    try {
+      db = this.getConnection(context);
+      thisEmployee = new Contact(db, employeeId);
+      //enabled user?
+      thisEmployee.checkEnabledUserAccount(db);
+      context.getRequest().setAttribute("ContactDetails", thisEmployee);
+      addRecentItem(context, thisEmployee);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+        //If user is going to the detail screen
+        addModuleBean(context, "Internal Contacts", "View Employee Details");
+        return ("EmployeeDetailsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+  
+  public String executeCommandModifyEmployee(ActionContext context) {
+
+    if (!(hasPermission(context, "contacts-internal_contacts-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
 
     String employeeId = context.getRequest().getParameter("empid");
     String action = context.getRequest().getParameter("action");
@@ -115,12 +151,8 @@ public final class CompanyDirectory extends CFSModule {
       thisEmployee = new Contact(db, employeeId);
       //enabled user?
       thisEmployee.checkEnabledUserAccount(db);
-      context.getRequest().setAttribute("EmployeeBean", thisEmployee);
+      context.getRequest().setAttribute("ContactDetails", thisEmployee);
       addRecentItem(context, thisEmployee);
-
-      if (action != null && action.equals("modify")) {
-        buildFormElements(context, db);
-      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -128,22 +160,102 @@ public final class CompanyDirectory extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (action != null && action.equals("modify")) {
-        //If user is going to the modify form
         addModuleBean(context, "Internal Contacts", "Modify Employee Details");
-        return ("EmployeeDetailsModifyOK");
-      } else {
-        //If user is going to the detail screen
-        addModuleBean(context, "Internal Contacts", "View Employee Details");
+        return executeCommandPrepare(context);
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  
+public String executeCommandSave(ActionContext context) {
+    if (!hasPermission(context, "contacts-internal_contacts-edit")) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = 0;
+    boolean recordInserted = false;
+    
+    Contact thisEmployee = (Contact) context.getFormBean();
+thisEmployee.addType(Contact.EMPLOYEE_TYPE);
+thisEmployee.setRequestItems(context.getRequest());
+thisEmployee.setEnteredBy(getUserId(context));
+thisEmployee.setModifiedBy(getUserId(context));
+
+//insert
+if(thisEmployee.getId() == -1){
+   thisEmployee.setOrgId(0);
+}
+    try {
+      db = this.getConnection(context);
+      if(thisEmployee.getId() == -1){
+	      thisEmployee.setOrgId(0);
+              addModuleBean(context, "Internal Contacts", "Internal Insert");
+	      recordInserted = thisEmployee.insert(db);
+      }else{
+       addModuleBean(context, "Internal Contacts", "Update Employee");
+       resultCount = thisEmployee.update(db);
+      }
+      
+      if (recordInserted) {
+        thisEmployee = new Contact(db, "" + thisEmployee.getId());
+        context.getRequest().setAttribute("ContactDetails", thisEmployee);
+        addRecentItem(context, thisEmployee);
+      }else if(resultCount == 1){
+        //If the user is in the cache, update the contact record
+        thisEmployee.checkUserAccount(db);
+        this.updateUserContact(db, context, thisEmployee.getUserId());
+      }else{
+        processErrors(context, thisEmployee.getErrors());
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    //Decide what happened with the update...
+   
+    if (errorMessage == null) {
+      
+	if (recordInserted) {
+        if ("true".equals((String) context.getRequest().getParameter("saveAndNew"))) {
+          context.getRequest().removeAttribute("ContactDetails");
+          return (executeCommandPrepare(context));
+        }
+        context.getRequest().setAttribute("ContactDetails", thisEmployee);
+        if ("true".equals(context.getRequest().getParameter("popup"))) {
+          return ("CloseInsertContactPopup");
+        }
         return ("EmployeeDetailsOK");
+      } else if (resultCount == 1) {
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+          return (executeCommandListEmployees(context));
+        } else {
+          return ("EmployeeDetailsUpdateOK");
+        }
+      } else {
+	if(thisEmployee.getId() == -1){
+		if (!"true".equals(context.getRequest().getParameter("popup"))) {
+          return (executeCommandPrepare(context));
+        }else{
+          return "ReloadAddContactPopup";
+        }
+	}else{
+	  if (resultCount == -1) {
+		 return executeCommandModifyEmployee(context);
+	 }
+	    context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+	    return ("UserError");
+	}
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
-
-
+  
   /**
    *  Description of the Method
    *
@@ -199,74 +311,13 @@ public final class CompanyDirectory extends CFSModule {
 
 
   /**
-   *  This method retrieves an EmployeeBean that was submitted, then updates the
-   *  database with the results. <p>
-   *
-   *  If someone else has already updated the database record, then a message is
-   *  displayed for the user and the record is not updated.
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.0
-   */
-  public String executeCommandUpdateEmployee(ActionContext context) {
-    if (!hasPermission(context, "contacts-internal_contacts-edit")) {
-      return ("PermissionError");
-    }
-    Exception errorMessage = null;
-    Connection db = null;
-    int resultCount = 0;
-    try {
-      Contact thisEmployee = (Contact) context.getFormBean();
-      thisEmployee.addType(Contact.EMPLOYEE_TYPE);
-      thisEmployee.setRequestItems(context.getRequest());
-      thisEmployee.setEnteredBy(getUserId(context));
-      thisEmployee.setModifiedBy(getUserId(context));
-      db = this.getConnection(context);
-      resultCount = thisEmployee.update(db);
-      if (resultCount == -1) {
-        processErrors(context, thisEmployee.getErrors());
-        buildFormElements(context, db);
-      } else {
-        //If the user is in the cache, update the contact record
-        thisEmployee.checkUserAccount(db);
-        this.updateUserContact(db, context, thisEmployee.getUserId());
-      }
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-    //Decide what happened with the update...
-    addModuleBean(context, "Internal Contacts", "Update Employee");
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return ("EmployeeDetailsModifyOK");
-      } else if (resultCount == 1) {
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandListEmployees(context));
-        } else {
-          return ("EmployeeDetailsUpdateOK");
-        }
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-  }
-
-
-  /**
    *  Preparation for displaying the insert employee contact form
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    *@since           1.10
    */
-  public String executeCommandInsertEmployeeForm(ActionContext context) {
+  public String executeCommandPrepare(ActionContext context) {
 
     if (!(hasPermission(context, "contacts-internal_contacts-add"))) {
       return ("PermissionError");
@@ -279,82 +330,22 @@ public final class CompanyDirectory extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      buildFormElements(context, db);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      return ("EmployeeInsertFormOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-  }
-
-
-  /**
-   *  Process the insert form
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.10
-   */
-  public String executeCommandInsertEmployee(ActionContext context) {
-
-    if (!(hasPermission(context, "contacts-internal_contacts-add"))) {
-      return ("PermissionError");
-    }
-
-    Exception errorMessage = null;
-    boolean recordInserted = false;
-
-    Contact thisEmployee = (Contact) context.getFormBean();
-    thisEmployee.addType(Contact.EMPLOYEE_TYPE);
-    thisEmployee.setOrgId(0);
-    thisEmployee.setRequestItems(context.getRequest());
-    thisEmployee.setEnteredBy(getUserId(context));
-    thisEmployee.setModifiedBy(getUserId(context));
-
-    Connection db = null;
-    try {
       db = this.getConnection(context);
-      recordInserted = thisEmployee.insert(db);
-      if (recordInserted) {
-        thisEmployee = new Contact(db, "" + thisEmployee.getId());
-        context.getRequest().setAttribute("EmployeeBean", thisEmployee);
-        addRecentItem(context, thisEmployee);
-      } else {
-        processErrors(context, thisEmployee.getErrors());
-      }
+      //prepare the Department List if employee is being added.
+      LookupList departmentList = new LookupList(db, "lookup_department");
+      departmentList.addItem(0, "--None--");
+      context.getRequest().setAttribute("DepartmentList", departmentList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "Internal Contacts", "Internal Insert");
     if (errorMessage == null) {
-      if (recordInserted) {
-        if ("true".equals((String) context.getRequest().getParameter("saveAndNew"))) {
-          context.getRequest().removeAttribute("EmployeeBean");
-          return (executeCommandInsertEmployeeForm(context));
-        }
-        if ("adduser".equals(context.getRequest().getParameter("source"))) {
-          context.getRequest().setAttribute("ContactDetails", thisEmployee);
-          return ("CloseInsertContactPopup");
-        }
-        context.getRequest().setAttribute("EmployeeBean", thisEmployee);
-        return ("EmployeeDetailsOK");
-      } else {
-        if (!"adduser".equals(context.getRequest().getParameter("source"))) {
-          return (executeCommandInsertEmployeeForm(context));
-        }else{
-          return "ReloadAddContactPopup";
-        }
+      if (context.getRequest().getParameter("popup") != null) {
+        return ("PopupPrepareOK");
       }
+      return ("PrepareOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -425,30 +416,6 @@ public final class CompanyDirectory extends CFSModule {
     context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
     return "CalendarOK";
   }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context           Description of Parameter
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.10
-   */
-  protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
-    LookupList departmentList = new LookupList(db, "lookup_department");
-    departmentList.addItem(0, "--None--");
-    context.getRequest().setAttribute("DepartmentList", departmentList);
-
-    LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");
-    context.getRequest().setAttribute("ContactPhoneTypeList", phoneTypeList);
-
-    LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
-    context.getRequest().setAttribute("ContactEmailTypeList", emailTypeList);
-
-    LookupList addressTypeList = new LookupList(db, "lookup_contactaddress_types");
-    context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
-  }
-
+  
 }
 

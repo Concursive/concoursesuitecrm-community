@@ -26,12 +26,11 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
-  public String executeCommandAdd(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
+  public String executeCommandPrepare(ActionContext context) {
+    if (!(hasPermission(context, "accounts-accounts-contacts-view"))) {
       return ("PermissionError");
     }
 
@@ -44,9 +43,18 @@ public final class Contacts extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      buildFormElements(context, db);
-      thisOrganization = new Organization(db, Integer.parseInt(orgId));
-      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      //prepare org
+      if(context.getRequest().getAttribute("OrgDetails") == null){
+       thisOrganization = new Organization(db, Integer.parseInt(orgId));
+       context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      }
+      //prepare contact type list
+      ContactTypeList ctl = new ContactTypeList();
+      ctl.setIncludeDefinedByUser(this.getUserId(context));
+      ctl.setCategory(ContactType.ACCOUNT);
+      ctl.buildList(db);
+      ctl.addItem(0, "--None--");
+      context.getRequest().setAttribute("ContactTypeList", ctl);
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -54,10 +62,7 @@ public final class Contacts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (context.getRequest().getParameter("popup") != null) {
-        return ("AddPopupOK");
-      }
-      return ("AddOK");
+      return ("PrepareOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -80,17 +85,11 @@ public final class Contacts extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
 
-    String orgId = context.getRequest().getParameter("orgId");
-    Organization thisOrganization = null;
-
     String contactId = context.getRequest().getParameter("id");
     Contact cloneContact = null;
 
     try {
       db = this.getConnection(context);
-      buildFormElements(context, db);
-      thisOrganization = new Organization(db, Integer.parseInt(orgId));
-      context.getRequest().setAttribute("OrgDetails", thisOrganization);
       cloneContact = new Contact(db, contactId);
       cloneContact.resetBaseInfo();
       context.getRequest().setAttribute("ContactDetails", cloneContact);
@@ -101,7 +100,7 @@ public final class Contacts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      return ("AddOK");
+      return executeCommandPrepare(context);
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -112,39 +111,51 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
-  public String executeCommandInsert(ActionContext context) {
+  public String executeCommandSave(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
       return ("PermissionError");
     }
 
-    addModuleBean(context, "View Accounts", "Add Contact to Account");
+    addModuleBean(context, "View Accounts", "Save Contact to Account");
     Exception errorMessage = null;
     boolean recordInserted = false;
+    int resultCount = 0;
 
-    Contact newContact = (Contact) context.getRequest().getAttribute("ContactDetails");
-    newContact.setRequestItems(context.getRequest());
-    newContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
-    newContact.setEnteredBy(getUserId(context));
-    newContact.setModifiedBy(getUserId(context));
-    newContact.setOwner(getUserId(context));
-
+    Contact thisContact = (Contact) context.getFormBean();
     Organization thisOrganization = null;
-
     Connection db = null;
     try {
       db = this.getConnection(context);
-      recordInserted = newContact.insert(db);
-      if (recordInserted) {
-        newContact = new Contact(db, "" + newContact.getId());
-        context.getRequest().setAttribute("ContactDetails", newContact);
-        thisOrganization = new Organization(db, newContact.getOrgId());
-        context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      boolean newContact = (thisContact.getId() == -1);
+      thisContact.setRequestItems(context.getRequest());
+      thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
+      thisContact.setModifiedBy(getUserId(context));
+      thisContact.setEnteredBy(getUserId(context));
+      if ("true".equals(context.getRequest().getParameter("primaryContact"))) {
+        thisContact.setPrimaryContact(true);
+      }
+      if (newContact) {
+        thisContact.setOwner(getUserId(context));
+        recordInserted = thisContact.insert(db);
       } else {
-        processErrors(context, newContact.getErrors());
+        resultCount = thisContact.update(db);
+      }
+
+      if (recordInserted || resultCount == 1) {
+        thisContact = new Contact(db, "" + thisContact.getId());
+        context.getRequest().setAttribute("ContactDetails", thisContact);
+        if (resultCount == 1) {
+          thisContact.checkUserAccount(db);
+          this.updateUserContact(db, context, thisContact.getUserId());
+        }
+	thisOrganization = new Organization(db, thisContact.getOrgId());
+        context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      }
+      if (!recordInserted && resultCount < 1) {
+        processErrors(context, thisContact.getErrors());
       }
     } catch (SQLException e) {
       errorMessage = e;
@@ -153,22 +164,26 @@ public final class Contacts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("orgId", "" + newContact.getOrgId());
+      context.getRequest().setAttribute("orgId", "" + thisContact.getOrgId());
       if (recordInserted) {
-        if (context.getRequest().getParameter("saveAndClone") != null) {
-          if (context.getRequest().getParameter("saveAndClone").equals("true")) {
-            newContact.resetBaseInfo();
-            context.getRequest().setAttribute("ContactDetails", newContact);
-            return (executeCommandAdd(context));
-          }
+        if ("true".equals(context.getRequest().getParameter("saveAndClone"))) {
+          thisContact.resetBaseInfo();
+          context.getRequest().setAttribute("ContactDetails", thisContact);
+          return (executeCommandPrepare(context));
         }
         if (context.getRequest().getParameter("popup") != null) {
           return ("CloseAddPopup");
         }
         return ("DetailsOK");
+      } else if (resultCount == 1) {
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+          return (executeCommandView(context));
+        } else {
+          return ("UpdateOK");
+        }
       } else {
-        context.getRequest().setAttribute("TypeList", newContact.getTypeList());
-        return (executeCommandAdd(context));
+        context.getRequest().setAttribute("TypeList", thisContact.getTypeList());
+        return (executeCommandPrepare(context));
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -215,12 +230,12 @@ public final class Contacts extends CFSModule {
         if (thisContact.getPrimaryContact()) {
           htmlDialog.setHeader("This contact cannot be deleted because it is also an individual account.");
           htmlDialog.addButton("OK", "javascript:parent.window.close()");
-        } else if(dependencies.canDelete()){
+        } else if (dependencies.canDelete()) {
           htmlDialog.setTitle("CFS: Confirm Delete");
           htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within CFS:");
           htmlDialog.addButton("Delete All", "javascript:window.location.href='Contacts.do?command=Delete&orgId=" + orgId + "&id=" + id + "'");
           htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
-        }else{
+        } else {
           htmlDialog.setHeader("This contact cannot be deleted because it has the following dependencies within CFS:");
           htmlDialog.addButton("OK", "javascript:parent.window.close()");
         }
@@ -267,16 +282,6 @@ public final class Contacts extends CFSModule {
     try {
       db = this.getConnection(context);
       newContact = new Contact(db, contactId);
-
-      LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");
-      context.getRequest().setAttribute("ContactPhoneTypeList", phoneTypeList);
-
-      LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
-      context.getRequest().setAttribute("ContactEmailTypeList", emailTypeList);
-
-      LookupList addressTypeList = new LookupList(db, "lookup_contactaddress_types");
-      context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
-
       thisOrganization = new Organization(db, newContact.getOrgId());
     } catch (Exception e) {
       errorMessage = e;
@@ -345,11 +350,10 @@ public final class Contacts extends CFSModule {
 
 
   /**
-   *  Modify Contact
+   *  Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
@@ -357,92 +361,20 @@ public final class Contacts extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "Modify Contact");
     Exception errorMessage = null;
-    String orgid = context.getRequest().getParameter("orgId");
     String passedId = context.getRequest().getParameter("id");
     Connection db = null;
     Contact newContact = null;
-    Organization thisOrganization = null;
     try {
       db = this.getConnection(context);
       newContact = new Contact(db, passedId);
-      thisOrganization = new Organization(db, Integer.parseInt(orgid));
-      buildFormElements(context, db);
+      context.getRequest().setAttribute("ContactDetails", newContact);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      context.getRequest().setAttribute("ContactDetails", newContact);
-      context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      return ("ModifyOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
-   */
-  public String executeCommandUpdate(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
-      return ("PermissionError");
-    }
-    //Prepare the action
-    Exception errorMessage = null;
-    Connection db = null;
-    int resultCount = 0;
-    //Process the form bean
-    Contact newContact = (Contact) context.getFormBean();
-    newContact.setRequestItems(context.getRequest());
-    if (context.getRequest().getParameter("primaryContact") != null) {
-      if (context.getRequest().getParameter("primaryContact").equalsIgnoreCase("true")) {
-        newContact.setPrimaryContact(true);
-      }
-    }
-    Organization thisOrganization = null;
-    String orgid = context.getRequest().getParameter("orgId");
-    try {
-      db = this.getConnection(context);
-      newContact.setEnteredBy(getUserId(context));
-      newContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
-      newContact.setModifiedBy(getUserId(context));
-      resultCount = newContact.update(db);
-      if (resultCount == -1) {
-        processErrors(context, newContact.getErrors());
-        buildFormElements(context, db);
-        thisOrganization = new Organization(db, Integer.parseInt(orgid));
-      } else {
-        //If the user is in the cache, update the contact record
-        newContact.checkUserAccount(db);
-        this.updateUserContact(db, context, newContact.getUserId());
-      }
-    } catch (SQLException e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        context.getRequest().setAttribute("OrgDetails", thisOrganization);
-        context.getRequest().setAttribute("TypeList", newContact.getTypeList());
-        return ("ModifyOK");
-      } else if (resultCount == 1) {
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandView(context));
-        } else {
-          return ("UpdateOK");
-        }
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
+      return executeCommandPrepare(context);
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -500,33 +432,5 @@ public final class Contacts extends CFSModule {
       return ("SystemError");
     }
   }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context           Description of Parameter
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since
-   */
-  protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
-    ContactTypeList ctl = new ContactTypeList();
-    ctl.setIncludeDefinedByUser(this.getUserId(context));
-    ctl.setCategory(ContactType.ACCOUNT);
-    ctl.buildList(db);
-    ctl.addItem(0, "--None--");
-    context.getRequest().setAttribute("ContactTypeList", ctl);
-
-    LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");
-    context.getRequest().setAttribute("ContactPhoneTypeList", phoneTypeList);
-
-    LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
-    context.getRequest().setAttribute("ContactEmailTypeList", emailTypeList);
-
-    LookupList addressTypeList = new LookupList(db, "lookup_contactaddress_types");
-    context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
-  }
-
 }
 
