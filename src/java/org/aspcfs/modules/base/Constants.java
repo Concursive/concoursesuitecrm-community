@@ -17,4 +17,9 @@ public final class Constants {
   
   public static final int TRUE = 1;
   public static final int FALSE = 0;
+  
+  public static final int NO_SYNC = -1;
+  public static final int SYNC_INSERTS = 2;
+  public static final int SYNC_UPDATES = 3;
+  public static final int SYNC_DELETES = 4;
 }

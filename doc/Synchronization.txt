@@ -82,6 +82,20 @@ Client #1 Sends records for delete with GUID...
 All changes can be requested and sent in a single transaction, or separated.  
 The order in which tables are processed is important for referential data.
 
+** UPDATED PROCESS 4/19/2002 **
+
+Client #1 Either requests a list of tables to be synchronized, or
+iterates through its cached table list from the database initialization
+- Client sends Last Anchor and Next Anchor to server in authentication block
+- Client sends transaction and command in body
+- Server determines the updates, inserts, and deletes for the specified table
+- Server sends record(s) to client with appropriate command and GUID
+- Server inserts GUID into client mapping table (if not already there)
+- Client processes the received data, performing the appropriate SQL
+- Client sends next table to be synchronized
+
+** PREVIOUS PROCESS (THE BASICS) **
+
 Client #1 Requests new Inserts
 - Client sends transaction and command in body
 - Client sends Last Anchor and Next Anchor to server in transaction
@@ -213,10 +227,10 @@ Sync protocol examples:
       <property>make_name</property>
       <property>etc..</property>
     </meta>
-    <makeList action="select">
+    <makeList action="sync">
       <lastSyncAnchor/>
       <nextSyncAnchor>2002-04-16 15:30:30</nextSyncAnchor>
-    </vehicleList>
+    </makeList>
   </transaction>
   <transaction id="13">
     <meta>
@@ -225,7 +239,7 @@ Sync protocol examples:
       <property>make_id</property>
       <property>etc..</property>
     </meta>
-    <vehicleList action="select">
+    <vehicleList action="sync">
       <lastSyncAnchor/>
       <nextSyncAnchor>2002-04-16 15:30:30</nextSyncAnchor>
     </vehicleList>

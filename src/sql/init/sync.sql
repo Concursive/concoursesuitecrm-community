@@ -45,7 +45,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
  VALUES (2, 'makeList', 'com.darkhorseventures.autoguide.base.MakeList', 50, true, 
-'CREATE TABLE makes (
+'CREATE TABLE make (
        make_id              int NOT NULL,
        make_name            nchar varying(20) NULL,
        record_status_id     int NULL,
@@ -57,8 +57,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF2makes', null, 60,
-'CREATE INDEX XIF2makes ON makes
+ VALUES (2, 'XIF2make', null, 60,
+'CREATE INDEX XIF2make ON make
 (
        record_status_id
 )'
@@ -77,7 +77,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
  VALUES (2, 'modelList', 'com.darkhorseventures.autoguide.base.ModelList', 80, true, 
-'CREATE TABLE make_model (
+'CREATE TABLE model (
        model_id             int NOT NULL,
        make_id              int NULL,
        record_status_id     int NULL,
@@ -85,23 +85,23 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        record_status_date   datetime NULL,
        PRIMARY KEY (model_id), 
        FOREIGN KEY (make_id)
-                             REFERENCES makes (make_id), 
+                             REFERENCES make (make_id), 
        FOREIGN KEY (record_status_id)
                              REFERENCES status_master (record_status_id)
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF3make_model', null, 90,
-'CREATE INDEX XIF3make_model ON make_model
+ VALUES (2, 'XIF3model', null, 90,
+'CREATE INDEX XIF3model ON model
 (
        record_status_id
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF5make_model', null, 100,
-'CREATE INDEX XIF5make_model ON make_model
+ VALUES (2, 'XIF5model', null, 100,
+'CREATE INDEX XIF5model ON model
 (
        make_id
 )'
@@ -109,43 +109,44 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
  VALUES (2, 'vehicleList', 'com.darkhorseventures.autoguide.base.VehicleList', 110, true, 
-'CREATE TABLE make_model_year (
+'CREATE TABLE vehicle (
        year                 nchar varying(4) NOT NULL,
-       make_id              int NOT NULL,
-       model_id             int NOT NULL,
+       vehicle_id           int NOT NULL,
+       model_id             int NULL,
+       make_id              int NULL,
        record_status_id     int NULL,
        record_status_date   datetime NULL,
-       PRIMARY KEY (year, make_id, model_id), 
+       PRIMARY KEY (vehicle_id), 
        FOREIGN KEY (model_id)
-                             REFERENCES make_model (model_id), 
+                             REFERENCES model (model_id), 
        FOREIGN KEY (make_id)
-                             REFERENCES makes (make_id), 
+                             REFERENCES make (make_id), 
        FOREIGN KEY (record_status_id)
                              REFERENCES status_master (record_status_id)
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF4make_model_year', null, 120,
-'CREATE INDEX XIF4make_model_year ON make_model_year
-(
-       record_status_id
-)'
-);
-
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF7make_model_year', null, 130,
-'CREATE INDEX XIF7make_model_year ON make_model_year
+ VALUES (2, 'XIF30vehicle', null, 120,
+'CREATE INDEX XIF30vehicle ON vehicle
 (
        make_id
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF8make_model_year', null, 140,
-'CREATE INDEX XIF8make_model_year ON make_model_year
+ VALUES (2, 'XIF31vehicle', null, 130,
+'CREATE INDEX XIF31vehicle ON vehicle
 (
        model_id
+)'
+);
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'XIF4vehicle', null, 140,
+'CREATE INDEX XIF4vehicle ON vehicle
+(
+       record_status_id
 )'
 );
 
@@ -194,70 +195,68 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'accountInventoryList', null, 190,
-'CREATE TABLE vehicles (
-       vehicle_id           int NOT NULL,
+'CREATE TABLE account_inventory (
+       inventory_id         int NOT NULL,
        vin                  nchar varying(20) NULL,
+       vehicle_id           int NULL,
        account_id           int NULL,
-       make_id              int NULL,
-       model_id             int NULL,
-       year                 nchar varying(4) NULL,
        adtype               nchar varying(20) NULL,
        mileage              nchar varying(20) NULL,
        entered              int NULL,
+       new                  bit,
        modified             int NULL,
        condition            nchar varying(20) NULL,
        comments             nchar varying(255) NULL,
-       stock_id             nchar varying(20) NULL,
+       stock_no             nchar varying(20) NULL,
        ext_color            nchar varying(20) NULL,
        int_color            nchar varying(20) NULL,
-       selling_price        nchar varying(20) NULL,
+       invoice_price        money NULL,
+       selling_price        money NULL,
        status               nchar varying(20) NULL,
        rep_id               int NULL,
        record_status_id     int NULL,
        record_status_date   nchar varying(20) NULL,
-       PRIMARY KEY (vehicle_id), 
+       PRIMARY KEY (inventory_id), 
+       FOREIGN KEY (vehicle_id)
+                             REFERENCES vehicle (vehicle_id), 
        FOREIGN KEY (account_id)
                              REFERENCES account (account_id), 
        FOREIGN KEY (rep_id)
                              REFERENCES sales_rep (rep_id), 
        FOREIGN KEY (record_status_id)
-                             REFERENCES status_master (record_status_id), 
-       FOREIGN KEY (year, make_id, model_id)
-                             REFERENCES make_model_year (year, make_id, model_id)
+                             REFERENCES status_master (record_status_id)
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF10vehicles', null, 200,
-'CREATE INDEX XIF10vehicles ON vehicles
+ VALUES (2, 'XIF10account_inventory', null, 200,
+'CREATE INDEX XIF10account_inventory ON account_inventory
 (
        record_status_id
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF11vehicles', null, 210,
-'CREATE INDEX XIF11vehicles ON vehicles
+ VALUES (2, 'XIF11account_inventory', null, 210,
+'CREATE INDEX XIF11account_inventory ON account_inventory
 (
        rep_id
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF19vehicles', null, 220,
-'CREATE INDEX XIF19vehicles ON vehicles
+ VALUES (2, 'XIF19account_inventory', null, 220,
+'CREATE INDEX XIF19account_inventory ON account_inventory
 (
        account_id
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF9vehicles', null, 230,
-'CREATE INDEX XIF9vehicles ON vehicles
+ VALUES (2, 'XIF35account_inventory', null, 230,
+'CREATE INDEX XIF35account_inventory ON account_inventory
 (
-       year,
-       make_id,
-       model_id
+       vehicle_id
 )'
 );
 
@@ -287,7 +286,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF14sales_rep_account', null, 260,
+ VALUES (2, 'XIF15sales_rep_account', null, 260,
 'CREATE INDEX XIF15sales_rep_account ON sales_rep_account
 (
        account_id
@@ -303,49 +302,49 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'vehicle_picture', null, 280,
-'CREATE TABLE vehicle_picture (
+ VALUES (2, 'inventory_picture', null, 280,
+'CREATE TABLE inventory_picture (
        pitcure_name         nchar varying(20) NOT NULL,
-       vehicle_id           int NOT NULL,
+       inventory_id         int NOT NULL,
        record_status_id     int NULL,
        record_status_date   datetime NULL,
-       PRIMARY KEY (pitcure_name, vehicle_id), 
+       PRIMARY KEY (pitcure_name, inventory_id), 
+       FOREIGN KEY (inventory_id)
+                             REFERENCES account_inventory (inventory_id), 
        FOREIGN KEY (record_status_id)
-                             REFERENCES status_master (record_status_id), 
-       FOREIGN KEY (vehicle_id)
-                             REFERENCES vehicles (vehicle_id)
+                             REFERENCES status_master (record_status_id)
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF20vehicle_picture', null, 290,
-'CREATE INDEX XIF20vehicle_picture ON vehicle_picture
-(
-       vehicle_id
-)'
-);
-
-INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF23vehicle_picture', null, 300,
-'CREATE INDEX XIF23vehicle_picture ON vehicle_picture
+ VALUES (2, 'XIF23inventory_picture', null, 290,
+'CREATE INDEX XIF23inventory_picture ON inventory_picture
 (
        record_status_id
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
+ VALUES (2, 'XIF32inventory_picture', null, 300,
+'CREATE INDEX XIF32inventory_picture ON inventory_picture
+(
+       inventory_id
+)'
+);
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'ad_run', null, 310,
 'CREATE TABLE ad_run (
-       vehicle_id           int NOT NULL,
+       inventory_id         int NOT NULL,
        record_status_id     int NULL,
        start_date           datetime NULL,
        end_date             datetime NULL,
        record_status_date   nchar varying(20) NULL,
-       PRIMARY KEY (vehicle_id), 
+       PRIMARY KEY (inventory_id), 
+       FOREIGN KEY (inventory_id)
+                             REFERENCES account_inventory (inventory_id), 
        FOREIGN KEY (record_status_id)
-                             REFERENCES status_master (record_status_id), 
-       FOREIGN KEY (vehicle_id)
-                             REFERENCES vehicles (vehicle_id)
+                             REFERENCES status_master (record_status_id)
 )'
 );
 
@@ -380,42 +379,42 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
  VALUES (2, 'vehicle_options', null, 350,
-'CREATE TABLE vehicle_options (
-       vehicle_id           int NOT NULL,
+'CREATE TABLE inventory_options (
+       inventory_id         int NOT NULL,
        option_id            int NOT NULL,
        record_status_id     int NULL,
        record_status_date   nchar varying(20) NULL,
-       PRIMARY KEY (vehicle_id, option_id), 
+       PRIMARY KEY (option_id, inventory_id), 
+       FOREIGN KEY (inventory_id)
+                             REFERENCES account_inventory (inventory_id), 
        FOREIGN KEY (record_status_id)
                              REFERENCES status_master (record_status_id), 
-       FOREIGN KEY (vehicle_id)
-                             REFERENCES vehicles (vehicle_id), 
        FOREIGN KEY (option_id)
                              REFERENCES options (option_id)
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF25vehicle_options', null, 360,
-'CREATE INDEX XIF25vehicle_options ON vehicle_options
+ VALUES (2, 'XIF25inventory_options', null, 360,
+'CREATE INDEX XIF25inventory_options ON inventory_options
 (
        option_id
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF26vehicle_options', null, 370,
-'CREATE INDEX XIF26vehicle_options ON vehicle_options
+ VALUES (2, 'XIF27inventory_options', null, 370,
+'CREATE INDEX XIF27inventory_options ON inventory_options
 (
-       vehicle_id
+       record_status_id
 )'
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, create_statement)
- VALUES (2, 'XIF27vehicle_options', null, 380,
-'CREATE INDEX XIF27vehicle_options ON vehicle_options
+ VALUES (2, 'XIF33inventory_options', null, 380,
+'CREATE INDEX XIF33inventory_options ON inventory_options
 (
-       record_status_id
+       inventory_id
 )'
 );
 

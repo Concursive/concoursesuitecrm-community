@@ -47,7 +47,7 @@ public final class ProcessPacket extends CFSModule {
           thisTransaction.setMapping(objectMap);
           thisTransaction.addMapping("meta", "com.darkhorseventures.utils.TransactionMeta");
           thisTransaction.build(thisElement);
-          int statusCode = thisTransaction.execute(db);
+          int statusCode = thisTransaction.execute(db, auth);
           TransactionStatus thisStatus = new TransactionStatus();
           thisStatus.setStatusCode(statusCode);
           thisStatus.setId(thisTransaction.getId());
@@ -117,6 +117,9 @@ public final class ProcessPacket extends CFSModule {
             Element record = document.createElement("record");
             recordSet.appendChild(record);
             Record thisRecord = (Record)recordList.next();
+            if (thisRecord.hasAction()) {
+              record.setAttribute("action", thisRecord.getAction());
+            }
             Iterator fields = thisRecord.keySet().iterator();
             while (fields.hasNext()) {
               String fieldName = (String)fields.next();

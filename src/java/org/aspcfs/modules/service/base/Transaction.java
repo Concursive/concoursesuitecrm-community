@@ -62,7 +62,7 @@ public class Transaction extends ArrayList {
   public void setMapping(Hashtable tmp) {
     mapping = tmp;
   }
-
+  
 
   /**
    *  Gets the id attribute of the Transaction object
@@ -155,7 +155,7 @@ public class Transaction extends ArrayList {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  public int execute(Connection db) throws SQLException {
+  public int execute(Connection db, AuthenticationItem auth) throws SQLException {
     Exception exception = null;
     try {
       db.setAutoCommit(false);
@@ -163,7 +163,7 @@ public class Transaction extends ArrayList {
       while (items.hasNext()) {
         TransactionItem thisItem = (TransactionItem) items.next();
         thisItem.setMeta(meta);
-        thisItem.execute(db);
+        thisItem.execute(db, auth);
         if (thisItem.hasError()) {
           appendErrorMessage(thisItem.getErrorMessage());
         }

@@ -5,6 +5,7 @@ import org.w3c.dom.*;
 import java.sql.*;
 import java.lang.reflect.*;
 import com.darkhorseventures.cfsbase.*;
+import com.darkhorseventures.utils.ObjectUtils;
 
 /**
  *  Every Transaction can be made of many TransactionItems. TransactionItems
@@ -26,6 +27,7 @@ public class TransactionItem {
   private final static int SELECT = 2;
   private final static int UPDATE = 3;
   private final static int DELETE = 4;
+  private final static int SYNC = 5;
 
   private String name = null;
   private Object object = null;
@@ -63,31 +65,6 @@ public class TransactionItem {
 
 
   /**
-   *  Gets the specified property from the specified Object.
-   *
-   *@param  thisObject    Description of Parameter
-   *@param  thisProperty  Description of Parameter
-   *@return               The value value
-   */
-  public static String getValue(Object thisObject, String thisProperty) {
-    try {
-      thisProperty = thisProperty.substring(0, 1).toUpperCase() + thisProperty.substring(1);
-      Method method = thisObject.getClass().getDeclaredMethod("get" + thisProperty, null);
-      Object result = method.invoke(thisObject, null);
-      if (result == null) {
-        return null;
-      } else if (result instanceof String) {
-        return (String) result;
-      } else {
-        return String.valueOf(result);
-      }
-    } catch (Exception e) {
-      return null;
-    }
-  }
-
-
-  /**
    *  Adds property names and values to the Record object, based on the supplied
    *  meta data
    *
@@ -100,10 +77,11 @@ public class TransactionItem {
       Iterator fields = thisMeta.getFields().iterator();
       while (fields.hasNext()) {
         String thisField = (String) fields.next();
-        String thisValue = getValue(thisObject, thisField);
+        String thisValue = ObjectUtils.getParam(thisObject, thisField);
         if (thisValue == null) {
           thisValue = "";
         }
+        //System.out.println("Setting-> " + thisField + "  ...  " + thisValue);
         thisRecord.put(thisField, thisValue);
       }
     }
@@ -168,6 +146,8 @@ public class TransactionItem {
       setAction(this.SELECT);
     } else if ("delete".equals(tmp)) {
       setAction(this.DELETE);
+    } else if ("sync".equals(tmp)) {
+      setAction(this.SYNC);
     }
   }
 
@@ -259,7 +239,7 @@ public class TransactionItem {
    *@param  db             Description of Parameter
    *@exception  Exception  Description of Exception
    */
-  public void execute(Connection db) throws Exception {
+  public void execute(Connection db, AuthenticationItem auth) throws Exception {
     String executeMethod = null;
     switch (action) {
         case -1:
@@ -277,41 +257,55 @@ public class TransactionItem {
         case SELECT:
           executeMethod = "select";
           break;
+        case SYNC:
+          executeMethod = "select";
+          break;
         default:
           appendErrorMessage("Unsupported action specified");
           break;
     }
-
+    
+    Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
+    Object[] dbObject = new Object[]{db};
+    Method method = null;
+    
     Object result = null;
-    if (executeMethod != null && object != null) {
-      Method method = object.getClass().getDeclaredMethod(executeMethod.trim(), new Class[]{Class.forName("java.sql.Connection")});
-      result = method.invoke(object, new Object[]{db});
+    if ((action == INSERT && meta != null) || action == SELECT || action == SYNC) {
+      if (recordList == null) {
+        recordList = new RecordList(name);
+      }
+    }
+    if (object != null && action == SYNC) {
+      ObjectUtils.setParam(object, "lastAnchor", auth.getLastAnchor());
+      ObjectUtils.setParam(object, "nextAnchor", auth.getNextAnchor());
+      
+      //Insert
+      if (auth.getNextAnchor() != null) {
+        ObjectUtils.setParam(object, "syncType", String.valueOf(Constants.SYNC_INSERTS));
+        method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
+        result = method.invoke(object, dbObject);
+        addRecords(object, recordList, "insert");
+        ((java.util.AbstractList)object).clear();
+      }
+      
+      //Update
+      if (auth.getLastAnchor() != null) {
+        ObjectUtils.setParam(object, "syncType", String.valueOf(Constants.SYNC_UPDATES));
+        method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
+        result = method.invoke(object, dbObject);
+        addRecords(object, recordList, "update");
+        ((java.util.AbstractList)object).clear();
+      }
+      
+      //Delete
+      
+    } else if (executeMethod != null && object != null) {
+      method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
+      result = method.invoke(object, dbObject);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
       }
-      if ((action == INSERT && meta != null) || action == SELECT) {
-        if (recordList == null) {
-          recordList = new RecordList(name);
-        }
-      }
-      
-      if (recordList != null) {
-        //Need to see if the Object is a collection of Objects, otherwise
-        //just process it as a single record.
-        if (object instanceof java.util.AbstractList) {
-          Iterator objectItems = ((java.util.AbstractList) object).iterator();
-          while (objectItems.hasNext()) {
-            Object objectItem = objectItems.next();
-            Record thisRecord = new Record();
-            this.addFields(thisRecord, meta, objectItem);
-            recordList.add(thisRecord);
-          }
-        } else {
-          Record thisRecord = new Record();
-          this.addFields(thisRecord, meta, object);
-          recordList.add(thisRecord);
-        }
-      }
+      addRecords(object, recordList, null);
     }
   }
 
@@ -347,6 +341,26 @@ public class TransactionItem {
         errorMessage.append(System.getProperty("line.separator"));
       }
       errorMessage.append(tmp);
+    }
+  }
+  
+  private void addRecords(Object object, RecordList recordList, String recordAction) {
+    if (recordList != null) {
+      //Need to see if the Object is a collection of Objects, otherwise
+      //just process it as a single record.
+      if (object instanceof java.util.AbstractList) {
+        Iterator objectItems = ((java.util.AbstractList) object).iterator();
+        while (objectItems.hasNext()) {
+          Object objectItem = objectItems.next();
+          Record thisRecord = new Record(recordAction);
+          this.addFields(thisRecord, meta, objectItem);
+          recordList.add(thisRecord);
+        }
+      } else {
+        Record thisRecord = new Record(recordAction);
+        this.addFields(thisRecord, meta, object);
+        recordList.add(thisRecord);
+      }
     }
   }
 }

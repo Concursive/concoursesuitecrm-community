@@ -11,7 +11,6 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -216,15 +215,19 @@ public class XMLUtils {
         nodeText = thisNode.getNodeValue();
       }
     }
-    int begin = 0;
-    int end = nodeText.length();
-    if (nodeText.startsWith(System.getProperty("line.separator"))) {
-      begin = (System.getProperty("line.separator").length());
+    if (nodeText == null) {
+      return null;
+    } else {
+      int begin = 0;
+      int end = nodeText.length();
+      if (nodeText.startsWith(System.getProperty("line.separator"))) {
+        begin = (System.getProperty("line.separator").length());
+      }
+      if (nodeText.endsWith(System.getProperty("line.separator"))) {
+        end = end - (System.getProperty("line.separator").length());
+      }
+      return nodeText.substring(begin, end);
     }
-    if (nodeText.endsWith(System.getProperty("line.separator"))) {
-      end = end - (System.getProperty("line.separator").length());
-    }
-    return nodeText.substring(begin, end);
   }
 
 
@@ -241,17 +244,12 @@ public class XMLUtils {
         Node theObject = (Node) objectElements.item(j);
         if (theObject.getNodeType() == Node.ELEMENT_NODE) {
           String param = theObject.getNodeName();
-          param = param.substring(0, 1).toUpperCase() + param.substring(1);
           String value = getNodeText(theObject);
-          try {
-            Method method = null;
-            Class[] argTypes = new Class[]{value.getClass()};
-            method = target.getClass().getMethod("set" + param, argTypes);
-            method.invoke(target, new Object[]{value});
+          if (ObjectUtils.setParam(target, param, value)) {
             if (System.getProperty("DEBUG") != null) {
               System.out.println("XMLUtils-> set" + param + "(" + value + ")");
             }
-          } catch (Exception e) {
+          } else {
             if (System.getProperty("DEBUG") != null) {
               System.out.println("XMLUtils-> set" + param + "(" + value + ") **INVALID");
             }

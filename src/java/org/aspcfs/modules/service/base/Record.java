@@ -5,10 +5,16 @@ import java.util.*;
 //import java.sql.*;
 
 public class Record extends Hashtable {
+  
+  private String action = null;
 
-  public Record() { 
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Record-> Initialized");
-    }
+  public Record() { }
+  
+  public Record(String thisAction) {
+    action = thisAction;
   }
+  
+  public void setAction(String tmp) { this.action = tmp; }
+  public String getAction() { return action; }
+  public boolean hasAction() { return (action != null); }
 }
