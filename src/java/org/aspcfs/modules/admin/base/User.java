@@ -37,7 +37,7 @@ import org.aspcfs.modules.base.*;
  */
 public class User extends GenericBean {
   private static Random rn = new Random();
-
+  //User Properties
   protected String errmsg = "";
   protected int id = -1;
   protected String username = null;
@@ -57,37 +57,34 @@ public class User extends GenericBean {
   protected int enteredBy = -1;
   protected int modifiedBy = -1;
   protected boolean enabled = true;
-  protected Contact contact = new Contact();
-  protected UserList childUsers = null;
-  protected double YTD = 0;
-
-  protected double pipelineValue = 0;
-  protected boolean pipelineValueIsValid = false;
-
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
   protected java.sql.Timestamp lastLogin = null;
-
   protected java.sql.Timestamp expires = null;
-
+  protected String previousUsername = null;
+  private int assistant = -1;
+  private int alias = -1;
+  //Related objects
+  protected Contact contact = new Contact();
+  protected UserList childUsers = null;
+  //Lazy loading properties
   protected boolean buildContact = false;
   protected boolean buildContactDetails = false;
   protected boolean buildHierarchy = false;
-
-  protected String previousUsername = null;
-
+  //check to see if manager user is enabled
+  private boolean managerUserEnabled = true;
+  //Cached data
+  //TODO: Remove cache data from this object
   protected boolean opportunityLock = false;
   protected boolean revenueLock = false;
+  protected double YTD = 0;
+  protected double pipelineValue = 0;
+  protected boolean pipelineValueIsValid = false;
   protected GraphSummaryList gmr = new GraphSummaryList();
   protected GraphSummaryList ramr = new GraphSummaryList();
   protected GraphSummaryList cgmr = new GraphSummaryList();
   protected GraphSummaryList cramr = new GraphSummaryList();
   protected GraphSummaryList revenue = new GraphSummaryList();
-  private int assistant = -1;
-  private int alias = -1;
-
-  //check to see if manager user is enabled
-  private boolean managerUserEnabled = true;
 
 
   /**
@@ -1503,11 +1500,9 @@ public class User extends GenericBean {
       return -1;
     } else {
       int resultCount = -1;
-
       if (this.getId() == -1) {
         throw new SQLException("User ID was not specified");
       }
-
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
@@ -1520,7 +1515,6 @@ public class User extends GenericBean {
       pst.setInt(++i, getId());
       resultCount = pst.executeUpdate();
       pst.close();
-
       return resultCount;
     }
   }
@@ -1591,6 +1585,9 @@ public class User extends GenericBean {
       if (lastLogin != null) {
         sql.append("last_login, ");
       }
+      if (timeZone != null) {
+        sql.append("timezone, ");
+      }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
@@ -1600,6 +1597,9 @@ public class User extends GenericBean {
         sql.append("?, ");
       }
       if (lastLogin != null) {
+        sql.append("?, ");
+      }
+      if (timeZone != null) {
         sql.append("?, ");
       }
       sql.append("?, ?) ");
@@ -1628,6 +1628,9 @@ public class User extends GenericBean {
       }
       if (lastLogin != null) {
         pst.setTimestamp(++i, lastLogin);
+      }
+      if (timeZone != null) {
+        pst.setString(++i, timeZone);
       }
       pst.setInt(++i, getEnteredBy());
       pst.setInt(++i, getModifiedBy());

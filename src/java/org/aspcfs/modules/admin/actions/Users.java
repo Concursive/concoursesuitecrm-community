@@ -16,7 +16,6 @@ import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.modules.base.Constants;
 
-
 /**
  *  Methods for managing users
  *
@@ -245,27 +244,21 @@ public final class Users extends CFSModule {
    *@since           1.7
    */
   public String executeCommandAddUser(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-users-add"))) {
+    if (!hasPermission(context, "admin-users-add")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
     User insertedUser = null;
-
     try {
       db = getConnection(context);
       User thisUser = (User) context.getFormBean();
-
       if (context.getRequest().getParameter("typeId") != null) {
         ((Contact) thisUser.getContact()).addType(context.getRequest().getParameter("typeId"));
       }
-
       thisUser.setEnteredBy(getUserId(context));
       thisUser.setModifiedBy(getUserId(context));
-
+      thisUser.setTimeZone((String) context.getServletContext().getAttribute("SYSTEM.TIMEZONE"));
       recordInserted = thisUser.insert(db, context);
       if (recordInserted) {
         insertedUser = new User();
@@ -275,27 +268,22 @@ public final class Users extends CFSModule {
         context.getRequest().setAttribute("UserRecord", insertedUser);
         updateSystemHierarchyCheck(db, context);
       } else {
-        if(thisUser.getContactId() != -1){
+        if (thisUser.getContactId() != -1) {
           thisUser.setContact(new Contact(db, thisUser.getContactId()));
         }
         context.getRequest().setAttribute("UserRecord", thisUser);
         processErrors(context, thisUser.getErrors());
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("UserDetailsOK");
-      } else {
-        return (executeCommandInsertUserForm(context));
-      }
+    if (recordInserted) {
+      return ("UserDetailsOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (executeCommandInsertUserForm(context));
     }
   }
 
@@ -361,7 +349,7 @@ public final class Users extends CFSModule {
     boolean recordDisabled = false;
     User thisUser = null;
     Ticket thisTicket = null;
-    
+
     User thisRec = ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
     User managerUser = null;
 
@@ -369,7 +357,7 @@ public final class Users extends CFSModule {
     try {
       db = this.getConnection(context);
       thisUser = new User(db, context.getRequest().getParameter("id"));
-      if(context.getRequest().getParameter("disablecontact") != null){
+      if (context.getRequest().getParameter("disablecontact") != null) {
         Contact thisContact = new Contact(db, thisUser.getContactId());
         thisContact.disable(db);
       }
@@ -443,7 +431,7 @@ public final class Users extends CFSModule {
       db = this.getConnection(context);
       thisUser = new User(db, context.getRequest().getParameter("id"));
       Contact thisContact = new Contact(db, thisUser.getContactId());
-      if(!thisContact.getEnabled()){
+      if (!thisContact.getEnabled()) {
         thisContact.enable(db);
       }
       recordEnabled = thisUser.enable(db);
