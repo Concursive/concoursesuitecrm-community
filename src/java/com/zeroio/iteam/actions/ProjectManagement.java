@@ -374,19 +374,21 @@ public final class ProjectManagement extends CFSModule {
       db = getConnection(context);
       thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       if ("Requirements".equals(section)) {
-        String toggle = (String)context.getRequest().getParameter("expand");
-        Vector reqsOpen = (Vector)context.getSession().getAttribute("Tree-OpenRequirements");
+        String expand = (String)context.getRequest().getParameter("expand");
+        String contract = (String)context.getRequest().getParameter("contract");
+        ArrayList reqsOpen = (ArrayList)context.getSession().getAttribute("Tree-OpenRequirements");
         if (reqsOpen == null) {
-          reqsOpen = new Vector();
+          reqsOpen = new ArrayList();
           context.getSession().setAttribute("Tree-OpenRequirements", reqsOpen);
         }
-        if (toggle != null) {
-          if (reqsOpen.contains(toggle)) {
-            if (System.getProperty("DEBUG") != null) System.out.println("ProjectManagement-> Removing: " + toggle);
-            reqsOpen.remove(toggle);
-          } else {
-            if (System.getProperty("DEBUG") != null) System.out.println("ProjectManagement-> Adding: " + toggle);
-            reqsOpen.add(toggle);
+        if (expand != null) {
+          if (!reqsOpen.contains(expand)) {
+            reqsOpen.add(expand);
+          }
+        }
+        if (contract != null) {
+          if (reqsOpen.contains(contract)) {
+            reqsOpen.remove(contract);
           }
         }
         

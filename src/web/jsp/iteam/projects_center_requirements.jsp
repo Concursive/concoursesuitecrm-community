@@ -34,7 +34,7 @@
       <%= thisRequirement.getEnteredString() %>
     </td>
     <td width='412' valign='top'>
-      <%= thisRequirement.getAssignmentTag("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() + "&expand=" + thisRequirement.getId()) %>
+      <%= thisRequirement.getAssignmentTag("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() + "&" + (thisRequirement.isTreeOpen()?"contract":"expand") + "=" + thisRequirement.getId()) %>
       <a href="ProjectManagementRequirements.do?command=Modify&rid=<%= thisRequirement.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisRequirement.getShortDescription()) %></a>
       (<%= thisRequirement.getAssignments().size() %> activit<%= (thisRequirement.getAssignments().size() == 1?"y":"ies") %>)<br>
       <%= ("".equals(thisRequirement.getSubmittedBy())?"":"<i>Requested By " + thisRequirement.getSubmittedBy() + "</i>") %>
