@@ -15,7 +15,7 @@
 My Action Lists<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="myhomepage-action-lists-add">
-<a href="javascript:window.location.href='MyActionLists.do?command=Add&return=list&params=' + escape('filters=all|mycontacts|accountcontacts');">Add a Action List</a><br>
+<a href="javascript:window.location.href='MyActionLists.do?command=Add&return=list&params=' + escape('filters=all|mycontacts|accountcontacts');">Add an Action List</a><br>
 </dhv:permission>
 <br>
 <table width="100%" border="0">
