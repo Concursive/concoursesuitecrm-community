@@ -26,15 +26,15 @@ View Contacts<br>
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= ExternalContactsInfo.getOptionValue("my") %>>My Contacts </option>
         <option <%= ExternalContactsInfo.getOptionValue("all") %>>All Contacts</option>
-        
         <% if (!(ExternalContactsInfo.getSavedCriteria().isEmpty())) { %>
           <option <%= ExternalContactsInfo.getOptionValue("search") %>>Search Results</option>
         <%}%>
-  
       </select>
 			<% ContactTypeList.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
 			<%= ContactTypeList.getHtmlSelect("listFilter1", ExternalContactsInfo.getFilterKey("listFilter1")) %>
-      <%= showAttribute(request, "actionError") %>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ExternalContactsInfo"/>
     </td>
     </form>
   </tr>
