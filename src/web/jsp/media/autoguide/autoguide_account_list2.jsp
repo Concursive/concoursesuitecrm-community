@@ -61,7 +61,7 @@
     <td class="PhotoList<%= (rowcount == 1?"":"AdditionalRow") %>">
         <span>
           <a href="AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId()%>"><img src="<%= (thisItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + thisItem.getId() + "&fid=" + thisItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/></a><br>
-          <a href="javascript:popURL('AutoGuide.do?command=UploadForm&id=<%= thisItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>&return=<%= java.net.URLEncoder.encode("AccountsAutoGuide.do?command=AccountList&orgId=" + OrgDetails.getOrgId()) %>','Photo Upload','500','300','no','no');">Upload Photo</a><br>
+          <a href="javascript:popURLReturn('AutoGuide.do?command=UploadForm&id=<%= thisItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>', 'AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>','Photo Upload','500','300','no','no');">Upload Photo</a><br>
           &nbsp;<br>
 <dhv:evaluate exp="<%= hasText(thisItem.getStockNo()) %>">
           #<%= toHtml(thisItem.getStockNo()) %><br>
