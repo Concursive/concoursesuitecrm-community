@@ -31,10 +31,10 @@ public final class ProjectManagementAssignments extends CFSModule {
    */
   public String executeCommandAdd(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-activities-add"))) {
+/* 	if (!(hasPermission(context, "projects-activities-add"))) {
 	    return ("PermissionError");
     	}
-	
+*/
     Exception errorMessage = null;
 
     String projectId = (String)context.getRequest().getParameter("pid");
@@ -103,10 +103,10 @@ public final class ProjectManagementAssignments extends CFSModule {
    */
   public String executeCommandInsert(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-activities-add"))) {
+/* 	if (!(hasPermission(context, "projects-activities-add"))) {
 	    return ("PermissionError");
     	}
-	
+ */	
     Exception errorMessage = null;
     Connection db = null;
 
@@ -149,10 +149,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
   public String executeCommandDetails(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-activities-view"))) {
+/* 	if (!(hasPermission(context, "projects-activities-view"))) {
 	    return ("PermissionError");
     	}
-	
+ */	
     Exception errorMessage = null;
 
     String projectId = (String)context.getRequest().getParameter("pid");
@@ -203,10 +203,10 @@ public final class ProjectManagementAssignments extends CFSModule {
   
   public String executeCommandModify(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-activities-edit"))) {
+/* 	if (!(hasPermission(context, "projects-activities-edit"))) {
 	    return ("PermissionError");
     	}
-	
+ */	
     Exception errorMessage = null;
 
     String projectId = (String)context.getRequest().getParameter("pid");
@@ -276,10 +276,10 @@ public final class ProjectManagementAssignments extends CFSModule {
 
   public String executeCommandUpdate(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-activities-edit"))) {
+/* 	if (!(hasPermission(context, "projects-activities-edit"))) {
 	    return ("PermissionError");
     	}
-	
+ */	
     Exception errorMessage = null;
 
     Assignment thisAssignment = (Assignment)context.getFormBean();

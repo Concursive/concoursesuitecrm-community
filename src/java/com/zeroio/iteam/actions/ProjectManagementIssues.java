@@ -31,10 +31,10 @@ public final class ProjectManagementIssues extends CFSModule {
    */
   public String executeCommandAdd(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-issues-add"))) {
+/* 	if (!(hasPermission(context, "projects-issues-add"))) {
 	    return ("PermissionError");
     	}
-	
+ */
     Exception errorMessage = null;
 
     String projectId = (String)context.getRequest().getParameter("pid");
@@ -74,10 +74,10 @@ public final class ProjectManagementIssues extends CFSModule {
    */
   public String executeCommandInsert(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-issues-add"))) {
+/* 	if (!(hasPermission(context, "projects-issues-add"))) {
 	    return ("PermissionError");
     	}
-	
+ */
     Exception errorMessage = null;
     Connection db = null;
 
@@ -120,10 +120,10 @@ public final class ProjectManagementIssues extends CFSModule {
   
   public String executeCommandDetails(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-issues-view"))) {
+/* 	if (!(hasPermission(context, "projects-issues-view"))) {
 	    return ("PermissionError");
     	}
-	
+ */
     Exception errorMessage = null;
 
     String projectId = (String)context.getRequest().getParameter("pid");
@@ -172,10 +172,10 @@ public final class ProjectManagementIssues extends CFSModule {
   
   public String executeCommandModify(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-issues-edit"))) {
+/* 	if (!(hasPermission(context, "projects-issues-edit"))) {
 	    return ("PermissionError");
     	}
-	
+ */
     Exception errorMessage = null;
 
     String projectId = (String)context.getRequest().getParameter("pid");
@@ -214,10 +214,10 @@ public final class ProjectManagementIssues extends CFSModule {
   
   public String executeCommandReply(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-issues-add"))) {
+/* 	if (!(hasPermission(context, "projects-issues-add"))) {
 	    return ("PermissionError");
     	}
-	
+ */
     Exception errorMessage = null;
 
     String projectId = (String)context.getRequest().getParameter("pid");
@@ -256,10 +256,10 @@ public final class ProjectManagementIssues extends CFSModule {
   
   public String executeCommandInsertReply(ActionContext context) {
 	  
-	if (!(hasPermission(context, "projects-issues-add"))) {
+/* 	if (!(hasPermission(context, "projects-issues-add"))) {
 	    return ("PermissionError");
     	}
-	
+ */
     Exception errorMessage = null;
     Connection db = null;
 
