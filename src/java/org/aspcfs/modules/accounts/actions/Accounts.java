@@ -828,6 +828,8 @@ public final class Accounts extends CFSModule {
           ((Contact) updatedOrg.getPrimaryContact()).setRequestItems(context.getRequest());
           ((Contact) updatedOrg.getPrimaryContact()).update(db);
         }
+        //update all contacts which are associated with this organization
+        ContactList.updateOrgName(db, updatedOrg);
       }
     } catch (SQLException e) {
       errorMessage = e;
