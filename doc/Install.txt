@@ -33,7 +33,7 @@
   $ rpm --install [file]
   $ ln -s /usr/java/j2sdk1.4.1 /usr/java/j2se
 
-- Install Apache Tomcat 4.1.18 binary
+- Install Apache Tomcat 4.1.12 or 4.1.19 binary (not 4.1.18)
   Purpose: Web Server
   http://jakarta.apache.org 
   file: jakarta-tomcat-4.1.18-LE-jdk14.tar.gz
@@ -125,6 +125,10 @@
     #  on a new line after "-Djava.io.tmpdir="$CATALINA_TMPDIR" \
       -Djava.awt.headless="true" \
     # Save and exit
+    
+  # Configure tomcat web application configuration
+    $ vi ${CATALINA_HOME}/conf/web.xml
+      # Change the init-param listings = true to listings = false
     
   # Setup tomcat to start when server starts up
     $ chkconfig --level 2345 tomcat on
