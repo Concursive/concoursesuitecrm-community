@@ -44,7 +44,7 @@ public class EmailAddressFormatter {
         email = email.substring(0, email.indexOf(" ")).trim();
       }
       //Remove ' marks at beginning and end of address
-      if (email.charAt(0) == '\'' &&
+      if (email.length() > 0 && email.charAt(0) == '\'' &&
           email.charAt(email.length() - 1) == '\'') {
         email = email.substring(1, email.length() -1);
       }
