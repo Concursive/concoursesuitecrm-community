@@ -65,7 +65,9 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       this.setTasksAssignedToMeOnly(true);
       this.setOwner(thisUser.getContactId());
       this.buildList(db);
-      System.out.println("TaskListScheduledActions --> Getting Tasks ");
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("TaskListScheduledActions --> Getting Tasks ");
+      }
       Iterator taskList = this.iterator();
       int taskCount = 0;
       while (taskList.hasNext()) {
