@@ -1769,7 +1769,6 @@ public class OpportunityComponent extends GenericBean {
     if (guess == 0 && !(errors.containsKey("guessError"))) {
       errors.put("guessError", "Amount needs to be entered");
     }
-
     if (terms == 0 && !(errors.containsKey("termsError"))) {
       errors.put("termsError", "Terms needs to be entered");
     } else {
@@ -1777,7 +1776,12 @@ public class OpportunityComponent extends GenericBean {
         errors.put("termsError", "Terms cannot be less than 0");
       }
     }
-
+    if (units == null) {
+      errors.put("termsError", "Units cannot be left blank");
+    }
+    if (type == null) {
+      errors.put("typeError", "Type cannot be left blank");
+    }
     if (hasErrors()) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Opportunity Component-> Cannot insert: object is not valid");
