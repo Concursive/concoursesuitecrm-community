@@ -448,6 +448,8 @@ public final class ProjectManagement extends CFSModule {
           Contact user = this.getUser(context, thisItem.getEnteredBy()).getContact();
           thisItem.setEnteredByString(user.getNameFirstLast());
         }
+      } else {
+        addRecentItem(context, thisProject);
       }
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", section.toLowerCase());
