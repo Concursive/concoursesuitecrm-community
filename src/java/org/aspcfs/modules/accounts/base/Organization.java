@@ -1628,7 +1628,7 @@ public class Organization extends GenericBean {
       Dependency oppDependency = new Dependency();
       oppDependency.setName("Opportunities");
       oppDependency.setCount(oppCount);
-      oppDependency.setCanDelete(true);
+      oppDependency.setCanDelete(false);
       dependencyList.add(oppDependency);
 
       Dependency scDependency = new Dependency();
