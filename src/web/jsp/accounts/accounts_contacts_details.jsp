@@ -48,7 +48,7 @@ Contact Details
     <td class="containerBack">
     <% String param1 = "id=" + ContactDetails.getId(); 
     %>
-        <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
+        <strong><%= toHtml(ContactDetails.getNameLastFirst() != null?ContactDetails.getNameLastFirst() + ":":"") %></strong>
         [ <dhv:container name="accountscontacts" selected="details" param="<%= param1 %>"/> ]
       <br>
       <br>

@@ -128,7 +128,7 @@ Modify Contact
     <td class="containerBack">
     <% String param2 = "id=" + ContactDetails.getId(); 
     %>
-        <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
+        <strong><%= toHtml(ContactDetails.getNameLastFirst() != null?ContactDetails.getNameLastFirst() + ":":"") %></strong>
         [ <dhv:container name="accountscontacts" selected="details" param="<%= param2 %>"/> ]
       <br>
       <br>
