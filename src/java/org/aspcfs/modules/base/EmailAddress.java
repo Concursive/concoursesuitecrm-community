@@ -439,7 +439,9 @@ public class EmailAddress {
 
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
-    this.setPrimaryEmail(rs.getBoolean("primary_email"));
+    if (isContact) {
+      this.setPrimaryEmail(rs.getBoolean("primary_email"));
+    }
 
     if (modifiedBy == -1) {
       this.setModifiedBy(0);
