@@ -308,7 +308,7 @@ public final class Users extends CFSModule {
 
     try {
       db = getConnection(context);
-      User thisUser = (User) context.getRequest().getAttribute("UserRecord");
+      User thisUser = (User) context.getFormBean();
 
       if (context.getRequest().getParameter("typeId") != null) {
         ((Contact) thisUser.getContact()).addType(context.getRequest().getParameter("typeId"));
@@ -322,7 +322,6 @@ public final class Users extends CFSModule {
         insertedUser = new User();
         insertedUser.setBuildContact(true);
         insertedUser.buildRecord(db, thisUser.getId());
-        context.getRequest().setAttribute("UserRecord", insertedUser);
         addRecentItem(context, insertedUser);
         context.getRequest().setAttribute("UserRecord", insertedUser);
         updateSystemHierarchyCheck(db, context);
