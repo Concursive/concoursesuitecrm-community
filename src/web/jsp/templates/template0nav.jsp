@@ -9,6 +9,7 @@
 <html>
 
 <head>
+<META HTTP-EQUIV="refresh" content="<%= User.getSystemStatus().getSessionTimeout() + 60 %>;URL=<%= request.getScheme() %>://<%= request.getServerName() %>/MyCFS.do?command=Home">
 <title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
 <link rel="stylesheet" href="css/template0.css" type="text/css">
@@ -26,8 +27,8 @@
       <a href="javascript:popLEFT('/Help.do?module=<%= request.getAttribute("moduleAction") %>&section=<%= request.getParameter("command") %>&sub=<%= request.getParameter("section") %>','CFS_Help','375','450','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a><br>
 <%
   if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
-%>      
-      User: <b class="highlight"><%= User.getUserRecord().getContact().getNameFirstLast() %></b> /
+%>  
+    <%=User.getActualUserId() != User.getUserId() ? "User Aliased To :":"User :"%> <b class="highlight"><%= User.getUserRecord().getContact().getNameFirstLast() %></b> /
 <%}%>      
       <b class="highlight"><%= User.getRole() %></b>
 <%
