@@ -254,10 +254,10 @@ public final class Leads extends CFSModule {
       oppId = Integer.parseInt(context.getRequest().getParameter("id"));
     }
 
-    if("true".equals(context.getRequest().getParameter("reset"))){
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("LeadsComponentListInfo");
     }
-    
+
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "LeadsComponentListInfo");
     componentListInfo.setLink("Leads.do?command=DetailsOpp&oppId=" + oppId);
     try {
@@ -572,6 +572,7 @@ public final class Leads extends CFSModule {
         //TODO: Set a max date for less records
         realFullOppList.setUnits("M");
         realFullOppList.setOwnerIdRange(range);
+        realFullOppList.setQueryOpenOnly(true);
         realFullOppList.buildList(db);
       }
 
@@ -945,8 +946,8 @@ public final class Leads extends CFSModule {
     }
 
     Exception errorMessage = null;
-    if("true".equals(context.getRequest().getParameter("reset"))){
-     context.getSession().removeAttribute("OpportunityListInfo");
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("OpportunityListInfo");
     }
     PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
     oppListInfo.setLink("Leads.do?command=ViewOpp");
@@ -967,10 +968,10 @@ public final class Leads extends CFSModule {
       if ("all".equals(oppListInfo.getListView())) {
         oppList.setOwnerIdRange(this.getUserRange(context));
         oppList.setQueryOpenOnly(true);
-      }else if ("closed".equals(oppListInfo.getListView())) { 
+      } else if ("closed".equals(oppListInfo.getListView())) {
         oppList.setOwnerIdRange(this.getUserRange(context));
         oppList.setQueryClosedOnly(true);
-      }else {
+      } else {
         oppList.setOwner(this.getUserId(context));
         oppList.setQueryOpenOnly(true);
       }
@@ -1644,6 +1645,18 @@ public final class Leads extends CFSModule {
         component.queryRecord(db, component.getId());
         context.getRequest().setAttribute("OppComponentDetails", component);
       }
+      if (resultCount == -1) {
+        UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+        User thisRec = thisUser.getUserRecord();
+        UserList shortChildList = thisRec.getShortChildList();
+        UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+        userList.setMyId(getUserId(context));
+        userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+        userList.setIncludeMe(true);
+        userList.setExcludeDisabledIfUnselected(true);
+        context.getRequest().setAttribute("UserList", userList);
+        buildFormElements(db, context);
+      }
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
@@ -1653,7 +1666,7 @@ public final class Leads extends CFSModule {
     if (errorMessage == null) {
       if (resultCount == -1) {
         processErrors(context, component.getErrors());
-        return executeCommandModifyComponent(context);
+        return "ComponentModifyOK";
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
           return (executeCommandViewOpp(context));
