@@ -91,19 +91,6 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
       pst.close();
       rs.close();
 
-      //Determine the offset, based on the filter, for the first record to show
-      if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString());
-        pst.setInt(1, itemId);
-        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
-        rs = pst.executeQuery();
-        if (rs.next()) {
-          int offsetCount = rs.getInt("recordcount");
-          pagedListInfo.setCurrentOffset(offsetCount);
-        }
-        rs.close();
-        pst.close();
-      }
 
       //Determine column to sort by
       pagedListInfo.setDefaultSort("asr.entered", null);

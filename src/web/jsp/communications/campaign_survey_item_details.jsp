@@ -5,20 +5,14 @@
 <%@ include file="../initPage.jsp" %>
 
 <br>
-<center><%= ItemDetailsListInfo.getAlphabeticalPageLinks() %></center>
-<dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="ItemDetailsListInfo"/>
+
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title" colspan="3">
-    <td>
-      <strong>Name</strong>
-    </td>
-  </tr>
   <tr class="title">
-     <td width="25" valign="top" align="center">
+     <td width="25" valign="top" align="left">
         Name
       </td>
-     <td valign="top" align="center">
+     <td valign="top" align="left">
         Phone Number(s)
       </td>
     <td valign="center" align="left">
@@ -54,6 +48,7 @@
     </table>
     <br>
     <dhv:pagedListControl object="ItemDetailsListInfo" />
+    <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="ItemDetailsListInfo"/>
   <%} else {%>  
   <tr>
     <td class="row2" valign="center">
