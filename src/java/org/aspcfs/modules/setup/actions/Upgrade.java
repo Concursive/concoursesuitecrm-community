@@ -11,6 +11,7 @@ import org.aspcfs.modules.system.base.ApplicationVersion;
 import java.util.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.controller.ApplicationPrefs;
+import bsh.*;
 
 /**
  *  Actions that facilitate upgrading an installation of Dark Horse CRM
@@ -88,21 +89,28 @@ public class Upgrade extends CFSModule {
       try {
         // Get a connection from the connection pool for this user
         db = this.getConnection(context);
+        // Prepare bean shell script, if needed
+        Interpreter script = new Interpreter();
+        script.set("db", db);
         // Determine if version 2004-06-15 (Version 2.8) needs to be executed
         if (!isInstalled(db, "2004-06-15")) {
           switch (DatabaseUtils.getType(db)) {
               case DatabaseUtils.POSTGRESQL:
                 System.out.println("Upgrade-> Executing PostgreSQL script 2004-06-15");
+                // SQL Script
                 DatabaseUtils.executeSQL(db,
                     context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql_2004-06-15.sql");
-                addVersion(db, "postgresql_2004-06-15.sql", "2004-06-15");
+                // Bean Shell Script
+                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-06-15.bsh");
                 installLog.add("2004-06-15 Database changes installed");
                 break;
               case DatabaseUtils.MSSQL:
                 System.out.println("Upgrade-> Executing MSSQL script 2004-06-15");
+                // SQL Script
                 DatabaseUtils.executeSQL(db,
                     context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql_2004-06-15.sql");
-                addVersion(db, "mssql_2004-06-15.sql", "2004-06-15");
+                // Bean Shell Script
+                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-06-15.bsh");
                 installLog.add("2004-06-15 Database changes installed");
                 break;
               default:
@@ -136,11 +144,10 @@ public class Upgrade extends CFSModule {
    *@return          The administrator value
    */
   private boolean isAdministrator(ActionContext context) {
-    User thisUser = getUser(context, getUserId(context));
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     if (thisUser != null) {
-      if (thisUser.getRoleId() == 1 || "Administrator".equals(thisUser.getRole())) {
-        return true;
-      }
+      String status = (String) context.getSession().getAttribute("UPGRADEOK");
+      return "UPGRADEOK".equals(status);
     }
     return false;
   }
