@@ -16,9 +16,10 @@ import org.aspcfs.modules.base.Constants;
 /**
  *  Description of the Class
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    March 26, 2002
- *@version    $Id$
+ *@version    $Id: SearchCriteriaListList.java,v 1.10 2003/03/07 14:13:39
+ *      mrajkowski Exp $
  */
 public class SearchCriteriaListList extends ArrayList {
 
@@ -27,12 +28,13 @@ public class SearchCriteriaListList extends ArrayList {
   private String ownerIdRange = null;
   private int campaignId = -1;
   private int enabled = Constants.TRUE;
-  
+
   public final static String tableName = "saved_criterialist";
   public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
+
 
   /**
    *  Constructor for the SearchCriteriaListList object
@@ -79,14 +81,86 @@ public class SearchCriteriaListList extends ArrayList {
     this.ownerIdRange = tmp;
   }
 
-public String getTableName() { return tableName; }
-public String getUniqueField() { return uniqueField; }
-public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
-public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
-public int getSyncType() { return syncType; }
-public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
-public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
-public void setSyncType(int tmp) { this.syncType = tmp; }
+
+  /**
+   *  Gets the tableName attribute of the SearchCriteriaListList object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the SearchCriteriaListList object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   *  Gets the lastAnchor attribute of the SearchCriteriaListList object
+   *
+   *@return    The lastAnchor value
+   */
+  public java.sql.Timestamp getLastAnchor() {
+    return lastAnchor;
+  }
+
+
+  /**
+   *  Gets the nextAnchor attribute of the SearchCriteriaListList object
+   *
+   *@return    The nextAnchor value
+   */
+  public java.sql.Timestamp getNextAnchor() {
+    return nextAnchor;
+  }
+
+
+  /**
+   *  Gets the syncType attribute of the SearchCriteriaListList object
+   *
+   *@return    The syncType value
+   */
+  public int getSyncType() {
+    return syncType;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the SearchCriteriaListList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the SearchCriteriaListList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the SearchCriteriaListList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
 
   /**
    *  Sets the campaignId attribute of the SearchCriteriaListList object
@@ -96,7 +170,13 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
   public void setCampaignId(int tmp) {
     this.campaignId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the campaignId attribute of the SearchCriteriaListList object
+   *
+   *@param  tmp  The new campaignId value
+   */
   public void setCampaignId(String tmp) {
     this.campaignId = Integer.parseInt(tmp);
   }
@@ -244,11 +324,6 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     if (campaignId != -1) {
       sqlFilter.append("AND id in (SELECT group_id FROM campaign_list_groups WHERE campaign_id = " + campaignId + ") ");
     }
-    /**
-    if (enabled == Constants.TRUE || enabled == Constants.FALSE) {
-      sqlFilter.append("AND enabled = ? ");
-    }
-    */
   }
 
 
@@ -267,36 +342,40 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     if (owner != -1) {
       pst.setInt(++i, owner);
     }
-    
-    /**
-    if (enabled == Constants.TRUE || enabled == Constants.FALSE) {
-      switch (enabled) {
-        case Constants.TRUE: pst.setBoolean(++i, true); break;
-        case Constants.FALSE: pst.setBoolean(++i, false); break;
-        default: break;
-      }
-    }
-    */
-    
+
+
     return i;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  listB  Description of the Parameter
+   *@return        Description of the Return Value
+   */
   public boolean containsItem(SearchCriteriaList listB) {
     //Similar to contains, but will find copies as well
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      SearchCriteriaList listA = (SearchCriteriaList)i.next();
+      SearchCriteriaList listA = (SearchCriteriaList) i.next();
       if (listA.getId() == listB.getId()) {
         return true;
       }
     }
     return false;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  listB  Description of the Parameter
+   */
   public void removeItem(SearchCriteriaList listB) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      SearchCriteriaList listA = (SearchCriteriaList)i.next();
+      SearchCriteriaList listA = (SearchCriteriaList) i.next();
       if (listA.getId() == listB.getId()) {
         i.remove();
       }
