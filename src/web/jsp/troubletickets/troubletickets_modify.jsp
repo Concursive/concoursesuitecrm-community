@@ -91,7 +91,6 @@ function ShowSpan(thisID)
 		<%} else {%>
 			<input type=submit value="Update">
 			<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
-			<input type=submit onClick="javascript:document.forms[0].close.value='1'" value="Close">
 			<%= showAttribute(request, "closedError") %>
 		<%}%>
 		
@@ -150,7 +149,6 @@ function ShowSpan(thisID)
 		<input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
 		<input type=hidden name=id value="<%=TicketDetails.getId()%>">
 		<input type=hidden name=companyName value="<%=toHtml(TicketDetails.getCompanyName())%>">
-		<input type=hidden name="close" value="">
 		<input type=hidden name=refresh value="-1">
 		
 		</td>
@@ -284,7 +282,7 @@ function ShowSpan(thisID)
 		
 		<td bgColor="white">
 		<textarea name=solution cols=55 rows=3><% if (TicketDetails.getSolution() != null) {%><%=TicketDetails.getSolution()%><%}%></textarea>
-
+		<input type=checkbox name="closeNow">Close ticket
 		</td>
 		</tr>
 		
@@ -356,7 +354,6 @@ function ShowSpan(thisID)
 		<%} else {%>
 			<input type=submit value="Update">
 			<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
-			<input type=submit onClick="javascript:document.forms[0].close.value='1'" value="Close">
 		<%}%>
 		</td>
 		

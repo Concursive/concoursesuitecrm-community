@@ -444,13 +444,14 @@ public String executeCommandDetails(ActionContext context) {
 		int catCount = 0;
 		TicketCategory thisCat = null;
 		boolean catInserted = false;
-		
 		boolean smartCommentsResult = true;
+		
+		String closeNow = context.getRequest().getParameter("closeNow");
 	
 		Ticket newTic = (Ticket)context.getFormBean();
 
-		if (context.getRequest().getParameter("close").equals("1")) {
-			newTic.setCloseIt(true);
+		if (closeNow != null && closeNow.equals("on")) {
+				newTic.setCloseIt(true);
 		}
 		
 		try {
