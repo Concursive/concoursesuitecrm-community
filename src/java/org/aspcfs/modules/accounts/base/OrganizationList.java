@@ -36,6 +36,10 @@ public class OrganizationList extends Vector {
   private String ownerIdRange = null;
   private boolean hasAlertDate = false;
   private boolean hasExpireDate = false;
+  
+  private int revenueType = -1;
+  private int revenueYear = -1;
+  private boolean buildRevenueYTD = false;
 
 
   /**
@@ -93,6 +97,10 @@ public class OrganizationList extends Vector {
   public void setMinerOnly(boolean tmp) {
     this.minerOnly = new Boolean(tmp);
   }
+public void setRevenueType(int tmp) { this.revenueType = tmp; }
+public void setRevenueYear(int tmp) { this.revenueYear = tmp; }
+public int getRevenueType() { return revenueType; }
+public int getRevenueYear() { return revenueYear; }
 
 
   /**
@@ -135,6 +143,13 @@ public class OrganizationList extends Vector {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
+  
+public boolean getBuildRevenueYTD() {
+	return buildRevenueYTD;
+}
+public void setBuildRevenueYTD(boolean buildRevenueYTD) {
+	this.buildRevenueYTD = buildRevenueYTD;
+}
 
 
   /**
@@ -332,6 +347,9 @@ public class OrganizationList extends Vector {
         break;
       }
       Organization thisOrganization = this.getObject(rs);
+      if (buildRevenueYTD && revenueYear > -1) {
+	      thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType());
+      }
       this.add(thisOrganization);
     }
     rs.close();

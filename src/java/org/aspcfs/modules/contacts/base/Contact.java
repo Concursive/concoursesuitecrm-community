@@ -160,6 +160,9 @@ public class Contact extends GenericBean {
 public void setUrl(String url) {
 	this.url = url;
 }
+public String getFullNameAbbr() {
+	return (this.getNameFirst().charAt(0) + ". " + this.getNameLast());
+}
 public int getCustom1() {
 	return custom1;
 }

@@ -50,7 +50,21 @@ public final class RevenueManager extends CFSModule {
     ResultSet rs = null;
 
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    String overrideId = context.getRequest().getParameter("oid");
+    String overrideId = null;
+    
+    if (context.getRequest().getParameter("oid") != null) {
+	    System.out.println("Based on req");
+	    overrideId = context.getRequest().getParameter("oid");
+	    if (Integer.parseInt(overrideId) == getUserId(context)) {
+		context.getSession().setAttribute("override", null);
+		context.getSession().setAttribute("othername", null);
+		context.getSession().setAttribute("previousId", null);
+      	    }
+		    
+    } else if (context.getSession().getAttribute("override") != null) {
+	    overrideId = (String)context.getSession().getAttribute("override");
+    } 
+    
     User thisRec = null;
 
     UserList shortChildList = new UserList();
@@ -61,17 +75,26 @@ public final class RevenueManager extends CFSModule {
     //RevenueList fullRevList = new RevenueList();
     RevenueList tempRevList = new RevenueList();
     RevenueList realFullRevList = new RevenueList();
-    RevenueList displayList = new RevenueList();
+    OrganizationList displayList = new OrganizationList();
 
     XYDataSource categoryData = null;
+    
+    if (context.getRequest().getParameter("reset") != null) {
+      overrideId = null;
+      context.getSession().setAttribute("override", null);
+      context.getSession().setAttribute("othername", null);
+      context.getSession().setAttribute("previousId", null);
+    }
 
-    if (overrideId != null && !(overrideId.equals("null")) && !(overrideId.equals("" + thisUser.getUserId()))) {
+    if (overrideId != null && !(overrideId.equals("null")) && !(Integer.parseInt(overrideId) == getUserId(context))) {
+      System.out.println("first one" + overrideId);
       idToUse = Integer.parseInt(overrideId);
       thisRec = thisUser.getUserRecord().getChild(idToUse);
-      context.getRequest().setAttribute("override", overrideId);
-      context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
-      context.getRequest().setAttribute("previousId", "" + thisRec.getManagerId());
+      context.getSession().setAttribute("override", overrideId);
+      context.getSession().setAttribute("othername", thisRec.getContact().getNameFull());
+      context.getSession().setAttribute("previousId", "" + thisRec.getManagerId());
     } else {
+      System.out.println("2nd one");
       idToUse = thisUser.getUserId();
       thisRec = thisUser.getUserRecord();
     }
@@ -89,33 +112,44 @@ public final class RevenueManager extends CFSModule {
       revenueInfo.setLink("/RevenueManager.do?command=Dashboard");
       
       //sort by amount on the dashboard screen
-      revenueInfo.setDefaultSort("r.amount desc", null);
+      //revenueInfo.setDefaultSort("s desc", null);
       
+      if (context.getRequest().getParameter("year") != null) {
+	      y = Integer.parseInt(context.getRequest().getParameter("year"));
+	      d.setYear(y - 1900);
+	      context.getSession().setAttribute("year", context.getRequest().getParameter("year"));
+      } else if (context.getSession().getAttribute("year") != null) {
+	      y = Integer.parseInt((String)context.getSession().getAttribute("year"));
+	      d.setYear(y - 1900);
+	      context.getSession().setAttribute("year", (String)context.getSession().getAttribute("year"));
+      } 
+           
       shortChildList = thisRec.getShortChildList();
+      shortChildList.setRevenueYear(y);
+      shortChildList.buildRevenueYTD(db);
+      
       context.getRequest().setAttribute("ShortChildList", shortChildList);
 
       fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
 
       String range = fullChildList.getUserListIds(idToUse);
       
-      if (context.getRequest().getParameter("year") != null) {
-	      y = Integer.parseInt(context.getRequest().getParameter("year"));
-	      d.setYear(y - 1900);
-      } 
+
       
       thisRec.setRevenueIsValid(false, true);
       realFullRevList.setYear(y);
-      displayList.setYear(y);
+      displayList.setRevenueYear(y);
+      displayList.setBuildRevenueYTD(true);
       
-      System.out.println("here is the session variable: " + context.getSession().getAttribute("RevenueGraphType"));
+      //System.out.println("here is the session variable: " + context.getSession().getAttribute("RevenueGraphType"));
       
       if (context.getRequest().getParameter("type") != null) {
 	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
-	      displayList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
+	      displayList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
 	      context.getSession().setAttribute("RevenueGraphType", context.getRequest().getParameter("type"));
       }  else if (context.getSession().getAttribute("RevenueGraphType") != null) {
 	      realFullRevList.setType(Integer.parseInt((String)context.getSession().getAttribute("RevenueGraphType")));
-	      displayList.setType(Integer.parseInt((String)context.getSession().getAttribute("RevenueGraphType")));
+	      displayList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("RevenueGraphType")));
       }
       
       realFullRevList.setOwnerIdRange(range);
@@ -133,7 +167,7 @@ public final class RevenueManager extends CFSModule {
         }
       }
       
-      displayList.setOwner(getUserId(context));
+      displayList.setOwnerId(idToUse);
       displayList.setPagedListInfo(revenueInfo);
       displayList.buildList(db);
       

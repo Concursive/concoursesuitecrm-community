@@ -55,6 +55,7 @@ public class Organization extends GenericBean {
 
   private LookupList types = new LookupList();
   private ArrayList typeList = null;
+  protected double YTD = 0;
 
 
   /**
@@ -304,7 +305,30 @@ public class Organization extends GenericBean {
     this.contractEndDate = contractEndDate;
   }
 
-
+public double getYTD() {
+	return YTD;
+}
+public void setYTD(double YTD) {
+	this.YTD = YTD;
+}
+  public String getYTDValue() {
+    double value_2dp = (double) Math.round(YTD * 100.0) / 100.0;
+    String toReturn = "" + value_2dp;
+    if (toReturn.endsWith(".0")) {
+      toReturn = toReturn.substring(0, toReturn.length() - 2);
+    } 
+    
+    if (Integer.parseInt(toReturn) == 0) 
+        toReturn = "";
+	
+    return toReturn;
+  }
+  
+  public String getYTDCurrency() {
+    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    String amountOut = numberFormatter.format(YTD);
+    return amountOut;
+  }
   /**
    *  Sets the ContractEndDate attribute of the Organization object
    *
@@ -320,7 +344,33 @@ public class Organization extends GenericBean {
     }
   }
 
+  public void buildRevenueYTD(Connection db, int year, int type) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
 
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT sum(rv.amount) as s " +
+        "FROM revenue rv " +
+        "WHERE rv.org_id = ? AND rv.year = ? ");
+    if (type > -1) {
+	    sql.append("AND rv.type = ? ");
+    }
+    
+    pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setInt(++i, orgId);
+    pst.setInt(++i, year);
+    if (type > -1) {
+	    pst.setInt(++i, type);
+    }	    
+    rs = pst.executeQuery();
+    if (rs.next()) {
+	    this.setYTD(rs.getDouble("s"));
+    } 
+    rs.close();
+    pst.close();
+  }
   /**
    *  Sets the alertDate attribute of the Organization object
    *

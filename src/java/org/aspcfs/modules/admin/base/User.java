@@ -10,6 +10,8 @@ import com.darkhorseventures.utils.*;
 import java.util.*;
 import java.text.DateFormat;
 
+import java.text.*;
+
 /**
  *  Represents a user access record <p>
  *
@@ -52,6 +54,7 @@ public class User extends GenericBean {
   protected Contact contact = new Contact();
   protected Vector permissions = new Vector();
   protected UserList childUsers = null;
+  protected double YTD = 0;
 
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
@@ -147,7 +150,31 @@ public GraphSummaryList getRevenue() {
 public void setRevenue(GraphSummaryList revenue) {
 	this.revenue = revenue;
 }
+public double getYTD() {
+	return YTD;
+}
+public void setYTD(double YTD) {
+	this.YTD = YTD;
+}
 
+  public String getYTDValue() {
+    double value_2dp = (double) Math.round(YTD * 100.0) / 100.0;
+    String toReturn = "" + value_2dp;
+    if (toReturn.endsWith(".0")) {
+      toReturn = toReturn.substring(0, toReturn.length() - 2);
+    } 
+    
+    if (Integer.parseInt(toReturn) == 0) 
+        toReturn = "";
+	
+    return toReturn;
+  }
+  
+  public String getYTDCurrency() {
+    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    String amountOut = numberFormatter.format(YTD);
+    return amountOut;
+  }
 
   /**
    *  Constructor for the User object
@@ -199,6 +226,9 @@ public void setRevenue(GraphSummaryList revenue) {
   public void setAssistant(int tmp) {
     this.assistant = tmp;
   }
+public UserList getChildUsers() {
+	return childUsers;
+}
 
 
   /**
@@ -1641,6 +1671,27 @@ public void setRevenueLock(boolean revenueLock) {
     rs.close();
     pst.close();
     buildResources(db);
+  }
+  
+    public void buildRevenueYTD(Connection db, int year) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT sum(rv.amount) as s " +
+        "FROM revenue rv " +
+        "WHERE rv.owner = ? AND rv.year = ? ");
+    pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setInt(++i, id);
+    pst.setInt(++i, year);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+	    this.setYTD(rs.getDouble("s"));
+    } 
+    rs.close();
+    pst.close();
   }
 
 

@@ -80,6 +80,7 @@
       Month
     </td>
     <td valign=center>
+      <% MonthList.setDefaultValue("" + Revenue.getMonth()); %>
       <%= MonthList.getHtml() %>
     </td>
   </tr>
@@ -88,6 +89,7 @@
       Year
     </td>
     <td valign=center>
+      <% YearList.setDefaultValue("" + Revenue.getYear()); %>
       <%= YearList.getHtml() %>
       <font color="red">*</font> <%= showAttribute(request, "yearError") %>
     </td>
@@ -102,7 +104,6 @@
     </td>
   </tr>
 </table>
-<br>
 <input type="submit" value="Update" name="Save">
 <% if (request.getParameter("return") != null && request.getParameter("return").equals("list")) {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'">

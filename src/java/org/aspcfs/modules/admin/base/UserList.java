@@ -40,6 +40,9 @@ public class UserList extends Vector {
   private int enabled = -1;
   private String jsEvent = null;
   private boolean includeAliases = false;
+  
+  private boolean buildRevenueYTD = false;
+  private int revenueYear = -1;
 
   private boolean includeMe = false;
   private String myValue = "";
@@ -119,6 +122,13 @@ public class UserList extends Vector {
     this.syncType = Integer.parseInt(tmp);
   }
 
+  public boolean getBuildRevenueYTD() {
+	return buildRevenueYTD;
+  }
+  
+  public void setBuildRevenueYTD(boolean buildRevenueYTD) {
+  	this.buildRevenueYTD = buildRevenueYTD;
+  }
 
   /**
    *  Sets the PagedListInfo attribute of the UserList object
@@ -217,6 +227,12 @@ public class UserList extends Vector {
     this.includeMe = tmp;
   }
 
+  public int getRevenueYear() {
+	return revenueYear;
+  }
+  public void setRevenueYear(int revenueYear) {
+	this.revenueYear = revenueYear;
+  }
 
   /**
    *  Sets the MyValue attribute of the UserList object
@@ -603,6 +619,10 @@ public class UserList extends Vector {
         thisUser.setManagerId(managerUser.getId());
         thisUser.setManagerUser(managerUser);
       }
+      if (buildRevenueYTD && revenueYear > -1) {
+	      thisUser.buildRevenueYTD(db, this.getRevenueYear());
+      }
+      
       this.add(thisUser);
     }
     rs.close();
@@ -611,7 +631,14 @@ public class UserList extends Vector {
     }
     buildResources(db);
   }
-
+  
+  public void buildRevenueYTD(Connection db) throws SQLException {
+      Iterator x = this.iterator();
+      while (x.hasNext()) {
+	      User tempUser = (User)x.next();
+	      tempUser.buildRevenueYTD(db, this.getRevenueYear());
+      }
+  }
 
   /**
    *  Description of the Method
