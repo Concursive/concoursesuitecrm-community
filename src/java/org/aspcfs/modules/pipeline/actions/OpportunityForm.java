@@ -52,13 +52,17 @@ public final class OpportunityForm extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      if ("true".equals(context.getRequest().getParameter("popup"))) {
-        return "PreparePopupAddOK";
-      }
+      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
       if ((thisOpp != null && thisOpp.getHeader().getId() > 0) || (thisComponent !=null && thisComponent.getId() >0)) {
-        return "PrepareModifyOK";
+        if (popup) {
+          return "PrepareModifyOppPopupOK";
+        }
+        return "PrepareModifyOppOK";
       } else {
-        return "PrepareAddOK";
+        if (popup) {
+          return "PrepareAddOppPopupOK";
+        }
+        return "PrepareAddOppOK";
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
