@@ -41,7 +41,7 @@ Vehicle Inventory List<br>
 			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideAccountInfo.getFilterKey("listFilter1")) %>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="AutoGuideAccountInfo"/>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AutoGuideAccountInfo"/>
     </td>
     </form>
   </tr>

@@ -10,7 +10,8 @@ Add Role<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Add" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
-<br>&nbsp;
+<br>
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan="2">

@@ -24,7 +24,7 @@ Document Details<br>
   </tr>
   <tr>
     <td class="containerBack">
-      <%= showAttribute(request, "actionError") %>
+      <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="7">

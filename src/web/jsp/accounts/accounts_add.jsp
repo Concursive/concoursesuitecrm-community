@@ -69,7 +69,7 @@ Add Account<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
-&nbsp;
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>

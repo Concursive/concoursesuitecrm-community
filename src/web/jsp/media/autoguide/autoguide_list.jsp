@@ -7,7 +7,8 @@
 <jsp:useBean id="MakeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %><br>&nbsp;</center>
+<center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %><br>
+<%= showError(request, "actionError") %></center>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="AutoGuide.do?command=List">
@@ -22,7 +23,6 @@
 			Status: <%= statusFilterSelect.getHtml("listFilter2", AutoGuideDirectoryInfo.getFilterKey("listFilter2")) %>
       <% MakeSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
 			Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
-      <%= showAttribute(request, "actionError") %>
     </td>
     </form>
   </tr>

@@ -29,7 +29,7 @@ Vehicle Inventory List<br>
     <td class="containerBack">
 <dhv:permission name="accounts-autoguide-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
 <dhv:permission name="accounts-autoguide-inventory-add" none="true"><br></dhv:permission>
-<center>&nbsp;</center>
+<center><%= showError(request, "actionError") %></center>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">
@@ -41,7 +41,6 @@ Vehicle Inventory List<br>
       &nbsp;
       <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
 			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideAccountInfo.getFilterKey("listFilter1")) %>
-      <%= showAttribute(request, "actionError") %>
     </td>
     </form>
   </tr>

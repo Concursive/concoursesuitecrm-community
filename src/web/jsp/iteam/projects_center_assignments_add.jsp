@@ -69,6 +69,9 @@
   }
 </script>
 <form method="POST" name="inputForm" action="ProjectManagementAssignments.do?command=Insert&auto-populate=true<%= ("Requirements".equals(request.getParameter("return"))?"&return=Requirements":"") %>" onSubmit="return checkForm(this);">
+  <% if (request.getAttribute("actionError") != null) { %>
+    <%= showError(request, "actionError") %>
+  <%}%>
   <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td width="2" bgcolor="#000000">&nbsp;</td>

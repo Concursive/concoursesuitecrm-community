@@ -16,7 +16,7 @@
 <a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
 <a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
 New Field<br>
-&nbsp;<br>
+<%= showError(request, "actionError") %><br>
 <%
   CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
 %>

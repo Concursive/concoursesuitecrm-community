@@ -137,7 +137,11 @@ public static String replace(String str, String o, String n) {
   }
   
   public static String showError(HttpServletRequest request, String errorEntry) {
-    return "<font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font>";
+    if (request.getAttribute(errorEntry) != null) {
+      return "&nbsp;<br><img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font><br>&nbsp;<br>";
+    } else {
+      return "&nbsp;";
+    }
   }
   
   public static boolean hasText(String in) {

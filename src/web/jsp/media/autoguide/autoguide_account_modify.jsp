@@ -94,7 +94,7 @@ Modify Vehicle<br>
 <input type="hidden" name="modified" value="<%= InventoryDetails.getModified() %>">
 <input type="hidden" name="dosubmit" value="true">
 <br>
-&nbsp;
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>

@@ -100,7 +100,9 @@
 Add User<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding=6 cellspacing=0 border=1 width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<% if (request.getAttribute("actionError") != null) { %>
+  <%= showError(request, "actionError") %>
+<%}%>
   <tr>
     <td colspan=2 align="left" bgcolor="#DEE0FA">
     <strong>Add a CFS User account</strong>
@@ -201,4 +203,5 @@ Add User<br>
 <br>
 <input type="submit" value="Add User">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='/Users.do?command=ListUsers';this.form.submit()">
+<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>

@@ -30,7 +30,7 @@
 Existing Field<br>
 <hr color="#BFBFBB" noshade>
 <% if (request.getAttribute("actionError") != null) { %>
-<%= showAttribute(request, "actionError") %><br>
+<%= showError(request, "actionError") %>
 <%}%>
 <%
   CategoryList.setJsEvent("ONCHANGE=\"javascript:this.form.dosubmit.value='false';document.forms[0].submit();\"");

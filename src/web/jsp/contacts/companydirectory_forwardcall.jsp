@@ -35,8 +35,8 @@
     <td class="containerBack">
     <input type="submit" value="Forward" onclick="javascript:save();">
     <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>'">
-
-<br>&nbsp;
+<br>
+<%= showError(request, "actionError") %>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">

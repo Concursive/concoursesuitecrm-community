@@ -40,6 +40,9 @@
 </script>
 <form method="post" name="inputForm" action="ProjectManagement.do?command=InsertProject&auto-populate=true" onSubmit="return checkForm(this);">
   <center>
+  <% if (request.getAttribute("actionError") != null) { %>
+    <%= showError(request, "actionError") %>
+  <%}%>
   <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td width="2" bgcolor="#808080">&nbsp;</td>

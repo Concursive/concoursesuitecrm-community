@@ -81,7 +81,7 @@ Calls<br>
   </tr>
   <tr>
     <td class="containerBack">
-<%= showAttribute(request, "actionError") %>
+<%= showError(request, "actionError") %>
 <dhv:permission name="pipeline-opportunities-calls-add">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">

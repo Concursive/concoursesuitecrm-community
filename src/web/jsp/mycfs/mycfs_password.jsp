@@ -17,7 +17,7 @@
 </dhv:permission>
 
 <br>
-&nbsp;
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>

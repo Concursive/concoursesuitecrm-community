@@ -17,7 +17,7 @@ New Group<br>
 <hr color="#BFBFBB" noshade>
 
 <% if (request.getAttribute("actionError") != null) { %>
-<%= showAttribute(request, "actionError") %><br>
+<%= showError(request, "actionError") %>
 <%}%>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

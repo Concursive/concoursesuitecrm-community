@@ -92,7 +92,8 @@ Modify Call<br>
 <%}%>
 
 <input type="reset" value="Reset">
-<br><%= showAttribute(request, "actionError") %>
+<br>
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>

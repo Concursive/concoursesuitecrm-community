@@ -33,7 +33,7 @@ Choose Groups
         <option <%= CampaignCenterGroupInfo.getOptionValue("my") %>>My Groups</option>
         <option <%= CampaignCenterGroupInfo.getOptionValue("all") %>>All Groups</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+      <%= showError(request, "actionError") %>
     </td>
   </tr>
 </table>

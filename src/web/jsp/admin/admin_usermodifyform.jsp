@@ -3,14 +3,11 @@
 <jsp:useBean id="RoleList" class="com.darkhorseventures.cfsbase.RoleList" scope="request"/>
 <jsp:useBean id="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></SCRIPT>
-
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <body onLoad="javascript:document.forms[0].username.focus();">
-<form name="details" action="/Users.do?command=UpdateUser&auto-populate=true" method="post">
-
+<form name="details" action="Users.do?command=UpdateUser&auto-populate=true" method="post">
 <a href="Admin.do">Setup</a> > 
-
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<a href="Users.do?command=ListUsers">View Users</a> >
@@ -19,8 +16,6 @@
 <a href="Users.do?command=ListUsers">View Users</a> >
 <a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>">User Details</a> >
 <%}%>
-
-
 Modify User<br>
 <hr color="#BFBFBB" noshade>
 
@@ -32,18 +27,17 @@ Modify User<br>
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=ListUsers'">
+	<input type=submit value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers'">
 	<%}%>
 <%} else {%>
-<input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
+<input type=submit value="Cancel" onClick="javascript:this.form.action='Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
 <%}%>
-<input type=submit value="Disable" onClick="javascript:this.form.action='/Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
+<input type=submit value="Disable" onClick="javascript:this.form.action='Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
 <br>
-&nbsp;
 <input type="hidden" name="id" value="<%= UserRecord.getId() %>">
 <input type="hidden" name="contactId" value="<%= UserRecord.getContactId() %>">
-
 <input type="hidden" name="previousUsername" value="<%= ((UserRecord.getPreviousUsername() == null)?UserRecord.getUsername():UserRecord.getPreviousUsername()) %>">
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
@@ -91,7 +85,7 @@ Modify User<br>
   
   <tr>
     <td width="150">Generate new password</td>
-    <td><input type=checkbox name="generatePass"></td>
+    <td><input type="checkbox" name="generatePass"></td>
   </tr>  
 
   
@@ -100,11 +94,11 @@ Modify User<br>
 <input type=submit value="Update">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=ListUsers'">
+	<input type=submit value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers'">
 	<%}%>
 <%} else {%>
-<input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
+<input type=submit value="Cancel" onClick="javascript:this.form.action='Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
 <%}%>
-<input type=submit value="Disable" onClick="javascript:this.form.action='/Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
+<input type=submit value="Disable" onClick="javascript:this.form.action='Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
 </form>
 </body>

@@ -27,6 +27,9 @@
   }
 </script>
 <form method="POST" name="inputForm" action="ProjectManagementIssues.do?command=Update&auto-populate=true" onSubmit="return checkForm(this);">
+  <% if (request.getAttribute("actionError") != null) { %>
+    <%= showError(request, "actionError") %>
+  <%}%>
   <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td width='2' bgcolor='#808080'>&nbsp;</td>

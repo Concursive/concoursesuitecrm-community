@@ -49,7 +49,7 @@ Modify Revenue<br>
 <%}%>
 <input type="reset" value="Reset">
 <br>
-&nbsp;
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -115,13 +115,13 @@ Modify Revenue<br>
     </td>
   </tr>
 </table>
+&nbsp;<br>
 <input type="submit" value="Update" name="Save">
 <% if (request.getParameter("return") != null && request.getParameter("return").equals("list")) {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'">
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'">
 <%}%>
-
 <input type="reset" value="Reset">
   </td>
   </tr>

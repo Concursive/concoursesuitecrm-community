@@ -135,19 +135,21 @@ Modify Ticket<br>
 			<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
 		<%} else {%>
 			<input type="submit" value="Update">
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
-	<%}%>
-<%} else {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
-<%}%>
-			<%= showAttribute(request, "closedError") %>
+      <% if (request.getParameter("return") != null) {%>
+        <% if (request.getParameter("return").equals("list")) {%>
+          <input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Home'">
+        <%}%>
+      <%} else {%>
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+      <%}%>
 		<%}%>
       </td>
 		</tr>
     </table>
-		<br>
+<%= showError(request, "actionError") %>
+<% if (request.getAttribute("closedError") != null) { %>
+  <%= showAttribute(request, "closedError") %>
+<%}%>
 		<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 		<tr bgcolor="#DEE0FA">
       <td colspan="2" valign="center" align="left">

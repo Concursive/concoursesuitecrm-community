@@ -31,7 +31,7 @@ Add Revenue<br>
 <input type=submit value="Save">
 <input type=reset value="Reset">
 <br>
-&nbsp;
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -83,7 +83,7 @@ Add Revenue<br>
   </tr>
   
 </table>
-<br>
+&nbsp;<br>
 <input type=submit value="Save">
 <input type=reset value="Reset">
     </td>

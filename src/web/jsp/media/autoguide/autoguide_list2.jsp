@@ -8,7 +8,8 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
-<center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %><br>&nbsp;</center>
+<center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %><br>
+<%= showError(request, "actionError") %></center>
 
 <table width="100%" border="0">
   <tr>
@@ -27,7 +28,6 @@
       &nbsp;
       <% MakeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
 			Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
-      <%= showAttribute(request, "actionError") %>
     </td>
     </form>
   </tr>

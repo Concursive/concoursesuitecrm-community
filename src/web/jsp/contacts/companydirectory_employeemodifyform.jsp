@@ -70,8 +70,7 @@ Modify Employee<br>
     
 <input type="reset" value="Reset">
 <br>
-&nbsp;
-
+<%= showError(request, "actionError") %>
 <% if (request.getParameter("return") != null) {%>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>

@@ -42,7 +42,7 @@ Add Employee<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
-&nbsp;
+<%= showError(request, "actionError") %>
 <input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

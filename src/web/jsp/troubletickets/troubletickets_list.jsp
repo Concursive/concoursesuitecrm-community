@@ -9,13 +9,13 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 
-<a href="/TroubleTickets.do">Tickets</a> > 
+<a href="TroubleTickets.do">Tickets</a> > 
   View Tickets<br>
 <hr color="#BFBFBB" noshade>
 
 <!--dhv:permission name="tickets-tickets-add"><a href="/TroubleTickets.do?command=Add">Add a Ticket</a></dhv:permission-->
 <!--br-->
-<!--%= showAttribute(request, "actionError") %-->
+<!--%= showError(request, "actionError") %-->
 
 <% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
 

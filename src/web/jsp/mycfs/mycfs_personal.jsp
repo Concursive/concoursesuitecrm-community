@@ -52,7 +52,7 @@
 </dhv:permission>
 
 <br>
-&nbsp;
+<%= showError(request, "actionError") %>
 <input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
 <input type="hidden" name="modified" value="<%= EmployeeBean.getModified().toString() %>">

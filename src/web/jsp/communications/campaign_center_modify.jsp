@@ -35,7 +35,7 @@ Modify
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=ViewDetails';">
   <input type="reset" value="Reset">
   <br>
-  &nbsp;
+  <%= showError(request, "actionError") %>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <td valign=center colspan=2 align=left>

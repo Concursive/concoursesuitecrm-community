@@ -19,10 +19,9 @@ Reports<br>
         <option <%= RptListInfo.getOptionValue("my") %>>My Reports</option>
         <option <%= RptListInfo.getOptionValue("all") %>>All Reports</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="RptListInfo"/>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RptListInfo"/>
     </td>
     </form>
   </tr>

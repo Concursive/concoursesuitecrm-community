@@ -29,7 +29,7 @@ Tickets<br>
 <br>
 </dhv:permission>
 <center><%= AccountTicketInfo.getAlphabeticalPageLinks() %></center>
-<dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="AccountTicketInfo"/>
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountTicketInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete">

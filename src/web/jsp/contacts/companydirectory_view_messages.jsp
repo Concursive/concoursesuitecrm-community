@@ -13,7 +13,6 @@
 Messages<br>
 <hr color="#BFBFBB" noshade>
 
-
 <a href="/ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -38,7 +37,7 @@ Messages<br>
         <option <%= ContactMessageListInfo.getOptionValue("my") %>>My Messages</option>
         <option <%= ContactMessageListInfo.getOptionValue("all") %>>All Messages</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+      <%= showError(request, "actionError") %>
     </td>
   </tr>
 </table>

@@ -19,6 +19,9 @@
 <%= Task.getId()==-1?"Add":"Update" %> a Task <br>
   <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
+<% if (request.getAttribute("actionError") != null) { %>
+<%= showError(request, "actionError") %>
+<%}%>
 <form name="addTask" action="MyTasks.do?command=<%=Task.getId()!=-1?"Update":"Insert"%>&id=<%=Task.getId()%>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post" onSubmit="return validateTask();">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">

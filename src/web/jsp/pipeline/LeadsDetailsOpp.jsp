@@ -2,32 +2,32 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OpportunityDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
-<form name="oppdet" action="/Leads.do?auto-populate=true&id=<%=OpportunityDetails.getId()%>&orgId=<%= OpportunityDetails.getAccountLink() %>&contactId=<%= OpportunityDetails.getContactLink() %>" method="post">
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<form name="oppdet" action="Leads.do?id=<%=OpportunityDetails.getId()%>&orgId=<%= OpportunityDetails.getAccountLink() %>&contactId=<%= OpportunityDetails.getContactLink() %>" method="post">
 
-<a href="/Leads.do">Pipeline Management</a> > 
+<a href="Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
-	<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+	<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
 <%} else {%>
 	<% if (request.getParameter("return").equals("dashboard")) { %>
-		<a href="/Leads.do?command=Dashboard">Dashboard</a> >
+		<a href="Leads.do?command=Dashboard">Dashboard</a> >
 	<%}%>
 <%}%>
 Opportunity Details<br>
 <hr color="#BFBFBB" noshade>
 
-<a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
-
+<a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td width="80%">
       <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;
       	<dhv:evaluate exp="<%=(OpportunityDetails.getAccountEnabled() && OpportunityDetails.getAccountLink() > -1)%>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
+        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
 	</dhv:evaluate>
 	  
 	<dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
-	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
+	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
 	</dhv:evaluate>
     </td>
   </tr>
@@ -43,7 +43,7 @@ Opportunity Details<br>
 <input type=hidden name="command" value="<%= OpportunityDetails.getId() %>">
 
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit();"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';javascript:popURLReturn('/Leads.do?command=ConfirmDelete&id=<%=OpportunityDetails.getId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%=OpportunityDetails.getId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -203,10 +203,10 @@ Opportunity Details<br>
 </table>
 <dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br></dhv:permission>
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='ModifyOpp';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';javascript:popURLReturn('/Leads.do?command=ConfirmDelete&id=<%=OpportunityDetails.getId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%=OpportunityDetails.getId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');"></dhv:permission>
 </td></tr>
 </table>
 <% if (request.getParameter("return") != null) { %>
-<input type=hidden name="return" value="<%=request.getParameter("return")%>">
+<input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
 </form>

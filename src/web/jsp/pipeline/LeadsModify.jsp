@@ -6,8 +6,8 @@
 <jsp:useBean id="UnitTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></SCRIPT>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -47,40 +47,39 @@
       }
     }
 </SCRIPT>
-<form name="updateOpp" action="/Leads.do?command=UpdateOpp&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
+<form name="updateOpp" action="Leads.do?command=UpdateOpp&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <%boolean popUp = false;
   if(request.getParameter("popup")!=null){
     popUp = true;
   }%>
 
 <dhv:evaluate exp="<%= !popUp %>">
-  <a href="/Leads.do">Pipeline Management</a> > 
+  <a href="Leads.do">Pipeline Management</a> > 
   <% if (request.getParameter("return") == null) { %>
-	  <a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
-    <a href="/Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
+	  <a href="Leads.do?command=ViewOpp">View Opportunities</a> >
+    <a href="Leads.do?command=DetailsOpp&id=<%=OpportunityDetails.getId()%>">Opportunity Details</a> >
     <%} else {%>
     <% if (request.getParameter("return").equals("list")) { %>
-		<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+		<a href="Leads.do?command=ViewOpp">View Opportunities</a> >
     <%} else if (request.getParameter("return").equals("dashboard")) { %>
-		<a href="/Leads.do?command=Dashboard">Dashboard</a> >
+		<a href="Leads.do?command=Dashboard">Dashboard</a> >
     <%}%>
   <%}%>
   Modify Opportunity<br>
   <hr color="#BFBFBB" noshade>
 <a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 </dhv:evaluate>
-
-
+&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
       <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;
       <dhv:evaluate exp="<%= !popUp %>">
         <dhv:evaluate exp="<%=(OpportunityDetails.getAccountEnabled() && OpportunityDetails.getAccountLink() > -1)%>">
-          <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
+          <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]</dhv:permission>
         </dhv:evaluate>
         <dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
-          <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="/ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
+          <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
         </dhv:evaluate>
       </dhv:evaluate>
     </td>
@@ -107,21 +106,18 @@
   
  <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 	<%}%>
     <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>';this.form.dosubmit.value='false';">
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 
-    
 <input type="reset" value="Reset">
-
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();"> 
 </dhv:evaluate>
-
 <br>
-&nbsp;
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 
 <tr bgcolor="#DEE0FA">
@@ -273,10 +269,10 @@ Reassign To
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 	<%}%>
     <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>';this.form.dosubmit.value='false';">
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&id=<%= OpportunityDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 
 <input type="reset" value="Reset">

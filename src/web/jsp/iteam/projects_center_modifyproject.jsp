@@ -38,6 +38,9 @@
   }
 </script>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <% if (request.getAttribute("actionError") != null) { %>
+    <%= showError(request, "actionError") %>
+  <%}%>
   <form method="POST" name="inputForm" action="ProjectManagement.do?command=UpdateProject&auto-populate=true" onSubmit="return checkForm(this);">
     <input type="hidden" name="id" value="<%= Project.getId() %>">
     <input type="hidden" name="modified" value="<%= Project.getModified() %>">

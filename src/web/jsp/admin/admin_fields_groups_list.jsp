@@ -41,7 +41,7 @@ Folder<br>
 <hr color="#BFBFBB" noshade>
 
 <% if (request.getAttribute("actionError") != null) { %>
-<%= showAttribute(request, "actionError") %><br>
+<%= showError(request, "actionError") %>
 <%}%>
 
 <%

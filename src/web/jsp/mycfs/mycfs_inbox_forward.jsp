@@ -23,8 +23,8 @@
     <input type="submit" value="Forward" onclick="javascript:save();">
     <input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFSInbox.do?command=CFSNoteDetails&id=<%=NoteDetails.getId()%>'">
 
-<br>&nbsp;
-
+<br>
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>

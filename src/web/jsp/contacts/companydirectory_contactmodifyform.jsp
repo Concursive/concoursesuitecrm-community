@@ -86,7 +86,8 @@ Modify Contact<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
-<br>&nbsp;
+<br>
+<%= showError(request, "actionError") %>
 <input type="hidden" name="orgId" value="<%= ContactDetails.getOrgId() %>">
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
