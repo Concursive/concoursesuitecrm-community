@@ -139,10 +139,7 @@ public class CustomLookupElement extends HashMap {
       seqName = tableName;
     }
     
-    if (System.getProperty("DEBUG") != null) {
-            System.out.println("HERE: " + seqName + "_" + getUniqueField() + "_seq");
-    }
-    id = DatabaseUtils.getCurrVal(db, seqName + "_" + getUniqueField() + "_seq");
+    //id = DatabaseUtils.getCurrVal(db, seqName + "_" + getUniqueField() + "_seq");
     
     return true;
   }
