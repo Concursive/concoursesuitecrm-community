@@ -72,7 +72,7 @@
 [<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');">Clear All</a>]
 <br>
 &nbsp;<br>
-<dhv:pagedListControl object="ContactTypeSelectorInfo" showForm="false" resetList="false"/>
+<dhv:pagedListControl object="ContactTypeSelectorInfo" showForm="false" resetList="false" enableJScript="true"/>
 </form>
 <%
   } else {
