@@ -71,13 +71,8 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
   
   
   public void addAlertDates(CalendarView companyCalendar, Connection db){
-    PagedListInfo orgAlertPaged = new PagedListInfo();
-    orgAlertPaged.setMaxRecords(20);
-    orgAlertPaged.setColumnToSortBy("alertdate");
-
     OrganizationList alertOrgs = new OrganizationList();
-    alertOrgs.setPagedListInfo(orgAlertPaged);
-    alertOrgs.setEnteredBy(this.getUserId());
+    alertOrgs.setOwnerId(this.getUserId());
     alertOrgs.setHasExpireDate(false);
     alertOrgs.setHasAlertDate(true);
     
@@ -99,13 +94,8 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     if (System.getProperty("DEBUG") != null) {
       System.out.println("AccountsListScheduledActions --> Building Account Contract End Dates ");
     }
-    PagedListInfo orgAlertPaged = new PagedListInfo();
-    orgAlertPaged.setMaxRecords(20);
-    orgAlertPaged.setColumnToSortBy("alertdate");
-
     OrganizationList contractEndOrgs = new OrganizationList(); 
-    contractEndOrgs.setPagedListInfo(orgAlertPaged);
-    contractEndOrgs.setEnteredBy(this.getUserId());
+    contractEndOrgs.setOwnerId(this.getUserId());
     contractEndOrgs.setHasAlertDate(false);
     contractEndOrgs.setHasExpireDate(true);
     try {
