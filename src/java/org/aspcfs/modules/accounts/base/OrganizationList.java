@@ -38,6 +38,7 @@ public class OrganizationList extends Vector implements SyncableList {
   protected int enteredBy = -1;
   protected String name = null;
   protected int ownerId = -1;
+  protected int orgId = -1;
   protected String HtmlJsEvent = "";
   protected boolean showMyCompany = false;
   protected String ownerIdRange = null;
@@ -375,8 +376,9 @@ public class OrganizationList extends Vector implements SyncableList {
   }
 
 
-  /**Building Alert Counts 
-   *  Sets the revenueOwnerId attribute of the OrganizationList object
+  /**
+   *  Building Alert Counts Sets the revenueOwnerId attribute of the
+   *  OrganizationList object
    *
    *@param  revenueOwnerId  The new revenueOwnerId value
    */
@@ -402,6 +404,26 @@ public class OrganizationList extends Vector implements SyncableList {
    */
   public void setOwnerId(int ownerId) {
     this.ownerId = ownerId;
+  }
+
+
+  /**
+   *  Sets the orgId attribute of the OrganizationList object
+   *
+   *@param  tmp  The new orgId value
+   */
+  public void setOrgId(int tmp) {
+    this.orgId = tmp;
+  }
+
+
+  /**
+   *  Sets the orgId attribute of the OrganizationList object
+   *
+   *@param  tmp  The new orgId value
+   */
+  public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
   }
 
 
@@ -482,6 +504,16 @@ public class OrganizationList extends Vector implements SyncableList {
    */
   public int getOwnerId() {
     return ownerId;
+  }
+
+
+  /**
+   *  Gets the orgId attribute of the OrganizationList object
+   *
+   *@return    The orgId value
+   */
+  public int getOrgId() {
+    return orgId;
   }
 
 
@@ -577,6 +609,7 @@ public class OrganizationList extends Vector implements SyncableList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  timeZone          Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
@@ -604,7 +637,7 @@ public class OrganizationList extends Vector implements SyncableList {
     rs = pst.executeQuery();
     while (rs.next()) {
       String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp(sqlDate.trim()));
-     int temp = rs.getInt("nocols");
+      int temp = rs.getInt("nocols");
       events.put(alertDate, new Integer(temp));
     }
     rs.close();
@@ -887,6 +920,10 @@ public class OrganizationList extends Vector implements SyncableList {
     if (typeId > 0) {
       sqlFilter.append("AND o.org_id IN (select atl.org_id from account_type_levels atl where atl.type_id = ?) ");
     }
+    
+    if (orgId > 0){
+      sqlFilter.append("AND o.org_id = ? ");
+    }
   }
 
 
@@ -1001,6 +1038,10 @@ public class OrganizationList extends Vector implements SyncableList {
 
     if (typeId > 0) {
       pst.setInt(++i, typeId);
+    }
+
+    if (orgId > 0){
+      pst.setInt(++i, orgId);
     }
 
     return i;

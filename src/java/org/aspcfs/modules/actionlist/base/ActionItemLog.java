@@ -486,6 +486,7 @@ public class ActionItemLog extends GenericBean {
       pst.setInt(2, thisType);
       recordCount = pst.executeUpdate();
       pst.close();
+      db.commit();
     } catch (SQLException e) {
       db.rollback();
       throw new SQLException(e.getMessage());

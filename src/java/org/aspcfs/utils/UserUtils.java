@@ -33,5 +33,29 @@ public class UserUtils {
   public static String getUserIdRange(HttpServletRequest request) {
     return ((UserBean) request.getSession().getAttribute("User")).getIdRange();
   }
+
+
+  /**
+   *  Gets the userRoleType attribute of the UserUtils class
+   *
+   *@param  request  Description of the Parameter
+   *@return          The userRoleType value
+   */
+  public static int getUserRoleType(HttpServletRequest request) {
+    return ((UserBean) request.getSession().getAttribute("User")).getRoleType();
+
+  }
+
+
+  /**
+   *  Gets the userOrganization attribute of the UserUtils class
+   *
+   *@param  request  Description of the Parameter
+   *@return          The userOrganization value
+   */
+  public static int getUserOrganization(HttpServletRequest request) {
+    return ((UserBean) request.getSession().getAttribute("User")).getOrgId();
+  }
+
 }
 

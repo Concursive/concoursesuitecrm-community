@@ -399,6 +399,12 @@ public final class Accounts extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-view"))) {
       return ("PermissionError");
     }
+    
+    //Bypass search form for portal users
+    if (isPortalUser(context)){
+      return (executeCommandSearch(context));
+    }
+
     Connection db = null;
     try {
       db = getConnection(context);
@@ -529,6 +535,10 @@ public final class Accounts extends CFSModule {
 
     try {
       String temporgId = context.getRequest().getParameter("orgId");
+      if (!isRecordAccessPermitted(context,Integer.parseInt(temporgId))){
+         return ("PermissionError");
+      }
+
       int tempid = Integer.parseInt(temporgId);
       db = this.getConnection(context);
       newOrg = new Organization(db, tempid);
@@ -572,6 +582,11 @@ public final class Accounts extends CFSModule {
     if (!(hasPermission(context, "accounts-dashboard-view"))) {
       if (!(hasPermission(context, "accounts-accounts-view"))) {
         return ("PermissionError");
+      }
+
+      //Bypass dashboard and search form for portal users
+      if (isPortalUser(context)){
+        return (executeCommandSearch(context));
       }
 
       return (executeCommandSearchForm(context));
@@ -634,6 +649,12 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
 
+      //For portal usr set source as 'searchForm' explicitly since
+      //the search form is bypassed.
+      //temporary solution for page redirection for portal user.
+      if (isPortalUser(context)){
+        source = "searchForm";
+      }
       //return if no criteria is selected
       if ((searchListInfo.getListView() == null || "".equals(searchListInfo.getListView())) && !"searchForm".equals(source)) {
         return "ListOK";
@@ -653,6 +674,10 @@ public final class Accounts extends CFSModule {
       if ("all".equals(searchListInfo.getListView())) {
         organizationList.setIncludeEnabled(-1);
       }
+      
+      if (isPortalUser(context))
+        organizationList.setOrgId(getPortalUserPermittedOrgId(context));
+      
       organizationList.buildList(db);
 
       context.getRequest().setAttribute("OrgList", organizationList);
@@ -684,6 +709,11 @@ public final class Accounts extends CFSModule {
     Organization newOrg = null;
     //Process request parameters
     int passedId = Integer.parseInt(context.getRequest().getParameter("orgId"));
+
+    //find record permissions for portal users
+    if (!isRecordAccessPermitted(context,passedId)){
+      return ("PermissionError");
+    }
     //Prepare PagedListInfo
     PagedListInfo ticketListInfo = this.getPagedListInfo(context, "AccountTicketInfo", "t.entered", "desc");
     ticketListInfo.setLink("Accounts.do?command=ViewTickets&orgId=" + passedId);

@@ -69,6 +69,7 @@ public final class Users extends CFSModule {
       list.setBuildContact(false);
       list.setBuildContactDetails(false);
       list.setBuildHierarchy(false);
+      list.setRoleType(0); //fetch only regular users
       list.buildList(db);
     } catch (Exception e) {
       errorMessage = e;

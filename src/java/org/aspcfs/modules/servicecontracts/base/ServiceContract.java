@@ -1038,6 +1038,7 @@ public class ServiceContract extends GenericBean {
       assetList = null;
       
       delete(db);
+      db.commit();
     } catch (SQLException e) {
       e.printStackTrace(System.out);
       db.rollback();

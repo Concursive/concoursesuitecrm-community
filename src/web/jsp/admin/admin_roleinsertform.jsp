@@ -33,6 +33,16 @@ Add Role
     <td class="formLabel">Description</td>
     <td nowrap><input type="text" name="description" size="60" maxlength="255" value="<%= toHtmlValue(Role.getDescription()) %>"><font color="red">*</font> <%= showAttribute(request, "descriptionError") %></td>
   </tr>
+<%--
+  <tr>
+    <td class="formLabel">
+      Portal Role
+    </td>
+    <td>
+    <input type="checkbox" name="roleType" value="on" />
+    </td>
+  </tr>
+--%>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

@@ -137,7 +137,12 @@
       <permission value="accounts-accounts-contacts-opportunities-view"/>
       <link value="AccountContactsOpps.do?command=ViewOpps&amp;contactId=${id}"/>
     </submenu>
-  </container>
+    <submenu name="portal">
+      <long_html value="Portal"/>
+      <permission value="portal-user-view"/>
+      <link value="ContactsPortal.do?command=View&amp;contactId=${id}"/>
+    </submenu>
+   </container>
   
   
   <!-- Submenu used in the Opportunities (Pipeline) module -->

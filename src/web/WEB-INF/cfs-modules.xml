@@ -183,6 +183,7 @@
   <menu>
     <action name="Accounts"/>
     <action name="Contacts"/>
+    <action name="ContactsPortal"/>
     <action name="Opportunities"/>
     <action name="OpportunitiesComponents"/>
     <action name="RevenueManager"/>

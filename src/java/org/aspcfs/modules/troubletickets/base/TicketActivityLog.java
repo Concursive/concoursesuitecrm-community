@@ -942,7 +942,9 @@ public class TicketActivityLog extends GenericBean {
       }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
       if (doCommit) {
@@ -1012,7 +1014,9 @@ public class TicketActivityLog extends GenericBean {
       }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
       if (doCommit) {

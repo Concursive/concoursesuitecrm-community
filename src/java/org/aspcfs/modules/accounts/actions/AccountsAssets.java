@@ -59,6 +59,11 @@ public class AccountsAssets extends CFSModule {
     }
     AssetList assetList = new AssetList();
     String orgId = context.getRequest().getParameter("orgId");
+
+    //find record permissions for portal users
+    if (!isRecordAccessPermitted(context,Integer.parseInt(orgId))){
+      return ("PermissionError");
+    }
     //Prepare pagedListInfo
     PagedListInfo assetListInfo = this.getPagedListInfo(context, "AssetListInfo");
     assetListInfo.setLink("AccountsAssets.do?command=List&orgId=" + orgId);
@@ -365,6 +370,12 @@ public class AccountsAssets extends CFSModule {
 
       ServiceContract thisContract = new ServiceContract();
       thisContract.queryRecord(db, thisAsset.getContractId());
+      
+      //find record permissions for portal users
+      if ((!isRecordAccessPermitted(context,thisContract.getOrgId())) ||
+        (!isRecordAccessPermitted(context,Integer.parseInt(context.getRequest().getParameter("orgId"))))){
+         return ("PermissionError");
+      }
 
       if (thisAsset.getContactId() > -1) {
         Contact thisContact = new Contact(db, thisAsset.getContactId());

@@ -93,6 +93,15 @@ public final class AccountTickets extends CFSModule {
     //Parameters
     String temporgId = context.getRequest().getParameter("orgId");
     int tempid = Integer.parseInt(temporgId);
+    //find record permissions for portal users
+    if (!isRecordAccessPermitted(context,tempid)){
+      return ("PermissionError");
+    }
+    if (isPortalUser(context)){
+     context.getRequest().setAttribute("portalUser","1"); 
+    }else{
+     context.getRequest().setAttribute("portalUser","0"); 
+    }
     try {
       db = this.getConnection(context);
       //Organization for header
@@ -161,6 +170,12 @@ public final class AccountTickets extends CFSModule {
       //Display account name in the header
       String temporgId = context.getRequest().getParameter("orgId");
       int tempid = Integer.parseInt(temporgId);
+      
+      //Check if portal user can insert this record
+      if (!isRecordAccessPermitted(context,tempid)){
+        return ("PermissionError");
+      }
+
       Organization newOrg = new Organization(db, tempid);
       context.getRequest().setAttribute("OrgDetails", newOrg);
 
@@ -218,6 +233,13 @@ public final class AccountTickets extends CFSModule {
       db = this.getConnection(context);
       // Load the ticket
       Ticket newTic = new Ticket(db, Integer.parseInt(ticketId));
+      
+      //find record permissions for portal users
+      if (!isRecordAccessPermitted(context,newTic.getOrgId())){
+        return ("PermissionError");
+      }
+      
+      
       if (newTic.getAssignedTo() > 0) {
         newTic.checkEnabledOwnerAccount(db);
       }

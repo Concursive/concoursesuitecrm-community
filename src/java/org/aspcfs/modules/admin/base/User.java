@@ -84,6 +84,10 @@ public class User extends GenericBean {
   protected GraphSummaryList cramr = new GraphSummaryList();
   protected GraphSummaryList revenue = new GraphSummaryList();
 
+  //For portal user
+  protected int roleType = -1;
+  protected int orgId = -1;
+
 
   /**
    *  Constructor for the User object
@@ -962,6 +966,46 @@ public class User extends GenericBean {
 
 
   /**
+   *  Sets the roleType attribute of the User object
+   *
+   *@param  tmp  The new roleType value
+   */
+  public void setRoleType(int tmp) {
+    this.roleType = tmp;
+  }
+
+
+  /**
+   *  Sets the roleType attribute of the User object
+   *
+   *@param  tmp  The new roleType value
+   */
+  public void setRoleType(String tmp) {
+    this.roleType = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the orgId attribute of the User object
+   *
+   *@param  tmp  The new orgId value
+   */
+  public void setOrgId(int tmp) {
+    this.orgId = tmp;
+  }
+
+
+  /**
+   *  Sets the orgId attribute of the User object
+   *
+   *@param  tmp  The new orgId value
+   */
+  public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the expires attribute of the User object
    *
    *@return    The expires value
@@ -1422,6 +1466,26 @@ public class User extends GenericBean {
 
 
   /**
+   *  Gets the roleType attribute of the User object
+   *
+   *@return    The roleType value
+   */
+  public int getRoleType() {
+    return roleType;
+  }
+
+
+  /**
+   *  Gets the orgId attribute of the User object
+   *
+   *@return    The orgId value
+   */
+  public int getOrgId() {
+    return orgId;
+  }
+
+
+  /**
    *  Returns whether this user is above the specified userId. If the specified
    *  userId is a child of this user, returns true.
    *
@@ -1573,7 +1637,7 @@ public class User extends GenericBean {
       sql.append(
           "INSERT INTO access " +
           "(username, password, contact_id, alias, " +
-          "manager_id, role_id, expires, ");
+          "manager_id, role_id, expires, role_type, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1587,7 +1651,7 @@ public class User extends GenericBean {
         sql.append("timezone, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1618,6 +1682,8 @@ public class User extends GenericBean {
       }
       pst.setInt(++i, getRoleId());
       DatabaseUtils.setTimestamp(pst, ++i, this.getExpires());
+      pst.setInt(++i, 0); //set role_type to 0 for regular users
+
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1661,6 +1727,190 @@ public class User extends GenericBean {
       db.setAutoCommit(true);
     }
     return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void queryPortalInformation(Connection db, int tmpContactId) throws SQLException {
+    ResultSet rs = null;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT user_id, username, a.role_id, expires, role, a.modified, a.enabled " +
+        "FROM access a, role r " +
+        "WHERE a.contact_id = ? " +
+        "AND r.role_type > 0 " +
+        "AND a.role_id = r.role_id");
+
+    int i = 0;
+    pst.setInt(++i, tmpContactId);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      id = rs.getInt("user_id"); 
+      username = rs.getString("username");
+      roleId = rs.getInt("role_id");
+      expires = rs.getTimestamp("expires");
+      role = rs.getString("role");
+      modified = rs.getTimestamp("modified");
+      enabled = rs.getBoolean("enabled");
+    }
+
+    rs.close();
+    pst.close();
+  }
+  
+  /**
+   *  inserts a portal user// this mehod does not build contact dependency as
+   *  the contact has been inserted eariler.
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insertPortalUser(Connection db, ActionContext context) throws SQLException {
+
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("User-> Beginning insert");
+    }
+    if (!isValid(db, context)) {
+      return false;
+    }
+    //Insert the user
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "INSERT INTO access " +
+        "(username, password, contact_id, role_id, expires, role_type, ");
+    if (entered != null) {
+      sql.append("entered, ");
+    }
+    if (modified != null) {
+      sql.append("modified, ");
+    }
+    if (lastLogin != null) {
+      sql.append("last_login, ");
+    }
+    if (timeZone != null) {
+      sql.append("timezone, ");
+    }
+    sql.append("enteredBy, modifiedBy ) ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+    if (entered != null) {
+      sql.append("?, ");
+    }
+    if (modified != null) {
+      sql.append("?, ");
+    }
+    if (lastLogin != null) {
+      sql.append("?, ");
+    }
+    if (timeZone != null) {
+      sql.append("?, ");
+    }
+    sql.append("?, ?) ");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setString(++i, getUsername());
+    if (encryptedPassword != null) {
+      pst.setString(++i, encryptedPassword);
+    } else {
+      pst.setString(++i, encryptPassword(password1));
+    }
+    pst.setInt(++i, getContactId());
+    pst.setInt(++i, getRoleId());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getExpires());
+    pst.setInt(++i, 1); // 0 for regular user and 1 portal user
+    if (entered != null) {
+      pst.setTimestamp(++i, entered);
+    }
+    if (modified != null) {
+      pst.setTimestamp(++i, modified);
+    }
+    if (lastLogin != null) {
+      pst.setTimestamp(++i, lastLogin);
+    }
+    if (timeZone != null) {
+      pst.setString(++i, timeZone);
+    }
+    pst.setInt(++i, getEnteredBy());
+    pst.setInt(++i, getModifiedBy());
+    pst.execute();
+    pst.close();
+    id = DatabaseUtils.getCurrVal(db, "access_user_id_seq");
+
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int updatePortalUser(Connection db, ActionContext context) throws SQLException {
+
+    int updated = -1;
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("User-> Beginning update");
+    }
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "UPDATE access " +
+        "SET expires = ?, ");
+
+    if (password1 != null) {
+      sql.append("password = ?,");
+    }
+
+    sql.append("role_id = ?, " +
+        "modifiedBy = ?, " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
+        "WHERE username = ? " + 
+        "AND modified = ? ");
+
+    pst = db.prepareStatement(sql.toString());
+
+    int i = 0;
+    pst.setTimestamp(++i, this.expires);
+    if (password1 != null) {
+      pst.setString(++i, encryptPassword(password1));
+    }
+    pst.setInt(++i, this.roleId);
+    pst.setInt(++i, modifiedBy);
+    pst.setString(++i, this.username);
+    pst.setTimestamp(++i, this.modified);
+
+    //Update the user
+    updated = pst.executeUpdate();
+    pst.close();
+
+    if (updated != 1)
+      return updated;
+    
+    //fetch the updated user id
+    int tmpUserId = -1;
+    ResultSet rs = null;
+    sql = new StringBuffer();
+    sql.append(
+      "SELECT user_id " +
+      "FROM access " + 
+      "WHERE username = ? ");
+    pst = db.prepareStatement(sql.toString());
+    i = 0;
+    pst.setString(++i, this.username);
+    
+    rs = pst.executeQuery();
+    if (rs.next())
+      tmpUserId = rs.getInt("user_id");
+
+    return tmpUserId;
   }
 
 
@@ -2361,6 +2611,64 @@ public class User extends GenericBean {
 
 
   /**
+   *  retrieves the role type of the user (regular or portal type)
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildUserRoleType(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT role_type " +
+        "FROM role " +
+        "WHERE role_id = ? ");
+
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, roleId);
+
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      roleType = rs.getInt("role_type");
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  retrieves the organization of the user this organization is stored in the
+   *  session object to restrict the portal user to view only the records of the
+   *  organization in which he is listed as account contact
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildUserOrganization(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT org_id " +
+        "FROM contact " +
+        "WHERE contact_id = ? ");
+
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, contactId);
+
+    rs = pst.executeQuery();
+    while (rs.next()) {
+      orgId = rs.getInt("org_id");
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
    *  Hashes a password... the resulting encrypted password cannot be decrypted
    *  since this is one-way.
    *
@@ -2384,6 +2692,36 @@ public class User extends GenericBean {
     UserList shortChildList = this.getShortChildList();
     UserList fullChildList = this.getFullChildList(shortChildList, new UserList());
     return (fullChildList.getUserListIds(id));
+  }
+
+
+  /**
+   *  Gets the numberOfSimilarUsernames attribute of the User class
+   *
+   *@param  db                Description of the Parameter
+   *@param  tmpUsername       Description of the Parameter
+   *@return                   The numberOfSimilarUsernames value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int getNumberOfSimilarUsernames(Connection db, String tmpUsername) throws SQLException {
+    ResultSet rs = null;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) as no " +
+        "FROM access " +
+        "WHERE username LIKE (?)");
+
+    int i = 0;
+    pst.setString(++i, tmpUsername + "%");
+    rs = pst.executeQuery();
+    int no = 0;
+    if (rs.next()) {
+      no = rs.getInt("no");
+    }
+
+    rs.close();
+    pst.close();
+
+    return no;
   }
 
 

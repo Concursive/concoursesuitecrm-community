@@ -120,10 +120,10 @@ Add Ticket
   <tr>
     <td class="containerBack">
 <form name="addticket" action="AccountTickets.do?command=InsertTicket&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-  <input type="submit" value="Insert" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Insert" name="Save" />
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
   <%= showAttribute(request, "closedError") %>
-  <br>
+  <br />
   <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 	<tr>
@@ -131,6 +131,7 @@ Add Ticket
       <strong>Add a new Ticket</strong>
     </th>
 	</tr>
+<dhv:evaluate if="<%= ("0".equals(request.getAttribute("portalUser"))) %>" >
 	<tr class="containerBody">
     <td class="formLabel">
       Ticket Source
@@ -139,6 +140,7 @@ Add Ticket
       <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
     </td>
 	</tr>	
+</dhv:evaluate>
 	<tr class="containerBody">
     <td class="formLabel">
       Organization
@@ -203,8 +205,10 @@ Add Ticket
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 <%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
+      <dhv:evaluate if="<%= ("0".equals(request.getAttribute("portalUser"))) %>" >
       [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','550','yes','yes');">Create New Contact</a>]
-    </td>
+      </dhv:evaluate> 
+     </td>
 	</tr>
 </table>
 <br>
@@ -241,6 +245,7 @@ Add Ticket
       <input type="text" name="location" value="<%= toHtmlValue(TicketDetails.getLocation()) %>" size="50" maxlength="256" />
     </td>
   </tr>
+<dhv:evaluate if="<%= ("0".equals(request.getAttribute("portalUser"))) %>" >
 <dhv:include name="ticket.catCode" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
@@ -292,8 +297,10 @@ Add Ticket
     </td>
 	</tr>
 </dhv:include>
+</dhv:evaluate >
 </table>
 <br>
+<dhv:evaluate if="<%= ("0".equals(request.getAttribute("portalUser"))) %>" >
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 	<tr>
     <th colspan="2">
@@ -391,10 +398,11 @@ Add Ticket
     </td>
   </tr>
 </table>
-<br>
-<input type="submit" value="Insert" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
-<input type="hidden" name="dosubmit" value="true">
+</dhv:evaluate >
+<br />
+<input type="submit" value="Insert" name="Save" />
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+<input type="hidden" name="dosubmit" value="true" />
 </td>
 </tr>
 </table>

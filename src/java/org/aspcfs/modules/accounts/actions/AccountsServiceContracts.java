@@ -56,10 +56,17 @@ public class AccountsServiceContracts extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
+      
+      //find record permissions for portal users
+      if (!isRecordAccessPermitted(context,Integer.parseInt(orgId))){
+        return ("PermissionError");
+      }
+
       setOrganization(context, db);
       //Build the service contract list
       serviceContractList.setPagedListInfo(serviceContractListInfo);
       serviceContractList.setOrgId(Integer.parseInt(orgId));
+
       serviceContractList.buildList(db);
       context.getRequest().setAttribute("serviceContractList", serviceContractList);
       buildFormElements(context, db);
@@ -389,6 +396,13 @@ public class AccountsServiceContracts extends CFSModule {
       setOrganization(context, db);
 
       ServiceContract thisContract = new ServiceContract(db, id);
+
+      //find record permissions for portal users
+      if ((!isRecordAccessPermitted(context,thisContract.getOrgId())) ||
+        (!isRecordAccessPermitted(context,Integer.parseInt(context.getRequest().getParameter("orgId"))))){
+         return ("PermissionError");
+      }
+
       if (thisContract.getContactId() > -1) {
         Contact thisContact = new Contact();
         thisContact.queryRecord(db, thisContract.getContactId());

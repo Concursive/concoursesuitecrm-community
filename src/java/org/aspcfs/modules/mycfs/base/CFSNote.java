@@ -963,6 +963,7 @@ public class CFSNote extends GenericBean {
         }
         st.close();
       }
+      db.commit();
     } catch (SQLException e) {
       db.rollback();
       if (System.getProperty("DEBUG") != null) {

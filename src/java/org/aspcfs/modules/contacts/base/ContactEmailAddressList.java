@@ -17,7 +17,8 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author     mrajkowski
  *@created    January 29, 2003
- *@version    $Id$
+ *@version    $Id: ContactEmailAddressList.java,v 1.7.34.2 2004/04/08 18:36:20
+ *      kbhoopal Exp $
  */
 public class ContactEmailAddressList extends EmailAddressList {
 
@@ -41,9 +42,16 @@ public class ContactEmailAddressList extends EmailAddressList {
    */
   public ContactEmailAddressList(HttpServletRequest request) {
     int i = 0;
+    int forPrimary = -1;
+    if (request.getParameter("forPrimary") != null) {
+      forPrimary = Integer.parseInt((String) request.getParameter("forPrimary"));
+    }
     while (request.getParameter("email" + (++i) + "type") != null) {
       ContactEmailAddress thisEmailAddress = new ContactEmailAddress();
       thisEmailAddress.buildRecord(request, i);
+      if (forPrimary == i) {
+        thisEmailAddress.setPrimaryEmail(true);
+      }
       if (thisEmailAddress.isValid()) {
         this.addElement(thisEmailAddress);
       }

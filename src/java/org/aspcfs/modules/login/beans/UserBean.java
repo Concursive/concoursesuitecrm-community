@@ -188,7 +188,6 @@ public class UserBean extends GenericBean {
   }
 
 
-
   /**
    *  Gets the connectionElement attribute of the UserBean object
    *
@@ -272,6 +271,26 @@ public class UserBean extends GenericBean {
    */
   public String getRole() {
     return getUserRecord().getRole();
+  }
+
+
+  /**
+   *  Gets the roleType attribute of the UserBean object
+   *
+   *@return    The roleType value
+   */
+  public int getRoleType() {
+    return getUserRecord().getRoleType();
+  }
+
+
+  /**
+   *  Gets the orgId attribute of the UserBean object
+   *
+   *@return    The orgId value
+   */
+  public int getOrgId() {
+    return getUserRecord().getOrgId();
   }
 
 

@@ -29,6 +29,7 @@ public class EmailAddress {
   private boolean enabled = true;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
+  private boolean primaryEmail = false;
 
 
   /**
@@ -203,6 +204,26 @@ public class EmailAddress {
 
 
   /**
+   *  Sets the primaryEmail attribute of the EmailAddress object
+   *
+   *@param  tmp  The new primaryEmail value
+   */
+  public void setPrimaryEmail(boolean tmp) {
+    this.primaryEmail = tmp;
+  }
+
+
+  /**
+   *  Sets the primaryEmail attribute of the EmailAddress object
+   *
+   *@param  tmp  The new primaryEmail value
+   */
+  public void setPrimaryEmail(String tmp) {
+    this.primaryEmail = ("primaryEmail".equals(tmp));
+  }
+
+
+  /**
    *  Gets the Id attribute of the EmailAddress object
    *
    *@return    The Id value
@@ -362,6 +383,16 @@ public class EmailAddress {
 
 
   /**
+   *  Gets the primaryEmail attribute of the EmailAddress object
+   *
+   *@return    The primaryEmail value
+   */
+  public boolean getPrimaryEmail() {
+    return primaryEmail;
+  }
+
+
+  /**
    *  If an email address is filled in, and a type is selected, then the email
    *  address is valid.
    *
@@ -408,6 +439,7 @@ public class EmailAddress {
 
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
+    this.setPrimaryEmail(rs.getBoolean("primary_email"));
 
     if (modifiedBy == -1) {
       this.setModifiedBy(0);

@@ -30,6 +30,7 @@ public class RoleList extends ArrayList {
   private int enabledState = Constants.TRUE;
   private boolean buildUsers = false;
   private boolean buildUserCount = false;
+  private int roleType = -1;
 
 
   /**
@@ -89,6 +90,26 @@ public class RoleList extends ArrayList {
 
 
   /**
+   *  Sets the roleType attribute of the RoleList object
+   *
+   *@param  tmp  The new roleType value
+   */
+  public void setRoleType(int tmp) {
+    this.roleType = tmp;
+  }
+
+
+  /**
+   *  Sets the roleType attribute of the RoleList object
+   *
+   *@param  tmp  The new roleType value
+   */
+  public void setRoleType(String tmp) {
+    this.roleType = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Gets the htmlSelect attribute of the RoleList object
    *
    *@param  selectName  Description of the Parameter
@@ -101,6 +122,7 @@ public class RoleList extends ArrayList {
 
   /**
    *  Gets the htmlSelect attribute of the RoleList object
+   *  Selects the regular roles from the role list
    *
    *@param  selectName  Description of the Parameter
    *@param  defaultKey  Description of the Parameter
@@ -114,9 +136,37 @@ public class RoleList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Role thisRole = (Role) i.next();
-      roleListSelect.addItem(
-          thisRole.getId(),
-          thisRole.getRole());
+      if (thisRole.getRoleType() == 0) {
+        roleListSelect.addItem(
+            thisRole.getId(),
+            thisRole.getRole());
+      }
+    }
+    return roleListSelect.getHtml(selectName, defaultKey);
+  }
+
+
+  /**
+   *  Gets the htmlSelectPortalRoles Selects only portal roles from the list of
+   *  roles
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelectPortalRoles value
+   */
+  public String getHtmlSelectPortalRoles(String selectName, int defaultKey) {
+    HtmlSelect roleListSelect = new HtmlSelect();
+    if (emptyHtmlSelectRecord != null) {
+      roleListSelect.addItem(-1, emptyHtmlSelectRecord);
+    }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Role thisRole = (Role) i.next();
+      if (thisRole.getRoleType() == 1) {
+        roleListSelect.addItem(
+            thisRole.getId(),
+            thisRole.getRole());
+      }
     }
     return roleListSelect.getHtml(selectName, defaultKey);
   }
@@ -224,6 +274,10 @@ public class RoleList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+    if (roleType != -1) {
+      sqlFilter.append("AND role_type = ? ");
+    }
+    
     if (enabledState > -1) {
       sqlFilter.append("AND enabled = ? ");
     }
@@ -239,6 +293,9 @@ public class RoleList extends ArrayList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    if (roleType != -1) {
+      pst.setInt(++i, roleType);
+    }
     if (enabledState > -1) {
       pst.setBoolean(++i, enabledState == Constants.TRUE);
     }

@@ -63,7 +63,8 @@
     <forward name="LoginVerifyOK" resource="/mycfs/mycfs_verify.jsp"/>
     <forward name="LoginRetry" resource="/index.jsp"/>
     <forward name="LicenseError" resource="/errors/error_license.jsp" layout="dhv"/>
-  </action>
+    <forward name="PortalLoginOK" resource="/Accounts.do?command=Search" />
+ </action>
   
   <!-- MyCFS Module -->
   <action name="MyCFS" class="org.aspcfs.modules.mycfs.actions.MyCFS">
@@ -491,10 +492,18 @@
     <forward name="PrepareAddPopupOK" resource="/accounts/accounts_contacts_add.jsp" layout="style"/>
     <forward name="ViewMessagesOK" resource="/accounts/accounts_contacts_messages_view.jsp" layout="nav"/>
     <forward name="MessageDetailsOK" resource="/accounts/accounts_contacts_messages_details.jsp" layout="nav"/>
+    <forward name="AddPortalOK" resource="/ContactsPortal.do?command=Add" />
   </action>
   <action name="ContactForm" class="org.aspcfs.modules.contacts.actions.ContactForm">
     <forward name="PrepareAddOK" resource="noresource"/>
     <forward name="PrepareModifyOK" resource="noresource"/>
+  </action>
+  <action name="ContactsPortal" class="org.aspcfs.modules.accounts.actions.ContactsPortal">
+    <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+    <forward name="ViewContactPortalOK" resource="/accounts/accounts_contacts_portal_view.jsp" layout="nav" />
+    <forward name="AddContactPortalOK" resource="/accounts/accounts_contacts_portal_add.jsp" layout="nav" />
+    <forward name="ModifyContactPortalOK" resource="/accounts/accounts_contacts_portal_modify.jsp" layout="nav" />
+    <forward name="ContactPortalError" resource="/accounts/accounts_contacts_portal_adderror.jsp" layout="nav" />
   </action>
   <action name="AccountContactsCalls" class="org.aspcfs.modules.accounts.actions.AccountContactsCalls">
     <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
@@ -639,6 +648,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="PermissionError" resource="/accounts/accounts_tickets_form_permission_error.jsp" layout="nav"/>
+    <forward name="FormERROR" resource="/accounts/accounts_tickets_form_invalidnote.jsp" layout="nav"/>
   </action>
   <action name="AccountTicketTasks" class="org.aspcfs.modules.accounts.actions.AccountTicketTasks">
     <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>

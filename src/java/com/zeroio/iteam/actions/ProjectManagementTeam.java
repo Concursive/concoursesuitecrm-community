@@ -52,6 +52,7 @@ public final class ProjectManagementTeam extends CFSModule {
       UserList userList = new UserList();
       userList.setBuildContact(true);
       userList.setBuildHierarchy(false);
+      userList.setRoleType(0);//regular users
       userList.buildList(db);
       //context.getRequest().setAttribute("UserList", userList);
       context.getRequest().setAttribute("UserSize", "" + userList.size());

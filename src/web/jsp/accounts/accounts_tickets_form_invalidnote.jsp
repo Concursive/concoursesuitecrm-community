@@ -29,18 +29,10 @@ Forms
   <% String param2 = "id=" + ticketDetails.getId(); %>
   [ <dhv:container name="accountstickets" selected="forms" param="<%= param2 %>"/> ]
   <br />
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" >
   <br />
   <tr>
-    <th >
-	    <strong>A corresponding form was not found for the form type selected on the ticket</strong>
-	  </th>
-  </tr>
-  <tr class="row2">
-    <td>
-	    When a supported form type is found, this page shows the ticket activity log or 
-      the asset maintenance notes.
-	  </td>
+    <th align="left">An asset should be associated with the ticket to add maintenance notes</th>
   </tr>
   </table>
  </td>

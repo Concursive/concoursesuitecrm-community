@@ -38,6 +38,21 @@ Update Role
     <td class="formLabel">Description</td>
     <td nowrap><input type="text" name="description" maxlength="255" size="60" value="<%= toHtmlValue(Role.getDescription()) %>"><font color="red">*</font> <%= showAttribute(request, "descriptionError") %></td>
   </tr>
+ <%--
+  <tr>
+    <td class="formLabel">
+      Portal Role?
+    </td>
+    <td>
+    <%
+      if (Role.getRoleType() > 0){%>
+      <input type="checkbox" name="roleType" value="on" checked></input>
+    <%}else{%>
+      <input type="checkbox" name="roleType" value="on"></input>
+    <%}%>
+   </td>
+  </tr>
+  --%>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">

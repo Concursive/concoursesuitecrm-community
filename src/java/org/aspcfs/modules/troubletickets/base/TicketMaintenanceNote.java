@@ -486,9 +486,14 @@ public class TicketMaintenanceNote extends GenericBean {
         // Save the parts
         insertReplacementParts(db, tmpPartList);
       }
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
       if (doCommit) {
@@ -526,10 +531,14 @@ public class TicketMaintenanceNote extends GenericBean {
       pst.setInt(1, this.id);
       pst.execute();
       pst.close();
-
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
       if (doCommit) {
@@ -573,13 +582,13 @@ public class TicketMaintenanceNote extends GenericBean {
   
       // Save the parts
       insertReplacementParts(db, this.getTicketReplacementPartList());
-      db.setAutoCommit(true);
+      db.commit();
     } catch (SQLException e) {
       e.printStackTrace(System.out);
       db.rollback();
       throw new SQLException(e.getMessage());
     } finally {
-        db.setAutoCommit(true);
+      db.setAutoCommit(true);
     }
   }
 

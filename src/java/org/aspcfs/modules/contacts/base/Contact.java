@@ -86,7 +86,7 @@ public class Contact extends GenericBean {
   private boolean buildDetails = true;
   private boolean buildTypes = true;
 
-
+  
   /**
    *  Constructor for the Contact object
    *
@@ -1902,8 +1902,11 @@ public class Contact extends GenericBean {
       return false;
     }
     StringBuffer sql = new StringBuffer();
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       sql.append(
           "INSERT INTO contact " +
           "(user_id, namefirst, namelast, owner, primary_contact, org_name, access_type, ");
@@ -1982,12 +1985,16 @@ public class Contact extends GenericBean {
         thisEmailAddress.process(db, id, this.getEnteredBy(), this.getModifiedBy());
       }
       this.update(db, true);
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       db.rollback();
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -2144,7 +2151,7 @@ public class Contact extends GenericBean {
         pst.setInt(1, this.getId());
         pst.executeUpdate();
         pst.close();
-        
+
         // delete all task links associated with this contact
         pst = db.prepareStatement(
             "DELETE FROM tasklink_contact " +
@@ -2152,7 +2159,7 @@ public class Contact extends GenericBean {
         pst.setInt(1, this.getId());
         pst.executeUpdate();
         pst.close();
-        
+
         // finally, delete the contact
         pst = db.prepareStatement(
             "DELETE FROM contact " +
@@ -2769,11 +2776,11 @@ public class Contact extends GenericBean {
         thisDependency.setCanDelete(false);
         dependencyList.add(thisDependency);
       }
-      
+
       rs.close();
       pst.close();
 
-      i=0;
+      i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as servicecontractcount " +
           "FROM service_contract " +
@@ -2787,11 +2794,11 @@ public class Contact extends GenericBean {
         thisDependency.setCanDelete(false);
         dependencyList.add(thisDependency);
       }
-      
+
       rs.close();
       pst.close();
 
-      i=0;
+      i = 0;
       pst = db.prepareStatement(
           "SELECT count(*) as assetcount " +
           "FROM asset " +
@@ -2805,10 +2812,10 @@ public class Contact extends GenericBean {
         thisDependency.setCanDelete(false);
         dependencyList.add(thisDependency);
       }
-      
+
       rs.close();
       pst.close();
-      
+
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }
@@ -2849,6 +2856,18 @@ public class Contact extends GenericBean {
     pst.setInt(2, this.getId());
     pst.executeUpdate();
     pst.close();
+  }
+
+  
+  /**
+   *  Gets the properties that are TimeZone sensitive
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("expires");
+    return thisList;
   }
 
 }

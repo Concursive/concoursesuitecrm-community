@@ -135,9 +135,9 @@
       if (hf2 != null){
         count++; 
       %>
-      hiddenValues[<%= count %>] = "<%=serviceContractHours.getAdjustmentNotes()%>";
+      hiddenValues[<%= count %>] = "<%=toHtml(serviceContractHours.getAdjustmentNotes())%>";
       hiddenFields[<%= count %>] = "<%=hf3%>";
-      displayValues[<%= count %>] = "<%=serviceContractHours.getAdjustmentNotes()%>";
+      displayValues[<%= count %>] = "<%=toHtml(serviceContractHours.getAdjustmentNotes())%>";
       displayFields[<%= count %>] = "<%=df3%>";
       <%}%>
       

@@ -25,6 +25,7 @@
     <td>
       <%= ContactEmailTypeList.getHtmlSelect("email"+ecount+"type", thisEmailAddress.getType()) %>
       <input type="text" size="40" name="email<%= ecount %>address" maxlength="255" value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
+      <input type="radio" name="forPrimary" value="<%= ecount %>" <%= (thisEmailAddress.getPrimaryEmail()) ? " checked" : "" %>>Primary
       <dhv:evaluate if="<%= thisEmailAddress.getId() > 0 %>">
         <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
         <input type="checkbox" name="email<%= ecount %>delete" value="on">mark to remove
@@ -43,6 +44,7 @@
     <td>
       <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", ((ContactDetails.getEmailAddressTypeId(1)==-1)?1:ContactDetails.getEmailAddressTypeId(1))) %>
       <input type="text" size="40" name="email<%=ecount%>address" maxlength="255">
+      <input type="radio" name="forPrimary" value="<%= ecount %>">Primary
     </td>
   </tr>
 <%

@@ -46,6 +46,13 @@ public final class AccountTicketActivityLog extends CFSModule {
       db = this.getConnection(context);
       // Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+
+      //find record permissions for portal users
+      if (!isRecordAccessPermitted(context,thisTicket.getOrgId())){
+        return ("PermissionError");
+      }
+
+
       context.getRequest().setAttribute("ticketDetails", thisTicket);
 
       // Load the Organization
@@ -267,6 +274,13 @@ public final class AccountTicketActivityLog extends CFSModule {
       db = this.getConnection(context);
       // Load the ticket
       Ticket thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+
+      //find record permissions for portal users
+      if (!isRecordAccessPermitted(context,thisTicket.getOrgId())){
+        return ("PermissionError");
+      }
+
+
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Load the Organization
       loadOrganizaton(context, db, thisTicket);

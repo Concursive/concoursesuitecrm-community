@@ -75,6 +75,7 @@ public class ReportBuilder {
     //need to set criteria here... otherwise sent to all!
     userList.setBuildContact(true);
     userList.setBuildContactDetails(true);
+    userList.setRoleType(0); //only regular users
     userList.buildList(db);
     Iterator i = userList.iterator();
     StringBuffer log = new StringBuffer();

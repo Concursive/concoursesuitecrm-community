@@ -23,7 +23,7 @@
     <th width="30%" >
       <strong>Reason</strong>
     </th>
-    <th width="50%" nowrap>
+    <th width="50%" >
       <strong>Notes</strong>
     </th>
     <th width="10%" nowrap>
@@ -45,10 +45,10 @@
       <td width="10%">
         <%= thisHours.getAdjustmentHours() %>
       </td>
-      <td width="30%" >
+      <td width="30%" nowrap>
         <%= toHtml(serviceContractHoursReasonList.getSelectedValue(thisHours.getAdjustmentReason())) %>
       </td>
-      <td width="70%"  nowrap>
+      <td width="50%"  >
       <%= toHtml(thisHours.getAdjustmentNotes()) %>
       </td>
       <td width="10%" >

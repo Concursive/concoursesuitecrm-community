@@ -24,6 +24,7 @@ public class Role extends GenericBean {
   protected int id = -1;
   protected String role = null;
   protected String description = null;
+  protected int roleType = -1; //regular or portal user type (engineer, customer...etc)
   protected java.sql.Timestamp entered = null;
   protected java.sql.Timestamp modified = null;
   protected int enteredBy = -1;
@@ -158,6 +159,26 @@ public class Role extends GenericBean {
    */
   public void setDescription(String tmp) {
     this.description = tmp;
+  }
+
+
+  /**
+   *  Sets the roleType attribute of the Role object
+   *
+   *@param  tmp  The new roleType value
+   */
+  public void setRoleType(int tmp) {
+    this.roleType = tmp;
+  }
+
+
+  /**
+   *  Sets the roleType attribute of the Role object
+   *
+   *@param  tmp  The new roleType value
+   */
+  public void setRoleType(String tmp) {
+    this.roleType = (("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp)) ? 1 : 0);
   }
 
 
@@ -333,6 +354,16 @@ public class Role extends GenericBean {
 
 
   /**
+   *  Gets the roleType attribute of the Role object
+   *
+   *@return    The roleType value
+   */
+  public int getRoleType() {
+    return roleType;
+  }
+
+
+  /**
    *  Gets the EnteredBy attribute of the Role object
    *
    *@return    The EnteredBy value
@@ -413,13 +444,14 @@ public class Role extends GenericBean {
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE role " +
-          "SET role = ?, description = ?, modified = CURRENT_TIMESTAMP, " +
+          "SET role = ?, description = ?, role_type = ?, modified = CURRENT_TIMESTAMP, " +
           "modifiedby = ? " +
           "WHERE modified = ? AND role_id = ? ");
       pst = db.prepareStatement(sql.toString());
       int i = 0;
       pst.setString(++i, this.getRole());
       pst.setString(++i, this.getDescription());
+      DatabaseUtils.setInt(pst,++i, getRoleType());
       pst.setInt(++i, this.getModifiedBy());
       pst.setTimestamp(++i, this.getModified());
       pst.setInt(++i, id);
@@ -487,7 +519,7 @@ public class Role extends GenericBean {
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
-      sql.append("INSERT INTO role (role, description, ");
+      sql.append("INSERT INTO role (role, description, role_type, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -495,7 +527,7 @@ public class Role extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredby, modifiedby, enabled ) " +
-          "VALUES (?, ?, ");
+          "VALUES (?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -507,6 +539,7 @@ public class Role extends GenericBean {
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, getRole());
       pst.setString(++i, getDescription());
+      DatabaseUtils.setInt(pst,++i, getRoleType());
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -661,6 +694,7 @@ public class Role extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
+    roleType = DatabaseUtils.getInt(rs, "role_type");
   }
 
 
@@ -730,7 +764,7 @@ public class Role extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
-   *@param  activeUsers       Description of Parameter
+   *@param  activeUsersOnly   Description of the Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    *@since
@@ -745,7 +779,7 @@ public class Role extends GenericBean {
         "AND (alias = -1 OR alias IS NULL) " +
         (activeUsersOnly ? "AND enabled = ? " : ""));
     pst.setInt(1, id);
-    if(activeUsersOnly){
+    if (activeUsersOnly) {
       pst.setBoolean(2, true);
     }
     ResultSet rs = pst.executeQuery();

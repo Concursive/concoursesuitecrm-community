@@ -87,6 +87,7 @@
       <permission name="accounts-assets" attributes="vaed" description="Assets"/>
       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed" description="Ticket Maintenance Notes"/>
       <permission name="accounts-accounts-tickets-activity-log" attributes="vaed" description="Ticket Activities"/>
+      <permission name="portal-user" attributes="vaed" description="Customer Portal User"/>
       <report file="accounts_type.xml" type="user" permission="accounts-accounts" title="Accounts by Type" description="What are my accounts by type?"/>
       <report file="accounts_recent.xml" type="user" permission="accounts-accounts" title="Accounts by Date Added" description="What are my recent accounts?"/>
       <report file="accounts_expire.xml" type="user" permission="accounts-accounts" title="Accounts by Contract End Date" description="Which accounts are expiring?"/>
@@ -200,6 +201,7 @@
       <permission name="accounts-assets" attributes="vaed" />
       <permission name="accounts-accounts-tickets-maintenance-report" attributes="vaed"/>
       <permission name="accounts-accounts-tickets-activity-log" attributes="vaed"/>
+      <permission name="portal-user" attributes="vaed" />
       <permission name="campaign" attributes="v---"/>
       <permission name="campaign-dashboard" attributes="v---"/>
       <permission name="campaign-campaigns" attributes="vaed"/>

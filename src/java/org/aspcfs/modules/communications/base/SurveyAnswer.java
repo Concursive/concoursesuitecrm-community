@@ -554,6 +554,7 @@ public class SurveyAnswer {
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
+      db.commit();
     } catch (SQLException e) {
       db.rollback();
       throw new SQLException(e.getMessage());

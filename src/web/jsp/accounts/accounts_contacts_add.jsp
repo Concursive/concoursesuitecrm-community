@@ -157,9 +157,21 @@
     </td>
   </tr>
 </table>
-&nbsp;<br>  
+&nbsp;<br />  
 <%--  include basic contact form --%>
 <%@ include file="../contacts/contact_include.jsp" %>
+<dhv:permission name="portal-user-add">
+<table>
+ <tr>
+    <td valign="top" >
+      <strong>Provide portal access?</strong>
+    </td>
+    <td>
+    <input type="checkbox" name="providePortalAccess" value="true" />
+    </td>
+ </tr>
+</table>
+</dhv:permission>
 <br>
 <input type="submit" value="Save" onClick="return checkForm(this.form)">
   <dhv:evaluate exp="<%= !popUp %>">

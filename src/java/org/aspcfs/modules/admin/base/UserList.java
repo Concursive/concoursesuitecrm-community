@@ -66,6 +66,7 @@ public class UserList extends Vector implements SyncableList {
   private java.sql.Timestamp enteredRangeStart = null;
   private java.sql.Timestamp enteredRangeEnd = null;
 
+  private int roleType = -1; //0 for regular users and 1 for portal users
 
   /**
    *  Constructor for the UserList object
@@ -242,6 +243,26 @@ public class UserList extends Vector implements SyncableList {
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
+  }
+
+
+  /**
+   *  Sets the roleType attribute of the UserList object
+   *
+   *@param  tmp  The new roleType value
+   */
+  public void setRoleType(int tmp) {
+    this.roleType = tmp;
+  }
+
+
+  /**
+   *  Sets the roleType attribute of the UserList object
+   *
+   *@param  tmp  The new roleType value
+   */
+  public void setRoleType(String tmp) {
+    this.roleType = Integer.parseInt(tmp);
   }
 
 
@@ -635,7 +656,7 @@ public class UserList extends Vector implements SyncableList {
       String elementText = null;
 
       elementText = thisUser.getContact().getValidName();
-      
+
       if (!(thisUser.getEnabled())) {
         elementText += " *";
       }
@@ -788,6 +809,16 @@ public class UserList extends Vector implements SyncableList {
   public User getObject(ResultSet rs) throws SQLException {
     User thisUser = new User(rs);
     return thisUser;
+  }
+
+
+  /**
+   *  Gets the roleType attribute of the UserList object
+   *
+   *@return    The roleType value
+   */
+  public int getRoleType() {
+    return roleType;
   }
 
 
@@ -1070,6 +1101,9 @@ public class UserList extends Vector implements SyncableList {
     if (includeUsersWithRolesOnly) {
       sqlFilter.append("AND a.role_id > -1 AND a.role_id IS NOT NULL ");
     }
+    if (roleType != -1) {
+      sqlFilter.append("AND a.role_type = ? ");
+    }
   }
 
 
@@ -1117,6 +1151,9 @@ public class UserList extends Vector implements SyncableList {
     }
     if (enteredRangeEnd != null) {
       pst.setTimestamp(++i, enteredRangeEnd);
+    }
+    if (roleType != -1) {
+      pst.setInt(++i, roleType);
     }
     return i;
   }

@@ -3,9 +3,10 @@ package org.aspcfs.modules.accounts.actions;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
-import java.util.Vector;
+import java.util.*;
 import java.sql.*;
 import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.modules.actions.CFSModule;
@@ -13,6 +14,9 @@ import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.admin.base.RoleList;
+import org.aspcfs.modules.admin.base.Role;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.communications.base.Campaign;
 import org.aspcfs.modules.communications.base.CampaignList;
 import org.aspcfs.modules.base.*;
@@ -67,6 +71,7 @@ public final class Contacts extends CFSModule {
       ctl.buildList(db);
       ctl.addItem(0, "--None--");
       context.getRequest().setAttribute("ContactTypeList", ctl);
+
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -177,6 +182,9 @@ public final class Contacts extends CFSModule {
       if (context.getRequest().getParameter("popup") != null) {
         return ("CloseAddPopup");
       }
+      if ("true".equals(context.getRequest().getParameter("providePortalAccess"))){
+        return ("AddPortalOK");
+      }
       return ("DetailsOK");
     } else if (resultCount == 1) {
       if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
@@ -268,6 +276,11 @@ public final class Contacts extends CFSModule {
       db = this.getConnection(context);
       newContact = new Contact(db, contactId);
       thisOrganization = new Organization(db, newContact.getOrgId());
+
+      //find record permissions for portal users
+      if (!isRecordAccessPermitted(context,newContact.getOrgId())){
+        return ("PermissionError");
+      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -407,6 +420,12 @@ public final class Contacts extends CFSModule {
     if (orgid == null) {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
+
+    //find record permissions for portal users    
+    if (!isRecordAccessPermitted(context,Integer.parseInt(orgid))){
+      return ("PermissionError");
+    }
+
     PagedListInfo companyDirectoryInfo = this.getPagedListInfo(context, "ContactListInfo");
     companyDirectoryInfo.setLink("Contacts.do?command=View&orgId=" + orgid);
     Connection db = null;

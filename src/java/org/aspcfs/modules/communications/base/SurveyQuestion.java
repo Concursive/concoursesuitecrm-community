@@ -359,6 +359,7 @@ public class SurveyQuestion {
           thisItem.insert(db, this.getId());
         }
       }
+      db.commit();
     } catch (SQLException e) {
       db.rollback();
       throw new SQLException(e.getMessage());
@@ -416,6 +417,7 @@ public class SurveyQuestion {
           thisItem.insert(db, this.getId());
         }
       }
+      db.commit();
     } catch (SQLException e) {
       db.rollback();
       throw new SQLException(e.getMessage());

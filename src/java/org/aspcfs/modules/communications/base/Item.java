@@ -168,6 +168,7 @@ public class Item {
       pst.close();
 
       this.setId(DatabaseUtils.getCurrVal(db, "survey_items_item_id_seq"));
+      db.commit();
     } catch (SQLException e) {
       db.rollback();
       throw new SQLException(e.getMessage());
@@ -198,6 +199,7 @@ public class Item {
       pst.setInt(++i, qId);
       count = pst.executeUpdate();
       pst.close();
+      db.commit();
     } catch (SQLException e) {
       db.rollback();
       throw new SQLException(e.getMessage());
