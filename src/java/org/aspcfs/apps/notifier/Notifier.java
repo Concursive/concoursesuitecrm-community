@@ -36,6 +36,7 @@ public class Notifier extends ReportBuilder {
    *  Description of the Field
    */
   public final static String fs = System.getProperty("file.separator");
+  public final static String lf = System.getProperty("line.separator");
 
 
   /**
@@ -47,19 +48,23 @@ public class Notifier extends ReportBuilder {
   public static void main(String args[]) {
 
     Notifier thisNotifier = new Notifier();
-    AppUtils.loadConfig("notifier.xml", thisNotifier.config);
+    if (args[0] != null) {
+      AppUtils.loadConfig(args[0], thisNotifier.config);
+    } else {
+      AppUtils.loadConfig("notifier.xml", thisNotifier.config);
+    }
 
     System.out.println("Generating and sending reports... ");
 
-    thisNotifier.baseName = (String) thisNotifier.config.get("GKHOST");
-    thisNotifier.dbUser = (String) thisNotifier.config.get("GKUSER");
-    thisNotifier.dbPass = (String) thisNotifier.config.get("GKUSERPW");
+    thisNotifier.baseName = (String) thisNotifier.config.get("GATEKEEPER.URL");
+    thisNotifier.dbUser = (String) thisNotifier.config.get("GATEKEEPER.USER");
+    thisNotifier.dbPass = (String) thisNotifier.config.get("GATEKEEPER.PASSWORD");
 
     if (thisNotifier.baseName.equals("debug")) {
       thisNotifier.sendAdminReport("Notifier manual sendmail test");
     } else {
       try {
-        Class.forName((String) thisNotifier.config.get("DatabaseDriver"));
+        Class.forName((String) thisNotifier.config.get("GATEKEEPER.DRIVER"));
 
         ArrayList siteList = new ArrayList();
 
@@ -103,11 +108,11 @@ public class Notifier extends ReportBuilder {
           System.out.println("Running Alerts...");
           thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
           //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
-          thisNotifier.output.append("<br><hr><br>");
+          thisNotifier.output.append(lf+lf+lf);
 
           System.out.println("Running Communications...");
           thisNotifier.output.append(thisNotifier.buildCommunications(db, siteInfo));
-          thisNotifier.output.append("<br><hr><br>");
+          thisNotifier.output.append(lf+lf+lf);
 
           db.close();
         }
@@ -119,6 +124,7 @@ public class Notifier extends ReportBuilder {
         System.out.println("Sending error email...");
         //thisNotifier.sendAdminReport(exc.toString());
         System.err.println("BuildReport Error: " + exc.toString());
+        System.exit(2);
       }
       System.exit(0);
     }
@@ -183,8 +189,8 @@ public class Notifier extends ReportBuilder {
         System.out.println("Notifier Error-> " + thisNotification.getErrorMessage());
       }
     }
-    thisReport.setHeader("Opportunity Alerts Report for " + start.toString() + "<br>" + "Total Records: " + notifyCount);
-    return thisReport.getHtml();
+    thisReport.setHeader("Opportunity Alerts Report for " + start.toString() + lf + "Total Records: " + notifyCount);
+    return thisReport.getDelimited();
   }
 
 
@@ -246,7 +252,7 @@ public class Notifier extends ReportBuilder {
       }
     }
     thisReport.setHeader("Opportunity Alerts Report for " + start.toString() + "<br>" + "Total Records: " + notifyCount);
-    return thisReport.getHtml();
+    return thisReport.getDelimited();
   }
 
 
@@ -416,8 +422,8 @@ public class Notifier extends ReportBuilder {
         thisCampaign.update(db);
       }
     }
-    thisReport.setHeader("Communications Report for " + start.toString() + "<br>" + "Total Records: " + notifyCount);
-    return thisReport.getHtml();
+    thisReport.setHeader("Communications Report for " + start.toString() + lf + "Total Records: " + notifyCount);
+    return thisReport.getDelimited();
   }
 
 
