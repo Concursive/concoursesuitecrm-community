@@ -2,6 +2,7 @@
 <%@ page import="java.util.*" %>
 <jsp:useBean id="installLog" class="java.util.ArrayList" scope="request" />
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
@@ -48,6 +49,11 @@ String step = (String) installs.next();
 </table>
 <br />
 <table border="0" width="100%">
+  <tr class="sectionTitle">
+    <th>
+      Next Steps
+    </th>
+  </tr>
   <tr>
     <td>
       Since the JavaServerPages have not yet been compiled, you should choose to precompile the
