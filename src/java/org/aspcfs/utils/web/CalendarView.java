@@ -37,8 +37,6 @@ public class CalendarView {
   protected int day = cal.get(Calendar.DAY_OF_MONTH);
   protected int month = cal.get(Calendar.MONTH);
   protected int year = cal.get(Calendar.YEAR);
-  protected int startDayOfWeek = -1;
-  protected int startMonthOfWeek = -1;
   protected Calendar calPrev = Calendar.getInstance();
   protected Calendar calNext = Calendar.getInstance();
 
@@ -115,6 +113,24 @@ public class CalendarView {
 
 
   /**
+   *Constructor for using with the CalendarBean 
+   *
+   *@param  calendarInfo  Description of the Parameter
+   */
+  public CalendarView(CalendarBean calendarInfo) {
+    this("EN", "US");
+    
+    this.calendarInfo = calendarInfo;
+    int month = calendarInfo.getPrimaryMonth();
+    int year = calendarInfo.getPrimaryYear();
+    int day = calendarInfo.getDaySelected();
+    this.setYear(year);
+    this.setMonth(month);
+    this.setDay(day);
+  }
+
+
+  /**
    *  Creates a CalendarView for a given locale
    *
    *@param  language  the two letter string code specifying a languge, "EN" for
@@ -148,28 +164,6 @@ public class CalendarView {
    */
   public void setCalendarInfo(CalendarBean calendarInfo) {
     this.calendarInfo = calendarInfo;
-  }
-
-
-  /**
-   *  UpdateParams sets the day, month and year selected <br>
-   *  Note :Specifically for the Home page calendar<br>
-   *  CalendarBean should be set to use this
-   */
-  public void updateParams() {
-    if (calendarInfo.getDaySelected() != -1) {
-      this.setDay(String.valueOf(calendarInfo.getDaySelected()));
-    }
-    if (calendarInfo.getMonthSelected() != -1) {
-      this.setMonth(String.valueOf((calendarInfo).getMonthSelected()));
-    }
-    if (calendarInfo.getYearSelected() != -1) {
-      this.setYear(String.valueOf(calendarInfo.getYearSelected()));
-    }
-    if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
-      this.setStartDayOfWeek(calendarInfo.getStartDayOfWeek());
-      this.setStartMonthOfWeek(calendarInfo.getStartMonthOfWeek());
-    }
   }
 
 
@@ -226,6 +220,25 @@ public class CalendarView {
     if ((dayArg != null) && (!dayArg.equals(""))) {
       try {
         this.day = Integer.parseInt(dayArg);
+        this.update();
+      } catch (Exception exc) {
+      }
+    } else {
+      this.day = 1;
+      this.update();
+    }
+  }
+
+
+  /**
+   *  Sets the day attribute of the CalendarView object
+   *
+   *@param  dayArg  The new day value
+   */
+  public void setDay(int dayArg) {
+    if (dayArg != -1 && dayArg != 0) {
+      try {
+        this.day = dayArg;
         this.update();
       } catch (Exception exc) {
       }
@@ -390,78 +403,12 @@ public class CalendarView {
 
 
   /**
-   *  Sets the startDayOfWeek attribute of the CalendarView object
-   *
-   *@param  startDayOfWeek  The new startDayOfWeek value
-   */
-  public void setStartDayOfWeek(int startDayOfWeek) {
-    this.startDayOfWeek = startDayOfWeek;
-  }
-
-
-  /**
-   *  Sets the startMonthOfWeek attribute of the CalendarView object
-   *
-   *@param  startMonthOfWeek  The new startMonthOfWeek value
-   */
-  public void setStartMonthOfWeek(int startMonthOfWeek) {
-    this.startMonthOfWeek = startMonthOfWeek;
-  }
-
-
-  /**
-   *  Gets the startOfWeekDate attribute of the CalendarView object
-   *
-   *@return    The startOfWeekDate value
-   */
-  public java.util.Date getStartOfWeekDate() {
-    Calendar thisCal = Calendar.getInstance();
-    thisCal.set(this.getYear(cal), this.getStartMonthOfWeek() - 1, this.getStartDayOfWeek());
-    return thisCal.getTime();
-  }
-
-
-  /**
-   *  Gets the endOfWeekDate attribute of the CalendarView object
-   *
-   *@return    The endOfWeekDate value
-   */
-  public java.util.Date getEndOfWeekDate() {
-    Calendar thisCal = Calendar.getInstance();
-    thisCal.set(this.getYear(cal), this.getStartMonthOfWeek() - 1, this.getStartDayOfWeek());
-    thisCal.add(java.util.Calendar.DATE, +6);
-    return thisCal.getTime();
-  }
-
-
-  /**
-   *  Gets the startDayOfWeek attribute of the CalendarView object
-   *
-   *@return    The startDayOfWeek value
-   */
-  public int getStartDayOfWeek() {
-    return startDayOfWeek;
-  }
-
-
-
-  /**
    *  Gets the calendarInfo attribute of the CalendarView object
    *
    *@return    The calendarInfo value
    */
   public CalendarBean getCalendarInfo() {
     return calendarInfo;
-  }
-
-
-  /**
-   *  Gets the startMonthOfWeek attribute of the CalendarView object
-   *
-   *@return    The startMonthOfWeek value
-   */
-  public int getStartMonthOfWeek() {
-    return startMonthOfWeek;
   }
 
 
@@ -685,13 +632,13 @@ public class CalendarView {
         displayYear = today.get(Calendar.YEAR);
       } else if (!source.equalsIgnoreCase("Calendar")) {
         if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
-          displayMonth = cal.get(Calendar.MONTH) + 1 + calendarInfo.getMonthDisplacement();
-          displayDay = Integer.parseInt(getDay());
-          displayYear = cal.get(Calendar.YEAR);
+          displayMonth = calendarInfo.getMonthSelected();
+          displayDay = calendarInfo.getDaySelected();
+          displayYear = calendarInfo.getYearSelected();
         } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
           displayMonth = calendarInfo.getStartMonthOfWeek();
           displayDay = calendarInfo.getStartDayOfWeek();
-          displayYear = cal.get(Calendar.YEAR);
+          displayYear = calendarInfo.getYearSelected();
         } else {
           displayMonth = calPrev.get(Calendar.MONTH) + 1;
           displayDay = (this.getEndCell(calPrev) - this.getStartCell(cal) + 2 - this.getStartCell(calPrev));
@@ -730,12 +677,12 @@ public class CalendarView {
         displayYear = today.get(Calendar.YEAR);
       } else if (!source.equalsIgnoreCase("Calendar")) {
         if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
-          displayMonth = cal.get(Calendar.MONTH) + 1 + calendarInfo.getMonthDisplacement();
-          displayDay = Integer.parseInt(getDay());
-          displayYear = cal.get(Calendar.YEAR);
+          displayMonth = calendarInfo.getMonthSelected();
+          displayDay = calendarInfo.getDaySelected();
+          displayYear = calendarInfo.getYearSelected();
         } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
           Calendar newDate = Calendar.getInstance();
-          newDate.set(cal.get(Calendar.YEAR), this.getStartMonthOfWeek() - 1, this.getStartDayOfWeek());
+          newDate.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek() - 1, calendarInfo.getStartDayOfWeek());
           newDate.add(Calendar.DATE, 6);
           displayMonth = newDate.get(Calendar.MONTH) + 1;
           displayDay = newDate.get(Calendar.DATE);
@@ -964,7 +911,6 @@ public class CalendarView {
       html.append("</td>");
     }
     html.append("</tr>");
-
     int startCellPrev = this.getStartCell(calPrev);
     int endCellPrev = this.getEndCell(calPrev);
 
@@ -985,7 +931,6 @@ public class CalendarView {
       int displayDay = 0;
       int displayMonth = 0;
       int displayYear = 0;
-
       if (cellNo < startCell) {
         //The previous month
         displayMonth = calPrev.get(Calendar.MONTH) + 1;
@@ -1024,10 +969,9 @@ public class CalendarView {
         }
         html.append(">");
       }
-
       if (!popup && (cellNo % 7 == 0)) {
         html.append("<td valign='top' width=\"4\" class=\"weekSelector\" name=\"weekSelector\">");
-        String weekSelectedArrow = "<a href=\"javascript:showWeekEvents(" + displayMonth + "," + displayDay + ")\">" + "<img ALIGN=\"MIDDLE\" src=\"images/next.gif\" border=\"0\" onclick=\"javascript:switchTableClass(this,'selectedWeek','row','<%=User.getBrowserId()%>');\"></a>";
+        String weekSelectedArrow = "<a href=\"javascript:showWeekEvents('" + displayYear + "','" + displayMonth + "','" + displayDay + "')\">" + "<img ALIGN=\"MIDDLE\" src=\"images/next.gif\" border=\"0\" onclick=\"javascript:switchTableClass(this,'selectedWeek','row','<%=User.getBrowserId()%>');\"></a>";
         html.append(weekSelectedArrow);
         html.append("</td>");
       }
@@ -1040,9 +984,8 @@ public class CalendarView {
           html.append(" height='45'");
         }
       }
-
       if (!popup) {
-        html.append(" onclick=\"javascript:showDayEvents('" + displayMonth + "','" + displayDay + "');javascript:switchTableClass(this,'selectedDay','cell','<%=User.getBrowserId()%>');\"");
+        html.append(" onclick=\"javascript:showDayEvents('" + displayYear + "','" + displayMonth + "','" + displayDay + "');javascript:switchTableClass(this,'selectedDay','cell','<%=User.getBrowserId()%>');\"");
         if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
           tdClass = "";
           if (displayMonth == calendarInfo.getMonthSelected() && displayDay == calendarInfo.getDaySelected()) {
@@ -1054,26 +997,25 @@ public class CalendarView {
       if (prevMonth) {
         //The previous month
         if (this.isCurrentDay(calPrev, displayDay)) {
-          html.append(" class='" + ((tdClass.equalsIgnoreCase("")) ? pre + "today'" : tdClass + "'") + " name='" + pre + "today' >");
+          html.append(" id='today' class='" + ((tdClass.equalsIgnoreCase("")) ? pre + "today'" : tdClass + "'") + " name='" + pre + "today' >");
         } else {
           html.append(" class='" + ((tdClass.equalsIgnoreCase("")) ? pre + "noday'" : tdClass + "'") + " name='" + pre + "noday' >");
         }
       } else if (nextMonth) {
         if (this.isCurrentDay(calNext, displayDay)) {
-          html.append(" class='" + ((tdClass.equalsIgnoreCase("")) ? pre + "today'" : tdClass + "'") + " name='" + pre + "today' >");
+          html.append(" id='today' class='" + ((tdClass.equalsIgnoreCase("")) ? pre + "today'" : tdClass + "'") + " name='" + pre + "today' >");
         } else {
           html.append(" class='" + ((tdClass.equalsIgnoreCase("")) ? pre + "noday'" : tdClass + "'") + " name='" + pre + "noday' >");
         }
       } else {
         //The main main
         if (this.isCurrentDay(cal, displayDay)) {
-          html.append(" class='" + ((tdClass.equalsIgnoreCase("")) ? pre + "today'" : tdClass + "'") + " name='" + pre + "today' >");
+          html.append(" id='today' class='" + ((tdClass.equalsIgnoreCase("")) ? pre + "today'" : tdClass + "'") + " name='" + pre + "today' >");
         } else {
           html.append(" class='" + ((tdClass.equalsIgnoreCase("")) ? pre + "day'" : tdClass + "'") + " name='" + pre + "day' >");
         }
       }
       // end if block
-
       //Display the day in the appropriate link color
       if (popup) {
         //Popup calendar
@@ -1092,12 +1034,12 @@ public class CalendarView {
         if (!mainMonth) {
           dateColor = "<font color=#888888>" + displayDay + "</font>";
         }
-        html.append("<a href=\"javascript:showDayEvents('" + displayMonth + "','" + displayDay + "');\">" + dateColor + "</a>");
-        
+        html.append("<a href=\"javascript:showDayEvents('" + displayYear + "','" + displayMonth + "','" + displayDay + "');\">" + dateColor + "</a>");
+
         if (this.isHoliday(displayMonth + "", displayDay + "", displayYear + "")) {
           html.append(CalendarEvent.getIcon("holiday") + "<font color=blue><br>");
         }
-        
+
         //get all events categories and respective counts.
         HashMap events = this.getEventList(displayMonth + "", displayDay + "", displayYear + "").getEventTypes();
         if (events != null) {
@@ -1113,10 +1055,10 @@ public class CalendarView {
             }
           }
           html.append("</table>");
-        }//end of events display.
+        }
+        //end of events display.
       }
       html.append("</td>");
-
       if ((cellNo + 1) % 7 == 0) {
         html.append("</tr>");
       }
@@ -1150,7 +1092,7 @@ public class CalendarView {
    */
   private String getHtmlMonthSelect() {
     StringBuffer html = new StringBuffer();
-    html.append("<select size=\"1\" name=\"month\" onChange=\"document.forms[0].submit();\">");
+    html.append("<select size=\"1\" name=\"primaryMonth\" onChange=\"document.forms[0].submit();\">");
     for (int month = 1; month <= 12; month++) {
       String selected = (this.getMonth().equals(String.valueOf(month))) ? " selected" : "";
       html.append("<option value=\"" + month + "\"" + selected + ">" + monthNames[month - 1] + "</option>");
@@ -1167,7 +1109,7 @@ public class CalendarView {
    */
   private String getHtmlYearSelect() {
     StringBuffer html = new StringBuffer();
-    html.append("<select size=\"1\" name=\"year\" onChange=\"document.forms[0].submit();\">");
+    html.append("<select size=\"1\" name=\"primaryYear\" onChange=\"document.forms[0].submit();\">");
     for (int year = 1998; year <= 2010; year++) {
       String selected = (this.getYear().equals(String.valueOf(year))) ? " selected" : "";
       html.append("<option value=\"" + year + "\"" + selected + ">" + year + "</option>");
@@ -1205,7 +1147,7 @@ public class CalendarView {
         dayCount = 7;
       } else if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
         dayCount = 1;
-        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected() - 1 + calendarInfo.getMonthDisplacement(), calendarInfo.getDaySelected());
+        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected() - 1, calendarInfo.getDaySelected());
       } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
         dayCount = 7;
         tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek() - 1, calendarInfo.getStartDayOfWeek());
@@ -1280,6 +1222,7 @@ public class CalendarView {
    *@param  subject    The feature to be added to the Event attribute
    *@param  category   The feature to be added to the Event attribute
    *@param  id         The feature to be added to the Event attribute
+   *@return            Description of the Return Value
    */
   public CalendarEvent addEvent(java.sql.Timestamp eventDate, String subject, String category, int id) {
     return addEvent(eventDate, subject, category, id, -1);
@@ -1294,6 +1237,7 @@ public class CalendarView {
    *@param  category   The feature to be added to the Event attribute
    *@param  idmain     The feature to be added to the Event attribute
    *@param  idsub      The feature to be added to the Event attribute
+   *@return            Description of the Return Value
    */
   public CalendarEvent addEvent(java.sql.Timestamp eventDate, String subject, String category, int idmain, int idsub) {
     CalendarEvent thisEvent = new CalendarEvent();
@@ -1313,6 +1257,7 @@ public class CalendarView {
    *@param  eventDate  The feature to be added to the Event attribute
    *@param  subject    The feature to be added to the Event attribute
    *@param  category   The feature to be added to the Event attribute
+   *@return            Description of the Return Value
    */
   public CalendarEvent addEvent(String eventDate, String subject, String category) {
     return addEvent(eventDate, "", subject, category);
@@ -1326,6 +1271,7 @@ public class CalendarView {
    *@param  eventTime  The feature to be added to the Event attribute
    *@param  subject    The feature to be added to the Event attribute
    *@param  category   The feature to be added to the Event attribute
+   *@return            Description of the Return Value
    */
   public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category) {
     return addEvent(eventDate, eventTime, subject, category, -1, -1, -1);
@@ -1340,6 +1286,7 @@ public class CalendarView {
    *@param  subject    The feature to be added to the Event attribute
    *@param  category   The feature to be added to the Event attribute
    *@param  id         The feature to be added to the Event attribute
+   *@return            Description of the Return Value
    */
   public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category, int id) {
     return addEvent(eventDate, eventTime, subject, category, id, -1, -1);
@@ -1355,6 +1302,7 @@ public class CalendarView {
    *@param  category   The feature to be added to the Event attribute
    *@param  idmain     The feature to be added to the Event attribute
    *@param  idsub      The feature to be added to the Event attribute
+   *@return            Description of the Return Value
    */
   public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub) {
     return addEvent(eventDate, eventTime, subject, category, idmain, idsub, -1);
@@ -1371,6 +1319,7 @@ public class CalendarView {
    *@param  idmain     The feature to be added to the Event attribute
    *@param  idsub      The feature to be added to the Event attribute
    *@param  status     The feature to be added to the Event attribute
+   *@return            Description of the Return Value
    */
   public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub, int status) {
     CalendarEvent thisEvent = new CalendarEvent();
