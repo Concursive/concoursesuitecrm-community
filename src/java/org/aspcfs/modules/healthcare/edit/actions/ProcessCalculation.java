@@ -19,6 +19,8 @@ import java.io.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.healthcare.edit.base.*;
 import java.text.DateFormat;
+import org.aspcfs.controller.SecurityHook;
+import org.aspcfs.controller.SystemStatus;
 
 /**
  *  This class processes EDIT transactions and stores them into a remote CFS
@@ -91,7 +93,14 @@ public final class ProcessCalculation extends CFSModule {
     try {
       //get a local database connection
       AuthenticationItem auth = new AuthenticationItem();
-      db = auth.getConnection(context, false);
+      ConnectionElement ce = auth.getConnectionElement(context);
+      db = this.getConnection(context, ce);
+      SystemStatus thisSystem = this.getSystemStatus(context, ce);
+      if (thisSystem == null) {
+        //Since typical login was bypassed, make sure the system status is in memory
+        thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
+      }
+      
       //get connections to the remote production database
       sqlDriver.setMaxConnections(2);
       if (System.getProperty("DEBUG") != null) {
@@ -391,10 +400,8 @@ public final class ProcessCalculation extends CFSModule {
         sb.append("Provider Tax ID: " + tempRec.getTaxId() + "<br>");
         sb.append("Provider Last Name: " + tempRec.getNameLast() + "<br>");
         sb.append("Vendor (Payer) ID: " + tempRec.getPayerId() + "<br><br>");
-
         sb.append(em + "<br><br>");
       }
-
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace();
@@ -404,7 +411,7 @@ public final class ProcessCalculation extends CFSModule {
       }
       sqlDriver.free(prodDb);
     }
-
+    //Mail the final report
     SMTPMessage mail = new SMTPMessage();
     mail.setHost((String) System.getProperty("MailServer"));
     mail.setFrom("cfs-messenger@darkhorseventures.com");
@@ -415,7 +422,7 @@ public final class ProcessCalculation extends CFSModule {
     if (mail.send() == 2) {
       System.err.println(mail.getErrorMsg());
     } else {
-      System.err.println("Error sending message to " + this.getValue(context, "ERROR_REPORT_ADDRESS"));
+      System.err.println("ProcessCalculation-> Sending report to " + this.getValue(context, "ERROR_REPORT_ADDRESS"));
     }
     return ("-none-");
   }

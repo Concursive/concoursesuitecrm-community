@@ -118,8 +118,21 @@ public class CFSModule {
    *@since                    1.1
    */
   protected Connection getConnection(ActionContext context) throws SQLException {
-    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    return this.getConnection(context, ce);
+  }
+
+
+  /**
+   *  Gets the connection attribute of the CFSModule object
+   *
+   *@param  context           Description of the Parameter
+   *@param  ce                Description of the Parameter
+   *@return                   The connection value
+   *@exception  SQLException  Description of the Exception
+   */
+  protected Connection getConnection(ActionContext context, ConnectionElement ce) throws SQLException {
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     return sqlDriver.getConnection(ce);
   }
 
@@ -206,6 +219,18 @@ public class CFSModule {
    */
   protected SystemStatus getSystemStatus(ActionContext context) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    return this.getSystemStatus(context, ce);
+  }
+
+
+  /**
+   *  Gets the systemStatus attribute of the CFSModule object
+   *
+   *@param  context  Description of the Parameter
+   *@param  ce       Description of the Parameter
+   *@return          The systemStatus value
+   */
+  protected SystemStatus getSystemStatus(ActionContext context, ConnectionElement ce) {
     return (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
   }
 
