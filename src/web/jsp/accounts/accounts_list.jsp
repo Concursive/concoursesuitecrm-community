@@ -3,6 +3,7 @@
 <jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="SearchOrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -24,6 +25,14 @@ Search Results
 </tr>
 </table>
 <%-- End Trails --%>
+<dhv:evaluate if="<%= (User.getRoleType() > 0) %>" >
+<table class="note" cellspacing="0">
+  <tr>
+    <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
+    <td>Select an account to manage.</td>
+  </tr>
+</table>
+</dhv:evaluate>
 <dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add">Add an Account</a></dhv:permission>
 <dhv:permission name="accounts-accounts-add" none="true"><br /></dhv:permission>
 <center><%= SearchOrgListInfo.getAlphabeticalPageLinks() %></center>
