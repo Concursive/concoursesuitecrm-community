@@ -7,20 +7,22 @@
 <%@ include file="initPage.jsp" %>
 <table bgcolor=white border=0 width="100%">
 <tr>
-  <td valign=top bgcolor=white width=300>
-<%  
-    CompanyCalendar.setBorderSize(1);
-    CompanyCalendar.setCellPadding(4);
-    CompanyCalendar.setCellSpacing(0);
-    CompanyCalendar.setSortEvents(true);
-    CompanyCalendar.addHolidays();
-    CompanyCalendar.setMonthArrows(true);
-		CompanyCalendar.setFrontPageView(true);
-		CompanyCalendar.setNumberOfCells(35);
-		CompanyCalendar.setShowSubject(false);
-%>
-    <%= CompanyCalendar.getHtml() %>
-  </td>
+  <form name="monthBean" action="MyCFS.do?command=Home" method="post">
+    <td valign="top" bgcolor="white" width="300">
+  <%  
+      CompanyCalendar.setBorderSize(1);
+      CompanyCalendar.setCellPadding(4);
+      CompanyCalendar.setCellSpacing(0);
+      CompanyCalendar.setSortEvents(true);
+      CompanyCalendar.addHolidays();
+      CompanyCalendar.setMonthArrows(true);
+      CompanyCalendar.setFrontPageView(true);
+      //CompanyCalendar.setNumberOfCells(35);
+      CompanyCalendar.setShowSubject(false);
+  %>
+      <%= CompanyCalendar.getHtml() %>
+    </td>
+  </form>
   <td "bgcolor=white" valign="top" height="100%" width="100%">
     <table bgcolor="white" height="100%" width="100%" border="1" cellpadding="1" cellspacing="0" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr bgcolor="#DEE0FA">
