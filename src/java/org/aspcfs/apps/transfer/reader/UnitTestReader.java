@@ -58,8 +58,10 @@ public class UnitTestReader implements DataReader {
     thisRecord.setName("ticket");
     thisRecord.setAction("insert");
     thisRecord.addField("orgId", "1");
-    thisRecord.addField("contactId", "1");
+    thisRecord.addField("contactId", "2");
     thisRecord.addField("problem", "Sample problem text");
+    thisRecord.addField("enteredBy", "2");
+    thisRecord.addField("modifiedBy", "2");
     writer.save(thisRecord);
     logger.info(writer.getLastResponse());
     return true;
