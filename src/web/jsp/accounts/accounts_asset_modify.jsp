@@ -20,7 +20,7 @@
   <a href="Accounts.do">Accounts</a> > 
   <a href="Accounts.do?command=Search">Search Results</a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
-  <a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Assets</a> >
+  <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>">Assets</a> >
   Modify Asset
 </td>
 </tr>

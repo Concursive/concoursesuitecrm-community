@@ -82,7 +82,6 @@ CREATE TABLE service_contract (
   contact_id INT REFERENCES contact(contact_id),
   description TEXT,
   contract_billing_notes TEXT,
-  total_hours_purchased INT,
   response_time INT REFERENCES lookup_response_model(code),
   telephone_service_model INT REFERENCES lookup_phone_model(code),
   onsite_service_model INT REFERENCES lookup_onsite_model(code),

@@ -10,6 +10,7 @@ import org.aspcfs.modules.actions.CFSModule;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Action class for managing Roles
@@ -53,7 +54,7 @@ public final class Roles extends CFSModule {
       roleList.setPagedListInfo(roleInfo);
       roleList.setBuildUsers(false);
       roleList.setBuildUserCount(true);
-      roleList.setRoleType(0); //regular users
+      roleList.setRoleType(Constants.ROLETYPE_REGULAR); //regular users
       roleList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -287,6 +288,7 @@ public final class Roles extends CFSModule {
 
         thisRole = new Role(db, thisRole.getId());
         context.getRequest().setAttribute("Role", thisRole);
+        updateSystemPermissionCheck(db, context);
 
       } else {
         processErrors(context, thisRole.getErrors());

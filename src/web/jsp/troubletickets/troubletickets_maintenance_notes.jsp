@@ -85,7 +85,8 @@ Maintenance Notes
     </td>
     <td align="right">
       <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-      <a href="javascript:popURLReturn('TroubleTicketMaintenanceNotes.do?command=PrintMaintenanceForm&id=<%=thisTicket.getId()%>&orgId=<%=thisTicket.getOrgId()%>')">Printable Form</a>
+      <%--<a href="javascript:popURLReturn('TroubleTicketMaintenanceNotes.do?command=PrintMaintenanceForm&id=<%=thisTicket.getId()%>&orgId=<%=thisTicket.getOrgId()%>')">Printable Form</a>--%>
+      <a href="javascript:popURLReturn('TroubleTickets.do?command=PrintReport&id=<%=thisTicket.getId()%>')">Printable Form</a>
     </td>
   </tr>
 </table>

@@ -27,7 +27,8 @@
       <strong>Notes</strong>
     </th>
     <th width="10%" nowrap>
-      <strong>Date</strong>
+      <b><a href="AccountsServiceContracts.do?command=HoursHistory&id=<%=serviceContractHoursHistory.getContractId()%>&popup=true&popupType=inline&column=modified">Date</a></b>
+      <%= serviceContractHoursHistoryInfo.getSortIcon("modified") %>
     </th>
   </tr>
   

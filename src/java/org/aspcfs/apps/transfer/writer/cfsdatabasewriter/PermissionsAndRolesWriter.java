@@ -338,6 +338,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
         Role thisRole = new Role();
         thisRole.setRole(record.getValue("role"));
         thisRole.setDescription(record.getValue("description"));
+        thisRole.setRoleType(record.getValue("type"));
         thisRole.setEnteredBy(0);
         thisRole.setModifiedBy(0);
         thisRole.insert(db);

@@ -42,7 +42,6 @@ public class ServiceContract extends GenericBean {
   private int contactId = -1;
   private String description = null;
   private String contractBillingNotes = null;
-  private int totalHoursPurchased = -1;
   private double totalHoursRemaining = 0; //special case as -1 is also valid
   private int responseTime = -1;
   private int telephoneResponseModel = -1;
@@ -296,26 +295,6 @@ public class ServiceContract extends GenericBean {
    */
   public void setContractBillingNotes(String tmp) {
     this.contractBillingNotes = tmp;
-  }
-
-
-  /**
-   *  Sets the totalHoursPurchased attribute of the ServiceContract object
-   *
-   *@param  tmp  The new totalHoursPurchased value
-   */
-  public void setTotalHoursPurchased(int tmp) {
-    this.totalHoursPurchased = tmp;
-  }
-
-
-  /**
-   *  Sets the totalHoursPurchased attribute of the ServiceContract object
-   *
-   *@param  tmp  The new totalHoursPurchased value
-   */
-  public void setTotalHoursPurchased(String tmp) {
-    this.totalHoursPurchased = Integer.parseInt(tmp);
   }
 
 
@@ -717,16 +696,6 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the totalHoursPurchased attribute of the ServiceContract object
-   *
-   *@return    The totalHoursPurchased value
-   */
-  public int getTotalHoursPurchased() {
-    return totalHoursPurchased;
-  }
-
-
-  /**
    *  Gets the totalHoursRemaining attribute of the ServiceContract object
    *
    *@return    The totalHoursRemaining value
@@ -901,7 +870,6 @@ public class ServiceContract extends GenericBean {
         "contact_id = ? , " +
         "description = ? , " +
         "contract_billing_notes = ? , " +
-        "total_hours_purchased = ? , " +
         "total_hours_remaining = ? , " +
         "response_time = ? , " +
         "telephone_service_model= ? , " +
@@ -920,7 +888,7 @@ public class ServiceContract extends GenericBean {
     int i = 0;
     pst.setString(++i, serviceContractNumber);
     pst.setInt(++i, orgId);
-    pst.setDouble(++i, contractValue);
+    DatabaseUtils.setDouble(pst,++i, contractValue);
     pst.setTimestamp(++i, initialStartDate);
     if (currentStartDate == null) {
       pst.setTimestamp(++i, initialStartDate);
@@ -933,7 +901,6 @@ public class ServiceContract extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, contactId);
     pst.setString(++i, description);
     pst.setString(++i, contractBillingNotes);
-    DatabaseUtils.setInt(pst, ++i, totalHoursPurchased);
     pst.setDouble(++i, totalHoursRemaining);
     DatabaseUtils.setInt(pst, ++i, responseTime);
     DatabaseUtils.setInt(pst, ++i, telephoneResponseModel);
@@ -1098,7 +1065,6 @@ public class ServiceContract extends GenericBean {
         "contact_id , " +
         "description , " +
         "contract_billing_notes , " +
-        "total_hours_purchased , " +
         "total_hours_remaining , " +
         "response_time , " +
         "telephone_service_model , " +
@@ -1106,11 +1072,11 @@ public class ServiceContract extends GenericBean {
         "email_service_model , " +
         "enteredby , " +
         "modifiedby ) " +
-        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     int i = 0;
     pst.setString(++i, serviceContractNumber);
     pst.setInt(++i, orgId);
-    pst.setDouble(++i, contractValue);
+    DatabaseUtils.setDouble(pst,++i, contractValue);
     pst.setTimestamp(++i, initialStartDate);
     if (currentStartDate == null) {
       pst.setTimestamp(++i, initialStartDate);
@@ -1123,7 +1089,6 @@ public class ServiceContract extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, contactId);
     pst.setString(++i, description);
     pst.setString(++i, contractBillingNotes);
-    DatabaseUtils.setInt(pst, ++i, totalHoursPurchased);
     pst.setDouble(++i, totalHoursRemaining);
     DatabaseUtils.setInt(pst, ++i, responseTime);
     DatabaseUtils.setInt(pst, ++i, telephoneResponseModel);
@@ -1180,7 +1145,6 @@ public class ServiceContract extends GenericBean {
     contactId = DatabaseUtils.getInt(rs, "contact_id");
     description = rs.getString("description");
     contractBillingNotes = rs.getString("contract_billing_notes");
-    totalHoursPurchased = DatabaseUtils.getInt(rs, "total_hours_purchased");
     responseTime = DatabaseUtils.getInt(rs, "response_time");
     telephoneResponseModel = DatabaseUtils.getInt(rs, "telephone_service_model");
     onsiteResponseModel = DatabaseUtils.getInt(rs, "onsite_service_model");
@@ -1190,7 +1154,7 @@ public class ServiceContract extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
-    contractValue = rs.getDouble("contract_value");
+    contractValue = DatabaseUtils.getDouble(rs,"contract_value");
     totalHoursRemaining = rs.getDouble("total_hours_remaining");
   }
 }

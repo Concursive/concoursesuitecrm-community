@@ -1,11 +1,13 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*,java.text.DateFormat" %>
 <jsp:useBean id="CreatedByMeList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="CreatedByMeInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="AssignedToMeList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="AssignedToMeInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="OpenList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="OpenInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="AllTicketsList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
+<jsp:useBean id="AllTicketsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -26,7 +28,7 @@ View Tickets
 </tr>
 </table>
 <%-- End Trails --%>
-<% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
+<% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -37,6 +39,7 @@ View Tickets
       <strong>Number</strong>
     </th>
     <th><b>Priority</b></th>
+    <th><b>Est. Resolution Date</b></th>
     <th><b>Age</b></th>
     <th><b>Company</b></th>
 	<th><b>Resource Assigned</b></th>
@@ -62,10 +65,13 @@ View Tickets
 		<td width="12%" valign="top" nowrap>
 			<%= toHtml(assignedTic.getPriorityName()) %>
 		</td>
+		<td width="15%" valign="top" nowrap>
+      <dhv:tz timestamp="<%=assignedTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+		</td>
 		<td width="6%" align="right" valign="top" nowrap>
 			<%= assignedTic.getAgeOf() %>
 		</td>
-		<td width="50%" valign="top">
+		<td width="45%" valign="top">
 			<%= toHtml(assignedTic.getCompanyName()) %><dhv:evaluate exp="<%= !(assignedTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="20%" nowrap valign="top">
@@ -111,7 +117,7 @@ View Tickets
 	<%}%>
 <br>
 <%}%>
-<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
+<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Other Tickets in My Department" object="OpenInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -122,6 +128,7 @@ View Tickets
       <strong>Number</strong>
     </th>
     <th><b>Priority</b></th>
+    <th><b>Est. Resolution Date</b></th>
     <th><b>Age</b></th>
     <th><b>Company</b></th>
 	<th><b>Resource Assigned</b></th>
@@ -147,10 +154,13 @@ View Tickets
 		<td width="12%" valign="top" nowrap class="row<%= rowid %>">
 			<%= toHtml(openTic.getPriorityName()) %>
 		</td>
+		<td width="15%" valign="top" class="row<%= rowid %>">
+      <dhv:tz timestamp="<%=openTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+		</td>
 		<td width="6%" align="right" valign="top" nowrap class="row<%= rowid %>">
 			<%= openTic.getAgeOf() %>
 		</td>
-		<td width="50%" valign="top" class="row<%= rowid %>">
+		<td width="45%" valign="top" class="row<%= rowid %>">
 			<%= toHtml(openTic.getCompanyName()) %><dhv:evaluate exp="<%= !(openTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="20%" nowrap valign="top" class="row<%= rowid %>">
@@ -202,7 +212,7 @@ View Tickets
 	<%}%>
 <br>
 <%}%>
-<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection())) || CreatedByMeInfo.getExpandedSelection()) { %>
+<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection()) && !(AllTicketsInfo.getExpandedSelection())) || CreatedByMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Created by Me" object="CreatedByMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
@@ -213,6 +223,7 @@ View Tickets
       <strong>Number</strong>
     </th>
     <th><b>Priority</b></th>
+    <th><b>Est. Resolution Date</b></th>
     <th><b>Age</b></th>
     <th><b>Company</b></th>
 	<th><b>Resource Assigned</b></th>
@@ -238,10 +249,13 @@ View Tickets
 		<td width="12%" valign="top" nowrap>
 			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
+		<td width="15%" valign="top" class="row<%= rowid %>">
+      <dhv:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+		</td>
 		<td width="6%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>
 		</td>
-		<td width="50%" valign="top">
+		<td width="45%" valign="top">
 			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate exp="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="20%" nowrap valign="top">
@@ -282,6 +296,101 @@ View Tickets
   <% if (CreatedByMeInfo.getExpandedSelection()) {%>
 <br>
 <dhv:pagedListControl object="CreatedByMeInfo" tdClass="row1"/>
+  <%}%>
+	<%} else {%>
+		<tr class="containerBody">
+      <td colspan="7">
+        No tickets found.
+      </td>
+    </tr>
+  </table>
+	<%}%>
+  <br />
+<%}%>
+<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AllTicketsInfo.getExpandedSelection()) { %>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="All Tickets" object="AllTicketsInfo"/>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+		<th valign="center" align="left">
+      <strong>Action</strong>
+    </th>
+    <th valign="center" align="left">
+      <strong>Number</strong>
+    </th>
+    <th><b>Priority</b></th>
+    <th><b>Est. Resolution Date</b></th>
+    <th><b>Age</b></th>
+    <th><b>Company</b></th>
+	<th><b>Resource Assigned</b></th>
+  </tr>
+<%
+	Iterator j = AllTicketsList.iterator();
+	if ( j.hasNext() ) {
+		int rowid = 0;
+     int i = 0;
+		while (j.hasNext()) {
+      i++;
+      rowid = (rowid != 1?1:2);
+      Ticket thisTic = (Ticket)j.next();
+%>   
+	<tr class="row<%= rowid %>">
+    <td rowspan="2" width="8" valign="top" nowrap>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+       <a href="javascript:displayMenu('menuTicket', '<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+    </td>
+		<td width="10%" valign="top" nowrap>
+			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
+		</td>
+		<td width="12%" valign="top" nowrap>
+			<%= toHtml(thisTic.getPriorityName()) %>
+		</td>
+		<td width="15%" valign="top" class="row<%= rowid %>">
+      <dhv:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
+		</td>
+		<td width="6%" align="right" valign="top" nowrap>
+			<%= thisTic.getAgeOf() %>
+		</td>
+		<td width="45%" valign="top">
+			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate exp="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+		</td>
+		<td width="20%" nowrap valign="top">
+      <dhv:evaluate exp="<%= thisTic.isAssigned() %>">
+        <dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/>
+      </dhv:evaluate>
+      <dhv:evaluate exp="<%= !(thisTic.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
+      <dhv:evaluate exp="<%= (!thisTic.isAssigned()) %>">
+        <font color="red"><dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/></font>
+      </dhv:evaluate>
+		</td>
+	</tr>
+  <tr class="row<%= rowid %>">
+    <td colspan="6" valign="top">
+<%
+  if (1==1) {
+    Iterator files = thisTic.getFiles().iterator();
+    while (files.hasNext()) {
+      FileItem thisFile = (FileItem)files.next();
+      if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
+%>
+  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= thisTic.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"></a>
+<%
+      }
+    }
+  }
+%>
+      <%= toHtml(thisTic.getProblemHeader()) %>
+      <% if (thisTic.getClosed() == null) { %>
+        [<font color="green">open</font>]
+      <%} else {%>
+        [<font color="red">closed</font>]
+      <%}%>
+    </td>
+  </tr>
+	<%}%>
+</table>
+  <% if (AllTicketsInfo.getExpandedSelection()) {%>
+<br>
+<dhv:pagedListControl object="AllTicketsInfo" tdClass="row1"/>
   <%}%>
 	<%} else {%>
 		<tr class="containerBody">

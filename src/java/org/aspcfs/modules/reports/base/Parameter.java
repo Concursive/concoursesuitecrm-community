@@ -512,6 +512,11 @@ public class Parameter extends GenericBean {
           (maxLength == -1 ? "" : "maxlength=\"" + maxLength + "\" ") + 
           "name=\"" + name + "\" " +
           "value=\"" + HTTPUtils.toHtmlValue(value) + "\"/>";
+    }else if (name.equals("orgid")){
+      return "<div id=\"changeaccount\" style=\"display:inline\">All</div>" +
+             "<input type=\"hidden\" name=\"orgid\" id=\"orgid\" value=\"-1\">" +
+             "&nbsp [<a href=\"javascript:popAccountsListSingle('orgid','changeaccount', 'showMyCompany=true&filters=all|my|disabled');\">Select</a>]" +
+             "&nbsp [<a href=\"javascript:changeDivContent('changeaccount','All');javascript:resetNumericFieldValue('orgid');\">Clear</a>]"; 
     }
     return "Parameter type not supported";
   }

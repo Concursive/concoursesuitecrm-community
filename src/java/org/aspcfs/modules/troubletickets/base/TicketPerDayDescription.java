@@ -24,8 +24,6 @@ public class TicketPerDayDescription extends GenericBean {
   private int id = -1;
   private int linkFormId = -1;
   private java.sql.Timestamp activityDate = null;
-  private double travelTime = -1;
-  private double laborTime = -1;
   private String descriptionOfService = null;
   private int travelHours = -1;
   private int travelMinutes = -1;
@@ -113,46 +111,6 @@ public class TicketPerDayDescription extends GenericBean {
     }
 
     this.activityDate = tmpDate;
-  }
-
-
-  /**
-   *  Sets the travelTime attribute of the TicketPerDayDescription object
-   *
-   *@param  tmp  The new travelTime value
-   */
-  public void setTravelTime(String tmp) {
-    this.travelTime = StringUtils.parseDouble(tmp, 0.0);
-  }
-
-
-  /**
-   *  Sets the travelTime attribute of the TicketPerDayDescription object
-   *
-   *@param  tmp  The new travelTime value
-   */
-  public void setTravelTime(double tmp) {
-    this.travelTime = tmp;
-  }
-
-
-  /**
-   *  Sets the laborTime attribute of the TicketPerDayDescription object
-   *
-   *@param  tmp  The new laborTime value
-   */
-  public void setLaborTime(String tmp) {
-    this.laborTime = StringUtils.parseDouble(tmp, 0.0);
-  }
-
-
-  /**
-   *  Sets the laborTime attribute of the TicketPerDayDescription object
-   *
-   *@param  tmp  The new laborTime value
-   */
-  public void setLaborTime(double tmp) {
-    this.laborTime = tmp;
   }
 
 
@@ -268,26 +226,6 @@ public class TicketPerDayDescription extends GenericBean {
 
 
   /**
-   *  Gets the travelTime attribute of the TicketPerDayDescription object
-   *
-   *@return    The travelTime value
-   */
-  public double getTravelTime() {
-    return travelTime;
-  }
-
-
-  /**
-   *  Gets the laborTime attribute of the TicketPerDayDescription object
-   *
-   *@return    The laborTime value
-   */
-  public double getLaborTime() {
-    return laborTime;
-  }
-
-
-  /**
    *  Gets the descriptionOfService attribute of the TicketPerDayDescription
    *  object
    *
@@ -375,20 +313,16 @@ public class TicketPerDayDescription extends GenericBean {
         "INSERT INTO  ticket_activity_item " +
         "(link_form_id, " +
         "activity_date, " +
-        "travel_time, " +
-        "labor_time, " +
         "description, " +
         "travel_hours, " +
         "travel_minutes, " +
         "labor_hours, " +
         "labor_minutes) " +
-        "VALUES (?,?,?,?,?,?,?,?,?)");
+        "VALUES (?,?,?,?,?,?,?)");
 
     int i = 0;
     pst.setInt(++i, linkFormId);
     pst.setTimestamp(++i, activityDate);
-    pst.setDouble(++i, travelTime);
-    pst.setDouble(++i, laborTime);
     pst.setString(++i, descriptionOfService);
     pst.setInt(++i, travelHours);
     pst.setInt(++i, travelMinutes);
@@ -410,8 +344,6 @@ public class TicketPerDayDescription extends GenericBean {
   public void buildRecord(HttpServletRequest request, int parseItem) {
 
     this.setActivityDate(request.getParameter("activityDate" + parseItem));
-    //this.setTravelTime(request.getParameter("travelTime" + parseItem));
-    //this.setLaborTime(request.getParameter("laborTime" + parseItem));
     this.setDescriptionOfService(request.getParameter("descriptionOfService" + parseItem));
     this.setTravelHours(request.getParameter("travelHours" + parseItem));
     this.setTravelMinutes(request.getParameter("travelMinutes" + parseItem));
@@ -432,8 +364,6 @@ public class TicketPerDayDescription extends GenericBean {
     linkFormId = rs.getInt("link_form_id");
     activityDate = rs.getTimestamp("activity_date");
     descriptionOfService = rs.getString("description");
-    travelTime = rs.getDouble("travel_time");
-    laborTime = rs.getDouble("labor_time");
     travelHours = rs.getInt("travel_hours");
     travelMinutes = rs.getInt("travel_minutes");
     laborHours = rs.getInt("labor_hours");

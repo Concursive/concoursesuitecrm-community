@@ -24,6 +24,7 @@ public class DatabaseUtils {
 
   public final static String CRLF = System.getProperty("line.separator");
 
+
   /**
    *  Gets the true attribute of the DatabaseUtils class
    *
@@ -253,6 +254,24 @@ public class DatabaseUtils {
 
 
   /**
+   *  Gets the double attribute of the DatabaseUtils class
+   *
+   *@param  rs                Description of the Parameter
+   *@param  column            Description of the Parameter
+   *@param  defaultValue      Description of the Parameter
+   *@return                   The double value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static double getDouble(ResultSet rs, String column, double defaultValue) throws SQLException {
+    double fieldValue = rs.getDouble(column);
+    if (rs.wasNull()) {
+      fieldValue = defaultValue;
+    }
+    return fieldValue;
+  }
+
+
+  /**
    *  Gets the int attribute of the DatabaseUtils class
    *
    *@param  rs                Description of the Parameter
@@ -262,6 +281,19 @@ public class DatabaseUtils {
    */
   public static int getInt(ResultSet rs, String column) throws SQLException {
     return DatabaseUtils.getInt(rs, column, -1);
+  }
+
+
+  /**
+   *  Gets the double attribute of the DatabaseUtils class
+   *
+   *@param  rs                Description of the Parameter
+   *@param  column            Description of the Parameter
+   *@return                   The double value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static double getDouble(ResultSet rs, String column) throws SQLException {
+    return DatabaseUtils.getDouble(rs, column, -1.0);
   }
 
 
@@ -309,6 +341,23 @@ public class DatabaseUtils {
       pst.setNull(paramCount, java.sql.Types.INTEGER);
     } else {
       pst.setInt(paramCount, value);
+    }
+  }
+
+
+  /**
+   *  Sets the double attribute of the DatabaseUtils class
+   *
+   *@param  pst               The new double value
+   *@param  paramCount        The new double value
+   *@param  value             The new double value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void setDouble(PreparedStatement pst, int paramCount, double value) throws SQLException {
+    if (value == -1.0) {
+      pst.setNull(paramCount, java.sql.Types.DOUBLE);
+    } else {
+      pst.setDouble(paramCount, value);
     }
   }
 

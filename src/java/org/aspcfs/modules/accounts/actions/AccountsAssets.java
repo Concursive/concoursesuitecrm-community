@@ -363,17 +363,20 @@ public class AccountsAssets extends CFSModule {
     try {
       //Get a connection from the connection pool for this user
       db = this.getConnection(context);
-      setOrganization(context, db);
 
       String id = context.getRequest().getParameter("id");
       Asset thisAsset = new Asset(db, id);
 
+      //Set Organization -- do seperately as orgId is not available as parameter
+      Organization thisOrganization = new Organization(db, thisAsset.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+
       ServiceContract thisContract = new ServiceContract();
       thisContract.queryRecord(db, thisAsset.getContractId());
+
       
       //find record permissions for portal users
-      if ((!isRecordAccessPermitted(context,thisContract.getOrgId())) ||
-        (!isRecordAccessPermitted(context,Integer.parseInt(context.getRequest().getParameter("orgId"))))){
+      if (!isRecordAccessPermitted(context,thisContract.getOrgId())){
          return ("PermissionError");
       }
 
@@ -398,6 +401,52 @@ public class AccountsAssets extends CFSModule {
   }
 
 
+  /**
+   *  Retrieves all tickets related to an asset
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandHistory(ActionContext context) {
+    if (!hasPermission(context, "accounts-assets-view")) {
+      return ("PermissionError");
+    }
+
+    Connection db = null;
+    try {
+      //Get a connection from the connection pool for this user
+      db = this.getConnection(context);
+
+      String id = context.getRequest().getParameter("id");
+      Asset thisAsset = new Asset(db, id);
+
+      //Set Organization -- do seperately as orgId is not available as parameter
+      Organization thisOrganization = new Organization(db, thisAsset.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+
+      //Prepare pagedListInfo
+      PagedListInfo assetHistoryInfo = this.getPagedListInfo(context, "AssetHistoryInfo");
+      assetHistoryInfo.setLink("AccountsAssets.do?command=History&id=" + thisAsset.getId());
+      TicketList ticketList = new TicketList();
+      ticketList.setPagedListInfo(assetHistoryInfo);
+      ticketList.setAssetId(thisAsset.getId());
+      ticketList.buildList(db);
+      context.getRequest().setAttribute("ticketList", ticketList);
+      
+      context.getRequest().setAttribute("asset", thisAsset);
+      return ("AccountsAssetsHistoryOK");
+    } catch (Exception errorMessage) {
+      //An error occurred, go to generic error message page
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      //Always free the database connection
+      this.freeConnection(context, db);
+    }
+  }
+  
+  
+  
   /**
    *  Loads related data for use in an HTML Form
    *

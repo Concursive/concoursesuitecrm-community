@@ -77,6 +77,7 @@ public class Ticket extends GenericBean {
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp closed = null;
+  private int expectation = -1;
   //Related descriptions
   private String companyName = "";
   private String categoryName = "";
@@ -286,6 +287,26 @@ public class Ticket extends GenericBean {
    */
   public void setClosed(String tmp) {
     this.closed = DateUtils.parseTimestampString(tmp);
+  }
+
+
+  /**
+   *  Sets the expectation attribute of the Ticket object
+   *
+   *@param  tmp  The new expectation value
+   */
+  public void setExpectation(int tmp) {
+    this.expectation = tmp;
+  }
+
+
+  /**
+   *  Sets the expectation attribute of the Ticket object
+   *
+   *@param  tmp  The new expectation value
+   */
+  public void setExpectation(String tmp) {
+    this.expectation = Integer.parseInt(tmp);
   }
 
 
@@ -1342,6 +1363,16 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Gets the expectation attribute of the Ticket object
+   *
+   *@return    The expectation value
+   */
+  public int getExpectation() {
+    return expectation;
+  }
+
+
+  /**
    *  Gets the paddedId attribute of the Ticket object
    *
    *@return    The paddedId value
@@ -1684,7 +1715,7 @@ public class Ticket extends GenericBean {
    *@return    The totalHoursRemaining value
    */
   public double getTotalHoursRemaining() {
-    return round(totalHoursRemaining,2);
+    return round(totalHoursRemaining, 2);
   }
 
 
@@ -2046,7 +2077,7 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO ticket (contact_id, problem, pri_code, " +
-          "department_code, cat_code, scode, org_id, link_contract_id, link_asset_id, ");
+          "department_code, cat_code, scode, org_id, link_contract_id, link_asset_id, expectation, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -2054,7 +2085,7 @@ public class Ticket extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -2089,6 +2120,7 @@ public class Ticket extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, orgId);
       DatabaseUtils.setInt(pst, ++i, contractId);
       DatabaseUtils.setInt(pst, ++i, assetId);
+      DatabaseUtils.setInt(pst, ++i, expectation);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -2173,7 +2205,9 @@ public class Ticket extends GenericBean {
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "UPDATE ticket SET link_contract_id = ?, link_asset_id = ?, department_code = ?, pri_code = ?, scode = ?, " +
+        "UPDATE ticket " +
+        "SET link_contract_id = ?, link_asset_id = ?, department_code = ?, " +
+        "pri_code = ?, scode = ?, " +
         "cat_code = ?, assigned_to = ?, " +
         "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, " +
         "source_code = ?, contact_id = ?, problem = ?, ");
@@ -2188,7 +2222,7 @@ public class Ticket extends GenericBean {
       }
     }
     sql.append("solution = ?, location = ?, assigned_date = ?, " +
-        "est_resolution_date = ?, resolution_date = ?, cause = ? " +
+        "est_resolution_date = ?, resolution_date = ?, cause = ?, expectation = ? " +
         "WHERE ticketid = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -2256,6 +2290,7 @@ public class Ticket extends GenericBean {
     DatabaseUtils.setTimestamp(pst, ++i, estimatedResolutionDate);
     DatabaseUtils.setTimestamp(pst, ++i, resolutionDate);
     pst.setString(++i, cause);
+    DatabaseUtils.setInt(pst, ++i, expectation);
     pst.setInt(++i, id);
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
@@ -2495,28 +2530,28 @@ public class Ticket extends GenericBean {
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       //delete related activity items
       pst = db.prepareStatement(
           "DELETE FROM trouble_asset_replacement WHERE link_form_id IN (SELECT form_id FROM ticket_sun_form WHERE link_ticket_id = ?)");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       //delete related activity items
       pst = db.prepareStatement(
           "DELETE FROM ticket_sun_form WHERE link_ticket_id = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       //delete related activity items
       pst = db.prepareStatement(
           "DELETE FROM ticket_activity_item WHERE link_form_id IN (SELECT form_id FROM ticket_csstm_form WHERE link_ticket_id = ?) ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      
+
       //delete related activity items
       pst = db.prepareStatement(
           "DELETE FROM ticket_csstm_form WHERE link_ticket_id = ?");
@@ -2652,9 +2687,9 @@ public class Ticket extends GenericBean {
     estimatedResolutionDate = rs.getTimestamp("est_resolution_date");
     resolutionDate = rs.getTimestamp("resolution_date");
     cause = rs.getString("cause");
-    contractId = DatabaseUtils.getInt(rs,"link_contract_id");
-    assetId = DatabaseUtils.getInt(rs,"link_asset_id");
-
+    contractId = DatabaseUtils.getInt(rs, "link_contract_id");
+    assetId = DatabaseUtils.getInt(rs, "link_asset_id");
+    expectation = DatabaseUtils.getInt(rs, "expectation");
     //organization table
     companyName = rs.getString("orgname");
     companyEnabled = rs.getBoolean("orgenabled");
@@ -2679,7 +2714,7 @@ public class Ticket extends GenericBean {
     totalHoursRemaining = rs.getFloat("hoursremaining");
     contractStartDate = rs.getTimestamp("contractstartdate");
     contractEndDate = rs.getTimestamp("contractenddate");
-    contractOnsiteResponseModel = DatabaseUtils.getInt(rs,"contractonsiteservicemodel");
+    contractOnsiteResponseModel = DatabaseUtils.getInt(rs, "contractonsiteservicemodel");
 
     //asset table
     assetSerialNumber = rs.getString("serialnumber");
@@ -2687,7 +2722,7 @@ public class Ticket extends GenericBean {
     assetVendor = rs.getString("assetvendor");
     assetModelVersion = rs.getString("modelversion");
     assetLocation = rs.getString("assetlocation");
-    assetOnsiteResponseModel = DatabaseUtils.getInt(rs,"assetonsiteservicemodel");
+    assetOnsiteResponseModel = DatabaseUtils.getInt(rs, "assetonsiteservicemodel");
 
     //Calculations
     if (entered != null) {

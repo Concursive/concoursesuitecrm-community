@@ -296,6 +296,7 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.setAction("insert");
         thisRecord.addField("role", (String) role.getAttribute("name"));
         thisRecord.addField("description", (String) role.getAttribute("description"));
+        thisRecord.addField("type", (((role.getAttribute("type") == null) || ("".equals(role.getAttribute("type"))))? "0" : (String)role.getAttribute("type")));
         writer.save(thisRecord);
         int roleId = Integer.parseInt(writer.getLastResponse());
 

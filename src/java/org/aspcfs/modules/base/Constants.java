@@ -100,6 +100,13 @@ public final class Constants {
   //Action Lists 
   public final static int ACTIONLISTS_CONTACTS = 2;
   
+
+  //User types
+  //Users who use CRM with its complete license
+  public final static int ROLETYPE_REGULAR = 0; 
   
+  // Restricted to access accounts of their organization
+  public final static int ROLETYPE_CUSTOMER = 1; 
+   
 }
 

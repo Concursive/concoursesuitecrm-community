@@ -24,8 +24,6 @@ public class TicketActivityLogList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private int id = -1;
   private int ticketId = -1;
-  private String formType = null;
-
 
   /**
    *  Constructor for the TicketList object
@@ -86,16 +84,6 @@ public class TicketActivityLogList extends ArrayList {
 
 
   /**
-   *  Sets the formType attribute of the TicketActivityLogList object
-   *
-   *@param  tmp  The new formType value
-   */
-  public void setFormType(String tmp) {
-    this.formType = tmp;
-  }
-
-
-  /**
    *  Gets the pagedListInfo attribute of the TicketCSSTMMaintenanceList object
    *
    *@return    The pagedListInfo value
@@ -122,16 +110,6 @@ public class TicketActivityLogList extends ArrayList {
    */
   public int getTicketId() {
     return ticketId;
-  }
-
-
-  /**
-   *  Gets the formType attribute of the TicketActivityLogList object
-   *
-   *@return    The formType value
-   */
-  public String getFormType() {
-    return formType;
   }
 
 
@@ -215,7 +193,6 @@ public class TicketActivityLogList extends ArrayList {
     sqlSelect.append(
         "form_id, " +
         "link_ticket_id, " +
-        "form_type, " +
         "phone_response_time, " +
         "engineer_response_time, " +
         "follow_up_required, " +
@@ -235,7 +212,7 @@ public class TicketActivityLogList extends ArrayList {
         "WHERE form_id > -1 "
         );
 
-    sqlGroup.append("GROUP BY form_id,link_ticket_id,form_type,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc ");
+    sqlGroup.append("GROUP BY form_id,link_ticket_id,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlGroup.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -263,10 +240,6 @@ public class TicketActivityLogList extends ArrayList {
     if (ticketId > -1) {
       sqlFilter.append("AND link_ticket_id = ? ");
     }
-
-    if (formType != null) {
-      sqlFilter.append("AND form_type = ? ");
-    }
   }
 
 
@@ -287,10 +260,6 @@ public class TicketActivityLogList extends ArrayList {
 
     if (ticketId > -1) {
       pst.setInt(++i, ticketId);
-    }
-
-    if (formType != null) {
-      pst.setString(++i, formType);
     }
 
     return i;

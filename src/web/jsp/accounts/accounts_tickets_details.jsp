@@ -258,6 +258,22 @@ Ticket Details
               <dhv:tz timestamp="<%= TicketDetails.getResolutionDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
             </td>
           </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Have our services met or exceeded your expectations?
+            </td>
+            <td>
+              <dhv:evaluate if="<%= TicketDetails.getExpectation() == 1 %>">
+                Yes
+              </dhv:evaluate>
+              <dhv:evaluate if="<%= TicketDetails.getExpectation() == 0 %>">
+                No
+              </dhv:evaluate>
+              <dhv:evaluate if="<%= TicketDetails.getExpectation() == -1 %>">
+                Undecided
+              </dhv:evaluate>
+            </td>
+          </tr>
         </table>
         &nbsp;
         <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br></dhv:permission>

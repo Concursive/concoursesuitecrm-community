@@ -145,6 +145,18 @@ public class FileDownload {
   }
 
 
+  public void sendFile(ActionContext context, byte[] bytes, String contentType) throws Exception {
+    context.getResponse().setContentType(contentType);
+    if (contentType.startsWith("application")) {
+      context.getResponse().setHeader("Content-Disposition", "attachment; filename=\"" + displayName + "\";");
+    }
+    ServletOutputStream ouputStream = context.getResponse().getOutputStream();
+    ouputStream.write(bytes, 0, bytes.length);
+    ouputStream.flush();
+    ouputStream.close();
+  }
+
+
   /**
    *  Description of the Method
    *

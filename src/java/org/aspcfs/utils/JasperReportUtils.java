@@ -3,19 +3,23 @@ package org.aspcfs.utils;
 import dori.jasper.engine.*;
 import dori.jasper.engine.util.*;
 import java.io.*;
+import java.sql.*;
+import java.util.HashMap;
 
 /**
  *  Methods to work with JasperReports
  *
  *@author     matt rajkowski
  *@created    October 3, 2003
- *@version    $Id$
+ *@version    $Id: JasperReportUtils.java,v 1.4.34.1 2004/04/29 18:32:29
+ *      kbhoopal Exp $
  */
 public class JasperReportUtils {
 
   /**
    *  Loads the specified JasperReport, if the report has not been compiled then
-   *  that happens first
+   *  that happens first. Only one report can be compiled at a time since a
+   *  duplicate request could ask to compile the same file.
    *
    *@param  filename       Description of the Parameter
    *@return                The report value
@@ -45,5 +49,23 @@ public class JasperReportUtils {
     return (JasperReport) JRLoader.loadObject(jasperFile.getPath());
   }
 
+
+  /**
+   *  Gets the reportAsBytes attribute of the JasperReportUtils class
+   *
+   *@param  filename       Description of the Parameter
+   *@param  map            Description of the Parameter
+   *@param  db             Description of the Parameter
+   *@return                The reportAsBytes value
+   *@exception  Exception  Description of the Exception
+   */
+  public static byte[] getReportAsBytes(String filename, HashMap map, Connection db) throws Exception {
+    JasperReport report = JasperReportUtils.getReport(filename);
+    if (report == null) {
+      return null;
+    } else {
+      return JasperRunManager.runReportToPdf(report, map, db);
+    }
+  }
 }
 

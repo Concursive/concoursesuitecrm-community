@@ -23,7 +23,6 @@ public class TicketActivityLog extends GenericBean {
 
   private int id = -1;
   private int linkTicketId = -1;
-  private String formType = null;
   private String phoneResponseTime = null;
   private String engineerResponseTime = null;
   private java.sql.Timestamp alertDate = null;
@@ -108,17 +107,6 @@ public class TicketActivityLog extends GenericBean {
   public void setLinkTicketId(String tmp) {
     this.linkTicketId = Integer.parseInt(tmp);
   }
-
-
-  /**
-   *  Sets the formType attribute of the TicketCSSTMMaintenanc object
-   *
-   *@param  tmp  The new formType value
-   */
-  public void setFormType(String tmp) {
-    this.formType = tmp;
-  }
-
 
 
   /**
@@ -518,16 +506,6 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the formType attribute of the TicketCSSTMMaintenanc object
-   *
-   *@return    The formType value
-   */
-  public String getFormType() {
-    return formType;
-  }
-
-
-  /**
    *  Gets the phoneResponseTime attribute of the TicketCSSTMMaintenanc object
    *
    *@return    The phoneResponseTime value
@@ -745,7 +723,6 @@ public class TicketActivityLog extends GenericBean {
     pst = db.prepareStatement(
         "SELECT form_id, " +
         "link_ticket_id, " +
-        "form_type, " +
         "phone_response_time, " +
         "engineer_response_time, " +
         "follow_up_required, " +
@@ -763,7 +740,7 @@ public class TicketActivityLog extends GenericBean {
         "FROM ticket_csstm_form " +
         "LEFT JOIN  ticket_activity_item on (link_form_id = form_id) " +
         "WHERE form_id = ? " +
-        "GROUP BY form_id,link_ticket_id,form_type,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc ");
+        "GROUP BY form_id,link_ticket_id,phone_response_time,engineer_response_time, follow_up_required, follow_up_description, alert_date,  entered, enteredby, modified,modifiedby, enabled, travel_towards_sc, labor_towards_sc ");
 
     pst.setInt(1, tmpId);
     rs = pst.executeQuery();
@@ -1045,7 +1022,6 @@ public class TicketActivityLog extends GenericBean {
       pst = db.prepareStatement(
           "INSERT INTO  ticket_csstm_form " +
           "(link_ticket_id, " +
-          "form_type, " +
           "phone_response_time, " +
           "engineer_response_time, " +
           "follow_up_required, " +
@@ -1055,11 +1031,10 @@ public class TicketActivityLog extends GenericBean {
           "modifiedby, " +
           "travel_towards_sc, " +
           "labor_towards_sc) " +
-          "VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+          "VALUES (?,?,?,?,?,?,?,?,?,?)");
 
       int i = 0;
       pst.setInt(++i, linkTicketId);
-      pst.setString(++i, formType);
       pst.setString(++i, phoneResponseTime);
       pst.setString(++i, engineerResponseTime);
       pst.setBoolean(++i, followUpRequired);
@@ -1125,7 +1100,6 @@ public class TicketActivityLog extends GenericBean {
 
     id = rs.getInt("form_id");
     linkTicketId = rs.getInt("link_ticket_id");
-    formType = rs.getString("form_type");
     phoneResponseTime = rs.getString("phone_response_time");
     engineerResponseTime = rs.getString("engineer_response_time");
     followUpRequired = rs.getBoolean("follow_up_required");

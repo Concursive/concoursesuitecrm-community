@@ -136,37 +136,9 @@ public class RoleList extends ArrayList {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Role thisRole = (Role) i.next();
-      if (thisRole.getRoleType() == 0) {
-        roleListSelect.addItem(
-            thisRole.getId(),
-            thisRole.getRole());
-      }
-    }
-    return roleListSelect.getHtml(selectName, defaultKey);
-  }
-
-
-  /**
-   *  Gets the htmlSelectPortalRoles Selects only portal roles from the list of
-   *  roles
-   *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelectPortalRoles value
-   */
-  public String getHtmlSelectPortalRoles(String selectName, int defaultKey) {
-    HtmlSelect roleListSelect = new HtmlSelect();
-    if (emptyHtmlSelectRecord != null) {
-      roleListSelect.addItem(-1, emptyHtmlSelectRecord);
-    }
-    Iterator i = this.iterator();
-    while (i.hasNext()) {
-      Role thisRole = (Role) i.next();
-      if (thisRole.getRoleType() == 1) {
-        roleListSelect.addItem(
-            thisRole.getId(),
-            thisRole.getRole());
-      }
+      roleListSelect.addItem(
+          thisRole.getId(),
+          thisRole.getRole());
     }
     return roleListSelect.getHtml(selectName, defaultKey);
   }

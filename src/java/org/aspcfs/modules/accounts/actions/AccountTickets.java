@@ -166,6 +166,13 @@ public final class AccountTickets extends CFSModule {
       String temporgId = context.getRequest().getParameter("orgId");
       int tempid = Integer.parseInt(temporgId);
       
+
+      // set ticket source to Web for tickets inserted by portal user
+      if (isPortalUser(context)){
+        LookupList sourceList = new LookupList(db, "lookup_ticketsource");
+        newTic.setSourceCode(sourceList.getIdFromValue("Web"));
+      }
+
       //Check if portal user can insert this record
       if (!isRecordAccessPermitted(context,tempid)){
         return ("PermissionError");

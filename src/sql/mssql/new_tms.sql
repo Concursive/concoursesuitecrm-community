@@ -126,7 +126,6 @@ CREATE TABLE ticketlog (
 CREATE TABLE ticket_csstm_form(
   form_id INT IDENTITY PRIMARY KEY,
   link_ticket_id INT REFERENCES ticket(ticketid), 
-  form_type VARCHAR(20),
   phone_response_time VARCHAR(10),
   engineer_response_time VARCHAR(10),
   follow_up_required BIT DEFAULT 0,
@@ -146,8 +145,6 @@ CREATE TABLE ticket_activity_item(
   link_form_id INT REFERENCES ticket_csstm_form(form_id),
   activity_date DATETIME,
   description TEXT,
-  travel_time FLOAT,
-  labor_time FLOAT,
   travel_hours INT,
   travel_minutes INT,
   labor_hours INT,

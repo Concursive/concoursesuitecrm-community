@@ -623,7 +623,34 @@ public class LookupList extends HtmlSelect implements SyncableList {
    *@return             The selectedValue value
    */
   public String getSelectedValue(String selectedId) {
-    return getSelectedValue(Integer.parseInt(selectedId));
+    try {
+      return getSelectedValue(Integer.parseInt(selectedId));
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
+
+  /**
+   *  Gets the SelectedValue attribute of the LookupList object
+   *
+   *@param  selectedId  Description of Parameter
+   *@return             The SelectedValue value
+   *@since
+   */
+  public String getValueFromId(int selectedId) {
+    return getSelectedValue(selectedId);
+  }
+
+
+  /**
+   *  Gets the selectedValue attribute of the LookupList object
+   *
+   *@param  selectedId  Description of Parameter
+   *@return             The selectedValue value
+   */
+  public String getValueFromId(String selectedId) {
+    return getSelectedValue(selectedId);
   }
 
 
@@ -815,6 +842,24 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
+   *  Gets the idFromValue attribute of the LookupList object
+   *
+   *@param  value  Description of the Parameter
+   *@return        The idFromValue value
+   */
+  public int getIdFromValue(String value) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (value.equals(thisElement.getDescription())) {
+        return thisElement.getId();
+      }
+    }
+    return -1;
+  }
+
+
+  /**
    *  Gets the levelFromId attribute of the LookupList object
    *
    *@param  id  Description of the Parameter
@@ -902,8 +947,8 @@ public class LookupList extends HtmlSelect implements SyncableList {
 
 
   /**
-   *  A group is for visual presentation only, the following items will be
-   *  in this group.
+   *  A group is for visual presentation only, the following items will be in
+   *  this group.
    *
    *@param  category  The feature to be added to the Group attribute
    */

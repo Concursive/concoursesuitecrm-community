@@ -560,6 +560,7 @@
     <forward name="CategoryJSListOK" resource="/js_categorylist.jsp"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="AccountsAssetsHistoryOK" resource="/accounts/accounts_asset_history.jsp" layout="nav"/>
   </action>
   
   <action name="RevenueManager" class="org.aspcfs.modules.accounts.actions.RevenueManager">

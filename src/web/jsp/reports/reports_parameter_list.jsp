@@ -10,6 +10,13 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/div.js"></script>
+<script language="JavaScript">
+ function resetNumericFieldValue(fieldId){
+  document.getElementById(fieldId).value = -1;
+ }
+</script>
 <form name="paramForm" method="post" action="Reports.do?command=GenerateReport&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">

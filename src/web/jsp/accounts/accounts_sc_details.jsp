@@ -107,7 +107,7 @@
     </td>
     <td>
       <dhv:evaluate if="<%= serviceContract.getType() > 0 %>">
-        <%= toHtml(serviceContractCategoryList.getSelectedValue(serviceContract.getType())) %>
+        <%= toHtml(serviceContractTypeList.getSelectedValue(serviceContract.getType())) %>
       </dhv:evaluate>&nbsp;
     </td>
   </tr>
@@ -117,13 +117,7 @@
     </td>
     <td>
       <dhv:evaluate if="<%= serviceContract.getContactId() > -1 %>">
-        <dhv:permission name="contacts-external_contacts-view">
-          <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= serviceContractContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');">
-        </dhv:permission>
-            <%= toHtml(serviceContractContact.getNameLastFirst()) %>
-         <dhv:permission name="contacts-external_contacts-view">
-          </a>
-         </dhv:permission>
+        <dhv:permission name="contacts-external_contacts-view"><a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= serviceContractContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"></dhv:permission><%= toHtml(serviceContractContact.getNameLastFirst()) %><dhv:permission name="contacts-external_contacts-view"></a></dhv:permission>
       </dhv:evaluate>
       &nbsp;
     </td>

@@ -178,7 +178,7 @@ public class Role extends GenericBean {
    *@param  tmp  The new roleType value
    */
   public void setRoleType(String tmp) {
-    this.roleType = (("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp)) ? 1 : 0);
+    this.roleType = Integer.parseInt(tmp);
   }
 
 

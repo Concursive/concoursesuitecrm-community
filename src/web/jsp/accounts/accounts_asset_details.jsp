@@ -24,27 +24,25 @@
   <a href="Accounts.do">Accounts</a> > 
   <a href="Accounts.do?command=Search">Search Results</a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
-  <a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Assets</a> >
+  <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>">Assets</a> >
   Asset Details
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-  <%@ include file="accounts_details_header_include.jsp" %>
-    <dhv:container name="accounts" selected="assets" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-  <table cellpadding="4" cellspacing="0" border="0" width="100%">
+<%@ include file="accounts_details_header_include.jsp" %>
+<dhv:container name="accounts" selected="assets" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td class="containerBack">
-      <dhv:permission name="accounts-assets-edit">
-      <input type=submit value="Modify">
-      </dhv:permission>
-      <dhv:permission name="accounts-assets-delete">
-      <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');">
-      </dhv:permission>
+      <% String param2 = "id=" + asset.getId(); %>
+      [ <dhv:container name="accountsassets" selected="details" param="<%= param2 %>"/> ]
+      <br /><br />
+      <dhv:permission name="accounts-assets-edit"><input type=submit value="Modify"></dhv:permission>
+      <dhv:permission name="accounts-assets-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
       <input type=hidden name="orgId" value = <%= OrgDetails.getOrgId() %> >
       <input type=hidden name="id" value = <%= asset.getOrgId() %> >
-      <br>
-<br />
+      <br /><br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -185,13 +183,7 @@
     </td>
     <td>
       <dhv:evaluate if="<%= assetContact.getId() > 0 %>">
-        <dhv:permission name="contacts-external_contacts-view">
-          <a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= assetContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');">
-        </dhv:permission>
-            <%= toHtml(assetContact.getNameLastFirst()) %>
-         <dhv:permission name="contacts-external_contacts-view">
-          </a>
-         </dhv:permission>
+        <dhv:permission name="contacts-external_contacts-view"><a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= assetContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"></dhv:permission><%= toHtml(assetContact.getNameLastFirst()) %><dhv:permission name="contacts-external_contacts-view"></a></dhv:permission>
       </dhv:evaluate>
       &nbsp;
     </td>
@@ -325,16 +317,11 @@
     </td>
   </tr>
 </table>
-
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 <%-- end details --%>
-<br>
-  <dhv:permission name="accounts-assets-edit">
-    <input type="submit" value="Modify" />
-  </dhv:permission>
-  <dhv:permission name="accounts-assets-delete">
-    <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');">
-  </dhv:permission>
+<br />
+  <dhv:permission name="accounts-assets-edit"><input type="submit" value="Modify" /></dhv:permission>
+  <dhv:permission name="accounts-assets-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
   </td>
   </tr>
 </table>

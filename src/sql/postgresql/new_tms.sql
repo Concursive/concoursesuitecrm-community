@@ -125,7 +125,6 @@ CREATE TABLE ticketlog (
 CREATE TABLE ticket_csstm_form(
   form_id SERIAL PRIMARY KEY,
   link_ticket_id INT REFERENCES ticket(ticketid), 
-  form_type VARCHAR (20),
   phone_response_time VARCHAR(10),
   engineer_response_time VARCHAR(10),
   follow_up_required BOOLEAN DEFAULT false,
@@ -145,8 +144,6 @@ CREATE TABLE ticket_activity_item(
   link_form_id INT REFERENCES ticket_csstm_form(form_id),
   activity_date TIMESTAMP(3),
   description TEXT,
-  travel_time FLOAT,
-  labor_time FLOAT,
   travel_hours INT,
   travel_minutes INT,
   labor_hours INT,

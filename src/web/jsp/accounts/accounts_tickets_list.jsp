@@ -49,6 +49,9 @@ Tickets
       <%= AccountTicketInfo.getSortIcon("pri_code") %>
     </th>
     <th width="15%">
+      <b>Est. Resolution Date</b>
+    </th>
+    <th width="15%">
       <b>Age</b>
     </th>
 		<th width="20%">
@@ -79,6 +82,9 @@ Tickets
 		</td>
 		<td valign="top" nowrap>
 			<%= toHtml(thisTic.getPriorityName()) %>
+		</td>
+		<td width="15%" valign="top" nowrap>
+      <dhv:tz timestamp="<%=thisTic.getEstimatedResolutionDate()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
 		</td>
 		<td width="8%" align="right" valign="top" nowrap>
 			<%= thisTic.getAgeOf() %>

@@ -95,11 +95,12 @@ public final class ContactsPortal extends CFSModule {
       }
 
       RoleList roleList = new RoleList();
-      roleList.setRoleType(1);
+      roleList.setRoleType(Constants.ROLETYPE_CUSTOMER);
       roleList.buildList(db);
       roleList.setEmptyHtmlSelectRecord("--None--");
       context.getRequest().setAttribute("roleList", roleList);
 
+      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord("--None--");
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -173,11 +174,12 @@ public final class ContactsPortal extends CFSModule {
       setOrganization(context, db, thisContact.getOrgId());
 
       RoleList roleList = new RoleList();
-      roleList.setRoleType(1);
+      roleList.setRoleType(Constants.ROLETYPE_CUSTOMER);
       roleList.buildList(db);
       roleList.setEmptyHtmlSelectRecord("--None--");
       context.getRequest().setAttribute("roleList", roleList);
 
+      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord("--None--");
       context.getRequest().setAttribute("ContactDetails", thisContact);
       context.getRequest().setAttribute("portalUserDetails", thisPortalUser);
     } catch (Exception e) {
@@ -433,7 +435,13 @@ public final class ContactsPortal extends CFSModule {
 
     //subsequently use this email address to email the user
     //of the portal access information
-    ContactEmailAddress emailAddress = getAddressToEmail(thisContact);
+    int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
+    ContactEmailAddress emailAddress = null;
+    if (emailAddressId != -1){
+       emailAddress = new ContactEmailAddress(db, emailAddressId);
+    }else{
+      emailAddress = getAddressToEmail(thisContact);
+    }
     if (recordInserted) {
       addRecentItem(context, newUser);
       context.getRequest().setAttribute("UserRecord", newUser);
@@ -533,7 +541,13 @@ public final class ContactsPortal extends CFSModule {
 
     //subsequently use this email address to email the user
     //of the portal access information
-    ContactEmailAddress emailAddress = getAddressToEmail(thisContact);
+    int emailAddressId = Integer.parseInt(context.getRequest().getParameter("emailAddressId"));
+    ContactEmailAddress emailAddress = null;
+    if (emailAddressId != -1){
+       emailAddress = new ContactEmailAddress(db, emailAddressId);
+    }else{
+      emailAddress = getAddressToEmail(thisContact);
+    }
     if (tmpUserId > 0) {
       context.getRequest().setAttribute("UserRecord", newUser);
       updateSystemHierarchyCheck(db, context);

@@ -34,7 +34,7 @@ Contact Details
       <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>" />
       <input type="hidden" name="userId" value="<%=portalUserDetails.getId()%>">
       <input type="hidden" name="enabled" value="<%=portalUserDetails.getEnabled()%>">
-<% if (portalUserDetails.getUsername() == null ){ %>
+<% if (ContactDetails.getUserId() == -1 ){ %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" >
   <tr>
     <td><%=ContactDetails.getNameLastFirst()%> does not have portal access</td>

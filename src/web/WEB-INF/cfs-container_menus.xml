@@ -143,7 +143,22 @@
       <link value="ContactsPortal.do?command=View&amp;contactId=${id}"/>
     </submenu>
    </container>
-  
+
+   <container name="accountsassets">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value="accounts-assets-view"/>
+      <link value="AccountsAssets.do?command=View&amp;id=${id}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value="accounts-assets-view"/>
+      <link value="AccountsAssets.do?command=History&amp;id=${id}"/>
+    </submenu>
+  </container>
   
   <!-- Submenu used in the Opportunities (Pipeline) module -->
   <container name="opportunities">

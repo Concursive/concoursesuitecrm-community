@@ -395,6 +395,16 @@ Modify Ticket
         <a href="javascript:popCalendar('details', 'resolutionDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
       </td>
     </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Have our services met or exceeded your expectations?
+    </td>
+    <td>
+      <input type="radio" name="expectation" value="1" <%= (TicketDetails.getExpectation() == 1) ? " checked" : "" %>>Yes
+      <input type="radio" name="expectation" value="0" <%= (TicketDetails.getExpectation() == 0) ? " checked" : "" %>>No
+      <input type="radio" name="expectation" value="-1" <%= (TicketDetails.getExpectation() == -1) ? " checked" : "" %>>Undecided
+    </td>
+  </tr>
 	</table>
 &nbsp;<br>
 <% if (TicketDetails.getClosed() != null) { %>

@@ -604,6 +604,7 @@ public final class TroubleTickets extends CFSModule {
     TicketList assignedToMeList = new TicketList();
     TicketList openList = new TicketList();
     TicketList createdByMeList = new TicketList();
+    TicketList allTicketsList = new TicketList();
     String sectionId = null;
     if (context.getRequest().getParameter("pagedListSectionId") != null) {
       sectionId = context.getRequest().getParameter("pagedListSectionId");
@@ -613,6 +614,7 @@ public final class TroubleTickets extends CFSModule {
       context.getSession().removeAttribute("AssignedToMeInfo");
       context.getSession().removeAttribute("OpenInfo");
       context.getSession().removeAttribute("CreatedByMeInfo");
+      context.getSession().removeAttribute("AllTicketsInfo");
     }
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     //Assigned To Me
@@ -686,6 +688,27 @@ public final class TroubleTickets extends CFSModule {
       createdByMeList.setEnteredBy(getUserId(context));
       createdByMeList.setOnlyOpen(true);
     }
+    //All Tickets
+    PagedListInfo allTicketsInfo = this.getPagedListInfo(context, "AllTicketsInfo", "t.entered", "desc");
+    allTicketsInfo.setLink("TroubleTickets.do?command=Home");
+    if (sectionId == null) {
+      if (!allTicketsInfo.getExpandedSelection()) {
+        if (allTicketsInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
+          allTicketsInfo.setItemsPerPage(MINIMIZED_ITEMS_PER_PAGE);
+        }
+      } else {
+        if (allTicketsInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
+          allTicketsInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+        }
+      }
+    } else if (sectionId.equals(allTicketsInfo.getId())) {
+      allTicketsInfo.setExpandedSelection(true);
+    }
+    if (sectionId == null || allTicketsInfo.getExpandedSelection() == true) {
+      allTicketsList.setPagedListInfo(allTicketsInfo);
+      allTicketsList.setUnassignedToo(true);
+      allTicketsList.setOnlyOpen(true);
+    }
     try {
       db = this.getConnection(context);
       if (sectionId == null || assignedToMeInfo.getExpandedSelection() == true) {
@@ -697,6 +720,10 @@ public final class TroubleTickets extends CFSModule {
       if (sectionId == null || createdByMeInfo.getExpandedSelection() == true) {
         createdByMeList.buildList(db);
       }
+      if (sectionId == null || allTicketsInfo.getExpandedSelection() == true) {
+        allTicketsList.buildList(db);
+        //System.out.println("Built all tickets --> "+ allTicketsList.size());
+      }
     } catch (Exception e) {
       errorCode = 1;
       errorMessage = e;
@@ -707,6 +734,7 @@ public final class TroubleTickets extends CFSModule {
     context.getRequest().setAttribute("CreatedByMeList", createdByMeList);
     context.getRequest().setAttribute("AssignedToMeList", assignedToMeList);
     context.getRequest().setAttribute("OpenList", openList);
+    context.getRequest().setAttribute("AllTicketsList", allTicketsList);
     if (errorCode == 0) {
       addModuleBean(context, "ViewTickets", "View Tickets");
       return ("HomeOK");
@@ -1340,6 +1368,34 @@ public final class TroubleTickets extends CFSModule {
       this.freeConnection(context, db);
     }
     return ("OrganizationJSListOK");
+  }
+  
+  public String executeCommandPrintReport(ActionContext context){
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      String id = (String)context.getRequest().getParameter("id");
+      HashMap map = new HashMap();
+      //map.put("ticketId",new Integer(id));
+      map.put("lookup_account_types",new Integer(-1));
+      String reportPath = getWebInfPath(context, "reports");
+      //String filename = "ActivityLogandMaintenanceReport.xml";
+      String filename = "accounts_type.xml";
+      byte[] bytes = JasperReportUtils.getReportAsBytes(reportPath + filename, map, db);
+      if (bytes != null){
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setDisplayName("ActivityLogandMaintenanceReport.pdf");
+        fileDownload.sendFile(context,bytes,"application/pdf");
+      }else{
+        return ("SystemError");
+      }
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("-none-");
   }
 }
 

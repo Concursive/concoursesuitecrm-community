@@ -10,6 +10,7 @@ import javax.servlet.http.*;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.EmailAddressList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.HtmlSelect;
 
 /**
  *  Contains a list of email addresses... currently used to build the list from
@@ -27,6 +28,10 @@ public class ContactEmailAddressList extends EmailAddressList {
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
+
+  //Html drop-down helper properties
+  private String emptyHtmlSelectRecord = null;
+  private String jsEvent = null;
 
 
   /**
@@ -110,6 +115,27 @@ public class ContactEmailAddressList extends EmailAddressList {
 
 
   /**
+   *  Gets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
+   *  object
+   *
+   *@return    The emptyHtmlSelectRecord value
+   */
+  public String getEmptyHtmlSelectRecord() {
+    return emptyHtmlSelectRecord;
+  }
+
+
+  /**
+   *  Gets the jsEvent attribute of the ContactEmailAddressList object
+   *
+   *@return    The jsEvent value
+   */
+  public String getJsEvent() {
+    return jsEvent;
+  }
+
+
+  /**
    *  Sets the lastAnchor attribute of the ContactEmailAddressList object
    *
    *@param  tmp  The new lastAnchor value
@@ -136,6 +162,27 @@ public class ContactEmailAddressList extends EmailAddressList {
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
+  }
+
+
+  /**
+   *  Sets the emptyHtmlSelectRecord attribute of the ContactEmailAddressList
+   *  object
+   *
+   *@param  tmp  The new emptyHtmlSelectRecord value
+   */
+  public void setEmptyHtmlSelectRecord(String tmp) {
+    this.emptyHtmlSelectRecord = tmp;
+  }
+
+
+  /**
+   *  Sets the jsEvent attribute of the ContactEmailAddressList object
+   *
+   *@param  tmp  The new jsEvent value
+   */
+  public void setJsEvent(String tmp) {
+    this.jsEvent = tmp;
   }
 
 
@@ -224,6 +271,56 @@ public class ContactEmailAddressList extends EmailAddressList {
     }
     rs.close();
     pst.close();
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the ContactEmailAddressList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName) {
+    return getHtmlSelect(selectName, -1);
+  }
+
+
+  /**
+   *  Gets the emptyHtmlSelect attribute of the ContactEmailAddressList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@return             The emptyHtmlSelect value
+   */
+  public String getEmptyHtmlSelect(String selectName) {
+    HtmlSelect emailListSelect = new HtmlSelect();
+    emailListSelect.addItem(-1, "-- None --");
+    return emailListSelect.getHtml(selectName);
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the ContactEmailAddressList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName, int defaultKey) {
+    HtmlSelect emailListSelect = new HtmlSelect();
+    emailListSelect.setJsEvent(jsEvent);
+
+    if (emptyHtmlSelectRecord != null) {
+      emailListSelect.addItem(-1, emptyHtmlSelectRecord);
+    }
+
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ContactEmailAddress thisEmailAddress = (ContactEmailAddress) i.next();
+      //emailListSelect.addItem(thisEmailAddress.getId(), thisEmailAddress.getEmail());
+      emailListSelect.addItem(thisEmailAddress.getId(), 
+            thisEmailAddress.getEmail() + (thisEmailAddress.getPrimaryEmail()? "*":""));
+    }
+    return emailListSelect.getHtml(selectName, defaultKey);
   }
 
 }

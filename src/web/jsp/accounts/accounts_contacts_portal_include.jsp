@@ -53,7 +53,7 @@
       Portal Role
     </td>
     <td>
-      <%= roleList.getHtmlSelectPortalRoles("roleId", portalUserDetails.getRoleId())%><font color="red">*</font>
+      <%= roleList.getHtmlSelect("roleId", portalUserDetails.getRoleId())%><font color="red">*</font>
     </td>
   </tr>
   <tr class="containerBody">
@@ -76,4 +76,12 @@
   </tr>
   <input type="hidden" name="modified" value="<%=portalUserDetails.getModified()%>" />
   </dhv:evaluate>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Email
+    </td>
+    <td>
+      <%= ContactDetails.getEmailAddressList().getHtmlSelect("emailAddressId", -1)%><font color="red"> Login information would be sent to this email or to the primary email of the contact</font>
+    </td>
+  </tr>
 </table>

@@ -129,7 +129,6 @@
     </category>
     <category id="8" name="Help Desk" folders="true" lookups="true" reports="true" scheduledEvents="true" objectEvents="true" categories="true">
       <folder constantId="11072003" description="Tickets"/>
-      <lookup constantId="127041246" class="lookupList" table="lookup_ticket_form" description="Form Type"/>
       <lookup constantId="1" class="lookupList" table="lookup_ticketsource" description="Ticket Source"/>
       <lookup constantId="2" class="lookupList" table="ticket_severity" description="Ticket Severity"/>
       <lookup constantId="3" class="lookupList" table="ticket_priority" description="Ticket Priority"/>
@@ -657,6 +656,17 @@
        <permission name="globalitems-search" attributes="v---"/>
        <permission name="globalitems-myitems" attributes="v---"/>
        <permission name="globalitems-recentitems" attributes="v---"/>
+    </role>
+    <role name="Customer" description="Customer portal user" type="1">
+       <permission name="accounts" attributes="v---"/>
+       <permission name="accounts-accounts" attributes="v---"/>
+       <permission name="accounts-accounts-contacts" attributes="v---"/>
+       <permission name="accounts-service-contracts" attributes="v---"/>
+       <permission name="accounts-assets" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-maintenance-report" attributes="v---"/>
+       <permission name="accounts-accounts-tickets-activity-log" attributes="v---"/>
+       <permission name="accounts-accounts-contacts" attributes="v---"/>
+       <permission name="accounts-accounts-tickets" attributes="va--"/>
     </role>
     <!--
     <role name="Marketing assistant" description="">
