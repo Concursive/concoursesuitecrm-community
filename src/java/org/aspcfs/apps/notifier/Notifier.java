@@ -146,7 +146,7 @@ public class Notifier extends ReportBuilder {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  private String buildCommunications(Connection db) throws SQLException {
+  private String buildCommunications(Connection db, String dbName) throws SQLException {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("Report");
@@ -172,6 +172,7 @@ public class Notifier extends ReportBuilder {
     while (i.hasNext()) {
       int campaignCount = 0;
       int sentCount = 0;
+      Vector faxLog = new Vector();
       System.out.println("  Getting campaign ...");
       Campaign thisCampaign = (Campaign)i.next();
       System.out.println("  Getting message ...");
@@ -205,22 +206,28 @@ public class Notifier extends ReportBuilder {
         Notification thisNotification = new Notification();
         thisNotification.setContactToNotify(thisContact.getId());
         thisNotification.setModule("Communications Manager");
+        thisNotification.setDatabaseName(dbName);
         thisNotification.setItemId(thisCampaign.getId());
         //thisNotification.setItemModified(thisCampaign.getActiveDate());
         if (thisNotification.isNew(db)) {
           System.out.println("Sending message ...");
           thisNotification.setFrom(thisMessage.getReplyTo());
           thisNotification.setSubject(thisMessage.getDescription());
+          thisNotification.setMessageIdToSend(thisMessage.getId());
           thisNotification.setMessageToSend(thisMessage.getMessageText());
-          thisNotification.setType(Notification.EMAIL);
+          //TODO: Check campaign for email vs. fax
+          thisNotification.setType(Notification.EMAILFAX);
           thisNotification.notifyContact(db);
+          if (thisNotification.getFaxLogEntry() != null) {
+            faxLog.add(thisNotification.getFaxLogEntry());
+          }
           ++notifyCount;
           ++sentCount;
           thisRecipient.setRunId(runId);
           thisRecipient.setSentDate(new java.sql.Timestamp(System.currentTimeMillis()));
           thisRecipient.setStatusDate(new java.sql.Timestamp(System.currentTimeMillis()));
           thisRecipient.setStatusId(1);
-          thisRecipient.setStatus("Sent");
+          thisRecipient.setStatus(thisNotification.getStatus());
           thisRecipient.update(db);
         } else {
           System.out.println("Notifier-> ...it's old");
@@ -230,6 +237,9 @@ public class Notifier extends ReportBuilder {
         }
       }
       if (campaignCount > 0) {
+        if (faxLog.size() > 0) {
+          outputFaxLog(faxLog);
+        }
         thisCampaign.setStatusId(Campaign.FINISHED);
         thisCampaign.setStatus(Campaign.FINISHED_TEXT);
         thisCampaign.update(db);
@@ -312,7 +322,7 @@ public class Notifier extends ReportBuilder {
 	  thisNotifier.output.append("<br><hr><br>");
 	  
 	  System.out.println("Running Communications...");
-	  thisNotifier.output.append(thisNotifier.buildCommunications(db));
+	  thisNotifier.output.append(thisNotifier.buildCommunications(db, (String)siteInfo.get("name")));
 	  thisNotifier.output.append("<br><hr><br>");
 	  
 	  db.close();
@@ -328,6 +338,26 @@ public class Notifier extends ReportBuilder {
       }
       System.exit(0);
     }
+  }
+  
+  private boolean outputFaxLog(Vector faxLog) {
+    if (faxLog == null || faxLog.size() == 0) return false;
+    PrintWriter out = null;
+    try {
+      Iterator faxEntries = faxLog.iterator();
+      out = new PrintWriter(new BufferedWriter(new FileWriter("foo.out")));
+      while (faxEntries.hasNext()) {
+        String thisEntry = (String)faxEntries.next();
+        out.println("./html2ps -o filename.ps http://127.0.0.1:8080/ProcessMessage.do?id=" + thisEntry);
+        out.println("gs -q -sDEVICE=tiffg3 -dNOPAUSE -dBATCH -sOutputFile=filename.tiff filename.ps");
+      }
+    } catch (IOException e) {
+      e.printStackTrace(System.err);
+      return false;
+    } finally {
+      if (out != null) out.close();
+    }
+    return true;
   }
 
   /*

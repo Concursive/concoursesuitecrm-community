@@ -156,7 +156,11 @@ public class SMTPMessage {
   public int send() {
     //throws Exception {
 
-    if (host.equals("") || from.equals("") || (to.size() == 0)) {
+    if (host == null || host.equals("")) errorMsg = "Host not specified";
+    if (from == null || from.equals("")) errorMsg = "Repy to address not specified";
+    if (to.size() == 0) errorMsg = "Recipients not specified";
+      
+    if (errorMsg != null && !errorMsg.equals("")) {
       return 1;
     }
 

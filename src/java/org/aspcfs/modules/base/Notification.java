@@ -14,6 +14,7 @@ import java.net.*;
 public class Notification {
 
   private int id = -1;
+  private String databaseName = null;
   private int userToNotify = -1;
   private int contactToNotify = -1;
   private String module = null;
@@ -21,14 +22,18 @@ public class Notification {
   private java.sql.Timestamp itemModified = null;
   private String from = null;
   private String subject = null;
+  private int messageIdToSend = -1;
   private String messageToSend = null;
   private String type = null;
   private String siteCode = null;
   private java.sql.Timestamp attempt = null;
   private int result = 0;
+  private String status = "";
   private String errorMessage = null;
+  String faxLogEntry = null;
 
   public final static String EMAIL = "Email";
+  public final static String EMAILFAX = "Email first, try Fax";
   public final static String IM = "Instant Message";
   public final static String FAX = "Fax";
 
@@ -53,6 +58,9 @@ public class Notification {
   
   public void setContactToNotify(int tmp) { this.contactToNotify = tmp; }
 
+  public void setDatabaseName(String tmp) {
+    this.databaseName = tmp;
+  }
 
 
   /**
@@ -85,6 +93,10 @@ public class Notification {
    */
   public void setItemModified(java.sql.Timestamp tmp) {
     this.itemModified = tmp;
+  }
+  
+  public void setMessageIdToSend(int tmp) {
+    this.messageIdToSend = tmp;
   }
 
 
@@ -167,6 +179,10 @@ public class Notification {
   public int getResult() {
     return result;
   }
+  
+  public String getStatus() {
+    return status;
+  }
 
 
   /**
@@ -179,6 +195,9 @@ public class Notification {
     return errorMessage;
   }
 
+  public String getFaxLogEntry() {
+    return faxLogEntry;
+  }
 
   /**
    *  Gets the New attribute of the Notification object
@@ -243,7 +262,7 @@ public class Notification {
    *@param  db  Description of Parameter
    *@since
    */
-  public void insertNotification(Connection db) { 
+  public void insertNotification(Connection db) {
     try {
       String sql =
         "INSERT INTO notification " +
@@ -330,32 +349,57 @@ public class Notification {
     if (type != null) {
       try {
         Contact thisContact = new Contact(db, "" + contactToNotify);
+        if (type.equals(EMAILFAX)) {
+          if (thisContact.getEmailAddress("Business").equals("") &&
+              !thisContact.getPhoneNumber("Business Fax").equals("")) {
+            type = FAX;
+          } else {
+            type = EMAIL;
+          }
+        }
         if (type.equals(EMAIL)) {
           System.out.println("Notification-> To: " + thisContact.getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
           mail.setHost("127.0.0.1");
-          if (from != null) {
+          if (from != null && !from.equals("")) {
             mail.setFrom(from);
           } else {
             mail.setFrom(siteCode + "@" + this.getHostName());
           }
           mail.setType("text/html");
-          mail.addTo(thisContact.getEmailAddress("Business"));
+          
+          if (thisContact.getEmailAddress("Business").equals("")) {
+            mail.addTo(thisContact.getEmailAddress("Personal"));
+          } else {
+            mail.addTo(thisContact.getEmailAddress("Business"));
+          }
           mail.setSubject(subject);
           mail.setBody(messageToSend);
-          if (mail.send() == 2) {
+          int errorCode = mail.send();
+          if (errorCode > 0) {
+            status = "Email Error";
             System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
             System.err.println("ReportBuilder Error: Report could not be sent");
             System.err.println(mail.getErrorMsg());
           } else {
+            status = "Email Sent";
             insertNotification(db);
           }
         } else if (type.equals(IM)) {
 
-
+          status = "IM Sent";
         } else if (type.equals(FAX)) {
-
-
+          String phoneNumber = thisContact.getPhoneNumber("Demo Fax");
+          if (!phoneNumber.equals("") && phoneNumber.length() == 10) {
+            if (phoneNumber.startsWith("757")) {
+              phoneNumber = phoneNumber.substring(3, 10);
+            } else {
+              phoneNumber = "1" + phoneNumber;
+            }
+            System.out.println("Notification-> Will send fax to: " + phoneNumber);
+            faxLogEntry = databaseName + "|" + messageIdToSend + "|" + phoneNumber;
+            status = "Fax Queued";
+          }
         }
       } catch (Exception e) {
         result = 2;
@@ -371,7 +415,6 @@ public class Notification {
    *  Gets the HostName attribute of the Notification object
    *
    *@return    The HostName value
-   *@since
    */
   protected String getHostName() {
     String tmp = "";
