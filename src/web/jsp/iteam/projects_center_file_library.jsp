@@ -13,7 +13,7 @@
 <table border='0' width='100%' bgcolor="#FFFFFF" cellpadding='0' cellspacing='0' class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor='#808080'>
     <td width="10" align="center"><font color="#FFFFFF">&lt;Action&gt;</font></td>
-    <td><font color='#FFFFFF'>&lt;Item&gt;</font></td>
+    <td width="100%"><font color='#FFFFFF'>&lt;Item&gt;</font></td>
     <td align="center"><font color='#FFFFFF'>&lt;Ext&gt;</font></td>
     <td><font color='#FFFFFF'>&lt;Size&gt;</font></td>
     <td align="center"><font color='#FFFFFF'>&lt;Version&gt;</font></td>
@@ -44,7 +44,7 @@
     <td align="center" valign="middle">
       <%= thisFile.getVersion() %>&nbsp;
     </td>
-    <td align="center" valign="middle">
+    <td align="center" valign="middle" nowrap>
       [<a href="ProjectManagementFiles.do?command=AddVersion&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
     </td>
     <td nowrap>
