@@ -112,7 +112,7 @@ public final class CampaignManager extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignListInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=View");
+    pagedListInfo.setLink("CampaignManager.do?command=View");
 
     deletePagedListInfo(context, "CampaignCenterGroupInfo");
 
@@ -1507,7 +1507,7 @@ public final class CampaignManager extends CFSModule {
       context.getSession().removeAttribute("SurveyQuestionListInfo");
     }
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "SurveyQuestionListInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=ViewResults&id=" + id);
+    pagedListInfo.setLink("CampaignManager.do?command=ViewResults&id=" + id);
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
@@ -1562,7 +1562,7 @@ public final class CampaignManager extends CFSModule {
       context.getSession().removeAttribute("SurveyResponseListInfo");
     }
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "SurveyResponseListInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=ViewResponse&id=" + id);
+    pagedListInfo.setLink("CampaignManager.do?command=ViewResponse&id=" + id);
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
@@ -1612,7 +1612,7 @@ public final class CampaignManager extends CFSModule {
       context.getSession().removeAttribute("ResponseDetailsListInfo");
     }
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ResponseDetailsListInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=ResponseDetails&id=" + id);
+    pagedListInfo.setLink("CampaignManager.do?command=ResponseDetails&id=" + id);
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
@@ -1653,23 +1653,18 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPreviewRecipients(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+    if (!hasPermission(context, "campaign-campaigns-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     Campaign campaign = null;
-
     String id = context.getRequest().getParameter("id");
-
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("CampaignDashboardRecipientInfo");
     }
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignDashboardRecipientInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=PreviewRecipients&id=" + id);
-
+    pagedListInfo.setLink("CampaignManager.do?command=PreviewRecipients&id=" + id);
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
@@ -1686,7 +1681,6 @@ public final class CampaignManager extends CFSModule {
       recipients.setPagedListInfo(pagedListInfo);
       recipients.buildList(db);
       context.getRequest().setAttribute("RecipientList", recipients);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1766,7 +1760,7 @@ public final class CampaignManager extends CFSModule {
     int itemId = Integer.parseInt(context.getRequest().getParameter("itemId"));
     String questionId = context.getRequest().getParameter("questionId");
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ItemDetailsListInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=ShowItemDetails&itemId=" + itemId + "&questionId=" + questionId);
+    pagedListInfo.setLink("CampaignManager.do?command=ShowItemDetails&itemId=" + itemId + "&questionId=" + questionId);
 
     try {
       db = this.getConnection(context);
@@ -1961,7 +1955,7 @@ public final class CampaignManager extends CFSModule {
       context.getSession().removeAttribute("CommentListInfo");
     }
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CommentListInfo");
-    pagedListInfo.setLink("/CampaignManager.do?command=ShowComments&questionId=" + questionId + "&type=" + type);
+    pagedListInfo.setLink("CampaignManager.do?command=ShowComments&questionId=" + questionId + "&type=" + type);
     try {
       SurveyAnswerList answerList = new SurveyAnswerList();
       answerList.setQuestionId(Integer.parseInt(questionId));

@@ -528,6 +528,7 @@ public class Notification extends Thread {
       try {
         User thisUser = new User();
         thisUser.setBuildContact(true);
+        thisUser.setBuildContactDetails(true);
         thisUser.buildRecord(db, userToNotify);
         if (type == EMAIL) {
           System.out.println("Notification-> To: " + thisUser.getContact().getEmailAddress("Business"));

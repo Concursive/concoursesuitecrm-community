@@ -74,6 +74,7 @@ public class ReportBuilder {
     UserList userList = new UserList();
     //need to set criteria here... otherwise sent to all!
     userList.setBuildContact(true);
+    userList.setBuildContactDetails(true);
     userList.buildList(db);
     Iterator i = userList.iterator();
     StringBuffer log = new StringBuffer();
@@ -85,7 +86,7 @@ public class ReportBuilder {
         SMTPMessage mail = new SMTPMessage();
         mail.setHost("127.0.0.1");
         mail.setFrom(baseName + "@" + this.getHostName());
-        mail.addTo(thisUser.getContact().getEmailAddress("Work"));
+        mail.addTo(thisUser.getContact().getEmailAddress("Business"));
         mail.setSubject("Report [1 day: " + totalRecords + " record" + ((totalRecords != 1) ? "s" : "") + "]");
         mail.setBody(output.toString());
         mail.setType("text/html");

@@ -267,7 +267,10 @@ public class Recipient extends GenericBean {
   }
   
   public void buildContact(Connection db) throws SQLException {
-    contact = new Contact(db, "" + contactId);
+    contact = new Contact();
+    contact.setId(contactId);
+    contact.setBuildDetails(true);
+    contact.build(db);
   }
 
 }

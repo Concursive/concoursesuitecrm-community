@@ -708,7 +708,10 @@ public final class MyCFS extends CFSModule {
           }
           boolean isUser = false;
 
-          thisContact = new Contact(db, hashKey.toString());
+          thisContact = new Contact();
+          thisContact.setId(hashKey.intValue());
+          thisContact.setBuildDetails(true);
+          thisContact.build(db);
           thisContact.checkUserAccount(db);
           thisNote.setSentTo(contactId);
           recordInserted = thisNote.insertLink(db, thisContact.hasAccount());
@@ -1254,11 +1257,9 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSProfile(ActionContext context) {
-
-    if (!(hasPermission(context, "myhomepage-profile-personal-view"))) {
+    if (!hasPermission(context, "myhomepage-profile-personal-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     try {
@@ -1266,6 +1267,7 @@ public final class MyCFS extends CFSModule {
       buildFormElements(context, db);
       User thisUser = new User(db, this.getUserId(context));
       thisUser.setBuildContact(true);
+      thisUser.setBuildContactDetails(true);
       thisUser.buildResources(db);
       context.getRequest().setAttribute("User", thisUser);
       context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
@@ -1274,7 +1276,6 @@ public final class MyCFS extends CFSModule {
       e.printStackTrace(System.out);
     }
     this.freeConnection(context, db);
-
     addModuleBean(context, "MyProfile", "");
     return ("ProfileOK");
   }
@@ -1288,23 +1289,19 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandUpdateProfile(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-profile-personal-edit"))) {
+    if (!hasPermission(context, "myhomepage-profile-personal-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-
     Contact thisContact = (Contact) context.getFormBean();
     thisContact.setRequestItems(context.getRequest());
     thisContact.setEnteredBy(getUserId(context));
     thisContact.setModifiedBy(getUserId(context));
-
     try {
       db = this.getConnection(context);
       resultCount = thisContact.update(db);
-
       if (resultCount == -1) {
         processErrors(context, thisContact.getErrors());
         buildFormElements(context, db);
@@ -1314,7 +1311,6 @@ public final class MyCFS extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (resultCount == -1) {
         return (executeCommandMyCFSProfile(context));
@@ -1339,11 +1335,9 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSPassword(ActionContext context) {
-
     if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     try {
@@ -1356,9 +1350,7 @@ public final class MyCFS extends CFSModule {
       errorMessage = e;
       e.printStackTrace(System.out);
     }
-
     this.freeConnection(context, db);
-
     addModuleBean(context, "MyProfile", "");
     return ("PasswordOK");
   }
@@ -1372,37 +1364,28 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandUpdatePassword(ActionContext context) {
-
-    if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
+    if (!hasPermission(context, "myhomepage-profile-password-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-
     User tempUser = (User) context.getFormBean();
-
     try {
       db = getConnection(context);
-
       User thisUser = new User(db, this.getUserId(context));
       thisUser.setBuildContact(false);
       thisUser.buildResources(db);
-
       resultCount = tempUser.updatePassword(db, context, thisUser.getPassword());
-
     } catch (SQLException e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (resultCount == -1) {
       processErrors(context, tempUser.getErrors());
       context.getRequest().setAttribute("NewUser", tempUser);
     }
-
     if (errorMessage == null) {
       if (resultCount == -1) {
         return (executeCommandMyCFSPassword(context));
@@ -1428,11 +1411,9 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSSettings(ActionContext context) {
-
-    if (!(hasPermission(context, "myhomepage-profile-settings-view"))) {
+    if (!hasPermission(context, "myhomepage-profile-settings-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     try {
