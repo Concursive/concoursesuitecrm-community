@@ -768,6 +768,7 @@
       <transaction src="${build.sql.dir}/project.sql"/>
       <!-- product catalog -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_product.sql"/>
+      <transaction src="${build.sql.dir}/product.sql"/>
       <!-- service contracts and assets -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_service_contract.sql"/>
       <transaction src="${build.sql.dir}/service_contract.sql"/>

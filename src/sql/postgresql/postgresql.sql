@@ -5466,7 +5466,7 @@ INSERT INTO search_fields VALUES (11, 'accountTypeId', 'Account Type', true, 0, 
 
 
 
-
+INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VALUES ('Labor Categories', 0, 0, true);
 
 
 

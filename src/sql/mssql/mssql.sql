@@ -4690,9 +4690,9 @@ ALTER TABLE [lookup_currency] WITH NOCHECK ADD
 GO
 
 ALTER TABLE [lookup_delivery_options] WITH NOCHECK ADD 
-	CONSTRAINT [DF__lookup_de__defau__1DB06A4F] DEFAULT (0) FOR [default_item],
-	CONSTRAINT [DF__lookup_de__level__1EA48E88] DEFAULT (0) FOR [level],
-	CONSTRAINT [DF__lookup_de__enabl__1F98B2C1] DEFAULT (1) FOR [enabled]
+	CONSTRAINT [DF__lookup_de__defau__1EA48E88] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_de__level__1F98B2C1] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_de__enabl__208CD6FA] DEFAULT (1) FOR [enabled]
 GO
 
 ALTER TABLE [lookup_department] WITH NOCHECK ADD 
@@ -9311,6 +9311,10 @@ Comment: ${this.comment}
 SET IDENTITY_INSERT [business_process_component_parameter] OFF
 GO
 SET NOCOUNT OFF
+
+INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VALUES ('Labor Categories', 0, 0, 1);
+
+
 
  CREATE  INDEX [import_entered_idx] ON [import]([entered]) ON [PRIMARY]
 GO

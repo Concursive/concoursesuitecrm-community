@@ -2035,6 +2035,8 @@ SET NOCOUNT OFF
 
 INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(4,17,200403192,10,'Product Catalog Categories','Jun 15 2004  8:49:59:710AM')
 
+INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VALUES ('Labor Categories', 0, 0, 1);
+
 -- rebuild help
 
  CREATE  INDEX [import_entered_idx] ON [import]([entered]) ON [PRIMARY]

@@ -1217,6 +1217,9 @@ INSERT INTO lookup_creditcard_types VALUES (4, 'Discover', false, 0, true);
 
 INSERT INTO module_field_categorylink VALUES (4, 17, 200403192, 10, 'Product Catalog Categories', '2004-06-15 08:40:34.691');
 
+INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VALUES ('Labor Categories', 0, 0, true);
+
+
 -- rebuild help
 
 CREATE INDEX contact_import_id_idx ON contact USING btree (import_id);
