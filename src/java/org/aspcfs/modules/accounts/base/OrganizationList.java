@@ -701,11 +701,6 @@ public class OrganizationList extends Vector implements SyncableList {
       }
       Organization thisOrganization = this.getObject(rs);
 
-      //if this is an individual account, populate the primary contact record
-      if (thisOrganization.getNameLast() != null) {
-        thisOrganization.populatePrimaryContact(db);
-      }
-
       if (buildRevenueYTD && revenueYear > -1 && revenueOwnerId > -1) {
         thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType(), this.getRevenueOwnerId());
         if (thisOrganization.getYTD() != 0) {
@@ -937,10 +932,14 @@ public class OrganizationList extends Vector implements SyncableList {
   protected void buildResources(Connection db) throws SQLException {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      Organization thisOrg = (Organization) i.next();
-      thisOrg.getPhoneNumberList().buildList(db);
-      thisOrg.getAddressList().buildList(db);
-      thisOrg.getEmailAddressList().buildList(db);
+      Organization thisOrganization = (Organization) i.next();
+      thisOrganization.getPhoneNumberList().buildList(db);
+      thisOrganization.getAddressList().buildList(db);
+      thisOrganization.getEmailAddressList().buildList(db);
+      //if this is an individual account, populate the primary contact record
+      if (thisOrganization.getNameLast() != null) {
+        thisOrganization.populatePrimaryContact(db);
+      }
     }
   }
 
