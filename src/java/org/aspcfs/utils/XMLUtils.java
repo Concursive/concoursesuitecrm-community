@@ -249,15 +249,17 @@ public class XMLUtils {
    *@return          The nodeText value
    */
   public static String getNodeText(Node element) {
-    String nodeText = null;
+    //String nodeText = null;
     NodeList nodeList = element.getChildNodes();
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node thisNode = nodeList.item(i);
       if (thisNode.getNodeType() == Node.TEXT_NODE ||
           thisNode.getNodeType() == Node.CDATA_SECTION_NODE) {
-        nodeText = thisNode.getNodeValue();
+        return thisNode.getNodeValue();
       }
     }
+    return null;
+/*
     if (nodeText == null) {
       return null;
     } else {
@@ -271,6 +273,7 @@ public class XMLUtils {
       }
       return nodeText.substring(begin, end);
     }
+*/
   }
 
 
