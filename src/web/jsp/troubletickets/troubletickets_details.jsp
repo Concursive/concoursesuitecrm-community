@@ -61,6 +61,7 @@
       </td>
 		</tr>
 		
+    <dhv:include name="tickets-code" none="true">
 		<tr>
 		<td width=100 class="formLabel">
 		Category
@@ -69,6 +70,7 @@
 		<%=toHtml(TicketDetails.getCategoryName())%>
 		</td>
 		</tr>
+    </dhv:include>
 		
     <dhv:include name="tickets-severity" none="true">
 		<tr>

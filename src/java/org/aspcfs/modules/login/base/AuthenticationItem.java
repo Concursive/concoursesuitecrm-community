@@ -22,6 +22,7 @@ public class AuthenticationItem {
     String gkUserPw = (String)context.getServletContext().getAttribute("GKUSERPW");
     String siteCode = (String)context.getServletContext().getAttribute("SiteCode");
     String serverName = context.getRequest().getServerName();
+    if (System.getProperty("DEBUG") != null) System.out.println("AuthenticationItem-> ServerName: " + serverName);
     
     if (id.equals(serverName)) {
       String authCode = null;

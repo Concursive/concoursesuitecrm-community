@@ -1,14 +1,13 @@
 <?xml version="1.0" standalone="yes"?> 
 <aspcfs>
   <authentication>
-    <id>127.0.0.1</id>
+    <id>vport.aspcfs.com</id>
     <code>20178A</code>
   </authentication>
   <transaction>
     <ticket type="insert">
       <orgId>0</orgId>
       <contactId>0</contactId>
-      <contactName>Freeform text (Caller's name)</contactName>
       <problem>
         First line is return phone #
         Second line is message text

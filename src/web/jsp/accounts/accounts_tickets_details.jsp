@@ -57,6 +57,8 @@
       <input type=hidden name=id value="<%=TicketDetails.getId()%>">
 		</td>
   </tr>
+  
+  <dhv:include name="tickets-code" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Category
@@ -65,6 +67,7 @@
       <%=toHtml(TicketDetails.getCategoryName())%>
 		</td>
   </tr>
+  </dhv:include>
   
   <dhv:include name="tickets-severity" none="true">
 	<tr class="containerBody">
