@@ -8,7 +8,7 @@
    and to customize the build.properties.  The build will fail until all
    installation conditions are met.
    
-   Do not edit the master build.properties in this folder, a copy will be
+   Do not edit master.properties in this folder, a copy will be
    made by the installation and you will be notified of the file to modify.
    
    The build process needs write access to the destination web-app folder.
@@ -50,7 +50,8 @@
     <echo message="ant init: verify system environment needed by install"/>
     <echo message="ant compile: compile all .java source files"/>
     <echo message="ant build: create .jar files for compiled classes"/>
-    <echo message="ant deploy: compile, build, copy, and configure web application"/>
+    <echo message="ant deploy: compile, build, copy, and configure web application (production)"/>
+    <echo message="ant dev: same as deploy, but doesn't do a clean compile (development)"/>
     <echo message="ant installgk: create tables for gatekeeper database"/>
     <echo message="ant installdb: create tables, insert base records and permissions into new database"/>
     <echo message="    install.database: just create the tables and base data"/>
@@ -77,33 +78,42 @@
   
   <!-- See if the properties file exists -->
   <target name="init.buildfile.exists" depends="init.environment">
-    <available file="${CFS_HOME}/WEB-INF/build.properties" property="build.config.present"/>
+    <copy file="${CFS_HOME}/WEB-INF/build.properties" 
+          tofile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"
+          failonerror="false"
+          verbose="off"/>
+    <copy file="${CFS_HOME}/WEB-INF/keystore" 
+          tofile="${CFS_HOME}/WEB-INF/fileLibrary/keystore"
+          failonerror="false"
+          verbose="off"/>
+    <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties" property="build.config.present"/>
   </target>
   
   <!-- Create the properties file if not exists -->
   <target name="init.buildfile.create" depends="init.buildfile.exists" 
           unless="build.config.present">
     <mkdir dir="${CFS_HOME}/WEB-INF"/>
-    <copy file="${base.dir}/build.properties" todir="${CFS_HOME}/WEB-INF"/>
-    <available file="${CFS_HOME}/WEB-INF/build.properties" property="build.config.present"/>
+    <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary"/>
+    <copy file="${base.dir}/master.properties" tofile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"/>
+    <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties" property="build.config.present"/>
   </target>
   
   <!-- Load the properties for this system, stop here if not found -->
   <target name="init.loadproperties" depends="init.buildfile.create">
     <!-- IF src build.properties is newer than CFS_HOME build.properties, abort now and have user update -->
     <uptodate property="build.config.uptodate"
-            srcfile="${base.dir}/build.properties"
-            targetfile="${CFS_HOME}/WEB-INF/build.properties"/>
-    <fail unless="build.config.uptodate">Initialization aborted${lf}${lf}The build.properties file might be out of date.  Compare and update the site copy with the source template, making any necessary changes.${lf}${lf}Site File: ${CFS_HOME}${fs}WEB-INF${fs}build.properties${lf}Source Template: ${base.dir}${fs}build.properties</fail>
-    <loadproperties srcFile="${CFS_HOME}/WEB-INF/build.properties">
+            srcfile="${base.dir}/master.properties"
+            targetfile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"/>
+    <fail unless="build.config.uptodate">Initialization aborted${lf}${lf}The build.properties file might be out of date.  Compare and update the site copy with the source template, making any necessary changes.${lf}${lf}Site File: ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties${lf}Source Template: ${base.dir}${fs}master.properties</fail>
+    <loadproperties srcFile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
           <param type="comment" value="#"/>
         </filterreader>
       </filterchain>
     </loadproperties>
-    <fail unless="build.config.present">Initialization aborted ${lf}${lf}The build properties file not found at ${CFS_HOME}${fs}WEB-INF${fs}build.properties</fail>
-    <fail unless="CONTROL">Initialization aborted ${lf}${lf}Edit the properties file at ${CFS_HOME}${fs}WEB-INF${fs}build.properties, make sure to uncomment the control parameter</fail>
+    <fail unless="build.config.present">Initialization aborted ${lf}${lf}The build properties file was not found at ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties</fail>
+    <fail unless="CONTROL">Initialization aborted ${lf}${lf}Edit the properties file at ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties, make sure to uncomment the control parameter</fail>
   </target>
   
   <!-- Copy the common jars -->
@@ -185,17 +195,38 @@
     </uptodate>
   </target>
   
-  <!-- Compile the Java source code -->
-  <target name="compile" 
-          description="Compile all .java source files"
-          depends="init"
-          unless="classes.uptodate">
+  <!-- Check to see if previously compiled classes should be deleted -->
+  <target name="compile.checkdelete" depends="init">
+    <condition property="compile.donotdelete">
+      <isset property="classes.uptodate"/>
+    </condition>
+    <condition property="compile.donotdelete">
+      <and>
+        <not>
+          <isset property="classes.uptodate"/>
+        </not>
+        <isset property="compile.donotdelete.property"/>
+      </and>
+    </condition>
+  </target>
+  
+  <target name="compile.delete"
+          depends="init,compile.checkdelete"
+          unless="compile.donotdelete">
     <!-- Get rid of any classes in the source dir that shouldn't be there -->
     <delete>
         <fileset dir= "${src.classes.dir}" includes="**/*.class"/>
     </delete>
     <delete dir="${build.classes.dir}"/>
     <mkdir dir="${build.classes.dir}"/>
+  </target>
+  
+  <!-- Compile the Java source code -->
+  <target name="compile" 
+          description="Compile all .java source files"
+          depends="init,compile.delete"
+          unless="classes.uptodate">
+    <!-- Compile the code -->
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on">
       <classpath>
         <path refid="cfs2.classpath"/>
@@ -284,29 +315,8 @@
         <exclude name="web.xml"/>
       </fileset>
     </copy>
-    <!-- Copy preference files -->
-    <copy file="${pref.dir}/cfs/notifier/notifier.xml" 
-          todir="${CFS_HOME}/WEB-INF" overwrite="true" verbose="true"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@FILELIBRARY@" value="${CFS_HOME}${fs}WEB-INF${fs}fileLibrary"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@FAXFILES@" value="${CFS_HOME}${fs}WEB-INF${fs}faxFiles"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GATEKEEPER.DRIVER@" value="${GATEKEEPER.DRIVER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GATEKEEPER.URL@" value="${GATEKEEPER.URL}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GATEKEEPER.USER@" value="${GATEKEEPER.USER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GATEKEEPER.PASSWORD@" value="${GATEKEEPER.PASSWORD}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@MAILSERVER@" value="${MAILSERVER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@FAXSERVER@" value="${FAXSERVER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@FORCESSL@" value="${FORCESSL}"/>
     <!-- Copy this build file -->
-    <copy file="${base.dir}/build.xml" todir="${CFS_HOME}/WEB-INF" verbose="true"/>
+    <copy file="${base.dir}/build.xml" todir="${CFS_HOME}/WEB-INF/fileLibrary" verbose="true"/>
   </target>
   
   <!-- See if there is an updated file to merge -->
@@ -318,13 +328,13 @@
     <condition property="deploy.merge.uptodate">
       <and>
         <available file="${CFS_HOME}/WEB-INF/web.xml"/>
-        <available file="${CFS_HOME}/WEB-INF/build.properties"/>
+        <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"/>
         <uptodate srcfile="${src.web.dir}/WEB-INF/web.xml"
                   targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
-        <uptodate srcfile="${CFS_HOME}/WEB-INF/build.properties"
+        <uptodate srcfile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"
                   targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
         <uptodate targetfile="${CFS_HOME}/WEB-INF/web.xml">
-          <srcfiles dir="${CFS_HOME}/WEB-INF" includes="*.xml,*.tld" excludes="web.xml,notifier.xml,build.xml"/>
+          <srcfiles dir="${CFS_HOME}/WEB-INF" includes="*.xml,*.tld" excludes="web.xml"/>
         </uptodate>
       </and>
     </condition>
@@ -335,37 +345,7 @@
     <echo message="Installing web.xml configuration file"/>
     <copy file="${src.web.dir}/WEB-INF/web.xml" todir="${CFS_HOME}/WEB-INF" overwrite="true"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GATEKEEPER.APPCODE@" value="${GATEKEEPER.APPCODE}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GATEKEEPER.DRIVER@" value="${GATEKEEPER.DRIVER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GATEKEEPER.URL@" value="${GATEKEEPER.URL}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GATEKEEPER.USER@" value="${GATEKEEPER.USER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GATEKEEPER.PASSWORD@" value="${GATEKEEPER.PASSWORD}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@MAILSERVER@" value="${MAILSERVER}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@KEYSTORE@" value="${CFS_HOME}${fs}WEB-INF${fs}keystore"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@FORCESSL@" value="${FORCESSL}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@DEBUGLEVEL@" value="${DEBUGLEVEL}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@CRON.ENABLED@" value="${CRON.ENABLED}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@CONNECTION_POOL.DEBUG@" value="${CONNECTION_POOL.DEBUG}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@CONNECTION_POOL.TEST_CONNECTIONS@" value="${CONNECTION_POOL.TEST_CONNECTIONS}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@CONNECTION_POOL.ALLOW_SHRINKING@" value="${CONNECTION_POOL.ALLOW_SHRINKING}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@CONNECTION_POOL.MAX_CONNECTIONS@" value="${CONNECTION_POOL.MAX_CONNECTIONS}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@CONNECTION_POOL.MAX_IDLE_TIME.SECONDS@" value="${CONNECTION_POOL.MAX_IDLE_TIME.SECONDS}"/>
-    <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@CONNECTION_POOL.MAX_DEAD_TIME.SECONDS@" value="${CONNECTION_POOL.MAX_DEAD_TIME.SECONDS}"/>
+             token="@KEYSTORE@" value="${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}keystore"/>
   </target>
   
   <!-- Log the deployment procss to the web-app folder -->
@@ -386,13 +366,13 @@
   
   <!-- Check if keyfile exists -->
   <target name="keyfile.exists" depends="init">
-    <available file="${CFS_HOME}/WEB-INF/keystore" property="keyfile.present"/>
+    <available file="${CFS_HOME}/WEB-INF/fileLibrary/keystore" property="keyfile.present"/>
   </target>
   
   <!-- Generate keyfile for new system -->
   <target name="keyfile" depends="keyfile.exists" unless="keyfile.present">
     <genkey alias="cfs" 
-            keystore="${CFS_HOME}/WEB-INF/keystore"
+            keystore="${CFS_HOME}/WEB-INF/fileLibrary/keystore"
             storepass="aspcfs" 
             storetype="JKS"
             keyalg="RSA"
@@ -408,15 +388,15 @@
       </dname>
     </genkey>
     <!-- Prepare a CSR to get signed
-    keytool -certreq -keyalg RSA -alias cfs -file ${CFS_HOME}/WEB-INF/domain.csr -keystore ${CFS_HOME}/WEB-INF/keystore
+    keytool -certreq -keyalg RSA -alias cfs -file ${CFS_HOME}/WEB-INF/fileLibrary/domain.csr -keystore ${CFS_HOME}/WEB-INF/fileLibrary/keystore
     -->
     <!-- Import the signed certificates
-    keytool -import -trustcacerts -alias root -file GTECyberTrustRoot.crt -keystore ${CFS_HOME}/WEB-INF/keystore
-    keytool -import -trustcacerts -alias comodo -file ComodoSecurityServicesCA.crt -keystore ${CFS_HOME}/WEB-INF/keystore
-    keytool -import -trustcacerts -alias cfs -file domain.crt -keystore ${CFS_HOME}/WEB-INF/keystore
+    keytool -import -trustcacerts -alias root -file GTECyberTrustRoot.crt -keystore ${CFS_HOME}/WEB-INF/fileLibrary/keystore
+    keytool -import -trustcacerts -alias comodo -file ComodoSecurityServicesCA.crt -keystore ${CFS_HOME}/WEB-INF/fileLibrary/keystore
+    keytool -import -trustcacerts -alias cfs -file domain.crt -keystore ${CFS_HOME}/WEB-INF/fileLibrary/keystore
     -->
     <!-- Export the certificate for a client app to use
-    keytool -export -alias cfs -file ${CFS_HOME}/WEB-INF/domain.cert -keystore ${CFS_HOME}/WEB-INF/keystore
+    keytool -export -alias cfs -file ${CFS_HOME}/WEB-INF/fileLibrary/domain.cert -keystore ${CFS_HOME}/WEB-INF/fileLibrary/keystore
     -->
   </target>
   
@@ -425,6 +405,15 @@
           description="Compile, build, copy, and configure web application"
           depends="log.deploy,classes.prepare,build,keyfile,deploy.delete,deploy.copy,deploy.merge">
     <mkdir dir="${CFS_HOME}/graphs"/>
+  </target>
+  
+  <target name="dev.configure">
+    <property name="compile.donotdelete.property" value="true"/>
+  </target>
+  
+  <target name="dev"
+          description="Deploy without deleting previously compiled source"
+          depends="dev.configure,deploy">
   </target>
   
   <!-- Generate .java/.class files out of the web-app .jsps -->
@@ -459,11 +448,92 @@
     </javac>
   </target>
   
+  <!-- Create a WAR -->
+  <target name="dist"
+          description="Compile, build, and generate web archive"
+          depends="classes.prepare,build,dist.archive">
+  </target>
+  
+  <target name="dist.archive">
+    <delete dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <!-- Copy the common .jars -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/lib">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+        <exclude name="ccp_integration.jar"/>
+        <exclude name="msbase.jar"/>
+        <exclude name="mssqlserver.jar"/>
+        <exclude name="msutil.jar"/>
+      </fileset>
+    </copy>
+    <!-- Copy the .jars -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/lib">
+      <fileset dir="${build.lib.dir}">
+        <include name="*.jar"/>
+        <exclude name="aspcfs.jar"/>
+      </fileset>
+    </copy>
+    <!-- aspcfs.jar -->
+    <jar jarfile="${dist.dir}/cfs/WEB-INF/lib/aspcfs.jar"
+          basedir="${build.classes.dir}"
+          includes="org/aspcfs/**/*.class"
+          excludes="org/aspcfs/modules/setup/actions/SetupServer.class"
+    />
+    <!-- Copy the web data -->
+    <copy todir="${dist.dir}/cfs">
+      <fileset dir="${src.web.dir}/jsp">
+        <include name="**"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}/cfs">
+      <fileset dir="${src.web.dir}/html">
+        <include name="**"/>
+      </fileset>
+    </copy>
+    <copy todir="${dist.dir}/cfs">
+      <fileset dir="${src.web.dir}">
+        <include name="images/**" />
+        <include name="javascript/**" />
+        <include name="css/**" />
+      </fileset>
+    </copy>
+    <!-- Copy the configuration files -->
+    <copy todir="${dist.dir}/cfs/WEB-INF" verbose="true">
+      <fileset dir="${src.web.dir}/WEB-INF">
+        <include name="*.xml"/>
+        <include name="*.tld"/>
+        <exclude name="web.xml"/>
+      </fileset>
+    </copy>
+    <!-- Copy the default preference files -->
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup" verbose="true">
+      <fileset dir="${pref.dir}/cfs/system">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <!-- Copy the database files -->
+    <copy file="${src.sql.dir}/postgresql/postgresql.sql" 
+          todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <!-- Copy the manifest -->
+    <!--<copy file="${base.dir}/MANIFEST.MF" 
+          todir="${dist.dir}/cfs/META-INF"/>-->
+    <!-- Archive the folder -->
+    <war destfile="${dist.dir}/cfs.war"
+         webxml="${src.web.dir}/WEB-INF/web.xml"
+         basedir="${dist.dir}/cfs"
+         compress="true"
+         manifest="${pref.dir}/cfs/war/MANIFEST.MF"
+         />
+    <delete dir="${dist.dir}/cfs"/>
+  </target>
+  
   <!-- Remove the build folder -->
   <target name="clean"
           description="Delete the temporary build folder used by the install"
           depends="init">
     <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
   </target>
   
   <target name="installgk.databasename">
@@ -841,31 +911,6 @@
     </java>
   </target>
   
-  <!-- Make sure the file exists, copied during deployment -->
-  <target name="run.notifier.init">
-    <available file="${env.CFS_HOME}/WEB-INF/notifier.xml" property="notifier.present"/>
-  </target>
-  
-  <!-- Run the CFS Notifier -->
-  <target name="run.notifier" depends="run.notifier.init" if="notifier.present">
-    <echo message="Processing sites that are enabled in the gatekeeper database"/>
-    <path id="cfs2.classpath">
-      <fileset dir="${env.CATALINA_HOME}/common/lib">
-        <include name="**/*.jar"/>
-      </fileset>
-    </path>
-    <record name="${env.CFS_HOME}/WEB-INF/notifier.log" append="no"/>
-    <java classname="org.aspcfs.apps.notifier.Notifier" fork="yes" failonerror="yes">
-      <classpath>
-        <path refid="cfs2.classpath"/>
-        <fileset dir="${env.CFS_HOME}/WEB-INF/lib">
-          <include name="**/*.jar"/>
-        </fileset>
-      </classpath>
-      <arg value="${env.CFS_HOME}${fs}WEB-INF${fs}notifier.xml"/>
-    </java>
-  </target>
-
   <!-- Test the EDIT transaction server -->
   <target name="run.edit" depends="init">
     <java classname="org.aspcfs.modules.healthcare.edit.apps.HttpPostTransaction" fork="yes" failonerror="yes">
