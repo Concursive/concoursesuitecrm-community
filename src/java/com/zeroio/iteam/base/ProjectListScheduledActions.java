@@ -16,7 +16,8 @@ import java.sql.*;
 public class ProjectListScheduledActions extends ProjectList implements ScheduledActions {
 
   private int userId = -1;
-
+protected java.sql.Date alertRangeStart = null;
+  protected java.sql.Date alertRangeEnd = null;
   /**
    *  Constructor for the ProjectListScheduledActions object
    */
@@ -41,6 +42,17 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
     return userId;
   }
 
+  public void setAlertRangeStart(java.sql.Date tmp) { this.alertRangeStart = tmp; }
+  public void setAlertRangeStart(String tmp) { 
+    this.alertRangeStart = java.sql.Date.valueOf(tmp);
+  }
+  public void setAlertRangeEnd(java.sql.Date tmp) { this.alertRangeEnd = tmp; }
+  public void setAlertRangeEnd(String tmp) { 
+    this.alertRangeEnd = java.sql.Date.valueOf(tmp);
+  }
+  
+  public java.sql.Date getAlertRangeStart() { return alertRangeStart; }
+  public java.sql.Date getAlertRangeEnd() { return alertRangeEnd; }
 
   /**
    *  Description of the Method
