@@ -5,6 +5,7 @@ import org.w3c.dom.*;
 import java.sql.*;
 import com.darkhorseventures.cfsbase.SyncTable;
 import com.darkhorseventures.cfsbase.SyncClientManager;
+import com.darkhorseventures.controller.ObjectHookList;
 
 /**
  *  A Transaction is an array of TransactionItems.  When a system requests
@@ -13,7 +14,7 @@ import com.darkhorseventures.cfsbase.SyncClientManager;
  *
  *  After the object is built, the transaction items can be executed.
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    April 10, 2002
  *@version    $Id$
  */
@@ -26,6 +27,7 @@ public class Transaction extends ArrayList {
   private TransactionMeta meta = null;
   private SyncClientManager clientManager = null;
   private AuthenticationItem auth = null;
+  private ObjectHookList objectHookList = null;
 
 
   /**
@@ -73,7 +75,8 @@ public class Transaction extends ArrayList {
   
   public void setAuth(AuthenticationItem tmp) { this.auth = tmp; }
 
-  
+  public void setObjectHookList(ObjectHookList tmp) { this.objectHookList = tmp; }
+
 
   /**
    *  Gets the id attribute of the Transaction object
@@ -123,6 +126,7 @@ public class Transaction extends ArrayList {
       thisItem.setClientManager(clientManager);
       thisItem.setMapping(mapping);
       thisItem.setAuth(auth);
+      thisItem.setObjectHookList(objectHookList);
       if (thisItem.getName().equals("meta")) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Transaction-> Meta data found");

@@ -86,7 +86,7 @@ public final class ProcessPacket extends CFSModule {
           thisTransaction.setAuth(auth);
           thisTransaction.setMapping(objectMap);
           thisTransaction.setClientManager(clientManager);
-          //TODO: thisTransaction.setHooks(hooks);
+          thisTransaction.setObjectHookList(hooks);
           SyncTable metaMapping = new SyncTable();
           metaMapping.setName("meta");
           metaMapping.setMappedClassName("com.darkhorseventures.utils.TransactionMeta");
@@ -231,10 +231,10 @@ public final class ProcessPacket extends CFSModule {
    *@return           The objectMap value
    */
   private HashMap getObjectMap(ActionContext context, Connection db, int systemId) {
-    SyncTableList systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap");
+    SyncTableList systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap" + systemId);
     if (systemObjectMap == null) {
       synchronized (this) {
-        systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap");
+        systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap" + systemId);
         if (systemObjectMap == null) {
           systemObjectMap = new SyncTableList();
           systemObjectMap.setBuildTextFields(false);
@@ -243,7 +243,7 @@ public final class ProcessPacket extends CFSModule {
           } catch (SQLException e) {
             e.printStackTrace(System.out);
           }
-          context.getServletContext().setAttribute("SyncObjectMap", systemObjectMap);
+          context.getServletContext().setAttribute("SyncObjectMap" + systemId, systemObjectMap);
         }
       }
     }

@@ -5,6 +5,7 @@ import org.w3c.dom.*;
 import java.sql.*;
 import java.lang.reflect.*;
 import com.darkhorseventures.cfsbase.*;
+import com.darkhorseventures.controller.ObjectHookList;
 import com.darkhorseventures.utils.ObjectUtils;
 import com.darkhorseventures.webutils.PagedListInfo;
 import org.theseus.beans.*;
@@ -51,7 +52,7 @@ public class TransactionItem {
   private AuthenticationItem auth = null;
   private HashMap mapping = null;
   private SyncClientMap syncClientMap = null;
-  
+  private ObjectHookList objectHookList = null;
 
   /**
    *  Constructor for the TransactionItem object
@@ -195,6 +196,7 @@ public class TransactionItem {
   public void setClientManager(SyncClientManager tmp) { this.clientManager = tmp; }
   public void setAuth(AuthenticationItem tmp) { this.auth = tmp; }
   public void setMapping(HashMap tmp) { this.mapping = tmp; }
+  public void setObjectHookList(ObjectHookList tmp) { this.objectHookList = tmp; }
 
 
   /**
@@ -616,7 +618,20 @@ public class TransactionItem {
     Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
     Object[] dbObject = new Object[]{db};
     Method method = object.getClass().getMethod(executeMethod, dbClass);
-    return (method.invoke(object, dbObject));
+    Object currentObject = null;
+    //TODO: Allow triggers for updates, requires old and new object for hook to use
+    //if (objectHookList != null && action == UPDATE) {
+    //  currentObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
+    //}
+    Object result = (method.invoke(object, dbObject));
+    if (objectHookList != null) {
+      switch(action) {
+        case INSERT: objectHookList.processInsert(object, db); break;
+        //case UPDATE: objectHookList.processUpdate(previousObject, object, db); break;
+        default: break;
+      }
+    }
+    return result;
   }
   
   private void checkResult(Object result) {

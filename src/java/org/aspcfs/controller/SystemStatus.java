@@ -314,7 +314,7 @@ public class SystemStatus {
   }
   
   public boolean processHook(Object object, Connection db) {
-    return (hooks.process(object, db));
+    return (hooks.processInsert(object, db));
   }
 
 }

@@ -44,6 +44,9 @@ public class ObjectHookList extends HashMap {
           }
           this.put(hookId, hookClass);
         }
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("ObjectHookList-> Hooks added: " + this.size());
+        }
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -56,7 +59,7 @@ public class ObjectHookList extends HashMap {
     return (this.get(object.getClass().getName()) != null);
   }
   
-  public boolean process(Object object, Connection db) {
+  public boolean processInsert(Object object, Connection db) {
     try {
       if (!this.has(object)) {
         return false;
