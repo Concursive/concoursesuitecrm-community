@@ -1,9 +1,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="NewsList" class="java.util.Vector" scope="request"/>
-<jsp:useBean id="alertsList" class="java.util.Vector" scope="request"/>
-<jsp:useBean id="IndustryList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="dateRangeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="reportTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="IndSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="AlertsListSelection" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="AlertOppsList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <table bgcolor=white border=0 width="100%">
@@ -24,49 +21,7 @@
 		</tr>
 	</table>
 	</td>
-		
-	  <!--tr>
-    <td valign=top bgcolor=white width=300>
-      <form name="dashboard" type="get" action="MyCFS.do">
-      <input type=hidden name=command value="Home">
-      <table bgcolor=white width=275 border=1 cellpadding=2 cellspacing=0 class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-        <tr bgcolor="#DEE0FA">
-          <td valign=center align=center colspan=2>
-            <strong>Performance Dashboard</strong>
-          </td>
-        </tr>
-        
-        <tr>
-          <td valign=center width=35%>
-            <strong>Activities</strong>
-          </td>
-          <td valign=center width=65%>
-            <%= reportTypeList.getHtml() %>
-          </td>
-        </tr>
-        <tr>
-          <td valign=center width=50%>
-            <strong>Period</strong>
-          </td>
-          <td valign=center width=50%>
-<%
-            dateRangeList.setJsEvent("onChange=\"document.forms['dashboard'].submit();\"");
-%>
-            <%= dateRangeList.getHtml() %>
-          </td>
-        </tr>
-	
-	
-        <tr>
-          <td align=center valign=center colspan=2>
-            <br>
-            <img border=0 width=275 height=179 src="/servlet/ChartServlet?graphRange=<%=request.getAttribute("graphRange")%>&rptType=<%=request.getAttribute("rptType")%>">
-          </td>
-        </tr>
-      </table>
-      </form>
-    </td-->
-<!-- ZZ:row one, column two -->
+
     <td bgcolor=white valign=top width=100%>
     <table bgcolor=white width=100% border=1 cellpadding=4 cellspacing=0 class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <form name="alerts" type="post" action="MyCFS.do">
@@ -93,35 +48,7 @@
      <th align=left>Description</th>
      <th align=left width=150>Account</th>
      <th width=100 align=left>Alert Date</th>
-       <!--th>Date</th>
-       <th>Email</th-->
      </tr>
-<!--
-<%
-	Iterator el = null;
-	if (alertsList == null) {
-		alertsList = new Vector ();
-	}
-	el = alertsList.iterator ();
-	while (el.hasNext ()) {
-		Alert alert = (Alert) el.next();
-%>
-      <tr>
-        <td bgcolor=white>
-          <a href="/TroubleTickets.do?command=Home&linkaction=ModT&ticketid=<%=alert.getId()%>" >
-          <%= alert.getDescription() %></a>
-        </td>
-        <td bgcolor=<%=alert.getColor()%> align=center><%=alert.getStatus()%></td>
-        <td bgcolor=white align=center><%=alert.getShortDateString()%></td>
-        <td bgcolor=white align=center>
-          <a href="mailto:<%=alert.getEmail()%>" >
-          <img src="/images/envelope.jpg" border=0></img></a>
-        </td>
-      </tr>
-<%
-	}
-%>
--->
 
 <%
 	Iterator n = AlertOppsList.iterator();
@@ -168,11 +95,13 @@
 	<strong>Personalized Industry News & Events</strong>
 	</td>
 	<td width= 40% align="right" valign=center>
-<%
-    IndustryList.setJsEvent("onChange=\"document.forms['miner_select'].submit();\"");
-	String thisElt = (String)IndustryList.getHtml();
-	out.println(thisElt);
-%>
+    
+    	<% if (request.getParameter("industry") == null || request.getParameter("industry").equals("")) { %>
+    		<%=IndSelect.getHtmlSelect("industry",1)%>
+	<% } else { %>
+		<%=IndSelect.getHtmlSelect("industry",Integer.parseInt(request.getParameter("industry")))%>
+	<%}%>
+	
 	</td>
 	</tr>
 	</table>
