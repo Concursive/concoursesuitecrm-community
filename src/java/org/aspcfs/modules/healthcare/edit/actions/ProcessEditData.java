@@ -330,10 +330,10 @@ public final class ProcessEditData extends CFSModule {
 									int number = ((Integer)tempList.get(y)).intValue();
 
 									if ( perDayTotalsMap.get(tempKey) != null ) {
-										testBuffer.append(((Integer)thisMap.get(t)) + ", " + new Integer( number + ((Integer)anotherList.get(y)).intValue() ) + "\n");
+										//testBuffer.append(((Integer)thisMap.get(t)) + ", " + new Integer( number + ((Integer)anotherList.get(y)).intValue() ) + "\n");
 										((ArrayList)perDayTotalsMap.get(tempKey)).set(y, new Integer( number + ((Integer)anotherList.get(y)).intValue() ));
 									} else {
-										testBuffer.append(((Integer)thisMap.get(t)) + ", " + new Integer( number + ((Integer)anotherList.get(y)).intValue() ) + "\n");
+										//testBuffer.append(((Integer)thisMap.get(t)) + ", " + new Integer( number + ((Integer)anotherList.get(y)).intValue() ) + "\n");
 
 										tempList.set(y, new Integer( number + ((Integer)anotherList.get(y)).intValue() ));
 										perDayTotalsMap.put(tempKey, tempList);
@@ -346,12 +346,10 @@ public final class ProcessEditData extends CFSModule {
 
 								for (int y=0; y<5; y++) {
 									tempList.add(y, (Integer)anotherList.get(y));
-									testBuffer.append(tempKey + ": " + y + " " + ((Integer)thisMap.get(t)) + ", " + anotherList.get(y) + "\n");
+									//testBuffer.append(tempKey + ": " + y + " " + ((Integer)thisMap.get(t)) + ", " + anotherList.get(y) + "\n");
 								}
 								
-								testBuffer.append("Size:" + perDayTotalsMap.size() + "\n");
 								perDayTotalsMap.put((Object)tempKey, tempList);
-								testBuffer.append("Size:" + perDayTotalsMap.size() + "\n");
 								orgTotalsMap.put(thisMap.get(t), perDayTotalsMap);
 							}
 
