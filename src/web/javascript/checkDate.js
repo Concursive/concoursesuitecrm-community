@@ -26,7 +26,7 @@ function checkDate(datein) {
     return false;
   }
   if (sep[2] != null) { 
-    if (checkDigits(sep[2])) {
+    if (checkDigits(sep[2]) && sep[2].length > 1) {
       y = parseInt(sep[2],10);
     } else {
       return false;
@@ -77,8 +77,13 @@ function checkAlertDate(datein) {
   d = parseInt(sep[1],10);
   y = parseInt(sep[2],10);
   
-  //alert(m);
-  
+  var fullYear = today.getFullYear() + '';
+  var century = fullYear.substring(0,2);
+  if(y > 9 && y <= 99){
+    y =  century + y ;
+  }else if(y >= 0 && y < 10){
+    y =  century + '0' + y ;
+  }
   var thisDate = new Date(y, m, d);
   
   var difference = thisDate.getTime() - today.getTime();
