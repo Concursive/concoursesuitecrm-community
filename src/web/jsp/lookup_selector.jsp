@@ -71,7 +71,7 @@
 [<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');">Clear All</a>]
 <br>
 &nbsp;<br>
-<dhv:pagedListControl object="LookupSelectorInfo" showForm="false" resetList="false"/>
+<dhv:pagedListControl object="LookupSelectorInfo" showForm="false" resetList="false" enableJScript="true"/>
 </form>
   <%} else {%>
 <body onLoad="javascript:setParentList(selectedValues,selectedIds,'list','<%= DisplayFieldId %>','<%= User.getBrowserId() %>');window.close();">
