@@ -11,6 +11,30 @@ function operator(id, operand, text){
 	this.operand = operand
 }
 
+function addValueFromChild(thisID){
+	var newOption = "Contact ID ( is ) " + thisID;
+	var searchList = document.searchForm.searchCriteria;
+	var newCriteria = "9|1|" + thisID;
+	
+	if (searchList.length == 0 || searchList.options[0].value == "-1") {
+		document.searchForm.searchCriteria.options[0] = new Option(newOption);
+	} else {
+			if (searchCriteria.length == 0) {
+				for (count=0; count<(searchList.length); count++) {
+					searchCriteria[count] = searchList.options[count].value;
+				}
+				
+			}
+			searchList.options[searchList.length] = new Option(newOption);
+	}
+		
+	searchCriteria[searchCriteria.length] = newCriteria;
+	searchForm.searchValue.value = document.searchForm.searchValue.defaultValue;
+	searchForm.searchValue.focus();
+	return true;
+}
+
+
 function ShowSpan(thisID)
 {
 	isNS4 = (document.layers) ? true : false;

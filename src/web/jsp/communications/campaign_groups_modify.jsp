@@ -60,6 +60,7 @@ function checkForm(form) {
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/searchForm.js"></script>
+<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript">
 var searchCriteria = new Array();
 
@@ -138,6 +139,7 @@ listOfOperators[2] = numberOperators
     </td>
     <td width="100%">
       <%= ContactSource.getHtml("contactSource", SCL.getContactSource()) %>
+      <a href="javascript:popURL('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a>
     </td>
   </tr>
 </table>

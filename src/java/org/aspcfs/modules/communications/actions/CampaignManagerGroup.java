@@ -20,6 +20,41 @@ import com.darkhorseventures.webutils.*;
  */
 public final class CampaignManagerGroup extends CFSModule {
 
+	public String executeCommandShowContactsPopup(ActionContext context) {
+		Exception errorMessage = null;
+		Connection db = null;
+		SearchCriteriaList thisSCL = new SearchCriteriaList();
+		
+		context.getSession().removeAttribute("CampaginGroupsContactsInfo");
+		PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsContactsInfo");
+		pagedListInfo.setLink("/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true");
+		
+		try {
+			db = this.getConnection(context);
+			thisSCL.setEnteredBy(getUserId(context));
+			thisSCL.setModifiedBy(getUserId(context));
+			thisSCL.setOwner(getUserId(context));
+			thisSCL.setContactSource(Integer.parseInt(context.getRequest().getParameter("source")));
+		
+			ContactList contacts = new ContactList();
+			contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
+			contacts.setPagedListInfo(pagedListInfo);
+			contacts.buildList(db);
+			context.getRequest().setAttribute("ContactList", contacts);
+		} catch (Exception e) {
+			errorMessage = e;
+		} finally {
+			this.freeConnection(context, db);
+		}
+	
+		if (errorMessage == null) {
+			return ("PopupOK");
+		} else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+	}
+	
   /**
    *  Description of the Method
    *

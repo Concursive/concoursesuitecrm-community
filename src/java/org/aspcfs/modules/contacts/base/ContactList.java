@@ -50,6 +50,7 @@ public class ContactList extends Vector {
   private String areaCodeRange = null;
   private String cityRange = null;
   private String typeIdRange = null;
+  private String contactIdRange = null;
 
   private String dateBefore = null;
   private String dateAfter = null;
@@ -102,7 +103,13 @@ public class ContactList extends Vector {
   public void setCheckExcludedFromCampaign(int checkExcludedFromCampaign) {
     this.checkExcludedFromCampaign = checkExcludedFromCampaign;
   }
-
+  
+public String getContactIdRange() {
+	return contactIdRange;
+}
+public void setContactIdRange(String contactIdRange) {
+	this.contactIdRange = contactIdRange;
+}
 
   /**
    *  Sets the FirstName attribute of the ContactList object
@@ -383,6 +390,11 @@ public class ContactList extends Vector {
     if (outerHash[7].containsKey("=") == true) {
       this.typeIdRange = outerHash[7].get(new String("=")).toString();
     }
+    
+    if (outerHash[8].containsKey("=") == true) {
+      this.contactIdRange = outerHash[8].get(new String("=")).toString();
+    }
+    
   }
 
 
@@ -700,6 +712,7 @@ public class ContactList extends Vector {
     Hashtable areacode = null;
     Hashtable city = null;
     Hashtable typeId = null;
+    Hashtable contactId = null;
 
     int count = 0;
 
@@ -712,6 +725,7 @@ public class ContactList extends Vector {
     areacode = new Hashtable();
     city = new Hashtable();
     typeId = new Hashtable();
+    contactId = new Hashtable();
 
     //THIS CORRESPONDS TO THE FIELD LIST
 
@@ -723,7 +737,8 @@ public class ContactList extends Vector {
         zip,
         areacode,
         city,
-        typeId
+        typeId,
+	contactId
         };
 
     if (System.getProperty("DEBUG") != null) {
@@ -1084,6 +1099,10 @@ public class ContactList extends Vector {
 
       if (ownerIdRange != null) {
         sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
+      }
+      
+      if (contactIdRange != null) {
+        sqlFilter.append("AND c.contact_id IN (" + contactIdRange + ") ");
       }
       
       if (withAccountsOnly) {
