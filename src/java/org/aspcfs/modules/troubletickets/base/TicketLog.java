@@ -843,10 +843,10 @@ public class TicketLog extends GenericBean {
 
     sql.append(
         "UPDATE ticketlog " +
-        "SET assigned_to = ?, ");
+        "SET assigned_to = ? ");
         
         if (override == false) {
-                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
+                sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
         }
         
     sql.append("WHERE id = ? ");
