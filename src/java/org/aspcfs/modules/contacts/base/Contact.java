@@ -144,7 +144,8 @@ public class Contact extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@param  db  Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public void build(Connection db) throws SQLException {
     queryRecord(db, this.getId());
@@ -1755,13 +1756,10 @@ public class Contact extends GenericBean {
    *@since                    1.1
    */
   public boolean insert(Connection db) throws SQLException {
-
     if (!isValid(db)) {
       return false;
     }
-
     StringBuffer sql = new StringBuffer();
-
     try {
       db.setAutoCommit(false);
       sql.append(
@@ -1782,22 +1780,12 @@ public class Contact extends GenericBean {
         sql.append("?, ");
       }
       sql.append("?, ?) ");
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      if (userId > -1) {
-        pst.setInt(++i, this.getUserId());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
-
+      DatabaseUtils.setInt(pst, ++i, this.getUserId());
       pst.setString(++i, this.getNameFirst());
       pst.setString(++i, this.getNameLast());
-      if (owner > -1) {
-        pst.setInt(++i, this.getOwner());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
+      DatabaseUtils.setInt(pst, ++i, this.getOwner());
       pst.setBoolean(++i, this.getPrimaryContact());
       if (entered != null) {
         pst.setTimestamp(++i, entered);
@@ -1807,12 +1795,9 @@ public class Contact extends GenericBean {
       }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-
       pst.execute();
       pst.close();
-
       id = DatabaseUtils.getCurrVal(db, "contact_contact_id_seq");
-
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Contact-> ContactID: " + this.getId());
       }
@@ -1837,9 +1822,7 @@ public class Contact extends GenericBean {
         ContactEmailAddress thisEmailAddress = (ContactEmailAddress) iemail.next();
         thisEmailAddress.process(db, id, this.getEnteredBy(), this.getModifiedBy());
       }
-
       this.update(db, true);
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1862,15 +1845,12 @@ public class Contact extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
-
     if (!isValid(db)) {
       return -1;
     }
-
     try {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
-
       if (this.getPrimaryContact()) {
         Organization thisOrg = new Organization(db, this.getOrgId());
         thisOrg.setNameFirst(this.getNameFirst());
@@ -2172,19 +2152,21 @@ public class Contact extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
-
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM excluded_recipient " +
-        "WHERE contact_id = " + getId() + " AND campaign_id = " + campaignId + " ");
+        "WHERE contact_id = ? " +
+        "AND campaign_id = ? ");
+    pst.setInt(1, this.getId());
+    pst.setInt(2, campaignId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       setExcludedFromCampaign(true);
     } else {
       setExcludedFromCampaign(false);
     }
     rs.close();
-    st.close();
+    pst.close();
   }
 
 
@@ -2198,14 +2180,12 @@ public class Contact extends GenericBean {
    */
   public boolean isValid(Connection db) throws SQLException {
     errors.clear();
-
     if (company == null || company.trim().equals("")) {
       if (nameLast == null || nameLast.trim().equals("")) {
         errors.put("nameLastError", "Last name is required");
         errors.put("lastcompanyError", "Last Name or Company Name is required");
       }
     }
-
     if (hasErrors()) {
       return false;
     } else {
@@ -2227,14 +2207,11 @@ public class Contact extends GenericBean {
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
-
     if (this.getId() == -1) {
       throw new SQLException("Contact ID was not specified");
     }
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-
     sql.append(
         "UPDATE contact " +
         "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
@@ -2253,16 +2230,13 @@ public class Contact extends GenericBean {
     }
     sql.append(
         "startofday = ?, endofday = ?, ");
-
     if (!override) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
-
     sql.append("modifiedby = ? WHERE contact_id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
     }
-
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getCompany());
@@ -2278,19 +2252,10 @@ public class Contact extends GenericBean {
     pst.setString(++i, this.getNameMiddle());
     pst.setString(++i, this.getNameSuffix());
     pst.setString(++i, this.getNotes());
-    if (owner > -1) {
-      pst.setInt(++i, this.getOwner());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
+    DatabaseUtils.setInt(pst, ++i, this.getOwner());
     pst.setInt(++i, this.getCustom1());
     pst.setString(++i, this.getUrl());
-
-    if (orgId > -1) {
-      pst.setInt(++i, this.getOrgId());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
+    DatabaseUtils.setInt(pst, ++i, orgId);
     pst.setBoolean(++i, this.getPrimaryContact());
     if (imService > -1) {
       pst.setInt(++i, this.getImService());
@@ -2314,7 +2279,6 @@ public class Contact extends GenericBean {
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
     }
-
     resultCount = pst.executeUpdate();
     pst.close();
 
@@ -2333,7 +2297,6 @@ public class Contact extends GenericBean {
         }
       }
     }
-
     return resultCount;
   }
 
@@ -2347,21 +2310,12 @@ public class Contact extends GenericBean {
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //contact table
-    this.setId(rs.getInt("contact_id"));
-    userId = rs.getInt("user_id");
-    if (rs.wasNull()) {
-      userId = -1;
-    }
-    orgId = rs.getInt("org_id");
-    if (rs.wasNull()) {
-      orgId = -1;
-    }
+    id = rs.getInt("contact_id");
+    userId = DatabaseUtils.getInt(rs, "user_id");
+    orgId = DatabaseUtils.getInt(rs, "org_id");
     company = rs.getString("company");
     title = rs.getString("title");
-    department = rs.getInt("department");
-    if (rs.wasNull()) {
-      department = 0;
-    }
+    department = DatabaseUtils.getInt(rs, "department", 0);
     nameSalutation = rs.getString("namesalutation");
     nameLast = rs.getString("namelast");
     nameFirst = rs.getString("namefirst");
@@ -2381,10 +2335,7 @@ public class Contact extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
-    owner = rs.getInt("owner");
-    if (rs.wasNull()) {
-      owner = -1;
-    }
+    owner = DatabaseUtils.getInt(rs, "owner");
     custom1 = rs.getInt("custom1");
     url = rs.getString("url");
     primaryContact = rs.getBoolean("primary_contact");
@@ -2440,11 +2391,9 @@ public class Contact extends GenericBean {
     int result = -1;
     this.setOwner(newOwner);
     result = this.update(db);
-
     if (result == -1) {
       return false;
     }
-
     return true;
   }
 
@@ -2514,9 +2463,9 @@ public class Contact extends GenericBean {
       db.setAutoCommit(false);
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
-                                "SELECT count(*) as oppcount " +
-                                "FROM opportunity_header " +
-                                "WHERE opportunity_header.contactlink = ? ");
+          "SELECT count(*) as oppcount " +
+          "FROM opportunity_header " +
+          "WHERE opportunity_header.contactlink = ? ");
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
