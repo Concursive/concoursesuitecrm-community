@@ -27,8 +27,6 @@ Messages<br>
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= ContactMessageListInfo.getOptionValue("my") %>>My Messages</option>
         <option <%= ContactMessageListInfo.getOptionValue("all") %>>All Messages</option>
-        <option <%= ContactMessageListInfo.getOptionValue("hierarchy") %>>Controlled Hierarchy Messages</option>
-        <option <%= ContactMessageListInfo.getOptionValue("personal") %>>Personal Messages</option>
       </select>
     </td>
     <td>
