@@ -468,6 +468,10 @@ public String getUniqueField() { return uniqueField; }
               thisTicket.setSendNotification(false);
       }
       
+      if (thisTicket.getAssignedTo() > -1) {
+        thisTicket.checkEnabledOwnerAccount(db);
+      }
+      
       this.addElement(thisTicket);
     }
     rs.close();

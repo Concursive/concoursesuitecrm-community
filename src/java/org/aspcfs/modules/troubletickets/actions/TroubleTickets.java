@@ -364,6 +364,7 @@ public final class TroubleTickets extends CFSModule {
       userList.setEmptyHtmlSelectRecord("-- None --");
       userList.setBuildContact(true);
       userList.setDepartment(newTic.getDepartmentCode());
+      userList.setExcludeDisabledIfUnselected(true);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
 
@@ -475,6 +476,12 @@ public final class TroubleTickets extends CFSModule {
       ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       newTic = new Ticket(db, Integer.parseInt(ticketId));
+      
+      //check whether or not the owner is an active User
+      if (newTic.getAssignedTo() > -1) {
+        newTic.checkEnabledOwnerAccount(db);
+      }
+      
       newTic.getHistory().setPagedListInfo(ticListInfo);
     } catch (Exception e) {
       errorMessage = e;
@@ -1091,6 +1098,8 @@ public final class TroubleTickets extends CFSModule {
     UserList userList = new UserList();
     userList.setEmptyHtmlSelectRecord("-- None --");
     userList.setBuildContact(true);
+    userList.setExcludeDisabledIfUnselected(true);
+    
     if (newTic.getDepartmentCode() > 0) {
       userList.setDepartment(newTic.getDepartmentCode());
       userList.buildList(db);
@@ -1215,6 +1224,7 @@ public final class TroubleTickets extends CFSModule {
       String departmentCode = context.getRequest().getParameter("departmentCode");
       db = this.getConnection(context);
       UserList userList = new UserList();
+      userList.setEnabled(UserList.TRUE);
       userList.setEmptyHtmlSelectRecord("-- None --");
       if ((departmentCode != null) && (!"0".equals(departmentCode))) {
         userList.setBuildContact(true);

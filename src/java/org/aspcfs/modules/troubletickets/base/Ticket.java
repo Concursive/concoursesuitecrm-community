@@ -69,6 +69,7 @@ public class Ticket extends GenericBean {
 
   private int ageOf = 0;
   private int campaignId = -1;
+  private boolean hasEnabledOwnerAccount = true;
 
   private TicketLogList history = new TicketLogList();
   private FileItemList files = new FileItemList();
@@ -548,7 +549,13 @@ public class Ticket extends GenericBean {
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
   }
-
+  
+  public boolean getHasEnabledOwnerAccount() {
+    return hasEnabledOwnerAccount;
+  }
+  public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
+    this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
+  }
 
   /**
    *  Sets the ContactId attribute of the Ticket object
@@ -1245,6 +1252,27 @@ public class Ticket extends GenericBean {
     } else {
       return getProblem();
     }
+  }
+  
+  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
+    if (this.getAssignedTo() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM access " +
+      "WHERE user_id = ? AND enabled = ? ");
+    pst.setInt(1, this.getAssignedTo());
+    pst.setBoolean(2, true);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setHasEnabledOwnerAccount(true);
+    } else {
+      this.setHasEnabledOwnerAccount(false);
+    }
+    rs.close();
+    pst.close();
   }
 
 
