@@ -3,12 +3,12 @@
 <jsp:useBean id="EmployeeList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="CompanyDirectoryInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 View Employees<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="contacts-internal_contacts-add"><a href="/CompanyDirectory.do?command=InsertEmployeeForm">Add an Employee</a></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-add"><a href="CompanyDirectory.do?command=InsertEmployeeForm">Add an Employee</a></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-add" none="true"><br></dhv:permission>
 <center><%= CompanyDirectoryInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CompanyDirectoryInfo"/>
@@ -46,11 +46,7 @@ View Employees<br>
   if (i.hasNext()) {
     int rowid = 0;
     while (i.hasNext()) {
-      if (rowid != 1) {
-        rowid = 1;
-      } else {
-        rowid = 2;
-      }
+      rowid = (rowid != 1?1:2);
       Contact thisEmployee = (Contact)i.next();
 %>      
   <tr>

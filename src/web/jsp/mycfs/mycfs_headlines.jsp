@@ -4,120 +4,102 @@
 <jsp:useBean id="HeadlineListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:include page="cfsor2.js" flush="true"/>
 <%@ include file="../initPage.jsp" %>
-
 <dhv:permission name="myhomepage-miner-add">
 <body onLoad="javascript:document.forms[0].name.focus();">
+<form name="addAccount" action="MyCFS.do?command=InsertHeadline" method="post">
 </dhv:permission>
-
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 Headlines<br>
 <hr color="#BFBFBB" noshade>
-
 <dhv:permission name="myhomepage-miner-add">
-<form name="addAccount" action="/MyCFS.do?command=InsertHeadline" method="post">
-
-<table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-    <td colspan=2 valign=center align=left>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td colspan="2">
       <strong>Monitor a New Company</strong>
     </td>     
   </tr>
-  <tr bgcolor="#FFFFFF">
-    <td width="125" colspan=1 valign=center>
+  <tr>
+    <td class="formLabel">
       Name
     </td>
-    <td colspan=1 valign=center>
-      <input type=text size=40 name="name">
+    <td>
+      <input type="text" size="40" name="name">
     </td>
   </tr>
-  
-    <tr bgcolor="#FFFFFF">
-    <td width="125" colspan=1 valign=center>
+  <tr>
+    <td class="formLabel">
       Ticker Symbol
     </td>
-    <td colspan=1 valign=center>
-      <input type=text size=10 name="stockSymbol">
+    <td>
+      <input type="text" size="10" name="stockSymbol">
     </td>
   </tr>
-  
-  <tr bgcolor="#FFFFFF">
-    <td valign=center colspan=2>
-      <input type=submit value="Insert">
-      <input type=reset value="Clear">
-    </td>
-  </tr>
-  </form>
 </table>
 &nbsp;<br>
+<input type="submit" value="Insert">
+<input type="reset" value="Clear">
+</form>
 </dhv:permission>
-
-<center>
-<%= HeadlineListInfo.getAlphabeticalPageLinks() %><br>
-&nbsp;
-</center>
-<form name="delAccount" action="/MyCFS.do?command=DeleteHeadline" method="post">
+<center><%= HeadlineListInfo.getAlphabeticalPageLinks() %></center>
+<br>
+<form name="delAccount" action="MyCFS.do?command=DeleteHeadline" method="post">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr bgcolor="#DEE0FA">
-  
-  <dhv:permission name="myhomepage-miner-delete">
-    <td width=3% valign=center align=left>
-      &nbsp;
-    </td>
-  </dhv:permission>
-  
-    <td valign=center align=left>
+  <tr class="title">
+    <dhv:permission name="myhomepage-miner-delete">
+      <td width="3%" valign="center" align="left">
+        &nbsp;
+      </td>
+    </dhv:permission>
+    <td>
       <strong>My Monitored Companies</strong>
     </td>
-        <td valign=center align=left>
+    <td valign=center align=left>
       <strong>Ticker</strong>
     </td>
-    <td valign=center>
+    <td>
       <strong>Date Entered</strong>
     </td>  
 </tr>
-
 <%
 	Iterator j = OrgList.iterator();
-	
+	int rowid = 0;
 	if ( j.hasNext() ) {
-	    while (j.hasNext()) {
+    while (j.hasNext()) {
+      rowid = (rowid != 1?1:2);
 			Organization thisOrg = (Organization)j.next();
 %>      
-	
-  <tr bgcolor="white">
+  <tr class="row<%= rowid %>">
     <dhv:permission name="myhomepage-miner-delete">
-    <td width=5 valign=center align=center>
-    <input type=checkbox name="<%= thisOrg.getOrgId() %>">
+    <td width="5" valign="center" align="center">
+      <input type="checkbox" name="<%= thisOrg.getOrgId() %>">
     </td>
     </dhv:permission>
-    <td valign=center>
+    <td valign="center">
       <%= toHtml(thisOrg.getName()) %>
     </td>
-        <td width=15 align=center>
+    <td width="15" align="center">
       <%= toHtml(thisOrg.getTicker()) %>
     </td>
-    <td width=100 valign=center><%= thisOrg.getEnteredStringLongYear() %></td>
+    <td width="100" valign="center" align="center">
+      <%= thisOrg.getEnteredStringLongYear() %>
+    </td>
   </tr>
 <%}%>
-<dhv:permission name="myhomepage-miner-delete">
-	<tr bgcolor="white">
-    <td valign="center" colspan=4>
-      
-      <input type=submit name="action" value="Delete Checked">
-      <input type=reset value="Clear">
-      
-    </td>
-	</tr>
-</dhv:permission>
 </table>
+<dhv:permission name="myhomepage-miner-delete">
+	&nbsp;<br>
+  <input type="submit" name="action" value="Delete Checked">
+  <input type="reset" value="Clear"><br>
+</dhv:permission>
 <br>
-	[<%= HeadlineListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= HeadlineListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>]
+<dhv:pagedListControl object="HeadlineListInfo" tdClass="row1"/>
 <%} else {%>
-  <tr bgcolor="white">
-    <td colspan=4 valign=center>No companies found.</td>
+  <tr>
+    <td colspan="4">No companies found.</td>
   </tr>
 </table>
 <%}%>
 </form>
+<dhv:permission name="myhomepage-miner-add">
 </body>
-
+</dhv:permission>
