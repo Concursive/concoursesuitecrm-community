@@ -4,7 +4,7 @@ import java.sql.*;
 import com.darkhorseventures.database.*;
 
 /**
- *  Description of the Class
+ *  Application to test threaded connections
  *
  *@author     mrajkowski
  *@created    July 10, 2001
@@ -17,17 +17,13 @@ public class Database {
 
 
   /**
-   *  Constructor for the TestDB object
-   *
-   *@since
+   *  Constructor for the Database object
    */
-  public TestDB() { }
+  public Database() { }
 
 
   /**
    *  Description of the Method
-   *
-   *@since
    */
   public synchronized void runTests() {
     java.util.Date startDate = new java.util.Date();
@@ -117,13 +113,12 @@ public class Database {
 
 
   /**
-   *  The main program for the TestDB class
+   *  The main program for the Database class
    *
    *@param  args  The command line arguments
-   *@since
    */
   public static void main(String[] args) {
-    TestDB thisApp = new TestDB();
+    Database thisApp = new Database();
     thisApp.runTests();
     System.exit(0);
   }
@@ -194,8 +189,6 @@ public class Database {
       } catch (SQLException e) {
       }
     }
-
   }
-
 }
 
