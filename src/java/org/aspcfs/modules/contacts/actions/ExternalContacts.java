@@ -959,6 +959,7 @@ public final class ExternalContacts extends CFSModule {
     int resultCount = 0;
     String id = context.getRequest().getParameter("id");
     String permission = "contacts-external_contacts-add";
+    Organization thisOrg = null;
 
     Contact thisContact = (Contact) context.getFormBean();
     thisContact.setRequestItems(context.getRequest());
@@ -981,7 +982,10 @@ public final class ExternalContacts extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-
+      if(thisContact.getOrgId() > 0){
+        thisOrg = new Organization(db, thisContact.getOrgId());
+        thisContact.setOrgName(thisOrg.getName());
+      }
       if (thisContact.getId() > 0) {
         addModuleBean(context, "External Contacts", "Update Contact");
         Contact oldContact = new Contact(db, id);
