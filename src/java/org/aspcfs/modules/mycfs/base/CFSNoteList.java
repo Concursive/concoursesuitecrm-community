@@ -135,10 +135,6 @@ public class CFSNoteList extends Vector {
     return sentFrom;
   }
 
-
-  // end buildList
-
-
   /**
    *  Gets the OldMessagesOnly attribute of the CFSNoteList object
    *
@@ -215,10 +211,10 @@ public class CFSNoteList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("entered", "desc");
+      pagedListInfo.setDefaultSort("m.entered", "desc");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY entered desc ");
+      sqlOrder.append("ORDER BY m.entered desc ");
     }
 
     //Need to build a base SQL statement for returning records
