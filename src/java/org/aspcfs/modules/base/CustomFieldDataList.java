@@ -74,8 +74,8 @@ public class CustomFieldDataList extends ArrayList {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
 
       //Determine column to sort by
       pagedListInfo.setDefaultSort("record_id", "field_id");

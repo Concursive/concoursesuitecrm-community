@@ -91,13 +91,12 @@ public class AccessLog extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Access Log not found");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Access Log not found");
+    }
   }
 
 
@@ -266,7 +265,6 @@ public class AccessLog extends GenericBean {
     if (userId == -1) {
       throw new SQLException("Log Entry must be associated to a CFS User");
     }
-
     StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
@@ -299,7 +297,6 @@ public class AccessLog extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);

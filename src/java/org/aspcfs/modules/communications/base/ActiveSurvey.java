@@ -89,14 +89,12 @@ public class ActiveSurvey extends SurveyBase {
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("ActiveSurvey record not found.");
     }
     rs.close();
     pst.close();
-
+    if (id == -1) {
+      throw new SQLException("ActiveSurvey record not found.");
+    }
     questions.setActiveSurveyId(this.getId());
     questions.buildList(db);
   }
@@ -419,7 +417,6 @@ public class ActiveSurvey extends SurveyBase {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -451,6 +448,7 @@ public class ActiveSurvey extends SurveyBase {
       st.executeUpdate("DELETE FROM active_survey_answer_avg WHERE question_id IN (SELECT question_id FROM active_survey_questions WHERE active_survey_id = " + this.getId() + ")");
       st.executeUpdate("DELETE FROM active_survey_questions WHERE active_survey_id = " + this.getId());
       st.executeUpdate("DELETE FROM active_survey WHERE active_survey_id = " + this.getId());
+      st.close();
       if (commit) {
         db.commit();
       }
@@ -463,9 +461,6 @@ public class ActiveSurvey extends SurveyBase {
     } finally {
       if (commit) {
         db.setAutoCommit(true);
-      }
-      if (st != null) {
-        st.close();
       }
     }
     return true;
@@ -496,11 +491,10 @@ public class ActiveSurvey extends SurveyBase {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 

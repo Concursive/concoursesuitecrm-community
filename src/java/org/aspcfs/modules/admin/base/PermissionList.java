@@ -21,6 +21,7 @@ public class PermissionList extends Vector {
   private String emptyHtmlSelectRecord = null;
   private int userId = -1;
   private String currentCategory = "!new";
+  private boolean viewpointsOnly = false;
 
 
   /**
@@ -37,6 +38,26 @@ public class PermissionList extends Vector {
    */
   public PermissionList(Connection db) throws SQLException {
     buildList(db);
+  }
+
+
+  /**
+   *  Sets the viewpointsOnly attribute of the PermissionList object
+   *
+   *@param  viewpointsOnly  The new viewpointsOnly value
+   */
+  public void setViewpointsOnly(boolean viewpointsOnly) {
+    this.viewpointsOnly = viewpointsOnly;
+  }
+
+
+  /**
+   *  Gets the viewpointsOnly attribute of the PermissionList object
+   *
+   *@return    The viewpointsOnly value
+   */
+  public boolean getViewpointsOnly() {
+    return viewpointsOnly;
   }
 
 
@@ -89,6 +110,11 @@ public class PermissionList extends Vector {
     }
     sqlFilter.append("AND p.enabled = ? ");
     sqlFilter.append("AND c.enabled = ? ");
+
+    if (viewpointsOnly) {
+      sqlFilter.append("AND p.viewpoints = ? ");
+      sqlFilter.append("AND c.viewpoints = ? ");
+    }
   }
 
 
@@ -103,6 +129,10 @@ public class PermissionList extends Vector {
     int i = 0;
     pst.setBoolean(++i, true);
     pst.setBoolean(++i, true);
+    if (viewpointsOnly) {
+      pst.setBoolean(++i, true);
+      pst.setBoolean(++i, true);
+    }
     return i;
   }
 

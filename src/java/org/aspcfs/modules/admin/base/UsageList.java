@@ -192,8 +192,8 @@ public class UsageList {
       count = DatabaseUtils.getInt(rs, "recordcount", 0);
       size = DatabaseUtils.getInt(rs, "recordsize", 0);
     }
-    pst.close();
     rs.close();
+    pst.close();
   }
 
 

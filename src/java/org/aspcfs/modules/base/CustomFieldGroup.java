@@ -629,9 +629,8 @@ public class CustomFieldGroup extends ArrayList {
     if (id == -1) {
       return result;
     }
-
-    db.setAutoCommit(false);
     try {
+      db.setAutoCommit(false);
       String sql =
           "DELETE FROM custom_field_data " +
           "WHERE field_id IN (SELECT field_id FROM custom_field_info WHERE group_id = ?) ";
@@ -677,7 +676,6 @@ public class CustomFieldGroup extends ArrayList {
     } finally {
       db.setAutoCommit(true);
     }
-
     return result;
   }
 

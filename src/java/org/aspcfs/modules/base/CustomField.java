@@ -134,7 +134,6 @@ public class CustomField extends GenericBean implements Cloneable {
     }
     rs.close();
     pst.close();
-
     if (this.getType() == CustomField.SELECT) {
       this.buildElementData(db);
     }
@@ -1528,7 +1527,6 @@ public class CustomField extends GenericBean implements Cloneable {
       rs.close();
       pst.close();
     }
-
     buildElementData(db);
   }
 
@@ -1650,9 +1648,9 @@ public class CustomField extends GenericBean implements Cloneable {
     } catch (SQLException e) {
       result = false;
       db.rollback();
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
-
     return result;
   }
 
@@ -1778,15 +1776,14 @@ public class CustomField extends GenericBean implements Cloneable {
       pst.setInt(1, id);
       pst.execute();
       pst.close();
-
       db.commit();
       result = true;
     } catch (SQLException e) {
       result = false;
       db.rollback();
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
-
     return result;
   }
 

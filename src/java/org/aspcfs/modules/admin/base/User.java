@@ -151,7 +151,6 @@ public class User extends GenericBean {
    */
   public User(Connection db, int userId) throws SQLException {
     buildRecord(db, userId);
-    buildResources(db);
   }
 
 
@@ -1593,7 +1592,6 @@ public class User extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
-
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Beginning insert");
       }
@@ -1707,10 +1705,10 @@ public class User extends GenericBean {
       }
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
     return true;
   }
 
@@ -1907,13 +1905,12 @@ public class User extends GenericBean {
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("User record not found.");
     }
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("User record not found.");
+    }
     buildResources(db);
   }
 

@@ -99,9 +99,6 @@ public final class Roles extends CFSModule {
       Role thisRole = new Role(db, Integer.parseInt(roleId));
       context.getRequest().setAttribute("Role", thisRole);
 
-      if (action != null && action.equals("modify")) {
-
-      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {

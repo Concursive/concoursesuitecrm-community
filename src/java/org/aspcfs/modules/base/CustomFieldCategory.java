@@ -997,11 +997,10 @@ public class CustomFieldCategory extends ArrayList {
       }
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
-
     return resultId;
   }
 
@@ -1165,11 +1164,10 @@ public class CustomFieldCategory extends ArrayList {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
-
     return true;
   }
 

@@ -28,7 +28,7 @@ public class NoteList extends Vector {
 	/**
 	 *  Description of the Field
 	 */
-	protected int oppId = -1;
+	protected int oppHeaderId = -1;
 	/**
 	 *  Description of the Field
 	 */
@@ -46,12 +46,12 @@ public class NoteList extends Vector {
 
 
 	/**
-	 *  Sets the OppId attribute of the NoteList object
+	 *  Sets the OppHeaderId attribute of the NoteList object
 	 *
-	 *@param  tmp  The new OppId value
+	 *@param  tmp  The new OppHeaderId value
 	 */
-	public void setOppId(int tmp) {
-		this.oppId = tmp;
+	public void setOppHeaderId(int tmp) {
+		this.oppHeaderId = tmp;
 	}
 
 
@@ -76,12 +76,12 @@ public class NoteList extends Vector {
 
 
 	/**
-	 *  Gets the OppId attribute of the NoteList object
+	 *  Gets the OppHeaderId attribute of the NoteList object
 	 *
-	 *@return    The OppId value
+	 *@return    The OppHeaderId value
 	 */
-	public int getOppId() {
-		return oppId;
+	public int getOppHeaderId() {
+		return oppHeaderId;
 	}
 
 
@@ -166,7 +166,7 @@ public class NoteList extends Vector {
 			sqlFilter.append("AND org_id = ? ");
 		}
 
-		if (oppId != -1) {
+		if (oppHeaderId != -1) {
 			sqlFilter.append("AND opp_id = ? ");
 		}
 
@@ -190,15 +190,12 @@ public class NoteList extends Vector {
 		if (orgId != -1) {
 			pst.setInt(++i, orgId);
 		}
-
-		if (oppId != -1) {
-			pst.setInt(++i, oppId);
+		if (oppHeaderId != -1) {
+			pst.setInt(++i, oppHeaderId);
 		}
-
 		if (contactId != -1) {
 			pst.setInt(++i, contactId);
 		}
-
 		return i;
 	}
 

@@ -25,7 +25,7 @@ public class Note extends GenericBean {
   private int id = -1;
   private int orgId = -1;
   private int contactId = -1;
-  private int oppId = -1;
+  private int oppHeaderId = -1;
   private String dateEntered = null;
   private String body = "";
   private String subject = "";
@@ -115,12 +115,12 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Sets the OppId attribute of the Note object
+   *  Sets the OppHeaderId attribute of the Note object
    *
-   *@param  tmp  The new OppId value
+   *@param  tmp  The new OppHeaderId value
    */
-  public void setOppId(int tmp) {
-    this.oppId = tmp;
+  public void setOppHeaderId(int tmp) {
+    this.oppHeaderId = tmp;
   }
 
 
@@ -255,12 +255,12 @@ public class Note extends GenericBean {
 
 
   /**
-   *  Gets the OppId attribute of the Note object
+   *  Gets the OppHeaderId attribute of the Note object
    *
-   *@return    The OppId value
+   *@return    The OppHeaderId value
    */
-  public int getOppId() {
-    return oppId;
+  public int getOppHeaderId() {
+    return oppHeaderId;
   }
 
 
@@ -329,12 +329,10 @@ public class Note extends GenericBean {
     } else if (!isOpp && !isOrg) {
       this.setContactId(rs.getInt("contact_id"));
     } else {
-      this.setOppId(rs.getInt("opp_id"));
+      this.setOppHeaderId(rs.getInt("opp_id"));
     }
-
     this.setBody(rs.getString("body"));
     this.setSubject(rs.getString("subject"));
-
     this.setEnteredBy(rs.getInt("enteredby"));
     this.setModifiedBy(rs.getInt("modifiedby"));
   }
@@ -349,14 +347,11 @@ public class Note extends GenericBean {
    */
   public void buildRecord(HttpServletRequest request, int parseItem) {
     this.setDateEntered(request.getParameter("note" + parseItem + "date"));
-
     if (request.getParameter("note" + parseItem + "id") != null) {
       this.setId(request.getParameter("note" + parseItem + "id"));
     }
-
     this.setSubject(request.getParameter("note" + parseItem + "subject"));
     this.setBody(request.getParameter("note" + parseItem + "body"));
-
     if (request.getParameter("note" + parseItem + "delete") != null) {
       String action = request.getParameter("note" + parseItem + "delete").toLowerCase();
       if (action.equals("on")) {

@@ -115,7 +115,6 @@ public class RolePermissionList extends Hashtable {
     }
     rs.close();
     pst.close();
-
   }
 
 

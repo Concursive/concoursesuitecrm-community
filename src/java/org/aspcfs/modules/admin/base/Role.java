@@ -11,7 +11,6 @@ import com.darkhorseventures.framework.beans.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.admin.base.*;
 
 /**
  *  Represents a Role (User Group)
@@ -70,14 +69,12 @@ public class Role extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Role record not found.");
     }
     rs.close();
     pst.close();
-
+    if (id == -1) {
+      throw new SQLException("Role record not found.");
+    }
     buildResources(db);
   }
 
@@ -374,15 +371,12 @@ public class Role extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-
     if (!isValid(db)) {
       return -1;
     }
-
     int resultCount = 0;
     try {
       db.setAutoCommit(false);
-
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
@@ -406,11 +400,10 @@ public class Role extends GenericBean {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 
@@ -423,39 +416,28 @@ public class Role extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
-    ResultSet rs = null;
-    String sql = "";
     DependencyList dependencyList = new DependencyList();
-    try {
-      db.setAutoCommit(false);
-      sql = "SELECT COUNT(*) AS user_count " +
-          "FROM access " +
-          "WHERE role_id = ? " +
-          "AND enabled = " + DatabaseUtils.getTrue(db) + " ";
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int usercount = rs.getInt("user_count");
-        if (usercount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Active Users");
-          thisDependency.setCount(usercount);
-          thisDependency.setCanDelete(true);
-          dependencyList.add(thisDependency);
-        }
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT COUNT(*) AS user_count " +
+        "FROM access " +
+        "WHERE role_id = ? " +
+        "AND enabled = ? ");
+    pst.setInt(++i, this.getId());
+    pst.setBoolean(++i, true);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      int usercount = rs.getInt("user_count");
+      if (usercount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Active Users");
+        thisDependency.setCount(usercount);
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
       }
-
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
     }
+    rs.close();
+    pst.close();
     return dependencyList;
   }
 
@@ -471,7 +453,6 @@ public class Role extends GenericBean {
     if (!isValid(db)) {
       return false;
     }
-
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
@@ -512,10 +493,10 @@ public class Role extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
     return true;
   }
 
@@ -543,7 +524,6 @@ public class Role extends GenericBean {
     try {
       db.setAutoCommit(false);
       Statement st = db.createStatement();
-
       if (hasUsers(db, false)) {
         recordCount = st.executeUpdate(
             "UPDATE role " +
@@ -559,11 +539,10 @@ public class Role extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
-
     if (recordCount == 0) {
       errors.put("actionError", "Role could not be deleted because it no longer exists.");
       return false;

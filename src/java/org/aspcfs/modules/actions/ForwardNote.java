@@ -3,7 +3,6 @@ package org.aspcfs.modules.actions;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
-import java.util.Vector;
 import org.aspcfs.utils.web.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.modules.actions.CFSModule;
@@ -39,13 +38,7 @@ public final class ForwardNote extends CFSModule {
     CFSNote thisNote = new CFSNote();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
 
-    UserList list = new UserList();
-    list.setEnabled(UserList.TRUE);
-    list.setBuildContact(false);
-    list.setBuildHierarchy(false);
-
     Connection db = null;
-
     try {
       db = getConnection(context);
 
@@ -57,11 +50,14 @@ public final class ForwardNote extends CFSModule {
         //forwarding a call
         if (Integer.parseInt(linkModId) == Constants.CONTACTS_CALLS) {
           Call thisCall = new Call(db, linkRecId);
-          thisNote.setBody("Contact Name: " + thisCall.getContactName() + "\nType: " + thisCall.getCallType() + "\nLength: " + thisCall.getLengthText() +
-              "\nSubject: " + thisCall.getSubject() + "\nNotes: " + thisCall.getNotes() + "\nEntered: "
-               + thisCall.getEnteredName() + " - " + thisCall.getEnteredString() + "\nModified: " +
-              thisCall.getModifiedName() + " - " + thisCall.getModifiedString());
-          context.getRequest().setAttribute("CallDetails", thisCall);
+          thisNote.setBody(
+              "Contact Name: " + thisCall.getContactName() + "\n" +
+              "Type: " + thisCall.getCallType() + "\n" +
+              "Length: " + thisCall.getLengthText() + "\n" +
+              "Subject: " + thisCall.getSubject() + "\n" +
+              "Notes: " + thisCall.getNotes() + "\n" +
+              "Entered: " + thisCall.getEnteredName() + " - " + thisCall.getEnteredString() + "\n" +
+              "Modified: " + thisCall.getModifiedName() + " - " + thisCall.getModifiedString());
         }
         //forwarding a note
         else if (Integer.parseInt(linkModId) == Constants.CFSNOTE) {
@@ -69,29 +65,19 @@ public final class ForwardNote extends CFSModule {
           thisNote.setBody("----Original Message----\nFrom: " + thisNote.getSentName() + "\nSent: " + thisNote.getEnteredDateTimeString() + "\nTo: " +
               thisUser.getNameFirst() + " " + thisUser.getNameLast() +
               "\nSubject: " + thisNote.getSubject() + "\n\n" + thisNote.getBody());
-
           if (!(thisNote.getSubject().startsWith("Fwd:"))) {
             thisNote.setSubject("Fwd: " + thisNote.getSubject());
           }
         }
       }
-
-      list.buildList(db);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-      context.getRequest().setAttribute("UserList", list);
       context.getRequest().setAttribute("NoteDetails", thisNote);
-      if (context.getRequest().getParameter("popup") != null) {
-        return ("PopupOK");
-      } else {
-        return ("ProjectCenterOK");
-      }
+      return ("PopupOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -117,7 +103,7 @@ public final class ForwardNote extends CFSModule {
       }
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
@@ -194,13 +180,11 @@ public final class ForwardNote extends CFSModule {
           }
         }
       }
-
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       context.getRequest().setAttribute("UserList", list);
       if (!recordInserted) {

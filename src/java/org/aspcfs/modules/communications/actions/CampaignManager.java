@@ -167,8 +167,14 @@ public final class CampaignManager extends CFSModule {
     }
 
     Exception errorMessage = null;
+    
+    if("list".equals(context.getRequest().getParameter("source"))){
+      addModuleBean(context, "ManageCampaigns", "Build New Campaign");
+    }else{
+      addModuleBean(context, "Add Campaign", "Build New Campaign");
+    }
 
-    addModuleBean(context, "ManageCampaigns", "Build New Campaign");
+    
 
     try {
       context.getSession().removeAttribute("CampaignCenterGroupInfo");

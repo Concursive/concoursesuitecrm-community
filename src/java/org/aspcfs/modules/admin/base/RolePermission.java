@@ -7,7 +7,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.framework.beans.*;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.admin.base.*;
 
 /**
  *  Description of the Class
@@ -60,13 +59,12 @@ public class RolePermission extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("RolePermission record not found.");
     }
     rs.close();
     pst.close();
+    if (roleId == -1) {
+      throw new SQLException("RolePermission record not found.");
+    }
   }
 
 

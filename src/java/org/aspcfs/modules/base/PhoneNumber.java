@@ -583,19 +583,17 @@ public class PhoneNumber {
    */
   public final static String convertToFormattedNumber(String tmp) {
     String tmpNum = "";
-
     if (tmp.indexOf("+") == 0) {
       tmpNum = tmp;
     } else {
       tmpNum = convertToNumber(tmp);
     }
-
     StringBuffer result = new StringBuffer();
 
     //it's a US number
     if (tmpNum.indexOf("+") == -1) {
       //1-XXX numbers, strip off the beginning "1"
-      if (tmpNum.length() == 11) {
+      if (tmpNum.length() == 11 && tmpNum.charAt(0) == '1') {
         tmpNum = tmpNum.substring(1);
       }
 
@@ -605,6 +603,9 @@ public class PhoneNumber {
       result.append(tmpNum.substring(3, 6));
       result.append("-");
       result.append(tmpNum.substring(6, 10));
+      if (tmpNum.length() > 10) {
+        result.append(tmpNum.substring(10));
+      }
     } else {
       result.append(tmpNum);
     }

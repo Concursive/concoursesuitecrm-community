@@ -437,17 +437,25 @@ public class Address {
    *@since     1.10
    */
   public boolean isValid() {
-    return (type > -1 &&
-        ((streetAddressLine1 != null && !streetAddressLine1.trim().equals("")) ||
-        (streetAddressLine2 != null && !streetAddressLine2.trim().equals("")) ||
-        (city != null && !city.trim().equals("")) ||
-        (state != null && !state.trim().equals("") && !state.trim().equals("-1")) ||
-        (zip != null && !zip.trim().equals("")) ||
-        (country != null && !country.equals("") && !country.equals("-1") && ((streetAddressLine1 != null && !streetAddressLine1.trim().equals("")) ||
-        (streetAddressLine2 != null && !streetAddressLine2.trim().equals("")) || (city != null && !city.trim().equals("")) ||
-        (state != null && !state.trim().equals("") && !state.trim().equals("-1")) || (zip != null && !zip.trim().equals("")))) ||
-        (!country.equals("UNITED STATES"))
-        ));
+    //A blank record is not valid, and having the default UNITED STATES selected
+    //without any other data is also invalid and does not need to be saved
+    if (type == -1) {
+      return false;
+    }
+    if ((streetAddressLine1 == null || streetAddressLine1.trim().equals("")) &&
+        (streetAddressLine2 == null || streetAddressLine2.trim().equals("")) &&
+        (city == null || city.trim().equals("")) &&
+        (state == null || 
+         state.trim().equals("") || 
+         "-1".equals(state)) &&
+        (zip == null || zip.trim().equals("")) &&
+        (country == null ||
+        country.trim().equals("") ||
+        "-1".equals(country) ||
+        "UNITED STATES".equals(country))) {
+      return false;
+    }
+    return true;
   }
 
 
