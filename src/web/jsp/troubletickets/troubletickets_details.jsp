@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
@@ -33,8 +33,15 @@
 <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete"><br>&nbsp;<br></dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan=2 valign=top align=left>
       <strong>Ticket Information</strong>
+<dhv:evaluate exp="<%= TicketDetails.getFiles().hasFileType(".none") %>">
+      <embed src="TroubleTicketsDocuments.do?command=Download&tId=23&fid=12"
+        align="absmiddle" border="0" width="0" height="0"
+        autostart="true" loop="false" playcount="1"></embed>
+      <noembed><A HREF="TroubleTicketsDocuments.do?command=Download&tId=23&fid=12">Recorded message</A></noembed>
+      <A HREF="TroubleTicketsDocuments.do?command=Download&tId=23&fid=12">Recorded message</A>
+</dhv:evaluate>
     </td>     
   </tr>
   <tr class="containerBody">
@@ -50,6 +57,17 @@
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
     <td valign=top>
+<%
+  Iterator files = TicketDetails.getFiles().iterator();
+  while (files.hasNext()) {
+    FileItem thisFile = (FileItem)files.next();
+    if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
+%>
+  <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom">Play Audio Message</a><br>
+<%
+    }
+  }
+%>
       <%= toHtml(TicketDetails.getProblem()) %>
       <input type="hidden" name="problem" value="<%=toHtml(TicketDetails.getProblem())%>">
       <input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
