@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="SearchOrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <script language="JavaScript">
@@ -37,7 +38,7 @@ Search Accounts
   </tr>
   <tr>
     <td class="formLabel">
-      Phone Number
+      <dhv:label name="organization.accountNumber">Account Number</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="searchAccountNumber" value="<%= SearchOrgListInfo.getSearchOptionValue("searchAccountNumber") %>">

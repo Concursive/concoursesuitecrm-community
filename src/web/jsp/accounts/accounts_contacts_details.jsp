@@ -35,13 +35,26 @@ Contact Details
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
+<%-- TODO: Currently this block appears and hides depending on the content,
+     this will need to be changed --%>
+<dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) || hasText(ContactDetails.getTypesNameString()) %>">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
-    </th>     
+      <strong>Details</strong>
+    </th>
   </tr>
-<dhv:evaluate exp="<%= hasText(ContactDetails.getTitle()) %>">
+  <dhv:evaluate if="<%= hasText(ContactDetails.getTypesNameString()) %>">
+  <tr class="containerBody">
+    <td class="formLabel">
+      Contact Type
+    </td>
+    <td>
+      <%= toHtml(ContactDetails.getTypesNameString()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>">
   <tr class="containerBody">
     <td class="formLabel">
       Title
@@ -50,29 +63,10 @@ Contact Details
       <%= toHtml(ContactDetails.getTitle()) %>
     </td>
   </tr>
-</dhv:evaluate>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Entered
-    </td>
-    <td>
-      <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= ContactDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Modified
-    </td>
-    <td>
-      <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
-      -
-      <dhv:tz timestamp="<%= ContactDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
-    </td>
-  </tr>
+  </dhv:evaluate>
 </table>
 &nbsp;
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -171,6 +165,46 @@ Contact Details
   </tr>
 <%}%>
 </table>
+&nbsp;
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+	    <strong>Additional Details</strong>
+	  </th>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">Notes</td>
+    <td><%= toHtml(ContactDetails.getNotes()) %></td>
+  </tr>
+</table>
+&nbsp;
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong>Record Information</strong>
+    </th>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap>
+      Entered
+    </td>
+    <td>
+      <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
+      -
+      <dhv:tz timestamp="<%= ContactDetails.getEntered()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel" nowrap>
+      Modified
+    </td>
+    <td>
+      <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
+      -
+      <dhv:tz timestamp="<%= ContactDetails.getModified()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+    </td>
+  </tr>
+</table>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
@@ -179,3 +213,4 @@ Contact Details
   </tr>
 </table>
 </form>
+

@@ -109,16 +109,22 @@ New Export
     </td>
     <td width="50%">
       <select size="5" multiple name="fields">
-        <option value="accountNumber" >Account No.</option>
-        <option value="url" >URL</option>
-        <option value="ticker" >Ticker</option>
-        <option value="employees" >Employees</option>
+        <option value="accountNumber"><dhv:label name="organization.accountNumber">Account Number</dhv:label></option>
+        <option value="url">Web Site URL</option>
+        <dhv:include name="organization.ticker" none="true">
+          <option value="ticker" >Ticker</option>
+        </dhv:include>
+        <dhv:include name="organization.employees" none="true">
+          <option value="employees" >Employees</option>
+        </dhv:include>
+        <dhv:include name="organization.contractEndDate" none="true">
+          <option value="contractEndDate" >Contract End Date</option>
+        </dhv:include>
+        <option value="owner" ><dhv:label name="organization.owner">Account Owner</dhv:label></option>
         <option value="entered" >Entered</option>
         <option value="enteredBy" >Entered By</option>
         <option value="modified" >Modified</option>
         <option value="modifiedBy" >Modified By</option>
-        <option value="owner" >Owner</option>
-        <option value="contractEndDate" >Contract End Date</option>
         <option value="notes" >Notes</option>
       </select>
     </td>

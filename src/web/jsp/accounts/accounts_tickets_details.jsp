@@ -58,7 +58,7 @@ Ticket Details
           </tr>
           <tr class="containerBody">
             <td valign="top" class="formLabel">
-              <dhv:label name="tickets-problem">Issue</dhv:label>
+              <dhv:label name="ticket.issue">Issue</dhv:label>
             </td>
             <td>
               <%= toHtml(TicketDetails.getProblem()) %>

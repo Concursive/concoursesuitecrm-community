@@ -113,10 +113,48 @@ Employee Details
     <td><%= toHtml(ContactDetails.getNotes()) %>&nbsp;</td>
   </tr>
 </table>
+&nbsp;
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong>Record Information</strong>
+    </th>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Owner
+    </td>
+    <td>
+      <dhv:username id="<%= ContactDetails.getOwner() %>"/>
+      <dhv:evaluate exp="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red">(No longer has access)</font></dhv:evaluate>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Entered
+    </td>
+    <td>
+      <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
+      -
+      <dhv:tz timestamp="<%= ContactDetails.getEntered()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Modified
+    </td>
+    <td>
+      <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
+      -
+      <dhv:tz timestamp="<%= ContactDetails.getModified()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+    </td>
+  </tr>
+</table>
 <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteEmployee&empid=<%=ContactDetails.getId() %>';confirmSubmit(document.details);"></dhv:permission>
 </td></tr>
 </table>
 </form>
+
 

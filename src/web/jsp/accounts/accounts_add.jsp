@@ -37,10 +37,12 @@
       message += "- Check that Alert Date is entered correctly\r\n";
       formTest = false;
     }
+    <dhv:include name="organization.contractEndDate" none="true">
     if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
       message += "- Check that Contract End Date is entered correctly\r\n";
       formTest = false;
     }
+    </dhv:include>
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -61,11 +63,12 @@
       message += "- URL entered is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
     }
+    <dhv:include name="organization.revenue" none="true">
     if (!checkNumber(form.revenue.value)) { 
       message += "- Revenue entered is invalid\r\n";
       formTest = false;
     }
-    
+    </dhv:include>
     if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
       alertMessage += "Alert Date is before today's date\r\n";
     }
@@ -84,27 +87,7 @@
     }
   }
   function resetFormElements() {
-    //some checks
-    isNS4 = (document.layers) ? true : false;
-    isIE4 = (document.all && !document.getElementById) ? true : false;
-    isIE5 = (document.all && document.getElementById) ? true : false;
-    isNS6 = (!document.all && document.getElementById) ? true : false;  
-    //end checks 
-    if (isNS4){
-      elm1 = document.layers["nameFirst1"];
-      elm2 = document.layers["nameMiddle1"];
-      elm3 = document.layers["nameLast1"];
-      elm4 = document.layers["orgname1"];
-      elm5 = document.layers["ticker1"];
-    }
-    else if (isIE4) {
-      elm1 = document.all["nameFirst1"];
-      elm2 = document.all["nameMiddle1"];
-      elm3 = document.all["nameLast1"];
-      elm4 = document.all["orgname1"];
-      elm5 = document.all["ticker1"];
-    }    
-    else if (isIE5 || isNS6) {
+    if (document.getElementById) {
       elm1 = document.getElementById("nameFirst1");
       elm2 = document.getElementById("nameMiddle1");
       elm3 = document.getElementById("nameLast1");
@@ -112,36 +95,20 @@
       elm5 = document.getElementById("ticker1");
       elm1.style.color = "#000000";
       document.addAccount.nameFirst.style.background = "#ffffff";
-      elm2.style.color = "#000000";      
+      elm2.style.color = "#000000";
       document.addAccount.nameMiddle.style.background = "#ffffff";
-      elm3.style.color = "#000000";          
+      elm3.style.color = "#000000";
       document.addAccount.nameLast.style.background = "#ffffff";
-      elm4.style.color = "#000000"; 
+      elm4.style.color = "#000000";
       document.addAccount.name.style.background = "#ffffff";
-      elm5.style.color = "#000000";      
-      document.addAccount.ticker.style.background = "#ffffff";
+      if (elm5) {
+        elm5.style.color = "#000000";
+        document.addAccount.ticker.style.background = "#ffffff";
+      }
     }
-  }  
+  }
   function updateFormElements(index) {
-    //some checks
-    isNS4 = (document.layers) ? true : false;
-    isIE4 = (document.all && !document.getElementById) ? true : false;
-    isIE5 = (document.all && document.getElementById) ? true : false;
-    isNS6 = (!document.all && document.getElementById) ? true : false;  
-    //end checks 
-    if (isNS4){
-      elm1 = document.layers["nameFirst1"];
-      elm2 = document.layers["nameMiddle1"];
-      elm3 = document.layers["nameLast1"];
-      elm4 = document.layers["orgname1"];
-      elm5 = document.layers["ticker1"];
-    } else if (isIE4) {
-      elm1 = document.all["nameFirst1"];
-      elm2 = document.all["nameMiddle1"];
-      elm3 = document.all["nameLast1"];
-      elm4 = document.all["orgname1"];
-      elm5 = document.all["ticker1"];
-    } else if (isIE5 || isNS6) {
+    if (document.getElementById) {
       elm1 = document.getElementById("nameFirst1");
       elm2 = document.getElementById("nameMiddle1");
       elm3 = document.getElementById("nameLast1");
@@ -154,9 +121,11 @@
         elm4.style.color="#cccccc";
         document.addAccount.name.style.background = "#cccccc";
         document.addAccount.name.value = "";
-        elm5.style.color="#cccccc";
-        document.addAccount.ticker.style.background = "#cccccc";
-        document.addAccount.ticker.value = "";        
+        if (elm5) {
+          elm5.style.color="#cccccc";
+          document.addAccount.ticker.style.background = "#cccccc";
+          document.addAccount.ticker.value = "";
+        }
       } else {
         indSelected = 0;
         orgSelected = 1;
@@ -172,7 +141,7 @@
         document.addAccount.nameLast.value = "";     
       }
     }
-    if(onLoad != 1){
+    if (onLoad != 1){
       var url = "Accounts.do?command=RebuildFormElements&index=" + index;
       window.frames['server_commands'].location.href=url;
     }
@@ -256,7 +225,8 @@ Add Account
       <strong>Add a New Account</strong>
     </th>
   </tr>
-   <tr>
+  <dhv:include name="organization.types" none="true">
+  <tr>
     <td nowrap class="formLabel" valign="top">
       Account Type(s)
     </td>
@@ -267,7 +237,7 @@ Add Account
             <select multiple name="selectedList" id="selectedList" size="5">
               <option value="-1">None Selected</option>
             </select>
-            <input type="hidden" name="previousSelection" value="">
+            <input type="hidden" name="previousSelection" value="" />
           </td>
           <td valign="top">
             &nbsp;[<a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_account_types');">Select</a>]
@@ -275,7 +245,8 @@ Add Account
         </tr>
       </table>
     </td>
-	</tr>
+  </tr>
+  </dhv:include>
   <tr>
     <td nowrap class="formLabel">
       Classification
@@ -319,7 +290,7 @@ Add Account
   </tr>  
   <tr>
     <td nowrap class="formLabel">
-      Account Number
+      <dhv:label name="organization.accountNumber">Account Number</dhv:label>
     </td>
     <td>
       <input type="text" size="50" name="accountNumber" maxlength=50 value="<%= OrgDetails.getAccountNumber() != null ? OrgDetails.getAccountNumber() : ""%>">
@@ -333,6 +304,7 @@ Add Account
       <input type="text" size="50" name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
     </td>
   </tr>
+  <dhv:include name="organization.industry" none="true">
   <tr>
     <td nowrap class="formLabel">
       Industry
@@ -341,7 +313,8 @@ Add Account
       <%= IndustryList.getHtmlSelect("industry",OrgDetails.getIndustry()) %>
     </td>
   </tr>
-  <dhv:include name="accounts-employees" none="true">
+  </dhv:include>
+  <dhv:include name="organization.employees" none="true">
   <tr>
     <td nowrap class="formLabel">
       No. of Employees
@@ -351,7 +324,7 @@ Add Account
     </td>
   </tr>
   </dhv:include>
-  <dhv:include name="accounts-revenue" none="true">
+  <dhv:include name="organization.revenue" none="true">
   <tr>
     <td nowrap class="formLabel">
       Revenue
@@ -361,6 +334,7 @@ Add Account
     </td>
   </tr>
   </dhv:include>
+  <dhv:include name="organization.ticker" none="true">
   <tr>
     <td name="ticker1" id="ticker1" nowrap class="formLabel">
       Ticker Symbol
@@ -369,6 +343,8 @@ Add Account
       <input onFocus="if (indSelected == 1) { tabNext(this) }" type="text" size="10" maxlength="10" name="ticker" value="<%= toHtmlValue(OrgDetails.getTicker()) %>">
     </td>
   </tr>
+  </dhv:include>
+  <dhv:include name="organization.contractEndDate" none="true">
   <tr>
     <td nowrap class="formLabel">
       Contract End Date
@@ -378,6 +354,7 @@ Add Account
       <a href="javascript:popCalendar('addAccount', 'contractEndDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>
+  </dhv:include>
   <tr>
     <td nowrap class="formLabel">
       Alert Description
@@ -1132,4 +1109,5 @@ Add Account
 <input type="hidden" name="dosubmit" value="true">
 </form>
 </body>
+
 

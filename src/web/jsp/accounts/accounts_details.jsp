@@ -25,12 +25,12 @@ Account Details
   <tr>
     <td class="containerBack">
       <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
-<dhv:evaluate exp="<%= OrgDetails.getEnabled() %>">
+<dhv:evaluate if="<%= OrgDetails.getEnabled() %>">
   <dhv:permission name="accounts-accounts-edit">
       <input type="button" value="Modify" onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';">
   </dhv:permission>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= !(OrgDetails.getEnabled()) %>">
+<dhv:evaluate if="<%= !(OrgDetails.getEnabled()) %>">
   <dhv:permission name="accounts-accounts-edit">
     <input type="button" value="Enable"	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
   </dhv:permission>
@@ -45,24 +45,24 @@ Account Details
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Owner
+      <dhv:label name="organization.owner">Account Owner</dhv:label>
     </td>
     <td>
       <%= OrgDetails.getOwnerName() %>
-      <dhv:evaluate exp="<%= !(OrgDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
+      <dhv:evaluate if="<%= !(OrgDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
-<dhv:evaluate exp="<%= hasText(OrgDetails.getAccountNumber()) %>">
+<dhv:evaluate if="<%= hasText(OrgDetails.getAccountNumber()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Account Number
+      <dhv:label name="organization.accountNumber">Account Number</dhv:label>
     </td>
     <td>
        <%= toHtml(OrgDetails.getAccountNumber()) %>&nbsp;
     </td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(OrgDetails.getUrl()) %>">
+<dhv:evaluate if="<%= hasText(OrgDetails.getUrl()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Web Site URL
@@ -72,7 +72,8 @@ Account Details
     </td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(OrgDetails.getIndustryName()) %>">
+<dhv:include name="organization.industry" none="true">
+<dhv:evaluate if="<%= hasText(OrgDetails.getIndustryName()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Industry
@@ -82,20 +83,21 @@ Account Details
     </td>
   </tr>
 </dhv:evaluate>
-<dhv:include name="accounts-employees" none="true">
-<dhv:evaluate exp="<%= (OrgDetails.getEmployees() > 0) %>">
+</dhv:include>
+<dhv:include name="organization.employees" none="true">
+<dhv:evaluate if="<%= (OrgDetails.getEmployees() > 0) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       No. of Employees
     </td>
     <td>
-       <%= OrgDetails.getEmployees() %>&nbsp;
+       <%= OrgDetails.getEmployees() %>
     </td>
   </tr>
 </dhv:evaluate>
 </dhv:include>
-<dhv:include name="accounts-revenue" none="true">
-<dhv:evaluate exp="<%= (OrgDetails.getRevenue() > 0) %>">
+<dhv:include name="organization.revenue" none="true">
+<dhv:evaluate if="<%= (OrgDetails.getRevenue() > 0) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Revenue
@@ -106,7 +108,8 @@ Account Details
   </tr>
 </dhv:evaluate>
 </dhv:include>
-<dhv:evaluate exp="<%= hasText(OrgDetails.getTicker()) %>">
+<dhv:include name="organization.ticker" none="true">
+<dhv:evaluate if="<%= hasText(OrgDetails.getTicker()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Ticker Symbol
@@ -116,7 +119,9 @@ Account Details
     </td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(OrgDetails.getContractEndDateString()) %>">
+</dhv:include>
+<dhv:include name="organization.contractEndDate" none="true">
+<dhv:evaluate if="<%= hasText(OrgDetails.getContractEndDateString()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Contract End Date
@@ -126,7 +131,8 @@ Account Details
     </td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(OrgDetails.getAlertText()) %>">
+</dhv:include>
+<dhv:evaluate if="<%= hasText(OrgDetails.getAlertText()) %>">
    <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Description
@@ -136,7 +142,7 @@ Account Details
     </td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= (OrgDetails.getAlertDate() != null) %>">
+<dhv:evaluate if="<%= (OrgDetails.getAlertDate() != null) %>">
    <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Date
@@ -154,7 +160,7 @@ Account Details
 	    <strong>Phone Numbers</strong>
 	  </th>
   </tr>
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
+<dhv:evaluate if="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%  
   Iterator inumber = OrgDetails.getPhoneNumberList().iterator();
   if (inumber.hasNext()) {
@@ -180,7 +186,7 @@ Account Details
     </tr>
 <%}%>
 </dhv:evaluate>
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
+<dhv:evaluate if="<%=(OrgDetails.getPrimaryContact() != null)%>">
 <%  
   Iterator inumber = OrgDetails.getPrimaryContact().getPhoneNumberList().iterator();
   if (inumber.hasNext()) {
@@ -214,7 +220,7 @@ Account Details
 	    <strong>Addresses</strong>
 	  </th>
   </tr>
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
+<dhv:evaluate if="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%  
   Iterator iaddress = OrgDetails.getAddressList().iterator();
   if (iaddress.hasNext()) {
@@ -240,7 +246,7 @@ Account Details
     </tr>
 <%}%>
 </dhv:evaluate>
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() != null)%>">
+<dhv:evaluate if="<%=(OrgDetails.getPrimaryContact() != null)%>">
 <%  
   Iterator iaddress = OrgDetails.getPrimaryContact().getAddressList().iterator();
   if (iaddress.hasNext()) {
@@ -274,7 +280,7 @@ Account Details
 	    <strong>Email Addresses</strong>
 	  </th>
   </tr>
-<dhv:evaluate exp="<%=(OrgDetails.getPrimaryContact() == null)%>">
+<dhv:evaluate if="<%=(OrgDetails.getPrimaryContact() == null)%>">
 <%
   Iterator iemail = OrgDetails.getEmailAddressList().iterator();
   if (iemail.hasNext()) {
@@ -300,7 +306,7 @@ Account Details
     </tr>
 <%}%>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= (OrgDetails.getPrimaryContact() != null) %>">
+<dhv:evaluate if="<%= (OrgDetails.getPrimaryContact() != null) %>">
 <%
   Iterator iemail = OrgDetails.getPrimaryContact().getEmailAddressList().iterator();
   if (iemail.hasNext()) {
@@ -372,10 +378,10 @@ Account Details
   </tr>
 </table>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br></dhv:permission>
-<dhv:evaluate exp="<%=(OrgDetails.getEnabled())%>">
+<dhv:evaluate if="<%=(OrgDetails.getEnabled())%>">
   <dhv:permission name="accounts-accounts-edit"><input type="button" value="Modify"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';"></dhv:permission>
 </dhv:evaluate>
-<dhv:evaluate exp="<%=!(OrgDetails.getEnabled())%>">
+<dhv:evaluate if="<%=!(OrgDetails.getEnabled())%>">
   <dhv:permission name="accounts-accounts-edit">
     <input type="button" value="Enable" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
   </dhv:permission>
