@@ -718,7 +718,7 @@ public void setId(String id) {
       int newOffset = currentOffset - itemsPerPage;
 
       if (!getEnableJavaScript()) {
-        return "<a href='" + link + "&offset=" + (newOffset > 0 ? newOffset : 0) + "'>" + linkOn + "</a>";
+        return "<a href='" + link + "&pagedListInfoId=" + this.getId() + "&offset=" + (newOffset > 0 ? newOffset : 0) + "'>" + linkOn + "</a>";
       } else {
         return "<a href=\"javascript:offsetsubmit('" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>";
       }
@@ -763,7 +763,7 @@ public void setId(String id) {
   public String getNextPageLink(String linkOn, String linkOff) {
     if ((currentOffset + itemsPerPage) < maxRecords) {
       if (!getEnableJavaScript()) {
-        return "<a href='" + link + "&offset=" + (currentOffset + itemsPerPage) + "'>" + linkOn + "</a>";
+        return "<a href='" + link + "&pagedListInfoId=" + this.getId() + "&offset=" + (currentOffset + itemsPerPage) + "'>" + linkOn + "</a>";
       } else {
         return "<a href=\"javascript:offsetsubmit('" + (currentOffset + itemsPerPage) + "');\">" + linkOn + "</a>";
       }

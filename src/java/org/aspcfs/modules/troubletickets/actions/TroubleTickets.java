@@ -370,6 +370,65 @@ public final class TroubleTickets extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandSearchTickets(ActionContext context) {
+
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
+      return ("PermissionError");
+    }
+
+    int errorCode = 0;
+    Exception errorMessage = null;
+
+    Connection db = null;
+    Statement st = null;
+    ResultSet rs = null;
+
+    TicketList ticList = new TicketList();
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+    
+    
+    PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicListInfo");
+    ticListInfo.setLink("/TroubleTickets.do?command=SearchTickets");
+    ticList.setPagedListInfo(ticListInfo);
+    ticListInfo.setSearchCriteria(ticList);
+    
+    try {
+      db = this.getConnection(context);
+      
+        if ("unassigned".equals(ticListInfo.getListView())) {
+          ticList.setUnassignedToo(true);
+          ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+        } else if ("assignedToMe".equals(ticListInfo.getListView())) {
+          ticList.setAssignedTo(getUserId(context));
+          ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+        } else {
+          ticList.setUnassignedToo(true);
+          
+          if ("createdByMe".equals(ticListInfo.getListView())) {
+                  ticList.setEnteredBy(getUserId(context));
+          }
+          
+        }
+
+      ticList.buildList(db);
+
+    } catch (Exception e) {
+      errorCode = 1;
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "ViewTickets", "View Tickets");
+    context.getRequest().setAttribute("TicList", ticList);
+
+    if (errorCode == 0) {
+      addModuleBean(context, "ViewTickets", "View Tickets");
+      return ("ResultsOK");
+    } else {
+      return ("SystemError");
+    }
+  }
 
 
   /**

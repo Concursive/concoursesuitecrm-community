@@ -600,6 +600,7 @@
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="HomeOK" resource="/troubletickets_list.jsp" layout="nav"/>
+    <forward name="ResultsOK" resource="/troubletickets_searchresults.jsp" layout="nav"/>
     <forward name="AddOK" resource="/troubletickets_add.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/troubletickets_modify.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/troubletickets_details.jsp" layout="nav"/>

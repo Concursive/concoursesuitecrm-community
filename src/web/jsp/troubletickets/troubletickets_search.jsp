@@ -4,7 +4,7 @@
 <jsp:useBean id="TicketTypeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].searchcodeId.focus();">
-<form name="searchTicket" action="/TroubleTickets.do?command=ViewResults&auto-populate=true" method="post">
+<form name="searchTicket" action="/TroubleTickets.do?command=SearchTickets&auto-populate=true" method="post">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
