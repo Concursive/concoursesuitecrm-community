@@ -130,8 +130,15 @@ public final class RevenueManager extends CFSModule {
       
       if (context.getRequest().getParameter("type") != null) {
 	      shortChildList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
+	      
+	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
+	      displayList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
+	      context.getSession().setAttribute("type", context.getRequest().getParameter("type"));
       }  else if (context.getSession().getAttribute("type") != null) {
 	      shortChildList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("type")));
+	      
+	      realFullRevList.setType(Integer.parseInt((String)context.getSession().getAttribute("type")));
+	      displayList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("type")));
       }
       
       shortChildList.buildRevenueYTD(db);
@@ -149,7 +156,7 @@ public final class RevenueManager extends CFSModule {
       displayList.setBuildRevenueYTD(true);
       
       System.out.println("here is the session variable: " + context.getSession().getAttribute("type"));
-      
+      /**
       if (context.getRequest().getParameter("type") != null) {
 	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
 	      displayList.setRevenueType(Integer.parseInt(context.getRequest().getParameter("type")));
@@ -158,7 +165,7 @@ public final class RevenueManager extends CFSModule {
 	      realFullRevList.setType(Integer.parseInt((String)context.getSession().getAttribute("type")));
 	      displayList.setRevenueType(Integer.parseInt((String)context.getSession().getAttribute("type")));
       }
-      
+      */
       realFullRevList.setOwnerIdRange(range);
       realFullRevList.buildList(db);
 
