@@ -57,16 +57,28 @@ public class InitHook implements ControllerInitHook {
     }
     
     if (config.getInitParameter("GlobalPWInfo") != null) {
-      config.getServletContext().setAttribute("GlobalPWInfo", config.getInitParameter("GlobalPWInfo"));
+      config.getServletContext().setAttribute("GlobalPWInfo", 
+        config.getInitParameter("GlobalPWInfo"));
     } else {
       if (System.getProperty("DEBUG") != null) System.out.println("InitHook-> No GlobalPWInfo");
       config.getServletContext().setAttribute("GlobalPWInfo", "#notspecified");
+    }
+    
+    if (config.getInitParameter("ClientSSLKeystore") != null) {
+      config.getServletContext().setAttribute("ClientSSLKeystore", 
+        config.getInitParameter("ClientSSLKeystore"));
+    }
+    
+    if (config.getInitParameter("ClientSSLKeystorePassword") != null) {
+      config.getServletContext().setAttribute("ClientSSLKeystorePassword", 
+        config.getInitParameter("ClientSSLKeystorePassword"));
     }
 
     config.getServletContext().setAttribute("SystemStatus", new Hashtable());
 
     return null;
   }
+  
 
 }
 

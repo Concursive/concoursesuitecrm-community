@@ -4,6 +4,9 @@ import java.sql.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import java.net.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import org.theseus.actions.*;
 
 /**
  *  Description of the Class
@@ -58,7 +61,7 @@ public class Notification extends Thread {
   private String errorMessage = null;
 
   private Connection connection = null;
-
+  private ActionContext context = null;
 
   /**
    *  Constructor for the Notification object
@@ -69,6 +72,11 @@ public class Notification extends Thread {
   
   public Notification(int thisType) {
     this.setType(thisType);
+  }
+  
+  public Notification(int thisType, ActionContext context) {
+    this.setType(thisType);
+    this.context = context;
   }
 
 
@@ -575,6 +583,13 @@ public class Notification extends Thread {
       thisMessage.setUrl(host);
       thisMessage.setPort(port);
       thisMessage.setMessage(messageToSend);
+      if (context != null) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Notification-> Setting Keystore");
+        }
+        thisMessage.setKeystore((String)context.getServletContext().getAttribute("ClientSSLKeystore"));
+        thisMessage.setKeystorePassword((String)context.getServletContext().getAttribute("ClientSSLKeystorePassword"));
+      }
       result = thisMessage.send();
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Notification->SEND RESULT: " + result);
@@ -591,6 +606,11 @@ public class Notification extends Thread {
     this.start();
   }
   
+  public void send(ActionContext context) {
+    this.context = context;
+    this.start();
+  }
+  
   public void run() {
     try {
       if (userToNotify > -1) {
@@ -601,6 +621,7 @@ public class Notification extends Thread {
        this.notifySystem();
       }
     } catch (Exception ignore) {
+      ignore.printStackTrace(System.out);
       result = 1;
     }
   }

@@ -86,6 +86,14 @@ Replaceable parameter  typical value / description
         <param-name>SiteCode</param-name>
         <param-value>@SiteCode@</param-value>
     </init-param>
+    <init-param>
+        <param-name>ClientSSLKeystore</param-name>
+        <param-value>@Keystore@</param-value>
+    </init-param>
+    <init-param>
+        <param-name>ClientSSLKeystorePassword</param-name>
+        <param-value>aspcfs</param-value>
+    </init-param>
     <!-- Gatekeeper configuration -->
     <init-param>
         <param-name>GKHOST</param-name>

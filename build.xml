@@ -325,6 +325,20 @@ determined user is ${USER}
         <include name="WEB-INF/web.xml" />
       </fileset>
     </copy>
+    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+             token="@SiteCode@" value="${SITECODE}"/>
+
+    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+             token="@GKHOST@" value="${GKHOST}"/>
+
+    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+             token="@GKUSER@" value="${GKUSER}"/>
+
+    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+             token="@GKUSERPW@" value="${GKUSERPW}"/>
+             
+    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+             token="@Keystore@" value="${DEST_DOCROOT}/WEB-INF/keystore"/>
   </target>
 
   <target name="site" description="Install files to site" 
@@ -361,18 +375,6 @@ determined user is ${USER}
     <mkdir dir="${DEST_DOCROOT}/graphs"/>
     <!--delete dir="${DEST_DOCROOT}/bin"/-->
     
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
-             token="@SiteCode@" value="${SITECODE}"/>
-
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
-             token="@GKHOST@" value="${GKHOST}"/>
-
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
-             token="@GKUSER@" value="${GKUSER}"/>
-
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
-             token="@GKUSERPW@" value="${GKUSERPW}"/>
-
     <exec executable="chown" os="Linux" >
       <arg value="-R"/>
       <arg value="${WEBUSER}.${CFSGRP}"/>

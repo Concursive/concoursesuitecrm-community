@@ -1212,7 +1212,7 @@ public final class Accounts extends CFSModule {
           thisNotification.setHost("127.0.0.1");
           thisNotification.setPort(44444);
           thisNotification.setMessageToSend(template.getParsedText());
-          thisNotification.send();
+          thisNotification.send(context);
         } else if (this.getDbName(context).equals("cdb_vport") &&
             thisCategory.hasField(11)) {
           Template template = new Template();
@@ -1223,7 +1223,7 @@ public final class Accounts extends CFSModule {
           thisNotification.setHost("151.204.139.251");
           thisNotification.setPort(44444);
           thisNotification.setMessageToSend(template.getParsedText());
-          thisNotification.send();
+          thisNotification.send(context);
         }
       }
       context.getRequest().setAttribute("Category", thisCategory);
