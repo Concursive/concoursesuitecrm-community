@@ -25,9 +25,9 @@ public class HtmlDialog {
   private String title = "";
   private String header = "";
   private String deleteUrl = "";
-  private HashMap links = new HashMap();
+  private LinkedHashMap links = new LinkedHashMap();
   private HashMap relationships = new HashMap();
-  private HashMap buttons = new HashMap();
+  private LinkedHashMap buttons = new LinkedHashMap();
   boolean showAndConfirm = true;
 
 
@@ -62,7 +62,7 @@ public class HtmlDialog {
    *
    *@param  tmp  The new buttons value
    */
-  public void setButtons(HashMap tmp) {
+  public void setButtons(LinkedHashMap tmp) {
     this.buttons = tmp;
   }
 
@@ -92,7 +92,7 @@ public class HtmlDialog {
    *
    *@param  links  The new links value
    */
-  public void setLinks(HashMap links) {
+  public void setLinks(LinkedHashMap links) {
     this.links = links;
   }
 
@@ -175,7 +175,7 @@ public class HtmlDialog {
    *
    *@return    The links value
    */
-  public HashMap getLinks() {
+  public LinkedHashMap getLinks() {
     return links;
   }
 
@@ -215,7 +215,7 @@ public class HtmlDialog {
    *
    *@return    The buttons value
    */
-  public HashMap getButtons() {
+  public LinkedHashMap getButtons() {
     return buttons;
   }
 

@@ -260,9 +260,9 @@ public final class Leads extends CFSModule {
     HtmlDialog htmlDialog = new HtmlDialog();
     String id = null;
 
-    //if (!(hasPermission(context, "myhomepage-inbox-view"))) {
-    //  return ("DefaultError");
-    //}
+        if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
+                return ("PermissionError");
+        }
 
     if (context.getRequest().getParameter("id") != null) {
       id = context.getRequest().getParameter("id");

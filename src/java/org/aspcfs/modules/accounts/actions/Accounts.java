@@ -1015,7 +1015,7 @@ public final class Accounts extends CFSModule {
         htmlDialog.setTitle("CFS: Confirm Delete");
         htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='/Accounts.do?command=Delete&action=delete&orgId=" + thisOrg.getOrgId() + "'");
-        //TODO: DISABLE
+        htmlDialog.addButton("Disable Only", "javascript:window.location.href='/Accounts.do?command=Delete&orgId=" + thisOrg.getOrgId() + "&action=disable'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
         
     } catch (Exception e) {
