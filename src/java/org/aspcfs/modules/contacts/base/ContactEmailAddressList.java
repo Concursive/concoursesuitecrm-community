@@ -46,7 +46,6 @@ public class ContactEmailAddressList extends EmailAddressList {
       thisEmailAddress.buildRecord(request, i);
       if (thisEmailAddress.isValid()) {
         this.addElement(thisEmailAddress);
-        System.out.println("Added an email address: " + thisEmailAddress.toString());
       }
     }
   }
