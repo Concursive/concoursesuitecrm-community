@@ -188,7 +188,7 @@ public class CFSDatasource implements DataSource {
 
 
   /**
-   *  Builds all events from the default connection information
+   *  Returns an empty list of events
    *
    *@return                             Description of the Return Value
    *@exception  CrontabEntryException   Description of the Exception
@@ -198,21 +198,9 @@ public class CFSDatasource implements DataSource {
    */
   public CrontabEntryBean[] findAll() throws CrontabEntryException,
       ClassNotFoundException, SQLException, DataNotFoundException {
-    //With the default connection, build events
-    Connection conn = null;
+    //Return no events...must be shutting down or not configured for
+    //the connection pool
     ArrayList events = new ArrayList();
-    try {
-      conn = getConnection();
-      findAll(events, conn, DEFAULT_TABLE, null);
-    } catch (SQLException e) {
-      //Ignore this... it could be temporary and we don't want this to crash
-    } finally {
-      try {
-        conn.close();
-      } catch (Exception ce) {
-        //It must be closed already
-      }
-    }
     return buildCrontabArray(events);
   }
 
