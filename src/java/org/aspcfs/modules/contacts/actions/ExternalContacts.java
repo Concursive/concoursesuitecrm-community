@@ -1150,6 +1150,50 @@ public final class ExternalContacts extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandConfirmDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Contact thisContact = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
+
+    //if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+    //  return ("DefaultError");
+    //}
+
+    if (context.getRequest().getParameter("id") != null) {
+      id = context.getRequest().getParameter("id");
+    }
+    
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, id);
+      htmlDialog.setRelationships(thisContact.processDependencies(db));
+      
+      if (htmlDialog.getRelationships().size() == 0) {
+        htmlDialog.setTitle("Confirm");
+        htmlDialog.setShowAndConfirm(false);
+        htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContacts.do?command=Delete&id=" + id + "'");
+      } else {
+        htmlDialog.setTitle("Confirm");
+        htmlDialog.setHeader("Note: The object you are requesting to delete has the following dependencies within CFS: ");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='/ExternalContacts.do?command=Delete&id=" + id + "'");
+        htmlDialog.addButton("No", "javascript:parent.window.close()");
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 
 
   /**

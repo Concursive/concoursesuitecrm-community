@@ -5,6 +5,11 @@
 <jsp:useBean id="OpportunityPagedListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+Opportunities<br>
+<hr color="#BFBFBB" noshade>
 <a href="ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">

@@ -177,6 +177,7 @@
     <forward name="DeleteReportOK" resource="/ExternalContacts.do?command=Reports"/>
     <forward name="DeleteReportERROR" resource="/ExternalContacts.do?command=Reports"/>
     <forward name="DefaultError" resource="/CompanyDirectory.do?command=ListEmployees"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp" layout="style"/>
 </action>
   <action name="ExternalContactsOpps" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
     <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>

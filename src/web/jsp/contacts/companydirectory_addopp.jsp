@@ -48,6 +48,12 @@
     }
 </script>
 <form name="addOpportunity" action="/ExternalContactsOpps.do?command=InsertOpp&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+<a href="/ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>">Opportunities</a> >
+Add Opportunity<br>
+<hr color="#BFBFBB" noshade>
 <a href="/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">Back to Opportunity List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">

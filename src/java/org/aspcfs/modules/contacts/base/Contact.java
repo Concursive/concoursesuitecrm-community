@@ -2027,5 +2027,38 @@ public class Contact extends GenericBean {
     }
     return out.toString().trim();
   }
+  
+  public HashMap processDependencies(Connection db) throws SQLException {
+    ResultSet rs = null;
+    String sql = "";
+    HashMap dependencyList = new HashMap();
+    try {
+      db.setAutoCommit(false);
+      sql = "SELECT count(*) as oppcount " +
+          "FROM opportunity " +
+          "WHERE opportunity.contactlink = ? ";
+
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+          if (rs.getInt("oppcount") != 0) {    
+                  dependencyList.put("Opportunities", new Integer(rs.getInt("oppcount")));
+          }
+      }
+
+      pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return dependencyList;
+  }
+    
 }
 
