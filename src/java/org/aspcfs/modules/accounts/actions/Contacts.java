@@ -142,9 +142,10 @@ public final class Contacts extends CFSModule {
     if (errorMessage == null) {
       context.getRequest().setAttribute("orgId", "" + newContact.getOrgId());
       if (recordInserted) {
-        if (context.getRequest().getParameter("saveAndNew") != null) {
-          if (context.getRequest().getParameter("saveAndNew").equals("true")) {
-            context.getRequest().removeAttribute("ContactDetails");
+        if (context.getRequest().getParameter("saveAndClone") != null) {
+          if (context.getRequest().getParameter("saveAndClone").equals("true")) {
+            newContact.resetBaseInfo();
+            context.getRequest().setAttribute("ContactDetails", newContact);
             return (executeCommandAdd(context));
           }
         }

@@ -50,7 +50,7 @@ Add Contact<br>
     <td class="containerBack">
 <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
 <input type=submit value="Save" onClick="return checkForm(this.form)">
-<input type=submit value="Save & New" onClick="this.form.saveAndNew.value='true';return checkForm(this.form);">
+<input type=submit value="Save & Clone" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
 <input type=reset value="Reset">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Contacts.do?command=View'">
 <br>
@@ -369,12 +369,12 @@ Add Contact<br>
 </table>
 <br>
 <input type=submit value="Save" onClick="return checkForm(this.form)">
-<input type=submit value="Save & New" onClick="this.form.saveAndNew.value='true';return checkForm(this.form);">
+<input type=submit value="Save & Clone" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
 <input type="reset" value="Reset">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Contacts.do?command=View'">
     </td>
   </tr>
 </table>
-<input type="hidden" name="saveAndNew" value="">
+<input type="hidden" name="saveAndClone" value="">
 </form>
 </body>
