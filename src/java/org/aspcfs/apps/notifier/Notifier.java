@@ -50,7 +50,7 @@ public class Notifier extends ReportBuilder {
       try {
         Class.forName((String) thisNotifier.config.get("DatabaseDriver"));
 
-        Vector siteList = new Vector();
+        ArrayList siteList = new ArrayList();
 
         Connection dbSites = DriverManager.getConnection(
             thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
@@ -283,18 +283,19 @@ public class Notifier extends ReportBuilder {
     while (i.hasNext()) {
       int campaignCount = 0;
       int sentCount = 0;
-      Vector faxLog = new Vector();
+      ArrayList faxLog = new ArrayList();
       ContactReport letterLog = new ContactReport();
       System.out.println("  Getting campaign ...");
       Campaign thisCampaign = (Campaign) i.next();
       
-      //TODO: Read the file attachments list, and copy into another FileItemList
+      //Read the file attachments list, and copy into another FileItemList
       //with the clientFilename, and the server's filename for the notification
+      FileItemList attachments = new FileItemList();
       FileItemList fileItemList = new FileItemList();
-      fileItemList.setLinkModuleId(Constants.COMMUNICATIONS);
+      fileItemList.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       fileItemList.setLinkItemId(thisCampaign.getId());
       fileItemList.buildList(db);
-      FileItemList attachments = new FileItemList();
+      System.out.println("  Campaign file attachments: " + fileItemList.size());
       Iterator files = fileItemList.iterator();
       while (files.hasNext()) {
         FileItem thisItem = (FileItem)files.next();
@@ -401,7 +402,7 @@ public class Notifier extends ReportBuilder {
    *@param  faxLog  Description of Parameter
    *@return         Description of the Returned Value
    */
-  private boolean outputFaxLog(Vector faxLog) {
+  private boolean outputFaxLog(ArrayList faxLog) {
     System.out.println("Notifier-> Outputting fax log");
     if (faxLog == null || faxLog.size() == 0) {
       return false;
