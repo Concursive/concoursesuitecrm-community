@@ -186,19 +186,6 @@ CREATE TABLE search_fields (
   enabled BOOLEAN DEFAULT true
 );
 
-CREATE TABLE recipient_list (
-  id serial PRIMARY KEY,
-  name VARCHAR(80) NOT NULL,
-  description VARCHAR(255),
-  search_id int,
-  dynamic BOOLEAN NOT NULL DEFAULT true,
-  enabled BOOLEAN NOT NULL DEFAULT true,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INT NOT NULL REFERENCES access(user_id),
-  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
-);
-
 CREATE TABLE message (
   id serial PRIMARY KEY,
   name VARCHAR(80) NOT NULL,

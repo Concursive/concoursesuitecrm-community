@@ -416,7 +416,7 @@ determined user is ${USER}
     <echo message=" Site code: ${SITECODE}"/>
     <echo message=" Destination: ${DEST_DOCROOT}"/>
     <echo message=" Source: ${SRC_APP}/WEB-INF/lib/*.jar"/>
-    <delete>
+    <delete quiet="true">
       <fileset dir= "${DEST_DOCROOT}/WEB-INF/lib" includes="*.jar"/>
     </delete>
     <copy todir="${DEST_DOCROOT}" >
