@@ -953,7 +953,7 @@ public class OpportunityComponent extends GenericBean {
    */
   public String getTermsString() {
     Double tmp = new Double(round(terms, 2));
-    String toReturn = "" + tmp;
+    String toReturn = String.valueOf(tmp);
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
     } else {
@@ -1100,7 +1100,7 @@ public class OpportunityComponent extends GenericBean {
    */
   public String getLowAmount() {
     Double thisAmount = new Double(round(low, 2));
-    String toReturn = "" + thisAmount;
+    String toReturn = String.valueOf(thisAmount);
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
     } else {
@@ -1141,7 +1141,7 @@ public class OpportunityComponent extends GenericBean {
    */
   public String getGuessAmount() {
     Double thisAmount = new Double(round(guess, 2));
-    String toReturn = "" + thisAmount;
+    String toReturn = String.valueOf(thisAmount);
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
     } else {
@@ -1203,7 +1203,7 @@ public class OpportunityComponent extends GenericBean {
    */
   public String getHighAmount() {
     Double thisAmount = new Double(round(high, 2));
-    String toReturn = "" + thisAmount;
+    String toReturn = String.valueOf(thisAmount);
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
     } else {
@@ -1246,8 +1246,7 @@ public class OpportunityComponent extends GenericBean {
    *@since
    */
   public String getCloseProbString() {
-    //String stringOut = (new java.math.BigDecimal("" + closeProb)).toString();
-    return "" + closeProb;
+    return String.valueOf(closeProb);
   }
 
 
@@ -1258,7 +1257,7 @@ public class OpportunityComponent extends GenericBean {
    */
   public String getCloseProbValue() {
     double value_2dp = (double) Math.round(closeProb * 100.0 * 100.0) / 100.0;
-    String toReturn = "" + value_2dp;
+    String toReturn = String.valueOf(value_2dp);
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
     } else {
@@ -1298,7 +1297,7 @@ public class OpportunityComponent extends GenericBean {
    *@since
    */
   public String getCommissionString() {
-    String stringOut = (new java.math.BigDecimal("" + commission)).toString();
+    String stringOut = (new java.math.BigDecimal(String.valueOf(commission))).toString();
     return stringOut;
   }
 
@@ -1323,7 +1322,7 @@ public class OpportunityComponent extends GenericBean {
    */
   public String getCommissionValue() {
     double value_2dp = (double) Math.round(commission * 100.0 * 100.0) / 100.0;
-    String toReturn = "" + value_2dp;
+    String toReturn = String.valueOf(value_2dp);
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
     } else {
