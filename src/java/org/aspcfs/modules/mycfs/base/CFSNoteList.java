@@ -221,18 +221,18 @@ public class CFSNoteList extends Vector {
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
-      sqlSelect.append("SELECT DISTINCT ");
+      sqlSelect.append("SELECT ");
     }
 
     if (sentMessagesOnly) {
       sqlSelect.append(
-          "m.id,m.subject,m.body,m.sent,m.delete_flag " +
+          "m.id, m.subject, m.body, m.sent, m.delete_flag " +
           "FROM cfsinbox_message m " +
-          "WHERE m.id > -1 AND m.delete_flag=" + DatabaseUtils.getFalse(db) + " ");
+          "WHERE m.id > -1 AND m.delete_flag = " + DatabaseUtils.getFalse(db) + " ");
     } else {
       sqlSelect.append(
-          "m.*, ml.*, ct_sent.namefirst as sent_namefirst, ct_sent.namelast as sent_namelast " +
-          "FROM cfsinbox_messagelink ml,cfsinbox_message m " +
+          "m.*, ml.*, ct_sent.namefirst AS sent_namefirst, ct_sent.namelast AS sent_namelast " +
+          "FROM cfsinbox_messagelink ml, cfsinbox_message m " +
           "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
           "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
           "LEFT JOIN contact ct_sent ON (m.enteredby = ct_sent.user_id) " +
