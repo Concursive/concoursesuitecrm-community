@@ -392,25 +392,21 @@ public class LookupElement {
    */
   public int disableElement(Connection db, String tableName) throws SQLException {
     int resultCount = 0;
-
     if (this.getCode() == 0) {
       throw new SQLException("Element Code not specified.");
     }
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-
     sql.append(
         "UPDATE " + tableName + " " +
-        "SET enabled = false " +
+        "SET enabled = ? " +
         "WHERE code = ? ");
-
     int i = 0;
     pst = db.prepareStatement(sql.toString());
+    pst.setBoolean(++i, false);
     pst.setInt(++i, this.getCode());
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
 
@@ -454,7 +450,6 @@ public class LookupElement {
   public boolean insert(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     int i = 0;
-
     sql.append(
         "INSERT INTO " + tableName + " " +
         "(description, level, enabled" + (fieldId > -1 ? ", field_id" : "") + ") " +
@@ -462,7 +457,6 @@ public class LookupElement {
     i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getDescription());
-
     pst.setInt(++i, this.getLevel());
     pst.setBoolean(++i, true);
     if (fieldId > -1) {
@@ -477,11 +471,8 @@ public class LookupElement {
     } else {
       seqName = tableName;
     }
-
     code = DatabaseUtils.getCurrVal(db, seqName + "_code_seq");
-
     return true;
   }
-
 }
 
