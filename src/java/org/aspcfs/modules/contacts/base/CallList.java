@@ -18,6 +18,12 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@version    $Id$
  */
 public class CallList extends Vector {
+        
+  public static final String tableName = "call_log";
+  public static final String uniqueField = "call_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private int contactId = -1;
@@ -28,6 +34,7 @@ public class CallList extends Vector {
   private java.sql.Date alertDate = null;
   private java.sql.Date alertRangeStart = null;
   private java.sql.Date alertRangeEnd = null;
+  
 
 
   /**

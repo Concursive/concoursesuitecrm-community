@@ -101,6 +101,44 @@ public class Call extends GenericBean {
     rs.close();
     st.close();
   }
+  
+  public Call(Connection db, int callId) throws SQLException {
+
+    Statement st = null;
+    ResultSet rs = null;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT c.*, t.*, " +
+        "e.namefirst as efirst, e.namelast as elast, " +
+        "m.namefirst as mfirst, m.namelast as mlast, " +
+        "ct.namefirst as ctfirst, ct.namelast as ctlast " +
+        "FROM call_log c " +
+        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
+        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code), " +
+        "contact e LEFT JOIN access a1 ON (e.contact_id = a1.contact_id), " +
+        "contact m LEFT JOIN access a2 ON (m.contact_id = a2.contact_id) " +
+        "WHERE c.enteredby = a1.user_id " +
+        "AND c.modifiedby = a2.user_id ");
+
+    if (callId > -1) {
+      sql.append("AND call_id = " + callId + " ");
+    } else {
+      throw new SQLException("Valid call ID not specified.");
+    }
+
+    st = db.createStatement();
+    rs = st.executeQuery(sql.toString());
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      rs.close();
+      st.close();
+      throw new SQLException("Call record not found.");
+    }
+    rs.close();
+    st.close();
+  }
 
 
   /**
@@ -142,8 +180,7 @@ public class Call extends GenericBean {
   public void setId(int tmp) {
     this.id = tmp;
   }
-
-
+  
   /**
    *  Sets the alertDate attribute of the Call object
    *
@@ -680,6 +717,10 @@ public class Call extends GenericBean {
 
     id = DatabaseUtils.getCurrVal(db, "call_log_call_id_seq");
     return true;
+  }
+  
+  public boolean insert(Connection db) throws SQLException {
+          return insert(db, null);
   }
 
 

@@ -31,7 +31,7 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
     writer.setAutoCommit(false);
     this.saveOppList(db, oppList);
     writer.commit();
-
+    
     //update owners
     
     writer.setAutoCommit(true);
@@ -44,6 +44,13 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
       Opportunity thisOpp = (Opportunity)opps.next();
       DataRecord thisRecord = mappings.createDataRecord(thisOpp, "insert");
       writer.save(thisRecord);
+      
+      //CallList callList = new CallList();
+      //callList.setOppId(thisOpp.getId());
+      //callList.buildList() ??
+      
+      //Iterate thru calls and create datarecords and write like we did for opps?
+      
     }
   }
     

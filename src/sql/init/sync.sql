@@ -532,5 +532,11 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'projectList', 'com.zeroio.iteam.base.ProjectList');
  
+ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'call', 'com.darkhorseventures.cfsbase.Call');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'callList', 'com.darkhorseventures.cfsbase.CallList');
+
+ 
  
  
