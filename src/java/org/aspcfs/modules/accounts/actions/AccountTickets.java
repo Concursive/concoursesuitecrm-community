@@ -445,6 +445,7 @@ public final class AccountTickets extends CFSModule {
       subList1.setParentCode(newTic.getCatCode());
       subList1.setHtmlJsEvent("onChange=\"javascript:updateSubList2();\"");
       subList1.buildList(db);
+      subList1.getCatListSelect().addItem(0, "Undetermined");
       context.getRequest().setAttribute("SubList1", subList1);
 
       ContactList contactList = new ContactList();
@@ -471,7 +472,7 @@ public final class AccountTickets extends CFSModule {
       } else {
         subList2.setParentCode(newTic.getSubCat1());
       }
-
+      subList2.getCatListSelect().addItem(0, "Undetermined");
       subList2.setHtmlJsEvent("onChange=\"javascript:updateSubList3();\"");
       subList2.buildList(db);
       context.getRequest().setAttribute("SubList2", subList2);
@@ -489,7 +490,7 @@ public final class AccountTickets extends CFSModule {
       } else {
         subList3.setParentCode(newTic.getSubCat2());
       }
-
+      subList3.getCatListSelect().addItem(0, "Undetermined");
       subList3.buildList(db);
       context.getRequest().setAttribute("SubList3", subList3);
 
