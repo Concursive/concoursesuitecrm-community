@@ -38,6 +38,20 @@ public final class Leads extends CFSModule {
   /**
    *  Description of the Method
    *
+   *@param  y  Description of Parameter
+   *@param  m  Description of Parameter
+   *@param  d  Description of Parameter
+   *@return    Description of the Returned Value
+   */
+  public static java.util.Date createDate(int y, int m, int d) {
+    GregorianCalendar calendar = new GregorianCalendar(y, m, d, 0, 0, 0);
+    return calendar.getTime();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    *@since
@@ -109,12 +123,12 @@ public final class Leads extends CFSModule {
    */
 
   public String executeCommandDashboard(ActionContext context) {
-    
+
     addModuleBean(context, "Dashboard", "Dashboard");
 
     int errorCode = 0;
     int idToUse = 0;
-    
+
     java.util.Date d = new java.util.Date();
 
     String errorMessage = "";
@@ -136,8 +150,8 @@ public final class Leads extends CFSModule {
     graphTypeSelect.addItem("cramr", "Commission Risk Adj. Monthly Revenue");
     graphTypeSelect.addItem("hist", "Historical");
     //done
-	
-    UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
+
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     String overrideId = context.getRequest().getParameter("oid");
 
     User thisRec = null;
@@ -167,9 +181,9 @@ public final class Leads extends CFSModule {
     graphString = context.getRequest().getParameter("whichGraph");
 
     if (graphString == null || graphString.equals("")) {
-	    graphString = "gmr";
+      graphString = "gmr";
     }
-    
+
     graphTypeSelect.setDefaultKey(graphString);
     graphTypeSelect.build();
 
@@ -195,7 +209,7 @@ public final class Leads extends CFSModule {
       Iterator z = realFullOppList.iterator();
 
       while (z.hasNext()) {
-        Opportunity tempOpp = (Opportunity)(z.next());
+        Opportunity tempOpp = (Opportunity) (z.next());
 
         //try it out
         //tempOppList is MY (or user drilled-to) Opps
@@ -212,137 +226,133 @@ public final class Leads extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
-    if (thisRec.getIsValid() == true) {	
-	if (graphString.equals("gmr")) {
-		checkFileName = thisRec.getGmr().getLastFileName();
-	} else if (graphString.equals("ramr")) {
-		checkFileName = thisRec.getRamr().getLastFileName();
-	} else if (graphString.equals("cgmr")) {
-		checkFileName = thisRec.getCgmr().getLastFileName();
-	} else if (graphString.equals("cramr")) {
-		checkFileName = thisRec.getCramr().getLastFileName();
-	}
+
+    if (thisRec.getIsValid() == true) {
+      if (graphString.equals("gmr")) {
+        checkFileName = thisRec.getGmr().getLastFileName();
+      } else if (graphString.equals("ramr")) {
+        checkFileName = thisRec.getRamr().getLastFileName();
+      } else if (graphString.equals("cgmr")) {
+        checkFileName = thisRec.getCgmr().getLastFileName();
+      } else if (graphString.equals("cramr")) {
+        checkFileName = thisRec.getCramr().getLastFileName();
+      }
     }
-    
+
     if (checkFileName.equals("")) {
-	    
-	    System.out.println("Leads-> Preparing the chart");
-	
-	    //add up all stuff for children
-	
-	    Iterator n = fullChildList.iterator();
-	
-	    while (n.hasNext()) {
-	      User thisRecord = (User)n.next();
-	      tempUserList = prepareLines(thisRecord, realFullOppList, tempUserList);
-	    }
-	
-	    linesToDraw = calculateLine(tempUserList, linesToDraw);
-	
-	    //set my own
-	
-	    tempUserList = prepareLines(thisRec, tempOppList, tempUserList);
-	
-	    //add me up -- keep this
-	    linesToDraw = calculateLine(thisRec, linesToDraw);
-	
-	    categoryData = createCategoryDataSource(linesToDraw, graphString);
-	
-	    JFreeChart chart = JFreeChart.createXYChart(categoryData);
-	
-	    chart.setChartBackgroundPaint(new GradientPaint(0, 0, Color.white, 1000, 0, Color.white));
-	    Plot bPlot = chart.getPlot();
-	
-	    //don't know if we really need this
-	    Axis vAxis = bPlot.getAxis(Plot.VERTICAL_AXIS);
-	    vAxis.setLabel("");
-	
-	    VerticalNumberAxis vnAxis = (VerticalNumberAxis)chart.getPlot().getAxis(Plot.VERTICAL_AXIS);
-	    vnAxis.setAutoRangeIncludesZero(true);
-	    
-	    HorizontalNumberAxis hnAxis = (HorizontalNumberAxis)chart.getPlot().getAxis(Plot.HORIZONTAL_AXIS);
-	    hnAxis.setAutoRangeIncludesZero(false);
-	    hnAxis.setAutoTickValue(false);
-	    hnAxis.setAutoRange(false);
-	    
-	    hnAxis.setLabel("");
-	    
-	    Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[] {2.0f, 2.0f}, 0.0f); 
-	    Paint gridPaint = Color.gray; 
 
-	
-	    //don't know if we really need this
-	    //Axis hAxis = bPlot.getAxis(Plot.HORIZONTAL_AXIS);
-	    //hAxis.setLabel("Months Out");
-	    
-	    System.out.println("Trying to use " + (d.getYear()+1900) + " " + d.getMonth() + " " + d.getDay());
-	    
-	    try {
-	    Axis myHorizontalDateAxis = new HorizontalDateAxis (hnAxis.getLabel(), hnAxis.getLabelFont(), 
-	    hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(), 
-	    hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(), 
-	    true, createDate( (d.getYear()+1900), d.getMonth(), 0), createDate((d.getYear() + 1901), d.getMonth(), 0), false, new DateUnit(Calendar.MONTH, 1), 
-	    new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint);
-	    
-	    bPlot.setHorizontalAxis(myHorizontalDateAxis);
-	    } catch (AxisNotCompatibleException err1) 
-		{ 
-		System.out.println("AxisNotCompatibleException error!"); 
-		} 
-		    
-	
-	    chart.setLegend(null);
-	    chart.setTitle("");
-	    
-	    //define the chart    
-	    int width = 300;
-	    int height = 200;
-	
-	    System.out.println("Leads-> Drawing the chart");
-	    BufferedImage img = draw(chart, width, height);
-	
-	    //Output the chart
-	    try {
-	      String fs = System.getProperty("file.separator");
-	
-	      String realPath = context.getServletContext().getRealPath("/");
-	      String filePath = realPath + "graphs" + fs;
-	
-	      java.util.Date testDate = new java.util.Date();
-	      java.util.Calendar testCal = java.util.Calendar.getInstance();
-	      testCal.setTime(testDate);
-	      testCal.add(java.util.Calendar.MONTH, +1);
-	
-	      fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
-		
-		if (graphString.equals("gmr")) {
-			thisRec.getGmr().setLastFileName(fileName);
-		} else if (graphString.equals("ramr")) {
-			thisRec.getRamr().setLastFileName(fileName);
-		} else if (graphString.equals("cgmr")) {
-			thisRec.getCgmr().setLastFileName(fileName);
-		} else if (graphString.equals("cramr")) {
-			thisRec.getCramr().setLastFileName(fileName);
-		}
-	      
-	      context.getRequest().setAttribute("GraphFileName", fileName);
-	      FileOutputStream foutstream = new FileOutputStream(filePath + fileName);
-	
-	      JPEGImageEncoder encoder =
-		  JPEGCodec.createJPEGEncoder(foutstream);
-	      JPEGEncodeParam param =
-		  encoder.getDefaultJPEGEncodeParam(img);
-	      param.setQuality(1.0f, true);
-	      encoder.encode(img, param);
-	      foutstream.close();
-	    } catch (IOException e) {
-	    }
+      System.out.println("Leads-> Preparing the chart");
 
+      //add up all stuff for children
+
+      Iterator n = fullChildList.iterator();
+
+      while (n.hasNext()) {
+        User thisRecord = (User) n.next();
+        tempUserList = prepareLines(thisRecord, realFullOppList, tempUserList);
+      }
+
+      linesToDraw = calculateLine(tempUserList, linesToDraw);
+
+      //set my own
+
+      tempUserList = prepareLines(thisRec, tempOppList, tempUserList);
+
+      //add me up -- keep this
+      linesToDraw = calculateLine(thisRec, linesToDraw);
+
+      categoryData = createCategoryDataSource(linesToDraw, graphString);
+
+      JFreeChart chart = JFreeChart.createXYChart(categoryData);
+
+      chart.setChartBackgroundPaint(new GradientPaint(0, 0, Color.white, 1000, 0, Color.white));
+      Plot bPlot = chart.getPlot();
+
+      //don't know if we really need this
+      Axis vAxis = bPlot.getAxis(Plot.VERTICAL_AXIS);
+      vAxis.setLabel("");
+
+      VerticalNumberAxis vnAxis = (VerticalNumberAxis) chart.getPlot().getAxis(Plot.VERTICAL_AXIS);
+      vnAxis.setAutoRangeIncludesZero(true);
+
+      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) chart.getPlot().getAxis(Plot.HORIZONTAL_AXIS);
+      hnAxis.setAutoRangeIncludesZero(false);
+      hnAxis.setAutoTickValue(false);
+      hnAxis.setAutoRange(false);
+
+      hnAxis.setLabel("");
+
+      Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
+      Paint gridPaint = Color.gray;
+
+      //don't know if we really need this
+      //Axis hAxis = bPlot.getAxis(Plot.HORIZONTAL_AXIS);
+      //hAxis.setLabel("Months Out");
+
+      System.out.println("Trying to use " + (d.getYear() + 1900) + " " + d.getMonth() + " " + d.getDay());
+
+      try {
+        Axis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
+            hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
+            hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
+            true, createDate((d.getYear() + 1900), d.getMonth(), 0), createDate((d.getYear() + 1901), d.getMonth(), 0), false, new DateUnit(Calendar.MONTH, 1),
+            new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint);
+
+        bPlot.setHorizontalAxis(myHorizontalDateAxis);
+      } catch (AxisNotCompatibleException err1) {
+        System.out.println("AxisNotCompatibleException error!");
+      }
+
+      chart.setLegend(null);
+      chart.setTitle("");
+
+      //define the chart
+      int width = 300;
+      int height = 200;
+
+      System.out.println("Leads-> Drawing the chart");
+      BufferedImage img = draw(chart, width, height);
+
+      //Output the chart
+      try {
+        String fs = System.getProperty("file.separator");
+
+        String realPath = context.getServletContext().getRealPath("/");
+        String filePath = realPath + "graphs" + fs;
+
+        java.util.Date testDate = new java.util.Date();
+        java.util.Calendar testCal = java.util.Calendar.getInstance();
+        testCal.setTime(testDate);
+        testCal.add(java.util.Calendar.MONTH, +1);
+
+        fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
+
+        if (graphString.equals("gmr")) {
+          thisRec.getGmr().setLastFileName(fileName);
+        } else if (graphString.equals("ramr")) {
+          thisRec.getRamr().setLastFileName(fileName);
+        } else if (graphString.equals("cgmr")) {
+          thisRec.getCgmr().setLastFileName(fileName);
+        } else if (graphString.equals("cramr")) {
+          thisRec.getCramr().setLastFileName(fileName);
+        }
+
+        context.getRequest().setAttribute("GraphFileName", fileName);
+        FileOutputStream foutstream = new FileOutputStream(filePath + fileName);
+
+        JPEGImageEncoder encoder =
+            JPEGCodec.createJPEGEncoder(foutstream);
+        JPEGEncodeParam param =
+            encoder.getDefaultJPEGEncodeParam(img);
+        param.setQuality(1.0f, true);
+        encoder.encode(img, param);
+        foutstream.close();
+      } catch (IOException e) {
+      }
 
     } else {
-	    System.out.println("This file is valid, and cached: " + checkFileName);
-	    context.getRequest().setAttribute("GraphFileName", checkFileName);
+      System.out.println("This file is valid, and cached: " + checkFileName);
+      context.getRequest().setAttribute("GraphFileName", checkFileName);
     }
 
     if (errorCode == 0) {
@@ -350,7 +360,7 @@ public final class Leads extends CFSModule {
       context.getRequest().setAttribute("FullChildList", fullChildList);
       context.getRequest().setAttribute("FullOppList", fullOppList);
       context.getRequest().setAttribute("GraphTypeList", graphTypeSelect);
-      
+
       return ("DashboardOK");
     } else {
       //A System Error occurred
@@ -359,12 +369,7 @@ public final class Leads extends CFSModule {
     }
 
   }
-  
-	public static java.util.Date createDate(int y, int m, int d) 
-	{ 
-		GregorianCalendar calendar = new GregorianCalendar(y, m, d, 0, 0, 0); 
-		return calendar.getTime(); 
-	} 
+
 
   /**
    *  Description of the Method
@@ -395,7 +400,7 @@ public final class Leads extends CFSModule {
     addModuleBean(context, "Opportunities", "Delete an opportunity");
     if (errorMessage == null) {
       if (recordDeleted) {
-	deleteRecentItem(context, newOpp);
+        deleteRecentItem(context, newOpp);
         return ("OppDeleteOK");
       } else {
         processErrors(context, newOpp.getErrors());
@@ -430,13 +435,13 @@ public final class Leads extends CFSModule {
     unitSelect.addItem("M", "Months");
     unitSelect.addItem("W", "Weeks");
     unitSelect.addItem("D", "Days");
-    
-    UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
-	
+
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+
     //this is how we get the multiple-level heirarchy...recursive function.
-	
+
     User thisRec = thisUser.getUserRecord();
-	
+
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
     userList.setMyId(getUserId(context));
@@ -461,7 +466,7 @@ public final class Leads extends CFSModule {
 
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
-      
+
       busTypeSelect.setDefaultKey(newOpp.getType());
       unitSelect.setDefaultKey(newOpp.getUnits());
 
@@ -501,27 +506,27 @@ public final class Leads extends CFSModule {
     OpportunityList oppList = new OpportunityList();
 
     //search stuff
-    
+
     String passedDesc = context.getRequest().getParameter("description");
 
     if (passedDesc != null && !(passedDesc.equals(""))) {
       passedDesc = "%" + passedDesc + "%";
     }
-    
+
     //end search stuff
 
     try {
-	db = this.getConnection(context);
-	oppList.setPagedListInfo(oppListInfo);
-	oppList.setDescription(passedDesc);
-	
-	if ("all".equals(oppListInfo.getListView())) {
-		oppList.setOwnerIdRange(this.getUserRange(context));
-	} else {
-		oppList.setOwner(this.getUserId(context));
-	}
-	
-	oppList.buildList(db);
+      db = this.getConnection(context);
+      oppList.setPagedListInfo(oppListInfo);
+      oppList.setDescription(passedDesc);
+
+      if ("all".equals(oppListInfo.getListView())) {
+        oppList.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        oppList.setOwner(this.getUserId(context));
+      }
+
+      oppList.buildList(db);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -537,51 +542,63 @@ public final class Leads extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandGenerateForm(ActionContext context) {
-	addModuleBean(context, "Reports", "Generate new");
-	return("GenerateFormOK");
+    addModuleBean(context, "Reports", "Generate new");
+    return ("GenerateFormOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandDeleteReport(ActionContext context) {
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
-    String projectId = (String)context.getRequest().getParameter("pid");
-    String itemId = (String)context.getRequest().getParameter("fid");
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String itemId = (String) context.getRequest().getParameter("fid");
 
     Connection db = null;
     try {
       db = getConnection(context);
-      
+
       //-1 is the project ID for non-projects
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-      
+
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
         recordDeleted = thisItem.delete(db, this.getPath(context, "lead-reports"));
-	
-	String filePath1 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
-	java.io.File fileToDelete1 = new java.io.File(filePath1);
-	if (!fileToDelete1.delete()) {
-		System.err.println("FileItem-> Tried to delete file: " + filePath1);
-	}
-	
-	String filePath2 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
-	java.io.File fileToDelete2 = new java.io.File(filePath2);
-	if (!fileToDelete2.delete()) {
-		System.err.println("FileItem-> Tried to delete file: " + filePath2);
-	}
-	
-      }
 
+        String filePath1 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
+        java.io.File fileToDelete1 = new java.io.File(filePath1);
+        if (!fileToDelete1.delete()) {
+          System.err.println("FileItem-> Tried to delete file: " + filePath1);
+        }
+
+        String filePath2 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+        java.io.File fileToDelete2 = new java.io.File(filePath2);
+        if (!fileToDelete2.delete()) {
+          System.err.println("FileItem-> Tried to delete file: " + filePath2);
+        }
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     addModuleBean(context, "Reports", "Reports del");
-    
+
     if (errorMessage == null) {
       if (recordDeleted) {
         return ("DeleteReportOK");
@@ -593,13 +610,20 @@ public final class Leads extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandDownloadCSVReport(ActionContext context) {
     Exception errorMessage = null;
 
-    String itemId = (String)context.getRequest().getParameter("fid");
+    String itemId = (String) context.getRequest().getParameter("fid");
     FileItem thisItem = null;
-    
+
     Connection db = null;
     try {
       db = getConnection(context);
@@ -614,10 +638,10 @@ public final class Leads extends CFSModule {
     try {
       FileItem itemToDownload = null;
       itemToDownload = thisItem;
-      
+
       //itemToDownload.setEnteredBy(this.getUserId(context));
       String filePath = this.getPath(context, "lead-reports") + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename() + ".csv";
-      
+
       FileDownload fileDownload = new FileDownload();
       fileDownload.setFullPath(filePath);
       fileDownload.setDisplayName(itemToDownload.getClientFilename());
@@ -637,7 +661,7 @@ public final class Leads extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    
+
     if (errorMessage == null) {
       return ("-none-");
     } else {
@@ -645,132 +669,150 @@ public final class Leads extends CFSModule {
       return ("SystemError");
     }
   }
-  
-  public String executeCommandShowReportHtml(ActionContext context) {
-	Exception errorMessage = null;
-	
-	String projectId = (String)context.getRequest().getParameter("pid");
-	String itemId = (String)context.getRequest().getParameter("fid");
-	
-	Connection db = null;
-	
-	try {
-		db = getConnection(context);
-	
-		//-1 is the project ID for non-projects
-		FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
-	
-		String filePath = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
-		String textToShow = this.includeFile(filePath);
-		context.getRequest().setAttribute("ReportText", textToShow);
-	} catch (Exception e) {
-		errorMessage = e;
-	} finally {
-		this.freeConnection(context, db);
-	}
-	
-	return ("ReportHtmlOK");
-  }
-  
-  public String executeCommandExportReport(ActionContext context) {
-	Exception errorMessage = null;
-	boolean recordInserted = false;
-	Connection db = null;
-	String subject = context.getRequest().getParameter("subject");
-	String ownerCriteria = context.getRequest().getParameter("criteria1");
-	
-	String filePath = this.getPath(context, "lead-reports");
-	
-	SimpleDateFormat formatter1 = new SimpleDateFormat ("yyyy");
-	String datePathToUse1 = formatter1.format(new java.util.Date());
-	SimpleDateFormat formatter2 = new SimpleDateFormat ("MMdd");
-	String datePathToUse2 = formatter2.format(new java.util.Date());
-	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
-	
-	OpportunityReport oppReport = new OpportunityReport();
-	oppReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
-	oppReport.setFilePath(filePath);
-	oppReport.setEnteredBy(getUserId(context));
-	oppReport.setModifiedBy(getUserId(context));
-	oppReport.setSubject(subject);
-	
-	PagedListInfo thisInfo = new PagedListInfo();
-	thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
-	oppReport.setPagedListInfo(thisInfo);
-	
-		
-	if (ownerCriteria.equals("my")) {
-		oppReport.setOwner(this.getUserId(context));
-	} else if (ownerCriteria.equals("all")) {
-		oppReport.setOwnerIdRange(this.getUserRange(context));
-	}
-	
-	try {
-		db = this.getConnection(context);
-		oppReport.buildReportFull(db);
-		oppReport.saveAndInsert(db);
-	} catch (Exception e) {
-		errorMessage = e;
-	} finally {
-		this.freeConnection(context, db);
-	}
 
-	
-	if (errorMessage == null) {
-		return executeCommandReports(context);
-	} else {
-		context.getRequest().setAttribute("Error", errorMessage);
-		return ("SystemError");
-	}
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandShowReportHtml(ActionContext context) {
+    Exception errorMessage = null;
+
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String itemId = (String) context.getRequest().getParameter("fid");
+
+    Connection db = null;
+
+    try {
+      db = getConnection(context);
+
+      //-1 is the project ID for non-projects
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+
+      String filePath = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+      String textToShow = this.includeFile(filePath);
+      context.getRequest().setAttribute("ReportText", textToShow);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    return ("ReportHtmlOK");
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandExportReport(ActionContext context) {
+    Exception errorMessage = null;
+    boolean recordInserted = false;
+    Connection db = null;
+    String subject = context.getRequest().getParameter("subject");
+    String ownerCriteria = context.getRequest().getParameter("criteria1");
+
+    String filePath = this.getPath(context, "lead-reports");
+
+    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
+    String datePathToUse1 = formatter1.format(new java.util.Date());
+    SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
+    String datePathToUse2 = formatter2.format(new java.util.Date());
+    filePath += datePathToUse1 + fs + datePathToUse2 + fs;
+
+    OpportunityReport oppReport = new OpportunityReport();
+    oppReport.setCriteria(context.getRequest().getParameterValues("selectedList"));
+    oppReport.setFilePath(filePath);
+    oppReport.setEnteredBy(getUserId(context));
+    oppReport.setModifiedBy(getUserId(context));
+    oppReport.setSubject(subject);
+
+    PagedListInfo thisInfo = new PagedListInfo();
+    thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
+    oppReport.setPagedListInfo(thisInfo);
+
+    if (ownerCriteria.equals("my")) {
+      oppReport.setOwner(this.getUserId(context));
+    } else if (ownerCriteria.equals("all")) {
+      oppReport.setOwnerIdRange(this.getUserRange(context));
+    }
+
+    try {
+      db = this.getConnection(context);
+      oppReport.buildReportFull(db);
+      oppReport.saveAndInsert(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return executeCommandReports(context);
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandReports(ActionContext context) {
-	Exception errorMessage = null;
-	Connection db = null;
-	
-	FileItemList files = new FileItemList();
-	files.setLinkModuleId(Constants.LEADS_REPORTS);
-	files.setLinkItemId(-1);
-	
-	PagedListInfo rptListInfo = this.getPagedListInfo(context, "LeadRptListInfo");
-	rptListInfo.setLink("/Leads.do?command=Reports");
-	  
-	try {
-		db = this.getConnection(context);
-		files.setPagedListInfo(rptListInfo);
-		
-		if ("all".equals(rptListInfo.getListView())) {
-			files.setOwnerIdRange(this.getUserRange(context));
-		} else {
-			files.setOwner(this.getUserId(context));
-		}
-		
-		files.buildList(db);
-		
-		Iterator i = files.iterator();
-		while (i.hasNext()) {
-			FileItem thisItem = (FileItem)i.next();
-			Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
-			Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
-			thisItem.setEnteredByString(enteredBy.getNameFirstLast());
-			thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
-		}
-	
-	} catch (Exception e) {
-		errorMessage = e;
-	} finally {
-		this.freeConnection(context, db);
-	}
-	
-	if (errorMessage == null) {
-		addModuleBean(context, "Reports", "ViewReports");
-		context.getRequest().setAttribute("FileList", files);
-		return("ReportsOK");
-	} else {
-		context.getRequest().setAttribute("Error", errorMessage);
-		return ("SystemError");
-	}
+    Exception errorMessage = null;
+    Connection db = null;
+
+    FileItemList files = new FileItemList();
+    files.setLinkModuleId(Constants.LEADS_REPORTS);
+    files.setLinkItemId(-1);
+
+    PagedListInfo rptListInfo = this.getPagedListInfo(context, "LeadRptListInfo");
+    rptListInfo.setLink("/Leads.do?command=Reports");
+
+    try {
+      db = this.getConnection(context);
+      files.setPagedListInfo(rptListInfo);
+
+      if ("all".equals(rptListInfo.getListView())) {
+        files.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        files.setOwner(this.getUserId(context));
+      }
+
+      files.buildList(db);
+
+      Iterator i = files.iterator();
+      while (i.hasNext()) {
+        FileItem thisItem = (FileItem) i.next();
+        Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
+        Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
+        thisItem.setEnteredByString(enteredBy.getNameFirstLast());
+        thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
+      }
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "Reports", "ViewReports");
+      context.getRequest().setAttribute("FileList", files);
+      return ("ReportsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
 
   }
 
@@ -787,30 +829,11 @@ public final class Leads extends CFSModule {
 
     Connection db = null;
     int resultCount = 0;
-    Opportunity oldOpp = null;
-    
-	Opportunity newOpp = (Opportunity)context.getFormBean();
-	newOpp.setId(Integer.parseInt(context.getRequest().getParameter("id")));
-	
-	String closeNow = context.getRequest().getParameter("closeNow");
-	
-		if (closeNow != null && closeNow.equals("on")) {
-			newOpp.setCloseIt(true);
-		} else {
-			newOpp.setOpenIt(true);
-		}
+
+    Opportunity newOpp = (Opportunity) context.getFormBean();
 
     try {
       db = this.getConnection(context);
-      
-      oldOpp = new Opportunity(db, context.getRequest().getParameter("id"));
-      
-      if ( (oldOpp.getStage() != newOpp.getStage()) || newOpp.getCloseIt() == true ) {
-	      newOpp.setStageChange(true);
-      } else {
-	      newOpp.setStageChange(false);
-      }
-      
       newOpp.setModifiedBy(getUserId(context));
       resultCount = newOpp.update(db, context);
     } catch (SQLException e) {
@@ -906,13 +929,13 @@ public final class Leads extends CFSModule {
 
     twelveMonths.setTime(d);
     twelveMonths.add(java.util.Calendar.MONTH, +13);
-    
+
     if (pertainsTo.getIsValid() == false) {
       pertainsTo.doOpportunityLock();
       if (pertainsTo.getIsValid() == false) {
         try {
           System.out.println("(RE)BUILDING DATA FOR " + pertainsTo.getId());
-          
+
           pertainsTo.setGmr(new GraphSummaryList());
           pertainsTo.setRamr(new GraphSummaryList());
           pertainsTo.setCgmr(new GraphSummaryList());
@@ -921,7 +944,7 @@ public final class Leads extends CFSModule {
           Iterator oppIterator = oppList.iterator();
           while (oppIterator.hasNext()) {
 
-            Opportunity tempOpp = (Opportunity)oppIterator.next();
+            Opportunity tempOpp = (Opportunity) oppIterator.next();
 
             if (tempOpp.getOwner() == pertainsTo.getId()) {
 
@@ -929,7 +952,7 @@ public final class Leads extends CFSModule {
               readDate.setTime(myDate);
 
               readDateAdjusted.setTime(myDate);
-              readDateAdjusted.add(java.util.Calendar.MONTH, + (int)(java.lang.Math.round(tempOpp.getTerms())));
+              readDateAdjusted.add(java.util.Calendar.MONTH, +(int) (java.lang.Math.round(tempOpp.getTerms())));
 
               passedDay = readDate.get(java.util.Calendar.DATE);
               passedYear = readDate.get(java.util.Calendar.YEAR);
@@ -954,7 +977,7 @@ public final class Leads extends CFSModule {
 
               //get the individual graph values
               gmrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()));
-	      ramrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb());
+              ramrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb());
               cgmrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCommission());
               cramrAddTerm = new Double(((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb() * tempOpp.getCommission()));
               //done
@@ -999,7 +1022,7 @@ public final class Leads extends CFSModule {
     }
 
     usersToGraph.addElement(pertainsTo);
-    
+
     if (oppList.size() == 0) {
       return new UserList();
     } else {
@@ -1037,6 +1060,7 @@ public final class Leads extends CFSModule {
    *  Description of the Method
    *
    *@param  passedList  Description of Parameter
+   *@param  whichGraph  Description of Parameter
    *@return             Description of the Returned Value
    *@since
    */
@@ -1045,9 +1069,9 @@ public final class Leads extends CFSModule {
     if (passedList.size() == 0) {
       return createEmptyCategoryDataSource();
     }
-    
+
     Object[][][] data;
-    
+
     java.util.Date d = new java.util.Date();
     java.util.Calendar iteratorDate = java.util.Calendar.getInstance();
 
@@ -1058,27 +1082,27 @@ public final class Leads extends CFSModule {
     Iterator n = passedList.iterator();
 
     while (n.hasNext()) {
-      User thisUser = (User)n.next();
+      User thisUser = (User) n.next();
 
       String[] valKeys = thisUser.getGmr().getRange(12);
-      
+
       iteratorDate.setTime(d);
       //iteratorDate.add(java.util.Calendar.MONTH, +1);
 
       for (count = 0; count < 12; count++) {
-	data[x][count][0] = createDate( iteratorDate.get(java.util.Calendar.YEAR), iteratorDate.get(java.util.Calendar.MONTH), 0);
-	
-	if (whichGraph.equals("gmr")) {
-	        data[x][count][1] = thisUser.getGmr().getValue(valKeys[count]);
-	} else if (whichGraph.equals("ramr")) {
-		data[x][count][1] = thisUser.getRamr().getValue(valKeys[count]);
-	} else if (whichGraph.equals("cgmr")) {
-		data[x][count][1] = thisUser.getCgmr().getValue(valKeys[count]);
-	} else if (whichGraph.equals("cramr")) {
-		data[x][count][1] = thisUser.getCramr().getValue(valKeys[count]);
-	}
-	
-	iteratorDate.add(java.util.Calendar.MONTH, +1);
+        data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), iteratorDate.get(java.util.Calendar.MONTH), 0);
+
+        if (whichGraph.equals("gmr")) {
+          data[x][count][1] = thisUser.getGmr().getValue(valKeys[count]);
+        } else if (whichGraph.equals("ramr")) {
+          data[x][count][1] = thisUser.getRamr().getValue(valKeys[count]);
+        } else if (whichGraph.equals("cgmr")) {
+          data[x][count][1] = thisUser.getCgmr().getValue(valKeys[count]);
+        } else if (whichGraph.equals("cramr")) {
+          data[x][count][1] = thisUser.getCramr().getValue(valKeys[count]);
+        }
+
+        iteratorDate.add(java.util.Calendar.MONTH, +1);
       }
 
       x++;
@@ -1107,7 +1131,7 @@ public final class Leads extends CFSModule {
     String[] valKeys = thisLine.getGmr().getRange(12);
 
     Iterator x = currentLines.iterator();
-    User addToMe = (User)x.next();
+    User addToMe = (User) x.next();
 
     int count = 0;
 
@@ -1144,13 +1168,13 @@ public final class Leads extends CFSModule {
     Iterator x = toRollUp.iterator();
 
     while (x.hasNext()) {
-      User thisUser = (User)x.next();
+      User thisUser = (User) x.next();
 
       for (count = 0; count < 12; count++) {
         thisLine.getGmr().setValue(valKeys[count], thisUser.getGmr().getValue(valKeys[count]));
-	thisLine.getRamr().setValue(valKeys[count], thisUser.getRamr().getValue(valKeys[count]));
-	thisLine.getCgmr().setValue(valKeys[count], thisUser.getCgmr().getValue(valKeys[count]));
-	thisLine.getCramr().setValue(valKeys[count], thisUser.getCramr().getValue(valKeys[count]));
+        thisLine.getRamr().setValue(valKeys[count], thisUser.getRamr().getValue(valKeys[count]));
+        thisLine.getCgmr().setValue(valKeys[count], thisUser.getCgmr().getValue(valKeys[count]));
+        thisLine.getCramr().setValue(valKeys[count], thisUser.getCramr().getValue(valKeys[count]));
       }
     }
 
@@ -1171,12 +1195,12 @@ public final class Leads extends CFSModule {
 
     data = new Object[][][]{
         {
-        {createDate( 2001, 12, 20),  new Integer(0)},
-        {createDate( 2002, 1, 18),  new Integer(45)},
-        {createDate( 2002, 2, 18),  new Integer(3)},
-        {createDate( 2002, 3, 18),  new Integer(3)},
-        {createDate( 2002, 4, 18),  new Integer(5)},
-        {createDate( 2002, 5, 18),  new Integer(56)}
+        {createDate(2001, 12, 20), new Integer(0)},
+        {createDate(2002, 1, 18), new Integer(45)},
+        {createDate(2002, 2, 18), new Integer(3)},
+        {createDate(2002, 3, 18), new Integer(3)},
+        {createDate(2002, 4, 18), new Integer(5)},
+        {createDate(2002, 5, 18), new Integer(56)}
         }
         };
 

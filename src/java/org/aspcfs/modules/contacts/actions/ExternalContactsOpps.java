@@ -16,7 +16,8 @@ import com.darkhorseventures.webutils.*;
  *
  *@author     chris
  *@created    October 15, 2001
- *@version    $Id$
+ *@version    $Id: ExternalContactsOpps.java,v 1.3 2002/02/05 19:44:43 chris Exp
+ *      $
  */
 public final class ExternalContactsOpps extends CFSModule {
 
@@ -79,7 +80,7 @@ public final class ExternalContactsOpps extends CFSModule {
 
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
-    
+
     HtmlSelect busTypeSelect = new HtmlSelect();
     busTypeSelect.setSelectName("type");
     busTypeSelect.addItem("N", "New");
@@ -100,10 +101,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      
+
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
-      
+
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (SQLException e) {
@@ -135,17 +136,11 @@ public final class ExternalContactsOpps extends CFSModule {
     Exception errorMessage = null;
     boolean recordInserted = false;
 
-    Opportunity newOpp = (Opportunity)context.getRequest().getAttribute("OppDetails");
+    Opportunity newOpp = (Opportunity) context.getRequest().getAttribute("OppDetails");
     newOpp.setOwner(getUserId(context));
     newOpp.setEnteredBy(getUserId(context));
     newOpp.setModifiedBy(getUserId(context));
-    
-    String closeNow = context.getRequest().getParameter("closeNow");
-    
-	if (closeNow != null && closeNow.equals("on")) {
-		newOpp.setCloseIt(true);
-	}
-    
+
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
 
@@ -156,7 +151,7 @@ public final class ExternalContactsOpps extends CFSModule {
       if (recordInserted) {
         newOpp = new Opportunity(db, "" + newOpp.getId());
         context.getRequest().setAttribute("OppDetails", newOpp);
-	addRecentItem(context, newOpp);
+        addRecentItem(context, newOpp);
       } else {
         processErrors(context, newOpp.getErrors());
       }
@@ -191,7 +186,7 @@ public final class ExternalContactsOpps extends CFSModule {
   public String executeCommandDetailsOpp(ActionContext context) {
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Opportunities");
-    
+
     String oppId = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
 
@@ -250,7 +245,7 @@ public final class ExternalContactsOpps extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         context.getRequest().setAttribute("contactId", tempcontact);
-	deleteRecentItem(context, newOpp);
+        deleteRecentItem(context, newOpp);
         return ("OppDeleteOK");
       } else {
         processErrors(context, newOpp.getErrors());
@@ -273,7 +268,7 @@ public final class ExternalContactsOpps extends CFSModule {
   public String executeCommandModifyOpp(ActionContext context) {
     Exception errorMessage = null;
     addModuleBean(context, "External Contacts", "Opportunities");
-    
+
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
 
@@ -292,13 +287,13 @@ public final class ExternalContactsOpps extends CFSModule {
     int tempId = -1;
     String passedId = context.getRequest().getParameter("id");
     tempId = Integer.parseInt(passedId);
-    
-    UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
-	
+
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+
     //this is how we get the multiple-level heirarchy...recursive function.
-	
+
     User thisRec = thisUser.getUserRecord();
-	
+
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
     userList.setMyId(getUserId(context));
@@ -316,13 +311,13 @@ public final class ExternalContactsOpps extends CFSModule {
       StringBuffer sql = new StringBuffer();
 
       newOpp = new Opportunity(db, "" + tempId);
-            
+
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
-      
+
       busTypeSelect.setDefaultKey(newOpp.getType());
       unitSelect.setDefaultKey(newOpp.getUnits());
-      
+
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
@@ -354,33 +349,14 @@ public final class ExternalContactsOpps extends CFSModule {
   public String executeCommandUpdateOpp(ActionContext context) {
     Exception errorMessage = null;
 
-    Opportunity newOpp = (Opportunity)context.getFormBean();
+    Opportunity newOpp = (Opportunity) context.getFormBean();
     Opportunity oldOpp = null;
-    
-	String closeNow = context.getRequest().getParameter("closeNow");
-	
-		if (closeNow != null && closeNow.equals("on")) {
-			newOpp.setCloseIt(true);
-		} else {
-			newOpp.setOpenIt(true);
-		}
-    
-    newOpp.setId(Integer.parseInt(context.getRequest().getParameter("id")));
 
     Connection db = null;
     int resultCount = 0;
 
     try {
       db = this.getConnection(context);
-      
-      oldOpp = new Opportunity(db, context.getRequest().getParameter("id"));
-      
-      if ( (oldOpp.getStage() != newOpp.getStage()) || newOpp.getCloseIt() == true ) {
-	      newOpp.setStageChange(true);
-      } else {
-	      newOpp.setStageChange(false);
-      }
-      
       newOpp.setModifiedBy(getUserId(context));
       resultCount = newOpp.update(db, context);
     } catch (SQLException e) {

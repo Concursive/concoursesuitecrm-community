@@ -352,6 +352,10 @@ public class Opportunity extends GenericBean {
   public void setId(int id) {
     this.id = id;
   }
+  
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -552,6 +556,10 @@ public class Opportunity extends GenericBean {
    */
   public void setCloseIt(boolean closeIt) {
     this.closeIt = closeIt;
+  }
+  
+  public void setCloseNow(String tmp) {
+    this.closeIt = ("ON").equalsIgnoreCase(tmp);
   }
 
 
@@ -1269,10 +1277,15 @@ public class Opportunity extends GenericBean {
   public int update(Connection db, ActionContext context) throws SQLException {
     int oldId = -1;
     Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery("SELECT owner FROM opportunity WHERE opp_id = " + this.getId());
+    ResultSet rs = st.executeQuery(
+      "SELECT owner " +
+      "FROM opportunity " +
+      "WHERE opp_id = " + this.getId());
     if (rs.next()) {
       oldId = rs.getInt("owner");
     }
+    rs.close();
+    st.close();
     int result = update(db);
     if (result == 1) {
       invalidateUserData(context);
@@ -1497,7 +1510,9 @@ public class Opportunity extends GenericBean {
     Statement st = db.createStatement();
     try {
       db.setAutoCommit(false);
-      st.executeUpdate("DELETE FROM opportunity WHERE opp_id = " + this.getId());
+      st.executeUpdate(
+        "DELETE FROM opportunity " +
+        "WHERE opp_id = " + this.getId());
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1559,12 +1574,12 @@ public class Opportunity extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Update the database with changes to this Opportunity
    *
-   *@param  db                Description of Parameter
-   *@param  override          Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   *@param  db                Opened database connection
+   *@param  override          Set to true on an Insert only
+   *@return                   The number of records updated
+   *@exception  SQLException  update error
    *@since
    */
   private int update(Connection db, boolean override) throws SQLException {
@@ -1572,7 +1587,34 @@ public class Opportunity extends GenericBean {
 
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
+    
+    if (!override) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Opportunity-> Retrieving values from previous Opportunity");
+      }
+      sql.append(
+        "SELECT stage " +
+        "FROM opportunity " +
+        "WHERE opp_id = ? ");
+      pst = db.prepareStatement(sql.toString());
+      pst.setInt(1, this.getId());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        int currentStage = rs.getInt("stage");
+        if (currentStage != stage || this.getCloseIt()) {
+          this.setStageChange(true);
+        } else {
+          this.setStageChange(false);
+        }
+      }
+      rs.close();
+      pst.close();
+      sql.setLength(0);
+    }
 
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Opportunity-> Updating the opportunity");
+    }
     sql.append(
         "UPDATE opportunity " +
         "SET lowvalue = ?, guessvalue = ?, highvalue = ?, closeprob = ?, " +
@@ -1638,8 +1680,13 @@ public class Opportunity extends GenericBean {
     }
 
     resultCount = pst.executeUpdate();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Opportunity-> ResultCount: " + resultCount);
+    }
     pst.close();
-
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Opportunity-> Closing PreparedStatement");
+    }
     return resultCount;
   }
   
