@@ -87,6 +87,7 @@ Modify Contact<br>
 <%}%>
 <input type="reset" value="Reset">
 <br>&nbsp;
+<input type="hidden" name="orgId" value="<%= ContactDetails.getOrgId() %>">
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">
 
