@@ -37,6 +37,10 @@ public class AuthenticationItem {
   public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
 
   public Connection getConnection(ActionContext context) throws SQLException {
+	  return getConnection(context, true);
+  }
+	  
+  public Connection getConnection(ActionContext context, boolean checkCode) throws SQLException {
     String gkHost = (String)context.getServletContext().getAttribute("GKHOST");
     String gkUser = (String)context.getServletContext().getAttribute("GKUSER");
     String gkUserPw = (String)context.getServletContext().getAttribute("GKUSERPW");
@@ -45,7 +49,7 @@ public class AuthenticationItem {
     String serverName = context.getRequest().getServerName();
     if (System.getProperty("DEBUG") != null) System.out.println("AuthenticationItem-> ServerName: " + serverName);
     
-    if (id != null && id.equals(serverName)) {
+    if ( (id != null && id.equals(serverName)) || !checkCode ) {
       String authCode = null;
       ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
       ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
@@ -76,7 +80,7 @@ public class AuthenticationItem {
       pst.close();
       sqlDriver.free(db);
       
-      if (code.equals(authCode)) {
+      if (!checkCode || code.equals(authCode)) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("AuthenticationItem-> Site: " + id + "/" + code);
         }

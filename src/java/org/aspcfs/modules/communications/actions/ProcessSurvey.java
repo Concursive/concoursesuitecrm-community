@@ -25,24 +25,11 @@ public final class ProcessSurvey extends CFSModule {
 	
 	CustomForm thisForm = getDynamicForm(context, "surveyview");
 	String passedId = context.getRequest().getParameter("id");
-	
+
 	try {
 		AuthenticationItem auth = new AuthenticationItem();
-		db = auth.getConnection(context);
-		
-		/**
-		System.out.println("Getting driver");
-		sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
-		ConnectionElement ce = new ConnectionElement();
-		ce.setUrl("jdbc:postgresql://127.0.0.1:5432/" + dbName);
-		ce.setUsername("cfsdba");
-		ce.setPassword("");
-		ce.setDbName(dbName);
-		System.out.println("Getting connection" + dbName);
-		db = sqlDriver.getConnection(ce);
-		System.out.println("Got connection");
-		*/
-		
+		//auth.setId(context.getRequest().getServerName());
+		db = auth.getConnection(context, false);
 		thisSurvey = new Survey(db, passedId);
 		thisForm.populate(thisSurvey);
 	} catch (Exception e) {
@@ -50,8 +37,7 @@ public final class ProcessSurvey extends CFSModule {
 	} finally {
 		this.freeConnection(context, db);
 	}
-	
-	
+
 	if (errorMessage == null) {
 		if (thisSurvey != null) {
 			context.getRequest().setAttribute("Survey", thisSurvey);
@@ -65,7 +51,7 @@ public final class ProcessSurvey extends CFSModule {
 		context.getRequest().setAttribute("Error", errorMessage);
 		return ("SystemError");
 	}
-}
 
+  }
 }
 

@@ -55,4 +55,13 @@
     </tab>
   </form>
   
+  <form name="surveyview" cancel="CampaignManagerSurvey.do?command=Add&amp;auto-populate=true">
+    <tab name="Page 1" id="0">
+      <group name="Survey Preview">
+        <field name="intro" type="survey_intro"/>
+	<field name="items" type="rowlist_question" lengthVar="itemLength"/>
+      </group>
+    </tab>
+  </form>
+  
 </application>
