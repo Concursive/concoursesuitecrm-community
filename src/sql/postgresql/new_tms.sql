@@ -70,7 +70,7 @@ CREATE TABLE ticket (
   pri_code INT NOT NULL DEFAULT -1 REFERENCES ticket_priority(code), 
   level_code INT NOT NULL DEFAULT -1,
   department_code INT NOT NULL DEFAULT -1,
-  source_code INT REFERENCES ticket_source(source_code), 
+  source_code INT REFERENCES lookup_ticketsource(code), 
   cat_code INT NOT NULL DEFAULT 0,
   subcat_code1 INT NOT NULL DEFAULT 0,
   subcat_code2 INT NOT NULL DEFAULT 0,
