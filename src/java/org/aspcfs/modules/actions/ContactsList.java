@@ -197,7 +197,6 @@ public final class ContactsList extends CFSModule {
       context.getSession().removeAttribute("ContactListInfo");
     }
     PagedListInfo contactListInfo = this.getPagedListInfo(context, "ContactListInfo");
-    contactListInfo.setEnableJavaScript(true);
 
     //filter for departments & project teams
     if (!contactListInfo.hasListFilters()) {
