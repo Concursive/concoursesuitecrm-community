@@ -173,7 +173,7 @@ Add Ticket
 <%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
       <dhv:evaluate if="<%= (User.getRoleType() == 0) %>" >
-      [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','550','yes','yes');">Create New Contact</a>]
+      [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','600','550','yes','yes');">Create New Contact</a>]
       </dhv:evaluate> 
      </td>
 	</tr>

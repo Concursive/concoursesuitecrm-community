@@ -130,14 +130,14 @@
     }
     if(orgId == '0'){
       if (empPermission) {
-        popURL('CompanyDirectory.do?command=Prepare&popup=true&source=troubletickets', 'New_Employee','500','550','yes','yes');
+        popURL('CompanyDirectory.do?command=Prepare&popup=true&source=troubletickets', 'New_Employee','600','550','yes','yes');
       } else {
         alert('You do not have permission to add employees');
         return;
       }
     }else{
       if (acctPermission) {
-        popURL('Contacts.do?command=Prepare&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','550','yes','yes');
+        popURL('Contacts.do?command=Prepare&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','600','550','yes','yes');
       } else {
         alert('You do not have permission to add contacts');
         return;
