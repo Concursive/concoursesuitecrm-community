@@ -73,7 +73,12 @@ View Tickets<br>
     }
   }
 %>
-      <%= toHtml(assignedTic.getProblemHeader()) %>
+      <%= toHtml(assignedTic.getProblemHeader()) %>&nbsp;
+      <% if (assignedTic.getClosed() == null) { %>
+        [<font color="green">open</font>]
+      <%} else {%>
+        [<font color="red">closed</font>]
+      <%}%>
     </td>
   </tr>
 	<%}%>
@@ -161,6 +166,11 @@ View Tickets<br>
   }
 %>
       <%= toHtml(openTic.getProblemHeader()) %>
+      <% if (openTic.getClosed() == null) { %>
+        [<font color="green">open</font>]
+      <%} else {%>
+        [<font color="red">closed</font>]
+      <%}%>
     </td>
   </tr>
 	<%}%>
@@ -248,6 +258,11 @@ View Tickets<br>
   }
 %>
       <%= toHtml(thisTic.getProblemHeader()) %>
+      <% if (thisTic.getClosed() == null) { %>
+        [<font color="green">open</font>]
+      <%} else {%>
+        [<font color="red">closed</font>]
+      <%}%>
     </td>
   </tr>
 	<%}%>
