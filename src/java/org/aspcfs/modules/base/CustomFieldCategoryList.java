@@ -349,9 +349,12 @@ public class CustomFieldCategoryList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-      "* " +
-      "FROM custom_field_category cfc, module_field_categorylink mfc " +
-      "WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
+      " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc.level as level,  " +
+      " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
+      " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
+      " cfc.multiple_records as multiple_records, cfc.read_only as read_only " +
+      " FROM custom_field_category cfc, module_field_categorylink mfc " +
+      " WHERE cfc.module_id = mfc.category_id AND cfc.module_id = ? ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);

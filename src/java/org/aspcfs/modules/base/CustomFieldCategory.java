@@ -94,7 +94,11 @@ public class CustomFieldCategory extends ArrayList {
    */
   public CustomFieldCategory(Connection db, int categoryId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT * " +
+        " SELECT " +
+        " cfc.module_id as module_id, cfc.category_id as category_id, cfc.category_name as category_name, cfc.level as level,  " +
+        " cfc.description as description, cfc.start_date as start_date, cfc.end_date as end_date, " +
+        " cfc.default_item as default_item, cfc.entered as entered, cfc.enabled as enabled, " +
+        " cfc.multiple_records as multiple_records, cfc.read_only as read_only " +
         "FROM custom_field_category cfc " +
         "WHERE cfc.category_id = ? ");
     pst.setInt(1, categoryId);
