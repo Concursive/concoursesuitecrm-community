@@ -13,6 +13,7 @@ import org.aspcfs.controller.SessionManager;
 import org.aspcfs.modules.contacts.base.Contact;
 import java.io.File;
 import org.w3c.dom.*;
+import javax.servlet.ServletContext;
 
 /**
  *  System status maintains global values for a shared group of users. This is
@@ -377,7 +378,7 @@ public class SystemStatus {
    */
   public void buildPreferences() {
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("SystemStatus-> Loading system preferences");
+      System.out.println("SystemStatus-> Loading system preferences: " + fileLibraryPath + "system.xml ");
     }
     //Build the system preferences
     preferences.clear();
@@ -433,7 +434,7 @@ public class SystemStatus {
     }
     //Build the workflow manager preferences
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("SystemStatus-> Loading workflow processes");
+      System.out.println("SystemStatus-> Loading workflow processes: " + fileLibraryPath + "workflow.xml");
     }
     try {
       if (fileLibraryPath != null) {
@@ -552,7 +553,8 @@ public class SystemStatus {
 
 
   /**
-   *  Description of the Method
+   *  Activates the object hook manager with the specified objects to see if a
+   *  business process can execute
    *
    *@param  context         Description of the Parameter
    *@param  action          Description of the Parameter
@@ -563,6 +565,22 @@ public class SystemStatus {
    */
   public void processHook(ActionContext context, int action, Object previousObject, Object object, ConnectionPool sqlDriver, ConnectionElement ce) {
     hookManager.process(context, action, previousObject, object, sqlDriver, ce);
+  }
+
+
+  /**
+   *  Activates the specified business process through the object hook manager
+   *
+   *@param  context      Description of the Parameter
+   *@param  processName  Description of the Parameter
+   *@param  sqlDriver    Description of the Parameter
+   *@param  ce           Description of the Parameter
+   */
+  public void processEvent(ServletContext context, String processName, ConnectionPool sqlDriver, ConnectionElement ce) {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SystemStatus-> processEvent: " + processName + " " + ce.getUrl());
+    }
+    hookManager.process(context, processName, sqlDriver, ce);
   }
 
 
