@@ -9,7 +9,6 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript">
-<!-- 
   function page_init() {
     if ('custom' == '<%= rangeSelect %>') {
       var obj = document.getElementById('customFields');
