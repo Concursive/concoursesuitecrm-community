@@ -22,4 +22,4 @@ SITECODE="cfs"
 DBSITECODE="ds21"
 SITEHOME="/home/matt/webapps"
 DEST_DOCROOT="/home/matt/webapps/cfs"
-
+DEBUGLEVEL="2"

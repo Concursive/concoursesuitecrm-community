@@ -98,6 +98,8 @@ if [ -n "${GKUSER}" ] ; then PARAMS="${PARAMS} -DGKUSER=${GKUSER}" ; fi
 
 if [ -n "${FORCESSL}" ] ; then PARAMS="${PARAMS} -DFORCESSL=${FORCESSL}" ; fi
 
+if [ -n "${DEBUGLEVEL}" ] ; then PARAMS="${PARAMS} -DDEBUGLEVEL=${DEBUGLEVEL}" ; fi
+
 if [ -n "${DBSITECODE}" ] ; then PARAMS="${PARAMS} -DDBSITECODE=${DBSITECODE}" ; fi
 
 echo "Params: ${PARAMS}"
