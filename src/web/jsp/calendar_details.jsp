@@ -34,7 +34,7 @@ function switchStyle(E){
       </tr>
       <dhv:evaluate exp="<%= !CalendarInfo.isAgendaView() %>">
       <tr>
-        <td valign="top" align="left" nowrap><a href="MyCFS.do?command=AgendaView&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>">Back To Agenda View</a></td>
+        <td valign="top" align="left" nowrap><a href="javascript:window.parent.frames['calendar'].resetCalendar();javascript:window.location.href='MyCFS.do?command=AgendaView&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';">Back To Agenda View</a></td>
         <table style="visibility:none" border="0" height="6"><tr height='2' style="visibility:none"><td></td></tr></table>
       </tr>
       </dhv:evaluate>
@@ -42,6 +42,13 @@ function switchStyle(E){
       <tr>
         <td height="100%" width="100%" valign="top">
           <table width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td colspan="2">
+              <strong>
+                <%= CompanyCalendar.getToday() %> (Today)
+              </strong>
+             </td>
+          </tr>
 <%
    Iterator days = (CompanyCalendar.getEvents(20)).iterator();
    if (days.hasNext()) {
@@ -57,16 +64,16 @@ function switchStyle(E){
        boolean isToday = 
           ((thisCal.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) &&
           (thisCal.get(Calendar.YEAR) == today.get(Calendar.YEAR)));
-      showToday = true;
 %>
+    <dhv:evaluate exp="<%= !isToday %>">
        <tr>
          <td colspan="2">
            <strong>
-             <%= toFullDateString(thisDay.getDate()) %>
-             <dhv:evaluate exp="<%= isToday %>">(Today)</dhv:evaluate>
+             <%=  toFullDateString(thisDay.getDate()) %>
            </strong>
          </td>
        </tr>
+     </dhv:evaluate>
 <%
        Iterator eventList ;
        boolean firstTime = true;
