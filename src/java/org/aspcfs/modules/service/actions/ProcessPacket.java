@@ -90,11 +90,11 @@ public final class ProcessPacket extends CFSModule {
       Document document = builder.parse(isXML);
 
       Element element = document.getDocumentElement();
-      Element authElement = getFirstElement(element, "auth-id");
+      Element authElement = (Element)element.getFirstChild();
       if (authElement != null) {
         //siteId = getNodeText(authElement); 
         //System.out.println(siteId);
-        Vector cfsElements = getCFSElements(element);
+        Vector cfsElements = getCFSElements(authElement);
         if (cfsElements.size() > 0) {
           Iterator elements = cfsElements.iterator();
           while (elements.hasNext()) {
@@ -104,7 +104,7 @@ public final class ProcessPacket extends CFSModule {
           }
         }
       } else {
-        return ("Authentication element not found");
+        return ("Authentication needs to be first element");
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -138,6 +138,9 @@ public final class ProcessPacket extends CFSModule {
   
   public static Vector getCFSElements(Element e) {
     Vector elementList = new Vector();
+    
+    
+    
     elementList.addAll(getElements(e, "account"));
     elementList.addAll(getElements(e, "contact"));
     elementList.addAll(getElements(e, "ticket"));
