@@ -97,7 +97,7 @@
       <input type="hidden" name="hiddenname<%= count %>" value="<%= toHtml(thisContact.getValidName()) %>">
     </td>
     <td nowrap>
-      <%= toHtml(thisContact.getValidName()) %>
+      <%= toHtml(thisContact.getNameFull()) %>
     </td>
 <%
       String email ="",emailType ="";

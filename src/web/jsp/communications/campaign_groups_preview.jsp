@@ -73,7 +73,7 @@ Contact List
       <%= count %>.
     </td>
     <td nowrap>
-      <%= toHtml(thisContact.getNameLastFirst()) %>
+      <%= toHtml(thisContact.getNameFull()) %>
     </td>
     <td>
       <%= toHtml(thisContact.getAffiliation()) %>

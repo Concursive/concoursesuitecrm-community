@@ -82,7 +82,7 @@ Recipients
 	      <%= count %>
 	    </td>
 	    <td nowrap>
-	      <%= toHtml(thisContact.getNameLastFirst()) %>
+	      <%= toHtml(thisContact.getNameFull()) %>
 	    </td>
 	    <td width="100%">
 	      <%= toHtml(thisContact.getCompany()) %>
