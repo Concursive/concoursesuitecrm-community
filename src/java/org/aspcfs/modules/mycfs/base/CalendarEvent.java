@@ -414,7 +414,7 @@ public class CalendarEvent implements Comparable {
       return "Events";
     } else if (thisCategory.equalsIgnoreCase("holiday")) {
       return "US Bank Holiday";
-    } else if (thisCategory.equalsIgnoreCase("Opportunity")) {
+    } else if (thisCategory.equalsIgnoreCase("Opportunities")) {
       return "Opportunities";
     } else if (thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
       return "Calls";
