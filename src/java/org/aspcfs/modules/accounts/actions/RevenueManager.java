@@ -4,15 +4,259 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
 import java.sql.*;
-import java.util.Vector;
-import java.sql.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
+import java.text.*;
 
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.*;
+import java.awt.image.*;
+import java.io.*;
+import java.util.*;
+
+import com.sun.image.codec.jpeg.*;
+
+import com.jrefinery.chart.*;
+import com.jrefinery.chart.data.*;
+import com.jrefinery.chart.ui.*;
+import com.jrefinery.util.ui.*;
 
 public final class RevenueManager extends CFSModule {
+	
+  public String executeCommandDashboard(ActionContext context) {
+	  
+/**
+  	if (!(hasPermission(context, "pipeline-dashboard-view"))) {
+		if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+	    		return ("PermissionError");
+    		}
+	    
+	    return (executeCommandViewOpp(context));
+    	}
+*/
 
+    addModuleBean(context, "Revenue", "Revenue");
+
+    int errorCode = 0;
+    int idToUse = 0;
+
+    java.util.Date d = new java.util.Date();
+
+    String errorMessage = "";
+    String fileName = "";
+    StringBuffer sql = new StringBuffer();
+    String checkFileName = "";
+    
+    String graphString = context.getRequest().getParameter("type");
+
+    Connection db = null;
+    Statement st = null;
+    ResultSet rs = null;
+
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+    String overrideId = context.getRequest().getParameter("oid");
+    User thisRec = null;
+
+    UserList shortChildList = new UserList();
+    UserList fullChildList = new UserList();
+    UserList tempUserList = new UserList();
+    UserList linesToDraw = new UserList();
+
+    //RevenueList fullRevList = new RevenueList();
+    RevenueList tempRevList = new RevenueList();
+    RevenueList realFullRevList = new RevenueList();
+
+    XYDataSource categoryData = null;
+
+    if (overrideId != null && !(overrideId.equals("null")) && !(overrideId.equals("" + thisUser.getUserId()))) {
+      idToUse = Integer.parseInt(overrideId);
+      thisRec = thisUser.getUserRecord().getChild(idToUse);
+      context.getRequest().setAttribute("override", overrideId);
+      context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
+      context.getRequest().setAttribute("previousId", "" + thisRec.getManagerId());
+    } else {
+      idToUse = thisUser.getUserId();
+      thisRec = thisUser.getUserRecord();
+    }
+
+    try {
+      db = this.getConnection(context);
+      System.out.println("Leads-> Got user record of" + idToUse);
+      
+	RevenueTypeList rtl = new RevenueTypeList(db);
+	rtl.addItem(0, "--All--");
+	context.getRequest().setAttribute("RevenueTypeList", rtl);
+      
+      //CHANGE THIS LATER
+      PagedListInfo revenueInfo = this.getPagedListInfo(context, "DBRevenueListInfo");
+      revenueInfo.setLink("/RevenueManager.do?command=Dashboard");
+      //END
+      
+      shortChildList = thisRec.getShortChildList();
+      context.getRequest().setAttribute("ShortChildList", shortChildList);
+
+      fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
+
+      String range = fullChildList.getUserListIds(idToUse);
+
+      //??realFullRevList.setYear();
+      
+      if (context.getRequest().getParameter("type") != null) {
+	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
+      }
+      
+      realFullRevList.setOwnerIdRange(range);
+      realFullRevList.buildList(db);
+
+      //filter out my revenue for displaying on page
+      
+      tempRevList.setPagedListInfo(revenueInfo);
+      Iterator z = realFullRevList.iterator();
+
+      while (z.hasNext()) {
+        Revenue tempRev = (Revenue) (z.next());
+        //tempOppList is MY (or user drilled-to) Revs
+        if (tempRev.getOwner() == idToUse) {
+          tempRevList.addElement(tempRev);
+        }
+      }
+
+      context.getRequest().setAttribute("MyRevList", tempRevList);
+      
+    } catch (Exception e) {
+      errorCode = 1;
+      errorMessage = e.toString();
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (thisRec.getIsValid() == true) {
+        checkFileName = thisRec.getRevenue().getLastFileName();
+    }
+    
+    if (checkFileName.equals("")) {
+
+      System.out.println("Revenue-> Preparing the chart");
+
+      //add up all stuff for children
+
+      Iterator n = fullChildList.iterator();
+
+      while (n.hasNext()) {
+        User thisRecord = (User) n.next();
+        tempUserList = prepareLines(thisRecord, realFullRevList, tempUserList);
+      }
+
+      linesToDraw = calculateLine(tempUserList, linesToDraw);
+
+      //set my own
+
+      tempUserList = prepareLines(thisRec, tempRevList, tempUserList);
+
+      //add me up -- keep this
+      linesToDraw = calculateLine(thisRec, linesToDraw);
+
+      categoryData = createCategoryDataSource(linesToDraw);
+      //categoryData = createEmptyCategoryDataSource();
+      
+      JFreeChart chart = JFreeChart.createXYChart(categoryData);
+
+      chart.setChartBackgroundPaint(new GradientPaint(0, 0, Color.white, 1000, 0, Color.white));
+      Plot bPlot = chart.getPlot();
+
+      //don't know if we really need this
+      Axis vAxis = bPlot.getAxis(Plot.VERTICAL_AXIS);
+      vAxis.setLabel("");
+
+      VerticalNumberAxis vnAxis = (VerticalNumberAxis) chart.getPlot().getAxis(Plot.VERTICAL_AXIS);
+      vnAxis.setAutoRangeIncludesZero(true);
+
+      HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) chart.getPlot().getAxis(Plot.HORIZONTAL_AXIS);
+      hnAxis.setAutoRangeIncludesZero(false);
+      hnAxis.setAutoTickValue(false);
+      hnAxis.setAutoRange(false);
+
+      hnAxis.setLabel("");
+
+      Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
+      Paint gridPaint = Color.gray;
+
+      System.out.println("Trying to use " + (d.getYear() + 1900) + " " + d.getMonth() + " " + d.getDay());
+
+      try {
+        Axis myHorizontalDateAxis = new HorizontalDateAxis(hnAxis.getLabel(), hnAxis.getLabelFont(),
+            hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(),
+            hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
+            true, createDate((d.getYear() + 1900), 0, 0), createDate((d.getYear() + 1901), 0, 0), false, new DateUnit(Calendar.MONTH, 1),
+            new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint);
+
+        bPlot.setHorizontalAxis(myHorizontalDateAxis);
+      } catch (AxisNotCompatibleException err1) {
+        System.out.println("AxisNotCompatibleException error!");
+      }
+
+      chart.setLegend(null);
+      chart.setTitle("");
+
+      //define the chart
+      int width = 275;
+      int height = 200;
+
+      System.out.println("Revenue-> Drawing the chart");
+      BufferedImage img = draw(chart, width, height);
+
+      //Output the chart
+      try {
+        String fs = System.getProperty("file.separator");
+
+        String realPath = context.getServletContext().getRealPath("/");
+        String filePath = realPath + "graphs" + fs;
+
+        java.util.Date testDate = new java.util.Date();
+        java.util.Calendar testCal = java.util.Calendar.getInstance();
+        testCal.setTime(testDate);
+        testCal.add(java.util.Calendar.MONTH, +1);
+
+        fileName = new String(idToUse + testDate.getTime() + context.getSession().getCreationTime() + ".jpg");
+        
+	thisRec.getRevenue().setLastFileName(fileName);
+        
+	context.getRequest().setAttribute("GraphFileName", fileName);
+        FileOutputStream foutstream = new FileOutputStream(filePath + fileName);
+
+        JPEGImageEncoder encoder =
+            JPEGCodec.createJPEGEncoder(foutstream);
+        JPEGEncodeParam param =
+            encoder.getDefaultJPEGEncodeParam(img);
+        param.setQuality(1.0f, true);
+        encoder.encode(img, param);
+        foutstream.close();
+      } catch (IOException e) {
+      }
+
+    } else {
+      System.out.println("This file is valid, and cached: " + checkFileName);
+      context.getRequest().setAttribute("GraphFileName", checkFileName);
+    }
+
+    if (errorCode == 0) {
+      context.getRequest().setAttribute("UserInfo", thisRec);
+      context.getRequest().setAttribute("FullChildList", fullChildList);
+      context.getRequest().setAttribute("FullRevList", realFullRevList);
+      //context.getRequest().setAttribute("GraphTypeList", graphTypeSelect);
+
+      return ("DashboardOK");
+    } else {
+      //A System Error occurred
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+
+  }
+	
+	
   public String executeCommandAdd(ActionContext context) {
     addModuleBean(context, "View Accounts", "Add Revenue to Account");
     
@@ -91,7 +335,7 @@ public final class RevenueManager extends CFSModule {
     try {
       db = this.getConnection(context);
       thisRevenue = new Revenue(db, context.getRequest().getParameter("id"));
-      recordDeleted = thisRevenue.delete(db);
+      recordDeleted = thisRevenue.delete(db, context);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
     } catch (Exception e) {
@@ -133,7 +377,7 @@ public final class RevenueManager extends CFSModule {
     
     try {
       db = this.getConnection(context);
-      recordInserted = thisRevenue.insert(db);
+      recordInserted = thisRevenue.insert(db, context);
       if (recordInserted) {
         newRevenue = new Revenue(db, "" + thisRevenue.getId());
         context.getRequest().setAttribute("Revenue", newRevenue);
@@ -238,6 +482,8 @@ public final class RevenueManager extends CFSModule {
     }
   }
   
+
+  
   public String executeCommandUpdate(ActionContext context) {
     Exception errorMessage = null;
 
@@ -252,7 +498,7 @@ public final class RevenueManager extends CFSModule {
     try {
       db = this.getConnection(context);
       newRevenue.setModifiedBy(getUserId(context));
-      resultCount = newRevenue.update(db);
+      resultCount = newRevenue.update(db, context);
       if (resultCount == -1) {
         processErrors(context, newRevenue.getErrors());
         buildFormElements(context, db);
@@ -281,6 +527,23 @@ public final class RevenueManager extends CFSModule {
     }
   }
   
+  protected BufferedImage draw(JFreeChart chart, int width, int height) {
+    BufferedImage img =
+        new BufferedImage(width, height,
+        BufferedImage.TYPE_INT_RGB);
+    Graphics2D g2 = img.createGraphics();
+
+    chart.draw(g2, new Rectangle2D.Double((-21), 0, width + 21, height));
+
+    g2.dispose();
+    return img;
+  }
+  
+  public static java.util.Date createDate(int y, int m, int d) {
+    GregorianCalendar calendar = new GregorianCalendar(y, m, d, 0, 0, 0);
+    return calendar.getTime();
+  }
+  
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
     RevenueTypeList rtl = new RevenueTypeList(db);
     rtl.addItem(0, "--None--");
@@ -296,6 +559,214 @@ public final class RevenueManager extends CFSModule {
     LookupList addressTypeList = new LookupList(db, "lookup_contactaddress_types");
     context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
 */
+  }
+  
+  private XYDataSource createEmptyCategoryDataSource() {
+
+    Object[][][] data;
+
+    data = new Object[][][]{
+        {
+        {createDate(2001, 12, 20), new Integer(0)},
+        {createDate(2002, 1, 18), new Integer(45)},
+        {createDate(2002, 2, 18), new Integer(3)},
+        {createDate(2002, 3, 18), new Integer(3)},
+        {createDate(2002, 4, 18), new Integer(5)},
+        {createDate(2002, 5, 18), new Integer(56)}
+        }
+        };
+
+    return new DefaultXYDataSource(data);
+  }
+  
+  private UserList prepareLines(User pertainsTo, RevenueList revList, UserList usersToGraph) {
+    java.util.Date d = new java.util.Date();
+    java.util.Calendar rightNow = java.util.Calendar.getInstance();
+    d.setDate(1);
+    rightNow.setTime(d);
+    
+    int passedDay = 0;
+    int passedYear = 0;
+    int passedMonth = 0;
+
+    Double revenueAddTerm = new Double(0.0);
+
+    String valKey = "";
+
+    //rightNow.add(java.util.Calendar.MONTH, +1);
+
+    if (pertainsTo.getRevenueIsValid() == false) {
+      pertainsTo.doRevenueLock();
+      if (pertainsTo.getRevenueIsValid() == false) {
+        try {
+          System.out.println("(RE)BUILDING REVENUE DATA FOR " + pertainsTo.getId());
+
+          pertainsTo.setRevenue(new GraphSummaryList());
+
+          Iterator revIterator = revList.iterator();
+          while (revIterator.hasNext()) {
+
+            Revenue tempRev = (Revenue) revIterator.next();
+
+            if (tempRev.getOwner() == pertainsTo.getId()) {
+
+	      passedDay = 0;
+              passedYear = tempRev.getYear();
+              passedMonth = (tempRev.getMonth()-1);
+
+              valKey = ("" + passedYear) + ("" + passedMonth);
+
+              //get the individual graph values
+              revenueAddTerm = new Double(tempRev.getAmount());
+              //done
+
+	      //System.out.println(passedYear + " " + rightNow.get(java.util.Calendar.YEAR));
+	      
+              //case: amount date within 12 month range
+              if ( passedYear == rightNow.get(java.util.Calendar.YEAR) ) {
+		//System.out.println("adding in " + revenueAddTerm + " at " + valKey);
+                pertainsTo.setRevenueGraphValues(valKey, revenueAddTerm);
+              }
+
+              //more terms
+              /**
+	      	if ((java.lang.Math.round(tempOpp.getTerms())) > 1) {
+
+                for (x = 1; x < (java.lang.Math.round(tempOpp.getTerms())); x++) {
+                  readDate.add(java.util.Calendar.MONTH, +1);
+                  if (((rightNow.before(readDate) || rightNowAdjusted.before(readDate)) && twelveMonths.after(readDate)) || rightNow.equals(readDate) || twelveMonths.equals(readDate)) {
+                    valKey = ("" + readDate.get(java.util.Calendar.YEAR)) + ("" + readDate.get(java.util.Calendar.MONTH));
+
+                    if (!(adjustTerms)) {
+                      pertainsTo.setGraphValues(valKey, gmrAddTerm, ramrAddTerm, cgmrAddTerm, cramrAddTerm);
+                    }
+                  }
+
+                  adjustTerms = false;
+                }
+              }
+	      */
+	      
+            }
+          }
+          pertainsTo.setRevenueIsValid(true, true);
+        } catch (Exception e) {
+          System.err.println("Revenue Manager-> Unwanted exception occurred: " + e.toString());
+        } finally {
+          pertainsTo.doRevenueUnlock();
+        }
+      } else {
+        pertainsTo.doRevenueUnlock();
+      }
+    }
+
+    usersToGraph.addElement(pertainsTo);
+
+    if (revList.size() == 0) {
+      return new UserList();
+    } else {
+      return usersToGraph;
+    }
+  }
+  
+  private UserList calculateLine(User primaryNode, UserList currentLines) {
+    if (currentLines.size() == 0) {
+      currentLines.addElement(primaryNode);
+      return currentLines;
+    }
+
+    User thisLine = new User();
+    String[] valKeys = thisLine.getRevenue().getYearRange(12);
+
+    Iterator x = currentLines.iterator();
+    User addToMe = (User) x.next();
+
+    int count = 0;
+
+    for (count = 0; count < 12; count++) {
+      thisLine.getRevenue().setValue(valKeys[count], new Double(primaryNode.getRevenue().getValue(valKeys[count]).doubleValue() + (addToMe.getRevenue().getValue(valKeys[count])).doubleValue()));
+      //System.out.println("VK: " + valKeys[count]);
+    }
+
+    currentLines.addElement(thisLine);
+    return currentLines;
+  }
+  
+  private UserList calculateLine(UserList toRollUp, UserList currentLines) {
+    if (toRollUp.size() == 0) {
+      return new UserList();
+    }
+
+    User thisLine = new User();
+    String[] valKeys = thisLine.getRevenue().getYearRange(12);
+
+    int count = 0;
+
+    Iterator x = toRollUp.iterator();
+
+    while (x.hasNext()) {
+      User thisUser = (User) x.next();
+
+      for (count = 0; count < 12; count++) {
+        thisLine.getRevenue().setValue(valKeys[count], thisUser.getRevenue().getValue(valKeys[count]));
+	//System.out.println("VK: " + valKeys[count]);
+      }
+    }
+
+    currentLines.addElement(thisLine);
+    return currentLines;
+  }
+  
+  private XYDataSource createCategoryDataSource(UserList passedList) {
+
+    if (passedList.size() == 0) {
+      return createEmptyCategoryDataSource();
+    }
+
+    Object[][][] data;
+
+    java.util.Date d = new java.util.Date();
+    java.util.Calendar iteratorDate = java.util.Calendar.getInstance();
+
+    data = new Object[passedList.size()][12][2];
+    int count = 0;
+    int x = 0;
+
+    Iterator n = passedList.iterator();
+
+    while (n.hasNext()) {
+      User thisUser = (User) n.next();
+
+      String[] valKeys = thisUser.getRevenue().getYearRange(12);
+
+      iteratorDate.setTime(d);
+      //iteratorDate.add(java.util.Calendar.MONTH, +1);
+
+      for (count = 0; count < 12; count++) {
+        //data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), iteratorDate.get(java.util.Calendar.MONTH), 0);
+	data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), count, 1);
+/**
+        if (whichGraph.equals("gmr")) {
+          data[x][count][1] = thisUser.getGmr().getValue(valKeys[count]);
+        } else if (whichGraph.equals("ramr")) {
+          data[x][count][1] = thisUser.getRamr().getValue(valKeys[count]);
+        } else if (whichGraph.equals("cgmr")) {
+          data[x][count][1] = thisUser.getCgmr().getValue(valKeys[count]);
+        } else if (whichGraph.equals("cramr")) {
+          data[x][count][1] = thisUser.getCramr().getValue(valKeys[count]);
+        }
+*/
+
+	data[x][count][1] = thisUser.getRevenue().getValue(valKeys[count]);
+	
+	//System.out.println("Check from data: " + valKeys[count] + "=" + data[x][count][0] + ", " + data[x][count][1]);
+      }
+
+      x++;
+    }
+
+    return new DefaultXYDataSource(data);
+    //return createEmptyCategoryDataSource();
   }
  
 }

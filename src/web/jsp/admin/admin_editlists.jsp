@@ -1,5 +1,6 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="ContactTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="RevenueTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -57,6 +58,11 @@ Lookup Lists<br>
     <dhv:permission name="admin-sysconfig-lists-edit"><td width=2><a href="/Admin.do?command=ModifyList&listId=2">Edit</a></td></dhv:permission>
     <td width=50%>Account Type</td>
     <td width=50%><%=AccountTypeList.getHtmlSelect("typeId",0)%></td>
+  </tr>
+  <tr>
+    <dhv:permission name="admin-sysconfig-lists-edit"><td width=2><a href="/Admin.do?command=ModifyList&listId=11">Edit</a></td></dhv:permission>
+    <td width=50%>Revenue Type</td>
+    <td width=50%><%=RevenueTypeList.getHtmlSelect("typeId",0)%></td>
   </tr>
 </table>
 &nbsp;

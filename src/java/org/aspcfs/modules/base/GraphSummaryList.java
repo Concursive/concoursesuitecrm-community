@@ -115,7 +115,12 @@ public class GraphSummaryList extends Hashtable {
 	 *@since
 	 */
 	public Double getValue(String which) {
-		return (Double) this.values.get(which);
+		if (!(this.values.containsKey(which))) {
+			//System.out.println("Key " + which + " not found!!");
+			return new Double(0.0);
+		} else {
+			return (Double) this.values.get(which);
+		}
 	}
 
 
@@ -148,8 +153,30 @@ public class GraphSummaryList extends Hashtable {
 
 		return valKeys;
 	}
+	
+	public String[] getYearRange(int size) {
 
+		String[] valKeys = new String[size];
 
+		java.util.Date d = new java.util.Date();
+		java.util.Calendar rightNow = java.util.Calendar.getInstance();
+		rightNow.setTime(d);
+
+		int year = rightNow.get(java.util.Calendar.YEAR);
+		int month = 0;
+
+		for (int x = 0; x < size; x++) {
+			valKeys[x] = ("" + year) + ("" + month);
+			//rightNow.add(java.util.Calendar.MONTH, +1);
+
+			year = rightNow.get(java.util.Calendar.YEAR);
+			month++;
+		}
+
+		return valKeys;
+	}
+
+	
 	/**
 	 *  Gets the IsValid attribute of the GraphSummaryList object
 	 *

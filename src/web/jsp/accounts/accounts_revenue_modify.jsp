@@ -37,7 +37,7 @@
   </tr>
   
 	<tr class="containerBody">
-	<td nowrap class="formLabel">
+	<td width=125 nowrap class="formLabel">
 	Reassign To
 	</td>
 	<td colspan=1 valign=center>
@@ -46,7 +46,7 @@
 	</tr>
   
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td width=125 nowrap class="formLabel">
       Revenue Type
     </td>
     <td valign=center>
@@ -54,7 +54,7 @@
     </td>
   </tr>
     <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td width=125 nowrap class="formLabel">
       Description
     </td>
     <td valign=center>
@@ -63,7 +63,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td width=125 nowrap class="formLabel">
       Month
     </td>
     <td valign=center>
@@ -71,7 +71,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td width=125 nowrap class="formLabel">
       4-digit Year
     </td>
     <td valign=center>
@@ -80,7 +80,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td width=125 nowrap class="formLabel">
       Amount
     </td>
     <td valign=center>

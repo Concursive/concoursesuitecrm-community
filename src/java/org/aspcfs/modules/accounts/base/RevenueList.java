@@ -15,6 +15,8 @@ public class RevenueList extends Vector {
 
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
+  private int type = 0;
+  private String ownerIdRange = null;
 
   public RevenueList() { }
 
@@ -129,12 +131,25 @@ public class RevenueList extends Vector {
 public void setOrgId(int orgId) {
 	this.orgId = orgId;
 }
+public int getType() {
+	return type;
+}
+public void setType(int type) {
+	this.type = type;
+}
 
 public void setPagedListInfo(PagedListInfo pagedListInfo) {
 	this.pagedListInfo = pagedListInfo;
 }
 public PagedListInfo getPagedListInfo() {
 	return pagedListInfo;
+}
+
+public String getOwnerIdRange() {
+	return ownerIdRange;
+}
+public void setOwnerIdRange(String ownerIdRange) {
+	this.ownerIdRange = ownerIdRange;
 }
 
   private void createFilter(StringBuffer sqlFilter) {
@@ -144,6 +159,12 @@ public PagedListInfo getPagedListInfo() {
     if (orgId != -1) {
       sqlFilter.append("AND r.org_id = ? ");
     }
+    if (type != 0) {
+      sqlFilter.append("AND r.type = ? ");
+    }
+    if (ownerIdRange != null) {
+      sqlFilter.append("AND r.owner in (" + this.ownerIdRange + ") ");
+    }
   }
 
   private int prepareFilter(PreparedStatement pst) throws SQLException {
@@ -151,6 +172,10 @@ public PagedListInfo getPagedListInfo() {
       
     if (orgId != -1) {
       pst.setInt(++i, orgId);
+    }
+    
+    if (type != 0) {
+      pst.setInt(++i, type);
     }
       
     return i;

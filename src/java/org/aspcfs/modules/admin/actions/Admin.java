@@ -284,6 +284,13 @@ public final class Admin extends CFSModule {
 				context.getRequest().setAttribute("SelectedList", stageList);
 				context.getRequest().setAttribute("ListLabel", "Opportunities/Leads: Stage");
 			}
+			else if (id == 11) {
+				LookupList rtl = new LookupList(db, "lookup_revenue_types");
+				rtl.setSelectSize(8);
+				rtl.setMultiple(true);
+				context.getRequest().setAttribute("SelectedList", rtl);
+				context.getRequest().setAttribute("ListLabel", "Account Management: Revenue Type");
+			}
 
 		}
 		catch (Exception e) {
@@ -339,6 +346,9 @@ public final class Admin extends CFSModule {
 		else if (which == 10) {
 			context.getRequest().setAttribute("StageList", newList);
 		}
+		else if (which == 11) {
+			context.getRequest().setAttribute("RevenueTypeList", newList);
+		}
 	}
 
 
@@ -364,6 +374,8 @@ public final class Admin extends CFSModule {
 		LookupList stageList = new LookupList(db, "lookup_stage");
 		LookupList atl = new LookupList(db, "lookup_account_types");
 		
+		LookupList rtl = new LookupList(db, "lookup_revenue_types");
+		
 		context.getRequest().setAttribute("SeverityList", severityList);
 		context.getRequest().setAttribute("PriorityList", priorityList);
 		context.getRequest().setAttribute("SourceList", sourceList);
@@ -374,6 +386,7 @@ public final class Admin extends CFSModule {
 		context.getRequest().setAttribute("ContactAddressTypeList", contactAddressTypeList);
 		context.getRequest().setAttribute("StageList", stageList);
 		context.getRequest().setAttribute("AccountTypeList", atl);
+		context.getRequest().setAttribute("RevenueTypeList", rtl);
 	}
 
 
@@ -475,6 +488,14 @@ public final class Admin extends CFSModule {
 		}
 		else {
 			tableName = "lookup_stage";
+		}
+		
+		if (ignore != 11) {
+			LookupList rtl = new LookupList(db, "lookup_revenue_types");
+			context.getRequest().setAttribute("RevenueTypeList", rtl);
+		}
+		else {
+			tableName = "lookup_revenue_types";
 		}
 
 		return tableName;

@@ -31,16 +31,20 @@
     <strong>Action</strong>
   </td>
   <td width=30% valign=center align=left>
-    <strong>Description</strong>
+    <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=description">Description</a></strong>
+    <%= RevenueListInfo.getSortIcon("description") %>
   </td>  
   <td width=20% valign=center align=left>
-    <strong>Month</strong>
+    <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=month">Month</a></strong>
+    <%= RevenueListInfo.getSortIcon("month") %>
   </td>   
   <td width=20% valign=center align=left>
-    <strong>Year</strong>
+    <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=year">Year</a></strong>
+    <%= RevenueListInfo.getSortIcon("year") %>
   </td>
   <td width=30% valign=center align=left>
-    <strong>Amount</strong>
+    <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=amount">Amount</a></strong>
+    <%= RevenueListInfo.getSortIcon("amount") %>
   </td>
 </tr>
 <%

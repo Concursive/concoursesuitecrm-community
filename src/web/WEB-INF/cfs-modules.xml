@@ -261,6 +261,13 @@
       <link value="/Accounts.do?command=View"/>
     </submenu>
     
+    <submenu name="Revenue">
+      <permission value="accounts-accounts-view"/>
+      <long_html value="Revenue"/>
+      <short_html value="Revenue"/>
+      <link value="/RevenueManager.do?command=Dashboard"/>
+    </submenu>
+    
     <submenu name="Reports">
       <permission value="accounts-accounts-reports-view"/>
       <long_html value="Reports"/>

@@ -68,10 +68,12 @@ public class User extends GenericBean {
   protected String previousUsername = null;
 
   protected boolean opportunityLock = false;
+  protected boolean revenueLock = false;
   protected GraphSummaryList gmr = new GraphSummaryList();
   protected GraphSummaryList ramr = new GraphSummaryList();
   protected GraphSummaryList cgmr = new GraphSummaryList();
   protected GraphSummaryList cramr = new GraphSummaryList();
+  protected GraphSummaryList revenue = new GraphSummaryList();
   private int assistant = -1;
   private int alias = -1;
 
@@ -138,6 +140,13 @@ public class User extends GenericBean {
     buildRecord(db, userId);
     buildResources(db);
   }
+  
+public GraphSummaryList getRevenue() {
+	return revenue;
+}
+public void setRevenue(GraphSummaryList revenue) {
+	this.revenue = revenue;
+}
 
 
   /**
@@ -242,6 +251,12 @@ public class User extends GenericBean {
   public void setGmr(GraphSummaryList tmp) {
     this.gmr = tmp;
   }
+public boolean getRevenueLock() {
+	return revenueLock;
+}
+public void setRevenueLock(boolean revenueLock) {
+	this.revenueLock = revenueLock;
+}
 
 
   /**
@@ -281,6 +296,20 @@ public class User extends GenericBean {
       managerUser.setIsValid(false, false);
     }
   }
+  
+  public void setRevenueIsValid(boolean isValid, boolean dataAlso) {
+    if (dataAlso == true) {
+      this.revenue.setIsValid(isValid);
+    }
+
+    if (isValid == false) {
+      this.revenue.setLastFileName("");
+    }
+
+    if (managerUser != null) {
+      managerUser.setRevenueIsValid(false, false);
+    }
+  }
 
 
   /**
@@ -309,7 +338,10 @@ public class User extends GenericBean {
     this.getCgmr().setValue(key, v3);
     this.getCramr().setValue(key, v4);
   }
-
+  
+  public void setRevenueGraphValues(String key, Double v1) {
+    this.getRevenue().setValue(key, v1);
+  }
 
   /**
    *  Sets the Cgmr attribute of the User object
@@ -882,7 +914,13 @@ public class User extends GenericBean {
     }
   }
 
-
+  public boolean getRevenueIsValid() {
+    if (this.revenue.getIsValid() == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   /**
    *  Gets the Gmr attribute of the User object
    *
@@ -1232,6 +1270,15 @@ public class User extends GenericBean {
     }
   }
 
+  public void doRevenueLock() {
+    while (revenueLock == true) {
+    }
+    synchronized (this) {
+      while (revenueLock) {
+      }
+      this.revenueLock = true;
+    }
+  }
 
   /**
    *  Sets the opportunityLock to false, allowing any waiting requests to try
@@ -1241,6 +1288,11 @@ public class User extends GenericBean {
    */
   public void doOpportunityUnlock() {
     this.opportunityLock = false;
+  }
+  
+  
+  public void doRevenueUnlock() {
+    this.revenueLock = false;
   }
 
 

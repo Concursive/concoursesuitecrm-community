@@ -365,7 +365,12 @@ public class CFSModule {
     systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
   }
 
-
+  protected void invalidateUserRevenueData(ActionContext context, int userId) {
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    systemStatus.getHierarchyList().getUser(userId).setRevenueIsValid(false, true);
+  }
+  
   /**
    *  Description of the Method
    *

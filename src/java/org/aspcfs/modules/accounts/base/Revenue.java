@@ -8,7 +8,10 @@ import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+
+import org.theseus.actions.*;
+import com.darkhorseventures.controller.*;
+import com.darkhorseventures.utils.*;
 
 public class Revenue extends GenericBean {
 
@@ -29,7 +32,10 @@ public class Revenue extends GenericBean {
   
   private String enteredByName = "";
   private String modifiedByName = "";
-  private String ownerName = "";
+  
+  private String ownerNameFirst = "";
+  private String ownerNameLast = "";
+  
   private String typeName = "";
   private String monthName = "";
 
@@ -112,12 +118,6 @@ public void setMonthName(String monthName) {
     }
     return ("");
   }
-  public String getOwnerName() {
-	return ownerName;
-}
-public void setOwnerName(String ownerName) {
-	this.ownerName = ownerName;
-}
 
   public String getAmountValue() {
     double value_2dp = (double) Math.round(amount * 100.0) / 100.0;
@@ -197,6 +197,58 @@ public void setType(String tmp) { this.type = Integer.parseInt(tmp); }
 public void setOwner(String tmp) { this.owner = Integer.parseInt(tmp); }
 public int getType() { return type; }
 public int getOwner() { return owner; }
+public void setOwnerNameFirst(String tmp) { this.ownerNameFirst = tmp; }
+public void setOwnerNameLast(String tmp) { this.ownerNameLast = tmp; }
+public String getOwnerNameFirst() { return ownerNameFirst; }
+public String getOwnerNameLast() { return ownerNameLast; }
+
+public String getOwnerName() {
+	return (Contact.getNameLastFirst(this.getOwnerNameLast(), this.getOwnerNameFirst()));
+}
+
+public String getOwnerNameAbbr() {
+	return (this.getOwnerNameFirst().charAt(0) + ". " + this.getOwnerNameLast());
+}
+
+  public boolean insert(Connection db, ActionContext context) throws SQLException {
+    if (insert(db)) {
+      invalidateUserData(context);
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  public int update(Connection db, ActionContext context) throws SQLException {
+    int oldId = -1;
+    Statement st = db.createStatement();
+    ResultSet rs = st.executeQuery(
+      "SELECT owner " +
+      "FROM revenue " +
+      "WHERE id = " + this.getId());
+    if (rs.next()) {
+      oldId = rs.getInt("owner");
+    }
+    rs.close();
+    st.close();
+    int result = update(db);
+    if (result == 1) {
+      invalidateUserData(context);
+      if (oldId != this.getOwner()) {
+        invalidateUserData(context, oldId);
+      }
+    }
+    return result;
+  }
+  
+    public boolean delete(Connection db, ActionContext context) throws SQLException {
+    if (delete(db)) {
+      invalidateUserData(context);
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 	public boolean insert(Connection db) throws SQLException {
 		    if (!isValid(db)) {
@@ -336,9 +388,36 @@ public int getOwner() { return owner; }
 	
 	enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
 	modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
-	ownerName = Contact.getNameLastFirst(rs.getString("own_namelast"), rs.getString("own_namefirst"));
+	
+	ownerNameFirst = rs.getString("own_namefirst");
+	ownerNameLast = rs.getString("own_namelast");
+	
 	typeName = rs.getString("typename");
 	monthName = rs.getString("monthname");
+  }
+  
+    /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@since
+   */
+  public void invalidateUserData(ActionContext context) {
+    invalidateUserData(context, owner);
+  }
+  
+    
+    /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@param  userId   Description of Parameter
+   *@since
+   */
+  public void invalidateUserData(ActionContext context, int userId) {
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    systemStatus.getHierarchyList().getUser(userId).setRevenueIsValid(false, true);
   }
   
 }

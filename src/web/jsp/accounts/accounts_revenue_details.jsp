@@ -27,12 +27,12 @@
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=center align=left>
+    <td colspan=3 valign=center align=left>
       <strong><%= toHtml(Revenue.getDescription()) %></strong>
     </td>     
   </tr>
   <tr class="containerBody">
-    <td class="formLabel">
+    <td width=125 class="formLabel">
       Owner
     </td>
     <td>
@@ -40,7 +40,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td class="formLabel">
+    <td width=125 class="formLabel">
       Type
     </td>
     <td>
@@ -48,7 +48,7 @@
     </td>
   </tr>
     <tr class="containerBody">
-    <td class="formLabel">
+    <td width=125 class="formLabel">
       Month
     </td>
     <td>
@@ -56,7 +56,7 @@
     </td>
   </tr>
       <tr class="containerBody">
-    <td class="formLabel">
+    <td width=125 class="formLabel">
       Year
     </td>
     <td>
@@ -64,7 +64,7 @@
     </td>
   </tr>
       <tr class="containerBody">
-    <td class="formLabel">
+    <td width=125 class="formLabel">
       Amount
     </td>
     <td>
@@ -72,7 +72,7 @@
     </td>
   </tr>
     <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td width=125 nowrap class="formLabel">
       Entered
     </td>
     <td>
@@ -80,7 +80,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td width=125 nowrap class="formLabel">
       Modified
     </td>
     <td>
