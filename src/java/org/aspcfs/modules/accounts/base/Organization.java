@@ -501,7 +501,11 @@ public class Organization extends GenericBean {
    *@param  employees  The new Employees value
    */
   public void setEmployees(String employees) {
-    this.employees = Integer.parseInt(employees);
+    try {
+      this.employees = Integer.parseInt(employees);
+    } catch (Exception e) {
+      this.employees = 0;
+    }
   }
 
 
