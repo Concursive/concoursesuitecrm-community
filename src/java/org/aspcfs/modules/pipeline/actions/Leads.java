@@ -983,9 +983,9 @@ public final class Leads extends CFSModule {
    */
   public String executeCommandExportReport(ActionContext context) {
 	  
-	if (!(hasPermission(context, "pipeline-reports-add"))) {
-	    return ("PermissionError");
-    	}
+    if (!(hasPermission(context, "pipeline-reports-add"))) {
+      return ("PermissionError");
+    }
 	
     Exception errorMessage = null;
     boolean recordInserted = false;

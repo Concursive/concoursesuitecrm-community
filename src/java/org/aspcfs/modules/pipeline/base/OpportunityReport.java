@@ -28,7 +28,7 @@ public class OpportunityReport extends OpportunityList {
 	protected int enteredBy = -1;
 	protected int modifiedBy = -1;
 	protected ArrayList criteria = null;
-	protected String[] params = new String[] {"id", "description", "contact", "owner", "amount1", "amount2", "amount3", "stageName", "stageDate", "probability", "revenueStart", "terms", "alertDate", "commission", "entered", "enteredBy", "modified", "modifiedBy"};
+	protected String[] params = new String[] {"id", "type", "description", "contact", "owner", "amount1", "amount2", "amount3", "stageName", "stageDate", "probability", "revenueStart", "terms", "alertDate", "commission", "entered", "enteredBy", "modified", "modifiedBy"};
 
 	
 	protected OrganizationReport orgReportJoin = new OrganizationReport();
@@ -107,6 +107,7 @@ public class OpportunityReport extends OpportunityList {
 			String param = (String) y.next();
 			
 			if ( param.equals("id") ) { rep.addColumn("Opportunity ID"); }
+      if ( param.equals("type") ) { rep.addColumn("Type(s)"); }
 			if ( param.equals("description")) { rep.addColumn("Description"); }
 			if ( param.equals("contact") )  { rep.addColumn("Contact/Organization"); }
 			if ( param.equals("owner") )   { rep.addColumn("Owner"); }
@@ -158,6 +159,7 @@ public class OpportunityReport extends OpportunityList {
 					String param = (String) y.next();
 					
 					if ( param.equals("id") ) {  thisRow.addCell(thisOpp.getId());	}
+          if ( param.equals("type") ) {  thisRow.addCell(thisOpp.getTypes().valuesAsString());	}
 					if ( param.equals("description")) { thisRow.addCell(thisOpp.getDescription());	}
 					if ( param.equals("contact") )  { thisRow.addCell(thisOpp.getAccountName()); }
 					if ( param.equals("owner") )   {	thisRow.addCell(thisOpp.getOwnerName()); }

@@ -101,6 +101,7 @@ Generate New Report <br>
     <td width=50%>
       <select size=5 multiple name="fields">
       <option value="contact" >Contact/Organization</option>
+      <option value="type" >Type(s)</option>
       <option value="owner" >Owner</option>
       <option value="amount1" >Low Amount</option>
       <option value="amount2" >Best Guess Amount</option>

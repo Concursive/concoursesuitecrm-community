@@ -340,16 +340,6 @@ public void setCloseDateEnd(String tmp) {
     ResultSet rs = null;
     int items = -1;
 
-    //String whereClause = "";
-
-    /*
-    if (orgId == -1) {
-      whereClause = " x.acctlink like '%' ";
-    } else {
-      whereClause = " x.acctlink = " + orgId + " ";
-    }
-    */
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
@@ -360,9 +350,6 @@ public void setCloseDateEnd(String tmp) {
       "SELECT COUNT(*) AS recordcount " +
       "FROM opportunity x " +
       "WHERE x.opp_id > -1 ");
-      /**
-      + "WHERE " + whereClause);
-      */
 
     createFilter(sqlFilter);
 
@@ -422,7 +409,6 @@ public void setCloseDateEnd(String tmp) {
       "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
       "lookup_stage y " +
       "WHERE x.stage = y.code ");
-      //"WHERE x.stage = y.code AND " + whereClause);
     pst = db.prepareStatement(
       sqlSelect.toString() + 
       sqlFilter.toString() + 
@@ -442,6 +428,7 @@ public void setCloseDateEnd(String tmp) {
       ++count;
       Opportunity thisOpp = new Opportunity(rs);
       thisOpp.buildFiles(db);
+      thisOpp.buildTypes(db);
       this.addElement(thisOpp);
     }
     rs.close();
