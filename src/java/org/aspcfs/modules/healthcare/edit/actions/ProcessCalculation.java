@@ -42,6 +42,7 @@ public final class ProcessCalculation extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
+    String test = context.getRequest().getParameter("test");
     //Declare the typical action objects
     Exception errorMessage = null;
     Connection db = null;
@@ -354,7 +355,9 @@ public final class ProcessCalculation extends CFSModule {
             if (System.getProperty("DEBUG") != null) {
               System.out.println("ProcessCalculation-> ...inserting");
             }
-            officeTransDetails.insert(prodDb);
+            if (test == null) {
+              officeTransDetails.insert(prodDb);
+            }
           }
         }
       }
@@ -386,8 +389,10 @@ public final class ProcessCalculation extends CFSModule {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("ProcessCalculation-> Inserting provider transactions: " + key);
         }
-        if (providerTransDetails.insert(prodDb) > -1) {
-          providerRecordsInserted++;
+        if (test == null) {
+          if (providerTransDetails.insert(prodDb) > -1) {
+            providerRecordsInserted++;
+          }
         }
       }
       sb.append(recordList.size() + " total record(s) processed<br>");
