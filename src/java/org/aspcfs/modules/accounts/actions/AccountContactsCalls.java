@@ -147,27 +147,19 @@ public final class AccountContactsCalls extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-
-    String permission = "contacts-external_contacts-add";
-
     boolean recordInserted = false;
     int resultCount = 0;
     String contactId = context.getRequest().getParameter("contactId");
     Call thisCall = (Call) context.getFormBean();
     thisCall.setModifiedBy(getUserId(context));
     addModuleBean(context, "View Accounts", "Save a Call");
-
-    if (thisCall.getId() > 0) {
-      permission = "accounts-accounts-contacts-calls-view";
-    }
-
-    if (!(hasPermission(context, permission))) {
+    if (!hasPermission(context, "accounts-accounts-contacts-calls-add") &&
+        !hasPermission(context, "contacts-external_contacts-add")) {
       return ("PermissionError");
     }
     Connection db = null;
     try {
       db = this.getConnection(context);
-
       //update or insert the call
       if (thisCall.getId() > 0) {
         resultCount = thisCall.update(db, context);
@@ -175,7 +167,6 @@ public final class AccountContactsCalls extends CFSModule {
         thisCall.setEnteredBy(getUserId(context));
         recordInserted = thisCall.insert(db, context);
       }
-
       //add account and contact to the request
       addFormElements(context, db);
 
