@@ -314,6 +314,8 @@ public class TransactionItem {
       ObjectUtils.setParam(object, "id", String.valueOf(auth.getClientId()));
       ObjectUtils.setParam(object, "anchor", auth.getNextAnchor());
       ((SyncClient) object).updateSyncAnchor(db);
+      Record thisRecord = new Record("syncEnd");
+      recordList.add(thisRecord);
     } else if (action == SYNC) {
       ObjectUtils.setParam(object, "lastAnchor", auth.getLastAnchor());
       ObjectUtils.setParam(object, "nextAnchor", auth.getNextAnchor());
@@ -377,16 +379,20 @@ public class TransactionItem {
           //Set the object's id to be written, based on the client guid
           this.setObjectId(db);
           //Retrieve the previous modified date to ensure integrity of update
+          syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
+          syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
           //TODO: Read modified from sync_map
+          syncClientMap.buildStatusDate(db);
           //TODO: Set modified from read
-          //ObjectUtils.setParam(object, "modified", ObjectUtils.getParam(object, "modified"));
+          ObjectUtils.setParam(object, "modified", syncClientMap.getStatusDate());
         }
         Object result = doExecute(db, executeMethod);
         if (System.getProperty("DEBUG") != null) {
           System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
         }
         if (action == INSERT) {
-          //Insert the guid / id into client mapping
+          //Insert the guid / id into client mapping, at this point, the object will have its
+          //newly inserted id, so set the syncMap before the insert
           if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
             syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
             syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
@@ -398,8 +404,6 @@ public class TransactionItem {
         } else if (action == UPDATE) {
           //Update the modified date in client mapping
           if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
-            syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
-            syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
             Object updatedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
             syncClientMap.updateStatusDate(db, ObjectUtils.getParam(updatedObject, "modified"));
           }

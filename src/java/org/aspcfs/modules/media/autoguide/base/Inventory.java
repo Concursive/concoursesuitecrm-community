@@ -973,6 +973,10 @@ public class Inventory {
         }
         adRuns.setInventoryId(id);
         adRuns.update(db);
+      } else {
+        System.out.println("Inventory-> Not updated...");
+        System.out.println("Inventory-> Inventory Id: " + id);
+        System.out.println("Inventory-> Inventory Modified: " + modified);
       }
 
       db.commit();

@@ -340,6 +340,29 @@ public class SyncClientMap {
     }
     return resultId;
   }
+  
+  public void buildStatusDate(Connection db) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT status_date " +
+        "FROM sync_map " +
+        "WHERE client_id = ? " +
+        "AND table_id = ? " +
+        "AND record_id = ? " +
+        "AND cuid = ? "); 
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, clientId);
+    pst.setInt(++i, tableId);
+    pst.setInt(++i, recordId);
+    pst.setString(++i, clientUniqueId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      statusDate = rs.getTimestamp("status_date");
+    }
+    rs.close();
+    pst.close();
+  }
 
 
   /**
