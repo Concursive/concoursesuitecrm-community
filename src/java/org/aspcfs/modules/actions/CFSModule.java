@@ -61,6 +61,7 @@ public class CFSModule {
   
   protected Connection getDefaultConnection(ActionContext context) throws SQLException {
     ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
+    System.out.println(sqlDriver.toString());
     return sqlDriver.getConnection();
   }
 
