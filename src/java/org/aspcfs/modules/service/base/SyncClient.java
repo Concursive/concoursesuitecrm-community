@@ -25,7 +25,7 @@ public class SyncClient extends GenericBean {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-  private String anchor = null;
+  private java.sql.Timestamp anchor = null;
 
   /**
    *  Constructor for the SyncClient object
@@ -60,6 +60,7 @@ public class SyncClient extends GenericBean {
         "FROM sync_client " +
         "WHERE client_id = ? ");
     pst = db.prepareStatement(sql.toString());
+    pst.setInt(1, id);
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
@@ -71,7 +72,51 @@ public class SyncClient extends GenericBean {
     rs.close();
     pst.close();
   }
+  
+  public boolean checkNormalSync(Connection db) throws SQLException {
+    boolean result = false;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT * " +
+        "FROM sync_client " +
+        "WHERE client_id = ? ");
+    if (anchor == null) {
+      sql.append("AND anchor is null "); 
+    } else {
+      sql.append("AND anchor = ? ");
+    }
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(1, id);
+    if (anchor != null) {
+      pst.setTimestamp(2, anchor);
+    }
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      result = true;
+    } else {
+      result = false;
+    }
+    rs.close();
+    pst.close();
+    return result;
+  }
 
+  public boolean updateSyncAnchor(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "UPDATE sync_client " +
+        "SET anchor = ? " +
+        "WHERE client_id = ? ");
+    pst = db.prepareStatement(sql.toString());
+    pst.setTimestamp(1, anchor);
+    pst.setInt(2, id);
+    pst.executeUpdate();
+    pst.close();
+    return true;
+  }
 
   /**
    *  Sets the id attribute of the SyncClient object
@@ -172,7 +217,7 @@ public class SyncClient extends GenericBean {
     this.modifiedBy = Integer.parseInt(tmp);
   }
 
-  public void setAnchor(String tmp) { this.anchor = tmp; }
+  public void setAnchor(java.sql.Timestamp tmp) { this.anchor = tmp; }
 
 
   /**
@@ -244,8 +289,7 @@ public class SyncClient extends GenericBean {
     return modifiedBy;
   }
   
-  public String getAnchor() { return anchor; }
-
+  public java.sql.Timestamp getAnchor() { return anchor; }
 
 
   /**
@@ -357,6 +401,7 @@ public class SyncClient extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    anchor = rs.getTimestamp("anchor");
   }
 
 }

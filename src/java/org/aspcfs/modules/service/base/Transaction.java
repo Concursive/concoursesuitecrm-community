@@ -3,6 +3,7 @@ package com.darkhorseventures.utils;
 import java.util.*;
 import org.w3c.dom.*;
 import java.sql.*;
+import com.darkhorseventures.cfsbase.SyncTable;
 
 /**
  *  A Transaction is an array of TransactionItems.  When a system requests
@@ -130,7 +131,7 @@ public class Transaction extends ArrayList {
    *@param  key    The feature to be added to the Mapping attribute
    *@param  value  The feature to be added to the Mapping attribute
    */
-  public void addMapping(String key, String value) {
+  public void addMapping(String key, SyncTable value) {
     if (mapping == null) {
       mapping = new HashMap();
     }
@@ -163,7 +164,7 @@ public class Transaction extends ArrayList {
       while (items.hasNext()) {
         TransactionItem thisItem = (TransactionItem) items.next();
         thisItem.setMeta(meta);
-        thisItem.execute(db, auth);
+        thisItem.execute(db, auth, mapping);
         if (thisItem.hasError()) {
           appendErrorMessage(thisItem.getErrorMessage());
         }

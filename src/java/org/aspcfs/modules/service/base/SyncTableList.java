@@ -96,7 +96,7 @@ public class SyncTableList extends ArrayList {
     while (iList.hasNext()) {
       SyncTable thisTable = (SyncTable)iList.next();
       if (thisTable.getSystemId() == thisSystemId && thisTable.getMappedClassName() != null) {
-        objectMap.put(thisTable.getName(), thisTable.getMappedClassName());
+        objectMap.put(thisTable.getName(), thisTable);
       }
     }
     return objectMap;

@@ -25,6 +25,8 @@ public class ModelList extends ArrayList {
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
   }
+  public void setSyncType(int tmp) { this.syncType = tmp; }
+  public void setSyncType(String tmp) { this.syncType = Integer.parseInt(tmp); }
   
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -74,14 +76,14 @@ public class ModelList extends ArrayList {
     }
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
-        sqlFilter.append("AND entered > ? ");
+        sqlFilter.append("AND model.entered > ? ");
       }
-      sqlFilter.append("AND entered < ? ");
+      sqlFilter.append("AND model.entered < ? ");
     }
     if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND modified > ? ");
-      sqlFilter.append("AND entered < ? ");
-      sqlFilter.append("AND modified < ? ");
+      sqlFilter.append("AND model.modified > ? ");
+      sqlFilter.append("AND model.entered < ? ");
+      sqlFilter.append("AND model.modified < ? ");
     }
   }
   

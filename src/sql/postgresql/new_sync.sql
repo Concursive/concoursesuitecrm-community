@@ -13,7 +13,8 @@ CREATE TABLE sync_client (
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL
+  modifiedby INT NOT NULL,
+  anchor TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE sync_system (
@@ -34,3 +35,11 @@ CREATE TABLE sync_table (
   sync_item BOOLEAN DEFAULT false
 );
 
+CREATE TABLE sync_map (
+  map_id SERIAL PRIMARY KEY,
+  client_id INT NOT NULL,
+  table_id INT NOT NULL,
+  record_id INT NOT NULL,
+  cuid VARCHAR(50) NOT NULL,
+  complete BOOLEAN DEFAULT false
+);

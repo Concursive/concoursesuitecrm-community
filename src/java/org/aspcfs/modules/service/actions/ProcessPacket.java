@@ -62,7 +62,10 @@ public final class ProcessPacket extends CFSModule {
           Element thisElement = (Element) trans.next();
           Transaction thisTransaction = new Transaction();
           thisTransaction.setMapping(objectMap);
-          thisTransaction.addMapping("meta", "com.darkhorseventures.utils.TransactionMeta");
+          SyncTable metaMapping = new SyncTable();
+          metaMapping.setName("meta");
+          metaMapping.setMappedClassName("com.darkhorseventures.utils.TransactionMeta");
+          thisTransaction.addMapping("meta", metaMapping);
           thisTransaction.build(thisElement);
           int statusCode = thisTransaction.execute(db, auth);
           TransactionStatus thisStatus = new TransactionStatus();

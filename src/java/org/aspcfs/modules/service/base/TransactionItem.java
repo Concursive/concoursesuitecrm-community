@@ -19,7 +19,8 @@ import com.darkhorseventures.utils.ObjectUtils;
  *
  *@author     matt
  *@created    April 10, 2002
- *@version    $Id$
+ *@version    $Id: TransactionItem.java,v 1.13 2002/04/24 15:39:44 mrajkowski
+ *      Exp $
  */
 public class TransactionItem {
 
@@ -28,6 +29,8 @@ public class TransactionItem {
   private final static int UPDATE = 3;
   private final static int DELETE = 4;
   private final static int SYNC = 5;
+  private final static int SYNC_START = 6;
+  private final static int SYNC_END = 7;
 
   private String name = null;
   private Object object = null;
@@ -90,7 +93,28 @@ public class TransactionItem {
         }
         thisRecord.put(thisField, thisValue);
       }
+      thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  mapping           Description of Parameter
+   *@param  auth              Description of Parameter
+   *@param  record            Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void insertClientMapping(Connection db, HashMap mapping,
+      AuthenticationItem auth, Record record) throws SQLException {
+    SyncClientMap syncClientMap = new SyncClientMap();
+    syncClientMap.setClientId(auth.getClientId());
+    syncClientMap.setTableId(((SyncTable) mapping.get(name)).getId());
+    syncClientMap.setRecordId(record.getRecordId());
+    syncClientMap.setClientUniqueId((String) record.get("guid"));
+    syncClientMap.insert(db);
   }
 
 
@@ -117,7 +141,7 @@ public class TransactionItem {
   public void setObject(Element element, HashMap mapping) throws Exception {
     name = element.getTagName();
     if (mapping.containsKey(name)) {
-      object = Class.forName((String) mapping.get(name)).newInstance();
+      object = Class.forName(((SyncTable) mapping.get(name)).getMappedClassName()).newInstance();
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TransactionItem-> New: " + object.getClass().getName());
       }
@@ -138,8 +162,8 @@ public class TransactionItem {
 
 
   /**
-   *  Determines the methods that are allowed from a specified action.
-   *  These are the methods that can be executed on the new Object.
+   *  Determines the methods that are allowed from a specified action. These are
+   *  the methods that can be executed on the new Object.
    *
    *@param  tmp  The new action value
    */
@@ -154,7 +178,11 @@ public class TransactionItem {
       setAction(this.DELETE);
     } else if ("sync".equals(tmp)) {
       setAction(this.SYNC);
-    }
+    } else if ("syncStart".equals(tmp)) {
+      setAction(this.SYNC_START);
+    } else if ("syncEnd".equals(tmp)) {
+      setAction(this.SYNC_END);
+    } 
   }
 
 
@@ -235,17 +263,19 @@ public class TransactionItem {
 
 
   /**
-   *  Assumes that the Object has already been built and populated, now
-   *  the specified action will be executed.  A database connection is
-   *  passed along since the Object will need it.<p>
+   *  Assumes that the Object has already been built and populated, now the
+   *  specified action will be executed. A database connection is passed along
+   *  since the Object will need it.<p>
    *
-   *  Data can be selected, inserted, updated, deleted, and synchronized
-   *  with client systems.
+   *  Data can be selected, inserted, updated, deleted, and synchronized with
+   *  client systems.
    *
    *@param  db             Description of Parameter
+   *@param  auth           Description of Parameter
+   *@param  mapping        Description of Parameter
    *@exception  Exception  Description of Exception
    */
-  public void execute(Connection db, AuthenticationItem auth) throws Exception {
+  public void execute(Connection db, AuthenticationItem auth, HashMap mapping) throws Exception {
     String executeMethod = null;
     switch (action) {
         case -1:
@@ -265,33 +295,61 @@ public class TransactionItem {
           break;
         case SYNC:
           break;
+        case SYNC_START:
+          break;
+        case SYNC_END:
+          break;
         default:
           appendErrorMessage("Unsupported action specified");
           break;
     }
     
-    if ((action == INSERT && meta != null) || action == SELECT || action == SYNC) {
+    if (object == null) {
+      appendErrorMessage("Unsupported object specified");
+      return;
+    }
+
+    if ((action == INSERT && meta != null) || 
+        action == SELECT || 
+        action == SYNC) {
       if (recordList == null) {
         recordList = new RecordList(name);
       }
     }
-    if (object != null && action == SYNC) {
+    
+    if (action == SYNC_START) {
+      ObjectUtils.setParam(object, "id", String.valueOf(auth.getClientId()));
+      ObjectUtils.setParam(object, "anchor", auth.getLastAnchor());
+      if (! ((SyncClient)object).checkNormalSync(db)) {
+        appendErrorMessage("Client and server not in sync!");
+      }
+    } else if (action == SYNC_END) {
+      ObjectUtils.setParam(object, "id", String.valueOf(auth.getClientId()));
+      ObjectUtils.setParam(object, "anchor", auth.getNextAnchor());
+      ((SyncClient)object).updateSyncAnchor(db);
+    } else if (action == SYNC) {
       ObjectUtils.setParam(object, "lastAnchor", auth.getLastAnchor());
       ObjectUtils.setParam(object, "nextAnchor", auth.getNextAnchor());
-      
+
       //Insert
       if (auth.getNextAnchor() != null) {
         addRecords(object, db, Constants.SYNC_INSERTS);
       }
-      
+
       //Update
       if (auth.getLastAnchor() != null) {
         addRecords(object, db, Constants.SYNC_UPDATES);
       }
-      
+
       //Delete
-      
-    } else if (executeMethod != null && object != null) {
+
+      Iterator syncRecords = recordList.iterator();
+      while (syncRecords.hasNext()) {
+        Record thisRecord = (Record) syncRecords.next();
+        this.insertClientMapping(db, mapping, auth, thisRecord);
+      }
+
+    } else if (executeMethod != null) {
       Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
       Object[] dbObject = new Object[]{db};
       Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
@@ -337,16 +395,25 @@ public class TransactionItem {
       errorMessage.append(tmp);
     }
   }
-  
+
+
+  /**
+   *  Adds a feature to the Records attribute of the TransactionItem object
+   *
+   *@param  object         The feature to be added to the Records attribute
+   *@param  db             The feature to be added to the Records attribute
+   *@param  syncType       The feature to be added to the Records attribute
+   *@exception  Exception  Description of Exception
+   */
   private void addRecords(Object object, Connection db, int syncType) throws Exception {
     PreparedStatement pst = null;
-    Class[] dbClass = new Class[]{Class.forName("java.sql.Connection"),Class.forName("java.sql.PreparedStatement")};
-    Object[] dbObject = new Object[]{db,pst};
+    Class[] dbClass = new Class[]{Class.forName("java.sql.Connection"), Class.forName("java.sql.PreparedStatement")};
+    Object[] dbObject = new Object[]{db, pst};
     String executeMethod = "queryList";
     ObjectUtils.setParam(object, "syncType", String.valueOf(syncType));
     Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
     Object result = method.invoke(object, dbObject);
-    while (((ResultSet)result).next()) {
+    while (((ResultSet) result).next()) {
       String objectMethod = "getObject";
       Class[] rsClass = new Class[]{Class.forName("java.sql.ResultSet")};
       Object[] rsObject = new Object[]{result};
@@ -354,24 +421,32 @@ public class TransactionItem {
       Object thisObject = getObject.invoke(object, rsObject);
       String recordAction = null;
       switch (syncType) {
-        case Constants.SYNC_INSERTS:
-          recordAction = "insert";
-          break;
-        case Constants.SYNC_UPDATES:
-          recordAction = "update";
-          break;
-        default:
-          break;
+          case Constants.SYNC_INSERTS:
+            recordAction = "insert";
+            break;
+          case Constants.SYNC_UPDATES:
+            recordAction = "update";
+            break;
+          default:
+            break;
       }
       addRecords(thisObject, recordList, recordAction);
     }
-    ((ResultSet)result).close();
+    ((ResultSet) result).close();
     if (pst != null) {
       pst.close();
     }
-    ((java.util.AbstractList)object).clear();
+    ((java.util.AbstractList) object).clear();
   }
-  
+
+
+  /**
+   *  Adds a feature to the Records attribute of the TransactionItem object
+   *
+   *@param  object        The feature to be added to the Records attribute
+   *@param  recordList    The feature to be added to the Records attribute
+   *@param  recordAction  The feature to be added to the Records attribute
+   */
   private void addRecords(Object object, RecordList recordList, String recordAction) {
     if (recordList != null) {
       //Need to see if the Object is a collection of Objects, otherwise
