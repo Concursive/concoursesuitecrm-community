@@ -67,7 +67,7 @@ Tickets<br>
 	<tr class="containerBody">
     <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete">
     <td width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="accounts-accounts-tickets-edit"><a href="AccountTickets.do?command=ModifyTicket&id=<%=thisTic.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-delete"><a href="javascript:confirmDelete('AccountTickets.do?command=DeleteTicket&orgId=<%=OrgDetails.getOrgId()%>&id=<%=thisTic.getId()%>');">Del</a></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-edit"><a href="AccountTickets.do?command=ModifyTicket&id=<%=thisTic.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-delete"><a href="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=thisTic.getId()%>&popup=true', 'Delete_ticket','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
     <td align="center" nowrap valign="top" class="row<%= rowid %>">
