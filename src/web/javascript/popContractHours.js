@@ -28,7 +28,12 @@ function setHours(hiddenValues, hiddenFields, displayValues, displayFields){
   for(i = 0; ; i++){
     if (!hiddenFields[i])
       break;
-    opener.document.getElementById(hiddenFields[i]).value = hiddenValues[i];
+    alert(hiddenValues[i]);
+    if (hiddenFields[i] == "adjustmentNotes") {
+      opener.document.getElementById(hiddenFields[i]).value = unescape(hiddenValues[i]);
+    } else {
+      opener.document.getElementById(hiddenFields[i]).value = hiddenValues[i];
+    }
     if (hiddenFields[i] != "totalHoursRemaining"){
       opener.changeDivContent(displayFields[i], displayValues[i]);
     }else{

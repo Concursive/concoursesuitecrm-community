@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*, org.aspcfs.utils.web.*,java.util.*,org.aspcfs.modules.assets.base.*,org.aspcfs.modules.servicecontracts.base.*,java.text.DateFormat" %>
+<%@ page import="org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="serviceContractHours" class="org.aspcfs.modules.servicecontracts.base.ServiceContractHours" scope="request"/>
 <jsp:useBean id="adjustmentReasonList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -117,16 +118,16 @@
     %>
     <script language="JavaScript">
       <% count++; %>
-      hiddenValues[<%= count %>] = "<%=serviceContractHours.getAdjustmentHours()%>";
+      hiddenValues[<%= count %>] = "<%= serviceContractHours.getAdjustmentHours() %>";
       hiddenFields[<%= count %>] = "<%=hf1%>";
-      displayValues[<%= count %>] = "<%=serviceContractHours.getAdjustmentHours()%>";
+      displayValues[<%= count %>] = "<%= serviceContractHours.getAdjustmentHours() %>";
       displayFields[<%= count %>] = "<%=df1%>";
 
       <% 
       if (hf2 != null){
         count++; 
       %>
-      hiddenValues[<%= count %>] = "<%=serviceContractHours.getAdjustmentReason()%>";
+      hiddenValues[<%= count %>] = "<%= serviceContractHours.getAdjustmentReason() %>";
       hiddenFields[<%= count %>] = "<%=hf2%>";
       displayValues[<%= count %>] = "<%= toHtml(adjustmentReasonList.getSelectedValue(serviceContractHours.getAdjustmentReason())) %>";
       displayFields[<%= count %>] = "<%=df2%>";
@@ -136,9 +137,9 @@
       if (hf2 != null){
         count++; 
       %>
-      hiddenValues[<%= count %>] = "<%=toHtml(serviceContractHours.getAdjustmentNotes())%>";
+      hiddenValues[<%= count %>] = "<%= StringUtils.jsEscape(serviceContractHours.getAdjustmentNotes()) %>";
       hiddenFields[<%= count %>] = "<%=hf3%>";
-      displayValues[<%= count %>] = "<%=toHtml(serviceContractHours.getAdjustmentNotes())%>";
+      displayValues[<%= count %>] = "<%= toHtml(serviceContractHours.getAdjustmentNotes()) %>";
       displayFields[<%= count %>] = "<%=df3%>";
       <%}%>
       

@@ -17,7 +17,7 @@
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="serviceContractHoursHistoryInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <th width="10%" align="right" nowrap>
+    <th width="10%" nowrap>
       <strong>Adjustment</strong>
     </th>
     <th width="30%" >
@@ -40,16 +40,16 @@
         i++;
         rowid = (rowid != 1 ? 1 : 2);
         ServiceContractHours thisHours = (ServiceContractHours)itr.next();
-    %>      
-    <tr align="right" class="row<%= rowid %>">
-      <td width="10%">
+    %>
+    <tr class="row<%= rowid %>">
+      <td width="10%" align="right">
         <%= thisHours.getAdjustmentHours() %>
       </td>
       <td width="30%" nowrap>
         <%= toHtml(serviceContractHoursReasonList.getSelectedValue(thisHours.getAdjustmentReason())) %>
       </td>
       <td width="50%"  >
-      <%= toString(thisHours.getAdjustmentNotes()) %>
+      <%= toHtml(thisHours.getAdjustmentNotes()) %>
       </td>
       <td width="10%" >
         <dhv:tz timestamp="<%=thisHours.getModified()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>

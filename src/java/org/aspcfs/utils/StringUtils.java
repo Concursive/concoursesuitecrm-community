@@ -566,7 +566,9 @@ public class StringUtils {
     if (s != null) {
       String jsReady = s.trim();
       jsReady = replace(jsReady, "%", "%25");
+      jsReady = replace(jsReady, "\r\n", "%0A");
       jsReady = replace(jsReady, "\r", "%0A");
+      jsReady = replace(jsReady, "\n", "%0A");
       jsReady = replace(jsReady, "\"", "%22");
       jsReady = replace(jsReady, "\\", "%5C");
       jsReady = replace(jsReady, "!", "%21");
