@@ -12,6 +12,7 @@ import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.communications.base.Campaign;
 import org.aspcfs.modules.pipeline.base.*;
 import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.beans.ModuleBean;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.controller.objectHookManager.*;
@@ -890,7 +891,7 @@ public class CFSModule {
    *@exception  SQLException  Description of the Exception
    */
   public boolean hasViewpointAuthority(Connection db, ActionContext context, String permName, int owner, int vpUser) throws SQLException {
-    //check if user has auth
+    //check if user has authority
     if (hasAuthority(context, owner) || (vpUser == owner)) {
       return true;
     }
@@ -913,6 +914,38 @@ public class CFSModule {
       }
     }
     return false;
+  }
+
+
+  /**
+   *  Checks to see if the user has authority to acccess a contact
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@param  contact           Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean hasContactAuthority(Connection db, ActionContext context, Contact contact) throws SQLException {
+    //check if user has authority by virtue of the hierarchy
+    if (!hasAuthority(context, contact.getOwner())) {
+      return false;
+    }
+
+    //check if user is the owner of the record
+    if (contact.getOwner() == this.getUserId(context)) {
+      return true;
+    }
+
+    //it has to be a hierarchy contact so make sure that it is not personal
+    AccessTypeList accessList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
+    if (accessList == null || accessList.size() == 0) {
+      return true;
+    }
+    if (accessList.getCode(AccessType.PERSONAL) == contact.getAccessType()) {
+      return false;
+    }
+    return true;
   }
 
 
@@ -995,5 +1028,6 @@ public class CFSModule {
     }
     return (returnString += "OK");
   }
+
 }
 
