@@ -53,7 +53,7 @@ NOTE: Dark Horse CRM works best with at least a 500 MHz processor and
 
 
 --------------------------------------------------------------------------------
-| DEPLOYING DARK HORSE CRM                                                     |
+| DEPLOYING DARK HORSE CRM (New Installation)                                  |
 --------------------------------------------------------------------------------
 
 With a default installation of Tomcat, web applications are automatically
@@ -135,6 +135,37 @@ Database: darkhorse_crm
 
 
 --------------------------------------------------------------------------------
+| DEPLOYING DARK HORSE CRM (Upgrading from a previous version)                 |
+--------------------------------------------------------------------------------
+
+IMPORTANT: Make sure to backup the Dark Horse CRM database and file library
+before continuing with the upgrade.  The upgrade process will make irreversible
+changes to your database, unless you have a backup.
+
+With a default installation of Tomcat, web applications are automatically
+unpacked and deployed when a new .war file is placed into Tomcat's webapps
+folder.
+
+Copy the included darkhorse.war file into your <CATALINA_HOME>/webapps folder.
+
+Tomcat will unpack and deploy the Dark Horse CRM application, overwriting any
+previous version.  If Tomcat does not appear to have removed the previous
+installation, then shutdown Tomcat, delete the existing darkhorse directory,
+then startup Tomcat with the new .war file in place.  Tomcat should now create
+the darkhorse directory.
+
+At this point you should be able to access Dark Horse CRM from your web browser.
+For example, http://127.0.0.1/darkhorse or http://127.0.0.1:8080/darkhorse
+
+The application will detect that the database is not up-to-date and await 
+further instruction.  Until an administrator logs into Dark Horse CRM
+and confirms the upgrade, users will not be able to login.
+
+If any problems occur, a detailed report is generated which can be used to 
+further identify the problem.  Make sure you have a backup!
+
+
+--------------------------------------------------------------------------------
 | RUNNING MULITPLE INSTANCES OF DARK HORSE CRM                                 |
 --------------------------------------------------------------------------------
 
@@ -155,10 +186,12 @@ problem, review the database server settings.  The application must be able
 to connect using TCP/IP.
 
 If you still have problems or questions, please join the Dark Horse CRM
-community site: http://community.darkhorsecrm.com
+community site for answers to common issues: http://community.darkhorsecrm.com
 
 For support and sales information please visit the Dark Horse CRM
 main site: http://www.darkhorsecrm.com
 
 
 The Dark Horse CRM Team
+
+(C) 2004 Dark Horse Ventures, All Rights Reserved.
