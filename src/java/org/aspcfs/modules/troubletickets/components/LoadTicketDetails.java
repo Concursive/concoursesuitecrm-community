@@ -41,7 +41,7 @@ public class LoadTicketDetails extends ObjectHookComponent implements ComponentI
    *@return    The description value
    */
   public String getDescription() {
-    return "Expands ticket information for use in other components for the current ticket";
+    return "Load all ticket information for use in other steps";
   }
 
 

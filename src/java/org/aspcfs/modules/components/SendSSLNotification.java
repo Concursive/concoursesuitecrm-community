@@ -28,7 +28,7 @@ public class SendSSLNotification extends ObjectHookComponent implements Componen
    *@return    The description value
    */
   public String getDescription() {
-    return "Post text data to a remote system using SSL.";
+    return "Post text data to a remote system using SSL";
   }
 
 

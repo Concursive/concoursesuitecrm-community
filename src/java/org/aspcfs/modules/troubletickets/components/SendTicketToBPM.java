@@ -35,7 +35,7 @@ public class SendTicketToBPM extends ObjectHookComponent implements ComponentInt
    *@return    The description value
    */
   public String getDescription() {
-    return "Send ticket information to NetDecisions BPM.";
+    return "Send ticket information to NetDecisions BPM";
   }
 
 

@@ -22,7 +22,7 @@ public class QueryTicketJustUpdated extends Component implements ComponentInterf
    *@return    The description value
    */
   public String getDescription() {
-    return "Returns whether a ticket was just updated in CFS";
+    return "Was the ticket just updated?";
   }
 
 

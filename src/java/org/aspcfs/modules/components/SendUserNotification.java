@@ -34,7 +34,7 @@ public class SendUserNotification extends ObjectHookComponent implements Compone
    *@return    The description value
    */
   public String getDescription() {
-    return "Send an email to a user, using the CFS Notification System.";
+    return "Send an email notification to a user";
   }
 
 

@@ -25,7 +25,7 @@ public class QueryHasFolderField extends ObjectHookComponent implements Componen
    *@return    The description value
    */
   public String getDescription() {
-    return "Does this folder field have the specified field?";
+    return "Does this folder contain a specified field?";
   }
 
 

@@ -22,7 +22,7 @@ public class QueryTicketJustAssigned extends ObjectHookComponent implements Comp
    *@return    The description value
    */
   public String getDescription() {
-    return "Was this ticket just assigned or re-assigned?";
+    return "Was the ticket just assigned or re-assigned?";
   }
 
 
