@@ -88,7 +88,7 @@ Response Details
                        %>
                             
                             <dhv:evaluate exp="<%= (type == SurveyQuestion.OPEN_ENDED) %>">
-                              <tr><td width="100%" align="left"><li><%= (thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) ? toHtml(thisAnswer.getComments() : "No comments provided") %></li></td></tr>
+                              <tr><td width="100%" align="left"><li><%= (thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) ? toHtml(thisAnswer.getComments()) : "No comments provided" %></li></td></tr>
                             </dhv:evaluate>
                             <dhv:evaluate exp="<%= (type == SurveyQuestion.QUANT_NOCOMMENTS) %>">
                               <tr><td width="100%" align="left"><li><%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns() + "" : "No answer provided" %></li></td></tr>
