@@ -2,9 +2,13 @@ $Id$
 
 Welcome to the binary distribution of Dark Horse CRM!
 
-The installation and configuration of Dark Horse CRM is intended to be as simple
-as possible.  However, this document assumes that you have a working knowledge
-of the required applications and have them already installed.
+The installation, configuration, and upgrade of Dark Horse CRM is intended to be
+as simple as possible.  However, this document assumes that you have a working 
+knowledge of the required applications and have them already installed.
+
+This information is provided to those that have read and agreed to the Dark
+Horse CRM license agreement.
+
 
 --------------------------------------------------------------------------------
 | REQUIREMENTS                                                                 |
@@ -140,11 +144,12 @@ Database: darkhorse_crm
 
 IMPORTANT: Make sure to backup the Dark Horse CRM database and file library
 before continuing with the upgrade.  The upgrade process will make irreversible
-changes to your database, unless you have a backup.
+changes to your database, unless you have a backup.  Review database backup
+information in the next sections.
 
-With a default installation of Tomcat, web applications are automatically
-unpacked and deployed when a new .war file is placed into Tomcat's webapps
-folder.
+All of your previous Dark Horse CRM configuration information is saved
+in the file library, which, by default, is not in the same path as the webapp,
+so your information will be preserved.
 
 Copy the included darkhorse.war file into your <CATALINA_HOME>/webapps folder.
 
@@ -163,6 +168,44 @@ and confirms the upgrade, users will not be able to login.
 
 If any problems occur, a detailed report is generated which can be used to 
 further identify the problem.  Make sure you have a backup!
+
+
+--------------------------------------------------------------------------------
+| POSTGRESQL DATABASE BACKUP PROCEDURE                                         |
+--------------------------------------------------------------------------------
+
+To backup the database, execute the following command:
+
+$ pg_dump -dOR darkhorse_crm > darkhorse_crm.dump
+
+If necessary, to restore the database, execute the following commands:
+
+$ dropdb darkhorse_crm
+$ createdb -E UNICODE -O darkhorse_crm darkhorse_crm
+
+Now supply the connection information to Dark Horse CRM when asked:
+
+User: darkhorse_crm
+Password: <password>
+Database: darkhorse_crm
+
+$ psql darkhorse_crm -f darkhorse_crm.dump
+
+
+--------------------------------------------------------------------------------
+| MSSQL DATABASE BACKUP PROCEDURE                                              |
+--------------------------------------------------------------------------------
+
+Using the Microsoft SQL Server Enterprise Manager, locate the darkhorse_crm
+database from the tree.
+
+Right-click on the database name and choose "All Tasks" then 
+"Backup Database..." from the drop-down menu.
+
+Perform a complete backup to your destination of choice.
+
+If necessary, to restore the database, choose "All Tasks" then 
+"Restore Database..." from the drop-down menu.
 
 
 --------------------------------------------------------------------------------
