@@ -9,6 +9,9 @@ import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationList;
+import org.aspcfs.modules.base.FilterList;
+import org.aspcfs.modules.base.Filter;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Creates a Accounts List for the Account popup with two levels of filters. <br>
@@ -122,7 +125,7 @@ public final class AccountSelector extends CFSModule {
   private void setParameters(OrganizationList acctList, ActionContext context) {
 
     if ("true".equals(context.getRequest().getParameter("reset"))) {
-      context.getSession().removeAttribute("AcctListInfo");
+      context.getSession().removeAttribute("AccountListInfo");
     }
 
     PagedListInfo acctListInfo = this.getPagedListInfo(context, "AccountListInfo");
@@ -133,13 +136,22 @@ public final class AccountSelector extends CFSModule {
       acctListInfo.addFilter(1, "0");
     }
 
+    //add filters
+    FilterList filters = new FilterList();
+    filters.setSource(Constants.ACCOUNTS);
+    filters.build(context.getRequest());
+    context.getRequest().setAttribute("Filters", filters);
+    
+    //  set Filter for retrieving addresses depending on typeOfContact
+    String firstFilter = filters.getFirstFilter(acctListInfo.getListView());
+    
     acctList.setPagedListInfo(acctListInfo);
     acctList.setMinerOnly(false);
     acctList.setTypeId(acctListInfo.getFilterKey("listFilter1"));
 
-    if ("my".equals(acctListInfo.getListView())) {
+    if ("my".equals(firstFilter)) {
       acctList.setOwnerId(this.getUserId(context));
-    } else if ("disabled".equals(acctListInfo.getListView())) {
+    } else if ("disabled".equals(firstFilter)) {
       acctList.setIncludeEnabled(0);
     }
   }
