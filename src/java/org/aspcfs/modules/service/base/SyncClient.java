@@ -25,7 +25,7 @@ public class SyncClient extends GenericBean {
   private int enteredBy = -1;
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
-
+  private String anchor = null;
 
   /**
    *  Constructor for the SyncClient object
@@ -172,6 +172,8 @@ public class SyncClient extends GenericBean {
     this.modifiedBy = Integer.parseInt(tmp);
   }
 
+  public void setAnchor(String tmp) { this.anchor = tmp; }
+
 
   /**
    *  Gets the id attribute of the SyncClient object
@@ -241,6 +243,9 @@ public class SyncClient extends GenericBean {
   public int getModifiedBy() {
     return modifiedBy;
   }
+  
+  public String getAnchor() { return anchor; }
+
 
 
   /**
