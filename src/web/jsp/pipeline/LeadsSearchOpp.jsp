@@ -4,7 +4,7 @@
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <body onLoad="javascript:document.forms[0].searchDescription.focus();">
-<form name="searchLeads" action="Leads.do?command=ViewOpp" method="post">
+<form name="searchLeads" action="Leads.do?command=Search" method="post">
 <a href="Leads.do">Pipeline Management</a> > 
 Search Opportunities<br>
 <hr color="#BFBFBB" noshade>
