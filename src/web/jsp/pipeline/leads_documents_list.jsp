@@ -10,7 +10,7 @@
     <td>
       <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;&nbsp;
       
-      	<% 
+		<% 
 	  if (OpportunityDetails.getAccountLink() != -1) { %>
 	  	[ <a href="/Accounts.do?command=Details&orgId=<%=OpportunityDetails.getAccountLink()%>">Go to this Account</a> ]
 	  <%} else { %>

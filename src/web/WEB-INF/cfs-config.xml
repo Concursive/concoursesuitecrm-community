@@ -236,7 +236,22 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-  </action>  
+  </action>
+	<action name="AccountsDocuments" class="com.darkhorseventures.cfsmodule.AccountsDocuments">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/accounts_documents_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/accounts_documents_upload.jsp" layout="nav"/>
+    <forward name="UploadOK" resource="/AccountsDocuments.do?command=View"/>
+    <forward name="AddVersionOK" resource="/accounts_documents_upload_version.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/accounts_documents_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/accounts_documents_modify.jsp" layout="nav"/>
+		<forward name="UpdateOK" resource="/AccountsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/AccountsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/AccountsDocuments.do?command=View"/>
+  </action>
   <!-- End Account Module -->
   
   
