@@ -2,11 +2,18 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.autoguide.base.*" %>
 <jsp:useBean id="InventoryItem" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<link rel="stylesheet" href="css/photolist.css" type="text/css">
 <a href="AutoGuide.do?command=List">Back to Vehicle List</a><p>
 <form action='/AutoGuide.do?command=Details&id=<%= InventoryItem.getId() %>&action=modify' method='post'>
+<%--
 <dhv:permission name="autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
 <dhv:permission name="autoguide-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>'"></dhv:permission>
 <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete"><br>&nbsp;</dhv:permission>
+--%>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr>
+    <td width="100%" valign="top">
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2" valign="center" align="center">
@@ -75,9 +82,53 @@
     </td>
   </tr>
 </dhv:evaluate>
+<dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
+  <tr>
+    <td nowrap class="formLabel">Ad Run Dates</td>
+    <td>
+<%
+      Iterator adruns = InventoryItem.getAdRuns().iterator();
+      while (adruns.hasNext()) {
+        AdRun thisAdRun = (AdRun)adruns.next();
+%>
+      <img border="0" src="<%= (thisAdRun.isComplete()?"images/box-checked.gif":"images/box.gif") %>" alt="" align="absmiddle"><%= toDateString(thisAdRun.getRunDate()) %>
+      (<%= toHtml(thisAdRun.getAdTypeName()) %> - with<%= (thisAdRun.getIncludePhoto()?"":"out") %> photo)<%= (adruns.hasNext()?"<br>":"") %>
+<%
+      }
+%>
+    </td>
+  </tr>
+</dhv:evaluate>
 </table>
+<dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
+&nbsp;<br>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr>
+    <td>
+Status Icons:<br>
+<img border="0" src="images/box.gif" alt="" align="absmiddle"> Ad Run has not been processed by Graphic Designer<br>
+<img border="0" src="images/box-checked.gif" alt="" align="absmiddle"> Ad Run has been processed by Graphic Designer 
+    </td>
+  </tr>
+</table>
+</dhv:evaluate>
+    </td>
+    <td class="PhotoDetail">
+      <span>
+        <img src="<%= (InventoryItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + InventoryItem.getId() + "&fid=" + InventoryItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/>
+        <br>
+      </span>
+<dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">      
+      <a href="#">D/L Hi-Res</a> (<%= InventoryItem.getPicture().getVersion(1.0d).getRelativeSize() %>k)<br>
+</dhv:evaluate>      
+      <a href="#">D/L Text</a>
+    </td>
+  </tr>
+</table>
+<%--
 <dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete"><br></dhv:permission>
 <dhv:permission name="autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
 <dhv:permission name="autoguide-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AutoGuide.do?command=Delete&id=<%= InventoryItem.getId() %>'"></dhv:permission>
+--%>
 </form>
 

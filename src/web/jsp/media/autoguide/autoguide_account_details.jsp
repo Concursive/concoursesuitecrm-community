@@ -111,6 +111,18 @@
   </tr>
 </dhv:evaluate>
 </table>
+<dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
+&nbsp;<br>
+<table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr>
+    <td>
+Status Icons:<br>
+<img border="0" src="images/box.gif" alt="" align="absmiddle"> Ad Run has not been processed by Graphic Designer<br>
+<img border="0" src="images/box-checked.gif" alt="" align="absmiddle"> Ad Run has been processed by Graphic Designer 
+    </td>
+  </tr>
+</table>
+</dhv:evaluate>
     </td>
     <td class="PhotoDetail">
       <span>

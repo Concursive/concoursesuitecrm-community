@@ -49,6 +49,7 @@ public class Inventory {
   private OptionList options = null;
   private AdRunList adRuns = null;
   private int pictureId = -1;
+  private FileItem picture = null;
 
 
   /**
@@ -110,7 +111,7 @@ public class Inventory {
     this.buildOrganizationInfo(db);
     this.buildOptions(db);
     this.buildAdRuns(db);
-    this.buildPictureId(db);
+    this.buildPicture(db);
   }
 
 
@@ -483,6 +484,10 @@ public class Inventory {
   public void setPictureId(int tmp) {
     this.pictureId = tmp;
   }
+  
+  public void setPicture(FileItem tmp) {
+    this.picture = tmp;
+  }
 
 
   /**
@@ -774,6 +779,9 @@ public class Inventory {
     return pictureId;
   }
 
+  public FileItem getPicture() {
+    return picture;
+  }
 
   /**
    *  Description of the Method
@@ -813,6 +821,10 @@ public class Inventory {
    */
   public boolean hasPictureId() {
     return pictureId > -1;
+  }
+  
+  public boolean hasPicture() {
+    return (picture != null);
   }
 
 
@@ -1062,6 +1074,18 @@ public class Inventory {
   public void buildPictureId(Connection db) throws SQLException {
     FileItem fileItem = new FileItem(db, -1, id, Constants.AUTOGUIDE);
     pictureId = fileItem.getId();
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Inventory-> PictureID: " + pictureId);
+    }
+  }
+  
+  public void buildPicture(Connection db) throws SQLException {
+    picture = new FileItem(db, -1, id, Constants.AUTOGUIDE);
+    picture.buildVersionList(db);
+    pictureId = picture.getId();
+    if (pictureId == -1) {
+      picture = null;
+    }
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Inventory-> PictureID: " + pictureId);
     }

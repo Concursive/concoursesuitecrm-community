@@ -7,14 +7,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 
 <form name="listView" method="post" action="AutoGuide.do?command=List">
-<dhv:permission name="autoguide-inventory-add">
-<a href="AutoGuide.do?command=InsertForm">Add a Vehicle</a>
-</dhv:permission>
-
-<dhv:permission name="autoguide-inventory-add" none="true">
 <br>
-</dhv:permission>
-
 <center><%= AutoGuideDirectoryInfo.getNumericalPageLinks() %></center>
 
 <table width="100%" border="0">
@@ -55,7 +48,7 @@
       <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Model</a></strong>
     </td>
     <td>
-      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Photo</a></strong>
+      <strong><a href="AutoGuide.do?command=List&column=i.inventory_id">Next Ad</a></strong>
     </td>
   </tr>
 <%    
@@ -94,8 +87,15 @@
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
         </td>
-        <td class="row<%= rowid %>" nowrap>
-          &nbsp;
+        <td class="row<%= rowid %>">
+          <dhv:evaluate exp="<%= thisItem.hasAdRuns() %>">
+            <img border="0" src="<%= (thisItem.getAdRuns().getNextAdRun().isComplete()?"images/box-checked.gif":"images/box.gif") %>" alt="" align="absmiddle"><%= toDateString(thisItem.getAdRuns().getNextAdRun().getRunDate()) %>
+            <%= toHtml(thisItem.getAdRuns().getNextAdRun().getAdTypeName().substring(0,1)) %>
+            <%= (thisItem.getAdRuns().getNextAdRun().getIncludePhoto()?"/ Include Photo":"") %>
+          </dhv:evaluate>
+          <dhv:evaluate exp="<%= !thisItem.hasAdRuns() %>">
+            &nbsp;
+          </dhv:evaluate>
         </td>
       </tr>
 <%

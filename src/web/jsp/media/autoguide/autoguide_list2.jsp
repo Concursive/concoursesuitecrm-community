@@ -7,14 +7,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <form name="listView" method="post" action="AutoGuide.do?command=List">
-<dhv:permission name="autoguide-inventory-add">
-<a href="AutoGuide.do?command=InsertForm">Add a Vehicle</a>
-</dhv:permission>
-
-<dhv:permission name="autoguide-inventory-add" none="true">
 <br>
-</dhv:permission>
-
 <center><%= AutoGuideDirectoryInfo.getNumericalPageLinks() %></center>
 
 <table width="100%" border="0">
@@ -50,7 +43,7 @@
 </dhv:evaluate>
     <td class="PhotoList<%= (rowcount == 1?"":"AdditionalRow") %>">
       <p>
-        <a href="AutoGuide.do?command=Details&id=<%= thisItem.getId()%>"><img src="images/vehicle_unavailable.gif" border="0"/></a>
+        <a href="AutoGuide.do?command=Details&id=<%= thisItem.getId()%>"><img src="<%= (thisItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + thisItem.getId() + "&fid=" + thisItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/></a>
       </p>
       <p>
         <span>

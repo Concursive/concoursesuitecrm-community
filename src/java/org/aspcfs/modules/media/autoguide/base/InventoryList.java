@@ -208,7 +208,7 @@ public class InventoryList extends ArrayList {
           thisItem.buildOrganizationInfo(db);
         }
         if (buildPictureId) {
-          thisItem.buildPictureId(db);
+          thisItem.buildPicture(db);
         }
         thisItem.buildAdRuns(db);
       }
