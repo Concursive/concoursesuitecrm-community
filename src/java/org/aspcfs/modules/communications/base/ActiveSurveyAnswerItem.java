@@ -106,7 +106,7 @@ public class ActiveSurveyAnswerItem {
    *
    *@param  item  The new item value
    */
-  public void setitem(ActiveSurveyQuestionItem item) {
+  public void setItem(ActiveSurveyQuestionItem item) {
     this.item = item;
   }
 
@@ -166,7 +166,7 @@ public class ActiveSurveyAnswerItem {
    *
    *@return    The item value
    */
-  public ActiveSurveyQuestionItem getitem() {
+  public ActiveSurveyQuestionItem getItem() {
     return item;
   }
 

@@ -45,7 +45,7 @@
   %>      
      <tr class="row<%= rowid %>">
         <td valign="top" align="center" class="row<%= rowid %>" nowrap>
-          <%= thisItem.getContact().getNameLastFirst() %>
+          <%= thisItem.getRecipient().getNameLastFirst() %>
         </td>
         <td width="80%">
           <%= toHtml(thisItem.getRecipient().getPhoneNumber(PhoneNumber.BUSSINESS)) %>
