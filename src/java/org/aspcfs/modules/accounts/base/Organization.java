@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -1168,15 +1168,12 @@ public class Organization extends GenericBean {
   public boolean checkIfExists(Connection db, String checkName) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
-    StringBuffer sqlSelect = new StringBuffer();
-
-    db.setAutoCommit(false);
-    sqlSelect.append(
-        "SELECT name, org_id " +
-        "FROM organization " +
-        "WHERE lower(organization.name) = ? ");
+    String sqlSelect = 
+      "SELECT name, org_id " +
+      "FROM organization " +
+      "WHERE lower(organization.name) = ? ";
     int i = 0;
-    pst = db.prepareStatement(sqlSelect.toString());
+    pst = db.prepareStatement(sqlSelect);
     pst.setString(++i, checkName.toLowerCase());
     rs = pst.executeQuery();
     if (rs.next()) {
@@ -1205,14 +1202,13 @@ public class Organization extends GenericBean {
       return false;
     }
 
-    StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
-      sql.append(
-          "INSERT INTO ORGANIZATION (name,industry_temp_code,url,miner_only,enteredby,modifiedby,owner,duplicate_id,notes,employees,revenue,ticker_symbol,account_number) " +
-          "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ");
+      String sql = 
+        "INSERT INTO ORGANIZATION (name,industry_temp_code,url,miner_only,enteredby,modifiedby,owner,duplicate_id,notes,employees,revenue,ticker_symbol,account_number) " +
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
+      PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(++i, this.getName());
       pst.setInt(++i, this.getIndustry());
       pst.setString(++i, this.getUrl());

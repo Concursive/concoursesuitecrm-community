@@ -515,3 +515,29 @@ SYNC'D ALL TABLES FIRST):
   </transaction>
 </app>
 
+...Inserting an account -- does not support phone numbers, addresses yet
+
+<?xml version="1.0" standalone="yes"?> 
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id>
+    <code>BZTST27A</code> 
+    <systemId>2</systemId>
+    <clientId>*PUT YOUR ID HERE*</clientId>
+    <lastAnchor/>
+    <nextAnchor>2002-04-27 14:30:30</nextAnchor>
+  </authentication>
+  <transaction id="30">
+    <meta>
+      <property>guid</property>
+    </meta>
+    <account action="insert">
+      <guid>*Client's id for this record*</guid>
+      <name>Account name</name>
+      <accountNumber>The dmv number</accountNumber>
+      <enteredBy lookup="user">*USER'S ID*</enteredBy>
+      <owner lookup="user">*USER'S ID*</owner>
+      <notes>some notes</notes>
+    </account>
+  </transaction>
+</app>

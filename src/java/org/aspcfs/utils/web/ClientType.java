@@ -31,7 +31,13 @@ public class ClientType {
   private double version = -1;
   private int os = 1;
   
+  public ClientType() { }
+  
   public ClientType(HttpServletRequest request) {
+    this.setParameters(request);
+  }
+  
+  public void setParameters(HttpServletRequest request) {
     this.type = HTML_BROWSER;
     String wapCheck = request.getHeader("x-up-subno");
     if (System.getProperty("DEBUG") != null) System.out.println("ClientType-> WAP String: " + wapCheck);
@@ -112,6 +118,15 @@ public class ClientType {
       }
     }
   }
+  
+  public void setType(int tmp) { this.type = tmp; }
+  public void setId(int tmp) { this.id = tmp; }
+  public void setVersion(double tmp) { this.version = tmp; }
+  public void setOs(int tmp) { this.os = tmp; }
+  public int getType() { return type; }
+  public int getId() { return id; }
+  public double getVersion() { return version; }
+  public int getOs() { return os; }
   
   public String getBrowserId() {
     String thisId = null;
