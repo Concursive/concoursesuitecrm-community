@@ -47,10 +47,13 @@ public class SystemStatus {
    *@since                    1.3
    */
   public SystemStatus(Connection db) throws SQLException {
+    queryRecord(db);
+  }
+
+  public void queryRecord(Connection db) throws SQLException {
     buildHierarchyList(db);
     buildPreferences(db);
   }
-
 
   /**
    *  Sets the PermissionCheck attribute of the SystemStatus object

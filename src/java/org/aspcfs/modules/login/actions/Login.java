@@ -112,10 +112,11 @@ public final class Login extends GenericAction {
       if (!((Hashtable)context.getServletContext().getAttribute("SystemStatus")).containsKey(ce.getUrl())) {
         synchronized (this) {
           if (!((Hashtable)context.getServletContext().getAttribute("SystemStatus")).containsKey(ce.getUrl())) {
-            SystemStatus newSystemStatus = new SystemStatus(db);
+            SystemStatus newSystemStatus = new SystemStatus();
             newSystemStatus.setFileLibraryPath( 
               context.getServletContext().getRealPath("/") + "WEB-INF" + fs +
                 "fileLibrary" + fs + ce.getDbName() + fs);
+            newSystemStatus.queryRecord(db);
             ((Hashtable)context.getServletContext().getAttribute("SystemStatus")).put(ce.getUrl(), newSystemStatus);
             if (System.getProperty("DEBUG") != null) {
               System.out.println("Login-> Added new System Status object: " + ce.getUrl());
