@@ -222,6 +222,14 @@ public class LookupList extends HtmlSelect {
   public void setSelectSize(int tmp) {
     this.selectSize = tmp;
   }
+  
+  public String getTableName() {
+    return tableName;
+  }
+  
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
 
   /**

@@ -114,6 +114,10 @@ public class UserList extends Vector {
   public void setSyncType(int tmp) {
     this.syncType = tmp;
   }
+  
+  public void setSyncType(String tmp) {
+    this.syncType = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -312,6 +316,13 @@ public class UserList extends Vector {
     this.managerUser = tmp;
   }
 
+  public String getTableName() {
+    return tableName;
+  }
+  
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    *  Gets the username attribute of the UserList object

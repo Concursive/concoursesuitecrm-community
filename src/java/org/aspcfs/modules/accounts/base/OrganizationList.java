@@ -65,6 +65,10 @@ public class OrganizationList extends Vector {
   public void setSyncType(int tmp) {
     this.syncType = tmp;
   }
+  
+  public void setSyncType(String tmp) {
+    this.syncType = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the PagedListInfo attribute of the OrganizationList object. <p>
@@ -175,6 +179,13 @@ public class OrganizationList extends Vector {
     this.ownerId = ownerId;
   }
 
+  public String getTableName() {
+    return tableName;
+  }
+  
+  public String getUniqueField() {
+    return uniqueField;
+  }
 
   /**
    *  Gets the hasAlertDate attribute of the OrganizationList object
