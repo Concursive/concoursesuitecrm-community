@@ -822,7 +822,7 @@ public class TicketLog extends GenericBean {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
       pst.setInt(++i, this.getLevelCode());
-      if (this.getDepartmentCode() > -1) {
+      if (this.getDepartmentCode() > 0) {
         pst.setInt(++i, this.getDepartmentCode());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
