@@ -138,5 +138,21 @@ public class DataRecord extends ArrayList {
     return null;
   }
 
+
+  /**
+   *  Gets the intValue attribute of the DataRecord object
+   *
+   *@param  fieldName  Description of the Parameter
+   *@return            The intValue value
+   */
+  public int getIntValue(String fieldName) {
+    String value = this.getValue(fieldName);
+    try {
+      return Integer.parseInt(value);
+    } catch (Exception e) {
+      return -1;
+    }
+  }
+
 }
 
