@@ -124,8 +124,7 @@ public class Notifier extends ReportBuilder {
         //thisNotifier.sendAdminReport(thisNotifier.output.toString());
         java.util.Date end = new java.util.Date();
       } catch (Exception exc) {
-        System.out.println("Sending error email...");
-        //thisNotifier.sendAdminReport(exc.toString());
+        exc.printStackTrace(System.out);
         System.err.println("BuildReport Error: " + exc.toString());
         System.exit(2);
       }
@@ -175,14 +174,24 @@ public class Notifier extends ReportBuilder {
       if (thisNotification.isNew(db)) {
         System.out.println("Notifier-> ...it's new");
         OpportunityHeader thisOpportunity = new OpportunityHeader(db, thisComponent.getHeaderId());
-        Organization thisOrganization = new Organization(db, thisOpportunity.getAccountLink());
+        String relationshipType = null;
+        String relationshipName = null;
+        if (thisOpportunity.getAccountLink() > 0) {
+          Organization thisOrganization = new Organization(db, thisOpportunity.getAccountLink());
+          relationshipType = "Organization";
+          relationshipName = thisOrganization.getName();
+        } else if (thisOpportunity.getContactLink() > 0) {
+          Contact thisContact = new Contact(db, thisOpportunity.getContactLink());
+          relationshipType = "Contact";
+          relationshipName = thisContact.getNameFull();
+        }
         thisNotification.setFrom("cfs-messenger@" + (String) siteInfo.get("vhost"));
         thisNotification.setSiteCode(baseName);
-        thisNotification.setSubject("CFS Opportunity: " + thisOrganization.getName());
+        thisNotification.setSubject("CFS Opportunity: " + StringUtils.toHtml(relationshipName));
         thisNotification.setMessageToSend(
             "The following opportunity component in CFS has an alert set:<br>" +
             "<br>" +
-            "Organization: " + StringUtils.toHtml(thisOrganization.getName()) + "<br>" +
+            relationshipType + ": " + StringUtils.toHtml(relationshipName) + "<br>" +
             "Opportunity Name: " + StringUtils.toHtml(thisOpportunity.getDescription()) + "<br>" +
             "Component Description: " + StringUtils.toHtml(thisComponent.getDescription()) + "<br>" +
             "Close Date: " + thisComponent.getCloseDateString() + "<br>" +
