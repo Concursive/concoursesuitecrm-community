@@ -93,8 +93,8 @@ Comment: ${this.comment}
       <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
       <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
       <components>
-        <component id="100" parent="0" class="com.darkhorseventures.cfs.projectmanager.component.LoadAssignmentDetails" enabled="true"/>
-        <component id="101" parent="100" if="true" class="com.darkhorseventures.cfs.projectmanager.component.QueryAssignmentJustCreated"/>
+        <component id="100" parent="0" class="com.zeroio.iteam.components.LoadAssignmentDetails" enabled="true"/>
+        <component id="101" parent="100" if="true" class="com.zeroio.iteam.components.QueryAssignmentJustCreated"/>
         <component id="102" parent="101" if="true" class="org.aspcfs.modules.components.SendUserNotification">
           <parameters>
             <parameter name="notification.module" value="Projects"/>
@@ -122,13 +122,13 @@ Assigned By: ${assignmentAssignedByContact.nameFirstLast}
       <parameter name="notification.host" value="151.204.140.140" enabled="true"/>
       <parameter name="notification.port" value="44444"/>
       <components>
-        <component id="200" parent="0" class="com.darkhorseventures.cfs.component.QueryObjectJustInserted" enabled="true"/>
-        <component id="201" parent="200" if="true" class="com.darkhorseventures.cfs.folders.component.QueryHasFolderField" enabled="true">
+        <component id="200" parent="0" class="org.aspcfs.modules.components.QueryObjectJustInserted" enabled="true"/>
+        <component id="201" parent="200" if="true" class="org.aspcfs.modules.components.QueryHasFolderField" enabled="true">
           <parameters>
             <parameter name="customFieldCategory.fieldId" value="11"/>
           </parameters>
         </component>
-        <component id="202" parent="201" if="true" class="com.darkhorseventures.cfs.component.SendSSLNotification">
+        <component id="202" parent="201" if="true" class="org.aspcfs.modules.components.SendSSLNotification">
           <parameters>
 <parameter name="notification.body"><![CDATA[
 <?xml version="1.0" standalone="yes"?>
