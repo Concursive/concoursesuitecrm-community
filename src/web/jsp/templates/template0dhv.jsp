@@ -15,28 +15,18 @@
 <body>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td>
-      <img src="images/dhv1.gif" width="339" height="65">
-    </td>
+    <td><img src="images/dhv1.gif" width="339" height="65"></td>
     <td width="100%" align="right" valign="top" style="background-image: url(images/spaceb1.gif); background-repeat: repeat-x; background-position: top left;">
       &nbsp;
     </td>
   </tr>
   <tr>
-    <td>
-      <img src="images/dhv2.gif" width="339" height="30">
-    </td>
-    <td width="100%">
-      <img src="images/spaceb2.gif" width="100%" height="30">
-    </td>
+    <td><img src="images/dhv2.gif" width="339" height="30"></td>
+    <td width="100%"><img src="images/spaceb2.gif" width="100%" height="30"></td>
   </tr>
   <tr>
-    <td>
-      <img src="images/dhv3.gif" width="339" height="11">
-    </td>
-    <td width="100%">
-      <img src="images/spaceg1.gif" width="100%" height="11">
-    </td>
+    <td><img src="images/dhv3.gif" width="339" height="11"></td>
+    <td width="100%"><img src="images/spaceg1.gif" width="100%" height="11"></td>
   </tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">

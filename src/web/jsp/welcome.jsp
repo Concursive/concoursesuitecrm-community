@@ -6,27 +6,31 @@
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
-  <tr> 
-    <td valign="top" height="10%"> 
+  <tr>
+    <td height="10%" valign="top" width="100%">
+      <%-- Logo --%>
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr> 
-          <td rowspan="3" valign="top"><img src="images/dhv.gif" width="339" height="106"></td>
-          <td width="61%"><img src="images/spaceb1.gif" width="100%" height="65"></td>
-          <td width="39%" background="images/spaceb1.gif"><img src="images/keys.gif" width="445" height="65"></td>
+        <tr>
+          <td><img src="images/dhv1.gif" width="339" height="65"></td>
+          <td width="100%"><img src="images/spaceb1.gif" width="100%" height="65"></td>
+          <td><img src="images/keys.gif" width="326" height="65"></td>
         </tr>
-        <tr> 
-          <td width="61%"><img src="images/spaceb2.gif" width="100%" height="30"></td>
-          <td width="39%" background="images/spaceb2.gif"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"><img src="images/textspace.gif" width="18" height="30"></td>
+        <tr>
+          <td><img src="images/dhv2.gif" width="339" height="30"></td>
+          <td width="100%"><img src="images/spaceb2.gif" width="100%" height="30"></td>
+          <td><img src="images/spaceb2.gif" width="326" height="30"></td>
         </tr>
-        <tr> 
-          <td width="61%"><img src="images/spaceg1.gif" width="100%" height="11"></td>
-          <td width="39%"><img src="images/green.gif" width="446" height="11"></td>
+        <tr>
+          <td><img src="images/dhv3.gif" width="339" height="11"></td>
+          <td width="100%"><img src="images/spaceg1.gif" width="100%" height="11"></td>
+          <td><img src="images/green.gif" width="326" height="11"></td>
         </tr>
       </table>
     </td>
   </tr>
-  <tr> 
-    <td height="85%"> 
+  <tr>
+    <td height="85%" width="100%" valign="top">
+      <%-- Content --%>
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr> 
           <td width="9%" height="26"><img src="images/sidespace.gif" width="97" height="1"></td>
@@ -91,12 +95,13 @@
     </td>
   </tr>
   <tr> 
-    <td valign="bottom" height="5%"> 
+    <td height="5%" valign="top" width="100%">
+      <%-- Copyright --%>
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td width="33%"><img src="images/bottom.gif" width="339" height="35"></td>
+          <td><img src="images/bottom.gif" width="120" height="35"></td>
           <td width="100%"><img src="images/bottomspace.gif" width="100%" height="35"></td>
-          <td width="33%"><div align="right"><img src="images/bottomcopyright.gif" width="339" height="35"></div></td>
+          <td><div align="right"><img src="images/bottomcopyright.gif" width="339" height="35"></div></td>
         </tr>
       </table>
     </td>
