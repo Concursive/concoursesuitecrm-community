@@ -284,6 +284,18 @@ public class StringUtils {
     }
     return sb.toString();
   }
+  
+  public static String loadText(String filename) throws java.io.IOException {
+    String ls = System.getProperty("line.separator");
+    StringBuffer text = new StringBuffer();
+    BufferedReader in = new BufferedReader(new FileReader(filename));
+    String line = null;
+    while ((line = in.readLine()) != null) {
+      text.append(line);
+      text.append(ls);
+    }
+    return text.toString();
+  }
 
 }
 
