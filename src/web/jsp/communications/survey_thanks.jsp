@@ -32,7 +32,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="row1">
     <td align="center">
-      <font color="#8c8c8c"><strong>(C) 2002 Dark Horse Ventures, LLC</strong></font>
+      <font color="#8c8c8c"><strong>(C) 2002-2003 Dark Horse Ventures, LLC</strong></font>
     </td>
   </tr>
 </table>
