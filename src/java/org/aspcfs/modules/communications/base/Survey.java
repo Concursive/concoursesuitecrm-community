@@ -685,23 +685,49 @@ public class Survey extends GenericBean {
   public boolean delete(Connection db) throws SQLException {
     boolean commit = true;
     Statement st = null;
+    ResultSet rs = null;
     try {
       commit = db.getAutoCommit();
+      
+      //Check to see if a survey is being used by any Inactive campaigns
+      //If so, the survey can't be deleted
+      int inactiveCount = 0;
       st = db.createStatement();
+      rs = st.executeQuery(
+        "SELECT COUNT(*) AS survey_count " +
+        "FROM campaign " +
+        "WHERE survey_id = " + this.getId() + " " +
+        "AND active = " + DatabaseUtils.getFalse(db));
+      rs.next();
+      inactiveCount = rs.getInt("survey_count");
+      rs.close();
+      if (inactiveCount > 0) {
+        st.close();
+        errors.put("actionError", "Survey could not be deleted because " +
+          inactiveCount + " " +
+          (inactiveCount == 1?"campaign is":"campaigns are") +
+          " being built that " +
+          (inactiveCount == 1?"uses":"use") +
+          " this survey.");
+        return false;
+      }
+      
+      //If not, Check to see if a survey is being used by any Active Campaigns
+      //If so, the campaign will be marked disabled and hidden to the user
+      int activeCount = 0;
+      rs = st.executeQuery(
+        "SELECT COUNT(*) AS survey_count " +
+        "FROM campaign " +
+        "WHERE survey_id = " + this.getId() + " " +
+        "AND active = " + DatabaseUtils.getTrue(db));
+      rs.next();
+      activeCount = rs.getInt("survey_count");
+      rs.close();
+      
       if (commit) {
         db.setAutoCommit(false);
       }
-      
-      int count = 0;
-      ResultSet rs = st.executeQuery(
-        "SELECT COUNT(*) AS survey_count " +
-        "FROM campaign " +
-        "WHERE survey_id = " + this.getId());
-      rs.next();
-      count = rs.getInt("survey_count");
-      rs.close();
-      
-      if (count > 0) {
+      if (activeCount > 0) {
         st.executeUpdate(
           "UPDATE survey " +
           "SET enabled = " + DatabaseUtils.getFalse(db) + " " +

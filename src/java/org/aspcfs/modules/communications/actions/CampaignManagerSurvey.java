@@ -28,34 +28,25 @@ public final class CampaignManagerSurvey extends CFSModule {
    *@exception  SQLException  Description of the Exception
    */
   public String executeCommandView(ActionContext context) throws SQLException {
-
     if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
       return ("PermissionError");
     }
 
     Exception errorMessage = null;
-
     PagedListInfo surveyInfo = this.getPagedListInfo(context, "CampaignSurveyListInfo");
     surveyInfo.setLink("/CampaignManagerSurvey.do?command=View");
-
     Connection db = null;
-
     SurveyList surveyList = new SurveyList();
 
     try {
       db = this.getConnection(context);
-
       surveyList.setPagedListInfo(surveyInfo);
-      //contactList.setTypeId(externalContactsInfo.getFilterKey("listFilter1"));
-
       if ("all".equals(surveyInfo.getListView())) {
         surveyList.setEnteredByIdRange(this.getUserRange(context));
       } else {
         surveyList.setEnteredByIdRange(this.getUserId(context) + "");
       }
-
       surveyList.buildList(db);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -191,16 +182,13 @@ public final class CampaignManagerSurvey extends CFSModule {
    *@exception  SQLException  Description of the Exception
    */
   public String executeCommandDelete(ActionContext context) throws SQLException {
-    if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
+    if (!(hasPermission(context, "campaign-campaigns-surveys-delete"))) {
       return ("PermissionError");
     }
 
     Exception errorMessage = null;
     boolean recordDeleted = false;
-
     Survey thisSurvey = null;
-    Survey surveyList = null;
-
     Connection db = null;
 
     try {
@@ -213,19 +201,17 @@ public final class CampaignManagerSurvey extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    String submenu = context.getRequest().getParameter("submenu");
-
+/*     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
       submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "ManageSurveys";
     }
-
+ */
     if (errorMessage == null) {
-      context.getRequest().setAttribute("SurveyList", surveyList);
-      context.getRequest().setAttribute("submenu", submenu);
-      addModuleBean(context, submenu, "View Surveys");
+      //context.getRequest().setAttribute("submenu", submenu);
+      //addModuleBean(context, submenu, "View Surveys");
 
       if (recordDeleted) {
         return ("DeleteOK");
