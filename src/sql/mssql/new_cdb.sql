@@ -63,8 +63,8 @@ CREATE TABLE system_prefs (
   enabled BIT NOT NULL DEFAULT 1
 );
 
-CREATE TABLE mod_log (
-  mod_id INT IDENTITY PRIMARY KEY,
+CREATE TABLE usage_log (
+  usage_id INT IDENTITY PRIMARY KEY,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NULL,
   action INT NOT NULL,

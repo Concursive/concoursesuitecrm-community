@@ -2,8 +2,8 @@
 
 DROP TABLE mod_log;
 
-CREATE TABLE mod_log (
-  mod_id SERIAL PRIMARY KEY,
+CREATE TABLE usage_log (
+  usage_id SERIAL PRIMARY KEY,
   entered TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NULL,
   action INT NOT NULL,
