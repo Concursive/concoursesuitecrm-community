@@ -74,6 +74,7 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
     //Configure the query
     CustomLookupList lookupList = new CustomLookupList();
     lookupList.setTableName(thisMap.getTable());
+    
     //Set the fields to query
     Iterator properties = thisMap.iterator();
     while (properties.hasNext()) {

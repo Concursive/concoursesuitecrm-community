@@ -43,4 +43,5 @@ public class CustomLookupList extends LookupList {
     }
     fields.add(fieldName);
   }
+  
 }

@@ -110,6 +110,7 @@ public class DatabaseUtils {
         rs = st.executeQuery("SELECT currval('" + sequenceName + "')");
         break;
       } catch (SQLException e) {
+              rs = null;
               break;
       }
       case DatabaseUtils.MSSQL:
