@@ -162,15 +162,26 @@ public final class Leads extends CFSModule {
     //build the graph selection
     HtmlSelect graphTypeSelect = new HtmlSelect();
     graphTypeSelect.setSelectName("whichGraph");
+    graphTypeSelect.setJsEvent("onChange=\"document.forms[0].submit();\"");
     graphTypeSelect.addItem("gmr", "Gross Monthly Revenue");
     graphTypeSelect.addItem("ramr", "Risk Adjusted Monthly Revenue");
     graphTypeSelect.addItem("cgmr", "Commission Gross Monthly Revenue");
     graphTypeSelect.addItem("cramr", "Commission Risk Adj. Monthly Revenue");
-    graphTypeSelect.addItem("hist", "Historical");
     //done
 
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    String overrideId = context.getRequest().getParameter("oid");
+    String overrideId = null;
+    
+    if (context.getRequest().getParameter("oid") != null) {
+	    overrideId = context.getRequest().getParameter("oid");
+	    if (Integer.parseInt(overrideId) == getUserId(context)) {
+		context.getSession().setAttribute("leadsoverride", null);
+		context.getSession().setAttribute("leadsothername", null);
+		context.getSession().setAttribute("leadspreviousId", null);
+      	    }
+    } else if (context.getSession().getAttribute("leadsoverride") != null) {
+	    overrideId = (String)context.getSession().getAttribute("leadsoverride");
+    }
 
     User thisRec = null;
 
@@ -196,14 +207,38 @@ public final class Leads extends CFSModule {
       thisRec = thisUser.getUserRecord();
     }
 
-    graphString = context.getRequest().getParameter("whichGraph");
-
-    if (graphString == null || graphString.equals("")) {
-      graphString = "gmr";
+    if (context.getRequest().getParameter("whichGraph") != null) { 
+	    graphString = context.getRequest().getParameter("whichGraph");
+    } else if ((String)context.getRequest().getSession().getAttribute("whichGraph") != null) {
+	    graphString = (String)context.getRequest().getSession().getAttribute("whichGraph");
+    } else {
+	    graphString = "gmr";
     }
 
     graphTypeSelect.setDefaultKey(graphString);
     graphTypeSelect.build();
+    
+    if (context.getRequest().getParameter("reset") != null) {
+      overrideId = null;
+      context.getSession().setAttribute("leadsoverride", null);
+      context.getSession().setAttribute("leadsothername", null);
+      context.getSession().setAttribute("leadspreviousId", null);
+    }
+
+    if (overrideId != null && !(overrideId.equals("null")) && !(Integer.parseInt(overrideId) == getUserId(context))) {
+      idToUse = Integer.parseInt(overrideId);
+      thisRec = thisUser.getUserRecord().getChild(idToUse);
+      context.getSession().setAttribute("leadsoverride", overrideId);
+      context.getSession().setAttribute("leadsothername", thisRec.getContact().getNameFull());
+      context.getSession().setAttribute("leadspreviousId", "" + thisRec.getManagerId());
+    } else {
+      idToUse = thisUser.getUserId();
+      thisRec = thisUser.getUserRecord();
+    }
+    
+    if (context.getRequest().getParameter("whichGraph") != null) {
+	      context.getSession().setAttribute("whichGraph", context.getRequest().getParameter("whichGraph"));
+      } 
 
     try {
       db = this.getConnection(context);
@@ -325,7 +360,7 @@ public final class Leads extends CFSModule {
       chart.setTitle("");
 
       //define the chart
-      int width = 300;
+      int width = 275;
       int height = 200;
 
       System.out.println("Leads-> Drawing the chart");
@@ -544,6 +579,7 @@ public final class Leads extends CFSModule {
 
     if (passedDesc != null && !(passedDesc.equals(""))) {
       passedDesc = "%" + passedDesc + "%";
+      oppList.setDescription(passedDesc);
     }
 
     //end search stuff
@@ -551,7 +587,6 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       oppList.setPagedListInfo(oppListInfo);
-      oppList.setDescription(passedDesc);
 
       if ("all".equals(oppListInfo.getListView())) {
         oppList.setOwnerIdRange(this.getUserRange(context));

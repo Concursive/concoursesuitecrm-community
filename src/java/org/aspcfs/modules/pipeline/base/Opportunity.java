@@ -970,10 +970,10 @@ public void setAccountEnabled(boolean accountEnabled) {
    *@since
    */
   public String getShortDescription() {
-    if (description.length() <= 20) {
+    if (description.length() <= 40) {
       return description;
     } else {
-      return description.substring(0, 20) + "...";
+      return description.substring(0, 40) + "...";
     }
   }
 
