@@ -136,7 +136,11 @@ public final class Login extends CFSModule {
         pst.close();
         userId2 = String.valueOf(lpd.length());
       } catch (Exception e) {
-        loginBean.setMessage("* Access denied: License is not up-to-date.");
+        loginBean.setMessage("* Access denied: License not found");
+        continueId = true;
+      }
+      if (!continueId) {
+        loginBean.setMessage("* Access denied: License is not up-to-date");
       }
       if (continueId) {
         //Query the user record
