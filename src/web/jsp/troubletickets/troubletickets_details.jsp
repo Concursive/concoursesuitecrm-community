@@ -42,14 +42,14 @@
 		</td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">
+    <td nowrap class="formLabel" valign="top">
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
     <td valign=top>
       <%= toHtml(TicketDetails.getProblem()) %>
-      <input type=hidden name=problem value="<%=toHtml(TicketDetails.getProblem())%>">
-      <input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
-      <input type=hidden name=id value="<%=TicketDetails.getId()%>">
+      <input type="hidden" name="problem" value="<%=toHtml(TicketDetails.getProblem())%>">
+      <input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
+      <input type="hidden" name="id" value="<%=TicketDetails.getId()%>">
     </td>
   </tr>
 <dhv:include name="tickets-code" none="true">
@@ -179,7 +179,7 @@
 <%}%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-		<td colspan="4" valign="center" align="left">
+		<td colspan="3" valign="center" align="left">
       <strong>Ticket Log History</strong>
 		</td>     
   </tr>
@@ -195,13 +195,13 @@
 			<% } else { %>
     <tr class="containerBody">
 			<%}%>
-			<td nowrap valign="center" width="100" class="formLabel">
+			<td nowrap valign="top" width="100" class="formLabel">
         <%=toHtml(thisEntry.getEnteredByName())%>
 			</td>
-			<td nowrap valign=center width=150>
+			<td nowrap valign="top" width="150">
         <%=thisEntry.getEnteredString()%>
 			</td>
-			<td valign="center">
+			<td valign="top">
         <%=toHtml(thisEntry.getEntryText())%>
 			</td>
     </tr>
@@ -211,7 +211,7 @@
 	%>
     <tr>
       <td>
-        <font color="#9E9E9E" colspan="4">No Log Entries.</font>
+        <font color="#9E9E9E" colspan="3">No Log Entries.</font>
 			</td>
     </tr>
   <%}%>

@@ -57,13 +57,13 @@
   <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 
 	<tr bgcolor="#DEE0FA">
-	<td colspan=2 valign=center align=left>
+	<td colspan="2" valign="center" align="left">
 	<strong>Add a new Ticket</strong>
 	</td>     
 	</tr>
 	
 	<tr>
-	<td width=100 class="formLabel">
+	<td width="100" class="formLabel">
 	Ticket Source
 	</td>
 	<td bgColor="white">
@@ -72,7 +72,7 @@
 	</tr>	
 	
 	<tr>
-	<td width=100 class="formLabel">
+	<td width="100" class="formLabel">
 	Organization
 	</td>
 	<td bgColor="white">
@@ -116,59 +116,59 @@
 	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	
 	<tr bgcolor="#DEE0FA">
-	<td colspan=2 valign=center align=left>
+	<td colspan="2" valign="center" align="left">
 	<strong>New Contact</strong>
 	</td>     
 	</tr>
 	
 	<tr>
-    <td width=100 class="formLabel">
+    <td width="100" class="formLabel">
       First Name
     </td>
-    <td colspan=1 valign=center>
+    <td valign="center">
       <input type=text size=35 name="thisContact_nameFirst" value="<%=TicketDetails.getThisContact().getNameFirst()%>">
     </td>
   </tr>
 
   <tr>
-    <td width=100 class="formLabel">
+    <td width="100" class="formLabel">
       Last Name
     </td>
-    <td colspan=1 valign=center>
+    <td valign="center">
       <input type=text size=35 name="thisContact_nameLast" value="<%=TicketDetails.getThisContact().getNameLast()%>">
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
   
   <tr>
-    <td width=100 class="formLabel">
+    <td width="100" class="formLabel">
       Title
     </td>
-    <td colspan=1 valign=center>
+    <td valign="center">
       <input type=text size=35 name="thisContact_title" value="<%=TicketDetails.getThisContact().getTitle()%>">
     </td>
   </tr>
   
     <tr>
-    <td width=100 class="formLabel">
+    <td width="100" class="formLabel">
       Email
     </td>
     <td>
-      <input type=hidden name="email1type" value="1">
-      <input type=text size=40 name="email1address" maxlength=255>
+      <input type="hidden" name="email1type" value="1">
+      <input type="text" size="40" name="email1address" maxlength="255">
     </td>
   </tr>
   
     <tr>
-    <td width=100 class="formLabel">
+    <td width="100" class="formLabel">
       Phone
     </td>
     <td>
-      <input type=hidden name="phone1type" value="1">
-      <input type=text size=3 name="phone1ac" maxlength=3>-
-      <input type=text size=3 name="phone1pre" maxlength=3>-
-      <input type=text size=4 name="phone1number" maxlength=4>ext.
-      <input type=text size=5 name="phone1ext" maxlength=10>
+      <input type="hidden" name="phone1type" value="1">
+      <input type="text" size="3" name="phone1ac" maxlength="3">-
+      <input type="text" size="3" name="phone1pre" maxlength="3">-
+      <input type="text" size="4" name="phone1number" maxlength="4">ext.
+      <input type="text" size="5" name="phone1ext" maxlength="10">
     </td>
   </tr>
   
@@ -181,13 +181,13 @@
 	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	
 	<tr bgcolor="#DEE0FA">
-    <td colspan=2 valign=center align=left>
+    <td colspan="2" valign="center" align="left">
       <strong>Classification</strong>
     </td>     
 	</tr>
 	
 	<tr>
-    <td width=100 class="formLabel">
+    <td width="100" valign="top" class="formLabel">
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
     <td bgColor="white" valign="top">
@@ -199,7 +199,7 @@
 	
   <dhv:include name="tickets-code" none="true">
 	<tr>
-    <td width=100 class="formLabel">
+    <td width="100" class="formLabel">
       Category
     </td>
     <td bgColor="white">
@@ -210,7 +210,7 @@
 	
   <dhv:include name="tickets-subcat1" none="true">
 	<tr>
-    <td width=100 class="formLabel">
+    <td width="100" class="formLabel">
       Sub-level 1
     </td>
     <td bgColor="white">
@@ -222,7 +222,7 @@
 	
   <dhv:include name="tickets-subcat2" none="true">
 	<tr>
-    <td width=100 class="formLabel">
+    <td width="100" class="formLabel">
       Sub-level 2
     </td>
     <td bgColor="white">
@@ -233,7 +233,7 @@
 	
   <dhv:include name="tickets-subcat3" none="true">
 	<tr>
-    <td width=100 class="formLabel">
+    <td width="100" class="formLabel">
       Sub-level 3
     </td>
     <td bgColor="white">
@@ -247,7 +247,7 @@
 	<a name="department"></a> 
 	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr bgcolor="#DEE0FA">
-	<td colspan=2 valign=center align=left>
+	<td colspan="2" valign="center" align="left">
 	<strong>Assignment</strong>
 	</td>     
 	</tr>
@@ -293,7 +293,7 @@
 	</tr>
 	
 	<tr>
-	<td width="100" class="formLabel">
+	<td width="100" valign="top" class="formLabel">
 	Entry Comments
 	</td>
 	
@@ -306,29 +306,29 @@
 	<br>
 	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr bgcolor="#DEE0FA">
-	<td colspan=2 valign=center align=left>
+	<td colspan="2" valign="center" align="left">
 	<strong>Resolution</strong>
 	</td>     
 	</tr>
 	
 	<tr>
-	<td width=100 class="formLabel">
+	<td width="100" valign="top" class="formLabel">
 	Solution
 	</td>
 	
 	<td bgColor="white">
-	<textarea name=solution cols=55 rows=3><%=TicketDetails.getSolution()%></textarea><br>
+	<textarea name="solution" cols="55" rows="3"><%=TicketDetails.getSolution()%></textarea><br>
 	<input type=checkbox name="closeNow">Close ticket
 	</td>
 	</tr>
 	
 		<tr>
-	<td width=100 class="formLabel">
+	<td width="100" class="formLabel">
 	Knowledge Base
 	</td>
 	
 	<td bgColor="white">
-	<input type=checkbox name="kbase" checked>Include this solution
+	<input type="checkbox" name="kbase" checked>Include this solution
 	</td>
 	</tr>
 

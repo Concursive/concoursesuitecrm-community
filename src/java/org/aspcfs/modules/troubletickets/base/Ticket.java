@@ -15,7 +15,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *
  *@author     chris
  *@created    November 8, 2001
- *@version
+ *@version    $Id$
  */
 public class Ticket extends GenericBean {
 
@@ -146,37 +146,47 @@ public class Ticket extends GenericBean {
     } else {
       thisContact = null;
     }
-    
+
     history.setTicketId(this.getId());
     history.buildList(db);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean checkContactRecord(Connection db, int id) throws SQLException {
-	if (id != -1) {
-		PreparedStatement pst = null;
-		StringBuffer sql = new StringBuffer();
-		sql.append(
-			"SELECT contact_id from contact c " +
-			"WHERE c.contact_id = " + id + " ");
-	
-			Statement st = null;
-			ResultSet rs = null;
-			st = db.createStatement();
-			rs = st.executeQuery(sql.toString());
-	
-			if (rs.next()) {
-				rs.close();
-				st.close();
-				return true;
-			} else {
-				rs.close();
-				st.close();
-				return false;
-			}
-	}  else {
-		return false;
-	}
+    if (id != -1) {
+      PreparedStatement pst = null;
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          "SELECT contact_id from contact c " +
+          "WHERE c.contact_id = " + id + " ");
+
+      Statement st = null;
+      ResultSet rs = null;
+      st = db.createStatement();
+      rs = st.executeQuery(sql.toString());
+
+      if (rs.next()) {
+        rs.close();
+        st.close();
+        return true;
+      } else {
+        rs.close();
+        st.close();
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
+
 
   /**
    *  Sets the closed attribute of the Ticket object
@@ -379,7 +389,13 @@ public class Ticket extends GenericBean {
   public void setCloseIt(boolean closeIt) {
     this.closeIt = closeIt;
   }
-  
+
+
+  /**
+   *  Sets the closeNow attribute of the Ticket object
+   *
+   *@param  tmp  The new closeNow value
+   */
   public void setCloseNow(String tmp) {
     this.closeIt = ("ON").equalsIgnoreCase(tmp);
   }
@@ -1114,6 +1130,14 @@ public class Ticket extends GenericBean {
   public String getProblem() {
     return problem;
   }
+  
+  public String getProblemHeader() {
+    if (problem.trim().length() > 100) {
+      return (problem.substring(0, 100) + "...");
+    } else {
+      return getProblem();
+    }
+  }
 
 
   /**
@@ -1562,7 +1586,7 @@ public class Ticket extends GenericBean {
     assignedTo = rs.getInt("assigned_to");
     solution = rs.getString("solution");
     severityCode = rs.getInt("scode");
-    
+
     //organization table
     companyName = rs.getString("orgname");
 
@@ -1584,9 +1608,8 @@ public class Ticket extends GenericBean {
     //contact table
     enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
     modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
-    ownerName =  Contact.getNameLastFirst(rs.getString("owner_namelast"), rs.getString("owner_namefirst"));
+    ownerName = Contact.getNameLastFirst(rs.getString("owner_namelast"), rs.getString("owner_namefirst"));
 
-    
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
       ageOf = java.lang.Math.round(ageCheck);
