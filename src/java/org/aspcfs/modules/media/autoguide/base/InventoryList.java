@@ -29,8 +29,10 @@ public class InventoryList extends ArrayList {
   private boolean buildOrganizationInfo = false;
   private boolean buildPictureId = false;
   private int orgId = -1;
+  //TODO: Implement these additional data filters
   private int showSold = -1;
-
+  private int hasRunDate = -1;
+  private int makeId = -1;
 
   /**
    *  Constructor for the InventoryList object
@@ -141,6 +143,20 @@ public class InventoryList extends ArrayList {
       this.showSold = -1;
     }
   }
+  
+  public void setHasRunDate(int tmp) { this.hasRunDate = tmp; }
+  public void setHasRunDate(String tmp) {
+    if (tmp != null) {
+      this.hasRunDate = Integer.parseInt(tmp);
+    } else {
+      this.hasRunDate = -1;
+    }
+  }
+  public void setMakeId(int tmp) { this.makeId = tmp; }
+  public void setMakeId(String tmp) { 
+    this.makeId = Integer.parseInt(tmp); 
+  }
+
 
   /**
    *  Gets the tableName attribute of the InventoryList object
@@ -252,6 +268,9 @@ public class InventoryList extends ArrayList {
     sqlCount.append(
       "SELECT COUNT(*) AS recordcount " +
       "FROM autoguide_inventory i " +
+      " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
+      " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
+      " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
       "WHERE i.inventory_id > -1 ");
     
     createFilter(sqlFilter);
