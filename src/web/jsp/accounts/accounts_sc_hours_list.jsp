@@ -37,16 +37,16 @@
         ServiceContractHours thisHours = (ServiceContractHours)itr.next();
     %>
     <tr class="row<%= rowid %>">
-      <td width="10%" align="right">
+      <td width="10%" valign="top" align="right">
         <%= thisHours.getAdjustmentHours() %>
       </td>
-      <td width="30%" nowrap>
+      <td width="30%" valign="top" nowrap>
         <%= toHtml(serviceContractHoursReasonList.getSelectedValue(thisHours.getAdjustmentReason())) %>
       </td>
       <td width="50%"  >
       <%= toHtml(thisHours.getAdjustmentNotes()) %>
       </td>
-      <td width="10%" >
+      <td width="10%" valign="top">
         <dhv:tz timestamp="<%=thisHours.getModified()%>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
       </td>
     </tr>

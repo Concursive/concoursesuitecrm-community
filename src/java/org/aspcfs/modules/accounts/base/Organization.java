@@ -2266,14 +2266,14 @@ public class Organization extends GenericBean {
     }
     try {
       db.setAutoCommit(false);
-      
+
       //Tickets have accounts, contacts, assets, service contracts related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setOrgId(this.getOrgId());
       ticketList.buildList(db);
       ticketList.delete(db, baseFilePath);
       ticketList = null;
-      
+
       // Delete after tickets
       AssetList assetList = new AssetList();
       assetList.setOrgId(this.getOrgId());
@@ -2296,7 +2296,7 @@ public class Organization extends GenericBean {
         fileList.delete(db, baseFilePath);
         fileList = null;
       }
-      
+
       CustomFieldRecordList folderList = new CustomFieldRecordList();
       folderList.setLinkModuleId(Constants.ACCOUNTS);
       folderList.setLinkItemId(this.getOrgId());

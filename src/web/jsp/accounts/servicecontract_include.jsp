@@ -285,7 +285,7 @@
     </tr>
   </dhv:evaluate>
   <tr class="containerBody">
-    <td class="formLabel">
+    <td valign="top" class="formLabel">
       Adjustment Reason
     </td>
     <td>
@@ -302,7 +302,7 @@
    </td>
   </tr>
   <tr class="containerBody">
-    <td class="formLabel">
+    <td valign="top" class="formLabel">
       Adjustment Notes
     </td>
     <td>

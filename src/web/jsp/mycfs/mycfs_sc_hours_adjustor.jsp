@@ -80,7 +80,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td class="formLabel">
+    <td valign="top" class="formLabel">
       Notes
     </td>
     <td>

@@ -156,6 +156,22 @@ Add Ticket
       <input type="hidden" name="orgId" value="<%=OrgDetails.getOrgId()%>">
     </td>
 	</tr>	
+	<tr class="containerBody">
+    <td class="formLabel">
+      Contact
+    </td>
+    <td>
+<% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
+      <%= ContactList.getEmptyHtmlSelect("contactId") %>
+<%} else {%>
+      <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
+<%}%>
+      <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
+      <dhv:evaluate if="<%= (User.getRoleType() == 0) %>" >
+      [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','550','yes','yes');">Create New Contact</a>]
+      </dhv:evaluate> 
+     </td>
+	</tr>
   <tr class="containerBody">
   <td class="formLabel">
     Service Contract Number
@@ -220,24 +236,8 @@ Add Ticket
     </table>
    </td>
   </tr>  
-	<tr class="containerBody">
-    <td class="formLabel">
-      Contact
-    </td>
-    <td>
-<% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
-      <%= ContactList.getEmptyHtmlSelect("contactId") %>
-<%} else {%>
-      <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
-<%}%>
-      <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      <dhv:evaluate if="<%= (User.getRoleType() == 0) %>" >
-      [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&orgId=<%= OrgDetails.getOrgId() %>', 'New_Contact','500','550','yes','yes');">Create New Contact</a>]
-      </dhv:evaluate> 
-     </td>
-	</tr>
 </table>
-<br>
+<br />
 <a name="categories"></a> 
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>

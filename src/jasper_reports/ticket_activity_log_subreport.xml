@@ -366,6 +366,38 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 						isPrintWhenDetailOverflows="false"/>
 					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
 				</rectangle>
+				<rectangle radius="0" >
+					<reportElement
+						mode="Transparent"
+						x="289"
+						y="36"
+						width="259"
+						height="174"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+				</rectangle>
+				<rectangle radius="0" >
+					<reportElement
+						mode="Transparent"
+						x="3"
+						y="34"
+						width="280"
+						height="211"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="true"
+						isPrintWhenDetailOverflows="true"/>
+					<graphicElement stretchType="RelativeToTallestObject" pen="Thin" fill="Solid" />
+				</rectangle>
 				<staticText>
 					<reportElement
 						mode="Transparent"
@@ -387,9 +419,9 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="3"
-						y="2"
-						width="145"
+						x="111"
+						y="1"
+						width="115"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -401,7 +433,7 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Service Contract # " + $F{contractnumber}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{contractnumber}]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement
@@ -660,22 +692,6 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
 				</textField>
-				<rectangle radius="0" >
-					<reportElement
-						mode="Transparent"
-						x="289"
-						y="36"
-						width="259"
-						height="174"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
-				</rectangle>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="385"
@@ -949,22 +965,25 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					</textElement>
 				<text><![CDATA[Ticket #]]></text>
 				</staticText>
-				<rectangle radius="0" >
+				<staticText>
 					<reportElement
-						mode="Transparent"
-						x="3"
-						y="34"
-						width="280"
-						height="211"
+						mode="Opaque"
+						x="4"
+						y="1"
+						width="105"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="true"
-						isPrintWhenDetailOverflows="true"/>
-					<graphicElement stretchType="RelativeToTallestObject" pen="Thin" fill="Solid" />
-				</rectangle>
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Service Contract #]]></text>
+				</staticText>
 			</band>
 		</title>
 		<pageHeader>

@@ -135,7 +135,19 @@ Modify Ticket
         <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
       </td>
 		</tr>
-
+		<tr class="containerBody">
+      <td class="formLabel">
+        Contact
+      </td>
+      <td>
+      <% if ( TicketDetails.getThisContact() == null ) {%>
+        <%= ContactList.getHtmlSelect("contactId", 0 ) %>
+      <%} else {%>
+        <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
+      <%}%>
+        <font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
+      </td>
+		</tr>
     <tr class="containerBody">
     <td class="formLabel">
       Service Contract Number
@@ -200,21 +212,8 @@ Modify Ticket
     </table>
    </td>
   </tr>
-		<tr class="containerBody">
-      <td class="formLabel">
-        Contact
-      </td>
-      <td>
-      <% if ( TicketDetails.getThisContact() == null ) {%>
-        <%= ContactList.getHtmlSelect("contactId", 0 ) %>
-      <%} else {%>
-        <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
-      <%}%>
-        <font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
-      </td>
-		</tr>
-    </table>
-  <br>
+  </table>
+  <br />
   <a name="categories"></a> 
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
 		<tr>

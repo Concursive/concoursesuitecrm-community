@@ -185,6 +185,20 @@
       </table>
     </td>
 	</tr>	
+	<tr>
+    <td class="formLabel">
+      Contact
+    </td>
+    <td valign="center">
+	<% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
+      <%= ContactList.getEmptyHtmlSelect("contactId") %>
+	<%} else {%>
+      <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
+	<%}%>
+      <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
+      [<a href="javascript:addNewContact();">Create New Contact</a>] 
+    </td>
+	</tr>
   <tr class="containerBody">
     <td class="formLabel">
       Service Contract Number
@@ -248,20 +262,6 @@
     </table>
    </td>
   </tr>
-	<tr>
-    <td class="formLabel">
-      Contact
-    </td>
-    <td valign="center">
-	<% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
-      <%= ContactList.getEmptyHtmlSelect("contactId") %>
-	<%} else {%>
-      <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
-	<%}%>
-      <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      [<a href="javascript:addNewContact();">Create New Contact</a>] 
-    </td>
-	</tr>
   <% }else{ %>
     <input type="hidden" name="orgId" value="<%= toHtmlValue(request.getParameter("orgId")) %>">
     <input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>">

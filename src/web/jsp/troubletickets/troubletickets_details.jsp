@@ -43,6 +43,54 @@ Ticket Details
       <%}%>
 <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete"><br />&nbsp;<br /></dhv:permission>
 <%-- Ticket Information --%>
+<%-- Primary Contact --%>
+<dhv:evaluate if="<%= TicketDetails.getThisContact() != null %>">
+<table cellpadding="4" cellspacing="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong>Primary Contact</strong>
+    </th>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Name
+    </td>
+    <td>
+      <dhv:permission name="accounts-accounts-contacts-view">
+        <a href="Contacts.do?command=Details&id=<%= TicketDetails.getContactId() %>"><%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %></a>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-view" none="true">
+        <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
+      </dhv:permission>
+    </td>
+  </tr>
+	<tr class="containerBody">
+    <td class="formLabel">
+      Title
+    </td>
+    <td>
+      <%= toHtml(TicketDetails.getThisContact().getTitle()) %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Email
+    </td>
+    <td>
+      <%= TicketDetails.getThisContact().getEmailAddressTag("Business", toHtml(TicketDetails.getThisContact().getEmailAddress("Business")), "&nbsp;") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Phone
+    </td>
+    <td>
+      <%= toHtml(TicketDetails.getThisContact().getPhoneNumber("Business")) %>
+    </td>
+  </tr>
+</table>
+&nbsp;
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
@@ -214,54 +262,6 @@ Ticket Details
   </tr>
 </table>
 &nbsp;
-<%-- Primary Contact --%>
-<dhv:evaluate if="<%= TicketDetails.getThisContact() != null %>">
-<table cellpadding="4" cellspacing="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong>Primary Contact</strong>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Name
-    </td>
-    <td>
-      <dhv:permission name="accounts-accounts-contacts-view">
-        <a href="Contacts.do?command=Details&id=<%= TicketDetails.getContactId() %>"><%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %></a>
-      </dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-view" none="true">
-        <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
-      </dhv:permission>
-    </td>
-  </tr>
-	<tr class="containerBody">
-    <td class="formLabel">
-      Title
-    </td>
-    <td>
-      <%= toHtml(TicketDetails.getThisContact().getTitle()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Email
-    </td>
-    <td>
-      <%= TicketDetails.getThisContact().getEmailAddressTag("Business", toHtml(TicketDetails.getThisContact().getEmailAddress("Business")), "&nbsp;") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Phone
-    </td>
-    <td>
-      <%= toHtml(TicketDetails.getThisContact().getPhoneNumber("Business")) %>
-    </td>
-  </tr>
-</table>
-&nbsp;
-</dhv:evaluate>
 <%-- Assignment --%>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>

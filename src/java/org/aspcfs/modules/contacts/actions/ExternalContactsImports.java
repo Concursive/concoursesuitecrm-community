@@ -117,7 +117,7 @@ public final class ExternalContactsImports extends CFSModule {
     Connection db = null;
     boolean contactRecordInserted = false;
     boolean fileRecordInserted = false;
-
+    
     ContactImport thisImport = (ContactImport) context.getFormBean();
     try {
       db = getConnection(context);
@@ -172,8 +172,8 @@ public final class ExternalContactsImports extends CFSModule {
         thisImport = new ContactImport(db, thisImport.getId());
         thisImport.buildFileDetails(db);
       } else if (contactRecordInserted) {
-        thisImport.delete(db);
-        thisImport.setId(-1);
+          thisImport.delete(db);
+          thisImport.setId(-1);
       }
 
       context.getRequest().setAttribute("ImportDetails", thisImport);

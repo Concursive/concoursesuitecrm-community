@@ -45,6 +45,51 @@ Ticket Details
           </dhv:evaluate>
         </dhv:permission>
         <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br />&nbsp;</dhv:permission>
+        <%-- Primary Contact --%>
+        <%
+          if (TicketDetails.getThisContact() != null ) {
+        %>
+        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+          <tr>
+            <th colspan="2">
+              <strong>Primary Contact</strong>
+            </th>     
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Name
+            </td>
+            <td>
+              <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Title
+            </td>
+            <td>
+              <%=toHtml(TicketDetails.getThisContact().getTitle())%>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Email
+            </td>
+            <td>
+              <%= TicketDetails.getThisContact().getEmailAddressTag("Business", toHtml(TicketDetails.getThisContact().getEmailAddress("Business")), "&nbsp;") %>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Phone
+            </td>
+            <td>
+              <%= toHtml(TicketDetails.getThisContact().getPhoneNumber("Business")) %>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <%}%>
         <%-- Ticket Information --%>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
           <tr>
@@ -163,52 +208,7 @@ Ticket Details
             </td>
           </tr>
         </table>
-        &nbsp;
-        <%-- Primary Contact --%>
-        <%
-          if (TicketDetails.getThisContact() != null ) {
-        %>
-        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-          <tr>
-            <th colspan="2">
-              <strong>Primary Contact</strong>
-            </th>     
-          </tr>
-          <tr class="containerBody">
-            <td class="formLabel">
-              Name
-            </td>
-            <td>
-              <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
-            </td>
-          </tr>
-          <tr class="containerBody">
-            <td class="formLabel">
-              Title
-            </td>
-            <td>
-              <%=toHtml(TicketDetails.getThisContact().getTitle())%>
-            </td>
-          </tr>
-          <tr class="containerBody">
-            <td class="formLabel">
-              Email
-            </td>
-            <td>
-              <%= TicketDetails.getThisContact().getEmailAddressTag("Business", toHtml(TicketDetails.getThisContact().getEmailAddress("Business")), "&nbsp;") %>
-            </td>
-          </tr>
-          <tr class="containerBody">
-            <td class="formLabel">
-              Phone
-            </td>
-            <td>
-              <%= toHtml(TicketDetails.getThisContact().getPhoneNumber("Business")) %>
-            </td>
-          </tr>
-        </table>
-        &nbsp;
-        <%}%>
+        <br />
         <%-- Assignment --%>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
           <tr>
