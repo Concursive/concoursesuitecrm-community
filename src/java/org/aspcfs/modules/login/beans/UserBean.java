@@ -253,16 +253,6 @@ public class UserBean extends GenericBean {
 
 
   /**
-   *  Gets the browserIdAndOS attribute of the UserBean object
-   *
-   *@return    The browserIdAndOS value
-   */
-  public String getBrowserIdAndOS() {
-    return clientType.getBrowserIdAndOS();
-  }
-
-
-  /**
    *  Gets the Role attribute of the userBean object
    *
    *@return    The Role value
