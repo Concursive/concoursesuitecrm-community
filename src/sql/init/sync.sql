@@ -623,8 +623,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'userList', 'org.aspcfs.modules.admin.base.UserList');
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'contact', 'org.aspcfs.modules.contacts.base.Contact');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, object_key)
+ VALUES (4, 'contact', 'org.aspcfs.modules.contacts.base.Contact', 'id');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList');
  
@@ -633,8 +633,8 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, object_key)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'ticketList', 'org.aspcfs.modules.troubletickets.base.TicketList');
 
-INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'account', 'org.aspcfs.modules.accounts.base.Organization');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, object_key)
+ VALUES (4, 'account', 'org.aspcfs.modules.accounts.base.Organization', 'id');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList');
  
