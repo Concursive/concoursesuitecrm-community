@@ -27,7 +27,7 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type="hidden" name="modified" value="<%= OrgDetails.getModified() %>">
+<input type="hidden" name="modified" value="<%= OrgDetails.getModifiedString() %>">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>'">
 <input type="reset" value="Reset">
