@@ -71,8 +71,8 @@ Tickets
       rowid = (rowid != 1?1:2);
       Ticket thisTic = (Ticket)j.next();
 %>   
-	<tr class="containerBody">
-    <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
+	<tr class="row<%= rowid %>">
+    <td rowspan="2" width="8" valign="top" nowrap>
       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
       <%-- To display the menu, pass the actionId, accountId and the contactId--%>
       <a href="javascript:displayMenu('menuTic','<%= OrgDetails.getId() %>','<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
@@ -101,7 +101,7 @@ Tickets
     </td>
    </tr>
    <tr class="row<%= rowid %>">
-    <td colspan="6" valign="top">
+    <td colspan="7" valign="top">
       <%
         if (1==1) {
           Iterator files = thisTic.getFiles().iterator();

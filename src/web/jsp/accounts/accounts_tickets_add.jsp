@@ -65,6 +65,10 @@
       message += "- Check that <dhv:label name="ticket.issue">Issue</dhv:label> is entered\r\n";
       formTest = false;
     }
+    if (form.closeNow.checked && form.solution.value == "") { 
+      message += "- Resolution needs to be filled in when closing a ticket\r\n";
+      formTest = false;
+    }
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -402,7 +406,7 @@ Add Ticket
       Resolution
     </td>
     <td>
-      <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
+      <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br />
       <input type="checkbox" name="closeNow" <%= TicketDetails.getCloseIt() ? " checked" : ""%>>Close ticket
       <%--
       <br>

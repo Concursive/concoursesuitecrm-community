@@ -1,8 +1,9 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.base.EmailAddress" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.quotes.base.*, org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="product" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
 <jsp:useBean id="customerProduct" class="org.aspcfs.modules.products.base.CustomerProduct" scope="request"/>
+<jsp:useBean id="quoteList" class="org.aspcfs.modules.quotes.base.QuoteList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="TroubleTickets.do?command=Modify&auto-populate=true" method="post">
@@ -27,6 +28,11 @@ Ticket Details
       <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
     <%} else {%>
       <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
+      <dhv:permission name="quotes-view">
+        <dhv:evaluate if="<%= TicketDetails.getProductId() > 0 %>">
+          <input type="button" value="Generate Quote" onClick="javascript:this.form.action='Quotes.do?command=Display&productId=<%= thisTicket.getProductId() %>&ticketId=<%= thisTicket.getId() %>';submit();"/>
+        </dhv:evaluate>
+      </dhv:permission>
       <dhv:permission name="tickets-tickets-delete">
       <% if ("searchResults".equals(request.getParameter("return"))){ %>
         <input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&return=searchResults&popup=true', 'Delete_ticket','320','200','yes','no');">
@@ -35,7 +41,7 @@ Ticket Details
       <%}%>
       </dhv:permission>
       <%}%>
-<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete"><br>&nbsp;<br></dhv:permission>
+<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete"><br />&nbsp;<br /></dhv:permission>
 <%-- Ticket Information --%>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
@@ -73,7 +79,8 @@ Ticket Details
       Labor Category
 		</td>
 		<td>
-      <%= toHtml(product.getSku()) %>:&nbsp;<%= toHtml(product.getName()) %>
+      <%= toHtml(product.getSku()) %>:
+      <%= toHtml(product.getName()) %>
 <%
     if(!"".equals(product.getShortDescription()) && (product.getShortDescription() != null)){
 %>
@@ -94,6 +101,46 @@ Ticket Details
 		</td>
   </tr>
 </dhv:evaluate>
+<%
+  if (quoteList.size() > 0) {
+%>
+  <tr class="containerBody">
+		<td nowrap class="formLabel">
+<%
+    if( quoteList.size() > 1 ){
+%>
+      Related Quotes
+<%
+    } else {
+%>
+      Related Quote
+<%
+    }
+%>
+		</td>
+		<td>
+<%
+    Iterator quotes = (Iterator) quoteList.iterator();
+    int quoteCounter = 0;
+    while(quotes.hasNext()){
+      Quote quote = (Quote) quotes.next();
+      if(quoteCounter++ == 0 ){
+%>
+        <a href="Quotes.do?command=Details&quoteId=<%= quote.getId() %>"> Quote #<%= quote.getId() %></a>
+<%
+      } else {
+%>
+        , <a href="Quotes.do?command=Details&quoteId=<%= quote.getId() %>"> Quote #<%= quote.getId() %></a>
+<%
+      }
+    }
+%>
+		</td>
+  </tr>
+<%
+}
+%>
+
   <tr class="containerBody">
     <td class="formLabel" valign="top">
       <dhv:label name="ticket.issue">Issue</dhv:label>
@@ -106,7 +153,7 @@ Ticket Details
     FileItem thisFile = (FileItem)files.next();
     if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
 %>
-  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom">Play Audio Message</a><br>
+  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom">Play Audio Message</a><br />
 <%
     }
   }
@@ -316,13 +363,18 @@ Ticket Details
   </tr>
 </table>
 &nbsp;
-<br>
+<br />
 <% if (TicketDetails.getClosed() != null) { %>
   <dhv:permission name="tickets-tickets-edit">
     <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
   </dhv:permission>
 <%} else {%>
   <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
+  <dhv:permission name="quotes-view">
+    <dhv:evaluate if="<%= TicketDetails.getProductId() > 0 %>">
+      <input type="button" value="Generate Quote" onClick="javascript:this.form.action='Quotes.do?command=Display&productId=<%= thisTicket.getProductId() %>&ticketId=<%= thisTicket.getId() %>';submit();"/>
+    </dhv:evaluate>
+  </dhv:permission>
   <dhv:permission name="tickets-tickets-delete">
     <% if ("searchResults".equals(request.getParameter("return"))){ %>
       <input type="button" value="Delete" onClick="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= TicketDetails.getId() %>&return=searchResults&popup=true', 'Delete_ticket','320','200','yes','no');">

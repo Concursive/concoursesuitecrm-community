@@ -74,10 +74,16 @@
       return true;
     }
   }
-
- function resetNumericFieldValue(fieldId){
+function resetNumericFieldValue(fieldId){
   document.getElementById(fieldId).value = -1;
- }  
+}
+function checkForm(form) {
+  if (form.closeNow.checked && form.solution.value == "") { 
+   alert("Resolution needs to be filled in when closing a ticket");
+   return false;
+  }
+  return true;
+}
 </script>
 <body>
 <%-- Trails --%>
@@ -116,7 +122,7 @@ Modify Ticket
               <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
             <%}%>
         <%} else {%>
-              <input type="submit" value="Update">
+              <input type="submit" value="Update" onClick="return checkForm(this.form)">
             <% if ("list".equals(request.getParameter("return"))) {%>
               <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
             <%} else {%> 
@@ -183,7 +189,7 @@ Modify Ticket
           </table>
          </td>
         </tr>
-        <tr class="containerBody">
+          <tr class="containerBody">
           <td class="formLabel">
             Labor Category
           </td>
@@ -419,7 +425,7 @@ Modify Ticket
               <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
             <%}%>
         <%} else {%>
-              <input type="submit" value="Update">
+              <input type="submit" value="Update" onClick="return checkForm(this.form)">
             <% if ("list".equals(request.getParameter("return"))) {%>
               <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
             <%} else {%> 

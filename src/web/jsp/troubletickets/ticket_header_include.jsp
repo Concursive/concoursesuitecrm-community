@@ -24,18 +24,16 @@
             <%}%>
           </td>
         </tr>
+        <dhv:evaluate if="<%= thisTicket.getContractId() > -1 %>">
         <tr>
           <td align="right" nowrap>
             <strong>Hours Remaining:</strong>
           </td>
           <td nowrap>
-            <% if (thisTicket.getContractId() == -1) { %>
-            Contract Not Specified
-            <%}else{%>
             <%= thisTicket.getTotalHoursRemaining() %>
-            <%}%>
           </td>
         </tr>
+        </dhv:evaluate>
       </table>
     </td>
     <td width="33%" align="right" valign="top" nowrap>

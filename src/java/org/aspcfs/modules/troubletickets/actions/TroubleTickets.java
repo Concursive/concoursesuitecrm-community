@@ -24,6 +24,7 @@ import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.text.*;
 import org.aspcfs.modules.products.base.*;
+import org.aspcfs.modules.quotes.base.*;
 
 /**
  *  Description of the Class
@@ -289,7 +290,8 @@ public final class TroubleTickets extends CFSModule {
     }
   }
 
-/**
+
+  /**
    *  DownloadCSVReport: Sends a copy of the CSV report to the user's local
    *  machine
    *
@@ -510,20 +512,25 @@ public final class TroubleTickets extends CFSModule {
       // Load the ticket
       newTic = new Ticket();
       newTic.queryRecord(db, Integer.parseInt(ticketId));
-      
+
       // check wether or not the product id exists
-      if (newTic.getProductId() != -1){
+      if (newTic.getProductId() != -1) {
         ProductCatalog product = new ProductCatalog(db, newTic.getProductId());
         context.getRequest().setAttribute("product", product);
+        
+        QuoteList quoteList = new QuoteList();
+        quoteList.setTicketId(newTic.getId());
+        quoteList.buildList(db);
+        context.getRequest().setAttribute("quoteList", quoteList);
       }
-      
+
       // check wether of not the customer product id exists
-      if (newTic.getCustomerProductId() != -1){
+      if (newTic.getCustomerProductId() != -1) {
         CustomerProduct customerProduct = new CustomerProduct(db, newTic.getCustomerProductId());
         customerProduct.buildFileList(db);
         context.getRequest().setAttribute("customerProduct", customerProduct);
       }
-      
+
       // check whether or not the owner is an active User
       if (newTic.getAssignedTo() > -1) {
         newTic.checkEnabledOwnerAccount(db);
@@ -729,8 +736,8 @@ public final class TroubleTickets extends CFSModule {
     context.getRequest().setAttribute("AssignedToMeList", assignedToMeList);
     context.getRequest().setAttribute("OpenList", openList);
     context.getRequest().setAttribute("AllTicketsList", allTicketsList);
-    addModuleBean(context, "ViewTickets", "View Tickets");
-    return ("HomeOK");
+      addModuleBean(context, "ViewTickets", "View Tickets");
+      return ("HomeOK");
   }
 
 
@@ -773,7 +780,7 @@ public final class TroubleTickets extends CFSModule {
       }
 
       //set the status
-      if (ticListInfo.getFilterKey("listFilter1") == 1){
+      if (ticListInfo.getFilterKey("listFilter1") == 1) {
         ticList.setOnlyOpen(true);
       } else if (ticListInfo.getFilterKey("listFilter1") == 2) {
         ticList.setOnlyClosed(true);
@@ -1042,7 +1049,9 @@ public final class TroubleTickets extends CFSModule {
       newTic.setModifiedBy(getUserId(context));
       //Get the previousTicket, update the ticket, then send both to a hook
       Ticket previousTicket = new Ticket(db, newTic.getId());
-
+      if (previousTicket.getProductId() > -1) {
+        newTic.setProductId(previousTicket.getProductId());
+      }
       resultCount = newTic.update(db);
       if (resultCount == 1) {
         processUpdateHook(context, previousTicket, newTic);
@@ -1094,14 +1103,14 @@ public final class TroubleTickets extends CFSModule {
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
-      } else if (dependencies.canDelete()){
+      } else if (dependencies.canDelete()) {
         htmlDialog.addMessage(dependencies.getHtmlString());
         htmlDialog.setHeader("This object has the following dependencies within Dark Horse CRM:");
-        
-        String returnType = (String)context.getRequest().getParameter("return");
-        if ("searchResults".equals(returnType)){
-          htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id +"&return=searchResults"+ HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
-        }else{
+
+        String returnType = (String) context.getRequest().getParameter("return");
+        if ("searchResults".equals(returnType)) {
+          htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + "&return=searchResults" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        } else {
           htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         }
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
@@ -1147,10 +1156,10 @@ public final class TroubleTickets extends CFSModule {
         processDeleteHook(context, thisTic);
         deleteRecentItem(context, thisTic);
 
-        String returnType = (String)context.getRequest().getParameter("return");
-        if ("searchResults".equals(returnType)){
+        String returnType = (String) context.getRequest().getParameter("return");
+        if ("searchResults".equals(returnType)) {
           context.getRequest().setAttribute("refreshUrl", "TroubleTickets.do?command=SearchTickets" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
-        }else{
+        } else {
           context.getRequest().setAttribute("refreshUrl", "TroubleTickets.do?command=Home" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
         }
         return ("DeleteOK");
@@ -1364,8 +1373,15 @@ public final class TroubleTickets extends CFSModule {
     }
     return ("OrganizationJSListOK");
   }
-  
-  public String executeCommandPrintReport(ActionContext context){
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPrintReport(ActionContext context) {
     if (!hasPermission(context, "tickets-tickets-view") &&
         !hasPermission(context, "accounts-accounts-tickets-view")) {
       return ("PermissionError");
@@ -1373,18 +1389,18 @@ public final class TroubleTickets extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      String id = (String)context.getRequest().getParameter("id");
+      String id = (String) context.getRequest().getParameter("id");
       HashMap map = new HashMap();
       map.put("ticketid",new Integer(id));
       String reportPath = getWebInfPath(context, "reports");
       map.put("path",reportPath);
       String filename = "ticket.xml";
       byte[] bytes = JasperReportUtils.getReportAsBytes(reportPath + filename, map, db);
-      if (bytes != null){
+      if (bytes != null) {
         FileDownload fileDownload = new FileDownload();
         fileDownload.setDisplayName("Ticket_Details_" + id + ".pdf");
         fileDownload.sendFile(context, bytes, "application/pdf");
-      }else{
+      } else {
         return ("SystemError");
       }
     } catch (Exception errorMessage) {

@@ -32,7 +32,7 @@ View Tickets
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-		<th valign="center" align="left">
+    <th valign="center" align="left">
       <strong>Action</strong>
     </th>
     <th valign="center" align="left">
@@ -79,7 +79,7 @@ View Tickets
 		</td>
 	</tr>
   <tr class="row<%= rowid %>">
-    <td colspan="6" valign="top">
+    <td colspan="7" valign="top">
 <%
   if (1==1) {
     Iterator files = assignedTic.getFiles().iterator();
@@ -174,7 +174,7 @@ View Tickets
 		</td>
 	</tr>
   <tr>
-    <td colspan="6" valign="top" class="row<%= rowid %>">
+    <td colspan="7" valign="top" class="row<%= rowid %>">
 <%
   if (1==1) {
     Iterator files = openTic.getFiles().iterator();
@@ -269,7 +269,7 @@ View Tickets
 		</td>
 	</tr>
   <tr class="row<%= rowid %>">
-    <td colspan="6" valign="top">
+    <td colspan="7" valign="top">
 <%
   if (1==1) {
     Iterator files = thisTic.getFiles().iterator();
@@ -364,7 +364,7 @@ View Tickets
 		</td>
 	</tr>
   <tr class="row<%= rowid %>">
-    <td colspan="6" valign="top">
+    <td colspan="7" valign="top">
 <%
   if (1==1) {
     Iterator files = thisTic.getFiles().iterator();

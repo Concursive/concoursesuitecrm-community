@@ -15,25 +15,23 @@
             <strong>Status:</strong>
           </td>
           <td nowrap>
-            <% if (thisTicket.getClosed() == null){ %>
+      <% if (thisTicket.getClosed() == null){ %>
             Open
-            <%}else{%>
+      <%}else{%>
             <font color="red">Closed on <%= toHtml(thisTicket.getClosedString()) %></font>
-            <%}%>
+      <%}%>
           </td>
         </tr>
+        <dhv:evaluate if="<%= thisTicket.getContractId() > -1 %>">
         <tr>
           <td align="right" nowrap>
             <strong>Hours Remaining:</strong>
           </td>
           <td nowrap>
-            <% if (thisTicket.getContractId() == -1) { %>
-            Contract Not Specified
-            <%}else{%>
             <%= thisTicket.getTotalHoursRemaining() %>
-            <%}%>
           </td>
         </tr>
+        </dhv:evaluate>
       </table>
     </td>
     <td width="33%" align="right" valign="top" nowrap>

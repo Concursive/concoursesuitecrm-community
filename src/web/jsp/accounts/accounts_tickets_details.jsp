@@ -31,15 +31,20 @@ Ticket Details
         <%@ include file="accounts_ticket_header_include.jsp" %>
         <% String param2 = "id=" + TicketDetails.getId(); %>
         [ <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/> ]
-      <br>
-      <br>
+      <br />
+      <br />
        <% if (TicketDetails.getClosed() != null) { %>
               <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();"> </dhv:permission>
         <%} else {%>
               <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
               <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%= TicketDetails.getOrgId() %>&id=<%= TicketDetails.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
         <%}%>
-        <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br>&nbsp;</dhv:permission>
+        <dhv:permission name="quotes-view">
+          <dhv:evaluate if="<%= TicketDetails.getProductId() > 0 %>">
+            <input type="button" value="Generate Quote" onClick="javascript:this.form.action='Quotes.do?command=Display&productId=<%= thisTicket.getProductId() %>&ticketId=<%= thisTicket.getId() %>';submit();"/>
+          </dhv:evaluate>
+        </dhv:permission>
+        <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br />&nbsp;</dhv:permission>
         <%-- Ticket Information --%>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
           <tr>
@@ -78,13 +83,13 @@ Ticket Details
               </td>
               <td>
                 <%= toHtml(product.getSku()) %>:&nbsp;<%= toHtml(product.getName()) %>
-                <%
+<%
                     if(!"".equals(product.getShortDescription()) && (product.getShortDescription() != null)){
-                %>
-                                / <%= toHtml(product.getShortDescription()) %>
-                <%
-                    }
-                %>
+%>
+                / <%= toHtml(product.getShortDescription()) %>
+<%
+    }
+%>
               </td>
             </tr>
             </dhv:evaluate>
@@ -305,14 +310,19 @@ Ticket Details
           </tr>
         </table>
         &nbsp;
-        <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br></dhv:permission>
+        <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete"><br /></dhv:permission>
         <% if (TicketDetails.getClosed() != null) { %>
               <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
         <%} else {%>
               <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
               <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%=TicketDetails.getOrgId()%>&id=<%=TicketDetails.getId()%>&popup=true', 'Delete_ticket','320','200','yes','no');"></dhv:permission>
         <%}%>
-  </td>
- </tr>
-</table>
+        <dhv:permission name="quotes-view">
+          <dhv:evaluate if="<%= TicketDetails.getProductId() > 0 %>">
+            <input type="button" value="Generate Quote" onClick="javascript:this.form.action='Quotes.do?command=Display&productId=<%= thisTicket.getProductId() %>&ticketId=<%= thisTicket.getId() %>';submit();"/>
+          </dhv:evaluate>
+        </dhv:permission>
+      </td>
+    </tr>
+  </table>
 </form>

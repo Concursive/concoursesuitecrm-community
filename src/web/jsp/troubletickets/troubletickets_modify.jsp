@@ -61,11 +61,16 @@ function changeDivContent(divName, divContents) {
     divToChange.innerHTML = divContents;
   }
 }
-
- function resetNumericFieldValue(fieldId){
+function resetNumericFieldValue(fieldId){
   document.getElementById(fieldId).value = -1;
- }
-
+}
+function checkForm(form) {
+  if (form.closeNow.checked && form.solution.value == "") { 
+   alert("Resolution needs to be filled in when closing a ticket");
+   return false;
+  }
+  return true;
+}
 </SCRIPT>
 <body>
 <form name="details" action="TroubleTickets.do?command=Update&auto-populate=true" method="post">
@@ -102,7 +107,7 @@ Modify Ticket
         <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
       <%} else {%>
-        <input type="submit" value="Update">
+        <input type="submit" value="Update" onClick="return checkForm(this.form)">
         <% if ("list".equals(request.getParameter("return"))) {%>
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
         <%} else if ("searchResults".equals(request.getParameter("return"))){%> 
@@ -432,7 +437,7 @@ Modify Ticket
 <% if (TicketDetails.getClosed() != null) { %>
   <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
 <%} else {%>
-  <input type="submit" value="Update">
+  <input type="submit" value="Update" onClick="return checkForm(this.form)">
 <%}%>
 	<% if ("list".equals(request.getParameter("return"))) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
