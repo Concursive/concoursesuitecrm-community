@@ -314,7 +314,7 @@
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@MAILSERVER@" value="${MAILSERVER}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@KEYSTORE@" value="${CFS_HOME}/WEB-INF/keystore"/>
+             token="@KEYSTORE@" value="${CFS_HOME}${fs}WEB-INF${fs}keystore"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@FORCESSL@" value="${FORCESSL}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
