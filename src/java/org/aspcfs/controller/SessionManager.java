@@ -56,14 +56,7 @@ public class SessionManager {
    *@param  context  The feature to be added to the User attribute
    */
   public void addUser(ActionContext context, int userId) {
-    UserSession thisSession = new UserSession(context);
-    if (sessions.get(new Integer(userId)) == null) {
-      synchUpdate(thisSession, userId, ADD);
-    } else {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("SessionManager -- > User " + userId + " already has a session");
-      }
-    }
+    this.addUser(context.getRequest(), userId);
   }
 
 
