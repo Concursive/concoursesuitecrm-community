@@ -300,7 +300,7 @@ of Service]]></text>
 					<reportElement
 						mode="Transparent"
 						x="7"
-						y="50"
+						y="51"
 						width="88"
 						height="14"
 						forecolor="#000000"
@@ -320,7 +320,7 @@ of Service]]></text>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="101"
-						y="50"
+						y="51"
 						width="138"
 						height="17"
 						forecolor="#000000"
@@ -343,7 +343,7 @@ of Service]]></text>
 						x="4"
 						y="34"
 						width="533"
-						height="15"
+						height="16"
 						forecolor="#000000"
 						backcolor="#000000"
 						key="rectangle"
@@ -361,7 +361,7 @@ of Service]]></text>
 						x="5"
 						y="34"
 						width="148"
-						height="14"
+						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						key="staticText"
@@ -380,7 +380,7 @@ of Service]]></text>
 					<reportElement
 						mode="Transparent"
 						x="243"
-						y="50"
+						y="51"
 						width="106"
 						height="14"
 						forecolor="#000000"
@@ -400,7 +400,7 @@ of Service]]></text>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="355"
-						y="50"
+						y="51"
 						width="178"
 						height="20"
 						forecolor="#000000"
