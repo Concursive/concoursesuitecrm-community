@@ -25,15 +25,11 @@
  */
 
 
-void insertQuotes()
-{
+void insertQuotes() {
 	caret = textArea.getCaretPosition();
 	text = textArea.getSelectedText();
 	if (text.length() > 0) {
 	  textArea.setSelectedText("\"" + text + "\"");
-    } else {
-      textArea.setCaretPosition(caret + 1);
-    }
   }
 }
 
