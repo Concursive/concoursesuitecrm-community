@@ -7,5 +7,6 @@
 # Execute from CRON using:
 #   0 1 * * * /bin/sh /home/webapps/ROOT/WEB-INF/weblog.sh
 #
+source /etc/profile
 webalizer -Q ${CATALINA_HOME}/logs/cfs_access_log.`date --date='yesterday' +%Y-%m-%d`.txt
 
