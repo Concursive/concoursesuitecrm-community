@@ -121,7 +121,7 @@ public class HtmlSelectTime extends TagSupport {
    *@param  tmp  The new showTimeZone value
    */
   public void setShowTimeZone(String tmp) {
-    this.showTimeZone = "yes".equals(tmp);
+    this.showTimeZone = DatabaseUtils.parseBoolean(tmp);
   }
 
 
