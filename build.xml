@@ -3,42 +3,19 @@
 
  Notes: 
    Make sure to override all preferences for the current system.
-   Sudo may be needed to deploy files to the webapp folder.
- 
+   Root/Administrator access may be required
 -->
-<project name="cfs2" default="" basedir="">
+<project name="cfs" default="init" basedir="">
 
-  <!-- environment -->
+  <!-- enable environment variables -->
   <property environment="env"/>
-
-  <!-- overridable -->
-  <property name="SITEHOME" value="/home"/>
-  <property name="SITECODE" value="cfs"/>
-  <property name="DBSITECODE" value="ds21"/>
-  <property name="WEBUSER" value="apache"/>
-  <property name="CFSGRP" value="cfs"/>
-  <property name="GKDRIVER" value="org.postgresql.Driver"/>
-  <property name="GKHOST" value="jdbc:postgresql://127.0.0.1:5432/cfs2gk"/>
-  <property name="GKUSER" value="gatekeeper"/>
-  <property name="GKUSERPW" value=""/>
-  <property name="MAILSERVER" value="127.0.0.1"/>
-  <property name="FORCESSL" value="false"/>
-  <property name="DEBUGLEVEL" value="none"/>
   
-  <!-- overridable - database installs and updates -->
-  <property name="DBTYPE" value="mssql"/>
-  <property name="DRIVER" value="com.microsoft.jdbc.sqlserver.SQLServerDriver"/>
-  <property name="URL" value="jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor"/>
-  <property name="USERID" value="dhv_appuser"/>
-  <property name="PASSWORD" value="@pus3r"/>
-  <!--<property name="DBTYPE" value="postgresql"/>-->
-
   <!-- computed properties -->
   <property name="SRC" value="${basedir}"/>
-  <property name="SRC_BIN" value="${SRC}/bin"/>
   <property name="SRC_APP" value="${SRC}/production/webapps/cfs2"/>
   <property name="SRC_CLASSES" value="${SRC_APP}/WEB-INF/classes"/>
   <property name="SRC_LIB" value="${SRC_APP}/WEB-INF/lib"/>
+  <property name="SRC_BIN" value="${SRC}/bin"/>
 
   <!-- classpath as both object and a property -->
   <path id="cfs2.classpath">
@@ -47,48 +24,59 @@
       <include name="**/*.jar"/>
     </fileset>
   </path>
-  
   <property name="CLASSPATH" refid="cfs2.classpath" />
-  <property name="DEST" value="${SITEHOME}/${SITECODE}"/>
-  <property name="DEST_DOCROOT" value="${DEST}/html"/>
-  <property name="DEST_BIN" value="${DEST}/bin"/>
-  <property name="DEST_LOGS" value="${DEST}/logs"/>
 
   <target name="init">
+    <!-- Environment variable must be set before continuing -->
+    <fail unless="env.CFS_HOME">Build aborted, environment variable CFS_HOME is not defined.</fail>
+    <property name="CFS_HOME" value="${env.CFS_HOME}"/>
+    
+    <!-- See if the properties file exists -->
+    <available file="${CFS_HOME}/WEB-INF/build.env" property="build.config.present"/>
+    <fail unless="build.config.present">Build aborted, Build properties file not found at ${CFS_HOME}/WEB-INF/build.env.</fail>
+    
+    <!-- Load the properties for this system, stop here if not found -->
+    <loadproperties srcFile="${SRC}/build.env">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
+          <param type="comment" value="#"/>
+        </filterreader>
+      </filterchain>
+    </loadproperties>
+    
+    <!-- Default properties if not set in file above -->
+    <property name="SITEHOME" value="/home"/>
+    <property name="SITECODE" value="cfs"/>
+    <property name="DBSITECODE" value="ds21"/>
+    <property name="GKDRIVER" value="org.postgresql.Driver"/>
+    <property name="GKHOST" value="jdbc:postgresql://127.0.0.1:5432/cfs2gk"/>
+    <property name="GKUSER" value="postgres"/>
+    <property name="GKUSERPW" value=""/>
+    <property name="MAILSERVER" value="127.0.0.1"/>
+    <property name="FORCESSL" value="false"/>
+    <property name="DEBUGLEVEL" value="none"/>
+    <!--<property name="DBTYPE" value="postgresql"/>-->
+    <property name="DBTYPE" value="mssql"/>
+    <property name="DRIVER" value="com.microsoft.jdbc.sqlserver.SQLServerDriver"/>
+    <property name="URL" value="jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor"/>
+    <property name="USERID" value="username"/>
+    <property name="PASSWORD" value="password"/>
+    
+    <!-- Begin output -->
     <tstamp><format property="NOW" pattern="yyyy-MM-dd hh:mm:ss" /></tstamp>
-    <echo message="System: ${os.name}"/>
+    <echo message="CFS Installation Script"/>
     <echo message="Date: ${NOW}"/>
+    <echo message="System: ${os.name}"/>
     <echo message="Ant version: ${ant.version}"/>
     <echo message="Java version: ${ant.java.version}"/>
-    <echo message="Source: ${SRC}"/>
-    <echo message=""/>
-    <echo message="Classpath: ${CLASSPATH}"/>
-    <uptodate property="theseus-jar-uptodate" targetfile="${SRC_LIB}/theseus.jar">
-        <srcfiles dir="${SRC_CLASSES}/org" includes="**/*.java"/>
-    </uptodate>
-    <uptodate property="darkhorseventures-jar-uptodate" targetfile="${SRC_LIB}/darkhorseventures.jar">
-        <srcfiles dir="${SRC_CLASSES}/com/darkhorseventures" includes="**/*.java"/>
-    </uptodate>
-    <uptodate property="isavvix-jar-uptodate" targetfile="${SRC_LIB}/isavvix.jar">
-        <srcfiles dir="${SRC_CLASSES}/com/isavvix" includes="**/*.java"/>
-    </uptodate>
-    <uptodate property="apps-jar-uptodate" targetfile="${SRC_BIN}/Notifier.jar">
-        <srcfiles dir="${SRC}">
-          <include name="bin/com/darkhorseventures/**/*.java" />
-          <include name="bin/notifier" />
-          <include name="bin/html2ps" />
-          <include name="bin/dataImport" />
-          <include name="bin/dataImport-config.xml" />
-          <include name="bin/CFSDatabaseReader.xml" />
-          <include name="scripts/env.*" />
-        </srcfiles>
-    </uptodate>
+    <echo message="Source Path: ${SRC}"/>
+    <echo message="Destination Path: ${CFS_HOME}"/>
     
-    <!--uptodate property="zeroio-jar-uptodate" 
-                targetfile="${SRC_LIB}/zeroio-iteam.jar">
-        <srcfiles dir="${SRC_CLASSES}/com/zeroio" includes="**/*.java"/>
-    </uptodate-->
-    
+    <!-- See if files are up-to-date so only new files are installed during development -->
+    <uptodate property="jars-uptodate">
+      <srcfiles dir="${SRC_CLASSES}" includes="**/*.java"/>
+      <mapper type="merge" to="${SRC_LIB}/aspcfs.jar"/>
+    </uptodate>
     <uptodate property="site-uptodate" >
         <srcfiles dir="${SRC_APP}" >
           <include name="*" />
@@ -99,142 +87,105 @@
           <include name="WEB-INF/*.tld" />
           <exclude name="WEB-INF/web.xml" />
         </srcfiles>
-        <mapper type="glob" from="*" to="${DEST_DOCROOT}/*"/>
+        <mapper type="glob" from="*" to="${CFS_HOME}/*"/>
      </uptodate>
   </target>
 
-  <target name="theseus" description="compile theseus classes into JAR"
-                depends="init" unless="theseus-jar-uptodate">
-    <echo message=" Compiling Source: ${SRC_CLASSES}"/>
-    <javac srcdir="${SRC_CLASSES}/org/theseus" verbose="off">
+  <target name="compile" 
+          description="compile classes into JARs"
+          depends="init" 
+          unless="jar-uptodate">
+    <!-- darkhorseventures.jar -->
+    <echo message=" Compiling Source: ${SRC_CLASSES}/com/darkhorseventures"/>
+    <javac srcdir="${SRC_CLASSES}/com/darkhorseventures" verbose="off">
         <classpath>
             <path refid="cfs2.classpath"/>
         </classpath>
-    </javac>
-    <delete file="${SRC_LIB}/theseus.jar"/>
-    <jar jarfile="${SRC_LIB}/theseus.jar"
-          basedir="${SRC_CLASSES}"
-          includes="org/theseus/**/*.class"/>
-    <delete>
-        <fileset dir= "${SRC_CLASSES}/org/theseus" includes="**/*.class"/>
-    </delete>
-  </target>
-  
-  <target name="zeroio" description="compile zeroio classes into JAR"
-          depends="init,theseus" unless="zeroio-jar-uptodate">
-    <echo message=" Compiling Source: ${SRC_CLASSES}"/>
-    <javac srcdir="${SRC_CLASSES}/com/darkhorseventures/webutils" verbose="off">
-      <classpath>
-        <path refid="cfs2.classpath"/>
-        <pathelement location="${SRC_LIB}/theseus.jar"/>
-      </classpath>
-    </javac>
-    <javac srcdir="${SRC_CLASSES}/com/zeroio" verbose="off">
-      <classpath>
-        <path refid="cfs2.classpath"/>
-      </classpath>
-    </javac>
-    <delete file="${SRC_LIB}/zeroio-iteam.jar"/>
-    <jar jarfile="${SRC_LIB}/zeroio-iteam.jar"
-          basedir="${SRC_CLASSES}"
-          includes="com/zeroio/**/*.class"/>
-    <delete>
-      <fileset dir= "${SRC_CLASSES}/com/zeroio" includes="**/*.class"/>
-    </delete>
-  </target>
-  
-  <target name="isavvix" description="compile isavvix into JAR" 
-	  unless="isavvix-jar-uptodate">
-    <echo message=" Compiling Source: ${SRC_CLASSES}"/>
-    <javac srcdir="${SRC_CLASSES}/com/isavvix" verbose="off">
-      <classpath>
-        <path refid="cfs2.classpath"/>
-      </classpath>
-    </javac>
-    <delete file="${SRC_LIB}/isavvix.jar"/>
-    <jar jarfile="${SRC_LIB}/isavvix.jar"
-          basedir="${SRC_CLASSES}"
-          includes="com/isavvix/**/*.class"/>
-    <delete>
-      <fileset dir= "${SRC_CLASSES}/com/isavvix" includes="**/*.class"/>
-    </delete>
-  </target>
-
-  <target name="darkhorseventures" description="compile dark horse classes into JAR"
-          depends="init,theseus,isavvix" 
-          unless="darkhorseventures-jar-uptodate">
-    <echo message=" Compiling Source: ${SRC_CLASSES}"/>
-    <javac srcdir="${SRC_CLASSES}/com/darkhorseventures" verbose="off">
-      <classpath>
-        <path refid="cfs2.classpath"/>
-        <pathelement location="${SRC_LIB}/theseus.jar"/>
-        <pathelement location="${SRC_LIB}/isavvix.jar"/>
-        <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
-        <pathelement location="${SRC_LIB}/jfreechart-0.9.3.jar"/>
-        <pathelement location="${SRC_LIB}/utils.jar"/>
-        <pathelement location="${SRC_LIB}/ccp_integration.jar"/>
-      </classpath>
     </javac>
     <delete file="${SRC_LIB}/darkhorseventures.jar"/>
     <jar jarfile="${SRC_LIB}/darkhorseventures.jar"
           basedir="${SRC_CLASSES}"
           includes="com/darkhorseventures/**/*.class"/>
     <delete>
-      <fileset dir= "${SRC_CLASSES}/com/darkhorseventures" includes="**/*.class"/>
+        <fileset dir= "${SRC_CLASSES}/com/darkhorseventures" includes="**/*.class"/>
+    </delete>
+    <!-- isavvix.jar -->
+    <echo message=" Compiling Source: ${SRC_CLASSES}/com/isavvix"/>
+    <javac srcdir="${SRC_CLASSES}/com/isavvix" verbose="off">
+        <classpath>
+            <path refid="cfs2.classpath"/>
+        </classpath>
+    </javac>
+    <delete file="${SRC_LIB}/isavvix.jar"/>
+    <jar jarfile="${SRC_LIB}/isavvix.jar"
+          basedir="${SRC_CLASSES}"
+          includes="com/isavvix/**/*.class"/>
+    <delete>
+        <fileset dir= "${SRC_CLASSES}/com/isavvix" includes="**/*.class"/>
+    </delete>
+    <!-- aspcfs.jar -->
+    <echo message=" Compiling Source: ${SRC_CLASSES}/org/aspcfs"/>
+    <javac srcdir="${SRC_CLASSES}/org/aspcfs" verbose="off">
+        <classpath>
+            <path refid="cfs2.classpath"/>
+            <pathelement location="${SRC_LIB}/darkhorseventures.jar"/>
+            <pathelement location="${SRC_LIB}/isavvix.jar"/>
+            <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
+            <pathelement location="${SRC_LIB}/jfreechart-0.9.3.jar"/>
+            <pathelement location="${SRC_LIB}/utils.jar"/>
+            <pathelement location="${SRC_LIB}/ccp_integration.jar"/>
+        </classpath>
+    </javac>
+    <delete file="${SRC_LIB}/aspcfs.jar"/>
+    <jar jarfile="${SRC_LIB}/aspcfs.jar"
+          basedir="${SRC_CLASSES}"
+          includes="org/aspcfs/**/*.class"/>
+    <delete>
+        <fileset dir= "${SRC_CLASSES}/org/aspcfs" includes="**/*.class"/>
     </delete>
   </target>
-
-  <target name="site-home" description="only create the destination once in a while"
-      depends="init">
-      <!-- user should be running with root privileges
-              else this will most likely fail -->
-      <delete includeEmptyDirs="true" dir="${DEST}"/>
-      <mkdir dir="${DEST}"/>
-      <mkdir dir="${DEST_BIN}"/>
-      <mkdir dir="${DEST_LOGS}"/>
-      <mkdir dir="${DEST_DOCROOT}"/>
-  </target>
   
+  <!-- separate app installation stuff -->
   <target name="check-apps-configuration">
-    <available file="${DEST_BIN}/notifier.xml" property="apps.config.present"/>
+    <available file="${CFS_HOME}/WEB-INF/notifier.xml" property="apps.config.present"/>
   </target>
   
   <target name="apps-configuration" depends="check-apps-configuration"
           unless="apps.config.present">
     <echo message="Installing App configuration files"/>
-    <copy todir="${DEST_BIN}">
+    <copy todir="${CFS_HOME}/WEB-INF">
       <fileset dir="${SRC_BIN}">
         <include name="notifier.xml" />
       </fileset>
     </copy>
-    <replace file="${DEST_BIN}/notifier.xml"
-             token="@FILELIBRARY@" value="${DEST_DOCROOT}/WEB-INF/fileLibrary"/>
-    <replace file="${DEST_BIN}/notifier.xml"
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@FILELIBRARY@" value="${CFS_HOME}/WEB-INF/fileLibrary"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@GKDRIVER@" value="${GKDRIVER}"/>
-    <replace file="${DEST_BIN}/notifier.xml"
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@GKHOST@" value="${GKHOST}"/>
-    <replace file="${DEST_BIN}/notifier.xml"
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@GKUSER@" value="${GKUSER}"/>
-    <replace file="${DEST_BIN}/notifier.xml"
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@GKUSERPW@" value="${GKUSERPW}"/>
-    <replace file="${DEST_BIN}/notifier.xml"
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@MAILSERVER@" value="${MAILSERVER}"/>
   </target>
   
   <target name="apps" description="Java applications that get installed."
-      depends="init,darkhorseventures,apps-configuration"
-      unless="apps-jar-uptodate">
+      depends="compile,apps-configuration"
+      unless="jar-uptodate">
     
     <echo message="Installing Apps"/>
     <echo message=" Site code: ${SITECODE}"/>
-    <echo message=" Destination: ${DEST_BIN}"/>
+    <echo message=" Destination: ${CFS_HOME}"/>
     <echo message=" Source: ${SRC_BIN}"/>
     
     <javac srcdir="${SRC_BIN}/com/darkhorseventures" verbose="off">
       <classpath>
         <path refid="cfs2.classpath"/>
         <pathelement location="${SRC_BIN}"/>
-        <pathelement location="${SRC_LIB}/theseus.jar"/>
+        <pathelement location="${SRC_LIB}/darkhorseventures-framework.jar"/>
         <pathelement location="${SRC_LIB}/darkhorseventures.jar"/>
         <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
         <pathelement location="${SRC_LIB}/jakarta-poi-1.5.0.jar"/>
@@ -249,7 +200,7 @@
     <delete>
       <fileset dir= "${SRC_BIN}/com/darkhorseventures" includes="**/*.class"/>
     </delete>
-    <copy todir="${DEST_BIN}" >
+    <copy todir="${CFS_HOME}" >
       <fileset dir="${SRC_BIN}">
         <include name="Notifier.jar" />
         <include name="notifier" />
@@ -260,13 +211,13 @@
       </fileset>
     </copy>
     <chmod perm="a+x" >
-      <fileset dir="${DEST_BIN}">
+      <fileset dir="${CFS_HOME}">
         <include name="notifier" />
         <include name="html2ps" />
         <include name="dataImport" />
       </fileset>
     </chmod>
-    <copy todir="${DEST_BIN}\scripts" >
+    <copy todir="${CFS_HOME}\scripts" >
       <fileset dir="${SRC}\scripts">
         <include name="env.*" />
       </fileset>
@@ -274,69 +225,69 @@
   </target>
   
   <target name="check-site-configuration">
-    <!--
-      <available file="${DEST_DOCROOT}/WEB-INF/web.xml" property="site.config.present"/>
-    -->
-    <!-- Use with Ant 1.5 
-     <uptodate property="webxml-uptodate"
-            srcfile="${SRC_APP}/WEB-INF/web.xml"
-            targetfile="${DEST_DOCROOT}/WEB-INF/web.xml"/>
-    -->
      <uptodate property="webxml-uptodate" 
-               targetfile="${DEST_DOCROOT}/WEB-INF/web.xml" >
-       <srcfiles dir="${SRC_APP}/WEB-INF" 
-                 includes="web.xml"/>
+               srcfile="${SRC_APP}/WEB-INF/web.xml"
+               targetfile="${CFS_HOME}/WEB-INF/web.xml" >
      </uptodate>
   </target>
   
   <target name="site-configuration" depends="check-site-configuration"
           unless="webxml-uptodate">
     <echo message="Installing web.xml configuration file"/>
-    <copy todir="${DEST_DOCROOT}">
+    <copy todir="${CFS_HOME}">
       <fileset dir="${SRC_APP}">
         <include name="WEB-INF/web.xml" />
       </fileset>
     </copy>
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@SiteCode@" value="${DBSITECODE}"/>
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@GKDRIVER@" value="${GKDRIVER}"/>
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@GKHOST@" value="${GKHOST}"/>
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@GKUSER@" value="${GKUSER}"/>
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@GKUSERPW@" value="${GKUSERPW}"/>
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@MAILSERVER@" value="${MAILSERVER}"/>
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
-             token="@KEYSTORE@" value="${DEST_DOCROOT}/WEB-INF/keystore"/>
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
+             token="@KEYSTORE@" value="${CFS_HOME}/WEB-INF/keystore"/>
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@FORCESSL@" value="${FORCESSL}"/>
-    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+    <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@DEBUGLEVEL@" value="${DEBUGLEVEL}"/>
   </target>
 
-  <target name="site" description="Install files to site" 
-          depends="init,site-configuration" unless="site-uptodate">
-    <echo message="Installing site"/>
-    <echo message=" Site code: ${SITECODE}"/>
-    <echo message=" Destination: ${DEST}"/>
-    <echo message=" Source: ${SRC_APP}"/>
-    <copy todir="${DEST_BIN}" >
-      <fileset dir="${SRC_BIN}">
-        <include name="*" />
-        <exclude name="notifier.xml" />
+  <!-- Deploy jars to CFS_HOME -->
+  <target name="deploy-jars" 
+          description="Install library files to site." 
+          depends="compile">
+    <echo message="Installing JAR files"/>
+    <echo message=" Source: ${SRC_APP}/WEB-INF/lib/*.jar"/>
+    <echo message=" Destination: ${CFS_HOME}"/>
+    <!-- Need to delete jar files that are no longer in source lib -->
+    <!-- Fails under windows because Tomcat has these in-use
+    <delete quiet="true">
+      <fileset dir= "${CFS_HOME}/WEB-INF/lib" includes="*.jar"/>
+    </delete>
+    -->
+    <copy todir="${CFS_HOME}/WEB-INF/lib" >
+      <fileset dir="${SRC_APP}">
+        <include name="WEB-INF/lib/*.jar" />
       </fileset>
     </copy>
-    <delete dir="${DEST_BIN}/com"/>
-    <chmod perm="+x" >
-      <fileset dir="${DEST_BIN}">
-        <include name="*" />
-      </fileset>
-    </chmod>
-
-    <copy todir="${DEST_DOCROOT}" >
+  </target>
+  
+  <!-- Deploy rest of site files to CFS_HOME -->
+  <target name="deploy-site" 
+          description="Install files to site" 
+          depends="init,site-configuration" unless="site-uptodate">
+    <echo message="Installing site"/>
+    <echo message=" Source: ${SRC_APP}"/>
+    <echo message=" Destination: ${CFS_HOME}"/>
+    <!-- Site files, except web.xml -->
+    <copy todir="${CFS_HOME}" >
       <fileset dir="${SRC_APP}">
         <include name="*" />
         <include name="images/**" />
@@ -347,51 +298,40 @@
         <exclude name="WEB-INF/web.xml" />
       </fileset>
     </copy>
-
-    <mkdir dir="${DEST_DOCROOT}/graphs"/>
-    <!--delete dir="${DEST_DOCROOT}/bin"/-->
+    <!-- Directory needed to support graphs -->
+    <mkdir dir="${CFS_HOME}/graphs"/>
   </target>
 
-  <target name="lib" description="Install library files to site." 
-        depends="init,darkhorseventures,theseus,apps,site">
-    <echo message="Installing JAR files"/>
-    <echo message=" Site code: ${SITECODE}"/>
-    <echo message=" Destination: ${DEST_DOCROOT}"/>
-    <echo message=" Source: ${SRC_APP}/WEB-INF/lib/*.jar"/>
-    <!-- Need to only delete files that no longer exist in source
-    <delete quiet="true">
-      <fileset dir= "${DEST_DOCROOT}/WEB-INF/lib" includes="*.jar"/>
-    </delete>
-    -->
-    <copy todir="${DEST_DOCROOT}" >
-      <fileset dir="${SRC_APP}">
-        <include name="WEB-INF/lib/*.jar" />
-      </fileset>
-    </copy>
+  <!-- Distribute the web app -->
+  <target name="dist" 
+          description="Installs changes to site"
+          depends="deploy-jars,deploy-site">
+    <echo message="Cleaning up files"/>
   </target>
 
+  <!-- Generate Java Docs -->
   <target name="docs" description="Install Documentation files to site." 
-        depends="init,site,darkhorseventures,theseus,apps">
+        depends="compile">
     <echo message="Installing Class Documentation files"/>
-    <echo message=" Site: ${SITECODE}"/>
-    <echo message=" Destination: ${DEST_DOCROOT}"/>
     <echo message=" Source: ${SRC_APP}"/>
-    <mkdir dir="${DEST_DOCROOT}/docs"/>
-    <echo message=" javadocs Source: ${SRC_CLASSES}"/>
+    <echo message=" Destination: ${CFS_HOME}"/>
+    <mkdir dir="${CFS_HOME}/docs"/>
+    <echo message=" JavaDocs Source: ${SRC_CLASSES}"/>
     <javadoc sourcepath="${SRC_CLASSES}"
           packagenames="com.*,org.*"
-          destdir="${DEST_DOCROOT}/docs"
+          destdir="${CFS_HOME}/docs"
           excludepackagenames="javax.servlet">
-      <header>Copyright 2001-2002 Dark Horse Ventures</header>
-      <footer>Copyright 2001-2002 Dark Horse Ventures</footer>
+      <header>Copyright 2001-2003 Dark Horse Ventures</header>
+      <footer>Copyright 2001-2003 Dark Horse Ventures</footer>
       <classpath>
         <path refid="cfs2.classpath"/>
-        <pathelement location="${SRC_LIB}/theseus.jar"/>
+        <pathelement location="${SRC_LIB}/darkhorseventures.jar"/>
       </classpath>
     </javadoc>
   </target>
   
-  <target name="builddb" description="Creates a new database">
+  <!-- Test code -->
+  <target name="installdb" description="Creates a new database">
     <echo message="Building database"/>
     
     <!-- Prepare files for any database type -->
@@ -463,6 +403,7 @@
     <delete dir="${SRC}/tmp" failonerror="false"/>
   </target>
   
+  <!-- Test code -->
   <target name="upgradedb" description="Upgrades an existing database">
     <echo message="Upgrading database"/>
     <sql
