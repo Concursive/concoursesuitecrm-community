@@ -319,17 +319,6 @@ public class Notification extends Thread {
 
 
   /**
-   *  Gets the Id attribute of the Notification object
-   *
-   *@return    The Id value
-   *@since
-   */
-  public int getId() {
-    return id;
-  }
-
-
-  /**
    *  Gets the Attempt attribute of the Notification object
    *
    *@return    The Attempt value
