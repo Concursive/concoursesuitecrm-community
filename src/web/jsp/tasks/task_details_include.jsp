@@ -71,7 +71,7 @@
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">Notes</td>
     <td>
-      <%= !"".equals(toString(Task.getNotes())) ?  toString(Task.getNotes()) : "&nbsp;"%>
+      <%= !"".equals(toHtml(Task.getNotes())) ?  toHtml(Task.getNotes()) : "&nbsp;"%>
     </td>
   </tr>
   <tr class="containerBody">
