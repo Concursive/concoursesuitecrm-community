@@ -30,7 +30,6 @@ public class MainMenuHook implements ControllerMainMenuHook {
   private File file;
   private ServletContext context;
 
-
   /**
    *  Called only once by the servlet controller during initialization,
    *  processes the config parameters
@@ -120,7 +119,8 @@ public class MainMenuHook implements ControllerMainMenuHook {
     while (menuItemsList.hasNext()) {
       MainMenuItem thisMenu = (MainMenuItem) menuItemsList.next();
       if ("".equals(thisMenu.getPermission()) || (systemStatus != null && systemStatus.hasPermission(thisUser.getUserId(), thisMenu.getPermission()))) {
-        if (thisMenu.hasActionName(actionPath)) {
+        if ((thisModule.getMenuKey() != null && thisMenu.hasActionName(thisModule.getMenuKey())) ||
+            (thisModule.getMenuKey() == null && thisMenu.hasActionName(actionPath))) {
           //The user is on this link/module
           thisModule.setName(thisMenu.getPageTitle());
           //Set the on state of the menu
@@ -178,15 +178,17 @@ public class MainMenuHook implements ControllerMainMenuHook {
       }
     }
 
-    //Output the menus
+    //Output several types of menus
     String[] theMenus = new String[3];
     theMenus[0] = menu.toString() + "<td style=\"width:100%; border: 0px; background-image: none !important; background: #fff; border-bottom: 1px #000 solid; cursor: default\">&nbsp;</td>";
     theMenus[1] = "<td width=\"" + menuWidth + "\" nowrap>" + graphicMenu.toString() + "</td>";
     theMenus[2] = smallMenu.toString();
+    theMenus[3] = menu.toString();
     request.setAttribute("MainMenu", theMenus[0]);
     request.setAttribute("MainMenuGraphic", theMenus[1]);
     request.setAttribute("MainMenuWidth", String.valueOf(menuWidth));
     request.setAttribute("MainMenuSmall", theMenus[2]);
+    request.setAttribute("MainMenuTableCells", theMenus[3]);
   }
 
 
@@ -216,6 +218,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
    *@since            1.17
    */
   private void parseAllMenus(Document document) {
+    //Process the menu tags
     menuItems.clear();
     NodeList menuTags = document.getElementsByTagName("menu");
     for (int i = 0; i < menuTags.getLength(); i++) {
