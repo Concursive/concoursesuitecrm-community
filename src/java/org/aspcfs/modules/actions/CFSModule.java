@@ -291,7 +291,7 @@ public class CFSModule {
    *@param  errors   Description of Parameter
    *@since           1.7
    */
-  protected void processErrors(ActionContext context, Hashtable errors) {
+  protected void processErrors(ActionContext context, HashMap errors) {
     Iterator i = errors.keySet().iterator();
     while (i.hasNext()) {
       String errorKey = (String)i.next();

@@ -17,7 +17,7 @@ import java.text.*;
  *@version    $Id: SearchCriteriaList.java,v 1.4 2001/12/11 22:21:17 mrajkowski
  *      Exp $
  */
-public class SearchCriteriaList extends Hashtable {
+public class SearchCriteriaList extends HashMap {
 
   public final static int SOURCE_ALL_ACCOUNTS = 1;
   public final static int SOURCE_MY_ACCOUNTS = 2;
@@ -25,7 +25,7 @@ public class SearchCriteriaList extends Hashtable {
   public final static int SOURCE_MY_CONTACTS = 4;
   public final static int SOURCE_EMPLOYEES = 5;
 
-  protected Hashtable errors = new Hashtable();
+  protected HashMap errors = new HashMap();
   private int id = -1;
   private String groupName = "";
   private int contactSource = -1;
@@ -120,7 +120,7 @@ public class SearchCriteriaList extends Hashtable {
         thisGroup.getGroupField().setId(thisElement.getFieldId());
         this.put(thisKey, thisGroup);
       }
-      thisGroup.addElement(thisElement);
+      thisGroup.add(thisElement);
     }
   }
 
@@ -131,7 +131,7 @@ public class SearchCriteriaList extends Hashtable {
    *@param  errors  The new Errors value
    *@since
    */
-  public void setErrors(Hashtable errors) {
+  public void setErrors(HashMap errors) {
     this.errors = errors;
   }
 
@@ -307,7 +307,7 @@ public class SearchCriteriaList extends Hashtable {
    *@return    The Errors value
    *@since
    */
-  public Hashtable getErrors() {
+  public HashMap getErrors() {
     return errors;
   }
 
@@ -536,10 +536,8 @@ public class SearchCriteriaList extends Hashtable {
         thisGroup = new SearchCriteriaGroup();
         thisGroup.getGroupField().setId(thisElement.getFieldId());
         this.put(thisKey, thisGroup);
-        System.out.println("SearchCriteriaList-> Added Group: " + thisElement.getFieldId());
       }
-      thisGroup.addElement(thisElement);
-      System.out.println("SearchCriteriaList-> Added Element: " + thisElement.getText());
+      thisGroup.add(thisElement);
     }
     rs.close();
     st.close();
@@ -549,8 +547,6 @@ public class SearchCriteriaList extends Hashtable {
     while (i.hasNext()) {
       SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.get(i.next());
       thisGroup.buildFieldData(db);
-      System.out.println("SearchCriteriaList-> Built Group: " + thisGroup.getGroupField().getFieldName());
-
       Iterator j = thisGroup.iterator();
       while (j.hasNext()) {
         SearchCriteriaElement thisElt = (SearchCriteriaElement) (j.next());

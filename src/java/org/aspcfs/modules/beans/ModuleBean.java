@@ -11,13 +11,14 @@ import com.darkhorseventures.controller.*;
  *
  *@author     matt
  *@created    July 13, 2001
+ *@version    $Id$
  */
 public class ModuleBean {
 
   private String name = "";
   private String currentAction = "";
   private String submenuKey = "";
-  private Vector menuItems = new Vector();
+  private ArrayList menuItems = new ArrayList();
 
 
   /**
@@ -25,8 +26,7 @@ public class ModuleBean {
    *
    *@since    1.0
    */
-  public ModuleBean() {
-  }
+  public ModuleBean() { }
 
 
   /**
@@ -54,8 +54,8 @@ public class ModuleBean {
   /**
    *  Sets the SubmenuKey attribute of the ModuleBean object
    *
-   *@param  tmp  The new SubmenuKey value
-   *@since
+   *@param  tmp      The new SubmenuKey value
+   *@param  context  The new submenuKey value
    */
   public void setSubmenuKey(ActionContext context, String tmp) {
     this.submenuKey = tmp;
@@ -79,7 +79,7 @@ public class ModuleBean {
    *@return    The MenuItems value
    *@since     1.0
    */
-  public Vector getMenuItems() {
+  public ArrayList getMenuItems() {
     return menuItems;
   }
 
@@ -93,7 +93,13 @@ public class ModuleBean {
   public String getCurrentAction() {
     return currentAction;
   }
-  
+
+
+  /**
+   *  Gets the submenuKey attribute of the ModuleBean object
+   *
+   *@return    The submenuKey value
+   */
   public String getSubmenuKey() {
     return this.submenuKey;
   }
@@ -110,7 +116,7 @@ public class ModuleBean {
     Iterator i = menuItems.iterator();
 
     while (i.hasNext()) {
-      SubmenuItem thisItem = (SubmenuItem)i.next();
+      SubmenuItem thisItem = (SubmenuItem) i.next();
       if (menu.length() != 0) {
         menu.append(" | " + thisItem.getHtml());
       } else {
@@ -142,6 +148,12 @@ public class ModuleBean {
     return (!menuItems.isEmpty());
   }
 
+
+  /**
+   *  Adds a feature to the MenuItem attribute of the ModuleBean object
+   *
+   *@param  thisItem  The feature to be added to the MenuItem attribute
+   */
   public void addMenuItem(SubmenuItem thisItem) {
     menuItems.add(thisItem);
   }

@@ -33,6 +33,21 @@ public class MakeList extends ArrayList {
   
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+    while (rs.next()) {
+      Make thisMake = this.getObject(rs);
+      this.add(thisMake);
+    }
+    rs.close();
+    pst.close();
+  }
+  
+  public Make getObject(ResultSet rs) throws SQLException {
+    Make thisMake = new Make(rs);
+    return thisMake;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     
@@ -44,15 +59,11 @@ public class MakeList extends ArrayList {
       "FROM autoguide_make make ");
     sql.append("WHERE make_id > -1 ");
     createFilter(sql);
+    sql.append("ORDER BY make_name ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    while (rs.next()) {
-      Make thisMake = new Make(rs);
-      this.add(thisMake);
-    }
-    rs.close();
-    pst.close();
+    return rs;
   }
   
   private void createFilter(StringBuffer sqlFilter) {

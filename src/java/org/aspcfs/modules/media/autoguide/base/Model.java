@@ -28,6 +28,7 @@ public class Model {
 
   public Model(ResultSet rs) throws SQLException {
     buildRecord(rs);
+    make = new Make(rs);
   }
 
   public void setId(int tmp) { this.id = tmp; }

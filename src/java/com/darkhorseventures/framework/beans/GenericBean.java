@@ -15,7 +15,7 @@ import java.text.*;
  */
 
 public class GenericBean implements Serializable {
-  protected Hashtable errors = new Hashtable();
+  protected HashMap errors = new HashMap();
 
   protected SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
   protected SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h:mm a");
@@ -131,19 +131,19 @@ public class GenericBean implements Serializable {
   /**
    *  Gets the Errors attribute of the GenericBean object<p>
    *
-   *  The hashtable is used for form validation when errors need to be presented
+   *  The HashMap is used for form validation when errors need to be presented
    *  in the resulting JSP
    *
    *@return    The Errors value
    *@since     1.4
    */
-  public Hashtable getErrors() {
+  public HashMap getErrors() {
     return errors;
   }
 
 
   /**
-   *  Returns whether the object has added any errors to the error hashtable
+   *  Returns whether the object has added any errors to the error HashMap
    *
    *@return    Description of the Returned Value
    *@since     1.4

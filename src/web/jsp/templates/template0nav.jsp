@@ -56,8 +56,7 @@
         <tr>  
           <td height="25" valign="middle" width="5"><font size="1">&nbsp;</font></td>
 <%    
-    Vector menuItems = ModuleBean.getMenuItems();
-    Iterator i = menuItems.iterator();
+    Iterator i = ModuleBean.getMenuItems().iterator();
     while (i.hasNext()) {
     	SubmenuItem thisItem = (SubmenuItem)i.next();
 	

@@ -595,9 +595,8 @@ public class UserList extends Vector {
         thisUser.setManagerId(managerUser.getId());
         thisUser.setManagerUser(managerUser);
       }
-      this.addElement(thisUser);
+      this.add(thisUser);
     }
-
     rs.close();
     pst.close();
 

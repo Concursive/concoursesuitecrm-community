@@ -19,11 +19,11 @@ import org.theseus.actions.*;
  *@version    $Id: CustomFieldCategory.java,v 1.3 2002/03/15 22:29:34 mrajkowski
  *      Exp $
  */
-public class CustomFieldCategory extends Vector {
+public class CustomFieldCategory extends ArrayList {
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;
-  protected Hashtable errors = new Hashtable();
+  protected HashMap errors = new HashMap();
 
   //Properties of a Category
   private int id = -1;
@@ -341,7 +341,7 @@ public class CustomFieldCategory extends Vector {
    *@param  tmp  The new Errors value
    *@since
    */
-  public void setErrors(Hashtable tmp) {
+  public void setErrors(HashMap tmp) {
     this.errors = tmp;
   }
 
@@ -575,7 +575,7 @@ public class CustomFieldCategory extends Vector {
    *@return    The Errors value
    *@since
    */
-  public Hashtable getErrors() {
+  public HashMap getErrors() {
     return errors;
   }
 
@@ -677,7 +677,7 @@ public class CustomFieldCategory extends Vector {
     rs = pst.executeQuery();
     while (rs.next()) {
       CustomFieldGroup thisGroup = new CustomFieldGroup(rs);
-      this.addElement(thisGroup);
+      this.add(thisGroup);
     }
     rs.close();
     pst.close();

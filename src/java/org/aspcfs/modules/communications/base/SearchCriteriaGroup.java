@@ -2,7 +2,7 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.sql.*;
 
 /**
@@ -13,7 +13,7 @@ import java.sql.*;
  *@created    November 13, 2001
  *@version    $Id$
  */
-public class SearchCriteriaGroup extends Vector {
+public class SearchCriteriaGroup extends ArrayList {
 
   SearchField groupField = new SearchField();
 

@@ -2,7 +2,7 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
@@ -13,7 +13,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@created    November 1, 2001
  *@version    $Id$
  */
-public class SearchFieldList extends Vector {
+public class SearchFieldList extends ArrayList {
 
   /**
    *  Constructor for the SearchFieldList object
@@ -38,7 +38,7 @@ public class SearchFieldList extends Vector {
         "WHERE searchable = " + DatabaseUtils.getTrue(db) + " ");
     while (rs.next()) {
       SearchField thisSearchField = new SearchField(rs);
-      this.addElement(thisSearchField);
+      this.add(thisSearchField);
     }
     rs.close();
     st.close();

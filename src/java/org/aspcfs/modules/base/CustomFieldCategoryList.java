@@ -4,7 +4,7 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
@@ -19,7 +19,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@version    $Id: CustomFieldCategoryList.java,v 1.4 2002/03/13 15:36:32 chris
  *      Exp $
  */
-public class CustomFieldCategoryList extends Vector {
+public class CustomFieldCategoryList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
 
@@ -357,7 +357,7 @@ public class CustomFieldCategoryList extends Vector {
       }
       ++count;
       CustomFieldCategory thisCategory = new CustomFieldCategory(rs);
-      this.addElement(thisCategory);
+      this.add(thisCategory);
     }
     rs.close();
     pst.close();

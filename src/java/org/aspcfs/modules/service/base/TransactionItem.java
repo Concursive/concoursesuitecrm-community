@@ -264,18 +264,12 @@ public class TransactionItem {
           executeMethod = "select";
           break;
         case SYNC:
-          executeMethod = "select";
           break;
         default:
           appendErrorMessage("Unsupported action specified");
           break;
     }
     
-    Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
-    Object[] dbObject = new Object[]{db};
-    Method method = null;
-    
-    Object result = null;
     if ((action == INSERT && meta != null) || action == SELECT || action == SYNC) {
       if (recordList == null) {
         recordList = new RecordList(name);
@@ -287,27 +281,21 @@ public class TransactionItem {
       
       //Insert
       if (auth.getNextAnchor() != null) {
-        ObjectUtils.setParam(object, "syncType", String.valueOf(Constants.SYNC_INSERTS));
-        method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
-        result = method.invoke(object, dbObject);
-        addRecords(object, recordList, "insert");
-        ((java.util.AbstractList)object).clear();
+        addRecords(object, db, Constants.SYNC_INSERTS);
       }
       
       //Update
       if (auth.getLastAnchor() != null) {
-        ObjectUtils.setParam(object, "syncType", String.valueOf(Constants.SYNC_UPDATES));
-        method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
-        result = method.invoke(object, dbObject);
-        addRecords(object, recordList, "update");
-        ((java.util.AbstractList)object).clear();
+        addRecords(object, db, Constants.SYNC_UPDATES);
       }
       
       //Delete
       
     } else if (executeMethod != null && object != null) {
-      method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
-      result = method.invoke(object, dbObject);
+      Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
+      Object[] dbObject = new Object[]{db};
+      Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
+      Object result = method.invoke(object, dbObject);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TransactionItem-> " + object.getClass().getName() + " " + executeMethod);
       }
@@ -348,6 +336,40 @@ public class TransactionItem {
       }
       errorMessage.append(tmp);
     }
+  }
+  
+  private void addRecords(Object object, Connection db, int syncType) throws Exception {
+    PreparedStatement pst = null;
+    Class[] dbClass = new Class[]{Class.forName("java.sql.Connection"),Class.forName("java.sql.PreparedStatement")};
+    Object[] dbObject = new Object[]{db,pst};
+    String executeMethod = "queryList";
+    ObjectUtils.setParam(object, "syncType", String.valueOf(syncType));
+    Method method = object.getClass().getDeclaredMethod(executeMethod, dbClass);
+    Object result = method.invoke(object, dbObject);
+    while (((ResultSet)result).next()) {
+      String objectMethod = "getObject";
+      Class[] rsClass = new Class[]{Class.forName("java.sql.ResultSet")};
+      Object[] rsObject = new Object[]{result};
+      Method getObject = object.getClass().getDeclaredMethod(objectMethod, rsClass);
+      Object thisObject = getObject.invoke(object, rsObject);
+      String recordAction = null;
+      switch (syncType) {
+        case Constants.SYNC_INSERTS:
+          recordAction = "insert";
+          break;
+        case Constants.SYNC_UPDATES:
+          recordAction = "update";
+          break;
+        default:
+          break;
+      }
+      addRecords(thisObject, recordList, recordAction);
+    }
+    ((ResultSet)result).close();
+    if (pst != null) {
+      pst.close();
+    }
+    ((java.util.AbstractList)object).clear();
   }
   
   private void addRecords(Object object, RecordList recordList, String recordAction) {

@@ -7,17 +7,46 @@ import java.util.Iterator;
 import java.util.Hashtable;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.cfsbase.Constants;
 
 public class ModelList extends ArrayList {
 
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  
   public ModelList() { }
 
+  public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+  public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+  
   public void select(Connection db) throws SQLException {
     buildList(db);
   }
   
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+    while (rs.next()) {
+      Model thisModel = new Model(rs);
+      this.add(thisModel);
+    }
+    rs.close();
+    pst.close();
+  }
+  
+  public Model getObject(ResultSet rs) throws SQLException {
+    Model thisModel = new Model(rs);
+    return thisModel;
+  }
+  
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     
@@ -32,26 +61,43 @@ public class ModelList extends ArrayList {
       "FROM autoguide_model model LEFT JOIN autoguide_make make ON model.make_id = make.make_id ");
     sql.append("WHERE model.model_id > -1 ");
     createFilter(sql);
+    sql.append("ORDER BY model_name ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    while (rs.next()) {
-      Model thisModel = new Model(rs);
-      thisModel.setMake(new Make(rs));
-      this.add(thisModel);
-    }
-    rs.close();
-    pst.close();
+    return rs;
   }
   
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND entered > ? ");
+      }
+      sqlFilter.append("AND entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND modified > ? ");
+      sqlFilter.append("AND entered < ? ");
+      sqlFilter.append("AND modified < ? ");
+    }
   }
   
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 }

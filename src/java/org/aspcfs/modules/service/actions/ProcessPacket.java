@@ -17,8 +17,25 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 import java.lang.reflect.*;
 
+/**
+ *  An HTTP connector for incoming XML packet requests. Requests must include
+ *  credentials and transactions to perform. There can be multiple transactions
+ *  per request.<p>
+ *
+ *  After processing is complete, a response is sent with a request status.
+ *
+ *@author     matt
+ *@created    April 24, 2002
+ *@version    $Id$
+ */
 public final class ProcessPacket extends CFSModule {
 
+  /**
+   *  XML API for HTTP requests.
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
     LinkedList statusMessages = new LinkedList();
@@ -31,7 +48,7 @@ public final class ProcessPacket extends CFSModule {
       }
       AuthenticationItem auth = new AuthenticationItem();
       xml.populateObject(auth, xml.getFirstChild("authentication"));
-      db = auth.getConnection(context); 
+      db = auth.getConnection(context);
       if (db != null) {
         if (auth.getSystemId() == -1) {
           //For Vport
@@ -42,7 +59,7 @@ public final class ProcessPacket extends CFSModule {
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
         while (trans.hasNext()) {
-          Element thisElement = (Element)trans.next();
+          Element thisElement = (Element) trans.next();
           Transaction thisTransaction = new Transaction();
           thisTransaction.setMapping(objectMap);
           thisTransaction.addMapping("meta", "com.darkhorseventures.utils.TransactionMeta");
@@ -76,7 +93,9 @@ public final class ProcessPacket extends CFSModule {
       thisStatus.setMessage("Error: " + e.getMessage());
       statusMessages.add(thisStatus);
     } finally {
-      if (db != null) this.freeConnection(context, db);
+      if (db != null) {
+        this.freeConnection(context, db);
+      }
     }
 
     try {
@@ -85,14 +104,14 @@ public final class ProcessPacket extends CFSModule {
       Document document = builder.newDocument();
       Element app = document.createElement("aspcfs");
       document.appendChild(app);
-      
+
       Iterator messages = statusMessages.iterator();
       while (messages.hasNext()) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("ProcessPacket-> Processing StatusMessage for output");
         }
-      
-        TransactionStatus thisMessage = (TransactionStatus)messages.next();
+
+        TransactionStatus thisMessage = (TransactionStatus) messages.next();
         Element response = document.createElement("response");
         if (thisMessage.getId() > -1) {
           response.setAttribute("id", "" + thisMessage.getId());
@@ -101,55 +120,72 @@ public final class ProcessPacket extends CFSModule {
         Element status = document.createElement("status");
         status.appendChild(document.createTextNode(String.valueOf(thisMessage.getStatusCode())));
         response.appendChild(status);
-        
+
         Element errorText = document.createElement("errorText");
         errorText.appendChild(document.createTextNode(thisMessage.getMessage()));
         response.appendChild(errorText);
-        
+
         if (!thisMessage.hasError() && thisMessage.hasRecordList()) {
           Element recordSet = document.createElement("recordSet");
           recordSet.setAttribute("name", thisMessage.getRecordList().getName());
           recordSet.setAttribute("count", String.valueOf(thisMessage.getRecordList().size()));
           response.appendChild(recordSet);
-          
+
           Iterator recordList = thisMessage.getRecordList().iterator();
           while (recordList.hasNext()) {
             Element record = document.createElement("record");
             recordSet.appendChild(record);
-            Record thisRecord = (Record)recordList.next();
+            Record thisRecord = (Record) recordList.next();
             if (thisRecord.hasAction()) {
               record.setAttribute("action", thisRecord.getAction());
             }
             Iterator fields = thisRecord.keySet().iterator();
             while (fields.hasNext()) {
-              String fieldName = (String)fields.next();
-              String fieldValue = (String)thisRecord.get(fieldName);
+              String fieldName = (String) fields.next();
+              String fieldValue = (String) thisRecord.get(fieldName);
               Element field = document.createElement(fieldName);
               field.appendChild(document.createTextNode(fieldValue));
               record.appendChild(field);
             }
           }
-          
+
         }
       }
-      
+
       context.getRequest().setAttribute("statusXML", XMLUtils.toString(document));
     } catch (Exception pce) {
       pce.printStackTrace(System.out);
     }
     return ("PacketOK");
   }
-  
+
+
+  /**
+   *  Clears the sync map that may have been cached in memory. The sync map only
+   *  needs to be cleared when the sync table has been modified.
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
   public String executeCommandReloadSyncMap(ActionContext context) {
     context.getServletContext().removeAttribute("SyncObjectMap");
     return ("PacketOK");
   }
-  
+
+
+  /**
+   *  Gets the objectMap attribute of the ProcessPacket object
+   *
+   *@param  context   Description of Parameter
+   *@param  db        Description of Parameter
+   *@param  systemId  Description of Parameter
+   *@return           The objectMap value
+   */
   private HashMap getObjectMap(ActionContext context, Connection db, int systemId) {
-    SyncTableList systemObjectMap = (SyncTableList)context.getServletContext().getAttribute("SyncObjectMap");
+    SyncTableList systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap");
     if (systemObjectMap == null) {
       synchronized (this) {
-        systemObjectMap = (SyncTableList)context.getServletContext().getAttribute("SyncObjectMap");
+        systemObjectMap = (SyncTableList) context.getServletContext().getAttribute("SyncObjectMap");
         if (systemObjectMap == null) {
           systemObjectMap = new SyncTableList();
           systemObjectMap.setBuildTextFields(false);

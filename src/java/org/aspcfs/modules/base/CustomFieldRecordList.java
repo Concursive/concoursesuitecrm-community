@@ -4,14 +4,14 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
 
-public class CustomFieldRecordList extends Vector {
+public class CustomFieldRecordList extends ArrayList {
   
   public static final int TRUE = 1;
   public static final int FALSE = 0;
@@ -124,7 +124,7 @@ public class CustomFieldRecordList extends Vector {
       }
       ++count;
       CustomFieldRecord thisRecord = new CustomFieldRecord(rs);
-      this.addElement(thisRecord);
+      this.add(thisRecord);
     }
     rs.close();
     pst.close();

@@ -7,17 +7,46 @@ import java.util.Iterator;
 import java.util.Hashtable;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.cfsbase.Constants;
 
 public class VehicleList extends ArrayList {
 
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+  
   public VehicleList() { }
 
+  public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+  public void setLastAnchor(String tmp) {
+    this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+  public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+  public void setNextAnchor(String tmp) {
+    this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
+  }
+  
   public void select(Connection db) throws SQLException {
     buildList(db);
   }
   
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+    while (rs.next()) {
+      Vehicle thisVehicle = this.getObject(rs);
+      this.add(thisVehicle);
+    }
+    rs.close();
+    pst.close();
+  }
+  
+  public Vehicle getObject(ResultSet rs) throws SQLException {
+    Vehicle thisVehicle = new Vehicle(rs);
+    return thisVehicle;
+  }
+   
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
     
@@ -41,25 +70,39 @@ public class VehicleList extends ArrayList {
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    int count = 0;
-    while (rs.next()) {
-      Vehicle thisVehicle = new Vehicle(rs);
-      thisVehicle.setMake(new Make(rs));
-      thisVehicle.setModel(new Model(rs));
-      this.add(thisVehicle);
-    }
-    rs.close();
-    pst.close();
+    return rs;
   }
   
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        sqlFilter.append("AND vehicle_entered > ? ");
+      }
+      sqlFilter.append("AND vehicle_entered < ? ");
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      sqlFilter.append("AND vehicle_modified > ? ");
+      sqlFilter.append("AND vehicle_entered < ? ");
+      sqlFilter.append("AND vehicle_modified < ? ");
+    }
   }
   
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    if (syncType == Constants.SYNC_INSERTS) {
+      if (lastAnchor != null) {
+        pst.setTimestamp(++i, lastAnchor);
+      }
+      pst.setTimestamp(++i, nextAnchor);
+    }
+    if (syncType == Constants.SYNC_UPDATES) {
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, lastAnchor);
+      pst.setTimestamp(++i, nextAnchor);
+    }
     return i;
   }
 }

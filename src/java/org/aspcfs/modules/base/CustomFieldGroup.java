@@ -14,10 +14,10 @@ import java.sql.*;
  *@version    $Id: CustomFieldGroup.java,v 1.4 2002/01/23 16:05:11 mrajkowski
  *      Exp $
  */
-public class CustomFieldGroup extends Vector {
+public class CustomFieldGroup extends ArrayList {
   public final static int TRUE = 1;
   public final static int FALSE = 0;
-  protected Hashtable errors = new Hashtable();
+  protected HashMap errors = new HashMap();
 
   //Properties for a Group
   private int id = -1;
@@ -366,7 +366,7 @@ public class CustomFieldGroup extends Vector {
    *@return    The Errors value
    *@since
    */
-  public Hashtable getErrors() {
+  public HashMap getErrors() {
     return errors;
   }
 
@@ -426,7 +426,7 @@ public class CustomFieldGroup extends Vector {
       thisField.setLinkModuleId(this.linkModuleId);
       thisField.setLinkItemId(linkItemId);
       thisField.setRecordId(recordId);
-      this.addElement(thisField);
+      this.add(thisField);
     }
     rs.close();
     pst.close();

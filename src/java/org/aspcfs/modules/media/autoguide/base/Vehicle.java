@@ -31,6 +31,8 @@ public class Vehicle {
 
   public Vehicle(ResultSet rs) throws SQLException {
     buildRecord(rs);
+    make = new Make(rs);
+    model = new Model(rs);
   }
 
   public void setId(int tmp) { id = tmp; }

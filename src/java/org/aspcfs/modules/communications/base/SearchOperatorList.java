@@ -2,7 +2,7 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
@@ -14,7 +14,7 @@ import com.darkhorseventures.webutils.HtmlSelect;
  *@author     Wesley S. Gillette
  *@created    November 1, 2001
  */
-public class SearchOperatorList extends Vector {
+public class SearchOperatorList extends ArrayList {
 
 	/**
 	 *  Constructor for the SearchOperatorList object
@@ -43,7 +43,7 @@ public class SearchOperatorList extends Vector {
 		rs = pst.executeQuery();
 		while (rs.next()) {
 			SearchOperator thisSearchOperator = new SearchOperator(rs);
-			this.addElement(thisSearchOperator);
+			this.add(thisSearchOperator);
 		}
 		rs.close();
 		pst.close();
@@ -73,7 +73,7 @@ public class SearchOperatorList extends Vector {
 		rs = pst.executeQuery();
 		while (rs.next()) {
 			SearchOperator thisSearchOperator = new SearchOperator(rs);
-			this.addElement(thisSearchOperator);
+			this.add(thisSearchOperator);
 		}
 		rs.close();
 		pst.close();

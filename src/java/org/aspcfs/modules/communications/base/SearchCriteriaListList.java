@@ -4,7 +4,7 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.sql.*;
@@ -19,7 +19,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@created    March 26, 2002
  *@version    $Id$
  */
-public class SearchCriteriaListList extends Vector {
+public class SearchCriteriaListList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
   private int owner = -1;
@@ -189,7 +189,7 @@ public class SearchCriteriaListList extends Vector {
       }
       ++count;
       SearchCriteriaList thisList = new SearchCriteriaList(rs);
-      this.addElement(thisList);
+      this.add(thisList);
     }
     rs.close();
     pst.close();
