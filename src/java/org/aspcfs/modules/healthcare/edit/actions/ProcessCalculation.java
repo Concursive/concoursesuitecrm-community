@@ -349,7 +349,9 @@ public final class ProcessCalculation extends CFSModule {
             }
             officeTransDetails.setRecordId(foundId);
             //update
-            officeTransDetails.update(prodDb);
+            if (test == null) {
+              officeTransDetails.update(prodDb);
+            }
           } else {
             //insert
             if (System.getProperty("DEBUG") != null) {
