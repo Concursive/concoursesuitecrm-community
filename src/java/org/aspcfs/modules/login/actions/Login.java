@@ -92,7 +92,6 @@ public final class Login extends GenericAction {
 
     if (db != null) sqlDriver.free(db);
     
-
     if (ce == null) {
       return "LoginRetry";
     }
@@ -118,7 +117,8 @@ public final class Login extends GenericAction {
       }
       
       pst = db.prepareStatement(
-        "SELECT * FROM access " +
+        "SELECT * " +
+        "FROM access " +
         "WHERE lower(username) = ? " +
         "AND enabled = ? ");
       pst.setString(1, username.toLowerCase());
