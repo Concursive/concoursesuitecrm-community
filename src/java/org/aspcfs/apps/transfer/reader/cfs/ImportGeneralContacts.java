@@ -238,7 +238,6 @@ public class ImportGeneralContacts implements DataReader {
       newContactRecord.addField("userId", userId, "user", null);
       newContactRecord.addField("nameFirst", "");
       newContactRecord.addField("nameLast", "Electronic Import");
-      newContactRecord.addField("enabled", "false");
       newContactRecord.addField("orgId", "0");
       newContactRecord.addField("enteredBy", userId);
       newContactRecord.addField("modifiedBy", userId);
