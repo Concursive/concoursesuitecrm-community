@@ -18,6 +18,9 @@
     return ypSlideOutMenu.displayMenu(id);
   }
   //Menu link functions
+  function showContact() {
+    popURL('ExternalContacts.do?command=ContactDetails&actionId=' + thisItemId + '&id=' + thisContactId + '&popup=true&popupType=inline','Details','650','500','yes','yes');
+  }
   function addCall() {
     if(thisOrgId == -1){
       popURL('ExternalContactsCalls.do?command=Add&popup=true&actionSource=MyActionContacts&contactId=' + thisContactId + '&actionId=' + thisItemId,'Call','600','300','yes','yes');
@@ -50,6 +53,17 @@
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
     <table id="menuContactTable" class="pulldown" width="170">
+      <dhv:permission name="myhomepage-action-lists-edit">
+      <tr>
+        <td>
+          <img src="images/icons/stock_bcard-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </td>
+        <td width="100%">
+          <a href="javascript:showContact()">Show Contact Record</a>
+        </td>
+      </tr>
+      </dhv:permission>
+      
       <dhv:permission name="contacts-external_contacts-calls-add">
       <tr>
         <td>
