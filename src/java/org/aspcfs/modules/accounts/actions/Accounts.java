@@ -1059,7 +1059,7 @@ public final class Accounts extends CFSModule {
         //of records matching this category that the user can choose from
         PagedListInfo folderListInfo = this.getPagedListInfo(context, "AccountFolderInfo");
         folderListInfo.setLink("/Accounts.do?command=Fields&orgId=" + orgId + "&catId=" + selectedCatId);
-      
+     
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(Constants.ACCOUNTS);
         recordList.setLinkItemId(thisOrganization.getOrgId());
