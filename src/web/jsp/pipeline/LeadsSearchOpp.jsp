@@ -19,13 +19,14 @@
     changeDivContent('changeaccount', ' All ');
     document.forms['searchLeads'].searchcodeContactId.value="";
     changeDivContent('changecontact', ' Any ');
-    document.forms['searchLeads'].searchcodeStage.value="";
+    document.forms['searchLeads'].searchcodeStage.options.selectedIndex = 0;
     document.forms['searchLeads'].searchdateCloseDateStart.value="";
     document.forms['searchLeads'].searchdateCloseDateEnd.value="";
     document.forms['searchLeads'].listView.options.selectedIndex = 0;
     document.forms['searchLeads'].listFilter1.options.selectedIndex = 0;
     document.forms['searchLeads'].listFilter2.options.selectedIndex = 0;
     document.forms['searchLeads'].searchDescription.focus();
+    updateOwnedBy();
   }
   
   function updateOwnedBy(){

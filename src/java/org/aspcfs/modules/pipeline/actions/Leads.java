@@ -359,15 +359,12 @@ public final class Leads extends CFSModule {
     if (vpUserId != -1 && vpUserId != userId) {
       userId = vpUserId;
     }
-    
     try {
       db = this.getConnection(context);
-
       //Opportunity types drop-down menu
       LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
       typeSelect.addItem(0, "All Types");
       context.getRequest().setAttribute("TypeSelect", typeSelect);
-
       //Generate user list
       User thisRec = this.getUser(context, userId);
       UserList shortChildList = thisRec.getShortChildList();
@@ -377,22 +374,20 @@ public final class Leads extends CFSModule {
       userList.setIncludeMe(true);
       userList.setExcludeDisabledIfUnselected(true);
       context.getRequest().setAttribute("UserList", userList);
-
       //check if account/contact is already selected, if so build it
       if (!"".equals(searchOppListInfo.getSearchOptionValue("searchcodeOrgId")) && !"-1".equals(searchOppListInfo.getSearchOptionValue("searchcodeOrgId"))) {
         String orgId = searchOppListInfo.getSearchOptionValue("searchcodeOrgId");
         Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
         context.getRequest().setAttribute("OrgDetails", thisOrg);
       }
-
       if (!"".equals(searchOppListInfo.getSearchOptionValue("searchcodeContactId")) && !"-1".equals(searchOppListInfo.getSearchOptionValue("searchcodeContactId"))) {
         String id = searchOppListInfo.getSearchOptionValue("searchcodeContactId");
         Contact thisContact = new Contact(db, Integer.parseInt(id));
         context.getRequest().setAttribute("ContactDetails", thisContact);
       }
-
       //stage
       LookupList stageSelect = new LookupList(db, "lookup_stage");
+      stageSelect.addItem(-1, "All Stages");
       context.getRequest().setAttribute("StageList", stageSelect);
     } catch (Exception e) {
       errorCode = 1;
