@@ -275,15 +275,11 @@ public final class Login extends CFSModule {
       SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(thisUser.getConnectionElement().getUrl());
       context.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
       //replace userSession in SessionManager HashMap & reset timeout
-      SessionManager sessionManager = systemStatus.getSessionManager();
-      UserSession oldSession = sessionManager.getUserSession(thisUser.getActualUserId());
-      if (!oldSession.getId().equals(context.getRequest().getSession().getId())) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("Login -- > Invalidating old Session");
-        }
-        UserSession currentSession = sessionManager.replaceUserSession(context, thisUser.getActualUserId());
-        context.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Login-> Invalidating old Session");
       }
+      SessionManager sessionManager = systemStatus.getSessionManager();
+      sessionManager.replaceUserSession(context, thisUser.getActualUserId());
       // TODO: Replace this so it does not need to be maintained
       // NOTE: Make sure to update this similar code in the previous method
       if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
