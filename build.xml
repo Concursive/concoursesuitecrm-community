@@ -283,6 +283,7 @@ determined user is ${USER}
         <pathelement location="${SRC_LIB}/darkhorseventures.jar"/>
         <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
         <pathelement location="${SRC_LIB}/jakarta-poi-1.5.0.jar"/>
+        <pathelement location="${SRC_LIB}/ccp_integration.jar"/>
       </classpath>
     </javac>
     <delete file="${DEST_BIN}/Notifier.jar"/>
