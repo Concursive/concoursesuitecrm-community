@@ -11,73 +11,26 @@ import java.util.*;
 import java.io.File;
 import java.sql.*;
 
-/** Perform system level maintenance, typically setup on a cron
- * @author matt rajkowski
- * @created 9/24/2002
- * @version $Id$
+/**
+ *  Perform system level maintenance, typically setup on a cron
+ *
+ *@author     matt rajkowski
+ *@created    9/24/2002
+ *@version    $Id$
  */
 public final class ProcessSystem extends CFSModule {
-  
-  
+
+  /**
+   *  For every cached system, the preferences are rebuilt
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandReloadSystemPrefs(ActionContext context) {
-    reloadSystemPrefs(context);
-    return "ProcessOK";
-  }
-  
-  /** Erases the day's graphing data since the graphs need to be rebuilt daily */
-  public String executeCommandClearGraphData(ActionContext context) {
-    clearGraphData(context);
-    deleteGraphFiles(context);
-    return "ProcessOK";
-  }
-  
-  /** Deletes all of the files in graphs, should be run each night */
-  private void deleteGraphFiles(ActionContext context) {
-    File graphFolder = new File(context.getServletContext().getRealPath("/") + "graphs" + fs);
-    if (graphFolder.isDirectory()) {
-      File[] files = graphFolder.listFiles();
-      if (files != null) {
-        for (int i = 0; i<files.length; i++) {
-          File thisFile = files[i];
-          thisFile.delete();
-        }
-      }
-    }
-  }
-  
-  /** Goes through each user and flags the graph data as invalid */
-  private void clearGraphData(ActionContext context) {
-    Hashtable globalStatus = (Hashtable)context.getServletContext().getAttribute("SystemStatus");
-    
-    Iterator i = globalStatus.values().iterator();
-    UserList shortChildList = new UserList();
-    UserList fullChildList = new UserList();
-    
-    while (i.hasNext()) {
-      SystemStatus thisStatus = (SystemStatus)i.next();
-      
-      UserList thisList = thisStatus.getHierarchyList();
-      Iterator j = thisList.iterator();
-      while (j.hasNext()) {
-        User thisUser = (User)j.next();
-        shortChildList = thisUser.getShortChildList();
-        fullChildList = thisUser.getFullChildList(shortChildList, new UserList());
-        
-        Iterator k = fullChildList.iterator();
-        while (k.hasNext()) {
-          User indUser = (User)k.next();
-          indUser.setIsValid(false,true);
-        }
-      }
-    }
-  }
-  
-  private void reloadSystemPrefs(ActionContext context) {
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
-    Hashtable globalStatus = (Hashtable)context.getServletContext().getAttribute("SystemStatus");
-    Iterator i = globalStatus.values().iterator();
+    Iterator i = this.getSystemIterator(context);
     while (i.hasNext()) {
-      SystemStatus systemStatus = (SystemStatus)i.next();
+      SystemStatus systemStatus = (SystemStatus) i.next();
       Connection db = null;
       try {
         db = sqlDriver.getConnection(systemStatus.getConnectionElement());
@@ -87,5 +40,95 @@ public final class ProcessSystem extends CFSModule {
         sqlDriver.free(db);
       }
     }
+    return "ProcessOK";
+  }
+
+
+  /**
+   *  Removes all systems from the cache
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandClearSystems(ActionContext context) {
+    //TODO: Must invalidate the user references too...
+    //NOTE: This doesn't work yet...
+    Iterator i = this.getSystemIterator(context);
+    while (i.hasNext()) {
+      SystemStatus thisStatus = (SystemStatus) i.next();
+      i.remove();
+    }
+    return "ProcessOK";
+  }
+
+
+  /**
+   *  For every system, invalidates and deletes the day's graphing data since the graphs need to be rebuilt daily
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandClearGraphData(ActionContext context) {
+    clearGraphData(context);
+    deleteGraphFiles(context);
+    return "ProcessOK";
+  }
+
+
+  /**
+   *  Deletes all of the files in graphs
+   *
+   *@param  context  Description of the Parameter
+   */
+  private void deleteGraphFiles(ActionContext context) {
+    File graphFolder = new File(context.getServletContext().getRealPath("/") + "graphs" + fs);
+    if (graphFolder.isDirectory()) {
+      File[] files = graphFolder.listFiles();
+      if (files != null) {
+        for (int i = 0; i < files.length; i++) {
+          File thisFile = files[i];
+          thisFile.delete();
+        }
+      }
+    }
+  }
+
+
+  /**
+   *  Goes through each user and flags the graph data as invalid
+   *
+   *@param  context  Description of the Parameter
+   */
+  private void clearGraphData(ActionContext context) {
+    UserList shortChildList = null;
+    UserList fullChildList = null;
+    Iterator i = this.getSystemIterator(context);
+    while (i.hasNext()) {
+      SystemStatus thisStatus = (SystemStatus) i.next();
+      UserList thisList = thisStatus.getHierarchyList();
+      Iterator j = thisList.iterator();
+      while (j.hasNext()) {
+        User thisUser = (User) j.next();
+        shortChildList = thisUser.getShortChildList();
+        fullChildList = thisUser.getFullChildList(shortChildList, new UserList());
+        Iterator k = fullChildList.iterator();
+        while (k.hasNext()) {
+          User indUser = (User) k.next();
+          indUser.setIsValid(false, true);
+        }
+      }
+    }
+  }
+
+
+  /**
+   *  Gets an Iterator of all SystemStatus objects that are cached
+   *
+   *@param  context  Description of the Parameter
+   *@return          The systemIterator value
+   */
+  private Iterator getSystemIterator(ActionContext context) {
+    Hashtable globalStatus = (Hashtable) context.getServletContext().getAttribute("SystemStatus");
+    return globalStatus.values().iterator();
   }
 }
