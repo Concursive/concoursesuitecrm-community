@@ -984,8 +984,8 @@ public class CalendarView {
         if (!popup) {
           if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
             if (displayMonth == calendarInfo.getStartMonthOfWeek() && displayDay == calendarInfo.getStartDayOfWeek()) {
-              html.append(" class=\"row1\" ");
-              tdClass = "row1";
+              html.append(" class=\"weekSelected\" ");
+              tdClass = "selectedDay";
             }
           }
         }
@@ -993,8 +993,8 @@ public class CalendarView {
       }
 
       if (!popup && (cellNo % 7 == 0)) {
-        html.append("<td valign='top' width=\"4\" class=\"row1\" name=\"row1\">");
-        String weekSelectedArrow = "<a href=\"javascript:showWeekEvents(" + displayMonth + "," + displayDay + ")\">" + "<img ALIGN=\"MIDDLE\" src=\"images/next.gif\" border=\"0\" onclick=\"javascript:switchTableClass(this,'row1','row','<%=User.getBrowserId()%>');\"></a>";
+        html.append("<td valign='top' width=\"4\" class=\"weekSelector\" name=\"weekSelector\">");
+        String weekSelectedArrow = "<a href=\"javascript:showWeekEvents(" + displayMonth + "," + displayDay + ")\">" + "<img ALIGN=\"MIDDLE\" src=\"images/next.gif\" border=\"0\" onclick=\"javascript:switchTableClass(this,'selectedWeek','row','<%=User.getBrowserId()%>');\"></a>";
         html.append(weekSelectedArrow);
         html.append("</td>");
       }
@@ -1009,11 +1009,11 @@ public class CalendarView {
       }
 
       if (!popup) {
-        html.append(" onclick=\"javascript:showDayEvents('" + displayMonth + "','" + displayDay + "');javascript:switchTableClass(this,'row1','cell','<%=User.getBrowserId()%>');\"");
+        html.append(" onclick=\"javascript:showDayEvents('" + displayMonth + "','" + displayDay + "');javascript:switchTableClass(this,'selectedDay','cell','<%=User.getBrowserId()%>');\"");
         if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
           tdClass = "";
           if (displayMonth == calendarInfo.getMonthSelected() && displayDay == calendarInfo.getDaySelected()) {
-            tdClass = "row1";
+            tdClass = "selectedDay";
           }
         }
       }

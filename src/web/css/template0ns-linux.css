@@ -31,10 +31,13 @@ BODY  { font-family: verdana, helvetica, arial, sans-serif; font-size: 10pt; bac
   .monthArrowPrev { background: #DEE0FA; color: #000000; font-size: 10pt; font-weight: bold; text-align: center; }
   .monthArrowNext { background: #DEE0FA; color: #000000; font-size: 10pt; font-weight: bold; text-align: center; }
   .weekName { background: #CCCCCC; color: #000000; font-size: 10pt; text-align: center; }
+  .selectedWeek { background: #FEFFB2;}
+  .weekSelector { background: #EDEDED;}
+  .selectedDay { background: #FEFFB2;}
   .day { background: white; color: #000000; font-family: arial, verdana; font-size: 10pt; font-weight: normal; text-align: left; }
   .highlightday { background: #66FF66; color: #000000; font-family: arial, verdana; font-size: 10pt; font-weight: normal; text-align: left; }
-  .noday { background: #FEF8DE; color: #000000; font-family: arial, verdana; font-size: 10pt; font-weight: normal; text-align: left; }
-  .today { background: #FFFFA6; color: #000000; font-family: arial, verdana; font-size: 10pt; font-weight: bold; text-align: left; }
+  .noday { background: #C9C9C9; color: #000000; font-family: arial, verdana; font-size: 10pt; font-weight: normal; text-align: left; }
+  .today { background: #C6E7FF; color: #000000; font-family: arial, verdana; font-size: 10pt; font-weight: bold; text-align: left; }
 
   .smallcalendar { background: #FFFFFF; }
   .smallmonthName { background: #3366CC; color: #FFFFFF; font-size: 10pt; font-weight: bold; text-align: center; }
