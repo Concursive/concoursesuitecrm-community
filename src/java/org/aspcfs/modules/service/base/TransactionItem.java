@@ -330,7 +330,8 @@ public class TransactionItem {
     } else if (action == SYNC) {
       ObjectUtils.setParam(object, "lastAnchor", auth.getLastAnchor());
       ObjectUtils.setParam(object, "nextAnchor", auth.getNextAnchor());
-      //TODO: Is this needed? setGuidParameters(db);
+      //If the client supplied any filters... set them
+      setGuidParameters(db);
       //Build inserts for client
       if (auth.getNextAnchor() != null) {
         buildRecords(object, db, dbLookup, Constants.SYNC_INSERTS);

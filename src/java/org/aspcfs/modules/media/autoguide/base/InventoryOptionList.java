@@ -298,6 +298,9 @@ public class InventoryOptionList extends ArrayList {
       sqlFilter.append("AND o.modified < ? ");
     }
  */
+    if (inventoryId > -1) {
+      sqlFilter.append("AND io.inventory_id = ? ");
+    }
   }
 
 
@@ -323,6 +326,9 @@ public class InventoryOptionList extends ArrayList {
       pst.setTimestamp(++i, nextAnchor);
     }
  */
+    if (inventoryId > -1) {
+      pst.setInt(++i, inventoryId);
+    }
     return i;
   }
 }
