@@ -300,13 +300,6 @@
         <include name="css/**" />
       </fileset>
     </copy>
-    <!-- Copy the help files  -->
-    <mkdir dir="${CFS_HOME}/images/help"/>
-    <copy todir="${CFS_HOME}/images/help" flatten="true">
-      <fileset dir="${src.web.dir}/help">
-        <include name="**/*" />
-      </fileset>
-    </copy>
     <!-- Copy the configuration files -->
     <copy todir="${CFS_HOME}/WEB-INF" verbose="true">
       <fileset dir="${src.web.dir}/WEB-INF">
