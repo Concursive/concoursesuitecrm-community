@@ -503,6 +503,7 @@ public class ControllerServlet extends HttpServlet
           result = (String) method.invoke(classRef, new Object[]{context});
           long actionExecuteTime = System.currentTimeMillis() - actionStartTime;
           request.setAttribute("debug.action.time", String.valueOf(actionExecuteTime));
+          System.out.println("ControllerServlet-> Action Took: " + actionExecuteTime + " ms");
         } else {
           Method method = classRef.getClass().getMethod("executeCommand" + context.getCommand(), new Class[]{context.getClass()});
           result = (String) method.invoke(classRef, new Object[]{context});
