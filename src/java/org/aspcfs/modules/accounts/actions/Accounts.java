@@ -135,6 +135,10 @@ public final class Accounts extends CFSModule {
       this.freeConnection(context, db);
     }
 
+    if (!hasAuthority(context, thisItem.getEnteredBy())) {
+      return ("PermissionError");
+    }
+
     //Start the download
     try {
       FileItem itemToDownload = null;
@@ -185,6 +189,7 @@ public final class Accounts extends CFSModule {
     }
 
     Exception errorMessage = null;
+    FileItem thisItem = null;
 
     String projectId = (String) context.getRequest().getParameter("pid");
     String itemId = (String) context.getRequest().getParameter("fid");
@@ -195,7 +200,7 @@ public final class Accounts extends CFSModule {
       db = getConnection(context);
 
       //-1 is the project ID for non-projects
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
 
       String filePath = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
       String textToShow = this.includeFile(filePath);
@@ -206,6 +211,9 @@ public final class Accounts extends CFSModule {
       this.freeConnection(context, db);
     }
 
+    if (!hasAuthority(context, thisItem.getEnteredBy())) {
+      return ("PermissionError");
+    }
     return ("ReportHtmlOK");
   }
 
@@ -411,20 +419,22 @@ public final class Accounts extends CFSModule {
       //-1 is the project ID for non-projects
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
 
-      if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "account-reports"));
+      if (!hasAuthority(context, thisItem.getEnteredBy())) {
+        return ("PermissionError");
+      }
 
-        String filePath1 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
-        java.io.File fileToDelete1 = new java.io.File(filePath1);
-        if (!fileToDelete1.delete()) {
-          System.err.println("FileItem-> Tried to delete file: " + filePath1);
-        }
+      recordDeleted = thisItem.delete(db, this.getPath(context, "account-reports"));
 
-        String filePath2 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
-        java.io.File fileToDelete2 = new java.io.File(filePath2);
-        if (!fileToDelete2.delete()) {
-          System.err.println("FileItem-> Tried to delete file: " + filePath2);
-        }
+      String filePath1 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
+      java.io.File fileToDelete1 = new java.io.File(filePath1);
+      if (!fileToDelete1.delete()) {
+        System.err.println("FileItem-> Tried to delete file: " + filePath1);
+      }
+
+      String filePath2 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+      java.io.File fileToDelete2 = new java.io.File(filePath2);
+      if (!fileToDelete2.delete()) {
+        System.err.println("FileItem-> Tried to delete file: " + filePath2);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -891,6 +901,9 @@ public final class Accounts extends CFSModule {
     Organization updatedOrg = null;
 
     Organization newOrg = (Organization) context.getFormBean();
+    if (!(hasAuthority(context, newOrg.getOwner()))) {
+      return ("PermissionError");
+    }
 
     newOrg.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOrg.setModifiedBy(getUserId(context));
@@ -975,6 +988,9 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisOrganization = new Organization(db, Integer.parseInt(context.getRequest().getParameter("orgId")));
+      if (!(hasAuthority(context, thisOrganization.getOwner()))) {
+        return ("PermissionError");
+      }
 
       if (context.getRequest().getParameter("action") != null) {
 
@@ -1153,6 +1169,10 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       newOrg = new Organization(db, tempid);
+
+      if (!(hasAuthority(context, newOrg.getOwner()))) {
+        return ("PermissionError");
+      }
 
       LookupList industrySelect = new LookupList(db, "lookup_industry");
       industrySelect.addItem(0, "--None--");

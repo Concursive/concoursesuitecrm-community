@@ -110,7 +110,7 @@ View Opportunities<br>
       </td>  
       
       <td width=35% valign=center class="row<%= rowid %>">
-        <a href="Leads.do?command=DetailsOpp&oppId=<%=thisOpp.getOppId()%>">
+        <a href="Leads.do?command=DetailsOpp&oppId=<%=thisOpp.getOppId()%>&reset=true">
         <%= toHtml(thisOpp.getComponentDescription()) %></a>
       <% if (thisOpp.hasFiles()) { %>
       <%= thisFile.getImageTag()%>

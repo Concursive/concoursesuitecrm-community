@@ -119,7 +119,7 @@ Dashboard<br>
       if (thisOpp.getId() != previousId) {
 %>    
 				<tr>
-          <td width="100%" class="row<%= rowid %>" valign=center><a href="Leads.do?command=DetailsOpp&oppId=<%=thisOpp.getId()%>&return=dashboard"><%= toHtml(thisOpp.getAccountName()) %>:&nbsp;<%= toHtml(thisOpp.getDescription()) %></a>
+          <td width="100%" class="row<%= rowid %>" valign=center><a href="Leads.do?command=DetailsOpp&oppId=<%=thisOpp.getId()%>&return=dashboard&reset=true"><%= toHtml(thisOpp.getAccountName()) %>:&nbsp;<%= toHtml(thisOpp.getDescription()) %></a>
           (<%=thisOpp.getComponentCount()%>)
         <% if (thisOpp.hasFiles()) {%>
         <%= thisFile.getImageTag() %>

@@ -22,22 +22,16 @@ import org.aspcfs.modules.base.Constants;
  */
 public class OpportunityHeaderList extends Vector {
 
-  public final static String tableName = "opportunity_header";
-  public final static String uniqueField = "opp_id";
-  protected java.sql.Timestamp lastAnchor = null;
-  protected java.sql.Timestamp nextAnchor = null;
-  protected int syncType = Constants.NO_SYNC;
-
   protected PagedListInfo pagedListInfo = null;
   protected int orgId = -1;
   protected int contactId = -1;
+  protected int owner = -1;
+  protected String ownerIdRange = null;
   protected Vector ignoreTypeIdList = new Vector();
   protected String description = null;
   protected int enteredBy = -1;
   protected boolean hasAlertDate = false;
   protected java.sql.Date alertDate = null;
-  protected int owner = -1;
-  protected String ownerIdRange = null;
   protected String accountOwnerIdRange = null;
   protected java.sql.Date alertRangeStart = null;
   protected java.sql.Date alertRangeEnd = null;
@@ -261,26 +255,6 @@ public class OpportunityHeaderList extends Vector {
    */
   public void setAlertDate(java.sql.Date tmp) {
     this.alertDate = tmp;
-  }
-
-
-  /**
-   *  Gets the tableName attribute of the OpportunityHeaderList object
-   *
-   *@return    The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   *  Gets the uniqueField attribute of the OpportunityHeaderList object
-   *
-   *@return    The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
   }
 
 
@@ -522,6 +496,7 @@ public class OpportunityHeaderList extends Vector {
         sqlFilter.toString() +
         sqlOrder.toString());
     items = prepareFilter(pst);
+    System.out.println("OppHeaderList -- > " + pst.toString());
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
@@ -592,18 +567,23 @@ public class OpportunityHeaderList extends Vector {
    *@param  sqlFilter  Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
+
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+
     if (orgId != -1) {
       sqlFilter.append("AND x.acctlink = ? ");
     }
+
     if (contactId != -1) {
       sqlFilter.append("AND x.contactlink = ? ");
     }
+
     if (enteredBy != -1) {
       sqlFilter.append("AND x.enteredby = ? ");
     }
+
     if (ignoreTypeIdList.size() > 0) {
       Iterator iList = ignoreTypeIdList.iterator();
       sqlFilter.append("AND x.contactlink NOT IN (");
@@ -616,6 +596,7 @@ public class OpportunityHeaderList extends Vector {
       }
       sqlFilter.append(") ");
     }
+
     if (description != null) {
       if (description.indexOf("%") >= 0) {
         sqlFilter.append("AND lower(x.description) like lower(?) ");
@@ -623,8 +604,19 @@ public class OpportunityHeaderList extends Vector {
         sqlFilter.append("AND lower(x.description) = lower(?) ");
       }
     }
+
     if (accountOwnerIdRange != null) {
       sqlFilter.append("AND x.acctlink IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
+    }
+
+    //Get the opportunity if user is owner in any one of the components of that opportunity
+    if (owner != -1) {
+      sqlFilter.append("OR x.opp_id in (SELECT opp_id from opportunity_component oc where oc.owner = ?)");
+    }
+
+    //Get the opportunity if user or anyone in user's hierarchy is owner in any one of the components of that opportunity
+    if (ownerIdRange != null) {
+      sqlFilter.append("OR x.opp_id in (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ")) ");
     }
   }
 
@@ -640,15 +632,19 @@ public class OpportunityHeaderList extends Vector {
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
     if (orgId != -1) {
       pst.setInt(++i, orgId);
     }
+
     if (contactId != -1) {
       pst.setInt(++i, contactId);
     }
+
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
     }
+
     if (ignoreTypeIdList.size() > 0) {
       Iterator iList = ignoreTypeIdList.iterator();
       while (iList.hasNext()) {
@@ -656,8 +652,13 @@ public class OpportunityHeaderList extends Vector {
         pst.setInt(++i, thisType);
       }
     }
+
     if (description != null) {
       pst.setString(++i, description);
+    }
+
+    if (owner != -1) {
+      pst.setInt(++i, owner);
     }
     return i;
   }

@@ -254,6 +254,10 @@ public final class Leads extends CFSModule {
       oppId = Integer.parseInt(context.getRequest().getParameter("id"));
     }
 
+    if("true".equals(context.getRequest().getParameter("reset"))){
+      context.getSession().removeAttribute("LeadsComponentListInfo");
+    }
+    
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "LeadsComponentListInfo");
     componentListInfo.setLink("Leads.do?command=DetailsOpp&oppId=" + oppId);
     try {
@@ -941,6 +945,9 @@ public final class Leads extends CFSModule {
     }
 
     Exception errorMessage = null;
+    if("true".equals(context.getRequest().getParameter("reset"))){
+     context.getSession().removeAttribute("OpportunityListInfo");
+    }
     PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
     oppListInfo.setLink("Leads.do?command=ViewOpp");
 

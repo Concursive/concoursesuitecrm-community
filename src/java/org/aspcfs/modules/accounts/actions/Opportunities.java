@@ -17,7 +17,6 @@ import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.utils.web.*;
 
-
 /**
  *  Description of the Class
  *
@@ -69,7 +68,12 @@ public final class Opportunities extends CFSModule {
       oppList.setPagedListInfo(oppPagedInfo);
       oppList.setBuildTotalValues(true);
       oppList.setOrgId(orgId);
-      oppList.setOwnerIdRange(this.getUserRange(context));
+      oppList.setEnteredBy(this.getUserId(context));
+      if ("all".equals(oppPagedInfo.getListView())) {
+        oppList.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        oppList.setOwner(this.getUserId(context));
+      }
       oppList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
@@ -120,6 +124,7 @@ public final class Opportunities extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      
       recordInserted = newComponent.insert(db, context);
 
       if (recordInserted) {
@@ -424,6 +429,10 @@ public final class Opportunities extends CFSModule {
       oppId = Integer.parseInt(context.getRequest().getParameter("oppId"));
     }
 
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
+      context.getSession().removeAttribute("AccountsComponentListInfo");
+    }
+
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "AccountsComponentListInfo");
     componentListInfo.setLink("Opportunities.do?command=Details&oppId=" + oppId + "&orgId=" + orgId);
 
@@ -433,6 +442,9 @@ public final class Opportunities extends CFSModule {
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, oppId);
 
+      if (!(hasAuthority(context, thisHeader.getEnteredBy()) || thisHeader.isComponentOwner(db, oppId, this.getUserId(context)))) {
+        return "PermissionError";
+      }
       //check whether or not the owner is an active User
       //newOpp.checkEnabledOwnerAccount(db);
 
@@ -484,6 +496,9 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(db, context.getRequest().getParameter("id"));
+      if (!hasAuthority(context, newOpp.getEnteredBy())) {
+        return "PermissionError";
+      }
       recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities"));
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
@@ -538,6 +553,9 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       thisComponent = new OpportunityComponent(db, id);
+      if (!hasAuthority(context, thisComponent.getOwner())) {
+        return "PermissionError";
+      }
       htmlDialog.setTitle("CFS: Account Management Opportunities");
       htmlDialog.setShowAndConfirm(false);
       htmlDialog.setDeleteUrl("javascript:window.location.href='OpportunitiesComponents.do?command=DeleteComponent&orgId=" + orgId + "&id=" + id + "'");
@@ -582,6 +600,9 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
+      if (!hasAuthority(context, component.getOwner())) {
+        return "PermissionError";
+      }
       recordDeleted = component.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
@@ -649,6 +670,9 @@ public final class Opportunities extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisHeader.getEnteredBy())) {
+        return "PermissionError";
+      }
       context.getRequest().setAttribute("HeaderDetails", thisHeader);
       addRecentItem(context, thisHeader);
       return ("ModifyOK");
@@ -687,6 +711,9 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       thisOpp = new OpportunityHeader(db, id);
+      if (!hasAuthority(context, thisOpp.getEnteredBy())) {
+        return "PermissionError";
+      }
       DependencyList dependencies = thisOpp.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
       htmlDialog.setTitle("CFS: Confirm Delete");
@@ -790,6 +817,9 @@ public final class Opportunities extends CFSModule {
     OpportunityComponent component = (OpportunityComponent) context.getFormBean();
     component.setTypeList(context.getRequest().getParameterValues("selectedList"));
 
+    if (!hasAuthority(context, component.getOwner())) {
+      return ("PermissionError");
+    }
     String orgId = context.getRequest().getParameter("orgId");
 
     try {
@@ -853,6 +883,9 @@ public final class Opportunities extends CFSModule {
     try {
       db = this.getConnection(context);
       oppHeader = new OpportunityHeader(db, oppId);
+      if (!hasAuthority(context, oppHeader.getEnteredBy())) {
+        return ("PermissionError");
+      }
       oppHeader.setModifiedBy(getUserId(context));
       oppHeader.setDescription(context.getRequest().getParameter("description"));
       resultCount = oppHeader.update(db);

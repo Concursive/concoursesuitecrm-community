@@ -43,16 +43,17 @@ public final class AccountsDocuments extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    Organization thisOrg = null;
 
     try {
       db = getConnection(context);
-      int orgId = addOrganization(context, db);
+      thisOrg = addOrganization(context, db);
       FileItemList documents = new FileItemList();
       documents.setLinkModuleId(Constants.ACCOUNTS);
-      documents.setLinkItemId(orgId);
+      documents.setLinkItemId(thisOrg.getOrgId());
 
       PagedListInfo docListInfo = this.getPagedListInfo(context, "DocListInfo");
-      docListInfo.setLink("/AccountsDocuments.do?command=View&orgId=" + orgId);
+      docListInfo.setLink("/AccountsDocuments.do?command=View&orgId=" + thisOrg.getOrgId());
 
       //TODO: Not implemented in the JSP, so not implemented here
       //PagedListInfo documentListInfo = this.getPagedListInfo(context, "AccountDocumentInfo");
@@ -92,10 +93,11 @@ public final class AccountsDocuments extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    Organization thisOrg = null;
 
     try {
       db = getConnection(context);
-      int orgId = addOrganization(context, db);
+      thisOrg = addOrganization(context, db);
       String folderId = context.getRequest().getParameter("folderId");
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
@@ -108,6 +110,9 @@ public final class AccountsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "Upload Document");
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisOrg.getOwner())) {
+        return "PermissionError";
+      }
       return ("AddOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -130,8 +135,9 @@ public final class AccountsDocuments extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
-
+    Organization thisOrg = null;
     boolean recordInserted = false;
+
     try {
       String filePath = this.getPath(context, "accounts");
 
@@ -150,7 +156,10 @@ public final class AccountsDocuments extends CFSModule {
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
-      int orgId = addOrganization(context, db, id);
+      thisOrg = addOrganization(context, db, id);
+      if (!hasAuthority(context, thisOrg.getOwner())) {
+        return "PermissionError";
+      }
 
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
 
@@ -159,7 +168,7 @@ public final class AccountsDocuments extends CFSModule {
 
         FileItem thisItem = new FileItem();
         thisItem.setLinkModuleId(Constants.ACCOUNTS);
-        thisItem.setLinkItemId(orgId);
+        thisItem.setLinkItemId(thisOrg.getOrgId());
         thisItem.setEnteredBy(getUserId(context));
         thisItem.setModifiedBy(getUserId(context));
         thisItem.setFolderId(Integer.parseInt(folderId));
@@ -213,6 +222,7 @@ public final class AccountsDocuments extends CFSModule {
     }
 
     Exception errorMessage = null;
+    Organization thisOrg = null;
 
     String itemId = (String) context.getRequest().getParameter("fid");
     if (itemId == null) {
@@ -227,9 +237,9 @@ public final class AccountsDocuments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int orgId = addOrganization(context, db);
+      thisOrg = addOrganization(context, db);
 
-      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), orgId, Constants.ACCOUNTS);
+      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       context.getRequest().setAttribute("FileItem", thisFile);
     } catch (Exception e) {
       errorMessage = e;
@@ -239,6 +249,9 @@ public final class AccountsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "Upload New Document Version");
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisOrg.getOwner())) {
+        return "PermissionError";
+      }
       return ("AddVersionOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -261,6 +274,7 @@ public final class AccountsDocuments extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    Organization thisOrg = null;
 
     boolean recordInserted = false;
     try {
@@ -282,7 +296,10 @@ public final class AccountsDocuments extends CFSModule {
       String itemId = (String) parts.get("fid");
       String subject = (String) parts.get("subject");
       String versionId = (String) parts.get("versionId");
-      int orgId = addOrganization(context, db, id);
+      thisOrg = addOrganization(context, db, id);
+      if (!hasAuthority(context, thisOrg.getOwner())) {
+        return "PermissionError";
+      }
 
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
         //Update the database with the resulting file
@@ -290,7 +307,7 @@ public final class AccountsDocuments extends CFSModule {
 
         FileItem thisItem = new FileItem();
         thisItem.setLinkModuleId(Constants.ACCOUNTS);
-        thisItem.setLinkItemId(orgId);
+        thisItem.setLinkItemId(thisOrg.getOrgId());
         thisItem.setId(Integer.parseInt(itemId));
         thisItem.setEnteredBy(getUserId(context));
         thisItem.setModifiedBy(getUserId(context));
@@ -350,9 +367,9 @@ public final class AccountsDocuments extends CFSModule {
 
     try {
       db = getConnection(context);
-      int orgId = addOrganization(context, db);
+      Organization thisOrg = addOrganization(context, db);
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), orgId, Constants.ACCOUNTS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
 
@@ -391,11 +408,14 @@ public final class AccountsDocuments extends CFSModule {
     FileItem thisItem = null;
 
     Connection db = null;
-    int orgId = -1;
+    Organization thisOrg = null;
     try {
       db = getConnection(context);
-      orgId = addOrganization(context, db);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), orgId, Constants.ACCOUNTS);
+      thisOrg = addOrganization(context, db);
+      if (!hasAuthority(context, thisOrg.getOwner())) {
+        return "PermissionError";
+      }
+      thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -483,13 +503,15 @@ public final class AccountsDocuments extends CFSModule {
     Exception errorMessage = null;
 
     String itemId = (String) context.getRequest().getParameter("fid");
-
+    
     Connection db = null;
+    Organization thisOrg = null;
+    
     try {
       db = getConnection(context);
-      int orgId = addOrganization(context, db);
-
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), orgId, Constants.ACCOUNTS);
+      thisOrg = addOrganization(context, db);
+      
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
 
@@ -501,6 +523,9 @@ public final class AccountsDocuments extends CFSModule {
 
     addModuleBean(context, "View Accounts", "Modify Document Information");
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisOrg.getOwner())) {
+        return "PermissionError";
+      }
       return ("ModifyOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -529,12 +554,16 @@ public final class AccountsDocuments extends CFSModule {
     String filename = (String) context.getRequest().getParameter("clientFilename");
 
     Connection db = null;
-    int orgId = -1;
+    Organization thisOrg = null;
+    
     try {
       db = getConnection(context);
-      orgId = addOrganization(context, db);
+      thisOrg = addOrganization(context, db);
+      if (!hasAuthority(context, thisOrg.getOwner())) {
+        return "PermissionError";
+      }
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), orgId, Constants.ACCOUNTS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
       recordInserted = thisItem.update(db);
@@ -578,11 +607,16 @@ public final class AccountsDocuments extends CFSModule {
     String itemId = (String) context.getRequest().getParameter("fid");
 
     Connection db = null;
+    Organization thisOrg = null;
+    
     try {
       db = getConnection(context);
-      int orgId = addOrganization(context, db);
-
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), orgId, Constants.ACCOUNTS);
+      thisOrg = addOrganization(context, db);
+      if (!hasAuthority(context, thisOrg.getOwner())) {
+        return "PermissionError";
+      }
+      
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
         recordDeleted = thisItem.delete(db, this.getPath(context, "accounts"));
       }
@@ -617,7 +651,7 @@ public final class AccountsDocuments extends CFSModule {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  private int addOrganization(ActionContext context, Connection db) throws SQLException {
+  private Organization addOrganization(ActionContext context, Connection db) throws SQLException {
     String organizationId = (String) context.getRequest().getParameter("orgId");
     if (organizationId == null) {
       organizationId = (String) context.getRequest().getAttribute("orgId");
@@ -639,11 +673,11 @@ public final class AccountsDocuments extends CFSModule {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  private int addOrganization(ActionContext context, Connection db, String organizationId) throws SQLException {
+  private Organization addOrganization(ActionContext context, Connection db, String organizationId) throws SQLException {
     context.getRequest().setAttribute("orgId", organizationId);
     Organization thisOrganization = new Organization(db, Integer.parseInt(organizationId));
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    return thisOrganization.getOrgId();
+    return thisOrganization;
   }
 
 }

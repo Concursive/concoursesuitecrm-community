@@ -162,6 +162,9 @@ public final class CampaignManagerGroup extends CFSModule {
     try {
       db = this.getConnection(context);
       thisSCL = new SearchCriteriaList(db, passedId);
+      if(!hasAuthority(context, thisSCL.getOwner())){
+        return "PermissionError";
+      }
       recordDeleted = thisSCL.delete(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -213,6 +216,9 @@ public final class CampaignManagerGroup extends CFSModule {
     try {
       db = this.getConnection(context);
       thisSCL = new SearchCriteriaList(db, id);
+      if(!hasAuthority(context, thisSCL.getOwner())){
+        return "PermissionError";
+      }
       htmlDialog.setTitle("CFS: Campaign Manager");
 
       DependencyList dependencies = thisSCL.processDependencies(db);
@@ -355,11 +361,9 @@ public final class CampaignManagerGroup extends CFSModule {
     addModuleBean(context, submenu, "Modify Criteria");
 
     if (errorMessage == null) {
-
-      if (!hasAuthority(context, scl.getEnteredBy())) {
+      if (!hasAuthority(context, scl.getOwner())) {
         return ("PermissionError");
       }
-
       return ("ModifyOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);

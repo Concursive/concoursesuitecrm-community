@@ -103,7 +103,8 @@ public class OpportunityHeader extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-
+      rs.close();
+      pst.close();
       if (buildComponentCount) {
         this.retrieveComponentCount(db);
       }
@@ -112,8 +113,7 @@ public class OpportunityHeader extends GenericBean {
       pst.close();
       throw new SQLException("Opportunity Header record not found.");
     }
-    rs.close();
-    pst.close();
+
     this.buildFiles(db);
   }
 
@@ -1203,6 +1203,34 @@ public class OpportunityHeader extends GenericBean {
     rs.close();
     pst.close();
     this.setTotalValue(total);
+  }
+
+
+  /**
+   *  Checks if the user owns atleast one of the components
+   *
+   *@param  db                Description of the Parameter
+   *@param  oppId             Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@return                   The componentOwner value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static boolean isComponentOwner(Connection db, int oppId, int userId) throws SQLException {
+    boolean isOwner = false;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT opp_id " +
+        "FROM opportunity_component oc " +
+        "WHERE id > 0 " +
+        "AND oc.opp_id = ? AND oc.owner = ?");
+    pst.setInt(1, oppId);
+    pst.setInt(2, userId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      isOwner = true;
+    }
+    rs.close();
+    pst.close();
+    return isOwner;
   }
 
 }

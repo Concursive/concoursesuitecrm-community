@@ -273,11 +273,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
       return ("ViewDetailsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -316,11 +314,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
       return ("ModifyOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -346,12 +342,13 @@ public final class CampaignManager extends CFSModule {
     //addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     addModuleBean(context, "Dashboard", "View Groups");
     Connection db = null;
+    Campaign campaign = null;
 
     String campaignId = context.getRequest().getParameter("id");
 
     try {
       db = this.getConnection(context);
-      Campaign campaign = new Campaign(db, campaignId);
+      campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
 
       //SearchCriteriaListList sclList = new SearchCriteriaListList();
@@ -366,6 +363,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       return ("ViewGroupsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -388,11 +388,12 @@ public final class CampaignManager extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    Campaign campaign = null;
 
     try {
       db = this.getConnection(context);
 
-      Campaign campaign = new Campaign(db, context.getRequest().getParameter("id"));
+      campaign = new Campaign(db, context.getRequest().getParameter("id"));
       context.getRequest().setAttribute("Campaign", campaign);
 
       SearchCriteriaList thisSCL = new SearchCriteriaList(db, context.getRequest().getParameter("scl"));
@@ -429,6 +430,9 @@ public final class CampaignManager extends CFSModule {
     addModuleBean(context, submenu, "Preview");
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       return ("PreviewGroupsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -491,7 +495,7 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     String campaignId = context.getRequest().getParameter("id");
     Campaign campaign = null;
-    
+
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
@@ -518,11 +522,11 @@ public final class CampaignManager extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       return ("ViewMessageOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -546,12 +550,13 @@ public final class CampaignManager extends CFSModule {
     Exception errorMessage = null;
     addModuleBean(context, "Dashboard", "Build New Campaign");
     Connection db = null;
+    Campaign campaign = null;
 
     String campaignId = context.getRequest().getParameter("id");
 
     try {
       db = this.getConnection(context);
-      Campaign campaign = new Campaign(db, campaignId);
+      campaign = new Campaign(db, campaignId);
       FileItemList documents = new FileItemList();
       documents.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       documents.setLinkItemId(Integer.parseInt(campaignId));
@@ -565,6 +570,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       return ("PreviewMessageOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -683,7 +691,7 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     String campaignId = context.getRequest().getParameter("id");
     Campaign campaign = null;
-    
+
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
@@ -712,11 +720,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
       return ("ViewAttachmentOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -765,11 +771,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
       return ("ViewScheduleOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -793,12 +797,13 @@ public final class CampaignManager extends CFSModule {
     Exception errorMessage = null;
     addModuleBean(context, "Dashboard", "Build New Campaign");
     Connection db = null;
+    Campaign campaign = null;
 
     String campaignId = context.getRequest().getParameter("id");
 
     try {
       db = this.getConnection(context);
-      Campaign campaign = new Campaign(db, campaignId);
+      campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
 
       LookupList deliveryList = new LookupList(db, "lookup_delivery_options");
@@ -816,6 +821,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       return ("PreviewScheduleOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -886,7 +894,7 @@ public final class CampaignManager extends CFSModule {
     pagedListInfo.setItemsPerPage(0);
     String campaignId = context.getRequest().getParameter("id");
     Campaign campaign = null;
-    
+
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
@@ -916,11 +924,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
       return ("AddGroupsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -952,6 +958,9 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       campaign.setGroups(context.getRequest());
       campaign.setModifiedBy(this.getUserId(context));
       recordInserted = campaign.insertGroups(db);
@@ -990,13 +999,15 @@ public final class CampaignManager extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    Campaign campaign = null;
+
     addModuleBean(context, "ManageCampaigns", "Campaign: Add Message");
 
     String campaignId = context.getRequest().getParameter("id");
 
     try {
       db = this.getConnection(context);
-      Campaign campaign = new Campaign(db, campaignId);
+      campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
 
       MessageList messageList = new MessageList();
@@ -1011,6 +1022,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       return ("AddMessageOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1033,13 +1047,14 @@ public final class CampaignManager extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    Campaign campaign = null;
     addModuleBean(context, "ManageCampaigns", "Campaign: Add Attachment");
 
     String campaignId = context.getRequest().getParameter("id");
 
     try {
       db = this.getConnection(context);
-      Campaign campaign = new Campaign(db, campaignId);
+      campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
 
     } catch (Exception e) {
@@ -1049,6 +1064,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       return ("AddMessageOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1083,6 +1101,9 @@ public final class CampaignManager extends CFSModule {
       try {
         db = this.getConnection(context);
         campaign = new Campaign(db, campaignId);
+        if (!hasAuthority(context, campaign.getEnteredBy())) {
+          return ("PermissionError");
+        }
         campaign.setMessageId(Integer.parseInt(messageId));
         campaign.setModifiedBy(this.getUserId(context));
         resultCount = campaign.updateMessage(db);
@@ -1130,6 +1151,9 @@ public final class CampaignManager extends CFSModule {
       surveyId = Integer.parseInt(context.getRequest().getParameter("surveyId"));
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       campaign.setSurveyId(surveyId);
       campaign.setModifiedBy(this.getUserId(context));
       resultCount = campaign.updateSurvey(db);
@@ -1175,6 +1199,9 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       campaign.setActiveDate(context.getRequest().getParameter("activeDate"));
 
       if (context.getRequest().getParameter("active") != null) {
@@ -1226,6 +1253,9 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return "PermissionError";
+      }
       campaign.setGroups(context.getRequest());
       campaign.setModifiedBy(this.getUserId(context));
       recordDeleted = campaign.deleteGroups(db);
@@ -1272,6 +1302,9 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = (Campaign) context.getFormBean();
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return "PermissionError";
+      }
       campaign.setModifiedBy(getUserId(context));
       resultCount = campaign.updateDetails(db);
     } catch (Exception e) {
@@ -1317,6 +1350,9 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return "PermissionError";
+      }
       campaign.setModifiedBy(getUserId(context));
       resultCount = campaign.cancel(db);
     } catch (Exception e) {
@@ -1367,6 +1403,9 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, id);
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return "PermissionError";
+      }
       campaign.setModifiedBy(getUserId(context));
       campaign.setModified(modified);
       campaign.setServerName(context.getRequest().getServerName());
@@ -1427,11 +1466,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
       addModuleBean(context, "Dashboard", "Campaign: Details");
       return ("DetailsOK");
     } else {
@@ -1455,6 +1492,8 @@ public final class CampaignManager extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    Campaign campaign = null;
+
     String id = context.getRequest().getParameter("id");
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("SurveyQuestionListInfo");
@@ -1463,7 +1502,7 @@ public final class CampaignManager extends CFSModule {
     pagedListInfo.setLink("/CampaignManager.do?command=ViewResults&id=" + id);
     try {
       db = this.getConnection(context);
-      Campaign campaign = new Campaign(db, id);
+      campaign = new Campaign(db, id);
       context.getRequest().setAttribute("Campaign", campaign);
 
       int surveyId = -1;
@@ -1481,6 +1520,9 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       addModuleBean(context, "Dashboard", "Campaign: Details");
       return ("ResultsOK");
     } else {
@@ -1504,6 +1546,7 @@ public final class CampaignManager extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    Campaign campaign = null;
 
     String id = context.getRequest().getParameter("id");
 
@@ -1515,7 +1558,10 @@ public final class CampaignManager extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      Campaign campaign = new Campaign(db, id);
+      campaign = new Campaign(db, id);
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
 
       int surveyId = -1;
@@ -1574,6 +1620,7 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
+
       context.getRequest().setAttribute("ItemList", itemList);
       return ("ItemListOK");
     } else {
@@ -1606,6 +1653,9 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, passedId);
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return "PermissionError";
+      }
       recordDeleted = campaign.delete(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -1647,6 +1697,9 @@ public final class CampaignManager extends CFSModule {
       String campaignId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       Campaign thisCampaign = new Campaign(db, campaignId);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       FileItemList files = new FileItemList();
       files.setLinkModuleId(Constants.COMMUNICATIONS);
       files.setLinkItemId(thisCampaign.getId());
@@ -1810,6 +1863,7 @@ public final class CampaignManager extends CFSModule {
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
+
       context.getRequest().setAttribute("Campaign", campaign);
       if (campaign.hasSurvey()) {
         Survey survey = new Survey(db, campaign.getSurveyId());
@@ -1829,11 +1883,11 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       return ("ViewAttachmentsOverviewOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1879,11 +1933,11 @@ public final class CampaignManager extends CFSModule {
     }
 
     if (errorMessage == null) {
-      
+
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
-      }       
-      
+      }
+
       return ("ManageFileAttachmentsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1926,6 +1980,9 @@ public final class CampaignManager extends CFSModule {
       //String subject = (String) parts.get("subject");
       //String folderId = (String) parts.get("folderId");
       Campaign campaign = new Campaign(db, Integer.parseInt(id));
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("Campaign", campaign);
 
       if ((Object) parts.get("id" + id) instanceof FileInfo) {
@@ -1986,6 +2043,10 @@ public final class CampaignManager extends CFSModule {
       String itemId = (String) context.getRequest().getParameter("fid");
       String campaignId = (String) context.getRequest().getParameter("id");
       db = getConnection(context);
+      Campaign campaign = new Campaign(db, Integer.parseInt(campaignId));
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return "PermissionError";
+      }
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       recordDeleted = thisItem.delete(db, this.getPath(context, "communications", thisItem.getLinkItemId()));
     } catch (Exception e) {
@@ -2021,6 +2082,10 @@ public final class CampaignManager extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
+      Campaign campaign = new Campaign(db, Integer.parseInt(campaignId));
+      if (!hasAuthority(context, campaign.getEnteredBy())) {
+        return "PermissionError";
+      }
       thisItem = new FileItem(db, Integer.parseInt(itemId), Integer.parseInt(campaignId), Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
     } catch (Exception e) {
       errorMessage = e;
@@ -2069,7 +2134,14 @@ public final class CampaignManager extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandMessageJSList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -2091,7 +2163,14 @@ public final class CampaignManager extends CFSModule {
     }
     return ("MessageJSListOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandSurveyJSList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;

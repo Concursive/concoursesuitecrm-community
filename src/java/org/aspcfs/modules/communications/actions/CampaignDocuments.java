@@ -44,13 +44,16 @@ public final class CampaignDocuments extends CFSModule {
 
     try {
       db = getConnection(context);
-      int id = addCampaign(context, db);
+      Campaign thisCampaign = addCampaign(context, db);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
       FileItemList documents = new FileItemList();
       documents.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
-      documents.setLinkItemId(id);
+      documents.setLinkItemId(thisCampaign.getId());
 
       PagedListInfo CampaignDocListInfo = this.getPagedListInfo(context, "CampaignDocListInfo");
-      CampaignDocListInfo.setLink("/CampaignDocuments.do?command=View&id=" + id);
+      CampaignDocListInfo.setLink("/CampaignDocuments.do?command=View&id=" + thisCampaign.getId());
 
       //TODO: Not implemented in the JSP, so not implemented here
       //PagedListInfo documentListInfo = this.getPagedListInfo(context, "AccountDocumentInfo");
@@ -93,7 +96,10 @@ public final class CampaignDocuments extends CFSModule {
 
     try {
       db = getConnection(context);
-      int id = addCampaign(context, db);
+      Campaign thisCampaign = addCampaign(context, db);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
       String folderId = context.getRequest().getParameter("folderId");
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
@@ -148,16 +154,19 @@ public final class CampaignDocuments extends CFSModule {
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
-      int campaignId = addCampaign(context, db, id);
+      Campaign thisCampaign = addCampaign(context, db);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
 
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
 
         //Update the database with the resulting file
-        FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
+        FileInfo newFileInfo = (FileInfo) parts.get("id" + thisCampaign.getId());
 
         FileItem thisItem = new FileItem();
         thisItem.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
-        thisItem.setLinkItemId(campaignId);
+        thisItem.setLinkItemId(thisCampaign.getId());
         thisItem.setEnteredBy(getUserId(context));
         thisItem.setModifiedBy(getUserId(context));
         thisItem.setFolderId(Integer.parseInt(folderId));
@@ -225,9 +234,12 @@ public final class CampaignDocuments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int id = addCampaign(context, db);
+      Campaign thisCampaign = addCampaign(context, db);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
 
-      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_DOCUMENTS);
+      FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), thisCampaign.getId(), Constants.COMMUNICATIONS_DOCUMENTS);
       context.getRequest().setAttribute("FileItem", thisFile);
     } catch (Exception e) {
       errorMessage = e;
@@ -280,7 +292,10 @@ public final class CampaignDocuments extends CFSModule {
       String itemId = (String) parts.get("fid");
       String subject = (String) parts.get("subject");
       String versionId = (String) parts.get("versionId");
-      int campaignId = addCampaign(context, db, id);
+      Campaign thisCampaign = addCampaign(context, db, id);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
 
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
         //Update the database with the resulting file
@@ -288,7 +303,7 @@ public final class CampaignDocuments extends CFSModule {
 
         FileItem thisItem = new FileItem();
         thisItem.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
-        thisItem.setLinkItemId(campaignId);
+        thisItem.setLinkItemId(thisCampaign.getId());
         thisItem.setId(Integer.parseInt(itemId));
         thisItem.setEnteredBy(getUserId(context));
         thisItem.setModifiedBy(getUserId(context));
@@ -348,9 +363,12 @@ public final class CampaignDocuments extends CFSModule {
 
     try {
       db = getConnection(context);
-      int id = addCampaign(context, db);
+      Campaign thisCampaign = addCampaign(context, db);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_DOCUMENTS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisCampaign.getId(), Constants.COMMUNICATIONS_DOCUMENTS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
 
@@ -392,8 +410,11 @@ public final class CampaignDocuments extends CFSModule {
     int id = -1;
     try {
       db = getConnection(context);
-      id = addCampaign(context, db);
-      thisItem = new FileItem(db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_DOCUMENTS);
+      Campaign thisCampaign = addCampaign(context, db);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
+      thisItem = new FileItem(db, Integer.parseInt(itemId), thisCampaign.getId(), Constants.COMMUNICATIONS_DOCUMENTS);
       if (version != null) {
         thisItem.buildVersionList(db);
       }
@@ -485,9 +506,12 @@ public final class CampaignDocuments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int id = addCampaign(context, db);
+      Campaign thisCampaign = addCampaign(context, db);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_DOCUMENTS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisCampaign.getId(), Constants.COMMUNICATIONS_DOCUMENTS);
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
 
@@ -530,9 +554,12 @@ public final class CampaignDocuments extends CFSModule {
     int id = -1;
     try {
       db = getConnection(context);
-      id = addCampaign(context, db);
+      Campaign thisCampaign = addCampaign(context, db);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_DOCUMENTS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisCampaign.getId(), Constants.COMMUNICATIONS_DOCUMENTS);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
       recordInserted = thisItem.update(db);
@@ -578,9 +605,12 @@ public final class CampaignDocuments extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      int id = addCampaign(context, db);
+      Campaign thisCampaign = addCampaign(context, db);
+      if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
+        return "PermissionError";
+      }
 
-      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), id, Constants.COMMUNICATIONS_DOCUMENTS);
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisCampaign.getId(), Constants.COMMUNICATIONS_DOCUMENTS);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
         recordDeleted = thisItem.delete(db, this.getPath(context, "campaign"));
       }
@@ -615,7 +645,7 @@ public final class CampaignDocuments extends CFSModule {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  private int addCampaign(ActionContext context, Connection db) throws SQLException {
+  private Campaign addCampaign(ActionContext context, Connection db) throws SQLException {
     String campaignId = (String) context.getRequest().getParameter("id");
     if (campaignId == null) {
       campaignId = (String) context.getRequest().getAttribute("id");
@@ -636,11 +666,11 @@ public final class CampaignDocuments extends CFSModule {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  private int addCampaign(ActionContext context, Connection db, String campaignId) throws SQLException {
+  private Campaign addCampaign(ActionContext context, Connection db, String campaignId) throws SQLException {
     context.getRequest().setAttribute("id", campaignId);
     Campaign thisCampaign = new Campaign(db, Integer.parseInt(campaignId));
     context.getRequest().setAttribute("Campaign", thisCampaign);
-    return thisCampaign.getId();
+    return thisCampaign;
   }
 
 }

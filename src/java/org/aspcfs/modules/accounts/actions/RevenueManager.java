@@ -374,8 +374,12 @@ public final class RevenueManager extends CFSModule {
     try {
       db = this.getConnection(context);
       thisRevenue = new Revenue(db, context.getRequest().getParameter("id"));
-      recordDeleted = thisRevenue.delete(db, context);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
+
+      if (hasAuthority(context, thisRevenue.getOwner())) {
+        return "PermissionError";
+      }
+      recordDeleted = thisRevenue.delete(db, context);
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
     } catch (Exception e) {
       errorMessage = e;
@@ -417,7 +421,6 @@ public final class RevenueManager extends CFSModule {
 
     Revenue thisRevenue = null;
     Revenue newRevenue = null;
-    Organization thisOrganization = null;
 
     thisRevenue = (Revenue) context.getFormBean();
     thisRevenue.setEnteredBy(getUserId(context));
@@ -430,8 +433,6 @@ public final class RevenueManager extends CFSModule {
       if (recordInserted) {
         newRevenue = new Revenue(db, String.valueOf(thisRevenue.getId()));
         context.getRequest().setAttribute("Revenue", newRevenue);
-        thisOrganization = new Organization(db, newRevenue.getOrgId());
-        context.getRequest().setAttribute("OrgDetails", thisOrganization);
       } else {
         processErrors(context, thisRevenue.getErrors());
       }
@@ -587,6 +588,9 @@ public final class RevenueManager extends CFSModule {
     try {
       db = this.getConnection(context);
       newRevenue.setModifiedBy(getUserId(context));
+      if (!hasAuthority(context, newRevenue.getOwner())) {
+        return "PermissionError";
+      }
       resultCount = newRevenue.update(db, context);
       if (resultCount == -1) {
         processErrors(context, newRevenue.getErrors());
