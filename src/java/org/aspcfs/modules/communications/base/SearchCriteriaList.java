@@ -18,10 +18,16 @@ import java.text.*;
  */
 public class SearchCriteriaList extends Hashtable {
 
+  public static final int SOURCE_ALL = 1;
+  public static final int SOURCE_ACCOUNTS = 2;
+  public static final int SOURCE_CONTACTS = 3;
+  public static final int SOURCE_EMPLOYEES = 4;
+  public static final int SOURCE_ACCOUNTS_CONTACTS = 5;
+  
 	protected Hashtable errors = new Hashtable();
-
 	private int id = -1;
 	private String groupName = "";
+  private int contactSource = -1;
 	private java.sql.Timestamp modified = null;
 	private java.sql.Timestamp entered = null;
 	private int modifiedBy = -1;
@@ -275,6 +281,14 @@ public class SearchCriteriaList extends Hashtable {
 	public void setGroupName(String tmp) {
 		this.groupName = tmp;
 	}
+  
+  public void setContactSource(int tmp) {
+    this.contactSource = tmp;
+  }
+  
+  public void setContactSource(String tmp) {
+    this.contactSource = Integer.parseInt(tmp);
+  }
 
 
 	/**
@@ -438,6 +452,10 @@ public class SearchCriteriaList extends Hashtable {
 	public String getGroupName() {
 		return groupName;
 	}
+  
+  public int getContactSource() {
+    return contactSource;
+  }
 
 
 	/**
@@ -582,13 +600,14 @@ public class SearchCriteriaList extends Hashtable {
 		try {
 			db.setAutoCommit(false);
 			sql.append(
-					"INSERT INTO saved_criterialist ( owner, name, enteredby, modifiedby ) " +
+					"INSERT INTO saved_criterialist ( owner, name, contact_source, enteredby, modifiedby ) " +
 					"VALUES ( ?, ?, ?, ? ) ");
 			int i = 0;
 			PreparedStatement pst = db.prepareStatement(sql.toString());
 
 			pst.setInt(++i, this.getOwner());
 			pst.setString(++i, this.getGroupName());
+      pst.setInt(++i, contactSource);
 			pst.setInt(++i, this.getEnteredBy());
 			pst.setInt(++i, this.getModifiedBy());
 			pst.execute();
@@ -671,12 +690,13 @@ public class SearchCriteriaList extends Hashtable {
 
 		sql.append(
 				"UPDATE saved_criterialist " +
-				"SET modified = CURRENT_TIMESTAMP, name = ?, owner = ? " +
+				"SET modified = CURRENT_TIMESTAMP, name = ?, contact_source = ?, owner = ? " +
 				"WHERE id = ? ");
 
 		int i = 0;
 		pst = db.prepareStatement(sql.toString());
 		pst.setString(++i, this.getGroupName());
+    pst.setInt(++i, contactSource);
 		pst.setInt(++i, this.getOwner());
 		pst.setInt(++i, id);
 
@@ -802,6 +822,7 @@ public class SearchCriteriaList extends Hashtable {
 	protected void buildRecord(ResultSet rs) throws SQLException {
 		this.setId(rs.getInt("id"));
 		groupName = rs.getString("name");
+    contactSource = rs.getInt("contact_source");
 		owner = rs.getInt("owner");
 
 		entered = rs.getTimestamp("entered");

@@ -40,6 +40,7 @@ public class ContactList extends Vector {
   private boolean buildDetails = true;
   private int owner = -1;
   private String ownerIdRange = null;
+  private String accountOwnerIdRange = null;
 
   //ranges
   private String companyRange = null;
@@ -144,6 +145,10 @@ public class ContactList extends Vector {
    */
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
+  }
+  
+  public void setAccountOwnerIdRange(String tmp) {
+    this.accountOwnerIdRange = tmp;
   }
 
 
@@ -450,6 +455,10 @@ public class ContactList extends Vector {
   public String getOwnerIdRange() {
     return ownerIdRange;
   }
+  
+  public String getAccountOwnerIdRange() {
+    return accountOwnerIdRange;
+  }
 
 
   /**
@@ -639,6 +648,27 @@ public class ContactList extends Vector {
    *@since
    */
   public void buildQuery() {
+    
+    switch(scl.getContactSource()) {
+      case SearchCriteriaList.SOURCE_ACCOUNTS:
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        break;
+        
+      case SearchCriteriaList.SOURCE_CONTACTS:
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        break;
+        
+      case SearchCriteriaList.SOURCE_EMPLOYEES:
+        
+        break;
+        
+      case SearchCriteriaList.SOURCE_ACCOUNTS_CONTACTS:
+        break;
+        
+      default:
+        break;
+    }
+    
     String fieldName = "";
     String readyToGo = "";
 
@@ -934,11 +964,11 @@ public class ContactList extends Vector {
    *@since             1.3
    */
   private void createFilter(StringBuffer sqlFilter) {
+    if (sqlFilter == null) {
+      sqlFilter = new StringBuffer();
+    }
+    
     if (searchText == null || (searchText.equals(""))) {
-      if (sqlFilter == null) {
-        sqlFilter = new StringBuffer();
-      }
-
       if (orgId != -1) {
         sqlFilter.append("AND c.org_id = ? ");
       }
@@ -1037,6 +1067,10 @@ public class ContactList extends Vector {
 
       if (ownerIdRange != null) {
         sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
+      }
+      
+      if (accountOwnerIdRange != null) {
+        sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
       }
 
       if (personalId != -1) {

@@ -108,6 +108,8 @@ public final class CampaignManagerGroup extends CFSModule {
         SearchCriteriaList scl = new SearchCriteriaList(db, passedId);
         context.getSession().setAttribute("SCL", scl);
       }
+      
+      this.buildContactSource(context);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -198,6 +200,7 @@ public final class CampaignManagerGroup extends CFSModule {
     try {
       db = this.getConnection(context);
       thisSCL.setGroupName(thisSearchForm.getGroupName());
+      thisSCL.setContactSource(thisSearchForm.getContactSource());
       thisSCL.setEnteredBy(getUserId(context));
       thisSCL.setModifiedBy(getUserId(context));
       thisSCL.setOwner(getUserId(context));
@@ -274,6 +277,8 @@ public final class CampaignManagerGroup extends CFSModule {
       stringOperatorList.buildOperatorList(db, 0);
       dateOperatorList.buildOperatorList(db, 1);
       numberOperatorList.buildOperatorList(db, 2);
+      
+      this.buildContactSource(context);
 
       if (passedId != null) {
         SearchCriteriaList scl = new SearchCriteriaList(db, passedId);
@@ -327,6 +332,7 @@ public final class CampaignManagerGroup extends CFSModule {
       db = this.getConnection(context);
       thisSCL.setId(Integer.parseInt(context.getRequest().getParameter("id")));
       thisSCL.setGroupName(thisSearchForm.getGroupName());
+      thisSCL.setContactSource(thisSearchForm.getContactSource());
       thisSCL.setOwner(thisSearchForm.getOwner());
       thisSCL.setModifiedBy(getUserId(context));
       resultCount = thisSCL.update(db);
@@ -417,6 +423,16 @@ public final class CampaignManagerGroup extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+  
+  public void buildContactSource(ActionContext context) {
+    HtmlSelect contactSource = new HtmlSelect();
+    contactSource.addItem(SearchCriteriaList.SOURCE_ALL, "All");
+    contactSource.addItem(SearchCriteriaList.SOURCE_ACCOUNTS, "Accounts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_CONTACTS, "Contacts & Resources");
+    contactSource.addItem(SearchCriteriaList.SOURCE_EMPLOYEES, "Employees");
+    contactSource.addItem(SearchCriteriaList.SOURCE_ACCOUNTS_CONTACTS, "Accounts/Contacts & Resources");
+    context.getRequest().setAttribute("ContactSource", contactSource);
   }
 
 }

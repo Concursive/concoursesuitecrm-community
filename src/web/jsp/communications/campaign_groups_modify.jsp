@@ -6,6 +6,7 @@
 <jsp:useBean id="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
 <jsp:useBean id="SCL" class="com.darkhorseventures.cfsbase.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="ContactSource" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 
 
@@ -129,6 +130,14 @@ listOfOperators[2] = numberOperators
     </td>
     <td width="100%">
       <input type="text" size="40" name="groupName" value="<%=toHtmlValue(SCL.getGroupName())%>"><font color=red>*</font> <%= showAttribute(request, "groupNameError") %>
+    </td>
+  </tr>
+  <tr>
+    <td class="formLabel" nowrap>
+      Contact Source
+    </td>
+    <td width="100%">
+      <%= ContactSource.getHtml("contactSource", SCL.getContactSource()) %>
     </td>
   </tr>
 </table>

@@ -16,10 +16,11 @@ import java.sql.*;
  */
 public class SearchFormBean extends GenericBean {
 
-  	private String groupName = null;
+  private String groupName = null;
 	private String searchCriteriaText = "";
+  private int contactSource = -1;
 	private int id = -1;
-  	private int owner = -1;
+  private int owner = -1;
 	private SearchCriteriaList searchCriteriaList = null;
 
 
@@ -65,6 +66,9 @@ public class SearchFormBean extends GenericBean {
 	}
   
   public void setGroupName(String tmp) { this.groupName = tmp; }
+  public void setContactSource(String tmp) { 
+    this.contactSource = Integer.parseInt(tmp);
+  }
   public void setOwner(int tmp) { this.owner = tmp; }
   public void setOwner(String tmp) { this.owner = Integer.parseInt(tmp); }
 
@@ -102,6 +106,7 @@ public class SearchFormBean extends GenericBean {
 	}
   
   public String getGroupName() { return groupName; }
+  public int getContactSource() { return contactSource; }
   public int getOwner() { return owner; }
 
 
