@@ -17,7 +17,7 @@
       </tr>
        <tr>
          <td>
-         <%=  !"".equals(toString(Help.getDescription())) ?  toString(Help.getDescription()) : "No Introduction available"%>
+         <%=  !"".equals(toString(Help.getDescription())) ?  toHtml(Help.getDescription()) : "No Introduction available"%>
         </td>
        </tr>
      </table><br>
@@ -154,7 +154,16 @@
          %>
             <tr>
               <td align="left">
-                <a href="javascript:popURL('HelpTips.do?command=ModifyTip&id=<%= thisTip.getId() %>&linkHelpId=<%= Help.getId() %>&popup=true', 'QA_Tip_Add','600','175','yes','yes');">Edit</a>&nbsp;<a href="javascript:confirmDelete('HelpTips.do?command=DeleteTip&id=<%= thisTip.getId() %>')">Del</a>&nbsp;<%= toHtml(thisTip.getDescription()) %>
+              <table class="empty" cellpadding="0" cellspacing="0">
+               <tr>
+                  <td valign="top" nowrap>
+                  <a href="javascript:popURL('HelpTips.do?command=ModifyTip&id=<%= thisTip.getId() %>&linkHelpId=<%= Help.getId() %>&popup=true', 'QA_Tip_Add','600','175','yes','yes');">Edit</a>&nbsp;<a href="javascript:confirmDelete('HelpTips.do?command=DeleteTip&id=<%= thisTip.getId() %>')">Del</a>
+                  </td>
+                  <td>
+                    <%= toHtml(thisTip.getDescription()) %>
+                  </td>
+                </tr>
+               </table>
               </td>
             </tr>
          <% }
