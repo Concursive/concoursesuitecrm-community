@@ -50,7 +50,7 @@ public class TransactionItem {
    *@param  objectElement  Description of Parameter
    *@param  mapping        Description of Parameter
    */
-  public TransactionItem(Element objectElement, Hashtable mapping) {
+  public TransactionItem(Element objectElement, HashMap mapping) {
     try {
       this.setAction(objectElement);
       this.setObject(objectElement, mapping);
@@ -114,7 +114,7 @@ public class TransactionItem {
    *@param  mapping        The new object value
    *@exception  Exception  Description of Exception
    */
-  public void setObject(Element element, Hashtable mapping) throws Exception {
+  public void setObject(Element element, HashMap mapping) throws Exception {
     name = element.getTagName();
     if (mapping.containsKey(name)) {
       object = Class.forName((String) mapping.get(name)).newInstance();

@@ -51,7 +51,7 @@ public class CalendarView {
   protected int numberOfCells = 42;
 
   //Events that can be displayed on the calendar
-  protected Hashtable eventList = new Hashtable();
+  protected HashMap eventList = new HashMap();
   protected boolean sortEvents = false;
   public final static int[] DAYSINMONTH = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
@@ -410,12 +410,12 @@ public class CalendarView {
    *  return tmp.toString();
    *  }
    */
-  public Vector getEvents(String tmp1, String tmp2, String tmp3) {
+  public ArrayList getEvents(String tmp1, String tmp2, String tmp3) {
     String key = tmp1 + "/" + tmp2 + "/" + tmp3;
     if (eventList.containsKey(key)) {
-      return (Vector)eventList.get(key);
+      return (ArrayList)eventList.get(key);
     } else {
-      return new Vector();
+      return new ArrayList();
     }
   }
 
@@ -574,7 +574,7 @@ public class CalendarView {
   public CalendarEvent getEvent(String tmp1, String tmp2, String tmp3) {
     String key = tmp1 + "/" + tmp2 + "/" + tmp3;
     if (eventList.containsKey(key)) {
-      return (CalendarEvent)((Vector)eventList.get(key)).get(0);
+      return (CalendarEvent)((ArrayList)eventList.get(key)).get(0);
     } else {
       return null;
     }
@@ -618,13 +618,13 @@ public class CalendarView {
    *@return    The DaysEvents value
    *@since
    */
-  public Vector getDaysEvents(int m, int d, int y) {
+  public ArrayList getDaysEvents(int m, int d, int y) {
     int displayMonth = m + 1;
     int displayYear = y;
     int displayDay = d;
 
     //Get this day's events
-    Vector tmpEvents = getEvents("" + displayMonth, "" + displayDay, "" + displayYear);
+    ArrayList tmpEvents = getEvents("" + displayMonth, "" + displayDay, "" + displayYear);
 
     //Sort the events
     if (sortEvents && tmpEvents.size() > 1) {
@@ -634,7 +634,7 @@ public class CalendarView {
       Arrays.sort(sortArray, comparator);
       tmpEvents.clear();
       for (int i = 0; i < sortArray.length; i++) {
-        tmpEvents.addElement((CalendarEvent)sortArray[i]);
+        tmpEvents.add((CalendarEvent)sortArray[i]);
       }
     }
 
@@ -808,7 +808,7 @@ public class CalendarView {
         html.append("<a href=\"javascript:openWindow('" + displayDay + "');\">" + dateColor + "</a>");
 
         //Get this day's events
-        Vector tmpEvents = getEvents("" + displayMonth, "" + displayDay, "" + displayYear);
+        ArrayList tmpEvents = getEvents("" + displayMonth, "" + displayDay, "" + displayYear);
 
         //Sort the events
         if (sortEvents && tmpEvents.size() > 1) {
@@ -818,7 +818,7 @@ public class CalendarView {
           Arrays.sort(sortArray, comparator);
           tmpEvents.clear();
           for (int i = 0; i < sortArray.length; i++) {
-            tmpEvents.addElement((CalendarEvent)sortArray[i]);
+            tmpEvents.add((CalendarEvent)sortArray[i]);
           }
         }
 
@@ -882,7 +882,7 @@ public class CalendarView {
 
 
   /**
-   *  Returns a vector of CalendarEventLists which contain CalendarEvents,
+   *  Returns an ArrayList of CalendarEventLists which contain CalendarEvents,
    *  including all of today's events.<p>
    *
    *  A full day is always returned, if the events do not add up to (max) then
@@ -892,9 +892,9 @@ public class CalendarView {
    *@return      The Events value
    *@since
    */
-  public Vector getEvents(int max) {
-    Vector allDays = new Vector();
-    Vector thisDay = null;
+  public ArrayList getEvents(int max) {
+    ArrayList allDays = new ArrayList();
+    ArrayList thisDay = null;
     String val = "";
     int count = 0;
     int loopCount = 0;
@@ -999,15 +999,15 @@ public class CalendarView {
 
   public void addEvent(CalendarEvent thisEvent) { 
     //Check to see if the eventList already has dailyEvents for the eventDate
-    Vector dailyEvents = null;
+    ArrayList dailyEvents = null;
     if (eventList.containsKey(thisEvent.getDateString())) {
-      dailyEvents = (Vector)eventList.get(thisEvent.getDateString());
+      dailyEvents = (ArrayList)eventList.get(thisEvent.getDateString());
     } else {
-      dailyEvents = new Vector();
+      dailyEvents = new ArrayList();
     }
 
     //Add the event to the list
-    dailyEvents.addElement(thisEvent);
+    dailyEvents.add(thisEvent);
 
     //Add the events to the eventList
     this.eventList.put(thisEvent.getDateString(), dailyEvents);
@@ -1133,7 +1133,7 @@ public class CalendarView {
   }
 
 
-  //Checks the Event Hashtable to see if an event exists
+  //Checks the Event HashMap to see if an event exists
   /**
    *  Description of the Method
    *

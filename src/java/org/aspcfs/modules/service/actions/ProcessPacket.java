@@ -21,7 +21,7 @@ public final class ProcessPacket extends CFSModule {
 
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
-    ArrayList statusMessages = new ArrayList();
+    LinkedList statusMessages = new LinkedList();
     Connection db = null;
 
     try {
@@ -37,8 +37,8 @@ public final class ProcessPacket extends CFSModule {
           //For Vport
           auth.setSystemId(1);
         }
-        Hashtable objectMap = this.getObjectMap(context, db, auth.getSystemId());
-        ArrayList transactionList = new ArrayList();
+        HashMap objectMap = this.getObjectMap(context, db, auth.getSystemId());
+        LinkedList transactionList = new LinkedList();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
         while (trans.hasNext()) {
@@ -145,7 +145,7 @@ public final class ProcessPacket extends CFSModule {
     return ("PacketOK");
   }
   
-  private Hashtable getObjectMap(ActionContext context, Connection db, int systemId) {
+  private HashMap getObjectMap(ActionContext context, Connection db, int systemId) {
     SyncTableList systemObjectMap = (SyncTableList)context.getServletContext().getAttribute("SyncObjectMap");
     if (systemObjectMap == null) {
       synchronized (this) {
@@ -162,7 +162,7 @@ public final class ProcessPacket extends CFSModule {
         }
       }
     }
-    Hashtable thisObjectMap = systemObjectMap.getObjectMapping(systemId);
+    HashMap thisObjectMap = systemObjectMap.getObjectMapping(systemId);
     return thisObjectMap;
   }
 }

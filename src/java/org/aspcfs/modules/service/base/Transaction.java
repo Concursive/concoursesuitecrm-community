@@ -18,7 +18,7 @@ import java.sql.*;
 public class Transaction extends ArrayList {
 
   private int id = -1;
-  private Hashtable mapping = null;
+  private HashMap mapping = null;
   private StringBuffer errorMessage = new StringBuffer();
   private RecordList recordList = null;
   private TransactionMeta meta = null;
@@ -59,7 +59,7 @@ public class Transaction extends ArrayList {
    *
    *@param  tmp  The new mapping value
    */
-  public void setMapping(Hashtable tmp) {
+  public void setMapping(HashMap tmp) {
     mapping = tmp;
   }
   
@@ -132,7 +132,7 @@ public class Transaction extends ArrayList {
    */
   public void addMapping(String key, String value) {
     if (mapping == null) {
-      mapping = new Hashtable();
+      mapping = new HashMap();
     }
     mapping.put(key, value);
   }

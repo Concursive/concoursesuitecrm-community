@@ -2,7 +2,7 @@ package com.darkhorseventures.cfsbase;
 
 import java.util.*;
 
-public class CalendarEventList extends Vector {
+public class CalendarEventList extends ArrayList {
 
 	private java.util.Date date = null;
   

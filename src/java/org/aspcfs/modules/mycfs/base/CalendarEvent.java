@@ -53,12 +53,12 @@ public class CalendarEvent implements Comparable {
   //Repeat forever
 
   //Invites
-  protected Vector invites = null;
+  protected ArrayList invites = null;
   //email address/names
   //Show guest list to guests?
 
   //Reminder
-  protected Vector reminders = null;
+  protected ArrayList reminders = null;
   //Alert me via Instant Message
   //Alert me via Pager/Cell Phone/Fax
   //Send email to ...

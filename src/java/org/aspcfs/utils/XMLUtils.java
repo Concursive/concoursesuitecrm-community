@@ -111,7 +111,7 @@ public class XMLUtils {
    *@param  e            Description of Parameter
    *@param  elementList  Description of Parameter
    */
-  public static void getAllChildren(Element e, ArrayList elementList) {
+  public static void getAllChildren(Element e, AbstractList elementList) {
     NodeList nl = e.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
@@ -129,7 +129,7 @@ public class XMLUtils {
    *@param  name         Description of Parameter
    *@param  elementList  Description of Parameter
    */
-  public static void getAllChildren(Element e, String name, ArrayList elementList) {
+  public static void getAllChildren(Element e, String name, AbstractList elementList) {
     NodeList nl = e.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
@@ -147,7 +147,7 @@ public class XMLUtils {
    *@param  name      Description of Parameter
    *@param  textList  Description of Parameter
    */
-  public static void getAllChildrenText(Element e, String name, ArrayList textList) {
+  public static void getAllChildrenText(Element e, String name, AbstractList textList) {
     NodeList nl = e.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);

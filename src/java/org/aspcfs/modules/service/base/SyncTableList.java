@@ -2,13 +2,13 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.sql.*;
 import com.darkhorseventures.utils.DatabaseUtils;
 
-public class SyncTableList extends Vector {
+public class SyncTableList extends ArrayList {
 
   private int systemId = -1;
   private boolean buildTextFields = true;
@@ -59,7 +59,7 @@ public class SyncTableList extends Vector {
       SyncTable thisTable = new SyncTable();
       thisTable.setBuildTextFields(buildTextFields);
       thisTable.buildRecord(rs);
-      this.addElement(thisTable);
+      this.add(thisTable);
     }
     rs.close();
     pst.close();
@@ -90,8 +90,8 @@ public class SyncTableList extends Vector {
     return i;
   }
 
-  public Hashtable getObjectMapping(int thisSystemId)  {
-    Hashtable objectMap = new Hashtable();
+  public HashMap getObjectMapping(int thisSystemId)  {
+    HashMap objectMap = new HashMap();
     Iterator iList = this.iterator();
     while (iList.hasNext()) {
       SyncTable thisTable = (SyncTable)iList.next();
