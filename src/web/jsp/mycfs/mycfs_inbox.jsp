@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="CFSNoteList" class="org.aspcfs.modules.mycfs.base.CFSNoteList" scope="request"/>
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -77,7 +77,7 @@ My Mailbox<br>
 %>      
   <tr>
           <td width=4 valign=center nowrap class="row<%= rowid %>">
-          <a href='javascript:window.location.href="MyCFSInbox.do?command=ForwardMessage&forwardType=9&id=<%= thisNote.getId() %>&sendUrl="+escape("MyCFSInbox.do?command=SendMessage")+"&return="+escape("MyCFSInbox.do?command=Inbox");'>Fwd</a>|<a href="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
+          <a href='javascript:window.location.href="MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%= thisNote.getId() %>&sendUrl="+escape("MyCFSInbox.do?command=SendMessage")+"&return="+escape("MyCFSInbox.do?command=Inbox");'>Fwd</a>|<a href="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
           </td>
 	        <% if(InboxInfo.getListView().equalsIgnoreCase("new")){%>
 		<td width=4 valign=center nowrap class="row<%= rowid %>">
