@@ -941,21 +941,17 @@ public final class TroubleTickets extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Prepares supplemental form data that a user can search by
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandSearchTicketsForm(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-view"))) {
+    if (!hasPermission(context, "tickets-tickets-view")) {
       return ("PermissionError");
     }
-
-    int errorCode = 0;
-    Exception errorMessage = null;
     Connection db = null;
-
+    //Prepare ticket state form data
     HtmlSelect ticketTypeSelect = new HtmlSelect();
     ticketTypeSelect.setSelectName("type");
     ticketTypeSelect.addItem("0", "-- Any --");
@@ -963,36 +959,23 @@ public final class TroubleTickets extends CFSModule {
     ticketTypeSelect.addItem("2", "Closed Only");
     ticketTypeSelect.build();
     context.getRequest().setAttribute("TicketTypeSelect", ticketTypeSelect);
-
     try {
       db = this.getConnection(context);
-
-      OrganizationList orgList = new OrganizationList();
-      orgList.setMinerOnly(false);
-      orgList.setShowMyCompany(true);
-      orgList.buildList(db);
-      context.getRequest().setAttribute("OrgList", orgList);
-
+      //Prepare severity list form data
       LookupList severityList = new LookupList(db, "ticket_severity");
       severityList.addItem(0, "-- Any --");
       context.getRequest().setAttribute("SeverityList", severityList);
-
+      //Prepare priority list form data
       LookupList priorityList = new LookupList(db, "ticket_priority");
       priorityList.addItem(0, "-- Any --");
       context.getRequest().setAttribute("PriorityList", priorityList);
-    } catch (Exception e) {
-      errorCode = 1;
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorCode == 0) {
       addModuleBean(context, "SearchTickets", "Tickets Search");
       return ("SearchTicketsFormOK");
-    } else {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 
@@ -1139,50 +1122,36 @@ public final class TroubleTickets extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Deletes the specified ticket and triggers any hooks
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandDelete(ActionContext context) {
-
-    if (!(hasPermission(context, "tickets-tickets-delete"))) {
+    if (!hasPermission(context, "tickets-tickets-delete")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     boolean recordDeleted = false;
-
-    String passedId = null;
     Ticket thisTic = null;
     Connection db = null;
-
-    passedId = context.getRequest().getParameter("id");
-
+    //Parameters
+    String passedId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
       thisTic = new Ticket(db, Integer.parseInt(passedId));
       recordDeleted = thisTic.delete(db);
       if (recordDeleted) {
         processDeleteHook(context, thisTic);
-      }
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-
-    if (errorMessage == null) {
-      if (recordDeleted) {
         deleteRecentItem(context, thisTic);
         context.getRequest().setAttribute("refreshUrl", "TroubleTickets.do?command=Home" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
         return ("DeleteOK");
-      } else {
-        return (executeCommandHome(context));
       }
-    } else {
+      return (executeCommandHome(context));
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 
@@ -1369,12 +1338,10 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandOrganizationJSList(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
-
       ContactList contactList = new ContactList();
       if (orgId != null && !"-1".equals(orgId)) {
         contactList.setBuildDetails(false);
@@ -1383,8 +1350,7 @@ public final class TroubleTickets extends CFSModule {
         contactList.buildList(db);
       }
       context.getRequest().setAttribute("ContactList", contactList);
-    } catch (SQLException e) {
-      errorMessage = e;
+    } catch (SQLException errorMessage) {
     } finally {
       this.freeConnection(context, db);
     }
