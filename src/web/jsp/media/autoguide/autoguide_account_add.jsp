@@ -119,14 +119,6 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Vin
-    </td>
-    <td>
-      <input type="text" size="30" name="vin" value="<%= toHtmlValue(InventoryDetails.getVin()) %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
       Mileage
     </td>
     <td>
@@ -136,20 +128,19 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Condition
+      Vin
     </td>
     <td>
-      <input type="text" size="30" name="condition" value="<%= toHtmlValue(InventoryDetails.getCondition()) %>">
-      <%= showAttribute(request, "conditionError") %>
+      <input type="text" size="30" name="vin" value="<%= toHtmlValue(InventoryDetails.getVin()) %>">
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Comments
+      Selling Price
     </td>
     <td>
-      <input type="text" size="30" name="comments" value="<%= toHtmlValue(InventoryDetails.getComments()) %>">
-      <%= showAttribute(request, "commentsError") %>
+      <input type="text" size="10" name="sellingPrice" value="<%= InventoryDetails.getSellingPriceString() %>">
+      <%= showAttribute(request, "sellingPrice") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -163,11 +154,20 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Selling Price
+      Condition
     </td>
     <td>
-      <input type="text" size="10" name="sellingPrice" value="<%= InventoryDetails.getSellingPriceString() %>">
-      <%= showAttribute(request, "sellingPrice") %>
+      <input type="text" size="30" name="condition" value="<%= toHtmlValue(InventoryDetails.getCondition()) %>">
+      <%= showAttribute(request, "conditionError") %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Additional Text
+    </td>
+    <td>
+      <input type="text" size="30" name="comments" value="<%= toHtmlValue(InventoryDetails.getComments()) %>">
+      <%= showAttribute(request, "commentsError") %>
     </td>
   </tr>
   <tr class="containerBody">

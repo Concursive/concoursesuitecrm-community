@@ -172,13 +172,13 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
-    <forward name="ListOK" resource="/autoguide_accountlist.jsp" layout="nav"/>
-    <forward name="List2OK" resource="/autoguide_accountlist2.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/autoguide_account_list.jsp" layout="nav"/>
+    <forward name="List2OK" resource="/autoguide_account_list2.jsp" layout="nav"/>
     <forward name="AddOK" resource="/autoguide_account_add.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/AccountsAutoGuide.do?command=AccountList"/>
     <forward name="ModifyOK" resource="/autoguide_account_modify.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/AccountsAutoGuide.do?command=Details"/>
-    <forward name="DetailsOK" resource="/autoguide_accountdetails.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/autoguide_account_details.jsp" layout="nav"/>
     <forward name="DeleteOK" resource="/AccountsAutoGuide.do?command=AccountList"/>
   </action>
   <action name="AutoGuide" class="com.darkhorseventures.autoguide.module.AutoGuide">
