@@ -2058,19 +2058,40 @@ public class User extends GenericBean {
       errors.put("roleError", "Role needs to be selected");
     }
     
-    //No circular allowed -- check hierarchy context
-    //Get id of the user being modified, see if the managerId is in their hierarchy
+    //Check hierarchy context for circular references
     if (managerId > 0 && id > -1 && alias == -1) {
       if (managerId == id) {
+        //Check 1: User cannot report to self
         errors.put("managerIdError", "User cannot report to itself");
       } else {
+        //Check 2: User cannot report to someone already beneath them
         ConnectionElement ce = (ConnectionElement) context.getRequest().getSession().getAttribute("ConnectionElement");
         SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
         User updatedUser = systemStatus.getHierarchyList().getUser(id);
         User testChild = updatedUser.getChild(managerId);
 
         if (testChild != null) {
-          errors.put("managerIdError", "Cannot create a circular hierarchy");
+          //Since the new manager is a child of this user, display the hierarchy for the user
+          //Start at the testChild and work up to current user
+          Stack names = new Stack();
+          int currentId = testChild.getId();
+          while (currentId != id) {
+            String childName = testChild.getContact().getNameFirstLast();
+            names.push(childName);
+            testChild = testChild.getManagerUser();
+            currentId = testChild.getId();
+          }
+          names.push(updatedUser.getContact().getNameFirstLast());
+          //Now work back down and show the hierarchy
+          StringBuffer sb = new StringBuffer();
+          sb.append("Cannot create a circular hierarchy, review current hierarchy:\r\n");
+          while (!names.empty()) {
+            sb.append((String)names.pop());
+            if (!names.empty()) {
+              sb.append(" < ");
+            }
+          }
+          errors.put("managerIdError", sb.toString());
         }
       }
     }
