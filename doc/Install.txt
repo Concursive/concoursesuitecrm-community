@@ -91,9 +91,11 @@
 [root user]
 
 - Configure OS environment
-  # Create a group called "cfs"
-    $ vigr
-      cfs:x:101:
+  # Create a user called "cfs" and give permissions to anyone in that group
+    $ adduser cfs
+    $ chmod ug+rw /home/cfs
+    $ chmod 2775 /home/cfs
+    $ chown .cfs /home/cfs
   # Add users to the system:
     $ adduser cfsdba
     $ adduser [your name] -g cfs
@@ -107,18 +109,11 @@
     export PATH=$PATH:${JAVA_HOME}/bin:${ANT_HOME}/bin
     export CATALINA_HOME=/usr/java/tomcat
     export CATALINA_OPTS=-Djava.awt.headless=true
-    export CFS_HOME=/home/webapps/ROOT
+    export CFS_HOME=/home/cfs/webapps/ROOT
 
   # Remove the GNU Java if installed (only if KDE was installed)
     $ rm /usr/bin/java
     $ rm /usr/bin/javac
-    
-  # Make the web folders
-    $ mkdir /home/webapps
-    $ mkdir /home/webapps/ROOT
-    $ chmod ug+rw /home/webapps/ROOT
-    $ chmod 2775 /home/webapps/ROOT
-    $ chown .cfs /home/webapps/ROOT
     
   # Log back in as root for changes to take effect, then test:
   # Java version should say: 
@@ -173,6 +168,8 @@
     $ vi access
       # Add a line with any of your e-mail domains... the part after the @
       darkhorseventures.com  RELAY
+      # Save file and exit
+    $ make
 
 [user]
       

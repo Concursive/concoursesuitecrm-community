@@ -46,7 +46,8 @@ $CATALINA_OPTS=-Djava.awt.headless=true on Linux
 
 CFS_HOME must be defined as well, this is the target directory in which the
 CFS application should be deployed. Typically ${CATALINA_HOME}/webapps/ROOT
-or /some/dir/ROOT
+or customized in some other folder and letting the Tomcat's server.xml know.
+DHV uses CFS_HOME=/home/cfs/webapps/ROOT
 
 For example:
 

@@ -1,6 +1,6 @@
 <!-- CFS based on Apache Tomcat 4.1.18 -->
-<!-- Replace /home/webapps with the actual path -->
-<!-- Replace /home/webapps/ROOT with the actual path --> 
+<!-- Replace /home/cfs/webapps with the actual path if it differs -->
+<!-- Replace /home/cfs/webapps/ROOT with the actual path if it differs --> 
 <Server port="8005" shutdown="SHUTDOWN" debug="0">
   <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener"
             debug="0"/>
@@ -73,11 +73,11 @@
         useURIValidationHack="false" disableUploadTimeout="true">
       <Factory className="org.apache.coyote.tomcat4.CoyoteServerSocketFactory" 
           clientAuth="false" protocol="TLS"
-          keystoreFile="/home/webapps/ROOT/WEB-INF/keystore" 
+          keystoreFile="/home/cfs/webapps/ROOT/WEB-INF/keystore" 
           keystorePass="aspcfs" keystoreType="JKS"/>
     </Connector>
     <Engine name="Web" defaultHost="localhost" debug="0">
-      <Host name="localhost" debug="0" appBase="/home/webapps" 
+      <Host name="localhost" debug="0" appBase="/home/cfs/webapps" 
             unpackWARs="false" autoDeploy="false">
         <Logger className="org.apache.catalina.logger.FileLogger"
                 directory="logs"  prefix="cfs_log." suffix=".txt"
