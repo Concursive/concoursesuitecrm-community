@@ -11,7 +11,8 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     chris
  *@created    October, 2002
- *@version    $Id$
+ *@version    $Id: PagedListStatusHandler.java,v 1.9 2003/03/21 13:50:06
+ *      mrajkowski Exp $
  */
 public class PagedListStatusHandler extends TagSupport {
   private String name = "statusProperties";
@@ -19,12 +20,13 @@ public class PagedListStatusHandler extends TagSupport {
   private String bgColor = null;
   private String fontColor = "#666666";
   private String tdClass = null;
-  private boolean showForm = true;
+  private boolean showHiddenParams = false;
   private boolean resetList = true;
   private boolean showExpandLink = false;
   private String title = "&nbsp;";
   private boolean showRefresh = true;
   private boolean showControlOnly = false;
+  private boolean enableJScript = false;
 
 
   /**
@@ -118,12 +120,12 @@ public class PagedListStatusHandler extends TagSupport {
 
 
   /**
-   *  Sets the showForm attribute of the PagedListStatusHandler object
+   *  Sets the showHiddenParams attribute of the PagedListStatusHandler object
    *
-   *@param  tmp  The new showForm value
+   *@param  tmp  The new showHiddenParams value
    */
-  public void setShowForm(String tmp) {
-    this.showForm = DatabaseUtils.parseBoolean(tmp);
+  public void setShowHiddenParams(String tmp) {
+    this.showHiddenParams = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -187,6 +189,25 @@ public class PagedListStatusHandler extends TagSupport {
   }
 
 
+  /**
+   *  Sets the enableJScript attribute of the PagedListStatusHandler object
+   *
+   *@param  enableJScript  The new enableJScript value
+   */
+  public void setEnableJScript(boolean enableJScript) {
+    this.enableJScript = enableJScript;
+  }
+
+
+  /**
+   *  Sets the enableJScript attribute of the PagedListStatusHandler object
+   *
+   *@param  tmp  The new enableJScript value
+   */
+  public void setEnableJScript(String tmp) {
+    this.enableJScript = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
    *  Description of the Method
@@ -198,7 +219,12 @@ public class PagedListStatusHandler extends TagSupport {
     try {
       PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(object);
       if (pagedListInfo != null) {
+        pagedListInfo.setEnableJScript(enableJScript);
         JspWriter out = this.pageContext.getOut();
+        //include java scripts if any
+        if (enableJScript) {
+          out.write("<SCRIPT LANGUAGE=\"JavaScript\" TYPE=\"text/javascript\" SRC=\"javascript/pageListInfo.js\"></SCRIPT>");
+        }
         //Draw the header of the PagedList table
         out.write("<table align=\"center\" width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\">");
         out.write("<tr>");
@@ -211,6 +237,11 @@ public class PagedListStatusHandler extends TagSupport {
               ">");
           out.write(title);
 
+          //show hidden values only if showform is false
+          if (showHiddenParams) {
+            out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
+            out.write("<input type=\"hidden\" name=\"pagedListInfoId\" value=\"" + object + "\">");
+          }
           //Display expansion link
           if (showExpandLink) {
             out.write(" (" + pagedListInfo.getExpandLink("Show more", "Return to overview") + ")");
