@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="OrgList" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="HeadlineListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:include page="cfsor2.js" flush="true"/>
 <%@ include file="../initPage.jsp" %>

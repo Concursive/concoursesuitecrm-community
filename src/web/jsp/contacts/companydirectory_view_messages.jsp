@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="campList" class="org.aspcfs.modules.CampaignList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
+<jsp:useBean id="campList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="ContactMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -53,15 +53,6 @@ Messages<br>
       <a href="ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%=ContactDetails.getId()%>"><strong>Run Date</strong></a>
       <%= ContactMessageListInfo.getSortIcon("active_date") %>
     </td> 
-    <!--td valign=center align=left>
-      <strong>Groups?</strong>
-    </td> 
-    <td valign=center align=left>
-      <strong>Message?</strong>
-    </td>
-    <td valign=center align=left>
-      <strong>Details?</strong>
-    </td-->
     <td valign=center width="15%" align=left>
       <strong>Status</strong>
     </td>
@@ -92,18 +83,6 @@ Messages<br>
     <td valign=center nowrap class="row<%= rowid %>">
       <%=toHtml(campaign.getStatus())%>
     </td>
-    <!--td valign=center align="center" nowrap class="row<%= rowid %>">
-      <a href="ExternalContacts.do?command=ViewGroups&id=<%= campaign.getId() %>"><%= (campaign.hasGroups()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %></a>
-    </td>
-    <td valign=center align="center" nowrap class="row<%= rowid %>">
-      <a href="ExternalContacts.do?command=ViewMessage&id=<%= campaign.getId() %>"><%= (campaign.hasMessage()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %></a>
-    </td>
-    <td valign=center align="center" nowrap class="row<%= rowid %>">
-      <a href="ExternalContacts.do?command=ViewSchedule&id=<%= campaign.getId() %>"><%= (campaign.hasDetails()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %></a>
-    </td>
-    <td valign=center align="center" nowrap class="row<%= rowid %>">
-      <%= (campaign.isReadyToActivate()?"<a href=\"javascript:confirmForward('CampaignManager.do?command=Activate&id=" + campaign.getId() + "&notify=true&modified=" + campaign.getModified() + "');\"><font color=\"red\">Activate</font></a>":"&nbsp;") %>
-    </td-->
 	</tr>
 	<%}%>
 <%} else {%>

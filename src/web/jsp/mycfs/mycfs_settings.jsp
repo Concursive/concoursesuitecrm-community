@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="Locale" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="TimeZone" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>

@@ -1,6 +1,6 @@
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.TaskCategory" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.tasks.base.TaskCategory" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
-<jsp:useBean id="categoryList" class="org.aspcfs.modules.TaskCategoryList" scope="request"/>
+<jsp:useBean id="categoryList" class="org.aspcfs.modules.tasks.base.TaskCategoryList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <table border='0' width='100%'  bgcolor='#000000' cellspacing='0' cellpadding='0'>
   <tr>

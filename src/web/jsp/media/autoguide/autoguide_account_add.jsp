@@ -1,11 +1,11 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.autoguide.base.*" %>
-<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
-<jsp:useBean id="InventoryDetails" class="org.aspcfs.autoguide.base.Inventory" scope="request"/>
+<%@ page import="java.util.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="InventoryDetails" class="org.aspcfs.modules.media.autoguide.base.Inventory" scope="request"/>
 <jsp:useBean id="YearSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="MakeSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="ModelSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<jsp:useBean id="OptionList" class="org.aspcfs.autoguide.base.OptionList" scope="request"/>
+<jsp:useBean id="OptionList" class="org.aspcfs.modules.media.autoguide.base.OptionList" scope="request"/>
 <jsp:useBean id="adRunTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].stockNo.focus();">

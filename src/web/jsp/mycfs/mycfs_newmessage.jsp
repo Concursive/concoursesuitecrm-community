@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
 <jsp:useBean id="Note" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
 <jsp:useBean id="returnUrl" class="java.lang.String" scope="request"/>
 <jsp:useBean id="sendUrl" class="java.lang.String" scope="request"/>

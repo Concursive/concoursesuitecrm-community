@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*,org.aspcfs.webutils.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="Assignment" class="com.zeroio.iteam.base.Assignment" scope="request"/>
 <jsp:useBean id="RequirementList" class="com.zeroio.iteam.base.RequirementList" scope="request"/>

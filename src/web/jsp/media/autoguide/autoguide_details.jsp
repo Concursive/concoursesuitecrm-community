@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.autoguide.base.*" %>
-<jsp:useBean id="InventoryItem" class="org.aspcfs.autoguide.base.Inventory" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.media.autoguide.base.*" %>
+<jsp:useBean id="InventoryItem" class="org.aspcfs.modules.media.autoguide.base.Inventory" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../../initPage.jsp" %>
 <%@ include file="../../initPageIsManagerOf.jsp" %>
@@ -9,11 +9,7 @@
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <a href="AutoGuide.do?command=List">Back to Vehicle List</a><p>
 <form action='/AutoGuide.do?command=Details&id=<%= InventoryItem.getId() %>&action=modify' method='post'>
-<%--
-<dhv:permission name="autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
-<dhv:permission name="autoguide-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>'"></dhv:permission>
-<dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete"><br>&nbsp;</dhv:permission>
---%>
+
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td width="100%" valign="top">
@@ -176,10 +172,6 @@ Ad Text:
     </td>
   </tr>
 </table>
-<%--
-<dhv:permission name="autoguide-inventory-edit,autoguide-inventory-delete"><br></dhv:permission>
-<dhv:permission name="autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
-<dhv:permission name="autoguide-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AutoGuide.do?command=Delete&id=<%= InventoryItem.getId() %>'"></dhv:permission>
---%>
+
 </form>
 

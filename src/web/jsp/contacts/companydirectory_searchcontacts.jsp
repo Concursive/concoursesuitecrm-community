@@ -9,9 +9,6 @@
 <a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
 Search Contacts<br>
 <hr color="#BFBFBB" noshade>
-<!--input type=submit value="Search">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
-<input type="reset" value="Reset"-->
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -66,7 +63,7 @@ Search Contacts<br>
 </table>
 <br>
 <input type=submit value="Search">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts'">
 <input type="reset" value="Reset">
 <input type="hidden" name="doSearch" value="true">
 </form>

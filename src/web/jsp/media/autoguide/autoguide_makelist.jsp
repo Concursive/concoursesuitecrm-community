@@ -1,5 +1,5 @@
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.autoguide.base.*" %>
-<jsp:useBean id="MakeList" class="org.aspcfs.autoguide.base.MakeList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.media.autoguide.base.*" %>
+<jsp:useBean id="MakeList" class="org.aspcfs.modules.media.autoguide.base.MakeList" scope="request"/>
 <html>
 <head>
 </head>

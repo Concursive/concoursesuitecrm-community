@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.webutils.LookupElement,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.LookupElement" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="category" class="org.aspcfs.webutils.LookupElement" scope="request"/>
 <jsp:useBean id="outlineList" class="org.aspcfs.modules.TaskList" scope="request"/>
@@ -11,7 +11,7 @@
     </td>
   </tr>
 </table>
-   
+
 <table border='0' width='100%' cellpadding='0' cellspacing='0'>
   <tr bgcolor="#808080">
     <td width="5" nowrap>&nbsp;</td>
@@ -34,7 +34,6 @@
     <td width="100%" valign="top" align="left"<%= thisTask.getComplete()?" class=\"strike\"":"" %>>
       <%= toHtml(thisTask.getDescription()) %>
     </td>
-    <%-- <td width="100%" valign="top" align="left"><a href="ProjectManagementIssues.do?command=Details&pid=<%= Project.getId() %>&tid=<%= thisTask.getId() %>&cid=<%= category.getId() %>"><%= toHtml(thisTask.getDescription()) %></a></td> --%>
     <td valign="top" align="left" nowrap>&nbsp; <dhv:username id="<%= thisTask.getEnteredBy() %>"/> &nbsp;</td>
     <td valign="top" align="left" nowrap><%= thisTask.getEnteredString() %></td>
   </tr>

@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
 <jsp:useBean id="CFSNoteList" class="org.aspcfs.modules.mycfs.base.CFSNoteList" scope="request"/>
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -9,12 +9,12 @@
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 My Mailbox<br>
 <hr color="#BFBFBB" noshade>
-<a href='javascript:window.location.href="MyCFSInbox.do?command=NewMessage&sendUrl="+escape("/MyCFSInbox.do?command=SendMessage")+"&return="+escape("MyCFSInbox.do?command=Inbox");'>New Message</a>
+<a href='javascript:window.location.href="MyCFSInbox.do?command=NewMessage&sendUrl="+escape("MyCFSInbox.do?command=SendMessage")+"&return="+escape("MyCFSInbox.do?command=Inbox");'>New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
-    <form name="listView" method="post" action="/MyCFSInbox.do?command=Inbox">
+    <form name="listView" method="post" action="MyCFSInbox.do?command=Inbox">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= InboxInfo.getOptionValue("new") %>>Messages (Inbox)</option>
@@ -41,16 +41,16 @@ My Mailbox<br>
     </td>
     <%}%>
     <td width=40% valign=center align=left>
-      <strong><a href="/MyCFSInbox.do?command=Inbox&column=m.subject">Subject</a></strong>
+      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.subject">Subject</a></strong>
       <%= InboxInfo.getSortIcon("m.subject") %>
     </td>
    <% if(!InboxInfo.getListView().equalsIgnoreCase("sent")){%>
     <td width=30% valign=center align=left nowrap>
-      <strong><a href="/MyCFSInbox.do?command=Inbox&column=sent_namelast">From</a></strong>
+      <strong><a href="MyCFSInbox.do?command=Inbox&column=sent_namelast">From</a></strong>
       <%= InboxInfo.getSortIcon("sent_namelast") %>
     </td>
     <td width=30% valign=center align=left nowrap>
-      <strong><a href="/MyCFSInbox.do?command=Inbox&column=m.sent">Received</a></strong>
+      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.sent">Received</a></strong>
     <%}
      else{%>
       <td width=30% valign=center align=left nowrap>
@@ -58,7 +58,7 @@ My Mailbox<br>
       <%= InboxInfo.getSortIcon("sent_namelast") %>
     </td>
     <td width=30% valign=center align=left nowrap>
-      <strong><a href="/MyCFSInbox.do?command=Inbox&column=m.sent">Sent</a></strong>
+      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.sent">Sent</a></strong>
     <%}%>
       <%= InboxInfo.getSortIcon("m.sent") %>
     </td>
@@ -78,7 +78,7 @@ My Mailbox<br>
 %>      
   <tr>
           <td width=4 valign=center nowrap class="row<%= rowid %>">
-          <a href="/MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=thisNote.getId()%>&return=/MyCFSInbox.do?command=Inbox">Fwd</a>|<a href="javascript:confirmDelete('/MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
+          <a href="MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=thisNote.getId()%>&return=/MyCFSInbox.do?command=Inbox">Fwd</a>|<a href="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
           </td>
 	        <% if(InboxInfo.getListView().equalsIgnoreCase("new")){%>
 		<td width=4 valign=center nowrap class="row<%= rowid %>">
@@ -86,7 +86,7 @@ My Mailbox<br>
         	</td>     
 		<%}%>
 		<td width="40%" class="row<%= rowid %>">
-      		<a href="/MyCFSInbox.do?command=CFSNoteDetails&id=<%=thisNote.getId()%>"><%= toHtml(thisNote.getSubject()) %></a>
+      		<a href="MyCFSInbox.do?command=CFSNoteDetails&id=<%=thisNote.getId()%>"><%= toHtml(thisNote.getSubject()) %></a>
 		</td>
 		<% if(!InboxInfo.getListView().equalsIgnoreCase("sent")){%>
 		<td width=30% valign=center class="row<%= rowid %>" nowrap><%= toHtml(thisNote.getSentName()) %></td>

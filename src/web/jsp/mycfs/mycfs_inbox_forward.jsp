@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
@@ -16,12 +16,12 @@
   </dhv:browser>
   }
 </script>
-<form name="addCall" action="/MyCFSInbox.do?command=Forward&id=<%= NoteDetails.getId() %>" method="post">
-<a href="/MyCFSInbox.do?command=Inbox">Back to Inbox</a>
+<form name="addCall" action="MyCFSInbox.do?command=Forward&id=<%= NoteDetails.getId() %>" method="post">
+<a href="MyCFSInbox.do?command=Inbox">Back to Inbox</a>
 <p>
 
     <input type="submit" value="Forward" onclick="javascript:save();">
-    <input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFSInbox.do?command=CFSNoteDetails&id=<%=NoteDetails.getId()%>'">
+    <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFSInbox.do?command=CFSNoteDetails&id=<%=NoteDetails.getId()%>'">
 
 <br>
 <%= showError(request, "actionError") %>
@@ -120,7 +120,7 @@
 </table>
 <br>
 <input type="submit" value="Forward" onclick="javascript:save();">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFSInbox.do?command=CFSNoteDetails&id=<%=NoteDetails.getId()%>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFSInbox.do?command=CFSNoteDetails&id=<%=NoteDetails.getId()%>'">
 
 </form>
 
