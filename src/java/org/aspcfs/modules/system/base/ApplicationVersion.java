@@ -8,6 +8,6 @@ package org.aspcfs.modules.system.base;
  *@version    $Id$
  */
 public class ApplicationVersion {
-  public final static String VERSION = "2.7.2 (2004-02-18)";
+  public final static String VERSION = "2.7.3 (2004-02-24)";
 }
 
