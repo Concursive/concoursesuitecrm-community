@@ -864,9 +864,7 @@ public final class TroubleTickets extends CFSModule {
     }
 
     int errorCode = 0;
-
     Exception errorMessage = null;
-
     Connection db = null;
 
     HtmlSelect ticketTypeSelect = new HtmlSelect();
