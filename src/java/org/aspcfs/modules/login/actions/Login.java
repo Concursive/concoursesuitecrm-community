@@ -38,6 +38,7 @@ public final class Login extends CFSModule {
    *@since           1.0
    */
   public String executeCommandLogin(ActionContext context) {
+    ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     //Process the login request
     LoginBean loginBean = (LoginBean) context.getFormBean();
     String username = loginBean.getUsername();
@@ -101,59 +102,68 @@ public final class Login extends CFSModule {
     UserBean thisUser = null;
     int userId = -1;
     int aliasId = -1;
+    int roleId = -1;
+    String role = null;
     String userId2 = null;
     java.util.Date now = new java.util.Date();
     boolean continueId = false;
     try {
+      SystemStatus thisSystem = null;
       db = sqlDriver.getConnection(ce);
-      //A good place to initialize this SystemStatus, must be done before getting a user
-      SystemStatus thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
-      }
-      //Check the license
-      try {
-        File keyFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-        File inputFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt");
-        if (keyFile.exists() && inputFile.exists()) {
-          java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-          org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
-          //The edition will be shown
-          String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
-          PreparedStatement pst = db.prepareStatement(
-              "SELECT count(*) AS user_count " +
-              "FROM access a, role r " +
-              "WHERE a.user_id > 0 " +
-              "AND a.role_id > 0 " +
-              "AND a.role_id = r.role_id " +
-              "AND r.role_type = ? " +
-              "AND a.enabled = ? ");
-          pst.setInt(1, Constants.ROLETYPE_REGULAR);
-          pst.setBoolean(2, true);
-          ResultSet rs = pst.executeQuery();
-          if (rs.next()) {
-            if (rs.getInt("user_count") <= Integer.parseInt(lpd.substring(7)) || "-1".equals(lpd.substring(7))) {
-              continueId = true;
-            } else {
-              loginBean.setMessage("* Access denied: License error");
-            }
-          }
-          rs.close();
-          pst.close();
-          userId2 = lpd.substring(7);
-        } else {
-          loginBean.setMessage("* Access denied: License not found");
+      // If system is not upgraded, perform lightweight validation to ensure backwards compatibility
+      if (applicationPrefs.isUpgradeable()) {
+        continueId = true;
+      } else {
+        //A good place to initialize this SystemStatus, must be done before getting a user
+        thisSystem = SecurityHook.retrieveSystemStatus(context.getServletContext(), db, ce);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
         }
-      } catch (Exception e) {
-        loginBean.setMessage("* Access denied: License is not up-to-date");
+        //Check the license
+        try {
+          File keyFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+          File inputFile = new File(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt");
+          if (keyFile.exists() && inputFile.exists()) {
+            java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
+            org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
+            //The edition will be shown
+            String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+            PreparedStatement pst = db.prepareStatement(
+                "SELECT count(*) AS user_count " +
+                "FROM access a, role r " +
+                "WHERE a.user_id > 0 " +
+                "AND a.role_id > 0 " +
+                "AND a.role_id = r.role_id " +
+                "AND r.role_type = ? " +
+                "AND a.enabled = ? ");
+            pst.setInt(1, Constants.ROLETYPE_REGULAR);
+            pst.setBoolean(2, true);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+              if (rs.getInt("user_count") <= Integer.parseInt(lpd.substring(7)) || "-1".equals(lpd.substring(7))) {
+                continueId = true;
+              } else {
+                loginBean.setMessage("* Access denied: License error");
+              }
+            }
+            rs.close();
+            pst.close();
+            userId2 = lpd.substring(7);
+          } else {
+            loginBean.setMessage("* Access denied: License not found");
+          }
+        } catch (Exception e) {
+          loginBean.setMessage("* Access denied: License is not up-to-date");
+        }
       }
+      //Query the user record
       if (continueId) {
-        //Query the user record
         PreparedStatement pst = db.prepareStatement(
-            "SELECT password, expires, alias, user_id " +
-            "FROM access " +
-            "WHERE lower(username) = ? " +
-            "AND enabled = ? ");
+            "SELECT a.password, a.expires, a.alias, a.user_id, a.role_id, r.role " +
+            "FROM access a, role r " +
+            "WHERE a.role_id = r.role_id " +
+            "AND lower(a.username) = ? " +
+            "AND a.enabled = ? ");
         pst.setString(1, username.toLowerCase());
         pst.setBoolean(2, true);
         ResultSet rs = pst.executeQuery();
@@ -170,6 +180,8 @@ public final class Login extends CFSModule {
             } else {
               aliasId = rs.getInt("alias");
               userId = rs.getInt("user_id");
+              roleId = rs.getInt("role_id");
+              role = rs.getString("role");
             }
           }
         }
@@ -181,26 +193,28 @@ public final class Login extends CFSModule {
         thisUser = new UserBean();
         thisUser.setUserId(aliasId > 0 ? aliasId : userId);
         thisUser.setActualUserId(userId);
-        //The user record must be in user cache to proceed
-        User userRecord = thisSystem.getUser(thisUser.getUserId());
-        if (userRecord != null) {
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("Login-> Retrieved user from memory: " + userRecord.getUsername());
-          }
-          thisUser.setConnectionElement(ce);
-          thisUser.setClientType(context.getRequest());
-          thisUser.setIdRange(userRecord.getIdRange());
-          thisUser.setUserRecord(userRecord);
-          //Log that the user attempted login (does not necessarily mean logged in
-          //anymore due to the single-session manager below
-          userRecord.setIp(context.getIpAddress());
-          userRecord.updateLogin(db);
-        } else {
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("Login-> Fatal: User not found in this System!");
+        thisUser.setConnectionElement(ce);
+        thisUser.setClientType(context.getRequest());
+        if (thisSystem != null) {
+          //The user record must be in user cache to proceed
+          User userRecord = thisSystem.getUser(thisUser.getUserId());
+          if (userRecord != null) {
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("Login-> Retrieved user from memory: " + userRecord.getUsername());
+            }
+            thisUser.setIdRange(userRecord.getIdRange());
+            thisUser.setUserRecord(userRecord);
+            //Log that the user attempted login (does not necessarily mean logged in
+            //anymore due to the single-session manager below
+            userRecord.setIp(context.getIpAddress());
+            userRecord.updateLogin(db);
           }
           if (!thisSystem.hasPermissions()) {
             System.out.println("Login-> This system does not have any permissions loaded!");
+          }
+        } else {
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Login-> Fatal: User not found in this System!");
           }
         }
       } else {
@@ -227,36 +241,37 @@ public final class Login extends CFSModule {
     //security manager will not let them access any secure pages
     context.getSession().setAttribute("User", thisUser);
     context.getSession().setAttribute("ConnectionElement", ce);
-    //Check to see if user is already logged in. 
-    //If not then add them to the valid users list
-    SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-    SessionManager sessionManager = thisSystem.getSessionManager();
-    if (sessionManager.isUserLoggedIn(userId)) {
-      UserSession thisSession = sessionManager.getUserSession(userId);
-      context.getSession().setMaxInactiveInterval(300);
-      context.getRequest().setAttribute("Session", thisSession);
-      return "LoginVerifyOK";
+    if (applicationPrefs.isUpgradeable()) {
+      if (roleId == 1 || "Administrator".equals(role)) {
+        context.getSession().setAttribute("UPGRADEOK", "UPGRADEOK");
+        return "PerformUpgradeOK";
+      } else {
+        return "UpgradeCheck";
+      }
+    } else {
+      //Check to see if user is already logged in. 
+      //If not then add them to the valid users list
+      SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      SessionManager sessionManager = thisSystem.getSessionManager();
+      if (sessionManager.isUserLoggedIn(userId)) {
+        UserSession thisSession = sessionManager.getUserSession(userId);
+        context.getSession().setMaxInactiveInterval(300);
+        context.getRequest().setAttribute("Session", thisSession);
+        return "LoginVerifyOK";
+      }
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Login-> Session Size: " + sessionManager.size());
+      }
+      // NOTE: This check is no longer valid until portal users are tracked
+      //if (userId2 != null && !userId2.equals("-1") && sessionManager.size() > Integer.parseInt(userId2)) {
+      //  return "LicenseError";
+      //}
+      context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
+      sessionManager.addUser(context, userId);
     }
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Login-> Session Size: " + sessionManager.size());
-    }
-    // NOTE: This check is no longer valid until portal users are tracked
-    //if (userId2 != null && !userId2.equals("-1") && sessionManager.size() > Integer.parseInt(userId2)) {
-    //  return "LicenseError";
-    //}
-    context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
-    sessionManager.addUser(context, userId);
     // TODO: Replace this so it does not need to be maintained
     // NOTE: Make sure to update this similar code in the following method
     if (thisUser.getRoleType() == Constants.ROLETYPE_REGULAR) {
-      ApplicationPrefs applicationPrefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
-      if (applicationPrefs.isUpgradeable()) {
-        if (thisUser.getRoleId() == 1 || "Administrator".equals(thisUser.getRole())) {
-          return "PerformUpgradeOK";
-        } else {
-          return "UpgradeCheck";
-        }
-      }
       return "LoginOK";
     } else if (thisUser.getRoleType() == Constants.ROLETYPE_CUSTOMER) {
       return "CustomerPortalLoginOK";
