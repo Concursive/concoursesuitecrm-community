@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
 <jsp:useBean id="MessageList" class="com.darkhorseventures.cfsbase.MessageList" scope="request"/>
@@ -33,7 +34,8 @@
       Message
     </td>
     <td width="100%">
-      <% MessageList.setJsEvent("onChange=\"javascript:document.frames['edit'].location.href = '/CampaignManagerMessage.do?command=PreviewMessage&id=' + this.options[this.selectedIndex].value;\""); %>
+      <%-- MessageList.setJsEvent("onChange=\"javascript:document.frames['edit'].location.href='/CampaignManagerMessage.do?command=PreviewMessage&id=' + this.options[this.selectedIndex].value;\""); --%>
+			<% MessageList.setJsEvent("onChange=\"javascript:window.frames['edit'].location.href='/CampaignManagerMessage.do?command=PreviewMessage&id=' + this.options[this.selectedIndex].value;\""); %>
       <%= MessageList.getHtmlSelect("messageId", Campaign.getMessageId()) %>
     </td>
   </tr>
@@ -42,8 +44,8 @@
       Preview
     </td>
     <td width="100%">
-      <iframe id="edit" frameborder="0" style="border: 1px solid #cccccc; width: 100%; height: 100%;" onblur="return false" src="/CampaignManagerMessage.do?command=PreviewMessage&id=<%= Campaign.getMessageId() %>">
-        Browser does not support this frame
+      <iframe id="edit" name="edit" frameborder="0" <dhv:browser id="ns">width="100%" height="200"</dhv:browser> <dhv:browser id="ie">style="border: 1px solid #cccccc; width: 100%; height: 100%;"</dhv:browser> onblur="return false" src="/CampaignManagerMessage.do?command=PreviewMessage&id=<%= Campaign.getMessageId() %>">
+        <%= Message.getMessageText() %>
       </iframe>
     </td>
   </tr>

@@ -37,9 +37,7 @@
       Preview
     </td>
     <td valign=center>
-      <jiframe id="edit" frameborder="0" style="border: 1px solid #cccccc; width: 100%; height: 100%;" onblur="return false" src="/CampaignManagerMessage.do?command=PreviewMessage&id=<%= MessageDetails.getId() %>">
-        <%= (MessageDetails.getMessageText()) %>&nbsp; 
-      </jiframe>
+			<%= (MessageDetails.getMessageText()) %>&nbsp; 
     </td>
   </tr>
   <tr>
