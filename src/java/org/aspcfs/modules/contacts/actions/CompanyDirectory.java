@@ -192,7 +192,7 @@ public final class CompanyDirectory extends CFSModule {
     String permission = "contacts-internal_contacts-add";
 
     Contact thisEmployee = (Contact) context.getFormBean();
-    thisEmployee.addType(Contact.EMPLOYEE_TYPE);
+    thisEmployee.setEmployee(true);
     thisEmployee.setRequestItems(context.getRequest());
     thisEmployee.setEnteredBy(getUserId(context));
     thisEmployee.setModifiedBy(getUserId(context));
