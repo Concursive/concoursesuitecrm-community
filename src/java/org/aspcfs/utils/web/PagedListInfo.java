@@ -223,15 +223,16 @@ public class PagedListInfo {
       this.setListView(tmpListView);
     }
 
+    //Populate the PagedListInfo with data filters, reset the list view since
+    //the user is changing the filter
     int filter = 0;
     while (context.getRequest().getParameter("listFilter" + (++filter)) != null) {
       String tmpListFilter = context.getRequest().getParameter("listFilter" + filter);
-      String currentSetting = (String) listFilters.get(tmpListFilter);
-      if (currentSetting != null && !currentSetting.equals(tmpListFilter)) {
-        this.setCurrentLetter("");
-        this.setCurrentOffset(0);
-      }
       addFilter(filter, tmpListFilter);
+    }
+    if (filter > 0) {
+      this.setCurrentLetter("");
+      this.setCurrentOffset(0);
     }
   }
   
