@@ -25,6 +25,7 @@ public class SetupServer extends CFSModule {
    */
   public String executeCommandSubmitRegistration(ActionContext context) {
     try {
+      boolean sendReg = false;
       //Receive the xml from the request
       XMLUtils xml = new XMLUtils(context.getRequest());
       //Create the object from the serialized xml
@@ -83,6 +84,7 @@ public class SetupServer extends CFSModule {
           status.appendChild(document.createTextNode("0"));
           errorText.appendChild(document.createTextNode("SUCCESS"));
           db.commit();
+          sendReg = true;
         } catch (Exception e) {
           status.appendChild(document.createTextNode("1"));
           errorText.appendChild(document.createTextNode("FAILURE"));
@@ -93,8 +95,10 @@ public class SetupServer extends CFSModule {
           }
           freeConnection(context, db);
         }
-        //Send the registration email
-        license.sendEmailRegistration();
+        if (sendReg) {
+          //Send the registration email
+          license.sendEmailRegistration();
+        }
       } else {
         status.appendChild(document.createTextNode("1"));
         errorText.appendChild(document.createTextNode("FAILURE"));

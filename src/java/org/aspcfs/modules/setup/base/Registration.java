@@ -437,7 +437,7 @@ public class Registration extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO registration (email, profile, name_first, name_last, " +
         "company, registration_text, os_version, java_version, webserver, " +
-        "ip_address, edition, code, " +
+        "ip_address, edition, crc, " +
         "key_file, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setString(++i, email);

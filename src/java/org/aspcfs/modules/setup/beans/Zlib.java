@@ -62,7 +62,6 @@ public class Zlib {
       //Test the key
       text = PrivateString.decrypt(key, XMLUtils.getNodeText(xml.getFirstChild("text")));
     } catch (Exception e) {
-      System.out.println(e.getMessage());
     }
   }
 
