@@ -75,26 +75,21 @@ public class ContactPhoneNumber extends PhoneNumber {
     if (phoneNumberId <= 0) {
       throw new SQLException("Invalid Phone Number ID specified.");
     }
-
-    Statement st = null;
-    ResultSet rs = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM contact_phone p, lookup_contactphone_types l " +
         "WHERE p.phone_type = l.code " +
-        "AND phone_id = " + phoneNumberId + " ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+        "AND phone_id = ? ");
+    pst.setInt(1, phoneNumberId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
+    } 
+    rs.close();
+    pst.close();
+    if (this.getId() == -1) {
       throw new SQLException("Phone record not found.");
     }
-    rs.close();
-    st.close();
   }
 
 
