@@ -178,45 +178,6 @@ Ticket Details<br>
 </table>
 &nbsp;
 <%}%>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-		<td colspan="4">
-      <strong>Ticket Log History</strong>
-		</td>     
-  </tr>
-<%  
-		Iterator hist = TicketDetails.getHistory().iterator();
-		if (hist.hasNext()) {
-			while (hist.hasNext()) {
-				TicketLog thisEntry = (TicketLog)hist.next();
-%>    
-<% if (thisEntry.getSystemMessage() == true) {%>
-  <tr bgColor="#F1F0E0">
-<% } else { %>
-  <tr class="containerBody">
-<%}%>
-    <td nowrap valign="top" class="formLabel">
-      <%= toHtml(thisEntry.getEnteredByName()) %>
-    </td>
-    <td nowrap valign="top">
-      <%= thisEntry.getEnteredString() %>
-    </td>
-    <td valign="top" width="100%">
-			<%= toHtml(thisEntry.getEntryText()) %>
-    </td>
-  </tr>
-<%    
-    }
-  } else {
-%>
-  <tr class="containerBody">
-    <td>
-      <font color="#9E9E9E" colspan="3">No Log Entries.</font>
-    </td>
-  </tr>
-<%}%>
-</table>
-&nbsp;
 
 <%-- include the tasks created --%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -364,6 +325,46 @@ Ticket Details<br>
         </td>
       </tr>
   <%}%>
+</table>
+&nbsp;
+
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+		<td colspan="4">
+      <strong>Ticket Log History</strong>
+		</td>     
+  </tr>
+<%  
+		Iterator hist = TicketDetails.getHistory().iterator();
+		if (hist.hasNext()) {
+			while (hist.hasNext()) {
+				TicketLog thisEntry = (TicketLog)hist.next();
+%>    
+<% if (thisEntry.getSystemMessage() == true) {%>
+  <tr bgColor="#F1F0E0">
+<% } else { %>
+  <tr class="containerBody">
+<%}%>
+    <td nowrap valign="top" class="formLabel">
+      <%= toHtml(thisEntry.getEnteredByName()) %>
+    </td>
+    <td nowrap valign="top">
+      <%= thisEntry.getEnteredString() %>
+    </td>
+    <td valign="top" width="100%">
+			<%= toHtml(thisEntry.getEntryText()) %>
+    </td>
+  </tr>
+<%    
+    }
+  } else {
+%>
+  <tr class="containerBody">
+    <td>
+      <font color="#9E9E9E" colspan="3">No Log Entries.</font>
+    </td>
+  </tr>
+<%}%>
 </table>
 
 &nbsp;
