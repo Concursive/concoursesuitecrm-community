@@ -26,6 +26,7 @@ public class CustomFieldCategoryList extends Vector {
   private int includeEnabled = -1;
   private int includeScheduled = -1;
   private boolean buildResources = false;
+  private boolean allSelectOption = false;
 
   private String jsEvent = null;
 
@@ -46,7 +47,6 @@ public class CustomFieldCategoryList extends Vector {
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
-
 
   public void setLinkModuleId(int tmp) { this.linkModuleId = tmp; }
   public void setIncludeEnabled(int tmp) { this.includeEnabled = tmp; }
@@ -78,6 +78,14 @@ public class CustomFieldCategoryList extends Vector {
   public int getLinkModuleId() { return linkModuleId; }
   public int getIncludeEnabled() { return includeEnabled; }
   public int getIncludeScheduled() { return includeScheduled; }
+  
+	public boolean getAllSelectOption() {
+		return allSelectOption;
+	}
+	public void setAllSelectOption(boolean allSelectOption) {
+		this.allSelectOption = allSelectOption;
+	}
+
 
   /**
    *  Gets the BuildResources attribute of the CustomFieldCategoryList object
@@ -138,6 +146,10 @@ public class CustomFieldCategoryList extends Vector {
 
   public String getHtmlSelect(String selectName, int defaultKey) {
 		HtmlSelect thisSelect = new HtmlSelect();
+		
+		if (allSelectOption) {
+			thisSelect.addItem(0, "All Folders");
+		}
 		
 		Iterator i = this.iterator();
 		while (i.hasNext()) {

@@ -244,8 +244,8 @@ public class ContactReport extends ContactList {
 				if (displayNameFirst) { thisRow.addCell(thisContact.getNameFirst()); }
 				if (displayNameMiddle) { thisRow.addCell(thisContact.getNameMiddle()); }
 				if (displayCompany) { thisRow.addCell(thisContact.getCompany()); }
-				if (displayDepartment) { thisRow.addCell(thisContact.getDepartmentName()); }
 				if (displayTitle) { thisRow.addCell(thisContact.getTitle()); }
+				if (displayDepartment) { thisRow.addCell(thisContact.getDepartmentName()); }
 				if (displayEntered) { thisRow.addCell(thisContact.getEnteredString()); }
 				if (displayEnteredBy) { thisRow.addCell(thisContact.getEnteredByName()); }
 				if (displayModified) { thisRow.addCell(thisContact.getModifiedString()); }
@@ -291,7 +291,7 @@ public class ContactReport extends ContactList {
 		thisItem.setEnteredBy(enteredBy);
 		thisItem.setModifiedBy(modifiedBy);
 		thisItem.setSubject(subject);
-		thisItem.setClientFilename(filenameToUse + ".csv");
+		thisItem.setClientFilename("contactreport-" + filenameToUse + ".csv");
 		thisItem.setFilename(filenameToUse);
 		thisItem.setSize(fileSize);
 		thisItem.insert(db);

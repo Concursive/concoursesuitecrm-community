@@ -44,6 +44,7 @@ public class OrganizationReport extends OrganizationList {
 	protected boolean displayNotes = true;
 	
 	protected boolean includeFolders = false;
+	protected int folderId = -1;
 
 	public OrganizationReport() { }
 	
@@ -90,6 +91,13 @@ public class OrganizationReport extends OrganizationList {
 	public void setDisplayContractEndDate(boolean tmp) { this.displayContractEndDate = tmp; }
 	public void setDisplayNotes(boolean tmp) { this.displayNotes = tmp; }
 	
+	public int getFolderId() {
+		return folderId;
+	}
+	public void setFolderId(int folderId) {
+		this.folderId = folderId;
+	}
+
 	public boolean getDisplayId() {
 		return displayId;
 	}
@@ -179,7 +187,12 @@ public class OrganizationReport extends OrganizationList {
 			rep.addColumn("Entered");
 			rep.addColumn("Modified");
 		}
+		
+		if (folderId > -1) {
+			rep.addColumn("Folder Name");
+		}
 	}
+	
 	
 	public void buildReportHeaders(Report passedReport) {
 		if (displayId) { passedReport.addColumn("Account ID"); }
@@ -200,6 +213,8 @@ public class OrganizationReport extends OrganizationList {
 	public void buildReportData(Connection db) throws SQLException {
 		this.buildList(db);
 		CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+		CustomFieldCategory thisCat = null;
+		CustomFieldGroup thisGroup = new CustomFieldGroup();
 		
 		if (includeFolders) {
 			thisList.setLinkModuleId(Constants.ACCOUNTS);
@@ -207,6 +222,23 @@ public class OrganizationReport extends OrganizationList {
 			thisList.setIncludeScheduled(Constants.TRUE);
 			thisList.setBuildResources(true);
 			thisList.buildList(db);	
+		} else if (folderId > -1) {
+			thisCat = new CustomFieldCategory(db, folderId);
+			thisCat.buildResources(db);
+			
+			Iterator grp = thisCat.iterator();
+			thisGroup = new CustomFieldGroup();
+			thisGroup = (CustomFieldGroup)grp.next();
+			thisGroup.buildResources(db);
+		
+			Iterator fields = thisGroup.iterator();
+		
+			if (fields.hasNext()) {
+				while (fields.hasNext()) {
+					CustomField thisField = (CustomField)fields.next();
+					rep.addColumn(thisField.getNameHtml());
+				}
+			}
 		}
 		
 		Iterator x = this.iterator();
@@ -216,11 +248,11 @@ public class OrganizationReport extends OrganizationList {
 			if (includeFolders) {
 				
 				CustomFieldRecordList recordList = new CustomFieldRecordList();
-				CustomFieldGroup thisGroup = new CustomFieldGroup();
+				thisGroup = new CustomFieldGroup();
 			
 				Iterator cat = thisList.iterator();
 				while (cat.hasNext()) {
-					CustomFieldCategory thisCat = (CustomFieldCategory) cat.next();
+					thisCat = (CustomFieldCategory) cat.next();
 				
 					recordList = new CustomFieldRecordList();
 					recordList.setLinkModuleId(Constants.ACCOUNTS);
@@ -269,6 +301,43 @@ public class OrganizationReport extends OrganizationList {
 						
 					}
 					
+			} else if (folderId > -1) {
+				CustomFieldRecordList recordList = new CustomFieldRecordList();
+				recordList.setLinkModuleId(Constants.ACCOUNTS);
+				recordList.setLinkItemId(thisOrg.getOrgId());
+				recordList.setCategoryId(thisCat.getId());
+				recordList.buildList(db);
+				
+				Iterator rec = recordList.iterator();
+				
+				while (rec.hasNext()) {
+					
+					ReportRow thisRow = new ReportRow();
+					addDataRow( thisRow, thisOrg );
+					thisRow.addCell(thisCat.getName());
+				
+					CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
+					Iterator grp = thisCat.iterator();
+					while (grp.hasNext()) {
+						thisGroup = new CustomFieldGroup();
+						thisGroup = (CustomFieldGroup)grp.next();
+						thisGroup.buildResources(db);
+				
+						Iterator fields = thisGroup.iterator();
+						if (fields.hasNext()) {
+							while (fields.hasNext()) {
+				
+								CustomField thisField = (CustomField)fields.next();
+								thisField.setRecordId(thisRec.getId());
+								thisField.buildResources(db);
+				
+								thisRow.addCell(thisField.getValueHtml());
+							}
+						}
+					}
+					
+					rep.addRow(thisRow);
+				}
 			} else {
 				ReportRow thisRow = new ReportRow();
 				

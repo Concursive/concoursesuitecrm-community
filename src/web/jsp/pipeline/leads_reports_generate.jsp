@@ -63,8 +63,30 @@
   </tr>
   
   <tr>
+    <td nowrap class="formLabel">
+      Sorting
+    </td>
+    <td>
+      <select name="sort">
+      <option value="description">Description</option>
+      <option value="opp_id">Opportunity ID</option>
+      <option value="lowvalue">Low Amount</option>
+      <option value="guessvalue">Best Guess Amount</option>
+      <option value="highvalue">High Amount</option>
+      <option value="closeprob">Prob. of Close</option>
+      <option value="closedate">Revenue Start</option>
+      <option value="terms">Terms</option>
+      <option value="alertdate">Alert Date</option>
+      <option value="commission">Commission</option>
+      <option value="entered">Entered</option>
+      <option value="modified">Modified</option>
+      </select>
+    </td>
+  </tr>
+  
+  <tr>
     <td nowrap valign=top class="formLabel">
-      Included Fields
+      Included Fields (CTRL+click to select/de-select)
     </td>
     <td>
       <select size=5 multiple name="fields">
@@ -72,7 +94,9 @@
       <option value="description" selected>Description</option>
       <option value="contact" selected>Contact/Organization</option>
       <option value="owner" selected>Owner</option>
-      <option value="amount" selected>Amount</option>
+      <option value="amount1" selected>Low Amount</option>
+      <option value="amount2" selected>Best Guess Amount</option>
+      <option value="amount3" selected>High Amount</option>
       <option value="stageName" selected>Stage Name</option>
       <option value="stageDate" selected>Stage Date</option>
       <option value="probability" selected>Prob. of Close</option>

@@ -63,8 +63,27 @@
   </tr>
   
   <tr>
+    <td nowrap class="formLabel">
+      Sorting
+    </td>
+    <td>
+      <select name="sort">
+      <option value="c.namelast">Last Name</option>
+      <option value="c.contact_id">Contact ID</option>
+      <option value="type_name">Contact Type</option>
+      <option value="c.namefirst">First Name</option>
+      <option value="company">Company</option>
+      <option value="c.title">Title</option>
+      <option value="departmentname">Department</option>
+      <option value="c.entered">Entered</option>
+      <option value="c.modified">Modified</option>
+      </select>
+    </td>
+  </tr>
+  
+  <tr>
     <td nowrap valign=top class="formLabel">
-      Included Fields
+      Included Fields (CTRL+click to select/de-select)
     </td>
     <td>
       <select size=5 multiple name="fields">

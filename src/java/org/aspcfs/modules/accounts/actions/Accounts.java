@@ -165,6 +165,26 @@ public final class Accounts extends CFSModule {
   }
   
   public String executeCommandGenerateForm(ActionContext context) {
+	Exception errorMessage = null;
+	Connection db = null;
+	  
+	CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+	thisList.setLinkModuleId(Constants.ACCOUNTS);
+	thisList.setIncludeEnabled(Constants.TRUE);
+	thisList.setIncludeScheduled(Constants.TRUE);
+	thisList.setAllSelectOption(true);
+	thisList.setBuildResources(false);
+	
+	try {
+		db = getConnection(context);
+		thisList.buildList(db);
+		context.getRequest().setAttribute("CategoryList", thisList);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+      
 	addModuleBean(context, "Reports", "Generate new");
 	return("GenerateFormOK");
   }
@@ -173,9 +193,11 @@ public final class Accounts extends CFSModule {
 	Exception errorMessage = null;
 	boolean recordInserted = false;
 	Connection db = null;
+	
 	String subject = context.getRequest().getParameter("subject");
 	String type = context.getRequest().getParameter("type");
 	String ownerCriteria = context.getRequest().getParameter("criteria1");
+	int folderId = Integer.parseInt(context.getRequest().getParameter("catId"));
 	
 	//String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
 	
@@ -213,6 +235,8 @@ public final class Accounts extends CFSModule {
 			oppReport.setModifiedBy(getUserId(context));
 			oppReport.setSubject(subject);
 			
+			oppReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
+			
 			if (ownerCriteria.equals("my")) {
 				oppReport.setOwner(this.getUserId(context));
 			} else if (ownerCriteria.equals("all")) {
@@ -232,6 +256,8 @@ public final class Accounts extends CFSModule {
 			contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
 			contactReport.setPersonalId(this.getUserId(context));
 			
+			contactReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
+			
 			if (ownerCriteria.equals("my")) {
 				contactReport.setOwner(this.getUserId(context));
 			} else if (ownerCriteria.equals("all")) {
@@ -249,13 +275,19 @@ public final class Accounts extends CFSModule {
 			ticReport.setSubject(subject);
 			ticReport.setHeader("CFS Accounts");
 			ticReport.setJoinOrgs(true);
+			
+			ticReport.getOrgReportJoin().setCriteria(context.getRequest().getParameterValues("fields"));
+			
 			ticReport.buildReportFull(db);
 			ticReport.saveAndInsert(db);
 		} else {
 		
-			if (type.equals("4")) {
+			if (type.equals("4") && folderId == 0) {
 				orgReport.setIncludeFolders(true);
+			} else if (type.equals("4") && folderId > 0) {
+				orgReport.setFolderId(folderId);
 			}
+			
 			orgReport.buildReportFull(db);
 			orgReport.saveAndInsert(db);
 		}	

@@ -699,6 +699,10 @@ public final class Leads extends CFSModule {
 	oppReport.setModifiedBy(getUserId(context));
 	oppReport.setSubject(subject);
 	
+	PagedListInfo thisInfo = new PagedListInfo();
+	thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
+	oppReport.setPagedListInfo(thisInfo);
+	
 		
 	if (ownerCriteria.equals("my")) {
 		oppReport.setOwner(this.getUserId(context));

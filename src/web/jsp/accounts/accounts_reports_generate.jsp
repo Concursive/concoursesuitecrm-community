@@ -16,9 +16,85 @@
         return true;
       }
     }
+    
+    function ShowSpan(thisID)
+{
+	isNS4 = (document.layers) ? true : false;
+	isIE4 = (document.all && !document.getElementById) ? true : false;
+	isIE5 = (document.all && document.getElementById) ? true : false;
+	isNS6 = (!document.all && document.getElementById) ? true : false;
+	
+	if (isNS4){
+	elm = document.layers[thisID];
+	}
+	else if (isIE4) {
+	elm = document.all[thisID];
+	}
+	else if (isIE5 || isNS6) {
+	elm = document.getElementById(thisID);
+	elm.style.visibility="visible";
+	}
+	
+	return true;
+   
+}
+
+function update(){
+	if (document.generate.type.selectedIndex == 3) {
+		javascript:ShowSpan('new0');
+	} else {
+		javascript:HideSpan('new0');
+	}
+}
+
+function HideSpan(thisID)
+{
+	isNS4 = (document.layers) ? true : false;
+	isIE4 = (document.all && !document.getElementById) ? true : false;
+	isIE5 = (document.all && document.getElementById) ? true : false;
+	isNS6 = (!document.all && document.getElementById) ? true : false;
+
+	if (isNS4){
+	elm = document.layers[thisID];
+	}
+	else if (isIE4) {
+	elm = document.all[thisID];
+	}
+	else if (isIE5 || isNS6) {
+	elm = document.getElementById(thisID);
+	elm.style.visibility="hidden";
+	}
+	
+	return true;
+   
+}
+    
+	function HideSpans()
+	{
+	isNS = (document.layers) ? true : false;
+	isIE = (document.all) ? true : false;
+	
+	if( (isIE) )
+	{
+	//document.all.new0.style.visibility="hidden";
+	//document.all.new1.style.visibility="hidden";
+	//document.all.new2.style.visibility="hidden";
+	//document.all.new3.style.visibility="hidden";
+	}
+	else if( (isNS) )
+	{
+	document.new0.visibility="hidden";
+	document.new1.visibility="hidden";
+	document.new2.visibility="hidden";
+	document.new3.visibility="hidden";
+	}
+	
+	return true;
+	
+	}
 </script>
 
-<body onLoad="javascript:document.forms[0].subject.focus();">
+<body onLoad="javascript:HideSpans();javascript:document.forms[0].subject.focus();">
 <form name="generate" action="/Accounts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
 <input type="submit" value="Generate">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=Reports';javascript:this.form.submit();">
@@ -36,13 +112,20 @@
       Type
     </td>
     <td>
-      <select name="type">
+      <select name="type" onchange='update();'>
       <option value="1">All Accounts</option>
       <option value="2">Accounts w/Contacts</option>
       <option value="3">Accounts w/Tickets</option>
       <option value="4">Accounts w/Folders</option>
       <option value="5">Accounts w/Opportunities</option>
       </select>
+      
+      <span name="new0" ID="new0" style="position:relative; visibility:hidden">&nbsp;:&nbsp;
+	<% if (CategoryList.size() > 0) {%>
+	<%=CategoryList.getHtmlSelect("catId", 0)%>
+	<%}%>
+      </span>
+      
     </td>
   </tr>
   

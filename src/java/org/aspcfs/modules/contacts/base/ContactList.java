@@ -164,6 +164,9 @@ public class ContactList extends Vector {
 		this.personalId = personalId;
 	}
 
+public PagedListInfo getPagedListInfo() {
+	return pagedListInfo;
+}
 
 	/**
 	 *  Sets the TypeIdRange attribute of the ContactList object

@@ -234,6 +234,11 @@ public String executeCommandReports(ActionContext context) {
 	contactReport.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
 	contactReport.setPersonalId(this.getUserId(context));
 	
+	PagedListInfo thisInfo = new PagedListInfo();
+	thisInfo.setColumnToSortBy(context.getRequest().getParameter("sort"));
+	contactReport.setPagedListInfo(thisInfo);
+	
+	
 	if (ownerCriteria.equals("my")) {
 		contactReport.setOwner(this.getUserId(context));
 	} else if (ownerCriteria.equals("all")) {
