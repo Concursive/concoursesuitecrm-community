@@ -7,6 +7,7 @@ import java.util.logging.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.autoguide.base.*;
+import java.io.File;
 
 /**
  *  Description of the Class
@@ -16,21 +17,40 @@ import com.darkhorseventures.autoguide.base.*;
  *@version    $Id$
  */
 public class PilotOnlineReader implements DataReader {
-
+  public static final String fs = System.getProperty("file.separator");
   private String driver = null;
   private String url = null;
   private String user = null;
   private String password = null;
+  private String pictureSourcePath = null;
+  private String pictureDestinationPath = null;
+  private ArrayList picturesToProcess = new ArrayList();
   
   public void setDriver(String tmp) { this.driver = tmp; }
   public void setUrl(String tmp) { this.url = tmp; }
   public void setUser(String tmp) { this.user = tmp; }
   public void setPassword(String tmp) { this.password = tmp; }
+  public void setPictureSourcePath(String tmp) { 
+    if (tmp.endsWith(fs)) {
+      this.pictureSourcePath = tmp;
+    } else {
+      this.pictureSourcePath = tmp + fs;
+    }
+  }
+  public void setPictureDestinationPath(String tmp) { 
+    if (tmp.endsWith(fs)) {
+      this.pictureDestinationPath = tmp;
+    } else {
+      this.pictureDestinationPath = tmp + fs;
+    }
+  }
+
   public String getDriver() { return driver; }
   public String getUrl() { return url; }
   public String getUser() { return user; }
   public String getPassword() { return password; }
-
+  public String getPictureSourcePath() { return pictureSourcePath; }
+  public String getPictureDestinationPath() { return pictureDestinationPath; }
   
   /**
    *  Gets the version attribute of the PilotOnlineReader object
@@ -70,7 +90,9 @@ public class PilotOnlineReader implements DataReader {
    *@return    The configured value
    */
   public boolean isConfigured() {
-    if (driver == null || url == null || user == null) {
+    if (driver == null || url == null || user == null || 
+        pictureSourcePath == null || pictureDestinationPath == null) {
+      logger.info("Check params: driver, url, user, pictureSourcePath, pictureDestinationPath");
       return false;
     }
     return true;
@@ -111,7 +133,11 @@ public class PilotOnlineReader implements DataReader {
         InventoryList inventoryList = new InventoryList();
         inventoryList.setOrgId(dealer.getId());
         inventoryList.setShowSold(Constants.FALSE);
-        //inventoryList.setAdRunDate(new java.sql.Date(new java.util.Date().getTime()));
+        Calendar runDate = Calendar.getInstance();
+        while (runDate.get(Calendar.DAY_OF_WEEK) != Calendar.THURSDAY) {
+          runDate.add(Calendar.DATE, 1);
+        }
+        inventoryList.setAdRunDate(new java.sql.Date(runDate.getTime().getTime()));
         inventoryList.setBuildPictureId(true);
         inventoryList.buildList(db);
         Iterator inventory = inventoryList.iterator();
@@ -151,12 +177,33 @@ public class PilotOnlineReader implements DataReader {
           thisRecord.addField("accountEmail", dealer.getEmailAddress("Primary"));
           //Picture
           if (vehicle.hasPicture()) {
-            thisRecord.addField("pictureFilename", vehicle.getPicture().getFilename() + ".jpg");
+            String pictureName = vehicle.getPicture().getFilename();
+            if (pictureName.endsWith("TH")) {
+              pictureName = pictureName.substring(0, pictureName.indexOf("TH"));
+            }
+            thisRecord.addField("pictureFilename", pictureName + ".jpg");
+            picturesToProcess.add(pictureName);
           } else {
             thisRecord.addField("pictureFilename", "");
           }
           writer.save(thisRecord);
           //logger.info(writer.getLastResponse());
+        }
+        if (picturesToProcess.size() > 0) {
+          Iterator pictures = picturesToProcess.iterator();
+          while (pictures.hasNext()) {
+            String thisPicture = (String)pictures.next();
+            File sourcePicture = new File(
+              pictureSourcePath + 
+              thisPicture.substring(0,4) + fs +
+              thisPicture.substring(4,8) + fs +
+              thisPicture);
+            File destinationPicture = new File(pictureDestinationPath + thisPicture + ".jpg");
+            if (sourcePicture.exists()) {
+              ImageUtils.saveThumbnail(sourcePicture, destinationPicture, 285.0, -1.0);
+            }
+          }
+          picturesToProcess.clear();
         }
       }
     } catch (Exception ex) {
