@@ -205,9 +205,9 @@ public class LookupListElement {
    *@param  db  Description of the Parameter
    */
   public void buildLookupList(Connection db, int userId) throws SQLException {
-    if (className.equals("lookuplist")) {
+    if (className.equals("lookupList")) {
       setLookupList(new LookupList(db, getTableName()));
-    } else if (className.equals("contacttype")) {
+    } else if (className.equals("contactType")) {
       ContactTypeList contactTypeList = new ContactTypeList();
       contactTypeList.setIncludeDefinedByUser(userId);
       contactTypeList.setCategory(moduleId);

@@ -267,8 +267,8 @@ public class PermissionsAndRolesWriter implements DataWriter {
             "VALUES (?, ?, ?, ?, ?, ?) ");
           pst.setInt(1, record.getIntValue("moduleId"));
           pst.setInt(2, record.getIntValue("lookupId"));
-          pst.setString(3, record.getValue("className"));
-          pst.setString(4, record.getValue("tableName"));
+          pst.setString(3, record.getValue("class"));
+          pst.setString(4, record.getValue("table"));
           pst.setInt(5, record.getIntValue("level"));
           pst.setString(6, record.getValue("description"));
           pst.executeUpdate();

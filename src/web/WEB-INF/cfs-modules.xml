@@ -59,7 +59,7 @@
     </submenu>
     
     <submenu name="Reassign">
-        <permission value="admin-reassign-view"/>
+        <permission value="myhomepage-reassign-view"/>
         <long_html value="Re-assignments"/>
         <short_html value="Re-assignments"/>
         <link value="Reassignments.do?command=Reassign"/>

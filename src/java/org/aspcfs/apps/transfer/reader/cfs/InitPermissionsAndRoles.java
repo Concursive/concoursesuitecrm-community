@@ -152,7 +152,7 @@ public class InitPermissionsAndRoles implements DataReader {
         
         //Insert any lookups under this category
         ArrayList lookupList = new ArrayList();
-        XMLUtils.getAllChildren(category, "lookup", folderList);
+        XMLUtils.getAllChildren(category, "lookup", lookupList);
         Iterator lookupItems = lookupList.iterator();
         int lookupLevel = 0;
         while (lookupItems.hasNext()) {
@@ -163,8 +163,8 @@ public class InitPermissionsAndRoles implements DataReader {
           lookupRecord.setAction("insert");
           lookupRecord.addField("moduleId", String.valueOf(categoryId));
           lookupRecord.addField("lookupId", (String) lookup.getAttribute("constantId"));
-          lookupRecord.addField("className", (String) lookup.getAttribute("className"));
-          lookupRecord.addField("tableName", (String) lookup.getAttribute("tableName"));
+          lookupRecord.addField("class", (String) lookup.getAttribute("class"));
+          lookupRecord.addField("table", (String) lookup.getAttribute("table"));
           lookupRecord.addField("level", String.valueOf(lookupLevel));
           lookupRecord.addField("description", (String) lookup.getAttribute("description"));
           writer.save(lookupRecord);
