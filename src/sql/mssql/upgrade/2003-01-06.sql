@@ -68,7 +68,6 @@ ALTER TABLE organization DROP COLUMN ins_type
 ALTER TABLE organization DROP COLUMN cust_status
 ALTER TABLE organization DROP COLUMN area
 ALTER TABLE organization DROP COLUMN industry_code
-ALTER TABLE organization DROP COLUMN duplicate
 ALTER TABLE organization ALTER COLUMN owner int NULL
 ALTER TABLE organization ALTER COLUMN duplicate_id int NULL
 ALTER TABLE organization ADD [namesalutation] [varchar] (80)NULL
@@ -76,6 +75,7 @@ ALTER TABLE organization ADD [namelast] [varchar] (80) NULL
 ALTER TABLE organization ADD [namefirst] [varchar] (80) NULL
 ALTER TABLE organization ADD [namemiddle] [varchar] (80) NULL
 ALTER TABLE organization ADD [namesuffix] [varchar] (80) NULL
+ALTER TABLE organization DROP COLUMN duplicate
 
 ALTER TABLE contact ALTER COLUMN owner INT NULL
 ALTER TABLE contact ADD primary_contact BIT NULL
@@ -283,7 +283,7 @@ GO
 CREATE INDEX "call_log_cidx" ON "call_log" ("alertdate", "enteredby");
 GO
 
-DROP TABLE ticket_log
+DROP TABLE ticketlog
 DROP TABLE ticket
 DROP TABLE ticket_level
 DROP TABLE ticket_source
@@ -1185,7 +1185,7 @@ UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.LookupList' WHER
 UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.media.autoguide.base.AdRunList' WHERE mapped_class_name = 'com.darkhorseventures.autoguide.base.AdRunList'
 UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.LookupElement' WHERE mapped_class_name = 'com.darkhorseventures.webutils.LookupElement'
 UPDATE sync_table SET mapped_class_name = 'org.aspcfs.utils.web.CustomLookupElement' WHERE mapped_class_name = 'com.darkhorseventures.webutils.CustomLookupElement'
-
+UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.troubletickets.base.Ticket' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Ticket'
 
 
 /* Foreign Keys */
@@ -1215,30 +1215,6 @@ ALTER TABLE [dbo].[account_type_levels] ADD
 GO
 
 ALTER TABLE [dbo].[autoguide_ad_run] ADD 
-	 FOREIGN KEY 
-	(
-		[inventory_id]
-	) REFERENCES [dbo].[autoguide_inventory] (
-		[inventory_id]
-	)
-GO
-
-ALTER TABLE [dbo].[autoguide_inventory] ADD 
-	 FOREIGN KEY 
-	(
-		[account_id]
-	) REFERENCES [dbo].[organization] (
-		[org_id]
-	),
-	 FOREIGN KEY 
-	(
-		[vehicle_id]
-	) REFERENCES [dbo].[autoguide_vehicle] (
-		[vehicle_id]
-	)
-GO
-
-ALTER TABLE [dbo].[autoguide_inventory_options] ADD 
 	 FOREIGN KEY 
 	(
 		[inventory_id]
@@ -1304,12 +1280,6 @@ ALTER TABLE [dbo].[contact] ADD
 	),
 	 FOREIGN KEY 
 	(
-		[owner]
-	) REFERENCES [dbo].[access] (
-		[user_id]
-	),
-	 FOREIGN KEY 
-	(
 		[super]
 	) REFERENCES [dbo].[contact] (
 		[contact_id]
@@ -1364,27 +1334,6 @@ ALTER TABLE [dbo].[organization] ADD
 	)
 GO
 
-ALTER TABLE [dbo].[project_files] ADD 
-	 FOREIGN KEY 
-	(
-		[enteredBy]
-	) REFERENCES [dbo].[access] (
-		[user_id]
-	),
-	 FOREIGN KEY 
-	(
-		[folder_id]
-	) REFERENCES [dbo].[project_folders] (
-		[folder_id]
-	),
-	 FOREIGN KEY 
-	(
-		[modifiedBy]
-	) REFERENCES [dbo].[access] (
-		[user_id]
-	)
-GO
-
 ALTER TABLE [dbo].[project_files_download] ADD 
 	 FOREIGN KEY 
 	(
@@ -1403,21 +1352,9 @@ GO
 ALTER TABLE [dbo].[project_files_version] ADD 
 	 FOREIGN KEY 
 	(
-		[enteredBy]
-	) REFERENCES [dbo].[access] (
-		[user_id]
-	),
-	 FOREIGN KEY 
-	(
 		[item_id]
 	) REFERENCES [dbo].[project_files] (
 		[item_id]
-	),
-	 FOREIGN KEY 
-	(
-		[modifiedBy]
-	) REFERENCES [dbo].[access] (
-		[user_id]
 	)
 GO
 
@@ -1437,12 +1374,6 @@ ALTER TABLE [dbo].[role] ADD
 GO
 
 ALTER TABLE [dbo].[sync_conflict_log] ADD 
-	 FOREIGN KEY 
-	(
-		[client_id]
-	) REFERENCES [dbo].[sync_client] (
-		[client_id]
-	),
 	 FOREIGN KEY 
 	(
 		[table_id]
