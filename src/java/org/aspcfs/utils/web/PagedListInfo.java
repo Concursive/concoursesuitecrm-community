@@ -213,6 +213,11 @@ public class PagedListInfo {
     if (tmpCurrentOffset != null) {
       this.setCurrentOffset(tmpCurrentOffset);
     }
+    
+    String tmpCurrentPage = context.getRequest().getParameter("page");
+    if (tmpCurrentPage != null) {
+      this.setCurrentOffset((Integer.parseInt(tmpCurrentPage) - 1) * itemsPerPage);
+    }
 
     String tmpListView = context.getRequest().getParameter("listView");
     if (tmpListView != null) {
@@ -347,7 +352,18 @@ public class PagedListInfo {
     return links.toString();
   }
 
+  public String getNumericalPageEntry() {
+    int numPages = this.getNumberOfPages();
+    StringBuffer links = new StringBuffer();
+    if (numPages > 1) {
+      links.append("<form name=\"pageEntry\" action=\"" + link + "\" method=\"post\">");
+      links.append("Page <input type=\"text\" name=\"page\" value=\"" + ((currentOffset / itemsPerPage) + 1) + "\" size=\"3\"> of " + numPages);
+      links.append("</form>");
+    }
+    return links.toString();
+  }
 
+  
   /**
    *  Gets the numberOfPages attribute of the PagedListInfo object
    *

@@ -8,12 +8,13 @@
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 
-<form name="listView" method="post" action="AutoGuide.do?command=List">
+
 <br>
 <center><%= AutoGuideDirectoryInfo.getNumericalPageLinks() %></center>
 
 <table width="100%" border="0">
   <tr>
+    <form name="listView" method="post" action="AutoGuide.do?command=List">
     <td align="left">
       Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= AutoGuideDirectoryInfo.getOptionValue("list") %>>List View</option>
@@ -30,6 +31,7 @@
 			Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
       <%= showAttribute(request, "actionError") %>
     </td>
+    </form>
   </tr>
 </table>
 
@@ -129,5 +131,4 @@
 <%}%>
 </table>
 <br>
-[<%= AutoGuideDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= AutoGuideDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= AutoGuideDirectoryInfo.getNumericalPageLinks() %>
-</form>
+[<%= AutoGuideDirectoryInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") %> <%= AutoGuideDirectoryInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") %>] <%= AutoGuideDirectoryInfo.getNumericalPageEntry() %>
