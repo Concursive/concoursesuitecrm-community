@@ -60,16 +60,32 @@ Add Role<br>
       <%= toHtml(thisPermission.getDescription()) %>
     </td>
     <td align="center">
-      <input type="checkbox" value="ON" name="permission<%= idCount %>view" <%= thisPermission.getView()?"":"disabled" %>>
+      <% if(thisPermission.getView()){ %>
+      <input type="checkbox" value="ON" name="permission<%= idCount %>view">
+      <% } else{ %>
+      --
+    <% } %>
     </td>
     <td align="center">
-      <input type="checkbox" value="ON" name="permission<%= idCount %>add" <%= thisPermission.getAdd()?"":"disabled" %>>
+    <% if(thisPermission.getAdd()){ %>
+      <input type="checkbox" value="ON" name="permission<%= idCount %>add">
+    <% } else{ %>
+      --
+    <% } %>
     </td>
     <td align="center">
-      <input type="checkbox" value="ON" name="permission<%= idCount %>edit" <%= thisPermission.getEdit()?"":"disabled" %>>
+    <% if(thisPermission.getEdit()){ %>
+      <input type="checkbox" value="ON" name="permission<%= idCount %>edit">
+    <% } else{ %>
+      --
+    <% } %>
     </td>
     <td align="center">
-      <input type="checkbox" value="ON" name="permission<%= idCount %>delete" <%= thisPermission.getDelete()?"":"disabled" %>>
+    <% if(thisPermission.getDelete()){ %> 
+      <input type="checkbox" value="ON" name="permission<%= idCount %>delete">
+    <% }else{ %>
+      --
+    <% } %>
     </td>
   </tr>
 <%
