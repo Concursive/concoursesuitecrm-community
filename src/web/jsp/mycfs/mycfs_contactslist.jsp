@@ -92,7 +92,7 @@
 <%} else {%>
         <a href="javascript:document.contactListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= count %>','contactListView');">Add</a>
 <%}%>
-        <input type="hidden" name="hiddencontactid<%= count %>" value=<%= thisContact.getId() %>>
+        <input type="hidden" name="hiddencontactid<%= count %>" value="<%= thisContact.getId() %>">
         <input type="hidden" name="hiddenname<%= count %>" value="<%= toHtml(thisContact.getNameLastFirst()) %>">
       </td>
       <td nowrap>
@@ -142,7 +142,7 @@
     <%}%>
       <td>
         <%= toHtml(thisContact.getTypesNameString()) %>
-        <input type="hidden" name="contactemail<%= count %>" value=<%= email %>>
+        <input type="hidden" name="contactemail<%= count %>" value="<%= toHtmlValue(email) %>">
       </td>
     </tr>
 <%
@@ -157,13 +157,13 @@
 <%}%>
     <input type="hidden" name="finalsubmit" value="false">
     <input type="hidden" name="rowcount" value="0">
-    <input type="hidden" name="displayFieldId" value="<%= request.getParameter("displayFieldId") %>">
-    <input type="hidden" name="hiddenFieldId" value="<%= request.getParameter("hiddenFieldId") %>">
-    <input type="hidden" name="listType" value="<%= (request.getParameter("listType") != null ? request.getParameter("listType") : "") %>">
-    <input type="hidden" name="usersOnly" value="<%= (request.getParameter("usersOnly") != null ? request.getParameter("usersOnly") : "") %>">
-    <input type="hidden" name="nonUsersOnly" value="<%= (request.getParameter("nonUsersOnly") != null ? request.getParameter("nonUsersOnly") : "") %>">
-    <input type="hidden" name="campaign" value="<%= (request.getParameter("campaign") != null ? request.getParameter("campaign") : "") %>">
-    <input type="hidden" name="filters" value="<%= (request.getParameter("filters") != null ? request.getParameter("filters") : "")%>">
+    <input type="hidden" name="displayFieldId" value="<%= toHtmlValue(request.getParameter("displayFieldId")) %>">
+    <input type="hidden" name="hiddenFieldId" value="<%= toHtmlValue(request.getParameter("hiddenFieldId")) %>">
+    <input type="hidden" name="listType" value="<%= toHtmlValue(request.getParameter("listType")) %>">
+    <input type="hidden" name="usersOnly" value="<%= toHtmlValue(request.getParameter("usersOnly")) %>">
+    <input type="hidden" name="nonUsersOnly" value="<%= toHtmlValue(request.getParameter("nonUsersOnly")) %>">
+    <input type="hidden" name="campaign" value="<%= toHtmlValue(request.getParameter("campaign")) %>">
+    <input type="hidden" name="filters" value="<%= toHtmlValue(request.getParameter("filters")) %>">
   </table>
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
