@@ -17,7 +17,6 @@ CREATE TABLE sites (
   enabled BOOLEAN NOT NULL DEFAULT false
 );
 
-GRANT ALL ON sites TO gatekeeper;
 
 CREATE TABLE events (
   event_id SERIAL PRIMARY KEY,
@@ -35,7 +34,6 @@ CREATE TABLE events (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-GRANT ALL ON events TO gatekeeper;
 
 CREATE TABLE events_log (
   log_id SERIAL PRIMARY KEY,
@@ -45,4 +43,6 @@ CREATE TABLE events_log (
   message TEXT
 );
 
+GRANT ALL ON sites TO gatekeeper;
+GRANT ALL ON events TO gatekeeper;
 GRANT ALL ON events_log TO gatekeeper;
