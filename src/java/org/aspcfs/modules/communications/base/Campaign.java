@@ -1535,6 +1535,7 @@ public class Campaign extends GenericBean {
   public void insertRecipients(Connection db, int userId, String userRangeId, int personalId) throws SQLException {
     SearchCriteriaListList groupData = new SearchCriteriaListList();
     groupData.setCampaignId(this.id);
+    groupData.setBuildCriteria(true);
     groupData.buildList(db);
     Iterator i = groupData.iterator();
     while (i.hasNext()) {
@@ -2024,6 +2025,7 @@ public class Campaign extends GenericBean {
         //Lock in the groups & criteria
         SearchCriteriaListList thisList = new SearchCriteriaListList();
         thisList.setCampaignId(id);
+        thisList.setBuildCriteria(true);
         thisList.buildList(db);
         lockGroupCriteria(thisList, db);
 

@@ -339,35 +339,23 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandViewGroups(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+    if (!hasPermission(context, "campaign-campaigns-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-    //addModuleBean(context, "ManageCampaigns", "Build New Campaign");
-    addModuleBean(context, "Dashboard", "View Groups");
     Connection db = null;
     Campaign campaign = null;
-
+    addModuleBean(context, "Dashboard", "View Groups");
     String campaignId = context.getRequest().getParameter("id");
-
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-
-      //SearchCriteriaListList sclList = new SearchCriteriaListList();
-      //sclList.setCampaignId(campaign.getId());
-      //sclList.buildList(db);
-      //context.getRequest().setAttribute("sclList", sclList);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
@@ -732,37 +720,26 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandViewSchedule(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+    if (!hasPermission(context, "campaign-campaigns-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
-
     String campaignId = context.getRequest().getParameter("id");
     Campaign campaign = null;
-
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-
+      //Prepare the list of available delivery types
       LookupList deliveryList = new LookupList(db, "lookup_delivery_options");
       context.getRequest().setAttribute("DeliveryList", deliveryList);
-
-      SearchCriteriaListList sclList = new SearchCriteriaListList();
-      sclList.setCampaignId(campaign.getId());
-      sclList.buildList(db);
-      context.getRequest().setAttribute("sclList", sclList);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
@@ -782,37 +759,23 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPreviewSchedule(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+    if (!hasPermission(context, "campaign-campaigns-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-    addModuleBean(context, "Dashboard", "Build New Campaign");
+    addModuleBean(context, "Dashboard", "Preview Schedule");
     Connection db = null;
     Campaign campaign = null;
-
     String campaignId = context.getRequest().getParameter("id");
-
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-
-      LookupList deliveryList = new LookupList(db, "lookup_delivery_options");
-      context.getRequest().setAttribute("DeliveryList", deliveryList);
-
-      SearchCriteriaListList sclList = new SearchCriteriaListList();
-      sclList.setCampaignId(campaign.getId());
-      sclList.buildList(db);
-      context.getRequest().setAttribute("sclList", sclList);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");

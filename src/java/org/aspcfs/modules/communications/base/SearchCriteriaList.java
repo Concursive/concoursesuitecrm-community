@@ -13,6 +13,9 @@ import org.aspcfs.modules.contacts.base.Contact;
 import java.text.*;
 
 /**
+ *  SearchCriteriaList contains the definitions for querying a ContactList. For
+ *  example, "Contacts with a 23456 zip code" <p>
+ *
  *  Contains a group of criteria groups, that each contain criteria elements. A
  *  group is a unique field that can have multiple criteria.
  *
@@ -23,9 +26,6 @@ import java.text.*;
  */
 public class SearchCriteriaList extends HashMap {
 
-  /**
-   *  Description of the Field
-   */
   protected HashMap errors = new HashMap();
   private int id = -1;
   private String groupName = "";
@@ -39,26 +39,10 @@ public class SearchCriteriaList extends HashMap {
   private String saveCriteria = "";
   private String htmlSelectIdName = null;
   private boolean onlyContactIds = true;
-  /**
-   *  Description of the Field
-   */
   public final static int SOURCE_MY_CONTACTS = 1;
-  /**
-   *  Description of the Field
-   */
   public final static int SOURCE_ALL_CONTACTS = 2;
-  /**
-   *  Description of the Field
-   */
   public final static int SOURCE_ALL_ACCOUNTS = 3;
-  /**
-   *  Description of the Field
-   */
   public final static int SOURCE_EMPLOYEES = 4;
-
-  /**
-   *  Description of the Field
-   */
   public final static int CONTACT_SOURCE_ELEMENTS = 4;
 
 
@@ -661,7 +645,8 @@ public class SearchCriteriaList extends HashMap {
    */
   public void buildResources(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT s.*, t.description as ctype, t2.description as atype, c.namefirst as cnamefirst, c.namelast as cnamelast " +
+        "SELECT s.*, t.description as ctype, t2.description as atype, " +
+        "c.namefirst as cnamefirst, c.namelast as cnamelast " +
         "FROM saved_criteriaelement s " +
         "LEFT JOIN lookup_contact_types t ON (s.value = t.code) " +
         "LEFT JOIN lookup_account_types t2 ON (s.value = t2.code) " +

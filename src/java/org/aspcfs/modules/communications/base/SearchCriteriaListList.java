@@ -22,13 +22,14 @@ import org.aspcfs.modules.base.Constants;
  *      mrajkowski Exp $
  */
 public class SearchCriteriaListList extends ArrayList {
-
+  //Properties to filter the resulting list
   private PagedListInfo pagedListInfo = null;
   private int owner = -1;
   private String ownerIdRange = null;
   private int campaignId = -1;
   private int enabled = Constants.TRUE;
-
+  private boolean buildCriteria = false;
+  //SyncXML API properties
   public final static String tableName = "saved_criterialist";
   public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
@@ -183,6 +184,26 @@ public class SearchCriteriaListList extends ArrayList {
 
 
   /**
+   *  Sets the buildCriteria attribute of the SearchCriteriaListList object
+   *
+   *@param  tmp  The new buildCriteria value
+   */
+  public void setBuildCriteria(boolean tmp) {
+    this.buildCriteria = tmp;
+  }
+
+
+  /**
+   *  Sets the buildCriteria attribute of the SearchCriteriaListList object
+   *
+   *@param  tmp  The new buildCriteria value
+   */
+  public void setBuildCriteria(String tmp) {
+    this.buildCriteria = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Gets the pagedListInfo attribute of the SearchCriteriaListList object
    *
    *@return    The pagedListInfo value
@@ -209,7 +230,6 @@ public class SearchCriteriaListList extends ArrayList {
    *@exception  SQLException  Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
-
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
@@ -223,10 +243,8 @@ public class SearchCriteriaListList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM saved_criterialist scl " +
-        "WHERE scl.id > -1 AND enabled = " + DatabaseUtils.getTrue(db) + " ");
-
+        "WHERE scl.id > -1 ");
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -239,7 +257,6 @@ public class SearchCriteriaListList extends ArrayList {
       }
       rs.close();
       pst.close();
-
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -255,14 +272,12 @@ public class SearchCriteriaListList extends ArrayList {
         rs.close();
         pst.close();
       }
-
       //Determine column to sort by
       pagedListInfo.setDefaultSort("name", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY name ");
     }
-
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -272,7 +287,7 @@ public class SearchCriteriaListList extends ArrayList {
     sqlSelect.append(
         "scl.* " +
         "FROM saved_criterialist scl " +
-        "WHERE scl.id > -1 AND enabled = " + DatabaseUtils.getTrue(db) + " ");
+        "WHERE scl.id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -292,11 +307,12 @@ public class SearchCriteriaListList extends ArrayList {
     }
     rs.close();
     pst.close();
-
-    Iterator i = this.iterator();
-    while (i.hasNext()) {
-      SearchCriteriaList thisList = (SearchCriteriaList) i.next();
-      thisList.buildResources(db);
+    if (buildCriteria) {
+      Iterator i = this.iterator();
+      while (i.hasNext()) {
+        SearchCriteriaList thisList = (SearchCriteriaList) i.next();
+        thisList.buildResources(db);
+      }
     }
   }
 
@@ -312,17 +328,17 @@ public class SearchCriteriaListList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
+    if (enabled != Constants.UNDEFINED) {
+      sqlFilter.append("AND enabled = ? ");
+    }
     if (owner != -1) {
       sqlFilter.append("AND scl.owner = ? ");
     }
-
     if (ownerIdRange != null) {
       sqlFilter.append("AND scl.owner IN (" + ownerIdRange + ") ");
     }
-
     if (campaignId != -1) {
-      sqlFilter.append("AND id in (SELECT group_id FROM campaign_list_groups WHERE campaign_id = " + campaignId + ") ");
+      sqlFilter.append("AND id in (SELECT group_id FROM campaign_list_groups WHERE campaign_id = ?) ");
     }
   }
 
@@ -338,12 +354,15 @@ public class SearchCriteriaListList extends ArrayList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
+    if (enabled != Constants.UNDEFINED) {
+      pst.setBoolean(++i, (enabled == Constants.TRUE ? true : false));
+    }
     if (owner != -1) {
       pst.setInt(++i, owner);
     }
-
-
+    if (campaignId != -1) {
+      pst.setInt(++i, campaignId);
+    }
     return i;
   }
 
