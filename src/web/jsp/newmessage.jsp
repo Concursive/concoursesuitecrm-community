@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*, org.aspcfs.modules.contacts.base.Contact" %>
 <jsp:useBean id="Note" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
 <jsp:useBean id="returnUrl" class="java.lang.String" scope="request"/>
 <jsp:useBean id="sendUrl" class="java.lang.String" scope="request"/>
@@ -29,7 +29,6 @@ function sendMessage() {
   }
 }
 </script>
-<form name="newMessageForm" action="<%= sendUrl %>" method="post" onSubmit="return sendMessage();">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
@@ -49,7 +48,7 @@ function sendMessage() {
             </select>
           </td>
           <td valign="top">
-            [<a href="javascript:popContactsListMultiple('listViewId','1', 'usersOnly=true&reset=true');">Add Recipients</a>]
+            [<a href="javascript:popContactsListMultiple('listViewId','1', 'reset=true');">Add Recipients</a>]
           </td>
         </tr>
       </table>
@@ -82,10 +81,5 @@ function sendMessage() {
     </td>
   </tr>
 </table>
-<input type="hidden" name="return" value="<%= returnUrl %>">
 <input type="hidden" name="noteId" value="<%= Note.getId() %>">
-<br>
-<input type="submit" value="Send">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='<%= returnUrl %>'">
-</form>
-
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
