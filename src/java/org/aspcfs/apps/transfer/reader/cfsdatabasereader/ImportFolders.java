@@ -7,7 +7,13 @@ import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.webutils.*;
 
+/** Retrieves data in the appropriate order for reconstructing folders
+ * @author matt rajkowski
+ * @created 9/15/2002
+ * @version $Id$
+ */
 public class ImportFolders implements CFSDatabaseReaderImportModule {
+  /** Reads folder data and sends to a writer */  
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     logger.info("ImportBaseData-> Inserting folders");
     boolean processOK = true;
@@ -78,7 +84,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
         }
         
         
-        //TODO: Test this with records... 
+        //TODO: Test this with records...
         //Copy the actual data
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(moduleId);
@@ -93,7 +99,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           thisRecord.setAction("insert");
           thisRecord.addField("linkModuleId", String.valueOf(thisCFRecord.getLinkModuleId()), "systemModules", null);
           switch (thisCFRecord.getLinkModuleId()) {
-            case 1: 
+            case 1:
               thisRecord.addField("linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "account", null);
               break;
             case 2:
@@ -137,7 +143,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
             processOK = writer.save(thisFieldRecord);
           }
         }
-
+        
       }
       
       

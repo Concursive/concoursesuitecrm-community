@@ -1866,12 +1866,12 @@ public class Opportunity extends GenericBean {
     commission = rs.getDouble("commission");
     type = rs.getString("type");
     alertDate = rs.getDate("alertdate");
-    alertText = rs.getString("alert");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getString("closed");
+    alertText = rs.getString("alert");
     enabled = rs.getBoolean("enabled");
 
     //table
