@@ -18,14 +18,14 @@ H1 {
       font-weight: bold;
       font-size: 18pt;
       line-height: 18pt;
-      font-family: arial,helvetica;
+      font-family: arial,helvetica,sans-serif;
       font-variant: normal;
       font-style: normal;
   }
-table, body, p,td,li{font-family:arial,helvetica;font-size=10pt;}
-th{font-family:arial,helvetica;font-size=10pt; background-color:#3366cc; color:#ffffff;}
+table, body, p,td,li{font-family:arial,helvetica,sans-serif;font-size=10pt;}
+th{font-family:arial,helvetica,sans-serif;font-size=10pt; background-color:#3366cc; color:#ffffff;}
 
-.th2{font-family:arial,helvetica;font-size=12pt; background-color:#8888ff; color:#ffffff;}
+.th2{font-family:arial,helvetica,sans-serif;font-size=12pt; background-color:#8888ff; color:#ffffff;}
 
 .flat{border:0;background-color:#cccccc;color:#000066;}
 .flat2{border:0;background-color:#ffffee;color:#000066;}
