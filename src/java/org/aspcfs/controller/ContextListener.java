@@ -81,7 +81,7 @@ public class ContextListener implements ServletContextListener {
     //Stop the cron first so that nothing new gets executed
     Crontab crontab = (Crontab)context.getAttribute("Crontab");
     if (crontab != null) {
-      crontab.uninit(5000);
+      crontab.uninit(200);
       context.removeAttribute("Crontab");
       System.out.println("ContextListener-> CRON stopped");
     }
