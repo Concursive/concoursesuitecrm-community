@@ -31,6 +31,7 @@ Modify
 <form name="addForm" action="CampaignManager.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= Campaign.getId() %>">
+  <input type="hidden" name="modified" value="<%= Campaign.getModified() %>">
   <input type="submit" value="Update" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=ViewDetails';">
   <input type="reset" value="Reset">
