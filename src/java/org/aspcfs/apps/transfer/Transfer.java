@@ -34,6 +34,7 @@ public class DataImport {
 
     DataImport dataImport = new DataImport();
     dataImport.execute(args[0]);
+    System.exit(0);
   }
 
 
@@ -97,8 +98,7 @@ public class DataImport {
     } catch (Exception e) {
       logger.info("Error: " + e.toString());
     }
-    logger.info("All done.");
-    System.exit(0);
+    logger.info("DataImport-> All done.");
   }
 
 
