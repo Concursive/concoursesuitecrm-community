@@ -105,6 +105,15 @@ public static String replace(String str, String o, String n) {
     return "";
   }
   
+  public static String toMediumDateString(java.util.Date inDate) {
+    try {
+      return java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM).format(inDate);
+    } catch (NullPointerException e) {
+    }
+    return "";
+  }
+  
+  
   public static String sqlReplace(String s) {
     //s = replace(s, "<br>", "\r");
     
