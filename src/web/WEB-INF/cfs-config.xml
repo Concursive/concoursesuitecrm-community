@@ -687,6 +687,16 @@
     <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
   </action>
+  <action name="ProjectManagementListsCategory" class="com.darkhorseventures.cfsmodule.ProjectManagementLists">
+    <bean name="category" class="com.darkhorseventures.cfsbase.TaskCategory" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="AddCategoryOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
+    <forward name="UpdateCategoryOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
+  </action>
   <!-- End Project Management Module -->
   
   
