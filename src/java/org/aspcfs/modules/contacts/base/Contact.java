@@ -602,6 +602,9 @@ public class Contact extends GenericBean {
    *@since       1.1
    */
   public void setTitle(String tmp) {
+    if(tmp.length() > 80){
+      tmp = tmp.substring(0,79);
+    }
     this.title = tmp;
   }
 
