@@ -26,7 +26,7 @@
   </action>  
   <action name="ProcessTransaction" class="org.aspcfs.modules.healthcare.edit.actions.ProcessTransaction">
   <bean name="Transaction" class="org.aspcfs.modules.healthcare.edit.base.TransactionRecord" scope="request"/>
-    <forward name="PacketOK" resource="/healthcare/edit/processtransaction.jsp" layout="styleNoSession"/>
+    <forward name="PacketOK" resource="/service/system_process_packet.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
   </action>  
   <!-- Actions for people taking a survey -->
@@ -52,7 +52,7 @@
   </action>
   <!-- Admin/Cron functions -->
   <action name="ProcessSystem" class="org.aspcfs.modules.admin.actions.ProcessSystem">
-    <forward name="ProcessOK" resource="/service/system_process_ok.jsp"/>
+    <forward name="ProcessOK" resource="/admin/system_process_ok.jsp"/>
     <forward name="ViewCronOK" resource="/service/cron_view.jsp"/>
   </action>
   <!-- CFS Actions -->
