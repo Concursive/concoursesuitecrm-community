@@ -82,10 +82,9 @@ fi
 #############################################################################
 echo ok
 
-cd ${SITEHOME}/${SITECODE}/bin
 
 #java -cp .:${CLASSPATH}:${SITEHOME}/${SITECODE}/bin/Notifier.jar com.darkhorseventures.apps.dataimport.DataImport dataImport-config.xml
-java -cp .:${CLASSPATH}:${SITEHOME}/${SITECODE}/bin/aspcfs.jar org.aspcfs.apps.transfer.Transfer netDesc-loadAccounts.xml
+java -cp .:${CLASSPATH}:${CFS_HOME}/WEB-INF/lib/aspcfs.jar:/home/akhi_m/cfs2/lib/jakarta-poi.jar:/usr/local/jakarta-tomcat-4.1.12-LE-jdk14/common/lib/commons-logging-api.jar:/home/cfs2/WEB-INF/lib/darkhorseventures.jar org.aspcfs.apps.transfer.Transfer netDesc-loadAccounts.xml
 
 
 ) >>${LOG} 2>&1 

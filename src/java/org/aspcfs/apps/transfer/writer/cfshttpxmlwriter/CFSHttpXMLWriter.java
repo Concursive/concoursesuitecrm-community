@@ -263,6 +263,7 @@ public class CFSHttpXMLWriter implements DataWriter {
       this.save(clientRecord);
   
       try {
+        System.out.println("CFSHttpXMLWriter - > " + lastResponse);
         XMLUtils responseXML = new XMLUtils(lastResponse, true);
         clientId = Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstElement("id")));
         logger.info("CFSHttpXMLWriter-> Client ID: " + clientId);

@@ -136,6 +136,7 @@ public class NetDescAccountsReader implements DataReader {
     logger.info("Processing excel file" + excelFile);
     try {
 
+      
       int userId = 1;
       HashMap accounts = new HashMap();
 
@@ -167,6 +168,7 @@ public class NetDescAccountsReader implements DataReader {
           thisOrg.setModifiedBy(userId);
 
           //build the contact
+          logger.info("Adding Contact " + row.getCell((short) (firstCellNum + 2)).getStringCellValue());
           Contact cfsContact = new Contact();
           cfsContact.setId(r);
           String contactInfo = row.getCell((short) (firstCellNum + 2)).getStringCellValue();
@@ -186,7 +188,7 @@ public class NetDescAccountsReader implements DataReader {
           cfsContact.setTitle(row.getCell((short) (firstCellNum + 13)).getStringCellValue());
           cfsContact.setEnteredBy(userId);
           cfsContact.setModifiedBy(userId);
-
+          logger.info("Adding Contact Address ");
           //build the Contact's Address
           ContactAddress cfsAddress = new ContactAddress();
           cfsAddress.setStreetAddressLine1(row.getCell((short) (firstCellNum + 3)).getStringCellValue());
