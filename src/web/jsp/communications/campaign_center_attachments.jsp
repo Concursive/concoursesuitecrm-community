@@ -6,9 +6,9 @@
 <script language="JavaScript">
 function fillFrame(object){
   if(object.options[object.selectedIndex].value != -1){
-    window.frames['edit'].location.href='CampaignManager.do?command=PreviewSurvey&preview=1&id=' + object.options[object.selectedIndex].value;
+    window.frames['edit'].location.href='CampaignManager.do?command=PreviewSurvey&preview=1&id=' + object.options[object.selectedIndex].value + '&inline=true';
   }else{
-    window.frames['edit'].location.href='CampaignManager.do?command=PreviewSurvey&preview=0&id=' + object.options[object.selectedIndex].value;
+    window.frames['edit'].location.href='CampaignManager.do?command=PreviewSurvey&preview=0&id=' + object.options[object.selectedIndex].value + '&inline=true';
   }
 }
 function updateList() {

@@ -9,7 +9,7 @@
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
-<a href="Opportunities.do?command=Details&oppId=<%=OppComponentDetails.getOppId()%>&orgId=<%=OrgDetails.getId()%>">Opportunity Details</a> >
+<a href="Opportunities.do?command=Details&oppId=<%=OppComponentDetails.getOppId()%>&orgId=<%=OrgDetails.getId()%>&reset=true">Opportunity Details</a> >
 Component Details
 <br>
 <hr color="#BFBFBB" noshade>

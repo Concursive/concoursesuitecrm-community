@@ -26,7 +26,22 @@ Opportunities<br>
     <td class="containerBack">
 <dhv:permission name="accounts-accounts-opportunities-add"><a href="Opportunities.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add an Opportunity</a></dhv:permission>
 <center><%= OpportunityPagedInfo.getAlphabeticalPageLinks() %></center>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityPagedInfo"/>
+<table width="100%" border="0">
+  <tr>
+    <form name="listView" method="post" action="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">
+    <td align="left">
+      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+        <option <%= OpportunityPagedInfo.getOptionValue("my") %>>My Opportunities </option>
+        <option <%= OpportunityPagedInfo.getOptionValue("all") %>>All Opportunities</option>
+      </select>
+    </td>
+    <td>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityPagedInfo"/>
+    </td>
+    </form>
+  </tr>
+</table>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
@@ -72,7 +87,7 @@ Opportunities<br>
     </td>
     </dhv:permission>
       <td width=40% valign=center class="row<%= rowid %>">
-        <a href="Opportunities.do?command=Details&oppId=<%=thisOpp.getOppId()%>&orgId=<%= OrgDetails.getId() %>">
+        <a href="Opportunities.do?command=Details&oppId=<%=thisOpp.getOppId()%>&orgId=<%= OrgDetails.getId() %>&reset=true">
         <%= toHtml(thisOpp.getDescription()) %></a>
         (<%=thisOpp.getComponentCount()%>)
         <% if (thisOpp.hasFiles()) {%>

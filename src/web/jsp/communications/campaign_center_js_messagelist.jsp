@@ -25,7 +25,7 @@ function page_init() {
 <%
   }
 %>
-  parent.window.frames['edit'].location.href='CampaignManagerMessage.do?command=PreviewMessage&id=-1';
+  parent.window.frames['edit'].location.href='CampaignManagerMessage.do?command=PreviewMessage&id=-1&inline=true';
 }
 </script>
 </body>

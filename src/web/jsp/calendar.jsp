@@ -14,14 +14,14 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/images.js"></SCRIPT>
 <script type="text/javascript">
   function showDayEvents(month,day){
-    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&month='+month+'&day='+day+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&month='+month+'&day='+day+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
   }
   function showToDaysEvents(thisMonth,thisDay,thisYear){
-    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&month='+thisMonth+'&day='+thisDay+'&year='+thisYear+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
-    window.location.href='MyCFS.do?command=MonthView&month='+thisMonth+'&year='+thisYear+'&source=calendar<%=returnPage!=null?"&return="+returnPage:""%>';
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&inline=true&&month='+thisMonth+'&day='+thisDay+'&year='+thisYear+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
+    window.location.href='MyCFS.do?command=MonthView&inline=true&&month='+thisMonth+'&year='+thisYear+'&source=calendar<%=returnPage!=null?"&return="+returnPage:""%>';
   }
   function showWeekEvents(startMonth,startDay){
-    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=WeekView&month='+startMonth+'&startMonthOfWeek='+startMonth+'&startDayOfWeek='+startDay+'&source=calendarDetails<%=returnPage!=null?"&return="+returnPage:""%>';
+    window.parent.frames['calendardetails'].location.href='MyCFS.do?command=WeekView&inline=true&&month='+startMonth+'&startMonthOfWeek='+startMonth+'&startDayOfWeek='+startDay+'&source=calendarDetails<%=returnPage!=null?"&return="+returnPage:""%>';
   }
   function switchTableClass(E,className,rowOrCell,browser){
     if(rowOrCell == "cell"){

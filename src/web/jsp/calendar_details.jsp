@@ -40,7 +40,7 @@ function switchStyle(E){
 <dhv:evaluate exp="<%= !CalendarInfo.isAgendaView() %>">
   <tr>
     <td valign="top" align="center" width="100%" nowrap>
-      <a href="javascript:window.parent.frames['calendar'].resetCalendar();javascript:window.location.href='MyCFS.do?command=AgendaView&source=calendardetails<%=returnPage != null ? "&return=" + returnPage : "" %>';">Back To Next 7 Days View</a>
+      <a href="javascript:window.parent.frames['calendar'].resetCalendar();javascript:window.location.href='MyCFS.do?command=AgendaView&inline=true&&source=calendardetails<%=returnPage != null ? "&return=" + returnPage : "" %>';">Back To Next 7 Days View</a>
     </td>
     <table style="visibility:none" border="0" height="6"><tr height='2' style="visibility:none"><td></td></tr></table>
   </tr>

@@ -147,7 +147,7 @@ Generate New Report<br>
       Subject
     </td>
     <td colspan=4>
-      <input type=text size=35 name="subject" maxlength=50>
+      <input type=text size=35 name="subject" maxlength=50><font color="red">*</font>
     </td>
   </tr>
   
