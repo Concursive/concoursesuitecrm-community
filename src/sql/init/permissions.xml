@@ -109,6 +109,7 @@
       <permission name="admin-sysconfig-lists" attributes="v-e-" description="Configure Lookup Lists"/>
       <permission name="admin-sysconfig-folders" attributes="vaed" description="Configure Custom Folders &amp; Fields"/>
       <permission name="admin-object-workflow" attributes="vaed" description="Configure Object Workflow"/>
+      <permission name="admin-sysconfig-categories" attributes="vaed" description="Categories"/>
     </category>
     <category id="10" name="Help" folders="false" lookups="false">
       <permission name="help" attributes="v---" description="Access to Help System"/>
