@@ -353,15 +353,17 @@ public class ActiveSurveyQuestion {
     Iterator answers = answerList.iterator();
     while (answers.hasNext()) {
       SurveyAnswer thisAnswer = (SurveyAnswer) answers.next();
-      Iterator itemList = thisAnswer.getItemList().iterator();
-      while (itemList.hasNext()) {
-        ActiveSurveyQuestionItem thisItem = ((SurveyAnswerItem) itemList.next()).getItem();
-        if (itemListResponse.containsKey((Object) thisItem)) {
-          Integer count = (Integer) itemListResponse.get((Object) thisItem);
-          itemListResponse.remove((Object) thisItem);
-          itemListResponse.put(thisItem, new Integer(count.intValue() + 1));
-        } else {
-          itemListResponse.put(thisItem, new Integer(1));
+      if (thisAnswer.getItemList() != null) {
+        Iterator itemList = thisAnswer.getItemList().iterator();
+        while (itemList.hasNext()) {
+          ActiveSurveyQuestionItem thisItem = ((SurveyAnswerItem) itemList.next()).getItem();
+          if (itemListResponse.containsKey((Object) thisItem)) {
+            Integer count = (Integer) itemListResponse.get((Object) thisItem);
+            itemListResponse.remove((Object) thisItem);
+            itemListResponse.put(thisItem, new Integer(count.intValue() + 1));
+          } else {
+            itemListResponse.put(thisItem, new Integer(1));
+          }
         }
       }
     }
