@@ -26,10 +26,17 @@
   <parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
-	<queryString><![CDATA[SELECT
-o.org_id,o.name,o.account_number,o.employees,o.ticker_symbol,
-o.owner,o.contract_end,o.namelast,o.namefirst,o.namemiddle,o.enabled,
-ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst
+	<queryString><![CDATA[SELECT o.name as name,
+o.account_number as account_number,
+o.namelast as namelast,
+o.namefirst as namefirst,
+o.namemiddle as namemiddle,
+o.org_id as org_id,
+o.employees as employees,
+o.owner as owner,
+o.contract_end as contract_end,
+ct_owner.namelast as o_namelast,
+ct_owner.namefirst as o_namefirst
 FROM organization o
 LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id)
 WHERE o.org_id > 0

@@ -26,9 +26,16 @@
 		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2003-10-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT
-o.*,
-ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst,
-i.description as industry_name, lat.description as type_desc  
+o.account_number as account_number,
+o.owner as owner,
+o.contract_end as contract_end,
+i.description as industry_name,
+ct_owner.namelast as o_namelast, 
+ct_owner.namefirst as o_namefirst,
+o.entered as entered,
+o.name as name,
+lat.description as type_desc,
+o.org_id as org_id
 FROM organization o
 LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id)
 LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code)
