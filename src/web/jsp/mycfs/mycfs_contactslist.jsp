@@ -19,9 +19,9 @@
     }
 %>
 <%-- Navigating the contact list, not the final submit --%>
-<br>
-<center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>
 <form name="contactListView" method="post" action="ContactsList.do?command=ContactList">
+  <br>
+  <center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">
   <table width="100%" border="0">
@@ -64,7 +64,7 @@
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <td align="center" width="8">
-        To
+        &nbsp;
       </td>
       <td>
         Name
@@ -90,12 +90,12 @@
       <td align="center" nowrap width="8">
 <% 
   if ("list".equals(request.getParameter("listType"))) { %>  
-        <input type="checkbox" name="checkcontact<%=count%>" value=<%= thisContact.getId() %><%= ((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
+        <input type="checkbox" name="checkcontact<%= count %>" value=<%= thisContact.getId() %><%= ((selectedContacts.get(new Integer(thisContact.getId()))!= null)?" checked":"") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
 <%} else {%>
-        <a href="javascript:document.contactListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%=count%>','contactListView');">Add</a>
+        <a href="javascript:document.contactListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= count %>','contactListView');">Add</a>
 <%}%>
-        <input type="hidden" name="hiddencontactid<%=count%>" value=<%=thisContact.getId()%>>
-        <input type="hidden" name="hiddenname<%=count%>" value="<%=toHtml(thisContact.getNameLastFirst())%>">
+        <input type="hidden" name="hiddencontactid<%= count %>" value=<%= thisContact.getId() %>>
+        <input type="hidden" name="hiddenname<%= count %>" value="<%= toHtml(thisContact.getNameLastFirst()) %>">
       </td>
       <td nowrap>
         <%= toHtml(thisContact.getNameLastFirst()) %>
@@ -142,7 +142,8 @@
         </select>
       </td>
     <%}%>
-      <td nowrap><%= toHtml(thisContact.getTypesNameString()) %>
+      <td>
+        <%= toHtml(thisContact.getTypesNameString()) %>
         <input type="hidden" name="contactemail<%= count %>" value=<%= email %>>
       </td>
     </tr>
@@ -166,21 +167,22 @@
     <input type="hidden" name="campaign" value="<%= (request.getParameter("campaign") != null ? request.getParameter("campaign") : "") %>">
     <input type="hidden" name="filters" value="<%= (request.getParameter("filters") != null ? request.getParameter("filters") : "")%>">
   </table>
-  <br>
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
   <input type="button" value="Cancel" onClick="javascript:window.close()">
-  <a href="javascript:SetChecked(1,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Check All</a>
-  <a href="javascript:SetChecked(0,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Clear All</a>
+  [<a href="javascript:SetChecked(1,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Check All</a>]
+  [<a href="javascript:SetChecked(0,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Clear All</a>]
+  <br>
 <%}%>
+  &nbsp;<br>
   <dhv:pagedListControl object="ContactListInfo" showForm="false" resetList="false"/>
 </form>
 <%} else {%>
 <%-- The final submit --%>
   <% if ("true".equals((String) request.getParameter("campaign"))) { %>
-  <body OnLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%=User.getBrowserId()%>');window.close()">
+  <body onLoad="javascript:setParentListCampaign(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%=User.getBrowserId()%>');window.close()">
   <%} else {%>
-  <body OnLoad="javascript:setParentList(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= User.getBrowserId() %>');window.close()">
+  <body onLoad="javascript:setParentList(recipientEmails,recipientIds,'<%= request.getParameter("listType") %>','<%= request.getParameter("displayFieldId") %>','<%= request.getParameter("hiddenFieldId") %>','<%= User.getBrowserId() %>');window.close()">
   <%}%>
   <script>recipientEmails = new Array();recipientIds = new Array();</script>
 <%

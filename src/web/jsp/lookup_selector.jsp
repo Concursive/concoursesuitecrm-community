@@ -10,19 +10,20 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <%@ include file="../initPage.jsp" %>
 <% if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){ %>
+<form name="elementListView" method="post" action="LookupSelector.do?command=PopupSelector">
 <br>
 <center><%= LookupSelectorInfo.getAlphabeticalPageLinks("setFieldSubmit","elementListView") %></center>
-<form name="elementListView" method="post" action="LookupSelector.do?command=PopupSelector">
-<input type=hidden name="letter">
+<br>
+<input type="hidden" name="letter">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-   <tr class="title">
+  <tr class="title">
     <td align="center" nowrap width="8">
-    &nbsp;
+      &nbsp;
     </td>
-    <td width="100%" align=left>
-    Option
+    <td width="100%">
+      Option
     </td>
-   </tr>
+  </tr>
 <%
   Iterator j = BaseList.iterator();
   if ( j.hasNext() ) {
@@ -39,9 +40,9 @@
       <input type="checkbox" name="checkelement<%= count %>" value=<%= thisElt.getCode() %><%= ((selectedElements.get(new Integer(thisElt.getCode()))!= null)?" checked":"") %> onClick="highlight(this,'<%= User.getBrowserId() %>');">
     </td>
     <td valign="center">
-      <%= thisElt.getDescription() %>
+      <%= toHtml(thisElt.getDescription()) %>
       <input type="hidden" name="hiddenelementid<%= count %>" value="<%= thisElt.getCode() %>">
-      <input type="hidden" name="elementvalue<%= count %>" value="<%= thisElt.getDescription() %>">
+      <input type="hidden" name="elementvalue<%= count %>" value="<%= toHtml(thisElt.getDescription()) %>">
     </td>
   </tr>
 <%
@@ -51,8 +52,8 @@
     }
   } else {
 %>
-      <tr bgcolor="white">
-        <td colspan="2" valign="center">
+      <tr bgcolor="containerBody">
+        <td colspan="2">
           No options matched query.
         </td>
       </tr>
@@ -66,14 +67,14 @@
 <input type="hidden" name="table" value="<%= Table %>">
 <input type='button' value="Done" onClick="javascript:document.elementListView.finalsubmit.value='true';document.elementListView.submit();">
 <input type="button" value="Cancel" onClick="javascript:window.close()">
-<a href="javascript:SetChecked(1,'checkelement','elementListView','<%= User.getBrowserId() %>');">Check All</a>
-<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');">Clear All</a>
+[<a href="javascript:SetChecked(1,'checkelement','elementListView','<%= User.getBrowserId() %>');">Check All</a>]
+[<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');">Clear All</a>]
+<br>
+&nbsp;<br>
 <dhv:pagedListControl object="LookupSelectorInfo" showForm="false" resetList="false"/>
-<br>
-<br>
 </form>
   <%} else {%>
-<body OnLoad="javascript:setParentList(selectedValues,selectedIds,'list','<%= DisplayFieldId %>','<%= User.getBrowserId() %>');window.close();">
+<body onLoad="javascript:setParentList(selectedValues,selectedIds,'list','<%= DisplayFieldId %>','<%= User.getBrowserId() %>');window.close();">
 <script>selectedValues = new Array();selectedIds = new Array();</script>
 <%
   Set s = selectedElements.keySet();
