@@ -739,6 +739,8 @@ public class TransactionItem {
             thisRecord.put("guid", ignoredProperties.get("guid"));
           } else if (thisRecord.getAction().equals("insert")) {
             thisRecord.put("guid", String.valueOf(identity++));
+          } else if (thisRecord.getAction().equals("update")) {
+            thisRecord.put("guid", ignoredProperties.get("guid"));
           }
         }
       } catch (java.lang.NumberFormatException e) {
