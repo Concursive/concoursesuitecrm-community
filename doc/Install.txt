@@ -1,5 +1,6 @@
 /**
  *  ASPCFS Server Installation
+ *  Configured for Red Hat 8.0, Postgresql 7.2.3, and Tomcat 4.1.12
  *
  *@author     matt rajkowski
  *@created    October 9, 2002
@@ -15,6 +16,7 @@
   - Configure to boot up to shell
   - Choose Custom Install (Everything)
   - Configure IP
+  - Turn on port 80 and 443 during install or in iptables later
 
 - Install Postgresql 7.2.3 RPMS for Red Hat 8.0
   Purpose: Database server
@@ -129,17 +131,11 @@
     $ chkconfig --level 2345 httpd off
     $ service httpd stop
     
-  # Setup the port and web context
-    $ cd /usr/java/tomcat/conf
-    $ vi server.xml
-    ...skipped relevent code to add port 80 connector and context...
-    ...this file can be copied from our cvs repository...
-
   # Test the web server, Tomcat welcome page should show:
     $ service tomcat start
     $ mozilla http://127.0.0.1:8080
 
-
+    
 - Configure Postgresql
   # Initialize the database by starting the service the first time:
     $ service postgresql start
@@ -151,7 +147,7 @@
   # like a backup server.
     $ service postgresql stop
     $ cd /var/lib/pgsql/data
-    $ vi pg_hba.config
+    $ vi pg_hba.conf
   # Verify this line is uncommented: 
     host all 127.0.0.1 255.255.255.255 trust
   # Add the backup server
@@ -169,13 +165,21 @@
 
   # Create the initial user
     $ su postgres
-  # Respond y,y,y
+  # Respond y,y
     $ createuser cfsdba
     $ createuser [your name]
-  # Respond n,n,n
+  # Respond n,n
     $ createuser gatekeeper
     $ exit
 
+    
+- Configure Sendmail
+  # Make sure sendmail is running on startup
+    $ chkconfig --level 2345 sendmail on
+  # Edit sendmail configuration to allow emails to be sent from specified
+  # domains.  In ASPCFS we allow 127.0.0.1 to sendmail from any domain user,
+  # not just darkhorseventures.com.
+  # The default already allows localhost to RELAY
 
 - Install ASPCFS
   # Login as your own username
@@ -196,6 +200,7 @@
     $ cp database/gatekeeper.init ./`hostname`.init
   # Make changes to sites table for this system
     $ vi `hostname`.init
+    $ psql -f `hostname`.init cfs2gk
 
   # Install ASPCFS additional .jars to Apache Tomcat
     $ cd ~/cfs2
@@ -208,15 +213,75 @@
   # Create the first customer database
     $ sudo sh install_ds [vhost part before .aspcfs.com]
 
-  # Test ASPCFS
+  # Setup Tomcat to use ASPCFS
+    $ sudo cp production/conf/server.xml /usr/java/tomcat/conf/
+  
+  # Setup a temporary SSL certificate
+  # Make changes as necessary... 
+  #  CN=Domain name users will connect by (important!) 
+  #    Either www.something.com or *.something.com
+  #  OU=Organization Unit
+  #  O=Organization
+  #  L=Location (typically city)
+  #  ST=State
+  #  C=Country
+  # The default password corresponds to the password that is set in Tomcat's server.xml
+    $ sudo keytool -genkey -alias ds -keyalg RSA -keysize 1024 -validity 1000 -dname "CN=*.aspcfs.com, OU=ASPCFS, O=Dark Horse Ventures, L=Norfolk, ST=Virginia, C=US" -keystore /home/cfs/keystore -keypass aspcfs -storepass aspcfs
+  
+  # Reload tomcat, must call stop and then start
+    $ sudo /sbin/service tomcat stop
+    $ sudo /sbin/service tomcat start
+  
+  # Test ASPCFS, should see login prompt or message to use secure login
     $ mozilla http://127.0.0.1
+  # Test SSL ASPCFS, should see Security Alert due to not having a signed cert,
+  # choose to proceed, then you should see login prompt
+    $ mozilla https://127.0.0.1
+
+- Setup cron items (as root)
+  # There are several tasks to keep ASPCFS running... eventually the ASPCFS
+  # items will be integrated into the ASPCFS application
+    $ crontab -e
+  
+# System Maintenance
+0 0 * * * /usr/sbin/up2date -u --nox
+0 0/6 * * * /usr/bin/rdate -s clock.darkhorseventures.com && /sbin/clock -w
+
+# Clean up graphs and data every night
+1 3 * * * /usr/bin/lynx -dump http://127.0.0.1/ProcessSystem.do?command=ClearGraphData > /dev/null
+
+# Check for emails, faxes, reports, etc.
+0,5,10,15,20,25,30,35,40,45,50,55 * * * * /home/cfs/bin/notifier cfs > /dev/null
 
 
-- Configure Sendmail
-  # Make sure sendmail is running on startup
-    $ chkconfig --level 2345 sendmail on
-  # Edit sendmail configuration to allow emails to be sent from specified
-  # domains.  In ASPCFS we allow 127.0.0.1 to sendmail from any domain user,
-  # not just darkhorseventures.com.
+*** Software Maintenace ***
+
+Even though the production server uses RAID, it is important that the database 
+is remotely backed up, as well as the file library.  There are several ways to
+handle this, the simplest being a download of the database that can be restored
+to the same server or other servers fairly easily.
+
+- On a remote server, install Postgresql from the RPMs
+- Copy the backup.sh from the ASPCFS distribution into /var/lib/pgsql
+- For the corresponding Postgresql version number, copy the following files into
+  /var/lib/pgsql/ so that the backup is compatible with future versions of postgresql
+  $ cp /usr/bin/pg_dump /var/lib/pgsql/pg_dump723
+  $ cp /usr/bin/pg_dumpall /var/lib/pgsql/pg_dumpall723
+  $ cp /usr/bin/psql /var/lib/pgsql/psql723
   
+  # Change all instances of: 
+  #  pg_dump to pg_dump723, 
+  #  pg_dumpall to pg_dumpall723
+  #  psql to psql723
+  # in the following files:
+  $ vi pg_dump723
+  $ vi pg_dumpall723
   
+- Then you need to setup a cron task with the following
+
+# Backup all the remote datebases for a server, and keep a 7 day rolling backup
+# The first parameter after backup.sh is the Postgresql version to backup from,
+# 723 matches Postgresql 7.2.3
+37 4 * * * su postgres -c "/var/lib/pgsql/backup.sh 723 aspcfs.darkhorseventures.com all `date +%a`"
+
+
