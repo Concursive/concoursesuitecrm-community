@@ -54,7 +54,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.assigned_
 		<group  name="month_yr" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{entered}]]></groupExpression>
 			<groupHeader>
-			<band height="30"  isSplitAllowed="true" >
+			<band height="32"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
@@ -76,7 +76,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.assigned_
 						x="4"
 						y="17"
 						width="189"
-						height="12"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -87,13 +87,13 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.assigned_
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("MMMM yyyy")).format($F{entered})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{entered} == null ? "No date" : (new SimpleDateFormat("MMMM yyyy")).format($F{entered})]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="2"
+						y="1"
 						width="535"
 						height="15"
 						forecolor="#000000"
@@ -185,7 +185,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.assigned_
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="2"
+						y="0"
 						width="535"
 						height="0"
 						forecolor="#808080"
@@ -201,9 +201,9 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.assigned_
 					<reportElement
 						mode="Opaque"
 						x="254"
-						y="3"
+						y="1"
 						width="44"
-						height="11"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"

@@ -50,7 +50,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, tc.description]]></queryString>
 		<group  name="month_yr" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{entered}]]></groupExpression>
 			<groupHeader>
-			<band height="30"  isSplitAllowed="true" >
+			<band height="32"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
@@ -72,7 +72,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, tc.description]]></queryString>
 						x="4"
 						y="16"
 						width="189"
-						height="12"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -83,7 +83,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, tc.description]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("MMMM yyyy")).format($F{entered})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{entered} == null ? "No date" : (new SimpleDateFormat("MMMM yyyy")).format($F{entered})]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement
@@ -199,7 +199,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, tc.description]]></queryString>
 						x="258"
 						y="1"
 						width="44"
-						height="11"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"

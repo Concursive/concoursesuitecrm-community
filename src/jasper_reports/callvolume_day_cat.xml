@@ -27,15 +27,15 @@
 	</parameter>
 	<parameter name="year_part" isForPrompting="false" class="java.lang.String">
 		<parameterDescription><![CDATA[t.entered]]></parameterDescription>
-		<defaultValueExpression><![CDATA["date_part('year', t.entered)"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["datepart(YY, t.entered)"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="month_part" isForPrompting="false" class="java.lang.String">
 		<parameterDescription><![CDATA[t.entered]]></parameterDescription>
-		<defaultValueExpression><![CDATA["date_part('month', t.entered)"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["datepart(MM, t.entered)"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="day_part" isForPrompting="false" class="java.lang.String">
 		<parameterDescription><![CDATA[t.entered]]></parameterDescription>
-		<defaultValueExpression><![CDATA["date_part('day', t.entered)"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["datepart(DD, t.entered)"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT t.entered,
 tc.description
@@ -54,7 +54,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, tc.description]]></quer
 		<group  name="date_wise" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{entered}]]></groupExpression>
 			<groupHeader>
-			<band height="30"  isSplitAllowed="true" >
+			<band height="32"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
@@ -76,7 +76,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, tc.description]]></quer
 						x="1"
 						y="17"
 						width="228"
-						height="12"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -87,7 +87,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, tc.description]]></quer
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("MMMM dd, yyyy")).format($F{entered})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{entered} == null ? "No date" : (new SimpleDateFormat("MMMM dd, yyyy")).format($F{entered})]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement
@@ -169,9 +169,9 @@ ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, tc.description]]></quer
 					<reportElement
 						mode="Opaque"
 						x="306"
-						y="3"
+						y="1"
 						width="44"
-						height="11"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -188,7 +188,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, tc.description]]></quer
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="2"
+						y="1"
 						width="535"
 						height="0"
 						forecolor="#808080"
