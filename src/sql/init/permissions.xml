@@ -70,6 +70,8 @@
       <permission name="accounts-dashboard" attributes="v---" description="Dashboard"/>
       <permission name="accounts-accounts-revenue" attributes="vaed" description="Revenue" enabled="false"/>
       <permission name="accounts-autoguide-inventory" attributes="vaed" description="Auto Guide Vehicle Inventory" enabled="false"/>
+      <permission name="accounts-accounts-tickets-documents" attributes="vaed" description="Ticket Documents"/>
+      <permission name="accounts-accounts-tickets-tasks" attributes="vaed" description="Ticket Tasks"/>
     </category>
     <category id="3" name="Auto Guide" folders="false" lookups="false" enabled="false">
       <permission name="autoguide" attributes="v---" description="Access to the Auto Guide module"/>
@@ -96,6 +98,7 @@
       <permission name="tickets" attributes="v---" description="Access to Ticket module"/>
       <permission name="tickets-tickets" attributes="vaed" description="Ticket Records"/>
       <permission name="tickets-reports" attributes="vaed" description="Ticket Reports"/>
+      <permission name="tickets-tickets-tasks" attributes="vaed" description="Tasks"/>
     </category>
     <category id="9" name="Admin" folders="false" lookups="false">
       <permission name="admin" attributes="v---" description="Access to Admin module"/>
