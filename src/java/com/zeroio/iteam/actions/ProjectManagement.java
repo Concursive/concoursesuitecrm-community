@@ -391,7 +391,6 @@ public final class ProjectManagement extends CFSModule {
             reqsOpen.remove(contract);
           }
         }
-        
         PagedListInfo projectRequirementsInfo = this.getPagedListInfo(context, "projectRequirementsInfo");
         projectRequirementsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + thisProject.getId());
         thisProject.getRequirements().setPagedListInfo(projectRequirementsInfo);
@@ -423,6 +422,19 @@ public final class ProjectManagement extends CFSModule {
           thisMember.setContact(thisUser.getContact());
         }
       } else if ("Assignments".equals(section)) {
+        PagedListInfo projectAssignmentsInfo = this.getPagedListInfo(context, "projectAssignmentsInfo");
+        projectAssignmentsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + thisProject.getId());
+        thisProject.getAssignments().setPagedListInfo(projectAssignmentsInfo);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("ProjectManagement-> Assignments pagedListInfo view: " + projectAssignmentsInfo.getListView());
+        }
+        if ("all".equals(projectAssignmentsInfo.getListView())) {
+          
+        } else if ("closed".equals(projectAssignmentsInfo.getListView())) {
+          thisProject.getAssignments().setClosedOnly(true);
+        } else {
+          thisProject.setIncompleteAssignmentsOnly(true);
+        }
         thisProject.buildAssignmentList(db);
         Iterator i = thisProject.getAssignments().iterator();
         while (i.hasNext()) {
