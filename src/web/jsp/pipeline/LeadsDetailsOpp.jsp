@@ -189,4 +189,7 @@ Opportunity Details<br>
 <dhv:permission name="pipeline-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='DeleteOpp';confirmSubmit(this.form);"></dhv:permission>
 </td></tr>
 </table>
+<% if (request.getParameter("return") != null) { %>
+<input type=hidden name="return" value="<%=request.getParameter("return")%>">
+<%}%>
 </form>

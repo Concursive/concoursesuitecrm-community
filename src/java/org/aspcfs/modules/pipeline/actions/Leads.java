@@ -1061,6 +1061,8 @@ public final class Leads extends CFSModule {
       if (resultCount == 1) {
 	      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
 		      return (executeCommandViewOpp(context));
+	      } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("dashboard")) {
+		      return (executeCommandDashboard(context));
 	      } else {
 		      return ("UpdateOppOK");
 	      }

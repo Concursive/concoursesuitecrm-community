@@ -49,6 +49,8 @@
 <%} else {%>
 	<% if (request.getParameter("return").equals("list")) { %>
 		<a href="/Leads.do?command=ViewOpp">View Opportunities</a> >
+	<%} else if (request.getParameter("return").equals("dashboard")) { %>
+		<a href="/Leads.do?command=Dashboard">Dashboard</a> >
 	<%}%>
 <%}%>
 Modify Opportunity<br>
