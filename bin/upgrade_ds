@@ -92,11 +92,13 @@ if [ -n "${GKDRIVER}" ] ; then PARAMS="${PARAMS} -DGKDRIVER=${GKDRIVER}" ; fi
 
 if [ -n "${GKUSER}" ] ; then PARAMS="${PARAMS} -DGKUSER=${GKUSER}" ; fi
 
-if [ -n "${GKUSERPW}" ] ; then ${PARAMS}="${PARAMS} -DGKUSERPW=${GKUSERPW}" ; fi
+if [ -n "${GKUSERPW}" ] ; then PARAMS="${PARAMS} -DGKUSERPW=${GKUSERPW}" ; fi
 
 if [ -n "${GKUSER}" ] ; then PARAMS="${PARAMS} -DGKUSER=${GKUSER}" ; fi
 
-if [ -n "${FORCESSL}" ] ; then ${PARAMS}="${PARAMS} -DFORCESSL=${FORCESSL}" ; fi
+if [ -n "${FORCESSL}" ] ; then PARAMS="${PARAMS} -DFORCESSL=${FORCESSL}" ; fi
+
+echo "Params: ${PARAMS}"
 
 ant ${PARAMS} lib
 ##/home/${SITECODE}/bin/restart 
