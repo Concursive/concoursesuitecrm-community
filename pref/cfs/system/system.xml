@@ -95,7 +95,7 @@
     <param name="accounts.account.alerts"><value>Account Alerts</value></param>
     <param name="accounts.accountContractEndAlerts"><value>Account Contract End Alerts</value></param>
     <param name="accounts.manage"><value>Select an account to manage.</value></param>
-    <param name="accounts.portalAccessDisabled"><value>Portal access has been disbled for this account contact.</value></param>
+    <param name="accounts.portalAccessDisabled"><value>Portal access has been disabled for this account contact.</value></param>
     <param name="accounts.alert.invalidAccount"><value>You have to select an Account first</value></param>
     <param name="accounts.tickets.ticket.close"><value>Ticket complete</value></param>
     <param name="accounts.tickets.information"><value>Ticket Information</value></param>
