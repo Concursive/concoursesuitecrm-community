@@ -417,7 +417,7 @@ public class CalendarEvent implements Comparable {
     } else if (thisCategory.equalsIgnoreCase("holiday")) {
       return "US Bank Holiday";
     } else if (thisCategory.equalsIgnoreCase("System Alerts")) {
-      return "User Account Expiry Alert";
+      return "System Alert";
     } else if (thisCategory.equalsIgnoreCase("Opportunity")) {
       return "Opportunities";
     } else if (thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {

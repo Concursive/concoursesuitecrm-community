@@ -801,7 +801,7 @@ public final class MyCFS extends CFSModule {
       User thisUser = this.getUser(context, this.getUserId(context));
       if (thisUser.getExpires() != null) {
         String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
-        companyCalendar.addEvent(expiryDate, "Your user account expires", CalendarEventList.EVENT_TYPES[9]);
+        companyCalendar.addEvent(expiryDate, "Your user login expires", CalendarEventList.EVENT_TYPES[9]);
       }
 
       //create events depending on alert type
