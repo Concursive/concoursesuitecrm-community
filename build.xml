@@ -509,4 +509,21 @@ determined user is ${USER}
     </sql>
     <delete dir="${SRC}/tmp" failonerror="false"/>
   </target>
+  
+  <target name="upgradedb" description="Upgrades an existing database">
+    <echo message="Upgrading database"/>
+    <sql
+        driver="com.microsoft.jdbc.sqlserver.SQLServerDriver"
+        url="jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor"
+        userid="dhv_appuser"
+        password="@pus3r">
+        <!--driver="org.postgresql.Driver"-->
+      <classpath>
+        <path refid="cfs2.classpath"/>
+      </classpath>
+        
+      <transaction src="database/${DBTYPE}/upgrade.sql"/>
+    </sql>
+  </target>
+  
 </project>
