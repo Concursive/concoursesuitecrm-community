@@ -1,0 +1,94 @@
+#!/bin/sh
+
+#############################################################################
+#
+# Configuration
+#
+#############################################################################
+PROGNAME=`basename $0`
+BASE=`pwd`
+WEBUSER="apache"
+CFSGROUP="cfs"
+CFSDBA="cfsdba"
+SITEHOME="/home"
+SITECODE=""
+SITEDB="jdbc:postgresql://127.0.0.1:5432/cfs2gk"
+
+usage ()
+{
+	printf "\nUsage: ${PROGNAME} sitecode\n\n"
+    printf "  sitecode: the installed location of the java Notifier\n"
+	printf "\n"
+	exit 1
+}
+
+#############################################################################
+#
+# Check that user is root.
+#
+#############################################################################
+if [ "`id -u`" != "0" ] ; then echo "Sorry, you must be root." ; exit 1 ; fi
+
+#############################################################################
+#
+# Get command-line parameters.
+#
+#############################################################################
+if [ -n "$1" ] ; then SITECODE="$1"; shift ; fi
+if [ -z "${SITECODE}" ] ; then echo "Missing site code" ; usage ; fi
+
+#############################################################################
+#
+# Set up environment.
+#
+#############################################################################
+ENVFILE="${SITEHOME}/${SITECODE}/bin/scripts/env.`hostname`.sh"
+#ENVFILE="scripts/env.`hostname`.sh"
+echo ${ENVFILE}
+if [ ! -f "${ENVFILE}" ] ; then echo "Missing file: ${ENVFILE}" ; exit ; fi
+. ${ENVFILE}
+
+#############################################################################
+#
+# Configuration using supplied parameters.
+#
+#############################################################################
+DIRDST="${SITEHOME}/${SITECODE}"
+DB="cdb_${SITECODE}"
+
+#############################################################################
+#
+# Begin install
+#
+#############################################################################
+#LOG="${PROGNAME}.log"
+LOG="${SITEHOME}/${SITECODE}/bin/${PROGNAME}.log"
+
+echo `date` >${LOG}
+
+(
+#############################################################################
+#
+# Verify directories
+#
+#############################################################################
+if [ ! -d "$DIRDST" ] ; then
+	if [ ! -d "$DIRDST" ] ; then echo "Exiting..."; exit 1; fi
+fi
+
+
+#############################################################################
+#
+#############################################################################
+echo ok
+
+cd ${SITEHOME}/${SITECODE}/bin
+
+java -cp .:${CLASSPATH}:${SITEHOME}/${SITECODE}/bin/Notifier.jar com.darkhorseventures.apps.dataimport.DataImport dataImport-config.xml
+
+
+) >>${LOG} 2>&1 
+
+exit 0
+
+
