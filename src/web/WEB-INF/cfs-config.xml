@@ -455,6 +455,8 @@
     <forward name="DetailsOK" resource="/accounts/accounts_contacts_details.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="CloseInsertContactPopup" resource="/accounts/accounts_closepopup_addcontact.jsp"/>
+    <forward name="AddContactPopupOK" resource="/accounts/accounts_contacts_add.jsp" layout="style"/>
   </action>
   <action name="RevenueManager" class="org.aspcfs.modules.accounts.actions.RevenueManager">
     <bean name="Revenue" class="org.aspcfs.modules.accounts.base.Revenue" scope="request"/>
