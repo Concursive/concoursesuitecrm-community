@@ -32,9 +32,6 @@ public final class Login extends GenericAction {
     String password = loginBean.getPassword();
     String serverName = context.getRequest().getServerName();
     String gkDriver = (String)context.getServletContext().getAttribute("GKDRIVER");
-    if (gkDriver == null || gkDriver.equals("")) {
-      gkDriver = "org.postgresql.Driver";
-    }
     String gkHost = (String)context.getServletContext().getAttribute("GKHOST");
     String gkUser = (String)context.getServletContext().getAttribute("GKUSER");
     String gkUserPw = (String)context.getServletContext().getAttribute("GKUSERPW");
@@ -74,12 +71,14 @@ public final class Login extends GenericAction {
       pst.setString(2, serverName);
       rs = pst.executeQuery();
       if (rs.next()) {
-        ce = new ConnectionElement(
-            rs.getString("dbhost"),
-            rs.getString("dbuser"),
-            rs.getString("dbpw"));
-        ce.setDbName(rs.getString("dbName"));
-        ce.setDriver(rs.getString("driver"));
+        String siteDbHost = rs.getString("dbhost");
+        String siteDbName = rs.getString("dbname");
+        String siteDbUser = rs.getString("dbuser");
+        String siteDbPw = rs.getString("dbpw");
+        String siteDriver = rs.getString("driver");
+        ce = new ConnectionElement(siteDbHost, siteDbUser, siteDbPw);
+        ce.setDbName(siteDbName);
+        ce.setDriver(siteDriver);
       } else {
         loginBean.setMessage("* Access denied: Host does not exist (" +
              serverName + ")");

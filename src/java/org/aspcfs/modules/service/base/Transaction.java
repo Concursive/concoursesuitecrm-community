@@ -7,8 +7,9 @@ import java.sql.*;
 public class Transaction extends Vector {
 
   private int id = -1;
-  private Hashtable mapping = new Hashtable();
+  private Hashtable mapping = null;
   private StringBuffer errorMessage = new StringBuffer();
+  private RecordList recordList = null;
   
   public Transaction() {}
   
@@ -34,18 +35,25 @@ public class Transaction extends Vector {
     while (i.hasNext()) {
       Element objectElement = (Element)i.next();
       TransactionItem thisItem = new TransactionItem(objectElement, mapping);
-      if (thisItem.isValid()) {
+      //if (thisItem.isValid()) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Transaction-> Adding transaction item");
         }
         this.add(thisItem);
-      } else {
-        errorMessage.append(thisItem.getErrorMessage());
-      }
+      //} else {
+      //  appendErrorMessage(thisItem.getErrorMessage());
+      //}
     }
   }
   
+  public void setMapping(Hashtable tmp) {
+    mapping = tmp;
+  }
+  
   public void addMapping(String key, String value) {
+    if (mapping == null) {
+      mapping = new Hashtable();
+    }
     mapping.put(key, value);
   }
   
@@ -61,13 +69,18 @@ public class Transaction extends Vector {
       while (items.hasNext()) {
         TransactionItem thisItem = (TransactionItem)items.next();
         thisItem.execute(db);
-        if (thisItem.hasError()) errorMessage.append(getErrorMessage());
+        if (thisItem.hasError()) {
+          appendErrorMessage(thisItem.getErrorMessage());
+        }
+        if (thisItem.hasRecordList() && recordList == null) {
+          recordList = thisItem.getRecordList();
+        }
       }
       db.commit();
     } catch (Exception e) {
       exception = e;
       e.printStackTrace(System.out);
-      errorMessage.append("Transaction failed");
+      appendErrorMessage("Transaction failed");
       db.rollback();
     } finally {
       db.setAutoCommit(true);
@@ -78,7 +91,7 @@ public class Transaction extends Vector {
     } 
     
     if (exception != null) {
-      errorMessage.append(exception.getMessage());
+      appendErrorMessage(exception.getMessage());
     }
     return 1;
   }
@@ -87,4 +100,16 @@ public class Transaction extends Vector {
     return (errorMessage.length() > 0);
   }
   
+  public RecordList getRecordList() {
+    return recordList;
+  }
+  
+  public void appendErrorMessage(String tmp) {
+    if (tmp != null) {
+      if (errorMessage.length() > 0) {
+        errorMessage.append(System.getProperty("line.separator"));
+      }
+      errorMessage.append(tmp);
+    }
+  }
 }

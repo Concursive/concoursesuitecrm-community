@@ -40,6 +40,8 @@ public class InitHook implements ControllerInitHook {
     
     if (config.getInitParameter("GKDRIVER") != null) {
       config.getServletContext().setAttribute("GKDRIVER", config.getInitParameter("GKDRIVER"));
+    } else {
+      config.getServletContext().setAttribute("GKDRIVER", "org.postgresql.Driver");
     }
 
     if (config.getInitParameter("GKHOST") != null) {

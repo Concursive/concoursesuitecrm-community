@@ -7,20 +7,28 @@ public class AuthenticationItem {
 
   private String id = null;
   private String code = null;
+  private String client = null;
+  private int clientId = -1;
 
   public AuthenticationItem() { }
   
   public void setId(String tmp) { id = tmp; }
   public void setCode(String tmp) { code = tmp; }
+  public void setClientId(int tmp) { clientId = tmp; }
+  public void setClientId(String tmp) { clientId = Integer.parseInt(tmp); }
+  public void setClient(String tmp) { client = tmp; }
 
   public String getId() { return id; }
   public String getCode() { return code; }
+  public int getClientId() { return clientId; }
+  public String getClient() { return client; }
   
   public Connection getConnection(ActionContext context) throws SQLException {
     String gkHost = (String)context.getServletContext().getAttribute("GKHOST");
     String gkUser = (String)context.getServletContext().getAttribute("GKUSER");
     String gkUserPw = (String)context.getServletContext().getAttribute("GKUSERPW");
     String siteCode = (String)context.getServletContext().getAttribute("SiteCode");
+    String gkDriver = (String)context.getServletContext().getAttribute("GKDRIVER");
     String serverName = context.getRequest().getServerName();
     if (System.getProperty("DEBUG") != null) System.out.println("AuthenticationItem-> ServerName: " + serverName);
     
@@ -28,6 +36,7 @@ public class AuthenticationItem {
       String authCode = null;
       ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
       ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
+      gk.setDriver(gkDriver);
       ConnectionElement ce = null;
       
       String sql = 
@@ -40,15 +49,15 @@ public class AuthenticationItem {
       pst.setString(2, serverName);
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
+        String siteDbHost = rs.getString("dbhost");
+        String siteDbName = rs.getString("dbname");
+        String siteDbUser = rs.getString("dbuser");
+        String siteDbPw = rs.getString("dbpw");
+        String siteDriver = rs.getString("driver");
         authCode = rs.getString("code");
-        String dbName = rs.getString("dbname");
-        ce = new ConnectionElement(
-            rs.getString("dbhost") + ":" + rs.getInt("dbport") +
-            "/" + dbName,
-            rs.getString("dbuser"),
-            rs.getString("dbpw")
-            );
-        ce.setDbName(dbName);
+        ce = new ConnectionElement(siteDbHost, siteDbUser, siteDbPw);
+        ce.setDbName(siteDbName);
+        ce.setDriver(siteDriver);
       }
       rs.close();
       pst.close();

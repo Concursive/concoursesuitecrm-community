@@ -3,9 +3,14 @@ package com.darkhorseventures.utils;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
+
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
+
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -176,6 +181,10 @@ public class XMLUtils {
     }
   }
   
+  public String toString() {
+    return XMLUtils.toString(document);
+  }
+  
   public static String toXMLValue(String s) {
     if (s != null) {
       String xmlReady = s.trim();
@@ -185,6 +194,40 @@ public class XMLUtils {
       return(xmlReady);
     } else {
       return("");
+    }
+  }
+  
+  public static String toString(Node node) {
+    try {
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      Transformer transformer = transformerFactory.newTransformer();
+      Source source = new DOMSource(node);
+  
+      StringWriter writer = new StringWriter();
+      Result result = new StreamResult(writer);
+  
+      transformer.transform(source,result);
+  
+      return writer.toString();
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return null;
+    }
+  }
+  
+  public static boolean debug(Node node) {
+    try {
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      Transformer transformer = transformerFactory.newTransformer();
+      Source source = new DOMSource(node);
+  
+      StreamResult result = new StreamResult(System.out); 
+  
+      transformer.transform(source,result);
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return false;
     }
   }
 }

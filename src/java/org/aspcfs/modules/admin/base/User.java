@@ -151,7 +151,6 @@ public class User extends GenericBean {
   public User(Connection db, int userId, boolean doHierarchy) throws SQLException {
     this.buildHierarchy = doHierarchy;
     buildRecord(db, userId);
-    buildResources(db);
   }
 
 
@@ -1254,7 +1253,20 @@ public void setPermissions(Vector permissions) {
 
       return resultCount;
     }
-
+  }
+  
+  public int select(Connection db) throws SQLException {
+    buildRecord(db, this.id);
+    if (expires != null && (new java.util.Date()).after(expires)) {
+      //set error message
+      return -1;
+    } else {
+      if (alias > 0) {
+        return alias;
+      } else {
+        return this.id;
+      }
+    }
   }
 
 
@@ -1454,7 +1466,7 @@ public void setPermissions(Vector permissions) {
    *@since                    1.10
    */
   public void buildRecord(Connection db, int userId) throws SQLException {
-    Statement st = null;
+    PreparedStatement pst = null;
     ResultSet rs = null;
 
     StringBuffer sql = new StringBuffer();
@@ -1476,19 +1488,33 @@ public void setPermissions(Vector permissions) {
         "LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
         "role r " +
         "WHERE a.role_id = r.role_id " +
-        "AND a.enabled = " + DatabaseUtils.getTrue(db) + " " +
-        "AND a.user_id = " + userId + " ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+        "AND a.enabled = ? ");
+    if (userId > -1) {
+      sql.append("AND a.user_id = ? ");
+    } else {
+      sql.append(
+        "AND lower(username) = ? " +
+        "AND password = ? ");
+    }
+    pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setBoolean(++i, true);
+    if (userId > -1) {
+      pst.setInt(++i, userId);
+    } else {
+      pst.setString(++i, username);
+      pst.setString(++i, encryptPassword(password));
+    }
+    rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     } else {
       rs.close();
-      st.close();
+      pst.close();
       throw new SQLException("User record not found.");
     }
     rs.close();
-    st.close();
+    pst.close();
     buildResources(db);
   }
 

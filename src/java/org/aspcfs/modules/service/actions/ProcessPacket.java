@@ -17,7 +17,6 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 import java.lang.reflect.*;
 
-
 public final class ProcessPacket extends CFSModule {
 
   public String executeCommandDefault(ActionContext context) {
@@ -27,31 +26,42 @@ public final class ProcessPacket extends CFSModule {
 
     try {
       XMLUtils xml = new XMLUtils(context.getRequest());
-
-      if (System.getProperty("DEBUG") != null)
+      if (System.getProperty("DEBUG") != null) {
         System.out.println("ProcessPacket-> Parsing data");
-
+      }
       AuthenticationItem auth = new AuthenticationItem();
       xml.populateObject(auth, xml.getFirstChild("authentication"));
       db = auth.getConnection(context); 
       if (db != null) {
+        Hashtable objectMap = new Hashtable();
+        if (auth.getClient() == null || auth.getClient().equals("aspcfs")) {
+          objectMap.put("account", "com.darkhorseventures.cfsbase.Organization");
+          objectMap.put("organization", "com.darkhorseventures.cfsbase.Organization");
+          objectMap.put("contact", "com.darkhorseventures.cfsbase.Contact");
+          objectMap.put("ticket", "com.darkhorseventures.cfsbase.Ticket");
+          objectMap.put("folder", "com.darkhorseventures.cfsbase.CustomFieldCategory");
+        } else if (auth.getClient().equals("autoguide")) {
+          objectMap.put("user", "com.darkhorseventures.cfsbase.User");
+          objectMap.put("syncClient", "com.darkhorseventures.cfsbase.SyncClient");
+          objectMap.put("account", "com.darkhorseventures.cfsbase.Organization");
+          objectMap.put("make", "com.darkhorseventures.autoguide.base.Make");
+          objectMap.put("model", "com.darkhorseventures.autoguide.base.Model");
+          objectMap.put("vehicle", "com.darkhorseventures.autoguide.base.Vehicle");
+        }
         Vector transactionList = new Vector();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
         while (trans.hasNext()) {
           Element thisElement = (Element)trans.next();
           Transaction thisTransaction = new Transaction();
-          thisTransaction.addMapping("account", "com.darkhorseventures.cfsbase.Organization");
-          thisTransaction.addMapping("organization", "com.darkhorseventures.cfsbase.Organization");
-          thisTransaction.addMapping("contact", "com.darkhorseventures.cfsbase.Contact");
-          thisTransaction.addMapping("ticket", "com.darkhorseventures.cfsbase.Ticket");
-          thisTransaction.addMapping("folder", "com.darkhorseventures.cfsbase.CustomFieldCategory");
+          thisTransaction.setMapping(objectMap);
           thisTransaction.build(thisElement);
           int statusCode = thisTransaction.execute(db);
           StatusMessage thisStatus = new StatusMessage();
           thisStatus.setStatusCode(statusCode);
           thisStatus.setId(thisTransaction.getId());
           thisStatus.setMessage(thisTransaction.getErrorMessage());
+          thisStatus.setRecordList(thisTransaction.getRecordList());
           statusMessages.add(thisStatus);
         }
 
@@ -78,7 +88,62 @@ public final class ProcessPacket extends CFSModule {
       if (db != null) this.freeConnection(context, db);
     }
 
-    context.getRequest().setAttribute("statusMessages", statusMessages);
+    try {
+      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = dbf.newDocumentBuilder();
+      Document document = builder.newDocument();
+      Element app = document.createElement("aspcfs");
+      document.appendChild(app);
+      
+      Iterator messages = statusMessages.iterator();
+      while (messages.hasNext()) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("ProcessPacket-> Processing StatusMessage for output");
+        }
+      
+        StatusMessage thisMessage = (StatusMessage)messages.next();
+        Element response = document.createElement("response");
+        if (thisMessage.getId() > -1) {
+          response.setAttribute("id", "" + thisMessage.getId());
+        }
+        app.appendChild(response);
+        Element status = document.createElement("status");
+        status.appendChild(document.createTextNode(String.valueOf(thisMessage.getStatusCode())));
+        response.appendChild(status);
+        
+        Element errorText = document.createElement("errorText");
+        errorText.appendChild(document.createTextNode(thisMessage.getMessage()));
+        response.appendChild(errorText);
+        
+        if (thisMessage.hasRecordList()) {
+          Element recordSet = document.createElement("recordSet");
+          recordSet.setAttribute("name", thisMessage.getRecordList().getName());
+          recordSet.setAttribute("count", String.valueOf(thisMessage.getRecordList().size()));
+          response.appendChild(recordSet);
+          
+          Iterator recordList = thisMessage.getRecordList().iterator();
+          while (recordList.hasNext()) {
+            Element record = document.createElement("record");
+            recordSet.appendChild(record);
+            Record thisRecord = (Record)recordList.next();
+            Iterator fields = thisRecord.keySet().iterator();
+            while (fields.hasNext()) {
+              String fieldName = (String)fields.next();
+              String fieldValue = (String)thisRecord.get(fieldName);
+              Element field = document.createElement(fieldName);
+              field.appendChild(document.createTextNode(fieldValue));
+              record.appendChild(field);
+            }
+          }
+          
+        }
+      }
+      
+      context.getRequest().setAttribute("statusXML", XMLUtils.toString(document));
+    } catch (Exception pce) {
+      pce.printStackTrace(System.out);
+    }
+    //context.getRequest().setAttribute("statusMessages", statusMessages);
     return ("PacketOK");
   }
 }
