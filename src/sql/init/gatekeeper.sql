@@ -20,7 +20,7 @@ INSERT INTO sites
 VALUES 
 ('cfs2',
  '127.0.0.1',
- 'jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs',
+ 'jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor',
  'cdb_cfs',
  1433,
  'postgres',

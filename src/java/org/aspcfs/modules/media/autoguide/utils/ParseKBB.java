@@ -34,7 +34,7 @@ public class ParseKBB {
     if (args.length > 0) {
       fileName = args[0];
     } else {
-      fileName = "kbb.csv";
+      fileName = "autoguide.csv";
     }
     thisApp.process(fileName);
     System.exit(0);
@@ -60,7 +60,7 @@ public class ParseKBB {
       sqlDriver.setForceClose(false);
       sqlDriver.setMaxConnections(1);
       ConnectionElement thisElement = new ConnectionElement(
-          "jdbc:microsoft:sqlserver://216.54.81.105:1433;DatabaseName=cdb_cfs",
+          "jdbc:microsoft:sqlserver://216.54.81.105:1433;DatabaseName=cdb_cfs;SelectMethod=cursor",
           "postgres",
           "p0stgres");
       thisElement.setDriver("com.microsoft.jdbc.sqlserver.SQLServerDriver");
