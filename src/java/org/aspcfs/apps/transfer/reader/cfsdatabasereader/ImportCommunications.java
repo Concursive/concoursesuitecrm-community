@@ -71,13 +71,17 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    logger.info("ImportCommunications-> Inserting Campaign Run");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaignRun");
+    if (!processOK) {
+      return false;
+    }
+    
     logger.info("ImportCommunications-> Inserting Scheduled Recipient Records");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "scheduledRecipient");
     if (!processOK) {
       return false;
     }
-    
-
     
     logger.info("ImportCommunications-> Inserting Excluded Recipients");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "excludedRecipient");
@@ -85,11 +89,6 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
     
-    logger.info("ImportCommunications-> Inserting Campaign Run");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaignRun");
-    if (!processOK) {
-      return false;
-    }
     
     logger.info("ImportCommunications-> Inserting Campaign List Groups");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaignListGroups");
