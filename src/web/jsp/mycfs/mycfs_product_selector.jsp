@@ -68,7 +68,7 @@
       <td colspan="6">
         No products found.
       </td>
-    <tr>
+    </tr>
   <%}%>
   <input type="hidden" name="finalsubmit" value="false" />
   <input type="hidden" name="listType" value="single" />

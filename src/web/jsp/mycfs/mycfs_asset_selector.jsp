@@ -162,7 +162,7 @@
       <td colspan="7">
         No assets found.
       </td>
-    <tr>
+    </tr>
   <%}%>
   <input type="hidden" name="finalsubmit" value="false" />
   <input type="hidden" name="listType" value="single" />

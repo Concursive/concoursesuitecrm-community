@@ -90,7 +90,7 @@
       <td colspan="6">
         No service contracts found.
       </td>
-    <tr>
+    </tr>
   <%}%>
   <input type="hidden" name="finalsubmit" value="false" />
   <input type="hidden" name="listType" value="single" />
