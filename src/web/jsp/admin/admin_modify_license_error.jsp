@@ -17,8 +17,6 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
-<jsp:useBean id="APP_ORGANIZATION" class="java.lang.String" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
