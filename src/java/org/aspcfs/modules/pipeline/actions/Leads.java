@@ -466,7 +466,6 @@ public final class Leads extends CFSModule {
       return (executeCommandSearch(context));
     }
     addModuleBean(context, "Dashboard", "Dashboard");
-    String errorMessage = null;
 
     //Prepare the user id to base all data on
     int idToUse = 0;
@@ -592,8 +591,8 @@ public final class Leads extends CFSModule {
       //ShortChildList is used for showing user list, under graph
       shortChildList.buildPipelineValues(db);
     } catch (Exception e) {
-      errorMessage = e.toString();
-      e.printStackTrace(System.out);
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
@@ -660,8 +659,12 @@ public final class Leads extends CFSModule {
       int width = 275;
       int height = 200;
       try {
-        String realPath = context.getServletContext().getRealPath("/");
-        String filePath = realPath + "graphs" + fs;
+        String filePath = context.getServletContext().getRealPath("/") + "graphs" + fs;
+        // Make sure the path exists before writing the image
+        File graphDirectory = new File(filePath);
+        if (!graphDirectory.exists()) {
+          graphDirectory.mkdirs();
+        }
         java.util.Date testDate = new java.util.Date();
         String fileName = String.valueOf(idToUse) + String.valueOf(testDate.getTime()) + String.valueOf(context.getSession().getCreationTime());
 
@@ -685,20 +688,14 @@ public final class Leads extends CFSModule {
           thisRec.getCramr().setLastFileName(fileName);
         }
         context.getRequest().setAttribute("GraphFileName", fileName);
-      } catch (IOException e) {
-        e.printStackTrace(System.out);
+      } catch (Exception e) {
+        context.getRequest().setAttribute("Error", e);
+        return ("SystemError");
       }
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("ShortChildList", shortChildList);
-      context.getRequest().setAttribute("GraphTypeList", graphTypeSelect);
-      return ("DashboardOK");
-    } else {
-      //A System Error occurred
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("ShortChildList", shortChildList);
+    context.getRequest().setAttribute("GraphTypeList", graphTypeSelect);
+    return ("DashboardOK");
   }
 
 
