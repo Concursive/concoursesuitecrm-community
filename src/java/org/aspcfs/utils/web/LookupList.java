@@ -568,21 +568,46 @@ public class LookupList extends HtmlSelect {
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
+    ResultSet rs = queryList(db, pst);
+    int count = 0;
+    while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
+      LookupElement thisElement = this.getObject(rs);
+      this.add(thisElement);
+    }
+    rs.close();
+    if (pst != null) {
+      pst.close();
+    }
+  }
+
+
+  /**
+   *  This method is required for synchronization, it allows for the resultset
+   *  to be streamed with lower overhead
+   *
+   *@param  db                Description of the Parameter
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
-
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlSelect = new StringBuffer();
-
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM " + tableName + " " +
         "WHERE code > -1 ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -594,7 +619,6 @@ public class LookupList extends HtmlSelect {
       }
       pst.close();
       rs.close();
-
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString() +
@@ -616,40 +640,22 @@ public class LookupList extends HtmlSelect {
     } else {
       sqlOrder.append("ORDER BY level,description ");
     }
-
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
       sqlSelect.append("SELECT ");
     }
-
     sqlSelect.append(
         "* " +
         "FROM " + tableName + " " +
         "WHERE code > -1 ");
-
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
-    int count = 0;
-    while (rs.next()) {
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-      ++count;
-      LookupElement thisElement = new LookupElement(rs);
-      this.add(thisElement);
-    }
-
-    rs.close();
-    pst.close();
+    return rs;
   }
 
 
