@@ -589,5 +589,76 @@ public final class AdminFields extends CFSModule {
     }
   }
   
+  public String executeCommandMoveField(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+
+    try {
+      db = this.getConnection(context);
+      this.addModuleList(context, db);
+      this.addCategoryList(context, db);
+      this.addCategory(context, db);
+      
+      String change = context.getRequest().getParameter("chg");
+      if (System.getProperty("DEBUG") != null) System.out.println("AdminFields->MoveField: " + change);
+      
+      if (change != null && change.indexOf("|") > -1) {
+        StringTokenizer st = new StringTokenizer(change, "|");
+        int groupChange = Integer.parseInt((String)st.nextToken());
+        int fieldChange = Integer.parseInt((String)st.nextToken());
+        String direction = (String)st.nextToken();
+        
+        CustomFieldCategory thisCategory = (CustomFieldCategory)context.getRequest().getAttribute("Category");
+        Iterator groups = thisCategory.iterator();
+        int groupCount = 0;
+        while (groups.hasNext()) {
+          CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
+          ++groupCount;
+          Iterator fields = thisGroup.iterator();
+          int level = 0;
+          int fieldCount = 0;
+          while (fields.hasNext()) {
+            CustomField thisField = (CustomField)fields.next();
+            ++fieldCount;
+            if (groupCount == groupChange && "U".equals(direction)) {
+              if (fieldCount < fieldChange) ++level;
+              if ((fieldCount + 1) == fieldChange) ++level;
+              if (fieldCount == fieldChange) --level;
+              if (fieldCount > fieldChange) ++level;
+              thisField.setLevel((new Integer(level)).intValue());
+              if (fieldCount == fieldChange) ++level;
+            }
+            
+            //TODO: the down clause...
+            if (groupCount == groupChange && "D".equals(direction)) {
+              if (fieldCount < fieldChange) ++level;
+              if (fieldCount == fieldChange) ++level;
+              if (fieldCount > fieldChange) ++level;
+              thisField.setLevel((new Integer(level)).intValue());
+              if ((fieldCount + 1) == fieldChange) ++level;
+              
+              if (fieldCount == fieldChange + 1) ++level;
+            }
+            
+            
+            System.out.println(thisField.getLevel());
+          }
+          
+        }
+        
+      }
+      
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "Configuration", "Configuration");
+    return ("MoveFieldOK");
+  }
+  
 }
 

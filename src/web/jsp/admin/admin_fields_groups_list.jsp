@@ -59,9 +59,11 @@ Folder<br>
   if (Category.size() > 0) {
     int rowId = 0;
     Iterator groups = Category.iterator();
+    int groupLevel = 0;
     while (groups.hasNext()) {
       rowId = 0;
-      //rowId = (rowId == 1 ? 2 : 1);
+      ++groupLevel;
+      
       CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
 %>      
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
@@ -92,8 +94,10 @@ Folder<br>
     </tr>
 <%      
       Iterator fields = thisGroup.iterator();
+      int fieldLevel = 0;
       while (fields.hasNext()) {
         rowId = (rowId == 1 ? 2 : 1);
+        ++fieldLevel;
         CustomField thisField = (CustomField)fields.next();
 %>    
     <tr class="row<%= rowId %>">
@@ -101,7 +105,7 @@ Folder<br>
         <a href="/AdminFields.do?command=ModifyField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisField.getGroupId() %>">Edit</a>|<a href="javascript:confirmDeleteField('/AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');">Del</a>
       </td>
       <td align="left" width="8" nowrap>
-        Up|Down
+        <a href="/AdminFields.do?command=MoveField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|U">Up</a>|<a href="/AdminFields.do?command=MoveField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|D">Down</a>
       </td>
       <td width="30%" nowrap>
         <%= thisField.getName() %>

@@ -413,6 +413,7 @@
     <forward name="UpdateFieldERROR" resource="/AdminFields.do?command=ModifyField"/>
     <forward name="DeleteFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
     <forward name="DeleteFieldERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="MoveFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
   </action>
   <action name="Users" class="com.darkhorseventures.cfsmodule.Users">
     <bean name="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request" />
