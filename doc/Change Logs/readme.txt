@@ -1,5 +1,16 @@
-Centric CRM 2.9
+Centric CRM 2.9.1
 Copyright 2004 Dark Horse Ventures
+
+Change Log - November 3, 2004
+----------------------------------------------------------------------------
+
+This release fixes the following bug:
+
+  - When adding a ticket from within a project, the operation could fail
+    with an error message.  Projects have the capability to have tickets, 
+    however they were not being associated to a contact correctly.
+    Thanks to Justin L. Spies for the report and fix.
+
 
 Change Log - October 29, 2004
 ----------------------------------------------------------------------------
