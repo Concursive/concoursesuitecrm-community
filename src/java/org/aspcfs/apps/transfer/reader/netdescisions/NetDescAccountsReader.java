@@ -172,7 +172,7 @@ public class NetDescAccountsReader implements DataReader {
       newUserRecord.setName("user");
       newUserRecord.setAction("insert");
       newUserRecord.addField("guid", userId);
-      newUserRecord.addField("username", "Importer");
+      newUserRecord.addField("username", "Electronic Importer");
       newUserRecord.addField("contactId", 1030);
       newUserRecord.addField("encryptedPassword", "none");
       writer.save(newUserRecord);
