@@ -19,6 +19,7 @@ public class Property implements Cloneable {
   private String displayName = null;
   private String uniqueName = null;
   private String defaultValue = null;
+  private String substitute = null;
   private int mappedColumn = -1;
   private int groupId = -1;
   private boolean required = false;
@@ -87,6 +88,18 @@ public class Property implements Cloneable {
     tmpValue = ((Element) n).getAttribute("displayName");
     if (!"".equals(StringUtils.toString(tmpValue))) {
       this.setDisplayName(tmpValue);
+    }
+
+    //hidden
+    tmpValue = ((Element) n).getAttribute("isForPrompting");
+    if (!"".equals(StringUtils.toString(tmpValue))) {
+      this.setIsForPrompting(tmpValue);
+    }
+
+    //substitute properties, if any
+    tmpValue = ((Element) n).getAttribute("substitute");
+    if (!"".equals(StringUtils.toString(tmpValue))) {
+      this.setSubstitute(tmpValue);
     }
   }
 
@@ -262,6 +275,26 @@ public class Property implements Cloneable {
 
 
   /**
+   *  Sets the substitute attribute of the Property object
+   *
+   *@param  tmp  The new substitute value
+   */
+  public void setSubstitute(String tmp) {
+    this.substitute = tmp;
+  }
+
+
+  /**
+   *  Gets the substitute attribute of the Property object
+   *
+   *@return    The substitute value
+   */
+  public String getSubstitute() {
+    return substitute;
+  }
+
+
+  /**
    *  Gets the groupId attribute of the Property object
    *
    *@return    The groupId value
@@ -294,6 +327,7 @@ public class Property implements Cloneable {
   /**
    *  Gets the dependency name of this property<br>
    *  NOTE: Returns NULL if this is not a dependency property
+   *
    *@return    The dependencyName value
    */
   public String getDependencyName() {
@@ -303,7 +337,7 @@ public class Property implements Cloneable {
 
     StringTokenizer tokens = new StringTokenizer(uniqueName
         , ".");
-    String tmp  = tokens.nextToken();
+    String tmp = tokens.nextToken();
     if (tokens.hasMoreTokens()) {
       return tmp;
     }
