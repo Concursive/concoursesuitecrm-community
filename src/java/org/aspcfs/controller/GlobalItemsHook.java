@@ -150,7 +150,9 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           sql =
               "SELECT COUNT(*) as ticketcount " +
               "FROM ticket " +
-              "WHERE assigned_to = -1 AND closed IS NULL AND (department_code = ? OR department_code in (0, -1))";
+              "WHERE (assigned_to = -1 OR assigned_to IS NULL) " +
+              "AND closed IS NULL " +
+              "AND (department_code = ? OR department_code in (0, -1))";
           pst = db.prepareStatement(sql);
           pst.setInt(1, departmentId);
           rs = pst.executeQuery();
@@ -169,11 +171,19 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         //CFS Inbox Items
         if (systemStatus.hasPermission(userId, "myhomepage-inbox-view")) {
           int inboxCount = 0;
-          CFSNoteList newMessages = new CFSNoteList();
-          newMessages.setSentTo(contactId);
-          newMessages.setNewMessagesOnly(true);
-          newMessages.buildList(db);
-          inboxCount = newMessages.size();
+          sql =
+              "SELECT COUNT(*) as inboxcount " +
+              "FROM cfsinbox_message m, cfsinbox_messagelink ml " +
+              "WHERE m.id = ml.id AND ml.sent_to = ? AND m.delete_flag = ? AND ml.status IN (0) ";
+          pst = db.prepareStatement(sql);
+          pst.setInt(1, contactId);
+          pst.setBoolean(2, false);
+          rs = pst.executeQuery();
+          if (rs.next()) {
+            inboxCount = rs.getInt("inboxcount");
+          }
+          rs.close();
+          pst.close();
           items.append("<a href='MyCFSInbox.do?command=Inbox&return=1' class='s'>Inbox</a> (" + paint(inboxCount) + " new)<br>");
           ++myItems;
         }
