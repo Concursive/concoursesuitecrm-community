@@ -38,32 +38,33 @@ View Opportunities<br>
     </dhv:permission>
     
     <td valign=center nowrap>
-      <strong><a href="/Leads.do?command=ViewOpp&column=acct_name">Organization</a></strong>
+      <strong><a href="Leads.do?command=ViewOpp&column=acct_name">Organization</a></strong>
       <%= OpportunityListInfo.getSortIcon("acct_name") %>
     </td>    
     
     <td valign=center nowrap>
-      <strong><a href="/Leads.do?command=ViewOpp&column=x.description">Component</a></strong>
+      <strong><a href="Leads.do?command=ViewOpp&column=x.description">Component</a></strong>
       <%= OpportunityListInfo.getSortIcon("x.description") %>
     </td>
     
     <td valign=center nowrap>
-      <strong><a href="/Leads.do?command=ViewOpp&column=guessvalue">Amount</a></strong>
+      <strong><a href="Leads.do?command=ViewOpp&column=guessvalue">Amount</a></strong>
       <%= OpportunityListInfo.getSortIcon("guessvalue") %>
     </td>
     
     <td valign=center nowrap>
-      <strong><a href="/Leads.do?command=ViewOpp&column=closeprob">Prob.</a></strong>
+      <strong><a href="Leads.do?command=ViewOpp&column=closeprob">Prob.</a></strong>
       <%= OpportunityListInfo.getSortIcon("closeprob") %>
     </td>
     
     <td valign=center nowrap>
-      <strong><a href="/Leads.do?command=ViewOpp&column=closedate">Start</a></strong>
+      <strong><a href="Leads.do?command=ViewOpp&column=closedate">Start</a></strong>
       <%= OpportunityListInfo.getSortIcon("closedate") %>
     </td>
     
     <td valign=center nowrap>
-      <strong>Term</strong>
+      <strong><a href="Leads.do?command=ViewOpp&column=terms">Term</a></strong>
+      <%= OpportunityListInfo.getSortIcon("terms") %>
     </td>
     
   </tr>

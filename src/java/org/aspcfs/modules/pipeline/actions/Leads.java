@@ -473,8 +473,11 @@ public final class Leads extends CFSModule {
     OpportunityList tempOppList = new OpportunityList();
     OpportunityList realFullOppList = new OpportunityList();
     
-    //OpportunityHeaderList headerList = new OpportunityHeaderList();
     OpportunityList oppList = new OpportunityList();
+    
+    PagedListInfo dashboardListInfo = this.getPagedListInfo(context, "DashboardListInfo");
+    dashboardListInfo.setLink("Leads.do?command=Dashboard");
+    dashboardListInfo.setColumnToSortBy("x.description");
 
     XYDataset categoryData = null;
 
@@ -540,11 +543,8 @@ public final class Leads extends CFSModule {
       
       oppList.setOwner(idToUse);
       oppList.setBuildComponentInfo(true);
+      oppList.setPagedListInfo(dashboardListInfo);
       oppList.buildList(db);
-      
-      //headerList.setOwner(idToUse);
-      //headerList.setBuildTotalValues(true);
-      //headerList.buildList(db);
       
       context.getRequest().setAttribute("OppList", oppList);
 

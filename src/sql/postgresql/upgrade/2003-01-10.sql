@@ -11,6 +11,12 @@ CREATE TABLE usage_log (
   record_size INT NULL
 );
 
+alter table organization add column namesalutation varchar(80);
+alter table organization add column namelast varchar(80);
+alter table organization add column namefirst varchar(80);
+alter table organization add column namemiddle varchar(80);
+alter table organization add column namesuffix varchar(80);
+
 
 /* some new opportunity component stuff */
 

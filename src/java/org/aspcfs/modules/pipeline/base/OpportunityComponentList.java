@@ -32,7 +32,8 @@ public class OpportunityComponentList extends Vector {
   protected java.sql.Date alertRangeEnd = null;
   protected java.sql.Date closeDateStart = null;
   protected java.sql.Date closeDateEnd = null;
-
+  protected boolean queryOpenOnly = false;
+  
   public OpportunityComponentList() { }
 
   public void setPagedListInfo(PagedListInfo tmp) {
@@ -115,6 +116,13 @@ public void setCloseDateEnd(String tmp) {
 
   public String getOwnerIdRange() {
     return ownerIdRange;
+  }
+  
+  public boolean getQueryOpenOnly() {
+    return queryOpenOnly;
+  }
+  public void setQueryOpenOnly(boolean queryOpenOnly) {
+    this.queryOpenOnly = queryOpenOnly;
   }
 
   public int getListSize() {
@@ -278,8 +286,24 @@ public void setCloseDateEnd(String tmp) {
     if (ownerIdRange != null) {
       sqlFilter.append("AND oc.owner in (" + this.ownerIdRange + ") ");
     }
+    
+    if (queryOpenOnly) {
+      sqlFilter.append("AND oc.closed IS NULL ");
+    }
+    
   }
 
+  public int reassignElements(Connection db, int newOwner) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      OpportunityComponent thisOpp = (OpportunityComponent) i.next();
+      if (thisOpp.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }   
 
   /**
    *  Sets the parameters for the preparedStatement - these items must

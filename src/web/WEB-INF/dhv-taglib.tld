@@ -209,6 +209,10 @@
       <name>resetList</name>
       <required>no</required>
     </attribute>
+    <attribute>
+      <name>abbreviate</name>
+      <required>no</required>
+    </attribute>    
   </tag>
   
   <tag>

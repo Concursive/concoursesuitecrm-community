@@ -160,10 +160,17 @@ Dashboard<br>
           <td valign=center colspan=7>No Opportunities at this time.</td>
         </tr>
 <%}%>
-	  
+     
       </table>
+      <br>
+      <div width="100">
+      <dhv:pagedListControl object="DashboardListInfo" tdClass="row0" abbreviate="true"/>
+      </div>
+      
     </td>
   </tr>
+  
+  
 </table>
 </form>
 </body>

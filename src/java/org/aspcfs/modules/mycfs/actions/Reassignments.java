@@ -173,10 +173,10 @@ public final class Reassignments extends CFSModule {
     ContactList sourceContacts = null;
     int targetIdContacts = -1;
 
-    OpportunityList sourceOpenOpps = null;
+    OpportunityComponentList sourceOpenOpps = null;
     int targetIdOpenOpps = -1;
 
-    OpportunityList sourceOpps = null;
+    OpportunityComponentList sourceOpps = null;
     int targetIdOpps = -1;
 
     RevenueList sourceRevenue = null;
@@ -235,7 +235,7 @@ public final class Reassignments extends CFSModule {
       }
 
       if (targetIdOpenOpps > -1) {
-        sourceOpenOpps = new OpportunityList();
+        sourceOpenOpps = new OpportunityComponentList();
         sourceOpenOpps.setOwner(userId);
         sourceOpenOpps.setQueryOpenOnly(true);
         sourceOpenOpps.buildList(db);
@@ -244,7 +244,7 @@ public final class Reassignments extends CFSModule {
       }
 
       if (targetIdOpps > -1) {
-        sourceOpps = new OpportunityList();
+        sourceOpps = new OpportunityComponentList();
         sourceOpps.setOwner(userId);
         sourceOpps.buildList(db);
         sourceOpps.reassignElements(db, targetIdOpps);

@@ -21,6 +21,7 @@ public class PagedListControlHandler extends TagSupport {
   private String tdClass = null;
   private boolean showForm = true;
   private boolean resetList = true;
+  private boolean abbreviate = false;
 
 
   /**
@@ -72,7 +73,6 @@ public class PagedListControlHandler extends TagSupport {
     tdClass = tmp;
   }
 
-
   /**
    *  Sets the showForm attribute of the PagedListControlHandler object
    *
@@ -93,6 +93,12 @@ public class PagedListControlHandler extends TagSupport {
     this.resetList = "true".equalsIgnoreCase(resetList);
   }
 
+  public boolean getAbbreviate() {
+    return abbreviate;
+  }
+  public void setAbbreviate(boolean abbreviate) {
+    this.abbreviate = abbreviate;
+  }
 
   /**
    *  Description of the Method
@@ -128,8 +134,19 @@ public class PagedListControlHandler extends TagSupport {
 
         out.write("<font color=\"" + fontColor + "\">");
         out.write("Page " + pagedListInfo.getNumericalPageEntry() + " ");
-        out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())) + ", ");
-        out.write("Items per page: " + pagedListInfo.getItemsPerPageEntry() + " ");
+        
+        if (!abbreviate) {
+          out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())) + ", ");
+        } else {
+          out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())));
+        }
+        
+        if (!abbreviate) {
+          out.write("Items per page: " + pagedListInfo.getItemsPerPageEntry() + " ");
+        } else {
+          out.write("&nbsp;&nbsp;");
+        }
+        
         out.write("<input type=\"submit\" value=\"go\">");
         out.write("</font>");
         out.write("</td>");
