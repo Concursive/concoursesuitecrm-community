@@ -132,15 +132,27 @@
     </td>
   </tr>
   
-  
-  <tr class="containerBody">
+  <dhv:evaluate exp="<%= hasText(OpportunityDetails.getAlertText()) %>">
+   <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Alert Description
+    </td>
+    <td valign=center colspan=1>
+       <%= toHtml(OpportunityDetails.getAlertText()) %>
+    </td>
+  </tr>
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%= (OpportunityDetails.getAlertDate() != null) %>">
+   <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Date
     </td>
-    <td>
-      <%= toHtml(OpportunityDetails.getAlertDateString()) %>&nbsp;
+    <td valign=center colspan=1>
+       <%= OpportunityDetails.getAlertDateStringLongYear() %>
     </td>
   </tr>
+</dhv:evaluate>
   
     <tr class="containerBody">
     <td nowrap class="formLabel">

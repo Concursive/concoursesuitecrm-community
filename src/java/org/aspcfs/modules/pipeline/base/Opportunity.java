@@ -39,6 +39,8 @@ public class Opportunity extends GenericBean {
   private String type = "";
 
   private java.sql.Date alertDate = null;
+  private String alertText = "";
+  
   private java.sql.Date closeDate = null;
   private java.sql.Date stageDate = null;
 
@@ -143,6 +145,12 @@ public class Opportunity extends GenericBean {
     this.enteredByName = enteredByName;
   }
 
+public String getAlertText() {
+	return alertText;
+}
+public void setAlertText(String alertText) {
+	this.alertText = alertText;
+}
 
   /**
    *  Sets the OpenIt attribute of the Opportunity object
@@ -1542,6 +1550,7 @@ public class Opportunity extends GenericBean {
     commission = rs.getDouble("commission");
     type = rs.getString("type");
     alertDate = rs.getDate("alertdate");
+    alertText = rs.getString("alert");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
@@ -1617,7 +1626,7 @@ public class Opportunity extends GenericBean {
     }
 
     sql.append("type = ?, stage = ?, description = ?, " +
-        "closedate = ?, alertdate = ?, terms = ?, units = ?, owner = ?, modifiedby = ?, modified = CURRENT_TIMESTAMP ");
+        "closedate = ?, alertdate = ?, alert = ?, terms = ?, units = ?, owner = ?, modifiedby = ?, modified = CURRENT_TIMESTAMP ");
 
     if (this.getCloseIt() == true) {
       sql.append(
@@ -1656,6 +1665,7 @@ public class Opportunity extends GenericBean {
       pst.setDate(++i, this.getAlertDate());
     }
 
+    pst.setString(++i, this.getAlertText());
     pst.setDouble(++i, this.getTerms());
     pst.setString(++i, this.getUnits());
     pst.setInt(++i, this.getOwner());

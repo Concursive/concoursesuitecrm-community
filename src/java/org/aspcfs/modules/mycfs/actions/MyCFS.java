@@ -946,7 +946,7 @@ public final class MyCFS extends CFSModule {
       Iterator n = alertOpps.iterator();
       while (n.hasNext()) {
         Opportunity thisOpp = (Opportunity) n.next();
-        companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "", thisOpp.getDescription(), "Opportunity", thisOpp.getId());
+        companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "", thisOpp.getDescription() + ": " + thisOpp.getAlertText(), "Opportunity", thisOpp.getId());
       }
 
       context.getRequest().setAttribute("CompanyCalendar", companyCalendar);

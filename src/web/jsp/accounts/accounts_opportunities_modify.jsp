@@ -21,6 +21,18 @@
         message += "- Check that Alert Date is entered correctly\r\n";
         formTest = false;
       }
+      if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+        message += "- Check that Alert Date is on or after today's date\r\n";
+        formTest = false;
+      }
+      if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
+        message += "- Please specify an alert date\r\n";
+        formTest = false;
+      }
+      if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
+        message += "- Please specify an alert description\r\n";
+        formTest = false;
+      }
       if (formTest == false) {
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
@@ -187,12 +199,22 @@ Modify Opportunity<br>
       <input type=hidden name="orgId" value="<%=request.getParameter("orgId")%>">
     </td>
   </tr>
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Alert Description
+    </td>
+    <td valign=center colspan=1>
+      <input type=text size=50 name="alertText" value="<%= toHtmlValue(OppDetails.getAlertText()) %>"><br>
+    </td>
+  </tr>
+  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Date
     </td>
     <td valign=center>
-      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppDetails.getAlertDateString()) %>">
+      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppDetails.getAlertDateStringLongYear()) %>">
       <a href="javascript:popCalendar('updateOpp', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>

@@ -12,3 +12,5 @@ ALTER TABLE  survey_answer ALTER COLUMN survey_id SET DEFAULT -1;
 alter table  cfsinbox_message add column delete_flag BOOLEAN;
 ALTER TABLE  cfsinbox_message ALTER COLUMN delete_flag SET DEFAULT false;
 
+/*8/12/2002*/
+alter table opportunity add column alert varchar(100) default null;

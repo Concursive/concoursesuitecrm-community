@@ -108,14 +108,27 @@ Opportunity Details<br>
       <%= OppDetails.getCommissionValue() %>%
     </td>
   </tr>
-  <tr class="containerBody">
+<dhv:evaluate exp="<%= hasText(OppDetails.getAlertText()) %>">
+   <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Alert Description
+    </td>
+    <td valign=center colspan=1>
+       <%= toHtml(OppDetails.getAlertText()) %>
+    </td>
+  </tr>
+</dhv:evaluate>
+
+<dhv:evaluate exp="<%= (OppDetails.getAlertDate() != null) %>">
+   <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Date
     </td>
-    <td>
-      <%= toHtml(OppDetails.getAlertDateString()) %>&nbsp;
+    <td valign=center colspan=1>
+       <%= OppDetails.getAlertDateStringLongYear() %>
     </td>
   </tr>
+</dhv:evaluate>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Entered

@@ -788,6 +788,7 @@ public void setYTD(double YTD) {
    */
   public String getAlertDateString() {
     String tmp = "";
+    
     try {
       return DateFormat.getDateInstance(3).format(alertDate);
     } catch (NullPointerException e) {

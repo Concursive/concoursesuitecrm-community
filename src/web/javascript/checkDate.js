@@ -75,7 +75,7 @@ function checkAlertDate(datein) {
   y = parseInt(sep[2],10);
   
   //alert(m);
-    
+  
   var thisDate = new Date(y, m, d);
   
   var difference = thisDate.getTime() - today.getTime();

@@ -208,7 +208,7 @@ Modify Account<br>
       Alert Date
     </td>
     <td valign=center colspan=1>
-              <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateString()) %>">
+              <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OrgDetails.getAlertDateStringLongYear()) %>">
       <a href="javascript:popCalendar('addAccount', 'alertDate');">Date</a> (mm/dd/yyyy)
 
     </td>

@@ -140,7 +140,7 @@ Account Details<br>
       Alert Date
     </td>
     <td valign=center colspan=1>
-       <%= OrgDetails.getAlertDate() %>
+       <%= OrgDetails.getAlertDateStringLongYear() %>
     </td>
   </tr>
 </dhv:evaluate>
