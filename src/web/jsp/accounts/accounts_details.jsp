@@ -62,6 +62,7 @@ Account Details
     </td>
   </tr>
 </dhv:evaluate>
+<dhv:include name="organization.url" none="true">
 <dhv:evaluate if="<%= hasText(OrgDetails.getUrl()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -72,6 +73,7 @@ Account Details
     </td>
   </tr>
 </dhv:evaluate>
+</dhv:include>
 <dhv:include name="organization.industry" none="true">
 <dhv:evaluate if="<%= hasText(OrgDetails.getIndustryName()) %>">
   <tr class="containerBody">
@@ -132,6 +134,7 @@ Account Details
   </tr>
 </dhv:evaluate>
 </dhv:include>
+<dhv:include name="organization.alert" none="true">
 <dhv:evaluate if="<%= hasText(OrgDetails.getAlertText()) %>">
    <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -152,6 +155,7 @@ Account Details
     </td>
   </tr>
 </dhv:evaluate>
+</dhv:include>
 </table>
 <br />
 <dhv:include name="organization.phoneNumbers" none="true">

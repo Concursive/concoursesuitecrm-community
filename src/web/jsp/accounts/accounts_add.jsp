@@ -33,16 +33,19 @@
     formTest = true;
     message = "";
     alertMessage = "";
+  <dhv:include name="organization.alert" none="true">
     if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
       message += "- Check that Alert Date is entered correctly\r\n";
       formTest = false;
     }
+  </dhv:include>
   <dhv:include name="organization.contractEndDate" none="true">
     if ((!form.contractEndDate.value == "") && (!checkDate(form.contractEndDate.value))) { 
       message += "- Check that Contract End Date is entered correctly\r\n";
       formTest = false;
     }
   </dhv:include>
+  <dhv:include name="organization.alert" none="true">
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
       message += "- Please specify an alert date\r\n";
       formTest = false;
@@ -51,6 +54,7 @@
       message += "- Please specify an alert description\r\n";
       formTest = false;
     }
+  </dhv:include>
   <dhv:include name="organization.phoneNumbers" none="true">
     if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value))) { 
       message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
@@ -63,19 +67,23 @@
       formTest = false;
     }
   </dhv:include>
+  <dhv:include name="organization.url" none="true">
     if (!checkURL(form.url.value)) { 
       message += "- URL entered is invalid.  Make sure there are no invalid characters\r\n";
       formTest = false;
     }
+  </dhv:include>
   <dhv:include name="organization.revenue" none="true">
     if (!checkNumber(form.revenue.value)) { 
       message += "- Revenue entered is invalid\r\n";
       formTest = false;
     }
   </dhv:include>
+  <dhv:include name="organization.alert" none="true">
     if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
       alertMessage += "Alert Date is before today's date\r\n";
     }
+  </dhv:include>
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -300,6 +308,7 @@ Add Account
       <input type="text" size="50" name="accountNumber" maxlength="50" value="<%= toHtmlValue(OrgDetails.getAccountNumber()) %>">
     </td>
   </tr>
+  <dhv:include name="organization.url" none="true">
   <tr>
     <td nowrap class="formLabel">
       Web Site URL
@@ -308,6 +317,7 @@ Add Account
       <input type="text" size="50" name="url" value="<%= toHtmlValue(OrgDetails.getUrl()) %>">
     </td>
   </tr>
+  </dhv:include>
   <dhv:include name="organization.industry" none="true">
   <tr>
     <td nowrap class="formLabel">
@@ -359,6 +369,7 @@ Add Account
     </td>
   </tr>
   </dhv:include>
+  <dhv:include name="organization.alert" none="true">
   <tr>
     <td nowrap class="formLabel">
       Alert Description
@@ -367,7 +378,7 @@ Add Account
       <input type="text" size="50" name="alertText" value="<%= toHtmlValue(OrgDetails.getAlertText()) %>">
     </td>
   </tr>
-   <tr>
+  <tr>
     <td nowrap class="formLabel">
       Alert Date
     </td>
@@ -376,6 +387,7 @@ Add Account
       <a href="javascript:popCalendar('addAccount', 'alertDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>
+  </dhv:include>
 </table>
 <br>
 <%

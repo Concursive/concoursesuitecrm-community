@@ -11,6 +11,8 @@
     <param name="organization.emailAddresses"/>
     <param name="organization.addresses"/>
     <param name="organization.industry"/>
+    <param name="organization.url"/>
+    <param name="organization.alert"/>
     <param name="organization.ticker"/>
     <param name="organization.contractEndDate"/>
     <param name="organization.types"/>
