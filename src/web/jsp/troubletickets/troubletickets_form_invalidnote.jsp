@@ -32,7 +32,7 @@ Maintenance Notes
   <br />
   <tr>
     <th align="left">
-      All information required for maintenance notes was not provided in the ticket.<br />When all required information is entered, this page shows the asset maintenance notes.
+      An asset was not provided in the ticket.<br />When all required information is entered, this page shows the asset maintenance notes.
     </th>
   </tr>
   </table>
