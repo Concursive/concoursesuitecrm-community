@@ -74,19 +74,13 @@ if (i.hasNext()) {
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td>
-      <a href="CompanyDirectory.do?command=ListEmployees&column=c.namelast">
-        <strong>Name</strong>
-      </a>
+      <strong>Name</strong>
     </td>
     <td width="175">
-      <a href="CompanyDirectory.do?command=ListEmployees&column=departmentname">
-        <strong>Department</strong>
-      </a>
+      <strong>Department</strong>
     </td>
     <td width="100">
-      <a href="CompanyDirectory.do?command=ListEmployees&column=title">
-        <strong>Title</strong>
-      </a>
+      <strong>Title</strong>
     </td>
     <td width="100" nowrap>
       <strong>Phone: Business</strong>
