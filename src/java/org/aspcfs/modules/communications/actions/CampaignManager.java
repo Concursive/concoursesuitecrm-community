@@ -468,34 +468,38 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandViewMessage(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
-
     String campaignId = context.getRequest().getParameter("id");
-
     try {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-
+      //Build my messages
       MessageList messageList = new MessageList();
       messageList.setOwner(this.getUserId(context));
       messageList.buildList(db);
+      //Message is not in my messages, so build hierarchy of messages
+      if (campaign.getMessageId() > 0 && !messageList.hasId(campaign.getMessageId())) {
+        messageList.clear();
+        messageList.setOwner(-1);
+        messageList.setOwnerIdRange(this.getUserRange(context));
+        messageList.buildList(db);
+        context.getRequest().setAttribute("listView", "all");
+      } else {
+        context.getRequest().setAttribute("listView", "my");
+      }
       messageList.addItem(0, "--None--");
       context.getRequest().setAttribute("MessageList", messageList);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       return ("ViewMessageOK");
     } else {
@@ -649,17 +653,13 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandViewAttachment(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
-
     String campaignId = context.getRequest().getParameter("id");
-
     try {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, campaignId);
@@ -668,6 +668,16 @@ public final class CampaignManager extends CFSModule {
       SurveyList surveyList = new SurveyList();
       surveyList.setEnteredBy(this.getUserId(context));
       surveyList.buildList(db);
+      //Survey is not in my surveys, so build hierarchy of surveys
+      if (campaign.getSurveyId() > 0 && !surveyList.hasId(campaign.getSurveyId())) {
+        surveyList.clear();
+        surveyList.setEnteredBy(-1);
+        surveyList.setEnteredByIdRange(this.getUserRange(context));
+        surveyList.buildList(db);
+        context.getRequest().setAttribute("listView", "all");
+      } else {
+        context.getRequest().setAttribute("listView", "my");
+      }
       surveyList.addItem(-1, "--None--");
       context.getRequest().setAttribute("SurveyList", surveyList);
 
@@ -1999,6 +2009,50 @@ public final class CampaignManager extends CFSModule {
       addModuleBean(context, "ManageCampaigns", "");
       return ("SystemError");
     }
+  }
+  
+  public String executeCommandMessageJSList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    String listView = context.getRequest().getParameter("listView");
+    try {
+      MessageList messageList = new MessageList();
+      if ("all".equals(listView)) {
+        messageList.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        messageList.setOwner(this.getUserId(context));
+      }
+      db = this.getConnection(context);
+      messageList.buildList(db);
+      context.getRequest().setAttribute("messageList", messageList);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("MessageJSListOK");
+  }
+  
+  public String executeCommandSurveyJSList(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    String listView = context.getRequest().getParameter("listView");
+    try {
+      SurveyList surveyList = new SurveyList();
+      if ("all".equals(listView)) {
+        surveyList.setEnteredByIdRange(this.getUserRange(context));
+      } else {
+        surveyList.setEnteredBy(this.getUserId(context));
+      }
+      db = this.getConnection(context);
+      surveyList.buildList(db);
+      context.getRequest().setAttribute("surveyList", surveyList);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("SurveyJSListOK");
   }
 }
 
