@@ -85,7 +85,7 @@ Choose Groups
 %>
 </table>
 <br>
-<dhv:pagedListControl object="CampaignCenterGroupInfo" showForm="false" resetList="false"/>
+<dhv:pagedListControl object="CampaignCenterGroupInfo" showForm="false" resetList="false" enableJScript="true"/>
 <br>
 <input type="submit" value="Update Campaign Groups" onClick="this.form.action='CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>'">
 <input type="submit" value="Cancel" onClick="this.form.action='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
