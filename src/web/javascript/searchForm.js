@@ -247,14 +247,14 @@ function removeValues(){
 		}
 		
     alert("before delete");
-    delete searchCriteria;
+    //delete searchCriteria;
     alert("after delete");
-    //for (j=0; j<searchCriteria.length; j++) {
-    //  alert(j+"::"+searchCriteria.length);
-    //  searchCriteria[j] = null;
-    //}
+    for (j=0; j<searchCriteria.length; j++) {
+      alert(j+"::"+searchCriteria.length);
+      searchCriteria[j] = null;
+    }
     
-		searchCriteria = new Array();
+		//searchCriteria = new Array();
     alert("after new");
     
     alert("four " + tempArray.length);
