@@ -6,15 +6,6 @@
  *@version    $Id$
  */
  
-CREATE TABLE lookup_project_templates (
-  code SERIAL PRIMARY KEY,
-  description VARCHAR(50) NOT NULL,
-  default_item BOOLEAN DEFAULT false,
-  level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true,
-  group_id INTEGER NOT NULL DEFAULT 0
-);
-
 CREATE TABLE lookup_project_activity (
   code SERIAL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -71,7 +62,7 @@ CREATE TABLE projects (
 	project_id SERIAL PRIMARY KEY ,
 	group_id INTEGER NOT NULL ,
 	department_id INTEGER REFERENCES lookup_department(code),
-  template_id INTEGER REFERENCES lookup_project_templates(code),
+  template_id INTEGER,
 	title VARCHAR(100) NOT NULL ,
 	shortDescription VARCHAR(200) NOT NULL ,
 	requestedBy VARCHAR(50) NULL ,
