@@ -728,7 +728,7 @@ public final class Accounts extends CFSModule {
       db = this.getConnection(context);
 
       LookupList typeSelect = new LookupList(db, "lookup_account_types");
-      typeSelect.addItem(0, "-- All --");
+      typeSelect.addItem(0, "All Types");
       context.getRequest().setAttribute("TypeSelect", typeSelect);
 
       organizationList.setPagedListInfo(orgListInfo);

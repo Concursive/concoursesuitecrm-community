@@ -129,7 +129,7 @@ public final class RevenueManager extends CFSModule {
 
       //Build the revenueTypeList combo box
       RevenueTypeList rtl = new RevenueTypeList(db);
-      rtl.addItem(0, "-- All --");
+      rtl.addItem(0, "All Types");
       rtl.setJsEvent("onChange=\"document.forms[0].submit();\"");
       context.getRequest().setAttribute("RevenueTypeList", rtl);
 

@@ -958,7 +958,7 @@ public final class Leads extends CFSModule {
       db = this.getConnection(context);
 
       LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
-      typeSelect.addItem(0, "-- All --");
+      typeSelect.addItem(0, "All Types");
       context.getRequest().setAttribute("TypeSelect", typeSelect);
 
       oppList.setPagedListInfo(oppListInfo);
