@@ -270,7 +270,7 @@ public class TicketLog extends GenericBean {
    *@param  tmp  The new AssignedTo value
    *@since
    */
-  public void setAssignedTo(String tmp) {
+  public void s(String tmp) {
     this.assignedTo = Integer.parseInt(tmp);
   }
 
