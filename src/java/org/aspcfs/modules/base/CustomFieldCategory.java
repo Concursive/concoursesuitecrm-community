@@ -1279,5 +1279,41 @@ public class CustomFieldCategory extends ArrayList {
     return a;
   }
 
+
+  /**
+   *  Gets the category_id provided the category_name attribute of the CustomFieldCategory class
+   *
+   *@param  db                Description of the Parameter
+   *@param  moduleId          Description of the Parameter
+   *@param  categoryName      Description of the Parameter
+   *@return                   The idFromName value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int getIdFromName(Connection db, int moduleId, String categoryName) throws SQLException {
+    int result = -1;
+    PreparedStatement pst = db.prepareStatement(
+        " SELECT category_id " +
+        " FROM custom_field_category " +
+        " WHERE module_id = ? " +
+        " AND category_name = ? " +
+        " AND category_id IN " +
+        " (SELECT max(category_id) " +
+        " FROM custom_field_category " +
+        " WHERE module_id = ? " +
+        " AND category_name = ?) "
+        );
+    pst.setInt(1, moduleId);
+    pst.setString(2, categoryName);
+    pst.setInt(3, moduleId);
+    pst.setString(4, categoryName);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      result = rs.getInt("category_id");
+    }
+    rs.close();
+    pst.close();
+    return result;
+  }
+
 }
 
