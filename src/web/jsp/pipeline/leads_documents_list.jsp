@@ -49,12 +49,12 @@
 %>      
     <tr class="row<%= rowid %>">
       <td valign="middle" align="center" rowspan="2" nowrap>
-        <a href="LeadsCalls.do?command=Modify&id=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('LeadsDocuments.do?command=Delete&id=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>');">Del</a></td>
+        <a href="LeadsCalls.do?command=Modify&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('LeadsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>');">Del</a></td>
       <td valign="top">
-        <a href="LeadsDocuments.do?command=Details&pid=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></a>
+        <a href="LeadsDocuments.do?command=Details&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></a>
       </td>
       <td valign=center valign="middle">
-        [<a href="LeadsDocuments.do?command=AddVersion&pid=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
+        [<a href="LeadsDocuments.do?command=AddVersion&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
       </td>
       <td align="center" valign="middle">
         <%= thisFile.getRelativeSize() %> k&nbsp;

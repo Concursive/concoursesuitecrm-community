@@ -36,7 +36,7 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
     
-    addModuleBean(context, "Opportunities", "");
+    addModuleBean(context, "View Opportunities", "View Documents");
     if (errorMessage == null) {
       return ("ViewOK");
     } else {
@@ -58,7 +58,7 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "Add File", "");
+    addModuleBean(context, "View Opportunities", "Upload Document");
     if (errorMessage == null) {
       return ("AddOK");
     } else {
@@ -129,8 +129,8 @@ public final class LeadsDocuments extends CFSModule {
       return ("SystemError");
     }
   }
+
   
-/*  
   public String executeCommandAddVersion(ActionContext context) {
     Exception errorMessage = null;
 
@@ -152,14 +152,15 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "Add File", "Add Version");
+    addModuleBean(context, "View Opportunities", "Upload New Document Version");
     if (errorMessage == null) {
-      return ("ProjectCenterOK");
+      return ("AddVersionOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
+  
   
   public String executeCommandUploadVersion(ActionContext context) {
     Exception errorMessage = null;
@@ -188,7 +189,7 @@ public final class LeadsDocuments extends CFSModule {
       FileInfo newFileInfo = (FileInfo)parts.get("id" + id);
       
       db = getConnection(context);
-      int opportunityId = addOpportunity(context, db);
+      int opportunityId = addOpportunity(context, db, id);
       
       FileItem thisItem = new FileItem();
       thisItem.setLinkModuleId(Constants.PIPELINE);
@@ -206,7 +207,6 @@ public final class LeadsDocuments extends CFSModule {
       if (!recordInserted) {
         processErrors(context, thisItem.getErrors());
       }
-      context.getRequest().setAttribute("pid", projectId);
       context.getRequest().setAttribute("fid", itemId);
     } catch (Exception e) {
       errorMessage = e;
@@ -216,7 +216,7 @@ public final class LeadsDocuments extends CFSModule {
 
     if (errorMessage == null) {
       if (recordInserted) {
-        return ("AddOK");
+        return ("UploadOK");
       } else {
         return (executeCommandAddVersion(context));
       }
@@ -226,7 +226,7 @@ public final class LeadsDocuments extends CFSModule {
     }
   }
 
-
+/*
   public String executeCommandDetails(ActionContext context) {
     Exception errorMessage = null;
 
@@ -252,7 +252,7 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "Details", "");
+    addModuleBean(context, "View Opportunities", "");
     if (errorMessage == null) {
       return ("ProjectCenterOK");
     } else {
@@ -315,7 +315,7 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
     
-    addModuleBean(context, "Details", "");
+    addModuleBean(context, "View Opportunities", "");
     if (errorMessage == null) {
       return ("-none-");
     } else {
@@ -346,7 +346,7 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "Modify", "");
+    addModuleBean(context, "View Opportunities", "");
     if (errorMessage == null) {
       return ("ProjectCenterOK");
     } else {
@@ -381,7 +381,7 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
     
-    addModuleBean(context, "Update", "");
+    addModuleBean(context, "View Opportunities", "");
     if (errorMessage == null) {
       if (recordInserted) {
         return ("UpdateOK");
@@ -419,7 +419,7 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
     
-    addModuleBean(context, "Delete", "");
+    addModuleBean(context, "View Opportunities", "Delete Document");
     if (errorMessage == null) {
       if (recordDeleted) {
         return ("DeleteOK");

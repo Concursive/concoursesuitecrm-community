@@ -1,5 +1,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OpportunityDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+<jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript">
   function checkFileForm(form) {
@@ -37,7 +38,7 @@
 <body onLoad="document.inputForm.subject.focus();">
 <a href="Leads.do?command=ViewOpp">Back to Opportunities List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <form method="post" name="inputForm" action="LeadsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+  <form method="post" name="inputForm" action="LeadsDocuments.do?command=UploadVersion" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
   <tr class="containerHeader">
     <td>
       <strong><%= toHtml(OpportunityDetails.getDescription()) %></strong>&nbsp;&nbsp;
@@ -64,7 +65,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
-      <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Document</b>
+      <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Version of Document</b>
     </td>
   </tr>
   <tr class="containerBody">
@@ -73,7 +74,22 @@
     </td>
     <td>
       <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
-      <input type="text" name="subject" size="59" maxlength="255">
+      <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td class="formLabel">
+      Version
+    </td>
+    <td>
+      Current Version:<br>
+       &nbsp;&nbsp;
+       <strong><%= FileItem.getVersion() %></strong><br>
+      New Version: <br>
+       &nbsp;&nbsp;
+       <input type="radio" value="<%= FileItem.getVersionNextMajor() %>" checked name="versionId">Major Update <%= FileItem.getVersionNextMajor() %>
+       <input type="radio" value="<%= FileItem.getVersionNextMinor() %>" name="versionId">Minor Update <%= FileItem.getVersionNextMinor() %>
+       <input type="radio" value="<%= FileItem.getVersionNextChanges() %>" name="versionId">Changes <%= FileItem.getVersionNextChanges() %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -94,6 +110,7 @@
   <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>';">
   <input type="hidden" name="dosubmit" value="false">
   <input type="hidden" name="id" value="<%= OpportunityDetails.getId() %>">
+  <input type="hidden" name="fid" value="<%= FileItem.getId() %>">
 </td>
 </tr>
 </form>
