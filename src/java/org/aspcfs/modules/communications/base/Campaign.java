@@ -2025,8 +2025,11 @@ public java.sql.Timestamp getModified() {
    *@since                    1.5
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    
+    ResultSetMetaData meta = rs.getMetaData();
+    
     //campaign table
-    this.setId(rs.getInt("campaign_id"));
+    this.setId(rs.getInt(meta.getColumnName(1)));
     name = rs.getString("name");
     description = rs.getString("description");
     groupId = rs.getInt("list_id");
