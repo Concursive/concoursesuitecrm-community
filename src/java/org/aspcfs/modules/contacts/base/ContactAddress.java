@@ -105,6 +105,12 @@ public class ContactAddress extends Address {
    */
   public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
+      if("-1".equals(this.getState())){
+        this.setState("");
+      }
+      if("-1".equals(this.getCountry())){
+        this.setCountry("");
+      }
       if (this.getId() == -1) {
         this.setContactId(contactId);
         this.setEnteredBy(enteredBy);
