@@ -571,7 +571,19 @@ public class HtmlSelect extends ArrayList {
    *@param  position  The feature to be added to the Item attribute
    */
   protected void addItem(String tmp1, String tmp2, int position) {
-    this.add(position, tmp1 + "|" + tmp2);
+    this.add(position, new HtmlOption(tmp1, tmp2));
+  }
+
+
+  /**
+   *  Adds an option at a particular position with specified attributes
+   *
+   *@param  tmp1        The feature to be added to the Item attribute
+   *@param  tmp2        The feature to be added to the Item attribute
+   *@param  attributes  The feature to be added to the Item attribute
+   */
+  public void addItem(int tmp1, String tmp2, HashMap attributes) {
+    this.add(new HtmlOption(String.valueOf(tmp1), tmp2, attributes));
   }
 
 
@@ -584,7 +596,7 @@ public class HtmlSelect extends ArrayList {
    *@since        1.0
    */
   public void addItem(String tmp1, String tmp2) {
-    this.add(tmp1 + "|" + tmp2);
+    this.add(new HtmlOption(String.valueOf(tmp1), tmp2));
   }
 
 
@@ -596,7 +608,7 @@ public class HtmlSelect extends ArrayList {
    *@since       1.0
    */
   public void addItem(String tmp) {
-    this.add(tmp + "|" + tmp);
+    this.add(new HtmlOption(String.valueOf(tmp), String.valueOf(tmp)));
   }
 
 
@@ -609,7 +621,7 @@ public class HtmlSelect extends ArrayList {
    *@since        1.0
    */
   public void addItem(int tmp1, String tmp2) {
-    this.add(tmp1 + "|" + tmp2);
+    this.add(new HtmlOption(String.valueOf(tmp1), tmp2));
   }
 
 
@@ -621,7 +633,7 @@ public class HtmlSelect extends ArrayList {
    *@param  position  The feature to be added to the Item attribute
    */
   public void addItem(int tmp1, String tmp2, int position) {
-    this.add(position, tmp1 + "|" + tmp2);
+    this.add(position, new HtmlOption(String.valueOf(tmp1), tmp2));
   }
 
 
@@ -685,12 +697,11 @@ public class HtmlSelect extends ArrayList {
     //Process a Vector
     for (int i = 0; i < this.size(); i++) {
       ++processedRowCount;
-      StringTokenizer values = new StringTokenizer((String) this.get(i), "|");
-      String tmp1 = values.nextToken();
-      String tmp2 = values.nextToken();
-      while (values.hasMoreTokens()) {
-        tmp2 += "|" + values.nextToken();
-      }
+      HtmlOption thisOption = (HtmlOption) this.get(i);;
+      String tmp1 = thisOption.getValue();
+      String tmp2 = thisOption.getText();
+      String attributes = thisOption.getAttributes();
+      
 
       String optionChecked = "";
       String optionSelected = "";
@@ -707,7 +718,7 @@ public class HtmlSelect extends ArrayList {
       }
       //Build the option row
       if (!checkboxOutput) {
-        rowList.append("<option " + optionSelected + "value='" + tmp1 + "'>" + toHtml(tmp2) + "</option>");
+        rowList.append("<option " + optionSelected + "value='" + tmp1 + "' " + attributes + ">" + toHtml(tmp2) + "</option>");
       } else {
         rowList.append("<input type='radio'" + optionChecked + ">" + toHtml(tmp2) + "&nbsp;");
       }
