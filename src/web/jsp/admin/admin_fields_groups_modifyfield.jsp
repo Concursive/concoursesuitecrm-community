@@ -165,7 +165,7 @@ Existing Field<br>
       &nbsp;<br>
       <input type="hidden" name="id" value="<%= (String)request.getParameter("id") %>">
       <input type="hidden" name="groupId" value="<%= (String)request.getParameter("grpId") %>">
-      <input type="hidden" name="dosubmit" value="false">
+      <input type="hidden" name="dosubmit" value="true">
       <input type="submit" value="Update" onClick="javascript:this.form.action='/AdminFields.do?command=UpdateField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true';this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>';this.form.dosubmit.value='false';">
     </td>

@@ -13,6 +13,7 @@
   
     //Check required fields
     if (form.description.value == "") {    
+      form.dosubmit.value = "true";
       alert("Description is required, please verify then try submitting the information again.");
       formTest = false;
     }
@@ -64,7 +65,7 @@
     </tr>      
     <tr>
       <td>
-          <input type="submit" value="Update" onClick="javascript:this.form.dosubmit.value='true';">
+          <input type="submit" value="Update">
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='';this.form.dosubmit.value='false';window.close();">
       </td>
     </tr>
@@ -73,6 +74,6 @@
   <input type="hidden" name="module" value="<%= Help.getModule() %>">
   <input type="hidden" name="section" value="<%= Help.getSection() %>">
   <input type="hidden" name="subsection" value="<%= Help.getSubsection() %>">
-  <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="dosubmit" value="true">
 </form>  
 </body>

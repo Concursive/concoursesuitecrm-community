@@ -60,6 +60,7 @@
       
     if (formTest == false) {
       messageText = "The activity form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
@@ -181,9 +182,9 @@
       <td width="100%" bgcolor="#000000" height="30" colspan="4">
         <p align="center">
           &nbsp;
-          <input type='submit' value=' Save ' onClick="javascript:this.form.dosubmit.value='true';">&nbsp;&nbsp;
+          <input type="submit" value=" Save ">&nbsp;&nbsp;
           &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>';">
+          <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>';">
           &nbsp;&nbsp;
         </p>
       </td>
@@ -191,6 +192,6 @@
     </tr>
   </table>
   <input type="hidden" name="pid" value="<%= Project.getId() %>">
-  <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="dosubmit" value="true">
 </form>
 </body>

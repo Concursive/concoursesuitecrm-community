@@ -14,6 +14,7 @@
       formTest = false;
     }
     if (formTest == false) {
+      form.dosubmit.value = "true";
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
     } else {
@@ -23,8 +24,8 @@
 </script>
 <body onLoad="javascript:document.forms[0].name.focus();">
 <form name="addForm" action="/CampaignManager.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
-  <input type="hidden" name="dosubmit" value="false">
-  <input type="submit" value="Insert" name="Save" onClick="javascript:this.form.dosubmit.value='true'">
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="submit" value="Insert" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=View';">
   <input type="reset" value="Reset">
   <br>
@@ -53,7 +54,7 @@
     </tr>
   </table>
   <br>
-  <input type="submit" value="Insert" name="Save" onClick="javascript:this.form.dosubmit.value='true'">
+  <input type="submit" value="Insert" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/CampaignManager.do?command=View';">
   <input type="reset" value="Reset">
 </form>

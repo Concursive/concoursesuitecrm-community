@@ -35,6 +35,7 @@
       formTest = false;
     }
     if (formTest == false) {
+      form.dosubmit.value = "true";
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
     } else {
@@ -78,12 +79,12 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type="submit" value="Update" name="Save" onClick="javascript:this.form.dosubmit.value='true';">
+<input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="id" value="<%= InventoryDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= InventoryDetails.getModified() %>">
-<input type="hidden" name="dosubmit" value="false">
+<input type="hidden" name="dosubmit" value="true">
 <br>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -298,7 +299,7 @@
 </table>
 &nbsp;
 <br>
-<input type="submit" value="Update" name="Save" onClick="javascript:this.form.dosubmit.value='true';">
+<input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
     </td>

@@ -14,6 +14,7 @@
   
     //Check required fields
     if ((form.subject.value == "") || (form.body.value == "")) {    
+      form.dosubmit.value = "true";
       alert("Subject and Description are required, please verify then try submitting your information again.");
       formTest = false;
     }
@@ -74,7 +75,7 @@
       <td width='50%' bgcolor='#808080' height='30'>
         <p align='right'>
           &nbsp;
-          <input type="submit" value=" Update " onClick="javascript:this.form.dosubmit.value='true';">&nbsp;&nbsp;
+          <input type="submit" value=" Update ">&nbsp;&nbsp;
         </p>
       </td>
       <td width='50%' bgcolor='#808080' height='30'>
@@ -87,6 +88,6 @@
     </tr>
   </table>
   <input type='hidden' name='pid' value='<%= Project.getId() %>'>
-  <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="dosubmit" value="true">
 </form>  
 </body>

@@ -23,6 +23,7 @@
     
     if (formTest == false) {
       messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
@@ -101,10 +102,10 @@
     <td width="2">&nbsp;</td>
     <td width="100%" height="30" align="center">
       <p align="center">
-        <input type='submit' value=' Upload ' name="upload" onClick="javascript:this.form.dosubmit.value='true';">
+        <input type='submit' value=' Upload ' name="upload">
         &nbsp;&nbsp;&nbsp;&nbsp;
         <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>';">
-        <input type="hidden" name="dosubmit" value="false">
+        <input type="hidden" name="dosubmit" value="true">
         <input type="hidden" name="pid" value="<%= Project.getId() %>">
       </p>
     </td>

@@ -162,7 +162,7 @@ Folder<br>
   </table>
   &nbsp;<br>
 <%}%>
-      <input type="hidden" name="dosubmit" value="false">
+      <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="moduleId" value="<%= ModuleList.getSelectedKey() %>">
       <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
       <dhv:permission name="admin-sysconfig-folders-delete">

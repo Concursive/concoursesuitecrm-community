@@ -23,6 +23,7 @@
     }
     
     if (formTest == false) {
+      form.dosubmit.value = "true";
       messageText = "The file information could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       alert(messageText);
       return false;
@@ -90,9 +91,9 @@
   </tr>
 </table>
 &nbsp;<br>
-  <input type='submit' value=' Update ' name="update" onClick="javascript:this.form.dosubmit.value='true';">
+  <input type='submit' value=' Update ' name="update">
   <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&oppId=<%= OpportunityDetails.getId() %>';">
-  <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="oppId" value="<%= OpportunityDetails.getId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
 </td>

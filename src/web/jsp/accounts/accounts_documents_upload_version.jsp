@@ -24,6 +24,7 @@
     
     if (formTest == false) {
       messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
@@ -98,9 +99,9 @@
     * Large files may take a while to upload.<br>
     Wait for file completion message when upload is complete.
   </p>
-  <input type='submit' value=' Upload ' name="upload" onClick="javascript:this.form.dosubmit.value='true';">
+  <input type='submit' value=' Upload ' name="upload">
   <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';">
-  <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
 </td>

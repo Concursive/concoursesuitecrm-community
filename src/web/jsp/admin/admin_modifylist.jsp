@@ -73,7 +73,7 @@ Edit List<br>
   <tr>
   <td colspan=3 valign=center>
   <input type=hidden name="selectNames" value="">
-  <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="dosubmit" value="true">
   <input type=hidden name="listid" value="<%=request.getParameter("listId")%>">
   <input type="submit" value="Save Changes" onClick="javascript:this.form.dosubmit.value='true';">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/Admin.do?command=EditLists'">

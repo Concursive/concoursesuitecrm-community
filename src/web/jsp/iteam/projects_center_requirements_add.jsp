@@ -47,6 +47,7 @@
     
     if (formTest == false) {
       messageText = "The requirements form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
@@ -140,7 +141,7 @@
       <td width="2" bgcolor="#000000">&nbsp;</td>
       <td width="50%" bgcolor="#000000" height="30">
         <p align="right">&nbsp;
-        <input type="submit" value=" Save " onClick="javascript:this.form.dosubmit.value='true'">&nbsp;&nbsp;</p>
+        <input type="submit" value=" Save ">&nbsp;&nbsp;</p>
       </td>
       <td width="50%" bgcolor="#000000" height="30">
         <p align="left">
@@ -152,6 +153,6 @@
     </tr>
   </table>
   <input type="hidden" name="pid" value="<%= Project.getId() %>">
-  <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="dosubmit" value="true">
 </form>
 </body>

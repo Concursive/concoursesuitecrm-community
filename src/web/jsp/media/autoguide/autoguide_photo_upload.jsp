@@ -16,6 +16,7 @@
     }
     if (formTest == false) {
       messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
@@ -52,14 +53,14 @@
         <br><input type="file" name="id<%= InventoryItem.getId() %>" size="45">
         <br>
 <dhv:permission name="accounts-autoguide-inventory-edit">
-        <input type='submit' value=' Upload ' name="upload" onClick="javascript:this.form.dosubmit.value='true';">
+        <input type='submit' value=' Upload ' name="upload">
 </dhv:permission>
         <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';window.close();">
       </span>
     </td>
   </tr>
 </table>
-<input type="hidden" name="dosubmit" value="false">
+<input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="id" value="<%= InventoryItem.getId() %>">
 </form>
 

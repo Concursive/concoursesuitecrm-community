@@ -30,6 +30,7 @@
   
     if (formTest == false) {
       messageText = "The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
@@ -146,8 +147,8 @@
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="50%" bgcolor="#808080" height="30">
         <p align="right">
-          &nbsp;<input type="hidden" name="dosubmit" value="false">
-          <input type="submit" value=" Save " onClick="javascript:this.form.dosubmit.value='true';">
+          &nbsp;<input type="hidden" name="dosubmit" value="true">
+          <input type="submit" value=" Save ">
           &nbsp;&nbsp;
         </p>
     </td>

@@ -26,6 +26,7 @@
     if (formTest == false) {
       messageText = "The issue form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
       alert(messageText);
+      form.dosubmit.value = "true";
       return false;
     } else {
       return true;
@@ -69,7 +70,7 @@
       <td width='50%' bgcolor='#808080' height='30'>
         <p align='right'>
           &nbsp;
-          <input type="submit" value=" Save " onClick="javascript:this.form.dosubmit.value='true';">&nbsp;&nbsp;
+          <input type="submit" value=" Save ">&nbsp;&nbsp;
         </p>
       </td>
       <td width='50%' bgcolor='#808080' height='30'>
@@ -83,7 +84,7 @@
   </table>
   <input type='hidden' name='projectId' value='<%= Project.getId() %>'>
   <input type='hidden' name='issueId' value='<%= Issue.getId() %>'>
-  <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="dosubmit" value="true">
 </form>
 <br>
 Original Issue:

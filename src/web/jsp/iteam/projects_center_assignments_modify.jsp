@@ -60,6 +60,7 @@
       
     if (formTest == false) {
       messageText = "The activity form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
@@ -175,9 +176,9 @@
       <td width="100%" bgcolor="#000000" height="30" colspan="4">
         <p align="center">
           &nbsp;
-          <input type='submit' value=' Update ' onClick="javascript:this.form.dosubmit.value='true';">&nbsp;&nbsp;
+          <input type="submit" value=" Update ">&nbsp;&nbsp;
           &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';<%= (request.getParameter("popup") != null?"window.close();":"this.form.action='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + Project.getId() + "';") %>">
+          <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';<%= (request.getParameter("popup") != null?"window.close();":"this.form.action='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + Project.getId() + "';") %>">
           &nbsp;&nbsp;
         </p>
       </td>
@@ -187,7 +188,7 @@
   <input type="hidden" name="projectId" value="<%= Project.getId() %>">
   <input type="hidden" name="id" value="<%= Assignment.getId() %>">
   <input type="hidden" name="modified" value="<%= Assignment.getModified() %>">
-  <input type="hidden" name="dosubmit" value="false">
+  <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="return" value="<%= request.getAttribute("return") %>">
   <input type="hidden" name="param" value="<%= request.getAttribute("param") %>">
 </form>
