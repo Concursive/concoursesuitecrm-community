@@ -38,15 +38,21 @@ public final class ProcessTransaction extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
+    XMLUtils xml = null;
+    ConnectionElement ce = null;
     try {
       //This is a custom DTD that won't be used by any other processes, so
       //populate the object here
-      XMLUtils xml = new XMLUtils(context.getRequest());
+      xml = new XMLUtils(context.getRequest());
       TransactionRecord thisRecord = new TransactionRecord();
       XMLUtils.populateObject(thisRecord, xml.getDocumentElement());
       //get a database connection using the vhost context info
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
+      
+      // The connection element is needed to retrieve the systemSystem object later
+      ce = auth.getConnectionElement(context);
+      
       //Insert the record
       recordInserted = thisRecord.insert(db);
       //The object might have specified some validation errors
@@ -93,7 +99,19 @@ public final class ProcessTransaction extends CFSModule {
     } catch (Exception pce) {
       pce.printStackTrace(System.out);
     }
+    // This project is phasing out so all requests are being forwarded
+    try {
+      if (xml != null) {
+        HTTPUtils.sendPacket(getValue(context, ce, "FORWARD.URL"), xml.toString());
+      }
+    } catch (Exception e) {
+      System.out.println("ProcessTransaction-> ERROR: " + e.getMessage());
+    }
     return ("PacketOK");
+  }
+  
+  private String getValue(ActionContext context, ConnectionElement ce, String param) {
+    return this.getSystemStatus(context, ce).getValue("org.aspcfs.modules.healthcare.edit.actions.ProcessTransaction", param);
   }
 }
 
