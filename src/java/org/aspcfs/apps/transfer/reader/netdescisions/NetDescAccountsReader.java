@@ -165,13 +165,15 @@ public class NetDescAccountsReader implements DataReader {
 
     logger.info("Processing excel file" + excelFile);
     try {
+      //FileWriter logs = new FileWriter(new File("NetDescLog.txt"));
+      //logs.write("Invalid Records\n");
       int userId = 1;
       DataRecord newUserRecord = new DataRecord();
       newUserRecord.setName("user");
       newUserRecord.setAction("insert");
       newUserRecord.addField("guid", userId);
       newUserRecord.addField("username", "Importer");
-      newUserRecord.addField("contactId",  1030);
+      newUserRecord.addField("contactId", 1030);
       newUserRecord.addField("encryptedPassword", "none");
       writer.save(newUserRecord);
 
@@ -197,24 +199,6 @@ public class NetDescAccountsReader implements DataReader {
           logger.info("Processing Account " + getCellValue(row.getCell(firstCellNum)));
 
           int orgId = r;
-          //Save Account if required
-          if (!accounts.containsKey(getCellValue(row.getCell(firstCellNum)))) {
-            //build the organization
-            Organization thisOrg = new Organization();
-            thisOrg.setOrgId(r);
-            thisOrg.setName(getCellValue(row.getCell(firstCellNum)));
-            thisOrg.setUrl(getCellValue(row.getCell((short) (firstCellNum + 14))));
-            thisOrg.setOwner(userId);
-            thisOrg.setEnteredBy(userId);
-            thisOrg.setModifiedBy(userId);
-            DataRecord thisRecord = mappings.createDataRecord(thisOrg, "insert");
-            accounts.put(thisOrg.getName(), new Integer(r));
-            if (!writer.save(thisRecord)) {
-              processOK = false;
-            }
-          } else {
-            orgId = ((Integer) accounts.get(getCellValue(row.getCell(firstCellNum)))).intValue();
-          }
 
           //build the contact
           logger.info("Adding Contact " + getCellValue(row.getCell((short) (firstCellNum + 2))));
@@ -232,7 +216,20 @@ public class NetDescAccountsReader implements DataReader {
                 StringTokenizer st1 = new StringTokenizer(contactInfo, " ");
                 cfsContact.setNameFirst(st1.nextToken());
                 if (st1.hasMoreTokens()) {
-                  cfsContact.setNameLast(st1.nextToken());
+                  String middleName = "";
+                  while (st1.hasMoreTokens()) {
+                    if (st1.countTokens() == 1) {
+                      cfsContact.setNameMiddle(middleName);
+                      //last word to be last name
+                      cfsContact.setNameLast(st1.nextToken());
+                    } else {
+                      middleName += st1.nextToken();
+                      if (st1.countTokens() > 1) {
+                        middleName = middleName + " ";
+                      }
+                    }
+                  }
+                  //cfsContact.setNameLast(st1.nextToken());
                 } else {
                   cfsContact.setNameLast(cfsContact.getNameFirst());
                   cfsContact.setNameFirst("");
@@ -242,8 +239,15 @@ public class NetDescAccountsReader implements DataReader {
             cfsContact.setTitle(getCellValue(row.getCell((short) (firstCellNum + 13))));
             cfsContact.setNameSalutation(getCellValue(row.getCell((short) (firstCellNum + 12))));
             cfsContact.setEnteredBy(userId);
+            cfsContact.setOwner(userId);
             cfsContact.setModifiedBy(userId);
-            cfsContact.setOrgId(orgId);
+            //cfsContact.setOrgId(orgId);
+
+            //add the account name under contact
+            cfsContact.setCompany(getCellValue(row.getCell(firstCellNum)));
+          } else {
+            logger.info("INVALID RECORD : No Contact Name Associated with " + r);
+            //logs.write(String.valueOf(r) + " --" +  getCellValue(row.getCell(firstCellNum)) + "\n");
           }
 
           //build the Contact's Address
@@ -252,16 +256,20 @@ public class NetDescAccountsReader implements DataReader {
           if (!"".equals(getCellValue(row.getCell((short) (firstCellNum + 3))))) {
             logger.info("Adding Contact Address ");
             cfsAddress = new ContactAddress();
-            String address = getCellValue(row.getCell((short) (firstCellNum + 3)));
-            StringTokenizer st = new StringTokenizer(address, ",");
-            if (st.hasMoreTokens()) {
-              cfsAddress.setStreetAddressLine1(st.nextToken());
-              if (st.hasMoreTokens()) {
-                cfsAddress.setStreetAddressLine2(st.nextToken());
+
+            //trim address line 1 depending on city
+            String addressLine1 = getCellValue(row.getCell((short) (firstCellNum + 3)));
+            String city = getCellValue(row.getCell((short) (firstCellNum + 4)));
+            if (addressLine1 != null && city != null && !"".equals(addressLine1) && !"".equals(city) && addressLine1.indexOf(city) != -1) {
+              if (!"NA".equals(addressLine1) && !"NA".equals(city)) {
+                addressLine1 = addressLine1.substring(0, addressLine1.indexOf(city) - 1);
+                if (addressLine1.endsWith(",")) {
+                  addressLine1 = addressLine1.substring(0, addressLine1.length() - 1);
+                }
               }
             }
-            cfsAddress.setStreetAddressLine1(getCellValue(row.getCell((short) (firstCellNum + 3))));
-            cfsAddress.setType(2);
+            cfsAddress.setStreetAddressLine1(addressLine1);
+            cfsAddress.setType(1);
             cfsAddress.setCity(getCellValue(row.getCell((short) (firstCellNum + 4))));
             cfsAddress.setState(getCellValue(row.getCell((short) (firstCellNum + 5))));
             cfsAddress.setZip(getCellValue(row.getCell((short) (firstCellNum + 6))));
@@ -273,25 +281,21 @@ public class NetDescAccountsReader implements DataReader {
 
           //build Company's Phone Numbers
 
-          OrganizationPhoneNumberList cfsCompPhList = null;
+          ContactPhoneNumberList cfsContPhList = new ContactPhoneNumberList();
           String NetDescComPN = getCellValue(row.getCell((short) (firstCellNum + 9)));
           if (!"".equals(NetDescComPN)) {
-            cfsCompPhList = new OrganizationPhoneNumberList();
             StringTokenizer st = new StringTokenizer(NetDescComPN, "/");
             while (st.hasMoreTokens()) {
-              OrganizationPhoneNumber cfsPhNumber = new OrganizationPhoneNumber();
+              ContactPhoneNumber cfsPhNumber = new ContactPhoneNumber();
               cfsPhNumber.setType(1);
               cfsPhNumber.setNumber(st.nextToken());
-              cfsPhNumber.setOrgId(orgId);
-              cfsPhNumber.setEnteredBy(userId);
-              cfsPhNumber.setModifiedBy(userId);
-              cfsCompPhList.add(cfsPhNumber);
+              cfsPhNumber.setContactId(r);
+              cfsContPhList.add(cfsPhNumber);
             }
           }
 
           //build Contact's Phone Numbers
           logger.info("Contact Phone Numbers ");
-          ContactPhoneNumberList cfsContPhList = new ContactPhoneNumberList();
           String NetDescContPN = getCellValue(row.getCell((short) (firstCellNum + 8)));
           if (!"".equals(NetDescContPN)) {
             StringTokenizer st = new StringTokenizer(NetDescContPN, "/");
@@ -345,7 +349,7 @@ public class NetDescAccountsReader implements DataReader {
           ContactEmailAddress cfsEmailAddress = null;
           if (!"".equals(getCellValue(row.getCell((short) (firstCellNum + 15))))) {
             cfsEmailAddress = new ContactEmailAddress();
-            cfsEmailAddress.setType(2);
+            cfsEmailAddress.setType(1);
             cfsEmailAddress.setEmail(getCellValue(row.getCell((short) (firstCellNum + 15))));
             cfsEmailAddress.setContactId(r);
             cfsEmailAddress.setEnteredBy(userId);
@@ -381,11 +385,6 @@ public class NetDescAccountsReader implements DataReader {
                 processOK = false;
               }
             }
-          }
-
-          //Save Company Phone Numbers
-          if (cfsCompPhList != null) {
-            processOK = mappings.saveList(writer, cfsCompPhList, "insert");
           }
 
           if (!processOK) {
