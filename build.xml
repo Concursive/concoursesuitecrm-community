@@ -434,9 +434,12 @@
     <delete dir="${build.dir}"/>
   </target>
   
+  <target name="installgk.databasename">
+    <property name="DATABASE.NAME" value="${GATEKEEPER.URL}"/>
+  </target>
   
   <!-- Install the gatekeeper to store all of the database references -->
-  <target name="installgk" depends="init"
+  <target name="installgk" depends="init,installgk.databasename,install.prepare"
     description="Create tables for gatekeeper database">
     <echo message="Attempting to create gatekeeper tables and database permissions, the gatekeeper user and database must already have been created at the database."/>
     <sql
@@ -448,10 +451,11 @@
         <path refid="cfs2.classpath"/>
       </classpath>
       <transaction src="${src.sql.dir}/${GATEKEEPER.DBTYPE}/new_gatekeeper.sql"/>
+      <transaction src="${build.sql.dir}/gatekeeper.sql"/>
     </sql>
   </target>
   
-  <target name="install.prepare.dbname">
+  <target name="install.prepare.dbname" unless="DATABASE.NAME">
     <!-- Ask for the database name -->
     <input message="Enter database name: " addproperty="DATABASE.NAME"/>
     <!-- Display all information about database here, except password -->
