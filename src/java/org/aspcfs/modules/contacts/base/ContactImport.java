@@ -15,9 +15,7 @@ import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.apps.transfer.reader.mapreader.*;
 import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.utils.formatter.PhoneNumberFormatter;
-import org.aspcfs.utils.formatter.EmailAddressFormatter;
-import org.aspcfs.utils.formatter.AddressFormatter;
+import org.aspcfs.utils.formatter.*;
 
 /**
  *  Represents importer for Contacts
@@ -378,6 +376,8 @@ public class ContactImport extends Import implements Runnable {
     boolean done = false;
     ArrayList header = null;
     Thread currentThread = Thread.currentThread();
+    PhoneNumberFormatter phoneFormatter = new PhoneNumberFormatter();
+    ContactNameFormatter nameFormatter = new ContactNameFormatter();
 
     try {
       //get connection from the manager
@@ -433,8 +433,14 @@ public class ContactImport extends Import implements Runnable {
             if (!"".equals(StringUtils.toString(nameLast))) {
               thisContact.setNameLast(nameLast);
             } else {
-              //log the record as failed
-              error.append("Last Name is a required field");
+              String nameFull = this.getValue(thisRecord, propertyMap.getProperty("nameFull"));
+              if (!"".equals(StringUtils.toString(nameFull))) {
+                nameFormatter.format(thisContact, nameFull);
+              }
+              if("".equals(StringUtils.toString(thisContact.getNameLast()))){
+                //log the record as failed
+                error.append("Last Name is a required field");
+              }
             }
 
             String nameFirst = this.getValue(thisRecord, propertyMap.getProperty("nameFirst"));
@@ -556,8 +562,7 @@ public class ContactImport extends Import implements Runnable {
                   phoneNumber.setType(type);
                 }
                 if (phoneNumber.isValid()) {
-                  String convertedNumber = phoneNumber.convertToFormattedNumber(phone);
-                  phoneNumber.setNumber(convertedNumber);
+                  phoneFormatter.format(phoneNumber);
                   //check if number is still valid
                   if (phoneNumber.isValid()) {
                     thisContact.getPhoneNumberList().add(phoneNumber);
