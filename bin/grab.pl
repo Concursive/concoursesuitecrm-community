@@ -87,17 +87,7 @@ sub insert {
 
 sub main () {
 
-#my $site_config = "$ARGV[0]" . "/database/site.cfg";
-
 open LOG, ">>$LOGFILE" or die "Cannot open $LOGFILE for write :$!";
-
-#print LOG "----------------------------\n";
-print LOG `date`;
-print LOG "$0\n";
-print LOG "\nconfiguration: $site_config\n"; 
-        
-#open CONF, $site_config or die "Cannot open $site_config for read :$!";
-
         
 #	while (<CONF>) {
 #		chomp;
@@ -119,6 +109,12 @@ print LOG "\nconfiguration: $site_config\n";
 
 	$DBNAME = 'cdb_' . $ARGV[0];
 	$SITE_CODE = $ARGV[0];
+
+	print LOG "----------------------------\n";
+        print LOG `date`;
+        print LOG "$0\n";
+        print LOG "site code: $SITE_CODE\n";
+        print LOG "database: $DBNAME\n";
 
 	if (!$SITE_CODE || !$DBNAME)
 	{

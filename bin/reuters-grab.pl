@@ -84,28 +84,37 @@ open LOG, ">>$LOGFILE" or die "Cannot open $LOGFILE for write :$!";
 #print LOG "----------------------------\n";
 print LOG `date`;
 print LOG "$0\n";
-print LOG "\nconfiguration: $site_config\n";
+#print LOG "\nconfiguration: $site_config\n";
 print LOG "database: $DBNAME\n";
 
-open CONF, $site_config or die "Cannot open $site_config for read :$!";
+#open CONF, $site_config or die "Cannot open $site_config for read :$!";
         
-        while (<CONF>) {
-                chomp;
-                next if (/^#/);
-                s/^[ \t]*//;
-                s/[ \t\r\n]*$//;
-                next if (/^$/);
+#        while (<CONF>) {
+#                chomp;
+#                next if (/^#/);
+#                s/^[ \t]*//;
+#                s/[ \t\r\n]*$//;
+#                next if (/^$/);
+#
+#                if ( /^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/ ) {
+#                        $key = $1;
+#                        $val = $2;
+#                        print LOG "Processing Entry: '$key'\n";
+#
+#                        $SITE_CODE = $val if ($key =~ /SITE_CODE/);
+#                        $DBNAME = $val if ($key =~ /DB/);
+#
+#                }
+#        }
 
-                if ( /^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/ ) {
-                        $key = $1;
-                        $val = $2;
-                        print LOG "Processing Entry: '$key'\n";
+        $DBNAME = 'cdb_' . $ARGV[0];
+        $SITE_CODE = $ARGV[0];
 
-                        $SITE_CODE = $val if ($key =~ /SITE_CODE/);
-                        $DBNAME = $val if ($key =~ /DB/);
-
-                }
-        }
+	print LOG "----------------------------\n";
+	print LOG `date`;
+	print LOG "$0\n";
+	print LOG "site code: $SITE_CODE\n";
+	print LOG "database: $DBNAME\n";
 
         if (!$SITE_CODE || !$DBNAME)
         {
