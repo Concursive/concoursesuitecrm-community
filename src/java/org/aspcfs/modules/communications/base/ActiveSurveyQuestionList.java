@@ -15,13 +15,15 @@ import org.aspcfs.modules.base.Constants;
  *
  *@author
  *@created    November 1, 2002
- *@version    $Id$
+ *@version    $Id: ActiveSurveyQuestionList.java,v 1.6 2003/01/14 16:11:33
+ *      akhi_m Exp $
  */
 public class ActiveSurveyQuestionList extends ArrayList {
 
   private int id = -1;
   private int activeSurveyId = -1;
   protected PagedListInfo pagedListInfo = null;
+  private boolean buildResults = false;
 
 
   /**
@@ -96,6 +98,26 @@ public class ActiveSurveyQuestionList extends ArrayList {
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
+  }
+
+
+  /**
+   *  Sets the buildResults attribute of the ActiveSurveyQuestionList object
+   *
+   *@param  buildResults  The new buildResults value
+   */
+  public void setBuildResults(boolean buildResults) {
+    this.buildResults = buildResults;
+  }
+
+
+  /**
+   *  Gets the buildResults attribute of the ActiveSurveyQuestionList object
+   *
+   *@return    The buildResults value
+   */
+  public boolean getBuildResults() {
+    return buildResults;
   }
 
 
@@ -200,7 +222,7 @@ public class ActiveSurveyQuestionList extends ArrayList {
         "WHERE sq.active_survey_id > -1 ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-    
+
     items = prepareFilter(pst);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ActiveSurveyQuestionList Query --> " + pst.toString());
@@ -226,26 +248,28 @@ public class ActiveSurveyQuestionList extends ArrayList {
     }
     rs.close();
     pst.close();
-    
+
     //build items & comments
-    Iterator thisList = this.iterator();
-    while (thisList.hasNext()) {
-      ActiveSurveyQuestion thisQuestion = (ActiveSurveyQuestion) thisList.next();
-      int type = thisQuestion.getType();
-      if (type == SurveyQuestion.ITEMLIST) {
-        ActiveSurveyQuestionItemList itemList = new ActiveSurveyQuestionItemList();
-        itemList.setQuestionId(thisQuestion.getId());
-        itemList.buildList(db);
-        thisQuestion.setItemList(itemList);
-      }else if (type == SurveyQuestion.QUANT_COMMENTS || type == SurveyQuestion.OPEN_ENDED) {
-        //thisQuestion.buildComments(db);
-        SurveyAnswerList answerList = new SurveyAnswerList();
-        answerList.setQuestionId(thisQuestion.getId());
-        answerList.setHasComments(Constants.TRUE);
-        answerList.setItemsPerPage(5);
-        answerList.setLastAnswers(true);
-        answerList.buildList(db);
-        thisQuestion.setAnswerList(answerList);
+    if (buildResults) {
+      Iterator thisList = this.iterator();
+      while (thisList.hasNext()) {
+        ActiveSurveyQuestion thisQuestion = (ActiveSurveyQuestion) thisList.next();
+        int type = thisQuestion.getType();
+        if (type == SurveyQuestion.ITEMLIST) {
+          ActiveSurveyQuestionItemList itemList = new ActiveSurveyQuestionItemList();
+          itemList.setQuestionId(thisQuestion.getId());
+          itemList.buildList(db);
+          thisQuestion.setItemList(itemList);
+        } else if (type == SurveyQuestion.QUANT_COMMENTS || type == SurveyQuestion.OPEN_ENDED) {
+          //thisQuestion.buildComments(db);
+          SurveyAnswerList answerList = new SurveyAnswerList();
+          answerList.setQuestionId(thisQuestion.getId());
+          answerList.setHasComments(Constants.TRUE);
+          answerList.setItemsPerPage(5);
+          answerList.setLastAnswers(true);
+          answerList.buildList(db);
+          thisQuestion.setAnswerList(answerList);
+        }
       }
     }
   }
@@ -281,6 +305,26 @@ public class ActiveSurveyQuestionList extends ArrayList {
       pst.setInt(++i, activeSurveyId);
     }
     return i;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  contactId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildResponse(Connection db, int contactId) throws SQLException {
+    Iterator thisList = this.iterator();
+    while (thisList.hasNext()) {
+      ActiveSurveyQuestion thisQuestion = (ActiveSurveyQuestion) thisList.next();
+      SurveyAnswerList answers = new SurveyAnswerList();
+      answers.setQuestionId(thisQuestion.getId());
+      answers.setContactId(contactId);
+      answers.buildList(db);
+      thisQuestion.setAnswerList(answers);
+    }
   }
 
 }
