@@ -26,6 +26,24 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
     this.mappings = mappings;
     boolean processOK = true;
     
+    TicketCategoryList categoryList = new TicketCategoryList();
+    categoryList.setEnabledState(-1);
+    categoryList.buildList(db);
+    Iterator categories = categoryList.iterator();
+    while (categories.hasNext()) {
+      DataRecord thisRecord = mappings.createDataRecord(categories.next(), "insert");
+      if ("0".equals(thisRecord.getValue("parentCode"))) {
+        //Remove the lookup attribute by overwriting the previous field
+        thisRecord.removeField("parentCode");
+        thisRecord.addField("parentCode", "0", null, null);
+      }
+      writer.save(thisRecord);
+    }
+    //processOK = mappings.saveList(writer, categoryList, "insert");
+    if (!processOK) {
+      return false;
+    }
+    
     logger.info("ImportTickets-> Inserting Tickets");
     writer.setAutoCommit(false);
     TicketList ticList = new TicketList();
@@ -47,8 +65,6 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
       return false;
     }    
 
-    //update owners
-    
     writer.setAutoCommit(true);
     return true;
   }

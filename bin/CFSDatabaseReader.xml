@@ -39,6 +39,10 @@
     <map class="com.darkhorseventures.webutils.LookupList" id="lookupRevenueTypes" table="lookup_revenue_types"/>
     <map class="com.darkhorseventures.webutils.LookupList" id="lookupRevenueDetailTypes" table="lookup_revenuedetail_types"/>
     <map class="com.darkhorseventures.webutils.LookupList" id="lookupSurveyTypes" table="lookup_survey_types"/>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="systemPrefs" table="system_prefs">
+      <property field="category"/>
+      <property field="data"/>
+    </map>
     <map class="com.darkhorseventures.cfsbase.Contact" id="contact">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
@@ -169,6 +173,14 @@
       <property>entered</property>
       <property>modified</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.TicketCategory" id="ticketCategory">
+      <property alias="guid">id</property>
+      <property>categoryLevel</property>
+      <property lookup="ticketCategory">parentCode</property>
+      <property>description</property>
+      <property>level</property>
+      <property>enabled</property>
+    </map>
     <map class="com.darkhorseventures.cfsbase.Ticket" id="ticket">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
@@ -182,10 +194,10 @@
       <property>levelCode</property>
       <property lookup="lookupDepartment">departmentCode</property>
       <property lookup="lookupTicketSource">sourceCode</property>
-      <property>catCode</property>
-      <property>subCat1</property>
-      <property>subCat2</property>
-      <property>subCat3</property>
+      <property lookup="ticketCategory">catCode</property>
+      <property lookup="ticketCategory">subCat1</property>
+      <property lookup="ticketCategory">subCat2</property>
+      <property lookup="ticketCategory">subCat3</property>
       <property lookup="ticketSeverity">severityCode</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>

@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 //The createFilter method and the prepareFilter method need to have the same
 //number of parameters if modified.
 
@@ -13,20 +13,21 @@ import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
- *  Description of the Class
+ *  Contains TicketCategory items for displaying to the user
  *
  *@author     chris
  *@created    December 11, 2001
- *@version    $Id$
+ *@version    $Id: TicketCategoryList.java,v 1.2 2002/03/25 19:12:22 mrajkowski
+ *      Exp $
  */
 public class TicketCategoryList extends Vector {
   HtmlSelect catListSelect = new HtmlSelect();
 
   private PagedListInfo pagedListInfo = null;
   private int parentCode = -1;
-  private boolean enabled = true;
   private int catLevel = -1;
   private String HtmlJsEvent = "";
+  private int enabledState = Constants.TRUE;
 
 
   /**
@@ -93,17 +94,6 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Sets the Enabled attribute of the TicketCategoryList object
-   *
-   *@param  tmp  The new Enabled value
-   *@since
-   */
-  public void setEnabled(boolean tmp) {
-    this.enabled = tmp;
-  }
-
-
-  /**
    *  Sets the CatLevel attribute of the TicketCategoryList object
    *
    *@param  catLevel  The new CatLevel value
@@ -122,6 +112,16 @@ public class TicketCategoryList extends Vector {
    */
   public void setCatLevel(String catLevel) {
     this.catLevel = Integer.parseInt(catLevel);
+  }
+
+
+  /**
+   *  Sets the enabledState attribute of the TicketCategoryList object
+   *
+   *@param  tmp  The new enabledState value
+   */
+  public void setEnabledState(int tmp) {
+    this.enabledState = tmp;
   }
 
 
@@ -193,13 +193,12 @@ public class TicketCategoryList extends Vector {
 
 
   /**
-   *  Gets the Enabled attribute of the TicketCategoryList object
+   *  Gets the enabledState attribute of the TicketCategoryList object
    *
-   *@return    The Enabled value
-   *@since
+   *@return    The enabledState value
    */
-  public boolean getEnabled() {
-    return enabled;
+  public int getEnabledState() {
+    return enabledState;
   }
 
 
@@ -212,11 +211,8 @@ public class TicketCategoryList extends Vector {
    *@since
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
-
     Iterator i = this.iterator();
-
     catListSelect.addItem(0, "Undetermined");
-
     while (i.hasNext()) {
       TicketCategory thisCat = (TicketCategory) i.next();
       catListSelect.addItem(
@@ -288,10 +284,10 @@ public class TicketCategoryList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("tc.level", null);
+      pagedListInfo.setDefaultSort("tc.cat_level, tc.level", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY tc.level");
+      sqlOrder.append("ORDER BY tc.cat_level, tc.level");
     }
 
     //Need to build a base SQL statement for returning records
@@ -307,11 +303,11 @@ public class TicketCategoryList extends Vector {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
+
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -338,11 +334,12 @@ public class TicketCategoryList extends Vector {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
+    if (enabledState != -1) {
+      sqlFilter.append("AND tc.enabled = ? ");
+    }
     if (parentCode != -1) {
       sqlFilter.append("AND tc.parent_cat_code = ? ");
     }
-
     if (catLevel != -1) {
       sqlFilter.append("AND tc.cat_level = ? ");
     }
@@ -359,14 +356,15 @@ public class TicketCategoryList extends Vector {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    if (enabledState != -1) {
+      pst.setBoolean(++i, enabledState == Constants.TRUE);
+    }
     if (parentCode != -1) {
       pst.setInt(++i, parentCode);
     }
-
     if (catLevel != -1) {
       pst.setInt(++i, catLevel);
     }
-
     return i;
   }
 

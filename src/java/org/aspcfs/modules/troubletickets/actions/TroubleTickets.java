@@ -13,18 +13,25 @@ import com.darkhorseventures.webutils.*;
 /**
  *  Description of the Class
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    March 15, 2002
- *@version
+ *@version    $Id$
  */
 public final class TroubleTickets extends CFSModule {
-        
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDefault(ActionContext context) {
     if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("DefaultError");
     }
     return (this.executeCommandHome(context));
   }
+
 
   /**
    *  Description of the Method
@@ -55,7 +62,6 @@ public final class TroubleTickets extends CFSModule {
       }
 
       buildFormElements(context, db, newTic);
-
     } catch (Exception e) {
       errorCode = 1;
       errorMessage = e;
@@ -287,42 +293,42 @@ public final class TroubleTickets extends CFSModule {
     TicketList openList = new TicketList();
 
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-    
+
     PagedListInfo assignedToMeInfo = this.getPagedListInfo(context, "AssignedToMeInfo");
     PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
-    
+
     assignedToMeInfo.setLink("/TroubleTickets.do?command=Home");
     openInfo.setLink("/TroubleTickets.do?command=Home");
-    
+
     assignedToMeList.setPagedListInfo(assignedToMeInfo);
 
     openList.setPagedListInfo(openInfo);
-    
+
     assignedToMeList.setAssignedTo(getUserId(context));
     assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-    
+
     openList.setUnassignedToo(true);
     openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-    
+
     PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo");
     createdByMeInfo.setLink("/TroubleTickets.do?command=Home");
-    
+
     createdByMeList.setPagedListInfo(createdByMeInfo);
-    
+
     createdByMeList.setUnassignedToo(true);
     createdByMeList.setEnteredBy(getUserId(context));
 
     try {
       db = this.getConnection(context);
-      
+
       if ("assignedToMe".equals(assignedToMeInfo.getListView())) {
-          assignedToMeList.setAssignedTo(getUserId(context));
-          assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+        assignedToMeList.setAssignedTo(getUserId(context));
+        assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
-      
+
       if ("unassigned".equals(openInfo.getListView())) {
-          openList.setUnassignedToo(true);
-          openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+        openList.setUnassignedToo(true);
+        openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
 
       createdByMeList.buildList(db);
@@ -347,26 +353,33 @@ public final class TroubleTickets extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandSearchTickets(ActionContext context) {
 
     if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
     }
-    
+
     PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicListInfo");
-    
+
     if (ticListInfo.getSavedCriteria().isEmpty()) {
-            return(executeCommandSearchTicketsForm(context));
-    } 
-    
-    if (context.getRequest().getParameter("reset") != null) {
-            if (context.getRequest().getParameter("reset").equals("true")) {
-                    ticListInfo.getSavedCriteria().clear();
-                    return(executeCommandSearchTicketsForm(context));
-            }
+      return (executeCommandSearchTicketsForm(context));
     }
-    
+
+    if (context.getRequest().getParameter("reset") != null) {
+      if (context.getRequest().getParameter("reset").equals("true")) {
+        ticListInfo.getSavedCriteria().clear();
+        return (executeCommandSearchTicketsForm(context));
+      }
+    }
+
     int errorCode = 0;
     Exception errorMessage = null;
 
@@ -376,28 +389,27 @@ public final class TroubleTickets extends CFSModule {
 
     TicketList ticList = new TicketList();
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-        
+
     ticListInfo.setLink("/TroubleTickets.do?command=SearchTickets");
     ticList.setPagedListInfo(ticListInfo);
     ticListInfo.setSearchCriteria(ticList);
-    
+
     try {
       db = this.getConnection(context);
-      
-        if ("unassigned".equals(ticListInfo.getListView())) {
-          ticList.setUnassignedToo(true);
-          ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-        } else if ("assignedToMe".equals(ticListInfo.getListView())) {
-          ticList.setAssignedTo(getUserId(context));
-          ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-        } else {
-          ticList.setUnassignedToo(true);
-          
-          if ("createdByMe".equals(ticListInfo.getListView())) {
-                  ticList.setEnteredBy(getUserId(context));
-          }
-          
+
+      if ("unassigned".equals(ticListInfo.getListView())) {
+        ticList.setUnassignedToo(true);
+        ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+      } else if ("assignedToMe".equals(ticListInfo.getListView())) {
+        ticList.setAssignedTo(getUserId(context));
+        ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+      } else {
+        ticList.setUnassignedToo(true);
+
+        if ("createdByMe".equals(ticListInfo.getListView())) {
+          ticList.setEnteredBy(getUserId(context));
         }
+      }
 
       ticList.buildList(db);
 
@@ -457,10 +469,10 @@ public final class TroubleTickets extends CFSModule {
       nc.setEnteredBy(getUserId(context));
       nc.setModifiedBy(getUserId(context));
       nc.setOwner(getUserId(context));
-      if ( newTic.getOrgId() == 0 ) {
-	      nc.setTypeId(1);
+      if (newTic.getOrgId() == 0) {
+        nc.setTypeId(1);
       } else {
-	      nc.setTypeId(0);
+        nc.setTypeId(0);
       }
     }
 
@@ -644,11 +656,11 @@ public final class TroubleTickets extends CFSModule {
       if (resultCount == -1) {
         return (executeCommandModify(context));
       } else if (resultCount == 1) {
-		if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-			return (executeCommandHome(context));
-		} else {
-			return ("UpdateOK");
-		}
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+          return (executeCommandHome(context));
+        } else {
+          return ("UpdateOK");
+        }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
@@ -763,7 +775,7 @@ public final class TroubleTickets extends CFSModule {
     categoryList.setHtmlJsEvent("onChange=\"javascript:updateSubList1();\"");
     categoryList.buildList(db);
     context.getRequest().setAttribute("CategoryList", categoryList);
-    
+
     TicketCategoryList subList1 = new TicketCategoryList();
     subList1.setCatLevel(1);
     subList1.setParentCode(newTic.getCatCode());
@@ -809,7 +821,14 @@ public final class TroubleTickets extends CFSModule {
 
     context.getRequest().setAttribute("TicketDetails", newTic);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandCategoryJSList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -817,7 +836,7 @@ public final class TroubleTickets extends CFSModule {
       String catCode = context.getRequest().getParameter("catCode");
       String subCat1 = context.getRequest().getParameter("subCat1");
       String subCat2 = context.getRequest().getParameter("subCat2");
-      
+
       db = this.getConnection(context);
       if (catCode != null) {
         TicketCategoryList subList1 = new TicketCategoryList();
@@ -845,7 +864,14 @@ public final class TroubleTickets extends CFSModule {
     }
     return ("CategoryJSListOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDepartmentJSList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -867,14 +893,21 @@ public final class TroubleTickets extends CFSModule {
     }
     return ("DepartmentJSListOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandOrganizationJSList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
-      
+
       ContactList contactList = new ContactList();
       if (orgId != null && !"-1".equals(orgId)) {
         contactList.setBuildDetails(false);

@@ -491,6 +491,10 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'lookupIndustryList', 'com.darkhorseventures.webutils.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'systemPrefs', 'com.darkhorseventures.webutils.CustomLookupElement');
+
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'systemModules', 'com.darkhorseventures.webutils.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'systemModulesList', 'com.darkhorseventures.webutils.LookupList');
@@ -569,7 +573,12 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'lookupCallTypes', 'com.darkhorseventures.webutils.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'lookupCallTypesList', 'com.darkhorseventures.webutils.LookupList');
- 
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'ticketCategory', 'com.darkhorseventures.cfsbase.TicketCategory');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'ticketCategoryList', 'com.darkhorseventures.cfsbase.TicketCategoryList');
+
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'ticketSeverity', 'com.darkhorseventures.webutils.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
