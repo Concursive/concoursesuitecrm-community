@@ -1,18 +1,18 @@
 /**
- *  PostgreSQL Table Creation
+ *  MSSQL Table Creation
  *
- *@author     cprice
+ *@author     mrajkowski
  *@created    March 19, 2002
  *@version    $Id$
  */
-
+ 
 CREATE TABLE lookup_industry (
-  code SERIAL PRIMARY KEY,
+  code INT IDENTITY PRIMARY KEY,
   order_id INT,
   description VARCHAR(50) NOT NULL,
-  default_item BOOLEAN DEFAULT false,
+  default_item BIT DEFAULT 0,
   level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
+  enabled BIT DEFAULT 1
 );
 
 insert into lookup_industry (description) values ('Automotive');
@@ -38,9 +38,9 @@ insert into lookup_industry (description) values ('Transportation');
 
 
 create table industry_temp (
-	ind_id serial,
-        name varchar(80),
-        code smallint
+	ind_id INT IDENTITY,
+  name varchar(80),
+  code smallint
 );
 
 insert into industry_temp (name,code) values ('Automotive',2);
