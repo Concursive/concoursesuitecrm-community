@@ -2,16 +2,37 @@
 
   Manual entries:
   
-  ALTER TABLE contact DROP CONSTRAINT DF_contact_type_id
-  ALTER TABLE contact ADD CONSTRAINT primary_contact
+  GUI: REMOVE default from project_files.folder_id
+  SQL: UPDATE project_files SET folder_id = NULL WHERE folder_id = 0;
   
-  REMOVE default from folder_id
+  ?Update the permissions tables with module code
   
-  Update the permissions tables with module code
+  GUI: ALTER TABLE account_type_levels RENAME COLUMN id TO org_id
   
-  ALTER TABLE account_type_levels RENAME COLUMN id TO org_id
+  GUI: ALTER TABLE organization DROP COLUMN duplicate
   
-  CREATE project_files constaints 
+  GUI: CREATE project_files constraints 
+  
+ALTER TABLE project_files ADD 
+	 FOREIGN KEY 
+	(
+		[folder_id]
+	) REFERENCES project_folders (
+		[folder_id]
+	),
+	 FOREIGN KEY 
+	(
+		enteredby
+	) REFERENCES access (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		modifiedby
+	) REFERENCES access (
+		[user_id]
+	)
+GO
 
 */
 
@@ -30,10 +51,10 @@ WHERE user_id = -1
 
 GO
 
-/* TODO: CHECK THIS VALUE BEFORE RUNNING */
+/* TODO: CHECK THIS VALUE BEFORE RUNNING 
 ALTER TABLE access_log DROP CONSTRAINT DF_access_log_user_id
-
 GO
+*/
 
 DROP TABLE system_prefs
 GO
@@ -92,10 +113,9 @@ ALTER TABLE organization ADD [namelast] [varchar] (80) NULL
 ALTER TABLE organization ADD [namefirst] [varchar] (80) NULL
 ALTER TABLE organization ADD [namemiddle] [varchar] (80) NULL
 ALTER TABLE organization ADD [namesuffix] [varchar] (80) NULL
-ALTER TABLE organization DROP COLUMN duplicate
 
 ALTER TABLE contact ALTER COLUMN owner INT NULL
-ALTER TABLE contact ADD primary_contact BIT NULL
+ALTER TABLE contact ADD primary_contact BIT DEFAULT 0
 
 ALTER TABLE permission_category ADD [folders] [bit] NULL DEFAULT 0
 GO
@@ -1667,12 +1687,5 @@ INSERT INTO permission (category_id, permission, level, permission_view, permiss
 INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (5, 'accounts-accounts-revenue', 95, 1, 1, 1, 1, 'Revenue')
 INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (6, 'campaign-campaigns-surveys', 60, 1, 1, 1, 1, 'Campaign Survey Records')
 INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (9, 'admin-usage', 45, 1, 0, 0, 0, 'System Usage')
-GO
-
-/* TODO: VERIFY THESE ENTRIES BEFORE INSTALL */
-UPDATE lookup_lists_lookup SET category_id = 1 WHERE module_id = 5
-UPDATE lookup_lists_lookup SET category_id = 2 WHERE module_id = 3
-UPDATE lookup_lists_lookup SET category_id = 4 WHERE module_id = 4
-UPDATE lookup_lists_lookup SET category_id = 8 WHERE module_id = 8
 GO
 
