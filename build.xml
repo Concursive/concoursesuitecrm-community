@@ -153,12 +153,6 @@ determined user is ${USER}
     <jar jarfile="${SRC_LIB}/theseus.jar"
           basedir="${SRC_CLASSES}"
           includes="org/theseus/**/*.class"/>
-<!-- No longer needed
-    <exec executable="chown" os="Linux" failonerror="true">
-      <arg value="${USER}.${CFSGRP}"/>
-      <arg value="${SRC_LIB}/theseus.jar"/>
-    </exec>
--->
     <delete>
         <fileset dir= "${SRC_CLASSES}/org/theseus" includes="**/*.class"/>
     </delete>
@@ -182,12 +176,6 @@ determined user is ${USER}
     <jar jarfile="${SRC_LIB}/zeroio-iteam.jar"
           basedir="${SRC_CLASSES}"
           includes="com/zeroio/**/*.class"/>
-<!-- No longer needed
-    <exec executable="chown" os="Linux" failonerror="true">
-      <arg value="${USER}.${CFSGRP}"/>
-      <arg value="${SRC_LIB}/zeroio-iteam.jar"/>
-    </exec>
--->
     <delete>
       <fileset dir= "${SRC_CLASSES}/com/zeroio" includes="**/*.class"/>
     </delete>
@@ -205,12 +193,6 @@ determined user is ${USER}
     <jar jarfile="${SRC_LIB}/isavvix.jar"
           basedir="${SRC_CLASSES}"
           includes="com/isavvix/**/*.class"/>
-<!-- No longer needed
-    <exec executable="chown" os="Linux" failonerror="true">
-      <arg value="${USER}.${CFSGRP}"/>
-      <arg value="${SRC_LIB}/isavvix.jar"/>
-    </exec>
--->
     <delete>
       <fileset dir= "${SRC_CLASSES}/com/isavvix" includes="**/*.class"/>
     </delete>
@@ -227,19 +209,13 @@ determined user is ${USER}
         <pathelement location="${SRC_LIB}/isavvix.jar"/>
         <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
         <pathelement location="${SRC_LIB}/jfreechart.jar"/>
-	<pathelement location="${SRC_LIB}/utils.jar"/>
+	      <pathelement location="${SRC_LIB}/utils.jar"/>
       </classpath>
     </javac>
     <delete file="${SRC_LIB}/darkhorseventures.jar"/>
     <jar jarfile="${SRC_LIB}/darkhorseventures.jar"
           basedir="${SRC_CLASSES}"
           includes="com/darkhorseventures/**/*.class"/>
-<!-- No longer needed
-    <exec executable="chown" os="Linux" failonerror="true">
-      <arg value="${USER}.${CFSGRP}"/>
-      <arg value="${SRC_LIB}/darkhorseventures.jar"/>
-    </exec>
--->
     <delete>
       <fileset dir= "${SRC_CLASSES}/com/darkhorseventures" includes="**/*.class"/>
     </delete>
@@ -306,10 +282,14 @@ determined user is ${USER}
         <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
       </classpath>
     </javac>
-    
-    <jar jarfile="${DEST_BIN}/Notifier.jar" basedir="${SRC_BIN}"
+    <delete file="${DEST_BIN}/Notifier.jar"/>
+    <jar jarfile="${DEST_BIN}/Notifier.jar" 
+          basedir="${SRC_BIN}"
           includes="com/darkhorseventures/**/*.class"
           manifest="${SRC_BIN}/com/darkhorseventures/apps/notifier.mf"/>
+    <delete>
+      <fileset dir= "${SRC_BIN}/com/darkhorseventures" includes="**/*.class"/>
+    </delete>
     <copy todir="${DEST_BIN}" >
       <fileset dir="${SRC_BIN}">
         <include name="notifier" />
