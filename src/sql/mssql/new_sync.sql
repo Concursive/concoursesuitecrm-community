@@ -45,5 +45,4 @@ CREATE TABLE sync_map (
 );
 
 CREATE UNIQUE INDEX idx_sync_map ON sync_map (client_id, table_id, record_id);
-CREATE INDEX idx_sync_map_client ON sync_map (client_id, table_id, cuid);
 
