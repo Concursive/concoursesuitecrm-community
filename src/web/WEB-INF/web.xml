@@ -96,30 +96,36 @@ Replaceable parameter  typical value / description
     </init-param>
     <init-param>
         <param-name>ClientSSLKeystore</param-name>
-        <param-value>@Keystore@</param-value>
+        <param-value>@KEYSTORE@</param-value>
     </init-param>
     <init-param>
         <param-name>ClientSSLKeystorePassword</param-name>
         <param-value>aspcfs</param-value>
     </init-param>
-    <!-- Gatekeeper configuration -->
+    <init-param>
+        <param-name>GKDRIVER</param-name>
+        <param-value>@GKDRIVER@</param-value>
+    </init-param>
     <init-param>
         <param-name>GKHOST</param-name>
-        <param-value>jdbc:postgresql://216.54.81.101:5432/cfs2gk</param-value>
+        <param-value>@GKHOST@</param-value>
     </init-param>
     <init-param>
         <param-name>GKUSER</param-name>
-        <param-value>gatekeeper</param-value>
+        <param-value>@GKUSER@</param-value>
     </init-param>
     <init-param>
         <param-name>GKUSERPW</param-name>
-        <param-value></param-value>
+        <param-value>@GKUSERPW@</param-value>
+    </init-param>
+    <init-param>
+        <param-name>MailServer</param-name>
+        <param-value>@MAILSERVER@</param-value>
     </init-param>
     <init-param>
         <param-name>GlobalPWInfo</param-name>
         <param-value>3d17aefbade4b011fbc4333508c0bd2b</param-value>
     </init-param>
-    <!-- End gatekeeper -->
     <init-param>
         <param-name>PreloadXSL</param-name>
         <param-value>false</param-value>
@@ -135,7 +141,7 @@ Replaceable parameter  typical value / description
         <url-pattern>*.do</url-pattern>
   </servlet-mapping>
   <session-config>
-        <session-timeout>60</session-timeout>
+        <session-timeout>90</session-timeout>
   </session-config>
   <!--welcome-file-list>
 	  <welcome-file>index.jsp</welcome-file>

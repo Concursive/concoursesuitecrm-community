@@ -22,9 +22,11 @@
   <property name="SITECODE" value="cfs"/>
   <property name="WEBUSER" value="apache"/>
   <property name="CFSGRP" value="cfs"/>
+  <property name="GKDRIVER" value="org.postgresql.Driver"/>
   <property name="GKHOST" value="jdbc:postgresql://127.0.0.1:5432/cfs2gk"/>
   <property name="GKUSER" value="gatekeeper"/>
   <property name="GKUSERPW" value=""/>
+  <property name="MAILSERVER" value="127.0.0.1"/>
 
   <!-- computed properties -->
   <property name="SRC" value="${basedir}"/>
@@ -274,6 +276,8 @@ determined user is ${USER}
              token="@GKUSER@" value="${GKUSER}"/>
     <replace file="${DEST_BIN}/notifier.xml"
              token="@GKUSERPW@" value="${GKUSERPW}"/>
+    <replace file="${DEST_BIN}/notifier.xml"
+             token="@MAILSERVER@" value="${MAILSERVER}"/>
   </target>
   
   <target name="apps" description="Java applications that get installed."
@@ -318,11 +322,23 @@ determined user is ${USER}
   </target>
   
   <target name="check-site-configuration">
-    <available file="${DEST_DOCROOT}/WEB-INF/web.xml" property="site.config.present"/>
+    <!--
+      <available file="${DEST_DOCROOT}/WEB-INF/web.xml" property="site.config.present"/>
+    -->
+    <!-- Use with Ant 1.5 
+     <uptodate property="webxml-uptodate"
+            srcfile="${SRC_APP}/WEB-INF/web.xml"
+            targetfile="${DEST_DOCROOT}/WEB-INF/web.xml"/>
+    -->
+     <uptodate property="webxml-uptodate" 
+               targetfile="${DEST_DOCROOT}/WEB-INF/web.xml" >
+       <srcfiles dir="${SRC_APP}/WEB-INF" 
+                 includes="web.xml"/>
+     </uptodate>
   </target>
   
   <target name="site-configuration" depends="check-site-configuration"
-          unless="site.config.present">
+          unless="webxml-uptodate">
     <echo message="Installing web.xml configuration file"/>
     <copy todir="${DEST_DOCROOT}">
       <fileset dir="${SRC_APP}">
@@ -331,18 +347,18 @@ determined user is ${USER}
     </copy>
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
              token="@SiteCode@" value="${SITECODE}"/>
-
+    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+             token="@GKDRIVER@" value="${GKDRIVER}"/>
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
              token="@GKHOST@" value="${GKHOST}"/>
-
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
              token="@GKUSER@" value="${GKUSER}"/>
-
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
              token="@GKUSERPW@" value="${GKUSERPW}"/>
-             
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
-             token="@Keystore@" value="${DEST_DOCROOT}/WEB-INF/keystore"/>
+             token="@MAILSERVER@" value="${MAILSERVER}"/>
+    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+             token="@KEYSTORE@" value="${DEST_DOCROOT}/WEB-INF/keystore"/>
   </target>
 
   <target name="site" description="Install files to site" 

@@ -51,7 +51,7 @@ public class Notification extends Thread {
   private int type = -1;
   private String typeText = null;
   
-  private String host = null;
+  private String host = "127.0.0.1";
   private int port = -1;
   
   private String siteCode = null;
@@ -441,7 +441,7 @@ public class Notification extends Thread {
         if (type == EMAIL) {
           System.out.println("Notification-> To: " + thisUser.getContact().getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
-          mail.setHost("127.0.0.1");
+          mail.setHost(host);
           if (from != null) {
             mail.setFrom(from);
           } else {
@@ -514,7 +514,7 @@ public class Notification extends Thread {
         if (type == EMAIL) {
           System.out.println("Notification-> To: " + thisContact.getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
-          mail.setHost("127.0.0.1");
+          mail.setHost(host);
           if (from != null && !from.equals("")) {
             mail.setFrom(from);
           } else {

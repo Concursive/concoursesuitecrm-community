@@ -100,6 +100,12 @@ public class InitHook implements ControllerInitHook {
       config.getServletContext().setAttribute("DynamicFormList", forms);
     }
     
+    if (config.getInitParameter("MailServer") != null) {
+      config.getServletContext().setAttribute("MailServer", 
+        config.getInitParameter("MailServer"));
+    }
+    
+    //All virtual hosts will have an entry in SystemStatus
     config.getServletContext().setAttribute("SystemStatus", new Hashtable());
 
     return null;

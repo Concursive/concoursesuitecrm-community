@@ -14,6 +14,7 @@ CFSDBA="cfsdba"
 SITEHOME="/home"
 SITECODE=""
 GKHOST="jdbc:postgresql://127.0.0.1:5432/cfs2gk"
+PARAMS=""
 
 usage ()
 {
@@ -53,7 +54,6 @@ if [ -z "${SITECODE}" ] ; then echo "Missing site code" ; usage ; fi
 #
 #############################################################################
 DIRDST="${SITEHOME}/${SITECODE}"
-DB="cdb_${SITECODE}"
 
 #############################################################################
 #
@@ -78,15 +78,31 @@ fi
 #############################################################################
 #
 #############################################################################
-echo ok
-
 # rm -f ${DIRDST}/html/index.jsp
 
-ant -DSITECODE=${SITECODE} -DGKHOST=${GKHOST} lib
+if [ -n "${DEST_DOCROOT}" ] ; then PARAMS="${PARAMS} -DDEST_DOCROOT=${DEST_DOCROOT}" ; fi
+
+if [ -n "${SITECODE}" ] ; then PARAMS="${PARAMS} -DSITECODE=${SITECODE}" ; fi
+
+if [ -n "${SITEHOME}" ] ; then PARAMS="${PARAMS} -DSITEHOME=${SITEHOME}" ; fi
+
+if [ -n "${GKHOST}" ] ; then PARAMS="${PARAMS} -DGKHOST=${GKHOST}" ; fi
+
+if [ -n "${GKDRIVER}" ] ; then PARAMS="${PARAMS} -DGKDRIVER=${GKDRIVER}" ; fi
+
+if [ -n "${GKUSER}" ] ; then PARAMS="${PARAMS} -DGKUSER=${GKUSER}" ; fi
+
+if [ -n "${MAILSERVER}" ] ; then ${PARAMS}="${PARAMS} -DMAILSERVER=${MAILSERVER}" ; fi
+
+#echo "Params: ${PARAMS}"
+
+ant ${PARAMS} lib
 ##/home/${SITECODE}/bin/restart 
 
 
 ) >>${LOG} 2>&1 
+
+cat ${LOG}
 
 exit 0
 

@@ -148,6 +148,7 @@ public class Notifier extends ReportBuilder {
       Opportunity thisOpportunity = (Opportunity) i.next();
       System.out.println(thisOpportunity.toString());
       Notification thisNotification = new Notification();
+      thisNotification.setHost((String) this.config.get("MailServer"));
       thisNotification.setUserToNotify(thisOpportunity.getOwner());
       thisNotification.setModule("Opportunities");
       thisNotification.setItemId(thisOpportunity.getId());
@@ -205,6 +206,7 @@ public class Notifier extends ReportBuilder {
     while (i.hasNext()) {
       Call thisCall = (Call) i.next();
       Notification thisNotification = new Notification();
+      thisNotification.setHost((String) this.config.get("MailServer"));
       thisNotification.setUserToNotify(thisCall.getEnteredBy());
       thisNotification.setModule("Calls");
       thisNotification.setItemId(thisCall.getId());
@@ -302,6 +304,7 @@ public class Notifier extends ReportBuilder {
         Contact thisContact = new Contact(db, "" + thisRecipient.getContactId());
 
         Notification thisNotification = new Notification();
+        thisNotification.setHost((String) this.config.get("MailServer"));
         thisNotification.setContactToNotify(thisContact.getId());
         thisNotification.setModule("Communications Manager");
         thisNotification.setDatabaseName(dbName);

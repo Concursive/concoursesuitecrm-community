@@ -3,7 +3,7 @@
   <!-- Driver for connecting to sites database -->
   <init-param>
     <param-name>DatabaseDriver</param-name>
-    <param-value>org.postgresql.Driver</param-value>
+    <param-value>@GKDRIVER@</param-value>
   </init-param>
   <init-param>
       <param-name>GKHOST</param-name>
@@ -25,6 +25,10 @@
   <init-param>
     <param-name>FileLibrary</param-name>
     <param-value>@FILELIBRARY@</param-value>
+  </init-param>
+  <init-param>
+    <param-name>MailServer</param-name>
+    <param-value>@MAILSERVER@</param-value>
   </init-param>
   <!-- Remote Hylafax fax server -->
   <init-param>
