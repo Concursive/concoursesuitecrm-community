@@ -156,11 +156,11 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
               DataRecord thisRecord = mappings.createDataRecord(thisContact, "insert");
               writer.save(thisRecord);
               
-              logger.info("ImportBaseData-> Inserting Contact Calls");
-              
               CallList callList = new CallList();
               callList.setContactId(thisContact.getId());
               callList.buildList(db);
+              
+              logger.info("ImportBaseData-> Inserting Contact Calls (" + callList.size() + ")");
               
               Iterator calls = callList.iterator();
               
