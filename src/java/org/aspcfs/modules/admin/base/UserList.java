@@ -38,6 +38,7 @@ public class UserList extends Vector {
   private boolean includeMe = false;
   private String myValue = "";
   private int myId = -1;
+  private String username = null;
 
 
   /**
@@ -118,6 +119,13 @@ public class UserList extends Vector {
   public void setDepartment(String department) {
     this.department = Integer.parseInt(department);
   }
+  
+public String getUsername() {
+	return username;
+}
+public void setUsername(String username) {
+	this.username = username;
+}
 
 
   /**
@@ -661,6 +669,11 @@ public class UserList extends Vector {
     if (enabled > -1) {
       sqlFilter.append("AND a.enabled = ? ");
     }
+    
+    if (username != null) {
+	    sqlFilter.append("AND a.username = ? ");
+    }
+    
   }
 
 
@@ -685,6 +698,9 @@ public class UserList extends Vector {
     }
     if (enabled > -1) {
       pst.setBoolean(++i, enabled == TRUE);
+    }
+    if (username != null) {
+      pst.setString(++i, username);
     }
 
     return i;
