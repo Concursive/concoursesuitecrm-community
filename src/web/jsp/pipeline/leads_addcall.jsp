@@ -23,6 +23,12 @@
     formTest = true;
     message = "";
     alertMessage = "";
+    
+    var tmpList = document.forms['addCall'].elements['contactId'];
+    if (tmpList.options[tmpList.selectedIndex].value == "-1") { 
+      message += "- Check that a Contact is selected\r\n";
+      formTest = false;
+    }
     if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
       message += "- Check that Alert Date is entered correctly\r\n";
       formTest = false;
@@ -38,7 +44,6 @@
     if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
       alertMessage += "Alert Date is before today's date\r\n";
     }
-    
     if (formTest == false) {
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
@@ -91,7 +96,7 @@ Add a Call
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <th colspan="2">
-            <strong>Log a New Call</strong>
+            <strong>Log a Call</strong>
           </th>
         </tr>
         <tr class="containerBody">
@@ -113,6 +118,7 @@ Add a Call
 	<%} else {%>
             <%= ContactList.getHtmlSelect("contactId", CallDetails.getContactId() ) %>
 	<%}%>
+            <font color="red">*</font>
           </td>
         </tr>
   <%} else {%>
