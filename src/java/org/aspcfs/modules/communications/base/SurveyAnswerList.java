@@ -205,7 +205,7 @@ public int getContactId() {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM active_survey_answers sa " +
+        "FROM active_survey_answers sa, active_survey_responses sr " +
         "WHERE sa.question_id > -1 ");
 
     createFilter(sqlFilter);
