@@ -50,7 +50,6 @@ public class User extends GenericBean {
   protected int roleId = -1;
   protected String role = null;
   protected int managerId = -1;
-  protected String manager = null;
   protected User managerUser = null;
   protected String ip = null;
   protected String timeZone = null;
@@ -71,8 +70,6 @@ public class User extends GenericBean {
   protected java.sql.Timestamp lastLogin = null;
 
   protected java.sql.Date expires = null;
-
-  protected String aliasName = null;
 
   protected boolean buildContact = false;
   protected boolean buildContactDetails = false;
@@ -489,16 +486,6 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the aliasName attribute of the User object
-   *
-   *@param  aliasName  The new aliasName value
-   */
-  public void setAliasName(String aliasName) {
-    this.aliasName = aliasName;
-  }
-
-
-  /**
    *  Sets the GraphValues attribute of the User object
    *
    *@param  key  The new GraphValues value
@@ -789,17 +776,6 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the Manager attribute of the User object
-   *
-   *@param  tmp  The new Manager value
-   *@since       1.11
-   */
-  public void setManager(String tmp) {
-    this.manager = tmp;
-  }
-
-
-  /**
    *  Sets the managerId attribute of the User object
    *
    *@param  tmp  The new managerId value
@@ -1007,16 +983,6 @@ public class User extends GenericBean {
     } catch (NullPointerException e) {
     }
     return tmp;
-  }
-
-
-  /**
-   *  Gets the aliasName attribute of the User object
-   *
-   *@return    The aliasName value
-   */
-  public String getAliasName() {
-    return aliasName;
   }
 
 
@@ -1304,17 +1270,6 @@ public class User extends GenericBean {
    */
   public int getManagerId() {
     return managerId;
-  }
-
-
-  /**
-   *  Gets the Manager attribute of the User object
-   *
-   *@return    The Manager value
-   *@since     1.11
-   */
-  public String getManager() {
-    return manager;
   }
 
 
@@ -1885,13 +1840,10 @@ public class User extends GenericBean {
         "a.entered as access_entered, a.enteredby as access_enteredby, " +
         "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
         "r.role, " +
-        "m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, m_usr.enabled as mgr_enabled, " +
-        "als.namefirst as als_namefirst, als.namelast as als_namelast, " +
+        "m_usr.enabled as mgr_enabled, " +
         "c.* " +
         "FROM access a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
-        "LEFT JOIN contact als ON (a.alias = als.user_id) " +
-        "LEFT JOIN contact m ON (a.manager_id = m.user_id) " +
         "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id) " +
         "LEFT JOIN role r ON (a.role_id = r.role_id) " +
         "WHERE a.user_id > -1 ");
@@ -2187,6 +2139,7 @@ public class User extends GenericBean {
    *@since                    1.1
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //access table
     this.setUsername(rs.getString("username"));
     String thisPassword = rs.getString("password");
     this.setPassword(thisPassword);
@@ -2208,24 +2161,13 @@ public class User extends GenericBean {
     enteredBy = rs.getInt("access_enteredby");
     modified = rs.getTimestamp("access_modified");
     modifiedBy = rs.getInt("access_modifiedby");
+    //role table
     this.setRole(rs.getString("role"));
-
-    String managerNameFirst = rs.getString("mgr_namefirst");
-    String managerNameLast = rs.getString("mgr_namelast");
-
-    //check to see if manager user is enabled
+    //user table (manager)
     if (managerId > -1) {
       managerUserEnabled = rs.getBoolean("mgr_enabled");
-    }
-
-    if (managerNameFirst != null || managerNameLast != null) {
-      this.manager = Contact.getNameLastFirst(managerNameLast, managerNameFirst);
-    }
-
-    String aliasNameFirst = rs.getString("als_namefirst");
-    String aliasNameLast = rs.getString("als_namelast");
-    if (aliasNameFirst != null) {
-      this.aliasName = Contact.getNameLastFirst(aliasNameLast, aliasNameFirst);
+    } else {
+      managerUserEnabled = false;
     }
   }
 
