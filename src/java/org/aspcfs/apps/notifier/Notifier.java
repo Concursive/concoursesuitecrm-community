@@ -436,7 +436,7 @@ public class Notifier extends ReportBuilder {
       File dir = new File(baseDirectory);
       dir.mkdirs();
     }
-    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddhhmmss");
+    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddHHmmss");
     String uniqueScript = formatter1.format(new java.util.Date());
     try {
       out = new PrintWriter(new BufferedWriter(new FileWriter(baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".sh")));
