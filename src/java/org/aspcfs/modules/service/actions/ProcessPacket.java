@@ -106,7 +106,7 @@ public final class ProcessPacket extends CFSModule {
         errorText.appendChild(document.createTextNode(thisMessage.getMessage()));
         response.appendChild(errorText);
         
-        if (thisMessage.hasRecordList()) {
+        if (!thisMessage.hasError() && thisMessage.hasRecordList()) {
           Element recordSet = document.createElement("recordSet");
           recordSet.setAttribute("name", thisMessage.getRecordList().getName());
           recordSet.setAttribute("count", String.valueOf(thisMessage.getRecordList().size()));
@@ -141,6 +141,7 @@ public final class ProcessPacket extends CFSModule {
   }
   
   public String executeCommandReloadSyncMap(ActionContext context) {
+    context.getServletContext().setAttribute("SyncObjectMap", null);
     context.getServletContext().removeAttribute("SyncObjectMap");
     return ("PacketOK");
   }
