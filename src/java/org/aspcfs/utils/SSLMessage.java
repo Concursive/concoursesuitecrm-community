@@ -18,7 +18,7 @@ public class SSLMessage {
   private String url = null;
   private int port = -1;
   private String message = null;
-  private String keystore = null;
+  private String keystoreLocation = null;
   private String keystorePassword = null;
 
   /**
@@ -46,9 +46,9 @@ public class SSLMessage {
     port = tmp;
   }
 
-  public void setKeystore(String tmp) { this.keystore = tmp; }
+  public void setKeystoreLocation(String tmp) { this.keystoreLocation = tmp; }
   public void setKeystorePassword(String tmp) { this.keystorePassword = tmp; }
-  public String getKeystore() { return keystore; }
+  public String getKeystoreLocation() { return keystoreLocation; }
   public String getKeystorePassword() { return keystorePassword; }
 
 
@@ -78,19 +78,17 @@ public class SSLMessage {
       System.setProperty("java.protocol.handler.pkgs", 
         "com.sun.net.ssl.internal.www.protocol");
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("SSLMessage-> Keystore: " + keystore + ":" + keystorePassword);
+        System.out.println("SSLMessage-> Keystore: " + keystoreLocation + ":" + keystorePassword);
       }
       
       char[] passphrase = keystorePassword.toCharArray();
       KeyStore keyStore = KeyStore.getInstance("JKS");
-      keyStore.load(new FileInputStream(keystore), passphrase);
+      keyStore.load(new FileInputStream(keystoreLocation), passphrase);
       
       if (keyStore.containsAlias("aspcfs") == false) {
-        System.out.println("Cannot locate identity.");
+        System.out.println("Cannot locate identity: local private key not found.");
       }
 
-
-      
       //Holds this peer's private key
       KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
       keyManagerFactory.init(keyStore, passphrase);

@@ -587,7 +587,7 @@ public class Notification extends Thread {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Notification-> Setting Keystore");
         }
-        thisMessage.setKeystore((String)context.getServletContext().getAttribute("ClientSSLKeystore"));
+        thisMessage.setKeystoreLocation((String)context.getServletContext().getAttribute("ClientSSLKeystore"));
         thisMessage.setKeystorePassword((String)context.getServletContext().getAttribute("ClientSSLKeystorePassword"));
       }
       result = thisMessage.send();
