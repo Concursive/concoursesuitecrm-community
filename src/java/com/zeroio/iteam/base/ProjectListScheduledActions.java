@@ -63,8 +63,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
    *@param  db               Description of the Parameter
    *@return                  Description of the Return Value
    */
-  public String calendarAlerts(CalendarView companyCalendar, Connection db) throws SQLException{
-
+  public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
     try {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ProjectListScheduledActions --> Building Project Alerts ");
@@ -98,7 +97,33 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
     } catch (SQLException e) {
       throw new SQLException("Error Building Project Calendar Alerts");
     }
-    return "CalendarProjectsOK";
+  }
+  
+  public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("ProjectListScheduledActions --> Building Alert Counts ");
+    }
+    try {
+      this.setGroupId(-1);
+      this.setOpenProjectsOnly(true);
+      this.setProjectsWithAssignmentsOnly(true);
+      this.setProjectsForUser(this.getUserId());
+      this.setBuildAssignments(true);
+      this.setAssignmentsForUser(this.getUserId());
+      this.setOpenAssignmentsOnly(true);
+      HashMap dayEvents = this.queryAssignmentRecordCount(db);
+      Set s = dayEvents.keySet();
+      Iterator i = s.iterator();
+      while (i.hasNext()) {
+        String thisDay = (String) i.next();
+        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[4], thisDay, dayEvents.get(thisDay));
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("ProjectListScheduledActions --> Added Assignments for day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
+        }
+      }
+    } catch (SQLException e) {
+      throw new SQLException("Error Building Project Calendar Alert Counts");
+    }
   }
 }
 

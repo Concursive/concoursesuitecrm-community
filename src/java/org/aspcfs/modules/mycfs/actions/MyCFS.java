@@ -51,7 +51,7 @@ public final class MyCFS extends CFSModule {
 
     Exception errorMessage = null;
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
-    inboxInfo.setLink("/MyCFSInbox.do?command=Inbox");
+    inboxInfo.setLink("MyCFSInbox.do?command=Inbox");
 
     Connection db = null;
     CFSNoteList noteList = new CFSNoteList();
@@ -271,7 +271,7 @@ public final class MyCFS extends CFSModule {
     Exception errorMessage = null;
 
     PagedListInfo orgListInfo = this.getPagedListInfo(context, "HeadlineListInfo");
-    orgListInfo.setLink("/MyCFS.do?command=Headline");
+    orgListInfo.setLink("MyCFS.do?command=Headline");
 
     Connection db = null;
     OrganizationList organizationList = new OrganizationList();
@@ -460,7 +460,7 @@ public final class MyCFS extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     ContactList contactList = null;
-    contactListInfo.setLink("/MyCFSInbox.do?command=ContactList");
+    contactListInfo.setLink("MyCFSInbox.do?command=ContactList");
     contactListInfo.setEnableJavaScript(true);
     String firstFilter = "";
     String secondFilter = "";
@@ -922,9 +922,9 @@ public final class MyCFS extends CFSModule {
       calendarInfo = new CalendarBean();
       calendarInfo.addAlertType(0, "Task");
       calendarInfo.addAlertType(1, "Call");
-      calendarInfo.addAlertType(2, "Opportunity");
-      //calendarInfo.addAlertType(3, "Project");
+      calendarInfo.addAlertType(2, "Project");
       calendarInfo.addAlertType(3, "Accounts");
+      calendarInfo.addAlertType(4, "Opportunity");
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
 
