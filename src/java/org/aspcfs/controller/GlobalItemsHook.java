@@ -81,7 +81,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         ResultSet rs = null;
         
         //External Contact Calls
-        if (thisUser.hasPermission("contacts-external_contacts-view")) {
+        if (thisUser.hasPermission("contacts-external_contacts-calls-view")) {
           int callCount = 0;
           sql = 
             "SELECT COUNT(*) as callcount FROM call_log WHERE alertdate = CURRENT_TIMESTAMP AND enteredby = ?";
@@ -154,7 +154,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           ++myItems;
         }
 	
-	//CFS Inbox Items
+	      //CFS Inbox Items
         if (thisUser.hasPermission("myhomepage-inbox-view")) {
           int inboxCount = 0;
           sql = 

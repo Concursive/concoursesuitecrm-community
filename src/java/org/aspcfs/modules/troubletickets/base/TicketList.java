@@ -357,7 +357,7 @@ public class TicketList extends Vector {
         "FROM ticket t " +
         "WHERE t.ticketid > 0 ");
 
-    createFilter(sqlFilter);
+    createFilter(sqlFilter, db);
 
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -426,11 +426,11 @@ public class TicketList extends Vector {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
+
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
@@ -469,7 +469,7 @@ public class TicketList extends Vector {
    *@param  sqlFilter  Description of Parameter
    *@since             1.2
    */
-  private void createFilter(StringBuffer sqlFilter) {
+  private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (searchText == null || (searchText.equals(""))) {
       if (enteredBy > -1) {
         sqlFilter.append("AND t.enteredby = ? ");
@@ -515,8 +515,17 @@ public class TicketList extends Vector {
         sqlFilter.append("AND t.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
       }
     } else {
-
-      sqlFilter.append("AND ( lower(t.problem) like lower(?) OR lower(t.comment) like lower(?) OR lower(t.solution) like lower(?) ) ");
+      if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
+        sqlFilter.append(
+          "AND ( LOWER(CONVERT(VARCHAR(2000),t.problem)) LIKE LOWER(?) OR " +
+          "LOWER(CONVERT(VARCHAR(2000),t.comment)) LIKE LOWER(?) OR " +
+          "LOWER(CONVERT(VARCHAR(2000),t.solution)) LIKE LOWER(?) ) ");
+      } else {
+        sqlFilter.append(
+          "AND ( LOWER(t.problem) LIKE LOWER(?) OR " +
+          "LOWER(t.comment) LIKE LOWER(?) OR " +
+          "LOWER(t.solution) LIKE LOWER(?) ) ");
+      }
     }
   }
 
