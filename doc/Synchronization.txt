@@ -439,8 +439,9 @@ Client #1 Ends Synchronization
   ** to replace a picture for the incorrect vehicle since pictures will 
   ** all have the same filenames.
   
+  ** Once pictures have been sent, tell the server to process them
   <transaction id="20">
-    <inventoryPicture action="insert"/>
+    <inventoryPictureList action="process"/>
   </transaction>
   
 

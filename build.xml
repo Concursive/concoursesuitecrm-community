@@ -469,13 +469,11 @@ determined user is ${USER}
         userid="dhv_appuser"
         password="@pus3r">
         <!--driver="org.postgresql.Driver"-->
+        <!--url="org.postgresql.Driver"-->
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
         
-      <transaction src="database/${DBTYPE}/gatekeeper.sql"/>
-      <transaction src="database/gatekeeper.init"/>
-      
       <transaction src="database/${DBTYPE}/new_cdb.sql"/>
       <transaction src="database/code_tables.init"/>
       <transaction src="database/access.init"/>
