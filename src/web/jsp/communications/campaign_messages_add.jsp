@@ -2,9 +2,10 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.utils.StringUtils" %>
 <jsp:useBean id="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<script type="text/javascript" src="/javascript/stringbuilder.js"></script>
-<script type="text/javascript" src="/javascript/richedit.js"></script>
-<script type="text/javascript" src="/javascript/coolbuttons.js"></script>
+<script type="text/javascript" src="javascript/stringbuilder.js"></script>
+<script type="text/javascript" src="javascript/getxhtml.js"></script>
+<script type="text/javascript" src="javascript/richedit.js"></script>
+<script type="text/javascript" src="javascript/coolbuttons.js"></script>
 <script>
   function save() {
 	<dhv:browser id="ie" minVersion="5.0" os="win" include="true">
@@ -23,13 +24,13 @@
   }  
 </style>
 <body onLoad="javascript:document.forms[0].name.focus();">
-<form name="addMessage" method="post" action="/CampaignManagerMessage.do?command=Insert&auto-populate=true">
+<form name="addMessage" method="post" action="CampaignManagerMessage.do?command=Insert&auto-populate=true">
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="/CampaignManagerMessage.do?command=View">Message List</a> >
+<a href="CampaignManagerMessage.do?command=View">Message List</a> >
 Add Message
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Save Message" onclick="javascript:save();">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
@@ -116,7 +117,7 @@ Add Message
 </table>
 <br>
 <input type="submit" value="Save Message" onclick="javascript:save();">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
 <input type="reset" value="Reset">
 </form>
 </body>

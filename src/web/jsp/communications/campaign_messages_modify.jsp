@@ -2,9 +2,10 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.utils.StringUtils" %>
 <jsp:useBean id="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<script type="text/javascript" src="/javascript/stringbuilder.js"></script>
-<script type="text/javascript" src="/javascript/richedit.js"></script>
-<script type="text/javascript" src="/javascript/coolbuttons.js"></script>
+<script type="text/javascript" src="javascript/stringbuilder.js"></script>
+<script type="text/javascript" src="javascript/getxhtml.js"></script>
+<script type="text/javascript" src="javascript/richedit.js"></script>
+<script type="text/javascript" src="javascript/coolbuttons.js"></script>
 <script>
   function save() {
 	<dhv:browser id="ie" minVersion="5.0" os="win" include="true">
@@ -39,10 +40,10 @@ Modify Message
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
 <%}%>
 <input type="reset" value="Reset">
 <br>
@@ -134,10 +135,10 @@ Modify Message
 <input type="submit" value="Update Message" name="Save" onclick="javascript:save();">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=View'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
 <%}%>
 <input type="reset" value="Reset">
 </form>
