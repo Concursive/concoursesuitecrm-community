@@ -6,7 +6,6 @@
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
 %>
 <html>
-
 <head>
 <title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
@@ -24,6 +23,5 @@
 </table>
 <!-- (C) 2001-2002 Dark Horse Ventures -->
 </body>
-
 </html>
 

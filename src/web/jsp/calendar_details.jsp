@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.lang.reflect.*" %>
-<jsp:useBean id="CompanyCalendar" class="org.aspcfs.utils.CalendarView" scope="request"/>
+<%@ page import="java.util.*,java.lang.reflect.*, org.aspcfs.modules.mycfs.beans.CalendarBean, org.aspcfs.modules.mycfs.base.*" %>
+<jsp:useBean id="CompanyCalendar" class="org.aspcfs.utils.web.CalendarView" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>

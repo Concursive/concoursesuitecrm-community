@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,org.aspcfs.controller.SystemStatus.*,com.darkhorsventures.database.ConnectionElement,org.aspcfs.utils.*" %>
+<%@ page import="java.util.*,org.aspcfs.controller.SystemStatus,com.darkhorseventures.database.ConnectionElement,org.aspcfs.utils.*" %>
 <%!
   public boolean isManagerOf(javax.servlet.jsp.PageContext context, int managerId, int userId) {
     Hashtable globalStatus = (Hashtable)context.getServletConfig().getServletContext().getAttribute("SystemStatus");
