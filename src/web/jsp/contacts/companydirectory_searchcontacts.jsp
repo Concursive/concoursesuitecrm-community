@@ -75,5 +75,6 @@ Search Contacts<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts'">
 <input type="reset" value="Reset">
 <input type="hidden" name="doSearch" value="true">
+<input type="hidden" name="source" value="searchForm">
 </form>
 </body>
