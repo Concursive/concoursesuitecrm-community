@@ -48,11 +48,6 @@ public final class ProcessTransaction extends CFSModule {
       AuthenticationItem auth = new AuthenticationItem();
       db = auth.getConnection(context, false);
       //Insert the record
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProcessTransaction-> " + thisRecord.getTransactionDate());
-        System.out.println("ProcessTransaction-> " + thisRecord.getTransactionTime());
-        System.out.println("ProcessTransaction-> " + thisRecord.getPerformed());
-      }
       recordInserted = thisRecord.insert(db);
       //The object might have specified some validation errors
       if (thisRecord.hasErrors()) {

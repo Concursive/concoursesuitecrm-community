@@ -473,10 +473,7 @@ public class TransactionRecord extends GenericBean {
    *@param  tmp  The new performed value
    */
   public void setPerformed(String tmp) {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("TransactionRecord-> Setting: " + tmp);
-    }
-    this.performed = DateUtils.parseTimestampString(tmp, "yyyy-MM-dd hh-mm-ss aa");
+    this.performed = DateUtils.parseTimestampString(tmp, "yyyy-MM-dd hh:mm:ss a");
   }
 
 
@@ -548,9 +545,6 @@ public class TransactionRecord extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("TransactionRecord-> Beginning insert");
-    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO billing_transaction " +
@@ -599,13 +593,7 @@ public class TransactionRecord extends GenericBean {
     pst.setString(++i, getTransactionId());
     pst.execute();
     pst.close();
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("TransactionRecord-> Setting ID");
-    }
     id = DatabaseUtils.getCurrVal(db, "billing_transaction_id_seq");
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("TransactionRecord-> TransactionRecord inserted successfully");
-    }
     return true;
   }
 
