@@ -79,5 +79,28 @@
       <property>modifiedBy</property>
       <property>enabled</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.Opportunity" id="opportunity">
+      <property>id</property>
+      <property lookup="user">owner</property>
+      <property>description</property>
+      <property lookup="account">acctlink</property>
+      <property lookup="contact">contactlink</property>
+      <property>closedate</property>
+      <property>closeprob</property>
+      <property>terms</property>
+      <property>units</property>
+      <property>lowvalue</property>
+      <property>guessvalue</property>
+      <property>highvalue</property>
+      <property lookup="">stage</property>
+      <property>stagedate</property>
+      <property>commission</property>
+      <property>type</property>
+      <property>alertdate</property>
+      <property lookup="user">enteredby</property>
+      <property>closed</property>
+      <property>alert</property>
+      <property>enabled</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

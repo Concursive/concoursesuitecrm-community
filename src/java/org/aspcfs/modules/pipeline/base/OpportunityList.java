@@ -27,6 +27,12 @@ public class OpportunityList extends Vector {
   public static final int TRUE = 1;
   public static final int FALSE = 0;
   private int includeEnabled = 1;
+  
+  public static final String tableName = "opportunity";
+  public static final String uniqueField = "opp_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;

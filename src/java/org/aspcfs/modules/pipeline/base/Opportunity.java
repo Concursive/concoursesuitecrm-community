@@ -85,8 +85,50 @@ public class Opportunity extends GenericBean {
   public Opportunity(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
+  
+  public Opportunity(Connection db, int oppId) throws SQLException {
 
+    Statement st = null;
+    ResultSet rs = null;
 
+    StringBuffer sql = new StringBuffer();
+
+    sql.append(
+        "SELECT x.*, y.description as stagename, org.name as acct_name, org.enabled as accountenabled, " +
+        "ct.namelast as last_name, ct.namefirst as first_name, " +
+        "ct.company as ctcompany," +
+        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
+        "FROM opportunity x " +
+        "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
+        "LEFT JOIN contact ct_owner ON (x.owner = ct_owner.user_id) " +
+        "LEFT JOIN contact ct_eb ON (x.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (x.modifiedby = ct_mb.user_id) " +
+        "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
+        "lookup_stage y " +
+        "WHERE y.code = x.stage ");
+
+    if (oppId > -1) {
+      sql.append("AND opp_id = " + oppId + " ");
+    } else {
+      throw new SQLException("Valid opportunity ID not specified.");
+    }
+
+    st = db.createStatement();
+    rs = st.executeQuery(sql.toString());
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      rs.close();
+      st.close();
+      throw new SQLException("Opportunity record not found.");
+    }
+    rs.close();
+    st.close();
+
+  }
+  
   /**
    *  Constructor for the Employee object, populates all attributes by
    *  performing a SQL query based on the employeeId parameter
