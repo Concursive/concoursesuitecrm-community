@@ -1,8 +1,9 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="ModuleList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
+<jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript">
   function checkForm(form) {
@@ -12,7 +13,7 @@
     
     if (confirm("Are you sure you want to delete this folder " +
               "and any associated data that may have been entered?")) {
-      form.action = "/AdminFieldsFolder.do?command=DeleteFolder&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&auto-populate=true";
+      form.action = "/AdminFieldsFolder.do?command=DeleteFolder&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true";
       return true;
     } else {
       return false;
@@ -31,19 +32,25 @@
     }
   }
 </script>
-<form name="details" action="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>" method="post" onSubmit="return checkForm(this);">
+<form name="details" action="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>" method="post" onSubmit="return checkForm(this);">
 <a href="/Admin.do">Setup</a> >
-<a href="/Admin.do?command=Config&modId=<%= ModuleList.getSelectedKey() %>">System Configuration</a> >
-<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModuleList.getSelectedKey() %>">Custom Folders</a> > 
+<a href="/Admin.do?command=Config&modId=<%= ModId %>">System Configuration</a> >
+<a href="/Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
 Folder<br>
+<hr color="#BFBFBB" noshade>
+
+<% if (request.getAttribute("actionError") != null) { %>
 <%= showAttribute(request, "actionError") %><br>
+<%}%>
+
 <%
   CategoryList.setJsEvent("onChange=\"javascript:this.form.dosubmit.value='false';document.forms[0].submit();\"");
 %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong>Module: <%= toHtml(ModuleList.getSelectedValue(ModuleList.getSelectedKey())) %></strong>
+      <strong>Module: <%=PermissionCategory.getCategory()%></strong>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -54,7 +61,7 @@ Folder<br>
   <tr>
     <td class="containerBack">
       <dhv:permission name="admin-sysconfig-folders-add">
-        <a href="/AdminFieldsGroup.do?command=AddGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
+        <a href="/AdminFieldsGroup.do?command=AddGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
         &nbsp;<br>
       </dhv:permission>
 <%
@@ -72,18 +79,18 @@ Folder<br>
     <tr>
       <td>
         <dhv:permission name="admin-sysconfig-folders-edit">
-          <a href="/AdminFieldsGroup.do?command=ModifyGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Edit</a> |
+          <a href="/AdminFieldsGroup.do?command=ModifyGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Edit</a> |
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-delete">
-          <a href="javascript:confirmDeleteGroup('/AdminFieldsGroup.do?command=DeleteGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisGroup.getId() %>&auto-populate=true');">Del</a> |
+          <a href="javascript:confirmDeleteGroup('/AdminFieldsGroup.do?command=DeleteGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&groupId=<%= thisGroup.getId() %>&auto-populate=true');">Del</a> |
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-add">
-          <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|U">Up</a> |
-          <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|D">Down</a> 
+          <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|U">Up</a> |
+          <a href="/AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|D">Down</a> 
           <dhv:permission name="admin-sysconfig-folders-add">|</dhv:permission>
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-add">
-          <a href="/AdminFields.do?command=AddField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Add a Custom Field</a>
+          <a href="/AdminFields.do?command=AddField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Add a Custom Field</a>
         </dhv:permission>
       </td>
     </tr>
@@ -116,15 +123,15 @@ Folder<br>
       <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete,admin-sysconfig-folders-add">
       <td align="left" nowrap>
         <dhv:permission name="admin-sysconfig-folders-edit">
-          <a href="/AdminFields.do?command=ModifyField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= thisField.getGroupId() %>">Edit</a>
+          <a href="/AdminFields.do?command=ModifyField&id=<%= thisField.getId() %>&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= thisField.getGroupId() %>">Edit</a>
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete" all="true">|</dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-delete">
-          <a href="javascript:confirmDeleteField('/AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');">Del</a>
+          <a href="javascript:confirmDeleteField('/AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModId %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');">Del</a>
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete">|</dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-add">
-          <a href="/AdminFields.do?command=MoveField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|U">Up </a>| <a href="/AdminFields.do?command=MoveField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|D">Down</a>
+          <a href="/AdminFields.do?command=MoveField&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|U">Up </a>| <a href="/AdminFields.do?command=MoveField&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|D">Down</a>
         </dhv:permission>
       </td>
       </dhv:permission>
@@ -163,7 +170,7 @@ Folder<br>
   &nbsp;<br>
 <%}%>
       <input type="hidden" name="dosubmit" value="true">
-      <input type="hidden" name="moduleId" value="<%= ModuleList.getSelectedKey() %>">
+      <input type="hidden" name="moduleId" value="<%= ModId %>">
       <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
       <dhv:permission name="admin-sysconfig-folders-delete">
         <input type='submit' value='Delete this folder and all fields' onClick="javascript:this.form.dosubmit.value='true';">

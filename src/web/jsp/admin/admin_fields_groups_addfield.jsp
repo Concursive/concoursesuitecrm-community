@@ -1,18 +1,20 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="ModuleList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="CustomField" class="com.darkhorseventures.cfsbase.CustomField" scope="request"/>
+<jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <body<% if (CustomField.getName() == null) { %> onLoad="document.forms[0].name.focus();"<%}%>>
-<form name="details" action="/AdminFields.do?command=AddField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" method="post">
+<form name="details" action="/AdminFields.do?command=AddField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" method="post">
 <a href="/Admin.do">Setup</a> >
 <a href="/Admin.do?command=Config">System Configuration</a> >
-<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModuleList.getSelectedKey() %>">Custom Folders</a> > 
-<a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>">Folder</a> >
+<a href="/Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
+<a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
 New Field<br>
 &nbsp;<br>
 <%
@@ -21,7 +23,7 @@ New Field<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong>Module: <%= toHtml(ModuleList.getSelectedValue(ModuleList.getSelectedKey())) %></strong>
+      <strong>Module: <%=PermissionCategory.getCategory()%></strong>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -31,7 +33,7 @@ New Field<br>
   </tr>
   <tr>
     <td class="containerBack">
-      <a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>">Back to Folder</a><br>
+      <a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Back to Folder</a><br>
       &nbsp;<br>
       
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -116,8 +118,8 @@ New Field<br>
       </table>
       &nbsp;<br>
       <input type="hidden" name="groupId" value="<%= (String)request.getParameter("grpId") %>">
-      <input type="submit" value="Save" onClick="javascript:this.form.action='/AdminFields.do?command=InsertField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true'">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>'">
+      <input type="submit" value="Save" onClick="javascript:this.form.action='/AdminFields.do?command=InsertField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true'">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
     </td>
   </tr>
 </table>

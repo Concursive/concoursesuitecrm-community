@@ -51,7 +51,6 @@ public final class AdminFields extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
       this.addCategoryList(context, db);
     } catch (Exception e) {
       errorMessage = e;
@@ -79,10 +78,11 @@ public final class AdminFields extends CFSModule {
 
     Exception errorMessage = null;
     Connection db = null;
+    PermissionCategory permCat = null;
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
+      permCat = new PermissionCategory(db, Integer.parseInt(context.getRequest().getParameter("modId")));
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
@@ -91,6 +91,12 @@ public final class AdminFields extends CFSModule {
     }
 
     addModuleBean(context, "Configuration", "Configuration");
+    
+    if (context.getRequest().getParameter("modId") != null) {
+      context.getRequest().setAttribute("ModId", context.getRequest().getParameter("modId"));
+      context.getRequest().setAttribute("PermissionCategory", permCat);
+    }
+    
     return ("AddFolderOK");
   }
 
@@ -150,7 +156,6 @@ public final class AdminFields extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
       this.addCategoryList(context, db);
       this.addCategory(context, db);
     } catch (Exception e) {
@@ -296,7 +301,6 @@ public final class AdminFields extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
       this.addCategoryList(context, db);
       this.addCategory(context, db);
 
@@ -329,7 +333,6 @@ public final class AdminFields extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
       this.addCategoryList(context, db);
       this.addCategory(context, db);
     } catch (Exception e) {
@@ -396,7 +399,7 @@ public final class AdminFields extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
+      //this.addModuleList(context, db);
       this.addCategoryList(context, db);
       this.addCategory(context, db);
       this.addGroup(context, db);
@@ -506,7 +509,6 @@ public final class AdminFields extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
       this.addCategoryList(context, db);
       this.addCategory(context, db);
     } catch (Exception e) {
@@ -611,7 +613,6 @@ public final class AdminFields extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
       this.addCategoryList(context, db);
       this.addCategory(context, db);
       this.addGroup(context, db);
@@ -750,13 +751,23 @@ public final class AdminFields extends CFSModule {
    *@exception  SQLException  Description of the Exception
    */
   private void addCategoryList(ActionContext context, Connection db) throws SQLException {
-    LookupList moduleList = (LookupList) context.getRequest().getAttribute("ModuleList");
+    int moduleId = -1;
+    PermissionCategory permCat = null;
+    
+    if (context.getRequest().getParameter("modId") != null) {
+      moduleId = Integer.parseInt(context.getRequest().getParameter("modId"));
+    }
+    
     CustomFieldCategoryList categoryList = new CustomFieldCategoryList();
-    if (moduleList.size() > 0) {
-      categoryList.setLinkModuleId(moduleList.getSelectedKey());
+    if (context.getRequest().getParameter("modId") != null) {
+      //to get the module name on the jsp
+      permCat = new PermissionCategory(db, Integer.parseInt(context.getRequest().getParameter("modId")));
+      categoryList.setLinkModuleId(moduleId);
       categoryList.setBuildResources(false);
       categoryList.buildList(db);
       context.getRequest().setAttribute("CategoryList", categoryList);
+      context.getRequest().setAttribute("ModId", context.getRequest().getParameter("modId"));
+      context.getRequest().setAttribute("PermissionCategory", permCat);
     }
   }
 
@@ -769,6 +780,7 @@ public final class AdminFields extends CFSModule {
    *@exception  SQLException  Description of the Exception
    */
   private void addCategory(ActionContext context, Connection db) throws SQLException {
+    int moduleId = -1;
     if ((context.getRequest().getParameter("auto-populate") == null) ||
         (context.getFormBean() == null) ||
         (!(context.getFormBean() instanceof CustomFieldCategory))) {
@@ -780,12 +792,26 @@ public final class AdminFields extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("AdminFields-> Adding Category: " + categoryId);
       }
+      
+      if (context.getRequest().getParameter("modId") != null) {
+        moduleId = Integer.parseInt(context.getRequest().getParameter("modId"));
+        
+        //Have to make these the "correct" module link ids since the permission table and 
+        //old system_modules table did not match up with ids
+        if (moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS) {
+          moduleId = 1;
+        } else if (moduleId == PermissionCategory.PERMISSION_CAT_CONTACTS) {
+          moduleId = 2;
+        }
+      }
+      
       if (categoryId != null) {
         context.getRequest().setAttribute("catId", categoryId);
         LookupList moduleList = (LookupList) context.getRequest().getAttribute("ModuleList");
         CustomFieldCategoryList categoryList = (CustomFieldCategoryList) context.getRequest().getAttribute("CategoryList");
         CustomFieldCategory thisCategory = categoryList.getCategory(Integer.parseInt(categoryId));
-        thisCategory.setLinkModuleId(moduleList.getSelectedKey());
+        //thisCategory.setLinkModuleId(moduleList.getSelectedKey());
+        thisCategory.setLinkModuleId(moduleId);
         thisCategory.setBuildResources(true);
         thisCategory.buildResources(db);
         context.getRequest().setAttribute("Category", thisCategory);
@@ -882,7 +908,7 @@ public final class AdminFields extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
+      //this.addModuleList(context, db);
       this.addCategoryList(context, db);
       this.addCategory(context, db);
 
@@ -1013,7 +1039,7 @@ public final class AdminFields extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      this.addModuleList(context, db);
+      //this.addModuleList(context, db);
       this.addCategoryList(context, db);
       this.addCategory(context, db);
 

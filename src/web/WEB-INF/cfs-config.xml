@@ -704,7 +704,7 @@
     <forward name="ConfigurationOK" resource="/admin_configuration.jsp" layout="nav"/>
     <forward name="EditListsOK" resource="/admin_editlists.jsp" layout="nav"/>
     <forward name="ModifyListOK" resource="/admin_modifylist.jsp" layout="nav"/>
-    <forward name="UpdateListOK" resource="/admin_editlists.jsp" layout="nav"/>
+    <forward name="ConfigDetailsOK" resource="/admin_configdetails.jsp" layout="nav"/>
   </action>
   
   <action name="AdminFieldsFolder" class="com.darkhorseventures.cfsmodule.AdminFields">

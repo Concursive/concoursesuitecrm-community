@@ -1,9 +1,10 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.LookupList" %>
-<jsp:useBean id="ModuleList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="CustomField" class="com.darkhorseventures.cfsbase.CustomField" scope="request"/>
+<jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
@@ -20,20 +21,24 @@
   }
 </script>
 <body<% if (CustomField.getName() == null) { %> onLoad="document.forms[0].name.focus();"<%}%>>
-<form name="modifyList" action="/AdminFields.do?command=ModifyField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" onSubmit="return doCheck();" method="post">
+<form name="modifyList" action="/AdminFields.do?command=ModifyField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" onSubmit="return doCheck();" method="post">
 <a href="/Admin.do">Setup</a> >
 <a href="/Admin.do?command=Config">System Configuration</a> >
-<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModuleList.getSelectedKey() %>">Custom Folders</a> > 
-<a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>">Folder</a> >
+<a href="/Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
+<a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
 Existing Field<br>
-&nbsp;<br>
+<hr color="#BFBFBB" noshade>
+<% if (request.getAttribute("actionError") != null) { %>
+<%= showAttribute(request, "actionError") %><br>
+<%}%>
 <%
   CategoryList.setJsEvent("ONCHANGE=\"javascript:this.form.dosubmit.value='false';document.forms[0].submit();\"");
 %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong>Module: <%= toHtml(ModuleList.getSelectedValue(ModuleList.getSelectedKey())) %></strong>
+      <strong>Module: <%=PermissionCategory.getCategory()%></strong>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -43,7 +48,7 @@ Existing Field<br>
   </tr>
   <tr>
     <td class="containerBack">
-      <a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>">Back to Folder</a><br>
+      <a href="/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Back to Folder</a><br>
       &nbsp;<br>
       
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -166,8 +171,8 @@ Existing Field<br>
       <input type="hidden" name="id" value="<%= (String)request.getParameter("id") %>">
       <input type="hidden" name="groupId" value="<%= (String)request.getParameter("grpId") %>">
       <input type="hidden" name="dosubmit" value="true">
-      <input type="submit" value="Update" onClick="javascript:this.form.action='/AdminFields.do?command=UpdateField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true';this.form.dosubmit.value='true';">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>';this.form.dosubmit.value='false';">
+      <input type="submit" value="Update" onClick="javascript:this.form.action='/AdminFields.do?command=UpdateField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true';this.form.dosubmit.value='true';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>';this.form.dosubmit.value='false';">
     </td>
   </tr>
 </table>

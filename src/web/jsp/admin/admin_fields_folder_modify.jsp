@@ -1,19 +1,26 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="ModuleList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
+<jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="document.forms[0].name.focus();">
-<form name="details" action="/AdminFieldsFolder.do?command=UpdateFolder&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&auto-populate=true" method="post">
+<form name="details" action="/AdminFieldsFolder.do?command=UpdateFolder&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true" method="post">
 <a href="/Admin.do">Setup</a> >
 <a href="/Admin.do?command=Config">System Configuration</a> >
-<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModuleList.getSelectedKey() %>">Custom Folders</a> > 
+<a href="/Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
+<a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
 Existing Folder<br>
-<%= showAttribute(request, "actionError") %><br>
+<hr color="#BFBFBB" noshade>
+
+<% if (request.getAttribute("actionError") != null) { %>
+  <%= showAttribute(request, "actionError") %><br>
+<%}%>
+
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong>Module: <%= toHtml(ModuleList.getSelectedValue(ModuleList.getSelectedKey())) %></strong>
+      <strong>Module: <%=PermissionCategory.getCategory()%></strong>
     </td>
   </tr>
   <tr>
@@ -60,10 +67,10 @@ Existing Folder<br>
         </tr>
       </table>
       &nbsp;<br>
-      <input type="hidden" name="moduleId" value="<%= ModuleList.getSelectedKey() %>">
+      <input type="hidden" name="moduleId" value="<%= ModId %>">
       <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
       <input type="submit" value="Update">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModuleList.getSelectedKey() %>'">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>'">
     </td>
   </tr>
 </table>

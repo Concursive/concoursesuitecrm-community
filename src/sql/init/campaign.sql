@@ -9,6 +9,7 @@ INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES 
 INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('typeId', 'Contact Type', true, 0);
 INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('contactId', 'Contact ID', false, 0);
 INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('title', 'Contact Title', false, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('accountTypeId', 'Account Type', true, 0);
 
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '=', 'is');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (0, 'string', '!=', 'is not');

@@ -1,5 +1,7 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="SelectedList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
+<jsp:useBean id="SubTitle" class="java.lang.String" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="/javascript/editListForm.js"></script>
 <script language="JavaScript" type="text/javascript">
   function doCheck() {
@@ -15,13 +17,14 @@
 <form name="modifyList" method="post" action="/Admin.do?command=UpdateList" onSubmit="return doCheck();">
 <a href="/Admin.do">Setup</a> >
 <a href="/Admin.do?command=Config">System Configuration</a> >
-<a href="/Admin.do?command=EditLists">Lookup Lists</a> > 
+<a href="/Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>">Configuration Options</a> >
+<a href="/Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 
 Edit List<br>
-&nbsp;<br>
+<hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=3>
-      <strong>Modify List - <%=request.getAttribute("ListLabel")%></strong>
+      <strong><%=SubTitle%></strong>
     </td>
   </tr>
   <tr>
@@ -73,8 +76,9 @@ Edit List<br>
   <tr>
   <td colspan=3 valign=center>
   <input type=hidden name="selectNames" value="">
+  <input type=hidden name="moduleId" value="<%=moduleId%>">
   <input type="hidden" name="dosubmit" value="true">
-  <input type=hidden name="listid" value="<%=request.getParameter("listId")%>">
+  <input type=hidden name="tableName" value="<%=SelectedList.getTableName()%>">
   <input type="submit" value="Save Changes" onClick="javascript:this.form.dosubmit.value='true';">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/Admin.do?command=EditLists'">
   </td>

@@ -13,3 +13,20 @@ update search_fields set searchable='f' where field='contactId';
 alter table saved_criteriaelement add column source integer;
 alter table saved_criteriaelement alter column source set default -1;
 
+//10-31-02
+alter table permission_category add column folders boolean;
+alter table permission_category alter column folders set default false;
+update table permission_category set folders='f';
+
+alter table permission_category add column lookups boolean;
+alter table permission_category alter column lookups set default false;
+update table permission_category set lookups='f';
+
+//do the database switch-around right before this to make accounts id 1 and contacts id 2
+
+update permission_category set folders='t' where category_id in (1,2);
+update permission_category set lookups='t' where category_id=4;
+update permission_category set lookups='t' where category_id=1;
+update permission_category set lookups='t' where category_id=2;
+update permission_category set lookups='t' where category_id=8;
+

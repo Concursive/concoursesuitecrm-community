@@ -547,7 +547,7 @@ public class LookupList extends HtmlSelect {
       pagedListInfo.setDefaultSort("description ", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY description ");
+      sqlOrder.append("ORDER BY level,description ");
     }  
     
     if (pagedListInfo != null) {
