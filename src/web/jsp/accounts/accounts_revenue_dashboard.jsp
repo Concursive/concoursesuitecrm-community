@@ -17,10 +17,10 @@ Revenue Dashboard<br>
       <table width="275" cellpadding="3" cellspacing="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
           <td width=255 valign=center colspan="1" align="center">
-		<% if (((String)request.getSession().getAttribute("override")) == null) {%>
+		<% if (((String)request.getSession().getAttribute("revenueoverride")) == null) {%>
       My Dashboard
 		<%} else {%>
-      Dashboard: <%=toHtml((String)request.getSession().getAttribute("othername"))%>
+      Dashboard: <%=toHtml((String)request.getSession().getAttribute("revenueothername"))%>
 		<%}%>
 	</td>
 	  <td width="20" valign="center" align="center">
@@ -28,8 +28,8 @@ Revenue Dashboard<br>
 <%
     if (request.getParameter("year") != null) {
 			YearList.setDefaultValue(request.getParameter("year"));
-		} else if (((String)request.getSession().getAttribute("year")) != null) {
-			YearList.setDefaultValue(((String)request.getSession().getAttribute("year")));
+		} else if (((String)request.getSession().getAttribute("revenueyear")) != null) {
+			YearList.setDefaultValue(((String)request.getSession().getAttribute("revenueyear")));
 		}
 %>
 	    <%=YearList.getHtml()%>
@@ -45,8 +45,8 @@ Revenue Dashboard<br>
 	    Type&nbsp;
 	    <% if (request.getParameter("type") != null) { %>
         <%= RevenueTypeList.getHtmlSelect("type", Integer.parseInt(request.getParameter("type"))) %>&nbsp;
-	    <%} else if ((String)request.getSession().getAttribute("type") != null) {%>
-        <%= RevenueTypeList.getHtmlSelect("type", Integer.parseInt((String)request.getSession().getAttribute("type"))) %>&nbsp;
+	    <%} else if ((String)request.getSession().getAttribute("revenuetype") != null) {%>
+        <%= RevenueTypeList.getHtmlSelect("type", Integer.parseInt((String)request.getSession().getAttribute("revenuetype"))) %>&nbsp;
 	    <%} else {%>
         <%= RevenueTypeList.getHtmlSelect("type", 0) %>&nbsp;
 	    <%}%>
@@ -57,9 +57,9 @@ Revenue Dashboard<br>
       <table width="285" border="0" cellspacing="0" cellpadding="3">
         <tr>
           <td align="center" width="100%">
-	<% if (!(((String)request.getSession().getAttribute("override")) == null)) {%>
-      <input type="hidden" name="oid" value="<%=((String)request.getSession().getAttribute("override"))%>">
-      <a href="RevenueManager.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("previousId"))%>">Up One Level</a> |
+	<% if (!(((String)request.getSession().getAttribute("revenueoverride")) == null)) {%>
+      <input type="hidden" name="oid" value="<%=((String)request.getSession().getAttribute("revenueoverride"))%>">
+      <a href="RevenueManager.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("revenuepreviousId"))%>">Up One Level</a> |
       <a href="RevenueManager.do?command=Dashboard&reset=1">Back to My Dashboard</a>
 	<%} else {%>
       &nbsp;
