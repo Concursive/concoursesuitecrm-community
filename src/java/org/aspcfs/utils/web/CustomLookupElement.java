@@ -139,6 +139,7 @@ public class CustomLookupElement extends HashMap {
       seqName = tableName;
     }
     
+    //TODO: Update this to accomodate the length of uniqueField
     if (this.getUniqueField() != null) {
             id = DatabaseUtils.getCurrVal(db, seqName + "_" + getUniqueField() + "_seq");
     }

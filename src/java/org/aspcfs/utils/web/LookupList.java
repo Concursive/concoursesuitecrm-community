@@ -16,8 +16,7 @@ import com.darkhorseventures.cfsbase.Constants;
  *@version    $Id$
  */
 public class LookupList extends HtmlSelect {
-        //was "code"
-  public static String uniqueField = null;
+  public static String uniqueField = "code";
   public String tableName = null;
 
   protected String jsEvent = null;
