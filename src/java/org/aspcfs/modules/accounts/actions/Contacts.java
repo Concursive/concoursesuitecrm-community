@@ -167,6 +167,7 @@ public final class Contacts extends CFSModule {
         }
         return ("DetailsOK");
       } else {
+        context.getRequest().setAttribute("TypeList", newContact.getTypeList());
         return (executeCommandAdd(context));
       }
     } else {
@@ -427,6 +428,7 @@ public final class Contacts extends CFSModule {
     if (errorMessage == null) {
       if (resultCount == -1) {
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
+        context.getRequest().setAttribute("TypeList", newContact.getTypeList());
         return ("ModifyOK");
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
