@@ -21,13 +21,13 @@ public class CustomLookupList extends LookupList {
     while (i.hasNext()) {
       sql.append((String)i.next());
       if (i.hasNext()) {
-        sql.append(", ");
+        sql.append(",");
       }
+      sql.append(" ");
     }
     sql.append("FROM " + tableName);
     PreparedStatement pst = db.prepareStatement(sql.toString());
     ResultSet rs = pst.executeQuery();
-    //ResultSetMetaData meta = rs.getMetaData();
     while (rs.next()) {
       CustomLookupElement thisElement = new CustomLookupElement(rs);
       this.add(thisElement);

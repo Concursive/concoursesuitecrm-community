@@ -8,9 +8,9 @@
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunities</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportTickets</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCalls</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportFolders</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunityReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportAccountReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRevenue</module>
@@ -206,20 +206,57 @@
       <property lookup="user">modifiedBy</property>
       <property>alertDate</property>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectActivity" table="lookup_project_activity">
-      <property alias="guid">code</property>
-      <property alias="description">description</property>
-      <property alias="default_item">defaultItem</property>
-      <property alias="level">level</property>
-      <property alias="enabled">enabled</property>
-      <property alias="group_id">groupId</property>
-      <property alias="template_id">templateId</property>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectActivity" 
+         table="lookup_project_activity" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+      <property field="template_id"/>
     </map>
-    <map class="" id="lookupProjectIssues" table="lookup_project_issues"/>
-    <map class="" id="lookupProjectLoe" table="lookup_project_loe"/>
-    <map class="" id="lookupProjectPriority" table="lookup_project_priority"/>
-    <map class="" id="lookupProjectStatus" table="lookup_project_status"/>
-    <map class="" id="lookupProjectTemplates" table="lookup_project_templates"/>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectIssues" 
+         table="lookup_project_issues" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+    </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectLoe" 
+         table="lookup_project_loe" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="base_value"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+    </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectPriority" 
+         table="lookup_project_priority" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+      <property field="graphic"/>
+      <property field="type"/>
+    </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectStatus" 
+         table="lookup_project_status" uniqueField="code">
+      <property field="code" alias="guid"/>
+      <property field="description"/>
+      <property field="default_item"/>
+      <property field="level"/>
+      <property field="enabled"/>
+      <property field="group_id"/>
+      <property field="graphic"/>
+      <property field="type"/>
+    </map>
     <map class="com.zeroio.iteam.base.Project" id="project">
       <property alias="guid">id</property>
       <property lookup="lookupDepartment">departmentId</property>
@@ -259,7 +296,6 @@
       <property lookup="user">enteredBy</property>
       <property>modified</property>
       <property lookup="user">modifiedBy</property>
-      
     </map>
     <map class="com.zeroio.iteam.base.Assignment" id="assignment">
       <property alias="guid">id</property>

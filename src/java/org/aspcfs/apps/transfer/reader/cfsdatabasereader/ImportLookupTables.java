@@ -33,7 +33,7 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
     while (mapList.hasNext() && processOK) {
       writer.setAutoCommit(false);
       String mapClass = (String)mapList.next();
-      if (mapClass.indexOf("LookupList") > 0) {
+      if (mapClass.indexOf(".LookupList") > 0) {
         PropertyMap thisMap = (PropertyMap)mappings.get(mapClass);
         logger.info("ImportLookupTables-> Processing: " + thisMap.getTable());
         processOK = saveLookupList(thisMap.getId(), thisMap.getTable());

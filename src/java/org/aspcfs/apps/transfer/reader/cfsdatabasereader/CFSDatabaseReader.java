@@ -198,6 +198,7 @@ public class CFSDatabaseReader implements DataReader {
         PropertyMap mapProperties = new PropertyMap();
         mapProperties.setId((String) map.getAttribute("id"));
         mapProperties.setTable((String) map.getAttribute("table"));
+        mapProperties.setUniqueField((String) map.getAttribute("uniqueField"));
         
         //Get any property nodes
         NodeList nl = map.getChildNodes();
@@ -205,21 +206,29 @@ public class CFSDatabaseReader implements DataReader {
           Node n = nl.item(i);
           if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals("property")) {
             String nodeText = XMLUtils.getNodeText((Element) n);
+            Property thisProperty = null;
             if (nodeText != null) {
-              Property thisProperty = new Property(nodeText);
-
-              String lookupValue = ((Element) n).getAttribute("lookup");
-              if (lookupValue != null && !"".equals(lookupValue)) {
-                thisProperty.setLookupValue(lookupValue);
-              }
-
-              String alias = ((Element) n).getAttribute("alias");
-              if (alias != null && !"".equals(alias)) {
-                thisProperty.setAlias(alias);
-              }
-
-              mapProperties.add(thisProperty);
+              thisProperty = new Property(nodeText);
+            } else {
+              thisProperty = new Property();
             }
+
+            String lookupValue = ((Element) n).getAttribute("lookup");
+            if (lookupValue != null && !"".equals(lookupValue)) {
+              thisProperty.setLookupValue(lookupValue);
+            }
+
+            String alias = ((Element) n).getAttribute("alias");
+            if (alias != null && !"".equals(alias)) {
+              thisProperty.setAlias(alias);
+            }
+            
+            String field = ((Element) n).getAttribute("field");
+            if (field != null && !"".equals(field)) {
+              thisProperty.setField(field);
+            }
+
+            mapProperties.add(thisProperty);
           }
         }
         if (mappings.containsKey(map.getAttribute("class"))) {
@@ -275,7 +284,8 @@ public class CFSDatabaseReader implements DataReader {
         }
       }
     } catch (Exception ex) {
-      logger.info(ex.toString());
+      ex.printStackTrace(System.out);
+      //logger.info(ex.toString());
       //logger.info(writer.getLastResponse());
     } finally {
       sqlDriver.free(db);

@@ -455,6 +455,10 @@ public class TransactionItem {
               insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")), ObjectUtils.getParam(object, "tableName"));
             }
             if (insertedObject == null) {
+              //Might be a customLookupElement
+              insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")), ObjectUtils.getParam(object, "tableName"), ObjectUtils.getParam(object, "uniqueField"));
+            }
+            if (insertedObject == null) {
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("TransactionItem-> The object was inserted, but could not be reloaded: possible invalid constructor");
               }

@@ -682,9 +682,39 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'lookupProjectActivityList', 'com.darkhorseventures.webutils.CustomLookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectIssues', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectIssuesList', 'com.darkhorseventures.webutils.CustomLookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectLoe', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectLoeList', 'com.darkhorseventures.webutils.CustomLookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectPriority', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectPriorityList', 'com.darkhorseventures.webutils.CustomLookupList');
+
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectStatus', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectStatusList', 'com.darkhorseventures.webutils.CustomLookupList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'project', 'com.zeroio.iteam.base.Project');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'projectList', 'com.zeroio.iteam.base.ProjectList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'requirement', 'com.zeroio.iteam.base.Requirement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'requirementList', 'com.zeroio.iteam.base.RequirementList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'assignment', 'com.zeroio.iteam.base.Assignment');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'assignmentList', 'com.zeroio.iteam.base.AssignmentList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'contactAddress', 'com.darkhorseventures.cfsbase.ContactAddress');
