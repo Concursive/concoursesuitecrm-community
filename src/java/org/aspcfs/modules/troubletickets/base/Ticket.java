@@ -350,6 +350,10 @@ public class Ticket extends GenericBean {
   public void setCloseIt(boolean closeIt) {
     this.closeIt = closeIt;
   }
+  
+  public void setCloseNow(String tmp) {
+    this.closeIt = ("ON").equalsIgnoreCase(tmp);
+  }
 
 
   /**
