@@ -1,6 +1,8 @@
 //Copyright 2001 Dark Horse Ventures
 package com.darkhorseventures.controller;
 
+import java.io.*;
+
 /**
  *  Represents an item in the RecentItems list
  *
@@ -8,7 +10,7 @@ package com.darkhorseventures.controller;
  *@created    December 19, 2001
  *@version    $Id$
  */
-public class RecentItem {
+public class RecentItem implements Serializable {
 
   //Properties
   private int type = -1;
