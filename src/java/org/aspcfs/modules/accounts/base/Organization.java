@@ -1361,25 +1361,24 @@ public class Organization extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public void buildTypes(Connection db) throws SQLException {
-    Statement st = null;
     ResultSet rs = null;
 
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT atl.type_id " +
         "FROM account_type_levels atl " +
-        "WHERE atl.org_id = " + orgId + " ORDER BY atl.level ");
+        "WHERE atl.org_id = ? ORDER BY atl.level ");
 
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    int i=0;
+    pst.setInt(++i, this.getId());    
+    rs = pst.executeQuery();
 
     while (rs.next()) {
-      //types.appendItem(new LookupElement(db, rs.getInt("type_id"), "lookup_account_types"));
       types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_account_types"));
     }
 
     rs.close();
-    st.close();
   }
 
 
@@ -1423,10 +1422,12 @@ public class Organization extends GenericBean {
       throw new SQLException("Organization ID not specified");
     }
     Statement st = db.createStatement();
-    st.executeUpdate(
-        "DELETE FROM account_type_levels " +
-        "WHERE org_id = " + this.getOrgId());
-    st.close();
+    String sql = "DELETE FROM account_type_levels WHERE org_id = ? ";
+    int i=0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    pst.execute();
+    pst.close();
     return true;
   }
 

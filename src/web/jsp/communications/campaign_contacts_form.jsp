@@ -45,7 +45,7 @@
       <%= toHtml(thisContact.getNameLastFirst()) %>
     </td>
     <td nowrap>
-      <%= toHtml(thisContact.getCompany()) %>
+      <%= toHtml(thisContact.getAffiliation()) %>
     </td>
   </tr>
   <%}%>

@@ -1108,11 +1108,6 @@ public final class Accounts extends CFSModule {
       LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
 
-      LookupList accountTypeList = new LookupList(db, "lookup_account_types");
-      accountTypeList.setSelectSize(4);
-      accountTypeList.setMultiple(true);
-      context.getRequest().setAttribute("AccountTypeList", accountTypeList);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {

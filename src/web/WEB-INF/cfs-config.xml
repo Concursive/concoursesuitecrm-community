@@ -218,10 +218,11 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ListOppsOK" resource="/companydirectory_listopps.jsp" layout="nav"/>
     <forward name="AddOppOK" resource="/companydirectory_addopp.jsp" layout="nav"/>
-    <forward name="OppDeleteOK" resource="/ExternalContactsOpps.do?command=ViewOpps"/>
+    <forward name="OppDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="OppModifyOK" resource="/companydirectory_modifyopp.jsp" layout="nav"/>
     <forward name="OppUpdateOK" resource="/ExternalContactsOpps.do?command=DetailsOpp"/>
     <forward name="DetailsOppOK" resource="/companydirectory_detailsopp.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <action name="ExternalContactsCalls" class="com.darkhorseventures.cfsmodule.ExternalContactsCalls">
     <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
@@ -425,10 +426,11 @@
     <forward name="DetailsOK" resource="/accounts_opportunities_details.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/Opportunities.do?command=Details"/>
     <forward name="ListOK" resource="/accounts_opportunities_list.jsp" layout="nav"/>
-    <forward name="DeleteOK" resource="/Opportunities.do?command=View"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="AddOK" resource="/accounts_opportunities_add.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/accounts_opportunities_modify.jsp" layout="nav"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <action name="AccountTickets" class="com.darkhorseventures.cfsmodule.AccountTickets">
     <bean name="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>

@@ -220,7 +220,7 @@ Campaign Details
       <%= toHtml(thisContact.getNameLastFirst()) %>
     </td>
     <td width=100% nowrap>
-      <%= toHtml(thisContact.getCompany()) %>
+      <%= toHtml(thisContact.getAffiliation()) %>
     </td>
     <td width="102" nowrap>
       <%= toHtml(thisRecipient.getSentDateString()) %>

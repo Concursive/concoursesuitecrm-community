@@ -484,6 +484,10 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
    *@return             The HtmlSelectDefaultNone value
    */
   public String getHtmlSelectDefaultNone(String selectName) {
+    return getHtmlSelectDefaultNone(selectName, -1);
+  }
+  
+  public String getHtmlSelectDefaultNone(String selectName, int defaultKey) {
     HtmlSelect orgListSelect = new HtmlSelect();
     orgListSelect.addItem(-1, "-- None --");
 
@@ -499,10 +503,10 @@ public void setAlertRangeStart(java.sql.Date alertRangeStart) {
       orgListSelect.setJsEvent(this.getHtmlJsEvent());
     }
 
-    return orgListSelect.getHtml(selectName);
-  }
-
-
+    return orgListSelect.getHtml(selectName, defaultKey);
+  }  
+  
+  
   /**
    *  Description of the Method
    *

@@ -309,7 +309,6 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
     }
   }
 
-
   /**
    *  Gets the AreaCode attribute of the PhoneNumber object
    *

@@ -1133,6 +1133,7 @@ public class Contact extends GenericBean {
    *@return    The Company value
    *@since     1.34
    */
+
   public String getCompany() {
     if (company == null || company.trim().equals("")) {
       return orgName;
@@ -1140,7 +1141,18 @@ public class Contact extends GenericBean {
       return company;
     }
   }
+  
+  public String getAffiliation() {
+    if (orgId > -1) {
+      return orgName;
+    } else {
+      return company;
+    }
+  }  
 
+  public String getCompanyOnly() {
+      return company;
+  }  
 
   /**
    *  Gets the Title attribute of the Contact object
@@ -1196,7 +1208,18 @@ public class Contact extends GenericBean {
   public String getPhoneNumber(String thisType) {
     return phoneNumberList.getPhoneNumber(thisType);
   }
-
+  
+  public void resetBaseInfo() {
+    this.nameFirst = null;
+    this.nameLast = null;
+    this.nameMiddle = null;
+    this.nameSalutation = null;
+    this.nameSuffix = null;
+    this.typeId = -1;
+    this.id = -1;
+    this.notes = null;
+    this.title = null;
+  }
 
   /**
    *  Gets the phoneNumber attribute of the Contact object
@@ -1204,11 +1227,10 @@ public class Contact extends GenericBean {
    *@param  thisType  Description of the Parameter
    *@return           The phoneNumber value
    */
-  public String getPhoneNumber(int thisType) {
-    return phoneNumberList.getPhoneNumber(thisType);
+  public String getPhoneNumber(int position) {
+    return phoneNumberList.getPhoneNumber(position);
   }
-
-
+  
   /**
    *  Gets the EmailAddress attribute of the Contact object
    *

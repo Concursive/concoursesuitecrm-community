@@ -87,6 +87,7 @@ public class PhoneNumberList extends Vector {
     }
     return "";
   }
+
   
   protected String getPhoneNumber(int thisType) {
     Iterator i = this.iterator();
@@ -98,7 +99,6 @@ public class PhoneNumberList extends Vector {
     }
     return "";
   }
-
 
   /**
    *  Builds a base SQL where statement for filtering records to be used by

@@ -58,9 +58,44 @@ public final class Contacts extends CFSModule {
     }
   }
   
+  public String executeCommandClone(ActionContext context) {
+	  
+    if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
+      return ("PermissionError");
+    }
+	
+    addModuleBean(context, "View Accounts", "Clone Account Contact");
+    Exception errorMessage = null;
+    Connection db = null;
+    
+    String orgId = context.getRequest().getParameter("orgId");
+    Organization thisOrganization = null;
+    
+    String contactId = context.getRequest().getParameter("id");
+    Contact cloneContact = null;
+    
+    try {
+      db = this.getConnection(context);
+      buildFormElements(context, db);
+      thisOrganization = new Organization(db, Integer.parseInt(orgId));
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);      
+      cloneContact = new Contact(db, contactId);
+      cloneContact.resetBaseInfo();
+      context.getRequest().setAttribute("ContactDetails", cloneContact);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("AddOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
   
-
-
   /**
    *  Description of the Method
    *
@@ -107,6 +142,12 @@ public final class Contacts extends CFSModule {
     if (errorMessage == null) {
       context.getRequest().setAttribute("orgId", "" + newContact.getOrgId());
       if (recordInserted) {
+        if (context.getRequest().getParameter("saveAndNew") != null) {
+          if (context.getRequest().getParameter("saveAndNew").equals("true")) {
+            context.getRequest().removeAttribute("ContactDetails");
+            return (executeCommandAdd(context));
+          }
+        }
         return ("DetailsOK");
       } else {
         return (executeCommandAdd(context));

@@ -8,6 +8,7 @@
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="StateSelect" class="com.darkhorseventures.webutils.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="com.darkhorseventures.webutils.CountrySelect" scope="request"/>
+<jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
@@ -82,6 +83,7 @@ Modify Contact<br>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
+<br>&nbsp;
 <br>
 <%= showError(request, "actionError") %>
 <input type="hidden" name="orgId" value="<%= ContactDetails.getOrgId() %>">
@@ -146,10 +148,32 @@ Modify Contact<br>
       Company
     </td>
     <td valign=center>
-      <input type=text size=35 name="company" value="<%= toHtmlValue(ContactDetails.getCompany()) %>">
+      <input type=text size=35 name="company" value="<%= toHtmlValue(ContactDetails.getCompanyOnly()) %>">
       <font color="red">-</font> <%= showAttribute(request, "lastcompanyError") %>
     </td>
   </tr>
+  
+  <dhv:evaluate exp="<%= (ContactDetails.getOrgId() == -1) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Associated with Account
+    </td>
+    <td valign=center>
+    <%= OrgList.getHtmlSelectDefaultNone("orgId")%>
+    </td>
+  </tr>  
+  </dhv:evaluate>
+  
+  <dhv:evaluate exp="<%= (ContactDetails.getOrgId() > -1) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Associated with Account
+    </td>
+    <td valign=center>
+    <%= OrgList.getHtmlSelectDefaultNone("orgId", ContactDetails.getOrgId())%>
+    </td>
+  </tr>  
+  </dhv:evaluate>
   
   <tr class="containerBody">
     <td nowrap class="formLabel">

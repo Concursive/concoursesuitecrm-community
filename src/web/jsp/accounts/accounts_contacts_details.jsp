@@ -28,6 +28,7 @@ Contact Details<br>
       <input type="hidden" name="id" value="<%=ContactDetails.getId()%>">
       <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>">
 <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='/Contacts.do?command=Modify';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='/Contacts.do?command=Delete';confirmSubmit(document.modContact);"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
 
@@ -164,6 +165,7 @@ Contact Details<br>
 </table>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='/Contacts.do?command=Modify';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:this.form.action='/Contacts.do?command=Delete';confirmSubmit(document.modContact);"></dhv:permission>
   </td>
   </tr>

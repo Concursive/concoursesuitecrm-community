@@ -461,3 +461,11 @@ CREATE TABLE account_type_levels (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE opportunity_type_levels (
+  opp_id INT NOT NULL REFERENCES opportunity(opp_id),
+  type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
+  level INTEGER not null,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+

@@ -52,7 +52,7 @@ if (i.hasNext()) {
           <%= ((thisContact.getOrgId() > 0)?"<a href=\"/Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[Account]</a>":"") %>
         </td>
         <td width=175 class="row<%= rowid %>">
-          <%= toHtml(thisContact.getCompany()) %>
+          <%= toHtml(thisContact.getAffiliation()) %>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisContact.getPhoneNumber("Business")) %>

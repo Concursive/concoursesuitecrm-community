@@ -88,6 +88,8 @@ public final class ExternalContacts extends CFSModule {
     }
 
   }
+  
+
 
   /**
    *  Description of the Method
@@ -711,7 +713,7 @@ public final class ExternalContacts extends CFSModule {
     Exception errorMessage = null;
 
     String contactId = context.getRequest().getParameter("id");
-    String action = context.getRequest().getParameter("action");
+    String action = context.getRequest().getParameter("cmd");
 
     if (action != null && action.equals("modify") && !(hasPermission(context, "contacts-external_contacts-edit"))) {
       return ("PermissionError");
@@ -746,6 +748,12 @@ public final class ExternalContacts extends CFSModule {
 
       if (action != null && action.equals("modify")) {
         buildFormElements(context, db);
+        
+        OrganizationList orgList = new OrganizationList();
+        orgList.setMinerOnly(false);
+        orgList.setShowMyCompany(true);
+        orgList.buildList(db);
+        context.getRequest().setAttribute("OrgList", orgList);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -851,6 +859,11 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       buildFormElements(context, db);
+        OrganizationList orgList = new OrganizationList();
+        orgList.setMinerOnly(false);
+        orgList.setShowMyCompany(true);
+        orgList.buildList(db);
+        context.getRequest().setAttribute("OrgList", orgList);      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -866,6 +879,38 @@ public final class ExternalContacts extends CFSModule {
     }
   }
 
+  public String executeCommandClone(ActionContext context) {
+	  
+    if (!(hasPermission(context, "contacts-external_contacts-add"))) {
+      return ("PermissionError");
+    }
+	
+    addModuleBean(context, "Add Contact", "Clone Contact");
+    Exception errorMessage = null;
+    Connection db = null;
+    
+    String contactId = context.getRequest().getParameter("id");
+    Contact cloneContact = null;
+    
+    try {
+      db = this.getConnection(context);
+      buildFormElements(context, db);
+      cloneContact = new Contact(db, contactId);
+      cloneContact.resetBaseInfo();
+      context.getRequest().setAttribute("ContactDetails", cloneContact);
+    } catch (SQLException e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("ContactInsertFormOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }    
 
   /**
    *  Process the insert form

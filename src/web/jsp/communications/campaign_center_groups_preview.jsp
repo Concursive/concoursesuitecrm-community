@@ -63,7 +63,7 @@
       <%= toHtml(thisContact.getNameLastFirst()) %>
     </td>
     <td nowrap>
-      <%= toHtml(thisContact.getCompany()) %>
+      <%= toHtml(thisContact.getAffiliation()) %>
     </td>
     <td align="center" nowrap>
       <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=ToggleRecipient&scl=<%=SCL.getId()%>&id=<%= Campaign.getId() %>&contactId=<%= thisContact.getId()%>"></dhv:permission><%= (thisContact.excludedFromCampaign()? "No" : "Yes") %><dhv:permission name="campaign-campaigns-edit"></a></dhv:permission>
