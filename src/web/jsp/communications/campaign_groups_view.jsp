@@ -5,7 +5,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <a href="CampaignManager.do">Communications Manager</a> >
-Group List
+View Groups
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="campaign-campaigns-groups-add"><a href="CampaignManagerGroup.do?command=Add">Add a Contact Group</a></dhv:permission>
 <dhv:permission name="campaign-campaigns-messages-add" none="true"><br></dhv:permission>
@@ -43,22 +43,22 @@ Group List
       <a href="CampaignManagerGroup.do?command=View&column=modified"><strong>Last Modified</strong></a>
       <%= CampaignGroupListInfo.getSortIcon("modified") %>
     </td>
-	<%
+<%
 	Iterator j = sclList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
     while (j.hasNext()) {
       rowid = (rowid != 1?1:2);
       SearchCriteriaList thisList = (SearchCriteriaList)j.next();
-	%>      
+%>
 	<tr class="containerBody">
 	<dhv:permission name="campaign-campaigns-groups-edit,campaign-campaigns-groups-delete">
     <td width="8" valign="center" nowrap class="row<%= rowid %>">
-      <dhv:permission name="campaign-campaigns-groups-edit"><a href="/CampaignManagerGroup.do?command=Modify&id=<%= thisList.getId() %>">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-groups-edit,campaign-campaigns-groups-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-groups-delete"><a href="javascript:popURLReturn('CampaignManagerGroup.do?command=ConfirmDelete&id=<%=thisList.getId()%>&popup=true','CampaignManagerGroup.do?command=View', 'Delete_group','330','200','yes','no');">Del</a></dhv:permission>
+      <dhv:permission name="campaign-campaigns-groups-edit"><a href="CampaignManagerGroup.do?command=Modify&id=<%= thisList.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-groups-edit,campaign-campaigns-groups-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-groups-delete"><a href="javascript:popURLReturn('CampaignManagerGroup.do?command=ConfirmDelete&id=<%=thisList.getId()%>&popup=true','CampaignManagerGroup.do?command=View', 'Delete_group','330','200','yes','no');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
     <td valign="center" class="row<%= rowid %>">
-      <a href="CampaignManagerGroup.do?command=Preview&id=<%= thisList.getId() %>"><%= toHtml(thisList.getGroupName()) %></a>
+      <a href="CampaignManagerGroup.do?command=Details&id=<%= thisList.getId() %>"><%= toHtml(thisList.getGroupName()) %></a>
     </td>
     <td valign="center" align="left" class="row<%= rowid %>" nowrap>
       <dhv:username id="<%= thisList.getEnteredBy() %>" lastFirst="true"/>

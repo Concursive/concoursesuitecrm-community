@@ -614,13 +614,15 @@
     <forward name="ViewOK" resource="/communications/campaign_groups_view.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/communications/campaign_groups_modify.jsp" layout="nav"/>
     <forward name="AddOK" resource="/communications/campaign_groups_add.jsp" layout="nav"/>
-    <forward name="InsertOK" resource="/communications/campaign_groups_preview.jsp" layout="nav"/>
-    <forward name="UpdateOK" resource="/communications/campaign_groups_preview.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/CampaignManagerGroup.do?command=Details"/>
+    <forward name="UpdateOK" resource="/CampaignManagerGroup.do?command=Details"/>
     <forward name="PreviewOK" resource="/communications/campaign_groups_preview.jsp" layout="nav"/>
+    <forward name="PopPreviewOK" resource="/communications/campaign_groups_preview.jsp" layout="style"/>
     <forward name="PopupOK" resource="/communications/campaign_contacts_form.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="DetailsOK" resource="/communications/campaign_groups_details.jsp" layout="nav"/>
   </action>
   <action name="CampaignManagerMessage" class="org.aspcfs.modules.communications.actions.CampaignManagerMessage">
     <bean name="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
@@ -892,7 +894,6 @@
     <forward name="ListUsersOK" resource="/admin/admin_listusers.jsp" layout="nav"/>
     <forward name="UserDetailsOK" resource="/admin/admin_userdetails.jsp" layout="nav"/>
     <forward name="UserInsertFormOK" resource="/admin/admin_userinsertform1.jsp" layout="nav"/>
-    <forward name="UserInsertForm2OK" resource="/admin/admin_userinsertform2.jsp" layout="nav"/>
     <forward name="UserDeleteOK" resource="/Users.do?command=ListUsers"/>
     <forward name="UserDisableConfirmOK" resource="/admin/admin_disableuser_confirmation.jsp" layout="nav"/>
     <forward name="UserUpdateOK" resource="/Users.do?command=UserDetails"/>

@@ -23,6 +23,9 @@ import java.text.*;
  */
 public class SearchCriteriaList extends HashMap {
 
+  /**
+   *  Description of the Field
+   */
   protected HashMap errors = new HashMap();
   private int id = -1;
   private String groupName = "";
@@ -36,11 +39,26 @@ public class SearchCriteriaList extends HashMap {
   private String saveCriteria = "";
   private String htmlSelectIdName = null;
   private boolean onlyContactIds = true;
+  /**
+   *  Description of the Field
+   */
   public final static int SOURCE_MY_CONTACTS = 1;
+  /**
+   *  Description of the Field
+   */
   public final static int SOURCE_ALL_CONTACTS = 2;
+  /**
+   *  Description of the Field
+   */
   public final static int SOURCE_ALL_ACCOUNTS = 3;
+  /**
+   *  Description of the Field
+   */
   public final static int SOURCE_EMPLOYEES = 4;
 
+  /**
+   *  Description of the Field
+   */
   public final static int CONTACT_SOURCE_ELEMENTS = 4;
 
 
@@ -615,31 +633,21 @@ public class SearchCriteriaList extends HashMap {
    *@exception  SQLException  SQL exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
-    Statement st = null;
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-
-    //The list details
-    sql.append(
-        "SELECT scl.* " +
-        "FROM saved_criterialist scl " +
-        "WHERE scl.id > -1 ");
-    if (id > -1) {
-      sql.append("AND scl.id = " + id + " ");
-    } else {
+    if (id == -1) {
       throw new SQLException("Invalid ID specified.");
     }
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT scl.* " +
+        "FROM saved_criterialist scl " +
+        "WHERE scl.id > -1 " +
+        "AND scl.id = ?");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     }
     rs.close();
-    st.close();
-    if (id == -1) {
-      throw new SQLException("Saved Criteria record not found.");
-    }
+    pst.close();
     this.buildResources(db);
   }
 
@@ -652,19 +660,15 @@ public class SearchCriteriaList extends HashMap {
    *@since
    */
   public void buildResources(Connection db) throws SQLException {
-    Statement st = null;
-    ResultSet rs = null;
-    StringBuffer sql = new StringBuffer();
-    //The elements
-    sql.append(
+    PreparedStatement pst = db.prepareStatement(
         "SELECT s.*, t.description as ctype, t2.description as atype, c.namefirst as cnamefirst, c.namelast as cnamelast " +
         "FROM saved_criteriaelement s " +
         "LEFT JOIN lookup_contact_types t ON (s.value = t.code) " +
         "LEFT JOIN lookup_account_types t2 ON (s.value = t2.code) " +
         "LEFT JOIN contact c ON (s.value = c.contact_id) " +
-        "WHERE s.id = " + id + " ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+        "WHERE s.id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       SearchCriteriaGroup thisGroup = null;
       SearchCriteriaElement thisElement = new SearchCriteriaElement(rs);
@@ -679,13 +683,24 @@ public class SearchCriteriaList extends HashMap {
       thisGroup.add(thisElement);
     }
     rs.close();
-    st.close();
+    pst.close();
+    buildRelatedResources(db);
+  }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildRelatedResources(Connection db) throws SQLException {
     //The groups
     Iterator i = this.keySet().iterator();
     while (i.hasNext()) {
       SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.get(i.next());
       thisGroup.buildFieldData(db);
+      //The fields
       Iterator j = thisGroup.iterator();
       while (j.hasNext()) {
         SearchCriteriaElement thisElt = (SearchCriteriaElement) (j.next());
@@ -699,29 +714,17 @@ public class SearchCriteriaList extends HashMap {
    *  Delete all of this object's associated SearchCriteriaElements from the
    *  database
    *
-   *@param  listid            unique ID of this SearchCriteriaList
    *@param  db                db connection
+   *@param  listId            Description of the Parameter
    *@exception  SQLException  SQL Exception
    *@since
    */
-  public void clearElements(int listid, Connection db) throws SQLException {
-    StringBuffer sqlDelete = new StringBuffer();
-    try {
-      db.setAutoCommit(false);
-      sqlDelete.append(
-          "DELETE FROM saved_criteriaelement where id = ? ");
-      int i = 0;
-      PreparedStatement pstDel = db.prepareStatement(sqlDelete.toString());
-      pstDel.setInt(++i, listid);
-      pstDel.execute();
-      pstDel.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
-    }
+  public void clearElements(int listId, Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM saved_criteriaelement where id = ? ");
+    pst.setInt(1, listId);
+    pst.execute();
+    pst.close();
   }
 
 
@@ -757,17 +760,11 @@ public class SearchCriteriaList extends HashMap {
         sql.append("?, ");
       }
       sql.append("?, ?) ");
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-
       pst.setInt(++i, this.getOwner());
       pst.setString(++i, this.getGroupName());
-      if (this.getContactSource() > -1) {
-        pst.setInt(++i, this.getContactSource());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
+      DatabaseUtils.setInt(pst, ++i, this.getContactSource());
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -778,11 +775,8 @@ public class SearchCriteriaList extends HashMap {
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
-
       id = DatabaseUtils.getCurrVal(db, "saved_criterialist_id_seq");
-
       insertGroups(db);
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -790,7 +784,6 @@ public class SearchCriteriaList extends HashMap {
     } finally {
       db.setAutoCommit(true);
     }
-
     return true;
   }
 
@@ -805,11 +798,9 @@ public class SearchCriteriaList extends HashMap {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
-
     if (!isValid()) {
       return -1;
     }
-
     try {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
@@ -837,21 +828,16 @@ public class SearchCriteriaList extends HashMap {
    */
   public int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
-
     if (!isValid()) {
       return -1;
     }
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-
     sql.append(
         "UPDATE saved_criterialist SET ");
-
     if (override == false) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
-
     sql.append("name = ?, contact_source = ?, owner = ? " +
         "WHERE id = ? ");
     int i = 0;
@@ -862,10 +848,8 @@ public class SearchCriteriaList extends HashMap {
     pst.setInt(++i, id);
     resultCount = pst.executeUpdate();
     pst.close();
-
     deleteGroups(db);
     insertGroups(db);
-
     return resultCount;
   }
 
@@ -889,39 +873,27 @@ public class SearchCriteriaList extends HashMap {
    *@exception  SQLException  Description of Exception
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
-    ResultSet rs = null;
-    String sql = null;
     DependencyList dependencyList = new DependencyList();
-    try {
-      db.setAutoCommit(false);
-      sql = "SELECT COUNT(*) AS group_count " +
-          "FROM campaign " +
-          "WHERE status_id <> " + Campaign.FINISHED + " " +
-          "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?)";
-
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int groupcount = rs.getInt("group_count");
-        if (groupcount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Campaigns");
-          thisDependency.setCount(groupcount);
-          thisDependency.setCanDelete(true);
-          dependencyList.add(thisDependency);
-        }
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT COUNT(*) AS group_count " +
+        "FROM campaign " +
+        "WHERE status_id <> " + Campaign.FINISHED + " " +
+        "AND campaign_id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = ?)");
+    pst.setInt(++i, this.getId());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      int groupcount = rs.getInt("group_count");
+      if (groupcount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("Campaigns");
+        thisDependency.setCount(groupcount);
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
       }
-      rs.close();
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
     }
+    rs.close();
+    pst.close();
     return dependencyList;
   }
 
@@ -939,12 +911,10 @@ public class SearchCriteriaList extends HashMap {
     if (this.getId() == -1) {
       throw new SQLException("GroupID not specified.");
     }
-
     Statement st = null;
     ResultSet rs = null;
     try {
       commit = db.getAutoCommit();
-
       //Check to see if the group is being used by any unfinished campaigns
       //If so, the group can't be deleted
       int inactiveCount = 0;
@@ -967,7 +937,6 @@ public class SearchCriteriaList extends HashMap {
             " this group.");
         return false;
       }
-
       //TODO: A group's criteria should be copied when a Campaign is executed for later review
       //The group is not in use... so delete it
       //Executed campaigns will want to know the group info, so if there are
@@ -1024,7 +993,6 @@ public class SearchCriteriaList extends HashMap {
     if (groupName == null || groupName.equals("")) {
       errors.put("groupNameError", "Required field");
     }
-
     if (hasErrors()) {
       return false;
     } else {
@@ -1064,11 +1032,12 @@ public class SearchCriteriaList extends HashMap {
    *@since
    */
   protected boolean deleteGroups(Connection db) throws SQLException {
-    Statement st = db.createStatement();
-    st.executeUpdate(
+    PreparedStatement pst = db.prepareStatement(
         "DELETE FROM saved_criteriaelement " +
-        "WHERE id = " + id);
-    st.close();
+        "WHERE id = ?");
+    pst.setInt(1, id);
+    pst.execute();
+    pst.close();
     return true;
   }
 
@@ -1089,11 +1058,7 @@ public class SearchCriteriaList extends HashMap {
     modifiedBy = rs.getInt("modifiedby");
     owner = rs.getInt("owner");
     groupName = rs.getString("name");
-    contactSource = rs.getInt("contact_source");
-    if (rs.wasNull()) {
-      contactSource = -1;
-    }
+    contactSource = DatabaseUtils.getInt(rs, "contact_source");
   }
-
 }
 

@@ -14,11 +14,11 @@ import java.sql.*;
  *@version    $Id: SearchCriteriaElement.java,v 1.1 2001/11/13 20:36:35
  */
 public class SearchCriteriaElement {
-
+  //Properties
   int fieldId = -1;
   int operatorId = -1;
   int sourceId = -1;
-
+  //Display/Lookup Properties
   String text = null;
   String operator = null;
   String dataType = null;
@@ -299,7 +299,7 @@ public class SearchCriteriaElement {
    *@since
    */
   public String getFieldIdAsString() {
-    return "" + fieldId;
+    return String.valueOf(fieldId);
   }
 
 
@@ -321,7 +321,7 @@ public class SearchCriteriaElement {
    *@since
    */
   public String getOperatorIdAsString() {
-    return "" + operatorId;
+    return String.valueOf(operatorId);
   }
 
 
@@ -345,18 +345,19 @@ public class SearchCriteriaElement {
    *@since
    */
   public void buildOperatorData(Connection db) throws SQLException {
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT * " +
+    PreparedStatement pst = db.prepareStatement(
+       "SELECT * " +
         "FROM field_types " +
-        "WHERE id = " + this.getOperatorId());
+        "WHERE id = ?");
+    pst.setInt(1, this.getOperatorId());
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       this.dataType = rs.getString("data_type");
       this.operator = rs.getString("operator");
       this.operatorDisplayText = rs.getString("display_text");
     }
     rs.close();
-    st.close();
+    pst.close();
   }
 
 
@@ -370,28 +371,20 @@ public class SearchCriteriaElement {
    *@since
    */
   public void insert(int listid, Connection db) throws SQLException {
-
-    StringBuffer sql = new StringBuffer();
-
     this.buildOperatorData(db);
-
     try {
-      sql.append(
+      PreparedStatement pst = db.prepareStatement(
           "INSERT INTO saved_criteriaelement ( id, field, operator, operatorid, value, source ) " +
           "VALUES ( ?, ?, ?, ?, ?, ? ) ");
-
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, listid);
       pst.setInt(++i, this.getFieldId());
       pst.setString(++i, this.getOperator());
       pst.setInt(++i, this.getOperatorId());
       pst.setString(++i, this.getText());
       pst.setInt(++i, this.getSourceId());
-
       pst.execute();
       pst.close();
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -434,15 +427,12 @@ public class SearchCriteriaElement {
     operator = rs.getString("operator");
     text = rs.getString("value");
     sourceId = rs.getInt("source");
-
     //lookup_contact_types table
     contactTypeName = rs.getString("ctype");
     accountTypeName = rs.getString("atype");
-
     //contact table
     contactNameFirst = rs.getString("cnamefirst");
     contactNameLast = rs.getString("cnamelast");
   }
-
 }
 

@@ -1,14 +1,16 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.web.LookupElement" %>
 <jsp:useBean id="SearchFieldList" class="org.aspcfs.modules.communications.base.SearchFieldList" scope="request"/>
 <jsp:useBean id="StringOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
 <jsp:useBean id="DateOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
 <jsp:useBean id="NumberOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
 <jsp:useBean id="SearchForm" class="org.aspcfs.modules.communications.beans.SearchFormBean" scope="request"/>
+<jsp:useBean id="SCL" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="AccountTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="SCL" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="ContactSource" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
 <!-- 
 //updateOperators has to be defined in each file because it uses bean
@@ -19,31 +21,35 @@ function updateOperators(){
 	if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 8) {
     //clear the select
     deleteOptions("idSelect");
-    <%
+<%
     Iterator x = ContactTypeList.iterator();
     if (x.hasNext()) {
       while (x.hasNext()) {
         LookupElement thisContactType = (LookupElement)x.next();
-    %>
-        insertOption("<%=thisContactType.getDescription()%>", "<%=thisContactType.getCode()%>", "idSelect");
-    <%
+%>
+        insertOption("<%= thisContactType.getDescription() %>", "<%= thisContactType.getCode() %>", "idSelect");
+<%
       }
     }
-    %>
-		javascript:ShowSpan('new0');
-    javascript:HideSpan('searchText1');
-    javascript:HideSpan('searchText2');
-    javascript:HideSpan('new1');
+%>
+		javascript:showSpan('new0');
+    javascript:showSpan('new0a');
+    javascript:hideSpan('searchText1');
+    javascript:hideSpan('searchText2');    
+    javascript:hideSpan('new1');
+    javascript:hideSpan('new1a');
 		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
 	} else if (document.searchForm.fieldSelect.selectedIndex == 3) {
-		javascript:HideSpan('new0');
-		javascript:ShowSpan('new1');
-    javascript:ShowSpan('searchText1');
-    javascript:ShowSpan('searchText2');
+		javascript:hideSpan('new0');
+    javascript:hideSpan('new0a');
+		javascript:showSpan('new1');
+    javascript:showSpan('new1a');
+    javascript:showSpan('searchText1');
+    javascript:showSpan('searchText2');
 		document.searchForm.searchValue.value = "";
 	} else if (document.searchForm.fieldSelect.options[document.searchForm.fieldSelect.selectedIndex].value == 11) {
-    javascript:HideSpan('new1');
-    
+    javascript:hideSpan('new1');
+    javascript:hideSpan('new1a');
     //clear the select
     deleteOptions("idSelect");
     <%
@@ -57,15 +63,18 @@ function updateOperators(){
       }
     }
     %>
-		javascript:ShowSpan('new0');
-    javascript:HideSpan('searchText1');
-    javascript:HideSpan('searchText2');
+		javascript:showSpan('new0');
+    javascript:showSpan('new0a');
+    javascript:hideSpan('searchText1');
+    javascript:hideSpan('searchText2');    
 		document.searchForm.searchValue.value = document.searchForm.idSelect.options[document.searchForm.idSelect.selectedIndex].text;
 	} else {
-		javascript:HideSpan('new0');
-    javascript:HideSpan('new1');
-    javascript:ShowSpan('searchText1');
-    javascript:ShowSpan('searchText2');
+		javascript:hideSpan('new0');
+    javascript:hideSpan('new0a');
+    javascript:hideSpan('new1');
+    javascript:hideSpan('new1a');
+    javascript:showSpan('searchText1');
+    javascript:showSpan('searchText2');    
 		document.searchForm.searchValue.value = "";
 	}
 	// empty the operator list
@@ -78,7 +87,7 @@ function updateOperators(){
 } // end updateOperators
 //  End -->
 </SCRIPT>
-<body onLoad="javascript:HideSpans();javascript:document.forms[0].groupName.focus();">
+<body onLoad="javascript:document.forms[0].groupName.focus()">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/searchForm.js"></script>
@@ -97,7 +106,6 @@ searchField = new Array();
 %> 
 searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, "<%= thisSearchField.getDescription() %>", <%= thisSearchField.getFieldTypeId() %>);
 <% } } %>
-
 stringOperators = new Array();
 <%
 	Iterator s = StringOperatorList.iterator();
@@ -109,7 +117,6 @@ stringOperators = new Array();
 %> 
 stringOperators[<%= stringArrayID %>] = new operator(<%= thisStringOperator.getId() %>, "<%= thisStringOperator.getOperator() %>", "<%= thisStringOperator.getDisplayText() %>");
 <% } } %>
-
 dateOperators = new Array();
 <%
 	Iterator d = DateOperatorList.iterator();
@@ -139,9 +146,14 @@ listOfOperators[2] = numberOperators
 </script>
 <form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
 <a href="CampaignManager.do">Communications Manager</a> >
-<a href="CampaignManagerGroup.do?command=View">Group List</a> >
+<a href="CampaignManagerGroup.do?command=View">View Groups</a> >
 Add a Group
 <hr color="#BFBFBB" noshade>
+<input type="submit" value="Save">
+<input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManagerGroup.do?command=View'">
+<input type="button" value="Preview" onClick="javascript:popPreview()">
+<br>
+&nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
@@ -152,8 +164,8 @@ Add a Group
     <td class="formLabel" nowrap>
       Group Name
     </td>
-    <td width="100%">
-      <input type="text" size="40" name="groupName" value="<%=toHtmlValue(SCL.getGroupName())%>"><font color=red>*</font> <%= showAttribute(request, "groupNameError") %>
+    <td>
+      <input type="text" size="40" name="groupName" value="<%= toHtmlValue(SCL.getGroupName()) %>"><font color="red">*</font> <%= showAttribute(request, "groupNameError") %>
     </td>
   </tr>
 </table>
@@ -161,14 +173,34 @@ Add a Group
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
-      Then select criteria to narrow your contact group
+      Select criteria for this group
     </td>
   </tr>
 	<tr>
-    <td align="left" valign="top" width="40%">
+    <td align="center" valign="center" width="50%">
       <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr>
-          <td width="98" nowrap>
+          <td class="row1" colspan="2">
+            Choose specific contacts:
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">
+            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1');">Add/Remove Contacts</a>]
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            &nbsp;
+          </td>
+        </tr>
+        <tr>
+          <td class="row1" colspan="2">
+            Define criteria to generate a list:
+          </td>
+        </tr>
+        <tr>
+          <td align="right" nowrap>
             Field
           </td>
           <td width="100%" valign="center">
@@ -189,7 +221,7 @@ Add a Group
           </td>
         </tr>
         <tr>
-          <td width="98" nowrap>
+          <td align="right" nowrap>
             Operator
           </td>
           <td width="100%" valign="center">
@@ -211,32 +243,31 @@ Add a Group
           </td>
         </tr>
         <tr>
-          <td valign="center">
-            &nbsp;
-          </td>
-          <td valign="center">
-            <span name="new0" ID="new0" style="position:relative; visibility:hidden"><select id="idSelect" name="idSelect" onChange="javascript:setText(document.searchForm.idSelect);"></select>
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td width="98" nowrap>
-            <span name="searchText1" ID="searchText1" style="position:relative">Search Text</span>
+          <td align="right" nowrap>
+            <span name="searchText1" ID="searchText1">Search Text</span>
           </td>
           <td width="100%" valign="center">
-            <span name="searchText2" ID="searchText2" style="position:relative"><input type="text" name="searchValue" value="" size=25  maxlength=125></span>
+            <span name="searchText2" ID="searchText2"><input type="text" name="searchValue" value="" size="25"  maxlength="125"></span> 
           </td>
         </tr>
         <tr>
+          <td align="right">
+            <span name="new1a" ID="new1a" style="display:none">&nbsp;</span>
+          </td>
+          <td align="left" valign="center">
+            <span name="new1" ID="new1" style="display:none">[<a href="javascript:popCalendar('searchForm', 'searchValue');">Date</a>]</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" nowrap>
+            <span name="new0a" ID="new0a" style="display:none">Search Text</span>
+          </td>
           <td valign="center">
-            &nbsp;
-          </td>
-          <td align="right" valign="center">
-            <span name="new1" ID="new1" style="position:relative; visibility:hidden"><a href="javascript:popCalendar('searchForm', 'searchValue');">Date</a></span>
+            <span name="new0" ID="new0" style="display:none"><select id="idSelect" name="idSelect" onChange="javascript:setText(document.searchForm.idSelect);"></select></span>
           </td>
         </tr>
         <tr>
-          <td width="98" nowrap>
+          <td align="right" nowrap>
             From
           </td>
           <td width="100%" valign="center">
@@ -251,8 +282,22 @@ Add a Group
         </tr>
       </table>
     </td>
-		<td align="center" valign="center" width="50%">
+		<td align="center" valign="top" width="50%">
+      <table width="100%" border="0" cellpadding="2" cellspacing="0">
+        <tr>
+          <td align="left" class="row1">
+            Selected criteria and contacts:
+          </td>
+        </tr>
+        <tr>
+          <td>
+            &nbsp;
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
 		<% if (SCL.size() > 0) {%>
+      <% SCL.setHtmlSelectIdName("listViewId"); %>
 			<%= SCL.getHtmlSelect("searchCriteria") %>
 		<%} else {%>
 			<select name="searchCriteria" id="listViewId" size="10">
@@ -260,15 +305,19 @@ Add a Group
 			</select>
 		<%}%>
       <br>
-      <a href="javascript:popContactsListMultipleCampaign('listViewId','1');">Add/Remove Contacts</a><br>
       &nbsp;<br>
       <input type="hidden" name="previousSelection" value="">
       <input type="button" value="Remove" onclick="removeValues()">
-		</td>
+          </td>
+        </tr>
+      </table>
+    </td>
 	</tr>
 </table>
 &nbsp;<br>
 <input type="hidden" name="searchCriteriaText">
-<input type="submit" value="Save & Preview Query">
+<input type="submit" value="Save">
+<input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManagerGroup.do?command=View'">
+<input type="button" value="Preview" onClick="javascript:popPreview()">
 </form>
 </body>
