@@ -1,4 +1,4 @@
-<body onLoad="javascript:document.forms[0].description.focus();">
+<body onLoad="javascript:document.forms[0].searchDescription.focus();">
 <form name="searchLeads" action="/Leads.do?command=ViewOpp" method="post">
 <br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

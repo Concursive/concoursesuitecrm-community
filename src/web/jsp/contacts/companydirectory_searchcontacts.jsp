@@ -4,7 +4,7 @@
 <jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].firstname.focus();">
+<body onLoad="javascript:document.forms[0].searchFirst.focus();">
 <form name="searchContact" action="/ExternalContacts.do?command=ListContacts&auto-populate=true" method="post">
 <!--input type=submit value="Search">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts'">
