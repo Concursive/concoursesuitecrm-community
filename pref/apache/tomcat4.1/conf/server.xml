@@ -1,4 +1,4 @@
-<!-- ASPCFS Apache Tomcat 4.1.12 -->
+<!-- ASPCFS Apache Tomcat 4.1.18 -->
 <Server className="org.apache.catalina.core.StandardServer" debug="0" port="8005" shutdown="SHUTDOWN">
   <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" debug="0"/>
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" debug="0"/>
@@ -93,9 +93,9 @@
       <Factory className="org.apache.catalina.net.DefaultServerSocketFactory"/>
     </Connector>/
     <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" 
-        acceptCount="10" enableLookups="true" 
+        acceptCount="10" connectionTimeout="60000" debug="0" enableLookups="true" 
         maxProcessors="75" minProcessors="5" port="443" 
-        debug="0" scheme="https" secure="true" 
+        scheme="https" secure="true" 
         useURIValidationHack="false">
       <Factory className="org.apache.coyote.tomcat4.CoyoteServerSocketFactory" 
           clientAuth="false" 
@@ -104,12 +104,32 @@
           randomFile="/root/random.pem" 
           rootFile="/root/root.pem"/>
     </Connector>
-    <Engine className="org.apache.catalina.core.StandardEngine" debug="0" defaultHost="localhost" mapperClass="org.apache.catalina.core.StandardEngineMapper" name="Web">
-      <Host className="org.apache.catalina.core.StandardHost" appBase="/home/webapps" autoDeploy="true" configClass="org.apache.catalina.startup.ContextConfig" contextClass="org.apache.catalina.core.StandardContext" debug="0" deployXML="true" errorReportValveClass="org.apache.catalina.valves.ErrorReportValve" liveDeploy="true" mapperClass="org.apache.catalina.core.StandardHostMapper" name="localhost" unpackWARs="false">
-        <Context className="org.apache.catalina.core.StandardContext" cachingAllowed="true" charsetMapperClass="org.apache.catalina.util.CharsetMapper" cookies="true" crossContext="false" debug="0" docBase="/home/cfs/html" mapperClass="org.apache.catalina.core.StandardContextMapper" path="" privileged="false" reloadable="true" useNaming="true" wrapperClass="org.apache.catalina.core.StandardWrapper">
+    <Engine className="org.apache.catalina.core.StandardEngine" debug="0" 
+            defaultHost="localhost" mapperClass="org.apache.catalina.core.StandardEngineMapper" name="Web">
+      <Host className="org.apache.catalina.core.StandardHost" 
+            appBase="/home/webapps" autoDeploy="true" 
+            configClass="org.apache.catalina.startup.ContextConfig" 
+            contextClass="org.apache.catalina.core.StandardContext" 
+            debug="0" deployXML="true" 
+            errorReportValveClass="org.apache.catalina.valves.ErrorReportValve" 
+            liveDeploy="true" mapperClass="org.apache.catalina.core.StandardHostMapper" 
+            name="localhost" unpackWARs="false">
+        <Context className="org.apache.catalina.core.StandardContext" 
+                 cachingAllowed="true" charsetMapperClass="org.apache.catalina.util.CharsetMapper" 
+                 cookies="true" crossContext="false" debug="0" 
+                 docBase="/home/cfs/html" 
+                 mapperClass="org.apache.catalina.core.StandardContextMapper" 
+                 path="" privileged="false" reloadable="true" useNaming="true" 
+                 wrapperClass="org.apache.catalina.core.StandardWrapper">
         </Context>
       </Host>
-      <Logger className="org.apache.catalina.logger.FileLogger" debug="0" directory="logs" prefix="aspcfs_log" suffix=".txt" timestamp="true" verbosity="0"/>
+      <Logger className="org.apache.catalina.logger.FileLogger" debug="0" 
+              directory="logs" prefix="aspcfs_log" suffix=".txt" 
+              timestamp="true" verbosity="0"/>
+      <Valve className="org.apache.catalina.valves.AccessLogValve"
+              directory="logs"  prefix="aspcfs_access_log." suffix=".txt"
+              pattern="%h %l %v %t &quot;%r&quot; %s %b"
+              resolveHosts="false"/>
     </Engine>
   </Service>
 </Server>
