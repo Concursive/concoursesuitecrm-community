@@ -232,6 +232,8 @@ public class QueueCriteriaList extends ArrayList {
         parameters.put(thisCriteria.getParameter(), DatabaseUtils.parseDateToTimestamp(thisCriteria.getValue()));
       } else if (classValue.getName().equals("java.sql.Timestamp")) {
         parameters.put(thisCriteria.getParameter(), DatabaseUtils.parseTimestamp(thisCriteria.getValue()));
+      } else if (classValue.getName().equals("java.lang.Boolean")) {
+        
       } else if (!classValue.getName().equals("java.lang.String")) {
         Class[] argTypes = new Class[]{String.class};
         Method method = classValue.getMethod("valueOf", argTypes);
