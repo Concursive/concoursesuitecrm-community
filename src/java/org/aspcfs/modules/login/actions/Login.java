@@ -159,6 +159,14 @@ public final class Login extends CFSModule {
           
           userRecord.setIp(context.getIpAddress());
           userRecord.updateLogin(db);
+        } else {
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Login-> Fatal: User not found in this System!");
+          }
+        }
+      } else {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Login-> Fatal: User does not have an Id!");
         }
       }
     } catch (Exception e) {
@@ -176,7 +184,7 @@ public final class Login extends CFSModule {
 
     context.getSession().setAttribute("User", thisUser);
     context.getSession().setAttribute("ConnectionElement", ce);
-
+    
     //Check to see if user is already logged in. If not then add him to the valid users list
     SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     SessionManager sessionManager = thisSystem.getSessionManager();
