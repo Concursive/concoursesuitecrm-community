@@ -603,12 +603,12 @@ public class Message extends GenericBean {
       int inactiveCount = 0;
       st = db.createStatement();
       rs = st.executeQuery(
-        "SELECT COUNT(*) AS survey_count " +
+        "SELECT COUNT(*) AS message_count " +
         "FROM campaign " +
         "WHERE message_id = " + this.getId() + " " +
         "AND status_id <> " + Campaign.FINISHED);
       rs.next();
-      inactiveCount = rs.getInt("survey_count");
+      inactiveCount = rs.getInt("message_count");
       rs.close();
       if (inactiveCount > 0) {
         st.close();

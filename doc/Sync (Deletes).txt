@@ -1,0 +1,16 @@
+Sync: Hard and Soft deletes
+
+The SyncML Delete command provides the capability for a SyncML request to delete 
+data from the recipient's data store. Two forms of deletion are supported. 
+Normally, when a Delete command is specified, it conveys a request to 
+completely delete the specified data from the recipient's data store. The 
+deleted data SHOULD no longer be associated with the originator's 
+synchronization data. This is the semantics of a "Hard Delete". In addition, 
+SyncML provides support for a "Soft Delete" command. The "Soft Delete" provides 
+the capability to request the deletion of data from the recipient but NOT to 
+remove it from the recipient's synchronization data. The rationale for a 
+"Soft Delete" is based on the possibility of limited storage resources in a 
+mobile device. The data is deleted to free-up storage for other, higher 
+priority data. Conceptually, the deleted data remains in the set of 
+synchronized data for the recipient of the "Soft Delete" command.
+

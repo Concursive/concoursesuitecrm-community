@@ -18,7 +18,7 @@ Group List
         <option <%= CampaignGroupListInfo.getOptionValue("my") %>>My Groups</option>
         <option <%= CampaignGroupListInfo.getOptionValue("all") %>>All Groups</option>
       </select>
-      <%= showAttribute(request, "actionError") %>
+      <%= showError(request, "actionError") %>
     </td>
     </form>
   </tr>

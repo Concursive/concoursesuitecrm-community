@@ -20,46 +20,53 @@ import com.darkhorseventures.webutils.*;
  */
 public final class CampaignManagerGroup extends CFSModule {
 
-	public String executeCommandShowContactsPopup(ActionContext context) {
-		
-		if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
-	    		return ("PermissionError");
-    		}
-	
-		Exception errorMessage = null;
-		Connection db = null;
-		SearchCriteriaList thisSCL = new SearchCriteriaList();
-		
-		context.getSession().removeAttribute("CampaginGroupsContactsInfo");
-		PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsContactsInfo");
-		pagedListInfo.setLink("/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true");
-		
-		try {
-			db = this.getConnection(context);
-			thisSCL.setEnteredBy(getUserId(context));
-			thisSCL.setModifiedBy(getUserId(context));
-			thisSCL.setOwner(getUserId(context));
-			thisSCL.setContactSource(Integer.parseInt(context.getRequest().getParameter("source")));
-		
-			ContactList contacts = new ContactList();
-			contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
-			contacts.setPagedListInfo(pagedListInfo);
-			contacts.buildList(db);
-			context.getRequest().setAttribute("ContactList", contacts);
-		} catch (Exception e) {
-			errorMessage = e;
-		} finally {
-			this.freeConnection(context, db);
-		}
-	
-		if (errorMessage == null) {
-			return ("PopupOK");
-		} else {
-			context.getRequest().setAttribute("Error", errorMessage);
-			return ("SystemError");
-		}
-	}
-	
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandShowContactsPopup(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    SearchCriteriaList thisSCL = new SearchCriteriaList();
+
+    context.getSession().removeAttribute("CampaginGroupsContactsInfo");
+    PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsContactsInfo");
+    pagedListInfo.setLink("/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true");
+
+    try {
+      db = this.getConnection(context);
+      thisSCL.setEnteredBy(getUserId(context));
+      thisSCL.setModifiedBy(getUserId(context));
+      thisSCL.setOwner(getUserId(context));
+      thisSCL.setContactSource(Integer.parseInt(context.getRequest().getParameter("source")));
+
+      ContactList contacts = new ContactList();
+      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
+      contacts.setPagedListInfo(pagedListInfo);
+      contacts.buildList(db);
+      context.getRequest().setAttribute("ContactList", contacts);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("PopupOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
   /**
    *  Description of the Method
    *
@@ -68,11 +75,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since           1.1
    */
   public String executeCommandView(ActionContext context) {
-	  
-  		if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupListInfo");
@@ -124,11 +131,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-groups-add"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-groups-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     String passedId = null;
 
@@ -158,7 +165,7 @@ public final class CampaignManagerGroup extends CFSModule {
         SearchCriteriaList scl = new SearchCriteriaList(db, passedId);
         context.getSession().setAttribute("SCL", scl);
       }
-      
+
       this.buildContactSource(context);
     } catch (Exception e) {
       errorMessage = e;
@@ -198,11 +205,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-groups-delete"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-groups-delete"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -226,8 +233,8 @@ public final class CampaignManagerGroup extends CFSModule {
       if (recordDeleted) {
         return ("DeleteOK");
       } else {
-        //processErrors(context, thisSCL.getErrors());
-        return ("DeleteError");
+        processErrors(context, thisSCL.getErrors());
+        return (executeCommandView(context));
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -244,11 +251,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since           1.1
    */
   public String executeCommandInsert(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-groups-add"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-groups-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
@@ -312,11 +319,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandModify(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-groups-edit"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-groups-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
 
@@ -340,7 +347,7 @@ public final class CampaignManagerGroup extends CFSModule {
       stringOperatorList.buildOperatorList(db, 0);
       dateOperatorList.buildOperatorList(db, 1);
       numberOperatorList.buildOperatorList(db, 2);
-      
+
       this.buildContactSource(context);
 
       if (passedId != null) {
@@ -384,11 +391,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-groups-edit"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-groups-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -452,11 +459,11 @@ public final class CampaignManagerGroup extends CFSModule {
    *@since
    */
   public String executeCommandPreview(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-groups-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
 
@@ -490,7 +497,13 @@ public final class CampaignManagerGroup extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   */
   public void buildContactSource(ActionContext context) {
     HtmlSelect contactSource = new HtmlSelect();
     contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "All Accounts");

@@ -732,20 +732,77 @@ public class SearchCriteriaList extends HashMap {
    *@since
    */
   public boolean delete(Connection db) throws SQLException {
+    boolean commit = true;
     if (this.getId() == -1) {
-      throw new SQLException("The Group could not be found.");
+      throw new SQLException("GroupID not specified.");
     }
 
-    Statement st = db.createStatement();
+    Statement st = null;
+    ResultSet rs = null;
     try {
-      db.setAutoCommit(false);
-      st.executeUpdate("DELETE FROM saved_criteriaelement WHERE id = " + this.getId() + " ");
-      st.executeUpdate("DELETE FROM saved_criterialist WHERE id = " + this.getId());
-      db.commit();
+      commit = db.getAutoCommit();
+      
+      //Check to see if the group is being used by any unfinished campaigns
+      //If so, the group can't be deleted
+      int inactiveCount = 0;
+      st = db.createStatement();
+      rs = st.executeQuery(
+        "SELECT COUNT(*) AS group_count " +
+        "FROM campaign " +
+        "WHERE status_id <> " + Campaign.FINISHED + " " +
+        "AND id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = " + this.getId() + ")");
+      rs.next();
+      inactiveCount = rs.getInt("group_count");
+      rs.close();
+      if (inactiveCount > 0) {
+        st.close();
+        errors.put("actionError", "Group could not be deleted because " +
+          inactiveCount + " " +
+          (inactiveCount == 1?"campaign is":"campaigns are") +
+          " being built that " +
+          (inactiveCount == 1?"uses":"use") +
+          " this group.");
+        return false;
+      }
+      
+      //TODO: A group's criteria should be copied when a Campaign is executed for later review
+      //The group is not in use... so delete it
+      //Executed campaigns will want to know the group info, so if there are
+      //executed campaigns, then hide the group... otherwise delete it
+      int activeCount = 0;
+      rs = st.executeQuery(
+        "SELECT COUNT(*) AS group_count " +
+        "FROM campaign " +
+        "WHERE active = " + DatabaseUtils.getTrue(db) + " " +
+        "AND id IN (SELECT campaign_id FROM campaign_list_groups WHERE group_id = " + this.getId() + ")");
+      rs.next();
+      activeCount = rs.getInt("group_count");
+      rs.close();
+      
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      if (activeCount > 0) {
+        st.executeUpdate(
+          "UPDATE saved_criterialist " +
+          "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
+          "WHERE id = " + this.getId() + " " +
+          "AND enabled = " + DatabaseUtils.getTrue(db));
+      } else {
+        st.executeUpdate("DELETE FROM saved_criteriaelement WHERE id = " + this.getId() + " ");
+        st.executeUpdate("DELETE FROM saved_criterialist WHERE id = " + this.getId());
+      }
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
       st.close();
     }
     return true;

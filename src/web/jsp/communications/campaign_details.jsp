@@ -13,19 +13,11 @@ Campaign Details
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2" valign="center" align="left">
-      <strong>Campaign Details</strong>
+      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
     </td>     
   </tr>
   <tr class="containerBody">
-    <td class="formLabel">
-      Name
-    </td>
-    <td width="100%">
-      <%= toHtml(Campaign.getName()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
+    <td class="formLabel" valign="top">
       Description
     </td>
     <td width="100%">

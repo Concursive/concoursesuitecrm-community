@@ -1,0 +1,88 @@
+1. PDA has no error checking.  If one step fails it may continue to the next
+   without resolving the first failure
+2. 
+
+XML is sent to the server...
+  Request for inventory
+  Start at 100
+  Limit 100
+XML is sent back to the client...
+  Server records 100-199
+  
+* PDA crashes *
+
+XML is sent to the server
+  Request for inventory
+  Start at 100
+  Limit 100
+XML is sent back to the client...
+  Server record 100-199
+  * Server had already record 100-199 *
+  The server could delete the duplicate reference
+  
+  
+SyncML provides the capability for refreshing the entire data on the SyncML client 
+with the equivalent synchronization data on the SyncML server. This may be necessary 
+if the SyncML client and the SyncML server versions are no longer "in sync" with 
+each other due to a hardware or power failure in the mobile device, or if the 
+version on the SyncML client has become corrupted or erased from memory. This 
+capability is provided by the SyncML client issuing a "refresh" Alert command to the 
+SyncML server.
+
+If the recipient determines that there is a high probability that the client 
+device data is out of sync, then the (508) Refresh required exception condition 
+is created by this command. When this exception condition occurs, the originator 
+of the Sync command SHOULD initiate a slow synchronization with the recipient.
+
+
+
+Server could check its MAX(id) for that client and start there instead of the 
+MAX(id) received from the client.  This would prevent data corruption, but
+could also lead to data duplication.
+
+If the MAX(id)'s do not match, then that one table could be refreshed... unless
+it has a related table that needs refreshing.
+
+There are several types of data:
+- System tables (maintained locally)
+- Base tables (infrequent changes)
+- User tables (frequent changes)
+
+If an error occurs on the base tables then there is a big problem because
+user tables are based on the base tables.  All tables need to be refreshed.
+
+If an error occurs on the user tables, then related user tables would need
+to be refreshed.
+
+
+
+Can we do a record by record check?
+
+Already being done: 
+PDA sends a transaction (INSERT or UPDATE) then receives
+a code back.  If code is OK, then mark as sent, else this will be resent
+next time.
+
+Not being done:
+When server sends a record to the client,
+the client can send a transaction ok back to the server.
+
+ Server: INSERT account #10
+ Client: OK, INSERTed account #10
+ 
+When the client sends an OK back, the server flags it so it won't send again.
+If server doesn't get OK, then it will have to resend it next time.
+
+
+
+Things we can do:
+
+- PDA can check for errors during synchronization
+  > Was HTML download complete?
+  > Is XML file valid?
+If failure, then it must stop the sync and try again where it left off.
+It should tell the server that the transaction was a failure.
+- The server needs to know if the client was able to insert or update a
+  record.  The server might need to know if it sent an INSERT or UPDATE
+  to the client previously so that it can send the same type again.
+

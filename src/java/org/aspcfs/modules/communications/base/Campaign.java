@@ -1513,7 +1513,8 @@ public class Campaign extends GenericBean {
       if (!thisSurvey.getEnabled()) {
         thisSurvey.delete(db);
       }
-      //No need to check for messages to delete
+      //No need to check for messages to delete because an active campaign contains
+      //a copy, and an inactive campaign doesn't allow the message to be deleted
       db.commit();
     } catch (SQLException e) {
       db.rollback();
