@@ -996,7 +996,7 @@ public class Task extends GenericBean {
     estimatedLOE = rs.getInt("estimatedloe");
     owner = rs.getInt("owner");
     completeDate = rs.getTimestamp("completeDate");
-    ownerName = rs.getString("lastname") + "," + rs.getString("firstname");
+    ownerName = Contact.getNameLastFirst(rs.getString("lastname"), rs.getString("firstname"));
     if (entered != null) {
       float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
       age = java.lang.Math.round(ageCheck);
