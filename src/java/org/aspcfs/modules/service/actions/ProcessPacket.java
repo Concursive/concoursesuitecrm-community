@@ -121,7 +121,6 @@ public final class ProcessPacket extends CFSModule {
 
     //Construct the XML response
     try {
-      //TODO: Change encoding to US-ASCII
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = dbf.newDocumentBuilder();
       Document document = builder.newDocument();
@@ -173,6 +172,9 @@ public final class ProcessPacket extends CFSModule {
             while (fields.hasNext()) {
               String fieldName = (String) fields.next();
               String fieldValue = (String) thisRecord.get(fieldName);
+              if (fieldValue == null) {
+                fieldValue = "";
+              }
               Element field = document.createElement(fieldName);
               field.appendChild(document.createTextNode(fieldValue));
               record.appendChild(field);
