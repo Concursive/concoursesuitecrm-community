@@ -54,11 +54,12 @@ public class Notifier extends ReportBuilder {
 
         Connection dbSites = DriverManager.getConnection(
             thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
-        Statement stSites = dbSites.createStatement();
-        ResultSet rsSites = stSites.executeQuery(
-            "SELECT * " +
-            "FROM sites " +
-            "WHERE enabled = " + DatabaseUtils.getTrue(dbSites));
+        PreparedStatement pstSites = dbSites.prepareStatement(
+          "SELECT * " +
+          "FROM sites " +
+          "WHERE enabled = ? ");
+        pstSites.setBoolean(1, true);
+        ResultSet rsSites = pstSites.executeQuery();
         while (rsSites.next()) {
           Hashtable siteInfo = new Hashtable();
           siteInfo.put("driver", rsSites.getString("driver"));
@@ -71,7 +72,7 @@ public class Notifier extends ReportBuilder {
           siteList.add(siteInfo);
         }
         rsSites.close();
-        stSites.close();
+        pstSites.close();
         dbSites.close();
 
         Iterator i = siteList.iterator();
@@ -310,7 +311,7 @@ public class Notifier extends ReportBuilder {
         ++campaignCount;
         System.out.println("  Getting contact ...");
         Recipient thisRecipient = (Recipient) iList.next();
-        Contact thisContact = new Contact(db, "" + thisRecipient.getContactId());
+        Contact thisContact = new Contact(db, thisRecipient.getContactId());
 
         Notification thisNotification = new Notification();
         thisNotification.setHost((String) this.config.get("MailServer"));
@@ -365,9 +366,9 @@ public class Notifier extends ReportBuilder {
         outputLetterLog(thisCampaign, letterLog, dbName, db);
         outputFaxLog(faxLog);
         thisCampaign.setStatusId(Campaign.FINISHED);
-        thisCampaign.update(db);
         thisCampaign.setRecipientCount(campaignCount);
         thisCampaign.setSentCount(sentCount);
+        thisCampaign.update(db);
       }
     }
     thisReport.setHeader("Communications Report for " + start.toString() + "<br>" + "Total Records: " + notifyCount);
