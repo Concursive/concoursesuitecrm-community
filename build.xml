@@ -39,9 +39,9 @@
 		<fileset dir="${env.TOMCAT_HOME}/lib">
 			<include name="**/*.jar"/>
 		</fileset>
-		<fileset dir="${env.TOMCAT_HOME}/common/lib">
+		<!--fileset dir="${env.TOMCAT_HOME}/common/lib">
 			<include name="**/*.jar"/>
-		</fileset>
+		</fileset-->
 	</path>
 	<property name="CLASSPATH" refid="cfs2.classpath" />
 
