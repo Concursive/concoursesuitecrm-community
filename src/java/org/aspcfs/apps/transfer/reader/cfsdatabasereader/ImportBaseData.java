@@ -47,7 +47,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     }
     
     
-    //TODO: update all user managers
+    //TODO: update all user managers, update all user contact_ids
 
     //Copy Accounts
     /**

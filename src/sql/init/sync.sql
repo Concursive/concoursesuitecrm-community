@@ -677,6 +677,11 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'customFieldData', 'com.darkhorseventures.cfsbase.CustomFieldData');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectActivity', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'lookupProjectActivityList', 'com.darkhorseventures.webutils.CustomLookupList');
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'project', 'com.zeroio.iteam.base.Project');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'projectList', 'com.zeroio.iteam.base.ProjectList');

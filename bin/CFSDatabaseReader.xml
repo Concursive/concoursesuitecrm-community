@@ -206,6 +206,20 @@
       <property lookup="user">modifiedBy</property>
       <property>alertDate</property>
     </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectActivity" table="lookup_project_activity">
+      <property alias="guid">code</property>
+      <property alias="description">description</property>
+      <property alias="default_item">defaultItem</property>
+      <property alias="level">level</property>
+      <property alias="enabled">enabled</property>
+      <property alias="group_id">groupId</property>
+      <property alias="template_id">templateId</property>
+    </map>
+    <map class="" id="lookupProjectIssues" table="lookup_project_issues"/>
+    <map class="" id="lookupProjectLoe" table="lookup_project_loe"/>
+    <map class="" id="lookupProjectPriority" table="lookup_project_priority"/>
+    <map class="" id="lookupProjectStatus" table="lookup_project_status"/>
+    <map class="" id="lookupProjectTemplates" table="lookup_project_templates"/>
     <map class="com.zeroio.iteam.base.Project" id="project">
       <property alias="guid">id</property>
       <property lookup="lookupDepartment">departmentId</property>
@@ -217,6 +231,57 @@
       <property>approvalDate</property>
       <property>approved</property>
       <property>closeDate</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
+    <map class="com.zeroio.iteam.base.Requirement" id="requirement">
+      <property alias="guid">id</property>
+      <property lookup="project">projectId</property>
+      <property>submittedBy</property>
+      <property>departmentBy</property>
+      <property>shortDescription</property>
+      <property>description</property>
+      <property>dateReceived</property>
+      <property>estimatedLoe</property>
+      <property lookup="lookupProjectLoe">estimatedLoeTypeId</property>
+      <property>actualLoe</property>
+      <property lookup="lookupProjectLoe">actualLoeTypeId</property>
+      <property>deadline</property>
+      <property lookup="user">approvedBy</property>
+      <property>approvalDate</property>
+      <property>approved</property>
+      <property lookup="user">closedBy</property>
+      <property>closeDate</property>
+      <property>closed</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+      
+    </map>
+    <map class="com.zeroio.iteam.base.Assignment" id="assignment">
+      <property alias="guid">id</property>
+      <property lookup="project">projectId</property>
+      <property lookup="requirement">requirementId</property>
+      <property lookup="user">assignedBy</property>
+      <property lookup="user">userAssignedId</property>
+      <property lookup="lookupProjectActivity">activityId</property>
+      <property>technology</property>
+      <property>role</property>
+      <property>estimatedLoe</property>
+      <property lookup="lookupProjectLoe">estimatedLoeTypeId</property>
+      <property>actualLoe</property>
+      <property lookup="lookupProjectLoe">actualLoeTypeId</property>
+      <property lookup="lookupProjectPriority">priorityId</property>
+      <property>assignDate</property>
+      <property>estStartDate</property>
+      <property>startDate</property>
+      <property>dueDate</property>
+      <property lookup="lookupProjectStatus">statusId</property>
+      <property>statusDate</property>
+      <property>completeDate</property>
       <property>entered</property>
       <property lookup="user">enteredBy</property>
       <property>modified</property>

@@ -16,15 +16,15 @@ import com.darkhorseventures.utils.*;
  */
 public class LookupElement {
 
-  private String tableName = null;
-  private int code = 0;
-  private String description = "";
-  private boolean defaultItem = false;
-  private int level = 0;
-  private boolean enabled = true;
-  private java.sql.Timestamp entered = null;
-  private java.sql.Timestamp modified = null;
-  private int fieldId = -1;
+  protected String tableName = null;
+  protected int code = 0;
+  protected String description = "";
+  protected boolean defaultItem = false;
+  protected int level = 0;
+  protected boolean enabled = true;
+  protected java.sql.Timestamp entered = null;
+  protected java.sql.Timestamp modified = null;
+  protected int fieldId = -1;
 
 
   /**

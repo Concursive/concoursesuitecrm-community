@@ -37,4 +37,15 @@ public class PropertyMapList extends HashMap {
     }
     return processOK;
   }
+  
+  public PropertyMap getMap(String mapId) {
+    Iterator maps = this.keySet().iterator();
+    while (maps.hasNext()) {
+      PropertyMap thisMap = (PropertyMap)maps.next();
+      if (mapId.equals(thisMap.getId())) {
+        return thisMap;
+      }
+    }
+    return null;
+  }
 }
