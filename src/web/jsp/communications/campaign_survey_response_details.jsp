@@ -58,10 +58,10 @@ Response Details
                   </td>
                </tr>
                  <tr>
-                   <td>
+                   <td class="containerBody">
                     <table cellpadding="4" cellspacing="0" border="<%= border %>" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
                     <dhv:evaluate exp="<%= (type == SurveyQuestion.OPEN_ENDED) %>">
-                      <tr><td align="left">Answer</td><td align="left">Comment</td></tr>
+                      <tr><td align="left">Comment</td></tr>
                     </dhv:evaluate>
                     <dhv:evaluate exp="<%= (type == SurveyQuestion.ITEMLIST) %>">
                       <tr><td width="100%" align="left">Item</td><td align="left">Selection</td></tr>
@@ -72,7 +72,7 @@ Response Details
                         while(i.hasNext()){
                           ActiveSurveyQuestionItem item = (ActiveSurveyQuestionItem) i.next();
                         %>
-                          <tr><td width="100%" align="left"><%= item.getDescription() %></td><td align="left"><%= itemListResponse.get((Object) item) %></td></tr>
+                          <tr><td width="80%" align="left"><%= item.getDescription() %></td><td align="left"><%= itemListResponse.get((Object) item) %></td></tr>
                         <%}
                         }else{
                       %>

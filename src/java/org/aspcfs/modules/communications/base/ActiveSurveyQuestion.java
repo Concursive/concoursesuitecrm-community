@@ -361,7 +361,7 @@ public class ActiveSurveyQuestion {
           itemListResponse.remove((Object) thisItem);
           itemListResponse.put(thisItem, new Integer(count.intValue() + 1));
         } else {
-          itemListResponse.put(thisItem, new Integer(0));
+          itemListResponse.put(thisItem, new Integer(1));
         }
       }
     }
