@@ -52,22 +52,24 @@ public final class AdminCategories extends CFSModule {
       context.getRequest().setAttribute("PermissionCategory", permCat);
 
       //create lists for selected categories
-      HashMap tmpList = (HashMap) context.getSession().getAttribute("selectedCategories");
-      if (tmpList == null || "true".equals(context.getRequest().getParameter("reset"))) {
-        tmpList = new HashMap();
-        context.getSession().setAttribute("selectedCategories", tmpList);
-      }
-      HashMap categories = thisEditor.getCategoryList();
-      for (int k = 1; k < 4; k++) {
-        TicketCategoryDraftList subList = null;
-        if (tmpList.get(new Integer(k - 1)) != null) {
-          TicketCategoryDraft tmpCat = (TicketCategoryDraft) categories.get((Integer) (tmpList.get(new Integer(k - 1))));
-          subList = tmpCat.getShortChildList();
-        } else {
-          subList = new TicketCategoryDraftList();
+      HashMap tmpList = null;
+      if (context.getSession().getAttribute("selectedCategories") != null ||  "true".equals(context.getRequest().getParameter("reset"))) {
+        tmpList = (HashMap) context.getSession().getAttribute("selectedCategories");
+        HashMap categories = thisEditor.getCategoryList();
+        for (int k = 1; k < 4; k++) {
+          TicketCategoryDraftList subList = null;
+          if (tmpList.get(new Integer(k - 1)) != null) {
+            TicketCategoryDraft tmpCat = (TicketCategoryDraft) categories.get((Integer) (tmpList.get(new Integer(k - 1))));
+            subList = tmpCat.getShortChildList();
+          } else {
+            subList = new TicketCategoryDraftList();
+          }
+          subList.setHtmlJsEvent("onChange=\"javascript:loadCategories('" + k + "');\"");
+          context.getRequest().setAttribute("SubList" + k, subList);
         }
-        subList.setHtmlJsEvent("onChange=\"javascript:loadCategories('" + k + "');\"");
-        context.getRequest().setAttribute("SubList" + k, subList);
+      }else{
+          tmpList = new HashMap();
+          context.getSession().setAttribute("selectedCategories", tmpList);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -135,7 +137,7 @@ public final class AdminCategories extends CFSModule {
     if (!(hasPermission(context, "admin-view"))) {
       return ("PermissionError");
     }
-    
+
     String categoryId = context.getRequest().getParameter("categoryId");
     String level = context.getRequest().getParameter("level");
     Exception errorMessage = null;
@@ -162,7 +164,6 @@ public final class AdminCategories extends CFSModule {
         HashMap tmpList = thisEditor.getHierarchyAsList(Integer.parseInt(categoryId));
         context.getSession().setAttribute("selectedCategories", tmpList);
       }
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -233,7 +234,7 @@ public final class AdminCategories extends CFSModule {
     if (!(hasPermission(context, "admin-view"))) {
       return ("PermissionError");
     }
-    
+
     HtmlDialog htmlDialog = new HtmlDialog();
     Exception errorMessage = null;
     Connection db = null;
@@ -243,10 +244,10 @@ public final class AdminCategories extends CFSModule {
     String level = context.getRequest().getParameter("level");
     try {
       db = getConnection(context);
-      
+
       //escape the ' character in the categories parameter
       categories = StringUtils.replacePattern(categories, "'", "\\\\'");
-      
+
       //get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
       CategoryEditor thisEditor = systemStatus.getCategoryEditor(db);
@@ -396,6 +397,9 @@ public final class AdminCategories extends CFSModule {
       categoryList.setParentCode(0);
       categoryList.setHtmlJsEvent("onChange=\"javascript:loadCategory();\"");
       categoryList.buildList(db);
+      if(categoryList.size() == 0){
+        categoryList.getCatListSelect().addItem(0, "---------None---------");
+      }
       context.getRequest().setAttribute("TopCategoryList", categoryList);
 
       //build the module details
