@@ -15,36 +15,6 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
 <!-- Begin
-function HideSpans() {
-	isNS = (document.layers) ? true : false;
-	isIE = (document.all) ? true : false;
-  if( (isIE) ){
-    //document.all.new0.style.visibility="hidden";
-    //document.all.new1.style.visibility="hidden";
-    //document.all.new2.style.visibility="hidden";
-    //document.all.new3.style.visibility="hidden";
-  } else if( (isNS) ) {
-    document.new0.visibility="hidden";
-    document.new1.visibility="hidden";
-    document.new2.visibility="hidden";
-    document.new3.visibility="hidden";
-  }
-  return true;
-}
-function ShowSpan(thisID){
-	isNS4 = (document.layers) ? true : false;
-	isIE4 = (document.all && !document.getElementById) ? true : false;
-	isIE5 = (document.all && document.getElementById) ? true : false;
-	isNS6 = (!document.all && document.getElementById) ? true : false;
-	if (isNS4){
-	elm = document.layers[thisID];
-	} else if (isIE4) {
-	elm = document.all[thisID];
-	} else if (isIE5 || isNS6) {
-	elm = document.getElementById(thisID);
-	elm.style.visibility="visible";
-	}
-}
   function updateSubList1() {
     var sel = document.forms['details'].elements['catCode'];
     var value = sel.options[sel.selectedIndex].value;
@@ -85,7 +55,7 @@ function ShowSpan(thisID){
   }
 //  End -->
 </script>
-<body onLoad="HideSpans();">
+<body>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -198,9 +168,6 @@ Modify Ticket<br>
 		</td>
 		<td>
       <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
-<% if (TicketDetails.getCatCode() == 0) { %>
-			<input type="checkbox" name="newCat0chk" onClick="javascript:ShowSpan('new0')">add new<span name="new0" ID="new0" style="position:relative; visibility:hidden">&nbsp;<input type=text size=25 name=newCat0></span>
-<%}%>
 		</td>
   </tr>
   </dhv:include>
@@ -211,9 +178,6 @@ Modify Ticket<br>
 		</td>
     <td>
       <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
-<% if (TicketDetails.getCatCode() != 0 && TicketDetails.getSubCat1() == 0) { %>
-			<input type="checkbox" name="newCat1chk" onClick="javascript:ShowSpan('new1')">add new<span name="new1" ID="new1" style="visibility:hidden">&nbsp;<input type=text size=25 name=newCat1></span>
-<%}%>
 		</td>
   </tr>
   </dhv:include>
@@ -224,9 +188,6 @@ Modify Ticket<br>
 		</td>
 		<td>
       <%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
-<% if (TicketDetails.getSubCat1() != 0 && TicketDetails.getCatCode() != 0 && TicketDetails.getSubCat2() == 0) { %>
-			<input type="checkbox" name="newCat2chk" onClick="javascript:ShowSpan('new2')">add new<span name="new2" ID="new2" style="visibility:hidden">&nbsp;<input type=text size=25 name=newCat2></span>
-<%}%>
 		</td>
   </tr>
   </dhv:include>
@@ -237,9 +198,6 @@ Modify Ticket<br>
 		</td>
 		<td>
       <%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
-<% if (TicketDetails.getSubCat2() != 0 && TicketDetails.getCatCode() != 0 && TicketDetails.getSubCat1() != 0) { %>
-			<input type="checkbox" name="newCat3chk" onClick="javascript:ShowSpan('new3')">add new<span name="new3" ID="new3" style="visibility:hidden">&nbsp;<input type=text size=25 name=newCat3></span>
-<%}%>
 		</td>
   </tr>
   </dhv:include>
