@@ -103,7 +103,8 @@ A:visited:hover{color:#FF3300;}
 }
 /* container menu tabs */
 .tabs {
-	color: #fff;
+	width: 100%;
+  color: #fff;
   margin: 0;
 	padding-top: .67em;
 	padding-left: 0px;

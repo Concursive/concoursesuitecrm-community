@@ -137,7 +137,7 @@ public class ContainerMenuHandler extends TagSupport {
         boolean itemOutput = false;
         if (style == TABS) {
           this.pageContext.getOut().write("<div class=\"tabs\" id=\"toptabs\">");
-          this.pageContext.getOut().write("<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\"><tr>");
+          this.pageContext.getOut().write("<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr>");
         }
         while (i.hasNext()) {
           SubmenuItem thisItem = (SubmenuItem) i.next();
@@ -177,7 +177,7 @@ public class ContainerMenuHandler extends TagSupport {
           }
         }
         if (style == TABS) {
-          this.pageContext.getOut().write("<td width=\"100%\" style=\"background-image: none; background-color: transparent; border: 0px; border-bottom: 1px solid #666; cursor: default\">&nbsp;</td>");
+          this.pageContext.getOut().write("<td style=\"width:100%; background-image: none; background-color: transparent; border: 0px; border-bottom: 1px solid #666; cursor: default\">&nbsp;</td>");
           this.pageContext.getOut().write("</tr></table></div>");
         }
       }
