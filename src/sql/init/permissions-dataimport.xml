@@ -1,0 +1,8 @@
+<data-import-config>
+  <description>
+    Imports permission categories, permissions, roles into CFS from an XML file.
+    Specify the reader's processConfigFile and the writer's database url, driver.
+  </description>
+  <reader class="com.darkhorseventures.apps.dataimport.reader.cfs.InitPermissionsAndRoles"/>
+  <writer class="com.darkhorseventures.apps.dataimport.writer.cfsdatabasewriter.PermissionsAndRolesWriter"/>
+</data-import-config>
