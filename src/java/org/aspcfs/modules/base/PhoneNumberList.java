@@ -80,7 +80,7 @@ public class PhoneNumberList extends Vector {
   public String getPhoneNumber(String thisType) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      PhoneNumber thisNumber = (PhoneNumber)i.next();
+      PhoneNumber thisNumber = (PhoneNumber) i.next();
       if (thisType.equals(thisNumber.getTypeName())) {
         return thisNumber.getPhoneNumber();
       }
@@ -88,17 +88,43 @@ public class PhoneNumberList extends Vector {
     return "";
   }
 
-  
+
+  /**
+   *  Gets the phoneNumber attribute of the PhoneNumberList object
+   *
+   *@param  thisType  Description of the Parameter
+   *@return           The phoneNumber value
+   */
   public String getPhoneNumber(int thisType) {
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      PhoneNumber thisNumber = (PhoneNumber)i.next();
+      PhoneNumber thisNumber = (PhoneNumber) i.next();
       if (thisType == thisNumber.getType()) {
         return thisNumber.getPhoneNumber();
       }
     }
     return "";
   }
+
+
+  /**
+   *  Gets the extension attribute of the PhoneNumberList object
+   *
+   *@param  tmpNumber  Description of the Parameter
+   *@return            The extension value
+   */
+  public String getExtension(String tmpNumber) {
+    Iterator i = this.iterator();
+    System.out.println("tmpNumber " + tmpNumber);
+    while (i.hasNext()) {
+      PhoneNumber thisNumber = (PhoneNumber) i.next();
+      if (tmpNumber.equals(thisNumber.getPhoneNumber())) {
+        return thisNumber.getExtension();
+      }
+    }
+    return "";
+  }
+
 
   /**
    *  Builds a base SQL where statement for filtering records to be used by
@@ -111,15 +137,12 @@ public class PhoneNumberList extends Vector {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
     if (orgId != -1) {
       sqlFilter.append("AND org_id = ? ");
     }
-
     if (type != -1) {
       sqlFilter.append("AND phone_type = ? ");
     }
-
     if (contactId != -1) {
       sqlFilter.append("AND contact_id = ? ");
     }
@@ -140,17 +163,14 @@ public class PhoneNumberList extends Vector {
     if (orgId != -1) {
       pst.setInt(++i, orgId);
     }
-
     if (type != -1) {
       pst.setInt(++i, type);
     }
-
     if (contactId != -1) {
       pst.setInt(++i, contactId);
     }
-
     return i;
   }
-  
+
 }
 
