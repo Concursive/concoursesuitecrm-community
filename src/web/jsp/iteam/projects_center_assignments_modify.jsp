@@ -71,9 +71,9 @@
     <tr>
       <td width="2" bgcolor="#000000">&nbsp;</td>
       <td width="100%" colspan="4">&nbsp;<br>
-        &nbsp;Link to Requirement:<br>
+        &nbsp;Activity Description:<br>
         &nbsp;
-        <%= RequirementList.getHtmlSelect("requirementId", Assignment.getRequirementId()) %><font color=red>*</font> <%= showAttribute(request, "requirementIdError") %>
+        <input type='text' name='role' size='57' maxlength='150' value='<%= toHtmlValue(Assignment.getRole()) %>'><font color=red>*</font> <%= showAttribute(request, "roleError") %>
         <br>
       </td>
       <td width="2" bgcolor="#000000">&nbsp;</td>
@@ -81,9 +81,9 @@
     <tr>
       <td width="2" bgcolor="#000000">&nbsp;</td>
       <td width="100%" colspan="4">&nbsp;<br>
-        &nbsp;Activity Description:<br>
+        &nbsp;Link to Requirement:<br>
         &nbsp;
-        <input type='text' name='role' size='57' maxlength='150' value='<%= toHtmlValue(Assignment.getRole()) %>'><font color=red>*</font> <%= showAttribute(request, "roleError") %>
+        <%= RequirementList.getHtmlSelect("requirementId", Assignment.getRequirementId()) %><font color=red>*</font> <%= showAttribute(request, "requirementIdError") %>
         <br>
         &nbsp;
       </td>
