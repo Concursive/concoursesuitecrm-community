@@ -19,7 +19,7 @@
       <value><![CDATA[<img border="0" src="images/dev21.jpg">]]></value>
     </param>
     <param name="ticket.issue">
-      <value>Issue</value>
+      <value>Description of Issue</value>
     </param>
     <param name="organization.accountNumber">
       <value>Cust ID</value>
