@@ -9,7 +9,7 @@
 <a href="Admin.do">Setup</a> > 
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-<%= toHtml(PermissionCategory.getCategory()) %> Categories
+Categories
 <br>
 <hr color="#BFBFBB" noshade>
 
