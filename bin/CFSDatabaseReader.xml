@@ -509,5 +509,12 @@
       <property field="reply_date"/>
       <property field="bounce_date"/>
     </map>
+    <map class="com.darkhorseventures.cfsbase.AccessLog" id="accessLog">
+      <property alias="guid">id</property>
+      <property lookup="user">userId</property>
+      <property>username</property>
+      <property>ip</property>
+      <property>browser</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

@@ -46,6 +46,16 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    logger.info("ImportBaseData-> Inserting access log records");
+    writer.setAutoCommit(false);
+    AccessLogList accessLog = new AccessLogList();
+    accessLog.buildList(db);
+    mappings.saveList(writer, accessLog, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+    
     
     //TODO: update all user managers, update all user contact_ids
 

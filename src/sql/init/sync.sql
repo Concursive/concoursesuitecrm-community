@@ -786,5 +786,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'scheduledRecipientList', 'com.darkhorseventures.webutils.CustomLookupList');
  
+ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'accessLog', 'com.darkhorseventures.cfsbase.AccessLog');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'accessLogList', 'com.darkhorseventures.cfsbase.AccessLogList');
 
  
