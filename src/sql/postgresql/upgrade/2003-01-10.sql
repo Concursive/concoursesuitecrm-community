@@ -22,6 +22,8 @@ INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES 
 INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('contactId', 'Contact ID', 't', 0);
 INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('title', 'Contact Title', 'f', 0);
 
+alter table contact add column url varchar(100);
+
 /*   3/25/2002  
 
   On the next update of ASPCFS.com, make sure to update the following

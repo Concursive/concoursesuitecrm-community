@@ -54,6 +54,8 @@ public class Contact extends GenericBean {
   private boolean hasAccount = false;
   private boolean excludedFromCampaign = false;
   private int owner = -1;
+  private String url = null;
+  
 
   private ContactEmailAddressList emailAddressList = new ContactEmailAddressList();
   private ContactPhoneNumberList phoneNumberList = new ContactPhoneNumberList();
@@ -150,7 +152,13 @@ public class Contact extends GenericBean {
   public void setOwnerName(String ownerName) {
     this.ownerName = ownerName;
   }
-
+  
+ public String getUrl() {
+	return url;
+}
+public void setUrl(String url) {
+	this.url = url;
+}
 
   /**
    *  Sets the Id attribute of the Contact object
@@ -238,7 +246,7 @@ public class Contact extends GenericBean {
   public void setId(String tmp) {
     this.setId(Integer.parseInt(tmp));
   }
-
+  
 
   /**
    *  Sets the OrgId attribute of the Contact object
@@ -1668,7 +1676,7 @@ public class Contact extends GenericBean {
         "UPDATE contact " +
         "SET company = ?, title = ?, department = ?, namesalutation = ?, " +
         "namefirst = ?, namelast = ?, " +
-        "namemiddle = ?, namesuffix = ?, type_id = ?, notes = ?, owner = ?, ");
+        "namemiddle = ?, namesuffix = ?, type_id = ?, notes = ?, owner = ?, url = ?, ");
     if (orgId > -1) {
       sql.append("org_id = ?, ");
     }
@@ -1703,6 +1711,7 @@ public class Contact extends GenericBean {
     pst.setInt(++i, this.getTypeId());
     pst.setString(++i, this.getNotes());
     pst.setInt(++i, this.getOwner());
+    pst.setString(++i, this.getUrl());
 
     if (orgId > -1) {
       pst.setInt(++i, this.getOrgId());
@@ -1772,6 +1781,7 @@ public class Contact extends GenericBean {
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
     owner = rs.getInt("owner");
+    url = rs.getString("url");
     
     //lookup_department table
     departmentName = rs.getString("departmentname");
