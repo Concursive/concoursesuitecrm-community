@@ -66,13 +66,6 @@
       <short_html value="Employees"/>
       <link value="CompanyDirectory.do?command=ListEmployees"/>
     </submenu>
-      
-    <submenu name="Add Employee">
-      <permission value="contacts-internal_contacts-add"/>
-      <long_html value="Add Employee"/>
-      <short_html value="Add&lt;br&gt;Employee"/>
-      <link value="CompanyDirectory.do?command=InsertEmployeeForm"/>
-    </submenu>
     
     <submenu name="Reassign">
         <permission value="myhomepage-reassign-view"/>
