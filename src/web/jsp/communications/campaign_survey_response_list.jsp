@@ -29,7 +29,7 @@ Response
 <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="SurveyResponseListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td align="left" width="30" nowrap>
+    <td align="left" width="20%" nowrap>
       <strong><a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>&column=c.namelast">Name</a></strong>
       <%= SurveyResponseListInfo.getSortIcon("c.namelast") %>
       </td>
@@ -54,7 +54,7 @@ Response
         <a href="CampaignManager.do?command=ResponseDetails&id=<%= Campaign.getId() %>&contactId=<%= thisResponse.getContactId() %>"><%= toHtml(thisResponse.getContact().getNameLastFirst()) %></a>
       </td>
       <td valign="middle" align="left" nowrap>
-        <%= toDateString(thisResponse.getEntered()) %>&nbsp;
+        <%= toDateTimeString(thisResponse.getEntered()) %>&nbsp;
       </td>
       <td align="left"><%= toHtml(thisResponse.getIpAddress()) %>&nbsp;</td>
       <td align="left" valign="middle" align="left"  nowrap>
