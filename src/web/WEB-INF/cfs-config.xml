@@ -1064,6 +1064,7 @@
   <!-- Initial Setup actions -->
   <action name="LicenseServer" class="org.aspcfs.modules.setup.actions.SetupServer">
     <forward name="SubmitProcessOK" resource="/service/system_process_packet.jsp"/>
+    <forward name="UpdateProcessOK" resource="/service/system_process_packet.jsp"/>
   </action>
   <action name="Setup" class="org.aspcfs.modules.setup.actions.Setup">
     <bean name="registration" class="org.aspcfs.modules.setup.beans.RegistrationBean" scope="request" />
