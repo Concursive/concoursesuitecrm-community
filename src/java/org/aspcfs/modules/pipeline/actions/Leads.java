@@ -285,7 +285,7 @@ public final class Leads extends CFSModule {
 	    hnAxis.getLabelPaint(), hnAxis.getLabelInsets(), true, hnAxis.getTickLabelFont(), 
 	    hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(), 
 	    true, createDate( (d.getYear()+1900), d.getMonth(), 0), createDate((d.getYear() + 1901), d.getMonth(), 0), false, new DateUnit(Calendar.MONTH, 1), 
-	    new SimpleDateFormat("MMM '  ' yy"), true, gridStroke, gridPaint);
+	    new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint);
 	    
 	    bPlot.setHorizontalAxis(myHorizontalDateAxis);
 	    } catch (AxisNotCompatibleException err1) 
