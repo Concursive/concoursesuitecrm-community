@@ -1,5 +1,6 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Dialog" class="com.darkhorseventures.webutils.HtmlDialog" scope="session"/>
+<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <%@ include file="initPage.jsp" %>
 
 <%if(Dialog.getShowAndConfirm()){
@@ -19,6 +20,8 @@ else{%>
 <%}
 }else{%>
 <html>
+        <link rel="stylesheet" href="css/template0<%= User.getBrowserIdAndOS() %>.css" type="text/css">
+        <link rel="stylesheet" href="css/template0.css" type="text/css">
   <title><%=Dialog.getTitle()%></title>
   <body>
     <br>

@@ -2061,9 +2061,9 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-          if (rs.getInt("oppcount") != 0) {    
+          //if (rs.getInt("oppcount") != 0) {    
                   dependencyList.put("Opportunities", new Integer(rs.getInt("oppcount")));
-          }
+         // }
       }
       
       sql = "SELECT count(*) as callcount " +
@@ -2075,9 +2075,9 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        if (rs.getInt("callcount") != 0) {
+        //if (rs.getInt("callcount") != 0) {
           dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
-        }
+        //}
       }
       
       sql = "SELECT count(*) as foldercount " +
@@ -2089,9 +2089,9 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        if (rs.getInt("foldercount") != 0) {
+       // if (rs.getInt("foldercount") != 0) {
           dependencyList.put("Folders", new Integer(rs.getInt("foldercount")));
-        }
+       // }
       }
       
       pst.close();

@@ -1173,16 +1173,16 @@ public final class ExternalContacts extends CFSModule {
       thisContact = new Contact(db, id);
       htmlDialog.setRelationships(thisContact.processDependencies(db));
       
-      if (htmlDialog.getRelationships().size() == 0) {
-        htmlDialog.setTitle("Confirm");
-        htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContacts.do?command=Delete&id=" + id + "'");
-      } else {
+      //if (htmlDialog.getRelationships().size() == 0) {
+      //  htmlDialog.setTitle("Confirm");
+     //   htmlDialog.setShowAndConfirm(false);
+     //   htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContacts.do?command=Delete&id=" + id + "'");
+      //} else {
         htmlDialog.setTitle("Confirm");
         htmlDialog.setHeader("The object you are requesting to delete has the following CFS dependencies: ");
         htmlDialog.addButton("Delete All", "javascript:window.location.href='/ExternalContacts.do?command=DeleteContact&id=" + id + "'");
         htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
-      }
+     // }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
