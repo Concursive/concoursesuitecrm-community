@@ -56,7 +56,7 @@ public class Contact extends GenericBean {
   private int owner = -1;
   private int custom1 = -1;
   private String url = null;
-  
+  private int userId = -1;
 
   private ContactEmailAddressList emailAddressList = new ContactEmailAddressList();
   private ContactPhoneNumberList phoneNumberList = new ContactPhoneNumberList();
@@ -711,6 +711,15 @@ public void setCustom1(String custom1) {
     return modified;
   }
 
+
+   /**
+   *  Gets the user_id attribute of the Contact object
+   *
+   *@return    The user_id value
+   */
+  public int getUserId() {
+	return userId;
+  }
 
   /**
    *  Gets the modifiedString attribute of the Contact object
@@ -1816,6 +1825,54 @@ public void setCustom1(String custom1) {
     orgName = rs.getString("org_name");
   }
 
+  
+  public int getContactType(Connection db,int id) throws SQLException {
+	  System.out.println("Comin in getCOntactType");
+	 PreparedStatement pst = null;
+	 ResultSet rs = null;
+	 int typeId = -1;   
+	 
+	 try {
+	if (id == -1) {
+		   System.out.println("Invalid Contact ID");
+	 }
+	   
+	 StringBuffer sql = new StringBuffer();
+	 db.setAutoCommit(false);
+	 if (System.getProperty("DEBUG") != null) {
+		  System.out.println("Contact-> Retrieving contact");
+	  }
+         sql.append(
+          "SELECT user_id,type_id " +
+          "FROM contact "+
+	  "where contact_id =" + id + " ");
+	  System.out.println("Contact Query "+sql.toString());
+	  int i = 0;
+	  Statement st = db.createStatement();
+	  pst = db.prepareStatement(sql.toString());
+	  rs  = pst.executeQuery();
+	  if (rs.next()) {
+	       this.userId = rs.getInt("user_id");
+	       typeId = rs.getInt("type_id");
+	  }
+	  System.out.println("Type id is"+typeId);
+      
+      	pst.close();
+	rs.close();
+	st.close();
+	if (System.getProperty("DEBUG") != null) {
+		System.out.println("Contact-> ContactID: " + this.getId());
+	}
+	db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return typeId;
+ }
 
   /**
    *  Description of the Method

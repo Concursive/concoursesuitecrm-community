@@ -40,7 +40,7 @@ public class ContactList extends Vector {
   private String accountOwnerIdRange = null;
   private boolean withAccountsOnly = false;
   private String emptyHtmlSelectRecord = null;
-
+    
   //ranges
   private String companyRange = null;
   private String nameFirstRange = null;
@@ -422,6 +422,7 @@ public class ContactList extends Vector {
   }
 
 
+  
   /**
    *  Gets the contactIdRange attribute of the ContactList object
    *
@@ -966,7 +967,6 @@ public class ContactList extends Vector {
     }
     rs.close();
     pst.close();
-
     buildResources(db);
   }
 
@@ -1184,6 +1184,9 @@ public class ContactList extends Vector {
 
       if (personalId != -1) {
         sqlFilter.append("AND (c.type_id != 2 OR (c.type_id = 2 AND c.owner = ?) ) ");
+      }
+      else{
+	sqlFilter.append("AND c.type_id != 2 ");
       }
 
       if (ignoreTypeIdList.size() > 0) {
