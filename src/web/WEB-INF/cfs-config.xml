@@ -308,7 +308,7 @@
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
     <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
     <forward name="PopupOK" resource="/projects_center_assignments_modify.jsp" layout="style"/>
-    <forward name="PopupCloseOK" resource="/closepopup.jsp"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="ProjectManagementIssues" class="com.darkhorseventures.cfsmodule.ProjectManagementIssues">
     <bean name="Issue" class="com.zeroio.iteam.base.Issue" scope="request" />
@@ -318,7 +318,7 @@
     <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
     <forward name="PopupOK" resource="/projects_center_issues_details.jsp" layout="style"/>
-    <forward name="PopupCloseOK" resource="/closepopup.jsp"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="ProjectManagementIssueReply" class="com.darkhorseventures.cfsmodule.ProjectManagementIssues">
     <bean name="IssueReply" class="com.zeroio.iteam.base.IssueReply" scope="request" />
@@ -445,6 +445,11 @@
   </action>
   <!-- End Setup Module -->
   
+  <action name="Help" class="com.darkhorseventures.cfsmodule.Help">
+    <bean name="Help" class="com.darkhorseventures.cfsbase.HelpItem" scope="request" />
+    <forward name="HelpOK" resource="/help.jsp" layout="style"/>
+    <forward name="ProcessOK" resource="/closepopup.jsp"/>
+  </action>
   
   <action name="Search" class="com.darkhorseventures.cfsmodule.Search">
     <forward name="SecurityCheck" resource="/login.jsp"/>
