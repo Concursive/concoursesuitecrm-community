@@ -249,6 +249,7 @@ public class UpgradeDatabaseTask extends Task {
       Interpreter script = new Interpreter();
       script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "aspcfs.jar\")");
       script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "darkhorseventures.jar\")");
+      script.eval("addClassPath(bsh.cwd + \"" + fsEval + "build" + fsEval + "lib" + fsEval + "zeroio-iteam.jar\")");
       script.eval("addClassPath(\"" + servletJar + "\")");
       script.set("db", db);
       script.set("fileLibraryPath", webPath);

@@ -169,11 +169,12 @@ A:visited:hover{color:#FF3300;}
 .pagedList {
   border: 1px solid #000;
 }
-.pagedList th {
+.pagedList th, .pagedList th a:link, .pagedList th a:visited {
   text-align: left;
   border-bottom: 1px solid #000;
   border-right: 1px solid #666;
   background-color: #DEE0FA;
+  color: #000;
 }
 .pagedList td {
   border-bottom: 1px solid #666 !important;
@@ -188,6 +189,7 @@ A:visited:hover{color:#FF3300;}
   border-bottom: 1px solid #000;
   border-right: 1px solid #666;
   background-color: #DEE0FA;
+  color: #000;
 }
 .details td {
   border-bottom: 1px solid #666;
@@ -222,7 +224,7 @@ A:visited:hover{color:#FF3300;}
 
 .highlight { color: #006699; font-weight: bold; }
 
-.title { background: #DEE0FA; }
+.title { background: #DEE0FA; color: #000; }
 .title2 { background: #D4D4D4; }
 
 .column { color: #000080; font-weight: bold; }
@@ -239,7 +241,10 @@ A:visited:hover{color:#FF3300;}
 .appt { color: #000000; }
 .underline { text-decoration: underline; }
 .smallfooter { color: #000000; text-align: center; }
-
+.cellBox {
+  background: #DEE0FA;
+  border: 1px solid #FFF;
+}
 .calendar { 
   background: #BFBFBB;
   border: 1px solid #000;
@@ -247,6 +252,7 @@ A:visited:hover{color:#FF3300;}
 .calendar th { 
   text-align: center;
   background: #DEE0FA;
+  color: #000;
   border-bottom: 1px solid #000;
   border-right: 1px solid #666;
   font-weight: normal;
@@ -330,6 +336,7 @@ A:visited:hover{color:#FF3300;}
 .smallcalendar th {
   text-align: center;
   background: #DEE0FA;
+  color: #000;
   border: none;
 }
 .smallcalendar td {
@@ -392,6 +399,17 @@ A:visited:hover{color:#FF3300;}
   background-image: url(../images/tabs/tabtopleft-unsel.gif);
   background-color: #fffbde;
   border-right: 1px solid #41413a;
+}
+.pagedListHeader {
+  width: 100%;
+  margin: 0;
+  border-bottom: 4px solid #FFF;
+}
+.pagedListHeader td {
+  color: #000;
+  font-weight: bold;
+  background-color: #FFF;
+  padding-bottom: 4px;
 }
 .underlineSection td {
   border-bottom: 1px #333 solid;

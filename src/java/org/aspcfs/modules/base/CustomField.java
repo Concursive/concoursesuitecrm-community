@@ -125,7 +125,7 @@ public class CustomField extends GenericBean implements Cloneable {
   public CustomField(Connection db, int thisId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
-        "FROM custom_field cf " +
+        "FROM custom_field_info cf " +
         "WHERE cf.field_id = ? ");
     pst.setInt(1, thisId);
     ResultSet rs = pst.executeQuery();
@@ -768,6 +768,26 @@ public class CustomField extends GenericBean implements Cloneable {
     } else {
       this.enteredValue = null;
     }
+  }
+
+
+  /**
+   *  Sets the enteredNumber attribute of the CustomField object
+   *
+   *@param  tmp  The new enteredNumber value
+   */
+  public void setEnteredNumber(int tmp) {
+    this.enteredNumber = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredDouble attribute of the CustomField object
+   *
+   *@param  tmp  The new enteredDouble value
+   */
+  public void setEnteredDouble(double tmp) {
+    this.enteredDouble = tmp;
   }
 
 
@@ -2000,5 +2020,29 @@ public class CustomField extends GenericBean implements Cloneable {
     enteredValue = rs.getString("entered_value");
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  name              Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int locateIdByName(Connection db, String name) throws SQLException {
+    int id = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT field_id " +
+        "FROM custom_field_info cf " +
+        "WHERE cf.field_name = ? ");
+    pst.setString(1, name);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      id = rs.getInt("field_id");
+    }
+    rs.close();
+    pst.close();
+    return id;
+  }
 }
 
