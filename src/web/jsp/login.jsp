@@ -21,7 +21,11 @@
   }
 </script>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="<%
-  if (LoginBean.getUsername().equals("")) {
+  if (request.getParameter("popup") != null) {
+    out.println("window.opener.location='MyCFS.do?command=Home'; window.close();");
+  } else if (request.getParameter("inline") != null) {
+    out.println("window.parent.location='MyCFS.do?command=Home'");
+  } else if (LoginBean.getUsername().equals("")) {
     out.println("document.login.username.focus()");
   } else {
     out.println("document.login.password.focus()");

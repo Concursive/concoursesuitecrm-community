@@ -4,7 +4,7 @@
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
 <jsp:useBean id="NewUserList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="IndSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></script>
 <%@ include file="initPage.jsp" %>
 <% 
   String returnPage = request.getParameter("return");
@@ -19,8 +19,8 @@
     window.frames[frameName].location.href=sourceUrl;
   }
   function reloadFrames(){
-    window.frames['calendar'].location.href='MyCFS.do?command=MonthView&source=Calendar';
-    window.frames['calendardetails'].location.href='MyCFS.do?command=Alerts&source=calendarDetails';
+    window.frames['calendar'].location.href='MyCFS.do?command=MonthView&source=Calendar&inline=true';
+    window.frames['calendardetails'].location.href='MyCFS.do?command=Alerts&source=calendarDetails&inline=true';
   }
 </script>
 
@@ -51,7 +51,7 @@
             <table width="100%" cellspacing="4" cellpadding="0" border="0" class="title">
               <tr class="title">
                 <td width="60%" valign="center">
-                 <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&alertsView='+document.getElementById('alerts').value);">
+                 <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&alertsView='+document.getElementById('alerts').value);">
                    <option value="All" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all")?" selected":"" %>>All Scheduled Actions</option>
                    <option value="Call" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("call")?" selected":"" %>>Calls</option>
                    <option value="Task" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("task")?" selected":"" %>>Tasks</option>
