@@ -1534,7 +1534,7 @@ public void setCustom1(int custom1) {
       isEnabled = rs.getBoolean("enabled");
     }
     rs.close();
-    st.close();
+    //st.close();
 
     if (hasAccess && isEnabled) {
       errors.put("actionError", "This contact has an active user account and could not be deleted.");
