@@ -263,6 +263,14 @@ public class TransactionItem {
       syncClientMap.insert(db, (String) record.get("modified"));
     }
   }
+  
+  public void updateClientMapping(Connection db, Record record) throws SQLException {
+    if (record.containsKey("guid")) {
+      syncClientMap.setRecordId(record.getRecordId());
+      syncClientMap.setClientUniqueId((String)record.get("guid"));
+      syncClientMap.updateStatusDate(db, (String) record.get("modified"));
+    }
+  }
 
 
   /**
@@ -381,12 +389,11 @@ public class TransactionItem {
         if (action == UPDATE) {
           //Set the object's id to be written, based on the client guid
           this.setObjectId(db);
+          //TODO: Does this work?  Is modified set correctly?
           //Retrieve the previous modified date to ensure integrity of update
           syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
           syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
-          //TODO: Read modified from sync_map
           syncClientMap.buildStatusDate(db);
-          //TODO: Set modified from read
           ObjectUtils.setParam(object, "modified", syncClientMap.getStatusDate());
         }
         Object result = doExecute(db, executeMethod);
@@ -602,16 +609,17 @@ public class TransactionItem {
           default:
             break;
       }
-      Record thisRecord = addRecords(thisObject, recordList, recordAction);
-      //if exists then insert it
       if (syncType == Constants.SYNC_INSERTS) {
-        this.insertClientMapping(dbLookup, thisRecord);
+        //TODO: Check to see if the client already has this record...
+        if (syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")) == -1) {
+          Record thisRecord = addRecords(thisObject, recordList, recordAction);
+          this.insertClientMapping(dbLookup, thisRecord);
+        }
       } else if (syncType == Constants.SYNC_UPDATES) {
-        //this.updateClientMapping(dbLookup, thisRecord);
+        Record thisRecord = addRecords(thisObject, recordList, recordAction);
+        //TODO: See if this works...
+        this.updateClientMapping(dbLookup, thisRecord);
       }
-      //TODO: else it shouldn't be in the result!
-      //TODO: if the record has a guid from a subobject, then retrieve the
-      //correct cuid for the client...
     }
     ((ResultSet) result).close();
     if (pst != null) {
