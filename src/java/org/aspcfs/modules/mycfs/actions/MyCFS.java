@@ -674,9 +674,7 @@ public final class MyCFS extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (context.getAction().getActionName().equals("MyCFSInbox")) {
-      addModuleBean(context, "My Inbox", "");
-    }
+    addModuleBean(context, "MyInbox", "Message Reply");
     context.getRequest().setAttribute("Note", newNote);
     return this.getReturn(context, "ReplyMessage");
   }
