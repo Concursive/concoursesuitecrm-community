@@ -29,6 +29,7 @@
   <property name="GKUSERPW" value=""/>
   <property name="MAILSERVER" value="127.0.0.1"/>
   <property name="FORCESSL" value="false"/>
+  <property name="DEBUGLEVEL" value="none"/>
 
   <!-- computed properties -->
   <property name="SRC" value="${basedir}"/>
@@ -357,6 +358,8 @@ determined user is ${USER}
              token="@KEYSTORE@" value="${DEST_DOCROOT}/WEB-INF/keystore"/>
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
              token="@FORCESSL@" value="${FORCESSL}"/>
+    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+             token="@DEBUGLEVEL@" value="${DEBUGLEVEL}"/>
   </target>
 
   <target name="site" description="Install files to site" 
