@@ -39,14 +39,14 @@
     </submenu>
     
     <submenu name="MyProfile">
-      <permission value="myhomepage-view"/>
+      <permission value="myhomepage-profile-view"/>
       <long_html value="My Profile"/>
       <short_html value="My&lt;br&gt;Profile"/>
       <link value="/MyCFS.do?command=MyProfile"/>
     </submenu>
     
     <submenu name="MyInbox">
-      <permission value="myhomepage-view"/>
+      <permission value="myhomepage-inbox-view"/>
       <long_html value="My Inbox"/>
       <short_html value="My&lt;br&gt;Inbox"/>
       <link value="/MyCFSInbox.do?command=Inbox&amp;return=1"/>
@@ -161,28 +161,27 @@
     </submenu-->
     
     <submenu name="Search Opportunities">
-      <permission value="pipeline-leads-view"/>
+      <permission value="pipeline-opportunities-view"/>
       <long_html value="Search Opportunities"/>
       <short_html value="Search&lt;br&gt;Opportunities"/>
       <link value="/Leads.do?command=SearchOpp"/>
     </submenu>
     
     <submenu name="-">
-      <permission value="pipeline-leads-add"/>
-      <permission value="pipeline-leads-view"/>
+      <permission value="pipeline-opportunities-view"/>
       <long_html value="|"/>
       <short_html value="&lt;image src='/images/divider.gif'&gt;"/>
     </submenu>
     
     <submenu name="Dashboard">
-      <permission value="modules{leads}"/>
+      <permission value="pipeline-dashboard-view"/>
       <long_html value="Dashboard"/>
       <short_html value="Dashboard"/>
       <link value="/Leads.do?command=Dashboard"/>
     </submenu>
     
     <submenu name="View Opportunities">
-      <permission value="pipeline-opportunities-view"/>
+      <permission value="pipeline-reports-view"/>
       <long_html value="View Opportunities"/>
       <short_html value="View&lt;br&gt;Opportunities"/>
       <link value="/Leads.do?command=ViewOpp"/>
@@ -231,34 +230,34 @@
     </submenu>
     
     <submenu name="Search Accounts">
-      <permission value="accounts-account-add"/>
+      <permission value="accounts-accounts-view"/>
       <long_html value="Search Accounts"/>
       <short_html value="Search&lt;br&gt;Accounts"/>
       <link value="/Accounts.do?command=Search"/>
     </submenu>
     
     <submenu name="-">
-      <permission value="accounts-account-view"/>
+      <permission value="accounts-accounts-view"/>
       <long_html value="|"/>
       <short_html value="&lt;image src='/images/divider.gif'&gt;"/>
     </submenu>
     
     <submenu name="Dashboard">
-      <permission value="modules{accounts}"/>
+      <permission value="accounts-dashboard-view"/>
       <long_html value="Dashboard"/>
       <short_html value="Dashboard"/>
       <link value="/Accounts.do?command=Dashboard"/>
     </submenu>
     
     <submenu name="View Accounts">
-      <permission value="accounts-view"/>
+      <permission value="accounts-accounts-view"/>
       <long_html value="View Accounts"/>
       <short_html value="View&lt;br&gt;Accounts"/>
       <link value="/Accounts.do?command=View"/>
     </submenu>
     
     <submenu name="Reports">
-      <permission value="accounts-reports"/>
+      <permission value="accounts-accounts-reports-view"/>
       <long_html value="Reports"/>
       <short_html value="Reports"/>
       <link value="/Accounts.do?command=Reports"/>
@@ -306,28 +305,28 @@
     <graphic width="83" height="36" on="menu-comm-on.gif" off="menu-comm-off.gif" rollover=""/>
     
     <submenu name="Dashboard">
-      <permission value="campaign-view"/>
+      <permission value="campaign-dashboard-view"/>
       <long_html value="Dashboard"/>
       <short_html value="Dashboard"/>
       <link value="/CampaignManager.do?command=Dashboard"/>
     </submenu>
     
     <submenu name="ManageCampaigns">
-      <permission value="campaign-view"/>
+      <permission value="campaign-campaigns-view"/>
       <long_html value="Campaign Builder"/>
       <short_html value="Campaign&lt;br&gt;Builder"/>
       <link value="/CampaignManager.do?command=View"/>
     </submenu>
     
     <submenu name="ManageGroups">
-      <permission value="campaign-view"/>
+      <permission value="campaign-campaigns-groups-view"/>
       <long_html value="Build Groups"/>
       <short_html value="Build&lt;br&gt;Groups"/>
       <link value="/CampaignManagerGroup.do?command=View"/>
     </submenu>
     
     <submenu name="ManageMessages">
-      <permission value="campaign-view"/>
+      <permission value="campaign-campaigns-messages-view"/>
       <long_html value="Create Messages"/>
       <short_html value="Create&lt;br&gt;Messages"/>
       <link value="/CampaignManagerMessage.do?command=View"/>
@@ -385,27 +384,27 @@
     <graphic width="83" height="36" on="menu-project-on.gif" off="menu-project-off.gif" rollover=""/>
     
     <submenu name="AddProject">
-      <permission value="projects-add"/>
+      <permission value="projects-projects-add"/>
       <long_html value="Add Project"/>
       <short_html value="Add&lt;br&gt;Project"/>
       <link value="/ProjectManagement.do?command=AddProject"/>
     </submenu>
     
     <submenu name="-">
-      <permission value="projects-add"/>
+      <permission value="projects-projects-add"/>
       <long_html value="|"/>
       <short_html value="&lt;image src='/images/divider.gif'&gt;"/>
     </submenu>
     
     <submenu name="PersonalView">
-      <permission value="projects-view"/>
+      <permission value="projects-personal-view"/>
       <long_html value="Personal View"/>
       <short_html value="Personal&lt;br&gt;View"/>
       <link value="/ProjectManagement.do?command=PersonalView"/>
     </submenu>
     
     <submenu name="EnterpriseView">
-      <permission value="projects-view"/>
+      <permission value="projects-enterprise-view"/>
       <long_html value="Enterprise View"/>
       <short_html value="Enterprise&lt;br&gt;View"/>
       <link value="/ProjectManagement.do?command=EnterpriseView"/>
@@ -423,39 +422,38 @@
     <graphic width="83" height="36" on="menu-tickets-on.gif" off="menu-tickets-off.gif" rollover=""/>
     
     <submenu name="AddTicket">
-      <permission value="tickets-ticket-add"/>
+      <permission value="tickets-tickets-add"/>
       <long_html value="Add Ticket"/>
       <short_html value="Add&lt;br&gt;Ticket"/>
       <link value="/TroubleTickets.do?command=Add"/>
     </submenu>
     
     <submenu name="SearchTickets">
-      <permission value="tickets-ticket-view"/>
+      <permission value="tickets-tickets-view"/>
       <long_html value="Search Tickets"/>
       <short_html value="Search&lt;br&gt;Tickets"/>
       <link value="/TroubleTickets.do?command=SearchTicketsForm"/>
     </submenu>
     
     <submenu name="-">
-      <permission value="tickets-ticket-add"/>
-      <permission value="tickets-ticket-view"/>
+      <permission value="tickets-tickets-view"/>
       <long_html value="|"/>
       <short_html value="&lt;image src='/images/divider.gif'&gt;"/>
     </submenu>
     
     <submenu name="ViewTickets">
-      <permission value="tickets-ticket-view"/>
+      <permission value="tickets-tickets-view"/>
       <long_html value="View Tickets"/>
       <short_html value="View&lt;br&gt;Tickets"/>
       <link value="/TroubleTickets.do?command=Home"/>
     </submenu>
     
-    <submenu name="Reports">
+    <!--submenu name="Reports">
       <permission value="tickets-reports"/>
       <long_html value="Reports"/>
       <short_html value="Reports"/>
       <link value="/TroubleTickets.do?command=Home&amp;action=RepT"/>
-    </submenu>
+    </submenu-->
   </menu>
   
   <menu>
@@ -507,14 +505,14 @@
     </submenu>
     
     <submenu name="Configuration">
-        <permission value="admin-roles-view"/>
+        <permission value="admin-sysconfig-view"/>
         <long_html value="System Configuration"/>
         <short_html value="System&lt;br&gt;Configuration"/>
         <link value="/Admin.do?command=Config"/>
     </submenu>
     
     <submenu name="Maintenance">
-        <permission value="admin-roles-view"/>
+        <permission value="admin-sysconfig-view"/>
         <long_html value="System Maintenance"/>
         <short_html value="System&lt;br&gt;Maintenance"/>
         <link value="#"/>

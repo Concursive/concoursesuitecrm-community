@@ -59,9 +59,14 @@
     Vector menuItems = ModuleBean.getMenuItems();
     Iterator i = menuItems.iterator();
     while (i.hasNext()) {
+    	SubmenuItem thisItem = (SubmenuItem)i.next();
+	
+    	if (User.hasPermission(thisItem.getPermission())) {
 %>
-          <td height="25" align="center" valign="middle" width="0"><b><font color="#FFFFFF" size="1"><%= (((SubmenuItem)i.next()).getAlternateHtml()) %></font></b></td>
+          <td height="25" align="center" valign="middle" width="0"><b><font color="#FFFFFF" size="1"><%= (thisItem.getAlternateHtml()) %></font></b></td>
           <td width="20">&nbsp;</td>
+	  
+	  <%}%>
 <%
     }
 %>  
