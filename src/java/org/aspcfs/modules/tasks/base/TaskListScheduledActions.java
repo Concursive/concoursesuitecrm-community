@@ -61,8 +61,6 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       User thisUser = new User(db, this.getUserId());
 
       // Add Tasks to calendar
-      this.setEnteredBy(this.getUserId());
-      this.setTasksAssignedToMeOnly(true);
       this.setOwner(thisUser.getContactId());
       this.buildList(db);
       if (System.getProperty("DEBUG") != null) {
