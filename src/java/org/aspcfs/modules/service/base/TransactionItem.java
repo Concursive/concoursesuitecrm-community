@@ -343,17 +343,19 @@ public class TransactionItem {
       //Build deletes for client
       String uniqueField = ObjectUtils.getParam(object, "uniqueField");
       String tableName = ObjectUtils.getParam(object, "tableName");
-      PreparedStatement pst = null;
-      ResultSet rs = syncClientMap.buildSyncDeletes(db, pst, uniqueField, tableName, recordList);
-      while (rs.next()) {
-        Record thisRecord = new Record("delete");
-        int id = rs.getInt("cuid");
-        thisRecord.put("guid", String.valueOf(id));
-        recordList.add(thisRecord);
-      }
-      rs.close();
-      if (pst != null) {
-        pst.close();
+      if (uniqueField != null && tableName != null) {
+        PreparedStatement pst = null;
+        ResultSet rs = syncClientMap.buildSyncDeletes(db, pst, uniqueField, tableName, recordList);
+        while (rs.next()) {
+          Record thisRecord = new Record("delete");
+          int id = rs.getInt("cuid");
+          thisRecord.put("guid", String.valueOf(id));
+          recordList.add(thisRecord);
+        }
+        rs.close();
+        if (pst != null) {
+          pst.close();
+        }
       }
     } else {
       if (System.getProperty("DEBUG") != null) {
