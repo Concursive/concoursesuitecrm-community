@@ -37,7 +37,7 @@ Modify User<br>
 <%} else {%>
 <input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
 <%}%>
-<input type=submit value="Delete" onClick="javascript:this.form.action='/Users.do?command=DeleteUser&id=<%=UserRecord.getId()%>'">
+<input type=submit value="Disable" onClick="javascript:this.form.action='/Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
 <br>
 &nbsp;
 <input type="hidden" name="id" value="<%= UserRecord.getId() %>">
@@ -105,6 +105,6 @@ Modify User<br>
 <%} else {%>
 <input type=submit value="Cancel" onClick="javascript:this.form.action='/Users.do?command=UserDetails&id=<%=UserRecord.getId()%>'">
 <%}%>
-<input type=submit value="Delete" onClick="javascript:this.form.action='/Users.do?command=DeleteUser&id=<%=UserRecord.getId()%>'">
+<input type=submit value="Disable" onClick="javascript:this.form.action='/Users.do?command=DisableUserConfirm&id=<%=UserRecord.getId()%>'">
 </form>
 </body>
