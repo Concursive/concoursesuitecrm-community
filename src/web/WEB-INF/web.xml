@@ -76,8 +76,8 @@ in the system's build.env, run ant for more information
         <param-value>@FORCESSL@</param-value>
     </init-param>
     <init-param>
-        <param-name>SiteCode</param-name>
-        <param-value>@GKAPPCODE@</param-value>
+        <param-name>GATEKEEPER.APPCODE</param-name>
+        <param-value>@GATEKEEPER.APPCODE@</param-value>
     </init-param>
     <init-param>
         <param-name>ClientSSLKeystore</param-name>
@@ -88,20 +88,20 @@ in the system's build.env, run ant for more information
         <param-value>aspcfs</param-value>
     </init-param>
     <init-param>
-        <param-name>GKDRIVER</param-name>
-        <param-value>@GKDRIVER@</param-value>
+        <param-name>GATEKEEPER.DRIVER</param-name>
+        <param-value>@GATEKEEPER.DRIVER@</param-value>
     </init-param>
     <init-param>
-        <param-name>GKHOST</param-name>
-        <param-value>@GKHOST@</param-value>
+        <param-name>GATEKEEPER.URL</param-name>
+        <param-value>@GATEKEEPER.URL@</param-value>
     </init-param>
     <init-param>
-        <param-name>GKUSER</param-name>
-        <param-value>@GKUSER@</param-value>
+        <param-name>GATEKEEPER.USER</param-name>
+        <param-value>@GATEKEEPER.USER@</param-value>
     </init-param>
     <init-param>
-        <param-name>GKUSERPW</param-name>
-        <param-value>@GKUSERPW@</param-value>
+        <param-name>GATEKEEPER.PASSWORD</param-name>
+        <param-value>@GATEKEEPER.PASSWORD@</param-value>
     </init-param>
     <init-param>
         <param-name>MailServer</param-name>

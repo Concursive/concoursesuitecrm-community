@@ -24,15 +24,6 @@
   <property name="build.jspclasses.dir" value="${build.dir}${file.separator}jspclasses"/>
   <property name="dist.dir" value="${base.dir}${file.separator}dist"/>
 
-  <!-- classpath as both object and a property -->
-  <path id="cfs2.classpath">
-    <!-- <pathelement path="${src.classes.dir}"/> -->
-    <fileset dir="${env.CATALINA_HOME}/common/lib">
-      <include name="**/*.jar"/>
-    </fileset>
-  </path>
-  <property name="CLASSPATH" refid="cfs2.classpath" />
-
   <!-- Environment variables must be set before continuing -->
   <target name="init.environment">
     <tstamp><format property="date.short" pattern="yyyyMMdd-HHmmss"/></tstamp>
@@ -47,51 +38,81 @@
   
   <!-- See if the properties file exists -->
   <target name="init.buildfile.exists" depends="init.environment">
-    <available file="${CFS_HOME}/WEB-INF/build.env" property="build.config.present"/>
+    <available file="${CFS_HOME}/WEB-INF/build.properties" property="build.config.present"/>
   </target>
   
   <!-- Create the properties file if not exists -->
   <target name="init.buildfile.create" depends="init.buildfile.exists" 
           unless="build.config.present">
     <mkdir dir="${CFS_HOME}/WEB-INF"/>
-    <copy file="${base.dir}/build.env" todir="${CFS_HOME}/WEB-INF"/>
-    <available file="${CFS_HOME}/WEB-INF/build.env" property="build.config.present"/>
+    <copy file="${base.dir}/build.properties" todir="${CFS_HOME}/WEB-INF"/>
+    <available file="${CFS_HOME}/WEB-INF/build.properties" property="build.config.present"/>
   </target>
   
   <!-- Load the properties for this system, stop here if not found -->
   <target name="init.loadproperties" depends="init.buildfile.create">
-    <!-- IF cvs build.env is newer than CFS_HOME build.env, abort now and have user update -->
+    <!-- IF src build.properties is newer than CFS_HOME build.properties, abort now and have user update -->
     <uptodate property="build.config.uptodate"
-            srcfile="${base.dir}/build.env"
-            targetfile="${CFS_HOME}/WEB-INF/build.env"/>
-    <fail unless="build.config.uptodate">Initialization aborted, update ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.env with any new changes from ${base.dir}${file.separator}build.env.</fail>
-    <loadproperties srcFile="${CFS_HOME}/WEB-INF/build.env">
+            srcfile="${base.dir}/build.properties"
+            targetfile="${CFS_HOME}/WEB-INF/build.properties"/>
+    <fail unless="build.config.uptodate">Initialization aborted, update ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.properties with any new changes from ${base.dir}${file.separator}build.properties.</fail>
+    <loadproperties srcFile="${CFS_HOME}/WEB-INF/build.properties">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
           <param type="comment" value="#"/>
         </filterreader>
       </filterchain>
     </loadproperties>
-    <fail unless="build.config.present">Initialization aborted, build properties file not found at ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.env</fail>
-    <fail unless="CONTROL">Initialization aborted, edit the properties file at ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.env</fail>
+    <fail unless="build.config.present">Initialization aborted, build properties file not found at ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.properties</fail>
+    <fail unless="CONTROL">Initialization aborted, edit the properties file at ${CFS_HOME}${file.separator}WEB-INF${file.separator}build.properties</fail>
   </target>
   
-  <target name="log" depends="init.loadproperties">
-    <mkdir dir="${CFS_HOME}/WEB-INF/logs"/>
-    <record name="${CFS_HOME}/WEB-INF/logs/build-${date.short}.log" append="no"/>
+  <!-- Copy the common jars -->
+  <target name="init.classpath.uptodate">
+    <copy todir="${env.CATALINA_HOME}/common/lib">
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <!-- Configure classpath as both object and a property -->
+  <target name="init.classpath" depends="init.classpath.uptodate">
+    <path id="cfs2.classpath">
+      <fileset dir="${env.CATALINA_HOME}/common/lib">
+        <include name="**/*.jar"/>
+      </fileset>
+    </path>
+    <property name="CLASSPATH" refid="cfs2.classpath" />
   </target>
   
   <!-- Prepare ant for processing -->
-  <target name="init" depends="init.loadproperties">
+  <target name="init" depends="init.loadproperties,init.classpath">
     <!-- Default properties if not set in file above -->
-    <property name="GKAPPCODE" value="cfs"/>
-    <property name="GKDRIVER" value="org.postgresql.Driver"/>
-    <property name="GKHOST" value="jdbc:postgresql://127.0.0.1:5432/cfs2gk"/>
-    <property name="GKUSER" value="postgres"/>
-    <property name="GKUSERPW" value=""/>
-    <property name="MAILSERVER" value="127.0.0.1"/>
-    <property name="FORCESSL" value="false"/>
     <property name="DEBUGLEVEL" value="none"/>
+    <!-- WEBSERVER.TYPE -->
+    <property name="GATEKEEPER.DRIVER" value="org.postgresql.Driver"/>
+    <property name="GATEKEEPER.URL" value="jdbc:postgresql://127.0.0.1:5432/cfs2gk"/>
+    <property name="GATEKEEPER.USER" value="postgres"/>
+    <property name="GATEKEEPER.PASSWORD" value=""/>
+    <property name="GATEKEEPER.APPCODE" value="cfs"/>
+    <!-- Defaults for new databases -->
+    <!--
+    DATABASE.TYPE
+    DATABASE.IP
+    DATABASE.USER
+    DATABASE.PASSWORD
+    DATABASE.APPCODE
+    -->
+    <property name="FORCESSL" value="false"/>
+    <property name="KEYSTORE.COMMONNAME" value="127.0.0.1"/>
+    <property name="KEYSTORE.ORGANIZATIONALUNIT" value="CFS"/>
+    <property name="KEYSTORE.ORGANIZATION" value="ASPCFS.org"/>
+    <property name="KEYSTORE.COUNTRY" value="US"/>
+    
+    <property name="MAILSERVER" value="127.0.0.1"/>
+    <property name="FAXSERVER" value="127.0.0.1"/>
+    
     <!--<property name="DBTYPE" value="postgresql"/>-->
     <property name="DBTYPE" value="mssql"/>
     <property name="DRIVER" value="com.microsoft.jdbc.sqlserver.SQLServerDriver"/>
@@ -229,33 +250,33 @@
   <!-- See if there is an updated file to merge -->
   <target name="deploy.merge.prepare">
     <!-- cvs web.xml is newer than CFS_HOME web.xml, so generate new CFS_HOME web.xml -->
-    <!-- CFS_HOME build.env is newer than CFS_HOME web.xml, so generate new CFS_HOME web.xml -->
+    <!-- CFS_HOME build.properties is newer than CFS_HOME web.xml, so generate new CFS_HOME web.xml -->
     <condition property="deploy.merge.uptodate">
       <and>
         <available file="${CFS_HOME}/WEB-INF/web.xml"/>
-        <available file="${CFS_HOME}/WEB-INF/build.env"/>
+        <available file="${CFS_HOME}/WEB-INF/build.properties"/>
         <uptodate srcfile="${src.web.dir}/WEB-INF/web.xml"
                   targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
-        <uptodate srcfile="${CFS_HOME}/WEB-INF/build.env"
+        <uptodate srcfile="${CFS_HOME}/WEB-INF/build.properties"
                   targetfile="${CFS_HOME}/WEB-INF/web.xml"/>
       </and>
     </condition>
   </target>
   
-  <!-- Merge meta-data with build.env, only if changed so reload doesn't kick in -->
+  <!-- Merge meta-data with build.properties, only if changed so reload doesn't kick in -->
   <target name="deploy.merge" depends="deploy.merge.prepare" unless="deploy.merge.uptodate">
     <echo message="Installing web.xml configuration file"/>
     <copy file="${src.web.dir}/WEB-INF/web.xml" todir="${CFS_HOME}/WEB-INF" overwrite="true"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GKAPPCODE@" value="${GKAPPCODE}"/>
+             token="@GATEKEEPER.APPCODE@" value="${GATEKEEPER.APPCODE}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GKDRIVER@" value="${GKDRIVER}"/>
+             token="@GATEKEEPER.DRIVER@" value="${GATEKEEPER.DRIVER}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GKHOST@" value="${GKHOST}"/>
+             token="@GATEKEEPER.URL@" value="${GATEKEEPER.URL}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GKUSER@" value="${GKUSER}"/>
+             token="@GATEKEEPER.USER@" value="${GATEKEEPER.USER}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@GKUSERPW@" value="${GKUSERPW}"/>
+             token="@GATEKEEPER.PASSWORD@" value="${GATEKEEPER.PASSWORD}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@MAILSERVER@" value="${MAILSERVER}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
@@ -266,10 +287,39 @@
              token="@DEBUGLEVEL@" value="${DEBUGLEVEL}"/>
   </target>
   
+  <!-- Log the deployment procss to the web-app folder -->
+  <target name="log" depends="init.loadproperties">
+    <mkdir dir="${CFS_HOME}/WEB-INF/logs"/>
+    <record name="${CFS_HOME}/WEB-INF/logs/build-${date.short}.log" append="no"/>
+  </target>
+  
+  <!-- Check if keyfile exists -->
+  <target name="keyfile.init">
+    <available file="${CFS_HOME}/WEB-INF/keystore" property="keyfile.present"/>
+  </target>
+  
+  <!-- Generate keyfile for new system -->
+  <target name="keyfile" depends="keyfile.init" unless="keyfile.present">
+    <genkey alias="cfs" 
+            keystore="${CFS_HOME}/WEB-INF/keystore"
+            storepass="aspcfs" 
+            storetype="JKS"
+            keyalg="RSA"
+            keysize="1024"
+            validity="1000">
+      <dname>
+        <param name="CN" value="${KEYSTORE.COMMONNAME}"/>
+        <param name="OU" value="${KEYSTORE.ORGANIZATIONALUNIT}"/>
+        <param name="O"  value="${KEYSTORE.ORGANIZATION}"/>
+        <param name="C"  value="${KEYSTORE.COUNTRY}"/>
+      </dname>
+    </genkey>
+  </target>
+  
   <!-- Copy all data to the web-app folder -->
   <target name="deploy"
           description="Build all data and copy to CFS_HOME"
-          depends="log,init,classes-check,build,deploy.copy,deploy.merge">
+          depends="log,init,classes-check,build,keyfile,deploy.copy,deploy.merge">
     
   </target>
   
@@ -337,13 +387,13 @@
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@FILELIBRARY@" value="${CFS_HOME}/WEB-INF/fileLibrary"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GKDRIVER@" value="${GKDRIVER}"/>
+             token="@GATEKEEPER.DRIVER@" value="${GATEKEEPER.DRIVER}"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GKHOST@" value="${GKHOST}"/>
+             token="@GATEKEEPER.URL@" value="${GATEKEEPER.URL}"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GKUSER@" value="${GKUSER}"/>
+             token="@GATEKEEPER.USER@" value="${GATEKEEPER.USER}"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
-             token="@GKUSERPW@" value="${GKUSERPW}"/>
+             token="@GATEKEEPER.PASSWORD@" value="${GATEKEEPER.PASSWORD}"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@MAILSERVER@" value="${MAILSERVER}"/>
   </target>

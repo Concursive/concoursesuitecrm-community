@@ -27,25 +27,12 @@ public class InitHook implements ControllerInitHook {
    */
   public String executeControllerInit(ServletConfig config) {
     ServletContext context = config.getServletContext();
-    if (config.getInitParameter("SiteCode") != null) {
-      context.setAttribute("SiteCode", config.getInitParameter("SiteCode"));
-    }
 
-    if (config.getInitParameter("GKDRIVER") != null) {
-      context.setAttribute("GKDRIVER", config.getInitParameter("GKDRIVER"));
-    } else {
-      context.setAttribute("GKDRIVER", "org.postgresql.Driver");
-    }
-
-    if (config.getInitParameter("GKHOST") != null) {
-      context.setAttribute("GKHOST", config.getInitParameter("GKHOST"));
-    }
-    if (config.getInitParameter("GKUSER") != null) {
-      context.setAttribute("GKUSER", config.getInitParameter("GKUSER"));
-    }
-    if (config.getInitParameter("GKUSERPW") != null) {
-      context.setAttribute("GKUSERPW", config.getInitParameter("GKUSERPW"));
-    }
+    InitHook.addAttribute(config, context, "SiteCode", "GATEKEEPER.APPCODE");
+    InitHook.addAttribute(config, context, "GKDRIVER", "GATEKEEPER.DRIVER");
+    InitHook.addAttribute(config, context, "GKHOST", "GATEKEEPER.URL");
+    InitHook.addAttribute(config, context, "GKUSER", "GATEKEEPER.USER");
+    InitHook.addAttribute(config, context, "GKPUSERPW", "GATEKEEPER.PASSWORD");
 
     if (config.getInitParameter("ForceSSL") != null) {
       if ("true".equals(config.getInitParameter("ForceSSL"))) {
@@ -62,30 +49,11 @@ public class InitHook implements ControllerInitHook {
       context.setAttribute("GlobalPWInfo", "#notspecified");
     }
 
-    if (config.getInitParameter("ClientSSLKeystore") != null) {
-      context.setAttribute("ClientSSLKeystore",
-          config.getInitParameter("ClientSSLKeystore"));
-    }
-
-    if (config.getInitParameter("ClientSSLKeystorePassword") != null) {
-      context.setAttribute("ClientSSLKeystorePassword",
-          config.getInitParameter("ClientSSLKeystorePassword"));
-    }
-
-    if (config.getInitParameter("ContainerMenuConfig") != null) {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("InitHook-> Setting the ContainerMenuConfig property: " +
-            config.getInitParameter("ContainerMenuConfig"));
-      }
-      context.setAttribute("ContainerMenuConfig",
-          config.getInitParameter("ContainerMenuConfig"));
-    }
+    InitHook.addAttribute(config, context, "ClientSSLKeystore", "ClientSSLKeystore");
+    InitHook.addAttribute(config, context, "ClientSSLKeystorePassword", "ClientSSLKeystorePassword");
+    InitHook.addAttribute(config, context, "ContainerMenuConfig", "ContainerMenuConfig");
 
     if (config.getInitParameter("DynamicFormConfig") != null) {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("InitHook-> Setting the DynamicFormConfig property: " +
-            config.getInitParameter("DynamicFormConfig"));
-      }
       context.setAttribute("DynamicFormConfig", config.getInitParameter("DynamicFormConfig"));
       CustomFormList forms = new CustomFormList(context, config.getInitParameter("DynamicFormConfig"));
       context.setAttribute("DynamicFormList", forms);
@@ -101,6 +69,21 @@ public class InitHook implements ControllerInitHook {
     }
 
     return null;
+  }
+
+
+  /**
+   *  Adds a feature to the Attribute attribute of the InitHook class
+   *
+   *@param  config         The feature to be added to the Attribute attribute
+   *@param  context        The feature to be added to the Attribute attribute
+   *@param  attributeName  The feature to be added to the Attribute attribute
+   *@param  paramName      The feature to be added to the Attribute attribute
+   */
+  private static void addAttribute(ServletConfig config, ServletContext context, String attributeName, String paramName) {
+    if (config.getInitParameter(paramName) != null) {
+      context.setAttribute(attributeName, config.getInitParameter(paramName));
+    }
   }
 
 }
