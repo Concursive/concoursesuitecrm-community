@@ -5,7 +5,9 @@ package org.aspcfs.utils.web;
 import java.sql.*;
 import java.util.*;
 import org.aspcfs.utils.*;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.ContactTypeList;
+import org.aspcfs.modules.contacts.base.ContactType;
 
 /**
  *  Represents an item from a LookupListLookup table.
@@ -210,7 +212,7 @@ public class LookupListElement {
     } else if (className.equals("contactType")) {
       ContactTypeList contactTypeList = new ContactTypeList();
       contactTypeList.setIncludeDefinedByUser(userId);
-      contactTypeList.setCategory(moduleId);
+      contactTypeList.setCategory(moduleId == Constants.ACCOUNTS ? ContactType.ACCOUNT : ContactType.GENERAL);
       contactTypeList.setShowPersonal(true);
       contactTypeList.buildList(db);
       setLookupList(contactTypeList.getLookupList("list", 0));
