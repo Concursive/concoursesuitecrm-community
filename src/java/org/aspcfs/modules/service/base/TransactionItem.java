@@ -763,6 +763,7 @@ public class TransactionItem {
         thisRecord.put(thisField, thisValue);
       }
       try {
+        //Special items when sending back an action to the client...
         thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
         if (thisRecord.containsKey("guid")) {
           if (thisRecord.getAction().equals("processed")) {
@@ -771,9 +772,11 @@ public class TransactionItem {
             thisRecord.put("guid", String.valueOf(identity++));
           } else if (thisRecord.getAction().equals("update")) {
             //Sending an update back to client, get the correct guid
-          thisRecord.put("guid", syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")));
+            thisRecord.put("guid", syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")));
           } else if (thisRecord.getAction().equals("delete")) {
             //Let the client know that its record was deleted
+            thisRecord.put("guid", ignoredProperties.get("guid"));
+          } else if (thisRecord.getAction().equals("conflict")) {
             thisRecord.put("guid", ignoredProperties.get("guid"));
           }
         }
