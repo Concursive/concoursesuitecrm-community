@@ -1,11 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*, org.aspcfs.modules.base.Filter" %>
 <jsp:useBean id="AccountList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="AccountListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SelectedAccounts" class="java.util.ArrayList" scope="session"/>
 <jsp:useBean id="FinalAccounts" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="Filters" class="org.aspcfs.modules.base.FilterList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
@@ -23,9 +24,13 @@
     <tr>
       <td nowrap>
         <select size="1" name="listView" onChange="javascript:setFieldSubmit('listFilter1','-1','acctListView');">
-            <option <%= AccountListInfo.getOptionValue("my") %>>My Accounts</option>
-            <option <%= AccountListInfo.getOptionValue("all") %>>All Accounts</option>
-            <option <%= AccountListInfo.getOptionValue("disabled") %>>Disabled Accounts</option>
+          <%
+            Iterator filters = Filters.iterator();
+            while(filters.hasNext()){
+            Filter thisFilter = (Filter) filters.next();
+          %>
+            <option <%= AccountListInfo.getOptionValue(thisFilter.getValue()) %>><%= thisFilter.getDisplayName() %></option>
+          <%}%>
          </select>
         <% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
         <%= TypeSelect.getHtmlSelect("listFilter1", AccountListInfo.getFilterKey("listFilter1")) %>
@@ -45,9 +50,6 @@
       </td>
       <td>
         <strong>Phone</strong>
-      </td>
-      <td>
-        <strong>Email</strong>
       </td>
     </tr>
 <%
@@ -78,11 +80,9 @@
       </td>
       <dhv:evaluate exp="<%=(thisAcct.getPrimaryContact() == null)%>">
         <td nowrap> <%= (!"".equals(thisAcct.getPhoneNumber("Main")) ? toHtml(thisAcct.getPhoneNumber("Main")) : "None") %></td> 
-        <td nowrap> <%= (!"".equals(thisAcct.getEmailAddress("Primary")) ? toHtml(thisAcct.getEmailAddress("Primary")) : "None") %></td>
       </dhv:evaluate>
       <dhv:evaluate exp="<%=(thisAcct.getPrimaryContact() != null)%>">
         <td nowrap> <%= (!"".equals(thisAcct.getPrimaryContact().getPhoneNumber("Business")) ? toHtml(thisAcct.getPrimaryContact().getPhoneNumber("Business")) : "None") %></td> 
-        <td nowrap> <%= (!"".equals(thisAcct.getPrimaryContact().getEmailAddress("Business")) ? toHtml(thisAcct.getPrimaryContact().getEmailAddress("Business")) : "None") %></td>
       </dhv:evaluate>
     </tr>
 <%
@@ -107,6 +107,8 @@
   <input type="button" value="Cancel" onClick="javascript:window.close()">
   <a href="javascript:SetChecked(1,'account','acctListView','<%=User.getBrowserId()%>');">Check All</a>
   <a href="javascript:SetChecked(0,'account','acctListView','<%=User.getBrowserId()%>');">Clear All</a>
+<%}else{%>
+  <input type="button" value="Cancel" onClick="javascript:window.close()">
 <%}%>
 <dhv:pagedListControl object="AccountListInfo" showForm="false" resetList="false"/>
 </form>
