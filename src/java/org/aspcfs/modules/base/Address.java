@@ -473,7 +473,7 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
    *@exception  SQLException  Description of Exception
    *@since                    1.6
    */
-  protected void buildRecord(ResultSet rs) throws SQLException {
+  public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("address_id"));
     if (!isContact) {
       this.setOrgId(rs.getInt("org_id"));
@@ -517,7 +517,7 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
    *@param  parseItem  Description of Parameter
    *@since             1.8
    */
-  protected void buildRecord(HttpServletRequest request, int parseItem) {
+  public void buildRecord(HttpServletRequest request, int parseItem) {
     this.setType(request.getParameter("address" + parseItem + "type"));
     if (request.getParameter("address" + parseItem + "id") != null) {
       this.setId(request.getParameter("address" + parseItem + "id"));

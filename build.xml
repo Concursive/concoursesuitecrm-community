@@ -109,6 +109,7 @@
     <delete>
         <fileset dir= "${SRC_CLASSES}/com/darkhorseventures" includes="**/*.class"/>
     </delete>
+    <echo message=""/>
     <!-- isavvix.jar -->
     <echo message=" Compiling Source: ${SRC_CLASSES}/com/isavvix"/>
     <javac srcdir="${SRC_CLASSES}/com/isavvix" verbose="off">
@@ -123,6 +124,22 @@
     <delete>
         <fileset dir= "${SRC_CLASSES}/com/isavvix" includes="**/*.class"/>
     </delete>
+    <echo message=""/>
+    <!-- zeroio-iteam.jar -->
+    <echo message=" Compiling Source: ${SRC_CLASSES}/com/zeroio"/>
+    <javac srcdir="${SRC_CLASSES}/com/zeroio" verbose="off">
+        <classpath>
+            <path refid="cfs2.classpath"/>
+        </classpath>
+    </javac>
+    <delete file="${SRC_LIB}/zeroio-iteam.jar"/>
+    <jar jarfile="${SRC_LIB}/zeroio-iteam.jar"
+          basedir="${SRC_CLASSES}"
+          includes="com/zeroio/**/*.class"/>
+    <delete>
+        <fileset dir= "${SRC_CLASSES}/com/zeroio" includes="**/*.class"/>
+    </delete>
+    <echo message=""/>
     <!-- aspcfs.jar -->
     <echo message=" Compiling Source: ${SRC_CLASSES}/org/aspcfs"/>
     <javac srcdir="${SRC_CLASSES}/org/aspcfs" verbose="off">
@@ -143,6 +160,7 @@
     <delete>
         <fileset dir= "${SRC_CLASSES}/org/aspcfs" includes="**/*.class"/>
     </delete>
+    <echo message=""/>
   </target>
   
   <!-- separate app installation stuff -->

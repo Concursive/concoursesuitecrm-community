@@ -9,6 +9,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.PhoneNumberList;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Contains a list of phone numbers... currently used to build the list from

@@ -8,6 +8,8 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.modules.base.AddressList;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Builds an address list for a contact using a custom query that extends the
