@@ -7,7 +7,7 @@ import java.text.*;
  *  Represents a scheduled date when an ad is going to run, along with details
  *  about the ad
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    May 17, 2002
  *@version    $Id$
  */
@@ -72,7 +72,13 @@ public class AdRun {
   public void setInventoryId(int tmp) {
     this.inventoryId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the inventoryId attribute of the AdRun object
+   *
+   *@param  tmp  The new inventoryId value
+   */
   public void setInventoryId(String tmp) {
     this.inventoryId = Integer.parseInt(tmp);
   }
@@ -112,7 +118,13 @@ public class AdRun {
   public void setAdTypeId(int tmp) {
     this.adTypeId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the adType attribute of the AdRun object
+   *
+   *@param  tmp  The new adType value
+   */
   public void setAdType(int tmp) {
     this.adTypeId = tmp;
   }
@@ -126,7 +138,13 @@ public class AdRun {
   public void setAdType(String tmp) {
     this.adTypeId = Integer.parseInt(tmp);
   }
-  
+
+
+  /**
+   *  Sets the adTypeId attribute of the AdRun object
+   *
+   *@param  tmp  The new adTypeId value
+   */
   public void setAdTypeId(String tmp) {
     this.adTypeId = Integer.parseInt(tmp);
   }
@@ -187,11 +205,25 @@ public class AdRun {
     }
   }
 
-  public void setCompletedBy(int tmp) { this.completedBy = tmp; }
+
+  /**
+   *  Sets the completedBy attribute of the AdRun object
+   *
+   *@param  tmp  The new completedBy value
+   */
+  public void setCompletedBy(int tmp) {
+    this.completedBy = tmp;
+  }
+
+
+  /**
+   *  Sets the completedBy attribute of the AdRun object
+   *
+   *@param  tmp  The new completedBy value
+   */
   public void setCompletedBy(String tmp) {
     this.completedBy = Integer.parseInt(tmp);
   }
-  public int getCompletedBy() { return completedBy; }
 
 
   /**
@@ -255,6 +287,16 @@ public class AdRun {
 
 
   /**
+   *  Gets the completedBy attribute of the AdRun object
+   *
+   *@return    The completedBy value
+   */
+  public int getCompletedBy() {
+    return completedBy;
+  }
+
+
+  /**
    *  Gets the id attribute of the AdRun object
    *
    *@return    The id value
@@ -285,14 +327,20 @@ public class AdRun {
 
 
   /**
-   *  Gets the adType attribute of the AdRun object
+   *  Gets the adTypeId attribute of the AdRun object
    *
    *@return    The adType value
    */
   public int getAdType() {
-    return adType;
+    return adTypeId;
   }
-  
+
+
+  /**
+   *  Gets the adTypeId attribute of the AdRun object
+   *
+   *@return    The adTypeId value
+   */
   public int getAdTypeId() {
     return adTypeId;
   }
@@ -455,7 +503,14 @@ public class AdRun {
       pst.close();
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void markComplete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -469,7 +524,14 @@ public class AdRun {
     pst.execute();
     pst.close();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void markIncomplete(Connection db) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(

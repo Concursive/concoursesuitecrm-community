@@ -290,7 +290,8 @@ public class InventoryList extends ArrayList {
       " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
       " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
       " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
-      "WHERE i.inventory_id > -1 ");
+      "WHERE i.inventory_id > -1 " +
+      "AND i.account_id IN (SELECT org_id FROM organization) ");
     
     createFilter(sqlFilter);
     
@@ -354,7 +355,8 @@ public class InventoryList extends ArrayList {
         " LEFT JOIN autoguide_vehicle v ON i.vehicle_id = v.vehicle_id " +
         " LEFT JOIN autoguide_make make ON v.make_id = make.make_id " +
         " LEFT JOIN autoguide_model model ON v.model_id = model.model_id " +
-        "WHERE i.inventory_id > -1 ");
+        "WHERE i.inventory_id > -1 " +
+        "AND i.account_id IN (SELECT org_id FROM organization) ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
