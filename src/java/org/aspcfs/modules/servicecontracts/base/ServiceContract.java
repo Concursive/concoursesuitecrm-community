@@ -57,7 +57,9 @@ public class ServiceContract extends GenericBean {
   /**
    *  Constructor for the ServiceContract object
    */
-  public ServiceContract() { }
+  public ServiceContract() { 
+    errors.clear();
+  }
 
 
   /**
@@ -69,6 +71,7 @@ public class ServiceContract extends GenericBean {
    */
   public ServiceContract(Connection db, String id) throws SQLException {
 
+    errors.clear();
     queryRecord(db, Integer.parseInt(id));
 
   }
@@ -82,6 +85,7 @@ public class ServiceContract extends GenericBean {
    */
   public ServiceContract(ResultSet rs) throws SQLException {
 
+    errors.clear();
     buildRecord(rs);
 
   }
@@ -153,7 +157,14 @@ public class ServiceContract extends GenericBean {
    *@param  tmp  The new contractValue value
    */
   public void setContractValue(String tmp) {
-    this.contractValue = Double.parseDouble(tmp);
+    tmp = StringUtils.replace(tmp, ",", "");
+    tmp = StringUtils.replace(tmp, "$", "");
+
+    try {
+      this.contractValue = Double.parseDouble(tmp);
+    } catch (NumberFormatException ne) {
+      errors.put("contractValueError", tmp + " is invalid input for this field");
+    }
   }
 
 
@@ -890,7 +901,6 @@ public class ServiceContract extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid() throws SQLException {
-    errors.clear();
     if (initialStartDate == null) {
       errors.put("initialStartDateError", "Initial contract date is required");
     }
@@ -912,7 +922,7 @@ public class ServiceContract extends GenericBean {
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
     //May Need additional checks if a ticket is assigned based on this contract
-    if (!isValid()) {
+    if (!isValid() || hasErrors()) {
       return resultCount;
     }
     PreparedStatement pst = null;
@@ -1097,6 +1107,7 @@ public class ServiceContract extends GenericBean {
       // Delete after tickets
       AssetList assetList = new AssetList();
       assetList.setServiceContractId(this.getId());
+      assetList.setAllAssets(false);
       assetList.buildList(db);
       assetList.delete(db);
       assetList = null;
@@ -1152,7 +1163,7 @@ public class ServiceContract extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    if (!isValid()) {
+    if (!isValid() || hasErrors()) {
       return false;
     }
     PreparedStatement pst = null;
