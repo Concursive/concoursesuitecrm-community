@@ -15,6 +15,13 @@
 <center><%= ContactTypeSelectorInfo.getAlphabeticalPageLinks("setFieldSubmit","elementListView") %></center>
 <br>
 <input type="hidden" name="letter">
+<table width="100%" border="0">
+  <tr>
+      <td align="right">
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactTypeSelectorInfo" showHiddenParams="true" enableJScript="true"/>
+      </td>
+  </tr>
+</table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td width="8">
