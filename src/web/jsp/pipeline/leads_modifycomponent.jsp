@@ -76,6 +76,7 @@ Modify Component<br>
 <%}%>
 
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">

@@ -364,6 +364,7 @@ public final class ExternalContactsOpps extends CFSModule {
       
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
+      componentList.setOwnerIdRange(this.getUserRange(context));
       componentList.setOppId(thisHeader.getOppId());
       componentList.buildList(db);
       context.getRequest().setAttribute("ComponentList", componentList);

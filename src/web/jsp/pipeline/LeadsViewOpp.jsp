@@ -62,9 +62,9 @@ View Opportunities<br>
       <%= OpportunityListInfo.getSortIcon("closedate") %>
     </td>
     
-    <!--td valign=center nowrap>
+    <td valign=center nowrap>
       <strong>Term</strong>
-    </td-->
+    </td>
     
   </tr>
 
@@ -88,7 +88,7 @@ View Opportunities<br>
 	<tr bgcolor="white">
 	<dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete">
 	<td width=8 valign=center nowrap class="row<%= rowid %>">
-	<dhv:permission name="pipeline-opportunities-edit"><a href="/Leads.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink()%>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-delete"><a href="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%=thisOpp.getOppId()%>','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+	<dhv:permission name="pipeline-opportunities-edit"><a href="LeadsComponents.do?command=ModifyComponent&id=<%= thisOpp.getComponentId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-delete"><a href="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&oppId=<%=thisOpp.getComponentId()%>&return=list','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
 	</td>
 	</dhv:permission>
   
@@ -106,7 +106,7 @@ View Opportunities<br>
       </td>  
       
       <td width=35% valign=center class="row<%= rowid %>">
-        <a href="LeadsComponents.do?command=DetailsComponent&id=<%=thisOpp.getComponentId()%>">
+        <a href="Leads.do?command=DetailsOpp&oppId=<%=thisOpp.getOppId()%>">
         <%= toHtml(thisOpp.getComponentDescription()) %></a>
       <% if (thisOpp.hasFiles()) { %>
       <%= thisFile.getImageTag()%>
@@ -124,6 +124,10 @@ View Opportunities<br>
       <td width=80 valign=center nowrap class="row<%= rowid %>">
         <%= toHtml(thisOpp.getCloseDateString()) %>
       </td>
+      
+      <td width=15 valign=center nowrap class="row<%= rowid %>">
+        <%= toHtml(thisOpp.getTermsString()) %>
+      </td>      
 
     </tr>
 <%

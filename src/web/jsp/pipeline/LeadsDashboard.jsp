@@ -4,7 +4,7 @@
 <jsp:useBean id="ShortChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="FullChildList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="FullOppList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
-<jsp:useBean id="OppList" class="com.darkhorseventures.cfsbase.OpportunityHeaderList" scope="request"/>
+<jsp:useBean id="OppList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="GraphTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 
@@ -128,6 +128,7 @@ Dashboard<br>
   
 		if ( n.hasNext() ) {
 			int rowid = 0;
+      int previousId = -1;
 			while (n.hasNext()) {
 		
 				if (rowid != 1) {
@@ -136,7 +137,9 @@ Dashboard<br>
 					rowid = 2;
 				}
 	          	
-				OpportunityHeader thisOpp = (OpportunityHeader)n.next();
+				Opportunity thisOpp = (Opportunity)n.next();
+        
+        if (thisOpp.getId() != previousId) {
 %>    
 				<tr>
           <td width="100%" class="row<%= rowid %>" valign=center><a href="Leads.do?command=DetailsOpp&oppId=<%=thisOpp.getId()%>&return=dashboard"><%= toHtml(thisOpp.getAccountName()) %>:&nbsp;<%= toHtml(thisOpp.getDescription()) %></a>
@@ -145,9 +148,12 @@ Dashboard<br>
         <%= thisFile.getImageTag() %>
         <%}%>             
           </td>
-          <td width="55" class="row<%= rowid %>">$<%= toHtml(thisOpp.getTotalValueCurrency()) %></td>
+          <td width="55" class="row<%= rowid %>">$<%=thisOpp.getTotalValue()%></td>
         </tr>
-<%    }
+<%
+        }
+        previousId = thisOpp.getId();
+      }
 	  } else {
 %>
         <tr>

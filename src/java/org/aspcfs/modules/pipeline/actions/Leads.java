@@ -234,6 +234,7 @@ public final class Leads extends CFSModule {
       
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
+      componentList.setOwnerIdRange(this.getUserRange(context));
       componentList.setOppId(thisHeader.getOppId());
       componentList.buildList(db);
       context.getRequest().setAttribute("ComponentList", componentList);      
@@ -472,7 +473,8 @@ public final class Leads extends CFSModule {
     OpportunityList tempOppList = new OpportunityList();
     OpportunityList realFullOppList = new OpportunityList();
     
-    OpportunityHeaderList headerList = new OpportunityHeaderList();
+    //OpportunityHeaderList headerList = new OpportunityHeaderList();
+    OpportunityList oppList = new OpportunityList();
 
     XYDataset categoryData = null;
 
@@ -536,10 +538,15 @@ public final class Leads extends CFSModule {
       realFullOppList.setOwnerIdRange(range);
       realFullOppList.buildList(db);
       
-      headerList.setOwner(idToUse);
-      headerList.setBuildTotalValues(true);
-      headerList.buildList(db);
-      context.getRequest().setAttribute("OppList", headerList);
+      oppList.setOwner(idToUse);
+      oppList.setBuildComponentInfo(true);
+      oppList.buildList(db);
+      
+      //headerList.setOwner(idToUse);
+      //headerList.setBuildTotalValues(true);
+      //headerList.buildList(db);
+      
+      context.getRequest().setAttribute("OppList", oppList);
 
       //filter out my opportunities for displaying on page
 
@@ -765,8 +772,14 @@ public final class Leads extends CFSModule {
 
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl","Leads.do?command=DetailsOpp&oppId="+component.getOppId());
         deleteRecentItem(context, component);
+        if (context.getRequest().getParameter("return") != null) {
+          if (context.getRequest().getParameter("return").equals("list")) {
+            context.getRequest().setAttribute("refreshUrl","Leads.do?command=ViewOpp");
+            return ("ComponentDeleteOK");
+          }
+        }
+        context.getRequest().setAttribute("refreshUrl","Leads.do?command=DetailsOpp&oppId="+component.getOppId());
         return ("ComponentDeleteOK");
       } else {
         processErrors(context, component.getErrors());
@@ -798,7 +811,7 @@ public final class Leads extends CFSModule {
       thisComponent = new OpportunityComponent(db, id);
       htmlDialog.setTitle("CFS: Pipeline Management");
       htmlDialog.setShowAndConfirm(false);
-      htmlDialog.setDeleteUrl("javascript:window.location.href='LeadsComponents.do?command=DeleteComponent&id=" + id + "'");      
+      htmlDialog.setDeleteUrl("javascript:window.location.href='LeadsComponents.do?command=DeleteComponent&id=" + id + "&return=" + context.getRequest().getParameter("return") + "'");      
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
       errorMessage = e;
@@ -920,7 +933,7 @@ public final class Leads extends CFSModule {
     Exception errorMessage = null;
     PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
     oppListInfo.setLink("/Leads.do?command=ViewOpp");
-
+    
     Connection db = null;
     OpportunityList oppList = new OpportunityList();
 
@@ -1702,7 +1715,7 @@ public final class Leads extends CFSModule {
         return executeCommandModifyComponent(context);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-		      return (executeCommandDetailsOpp(context));
+		      return (executeCommandViewOpp(context));
 	      } else {
           return ("DetailsComponentOK");
 	      }

@@ -150,6 +150,10 @@ public void setCloseDateEnd(String tmp) {
   public void setOwner(int tmp) {
     this.owner = tmp;
   }
+  
+  public void setOwner(String tmp) {
+    this.owner = Integer.parseInt(tmp);
+  }  
 
   public String getAccountOwnerIdRange() {
     return accountOwnerIdRange;

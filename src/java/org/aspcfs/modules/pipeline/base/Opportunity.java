@@ -50,6 +50,7 @@ public class Opportunity extends OpportunityComponent {
   
   private String componentDescription = null;
   private int componentId = -1;
+  private double totalValue = 0;
   
   /**
    *  Constructor for the Opportunity object
@@ -300,6 +301,26 @@ public class Opportunity extends OpportunityComponent {
     return callsDelete;
   }
 
+  public double getTotalValue() {
+    return totalValue;
+  }
+  public void setTotalValue(double totalValue) {
+    this.totalValue = totalValue;
+  }
+  
+  public String getTotalValue(int divisor) {
+    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    double tempValue = (totalValue / divisor);
+    String amountOut = "";
+
+    if (tempValue < 1) {
+      amountOut = "<1";
+    } else {
+      amountOut = numberFormatter.format(tempValue);
+    }
+
+    return amountOut;
+  }  
 
   /**
    *  Gets the documentDelete attribute of the Opportunity object
@@ -2328,8 +2349,16 @@ public class Opportunity extends OpportunityComponent {
       "FROM opportunity_component oc " +
       "WHERE id > 0 ");
     sql.append("AND oc.opp_id = ?");
+    
+    if (this.getOwner() > -1) {
+      sql.append("AND oc.owner = ?");
+    }
+    
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(1, id);
+    if (this.getOwner() > -1) {
+      pst.setInt(2, owner);
+    }    
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       count = rs.getInt("componentcount");
@@ -2338,6 +2367,31 @@ public class Opportunity extends OpportunityComponent {
     pst.close();
     this.setComponentCount(count);
   }   
+
+  public void buildTotal(Connection db) throws SQLException {
+    double total = 0;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+      "SELECT sum(guessvalue) as total " +
+      "FROM opportunity_component oc " +
+      "WHERE id > 0 ");
+    sql.append("AND oc.opp_id = ?");
+    if (this.getOwner() > -1) {
+      sql.append("AND oc.owner = ?");
+    }    
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(1, oppId);
+    if (this.getOwner() > -1) {
+      pst.setInt(2, owner);
+    }
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      total = rs.getDouble("total");
+    }
+    rs.close();
+    pst.close();
+    this.setTotalValue(total);
+  }
 
 }
 

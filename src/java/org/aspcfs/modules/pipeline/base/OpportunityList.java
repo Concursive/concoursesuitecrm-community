@@ -52,6 +52,7 @@ public class OpportunityList extends Vector {
   protected java.sql.Date closeDateEnd = null;
   protected int stage = -1;
   private boolean queryOpenOnly = false;
+  private boolean buildComponentInfo = false;  
 
   /**
    *  Constructor for the ContactList object
@@ -118,6 +119,12 @@ public void setStage(String stage) {
     this.contactId = tmp;
   }
 
+  public boolean getBuildComponentInfo() {
+    return buildComponentInfo;
+  }
+  public void setBuildComponentInfo(boolean buildComponentInfo) {
+    this.buildComponentInfo = buildComponentInfo;
+  }
 
   /**
    *  Sets the Description attribute of the OpportunityList object
@@ -432,6 +439,10 @@ public void setCloseDateEnd(String tmp) {
       Opportunity thisOpp = new Opportunity(rs);
       thisOpp.buildFiles(db);
       thisOpp.buildTypes(db);
+      if (this.getBuildComponentInfo()) {
+        thisOpp.retrieveComponentCount(db);
+        thisOpp.buildTotal(db);
+      }
       this.addElement(thisOpp);
     }
     rs.close();

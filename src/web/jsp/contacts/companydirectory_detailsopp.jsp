@@ -66,8 +66,6 @@ Opportunity Details<br>
 </table>
 <br>
 <dhv:pagedListStatus showExpandLink="false" title="<%= showError(request, "actionError") %>" object="ComponentListInfo"/>
-<center><%= ComponentListInfo.getAlphabeticalPageLinks() %></center>
-<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
