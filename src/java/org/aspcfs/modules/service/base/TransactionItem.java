@@ -356,7 +356,11 @@ public class TransactionItem {
       ResultSet rs = syncClientMap.buildSyncDeletes(db, pst, uniqueField, tableName, recordList);
       while (rs.next()) {
         Record thisRecord = new Record("delete");
-        thisRecord.put("guid", rs.getString());
+        int id = rs.getInt(uniqueField);
+        java.sql.Timestamp entered = rs.getTimestamp("entered");
+        int enteredBy = rs.getInt("enteredby");
+        thisRecord.put("guid", 
+          ObjectUtils.generateGuid(entered, enteredBy, id));
         recordList.add(thisRecord);
       }
       rs.close();
