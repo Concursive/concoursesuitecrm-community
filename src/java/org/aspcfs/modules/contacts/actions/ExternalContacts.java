@@ -1480,7 +1480,6 @@ public final class ExternalContacts extends CFSModule {
       context.getSession().removeAttribute("ContactTypeSelectorInfo");
     }
     PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "ContactTypeSelectorInfo");
-    lookupSelectorInfo.setEnableJScript(true);
 
     HashMap selectedList = new HashMap();
     HashMap finalElementList = (HashMap) context.getSession().getAttribute("finalElements");
