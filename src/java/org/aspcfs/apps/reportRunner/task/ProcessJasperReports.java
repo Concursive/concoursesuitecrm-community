@@ -89,7 +89,11 @@ public class ProcessJasperReports {
     criteria.setQueueId(thisQueue.getId());
     criteria.buildList(db);
     //Export the pdf to fileLibrary for this site
-    JasperRunManager.runReportToPdfFile(path + thisReport.getFilename() + ".jasper", destFilename, criteria.getParameters(jasperReport), db);
+    JasperRunManager.runReportToPdfFile(
+        path + 
+        thisReport.getFilename().substring(0, thisReport.getFilename().lastIndexOf(".xml")) + ".jasper", 
+        destFilename, 
+        criteria.getParameters(jasperReport), db);
     //Determine the size
     File reportFile = new File(destFilename);
     if (reportFile.exists()) {

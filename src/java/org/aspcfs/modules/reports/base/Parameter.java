@@ -426,7 +426,9 @@ public class Parameter extends GenericBean {
    *@return          The html value
    */
   public String getHtml(HttpServletRequest request) {
-    if (name.startsWith("date_")) {
+    if (name.equals("userid_range_source")) {
+      return HtmlSelectRecordSource.getSelect(name, value).getHtml();
+    } else if (name.startsWith("date_")) {
       //Date Field
       return "<input type='text' size='10' name='" + name + "' value='" + HTTPUtils.toHtmlValue(value) + "'/>\r\n" +
           "<a href=\"javascript:popCalendar('paramForm', '" + name + "');\"><img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/></a> (mm/dd/yyyy)";

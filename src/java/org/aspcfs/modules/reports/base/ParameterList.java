@@ -6,6 +6,7 @@ import java.util.*;
 import java.sql.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.UserUtils;
 import dori.jasper.engine.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
@@ -90,6 +91,15 @@ public class ParameterList extends ArrayList {
       Parameter param = (Parameter) i.next();
       if (param.getIsForPrompting()) {
         param.setValue(request.getParameter(param.getName()));
+        if (param.getName().equals("userid_range_source")) {
+          if (param.getValue().equals("all")) {
+            addParam("userid_range", "");
+          } else if (param.getValue().equals("hierarchy")) {
+            addParam("userid_range", UserUtils.getUserIdRange(request));
+          } else {
+            addParam("userid_range", String.valueOf(UserUtils.getUserId(request)));
+          }
+        }
         if (param.getName().startsWith("lookup_")) {
           if ("-1".equals(param.getValue())) {
             addParam(param.getName() + "_max", "999999");
@@ -111,6 +121,7 @@ public class ParameterList extends ArrayList {
         System.out.println("ParameterList-> " + param.getName() + "=" + param.getValue());
       }
     }
+    this.addParam("userid", String.valueOf(UserUtils.getUserId(request)));
   }
 
 

@@ -33,6 +33,7 @@ public class JasperReportUtils {
       return null;
     }
     //Check to see if the .jasper exists
+    filename = filename.substring(0, filename.lastIndexOf(".xml"));
     File jasperFile = new File(filename + ".jasper");
     if (!jasperFile.exists()) {
       //synchronized (this) {

@@ -278,8 +278,7 @@ public final class Reports extends CFSModule {
       //Set the user supplied parameters from the request
       params.setParameters(context.getRequest());
       //Set the system generated parameters
-      params.addParam("userid", String.valueOf(getUserId(context)));
-      params.addParam("userid_range", getUserRange(context));
+      //TODO: Move this into ParameterList.java
       params.addParam("user_name", (getUser(context, getUserId(context))).getContact().getNameFirstLast());
       //Populate a criteria record which will be used in the report
       Criteria thisCriteria = new Criteria();

@@ -163,7 +163,7 @@ public class CFSModule {
    *@since           1.7
    */
   protected int getUserId(ActionContext context) {
-    return ((UserBean) context.getSession().getAttribute("User")).getUserId();
+    return UserUtils.getUserId(context.getRequest());
   }
 
 
@@ -186,7 +186,7 @@ public class CFSModule {
    *@since
    */
   protected String getUserRange(ActionContext context) {
-    return ((UserBean) context.getSession().getAttribute("User")).getIdRange();
+    return UserUtils.getUserIdRange(context.getRequest());
   }
 
 
