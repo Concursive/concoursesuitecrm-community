@@ -30,7 +30,7 @@
 .PhotoDetail
 {
 	font-size: x-small;
-	vertical-align: baseline;
+	vertical-align: top;
 	text-align: center;
 }
 .PhotoDetail img
