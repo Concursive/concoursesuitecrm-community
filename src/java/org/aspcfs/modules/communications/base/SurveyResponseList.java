@@ -96,7 +96,6 @@ public class SurveyResponseList extends ArrayList {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
       items = prepareFilter(pst);
-      System.out.println("SurveyResponseList -- > "  + pst.toString());
       rs = pst.executeQuery();
       if (rs.next()) {
         int maxRecords = rs.getInt("recordcount");
@@ -142,7 +141,6 @@ public class SurveyResponseList extends ArrayList {
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    System.out.println("SurveyResponseList -- > "  + pst.toString());
     rs = pst.executeQuery();
 
     if (pagedListInfo != null) {

@@ -399,9 +399,6 @@ public class ActiveSurvey extends SurveyBase {
       pst.setInt(++i, type);
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, modifiedBy);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("ActiveSurvey -- > Inserting  Survey " + pst.toString());
-      }
       pst.execute();
       pst.close();
 

@@ -449,9 +449,6 @@ public class CustomFieldGroup extends ArrayList {
    *@since
    */
   public void buildResources(Connection db) throws SQLException {
-    if (System.getProperty("DEBUG") != null) {
-      //System.out.println("CustomFieldGroup-> buildResources");
-    }
     this.clear();
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -623,9 +620,6 @@ public class CustomFieldGroup extends ArrayList {
    */
   public boolean deleteGroup(Connection db) throws SQLException {
     boolean result = false;
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("CustomFieldGroup-> deleteGroup Id:" + id);
-    }
     if (id == -1) {
       return result;
     }

@@ -430,9 +430,6 @@ public class SurveyAnswer {
     pst.setString(++i, comments);
     pst.setInt(++i, quantAns);
     pst.setString(++i, textAns);
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("SurveyAnswer -- > Insert Query: " + pst.toString());
-    }
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "active_survey_ans_answer_id_seq");

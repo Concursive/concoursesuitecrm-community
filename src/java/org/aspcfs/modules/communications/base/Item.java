@@ -164,9 +164,6 @@ public class Item {
       pst.setInt(++i, qid);
       pst.setInt(++i, this.getType());
       pst.setString(++i, this.getDescription());
-      if (System.getProperty("DEBUG") != null) {
-            System.out.println(" Item -- > Insert Query " + pst.toString());
-      }
       pst.execute();
       pst.close();
 
@@ -199,9 +196,6 @@ public class Item {
       int i = 0;
       pst.setString(++i, description);
       pst.setInt(++i, qId);
-      if (System.getProperty("DEBUG") != null) {
-            System.out.println(" SurveyQuestion -- > Update Item " + pst.toString());
-      }
       count = pst.executeUpdate();
       pst.close();
     } catch (SQLException e) {

@@ -124,10 +124,6 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlOrder.toString());
     pst.setInt(1, itemId);
-
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("ActiveSurveyAnswerItemList Query --> " + pst.toString());
-    }
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);

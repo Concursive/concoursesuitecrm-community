@@ -579,7 +579,6 @@ public class Survey extends SurveyBase {
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getId());
       pst.setTimestamp(++i, modified);
-      System.out.println("Survey -- > Update " + pst.toString());
       resultCount = pst.executeUpdate();
       pst.close();
 

@@ -390,9 +390,6 @@ public class ActiveSurveyQuestion {
     pst.setString(++i, description);
     pst.setBoolean(++i, required);
     pst.setInt(++i, this.getPosition());
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("ActiveSurveyQuestion -- > Inserting Question " + pst.toString());
-    }
     pst.execute();
 
     pst.close();

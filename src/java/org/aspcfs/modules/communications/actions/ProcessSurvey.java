@@ -60,7 +60,6 @@ public final class ProcessSurvey extends CFSModule {
           surveyId = Integer.parseInt(value);
         }
       }
-      System.out.println("ProcessSurvey -- > Survey Id " + surveyId);
       thisSurvey = new ActiveSurvey(db, surveyId);
     } catch (Exception e) {
       errorMessage = e;

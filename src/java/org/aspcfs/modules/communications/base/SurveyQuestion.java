@@ -45,9 +45,6 @@ public class SurveyQuestion {
     this.setPosition(Integer.parseInt(request.getParameter("position")));
     if (type == ITEMLIST) {
       this.buildItems(request);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println(" SurveyQuestion -- > Building ItemList  " + request.getParameter("items"));
-      }
     }
     this.setRequired(request.getParameter("required") != null ? true : false);
   }
@@ -351,9 +348,6 @@ public class SurveyQuestion {
       pst.setString(++i, description);
       pst.setBoolean(++i, required);
       pst.setInt(++i, position);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println(" SurveyQuestion -- > Insert Query " + pst.toString());
-      }
       pst.execute();
       pst.close();
       this.setId(DatabaseUtils.getCurrVal(db, "survey_question_question_id_seq"));

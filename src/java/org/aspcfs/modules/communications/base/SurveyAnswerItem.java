@@ -314,9 +314,6 @@ public class SurveyAnswerItem {
       pst.setInt(++i, this.getId());
       pst.setInt(++i, thisAnswerId);
       pst.setString(++i, comments);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("SurveyAnswerItem -- > Insert : " + pst.toString());
-      }
       pst.execute();
       pst.close();
       updateSurveyAverage(db, questionId);
@@ -354,9 +351,6 @@ public class SurveyAnswerItem {
           "WHERE question_id = ? AND item_id =? ");
       pst.setInt(++i, questionId);
       pst.setInt(++i, this.getId());
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("SurveyAnswerItem -- > Update Avg : " + pst.toString());
-      }
       count = pst.executeUpdate();
       pst.close();
     } catch (SQLException e) {
