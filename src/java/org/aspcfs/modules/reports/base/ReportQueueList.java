@@ -24,6 +24,8 @@ public class ReportQueueList extends ArrayList {
   private boolean unprocessedOnly = false;
   private boolean inQueueOnly = false;
   private boolean sortAscending = false;
+  private java.sql.Timestamp rangeStart = null;
+  private java.sql.Timestamp rangeEnd = null;
 
 
   /**
@@ -193,6 +195,47 @@ public class ReportQueueList extends ArrayList {
 
 
   /**
+   *  Sets the rangeStart attribute of the ReportQueueList object
+   *
+   *@param  tmp  The new rangeStart value
+   */
+  public void setRangeStart(java.sql.Timestamp tmp) {
+    this.rangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the rangeStart attribute of the ReportQueueList object
+   *
+   *@param  tmp  The new rangeStart value
+   */
+  public void setRangeStart(String tmp) {
+    this.rangeStart = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the rangeEnd attribute of the ReportQueueList object
+   *
+   *@param  tmp  The new rangeEnd value
+   */
+  public void setRangeEnd(java.sql.Timestamp tmp) {
+    this.rangeEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the rangeEnd attribute of the ReportQueueList object
+   *
+   *@param  tmp  The new rangeEnd value
+   */
+  public void setRangeEnd(String tmp) {
+    this.rangeEnd = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+
+  /**
    *  Gets the processedOnly attribute of the ReportQueueList object
    *
    *@return    The processedOnly value
@@ -229,6 +272,26 @@ public class ReportQueueList extends ArrayList {
    */
   public boolean getSortAscending() {
     return sortAscending;
+  }
+
+
+  /**
+   *  Gets the rangeStart attribute of the ReportQueueList object
+   *
+   *@return    The rangeStart value
+   */
+  public java.sql.Timestamp getRangeStart() {
+    return rangeStart;
+  }
+
+
+  /**
+   *  Gets the rangeEnd attribute of the ReportQueueList object
+   *
+   *@return    The rangeEnd value
+   */
+  public java.sql.Timestamp getRangeEnd() {
+    return rangeEnd;
   }
 
 
@@ -333,6 +396,12 @@ public class ReportQueueList extends ArrayList {
     if (inQueueOnly) {
       sqlFilter.append("AND q.processed IS NULL ");
     }
+    if (rangeStart != null) {
+      sqlFilter.append("AND q.processed >= ? ");
+    }
+    if (rangeEnd != null) {
+      sqlFilter.append("AND q.processed < ? ");
+    }
   }
 
 
@@ -348,6 +417,12 @@ public class ReportQueueList extends ArrayList {
     int i = 0;
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
+    }
+    if (rangeStart != null) {
+      pst.setTimestamp(++i, rangeStart);
+    }
+    if (rangeEnd != null) {
+      pst.setTimestamp(++i, rangeEnd);
     }
     return i;
   }

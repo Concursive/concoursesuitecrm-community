@@ -3,7 +3,7 @@
   is specified with a "#"
 */
 
-/* Sample cron entry for running the notifier, every day every 5 minutes */
+/* Cron entry for running the notifier, every day every 5 minutes */
 INSERT INTO events
 (minute, task, extrainfo, enabled)
 VALUES
@@ -13,12 +13,23 @@ VALUES
  @TRUE@
 );
 
-/* Sample cron entry for running the report runner, every day every 5 minutes */
+/* Cron entry for running the report runner, every day every 2 minutes */
 INSERT INTO events
 (minute, task, extrainfo, enabled)
 VALUES
 ('*/2',
  'org.aspcfs.apps.reportRunner.ReportRunner#doTask',
+ '${FILEPATH}',
+ @TRUE@
+);
+
+/* Cron entry for cleaning up the reports, every day every 12 hours */
+INSERT INTO events
+(minute, hour, task, extrainfo, enabled)
+VALUES
+('0',
+ '*/12',
+ 'org.aspcfs.apps.reportRunner.ReportCleanup#doTask',
  '${FILEPATH}',
  @TRUE@
 );
