@@ -18,6 +18,11 @@ import javax.servlet.http.*;
  */
 public class Contact extends GenericBean {
 
+  /**
+   *  Description of the Field
+   */
+  public final static int EMPLOYEE_TYPE = 1;
+
   private int id = -1;
   private int orgId = -1;
   private String orgName = "";
@@ -56,8 +61,6 @@ public class Contact extends GenericBean {
   private String ownerName = "";
   private String enteredByName = "";
   private String modifiedByName = "";
-
-  public final static int EMPLOYEE_TYPE = 1;
 
 
   /**
@@ -133,6 +136,7 @@ public class Contact extends GenericBean {
     emailAddressList.buildList(db);
   }
 
+
   /**
    *  Sets the OwnerName attribute of the Contact object
    *
@@ -157,33 +161,48 @@ public class Contact extends GenericBean {
     emailAddressList.setContactId(tmp);
   }
 
-public java.sql.Timestamp getEntered() { return entered; }
-public java.sql.Timestamp getModified() { return modified; }
 
-public String getModifiedString() {
-	String tmp = "";
-	try {
-		return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
-	} catch (NullPointerException e) {
-	}
-	return tmp;
-}
+  /**
+   *  Sets the entered attribute of the Contact object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
 
 
-public String getEnteredString() {
-	String tmp = "";
-	try {
-		return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
-	} catch (NullPointerException e) {
-	}
-	return tmp;
-}
+  /**
+   *  Sets the modified attribute of the Contact object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
 
-public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
-public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
-public void setEntered(String tmp) { this.entered = java.sql.Timestamp.valueOf(tmp); }
-public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf(tmp);; }
+  /**
+   *  Sets the entered attribute of the Contact object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Contact object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = java.sql.Timestamp.valueOf(tmp);
+    ;
+  }
+
+
   /**
    *  Sets the Owner attribute of the Opportunity object
    *
@@ -394,41 +413,17 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
   public void setPhoneNumberList(ContactPhoneNumberList tmp) {
     this.phoneNumberList = tmp;
   }
-  
-  public boolean excludedFromCampaign() {
-    return excludedFromCampaign;
-  }
+
+
+  /**
+   *  Sets the excludedFromCampaign attribute of the Contact object
+   *
+   *@param  excludedFromCampaign  The new excludedFromCampaign value
+   */
   public void setExcludedFromCampaign(boolean excludedFromCampaign) {
-    this.excludedFromCampaign = excludedFromCampaign; 
+    this.excludedFromCampaign = excludedFromCampaign;
   }
-  
-  public boolean toggleExcluded(Connection db, int campaignId) throws SQLException {
-	if (id == -1) {
-	return false;
-	}
-	
-	String sql = "";
-	
-	if (this.excludedFromCampaign()) {
-		sql =
-		"DELETE FROM excluded_recipient " +
-		"WHERE campaign_id = ? AND contact_id = ? ";
-	} else {
-		sql =
-		"INSERT INTO excluded_recipient " +
-		"(campaign_id, contact_id) VALUES (?, ?) ";
-	}
-	
-	int i = 0;
-	PreparedStatement pst = db.prepareStatement(sql);
-	pst.setInt(++i, campaignId);
-	pst.setInt(++i, this.getId());
-	pst.execute();
-	pst.close();
-    
-	this.excludedFromCampaign = !excludedFromCampaign;
-	return true;
-  }
+
 
   /**
    *  Sets the AddressList attribute of the Contact object
@@ -673,6 +668,56 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
 
 
   /**
+   *  Gets the entered attribute of the Contact object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the Contact object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Gets the modifiedString attribute of the Contact object
+   *
+   *@return    The modifiedString value
+   */
+  public String getModifiedString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+
+  /**
+   *  Gets the enteredString attribute of the Contact object
+   *
+   *@return    The enteredString value
+   */
+  public String getEnteredString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+
+  /**
    *  Gets the ModifiedByName attribute of the Contact object
    *
    *@return    The ModifiedByName value
@@ -832,9 +877,9 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
     if (nameSuffix != null && nameSuffix.length() > 0) {
       out.append(nameSuffix + " ");
     }
-    
+
     if (out.toString().length() == 0) {
-	    return company;
+      return company;
     }
 
     return out.toString().trim();
@@ -857,9 +902,9 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
     if (nameLast != null && nameLast.length() > 0) {
       out.append(nameLast);
     }
-    
+
     if (out.toString().length() == 0) {
-	    return company;
+      return company;
     }
 
     return out.toString().trim();
@@ -885,10 +930,10 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
       }
       out.append(nameFirst);
     }
-    
+
     if (out.toString().length() == 0) {
-	    System.out.println("chris");
-	    return company;
+      System.out.println("chris");
+      return company;
     }
 
     return out.toString().trim();
@@ -1156,6 +1201,7 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
     return enabled;
   }
 
+
   /**
    *  Gets the PhoneNumberList attribute of the Contact object
    *
@@ -1208,6 +1254,90 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
    */
   public int getModifiedBy() {
     return modifiedBy;
+  }
+
+
+  /**
+   *  Gets the campaignMessageRange attribute of the Contact object
+   *
+   *@param  db                Description of Parameter
+   *@return                   The campaignMessageRange value
+   *@exception  SQLException  Description of Exception
+   */
+  public String getCampaignMessageRange(Connection db) throws SQLException {
+    Statement st = null;
+    ResultSet rs = null;
+    StringBuffer r = new StringBuffer();
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT campaign_id from scheduled_recipient " +
+        "WHERE contact_id = " + id + " ");
+
+    st = db.createStatement();
+    rs = st.executeQuery(sql.toString());
+    while (rs.next()) {
+      if (r.length() > 0) {
+        r.append(", " + rs.getInt("campaign_id"));
+      } else {
+        r.append(rs.getInt("campaign_id"));
+      }
+    }
+    rs.close();
+    st.close();
+
+    if (r.length() == 0) {
+      r.append("''");
+    }
+
+    return r.toString();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
+  public boolean excludedFromCampaign() {
+    return excludedFromCampaign;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  campaignId        Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean toggleExcluded(Connection db, int campaignId) throws SQLException {
+    if (id == -1) {
+      return false;
+    }
+
+    String sql = "";
+
+    if (this.excludedFromCampaign()) {
+      sql =
+          "DELETE FROM excluded_recipient " +
+          "WHERE campaign_id = ? AND contact_id = ? ";
+    } else {
+      sql =
+          "INSERT INTO excluded_recipient " +
+          "(campaign_id, contact_id) VALUES (?, ?) ";
+    }
+
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, campaignId);
+    pst.setInt(++i, this.getId());
+    pst.execute();
+    pst.close();
+
+    this.excludedFromCampaign = !excludedFromCampaign;
+    return true;
   }
 
 
@@ -1274,21 +1404,21 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
       //Insert the phone numbers if there are any
       Iterator iphone = phoneNumberList.iterator();
       while (iphone.hasNext()) {
-        ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)iphone.next();
+        ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber) iphone.next();
         thisPhoneNumber.insert(db, this.getId(), this.getEnteredBy());
       }
 
       //Insert the addresses if there are any
       Iterator iaddress = addressList.iterator();
       while (iaddress.hasNext()) {
-        ContactAddress thisAddress = (ContactAddress)iaddress.next();
+        ContactAddress thisAddress = (ContactAddress) iaddress.next();
         thisAddress.insert(db, this.getId(), this.getEnteredBy());
       }
 
       //Insert the email addresses if there are any
       Iterator iemail = emailAddressList.iterator();
       while (iemail.hasNext()) {
-        ContactEmailAddress thisEmailAddress = (ContactEmailAddress)iemail.next();
+        ContactEmailAddress thisEmailAddress = (ContactEmailAddress) iemail.next();
         thisEmailAddress.insert(db, this.getId(), this.getEnteredBy());
       }
 
@@ -1331,21 +1461,21 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
       //Process the phone numbers if there are any
       Iterator iphone = phoneNumberList.iterator();
       while (iphone.hasNext()) {
-        ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)iphone.next();
+        ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber) iphone.next();
         thisPhoneNumber.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the addresses if there are any
       Iterator iaddress = addressList.iterator();
       while (iaddress.hasNext()) {
-        ContactAddress thisAddress = (ContactAddress)iaddress.next();
+        ContactAddress thisAddress = (ContactAddress) iaddress.next();
         thisAddress.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the email addresses if there are any
       Iterator iemail = emailAddressList.iterator();
       while (iemail.hasNext()) {
-        ContactEmailAddress thisEmailAddress = (ContactEmailAddress)iemail.next();
+        ContactEmailAddress thisEmailAddress = (ContactEmailAddress) iemail.next();
         thisEmailAddress.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
       }
 
@@ -1359,35 +1489,7 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
     db.setAutoCommit(true);
     return resultCount;
   }
-  
-  public String getCampaignMessageRange(Connection db) throws SQLException {
-	Statement st = null;
-	ResultSet rs = null;
-	StringBuffer r = new StringBuffer();
-	
-	StringBuffer sql = new StringBuffer();
-	sql.append(
-			"SELECT campaign_id from scheduled_recipient " +
-			"WHERE contact_id = " + id + " ");
-			
-	st = db.createStatement();
-	rs = st.executeQuery(sql.toString());
-	while (rs.next()) {
-		if (r.length() > 0) {
-			r.append(", " + rs.getInt("campaign_id"));
-		} else {
-			r.append(rs.getInt("campaign_id"));
-		}
-	} 
-	rs.close();
-	st.close();
-	
-	if (r.length() == 0) {
-		r.append("''");
-	}
-	
-	return r.toString();
-  }
+
 
   /**
    *  Delete the current object from the database
@@ -1427,6 +1529,20 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
     } else {
       try {
         db.setAutoCommit(false);
+
+        CustomFieldRecordList folderList = new CustomFieldRecordList();
+        folderList.setLinkModuleId(Constants.CONTACTS);
+        folderList.setLinkItemId(this.getId());
+        folderList.buildList(db);
+        folderList.delete(db);
+        folderList = null;
+
+        CallList callList = new CallList();
+        callList.setContactId(this.getId());
+        callList.buildList(db);
+        callList.delete(db);
+        callList = null;
+
         st.executeUpdate("DELETE FROM contact_phone WHERE contact_id = " + this.getId());
         st.executeUpdate("DELETE FROM contact_emailaddress WHERE contact_id = " + this.getId());
         st.executeUpdate("DELETE FROM contact_address WHERE contact_id = " + this.getId());
@@ -1469,7 +1585,15 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
     rs.close();
     st.close();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  campaignId        Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void checkExcludedFromCampaign(Connection db, int campaignId) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("ID not specified for lookup.");
@@ -1647,7 +1771,6 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
 
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
-
 
     modified = rs.getTimestamp("modified");
 

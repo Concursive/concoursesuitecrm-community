@@ -11,10 +11,17 @@ import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     matt
+ *@created    March 14, 2002
+ */
 public final class LeadsCalls extends CFSModule {
 
   /**
-   *  Provides a list of calls with a form to add new calls for a selected lead/opportunity
+   *  Provides a list of calls with a form to add new calls for a selected
+   *  lead/opportunity
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -36,22 +43,22 @@ public final class LeadsCalls extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      
+
       callList.setPagedListInfo(leadsCallListInfo);
       callList.setOppId(Integer.parseInt(context.getRequest().getParameter("oppId")));
       callList.buildList(db);
-      
+
       thisOpp = new Opportunity(db, oppId);
       context.getRequest().setAttribute("OpportunityDetails", thisOpp);
-      
-      	ContactList contactList = new ContactList();
-	contactList.setPersonalId(getUserId(context));
-	//contactList.setTypeId(Integer.parseInt(typeId));
-	contactList.setBuildDetails(false);
-	contactList.setOrgId(thisOpp.getAccountLink());
-	contactList.buildList(db);
-	context.getRequest().setAttribute("ContactList", contactList);
-      
+
+      ContactList contactList = new ContactList();
+      contactList.setPersonalId(getUserId(context));
+      //contactList.setTypeId(Integer.parseInt(typeId));
+      contactList.setBuildDetails(false);
+      contactList.setOrgId(thisOpp.getAccountLink());
+      contactList.buildList(db);
+      context.getRequest().setAttribute("ContactList", contactList);
+
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
@@ -81,16 +88,16 @@ public final class LeadsCalls extends CFSModule {
   public String executeCommandInsert(ActionContext context) {
     Exception errorMessage = null;
     boolean recordInserted = false;
-    
+
     String contactId = context.getRequest().getParameter("contactId");
     Contact thisContact = null;
 
-    Call thisCall = (Call)context.getRequest().getAttribute("CallDetails");
+    Call thisCall = (Call) context.getRequest().getAttribute("CallDetails");
     thisCall.setEnteredBy(getUserId(context));
     thisCall.setModifiedBy(getUserId(context));
-    
+
     Connection db = null;
-    
+
     try {
       db = this.getConnection(context);
       recordInserted = thisCall.insert(db, context);
@@ -123,7 +130,7 @@ public final class LeadsCalls extends CFSModule {
    */
   public String executeCommandDetails(ActionContext context) {
     Exception errorMessage = null;
-    
+
     String callId = context.getRequest().getParameter("id");
     String oppId = context.getRequest().getParameter("oppId");
 
@@ -164,14 +171,14 @@ public final class LeadsCalls extends CFSModule {
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
-    String oppId = context.getRequest().getParameter("oppId");     
+    String oppId = context.getRequest().getParameter("oppId");
     Call thisCall = null;
 
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisCall = new Call(db, context.getRequest().getParameter("id"));
-      recordDeleted = thisCall.delete(db, context);
+      recordDeleted = thisCall.delete(db);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -191,7 +198,8 @@ public final class LeadsCalls extends CFSModule {
       return ("SystemError");
     }
   }
-  
+
+
   /**
    *  Show the modify form from which a call can be updated
    *
@@ -202,7 +210,7 @@ public final class LeadsCalls extends CFSModule {
 
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
-    
+
     String oppId = context.getRequest().getParameter("oppId");
     Opportunity thisOpp = null;
 
@@ -216,10 +224,10 @@ public final class LeadsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisCall = new Call(db, "" + callId);
-      
+
       thisOpp = new Opportunity(db, oppId);
       context.getRequest().setAttribute("OpportunityDetails", thisOpp);
-      
+
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
@@ -250,8 +258,8 @@ public final class LeadsCalls extends CFSModule {
   public String executeCommandUpdate(ActionContext context) {
     Exception errorMessage = null;
 
-    Call thisCall = (Call)context.getFormBean();
-    
+    Call thisCall = (Call) context.getFormBean();
+
     String oppId = context.getRequest().getParameter("oppId");
     Opportunity thisOpp = null;
 
@@ -265,7 +273,7 @@ public final class LeadsCalls extends CFSModule {
       if (resultCount == -1) {
         thisOpp = new Opportunity(db, oppId);
         context.getRequest().setAttribute("OpportunityDetails", thisOpp);
-        
+
         LookupList callTypeList = new LookupList(db, "lookup_call_types");
         callTypeList.addItem(0, "--None--");
         context.getRequest().setAttribute("CallTypeList", callTypeList);

@@ -161,7 +161,7 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisCall = new Call(db, context.getRequest().getParameter("id"));
-      recordDeleted = thisCall.delete(db, context);
+      recordDeleted = thisCall.delete(db);
     } catch (Exception e) {
       errorMessage = e;
     } finally {

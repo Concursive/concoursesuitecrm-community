@@ -1322,6 +1322,12 @@ public class Organization extends GenericBean {
       folderList.delete(db);
       folderList = null;
       
+      CallList callList = new CallList();
+      callList.setOrgId(this.getOrgId());
+      callList.buildList(db);
+      callList.delete(db);
+      callList = null;
+      
       st.executeUpdate("DELETE FROM organization_phone WHERE org_id = " + this.getOrgId());
       st.executeUpdate("DELETE FROM organization_emailaddress WHERE org_id = " + this.getOrgId());
       st.executeUpdate("DELETE FROM organization_address WHERE org_id = " + this.getOrgId());
