@@ -1411,9 +1411,10 @@ public class Opportunity extends GenericBean {
       db.setAutoCommit(false);
 
       StringBuffer sql = new StringBuffer();
-      sql.append("INSERT INTO opportunity ");
-      sql.append("(acctlink, contactlink, enteredby, modifiedby, owner, closedate, stage, description) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+      sql.append(
+        "INSERT INTO opportunity " +
+        "(acctlink, contactlink, enteredby, modifiedby, owner, closedate, stage, description) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());

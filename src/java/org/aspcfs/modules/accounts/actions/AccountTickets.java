@@ -44,11 +44,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandAddTicket(ActionContext context) {
-	  
-	if (!(hasPermission(context, "accounts-accounts-tickets-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "accounts-accounts-tickets-add"))) {
+      return ("PermissionError");
+    }
+
     int errorCode = 0;
     Exception errorMessage = null;
     Connection db = null;
@@ -63,12 +63,12 @@ public final class AccountTickets extends CFSModule {
       newOrg = new Organization(db, tempid);
 
       if (context.getRequest().getParameter("refresh") != null || (context.getRequest().getParameter("contact") != null && context.getRequest().getParameter("contact").equals("on"))) {
-        newTic = (Ticket)context.getFormBean();
+        newTic = (Ticket) context.getFormBean();
         newTic.getHistory().setTicketId(newTic.getId());
         newTic.getHistory().buildList(db);
       } else {
         newTic = new Ticket();
-	newTic.setOrgId(tempid);
+        newTic.setOrgId(tempid);
       }
 
       buildFormElements(context, db, newTic);
@@ -100,11 +100,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandInsertTicket(ActionContext context) {
-	  
-	if (!(hasPermission(context, "accounts-accounts-tickets-add"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "accounts-accounts-tickets-add"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -115,28 +115,23 @@ public final class AccountTickets extends CFSModule {
     Ticket newTicket = null;
 
     String newContact = context.getRequest().getParameter("contact");
-    String closeNow = context.getRequest().getParameter("closeNow");
 
-    Ticket newTic = (Ticket)context.getFormBean();
+    Ticket newTic = (Ticket) context.getFormBean();
 
     newTic.setEnteredBy(getUserId(context));
     newTic.setModifiedBy(getUserId(context));
 
     if (newContact != null && newContact.equals("on")) {
       nc = new Contact();
-	nc.setNameFirst(context.getRequest().getParameter("thisContact_nameFirst"));
-	nc.setNameLast(context.getRequest().getParameter("thisContact_nameLast"));
-	nc.setTitle(context.getRequest().getParameter("thisContact_title"));
+      nc.setNameFirst(context.getRequest().getParameter("thisContact_nameFirst"));
+      nc.setNameLast(context.getRequest().getParameter("thisContact_nameLast"));
+      nc.setTitle(context.getRequest().getParameter("thisContact_title"));
       nc.setRequestItems(context.getRequest());
       nc.setOrgId(newTic.getOrgId());
       nc.setEnteredBy(getUserId(context));
       nc.setModifiedBy(getUserId(context));
       nc.setOwner(getUserId(context));
       nc.setTypeId(0);
-    }
-
-    if (closeNow != null && closeNow.equals("on")) {
-      newTic.setCloseIt(true);
     }
 
     try {
@@ -195,11 +190,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandTicketDetails(ActionContext context) {
-	  
-	if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
@@ -242,11 +237,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandDeleteTicket(ActionContext context) {
-	  
-	if (!(hasPermission(context, "accounts-accounts-tickets-delete"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "accounts-accounts-tickets-delete"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -295,11 +290,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandModifyTicket(ActionContext context) {
-	  
-	if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
@@ -311,11 +306,11 @@ public final class AccountTickets extends CFSModule {
       if (context.getRequest().getParameter("companyName") == null) {
         newTic = new Ticket(db, Integer.parseInt(ticketId));
       } else {
-        newTic = (Ticket)context.getFormBean();
+        newTic = (Ticket) context.getFormBean();
         newTic.getHistory().setTicketId(newTic.getId());
         newTic.getHistory().buildList(db);
       }
-      
+
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
@@ -440,11 +435,10 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandUpdateTicket(ActionContext context) {
-	  
-	if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
-	    return ("PermissionError");
-    	}
-	
+
+    if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+      return ("PermissionError");
+    }
 
     Exception errorMessage = null;
     Connection db = null;
@@ -456,12 +450,11 @@ public final class AccountTickets extends CFSModule {
 
     boolean smartCommentsResult = true;
 
-    Ticket newTic = (Ticket)context.getFormBean();
+    Ticket newTic = (Ticket) context.getFormBean();
 
     if (context.getRequest().getParameter("close").equals("1")) {
       newTic.setCloseIt(true);
     }
-
 
     try {
       db = this.getConnection(context);
