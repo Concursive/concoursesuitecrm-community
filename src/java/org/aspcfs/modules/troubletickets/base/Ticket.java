@@ -70,7 +70,8 @@ public class Ticket extends GenericBean {
   private boolean companyEnabled = true;
   private boolean sendNotification = true;
 
-  private int ageOf = 0;
+  private int ageDays = 0;
+  private int ageHours = 0;
   private int campaignId = -1;
   private boolean hasEnabledOwnerAccount = true;
 
@@ -661,8 +662,8 @@ public class Ticket extends GenericBean {
    *@param  ageOf  The new AgeOf value
    *@since
    */
-  public void setAgeOf(int ageOf) {
-    this.ageOf = ageOf;
+  public void setAgeDays(int ageOf) {
+    this.ageDays = ageOf;
   }
 
 
@@ -1236,7 +1237,7 @@ public class Ticket extends GenericBean {
    *@since
    */
   public String getAgeOf() {
-    return ageOf + "d";
+    return ageDays + "d " + ageHours + "h";
   }
 
 
@@ -2025,11 +2026,19 @@ public class Ticket extends GenericBean {
 
     if (entered != null) {
       if (closed != null) {
-        float ageCheck = ((closed.getTime() - entered.getTime()) / 86400000);
-        ageOf = java.lang.Math.round(ageCheck);
+        //float ageCheck = ((closed.getTime() - entered.getTime()) / 86400000);
+        //ageDays = java.lang.Math.round(ageCheck);
+        float ageCheck = ((closed.getTime() - entered.getTime()) / 3600000);
+        int totalHours = java.lang.Math.round(ageCheck);
+        ageDays = java.lang.Math.round(totalHours/24);
+        ageHours = java.lang.Math.round(totalHours - (24 * ageDays));
       } else {
-        float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
-        ageOf = java.lang.Math.round(ageCheck);
+        //float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 86400000);
+        //ageDays = java.lang.Math.round(ageCheck);
+        float ageCheck = ((System.currentTimeMillis() - entered.getTime()) / 3600000);
+        int totalHours = java.lang.Math.round(ageCheck);
+        ageDays = java.lang.Math.round(totalHours/24);
+        ageHours = java.lang.Math.round(totalHours - (24 * ageDays));
       }
     }
   }
