@@ -158,8 +158,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='MyCFS.do?command=Home' class='s'>Pending Calls</a> (" + paint(callCount) + ")<br>");
-          ++myItems;
+          if (callCount > 0) {
+            items.append("<a href='MyCFS.do?command=Home' class='s'>Pending Calls</a> (" + paint(callCount) + ")<br>");
+            ++myItems;
+          }
         }
 
         //Project Activities
@@ -181,8 +183,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='ProjectManagement.do?command=PersonalView' class='s'>Assigned Activities</a> (" + paint(activityCount) + ")<br>");
-          ++myItems;
+          if (activityCount > 0) {
+            items.append("<a href='ProjectManagement.do?command=PersonalView' class='s'>Assigned Activities</a> (" + paint(activityCount) + ")<br>");
+            ++myItems;
+          }
         }
 
         //Tickets Assigned to me
@@ -201,8 +205,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='TroubleTickets.do?command=Home' class='s'>Assigned Tickets</a> (" + paint(ticketCount) + ")<br>");
-          ++myItems;
+          if (ticketCount > 0) {
+            items.append("<a href='TroubleTickets.do?command=Home' class='s'>Assigned Tickets</a> (" + paint(ticketCount) + ")<br>");
+            ++myItems;
+          }
         }
 
         //Tickets Unassigned
@@ -225,8 +231,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='TroubleTickets.do?command=Home' class='s'>Unassigned Tickets</a> (" + paint(ticketCount) + ")<br>");
-          ++myItems;
+          if (ticketCount > 0) {
+            items.append("<a href='TroubleTickets.do?command=Home' class='s'>Unassigned Tickets</a> (" + paint(ticketCount) + ")<br>");
+            ++myItems;
+          }
         }
 
         //CFS Inbox Items
@@ -245,15 +253,19 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='MyCFSInbox.do?command=Inbox&return=1' class='s'>Inbox</a> (" + paint(inboxCount) + " new)<br>");
-          ++myItems;
+          if (inboxCount > 0) {
+            items.append("<a href='MyCFSInbox.do?command=Inbox&return=1' class='s'>Inbox</a> (" + paint(inboxCount) + " new)<br>");
+            ++myItems;
+          }
         }
 
         //Tasks Items
         if (systemStatus.hasPermission(userId, "myhomepage-tasks-view")) {
           int taskCount = TaskList.queryPendingCount(db, userId);
-          items.append("<a href='MyTasks.do?command=ListTasks' class='s'>Tasks</a> (" + paint(taskCount) + " incomplete)<br>");
-          ++myItems;
+          if (taskCount > 0) {
+            items.append("<a href='MyTasks.do?command=ListTasks' class='s'>Tasks</a> (" + paint(taskCount) + " incomplete)<br>");
+            ++myItems;
+          }
         }
 
         //Default no items
