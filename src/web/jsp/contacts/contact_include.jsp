@@ -294,6 +294,8 @@
     </td>
   </tr>
 </table>
+<input type="hidden" name="saveAndClone" value="false"/>
+<input type="hidden" name="saveAndNew" value="false"/>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 
 
