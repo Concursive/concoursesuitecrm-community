@@ -70,66 +70,57 @@ function ShowSpan(thisID)
   <tr>
     <td bgColor="#FFFF95"><strong>Ticket #<%=TicketDetails.getId()%> - <%=toHtml(TicketDetails.getCompanyName())%></strong></td>
   </tr>
+  
+  
+<% if (TicketDetails.getClosed() != null) { %>  
   <tr>
     <td bgColor="#F1F0E0">
-      <% if (TicketDetails.getClosed() != null) { %>
-      	<font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
-      <%} else {%>
-      &nbsp;
-      <%}%>
+      <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
     </td>
   </tr>
+<%}%>
   
   <tr>
   	<td>
   	<table cellpadding="0" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      				<tr>
-		<td colspan=2 bgColor="white">
-		
+    <tr>
+      <td colspan=2 bgColor="white">
 		<% if (TicketDetails.getClosed() != null) { %>
-		        <input type=button value="Reopen">
+      <input type=button value="Reopen">
 			<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
 		<%} else {%>
 			<input type=submit value="Update">
 			<input type="submit" value="Cancel" onClick="javascript:this.form.action='/TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
 			<%= showAttribute(request, "closedError") %>
 		<%}%>
-		
-
-		</td>
+      </td>
 		</tr>
-		
-				</table>
+    </table>
 		<br>
 		<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-		
-		
 		<tr bgcolor="#DEE0FA">
-		<td colspan=2 valign=center align=left>
-		<strong>Ticket Information</strong>
-		</td>     
+      <td colspan=2 valign=center align=left>
+        <strong>Ticket Information</strong>
+      </td>     
 		</tr>
-		
 		<tr>
-		<td width=100 class="formLabel">
-		Ticket Source
-		</td>
-		<td bgColor="white">
-		<%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
-		</td>
+      <td width=100 class="formLabel">
+        Ticket Source
+      </td>
+      <td bgColor="white">
+        <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
+      </td>
 		</tr>
-		
 		<tr>
-		<td nowrap class="formLabel">
-		Contact
-		</td>
-		<td colspan=1 valign=center>
-		<%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
-		<font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
-		</td>
+      <td nowrap class="formLabel">
+        Contact
+      </td>
+      <td colspan=1 valign=center>
+        <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
+        <font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
+      </td>
 		</tr>
-		
-		</table>
+    </table>
 		<br>
 		<a name="categories"></a> 
 		<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

@@ -9,15 +9,14 @@
   <tr>
     <td bgColor="#FFFF95"><strong>Ticket #<%=TicketDetails.getId()%> - <%=toHtml(TicketDetails.getCompanyName())%></strong></td>
   </tr>
+  
+<% if (TicketDetails.getClosed() != null) { %>  
   <tr>
     <td bgColor="#F1F0E0">
-      <% if (TicketDetails.getClosed() != null) { %>
-      	<font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
-      <%} else {%>
-      &nbsp;
-      <%}%>
+      <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
     </td>
   </tr>
+<%}%>
   
   <tr>
   	<td>
