@@ -50,7 +50,8 @@ public final class ExternalContactsOpps extends CFSModule {
 
     addModuleBean(context, "External Contacts", "Opportunities");
 
-    PagedListInfo oppPagedListInfo = this.getPagedListInfo(context, "OpportunityPagedListInfo");
+    
+    PagedListInfo oppPagedListInfo = this.getPagedListInfo(context, "ExternalOppsPagedListInfo");
     oppPagedListInfo.setLink("/ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId);
 
     Connection db = null;
@@ -62,6 +63,11 @@ public final class ExternalContactsOpps extends CFSModule {
       oppList.setPagedListInfo(oppPagedListInfo);
       oppList.setBuildTotalValues(true);
       oppList.setContactId(contactId);
+      if ("all".equals(oppPagedListInfo.getListView())) {
+        oppList.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        oppList.setOwner(this.getUserId(context));
+      }
       oppList.buildList(db);
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -72,6 +78,9 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("OpportunityHeaderList", oppList);
       return ("ListOppsOK");
     } else {
@@ -113,6 +122,9 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       addModuleBean(context, "External Contacts", "Opportunities");
       return ("AddOppOK");
     } else {
@@ -166,6 +178,9 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       addModuleBean(context, "External Contacts", "Opportunities");
       return ("AddOppComponentOK");
     } else {
@@ -244,6 +259,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       recordInserted = newOpp.insert(db, context);
 
       if (recordInserted) {
@@ -262,7 +281,6 @@ public final class ExternalContactsOpps extends CFSModule {
         processErrors(context, newOpp.getComponent().getErrors());
       }
 
-      thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
     } catch (SQLException e) {
@@ -317,6 +335,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(context, newComponent.getOwner()))) {
+        return ("PermissionError");
+      }
       recordInserted = newComponent.insert(db, context);
 
       if (recordInserted) {
@@ -325,7 +347,6 @@ public final class ExternalContactsOpps extends CFSModule {
       } else {
         processErrors(context, newComponent.getErrors());
       }
-      thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (SQLException e) {
       errorMessage = e;
@@ -404,6 +425,9 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("HeaderDetails", thisHeader);
       addRecentItem(context, thisHeader);
       return ("DetailsOppOK");
@@ -442,7 +466,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
     try {
       db = this.getConnection(context);
-
+      thisContact = new Contact(db, contactId);
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
       thisHeader.queryRecord(db, oppId);
@@ -450,7 +477,6 @@ public final class ExternalContactsOpps extends CFSModule {
       //check whether or not the owner is an active User
       //thisHeader.checkEnabledOwnerAccount(db);
 
-      thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       errorMessage = e;
@@ -493,9 +519,12 @@ public final class ExternalContactsOpps extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(context, thisComponent.getOwner()))) {
+        return ("PermissionError");
+      }
       thisComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
       thisComponent.checkEnabledOwnerAccount(db);
-      thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       errorMessage = e;
@@ -546,6 +575,10 @@ public final class ExternalContactsOpps extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      Contact thisContact = new Contact(db, contactId);
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       thisOpp = new OpportunityHeader(db, id);
       DependencyList dependencies = thisOpp.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
@@ -595,7 +628,11 @@ public final class ExternalContactsOpps extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      Contact thisContact = new Contact(db, contactId);
       thisComponent = new OpportunityComponent(db, id);
+      if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(context, thisComponent.getOwner()))) {
+        return ("PermissionError");
+      }
       htmlDialog.setTitle("CFS: General Contacts Opportunities");
       htmlDialog.setShowAndConfirm(false);
       htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + "'");
@@ -640,6 +677,10 @@ public final class ExternalContactsOpps extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
+      Contact thisContact = new Contact(db, contactId);
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       newOpp = new OpportunityHeader(db, context.getRequest().getParameter("id"));
       recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
@@ -689,7 +730,11 @@ public final class ExternalContactsOpps extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      Contact thisContact = new Contact(db, contactId);
       component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
+      if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(context, component.getOwner()))) {
+        return ("PermissionError");
+      }
       recordDeleted = component.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
@@ -761,7 +806,7 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (!hasAuthority(context, component.getOwner())) {
+      if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(context, component.getOwner()))) {
         return ("PermissionError");
       }
 
@@ -801,6 +846,9 @@ public final class ExternalContactsOpps extends CFSModule {
     try {
       db = this.getConnection(context);
       oppHeader = new OpportunityHeader(db, oppId);
+      if (!hasAuthority(context, oppHeader.getEnteredBy())) {
+        return ("PermissionError");
+      }
       oppHeader.setModifiedBy(getUserId(context));
       oppHeader.setDescription(context.getRequest().getParameter("description"));
       resultCount = oppHeader.update(db);
@@ -856,7 +904,11 @@ public final class ExternalContactsOpps extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
       component.setModifiedBy(getUserId(context));
+      if (!(hasAuthority(context, thisContact.getOwner()) || hasAuthority(context, component.getOwner()))) {
+        return ("PermissionError");
+      }
       resultCount = component.update(db, context);
 
       if (resultCount == 1) {
@@ -864,7 +916,6 @@ public final class ExternalContactsOpps extends CFSModule {
         context.getRequest().setAttribute("OppComponentDetails", component);
       }
 
-      thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
     } catch (SQLException e) {

@@ -496,7 +496,6 @@ public class OpportunityHeaderList extends Vector {
         sqlFilter.toString() +
         sqlOrder.toString());
     items = prepareFilter(pst);
-    System.out.println("OppHeaderList -- > " + pst.toString());
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
@@ -611,12 +610,12 @@ public class OpportunityHeaderList extends Vector {
 
     //Get the opportunity if user is owner in any one of the components of that opportunity
     if (owner != -1) {
-      sqlFilter.append("OR x.opp_id in (SELECT opp_id from opportunity_component oc where oc.owner = ?)");
+      sqlFilter.append("OR ( (x.opp_id in (SELECT opp_id from opportunity_component oc where oc.owner = ?))" + (orgId != -1 ? " AND (x.acctlink = ?)" : "") + (contactId != -1 ? " AND (x.contactlink = ?)" : "") + " ) ");
     }
 
     //Get the opportunity if user or anyone in user's hierarchy is owner in any one of the components of that opportunity
     if (ownerIdRange != null) {
-      sqlFilter.append("OR x.opp_id in (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ")) ");
+      sqlFilter.append("OR ( (x.opp_id in (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ")))" + (orgId != -1 ? "AND (x.acctlink = ?) " : "") + (contactId != -1 ? "AND (contactlink = ?) " : "") + ") ");
     }
   }
 
@@ -659,6 +658,23 @@ public class OpportunityHeaderList extends Vector {
 
     if (owner != -1) {
       pst.setInt(++i, owner);
+      if (orgId != -1) {
+        pst.setInt(++i, orgId);
+      }
+
+      if (contactId != -1) {
+        pst.setInt(++i, contactId);
+      }
+    }
+
+    if (ownerIdRange != null) {
+      if (orgId != -1) {
+        pst.setInt(++i, orgId);
+      }
+
+      if (contactId != -1) {
+        pst.setInt(++i, contactId);
+      }
     }
     return i;
   }
@@ -697,5 +713,33 @@ public class OpportunityHeaderList extends Vector {
     return count;
   }
 
+
+  /**
+   *  Checks if the user owns atleast one of the components for all
+   *  opportunities of a contact
+   *
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@return                   The componentOwner value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static boolean isComponentOwner(Connection db, int userId) throws SQLException {
+    boolean isOwner = false;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT opp_id " +
+        "FROM opportunity_header oh " +
+        "WHERE opp_id > 0 and opp_id in ( " +
+        "SELECT opp_id from opportunity_component oc " +
+        "WHERE oc.owner = ? AND oh.opp_id = oc.opp_id ) ");
+    pst.setInt(1, userId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      isOwner = true;
+    }
+    rs.close();
+    pst.close();
+    return isOwner;
+  }
 }
+
 

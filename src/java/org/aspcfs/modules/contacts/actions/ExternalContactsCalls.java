@@ -67,6 +67,9 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("CallList", callList);
       return ("ViewOK");
     } else {
@@ -158,7 +161,7 @@ public final class ExternalContactsCalls extends CFSModule {
 
     if (errorMessage == null) {
 
-      if (!hasAuthority(context, thisCall.getEnteredBy())) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
         return ("PermissionError");
       }
 
@@ -193,7 +196,12 @@ public final class ExternalContactsCalls extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
+      Contact thisContact = new Contact(db, contactId);
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       thisCall = new Call(db, context.getRequest().getParameter("id"));
+
       recordDeleted = thisCall.delete(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -253,6 +261,9 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       addModuleBean(context, "External Contacts", "Calls");
       return ("AddOK");
     } else {
@@ -306,10 +317,9 @@ public final class ExternalContactsCalls extends CFSModule {
 
     if (errorMessage == null) {
 
-      if (!hasAuthority(context, thisCall.getEnteredBy())) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
         return ("PermissionError");
       }
-
       context.getRequest().setAttribute("CallDetails", thisCall);
       if (context.getRequest().getParameter("popup") != null) {
         return ("ModifyPopupOK");
@@ -348,12 +358,14 @@ public final class ExternalContactsCalls extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
       thisCall.setModifiedBy(getUserId(context));
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       resultCount = thisCall.update(db, context);
       if (resultCount == -1) {
-        thisContact = new Contact(db, contactId);
         context.getRequest().setAttribute("ContactDetails", thisContact);
-
         LookupList callTypeList = new LookupList(db, "lookup_call_types");
         callTypeList.addItem(0, "--None--");
         context.getRequest().setAttribute("CallTypeList", callTypeList);

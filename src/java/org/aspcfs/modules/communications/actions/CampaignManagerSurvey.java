@@ -135,7 +135,7 @@ public final class CampaignManagerSurvey extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandViewItems(ActionContext context) {
-    if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
+    if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -225,6 +225,9 @@ public final class CampaignManagerSurvey extends CFSModule {
       addModuleBean(context, submenu, "Add Surveys");
 
       if (thisSurvey != null) {
+        if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
+          return ("PermissionError");
+        }
         context.getRequest().setAttribute("Survey", thisSurvey);
         context.getRequest().setAttribute("CustomFormInfo", thisForm);
         return ("ModifyOK");
@@ -325,6 +328,9 @@ public final class CampaignManagerSurvey extends CFSModule {
     try {
       db = this.getConnection(context);
       thisSurvey = new Survey(db, Integer.parseInt(context.getRequest().getParameter("id")));
+      if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
+        return ("PermissionError");
+      }
       recordDeleted = thisSurvey.delete(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -368,6 +374,9 @@ public final class CampaignManagerSurvey extends CFSModule {
     try {
       db = this.getConnection(context);
       thisSurvey = new Survey(db, surveyId);
+      if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
+        return ("PermissionError");
+      }
       SurveyQuestionList thisList = thisSurvey.getQuestions();
       recordDeleted = thisList.getQuestion(questionId).delete(db, surveyId);
     } catch (Exception e) {
@@ -588,6 +597,9 @@ public final class CampaignManagerSurvey extends CFSModule {
     try {
       db = this.getConnection(context);
       thisSurvey = new Survey(db, id);
+      if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
+        return ("PermissionError");
+      }
       htmlDialog.setTitle("CFS: Campaign Manager");
 
       DependencyList dependencies = thisSurvey.processDependencies(db);
@@ -639,7 +651,7 @@ public final class CampaignManagerSurvey extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandMoveQuestion(ActionContext context) {
-    if (!(hasPermission(context, "campaign-campaigns-surveys-add"))) {
+    if (!(hasPermission(context, "campaign-campaigns-surveys-edit"))) {
       return ("PermissionError");
     }
 
@@ -651,6 +663,9 @@ public final class CampaignManagerSurvey extends CFSModule {
     try {
       db = this.getConnection(context);
       thisSurvey = new Survey(db, Integer.parseInt(context.getRequest().getParameter("id")));
+      if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
+        return ("PermissionError");
+      }
       thisSurvey.getQuestions().updateOrder(db, Integer.parseInt(context.getRequest().getParameter("questionid")), direction);
     } catch (Exception e) {
       errorMessage = e;

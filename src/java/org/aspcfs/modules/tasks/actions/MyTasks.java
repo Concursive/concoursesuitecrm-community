@@ -10,6 +10,7 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.contacts.base.Contact;
 import java.util.*;
 import java.sql.*;
 import com.zeroio.webutils.*;
@@ -49,6 +50,7 @@ public final class MyTasks extends CFSModule {
     Exception errorMessage = null;
     PagedListInfo taskListInfo = this.getPagedListInfo(context, "TaskListInfo");
     int contactId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
+    Contact thisContact = null;
     taskListInfo.setLink("MyTasks.do?command=ListTasks");
     Connection db = null;
     TaskList taskList = new TaskList();
@@ -58,6 +60,7 @@ public final class MyTasks extends CFSModule {
     }
     try {
       db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
       taskList.setPagedListInfo(taskListInfo);
       //Configure the first filter
       if ("tasksbyme".equals(taskListInfo.getFilterValue("listFilter1"))) {
@@ -81,6 +84,9 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
+      if (!hasAuthority(context, thisContact.getOwner())) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("TaskList", taskList);
       addModuleBean(context, "My Tasks", "Task Home");
       return ("TaskListOK");
@@ -150,6 +156,9 @@ public final class MyTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, id);
+      if (!hasAuthority(context, thisTask.getOwner())) {
+        return ("PermissionError");
+      }
       if (thisTask.getOwner() > -1) {
         ownerUserId = thisTask.checkEnabledOwnerAccount(db);
       }
@@ -252,6 +261,9 @@ public final class MyTasks extends CFSModule {
       db = this.getConnection(context);
       Task thisTask = (Task) context.getFormBean();
       thisTask.setModifiedBy(getUserId(context));
+      if (!hasAuthority(context, thisTask.getOwner())) {
+        return ("PermissionError");
+      }
       int count = thisTask.update(db);
       if (count == -1) {
         processErrors(context, thisTask.getErrors());
@@ -298,6 +310,9 @@ public final class MyTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, id);
+      if (!hasAuthority(context, thisTask.getOwner())) {
+        return ("PermissionError");
+      }
       DependencyList dependencies = thisTask.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
 
@@ -352,6 +367,9 @@ public final class MyTasks extends CFSModule {
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, id);
+      if (!hasAuthority(context, thisTask.getOwner())) {
+        return ("PermissionError");
+      }
       thisTask.delete(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -391,6 +409,9 @@ public final class MyTasks extends CFSModule {
       int status = Integer.parseInt(st.nextToken());
       db = this.getConnection(context);
       Task thisTask = new Task(db, taskId);
+      if (!hasAuthority(context, thisTask.getOwner())) {
+        return ("PermissionError");
+      }
 
       if (status == Task.DONE) {
         thisTask.setComplete(true);

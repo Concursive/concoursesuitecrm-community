@@ -144,23 +144,27 @@ public final class CampaignManagerMessage extends CFSModule {
       return ("PermissionError");
     }
 
-    Exception errorMessage = null;
     addModuleBean(context, "ManageMessages", "Message Details");
-
-    MessageList messageList = null;
-    Message newMessage = (Message) context.getFormBean();
-
+    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
 
+    String id = (String) context.getRequest().getParameter("id");
+    Message newMessage = (Message) context.getFormBean();
+
     try {
+      db = this.getConnection(context);
+      Message oldMessage = new Message(db, Integer.parseInt(id));
+      if (!hasAuthority(context, oldMessage.getEnteredBy())) {
+        return ("PermissionError");
+      }
       newMessage.setModifiedBy(getUserId(context));
       //IE5.0+ uses an HTML Editor, all others use a Text Editor
       UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
       if (!("ie".equals(thisUser.getBrowserId()) && thisUser.getBrowserVersion() >= 5.0)) {
         newMessage.setMessageText(StringUtils.toHtmlText(newMessage.getMessageText()));
       }
-      db = this.getConnection(context);
+
       resultCount = newMessage.update(db);
       if (resultCount == -1) {
         processErrors(context, newMessage.getErrors());
@@ -291,6 +295,7 @@ public final class CampaignManagerMessage extends CFSModule {
         newMessage.setMessageText(StringUtils.toHtmlText(newMessage.getMessageText()));
       }
       db = this.getConnection(context);
+
       recordInserted = newMessage.insert(db);
       if (recordInserted) {
         newMessage = new Message(db, newMessage.getId());
@@ -337,6 +342,9 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       thisMessage = new Message(db, context.getRequest().getParameter("id"));
+      if (!hasAuthority(context, thisMessage.getEnteredBy())) {
+        return ("PermissionError");
+      }
       recordDeleted = thisMessage.delete(db);
     } catch (Exception e) {
       errorMessage = e;
@@ -470,6 +478,9 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       thisMessage = new Message(db, id);
+      if (!hasAuthority(context, thisMessage.getEnteredBy())) {
+        return ("PermissionError");
+      }
       htmlDialog.setTitle("CFS: Campaign Manager");
 
       DependencyList dependencies = thisMessage.processDependencies(db);

@@ -399,6 +399,9 @@ public final class CampaignManagerGroup extends CFSModule {
       thisSCL.setContactSource(thisSearchForm.getContactSource());
       thisSCL.setOwner(thisSearchForm.getOwner());
       thisSCL.setModifiedBy(getUserId(context));
+      if (!hasAuthority(context, thisSCL.getOwner())) {
+        return ("PermissionError");
+      }
       resultCount = thisSCL.update(db);
 
       if (resultCount == -1) {
