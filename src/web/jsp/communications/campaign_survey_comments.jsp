@@ -52,8 +52,7 @@
         <%=toHtml(thisAnswer.getComments())%>
       </td>
       <td align="center" nowrap>
-        <dhv:username id="<%=thisAnswer.getContactId()%>"/>
-        
+        <dhv:contactname id="<%=thisAnswer.getContactId()%>" listName="SurveyContactList"/>
       </td>
     </tr>
     <%
