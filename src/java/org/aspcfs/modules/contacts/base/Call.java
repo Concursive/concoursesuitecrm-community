@@ -747,7 +747,9 @@ public class Call extends GenericBean {
 
     sql.append(
         "UPDATE call_log " +
-        "SET call_type_id = ?, length = ?, subject = ?, notes = ?, modifiedby = ?, alertdate = ?, modified = CURRENT_TIMESTAMP " +
+        "SET call_type_id = ?, length = ?, subject = ?, notes = ?, " +
+        "modifiedby = ?, alertdate = ?, " +
+        "modified = CURRENT_TIMESTAMP " +
         "WHERE call_id = ? " +
         "AND modified = ? ");
 

@@ -9,6 +9,7 @@ import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.zeroio.iteam.base.FileItemList;
+import com.darkhorseventures.utils.*;
 
 /**
  *@author     chris
@@ -1075,7 +1076,7 @@ public class Organization extends GenericBean {
     if (!isValid(db)) {
       return false;
     }
-
+    
     StringBuffer sql = new StringBuffer();
 
     try {
@@ -1226,7 +1227,7 @@ public class Organization extends GenericBean {
     sql.append(
         "UPDATE organization SET name = ?, industry_temp_code = ?, " +
         "url = ?, notes= ?, " +
-        "modified = CURRENT_TIMESTAMP, modifiedby = ?, employees = ?, revenue = ?, ticker_symbol = ?, account_number = ?, owner = ?, duplicate_id = ?, contract_end = ?, alertdate = ?, alert = ? " +
+        "modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", modifiedby = ?, employees = ?, revenue = ?, ticker_symbol = ?, account_number = ?, owner = ?, duplicate_id = ?, contract_end = ?, alertdate = ?, alert = ? " +
         "WHERE org_id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
