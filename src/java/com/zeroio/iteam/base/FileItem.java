@@ -1235,7 +1235,7 @@ public class FileItem extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getId());
-      pst.execute();
+      pst.executeUpdate();
       pst.close();
 
       //Delete all of the versions
@@ -1245,7 +1245,7 @@ public class FileItem extends GenericBean {
       i = 0;
       pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getId());
-      pst.execute();
+      pst.executeUpdate();
       pst.close();
 
       //Delete the master record
@@ -1255,7 +1255,7 @@ public class FileItem extends GenericBean {
       i = 0;
       pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getId());
-      pst.execute();
+      pst.executeUpdate();
       pst.close();
 
       db.commit();
