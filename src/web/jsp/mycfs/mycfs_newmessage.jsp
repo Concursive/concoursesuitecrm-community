@@ -45,27 +45,29 @@ function sendMessage() {
       Recipient(s)
       </td>
     <td align="left">
-      <select size="3" name="listView" id="listViewId" multiple>
-        <option  value = "none" selected>None Selected</option>
-      </select>
-      <a href="javascript:popContactsListMultiple('listViewId','1', 'usersOnly=true');">Add Recipients</a>
-     </td>
- </tr>
-  
-
-  
-   <tr class="containerBody">
-  <td nowrap class="formLabel">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>
+            <select size="3" name="listView" id="listViewId" multiple>
+              <option  value = "none" selected>None Selected</option>
+            </select>
+          </td>
+          <td valign="top">
+            [<a href="javascript:popContactsListMultiple('listViewId','1', 'usersOnly=true');">Add Recipients</a>]
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       Subject
-  </td>
-  
-  <td width=100%>
+    </td>
+    <td width="100%">
       <input type=text name="subject" value="<%=Note.getSubject().equals("")?"":Note.getSubject()%>" size=50>
       <font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %>
-  </td>
-  
+    </td>
   </tr>
-  
   <tr>
     <td nowrap class="formLabel" valign="top">
       Options
@@ -73,10 +75,8 @@ function sendMessage() {
     <td width=100%>
       <input type=checkbox name="mailrecipients">
       Email copy to recipient(s)<br>
-      </td> 
-   </tr>
-
-
+    </td> 
+  </tr>
   <tr class="containerBody">
     <td nowrap valign="top" class="formLabel">
       Body
@@ -86,8 +86,7 @@ function sendMessage() {
     </td>
   </tr>
 </table>
-  <input type=hidden name="return" value="<%=returnUrl%>">
-
+<input type=hidden name="return" value="<%=returnUrl%>">
 <br>
 <input type="submit" value="Send">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='<%=returnUrl%>'">
