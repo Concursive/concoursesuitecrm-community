@@ -46,6 +46,7 @@ public final class Constants {
   public final static int ADMIN = 7;
   public final static int CONTACTS_CALLS = 8;
   public final static int CFSNOTE = 9;
+  public final static int PIPELINE_CALLS = 10;
   //public final static int ACCOUNTS_REPORTS = 10;
   //public final static int CONTACTS_REPORTS = 11;
   //public final static int LEADS_REPORTS = 12;
