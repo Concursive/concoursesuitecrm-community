@@ -1,4 +1,4 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 Communications Manager
 <hr color="#BFBFBB" noshade>
 Review and manage campaigns with the following options:<br>

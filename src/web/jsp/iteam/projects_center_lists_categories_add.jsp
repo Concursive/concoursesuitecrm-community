@@ -1,7 +1,7 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*,com.darkhorseventures.webutils.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*,org.aspcfs.webutils.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
-<jsp:useBean id="category" class="com.darkhorseventures.cfsbase.TaskCategory" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="category" class="org.aspcfs.modules.TaskCategory" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.description.focus();">
 <script language="JavaScript">
   function checkForm(form) {

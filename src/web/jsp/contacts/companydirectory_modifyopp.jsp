@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<jsp:useBean id="HeaderDetails" class="com.darkhorseventures.cfsbase.OpportunityHeader" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="HeaderDetails" class="org.aspcfs.modules.OpportunityHeader" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <form name="modifyOpp" action="ExternalContactsOpps.do?command=UpdateOpp&contactId=<%= ContactDetails.getId() %>&auto-populate=true" method="post">
 <a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >

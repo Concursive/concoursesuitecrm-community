@@ -1,7 +1,7 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page  import="java.util.*,com.darkhorseventures.cfsmodule.*,com.darkhorseventures.controller.*" %>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
-<jsp:useBean id="ModuleBean" class="com.darkhorseventures.cfsmodule.ModuleBean" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page  import="java.util.*,org.aspcfs.cfsmodule.*,org.aspcfs.controller.*" %>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="ModuleBean" class="org.aspcfs.cfsmodule.ModuleBean" scope="request"/>
 <%
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1

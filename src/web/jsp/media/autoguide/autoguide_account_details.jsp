@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.autoguide.base.*" %>
-<jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
-<jsp:useBean id="InventoryItem" class="com.darkhorseventures.autoguide.base.Inventory" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.autoguide.base.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
+<jsp:useBean id="InventoryItem" class="org.aspcfs.autoguide.base.Inventory" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">

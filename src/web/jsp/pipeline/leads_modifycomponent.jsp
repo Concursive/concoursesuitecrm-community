@@ -1,11 +1,11 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="LeadsComponentDetails" class="com.darkhorseventures.cfsbase.OpportunityComponent" scope="request"/>
-<jsp:useBean id="BusTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="StageList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="UnitTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="LeadsComponentDetails" class="org.aspcfs.modules.OpportunityComponent" scope="request"/>
+<jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>

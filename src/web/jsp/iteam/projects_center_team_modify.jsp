@@ -1,14 +1,14 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
-<jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="CurrentTeam" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="CurrentTeam" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="vector1" class="java.lang.String" scope="request"/>
 <jsp:useBean id="vector2" class="java.lang.String" scope="request"/>
 <jsp:useBean id="vector3" class="java.lang.String" scope="request"/>
 <jsp:useBean id="vector4" class="java.lang.String" scope="request"/>
 <jsp:useBean id="vector5" class="java.lang.String" scope="request"/>
 <jsp:useBean id="UserSize" class="java.lang.String" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <%
   CurrentTeam.setSelectSize(10);
   CurrentTeam.setJsEvent("onChange=\"switchList(this.form, 'remove')\"");

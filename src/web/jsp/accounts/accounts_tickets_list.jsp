@@ -1,9 +1,9 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
-<jsp:useBean id="TicList" class="com.darkhorseventures.cfsbase.TicketList" scope="request"/>
-<jsp:useBean id="AccountTicketInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
+<jsp:useBean id="TicList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
+<jsp:useBean id="AccountTicketInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >

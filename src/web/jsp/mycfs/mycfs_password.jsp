@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.User" scope="request"/>
-<jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
+<jsp:useBean id="EmployeeBean" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].password.focus();">
 <form action="MyCFSPassword.do?command=UpdatePassword&auto-populate=true" method="post">
 <a href="MyCFS.do?command=Home">My Home Page</a> > 

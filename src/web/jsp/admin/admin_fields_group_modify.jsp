@@ -1,11 +1,11 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
-<jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
-<jsp:useBean id="Group" class="com.darkhorseventures.cfsbase.CustomFieldGroup" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="CategoryList" class="org.aspcfs.modules.CustomFieldCategoryList" scope="request"/>
+<jsp:useBean id="Category" class="org.aspcfs.modules.CustomFieldCategory" scope="request"/>
+<jsp:useBean id="Group" class="org.aspcfs.modules.CustomFieldGroup" scope="request"/>
 <jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
-<jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.PermissionCategory" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <body onLoad="document.forms[0].name.focus();">
 <form name="details" action="AdminFieldsGroup.do?command=UpdateGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true" method="post">
 <a href="Admin.do">Setup</a> >

@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="MessageList" class="com.darkhorseventures.cfsbase.MessageList" scope="request"/>
-<jsp:useBean id="CampaignMessageListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="MessageList" class="org.aspcfs.modules.MessageList" scope="request"/>
+<jsp:useBean id="CampaignMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <a href="CampaignManager.do">Communications Manager</a> >
 Message List

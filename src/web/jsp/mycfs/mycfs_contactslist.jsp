@@ -1,18 +1,18 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
-<jsp:useBean id="ContactListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="ContactListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="selectedContacts" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="finalContacts" class="java.util.HashMap" scope="session"/>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
-<jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="session"/>
-<jsp:useBean id="ProjectListSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="session"/>
+<jsp:useBean id="ProjectListSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="session"/>
 <jsp:useBean id="DisplayFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="HiddenFieldId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="ListType" class="java.lang.String" scope="request"/>
 <jsp:useBean id="Campaign" class="java.lang.String" scope="request"/>
 <jsp:useBean id="AllContacts" class="java.lang.String" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popContacts.js"></script>
 

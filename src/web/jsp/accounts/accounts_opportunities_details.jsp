@@ -1,10 +1,10 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
-<jsp:useBean id="HeaderDetails" class="com.darkhorseventures.cfsbase.OpportunityHeader" scope="request"/>
-<jsp:useBean id="ComponentList" class="com.darkhorseventures.cfsbase.OpportunityComponentList" scope="request"/>
-<jsp:useBean id="AccountsComponentListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
+<jsp:useBean id="HeaderDetails" class="org.aspcfs.modules.OpportunityHeader" scope="request"/>
+<jsp:useBean id="ComponentList" class="org.aspcfs.modules.OpportunityComponentList" scope="request"/>
+<jsp:useBean id="AccountsComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="oppdet" action="Opportunities.do?command=ModifyOpp&id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">

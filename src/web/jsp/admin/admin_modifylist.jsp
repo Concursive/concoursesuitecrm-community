@@ -1,5 +1,5 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="SelectedList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="SelectedList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="SubTitle" class="java.lang.String" scope="request"/>
 <jsp:useBean id="category" class="java.lang.String" scope="request"/>

@@ -1,7 +1,7 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ProjectList" class="com.zeroio.iteam.base.ProjectList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <%
   Iterator i = ProjectList.iterator();

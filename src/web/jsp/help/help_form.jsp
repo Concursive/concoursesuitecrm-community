@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="HelpContents" class="com.darkhorseventures.cfsbase.HelpContents" scope="request"/>
-<jsp:useBean id="Help" class="com.darkhorseventures.cfsbase.HelpItem" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="HelpContents" class="org.aspcfs.modules.HelpContents" scope="request"/>
+<jsp:useBean id="Help" class="org.aspcfs.modules.HelpItem" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.description.focus();">
 <script language="JavaScript">
   function checkForm(form) {

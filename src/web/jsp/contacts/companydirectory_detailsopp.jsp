@@ -1,10 +1,10 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<jsp:useBean id="HeaderDetails" class="com.darkhorseventures.cfsbase.OpportunityHeader" scope="request"/>
-<jsp:useBean id="ComponentList" class="com.darkhorseventures.cfsbase.OpportunityComponentList" scope="request"/>
-<jsp:useBean id="ComponentListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="HeaderDetails" class="org.aspcfs.modules.OpportunityHeader" scope="request"/>
+<jsp:useBean id="ComponentList" class="org.aspcfs.modules.OpportunityComponentList" scope="request"/>
+<jsp:useBean id="ComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <form name="oppdet" action="ExternalContactsOpps.do?command=ModifyOpp&id=<%=HeaderDetails.getId()%>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
 <a href="ExternalContacts.do">Contacts &amp; Resources</a> > 

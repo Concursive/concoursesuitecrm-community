@@ -1,6 +1,6 @@
-<jsp:useBean id="Dialog" class="com.darkhorseventures.webutils.HtmlDialog" scope="session"/>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="Dialog" class="org.aspcfs.utils.web.HtmlDialog" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<%@ include file="../initPage.jsp" %>
 
 <%if(Dialog.getShowAndConfirm()){
   if(Dialog.getText().equals("")){

@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-<jsp:useBean id="MessageList" class="com.darkhorseventures.cfsbase.MessageList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
+<jsp:useBean id="MessageList" class="org.aspcfs.modules.MessageList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function updateMessageList() {
     var sel = document.forms['modForm'].elements['ListView'];

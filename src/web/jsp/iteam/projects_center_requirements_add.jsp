@@ -1,8 +1,8 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="Requirement" class="com.zeroio.iteam.base.Requirement" scope="request"/>
-<jsp:useBean id="LoeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="LoeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <body bgcolor="#FFFFFF" onLoad="document.inputForm.shortDescription.focus();">
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>

@@ -1,15 +1,15 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
-<jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 
-<form name="modContact" action="/Contacts.do?command=Modify&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>" method="post">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
+<form name="modContact" action="Contacts.do?command=Modify&id=<%=ContactDetails.getId()%>&orgId=<%=ContactDetails.getOrgId()%>" method="post">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 Contact Details<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -28,7 +28,7 @@ Contact Details<br>
     <td class="containerBack">
       <input type="hidden" name="id" value="<%=ContactDetails.getId()%>">
       <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>">
-<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='/Contacts.do?command=Modify';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
@@ -164,7 +164,7 @@ Contact Details<br>
 <%}%>
 </table>
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
-<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='/Contacts.do?command=Modify';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="Modify"	onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="Clone"	onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="Delete" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
   </td>

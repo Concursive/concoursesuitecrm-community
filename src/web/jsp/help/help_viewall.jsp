@@ -1,7 +1,7 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="HelpContents" class="com.darkhorseventures.cfsbase.HelpContents" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="HelpContents" class="org.aspcfs.modules.HelpContents" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <table border="0" width="100%" cellspacing="0" cellpadding="4">
   <tr>
     <td align="center" colspan="4" width="100%">

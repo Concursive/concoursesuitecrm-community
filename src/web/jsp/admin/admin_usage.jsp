@@ -1,11 +1,11 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="com.darkhorseventures.cfsbase.PermissionCategory, java.util.*" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="org.aspcfs.modules.PermissionCategory, java.util.*" %>
 <jsp:useBean id="rangeSelect" class="java.lang.String" scope="request"/>
 <jsp:useBean id="dateStart" class="java.sql.Date" scope="request"/>
 <jsp:useBean id="dateEnd" class="java.sql.Date" scope="request"/>
 <jsp:useBean id="usageList" class="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="usageList2" class="java.util.ArrayList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript">

@@ -1,5 +1,5 @@
-<jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
-<jsp:useBean id="StageList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>

@@ -1,9 +1,9 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-<jsp:useBean id="RecipientList" class="com.darkhorseventures.cfsbase.RecipientList" scope="request"/>
-<jsp:useBean id="CampaignDashboardRecipientInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
+<jsp:useBean id="RecipientList" class="org.aspcfs.modules.RecipientList" scope="request"/>
+<jsp:useBean id="CampaignDashboardRecipientInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<%@ include file="../initPage.jsp" %>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="/CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="/CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >

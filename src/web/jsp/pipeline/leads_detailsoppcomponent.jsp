@@ -1,7 +1,7 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="LeadsComponentDetails" class="com.darkhorseventures.cfsbase.OpportunityComponent" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="LeadsComponentDetails" class="org.aspcfs.modules.OpportunityComponent" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="componentDetails" action="Leads.do?command=ModifyComponent&id=<%=LeadsComponentDetails.getId()%>" method="post">
 <a href="Leads.do">Pipeline Management</a> > 

@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,com.darkhorseventures.cfsbase.*" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.*" %>
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
-<jsp:useBean id="ContactRptListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="ContactRptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="listView" method="post" action="/ExternalContacts.do?command=Reports">

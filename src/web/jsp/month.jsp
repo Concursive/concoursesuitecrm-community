@@ -1,5 +1,5 @@
-<jsp:useBean id="cal" class="com.darkhorseventures.utils.CalendarView" scope="page"/>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
+<jsp:useBean id="cal" class="org.aspcfs.utils.CalendarView" scope="page"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <html>
 <head>
 <title>Calendar</title>

@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="CustomFormInfo" class="com.darkhorseventures.controller.CustomForm" scope="request"/>
-<jsp:useBean id="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request"/>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.controller.CustomFormTab,com.darkhorseventures.controller.CustomFormGroup" %>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="CustomFormInfo" class="org.aspcfs.controller.CustomForm" scope="request"/>
+<jsp:useBean id="Survey" class="org.aspcfs.modules.Survey" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.controller.CustomFormTab,org.aspcfs.controller.CustomFormGroup" %>
+<%@ include file="../initPage.jsp" %>
 <html>
 <head>
   <title>Thank you for visiting our survey page</title>

@@ -1,6 +1,6 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.webutils.HtmlSelect"%>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.utils.web.HtmlSelect"%>
+<%@ include file="../initPage.jsp" %>
 
 <SCRIPT LANGUAGE="JavaScript">
   

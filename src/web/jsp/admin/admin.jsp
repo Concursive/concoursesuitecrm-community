@@ -1,4 +1,4 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 Setup
 <hr color="#BFBFBB" noshade>
 Manage CFS by reviewing system usage, configuring specific modules, and configuring system parameters.<br>

@@ -1,11 +1,11 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="NewsList" class="com.darkhorseventures.cfsbase.NewsArticleList" scope="request"/>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
-<jsp:useBean id="NewUserList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="IndSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="NewsList" class="org.aspcfs.modules.NewsArticleList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="NewUserList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="IndSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></script>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <% 
   String returnPage = request.getParameter("return");
    CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage!=null?returnPage + "CalendarInfo" :"CalendarInfo");

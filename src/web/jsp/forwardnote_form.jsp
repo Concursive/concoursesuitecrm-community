@@ -1,9 +1,9 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,java.net.URLEncoder.*" %>
-<jsp:useBean id="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
-<jsp:useBean id="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
-<jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,java.net.URLEncoder.*" %>
+<jsp:useBean id="NoteDetails" class="org.aspcfs.modules.CFSNote" scope="request"/>
+<jsp:useBean id="CallDetails" class="org.aspcfs.modules.Call" scope="request"/>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
 
   function updateUserList() {

@@ -1,9 +1,9 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="OrgList" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
-<jsp:useBean id="HeadlineListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<jsp:useBean id="HeadlineListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:include page="cfsor2.js" flush="true"/>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 
 <dhv:permission name="myhomepage-miner-add">
 <body onLoad="javascript:document.forms[0].name.focus();">

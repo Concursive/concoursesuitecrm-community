@@ -1,7 +1,7 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="ActiveSurvey" class="com.darkhorseventures.cfsbase.ActiveSurvey" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="ActiveSurvey" class="org.aspcfs.modules.ActiveSurvey" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <html>
 <head>
   <title>Thank you for visiting our survey page</title>

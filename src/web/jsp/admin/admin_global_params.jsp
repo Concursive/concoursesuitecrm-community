@@ -1,4 +1,4 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Timeout" class="java.lang.String" scope="request"/>
 
 <a href="Admin.do">Setup</a> >

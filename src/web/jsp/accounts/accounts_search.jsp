@@ -1,9 +1,9 @@
-<!--jsp:useBean id="SearchResultsBean" class="com.darkhorseventures.cfsbase.SearchResultsBean" scope="request"/-->
+<!--jsp:useBean id="SearchResultsBean" class="org.aspcfs.modules.SearchResultsBean" scope="request"/-->
 <!--
 <b>Add a New Account</b>
 <hr color="#BFBFBB" noshade>
 -->
-<jsp:useBean id="IndustryList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
+<jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <body onLoad="javascript:document.forms[0].searchName.focus();">
 <form name="searchAccount" action="/Accounts.do?command=View" method="post">
 <a href="/Accounts.do">Account Management</a> > 

@@ -1,7 +1,7 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="HeaderDetails" class="com.darkhorseventures.cfsbase.OpportunityHeader" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="HeaderDetails" class="org.aspcfs.modules.OpportunityHeader" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <form name="modifyOpp" action="Leads.do?command=UpdateOpp&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post">
 <%boolean popUp = false;
   if(request.getParameter("popup")!=null){

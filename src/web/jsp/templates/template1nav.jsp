@@ -1,4 +1,4 @@
-<jsp:useBean id="ModuleBean" class="com.darkhorseventures.cfsmodule.ModuleBean" scope="request"/>
+<jsp:useBean id="ModuleBean" class="org.aspcfs.cfsmodule.ModuleBean" scope="request"/>
 <%
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1

@@ -1,5 +1,5 @@
-<jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript">

@@ -1,4 +1,4 @@
-<jsp:useBean id="LoginBean" class="com.darkhorseventures.cfsmodule.LoginBean" scope="request"/>
+<jsp:useBean id="LoginBean" class="org.aspcfs.cfsmodule.LoginBean" scope="request"/>
 <%!
   public static String getLongDate(java.util.Date tmp) {
     java.text.SimpleDateFormat formatter1 = new java.text.SimpleDateFormat ("MMMMM d, yyyy");

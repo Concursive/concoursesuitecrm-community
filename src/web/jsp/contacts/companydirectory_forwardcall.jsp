@@ -1,10 +1,10 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<jsp:useBean id="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
-<jsp:useBean id="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
-<jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="NoteDetails" class="org.aspcfs.modules.CFSNote" scope="request"/>
+<jsp:useBean id="CallDetails" class="org.aspcfs.modules.Call" scope="request"/>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script type="text/javascript" src="javascript/stringbuilder.js"></script>
 <script type="text/javascript" src="javascript/richedit.js"></script>

@@ -1,7 +1,7 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="InboxInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="finalContacts" class="java.util.HashMap" scope="session"/>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <br>
 
 <a href="<%=request.getParameter("return")%>">Back</a>

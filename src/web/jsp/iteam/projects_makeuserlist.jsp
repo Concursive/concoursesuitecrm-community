@@ -1,5 +1,5 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <html>
 <head>
 </head>

@@ -1,11 +1,11 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<jsp:useBean id="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
-<jsp:useBean id="CallList" class="com.darkhorseventures.cfsbase.CallList" scope="request"/>
-<jsp:useBean id="CallListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<jsp:useBean id="CallTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="CallDetails" class="org.aspcfs.modules.Call" scope="request"/>
+<jsp:useBean id="CallList" class="org.aspcfs.modules.CallList" scope="request"/>
+<jsp:useBean id="CallListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="CallTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <dhv:permission name="contacts-external_contacts-calls-add">
 <body onLoad="javascript:document.forms[0].subject.focus();">
 </dhv:permission>

@@ -1,9 +1,9 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.User" scope="request"/>
-<jsp:useBean id="Locale" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="TimeZone" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
+<jsp:useBean id="Locale" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="TimeZone" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <form action='MyCFSSettings.do?command=UpdateSettings' method='post'>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 <a href="MyCFS.do?command=MyProfile">My Settings</a> >

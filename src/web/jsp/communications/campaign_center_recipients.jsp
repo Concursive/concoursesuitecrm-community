@@ -1,7 +1,7 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-<jsp:useBean id="sclList" class="com.darkhorseventures.cfsbase.SearchCriteriaListList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
+<jsp:useBean id="sclList" class="org.aspcfs.modules.SearchCriteriaListList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <form name="modForm" action="/CampaignManager.do?command=Update&id=<%= Campaign.getId() %>&auto-populate=true" method="post">
 <a href="/CampaignManager.do?command=View">Back to Campaign List</a><br>&nbsp;

@@ -1,7 +1,7 @@
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,com.darkhorseventures.cfsbase.TaskCategory" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.TaskCategory" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
-<jsp:useBean id="categoryList" class="com.darkhorseventures.cfsbase.TaskCategoryList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="categoryList" class="org.aspcfs.modules.TaskCategoryList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <table border='0' width='100%'  bgcolor='#000000' cellspacing='0' cellpadding='0'>
   <tr>
     <td width="100%" bgcolor="#39686e">

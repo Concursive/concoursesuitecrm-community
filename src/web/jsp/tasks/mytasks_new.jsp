@@ -1,14 +1,14 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="//WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*"%>
-<%@ include file="initPage.jsp" %>
-<jsp:useBean id="Task" class="com.darkhorseventures.cfsbase.Task" scope="request"/>
-<jsp:useBean id="PriorityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="EstimatedLOETypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<%@ include file="../../initPage.jsp" %>
+<jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
+<jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="EstimatedLOETypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/tasks.js"></script>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <form name="addTask" action="MyTasks.do?command=<%=Task.getId()!=-1?"Update":"Insert"%>&id=<%=Task.getId()%>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post" onSubmit="return validateTask();">
 <%boolean popUp = false;

@@ -1,10 +1,10 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.HtmlSelect" %>
-<jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<jsp:useBean id="relationshipTypeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="objectSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="objectSubSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.utils.web.HtmlSelect" %>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="relationshipTypeSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="objectSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="objectSubSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >

@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="CommentListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<jsp:useBean id="SurveyAnswerList" class="com.darkhorseventures.cfsbase.SurveyAnswerList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="CommentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="SurveyAnswerList" class="org.aspcfs.modules.SurveyAnswerList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <%
   boolean openEnded =  "open".equalsIgnoreCase(request.getParameter("type"));
 %>

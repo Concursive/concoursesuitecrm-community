@@ -1,5 +1,5 @@
 <jsp:useBean id="ThankYouText" class="java.lang.String" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <html>
 <head>
   <title>Thank you for visiting our survey page</title>

@@ -1,6 +1,6 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <body bgcolor="#FFFFFF" onLoad="document.inputForm.subject.focus();">
 <script language="JavaScript">
   function checkFileForm(form) {

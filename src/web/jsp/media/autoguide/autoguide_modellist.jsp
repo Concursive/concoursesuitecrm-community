@@ -1,5 +1,5 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.autoguide.base.*" %>
-<jsp:useBean id="ModelList" class="com.darkhorseventures.autoguide.base.ModelList" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.autoguide.base.*" %>
+<jsp:useBean id="ModelList" class="org.aspcfs.autoguide.base.ModelList" scope="request"/>
 <html>
 <head>
 </head>

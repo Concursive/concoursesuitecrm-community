@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="com.darkhorseventures.cfsbase.User,java.util.*,com.darkhorseventures.cfsbase.Permission" %>
-<%@ include file="initPage.jsp" %>
-<jsp:useBean id="Role" class="com.darkhorseventures.cfsbase.Role" scope="request"/>
-<jsp:useBean id="PermissionList" class="com.darkhorseventures.cfsbase.PermissionList" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="org.aspcfs.modules.admin.base.User,java.util.*,org.aspcfs.modules.Permission" %>
+<%@ include file="../initPage.jsp" %>
+<jsp:useBean id="Role" class="org.aspcfs.modules.Role" scope="request"/>
+<jsp:useBean id="PermissionList" class="org.aspcfs.modules.PermissionList" scope="request"/>
 <a href="Admin.do">Setup</a> >
 <a href="Roles.do">View Roles</a> >
 Update Role

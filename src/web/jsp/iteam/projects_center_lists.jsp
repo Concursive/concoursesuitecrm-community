@@ -1,9 +1,9 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,com.darkhorseventures.webutils.LookupElement,com.darkhorseventures.cfsbase.*" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.webutils.LookupElement,org.aspcfs.modules.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
-<jsp:useBean id="category" class="com.darkhorseventures.webutils.LookupElement" scope="request"/>
-<jsp:useBean id="outlineList" class="com.darkhorseventures.cfsbase.TaskList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="category" class="org.aspcfs.webutils.LookupElement" scope="request"/>
+<jsp:useBean id="outlineList" class="org.aspcfs.modules.TaskList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <table border='0' width='100%'  bgcolor='#000000' cellspacing='0' cellpadding='0'>
   <tr>
     <td width='100%' bgcolor='#39686e'>

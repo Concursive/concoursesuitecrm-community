@@ -1,7 +1,7 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="CustomFormInfo" class="com.darkhorseventures.controller.CustomForm" scope="request"/>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.controller.CustomFormTab,com.darkhorseventures.controller.CustomFormGroup" %>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="CustomFormInfo" class="org.aspcfs.controller.CustomForm" scope="request"/>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.controller.CustomFormTab,org.aspcfs.controller.CustomFormGroup" %>
+<%@ include file="../initPage.jsp" %>
 <%= CustomFormInfo.getJScripts() %>
 <%
   int pg = 0;

@@ -1,9 +1,9 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
-<jsp:useBean id="sclList" class="com.darkhorseventures.cfsbase.SearchCriteriaListList" scope="request"/>
-<jsp:useBean id="selectedList" class="com.darkhorseventures.cfsbase.SearchCriteriaListList" scope="request"/>
-<jsp:useBean id="CampaignCenterGroupInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
-<%@ include file="initPage.jsp" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="Campaign" class="org.aspcfs.modules.Campaign" scope="request"/>
+<jsp:useBean id="sclList" class="org.aspcfs.modules.SearchCriteriaListList" scope="request"/>
+<jsp:useBean id="selectedList" class="org.aspcfs.modules.SearchCriteriaListList" scope="request"/>
+<jsp:useBean id="CampaignCenterGroupInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <form name="modForm" action="/CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>" method="post">

@@ -1,9 +1,9 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*,com.darkhorseventures.webutils.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*,org.aspcfs.webutils.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request"/>
 <jsp:useBean id="Issue" class="com.zeroio.iteam.base.Issue" scope="request"/>
-<jsp:useBean id="CategoryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<jsp:useBean id="CategoryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <body bgcolor="#FFFFFF" onLoad="document.inputForm.subject.focus();">
 <script language="JavaScript">
   function checkForm(form) {

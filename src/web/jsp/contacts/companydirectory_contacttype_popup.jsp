@@ -1,13 +1,13 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*" %>
-<jsp:useBean id="ContactTypeList" class="com.darkhorseventures.cfsbase.ContactTypeList" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.*" %>
+<jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="selectedElements" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="finalElements" class="java.util.HashMap" scope="session"/>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.UserBean" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="DisplayFieldId" class="java.lang.String" scope="request"/>
-<jsp:useBean id="ContactTypeSelectorInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<jsp:useBean id="ContactTypeSelectorInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <% if(!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))){ %>
 <br>
 <center><%= ContactTypeSelectorInfo.getAlphabeticalPageLinks("setFieldSubmit","elementListView") %></center>

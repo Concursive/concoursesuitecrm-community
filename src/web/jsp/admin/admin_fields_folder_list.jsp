@@ -1,9 +1,9 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
-<jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
-<jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="CategoryList" class="org.aspcfs.modules.CustomFieldCategoryList" scope="request"/>
+<jsp:useBean id="Category" class="org.aspcfs.modules.CustomFieldCategory" scope="request"/>
+<jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.PermissionCategory" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <form name="details" action="AdminFieldsFolder.do?command=ListFolders" method="post">
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >

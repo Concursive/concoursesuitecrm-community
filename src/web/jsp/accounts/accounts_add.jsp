@@ -1,13 +1,13 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="IndustryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="OrgPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="OrgAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="OrgEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
-<jsp:useBean id="StateSelect" class="com.darkhorseventures.webutils.StateSelect" scope="request"/>
-<jsp:useBean id="CountrySelect" class="com.darkhorseventures.webutils.CountrySelect" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="IndustryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="OrgPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="OrgAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="OrgEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="AccountTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
+<jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
@@ -223,12 +223,12 @@
 
 <body onLoad="javascript:document.forms[0].name.focus();updateFormElements(0);">
 
-<form name="addAccount" action="/Accounts.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<a href="/Accounts.do">Account Management</a> > 
+<form name="addAccount" action="Accounts.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<a href="Accounts.do">Account Management</a> > 
 Add Account<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=View';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
@@ -574,7 +574,7 @@ Add Account<br>
 </table>
 <br>
 <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=View';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=View';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 </form>

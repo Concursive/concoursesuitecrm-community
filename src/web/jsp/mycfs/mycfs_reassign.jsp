@@ -1,17 +1,17 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<jsp:useBean id="UserSelectList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<jsp:useBean id="SourceUser" class="com.darkhorseventures.cfsbase.User" scope="request"/>
-<jsp:useBean id="SourceAccounts" class="com.darkhorseventures.cfsbase.OrganizationList" scope="request"/>
-<jsp:useBean id="SourceContacts" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
-<jsp:useBean id="SourceUsers" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
-<jsp:useBean id="SourceOpenTickets" class="com.darkhorseventures.cfsbase.TicketList" scope="request"/>
-<jsp:useBean id="SourceRevenue" class="com.darkhorseventures.cfsbase.RevenueList" scope="request"/>
-<jsp:useBean id="SourceOpportunities" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
-<jsp:useBean id="SourceOpenOpportunities" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="UserSelectList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="SourceUser" class="org.aspcfs.modules.admin.base.User" scope="request"/>
+<jsp:useBean id="SourceAccounts" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<jsp:useBean id="SourceContacts" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
+<jsp:useBean id="SourceUsers" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="SourceOpenTickets" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
+<jsp:useBean id="SourceRevenue" class="org.aspcfs.modules.RevenueList" scope="request"/>
+<jsp:useBean id="SourceOpportunities" class="org.aspcfs.modules.OpportunityList" scope="request"/>
+<jsp:useBean id="SourceOpenOpportunities" class="org.aspcfs.modules.OpportunityList" scope="request"/>
 <jsp:useBean id="SourceAssignments" class="com.zeroio.iteam.base.AssignmentList" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 

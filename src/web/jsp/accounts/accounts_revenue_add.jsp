@@ -1,10 +1,10 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
-<jsp:useBean id="Revenue" class="com.darkhorseventures.cfsbase.Revenue" scope="request"/>
-<jsp:useBean id="RevenueTypeList" class="com.darkhorseventures.cfsbase.RevenueTypeList" scope="request"/>
-<jsp:useBean id="MonthList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="YearList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.Organization" scope="request"/>
+<jsp:useBean id="Revenue" class="org.aspcfs.modules.Revenue" scope="request"/>
+<jsp:useBean id="RevenueTypeList" class="org.aspcfs.modules.RevenueTypeList" scope="request"/>
+<jsp:useBean id="MonthList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="YearList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <form name="addRevenue" action="RevenueManager.do?command=Insert&auto-populate=true" method="post">
 <a href="Accounts.do">Account Management</a> > 

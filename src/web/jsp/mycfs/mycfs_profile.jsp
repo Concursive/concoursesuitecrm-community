@@ -1,4 +1,4 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 My Settings<br>
 <hr color="#BFBFBB" noshade>

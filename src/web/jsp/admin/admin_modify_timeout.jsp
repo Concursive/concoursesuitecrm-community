@@ -1,4 +1,4 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=ListGlobalParams"> Global Parameters</a> >

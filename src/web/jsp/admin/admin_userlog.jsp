@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<%@ include file="initPage.jsp" %>
-<jsp:useBean id="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request"/>
-<jsp:useBean id="AccessLog" class="com.darkhorseventures.cfsbase.AccessLogList" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ include file="../initPage.jsp" %>
+<jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
+<jsp:useBean id="AccessLog" class="org.aspcfs.modules.AccessLogList" scope="request"/>
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
 <a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>">User Details</a> >

@@ -1,14 +1,14 @@
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.LookupElement" %>
-<jsp:useBean id="SearchFieldList" class="com.darkhorseventures.cfsbase.SearchFieldList" scope="request"/>
-<jsp:useBean id="StringOperatorList" class="com.darkhorseventures.cfsbase.SearchOperatorList" scope="request"/>
-<jsp:useBean id="DateOperatorList" class="com.darkhorseventures.cfsbase.SearchOperatorList" scope="request"/>
-<jsp:useBean id="NumberOperatorList" class="com.darkhorseventures.cfsbase.SearchOperatorList" scope="request"/>
-<jsp:useBean id="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
-<jsp:useBean id="ContactTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="SCL" class="com.darkhorseventures.cfsbase.SearchCriteriaList" scope="request"/>
-<jsp:useBean id="ContactSource" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.LookupElement" %>
+<jsp:useBean id="SearchFieldList" class="org.aspcfs.modules.SearchFieldList" scope="request"/>
+<jsp:useBean id="StringOperatorList" class="org.aspcfs.modules.SearchOperatorList" scope="request"/>
+<jsp:useBean id="DateOperatorList" class="org.aspcfs.modules.SearchOperatorList" scope="request"/>
+<jsp:useBean id="NumberOperatorList" class="org.aspcfs.modules.SearchOperatorList" scope="request"/>
+<jsp:useBean id="SearchForm" class="org.aspcfs.modules.SearchFormBean" scope="request"/>
+<jsp:useBean id="ContactTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="AccountTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="SCL" class="org.aspcfs.modules.SearchCriteriaList" scope="request"/>
+<jsp:useBean id="ContactSource" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 
 <SCRIPT LANGUAGE="JavaScript">
 <!-- 

@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="com.darkhorseventures.cfsbase.*,java.util.*" %>
-<jsp:useBean id="User" class="com.darkhorseventures.cfsbase.User" scope="request"/>
-<jsp:useBean id="ManagerUser" class="com.darkhorseventures.cfsbase.User" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="org.aspcfs.modules.*,java.util.*" %>
+<jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
+<jsp:useBean id="ManagerUser" class="org.aspcfs.modules.admin.base.User" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <a href="/Admin.do">Setup</a> >
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>

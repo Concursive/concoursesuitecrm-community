@@ -1,8 +1,8 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
-<jsp:useBean id="Survey" class="com.darkhorseventures.cfsbase.Survey" scope="request"/>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<jsp:useBean id="Survey" class="org.aspcfs.modules.Survey" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
-<%@ include file="initPage.jsp" %>
+<%@ include file="../initPage.jsp" %>
 <a href="CampaignManager.do">Communications Manager</a> > <a href="/CampaignManagerAttachment.do">Create Attachments</a> > <a href="/CampaignManagerSurvey.do?command=View"> Surveys </a> > Survey Details<br>
 <hr color="#BFBFBB" noshade>
 

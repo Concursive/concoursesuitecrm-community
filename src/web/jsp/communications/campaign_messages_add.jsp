@@ -1,7 +1,7 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.utils.StringUtils" %>
-<jsp:useBean id="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
-<%@ include file="initPage.jsp" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.utils.StringUtils" %>
+<jsp:useBean id="Message" class="org.aspcfs.modules.Message" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <script type="text/javascript" src="javascript/stringbuilder.js"></script>
 <script type="text/javascript" src="javascript/getxhtml.js"></script>
 <script type="text/javascript" src="javascript/richedit.js"></script>

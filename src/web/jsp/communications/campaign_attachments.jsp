@@ -1,4 +1,4 @@
-<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <a href="CampaignManager.do">Communications Manager</a> >
 Create Attachments
 <hr color="#BFBFBB" noshade>
