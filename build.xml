@@ -78,23 +78,25 @@
   
   <!-- See if the properties file exists -->
   <target name="init.buildfile.exists" depends="init.environment">
-    <copy file="${CFS_HOME}/WEB-INF/build.properties" 
-          tofile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"
-          failonerror="false"
-          verbose="off"/>
-    <copy file="${CFS_HOME}/WEB-INF/keystore" 
-          tofile="${CFS_HOME}/WEB-INF/fileLibrary/keystore"
-          failonerror="false"
-          verbose="off"/>
-    <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties" property="build.config.present"/>
+    <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties" 
+               property="build.config.present"/>
+  </target>
+  
+  <!-- Reports an invalid location that must be fixed -->
+  <target name="init.buildfile.location" depends="init.buildfile.exists" 
+          unless="build.config.present">
+    <available file="${CFS_HOME}/WEB-INF/build.properties" property="build.config.old"/>
+    <fail if="build.config.old">Initialization aborted${lf}${lf}The build.properties file needs to be moved to ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs} making any necessary changes as compared with the master.properties file.${lf}${lf}Old File: ${CFS_HOME}${fs}WEB-INF${fs}build.properties${lf}New File: ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties${lf}Source Template: ${base.dir}${fs}master.properties</fail>
   </target>
   
   <!-- Create the properties file if not exists -->
-  <target name="init.buildfile.create" depends="init.buildfile.exists" 
+  <target name="init.buildfile.create" depends="init.buildfile.exists,init.buildfile.location" 
           unless="build.config.present">
     <mkdir dir="${CFS_HOME}/WEB-INF"/>
     <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary"/>
-    <copy file="${base.dir}/master.properties" tofile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"/>
+    <copy file="${base.dir}/master.properties" 
+          tofile="${CFS_HOME}/WEB-INF/fileLibrary/build.properties"
+          overwrite="false"/>
     <available file="${CFS_HOME}/WEB-INF/fileLibrary/build.properties" property="build.config.present"/>
   </target>
   
