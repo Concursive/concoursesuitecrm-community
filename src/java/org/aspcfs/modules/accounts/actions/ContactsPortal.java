@@ -268,6 +268,7 @@ public final class ContactsPortal extends CFSModule {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
+      setOrganization(context, db, thisContact.getOrgId());      
       //Cannot change portal login information if the
       //user contact does not have email
       ContactEmailAddressList emailList = thisContact.getEmailAddressList();
