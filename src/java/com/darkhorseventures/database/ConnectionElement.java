@@ -158,6 +158,10 @@ public class ConnectionElement {
   
   public String getDbName() { return dbName; }
   public String getDriver() { return driver; }
+  
+  public void renew() {
+    activeDate = new java.util.Date();
+  }
 
 }
 

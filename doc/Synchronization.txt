@@ -362,7 +362,7 @@ Client #1 Ends Synchronization
       <property>guid</property>
       <property>vehicleGuid</property>
       <property>accountGuid</property>
-      <property>enteredBy/userGuid</property>
+      <property>enteredBy^userGuid</property>
       <property>stockNo</property>
       <property>mileage</property>
       <property>vin</property>
@@ -373,7 +373,7 @@ Client #1 Ends Synchronization
       <property>sold</property>
       <property>modified</property>
       <property>hasPicture</property>
-      <property>owner/userGuid</property>
+      <property>owner^userGuid</property>
     </meta>
     <accountInventoryList action="sync" identity="1">
       <accountGuid>*OPTIONAL: SPECIFY AN ACCOUNT ID OR YOU GET ALL ACCOUNTS*</accountGuid>
@@ -430,6 +430,9 @@ SYNC'D ALL TABLES FIRST):
     <nextAnchor>2002-04-27 14:30:30</nextAnchor>
   </authentication>
   <transaction id="11">
+    <meta>
+      <property>guid</property>
+    </meta>
     <accountInventory action="insert">
       <guid>10</guid>
       <vehicleGuid>1089</vehicleGuid>

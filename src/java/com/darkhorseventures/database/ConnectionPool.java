@@ -401,6 +401,13 @@ public class ConnectionPool implements Runnable {
       notifyAll();
     }
   }
+  
+  public void renew(Connection connection) {
+    if (connection != null) {
+      ConnectionElement thisElement = (ConnectionElement)busyConnections.get(connection);
+      thisElement.renew();
+    }
+  }
 
 
   /**

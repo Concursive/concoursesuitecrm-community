@@ -40,12 +40,15 @@ public final class ProcessPacket extends CFSModule {
     Exception errorMessage = null;
     LinkedList statusMessages = new LinkedList();
     Connection db = null;
+    Connection dbLookup = null;
 
     try {
+      //Put the request into an XML document
       XMLUtils xml = new XMLUtils(context.getRequest());
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ProcessPacket-> Parsing data");
       }
+      //There should be an authentication node in the packet
       AuthenticationItem auth = new AuthenticationItem();
       xml.populateObject(auth, xml.getFirstChild("authentication"));
       db = auth.getConnection(context);
@@ -54,6 +57,9 @@ public final class ProcessPacket extends CFSModule {
           //For Vport
           auth.setSystemId(1);
         }
+        
+        //Now process all of the transactions in the packet
+        dbLookup = auth.getConnection(context);
         HashMap objectMap = this.getObjectMap(context, db, auth.getSystemId());
         LinkedList transactionList = new LinkedList();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
@@ -67,7 +73,7 @@ public final class ProcessPacket extends CFSModule {
           metaMapping.setMappedClassName("com.darkhorseventures.utils.TransactionMeta");
           thisTransaction.addMapping("meta", metaMapping);
           thisTransaction.build(thisElement);
-          int statusCode = thisTransaction.execute(db, auth);
+          int statusCode = thisTransaction.execute(db, dbLookup, auth);
           TransactionStatus thisStatus = new TransactionStatus();
           thisStatus.setStatusCode(statusCode);
           thisStatus.setId(thisTransaction.getId());
@@ -75,7 +81,7 @@ public final class ProcessPacket extends CFSModule {
           thisStatus.setRecordList(thisTransaction.getRecordList());
           statusMessages.add(thisStatus);
         }
-
+        //Each transaction provides a status that needs to be returned to the client
         if (statusMessages.size() == 0 && transactionList.size() == 0) {
           TransactionStatus thisStatus = new TransactionStatus();
           thisStatus.setStatusCode(1);
@@ -83,12 +89,14 @@ public final class ProcessPacket extends CFSModule {
           statusMessages.add(thisStatus);
         }
       } else {
+        //The packet failed authentication
         TransactionStatus thisStatus = new TransactionStatus();
         thisStatus.setStatusCode(1);
         thisStatus.setMessage("Not authorized");
         statusMessages.add(thisStatus);
       }
     } catch (Exception e) {
+      //The transaction usually catches errors, but not always
       errorMessage = e;
       e.printStackTrace();
       TransactionStatus thisStatus = new TransactionStatus();
@@ -99,8 +107,12 @@ public final class ProcessPacket extends CFSModule {
       if (db != null) {
         this.freeConnection(context, db);
       }
+      if (dbLookup != null) {
+        this.freeConnection(context, dbLookup);
+      }
     }
 
+    //Construct the XML response
     try {
       //TODO: Change encoding to US-ASCII
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -109,6 +121,7 @@ public final class ProcessPacket extends CFSModule {
       Element app = document.createElement("aspcfs");
       document.appendChild(app);
 
+      //Convert the result messages to XML
       Iterator messages = statusMessages.iterator();
       while (messages.hasNext()) {
         if (System.getProperty("DEBUG") != null) {

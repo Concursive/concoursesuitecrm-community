@@ -156,7 +156,7 @@ public class Transaction extends ArrayList {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  public int execute(Connection db, AuthenticationItem auth) throws SQLException {
+  public int execute(Connection db, Connection dbLookup, AuthenticationItem auth) throws SQLException {
     Exception exception = null;
     try {
       db.setAutoCommit(false);
@@ -164,7 +164,7 @@ public class Transaction extends ArrayList {
       while (items.hasNext()) {
         TransactionItem thisItem = (TransactionItem) items.next();
         thisItem.setMeta(meta);
-        thisItem.execute(db, auth, mapping);
+        thisItem.execute(db, dbLookup, auth, mapping);
         if (thisItem.hasError()) {
           appendErrorMessage(thisItem.getErrorMessage());
         }

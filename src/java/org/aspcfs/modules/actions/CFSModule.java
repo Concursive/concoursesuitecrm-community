@@ -264,7 +264,16 @@ public class CFSModule {
       sqlDriver.free(db);
     }
     db = null;
-
+  }
+  
+  protected void renewConnection(ActionContext context, Connection db) {
+    //Connections are usually checked out and expire, this will renew the expiration
+    //time
+    if (db != null) {
+      ConnectionPool sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
+      sqlDriver.renew(db);
+    }
+    db = null;
   }
 
 
