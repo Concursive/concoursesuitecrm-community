@@ -216,6 +216,9 @@
       <permission name="campaign" attributes="v---"/>
       <permission name="campaign-dashboard" attributes="v---"/>
       <permission name="campaign-campaigns" attributes="vaed"/>
+      <permission name="campaign-campaigns-groups" attributes="vaed"/>
+      <permission name="campaign-campaigns-messages" attributes="vaed"/>
+      <permission name="campaign-campaigns-surveys" attributes="vaed"/>
       <permission name="tickets" attributes="v---"/>
       <permission name="tickets-tickets" attributes="vaed"/>
       <permission name="tickets-reports" attributes="vaed"/>
