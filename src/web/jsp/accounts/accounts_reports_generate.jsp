@@ -1,3 +1,4 @@
+<jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 
 <script language="JavaScript">
@@ -32,7 +33,7 @@
   
   <tr>
     <td nowrap class="formLabel">
-      Report Type
+      Type
     </td>
     <td>
       <select name="type">
@@ -47,7 +48,7 @@
   
   <tr>
     <td nowrap class="formLabel">
-      Report Subject
+      Subject
     </td>
     <td>
       <input type=text size=35 name="subject" maxlength=50>
@@ -55,11 +56,24 @@
   </tr>
   
   <tr>
+    <td nowrap class="formLabel">
+      Criteria
+    </td>
+    <td>
+      <select name="criteria1">
+      <option value="my">My Data</option>
+      <option value="all">All Data</option>
+      </select>
+    </td>
+  </tr>
+  
+  <tr>
     <td nowrap valign=top class="formLabel">
-      Included Fields
+      Included Fields (CTRL+click to select/de-select)
     </td>
     <td>
       <select size=5 multiple name="fields">
+      <option value="id" selected>Account ID</option>
       <option value="accountName" selected>Account Name</option>
       <option value="accountNumber" selected>Account No.</option>
       <option value="url" selected>URL</option>

@@ -29,6 +29,7 @@ public class OrganizationReport extends OrganizationList {
 	protected ArrayList criteria = null;
 	String[] params = null;
 	
+	protected boolean displayId = true;
 	protected boolean displayAccountName = true;
 	protected boolean displayAccountNumber = true;
 	protected boolean displayURL = true;
@@ -89,6 +90,13 @@ public class OrganizationReport extends OrganizationList {
 	public void setDisplayContractEndDate(boolean tmp) { this.displayContractEndDate = tmp; }
 	public void setDisplayNotes(boolean tmp) { this.displayNotes = tmp; }
 	
+	public boolean getDisplayId() {
+		return displayId;
+	}
+	public void setDisplayId(boolean displayId) {
+		this.displayId = displayId;
+	}
+	
 	public void setIncludeFolders(boolean includeFolders) {
 		this.includeFolders = includeFolders;
 	}
@@ -112,6 +120,7 @@ public class OrganizationReport extends OrganizationList {
 	}
 	
 	public void setCriteriaVars() {
+		if ( !(criteria.contains("id")) ) { displayId = false; }
 		if ( !(criteria.contains("accountName")) ) { displayAccountName = false; }
 		if ( !(criteria.contains("accountNumber")) ) { displayAccountNumber = false; }
 		if ( !(criteria.contains("url")) ) { displayURL = false; }
@@ -147,6 +156,7 @@ public class OrganizationReport extends OrganizationList {
 	}
 	
 	public void buildReportHeaders() {
+		if (displayId) { rep.addColumn("Account ID"); }
 		if (displayAccountName) { rep.addColumn("Account Name"); }
 		if (displayAccountNumber) { rep.addColumn("Account No."); }
 		if (displayURL) { rep.addColumn("URL"); }
@@ -172,6 +182,7 @@ public class OrganizationReport extends OrganizationList {
 	}
 	
 	public void buildReportHeaders(Report passedReport) {
+		if (displayId) { passedReport.addColumn("Account ID"); }
 		if (displayAccountName) { passedReport.addColumn("Account Name"); }
 		if (displayAccountNumber) { passedReport.addColumn("Account No."); }
 		if (displayURL) { passedReport.addColumn("URL"); }
@@ -261,6 +272,7 @@ public class OrganizationReport extends OrganizationList {
 			} else {
 				ReportRow thisRow = new ReportRow();
 				
+				if (displayId) { thisRow.addCell(thisOrg.getOrgId());	}
 				if (displayAccountName) { thisRow.addCell(thisOrg.getName());	}
 				if (displayAccountNumber) { thisRow.addCell(thisOrg.getAccountNumber()); }
 				if (displayURL) {	thisRow.addCell(thisOrg.getUrl()); }
@@ -280,6 +292,7 @@ public class OrganizationReport extends OrganizationList {
 	}
 	
 	public void addDataRow(ReportRow thisRow, Organization thisOrg) throws SQLException {
+		if (displayId) { thisRow.addCell(thisOrg.getOrgId());	}
 		if (displayAccountName) { thisRow.addCell(thisOrg.getName());	}
 		if (displayAccountNumber) { thisRow.addCell(thisOrg.getAccountNumber()); }
 		if (displayURL) {	thisRow.addCell(thisOrg.getUrl()); }

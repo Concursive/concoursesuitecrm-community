@@ -75,7 +75,6 @@ public class CustomFieldCategoryList extends Vector {
     return pagedListInfo;
   }
 
-
   public int getLinkModuleId() { return linkModuleId; }
   public int getIncludeEnabled() { return includeEnabled; }
   public int getIncludeScheduled() { return includeScheduled; }
