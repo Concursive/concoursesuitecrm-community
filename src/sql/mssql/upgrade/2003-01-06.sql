@@ -53,6 +53,9 @@ CREATE TABLE sync_conflict_log (
   status_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE UNIQUE INDEX idx_autog_inv_opt ON autoguide_inventory_options (inventory_id, option_id);
+
+
 
 INSERT INTO sync_system (application_name) VALUES ('Vport Telemarketing');
 INSERT INTO sync_system (application_name) VALUES ('Land Mark: Auto Guide PocketPC');
