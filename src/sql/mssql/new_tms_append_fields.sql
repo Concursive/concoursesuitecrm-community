@@ -9,4 +9,6 @@ ALTER TABLE ticket ADD customer_product_id INTEGER REFERENCES customer_product(c
 ALTER TABLE ticket ADD expectation INTEGER;
 ALTER TABLE ticket ADD key_count INT;
 ALTER TABLE ticket ADD est_resolution_date_timezone VARCHAR(255);
+ALTER TABLE ticket ADD assigned_date_timezone VARCHAR(255);
+ALTER TABLE ticket ADD resolution_date_timezone VARCHAR(255);
 
