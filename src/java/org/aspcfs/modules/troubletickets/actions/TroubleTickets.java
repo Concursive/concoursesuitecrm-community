@@ -704,10 +704,11 @@ public final class TroubleTickets extends CFSModule {
       }
 
       if (recordInserted) {
-        newTicket = new Ticket(db, newTic.getId());
         //Check for and process any system hooks
         this.getSystemStatus(context).processHook(newTic, db);
         
+        //Prepare the ticket for the response
+        newTicket = new Ticket(db, newTic.getId());
         context.getRequest().setAttribute("TicketDetails", newTicket);
         addRecentItem(context, newTicket);
       } else {

@@ -11,6 +11,7 @@ import java.sql.*;
 import java.util.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.utils.*;
+import com.darkhorseventures.controller.*;
 import java.io.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
@@ -58,27 +59,42 @@ public final class ProcessPacket extends CFSModule {
           auth.setSystemId(1);
         }
         
-        //Now process all of the transactions in the packet
+        //Prepare the SyncClientManager
         SyncClientManager clientManager = new SyncClientManager();
         clientManager.addClient(db, auth.getClientId());
+        
+        //Prepare the objectMap: The allowable objects that can be processed for the
+        //given systemId
+        HashMap objectMap = this.getObjectMap(context, db, auth.getSystemId());
+        
+        //Prepare the objectHooks: Inserts and updates can trigger code if specified
+        ObjectHookList hooks = new ObjectHookList();
+        hooks.buildList(db);
+        
+        //2nd connection when transactions need to do additional processing
         dbLookup = auth.getConnection(context);
         dbLookup.setAutoCommit(false);
-        HashMap objectMap = this.getObjectMap(context, db, auth.getSystemId());
+        
+        //Process the transactions
         LinkedList transactionList = new LinkedList();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
         while (trans.hasNext()) {
+          //Configure the transaction
           Element thisElement = (Element) trans.next();
           Transaction thisTransaction = new Transaction();
           thisTransaction.setAuth(auth);
           thisTransaction.setMapping(objectMap);
           thisTransaction.setClientManager(clientManager);
+          //TODO: thisTransaction.setHooks(hooks);
           SyncTable metaMapping = new SyncTable();
           metaMapping.setName("meta");
           metaMapping.setMappedClassName("com.darkhorseventures.utils.TransactionMeta");
           thisTransaction.addMapping("meta", metaMapping);
           thisTransaction.build(thisElement);
+          //Execute the transaction
           int statusCode = thisTransaction.execute(db, dbLookup);
+          //Build a status from the transaction response
           TransactionStatus thisStatus = new TransactionStatus();
           thisStatus.setStatusCode(statusCode);
           thisStatus.setId(thisTransaction.getId());

@@ -28,7 +28,7 @@ public class SystemStatus {
   boolean hierarchyUpdating = false;
   ArrayList ignoredFields = new ArrayList();
   Hashtable fieldLabels = new Hashtable();
-  HashMap hooks = new HashMap();
+  ObjectHookList hooks = new ObjectHookList();
 
 
   /**
@@ -209,12 +209,9 @@ public class SystemStatus {
    *@exception  SQLException  Description of Exception
    */
   public void buildPreferences(Connection db) throws SQLException {
-    ignoredFields.clear();
-    fieldLabels.clear();
-    hooks.clear();
     String fieldsToIgnore = null;
     String labelsToUse = null;
-    String hooksToUse = null;
+    String hookData = null;
     PreparedStatement pst = db.prepareStatement(
         "SELECT category, data " +
         "FROM system_prefs ");
@@ -226,7 +223,7 @@ public class SystemStatus {
       } else if ("field labels".equals(category)) {
         labelsToUse = rs.getString("data");
       } else if ("hooks".equals(category)) {
-        hooksToUse = rs.getString("data");
+        hookData = rs.getString("data");
       } else {
         String tmp = rs.getString("data");
       }
@@ -234,6 +231,7 @@ public class SystemStatus {
     rs.close();
     pst.close();
 
+    ignoredFields.clear();
     if (fieldsToIgnore != null) {
       try {
         if (System.getProperty("DEBUG") != null) {
@@ -245,7 +243,8 @@ public class SystemStatus {
         System.out.println("SystemStatus-> Error: " + e.getMessage());
       }
     }
-
+    
+    fieldLabels.clear();
     if (labelsToUse != null) {
       try {
         if (System.getProperty("DEBUG") != null) {
@@ -269,28 +268,8 @@ public class SystemStatus {
       }
     }
 
-    if (hooksToUse != null) {
-      try {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("SystemStatus-> Adding hooks");
-        }
-        XMLUtils xml = new XMLUtils(hooksToUse);
-        ArrayList hookElements = new ArrayList();
-        xml.getAllChildren(xml.getDocumentElement(), "hook", hookElements);
-        Iterator elements = hookElements.iterator();
-        while (elements.hasNext()) {
-          Element thisElement = (Element) elements.next();
-          String hookId = (String) thisElement.getAttribute("id");
-          String hookClass = (String) thisElement.getAttribute("class");
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("SystemStatus-> Hook " + hookId + " executes " + hookClass);
-          }
-          hooks.put(hookId, hookClass);
-        }
-      } catch (Exception e) {
-        e.printStackTrace(System.out);
-      }
-    }
+    hooks.clear();
+    hooks.parse(hookData);
   }
 
 
@@ -330,39 +309,13 @@ public class SystemStatus {
   }
 
 
-  /**
-   *  Checks to see if this system is configured with a Hook for the specified
-   *  object. The hook is typically executed when an object is being inserted,
-   *  updated, or deleted.
-   *
-   *@param  object                                Description of the Parameter
-   *@return                                       Description of the Return
-   *      Value
-   *@exception  java.lang.ClassNotFoundException  Description of the Exception
-   */
-  public boolean hasListener(Object object) throws java.lang.ClassNotFoundException {
-    return (hooks.get(object.getClass().getName()) != null);
+  public boolean hasHook(Object object) throws java.lang.ClassNotFoundException {
+    return (hooks.has(object));
   }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  object  Description of the Parameter
-   *@param  db      Description of the Parameter
-   *@return         Description of the Return Value
-   */
+  
   public boolean processHook(Object object, Connection db) {
-    try {
-      if (!this.hasListener(object)) {
-        return false;
-      }
-      String classHook = (String) hooks.get(object.getClass().getName());
-      Object hook = ObjectUtils.constructObject(Class.forName(classHook), object, db);
-    } catch (java.lang.ClassNotFoundException e) {
-      return false;
-    }
-    return true;
+    return (hooks.process(object, db));
   }
+
 }
 
