@@ -435,7 +435,11 @@ public class Parameter extends GenericBean {
     } else if (name.startsWith("lookup_") && !name.endsWith("_max") && !name.endsWith("_min")) {
       //Lookup Lists
       LookupList select = (LookupList) request.getAttribute(name);
-      return select.getHtmlSelect(name, Integer.parseInt(value));
+      if (value != null) {
+        return select.getHtmlSelect(name, Integer.parseInt(value));
+      } else {
+        return select.getHtmlSelect(name, -1);
+      }
     } else if (name.startsWith("percent_") && !name.endsWith("_max") && !name.endsWith("_min")) {
       //Percent drop-down
       return HtmlSelectProbabilityRange.getSelect(name, value).getHtml();
