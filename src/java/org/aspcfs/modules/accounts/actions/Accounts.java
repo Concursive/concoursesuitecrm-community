@@ -475,6 +475,19 @@ public final class Accounts extends CFSModule {
     String orgid = context.getRequest().getParameter("orgId");
     context.getRequest().setAttribute("orgId", orgid);
     int tempid = Integer.parseInt(orgid);
+    
+    UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
+	
+    //this is how we get the multiple-level heirarchy...recursive function.
+	
+    User thisRec = thisUser.getUserRecord();
+	
+    UserList shortChildList = thisRec.getShortChildList();
+    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+    userList.setMyId(getUserId(context));
+    userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+    userList.setIncludeMe(true);
+    context.getRequest().setAttribute("UserList", userList);
 
     Connection db = null;
     Organization newOrg = null;
@@ -494,16 +507,6 @@ public final class Accounts extends CFSModule {
       
       LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
-
-      UserList userList = new UserList();
-      //userList.setEmptyHtmlSelectRecord("-- None --");
-      userList.setBuildContact(true);
-      userList.setIncludeMe(true);
-      userList.setMyId(getUserId(context));
-      userList.setMyValue(getNameLast(context) + ", " + getNameFirst(context));
-      userList.setManagerId(getUserId(context));
-      userList.buildList(db);
-      context.getRequest().setAttribute("UserList", userList);
 
     } catch (Exception e) {
       errorMessage = e;

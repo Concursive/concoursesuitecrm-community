@@ -192,12 +192,21 @@ public final class MyCFS extends CFSModule {
 		String whereClause = new String();
 		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
 		
-		UserList newUserList = new UserList();
-		newUserList.setManagerId(getUserId(context));
-		newUserList.setBuildHierarchy(true);
+		//this is how we get the multiple-level heirarchy...recursive function.
+		
+		User thisRec = thisUser.getUserRecord();
+		
+		UserList shortChildList = thisRec.getShortChildList();
+		UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
+		
+		//newUserList.setManagerId(getUserId(context));
+		//newUserList.setBuildHierarchy(true);
+		
 		newUserList.setMyId(getUserId(context));
 		newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
 		newUserList.setIncludeMe(true);
+		
+		System.out.println("new userlist size = " + newUserList.size());
 
 		//	
 		//	Alerts Selection
@@ -222,7 +231,7 @@ public final class MyCFS extends CFSModule {
 			
 			db = this.getConnection(context);
 			
-			newUserList.buildList(db);
+			//newUserList.buildList(db);
 			context.getRequest().setAttribute("NewUserList", newUserList);
 			
 			LookupList indSelect = new LookupList(db, "lookup_industry");

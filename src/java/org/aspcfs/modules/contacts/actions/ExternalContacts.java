@@ -128,6 +128,19 @@ public final class ExternalContacts extends CFSModule {
 
     String contactId = context.getRequest().getParameter("id");
     String action = context.getRequest().getParameter("action");
+    
+    UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
+	
+    //this is how we get the multiple-level heirarchy...recursive function.
+	
+    User thisRec = thisUser.getUserRecord();
+	
+    UserList shortChildList = thisRec.getShortChildList();
+    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+    userList.setMyId(getUserId(context));
+    userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+    userList.setIncludeMe(true);
+    context.getRequest().setAttribute("UserList", userList);
 
     Connection db = null;
     Contact thisContact = null;
@@ -137,16 +150,6 @@ public final class ExternalContacts extends CFSModule {
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
       addRecentItem(context, thisContact);
-      
-      UserList userList = new UserList();
-      //userList.setEmptyHtmlSelectRecord("-- None --");
-      userList.setBuildContact(true);
-      userList.setIncludeMe(true);
-      userList.setMyId(getUserId(context));
-      userList.setMyValue(getNameLast(context) + ", " + getNameFirst(context));
-      userList.setManagerId(getUserId(context));
-      userList.buildList(db);
-      context.getRequest().setAttribute("UserList", userList);
 
       if (action != null && action.equals("modify")) {
         buildFormElements(context, db);

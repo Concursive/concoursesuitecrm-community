@@ -288,6 +288,8 @@ CREATE TABLE organization (
   owner INT NOT NULL,
   duplicate boolean default 'f',
   duplicate_id int default -1,
+  custom1 int default -1,
+  custom2 int default -1,
   custom_data TEXT
 );
 
@@ -323,6 +325,8 @@ CREATE TABLE opportunity (
   ,enteredby 			INT NOT NULL
   ,modified 			TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   ,modifiedby 			INT NOT NULL
+  ,custom1     			int default -1
+  ,custom2 			int default -1
   ,closed 			TIMESTAMP,
   custom_data TEXT
 );
@@ -368,6 +372,8 @@ CREATE TABLE contact (
   modifiedby INT NOT NULL,
   enabled BOOLEAN DEFAULT true,
   owner INT NOT NULL,
+  custom1 int default -1,
+  custom2 int default -1,
   custom_data TEXT
 );
 

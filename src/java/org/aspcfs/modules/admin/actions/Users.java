@@ -92,7 +92,21 @@ public final class Users extends CFSModule {
 		Connection db = null;
 		Statement st = null;
 		ResultSet rs = null;
+		
+		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
+		
+		//this is how we get the multiple-level heirarchy...recursive function.
+		
+		User thisRec = thisUser.getUserRecord();
+		
+		UserList shortChildList = thisRec.getShortChildList();
+		UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+		userList.setMyId(getUserId(context));
+		userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+		userList.setIncludeMe(true);
+		context.getRequest().setAttribute("UserList", userList);
 
+		/**
 		try {
 			db = this.getConnection(context);
 
@@ -111,6 +125,7 @@ public final class Users extends CFSModule {
 		finally {
 			this.freeConnection(context, db);
 		}
+		*/
 
 		addModuleBean(context, "Reassign", "Bulk Reassign");
 		if (errorMessage == null) {

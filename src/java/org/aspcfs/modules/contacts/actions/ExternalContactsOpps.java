@@ -292,6 +292,19 @@ public final class ExternalContactsOpps extends CFSModule {
     int tempId = -1;
     String passedId = context.getRequest().getParameter("id");
     tempId = Integer.parseInt(passedId);
+    
+    UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
+	
+    //this is how we get the multiple-level heirarchy...recursive function.
+	
+    User thisRec = thisUser.getUserRecord();
+	
+    UserList shortChildList = thisRec.getShortChildList();
+    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+    userList.setMyId(getUserId(context));
+    userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+    userList.setIncludeMe(true);
+    context.getRequest().setAttribute("UserList", userList);
 
     Connection db = null;
     Statement st = null;
@@ -309,16 +322,6 @@ public final class ExternalContactsOpps extends CFSModule {
       
       busTypeSelect.setDefaultKey(newOpp.getType());
       unitSelect.setDefaultKey(newOpp.getUnits());
-
-      UserList userList = new UserList();
-      //userList.setEmptyHtmlSelectRecord("-- None --");
-      userList.setBuildContact(true);
-      userList.setIncludeMe(true);
-      userList.setMyId(getUserId(context));
-      userList.setMyValue(getNameLast(context) + ", " + getNameFirst(context));
-      userList.setManagerId(getUserId(context));
-      userList.buildList(db);
-      context.getRequest().setAttribute("UserList", userList);
       
       thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
