@@ -146,6 +146,7 @@
   
   <action name="MyTasksForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
@@ -269,7 +270,6 @@
     <forward name="DeleteOK" resource="/ExternalContactsCalls.do?command=View"/>
     <forward name="ModifyPopupOK" resource="/contacts/companydirectory_modifycall.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
-    <forward name="SendMessageOK" resource="/ExternalContactsCallsForward.do?command=SendMessage"/>
   </action>
   <action name="ExternalContactsCallsForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
@@ -379,6 +379,17 @@
     <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
+  
+  <action name="LeadsCallsForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
+    <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="SendMessageOK" resource="/pipeline/leads_confirmsend.jsp" layout="nav"/>
+    <forward name="ForwardMessageOK" resource="/pipeline/leads_forwardcall.jsp" layout="nav"/>
+   </action>
+    
   <action name="LeadsDocuments" class="org.aspcfs.modules.pipeline.actions.LeadsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
