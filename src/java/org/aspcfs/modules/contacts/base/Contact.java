@@ -79,6 +79,9 @@ public class Contact extends GenericBean {
   private LookupList types = new LookupList();
   private ArrayList typeList = null;
 
+  private boolean buildDetails = true;
+  private boolean buildTypes = true;
+
 
   /**
    *  Constructor for the Contact object
@@ -183,19 +186,23 @@ public class Contact extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-      buildTypes(db);
     }
     rs.close();
     pst.close();
     if (id == -1) {
       throw new SQLException("Contact record not found.");
     }
-    phoneNumberList.setContactId(this.getId());
-    phoneNumberList.buildList(db);
-    addressList.setContactId(this.getId());
-    addressList.buildList(db);
-    emailAddressList.setContactId(this.getId());
-    emailAddressList.buildList(db);
+    if (buildDetails) {
+      phoneNumberList.setContactId(this.getId());
+      phoneNumberList.buildList(db);
+      addressList.setContactId(this.getId());
+      addressList.buildList(db);
+      emailAddressList.setContactId(this.getId());
+      emailAddressList.buildList(db);
+    }
+    if (buildTypes) {
+      buildTypes(db);
+    }
   }
 
 
@@ -375,6 +382,37 @@ public class Contact extends GenericBean {
   public void setCustom1(String custom1) {
     this.custom1 = Integer.parseInt(custom1);
   }
+
+
+  /**
+   *  Sets the buildDetails attribute of the Contact object
+   *
+   *@param  tmp  The new buildDetails value
+   */
+  public void setBuildDetails(boolean tmp) {
+    this.buildDetails = tmp;
+  }
+
+
+  /**
+   *  Sets the buildTypes attribute of the Contact object
+   *
+   *@param  tmp  The new buildTypes value
+   */
+  public void setBuildTypes(boolean tmp) {
+    this.buildTypes = tmp;
+  }
+
+
+  /**
+   *  Sets the buildTypes attribute of the Contact object
+   *
+   *@param  tmp  The new buildTypes value
+   */
+  public void setBuildTypes(String tmp) {
+    this.buildTypes = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
 
   /**
@@ -2088,15 +2126,25 @@ public class Contact extends GenericBean {
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT ctl.type_id " +
+        "SELECT ctl.type_id, lct.description, lct.enabled " +
         "FROM contact_type_levels ctl " +
-        "WHERE ctl.contact_id = ? ORDER BY ctl.level ");
+        "LEFT JOIN lookup_contact_types lct " +
+        "ON ctl.type_id = lct.code " +
+        "WHERE ctl.contact_id = ? " +
+        "ORDER BY ctl.level ");
     PreparedStatement pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, id);
     rs = pst.executeQuery();
     while (rs.next()) {
-      types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_contact_types"));
+      LookupElement thisType = new LookupElement();
+      thisType.setCode(rs.getInt("type_id"));
+      thisType.setDescription(rs.getString("description"));
+      thisType.setEnabled(rs.getBoolean("enabled"));
+      types.add(thisType);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Contact-> Built contact type: contact/" + id + " type/" + thisType.getCode() + " " + thisType.getDescription());
+      }
     }
     rs.close();
     pst.close();
