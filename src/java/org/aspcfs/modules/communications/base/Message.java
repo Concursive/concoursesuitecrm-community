@@ -15,7 +15,6 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 
-
 /**
  *  Represents an HTML message than can be emailed, faxed, or printed. Messages
  *  are intended to be used with Campaigns.
@@ -40,6 +39,7 @@ public class Message extends GenericBean {
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp entered = null;
   private boolean enabled = true;
+  private boolean formatLineFeeds = true;
 
   /**
    *  Description of the Field
@@ -413,8 +413,29 @@ public class Message extends GenericBean {
    *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
-    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    enabled = DatabaseUtils.parseBoolean(tmp);
   }
+
+
+  /**
+   *  Sets the formatLineFeeds attribute of the Message object
+   *
+   *@param  tmp  The new formatLineFeeds value
+   */
+  public void setFormatLineFeeds(boolean tmp) {
+    this.formatLineFeeds = tmp;
+  }
+
+
+  /**
+   *  Sets the formatLineFeeds attribute of the Message object
+   *
+   *@param  tmp  The new formatLineFeeds value
+   */
+  public void setFormatLineFeeds(String tmp) {
+    this.formatLineFeeds = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
 
   /**
@@ -604,6 +625,17 @@ public class Message extends GenericBean {
 
 
   /**
+   *  Gets the formatLineFeeds attribute of the Message object
+   *
+   *@return    The formatLineFeeds value
+   */
+  public boolean getFormatLineFeeds() {
+    return formatLineFeeds;
+  }
+
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
@@ -787,11 +819,11 @@ public class Message extends GenericBean {
       if (rs.next()) {
         int msgcount = rs.getInt("message_count");
         if (msgcount != 0) {
-            Dependency thisDependency = new Dependency();
-            thisDependency.setName("Campaigns");
-            thisDependency.setCount(msgcount);
-            thisDependency.setCanDelete(true);
-            dependencyList.add(thisDependency);
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("Campaigns");
+          thisDependency.setCount(msgcount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
         }
       }
 
