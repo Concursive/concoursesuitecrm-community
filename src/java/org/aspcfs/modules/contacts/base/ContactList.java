@@ -24,7 +24,7 @@ public class ContactList extends Vector {
   
   public static final int TRUE = 1;
   public static final int FALSE = 0;
-  private int includeEnabled = 1;
+  private int includeEnabled = TRUE;
   
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
@@ -912,6 +912,15 @@ public class ContactList extends Vector {
     this.setSearchValues(outerHash);
   }
   
+  /**
+   *  Builds a list, a part of the XML API
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void select(Connection db) throws SQLException {
+    buildList(db);
+  }
   
   /**
    *  Builds a list of contacts based on several parameters. The parameters are
