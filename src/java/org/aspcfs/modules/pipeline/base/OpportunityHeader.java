@@ -26,7 +26,7 @@ import com.zeroio.iteam.base.FileItemList;
  */
 
 public class OpportunityHeader extends GenericBean {
-  protected int oppId = -1;
+  protected int id = -1;
   protected String description = null;
   private int accountLink = -1;
   private int contactLink = -1;
@@ -68,11 +68,11 @@ public class OpportunityHeader extends GenericBean {
    *  Constructor for the OpportunityHeader object
    *
    *@param  db                Description of the Parameter
-   *@param  oppId             Description of the Parameter
+   *@param  id                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public OpportunityHeader(Connection db, int oppId) throws SQLException {
-    queryRecord(db, oppId);
+  public OpportunityHeader(Connection db, int id) throws SQLException {
+    queryRecord(db, id);
   }
 
 
@@ -80,40 +80,48 @@ public class OpportunityHeader extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  oppId             Description of the Parameter
+   *@param  id                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void queryRecord(Connection db, int oppId) throws SQLException {
-    if (oppId == -1) {
+  public void queryRecord(Connection db, int id) throws SQLException {
+    if (id == -1) {
       throw new SQLException("Opportunity Header ID not specified.");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT oh.*, org.name as acct_name, org.enabled as accountenabled, " +
-        "ct.namelast as last_name, ct.namefirst as first_name, " +
-        "ct.company as ctcompany, " +
+        "SELECT " +
+        "oh.opp_id AS header_opp_id, " +
+        "oh.description AS header_description, " +
+        "oh.acctlink AS header_acctlink, " +
+        "oh.contactlink AS header_contactlink, " +
+        "oh.entered AS header_entered, " +
+        "oh.enteredby AS header_enteredby, " +
+        "oh.modified AS header_modified, " +
+        "oh.modifiedby AS header_modifiedby, " +
+        "org.name as acct_name, org.enabled as accountenabled, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
+        "ct.namelast as last_name, ct.namefirst as first_name, " +
+        "ct.company as ctcompany " +
         "FROM opportunity_header oh " +
-        "LEFT JOIN contact ct_eb ON (oh.enteredby = ct_eb.user_id) " +
         "LEFT JOIN organization org ON (oh.acctlink = org.org_id) " +
-        "LEFT JOIN contact ct ON (oh.contactlink = ct.contact_id) " +
+        "LEFT JOIN contact ct_eb ON (oh.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (oh.modifiedby = ct_mb.user_id) " +
+        "LEFT JOIN contact ct ON (oh.contactlink = ct.contact_id) " +
         "WHERE opp_id = ? ");
-    pst.setInt(1, oppId);
+    pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-      rs.close();
-      pst.close();
-      if (buildComponentCount) {
-        this.retrieveComponentCount(db);
-      }
-    } else {
-      rs.close();
-      pst.close();
+    }
+    rs.close();
+    pst.close();
+
+    if (id == -1) {
       throw new SQLException("Opportunity Header record not found.");
     }
-
+    if (buildComponentCount) {
+      this.retrieveComponentCount(db);
+    }
     this.buildFiles(db);
   }
 
@@ -171,6 +179,23 @@ public class OpportunityHeader extends GenericBean {
 
 
   /**
+   *  Gets the totalValue attribute of the OpportunityHeader object
+   *
+   *@param  divisor  Description of the Parameter
+   *@return          The totalValue value
+   */
+  public String getTotalValue(int divisor) {
+    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    double tempValue = (java.lang.Math.round(totalValue) / divisor);
+    if (tempValue < 1) {
+      return "<1";
+    } else {
+      return numberFormatter.format(tempValue);
+    }
+  }
+
+
+  /**
    *  Sets the totalValue attribute of the OpportunityHeader object
    *
    *@param  totalValue  The new totalValue value
@@ -207,22 +232,12 @@ public class OpportunityHeader extends GenericBean {
 
 
   /**
-   *  Gets the oppId attribute of the OpportunityHeader object
-   *
-   *@return    The oppId value
-   */
-  public int getOppId() {
-    return oppId;
-  }
-
-
-  /**
    *  Gets the id attribute of the OpportunityHeader object
    *
    *@return    The id value
    */
   public int getId() {
-    return oppId;
+    return id;
   }
 
 
@@ -343,22 +358,22 @@ public class OpportunityHeader extends GenericBean {
 
 
   /**
-   *  Sets the oppId attribute of the OpportunityHeader object
+   *  Sets the id attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new oppId value
+   *@param  tmp  The new id value
    */
-  public void setOppId(int tmp) {
-    this.oppId = tmp;
+  public void setId(int tmp) {
+    this.id = tmp;
   }
 
 
   /**
-   *  Sets the oppId attribute of the OpportunityHeader object
+   *  Sets the id attribute of the OpportunityHeader object
    *
-   *@param  tmp  The new oppId value
+   *@param  tmp  The new id value
    */
-  public void setOppId(String tmp) {
-    this.oppId = Integer.parseInt(tmp);
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
   }
 
 
@@ -731,34 +746,19 @@ public class OpportunityHeader extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean disable(Connection db) throws SQLException {
-    if (this.getOppId() == -1) {
+    if (id == -1) {
       throw new SQLException("Opportunity Header ID not specified");
     }
-
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-    boolean success = false;
-
-    sql.append(
-        "UPDATE opportunity_component set enabled = " + DatabaseUtils.getFalse(db) + " " +
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE opportunity_component " +
+        "SET enabled = ? " +
         "WHERE opp_id = ? ");
-
-    //sql.append("AND modified = ? ");
-
     int i = 0;
-    pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, oppId);
-
-    //pst.setTimestamp(++i, this.getModified());
-
+    pst.setBoolean(++i, false);
+    pst.setInt(++i, id);
     int resultCount = pst.executeUpdate();
     pst.close();
-
-    if (resultCount == 1) {
-      success = true;
-    }
-
-    return success;
+    return (resultCount == 1);
   }
 
 
@@ -844,14 +844,14 @@ public class OpportunityHeader extends GenericBean {
       pst.execute();
       pst.close();
 
-      oppId = DatabaseUtils.getCurrVal(db, "opportunity_header_opp_id_seq");
+      id = DatabaseUtils.getCurrVal(db, "opportunity_header_opp_id_seq");
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
     return true;
   }
 
@@ -865,26 +865,22 @@ public class OpportunityHeader extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-
-    if (this.getOppId() == -1) {
+    if (id == -1) {
       throw new SQLException("Opportunity Header ID was not specified");
     }
-
     if (!isValid(db)) {
       return -1;
     }
-
     try {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
-
     return resultCount;
   }
 
@@ -899,62 +895,53 @@ public class OpportunityHeader extends GenericBean {
   public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
     DependencyList dependencyList = new DependencyList();
-
-    try {
-      db.setAutoCommit(false);
-      String sql = "SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = ? ";
-
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        Dependency thisDependency = new Dependency();
-        thisDependency.setName("Calls");
-        thisDependency.setCount(rs.getInt("callcount"));
-        thisDependency.setCanDelete(true);
-        dependencyList.add(thisDependency);
-      }
-
-      sql = "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = ? and pf.link_item_id = ? ";
-
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, Constants.DOCUMENTS_OPPORTUNITIES);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        Dependency thisDependency = new Dependency();
-        thisDependency.setName("Documents");
-        thisDependency.setCount(rs.getInt("documentcount"));
-        thisDependency.setCanDelete(true);
-        dependencyList.add(thisDependency);
-      }
-
-      sql = "SELECT COUNT(*) as componentcount FROM opportunity_component oc WHERE oc.opp_id = ? ";
-
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        Dependency thisDependency = new Dependency();
-        thisDependency.setName("Components");
-        thisDependency.setCount(rs.getInt("componentcount"));
-        thisDependency.setCanDelete(true);
-        dependencyList.add(thisDependency);
-      }
-
-      pst.close();
-      db.commit();
-
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
+    String sql =
+        "SELECT COUNT(*) as callcount " +
+        "FROM call_log c WHERE c.opp_id = ? ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      Dependency thisDependency = new Dependency();
+      thisDependency.setName("Calls");
+      thisDependency.setCount(rs.getInt("callcount"));
+      thisDependency.setCanDelete(true);
+      dependencyList.add(thisDependency);
     }
+    rs.close();
+    pst.close();
+    sql =
+        "SELECT COUNT(*) as documentcount " +
+        "FROM project_files pf WHERE pf.link_module_id = ? and pf.link_item_id = ? ";
+    i = 0;
+    pst = db.prepareStatement(sql);
+    pst.setInt(++i, Constants.DOCUMENTS_OPPORTUNITIES);
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      Dependency thisDependency = new Dependency();
+      thisDependency.setName("Documents");
+      thisDependency.setCount(rs.getInt("documentcount"));
+      thisDependency.setCanDelete(true);
+      dependencyList.add(thisDependency);
+    }
+    sql =
+        "SELECT COUNT(*) as componentcount " +
+        "FROM opportunity_component oc WHERE oc.opp_id = ? ";
+    i = 0;
+    pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      Dependency thisDependency = new Dependency();
+      thisDependency.setName("Components");
+      thisDependency.setCount(rs.getInt("componentcount"));
+      thisDependency.setCanDelete(true);
+      dependencyList.add(thisDependency);
+    }
+    rs.close();
+    pst.close();
     return dependencyList;
   }
 
@@ -967,27 +954,14 @@ public class OpportunityHeader extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   protected boolean delete(Connection db) throws SQLException {
-    if (this.getOppId() == -1) {
+    if (id == -1) {
       throw new SQLException("The Opportunity Header could not be found.");
     }
-
-    Statement st = null;
-
-    try {
-      db.setAutoCommit(false);
-
-      st = db.createStatement();
-      st.executeUpdate(
-          "DELETE FROM opportunity_header WHERE opp_id = " + this.getOppId());
-      st.close();
-
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-    } finally {
-      db.setAutoCommit(true);
-      st.close();
-    }
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM opportunity_header WHERE opp_id = ? ");
+    pst.setInt(1, id);
+    pst.executeUpdate();
+    pst.close();
     return true;
   }
 
@@ -1000,13 +974,13 @@ public class OpportunityHeader extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean resetType(Connection db) throws SQLException {
-    if (oppId == -1) {
+    if (id == -1) {
       throw new SQLException("Opportunity ID not specified");
     }
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM opportunity_component_levels " +
         "WHERE opp_id in (SELECT id from opportunity_component oc where oc.opp_id = ?) ");
-    pst.setInt(1, this.getId());
+    pst.setInt(1, id);
     pst.execute();
     pst.close();
     return true;
@@ -1025,15 +999,12 @@ public class OpportunityHeader extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("The Opportunity Record could not be found.");
     }
-
-    Statement st = null;
-
     try {
       db.setAutoCommit(false);
       this.resetType(db);
 
       CallList callList = new CallList();
-      callList.setOppId(this.getId());
+      callList.setOppHeaderId(id);
       callList.buildList(db);
       callList.delete(db);
       callList = null;
@@ -1046,22 +1017,25 @@ public class OpportunityHeader extends GenericBean {
       fileList = null;
 
       //delete components
-      st = db.createStatement();
-      st.executeUpdate(
-          "DELETE FROM opportunity_component WHERE opp_id = " + this.getId());
-      st.close();
+      PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM opportunity_component " +
+          "WHERE opp_id = ? ");
+      pst.setInt(1, id);
+      pst.executeUpdate();
+      pst.close();
 
-      st = db.createStatement();
-      st.executeUpdate(
-          "DELETE FROM opportunity_header WHERE opp_id = " + this.getId());
-      st.close();
+      pst = db.prepareStatement(
+          "DELETE FROM opportunity_header " +
+          "WHERE opp_id = ? ");
+      pst.setInt(1, id);
+      pst.executeUpdate();
+      pst.close();
 
       db.commit();
     } catch (SQLException e) {
       db.rollback();
     } finally {
       db.setAutoCommit(true);
-      st.close();
     }
     return true;
   }
@@ -1075,32 +1049,24 @@ public class OpportunityHeader extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    this.setOppId(rs.getInt("opp_id"));
-    description = rs.getString("description");
-    accountLink = rs.getInt("acctLink");
-    if (rs.wasNull()) {
-      accountLink = -1;
-    }
-    contactLink = rs.getInt("contactLink");
-    if (rs.wasNull()) {
-      contactLink = -1;
-    }
-    entered = rs.getTimestamp("entered");
-    enteredBy = rs.getInt("enteredby");
-    modified = rs.getTimestamp("modified");
-    modifiedBy = rs.getInt("modifiedby");
+    id = rs.getInt("header_opp_id");
+    description = rs.getString("header_description");
+    accountLink = DatabaseUtils.getInt(rs, "header_acctlink");
+    contactLink = DatabaseUtils.getInt(rs, "header_contactlink");
+    entered = rs.getTimestamp("header_entered");
+    enteredBy = rs.getInt("header_enteredby");
+    modified = rs.getTimestamp("header_modified");
+    modifiedBy = rs.getInt("header_modifiedby");
 
-    //table
+    //joined tables
     accountName = rs.getString("acct_name");
     accountEnabled = rs.getBoolean("accountenabled");
-
-    //contact table
+    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
+    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
     String contactNameLast = rs.getString("last_name");
     String contactNameFirst = rs.getString("first_name");
     contactName = Contact.getNameFirstLast(contactNameFirst, contactNameLast);
     contactCompanyName = rs.getString("ctcompany");
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
   }
 
 
@@ -1114,7 +1080,6 @@ public class OpportunityHeader extends GenericBean {
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     if (System.getProperty("DEBUG") != null) {
@@ -1134,18 +1099,10 @@ public class OpportunityHeader extends GenericBean {
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getDescription());
-    if (accountLink > -1) {
-      pst.setInt(++i, this.getAccountLink());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-    if (contactLink > -1) {
-      pst.setInt(++i, this.getContactLink());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-    pst.setInt(++i, this.getModifiedBy());
-    pst.setInt(++i, this.getOppId());
+    DatabaseUtils.setInt(pst, ++i, accountLink);
+    DatabaseUtils.setInt(pst, ++i, contactLink);
+    pst.setInt(++i, modifiedBy);
+    pst.setInt(++i, id);
     if (!override) {
       pst.setTimestamp(++i, modified);
     }
@@ -1169,9 +1126,8 @@ public class OpportunityHeader extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT COUNT(*) as componentcount " +
         "FROM opportunity_component oc " +
-        "WHERE id > 0 " +
-        "AND oc.opp_id = ?");
-    pst.setInt(1, oppId);
+        "WHERE oc.opp_id = ?");
+    pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       count = rs.getInt("componentcount");
@@ -1193,9 +1149,8 @@ public class OpportunityHeader extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "SELECT sum(guessvalue) as total " +
         "FROM opportunity_component oc " +
-        "WHERE id > 0 " +
-        "AND oc.opp_id = ?");
-    pst.setInt(1, oppId);
+        "WHERE oc.opp_id = ?");
+    pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       total = rs.getDouble("total");
@@ -1210,19 +1165,18 @@ public class OpportunityHeader extends GenericBean {
    *  Checks if the user owns atleast one of the components
    *
    *@param  db                Description of the Parameter
-   *@param  oppId             Description of the Parameter
+   *@param  id                Description of the Parameter
    *@param  userId            Description of the Parameter
    *@return                   The componentOwner value
    *@exception  SQLException  Description of the Exception
    */
-  public static boolean isComponentOwner(Connection db, int oppId, int userId) throws SQLException {
+  public static boolean isComponentOwner(Connection db, int id, int userId) throws SQLException {
     boolean isOwner = false;
     PreparedStatement pst = db.prepareStatement(
         "SELECT opp_id " +
         "FROM opportunity_component oc " +
-        "WHERE id > 0 " +
-        "AND oc.opp_id = ? AND oc.owner = ?");
-    pst.setInt(1, oppId);
+        "WHERE oc.opp_id = ? AND oc.owner = ?");
+    pst.setInt(1, id);
     pst.setInt(2, userId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

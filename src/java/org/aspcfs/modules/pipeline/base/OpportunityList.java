@@ -4,7 +4,7 @@
 
 package org.aspcfs.modules.pipeline.base;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import java.util.*;
@@ -13,6 +13,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.pipeline.beans.*;
 import org.aspcfs.modules.base.Constants;
 
 /**
@@ -24,22 +25,19 @@ import org.aspcfs.modules.base.Constants;
  *@version    $Id: OpportunityList.java,v 1.7 2001/10/03 21:26:46 mrajkowski Exp
  *      $
  */
-public class OpportunityList extends Vector {
+public class OpportunityList extends ArrayList {
 
   public final static int TRUE = 1;
   public final static int FALSE = 0;
   protected int includeEnabled = 1;
-
-  public final static String tableName = "opportunity";
-  public final static String uniqueField = "opp_id";
-  protected java.sql.Timestamp lastAnchor = null;
-  protected java.sql.Timestamp nextAnchor = null;
-  protected int syncType = Constants.NO_SYNC;
+  
+  //NOTE: this class is not meant to be sync'd, sync the base classes
+  //OpportunityHeaderList and OpportunityComponentList
 
   protected PagedListInfo pagedListInfo = null;
   protected int orgId = -1;
   protected int contactId = -1;
-  protected Vector ignoreTypeIdList = new Vector();
+  protected ArrayList ignoreTypeIdList = new ArrayList();
   protected String description = null;
   protected int enteredBy = -1;
   protected boolean hasAlertDate = false;
@@ -372,26 +370,6 @@ public class OpportunityList extends Vector {
 
 
   /**
-   *  Gets the tableName attribute of the OpportunityList object
-   *
-   *@return    The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   *  Gets the uniqueField attribute of the OpportunityList object
-   *
-   *@return    The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
    *  Gets the closeDateStart attribute of the OpportunityList object
    *
    *@return    The closeDateStart value
@@ -591,8 +569,8 @@ public class OpportunityList extends Vector {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
@@ -631,21 +609,24 @@ public class OpportunityList extends Vector {
         "x.enteredby AS header_enteredby, " +
         "x.modified AS header_modified, " +
         "x.modifiedby AS header_modifiedby, " +
-        "oc.*, y.description AS stagename, " +
-        "ct_owner.namelast AS o_namelast, ct_owner.namefirst AS o_namefirst, " +
+        "org.name AS acct_name, org.enabled AS accountenabled, " +
         "ct_eb.namelast AS eb_namelast, ct_eb.namefirst AS eb_namefirst, " +
         "ct_mb.namelast AS mb_namelast, ct_mb.namefirst AS mb_namefirst, " +
-        "org.name AS acct_name, org.enabled AS accountenabled, " +
         "ct.namelast AS last_name, ct.namefirst AS first_name, " +
         "ct.company AS ctcompany, " +
-        "oc.description AS comp_desc, oc.id AS comp_id " +
+        "oc.*, y.description AS stagename, " +
+        "ct_comp_owner.namelast AS comp_o_namelast, ct_comp_owner.namefirst AS comp_o_namefirst, " +
+        "ct_comp_eb.namelast AS comp_eb_namelast, ct_comp_eb.namefirst AS comp_eb_namefirst, " +
+        "ct_comp_mb.namelast AS comp_mb_namelast, ct_comp_mb.namefirst AS comp_mb_namefirst " +
         "FROM opportunity_header x " +
         "LEFT JOIN opportunity_component oc ON (x.opp_id = oc.opp_id) " +
         "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
         "LEFT JOIN contact ct_eb ON (x.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_owner ON (oc.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_mb ON (x.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id), " +
+        "LEFT JOIN contact ct ON (x.contactlink = ct.contact_id) " +
+        "LEFT JOIN contact ct_comp_owner ON (oc.owner = ct_comp_owner.user_id) " +
+        "LEFT JOIN contact ct_comp_eb ON (oc.enteredby = ct_comp_eb.user_id) " +
+        "LEFT JOIN contact ct_comp_mb ON (oc.modifiedby = ct_comp_mb.user_id), " +
         "lookup_stage y " +
         "WHERE y.code = oc.stage " +
         "AND x.opp_id > 0 ");
@@ -666,20 +647,22 @@ public class OpportunityList extends Vector {
         break;
       }
       ++count;
-      Opportunity thisOpp = new Opportunity(rs);
-      this.add(thisOpp);
+      OpportunityBean oppBean = new OpportunityBean();
+      oppBean.setHeader(new OpportunityHeader(rs));
+      oppBean.setComponent(new OpportunityComponent(rs));
+      this.add(oppBean);
     }
     rs.close();
     pst.close();
 
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      Opportunity thisOpp = (Opportunity) i.next();
-      thisOpp.buildFiles(db);
-      thisOpp.buildTypes(db);
+      OpportunityBean oppBean = (OpportunityBean) i.next();
+      oppBean.getHeader().buildFiles(db);
+      oppBean.getComponent().buildTypes(db);
       if (this.getBuildComponentInfo()) {
-        thisOpp.retrieveComponentCount(db);
-        thisOpp.buildTotal(db);
+        oppBean.getHeader().retrieveComponentCount(db);
+        oppBean.getHeader().buildTotal(db);
       }
     }
   }
@@ -719,8 +702,8 @@ public class OpportunityList extends Vector {
     int total = 0;
     Iterator i = this.iterator();
     while (i.hasNext()) {
-      Opportunity thisOpp = (Opportunity) i.next();
-      if (thisOpp.reassign(db, newOwner)) {
+      OpportunityBean oppBean = (OpportunityBean) i.next();
+      if (oppBean.getComponent().reassign(db, newOwner)) {
         total++;
       }
     }
@@ -737,8 +720,8 @@ public class OpportunityList extends Vector {
   public void delete(Connection db) throws SQLException {
     Iterator opportunities = this.iterator();
     while (opportunities.hasNext()) {
-      Opportunity thisOpportunity = (Opportunity) opportunities.next();
-      thisOpportunity.delete(db);
+      OpportunityBean oppBean = (OpportunityBean) opportunities.next();
+      oppBean.getHeader().delete(db);
     }
   }
 

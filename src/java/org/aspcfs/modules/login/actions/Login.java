@@ -89,15 +89,12 @@ public final class Login extends CFSModule {
       }
       rs.close();
       pst.close();
-
     } catch (Exception e) {
       loginBean.setMessage("* Gatekeeper: " + e.getMessage());
     }
-
     if (db != null) {
       sqlDriver.free(db);
     }
-
     if (ce == null) {
       return "LoginRetry";
     }

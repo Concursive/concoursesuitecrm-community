@@ -4,12 +4,11 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import java.util.Vector;
 import java.io.*;
-import java.sql.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.pipeline.base.*;
+import org.aspcfs.modules.pipeline.beans.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.contacts.base.*;
 
@@ -18,7 +17,8 @@ import org.aspcfs.modules.contacts.base.*;
  *
  *@author     matt
  *@created    March 14, 2002
- *@version    $Id$
+ *@version    $Id: LeadsCalls.java,v 1.9.10.1 2003/02/25 22:36:51 mrajkowski Exp
+ *      $
  */
 public final class LeadsCalls extends CFSModule {
 
@@ -28,42 +28,39 @@ public final class LeadsCalls extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandView(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-opportunities-calls-view"))) {
+    if (!hasPermission(context, "pipeline-opportunities-calls-view")) {
       return ("PermissionError");
     }
 
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
     Exception errorMessage = null;
-    String oppId = context.getRequest().getParameter("oppId");
+    String headerId = context.getRequest().getParameter("headerId");
 
     addModuleBean(context, "View Opportunities", "Opportunity Calls");
 
     PagedListInfo leadsCallListInfo = this.getPagedListInfo(context, "LeadsCallListInfo");
-    //leadsCallListInfo.setLink("/LeadsCalls.do?command=View&id=" + oppId);
-    leadsCallListInfo.setItemsPerPage(0);
+    leadsCallListInfo.setLink("LeadsCalls.do?command=View&headerId=" + headerId);
 
     Connection db = null;
     CallList callList = new CallList();
-    Opportunity thisOpp = null;
-
     try {
       db = this.getConnection(context);
-
       callList.setPagedListInfo(leadsCallListInfo);
-      callList.setOppId(Integer.parseInt(context.getRequest().getParameter("oppId")));
+      callList.setOppHeaderId(Integer.parseInt(headerId));
       callList.buildList(db);
 
-      thisOpp = new Opportunity(db, oppId);
-      context.getRequest().setAttribute("OpportunityDetails", thisOpp);
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
       ContactList contactList = new ContactList();
-      contactList.setPersonalId(getUserId(context));
-      //contactList.setTypeId(Integer.parseInt(typeId));
+      contactList.setPersonalId(userId);
       contactList.setBuildDetails(false);
-      contactList.setOrgId(thisOpp.getAccountLink());
+      contactList.setOrgId(oppHeader.getAccountLink());
       contactList.buildList(db);
       context.getRequest().setAttribute("ContactList", contactList);
 
@@ -87,6 +84,58 @@ public final class LeadsCalls extends CFSModule {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandAdd(ActionContext context) {
+    if (!hasPermission(context, "pipeline-opportunities-calls-add")) {
+      return ("PermissionError");
+    }
+
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
+    Exception errorMessage = null;
+    String headerId = context.getRequest().getParameter("headerId");
+
+    addModuleBean(context, "View Opportunities", "Opportunity Calls");
+
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
+
+      ContactList contactList = new ContactList();
+      contactList.setPersonalId(userId);
+      contactList.setBuildDetails(false);
+      contactList.setOrgId(oppHeader.getAccountLink());
+      contactList.buildList(db);
+      context.getRequest().setAttribute("ContactList", contactList);
+
+      LookupList callTypeList = new LookupList(db, "lookup_call_types");
+      callTypeList.addItem(0, "--None--");
+      context.getRequest().setAttribute("CallTypeList", callTypeList);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      return ("AddOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
    *  Insert a new call record for the selected opportunity/lead
    *
    *@param  context  Description of Parameter
@@ -94,11 +143,9 @@ public final class LeadsCalls extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-opportunities-calls-add"))) {
+    if (!hasPermission(context, "pipeline-opportunities-calls-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordInserted = false;
 
@@ -124,7 +171,6 @@ public final class LeadsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       return (executeCommandView(context));
     } else {
@@ -139,40 +185,36 @@ public final class LeadsCalls extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDetails(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-opportunities-calls-view"))) {
+    if (!hasPermission(context, "pipeline-opportunities-calls-view")) {
       return ("PermissionError");
     }
 
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
     Exception errorMessage = null;
-
     String callId = context.getRequest().getParameter("id");
-    String oppId = context.getRequest().getParameter("oppId");
-
+    String headerId = context.getRequest().getParameter("headerId");
     Connection db = null;
     Call thisCall = null;
-    Opportunity thisOpp = null;
-
     try {
       db = this.getConnection(context);
       thisCall = new Call(db, callId);
-      thisOpp = new Opportunity(db, oppId);
-      context.getRequest().setAttribute("OpportunityDetails", thisOpp);
+      if (!hasViewpointAuthority(db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-
-      if (!hasAuthority(context, thisCall.getEnteredBy())) {
-        return ("PermissionError");
-      }
-
       context.getRequest().setAttribute("CallDetails", thisCall);
       addModuleBean(context, "View Opportunities", "Opportunity Calls");
       return ("DetailsOK");
@@ -188,34 +230,37 @@ public final class LeadsCalls extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDelete(ActionContext context) {
-
     if (!(hasPermission(context, "pipeline-opportunities-calls-delete"))) {
       return ("PermissionError");
     }
 
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
-
-    String oppId = context.getRequest().getParameter("oppId");
+    String headerId = context.getRequest().getParameter("headerId");
     Call thisCall = null;
-
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisCall = new Call(db, context.getRequest().getParameter("id"));
+      if (!hasViewpointAuthority(db, context, "pipeline", thisCall.getEnteredBy(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
       recordDeleted = thisCall.delete(db);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("oppId", oppId);
+        context.getRequest().setAttribute("headerId", headerId);
         return (executeCommandView(context));
       } else {
         processErrors(context, thisCall.getErrors());
@@ -237,29 +282,29 @@ public final class LeadsCalls extends CFSModule {
    */
 
   public String executeCommandModify(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-opportunities-calls-edit"))) {
+    if (!hasPermission(context, "pipeline-opportunities-calls-edit")) {
       return ("PermissionError");
     }
 
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
     Exception errorMessage = null;
-
-    String oppId = context.getRequest().getParameter("oppId");
-    Opportunity thisOpp = null;
-
-    int callId = -1;
-    String passedId = context.getRequest().getParameter("id");
-    callId = Integer.parseInt(passedId);
-
+    String headerId = context.getRequest().getParameter("headerId");
+    int callId = Integer.parseInt(context.getRequest().getParameter("id"));
     Connection db = null;
     Call thisCall = null;
-
     try {
       db = this.getConnection(context);
-      thisCall = new Call(db, "" + callId);
+      thisCall = new Call(db, callId);
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
-      thisOpp = new Opportunity(db, oppId);
-      context.getRequest().setAttribute("OpportunityDetails", thisOpp);
+      if (!hasViewpointAuthority(db, context, "pipeline", oppHeader.getEnteredBy(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
 
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
@@ -269,13 +314,7 @@ public final class LeadsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-
-      if (!hasAuthority(context, thisCall.getEnteredBy())) {
-        return ("PermissionError");
-      }
-
       addModuleBean(context, "View Opportunities", "Opportunity Calls");
       context.getRequest().setAttribute("CallDetails", thisCall);
       if (context.getRequest().getParameter("popup") != null) {
@@ -297,28 +336,32 @@ public final class LeadsCalls extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-
-    if (!(hasPermission(context, "pipeline-opportunities-calls-edit"))) {
+    if (!hasPermission(context, "pipeline-opportunities-calls-edit")) {
       return ("PermissionError");
     }
 
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
     Exception errorMessage = null;
-
     Call thisCall = (Call) context.getFormBean();
-
-    String oppId = context.getRequest().getParameter("oppId");
-    Opportunity thisOpp = null;
-
+    String headerId = context.getRequest().getParameter("headerId");
     Connection db = null;
     int resultCount = 0;
-
     try {
       db = this.getConnection(context);
       thisCall.setModifiedBy(getUserId(context));
+      Call oldCall = new Call(db, context.getRequest().getParameter("id"));
+      if (!hasViewpointAuthority(db, context, "pipeline", oldCall.getEnteredBy(), userId)) {
+        System.out.println("NO AUTHPRITY");
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
       resultCount = thisCall.update(db, context);
       if (resultCount == -1) {
-        thisOpp = new Opportunity(db, oppId);
-        context.getRequest().setAttribute("OpportunityDetails", thisOpp);
+        OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+        context.getRequest().setAttribute("opportunityHeader", oppHeader);
 
         LookupList callTypeList = new LookupList(db, "lookup_call_types");
         callTypeList.addItem(0, "--None--");
@@ -329,7 +372,6 @@ public final class LeadsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (resultCount == -1) {
         processErrors(context, thisCall.getErrors());

@@ -21,10 +21,22 @@ import org.aspcfs.utils.*;
  *@version    $Id$
  */
 public class OpportunityBean extends GenericBean {
-  private OpportunityComponent component = new OpportunityComponent();
-  private OpportunityHeader header = new OpportunityHeader();
+  private OpportunityHeader header = null;
+  private OpportunityComponent component = null;
 
-
+  /**
+   *  Constructor for the OpportunityBean object
+   */
+  public OpportunityBean() { 
+    header = new OpportunityHeader();
+    component = new OpportunityComponent();
+  }
+  
+  public OpportunityBean(OpportunityHeader tmp1, OpportunityComponent tmp2) { 
+    header = tmp1;
+    component = tmp2;
+  }
+  
   /**
    *  Gets the component attribute of the OpportunityBean object
    *
@@ -66,12 +78,6 @@ public class OpportunityBean extends GenericBean {
 
 
   /**
-   *  Constructor for the OpportunityBean object
-   */
-  public OpportunityBean() { }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -103,13 +109,11 @@ public class OpportunityBean extends GenericBean {
     try {
       db.setAutoCommit(false);
       headerInserted = header.insert(db, context);
-      component.setOppId(header.getOppId());
+      component.setHeaderId(header.getId());
       componentInserted = component.insert(db, context);
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);

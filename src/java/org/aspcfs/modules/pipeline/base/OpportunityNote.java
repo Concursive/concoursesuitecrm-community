@@ -60,13 +60,12 @@ public class OpportunityNote extends Note {
     rs = st.executeQuery(sql.toString());
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      st.close();
-      throw new SQLException("Note record not found.");
     }
     rs.close();
     st.close();
+    if (this.getId() == -1) {
+      throw new SQLException("Note record not found.");
+    }
   }
 
 
@@ -77,14 +76,14 @@ public class OpportunityNote extends Note {
    *@param  db                Description of Parameter
    *@param  enteredBy         Description of Parameter
    *@param  modifiedBy        Description of Parameter
-   *@param  oppId             Description of the Parameter
+   *@param  oppHeaderId       Description of the Parameter
    *@exception  SQLException  Description of Exception
    *@since
    */
-  public void process(Connection db, int oppId, int enteredBy, int modifiedBy) throws SQLException {
+  public void process(Connection db, int oppHeaderId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
-        this.insert(db, oppId, enteredBy);
+        this.insert(db, oppHeaderId, enteredBy);
       } else {
         this.update(db, modifiedBy);
       }
@@ -98,11 +97,11 @@ public class OpportunityNote extends Note {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  oppId             Description of the Parameter
    *@param  enteredBy         Description of the Parameter
+   *@param  oppHeaderId       Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void insert(Connection db, int oppId, int enteredBy) throws SQLException {
+  public void insert(Connection db, int oppHeaderId, int enteredBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO note " +
         "(org_id, contact_id, opp_id, subject, body, enteredby, modifiedby) " +
@@ -111,14 +110,13 @@ public class OpportunityNote extends Note {
     int i = 0;
     pst.setInt(++i, this.getOrgId());
     pst.setInt(++i, this.getContactId());
-    pst.setInt(++i, oppId);
+    pst.setInt(++i, oppHeaderId);
     pst.setString(++i, this.getSubject());
     pst.setString(++i, this.getBody());
     pst.setInt(++i, enteredBy);
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
-
     this.setId(DatabaseUtils.getCurrVal(db, "note_id_seq"));
   }
 

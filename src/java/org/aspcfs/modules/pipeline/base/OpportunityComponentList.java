@@ -2,7 +2,7 @@
 
 package org.aspcfs.modules.pipeline.base;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import java.util.*;
@@ -22,7 +22,7 @@ import org.aspcfs.modules.base.Constants;
  *      mrajkowski Exp $
  */
 
-public class OpportunityComponentList extends Vector {
+public class OpportunityComponentList extends ArrayList {
 
   public final static String tableName = "opportunity_component";
   public final static String uniqueField = "id";
@@ -31,7 +31,7 @@ public class OpportunityComponentList extends Vector {
   protected int syncType = Constants.NO_SYNC;
 
   protected PagedListInfo pagedListInfo = null;
-  protected int oppId = -1;
+  protected int headerId = -1;
   protected int enteredBy = -1;
   protected boolean hasAlertDate = false;
   protected java.sql.Date alertDate = null;
@@ -60,23 +60,13 @@ public class OpportunityComponentList extends Vector {
   }
 
 
-  /**
-   *  Sets the oppId attribute of the OpportunityComponentList object
-   *
-   *@param  tmp  The new oppId value
-   */
-  public void setOppId(String tmp) {
-    this.oppId = Integer.parseInt(tmp);
+  public void setHeaderId(String tmp) {
+    this.headerId = Integer.parseInt(tmp);
   }
 
 
-  /**
-   *  Sets the oppId attribute of the OpportunityComponentList object
-   *
-   *@param  tmp  The new oppId value
-   */
-  public void setOppId(int tmp) {
-    this.oppId = tmp;
+  public void setHeaderId(int tmp) {
+    this.headerId = tmp;
   }
 
 
@@ -357,14 +347,11 @@ public class OpportunityComponentList extends Vector {
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
-
     createFilter(sqlFilter);
-
     sqlSelect.append(
         "SELECT alertdate, count(*) " +
         "FROM opportunity_component oc " +
         "WHERE oc.opp_id > -1 ");
-
     sqlTail.append("GROUP BY alertdate ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     prepareFilter(pst);
@@ -372,7 +359,7 @@ public class OpportunityComponentList extends Vector {
     while (rs.next()) {
       String alertdate = Call.getAlertDateStringLongYear(rs.getDate("alertdate"));
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("OppList --> Added Days Calls " + alertdate + ":" + rs.getInt("count"));
+        System.out.println("OpportunityComponentList-> Added Days Calls " + alertdate + ":" + rs.getInt("count"));
       }
       events.put(alertdate, new Integer(rs.getInt("count")));
     }
@@ -404,13 +391,12 @@ public class OpportunityComponentList extends Vector {
         "LEFT JOIN opportunity_header oh ON (oc.opp_id = oh.opp_id) " +
         "LEFT JOIN organization org ON (oh.acctlink = org.org_id) " +
         "WHERE oc.opp_id > -1 ");
-
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
       OpportunityComponent thisOpp = new OpportunityComponent();
-      thisOpp.setOppId(rs.getInt("opp_id"));
+      thisOpp.setHeaderId(rs.getInt("opp_id"));
       thisOpp.setId(rs.getInt("id"));
       thisOpp.setDescription(rs.getString("description"));
       thisOpp.setAccountName(rs.getString("acct_name"));
@@ -460,8 +446,8 @@ public class OpportunityComponentList extends Vector {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
@@ -493,14 +479,14 @@ public class OpportunityComponentList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " oc.*, y.description as stagename, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, oc.modified as c_mod, oc.modifiedby as c_modby, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
+        "oc.*, y.description as stagename, " +
+        "ct_comp_owner.namelast AS comp_o_namelast, ct_comp_owner.namefirst AS comp_o_namefirst, " +
+        "ct_comp_eb.namelast AS comp_eb_namelast, ct_comp_eb.namefirst AS comp_eb_namefirst, " +
+        "ct_comp_mb.namelast AS comp_mb_namelast, ct_comp_mb.namefirst AS comp_mb_namefirst " +
         "FROM opportunity_component oc " +
-        "LEFT JOIN contact ct_eb ON (oc.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (oc.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN contact ct_owner ON (oc.owner = ct_owner.user_id), " +
+        "LEFT JOIN contact ct_comp_owner ON (oc.owner = ct_comp_owner.user_id) " +
+        "LEFT JOIN contact ct_comp_eb ON (oc.enteredby = ct_comp_eb.user_id) " +
+        "LEFT JOIN contact ct_comp_mb ON (oc.modifiedby = ct_comp_mb.user_id), " +
         "lookup_stage y " +
         "WHERE y.code = oc.stage " +
         "AND oc.opp_id > -1 ");
@@ -522,7 +508,7 @@ public class OpportunityComponentList extends Vector {
       }
       ++count;
       OpportunityComponent thisOppComponent = new OpportunityComponent(rs);
-      this.addElement(thisOppComponent);
+      this.add(thisOppComponent);
     }
     rs.close();
     pst.close();
@@ -538,7 +524,7 @@ public class OpportunityComponentList extends Vector {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-    if (oppId != -1) {
+    if (headerId != -1) {
       sqlFilter.append("AND oc.opp_id = ? ");
     }
     if (enteredBy != -1) {
@@ -606,8 +592,8 @@ public class OpportunityComponentList extends Vector {
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-    if (oppId != -1) {
-      pst.setInt(++i, oppId);
+    if (headerId != -1) {
+      pst.setInt(++i, headerId);
     }
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);

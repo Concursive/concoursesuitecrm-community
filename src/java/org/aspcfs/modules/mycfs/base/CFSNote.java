@@ -703,7 +703,6 @@ public class CFSNote extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
@@ -770,11 +769,10 @@ public class CFSNote extends GenericBean {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 
@@ -814,8 +812,8 @@ public class CFSNote extends GenericBean {
       if (rs.next()) {
         outboxCount = rs.getInt("outboxcount");
       }
-      pst.close();
       rs.close();
+      pst.close();
       /*
        *  Get the count of deleted msgs by the recipients
        */
@@ -824,9 +822,8 @@ public class CFSNote extends GenericBean {
       if (rs.next()) {
         inboxCount = rs.getInt("inboxcount");
       }
-
-      pst.close();
       rs.close();
+      pst.close();
       /*
        *  sender & recipient(s) have marked messages to be deleted
        */

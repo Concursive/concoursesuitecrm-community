@@ -2,7 +2,7 @@
 
 package org.aspcfs.modules.pipeline.base;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import java.util.*;
@@ -11,6 +11,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.pipeline.beans.*;
 
 /**
  *  Container for OpportunityHeader objects
@@ -20,14 +21,14 @@ import org.aspcfs.modules.base.Constants;
  *@version    $Id: OpportunityHeaderList.java,v 1.3 2003/01/07 20:21:45
  *      mrajkowski Exp $
  */
-public class OpportunityHeaderList extends Vector {
+public class OpportunityHeaderList extends ArrayList {
 
   protected PagedListInfo pagedListInfo = null;
   protected int orgId = -1;
   protected int contactId = -1;
   protected int owner = -1;
   protected String ownerIdRange = null;
-  protected Vector ignoreTypeIdList = new Vector();
+  protected ArrayList ignoreTypeIdList = new ArrayList();
   protected String description = null;
   protected int enteredBy = -1;
   protected boolean hasAlertDate = false;
@@ -469,8 +470,8 @@ public class OpportunityHeaderList extends Vector {
         int maxRecords = rs.getInt("recordcount");
         pagedListInfo.setMaxRecords(maxRecords);
       }
-      pst.close();
       rs.close();
+      pst.close();
 
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
@@ -501,11 +502,19 @@ public class OpportunityHeaderList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " x.*, org.name as acct_name, org.enabled as accountenabled, " +
-        "ct.namelast as last_name, ct.namefirst as first_name, " +
-        "ct.company as ctcompany, " +
+        "x.opp_id AS header_opp_id, " +
+        "x.description AS header_description, " +
+        "x.acctlink AS header_acctlink, " +
+        "x.contactlink AS header_contactlink, " +
+        "x.entered AS header_entered, " +
+        "x.enteredby AS header_enteredby, " +
+        "x.modified AS header_modified, " +
+        "x.modifiedby AS header_modifiedby, " +
+        "org.name as acct_name, org.enabled as accountenabled, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
+        "ct.namelast as last_name, ct.namefirst as first_name, " +
+        "ct.company as ctcompany " +
         "FROM opportunity_header x " +
         "LEFT JOIN organization org ON (x.acctlink = org.org_id) " +
         "LEFT JOIN contact ct_eb ON (x.enteredby = ct_eb.user_id) " +
@@ -530,7 +539,7 @@ public class OpportunityHeaderList extends Vector {
       }
       ++count;
       OpportunityHeader thisOppHeader = new OpportunityHeader(rs);
-      this.addElement(thisOppHeader);
+      this.add(thisOppHeader);
     }
     rs.close();
     pst.close();
@@ -554,7 +563,7 @@ public class OpportunityHeaderList extends Vector {
    *@param  tmp  The feature to be added to the IgnoreTypeId attribute
    */
   public void addIgnoreTypeId(String tmp) {
-    ignoreTypeIdList.addElement(tmp);
+    ignoreTypeIdList.add(tmp);
   }
 
 
@@ -565,7 +574,7 @@ public class OpportunityHeaderList extends Vector {
    *@param  tmp  The feature to be added to the IgnoreTypeId attribute
    */
   public void addIgnoreTypeId(int tmp) {
-    ignoreTypeIdList.addElement("" + tmp);
+    ignoreTypeIdList.add(String.valueOf(tmp));
   }
 
 
@@ -578,7 +587,7 @@ public class OpportunityHeaderList extends Vector {
   public void delete(Connection db) throws SQLException {
     Iterator opportunities = this.iterator();
     while (opportunities.hasNext()) {
-      Opportunity thisOpportunity = (Opportunity) opportunities.next();
+      OpportunityHeader thisOpportunity = (OpportunityHeader) opportunities.next();
       thisOpportunity.delete(db);
     }
   }
@@ -590,23 +599,18 @@ public class OpportunityHeaderList extends Vector {
    *@param  sqlFilter  Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
-
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
     if (orgId != -1) {
-      sqlFilter.append("AND x.acctlink = ? ");
+      sqlFilter.append("AND (x.acctlink = ? OR x.contactlink IN (SELECT contact_id from contact c where c.org_id = ? )) ");
     }
-
     if (contactId != -1) {
       sqlFilter.append("AND x.contactlink = ? ");
     }
-
     if (enteredBy != -1) {
       sqlFilter.append("AND x.enteredby = ? ");
     }
-
     if (ignoreTypeIdList.size() > 0) {
       Iterator iList = ignoreTypeIdList.iterator();
       sqlFilter.append("AND x.contactlink NOT IN (");
@@ -619,7 +623,6 @@ public class OpportunityHeaderList extends Vector {
       }
       sqlFilter.append(") ");
     }
-
     if (description != null) {
       if (description.indexOf("%") >= 0) {
         sqlFilter.append("AND lower(x.description) like lower(?) ");
@@ -627,27 +630,34 @@ public class OpportunityHeaderList extends Vector {
         sqlFilter.append("AND lower(x.description) = lower(?) ");
       }
     }
-
     if (queryOpenOnly) {
       sqlFilter.append("AND x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.closed IS NULL) ");
     }
-
     if (queryClosedOnly) {
       sqlFilter.append("AND x.opp_id NOT IN (SELECT opp_id from opportunity_component oc where oc.closed IS NULL) ");
     }
     if (accountOwnerIdRange != null) {
       sqlFilter.append("AND x.acctlink IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
-
     //Get the opportunity if user is owner in any one of the components of that opportunity
     if (owner != -1) {
-      sqlFilter.append("AND ( (x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner = ? ))  OR (x.opp_id NOT IN (SELECT opp_id from opportunity_component oc1 WHERE oc1.opp_id = x.opp_id )) ) ");
+      sqlFilter.append("AND " +
+          "( " +
+          "(x.opp_id IN (SELECT opp_id FROM opportunity_component oc WHERE oc.owner = ? )) " +
+          "OR (x.opp_id NOT IN (SELECT opp_id FROM opportunity_component oc1 WHERE oc1.opp_id = x.opp_id ) AND " +
+          "x.enteredby = ?) " +
+          ") ");
     }
-
     //Get the opportunity if user or anyone in user's hierarchy is owner in any one of the components of that opportunity
     if (ownerIdRange != null) {
-      sqlFilter.append("AND ( (x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ") ) ) OR (x.opp_id NOT IN (SELECT opp_id from opportunity_component oc1 WHERE oc1.opp_id = x.opp_id) ) ) ");
+      sqlFilter.append("AND " +
+          "( " +
+          "(x.opp_id IN (SELECT opp_id FROM opportunity_component oc WHERE oc.owner IN (" + ownerIdRange + ") ) ) " +
+          "OR (x.opp_id NOT IN (SELECT opp_id from opportunity_component oc1 WHERE oc1.opp_id = x.opp_id) AND " +
+          "x.enteredby IN (" + ownerIdRange + ") ) " +
+          ") ");
     }
+    
   }
 
 
@@ -662,19 +672,16 @@ public class OpportunityHeaderList extends Vector {
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
     if (orgId != -1) {
       pst.setInt(++i, orgId);
+      pst.setInt(++i, orgId);
     }
-
     if (contactId != -1) {
       pst.setInt(++i, contactId);
     }
-
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
     }
-
     if (ignoreTypeIdList.size() > 0) {
       Iterator iList = ignoreTypeIdList.iterator();
       while (iList.hasNext()) {
@@ -682,15 +689,13 @@ public class OpportunityHeaderList extends Vector {
         pst.setInt(++i, thisType);
       }
     }
-
     if (description != null) {
       pst.setString(++i, description);
     }
-
     if (owner != -1) {
       pst.setInt(++i, owner);
+      pst.setInt(++i, owner);
     }
-
     return i;
   }
 
@@ -756,5 +761,6 @@ public class OpportunityHeaderList extends Vector {
     return isOwner;
   }
 }
+
 
 

@@ -943,7 +943,6 @@ public class Inventory {
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-
     try {
       db.setAutoCommit(false);
       PreparedStatement pst = null;
@@ -996,16 +995,14 @@ public class Inventory {
           adRuns.update(db);
         }
       }
-
       db.commit();
     } catch (Exception e) {
       e.printStackTrace(System.out);
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-
-    db.setAutoCommit(true);
     return resultCount;
   }
 

@@ -9,6 +9,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.pipeline.beans.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.accounts.base.OrganizationReport;
 import com.zeroio.iteam.base.*;
@@ -445,18 +446,14 @@ public class OpportunityReport extends OpportunityList {
    */
   public void buildReportData(Connection db) throws SQLException {
     this.buildList(db);
-
     boolean writeOut = false;
     Organization tempOrg = null;
-
     Iterator x = this.iterator();
     while (x.hasNext()) {
-      Opportunity thisOpp = (Opportunity) x.next();
+      OpportunityBean oppBean = (OpportunityBean) x.next();
       ReportRow thisRow = new ReportRow();
-
-      if (joinOrgs && thisOpp.getAccountLink() > -1) {
-        tempOrg = new Organization(db, thisOpp.getAccountLink());
-
+      if (joinOrgs && oppBean.getHeader().getAccountLink() > -1) {
+        tempOrg = new Organization(db, oppBean.getHeader().getAccountLink());
         if (limitId > -1) {
           if (tempOrg.getOwner() == limitId) {
             orgReportJoin.addDataRow(thisRow, tempOrg);
@@ -472,69 +469,66 @@ public class OpportunityReport extends OpportunityList {
         Iterator y = criteria.iterator();
         while (y.hasNext()) {
           String param = (String) y.next();
-
           if (param.equals("id")) {
-            thisRow.addCell(thisOpp.getId());
+            thisRow.addCell(oppBean.getComponent().getId());
           }
           if (param.equals("type")) {
-            thisRow.addCell(thisOpp.getTypes().valuesAsString());
+            thisRow.addCell(oppBean.getComponent().getTypes().valuesAsString());
           }
           if (param.equals("description")) {
-            thisRow.addCell(thisOpp.getDescription());
+            thisRow.addCell(oppBean.getComponent().getDescription());
           }
           if (param.equals("contact")) {
-            thisRow.addCell(thisOpp.getAccountName());
+            thisRow.addCell(oppBean.getHeader().getAccountName());
           }
           if (param.equals("owner")) {
-            thisRow.addCell(thisOpp.getOwnerName());
+            thisRow.addCell(oppBean.getComponent().getOwnerName());
           }
           if (param.equals("amount1")) {
-            thisRow.addCell("$" + thisOpp.getLowCurrency());
+            thisRow.addCell("$" + oppBean.getComponent().getLowCurrency());
           }
           if (param.equals("amount2")) {
-            thisRow.addCell("$" + thisOpp.getGuessCurrency());
+            thisRow.addCell("$" + oppBean.getComponent().getGuessCurrency());
           }
           if (param.equals("amount3")) {
-            thisRow.addCell("$" + thisOpp.getHighCurrency());
+            thisRow.addCell("$" + oppBean.getComponent().getHighCurrency());
           }
           if (param.equals("stageName")) {
-            thisRow.addCell(thisOpp.getStageName());
+            thisRow.addCell(oppBean.getComponent().getStageName());
           }
           if (param.equals("stageDate")) {
-            thisRow.addCell(thisOpp.getStageDateString());
+            thisRow.addCell(oppBean.getComponent().getStageDateString());
           }
           if (param.equals("probability")) {
-            thisRow.addCell(thisOpp.getCloseProbValue());
+            thisRow.addCell(oppBean.getComponent().getCloseProbValue());
           }
           if (param.equals("revenueStart")) {
-            thisRow.addCell(thisOpp.getCloseDateString());
+            thisRow.addCell(oppBean.getComponent().getCloseDateString());
           }
           if (param.equals("terms")) {
-            thisRow.addCell(thisOpp.getTermsString());
+            thisRow.addCell(oppBean.getComponent().getTermsString());
           }
           if (param.equals("alertDate")) {
-            thisRow.addCell(thisOpp.getAlertDateString());
+            thisRow.addCell(oppBean.getComponent().getAlertDateString());
           }
           if (param.equals("commission")) {
-            thisRow.addCell(thisOpp.getCommissionPercent());
+            thisRow.addCell(oppBean.getComponent().getCommissionPercent());
           }
           if (param.equals("entered")) {
-            thisRow.addCell(thisOpp.getEnteredString());
+            thisRow.addCell(oppBean.getComponent().getEnteredString());
           }
           if (param.equals("enteredBy")) {
-            thisRow.addCell(thisOpp.getEnteredByName());
+            thisRow.addCell(oppBean.getComponent().getEnteredByName());
           }
           if (param.equals("modified")) {
-            thisRow.addCell(thisOpp.getModifiedString());
+            thisRow.addCell(oppBean.getComponent().getModifiedString());
           }
           if (param.equals("modifiedBy")) {
-            thisRow.addCell(thisOpp.getModifiedByName());
+            thisRow.addCell(oppBean.getComponent().getModifiedByName());
           }
         }
-
         rep.addRow(thisRow);
       }
-
       writeOut = false;
     }
   }

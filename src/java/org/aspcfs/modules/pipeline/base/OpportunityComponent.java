@@ -32,7 +32,7 @@ import org.aspcfs.modules.contacts.base.*;
 
 public class OpportunityComponent extends GenericBean {
   protected int id = -1;
-  protected int oppId = -1;
+  protected int headerId = -1;
   protected int owner = -1;
   protected String description = null;
   protected java.sql.Date closeDate = null;
@@ -147,23 +147,13 @@ public class OpportunityComponent extends GenericBean {
   }
 
 
-  /**
-   *  Sets the OppId attribute of the OpportunityComponent object
-   *
-   *@param  oppId  The new OppId value
-   */
-  public void setOppId(int oppId) {
-    this.oppId = oppId;
+  public void setHeaderId(int tmp) {
+    headerId = tmp;
   }
 
 
-  /**
-   *  Sets the OppId attribute of the OpportunityComponent object
-   *
-   *@param  oppId  The new OppId value
-   */
-  public void setOppId(String oppId) {
-    this.oppId = Integer.parseInt(oppId);
+  public void setHeaderId(String tmp) {
+    headerId = Integer.parseInt(tmp);
   }
 
 
@@ -685,24 +675,8 @@ public class OpportunityComponent extends GenericBean {
   }
 
 
-  /**
-   *  Gets the OppId attribute of the OpportunityComponent object
-   *
-   *@return        The OppId value
-   *@deprecated    Too confusing, an opportunity header is the parent now
-   */
-  public int getOppId() {
-    return oppId;
-  }
-
-
-  /**
-   *  Gets the headerId attribute of the OpportunityComponent object
-   *
-   *@return    The headerId value
-   */
   public int getHeaderId() {
-    return oppId;
+    return headerId;
   }
 
 
@@ -1370,14 +1344,15 @@ public class OpportunityComponent extends GenericBean {
       throw new SQLException("Opportunity Component ID not specified.");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT oc.*, y.description as stagename, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
+        "SELECT " +
+        "oc.*, y.description as stagename, " +
+        "ct_comp_owner.namelast AS comp_o_namelast, ct_comp_owner.namefirst AS comp_o_namefirst, " +
+        "ct_comp_eb.namelast AS comp_eb_namelast, ct_comp_eb.namefirst AS comp_eb_namefirst, " +
+        "ct_comp_mb.namelast AS comp_mb_namelast, ct_comp_mb.namefirst AS comp_mb_namefirst " +
         "FROM opportunity_component oc " +
-        "LEFT JOIN contact ct_owner ON (oc.owner = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (oc.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (oc.modifiedby = ct_mb.user_id), " +
+        "LEFT JOIN contact ct_comp_owner ON (oc.owner = ct_comp_owner.user_id) " +
+        "LEFT JOIN contact ct_comp_eb ON (oc.enteredby = ct_comp_eb.user_id) " +
+        "LEFT JOIN contact ct_comp_mb ON (oc.modifiedby = ct_comp_mb.user_id), " +
         "lookup_stage y " +
         "WHERE y.code = oc.stage " +
         "AND id = ? ");
@@ -1385,13 +1360,12 @@ public class OpportunityComponent extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Opportunity Component record not found.");
-    }
+    } 
     rs.close();
     pst.close();
+    if (id == -1) {
+      throw new SQLException("Opportunity Component record not found.");
+    }
     buildTypes(db);
   }
 
@@ -1673,10 +1647,10 @@ public class OpportunityComponent extends GenericBean {
       db.commit();
     } catch (SQLException e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
     return true;
   }
 
@@ -1700,11 +1674,9 @@ public class OpportunityComponent extends GenericBean {
     int i = 0;
     pst.setInt(++i, id);
     rs = pst.executeQuery();
-
     while (rs.next()) {
       types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_opportunity_types"));
     }
-
     rs.close();
   }
 
@@ -1781,11 +1753,9 @@ public class OpportunityComponent extends GenericBean {
     int result = -1;
     this.setOwner(newOwner);
     result = this.update(db);
-
     if (result == -1) {
       return false;
     }
-
     return true;
   }
 
@@ -1883,11 +1853,10 @@ public class OpportunityComponent extends GenericBean {
       db.commit();
     } catch (Exception e) {
       db.rollback();
-      db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    db.setAutoCommit(true);
-
     return resultCount;
   }
 
@@ -1910,18 +1879,15 @@ public class OpportunityComponent extends GenericBean {
     try {
       db.setAutoCommit(false);
       this.resetType(db);
-
       st = db.createStatement();
       st.executeUpdate(
           "DELETE FROM opportunity_component WHERE id = " + this.getId());
       st.close();
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();
     } finally {
       db.setAutoCommit(true);
-      st.close();
     }
     return true;
   }
@@ -1945,9 +1911,8 @@ public class OpportunityComponent extends GenericBean {
     try {
       db.setAutoCommit(false);
       this.resetType(db);
-
       CallList callList = new CallList();
-      callList.setOppId(this.getId());
+      callList.setOppHeaderId(headerId);
       callList.buildList(db);
       callList.delete(db);
       callList = null;
@@ -1969,7 +1934,6 @@ public class OpportunityComponent extends GenericBean {
       db.rollback();
     } finally {
       db.setAutoCommit(true);
-      st.close();
     }
     return true;
   }
@@ -1984,13 +1948,13 @@ public class OpportunityComponent extends GenericBean {
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //opportunity table
-    this.setId(rs.getInt("id"));
-    oppId = rs.getInt("opp_id");
+    id = rs.getInt("id");
+    headerId = rs.getInt("opp_id");
     owner = rs.getInt("owner");
     description = rs.getString("description");
     closeDate = rs.getDate("closedate");
     closeProb = rs.getDouble("closeprob");
-    terms = rs.getInt("terms");
+    terms = rs.getDouble("terms");
     units = rs.getString("units");
     low = rs.getDouble("lowvalue");
     guess = rs.getDouble("guessvalue");
@@ -2013,9 +1977,9 @@ public class OpportunityComponent extends GenericBean {
     stageName = rs.getString("stagename");
 
     //contact table
-    ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
-    enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
-    modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
+    ownerName = Contact.getNameLastFirst(rs.getString("comp_o_namelast"), rs.getString("comp_o_namefirst"));
+    enteredByName = Contact.getNameLastFirst(rs.getString("comp_eb_namelast"), rs.getString("comp_eb_namefirst"));
+    modifiedByName = Contact.getNameLastFirst(rs.getString("comp_mb_namelast"), rs.getString("comp_mb_namefirst"));
   }
 
 
@@ -2030,19 +1994,15 @@ public class OpportunityComponent extends GenericBean {
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
-
     PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-
     if (!override) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Opportunity Component-> Retrieving values from previous Opportunity Component");
       }
-      sql.append(
+      pst = db.prepareStatement(
           "SELECT stage, closed " +
           "FROM opportunity_component " +
           "WHERE id = ? ");
-      pst = db.prepareStatement(sql.toString());
       pst.setInt(1, this.getId());
       ResultSet rs = pst.executeQuery();
       if (rs.next()) {
@@ -2060,30 +2020,25 @@ public class OpportunityComponent extends GenericBean {
       }
       rs.close();
       pst.close();
-      sql.setLength(0);
     }
 
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity Component-> Updating the opportunity component");
     }
+    StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE opportunity_component " +
         "SET lowvalue = ?, guessvalue = ?, highvalue = ?, closeprob = ?, " +
         "commission = ?, ");
-
     if ((this.getStageChange() == true && override == false)) {
       sql.append("stagedate = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
-
     sql.append("type = ?, stage = ?, description = ?, " +
         "closedate = ?, alertdate = ?, alert = ?, terms = ?, units = ?, owner = ?, notes = ?, ");
-
     if (override == false) {
       sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
-
     sql.append("modifiedby = ? ");
-
     if (this.getCloseIt() == true) {
       sql.append(
           ", closed = CURRENT_TIMESTAMP ");
@@ -2091,13 +2046,10 @@ public class OpportunityComponent extends GenericBean {
       sql.append(
           ", closed = ? ");
     }
-
     sql.append("WHERE id = ? ");
-
     if (!override) {
       sql.append("AND modified = ? ");
     }
-
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setDouble(++i, this.getLow());
@@ -2108,36 +2060,21 @@ public class OpportunityComponent extends GenericBean {
     pst.setString(++i, this.getType());
     pst.setInt(++i, this.getStage());
     pst.setString(++i, this.getDescription());
-
-    if (closeDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setDate(++i, this.getCloseDate());
-    }
-
-    if (alertDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setDate(++i, this.getAlertDate());
-    }
-
+    DatabaseUtils.setDate(pst, ++i, this.getCloseDate());
+    DatabaseUtils.setDate(pst, ++i, this.getAlertDate());
     pst.setString(++i, this.getAlertText());
     pst.setDouble(++i, this.getTerms());
     pst.setString(++i, this.getUnits());
     pst.setInt(++i, this.getOwner());
     pst.setString(++i, this.getNotes());
     pst.setInt(++i, this.getModifiedBy());
-
     if (this.getOpenIt() == true) {
       pst.setNull(++i, java.sql.Types.DATE);
     }
-
     pst.setInt(++i, this.getId());
-
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
     }
-
     resultCount = pst.executeUpdate();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity Component-> ResultCount: " + resultCount);
@@ -2162,7 +2099,6 @@ public class OpportunityComponent extends GenericBean {
       }
       this.updateHeaderModified(db);
     }
-
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity Component-> Closing PreparedStatement");
     }

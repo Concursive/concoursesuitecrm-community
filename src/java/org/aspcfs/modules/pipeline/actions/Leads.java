@@ -69,28 +69,44 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAddOpp(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-opportunities-add"))) {
+    if (!hasPermission(context, "pipeline-opportunities-add")) {
       return ("PermissionError");
     }
-
+    
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
     OrganizationList orgList = new OrganizationList();
     Connection db = null;
-
+    
+    User thisRec = this.getUser(context, userId);
+    UserList shortChildList = thisRec.getShortChildList();
+    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+    userList.setMyId(userId);
+    userList.setMyValue(thisRec.getContact().getNameLast() + ", " + thisRec.getContact().getNameFirst());
+    userList.setIncludeMe(true);
+    userList.setExcludeDisabledIfUnselected(true);
+    context.getRequest().setAttribute("UserList", userList);
+    
     try {
       db = this.getConnection(context);
       buildFormElements(db, context);
       orgList.setMinerOnly(false);
       orgList.buildList(db);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       context.getRequest().setAttribute("OrgList", orgList);
-      addModuleBean(context, "Add Opportunity", "Add Opportunity");
+      if("list".equals(context.getRequest().getParameter("source"))){
+        addModuleBean(context, "View Opportunities", "Add Opportunity");
+      }else{
+        addModuleBean(context, "Add Opportunity", "Add Opportunity");
+      }
       return ("AddOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -106,41 +122,41 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsertOppComponent(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-opportunities-add"))) {
+    if (!hasPermission(context, "pipeline-opportunities-add")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
     boolean recordInserted = false;
-    Connection db = null;
-
+    
     OpportunityComponent newComponent = (OpportunityComponent) context.getFormBean();
-
-    //set types
     newComponent.setTypeList(context.getRequest().getParameterValues("selectedList"));
-    newComponent.setOwner(getUserId(context));
     newComponent.setEnteredBy(getUserId(context));
     newComponent.setModifiedBy(getUserId(context));
+    
+    Connection db = null;
     try {
       db = this.getConnection(context);
       recordInserted = newComponent.insert(db, context);
-
       if (recordInserted) {
-        context.getRequest().setAttribute("LeadsComponentDetails", newComponent);
         addRecentItem(context, newComponent);
       } else {
         processErrors(context, newComponent.getErrors());
+        //rebuild the form
+        buildFormElements(db, context);
+        OpportunityHeader oppHeader = new OpportunityHeader(db, newComponent.getHeaderId());
+        context.getRequest().setAttribute("OpportunityHeader", oppHeader);
       }
-    } catch (SQLException e) {
+      context.getRequest().setAttribute("OppComponentDetails", newComponent);
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (recordInserted) {
         return (executeCommandDetailsOpp(context));
       } else {
-        return (executeCommandAddOppComponent(context));
+        return ("AddOppComponentOK");
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -156,23 +172,17 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsertOpp(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-opportunities-add"))) {
+    if (!hasPermission(context, "pipeline-opportunities-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordInserted = false;
-    Contact linkedContact = null;
-    OpportunityHeader resultHeader = null;
-    OpportunityComponentList componentList = null;
-    Connection db = null;
-
     OpportunityBean newOpp = (OpportunityBean) context.getRequest().getAttribute("OppDetails");
     String association = context.getRequest().getParameter("opp_type");
-
+    Contact linkedContact = null;
+    
     //set types
     newOpp.getComponent().setTypeList(context.getRequest().getParameterValues("selectedList"));
-    newOpp.getComponent().setOwner(getUserId(context));
     newOpp.getComponent().setEnteredBy(getUserId(context));
     newOpp.getComponent().setModifiedBy(getUserId(context));
     newOpp.getHeader().setEnteredBy(getUserId(context));
@@ -184,42 +194,29 @@ public final class Leads extends CFSModule {
       newOpp.getHeader().setAccountLink("-1");
     }
 
+    Connection db = null;
     try {
       db = this.getConnection(context);
-
       //set the name for displaying on the form in case there are any errors
       if (newOpp.getHeader().getContactLink() > -1) {
         linkedContact = new Contact(db, newOpp.getHeader().getContactLink());
         newOpp.getHeader().setContactName(linkedContact.getNameLastFirst());
       }
-
       recordInserted = newOpp.insert(db, context);
-      if (recordInserted) {
-        resultHeader = new OpportunityHeader(db, newOpp.getHeader().getOppId());
-        context.getRequest().setAttribute("HeaderDetails", resultHeader);
-
-        PagedListInfo componentListInfo = this.getPagedListInfo(context, "LeadsComponentListInfo");
-        componentListInfo.setLink("Opportunities.do?command=DetailsOpp&oppId=" + resultHeader.getOppId());
-        componentList = new OpportunityComponentList();
-        componentList.setPagedListInfo(componentListInfo);
-        componentList.setOppId(resultHeader.getOppId());
-        componentList.buildList(db);
-        context.getRequest().setAttribute("ComponentList", componentList);
-      } else {
+      if (!recordInserted) {
         processErrors(context, newOpp.getHeader().getErrors());
         processErrors(context, newOpp.getComponent().getErrors());
       }
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
-    addModuleBean(context, "Add Opportunity", "Add Opportunity");
     if (errorMessage == null) {
       if (recordInserted) {
-        addRecentItem(context, resultHeader);
-        return ("OppDetailsOK");
+        addRecentItem(context, newOpp.getHeader());
+        context.getRequest().setAttribute("headerId", String.valueOf(newOpp.getHeader().getId()));
+        return (executeCommandDetailsOpp(context));
       } else {
         return (executeCommandAddOpp(context));
       }
@@ -237,37 +234,44 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetailsOpp(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-opportunities-view"))) {
+    if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
-
-    addModuleBean(context, "View Opportunities", "View Opportunity Details");
     Exception errorMessage = null;
-    int oppId = -1;
+    int headerId = -1;
+    addModuleBean(context, "View Opportunities", "View Opportunity Details");
+    
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
+    
+    if (context.getRequest().getParameter("headerId") != null) {
+      headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
+    } else {
+      headerId = Integer.parseInt((String) context.getRequest().getAttribute("headerId"));
+    }
     Connection db = null;
     OpportunityHeader thisHeader = null;
     OpportunityComponentList componentList = null;
-
-    if (context.getRequest().getParameter("oppId") != null) {
-      oppId = Integer.parseInt(context.getRequest().getParameter("oppId"));
-    } else if (context.getRequest().getParameter("id") != null) {
-      oppId = Integer.parseInt(context.getRequest().getParameter("id"));
-    }
 
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("LeadsComponentListInfo");
     }
 
     PagedListInfo componentListInfo = this.getPagedListInfo(context, "LeadsComponentListInfo");
-    componentListInfo.setLink("Leads.do?command=DetailsOpp&oppId=" + oppId);
+    componentListInfo.setLink("Leads.do?command=DetailsOpp&headerId=" + headerId);
     try {
       db = this.getConnection(context);
-      thisHeader = new OpportunityHeader(db, oppId);
-      //check whether or not the owner is an active User
+      thisHeader = new OpportunityHeader();
+      thisHeader.setBuildComponentCount(true);
+      thisHeader.queryRecord(db, headerId);
+      context.getRequest().setAttribute("HeaderDetails", thisHeader);
+      
       componentList = new OpportunityComponentList();
       componentList.setPagedListInfo(componentListInfo);
-      componentList.setOwnerIdRange(this.getUserRange(context));
-      componentList.setOppId(thisHeader.getOppId());
+      componentList.setOwnerIdRange(this.getUserRange(context, userId));
+      componentList.setHeaderId(thisHeader.getId());
       componentList.buildList(db);
       context.getRequest().setAttribute("ComponentList", componentList);
     } catch (Exception e) {
@@ -277,7 +281,6 @@ public final class Leads extends CFSModule {
     }
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("HeaderDetails", thisHeader);
       addRecentItem(context, thisHeader);
       return ("OppDetailsOK");
     } else {
@@ -294,32 +297,38 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAddOppComponent(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-opportunities-add"))) {
+    if (!hasPermission(context, "pipeline-opportunities-add")) {
       return ("PermissionError");
     }
-
+    
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
+    String headerId = context.getRequest().getParameter("id");
     Connection db = null;
-    String oppId = null;
-    OpportunityHeader oppHeader = null;
-
-    if (context.getRequest().getParameter("id") != null) {
-      oppId = context.getRequest().getParameter("id");
-    }
-
+    
+    User thisRec = this.getUser(context, userId);
+    UserList shortChildList = thisRec.getShortChildList();
+    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+    userList.setMyId(userId);
+    userList.setMyValue(thisRec.getContact().getNameLast() + ", " + thisRec.getContact().getNameFirst());
+    userList.setIncludeMe(true);
+    userList.setExcludeDisabledIfUnselected(true);
+    context.getRequest().setAttribute("UserList", userList);
+    
     try {
       db = this.getConnection(context);
       buildFormElements(db, context);
-
       //get the header info
-      oppHeader = new OpportunityHeader(db, oppId);
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
       context.getRequest().setAttribute("OpportunityHeader", oppHeader);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       addModuleBean(context, "View Opportunities", "Add Opportunity Component");
       return ("AddOppComponentOK");
@@ -356,7 +365,7 @@ public final class Leads extends CFSModule {
     try {
       LookupList stageSelect = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageSelect);
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     }
   }
@@ -467,20 +476,27 @@ public final class Leads extends CFSModule {
 
     //Prepare the user id to base all data on
     int idToUse = 0;
-    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+
+    //Check to see if a Viewpoint is selected else default to user who's logged in
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+
     User thisRec = null;
+
     //Check if a specific user was selected
     int overrideId = StringUtils.parseInt(context.getRequest().getParameter("oid"), -1);
+
     //Check if the list is being reset
-    if (context.getRequest().getParameter("reset") != null) {
+    if ("true".equals(context.getRequest().getParameter("reset"))) {
       overrideId = -1;
       context.getSession().removeAttribute("leadsoverride");
       context.getSession().removeAttribute("leadsothername");
       context.getSession().removeAttribute("leadspreviousId");
     }
+
     //Determine the user whose data is being shown, by default it's the current user
     if (overrideId > -1) {
-      if (overrideId == getUserId(context)) {
+      if (overrideId == getUserId(context) || overrideId == viewpointInfo.getVpUserId()) {
         context.getSession().removeAttribute("leadsoverride");
         context.getSession().removeAttribute("leadsothername");
         context.getSession().removeAttribute("leadspreviousId");
@@ -488,26 +504,15 @@ public final class Leads extends CFSModule {
     } else if (context.getSession().getAttribute("leadsoverride") != null) {
       overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("leadsoverride"), -1);
     } else {
-      overrideId = thisUser.getUserId();
+      overrideId = userId;
     }
+    String checkFileName = null;
+    Connection db = null;
 
-    //Check that the user hasAuthority for this oid
-    if (hasAuthority(context, overrideId)) {
-      idToUse = overrideId;
-    } else {
-      idToUse = thisUser.getUserId();
-    }
-    thisRec = this.getUser(context, idToUse);
-
-    //Track the id in the request and the session
-    if (idToUse > -1 && idToUse != getUserId(context)) {
-      context.getRequest().setAttribute("override", String.valueOf(idToUse));
-      context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
-      context.getRequest().setAttribute("previousId", String.valueOf(thisRec.getManagerId()));
-      context.getSession().setAttribute("leadsoverride", String.valueOf(overrideId));
-      context.getSession().setAttribute("leadsothername", thisRec.getContact().getNameFull());
-      context.getSession().setAttribute("leadspreviousId", String.valueOf(thisRec.getManagerId()));
-    }
+    UserList fullChildList = new UserList();
+    UserList shortChildList = new UserList();
+    OpportunityList realFullOppList = new OpportunityList();
+    HtmlSelect graphTypeSelect = new HtmlSelect();
 
     //Determine the graph type to generate
     String graphString = null;
@@ -520,48 +525,64 @@ public final class Leads extends CFSModule {
       graphString = "gmr";
     }
 
-    //Check the cache and see if the current graph exists and is valid
-    String checkFileName = null;
-    if (thisRec.getIsValid() == true) {
-      if (graphString.equals("gmr")) {
-        checkFileName = thisRec.getGmr().getLastFileName();
-      } else if (graphString.equals("ramr")) {
-        checkFileName = thisRec.getRamr().getLastFileName();
-      } else if (graphString.equals("cgmr")) {
-        checkFileName = thisRec.getCgmr().getLastFileName();
-      } else if (graphString.equals("cramr")) {
-        checkFileName = thisRec.getCramr().getLastFileName();
-      }
-    }
-
-    //Build the html graph combo box
-    HtmlSelect graphTypeSelect = new HtmlSelect();
-    graphTypeSelect.setSelectName("whichGraph");
-    graphTypeSelect.setJsEvent("onChange=\"document.forms[0].submit();\"");
-    graphTypeSelect.addItem("gmr", "Gross Monthly Revenue");
-    graphTypeSelect.addItem("ramr", "Risk Adjusted Monthly Revenue");
-    graphTypeSelect.addItem("cgmr", "Commission Gross Monthly Revenue");
-    graphTypeSelect.addItem("cramr", "Commission Risk Adj. Monthly Revenue");
-    graphTypeSelect.setDefaultKey(graphString);
-
-    UserList fullChildList = new UserList();
-    UserList shortChildList = new UserList();
-    shortChildList = thisRec.getShortChildList();
-    OpportunityList realFullOppList = new OpportunityList();
-    Connection db = null;
     try {
       db = this.getConnection(context);
+
+      //Add Viewpoints
+      UserList vpUserList = this.addViewpoints(db, context, "pipeline");
+      viewpointInfo.setVpUserName(vpUserList);
+      
+      //Check that the user hasAuthority for this oid
+      if (hasViewpointAuthority(db, context, "pipeline", overrideId, userId)) {
+        idToUse = overrideId;
+      } else {
+        idToUse = this.getUserId(context);
+      }
+      thisRec = this.getUser(context, idToUse);
+      shortChildList = thisRec.getShortChildList();
+
+      //Track the id in the request and the session
+      if (idToUse != this.getUserId(context) && idToUse != viewpointInfo.getVpUserId()) {
+        context.getRequest().setAttribute("override", String.valueOf(idToUse));
+        context.getRequest().setAttribute("othername", thisRec.getContact().getNameFull());
+        context.getRequest().setAttribute("previousId", String.valueOf(thisRec.getManagerId()));
+        context.getSession().setAttribute("leadsoverride", String.valueOf(overrideId));
+        context.getSession().setAttribute("leadsothername", thisRec.getContact().getNameFull());
+        context.getSession().setAttribute("leadspreviousId", String.valueOf(thisRec.getManagerId()));
+      }
+
+      //Check the cache and see if the current graph exists and is valid
+      if (thisRec.getIsValid() == true) {
+        if (graphString.equals("gmr")) {
+          checkFileName = thisRec.getGmr().getLastFileName();
+        } else if (graphString.equals("ramr")) {
+          checkFileName = thisRec.getRamr().getLastFileName();
+        } else if (graphString.equals("cgmr")) {
+          checkFileName = thisRec.getCgmr().getLastFileName();
+        } else if (graphString.equals("cramr")) {
+          checkFileName = thisRec.getCramr().getLastFileName();
+        }
+      }
+
+      //Build the html graph combo box
+      graphTypeSelect.setSelectName("whichGraph");
+      graphTypeSelect.setJsEvent("onChange=\"document.forms[0].submit();\"");
+      graphTypeSelect.addItem("gmr", "Gross Monthly Revenue");
+      graphTypeSelect.addItem("ramr", "Risk Adjusted Monthly Revenue");
+      graphTypeSelect.addItem("cgmr", "Commission Gross Monthly Revenue");
+      graphTypeSelect.addItem("cramr", "Commission Risk Adj. Monthly Revenue");
+      graphTypeSelect.setDefaultKey(graphString);
 
       //Generate the opportunities pagedList for the idToUse, right of graph
       PagedListInfo dashboardListInfo = this.getPagedListInfo(context, "DashboardListInfo");
       dashboardListInfo.setLink("Leads.do?command=Dashboard");
       dashboardListInfo.setColumnToSortBy("x.description");
-      OpportunityList oppList = new OpportunityList();
-      oppList.setPagedListInfo(dashboardListInfo);
-      oppList.setOwner(idToUse);
-      oppList.setBuildComponentInfo(true);
-      oppList.buildList(db);
-      context.getRequest().setAttribute("OppList", oppList);
+      OpportunityHeaderList headerList = new OpportunityHeaderList();
+      headerList.setPagedListInfo(dashboardListInfo);
+      headerList.setOwner(idToUse);
+      headerList.setBuildTotalValues(true);
+      headerList.buildList(db);
+      context.getRequest().setAttribute("oppList", headerList);
 
       //FullChildList is the complete user hierarchy for the selected user and
       //is needed for the graph
@@ -601,8 +622,8 @@ public final class Leads extends CFSModule {
       OpportunityList tempOppList = new OpportunityList();
       Iterator z = realFullOppList.iterator();
       while (z.hasNext()) {
-        Opportunity tempOpp = (Opportunity) (z.next());
-        if (tempOpp.getOwner() == idToUse) {
+        OpportunityBean tempOpp = (OpportunityBean) (z.next());
+        if (tempOpp.getComponent().getOwner() == idToUse) {
           tempOppList.add(tempOpp);
         }
       }
@@ -700,6 +721,10 @@ public final class Leads extends CFSModule {
       return ("PermissionError");
     }
 
+    //get viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
     boolean recordDeleted = false;
     OpportunityHeader newOpp = null;
@@ -708,6 +733,10 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       newOpp = new OpportunityHeader(db, context.getRequest().getParameter("id"));
+      if (!hasViewpointAuthority(db, context, "pipeline", newOpp.getEnteredBy(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
       recordDeleted = newOpp.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
@@ -739,25 +768,31 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDeleteComponent(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
+    if (!hasPermission(context, "pipeline-opportunities-delete")) {
       return ("PermissionError");
     }
-
+    
+    //Get viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
     boolean recordDeleted = false;
     OpportunityComponent component = null;
     Connection db = null;
-
     try {
       db = this.getConnection(context);
       component = new OpportunityComponent(db, context.getRequest().getParameter("id"));
+      if (!hasViewpointAuthority(db, context, "pipeline", component.getEnteredBy(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
       recordDeleted = component.delete(db, context, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (recordDeleted) {
         deleteRecentItem(context, component);
@@ -767,7 +802,7 @@ public final class Leads extends CFSModule {
             return ("ComponentDeleteOK");
           }
         }
-        context.getRequest().setAttribute("refreshUrl", "Leads.do?command=DetailsOpp&oppId=" + component.getOppId());
+        context.getRequest().setAttribute("refreshUrl", "Leads.do?command=DetailsOpp&headerId=" + component.getHeaderId());
         return ("ComponentDeleteOK");
       } else {
         processErrors(context, component.getErrors());
@@ -787,20 +822,15 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfirmComponentDelete(ActionContext context) {
-    Exception errorMessage = null;
-    Connection db = null;
-    OpportunityComponent thisComponent = null;
-    HtmlDialog htmlDialog = new HtmlDialog();
-    String id = null;
-
-    if (!(hasPermission(context, "pipeline-opportunities-delete"))) {
+    if (!hasPermission(context, "pipeline-opportunities-delete")) {
       return ("PermissionError");
     }
-
-    if (context.getRequest().getParameter("oppId") != null) {
-      id = context.getRequest().getParameter("oppId");
-    }
-
+    Exception errorMessage = null;
+    OpportunityComponent thisComponent = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = context.getRequest().getParameter("id");
+    
+    Connection db = null;
     try {
       db = this.getConnection(context);
       thisComponent = new OpportunityComponent(db, id);
@@ -830,26 +860,27 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModifyComponent(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+    if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
-
+    
+    //Get viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
     Connection db = null;
     OpportunityComponent component = null;
     addModuleBean(context, "View Opportunities", "Opportunities");
 
-    String passedId = context.getRequest().getParameter("id");
-    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
-
-    //this is how we get the multiple-level heirarchy...recursive function.
-
-    User thisRec = thisUser.getUserRecord();
-
+    String componentId = context.getRequest().getParameter("id");
+    
+    
+    User thisRec = this.getUser(context, userId);
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
-    userList.setMyId(getUserId(context));
-    userList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+    userList.setMyId(userId);
+    userList.setMyValue(thisRec.getContact().getNameLast() + ", " + thisRec.getContact().getNameFirst());
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
@@ -857,19 +888,17 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       buildFormElements(db, context);
-      component = new OpportunityComponent(db, passedId);
+      component = new OpportunityComponent(db, componentId);
+      if (!hasViewpointAuthority(db, context, "pipeline", component.getOwner(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-
-      if (!hasAuthority(context, component.getOwner())) {
-        return ("PermissionError");
-      }
-
       context.getRequest().setAttribute("LeadsComponentDetails", component);
       addRecentItem(context, component);
       if (context.getRequest().getParameter("popup") != null) {
@@ -891,38 +920,25 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandModifyOpp(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+    if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
-
+    
     Exception errorMessage = null;
-    int oppId = -1;
     addModuleBean(context, "View Opportunities", "Modify Opportunity");
-
-    if (context.getRequest().getParameter("oppId") != null) {
-      oppId = Integer.parseInt(context.getRequest().getParameter("oppId"));
-    } else if (context.getRequest().getParameter("id") != null) {
-      oppId = Integer.parseInt(context.getRequest().getParameter("id"));
-    }
-
+    int headerId = Integer.parseInt(context.getRequest().getParameter("headerId"));
     Connection db = null;
     OpportunityHeader thisHeader = null;
-
     try {
       db = this.getConnection(context);
-
       thisHeader = new OpportunityHeader();
       thisHeader.setBuildComponentCount(true);
-      thisHeader.queryRecord(db, oppId);
-
-      //check whether or not the owner is an active User
-      //thisHeader.checkEnabledOwnerAccount(db);
+      thisHeader.queryRecord(db, headerId);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       context.getRequest().setAttribute("HeaderDetails", thisHeader);
       addRecentItem(context, thisHeader);
@@ -944,38 +960,40 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("OpportunityListInfo");
     }
     PagedListInfo oppListInfo = this.getPagedListInfo(context, "OpportunityListInfo");
     oppListInfo.setLink("Leads.do?command=ViewOpp");
-
+    
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int vpUserId = viewpointInfo.getVpUserId(this.getUserId(context));
+    int userId = this.getUserId(context);
+    if(vpUserId != -1 && vpUserId != userId){
+      userId = vpUserId;
+    }
     Connection db = null;
     OpportunityList oppList = new OpportunityList();
-
     try {
+      
       db = this.getConnection(context);
-
       LookupList typeSelect = new LookupList(db, "lookup_opportunity_types");
       typeSelect.addItem(0, "All Types");
       context.getRequest().setAttribute("TypeSelect", typeSelect);
 
       oppList.setPagedListInfo(oppListInfo);
       oppListInfo.setSearchCriteria(oppList);
-
       if ("all".equals(oppListInfo.getListView())) {
-        oppList.setOwnerIdRange(this.getUserRange(context));
+        oppList.setOwnerIdRange(this.getUserRange(context, userId));
         oppList.setQueryOpenOnly(true);
       } else if ("closed".equals(oppListInfo.getListView())) {
-        oppList.setOwnerIdRange(this.getUserRange(context));
+        oppList.setOwnerIdRange(this.getUserRange(context, userId));
         oppList.setQueryClosedOnly(true);
       } else {
-        oppList.setOwner(this.getUserId(context));
+        oppList.setOwner(userId);
         oppList.setQueryOpenOnly(true);
       }
-
       oppList.setTypeId(oppListInfo.getFilterKey("listFilter1"));
       oppList.buildList(db);
     } catch (Exception e) {
@@ -1020,6 +1038,11 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-reports-delete")) {
       return ("PermissionError");
     }
+    
+    //Get viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -1033,7 +1056,10 @@ public final class Leads extends CFSModule {
       //-1 is the project ID for non-projects
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
 
-      if (thisItem.getEnteredBy() == this.getUserId(context)) {
+      if (!hasViewpointAuthority(db, context, "pipeline", thisItem.getEnteredBy(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
         recordDeleted = thisItem.delete(db, this.getPath(context, "lead-reports"));
 
         String filePath1 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
@@ -1047,7 +1073,7 @@ public final class Leads extends CFSModule {
         if (!fileToDelete2.delete()) {
           System.err.println("FileItem-> Tried to delete file: " + filePath2);
         }
-      }
+      
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1177,7 +1203,6 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-reports-add")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordInserted = false;
     Connection db = null;
@@ -1239,6 +1264,11 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-reports-view")) {
       return ("PermissionError");
     }
+    
+    //Get viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
     Connection db = null;
 
@@ -1254,9 +1284,9 @@ public final class Leads extends CFSModule {
       files.setPagedListInfo(rptListInfo);
 
       if ("all".equals(rptListInfo.getListView())) {
-        files.setOwnerIdRange(this.getUserRange(context));
+        files.setOwnerIdRange(this.getUserRange(context, userId));
       } else {
-        files.setOwner(this.getUserId(context));
+        files.setOwner(userId);
       }
 
       files.buildList(db);
@@ -1298,24 +1328,30 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
-
+    
+    //Get viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
-    OpportunityHeader oppHeader = null;
-    String oppId = null;
-
-    if (context.getRequest().getParameter("oppId") != null) {
-      oppId = context.getRequest().getParameter("oppId");
-    }
+    String headerId = context.getRequest().getParameter("headerId");
 
     try {
       db = this.getConnection(context);
-      oppHeader = new OpportunityHeader(db, oppId);
+      OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
+      if (!hasViewpointAuthority(db, context, "pipeline", oppHeader.getEnteredBy(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
       oppHeader.setModifiedBy(getUserId(context));
       oppHeader.setDescription(context.getRequest().getParameter("description"));
       resultCount = oppHeader.update(db);
-    } catch (SQLException e) {
+      if (resultCount == -1) {
+        processErrors(context, oppHeader.getErrors());
+      }
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
@@ -1323,7 +1359,6 @@ public final class Leads extends CFSModule {
 
     if (errorMessage == null) {
       if (resultCount == -1) {
-        processErrors(context, oppHeader.getErrors());
         return executeCommandModifyOpp(context);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
@@ -1352,31 +1387,31 @@ public final class Leads extends CFSModule {
     if (!hasPermission(context, "pipeline-opportunities-view")) {
       return ("PermissionError");
     }
-
+    
+    //Get viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
     addModuleBean(context, "View Opportunities", "Component Details");
-
     String componentId = context.getRequest().getParameter("id");
-
-    Connection db = null;
     OpportunityComponent thisComponent = null;
 
+    Connection db = null;
     try {
       db = this.getConnection(context);
       thisComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
+      if (!hasViewpointAuthority(db, context, "pipeline", thisComponent.getOwner(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
       thisComponent.checkEnabledOwnerAccount(db);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-
-      if (!hasAuthority(context, thisComponent.getOwner())) {
-        return ("PermissionError");
-      }
-
       context.getRequest().setAttribute("LeadsComponentDetails", thisComponent);
       addRecentItem(context, thisComponent);
       return ("DetailsComponentOK");
@@ -1441,12 +1476,12 @@ public final class Leads extends CFSModule {
 
           Iterator oppIterator = oppList.iterator();
           while (oppIterator.hasNext()) {
-            Opportunity tempOpp = (Opportunity) oppIterator.next();
-            if (tempOpp.getOwner() == pertainsTo.getId()) {
-              myDate = tempOpp.getCloseDate();
+            OpportunityBean tempOpp = (OpportunityBean) oppIterator.next();
+            if (tempOpp.getComponent().getOwner() == pertainsTo.getId()) {
+              myDate = tempOpp.getComponent().getCloseDate();
               readDate.setTime(myDate);
               readDateAdjusted.setTime(myDate);
-              readDateAdjusted.add(java.util.Calendar.MONTH, +(int) (java.lang.Math.round(tempOpp.getTerms())));
+              readDateAdjusted.add(java.util.Calendar.MONTH, +(int) (java.lang.Math.round(tempOpp.getComponent().getTerms())));
               passedDay = readDate.get(Calendar.DATE);
               passedYear = readDate.get(Calendar.YEAR);
               passedMonth = readDate.get(Calendar.MONTH);
@@ -1466,10 +1501,10 @@ public final class Leads extends CFSModule {
               valKey = String.valueOf(roundedYear) + String.valueOf(roundedMonth);
 
               //get the individual graph values
-              gmrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()));
-              ramrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb());
-              cgmrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCommission());
-              cramrAddTerm = new Double(((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb() * tempOpp.getCommission()));
+              gmrAddTerm = new Double((tempOpp.getComponent().getGuess() / tempOpp.getComponent().getTerms()));
+              ramrAddTerm = new Double((tempOpp.getComponent().getGuess() / tempOpp.getComponent().getTerms()) * tempOpp.getComponent().getCloseProb());
+              cgmrAddTerm = new Double((tempOpp.getComponent().getGuess() / tempOpp.getComponent().getTerms()) * tempOpp.getComponent().getCommission());
+              cramrAddTerm = new Double(((tempOpp.getComponent().getGuess() / tempOpp.getComponent().getTerms()) * tempOpp.getComponent().getCloseProb() * tempOpp.getComponent().getCommission()));
 
               //case: close date within 0-6m range
               if (((rightNow.before(readDate) || rightNowAdjusted.before(readDate)) && twelveMonths.after(readDate)) || rightNow.equals(readDate) || twelveMonths.equals(readDate)) {
@@ -1481,8 +1516,8 @@ public final class Leads extends CFSModule {
               }
 
               //more terms
-              if ((java.lang.Math.round(tempOpp.getTerms())) > 1) {
-                for (x = 1; x < (java.lang.Math.round(tempOpp.getTerms())); x++) {
+              if ((java.lang.Math.round(tempOpp.getComponent().getTerms())) > 1) {
+                for (x = 1; x < (java.lang.Math.round(tempOpp.getComponent().getTerms())); x++) {
                   readDate.add(java.util.Calendar.MONTH, +1);
                   if (((rightNow.before(readDate) || rightNowAdjusted.before(readDate)) && twelveMonths.after(readDate)) || rightNow.equals(readDate) || twelveMonths.equals(readDate)) {
                     valKey = String.valueOf(readDate.get(java.util.Calendar.YEAR)) +
@@ -1624,27 +1659,38 @@ public final class Leads extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdateComponent(ActionContext context) {
-    if (!(hasPermission(context, "pipeline-opportunities-edit"))) {
+    if (!hasPermission(context, "pipeline-opportunities-edit")) {
       return ("PermissionError");
     }
-    addModuleBean(context, "View Opportunities", "Update Opportunity Component");
+    
+    //Get Viewpoints if any
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
+    
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     OpportunityHeader header = null;
-
+    String componentId = context.getRequest().getParameter("id");
+    
     OpportunityComponent component = (OpportunityComponent) context.getFormBean();
     component.setTypeList(context.getRequest().getParameterValues("selectedList"));
+    
 
     try {
       db = this.getConnection(context);
+      OpportunityComponent oldComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
+      if (!hasViewpointAuthority(db, context, "pipeline", oldComponent.getOwner(), userId)) {
+        this.freeConnection(context, db);
+        return "PermissionError";
+      }
+      
       component.setModifiedBy(getUserId(context));
       resultCount = component.update(db, context);
-
       if (resultCount == 1) {
         component.queryRecord(db, component.getId());
-        context.getRequest().setAttribute("OppComponentDetails", component);
       }
+      context.getRequest().setAttribute("OppComponentDetails", component);
       if (resultCount == -1) {
         UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
         User thisRec = thisUser.getUserRecord();
@@ -1657,7 +1703,7 @@ public final class Leads extends CFSModule {
         context.getRequest().setAttribute("UserList", userList);
         buildFormElements(db, context);
       }
-    } catch (SQLException e) {
+    } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
@@ -1668,9 +1714,9 @@ public final class Leads extends CFSModule {
         processErrors(context, component.getErrors());
         return "ComponentModifyOK";
       } else if (resultCount == 1) {
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+        if ("list".equals(context.getRequest().getParameter("return"))) {
           return (executeCommandViewOpp(context));
-        } else if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("details")) {
+        } else if ("details".equals(context.getRequest().getParameter("return"))) {
           return (executeCommandDetailsOpp(context));
         } else if (context.getRequest().getParameter("popup") != null) {
           return "PopupCloseOK";
