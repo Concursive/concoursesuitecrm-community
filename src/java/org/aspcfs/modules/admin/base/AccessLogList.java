@@ -58,9 +58,6 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     ResultSet rs = null;
     int items = -1;
 
-    TicketLog prevTicketLog = null;
-    boolean systemResult = true;
-
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();

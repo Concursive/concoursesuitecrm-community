@@ -104,7 +104,7 @@ public void setBrowser(String tmp) { this.browser = tmp; }
       db.setAutoCommit(false);
 
       sql.append(
-          "INSERT INTO TICKETLOG (user_id, username, ip, browser) " +
+          "INSERT INTO access_log (user_id, username, ip, browser) " +
           "VALUES ( ?, ?, ?, ? ) ");
 
       int i = 0;
