@@ -10,7 +10,7 @@
 Message Details<br>
 <hr color="#BFBFBB" noshade>
 <input type="button" name="btn" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
-<input type="button" name="btn" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%=NoteDetails.getId()%>&return=MyCFSInbox.do?command=Inbox&sendUrl=MyCFSInbox.do?command=SendMessage'">
+<input type="button" name="btn" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%=NoteDetails.getId()%>'">
 <dhv:evaluate if="<%= !InboxInfo.getListView().equalsIgnoreCase("sent") %>">
   <input type="button" name="btn" value="<%= (NoteDetails.getStatus() != 2?"Archive":"Send to Inbox") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
 </dhv:evaluate>

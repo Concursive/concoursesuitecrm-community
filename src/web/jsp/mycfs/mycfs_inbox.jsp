@@ -8,7 +8,7 @@
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 My Mailbox<br>
 <hr color="#BFBFBB" noshade>
-<a href="javascript:window.location.href='MyCFSInbox.do?command=NewMessage&sendUrl='+escape('MyCFSInbox.do?command=SendMessage')+'&return='+escape('MyCFSInbox.do?command=Inbox');">New Message</a>
+<a href="javascript:window.location.href='MyCFSInbox.do?command=NewMessage';">New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
@@ -69,7 +69,7 @@ My Mailbox<br>
 %>      
   <tr>
     <td valign="center" nowrap class="row<%= rowid %>">
-      <a href='javascript:window.location.href="MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%= thisNote.getId() %>&sendUrl="+escape("MyCFSInbox.do?command=SendMessage")+"&return="+escape("MyCFSInbox.do?command=Inbox");'>Fwd</a>|<a href="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
+      <a href='javascript:window.location.href="MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%= thisNote.getId() %>"'>Fwd</a>|<a href="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
     </td>
   <% if (InboxInfo.getListView().equalsIgnoreCase("new")){ %>
 		<td valign="center" nowrap class="row<%= rowid %>">

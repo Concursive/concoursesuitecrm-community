@@ -241,3 +241,4 @@
     </td>
   </tr>
 </table>
+<%= addHiddenParams(request, "popup|popupType|actionId") %>
