@@ -103,7 +103,6 @@ public class RevenueList extends Vector {
       sqlOrder.append("ORDER BY r.year desc,r.month desc ");
     }
 
-    //System.out.println(sqlOrder.toString());
 
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -124,7 +123,6 @@ public class RevenueList extends Vector {
         "WHERE r.id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    //System.out.println(pst.toString());
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
