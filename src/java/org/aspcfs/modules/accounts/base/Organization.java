@@ -644,6 +644,10 @@ public void setYTD(double YTD) {
   public void setMiner_only(boolean tmp) {
     this.miner_only = tmp;
   }
+  
+  public void setMiner_only(String tmp) {
+    this.miner_only = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+  }
 
 
   /**

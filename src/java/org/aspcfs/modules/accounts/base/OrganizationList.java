@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -20,18 +20,18 @@ import com.darkhorseventures.utils.ObjectUtils;
  *      Exp $
  */
 public class OrganizationList extends Vector {
-	
-  public static final int TRUE = 1;
-  public static final int FALSE = 0;
+
+  public final static int TRUE = 1;
+  public final static int FALSE = 0;
   private int includeEnabled = 1;
 
-  public static final String tableName = "organization";
-  public static final String uniqueField = "org_id";
+  public final static String tableName = "organization";
+  public final static String uniqueField = "org_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private PagedListInfo pagedListInfo = null;
-  
+
   private Boolean minerOnly = null;
   private int enteredBy = -1;
   private String name = null;
@@ -42,11 +42,12 @@ public class OrganizationList extends Vector {
   private boolean hasAlertDate = false;
   private boolean hasExpireDate = false;
   private String accountNumber = null;
-  
+
   private int revenueType = 0;
   private int revenueYear = -1;
   private int revenueOwnerId = -1;
   private boolean buildRevenueYTD = false;
+
 
   /**
    *  Constructor for the OrganizationList object, creates an empty list. After
@@ -56,29 +57,66 @@ public class OrganizationList extends Vector {
    */
   public OrganizationList() { }
 
+
+  /**
+   *  Sets the lastAnchor attribute of the OrganizationList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
   }
-  
+
+
+  /**
+   *  Sets the lastAnchor attribute of the OrganizationList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
   }
-  
+
+
+  /**
+   *  Sets the nextAnchor attribute of the OrganizationList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
   }
-  
+
+
+  /**
+   *  Sets the nextAnchor attribute of the OrganizationList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
   }
-  
+
+
+  /**
+   *  Sets the syncType attribute of the OrganizationList object
+   *
+   *@param  tmp  The new syncType value
+   */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
   }
-  
+
+
+  /**
+   *  Sets the syncType attribute of the OrganizationList object
+   *
+   *@param  tmp  The new syncType value
+   */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
   }
+
 
   /**
    *  Sets the PagedListInfo attribute of the OrganizationList object. <p>
@@ -91,7 +129,8 @@ public class OrganizationList extends Vector {
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
-  
+
+
   /**
    *  Sets the MinerOnly attribute of the OrganizationList object to limit the
    *  results to miner only, or non-miner only.
@@ -102,17 +141,67 @@ public class OrganizationList extends Vector {
   public void setMinerOnly(boolean tmp) {
     this.minerOnly = new Boolean(tmp);
   }
-public void setRevenueType(int tmp) { this.revenueType = tmp; }
-public void setRevenueYear(int tmp) { this.revenueYear = tmp; }
-public int getRevenueType() { return revenueType; }
-public int getRevenueYear() { return revenueYear; }
 
-public int getIncludeEnabled() {
-	return includeEnabled;
-}
-public void setIncludeEnabled(int includeEnabled) {
-	this.includeEnabled = includeEnabled;
-}
+
+  /**
+   *  Sets the revenueType attribute of the OrganizationList object
+   *
+   *@param  tmp  The new revenueType value
+   */
+  public void setRevenueType(int tmp) {
+    this.revenueType = tmp;
+  }
+
+
+  /**
+   *  Sets the revenueYear attribute of the OrganizationList object
+   *
+   *@param  tmp  The new revenueYear value
+   */
+  public void setRevenueYear(int tmp) {
+    this.revenueYear = tmp;
+  }
+
+
+  /**
+   *  Gets the revenueType attribute of the OrganizationList object
+   *
+   *@return    The revenueType value
+   */
+  public int getRevenueType() {
+    return revenueType;
+  }
+
+
+  /**
+   *  Gets the revenueYear attribute of the OrganizationList object
+   *
+   *@return    The revenueYear value
+   */
+  public int getRevenueYear() {
+    return revenueYear;
+  }
+
+
+  /**
+   *  Gets the includeEnabled attribute of the OrganizationList object
+   *
+   *@return    The includeEnabled value
+   */
+  public int getIncludeEnabled() {
+    return includeEnabled;
+  }
+
+
+  /**
+   *  Sets the includeEnabled attribute of the OrganizationList object
+   *
+   *@param  includeEnabled  The new includeEnabled value
+   */
+  public void setIncludeEnabled(int includeEnabled) {
+    this.includeEnabled = includeEnabled;
+  }
+
 
   /**
    *  Sets the ShowMyCompany attribute of the OrganizationList object
@@ -143,12 +232,26 @@ public void setIncludeEnabled(int includeEnabled) {
     this.HtmlJsEvent = HtmlJsEvent;
   }
 
-public String getAccountNumber() {
-	return accountNumber;
-}
-public void setAccountNumber(String accountNumber) {
-	this.accountNumber = accountNumber;
-}
+
+  /**
+   *  Gets the accountNumber attribute of the OrganizationList object
+   *
+   *@return    The accountNumber value
+   */
+  public String getAccountNumber() {
+    return accountNumber;
+  }
+
+
+  /**
+   *  Sets the accountNumber attribute of the OrganizationList object
+   *
+   *@param  accountNumber  The new accountNumber value
+   */
+  public void setAccountNumber(String accountNumber) {
+    this.accountNumber = accountNumber;
+  }
+
 
   /**
    *  Sets the EnteredBy attribute of the OrganizationList object to limit
@@ -160,13 +263,26 @@ public void setAccountNumber(String accountNumber) {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-  
-public boolean getBuildRevenueYTD() {
-	return buildRevenueYTD;
-}
-public void setBuildRevenueYTD(boolean buildRevenueYTD) {
-	this.buildRevenueYTD = buildRevenueYTD;
-}
+
+
+  /**
+   *  Gets the buildRevenueYTD attribute of the OrganizationList object
+   *
+   *@return    The buildRevenueYTD value
+   */
+  public boolean getBuildRevenueYTD() {
+    return buildRevenueYTD;
+  }
+
+
+  /**
+   *  Sets the buildRevenueYTD attribute of the OrganizationList object
+   *
+   *@param  buildRevenueYTD  The new buildRevenueYTD value
+   */
+  public void setBuildRevenueYTD(boolean buildRevenueYTD) {
+    this.buildRevenueYTD = buildRevenueYTD;
+  }
 
 
   /**
@@ -190,13 +306,26 @@ public void setBuildRevenueYTD(boolean buildRevenueYTD) {
   public void setName(String tmp) {
     this.name = tmp;
   }
-  
-public int getRevenueOwnerId() {
-	return revenueOwnerId;
-}
-public void setRevenueOwnerId(int revenueOwnerId) {
-	this.revenueOwnerId = revenueOwnerId;
-}
+
+
+  /**
+   *  Gets the revenueOwnerId attribute of the OrganizationList object
+   *
+   *@return    The revenueOwnerId value
+   */
+  public int getRevenueOwnerId() {
+    return revenueOwnerId;
+  }
+
+
+  /**
+   *  Sets the revenueOwnerId attribute of the OrganizationList object
+   *
+   *@param  revenueOwnerId  The new revenueOwnerId value
+   */
+  public void setRevenueOwnerId(int revenueOwnerId) {
+    this.revenueOwnerId = revenueOwnerId;
+  }
 
 
   /**
@@ -218,13 +347,26 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     this.ownerId = ownerId;
   }
 
+
+  /**
+   *  Gets the tableName attribute of the OrganizationList object
+   *
+   *@return    The tableName value
+   */
   public String getTableName() {
     return tableName;
   }
-  
+
+
+  /**
+   *  Gets the uniqueField attribute of the OrganizationList object
+   *
+   *@return    The uniqueField value
+   */
   public String getUniqueField() {
     return uniqueField;
   }
+
 
   /**
    *  Gets the hasAlertDate attribute of the OrganizationList object
@@ -350,9 +492,17 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     return orgListSelect.getHtml(selectName);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void select(Connection db) throws SQLException {
     buildList(db);
   }
+
 
   /**
    *  Queries the database, using any of the filters, to retrieve a list of
@@ -372,13 +522,13 @@ public void setRevenueOwnerId(int revenueOwnerId) {
       }
       Organization thisOrganization = this.getObject(rs);
       if (buildRevenueYTD && revenueYear > -1 && revenueOwnerId > -1) {
-	      thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType(), this.getRevenueOwnerId());
-	      
-	      if (thisOrganization.getYTD() > 0) {
-		      this.add(thisOrganization);
-	      }
+        thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType(), this.getRevenueOwnerId());
+
+        if (thisOrganization.getYTD() > 0) {
+          this.add(thisOrganization);
+        }
       } else {
-	      this.add(thisOrganization);
+        this.add(thisOrganization);
       }
     }
     rs.close();
@@ -387,12 +537,29 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     }
     buildResources(db);
   }
-  
+
+
+  /**
+   *  Gets the object attribute of the OrganizationList object
+   *
+   *@param  rs                Description of the Parameter
+   *@return                   The object value
+   *@exception  SQLException  Description of the Exception
+   */
   public Organization getObject(ResultSet rs) throws SQLException {
     Organization thisOrganization = new Organization(rs);
     return thisOrganization;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
     int items = -1;
@@ -467,7 +634,7 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
@@ -510,11 +677,11 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     if (ownerIdRange != null) {
       sqlFilter.append("AND o.owner IN (" + ownerIdRange + ") ");
     }
-    
+
     if (includeEnabled == TRUE || includeEnabled == FALSE) {
       sqlFilter.append("AND o.enabled = ? ");
     }
-    
+
     if (showMyCompany == false) {
       sqlFilter.append("AND o.org_id != 0 ");
     }
@@ -526,7 +693,7 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     if (hasExpireDate == true) {
       sqlFilter.append("AND o.contract_end is not null ");
     }
-    
+
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         sqlFilter.append("AND o.entered > ? ");
@@ -538,11 +705,11 @@ public void setRevenueOwnerId(int revenueOwnerId) {
       sqlFilter.append("AND o.entered < ? ");
       sqlFilter.append("AND o.modified < ? ");
     }
-        
+
     if (revenueOwnerId > -1) {
       sqlFilter.append("AND o.org_id in (SELECT org_id from revenue WHERE owner = ?) ");
     }
-    
+
     if (accountNumber != null) {
       if (accountNumber.indexOf("%") >= 0) {
         sqlFilter.append("AND lower(o.account_number) like lower(?) ");
@@ -597,13 +764,13 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     if (ownerId > -1) {
       pst.setInt(++i, ownerId);
     }
-    
+
     if (includeEnabled == TRUE) {
       pst.setBoolean(++i, true);
     } else if (includeEnabled == FALSE) {
       pst.setBoolean(++i, false);
     }
-    
+
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
         pst.setTimestamp(++i, lastAnchor);
@@ -619,11 +786,11 @@ public void setRevenueOwnerId(int revenueOwnerId) {
     if (revenueOwnerId > -1) {
       pst.setInt(++i, revenueOwnerId);
     }
-    
+
     if (accountNumber != null) {
       pst.setString(++i, accountNumber);
     }
-    
+
     return i;
   }
 

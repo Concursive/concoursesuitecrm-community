@@ -16,7 +16,10 @@ import org.w3c.dom.*;
  *  CFS Objects must have the following:<br>
  *  - A method called: insert(Connection db)<br>
  *  - A constructor like: new Object(Connection db, int id)<br>
- *  - A modified field with a getModified() method
+ *  - A modified field with a getModified() method<p>
+ *
+ *  CFS List Objects must have the following fields:<br>
+ *  - tableName, uniqueField, lastAnchor, nextAnchor, syncType, pagedListInfo
  *
  *@author     matt rajkowski
  *@created    September 3, 2002
@@ -265,6 +268,7 @@ public class CFSDatabaseReader implements DataReader {
       }
     } catch (Exception ex) {
       logger.info(ex.toString());
+      logger.info(writer.getLastResponse());
     } finally {
       sqlDriver.free(db);
       sqlDriver.destroy();

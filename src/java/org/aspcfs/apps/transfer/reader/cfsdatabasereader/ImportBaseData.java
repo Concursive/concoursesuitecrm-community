@@ -30,17 +30,26 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     this.writer = writer; 
     this.mappings = mappings;
     
-    //Loop through created items until complete, in the following order
+    //Copy Users
+    logger.info("ImportBaseData-> Inserting users");
     UserList userList = new UserList();
     User baseUser = new User(db, "0");
     userList.add(baseUser);
-    
-    logger.info("BaseDataImport-> Processing 1st user: " + baseUser.getUsername());
-    
     writer.setAutoCommit(false);
     this.saveUserList(db, userList);
     writer.commit();
+    userList = null;
+    baseUser = null;
 
+    //Copy Accounts
+    logger.info("ImportBaseData-> Inserting accounts");
+    writer.setAutoCommit(false);
+    OrganizationList accounts = new OrganizationList();
+    accounts.buildList(db);
+    mappings.saveList(writer, accounts, "insert");
+    writer.commit();
+    
+    //Copy Contacts
     
     //Save this user's role first
     //Get all accounts user entered
@@ -52,18 +61,23 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     return true;
   }
   
-  private void saveUserList(Connection db, UserList userList) {
+  private void saveUserList(Connection db, UserList userList) throws SQLException{
     Iterator users = userList.iterator();
     while (users.hasNext()) {
       User thisUser = (User)users.next();
       DataRecord thisRecord = mappings.createDataRecord(thisUser, "insert");
-      /* thisRecord.removeField("contactId");
+      thisRecord.removeField("enteredBy");
+      thisRecord.removeField("contactId");
       thisRecord.removeField("roleId");
       thisRecord.removeField("managerId");
       thisRecord.removeField("assistant");
-      thisRecord.removeField("alias"); */
+      thisRecord.removeField("alias"); 
       writer.save(thisRecord);
-      //TODO:saveUserList(db, 
+      
+      UserList newUserList = new UserList();
+      newUserList.setEnteredBy(thisUser.getId());
+      newUserList.buildList(db);
+      saveUserList(db, newUserList);
     }
   }
 }

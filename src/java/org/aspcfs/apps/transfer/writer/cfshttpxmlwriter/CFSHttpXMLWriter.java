@@ -192,7 +192,6 @@ public class CFSHttpXMLWriter implements DataWriter {
     this.save(clientRecord);
     
     try {
-      logger.info(lastResponse);
       XMLUtils responseXML = new XMLUtils(lastResponse, true);
       clientId = Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstElement("id")));
       logger.info("CFSHttpXMLWriter-> Client ID: " + clientId);
@@ -211,7 +210,6 @@ public class CFSHttpXMLWriter implements DataWriter {
    *@return       Description of the Return Value
    */
   public boolean save(DataRecord record) {
-    logger.info("Writer adding record to transaction: " + record.getName());
     transaction.add(record);
     if (autoCommit) {
       return commit();

@@ -1,7 +1,6 @@
 package com.darkhorseventures.apps.dataimport.cfsdatabasereader;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import com.darkhorseventures.apps.dataimport.*;
 import com.darkhorseventures.utils.*;
 import java.util.logging.*;
@@ -25,6 +24,15 @@ public class PropertyMapList extends HashMap {
     } else {
       logger.info("PropertyMapList-> Object mapping not found");
       return null;
+    }
+  }
+  
+  public void saveList(DataWriter writer, AbstractList list, String action) {
+    Iterator i = list.iterator();
+    while (i.hasNext()) {
+      Object object = i.next();
+      DataRecord thisRecord = createDataRecord(object, action);
+      writer.save(thisRecord);
     }
   }
 }

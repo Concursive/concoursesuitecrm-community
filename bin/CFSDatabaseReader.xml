@@ -5,7 +5,7 @@
     <!-- Users, Accounts, Contacts and ownership -->
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportBaseData</module>
     <!-- Related Data -->
-<!--    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunities</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunities</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunityReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportAccountReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRevenue</module>
@@ -14,12 +14,11 @@
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportDocuments</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
- -->
   </processes>
   <mappings>
     <map class="com.darkhorseventures.cfsbase.Contact" id="contact">
-      <property>id</property>
-      <property lookup="">orgId</property>
+      <property>guid</property>
+      <property lookup="account">orgId</property>
       <property>title</property>
       <property>department</property>
       <property>nameSalutation</property>
@@ -33,21 +32,21 @@
       <property>locale</property>
       <property>employeeId</property>
       <property lookup="">employmentType</property>
-      <property lookup="">enteredBy</property>
+      <property lookup="user">enteredBy</property>
       <property>enabled</property>
-      <property lookup="">owner</property>
+      <property lookup="user">owner</property>
       <property>custom1</property>
       <property>url</property>
-      <property lookup="">userId</property>
+      <property lookup="user">userId</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Organization" id="account">
-      <property>id</property>
+      <property>guid</property>
       <property>name</property>
       <property>url</property>
       <property>notes</property>
       <property lookup="">industry</property>
       <property>miner_only</property>
-      <property>enteredBy</property>
+      <property lookup="user">enteredBy</property>
       <property>contactEndDate</property>
       <property>alertDate</property>
       <property>alertText</property>
@@ -56,7 +55,7 @@
       <property>revenue</property>
       <property>ticker</property>
       <property>accountNumber</property>
-      <property lookup="">owner</property>
+      <property lookup="user">owner</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.User" id="user">
       <property alias="guid">id</property>
@@ -73,7 +72,7 @@
       <property lookup="user">alias</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Role" id="role">
-      <property>id</property>
+      <property>guid</property>
       <property>role</property>
       <property>description</property>
       <property>enteredBy</property>
