@@ -52,7 +52,7 @@ public final class AccountTicketsDocuments extends CFSModule {
       documents.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
       documents.setLinkItemId(ticketId);
 
-      PagedListInfo docListInfo = this.getPagedListInfo(context, "TicketDocumentListInfo");
+      PagedListInfo docListInfo = this.getPagedListInfo(context, "AccountTicketDocumentListInfo");
       docListInfo.setLink("TroubleTicketsDocuments.do?command=View&tId=" + ticketId + "&orgId=" + orgId);
 
       //TODO: Not implemented in the JSP, so not implemented here
