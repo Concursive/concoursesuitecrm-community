@@ -1,18 +1,20 @@
 package org.aspcfs.utils;
 
 import java.io.*;
+import java.util.*;
 import java.net.*;
 import javax.net.*;
 import javax.net.ssl.*;
+import javax.servlet.http.*;
 import java.security.cert.CertificateFactory;
 import javax.security.cert.*;
 
 /**
  *  Utilities for working with HTTP
  *
- *@author     matt rajkowski
- *@created    August 29, 2002
- *@version    $Id: HTTPUtils.java,v 1.2.20.1 2002/12/06 21:37:00 mrajkowski Exp
+ * @author     matt rajkowski
+ * @created    August 29, 2002
+ * @version    $Id: HTTPUtils.java,v 1.2.20.1 2002/12/06 21:37:00 mrajkowski Exp
  *      $
  */
 public class HTTPUtils {
@@ -21,8 +23,8 @@ public class HTTPUtils {
    *  Generates acceptable default html text when using an input field on an
    *  html form
    *
-   *@param  s  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param  s  Description of the Parameter
+   * @return    Description of the Return Value
    */
   public static String toHtmlValue(String s) {
     if (s != null) {
@@ -46,10 +48,10 @@ public class HTTPUtils {
    *  with web servers.  Use the SSLMessage for secure communication with
    *  a server application.
    *
-   *@param  address                  Description of the Parameter
-   *@param  xmlPacket                Description of the Parameter
-   *@return                          Description of the Return Value
-   *@exception  java.io.IOException  Description of the Exception
+   * @param  address                  Description of the Parameter
+   * @param  xmlPacket                Description of the Parameter
+   * @return                          Description of the Return Value
+   * @exception  java.io.IOException  Description of the Exception
    */
   public static String sendPacket(String address, String xmlPacket) throws java.io.IOException {
     Exception errorMessage = null;
@@ -104,9 +106,9 @@ public class HTTPUtils {
   /**
    *  Returns the text received from a web post
    *
-   *@param  http                     Description of the Parameter
-   *@return                          Description of the Return Value
-   *@exception  java.io.IOException  Description of the Exception
+   * @param  http                     Description of the Parameter
+   * @return                          Description of the Return Value
+   * @exception  java.io.IOException  Description of the Exception
    */
   public static String retrieveHtml(HttpURLConnection http) throws java.io.IOException {
     StringBuffer htmlOutput = new StringBuffer();
@@ -125,9 +127,9 @@ public class HTTPUtils {
    *  Downloads a URL into a postscript file. Currently uses html2ps, but for
    *  Windows compatibility may need to use htmldoc after testing.
    *
-   *@param  url           Description of the Parameter
-   *@param  baseFilename  Description of the Parameter
-   *@return               Description of the Return Value
+   * @param  url           Description of the Parameter
+   * @param  baseFilename  Description of the Parameter
+   * @return               Description of the Return Value
    */
   public static int convertUrlToPostscriptFile(String url, String baseFilename) {
     Process process;
@@ -167,5 +169,24 @@ public class HTTPUtils {
     }
   }
 
+
+  /**
+   *  Adds a feature to the LinkParams attribute of the HTTPUtils class
+   *
+   * @param  request  The feature to be added to the LinkParams attribute
+   * @param  tmp      The feature to be added to the LinkParams attribute
+   * @return          Description of the Return Value
+   */
+  public static String addLinkParams(HttpServletRequest request, String tmp) {
+    String params = "";
+    StringTokenizer tokens = new StringTokenizer(tmp, "|");
+    while (tokens.hasMoreTokens()) {
+      String param = tokens.nextToken();
+      if (request.getParameter(param) != null) {
+        params += ("&" + param + "=" + request.getParameter(param));
+      }
+    }
+    return params;
+  }
 }
 
