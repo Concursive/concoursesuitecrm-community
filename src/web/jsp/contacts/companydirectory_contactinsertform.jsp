@@ -4,9 +4,9 @@
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="StateSelect" class="org.aspcfs.webutils.StateSelect" scope="request"/>
-<jsp:useBean id="CountrySelect" class="org.aspcfs.webutils.CountrySelect" scope="request"/>
-<jsp:useBean id="OrgList" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
+<jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
@@ -49,13 +49,13 @@
     }
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<form name="addContact" action="/ExternalContacts.do?command=InsertContact&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<form name="addContact" action="ExternalContacts.do?command=InsertContact&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
 Add Contact<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
@@ -406,7 +406,7 @@ Add Contact<br>
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=ListContacts';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="saveAndNew" value="">

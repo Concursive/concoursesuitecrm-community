@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
-<jsp:useBean id="OpportunityHeaderList" class="org.aspcfs.modules.OpportunityHeaderList" scope="request"/>
+<jsp:useBean id="OpportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="OpportunityPagedListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>

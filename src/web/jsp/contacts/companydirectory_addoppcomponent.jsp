@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
-<jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.OpportunityHeader" scope="request"/>
-<jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.OpportunityComponent" scope="request"/>
+<jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>

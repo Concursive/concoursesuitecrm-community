@@ -6,9 +6,9 @@
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
-<jsp:useBean id="StateSelect" class="org.aspcfs.webutils.StateSelect" scope="request"/>
-<jsp:useBean id="CountrySelect" class="org.aspcfs.webutils.CountrySelect" scope="request"/>
-<jsp:useBean id="OrgList" class="org.aspcfs.modules.OrganizationList" scope="request"/>
+<jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
+<jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
+<jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>

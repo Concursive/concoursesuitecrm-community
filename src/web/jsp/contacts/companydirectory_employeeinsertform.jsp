@@ -4,8 +4,8 @@
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="StateSelect" class="org.aspcfs.webutils.StateSelect" scope="request"/>
-<jsp:useBean id="CountrySelect" class="org.aspcfs.webutils.CountrySelect" scope="request"/>
+<jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
+<jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
@@ -34,12 +34,12 @@
 </script>
 
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
-<form action='/CompanyDirectory.do?command=InsertEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
-<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<form action='CompanyDirectory.do?command=InsertEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
+<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
 Add Employee<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Save" name="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
@@ -280,7 +280,7 @@ Add Employee<br>
 </table>
 <br>
 <input type="submit" value="Save" name="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 </form>

@@ -1,15 +1,15 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="EmployeeBean" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="details" action="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify" method="post">
-<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
-<a href="/CompanyDirectory.do?command=ListEmployees">View Employees</a> >
+<form name="details" action="CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify" method="post">
+<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
 Employee Details<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify';submit();"></dhv:permission>
-<dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/CompanyDirectory.do?command=DeleteEmployee&empid=<%=EmployeeBean.getId() %>';confirmSubmit(document.details);"></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify';submit();"></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteEmployee&empid=<%=EmployeeBean.getId() %>';confirmSubmit(document.details);"></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -119,7 +119,7 @@ Employee Details<br>
   </tr>
 </table>
 <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br></dhv:permission>
-<dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify';submit();"></dhv:permission>
-<dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/CompanyDirectory.do?command=DeleteEmployee&empid=<%=EmployeeBean.getId() %>';confirmSubmit(document.details);"></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify';submit();"></dhv:permission>
+<dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteEmployee&empid=<%=EmployeeBean.getId() %>';confirmSubmit(document.details);"></dhv:permission>
 </form>
 

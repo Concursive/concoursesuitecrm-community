@@ -1,9 +1,9 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
-<jsp:useBean id="CategoryList" class="org.aspcfs.modules.CustomFieldCategoryList" scope="request"/>
-<jsp:useBean id="Category" class="org.aspcfs.modules.CustomFieldCategory" scope="request"/>
-<jsp:useBean id="Records" class="org.aspcfs.modules.CustomFieldRecordList" scope="request"/>
+<jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
+<jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
+<jsp:useBean id="Records" class="org.aspcfs.modules.base.CustomFieldRecordList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">

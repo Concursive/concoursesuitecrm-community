@@ -1,12 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.StateSelect,org.aspcfs.webutils.CountrySelect" %>
+<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.StateSelect,org.aspcfs.utils.web.CountrySelect" %>
 <jsp:useBean id="EmployeeBean" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="StateSelect" class="org.aspcfs.webutils.StateSelect" scope="request"/>
-<jsp:useBean id="CountrySelect" class="org.aspcfs.webutils.CountrySelect" scope="request"/>
+<jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
+<jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
@@ -42,17 +42,17 @@
     }
 </script>
 
-<form action='/CompanyDirectory.do?command=UpdateEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
+<form action='CompanyDirectory.do?command=UpdateEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
 
-<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<a href="/CompanyDirectory.do?command=ListEmployees">View Employees</a> >
+	<a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
   <%}%>
 <%} else {%>
-<a href="/CompanyDirectory.do?command=ListEmployees">View Employees</a> >
-<a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%=EmployeeBean.getId()%>">Employee Details</a> >
+<a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
+<a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%=EmployeeBean.getId()%>">Employee Details</a> >
 <%}%>
 
 
@@ -62,10 +62,10 @@ Modify Employee<br>
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 	<%}%>
     <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
     <%}%>
     
 <input type="reset" value="Reset">
@@ -334,10 +334,10 @@ Modify Employee<br>
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
     <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=ListEmployees';this.form.dosubmit.value='false';">
 	<%}%>
     <%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
+    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>';this.form.dosubmit.value='false';">
     <%}%>
     <input type="reset" value="Reset">
     <input type="hidden" name="dosubmit" value="true">

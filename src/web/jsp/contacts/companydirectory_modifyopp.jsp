@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.*,org.aspcfs.webutils.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
-<jsp:useBean id="HeaderDetails" class="org.aspcfs.modules.OpportunityHeader" scope="request"/>
+<jsp:useBean id="HeaderDetails" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="modifyOpp" action="ExternalContactsOpps.do?command=UpdateOpp&contactId=<%= ContactDetails.getId() %>&auto-populate=true" method="post">
 <a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
