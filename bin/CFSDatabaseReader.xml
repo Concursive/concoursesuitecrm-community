@@ -632,17 +632,17 @@
       <property field="modified">modified</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="scheduledRecipient" table="scheduled_recipient" uniqueField="id">
-      <property alias="guid" field="id"/>
-      <property lookup="campaign" field="campaign_id"/>
-      <property lookup="contact" field="contact_id"/>
-      <property field="run_id"/>
-      <property field="status_id"/>
-      <property field="status"/>
-      <property field="status_date"/>
-      <property field="scheduled_date"/>
-      <property field="sent_date"/>
-      <property field="reply_date"/>
-      <property field="bounce_date"/>
+      <property alias="guid" field="id">id</property>
+      <property lookup="campaign" field="campaign_id">campaignId</property>
+      <property lookup="contact" field="contact_id">contactId</property>
+      <property field="run_id">runId</property>
+      <property field="status_id">statusId</property>
+      <property field="status">status</property>
+      <property field="status_date">statusDate</property>
+      <property field="scheduled_date">scheduledDate</property>
+      <property field="sent_date">sentDate</property>
+      <property field="reply_date">replyDate</property>
+      <property field="bounce_date">bounceDate</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.AccessLog" id="accessLog">
       <property alias="guid">id</property>

@@ -822,9 +822,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaignList', 'com.darkhorseventures.cfsbase.CampaignList');
  
  INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'scheduledRecipient', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'scheduledRecipient', 'com.darkhorseventures.cfsbase.ScheduledRecipient');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'scheduledRecipientList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'scheduledRecipientList', 'com.darkhorseventures.cfsbase.ScheduledRecipientList');
  
  INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'accessLog', 'com.darkhorseventures.cfsbase.AccessLog');
