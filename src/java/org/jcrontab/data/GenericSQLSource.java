@@ -35,7 +35,7 @@ import org.jcrontab.log.Log;
  *  jboss it's quite easy, should substitute connection logic with particular
  *  one.
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */
@@ -152,9 +152,7 @@ public class GenericSQLSource implements DataSource {
    */
   public CrontabEntryBean[] findAll() throws CrontabEntryException,
       ClassNotFoundException, SQLException, DataNotFoundException {
-
     Vector list = new Vector();
-
     Connection conn = null;
     java.sql.PreparedStatement pst = null;
     java.sql.ResultSet rs = null;
@@ -163,50 +161,46 @@ public class GenericSQLSource implements DataSource {
       pst = conn.prepareStatement(queryAll);
       pst.setBoolean(1, true);
       rs = pst.executeQuery();
-      if (rs != null) {
-        while (rs.next()) {
-          boolean[] bSeconds = new boolean[60];
-          boolean[] bYears = new boolean[10];
-          String second = rs.getString("second");
-          String minute = rs.getString("minute");
-          String hour = rs.getString("hour");
-          String dayofmonth = rs.getString("dayofmonth");
-          String month = rs.getString("month");
-          String dayofweek = rs.getString("dayofweek");
-          String year = rs.getString("year");
-          String task = rs.getString("task");
-          String extrainfo = rs.getString("extrainfo");
-          String line =
-              minute + " " + hour + " " + dayofmonth
-               + " " + month + " "
-               + dayofweek + " " + task + " " + extrainfo;
+      while (rs.next()) {
+        boolean[] bSeconds = new boolean[60];
+        boolean[] bYears = new boolean[10];
+        String second = rs.getString("second");
+        String minute = rs.getString("minute");
+        String hour = rs.getString("hour");
+        String dayofmonth = rs.getString("dayofmonth");
+        String month = rs.getString("month");
+        String dayofweek = rs.getString("dayofweek");
+        String year = rs.getString("year");
+        String task = rs.getString("task");
+        String extrainfo = rs.getString("extrainfo");
+        String line =
+            minute + " " + hour + " " + dayofmonth
+             + " " + month + " "
+             + dayofweek + " " + task + " " + extrainfo;
+        boolean businessDays = rs.getBoolean("businessDays");
 
-          boolean businessDays = rs.getBoolean("businessDays");
+        CrontabEntryBean ceb = cp.marshall(line);
+        cp.parseToken(year, bYears, false);
+        ceb.setBYears(bYears);
+        ceb.setYears(year);
 
-          CrontabEntryBean ceb = cp.marshall(line);
+        cp.parseToken(second, bSeconds, false);
+        ceb.setBSeconds(bSeconds);
+        ceb.setSeconds(second);
+        ceb.setBusinessDays(businessDays);
 
-          cp.parseToken(year, bYears, false);
-          ceb.setBYears(bYears);
-          ceb.setYears(year);
-
-          cp.parseToken(second, bSeconds, false);
-          ceb.setBSeconds(bSeconds);
-          ceb.setSeconds(second);
-          ceb.setBusinessDays(businessDays);
-
-          list.add(ceb);
-        }
-        rs.close();
-      } else {
-        throw new DataNotFoundException(" No CrontabEntries available");
+        list.add(ceb);
       }
+      rs.close();
+      pst.close();
+    } catch (Exception e) {
+      //Ignore this... it could be temporary and we don't want this to crash
     } finally {
       try {
-        pst.close();
-      } catch (Exception e) {}
-      try {
         conn.close();
-      } catch (Exception e2) {}
+      } catch (Exception ce) {
+        //It must be closed already
+      }
     }
     CrontabEntryBean[] result = new CrontabEntryBean[list.size()];
     for (int i = 0; i < list.size(); i++) {
@@ -226,7 +220,6 @@ public class GenericSQLSource implements DataSource {
    *      ClassNotFoundException
    *@throws  SQLException            Yep can throw an SQLException too
    */
-
   public void remove(CrontabEntryBean[] beans)
        throws CrontabEntryException,
       ClassNotFoundException, SQLException {
@@ -263,10 +256,8 @@ public class GenericSQLSource implements DataSource {
         ps.setBoolean(10, beans[i].getBusinessDays());
         ps.executeUpdate();
       }
+      ps.close();
     } finally {
-      try {
-        ps.close();
-      } catch (Exception e) {}
       try {
         conn.close();
       } catch (Exception e2) {}
@@ -276,8 +267,8 @@ public class GenericSQLSource implements DataSource {
 
   /**
    *  This method saves the CrontabEntryBean the actual problem with this method
-   *  is that doesn???t store comments and blank lines from the original file
-   *  any ideas?
+   *  is that it doesn't store comments and blank lines from the original file, any
+   *  ideas?
    *
    *@param  beans                    Description of the Parameter
    *@throws  CrontabEntryException   when it can't parse the line correctly
@@ -287,7 +278,6 @@ public class GenericSQLSource implements DataSource {
    */
   public void store(CrontabEntryBean[] beans) throws CrontabEntryException,
       ClassNotFoundException, SQLException {
-
     Connection conn = null;
     java.sql.PreparedStatement ps = null;
     try {
@@ -320,10 +310,8 @@ public class GenericSQLSource implements DataSource {
         ps.setBoolean(10, beans[i].getBusinessDays());
         ps.executeUpdate();
       }
+      ps.close();
     } finally {
-      try {
-        ps.close();
-      } catch (Exception e) {}
       try {
         conn.close();
       } catch (Exception e2) {}
@@ -333,7 +321,7 @@ public class GenericSQLSource implements DataSource {
 
   /**
    *  This method saves the CrontabEntryBean the actual problem with this method
-   *  is that doesn???t store comments and blank lines from the original file
+   *  is that doesn't store comments and blank lines from the original file
    *  any ideas?
    *
    *@param  bean                     Description of the Parameter
@@ -398,11 +386,11 @@ public class GenericSQLSource implements DataSource {
     if (dbDataSource == null) {
       String dbDriver =
           crontab.getProperty("org.jcrontab.data.GenericSQLSource.driver");
-      Log.info("Loading dbDriver: " + dbDriver);
+      Log.info("GenericSQLSource-> Loading dbDriver: " + dbDriver);
       try {
         return Class.forName(dbDriver).newInstance();
       } catch (Exception ie) {
-        Log.error("Error loading " + dbDriver, ie);
+        Log.error("GenericSQLSource-> Error loading " + dbDriver, ie);
         return DriverManager.getDriver(crontab.getProperty(
             "org.jcrontab.data.GenericSQLSource.url"));
       }
