@@ -373,11 +373,11 @@ public class Address {
   public String getCityState() {
     if (getCity() == null || getState() == null) {
       return ("");
-    } else if (!getCity().equals("") && !getState().equals("")) {
+    } else if (!getCity().equals("") && !getState().equals("") && !"-1".equals(getState())) {
       return (getCity() + ", " + getState());
-    } else if (getCity().equals("") && !getState().equals("")) {
+    } else if (getCity().equals("") && !getState().equals("") && !"-1".equals(getState())) {
       return (getState());
-    } else if (!getCity().equals("") && getState().equals("")) {
+    } else if (!getCity().equals("") && getState().equals("") && !"-1".equals(getState())) {
       return (getCity());
     } else {
       return ("");
