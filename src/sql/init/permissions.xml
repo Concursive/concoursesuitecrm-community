@@ -15,7 +15,7 @@
     <category id="14" name="My Home Page" folders="false" lookups="false">
       <permission name="myhomepage" attributes="v---" description="Access to My Home Page module"/>
       <permission name="myhomepage-dashboard" attributes="v---" description="View Performance Dashboard"/>
-      <permission name="myhomepage-miner" attributes="va-d" description="Industry News records"/>
+      <permission name="myhomepage-miner" attributes="va-d" description="Industry News records" enabled="false"/>
       <permission name="myhomepage-profile" attributes="v---" description="My Profile"/>
       <permission name="myhomepage-profile-personal" attributes="v-e-" description="Personal Information"/>
       <permission name="myhomepage-profile-settings" attributes="v-e-" description="Settings"/>
@@ -23,6 +23,7 @@
       <permission name="myhomepage-inbox" attributes="v---" description="My Inbox"/>
     </category>
     <category id="2" name="Contacts &amp; Resources" folders="true" lookups="true">
+      <folder constantId="2" description="Contacts"/>
       <permission name="contacts" attributes="v---" description="Access to Contacts &amp; Resources module"/>
       <permission name="contacts-external_contacts" attributes="vaed" description="External Contact Records"/>
       <permission name="contacts-internal_contacts" attributes="vaed" description="Internal Contact Records"/>
@@ -41,6 +42,7 @@
       <permission name="pipeline-opportunities-documents" attributes="vaed" description="Documents"/>
     </category>
     <category id="1" name="Account Management" folders="true" lookups="true">
+      <folder constantId="1" description="Accounts"/>
       <permission name="accounts" attributes="v---" description="Access to Account Management module"/>
       <permission name="accounts-accounts" attributes="vaed" description="Account Records"/>
       <permission name="accounts-accounts-folders" attributes="vae-" description="Folders"/>
