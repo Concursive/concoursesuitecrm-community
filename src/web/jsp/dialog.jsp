@@ -15,8 +15,8 @@
           <frame name="topframe" src="loadframes.jsp">
         <%}%>
         
-      <!--frame marginheight="0" name="middleframe" src="">
-      <frame name="bottomframe" src=""-->
+      <frame marginheight="0" name="middleframe">
+      <frame name="bottomframe">
     </frameset>
   </html>
 <%}
