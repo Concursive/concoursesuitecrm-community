@@ -5,7 +5,8 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="listView" method="post" action="/CampaignManagerMessage.do?command=View">
-<a href="/CampaignManagerMessage.do?command=Add">Add a Message</a>
+<dhv:permission name="campaign-campaigns-messages-add"><a href="/CampaignManagerMessage.do?command=Add">Add a Message</a></dhv:permission>
+<dhv:permission name="campaign-campaigns-messages-add" none="true"><br></dhv:permission>
 <center><%= CampaignMessageListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
@@ -20,9 +21,11 @@
 </table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
+  <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete">
    <td valign=center align=left bgcolor="#DEE0FA">
       <strong>Action</strong>
     </td>
+    </dhv:permission>
     <td width=40% valign=center align=left>
       <a href="/CampaignManagerMessage.do?command=View&column=name"><strong>Name</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("name") %>
@@ -56,9 +59,11 @@
 		Message thisMessage = (Message)j.next();
 %>      
   <tr class="containerBody">
+  <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete">
     <td width=8 valign=center nowrap align="center" class="row<%= rowid %>">
-      <a href="/CampaignManagerMessage.do?command=Modify&id=<%=thisMessage.getId()%>&return=list">Edit</a>|<a href="javascript:confirmDelete('/CampaignManagerMessage.do?command=Delete&id=<%=thisMessage.getId()%>');">Del</a>
+      <dhv:permission name="campaign-campaigns-messages-edit"><a href="/CampaignManagerMessage.do?command=Modify&id=<%=thisMessage.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-messages-delete"><a href="javascript:confirmDelete('/CampaignManagerMessage.do?command=Delete&id=<%=thisMessage.getId()%>');">Del</a></dhv:permission>
     </td>
+    </dhv:permission>
 		<td width=40% valign=center class="row<%= rowid %>">
       <a href="/CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>"><%= toHtml(thisMessage.getName()) %></a>
 		</td>

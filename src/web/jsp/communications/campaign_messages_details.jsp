@@ -1,13 +1,13 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="MessageDetails" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <a href="/CampaignManagerMessage.do?command=View">Back to Message List</a><br>
 <form name="details" action="/CampaignManagerMessage.do?command=Modify&id=<%= MessageDetails.getId() %>" method="post">
-<input type='submit' value='Modify' name='Modify'>
-<input type="submit" value="Delete" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=Delete&id=<%= MessageDetails.getId() %>'">
-<br>
-&nbsp;
+<dhv:permission name="campaign-campaigns-messages-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
+<dhv:permission name="campaign-campaigns-messages-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=Delete&id=<%=MessageDetails.getId() %>'"></dhv:permission>
+<dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -81,7 +81,8 @@
     </td>
   </tr>
 </table>
-<br>
-<input type='submit' value='Modify' name='Modify'>
-<input type="submit" value="Delete" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=Delete&id=<%= MessageDetails.getId() %>'">
+<dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete"><br></dhv:permission>
+<dhv:permission name="campaign-campaigns-messages-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
+<dhv:permission name="campaign-campaigns-messages-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='/CampaignManagerMessage.do?command=Delete&id=<%=MessageDetails.getId() %>'"></dhv:permission>
 </form>
+

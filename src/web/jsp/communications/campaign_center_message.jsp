@@ -14,15 +14,15 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><font color="#000000">Details</font></a> |
-      <a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>"><font color="#000000">Groups</font></a> | 
-      <a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>"><font color="#0000FF">Message</font></a> | 
-      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><font color="#000000">Schedule</font></a>
+      <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><font color="#000000">Details</font></a><dhv:permission name="campaign-campaigns-groups-view"> |
+      <a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>"><font color="#000000">Groups</font></a></dhv:permission><dhv:permission name="campaign-campaigns-messages-view"> | 
+      <a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>"><font color="#0000FF">Message</font></a></dhv:permission><dhv:permission name="campaign-campaigns-view"> | 
+      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><font color="#000000">Schedule</font></a></dhv:permission>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
-<a href="/CampaignManager.do?command=AddMessage&id=<%= Campaign.getId() %>">Add/Manage Messages</a><br>&nbsp;
+<dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=AddMessage&id=<%= Campaign.getId() %>">Add/Manage Messages</a><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
@@ -50,8 +50,10 @@
     </td>
   </tr>
 </table>
+<dhv:permission name="campaign-campaigns-edit">
 <br>
 <input type='submit' value="Update Campaign Message" name="Save">
+</dhv:permission>
   </td>
   </tr>
 </table>

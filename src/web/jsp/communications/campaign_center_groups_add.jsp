@@ -13,11 +13,11 @@
     </td>
   </tr>
   <tr>
-    <td class="containerMenu">
-      <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><font color="#000000">Details</font></a> |
-      <a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>"><font color="#0000FF">Groups</font></a> | 
-      <a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>"><font color="#000000">Message</font></a> | 
-      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><font color="#000000">Schedule</font></a>
+    <td>
+      <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><font color="#000000">Details</font></a><dhv:permission name="campaign-campaigns-groups-view"> |
+      <a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>"><font color="#0000FF">Groups</font></a></dhv:permission><dhv:permission name="campaign-campaigns-messages-view"> | 
+      <a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>"><font color="#000000">Message</font></a></dhv:permission><dhv:permission name="campaign-campaigns-view"> | 
+      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><font color="#000000">Schedule</font></a></dhv:permission>
     </td>
   </tr>
   <tr>

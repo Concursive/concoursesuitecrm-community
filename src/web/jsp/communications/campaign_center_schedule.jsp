@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
 <jsp:useBean id="DeliveryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -31,10 +32,10 @@
   </tr>
   <tr class="containerMenu">
     <td>
-      <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><font color="#000000">Details</font></a> |
-      <a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>"><font color="#000000">Groups</font></a> | 
-      <a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>"><font color="#000000">Message</font></a> | 
-      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><font color="#0000FF">Schedule</font></a>
+      <a href="/CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><font color="#000000">Details</font></a><dhv:permission name="campaign-campaigns-groups-view"> |
+      <a href="/CampaignManager.do?command=ViewGroups&id=<%= Campaign.getId() %>"><font color="#000000">Groups</font></a></dhv:permission><dhv:permission name="campaign-campaigns-messages-view"> | 
+      <a href="/CampaignManager.do?command=ViewMessage&id=<%= Campaign.getId() %>"><font color="#000000">Message</font></a></dhv:permission><dhv:permission name="campaign-campaigns-view"> | 
+      <a href="/CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>"><font color="#0000FF">Schedule</font></a></dhv:permission>
     </td>
   </tr>
   <tr>
@@ -52,7 +53,7 @@
     </td>
     <td width="100%">
       <input type=text size=10 name="activeDate" value="<%= toHtmlValue(Campaign.getActiveDateString()) %>">
-      <a href="javascript:popCalendar('inputForm', 'activeDate');">Date</a> (mm/dd/yyyy)<%--<br>
+      <dhv:permission name="campaign-campaigns-edit"><a href="javascript:popCalendar('inputForm', 'activeDate');">Date</a> (mm/dd/yyyy)</dhv:permission><%--<br>
       <input type="checkbox" name="active" <%= Campaign.getActive("checked") %>>Ready to Run--%>
     </td>
   </tr>
@@ -67,8 +68,10 @@
   </tr>
   
 </table>
+<dhv:permission name="campaign-campaigns-edit">
 <br>
 <input type='submit' name="Save" value="Update Campaign Schedule">
+</dhv:permission>
   </td>
   </tr>
 </table>
