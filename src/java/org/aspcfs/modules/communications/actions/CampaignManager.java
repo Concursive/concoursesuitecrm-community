@@ -261,6 +261,12 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       Campaign campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
+      
+      FileItemList files = new FileItemList();
+      files.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
+      files.setLinkItemId(campaign.getId());
+      files.buildList(db);
+      context.getRequest().setAttribute("fileItemList", files);
 
       if ("true".equals(context.getRequest().getParameter("reset"))) {
         context.getSession().removeAttribute("CampaignCenterGroupInfo");
