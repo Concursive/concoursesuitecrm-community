@@ -21,7 +21,7 @@
   if (PermissionCategory.getCategories()) { 
     ++count;
 %>
-  <dhv:permission name="admin-sysconfig-folders-view">
+  <dhv:permission name="admin-sysconfig-categories-view">
   <tr>
     <td><a href="AdminCategories.do?command=ViewActive&moduleId=<%= PermissionCategory.getId() %>">Categories</a></td>
   </tr>
