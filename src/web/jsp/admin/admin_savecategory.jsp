@@ -8,6 +8,6 @@
  <% }else{ %>
   parent.opener.window.opener.loadTopCategories();
  <% } %>
-  parent.window.close();parent.opener.window.close();
+  parent.opener.window.close();parent.window.close();
 </script>
 </html>
