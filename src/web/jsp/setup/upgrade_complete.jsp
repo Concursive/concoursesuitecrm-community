@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*" %>
 <jsp:useBean id="installLog" class="java.util.ArrayList" scope="request" />
 <%@ include file="../initPage.jsp" %>
