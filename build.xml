@@ -539,8 +539,6 @@
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
-      <!-- framework data -->
-      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_workflow.sql"/>
       <!-- base data -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_cdb.sql"/>
       <transaction src="${build.sql.dir}/cdb.sql"/>
@@ -576,6 +574,8 @@
       <!-- task management -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_task.sql"/>
       <transaction src="${build.sql.dir}/task.sql"/>
+      <!-- framework data -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_workflow.sql"/>
     </sql>
     <delete dir="${build.sql.dir}" failonerror="false"/>
   </target>
@@ -713,6 +713,34 @@
         </fileset>
       </classpath>
       <arg value="${build.pref.dir}${fs}import-generalcontacts.xml"/>
+    </java>
+  </target>
+  
+  <!-- General Contact Importer based on CSV spec -->
+  <target name="import.accountcontacts" depends="init">
+    <fail unless="arg1">Missing arg1: CSV file to import not specified</fail>
+    <fail unless="arg2">Missing arg2: Virtual Host to import to not specified</fail>
+    <fail unless="arg3">Missing arg3: Import code not specified</fail>
+    <mkdir dir="${build.pref.dir}"/>
+    <copy file="${pref.dir}/cfs/transfer/import-accountcontacts.xml" todir="${build.pref.dir}" overwrite="true"/>
+    <replace file="${build.pref.dir}/import-accountcontacts.xml"
+             token="@PROPERTY.FILE@" value="${pref.dir}/cfs/transfer/import-mappings.xml"/>
+    <replace file="${build.pref.dir}/import-accountcontacts.xml"
+             token="@CSV.FILE@" value="${arg1}"/>
+    <replace file="${build.pref.dir}/import-accountcontacts.xml"
+             token="@URL@" value="${arg2}"/>
+    <replace file="${build.pref.dir}/import-accountcontacts.xml"
+             token="@CODE@" value="${arg3}"/>
+    <replace file="${build.pref.dir}/import-accountcontacts.xml"
+             token="@SYSTEM.ID@" value="4"/>
+    <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${CFS_HOME}/WEB-INF/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${build.pref.dir}${fs}import-accountcontacts.xml"/>
     </java>
   </target>
   
