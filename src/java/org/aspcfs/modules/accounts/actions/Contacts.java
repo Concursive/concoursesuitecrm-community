@@ -370,8 +370,8 @@ public final class Contacts extends CFSModule {
     Contact newContact = null;
     try {
       db = this.getConnection(context);
-      newContact = new Contact(db, passedId);
-      context.getRequest().setAttribute("ContactDetails", newContact);
+      newContact = (Contact) context.getFormBean();
+      newContact.queryRecord(db, Integer.parseInt(passedId));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
