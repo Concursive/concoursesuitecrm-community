@@ -33,7 +33,7 @@ public void setOrgId(int orgId) {
 }
 
 public void setOrgId(String orgId) {
-	this.orgId = Intger.parseInt(orgId);
+	this.orgId = Integer.parseInt(orgId);
 }
 
 public void setTypeId(int tmp) { this.typeId = tmp; }
