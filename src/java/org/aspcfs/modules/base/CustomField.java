@@ -1660,7 +1660,7 @@ public class CustomField extends GenericBean {
    *@return    The ParameterData value
    *@since
    */
-  private String getParameterData() {
+  public String getParameterData() {
     StringBuffer parameterData = new StringBuffer();
     Iterator params = (parameters.keySet()).iterator();
     while (params.hasNext()) {
