@@ -558,11 +558,22 @@ public class Setup extends CFSModule {
           //pg_dump -xOdR  cfs2gk > gatekeeper.sql
           //pg_dump -xOdR  cdb_cfs > postgresql.sql
           //Add BEGIN WORK; to beginning of file, COMMIT; to end of file
-          String sql = StringUtils.loadText(
-              context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql.sql");
-          Statement st = db.createStatement();
-          st.execute(sql);
-          st.close();
+          switch (DatabaseUtils.getType(db)) {
+            case DatabaseUtils.POSTGRESQL:
+              String sql = StringUtils.loadText(
+                context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql.sql");
+              Statement st = db.createStatement();
+              st.execute(sql);
+              st.close();
+              break;
+            case DatabaseUtils.MSSQL:
+              DatabaseUtils.executeSQL(db, 
+                context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql.sql");
+              break;
+            default:
+              break;
+          }
+          
         } catch (SQLException cre) {
           if (System.getProperty("DEBUG") != null) {
             System.out.println(cre.getMessage());
@@ -590,6 +601,7 @@ public class Setup extends CFSModule {
     } catch (Exception e) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println(e.getMessage());
+        e.printStackTrace(System.out);
       }
       context.getRequest().setAttribute("actionError",
           "An error occurred while trying to create the database schema, the " +
