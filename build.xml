@@ -211,7 +211,7 @@ determined user is ${USER}
         <pathelement location="${SRC_LIB}/isavvix.jar"/>
         <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
         <pathelement location="${SRC_LIB}/jfreechart.jar"/>
-	      <pathelement location="${SRC_LIB}/utils.jar"/>
+        <pathelement location="${SRC_LIB}/utils.jar"/>
       </classpath>
     </javac>
     <delete file="${SRC_LIB}/darkhorseventures.jar"/>
@@ -282,6 +282,8 @@ determined user is ${USER}
         <pathelement location="${SRC_LIB}/theseus.jar"/>
         <pathelement location="${SRC_LIB}/darkhorseventures.jar"/>
         <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
+        <pathelement location="${SRC_LIB}/jakarta-poi-1.5.0.jar"/>
+        <pathelement location="${SRC_LIB}/jakarta-commons-logging-1.0.1.jar"/>
       </classpath>
     </javac>
     <delete file="${DEST_BIN}/Notifier.jar"/>

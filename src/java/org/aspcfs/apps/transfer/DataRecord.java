@@ -45,6 +45,17 @@ public class DataRecord extends ArrayList {
     }
     return false;
   }
+  
+  public String getValue(String fieldName) {
+    Iterator fields = this.iterator();
+    while (fields.hasNext()) {
+      DataField thisField = (DataField)fields.next();
+      if (fieldName.equals(thisField.getName())) {
+        return thisField.getValue();
+      }
+    }
+    return null;
+  }
 
 }
 
