@@ -58,10 +58,10 @@ Response
       </td>
       <td align="left"><%= toHtml(thisResponse.getIpAddress()) %>&nbsp;</td>
       <td align="left" valign="middle" align="left"  nowrap>
-        <%= thisResponse.getContact().getEmailAddress("BUSINESS") %> &nbsp;
+        <%= thisResponse.getContact().getEmailAddress(EmailAddress.BUSINESS) %> &nbsp;
       </td>
       <td align="left" valign="middle" align="left" nowrap>
-        <%= thisResponse.getContact().getPhoneNumber("BUSINESS") %>&nbsp;
+        <%= thisResponse.getContact().getPhoneNumber(PhoneNumber.EmailAddress.BUSINESS) %>&nbsp;
       </td>
     </tr>
 <%}%>

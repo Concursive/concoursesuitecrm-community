@@ -16,7 +16,7 @@ import org.aspcfs.utils.DateUtils;
  */
 public class PhoneNumber {
 
-  public final static int BUSSINESS = 1;
+  public final static int BUSINESS = 1;
   protected boolean isContact = false;
   private int id = -1;
   private int orgId = -1;
