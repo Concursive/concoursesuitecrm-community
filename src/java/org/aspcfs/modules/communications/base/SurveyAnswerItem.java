@@ -16,6 +16,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 public class SurveyAnswerItem {
   private int id = -1;
   private int answerId = -1;
+  private int contactId = -1;
   private String comments = null;
   private Contact recipient = null;
   private java.sql.Timestamp entered = null;
@@ -113,6 +114,26 @@ public class SurveyAnswerItem {
 
 
   /**
+   *  Sets the contactId attribute of the SurveyAnswerItem object
+   *
+   *@param  contactId  The new contactId value
+   */
+  public void setContactId(int contactId) {
+    this.contactId = contactId;
+  }
+
+
+  /**
+   *  Gets the contactId attribute of the SurveyAnswerItem object
+   *
+   *@return    The contactId value
+   */
+  public int getContactId() {
+    return contactId;
+  }
+
+
+  /**
    *  Gets the recipient attribute of the ActiveSurveyAnswerItem object
    *
    *@return    The recipient value
@@ -203,32 +224,9 @@ public class SurveyAnswerItem {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void buildResources(Connection db) throws SQLException {
-    if (answerId == -1) {
-      throw new SQLException("Answer ID not specified");
-    }
-
-    int contactId = -1;
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-    pst = db.prepareStatement("SELECT sr.contact_id, sr.entered " +
-        "FROM active_survey_answers s, active_survey_responses sr " +
-        "WHERE answer_id = ? WHERE s.answer_id = sr.answer_id ");
-    pst.setInt(1, answerId);
-    rs = pst.executeQuery();
-    if (rs.next()) {
-      entered = rs.getTimestamp("entered");
-      contactId = rs.getInt("contact_id");
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Question AnswerItem record not found.");
-    }
-    rs.close();
-    pst.close();
-
+  public void buildContactDetails(Connection db) throws SQLException {
     if (contactId == -1) {
-      throw new SQLException("Contact Id not found");
+      throw new SQLException("Contact ID not specified");
     }
     recipient = new Contact(db, contactId);
   }
@@ -244,6 +242,21 @@ public class SurveyAnswerItem {
     this.setId(rs.getInt("item_id"));
     this.setAnswerId(rs.getInt("answer_id"));
     this.setComments(rs.getString("comments"));
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildDetailedRecord(ResultSet rs) throws SQLException {
+    this.setId(rs.getInt("item_id"));
+    this.setAnswerId(rs.getInt("answer_id"));
+    this.setComments(rs.getString("comments"));
+    this.setContactId(rs.getInt("contact_id"));
+    this.setEntered(rs.getTimestamp("entered"));
   }
 
 

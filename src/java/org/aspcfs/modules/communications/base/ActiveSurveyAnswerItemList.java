@@ -118,9 +118,9 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "asi.item_id, asi.answer_id, asi.comments  " +
-        "FROM active_survey_answer_items asi " +
-        "WHERE  asi.item_id = ? ");
+        "asi.item_id, asi.answer_id, asi.comments, asr.contact_id, asr.entered  " +
+        "FROM active_survey_responses asr, active_survey_answers asa, active_survey_answer_items asi " +
+        "WHERE  asr.response_id = asa.response_id AND asa.answer_id = asi.answer_id AND asi.item_id = ? ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlOrder.toString());
     pst.setInt(1, itemId);
@@ -141,7 +141,8 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
         break;
       }
       ++count;
-      SurveyAnswerItem thisItem = new SurveyAnswerItem(rs);
+      SurveyAnswerItem thisItem = new SurveyAnswerItem();
+      thisItem.buildDetailedRecord(rs);
       this.add(thisItem);
     }
     rs.close();
@@ -152,7 +153,7 @@ public class ActiveSurveyAnswerItemList extends ArrayList {
     Iterator thisList = this.iterator();
     while (thisList.hasNext()) {
       SurveyAnswerItem thisItem = (SurveyAnswerItem) thisList.next();
-      thisItem.buildResources(db);
+      thisItem.buildContactDetails(db);
     }
   }
 }
