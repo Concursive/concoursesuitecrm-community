@@ -38,6 +38,7 @@ public class OpportunityHeaderList extends Vector {
   protected java.sql.Date closeDateStart = null;
   protected java.sql.Date closeDateEnd = null;
   private boolean queryOpenOnly = false;
+  private boolean queryClosedOnly = false;
 
   private boolean buildTotalValues = false;
 
@@ -195,6 +196,26 @@ public class OpportunityHeaderList extends Vector {
    */
   public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = java.sql.Date.valueOf(tmp);
+  }
+
+
+  /**
+   *  Sets the queryClosedOnly attribute of the OpportunityHeaderList object
+   *
+   *@param  queryClosedOnly  The new queryClosedOnly value
+   */
+  public void setQueryClosedOnly(boolean queryClosedOnly) {
+    this.queryClosedOnly = queryClosedOnly;
+  }
+
+
+  /**
+   *  Gets the queryClosedOnly attribute of the OpportunityHeaderList object
+   *
+   *@return    The queryClosedOnly value
+   */
+  public boolean getQueryClosedOnly() {
+    return queryClosedOnly;
   }
 
 
@@ -607,18 +628,25 @@ public class OpportunityHeaderList extends Vector {
       }
     }
 
+    if (queryOpenOnly) {
+      sqlFilter.append("AND x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.closed IS NULL) ");
+    }
+
+    if (queryClosedOnly) {
+      sqlFilter.append("AND x.opp_id NOT IN (SELECT opp_id from opportunity_component oc where oc.closed IS NULL) ");
+    }
     if (accountOwnerIdRange != null) {
       sqlFilter.append("AND x.acctlink IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
 
     //Get the opportunity if user is owner in any one of the components of that opportunity
     if (owner != -1) {
-      sqlFilter.append("OR ( (x.opp_id in (SELECT opp_id from opportunity_component oc where oc.owner = ?))" + (orgId != -1 ? " AND (x.acctlink = ?)" : "") + (contactId != -1 ? " AND (x.contactlink = ?)" : "") + " ) ");
+      sqlFilter.append("OR ( (x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner = ? " + (queryOpenOnly ? "AND oc.closed IS NULL " : "") + (queryClosedOnly ? "AND oc.closed IS NOT NULL " : "") + "))" + (orgId != -1 ? " AND (x.acctlink = ?)" : "") + (contactId != -1 ? " AND (x.contactlink = ?)" : "") + " ) ");
     }
 
     //Get the opportunity if user or anyone in user's hierarchy is owner in any one of the components of that opportunity
     if (ownerIdRange != null) {
-      sqlFilter.append("OR ( (x.opp_id in (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ")))" + (orgId != -1 ? "AND (x.acctlink = ?) " : "") + (contactId != -1 ? "AND (contactlink = ?) " : "") + ") ");
+      sqlFilter.append("OR ( (x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ") " + (queryOpenOnly ? "AND oc.closed IS NULL " : "") + (queryClosedOnly ? "AND oc.closed IS NOT NULL " : "") + "))" + (orgId != -1 ? "AND (x.acctlink = ?) " : "") + (contactId != -1 ? "AND (contactlink = ?) " : "") + ") ");
     }
   }
 
