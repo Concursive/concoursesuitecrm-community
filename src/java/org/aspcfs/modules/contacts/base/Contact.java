@@ -162,7 +162,7 @@ public class Contact extends GenericBean {
    *@param  contactId         Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  private void queryRecord(Connection db, int contactId) throws SQLException {
+  public void queryRecord(Connection db, int contactId) throws SQLException {
     if (contactId < 0) {
       throw new SQLException("Contact ID not specified.");
     }
