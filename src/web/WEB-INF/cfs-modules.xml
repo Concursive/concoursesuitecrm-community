@@ -27,7 +27,6 @@
     <action name="MyActionContacts"/>
     <action name="CompanyDirectory"/>
     <action name="Reassignments"/>
-    <action name="Reassignments"/>
     <page title="My Home Page"/>
     <permission value="myhomepage-view"/>
     <long_html value="My Home Page"/>
@@ -543,6 +542,8 @@
     <action name="Users"/>
     <action name="Roles"/>
     <action name="Viewpoints"/>
+    <action name="AdminObjectEvents"/>
+    <action name="AdminScheduledEvents"/>
     <page title="System Administration"/>
     <permission value="admin-view"/>
     <long_html value="System Administration"/>

@@ -9,16 +9,17 @@ import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.formatter.*;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.accounts.base.*;
 
 /**
- *  Imports a list of contacts into CFS General Contacts
+ *  Imports a list of contacts and account names into CFS Accounts, merging
+ *  contacts into existing Account names
  *
  *@author     matt rajkowski
- *@created    March 3, 2003
- *@version    $Id: ImportGeneralContacts.java,v 1.1.2.3 2003/03/05 21:19:14
- *      mrajkowski Exp $
+ *@created    June 9, 2003
+ *@version    $Id$
  */
-public class ImportGeneralContacts extends CSVReader {
+public class ImportAccountContacts extends CSVReader {
 
   private int OWNER = 0;
   private int NAME_SALUTATION = 0;
@@ -58,7 +59,7 @@ public class ImportGeneralContacts extends CSVReader {
 
 
   /**
-   *  Gets the version attribute of the ImportGeneralContacts object
+   *  Gets the version attribute of the ImportAccounts object
    *
    *@return    The version value
    */
@@ -68,22 +69,22 @@ public class ImportGeneralContacts extends CSVReader {
 
 
   /**
-   *  Gets the name attribute of the ImportGeneralContacts object
+   *  Gets the name attribute of the ImportAccounts object
    *
    *@return    The name value
    */
   public String getName() {
-    return "CFS General Contacts Importer";
+    return "CFS Account Contacts Importer";
   }
 
 
   /**
-   *  Gets the description attribute of the ImportGeneralContacts object
+   *  Gets the description attribute of the ImportAccounts object
    *
    *@return    The description value
    */
   public String getDescription() {
-    return "Reads general contacts from a text file based on CFS specifications";
+    return "Reads contacts from a text file based on CFS specifications";
   }
 
 
@@ -105,6 +106,8 @@ public class ImportGeneralContacts extends CSVReader {
       //TODO: create user record
       int userId = 1;
       int contactId = 1;
+      int orgId = 1;
+      Map organizationMap = new HashMap();
 
       //Create the user, associated with the contact
       DataRecord newUserRecord = new DataRecord();
@@ -131,21 +134,6 @@ public class ImportGeneralContacts extends CSVReader {
       newContactRecord.addField("modifiedBy", userId);
       newContactRecord.addField("enabled", "false");
       writer.save(newContactRecord);
-      /*
-       *  XMLUtils responseXML = new XMLUtils(writer.getLastResponse(), true);
-       *  System.out.println(XMLUtils.getNodeText(responseXML.getFirstElement("id")));
-       *  /Update the user with the contact info
-       *  DataRecord newUserRecord = new DataRecord();
-       *  newUserRecord.setName("user");
-       *  newUserRecord.setAction("insert");
-       *  newUserRecord.addField("guid", userId);
-       *  newUserRecord.addField("username", "Electronic Import");
-       *  newUserRecord.addField("contactId", contactId, "contact", null);
-       *  newUserRecord.addField("encryptedPassword", "none");
-       *  newUserRecord.addField("enteredBy", userId);
-       *  newUserRecord.addField("modifiedBy", userId);
-       *  writer.save(newUserRecord);
-       */
       //Prepare the formatters
       AddressFormatter addressFormatter = new AddressFormatter();
       EmailAddressFormatter emailFormatter = new EmailAddressFormatter();
@@ -167,14 +155,14 @@ public class ImportGeneralContacts extends CSVReader {
           MIDDLE_NAME = findColumn(thisRecord, "Middle Name");
           LAST_NAME = findColumn(thisRecord, new String[]{"LastName", "Last Name"});
           SUFFIX = findColumn(thisRecord, "Suffix");
-          COMPANY_NAME = findColumn(thisRecord, new String[]{"Company", "Company Name"});
+          COMPANY_NAME = findColumn(thisRecord, new String[]{"Company Name", "Company"});
           TITLE = findColumn(thisRecord, "Title");
           BUSINESS_ADDRESS_1 = findColumn(thisRecord, "Business Address Line 1");
           BUSINESS_ADDRESS_2 = findColumn(thisRecord, "Business Address Line 2");
           BUSINESS_ADDRESS_3 = findColumn(thisRecord, "Business Address Line 3");
           BUSINESS_CITY = findColumn(thisRecord, new String[]{"BusinessCity", "Business City"});
-          BUSINESS_STATE = findColumn(thisRecord, new String[]{"Business State", "Business State/Province"});
-          BUSINESS_ZIP = findColumn(thisRecord, new String[]{"Business Zip", "Business Postal Code"});
+          BUSINESS_STATE = findColumn(thisRecord, new String[]{"Business State/Province", "Business State"});
+          BUSINESS_ZIP = findColumn(thisRecord, "Business Postal Code");
           BUSINESS_COUNTRY = findColumn(thisRecord, "Business Country");
           HOME_ADDRESS_1 = findColumn(thisRecord, "Home Address Line 1");
           HOME_ADDRESS_2 = findColumn(thisRecord, "Home Address Line 2");
@@ -199,8 +187,9 @@ public class ImportGeneralContacts extends CSVReader {
           continue;
         }
         ++contactId;
+        ++orgId;
 
-        //Contact Record Fields
+        //Contact Record Fields first, then generate Account Record from Contact
         Contact thisContact = new Contact();
         ContactEmailAddressList emailAddressList = thisContact.getEmailAddressList();
         ContactPhoneNumberList phoneNumberList = thisContact.getPhoneNumberList();
@@ -401,18 +390,95 @@ public class ImportGeneralContacts extends CSVReader {
 
         thisContact.setNotes(getValue(thisRecord, NOTES));
 
-        processOK = writer.save(mappings.createDataRecord(thisContact, "insert"));
+        //Generate the Account Record from the Contact
+        Organization thisOrganization = new Organization();
+        OrganizationPhoneNumberList organizationNumberList = thisOrganization.getPhoneNumberList();
+        OrganizationAddressList organizationAddressList = thisOrganization.getAddressList();
+
+        thisOrganization.setEnteredBy(userId);
+        if (OWNER > 0) {
+          thisOrganization.setOwner(getValue(thisRecord, OWNER));
+        } else {
+          thisOrganization.setOwner(userId);
+        }
+        thisOrganization.setModifiedBy(userId);
+        thisOrganization.setName(getValue(thisRecord, COMPANY_NAME));
+        //Prevent duplicate account names by doing a lookup on the previous account names
+        if (organizationMap.containsKey(thisOrganization.getName())) {
+          thisOrganization.setOrgId(((Integer) organizationMap.get(thisOrganization.getName())).intValue());
+        } else {
+          thisOrganization.setOrgId(orgId);
+          organizationMap.put(thisOrganization.getName(), new Integer(thisOrganization.getOrgId()));
+        }
+
+        //Business Phone
+        OrganizationPhoneNumber organizationPhone = new OrganizationPhoneNumber();
+        organizationPhone.setOrgId(thisOrganization.getOrgId());
+        organizationPhone.setType(1);
+        organizationPhone.setEnteredBy(userId);
+        organizationPhone.setModifiedBy(userId);
+        organizationPhone.setNumber(getValue(thisRecord, BUSINESS_PHONE));
+        if (organizationPhone.isValid()) {
+          phoneFormatter.format(organizationPhone, thisLocale);
+          organizationNumberList.add(organizationPhone);
+        }
+        //Business Fax
+        OrganizationPhoneNumber organizationFax = new OrganizationPhoneNumber();
+        organizationFax.setOrgId(thisOrganization.getOrgId());
+        organizationFax.setType(2);
+        organizationFax.setEnteredBy(userId);
+        organizationFax.setModifiedBy(userId);
+        organizationFax.setNumber(getValue(thisRecord, BUSINESS_FAX));
+        if (organizationFax.isValid()) {
+          phoneFormatter.format(organizationFax, thisLocale);
+          organizationNumberList.add(organizationFax);
+        }
+        //Business Address
+        OrganizationAddress organizationAddress = new OrganizationAddress();
+        organizationAddress.setOrgId(thisOrganization.getOrgId());
+        organizationAddress.setType(1);
+        organizationAddress.setEnteredBy(userId);
+        organizationAddress.setModifiedBy(userId);
+        //OrganizationAddress Fields
+        organizationAddress.setStreetAddressLine1(getValue(thisRecord, BUSINESS_ADDRESS_1));
+        organizationAddress.setStreetAddressLine2(getValue(thisRecord, BUSINESS_ADDRESS_2));
+        organizationAddress.setStreetAddressLine3(getValue(thisRecord, BUSINESS_ADDRESS_3));
+        organizationAddress.setCity(getValue(thisRecord, BUSINESS_CITY));
+        organizationAddress.setState(getValue(thisRecord, BUSINESS_STATE));
+        organizationAddress.setZip(getValue(thisRecord, BUSINESS_ZIP));
+        organizationAddress.setCountry(getValue(thisRecord, BUSINESS_COUNTRY));
+        if (organizationAddress.isValid()) {
+          addressFormatter.format(organizationAddress);
+          organizationAddressList.add(organizationAddress);
+        }
+
+        //Save all new records now
+        if (thisOrganization.getOrgId() == orgId) {
+          processOK = writer.save(mappings.createDataRecord(thisOrganization, "insert"));
+          if (processOK) {
+            //TODO: Insert address and phone
+            processOK = mappings.saveList(writer, organizationAddressList, "insert");
+            processOK = mappings.saveList(writer, organizationNumberList, "insert");
+          }
+        } else {
+          processOK = true;
+        }
+        //If Account inserts OK, then save the Contact as an Account Contact
         if (processOK) {
-          processOK = mappings.saveList(writer, addressList, "insert");
-          processOK = mappings.saveList(writer, phoneNumberList, "insert");
-          processOK = mappings.saveList(writer, emailAddressList, "insert");
+          thisContact.setOrgId(thisOrganization.getOrgId());
+          processOK = writer.save(mappings.createDataRecord(thisContact, "insert"));
+          if (processOK) {
+            processOK = mappings.saveList(writer, addressList, "insert");
+            processOK = mappings.saveList(writer, phoneNumberList, "insert");
+            processOK = mappings.saveList(writer, emailAddressList, "insert");
+          }
         }
         writeln(out, thisRecord);
       }
       out.flush();
       out.close();
     } catch (Exception e) {
-      logger.info("ImportGeneralContacts-> Error: " + e.toString());
+      logger.info("ImportAccounts-> Error: " + e.toString());
       e.printStackTrace(System.out);
       processOK = false;
     }

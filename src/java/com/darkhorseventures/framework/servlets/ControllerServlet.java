@@ -562,7 +562,9 @@ public class ControllerServlet extends HttpServlet
     if (request.getParameter("actionSource") != null) {
       String actualActionPath = (String) request.getParameter("actionSource");
       action = (Action) actions.get(actualActionPath);
-      System.out.println("ACTION SOURCE FOUND -- > REDIRECTING .... TO " + actualActionPath + " --> " + lookup);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("> Action source found, forward to action: " + actualActionPath + " result: " + lookup);
+      }
     }
     Resource resource = action.getResource(lookup);
     if (resource != null) {

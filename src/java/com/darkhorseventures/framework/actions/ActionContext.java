@@ -55,11 +55,13 @@ public class ActionContext
     session = request.getSession(true);
 
     // If a 'command' parameter is in the request scope, then a command
-    // is available and we must set this context instance' command value.
+    // is available and we must set this context instances' command value.
     // If a command parameter is not found, then the default command is
     // always assumed.
-    if (request.getParameter("command") != null) {
-      command = request.getParameter("command");
+    if (request.getQueryString() != null) {
+      if (request.getQueryString().indexOf("command=") > -1) {
+        command = request.getParameter("command");
+      }
     }
   }
 

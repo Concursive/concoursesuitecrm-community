@@ -6,7 +6,9 @@ import java.sql.*;
 import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 
 /**
- *  Description of the Class
+ *  The WorkflowManager is responsible for executing Business Processes. During
+ *  execution, individual components are executed and evaluated, which in turn
+ *  can further execute children components.
  *
  *@author     matt rajkowski
  *@created    January 13, 2003
@@ -24,7 +26,8 @@ public class WorkflowManager {
 
 
   /**
-   *  Description of the Method
+   *  Execution of a business process begins by executing this method with a
+   *  valid ComponentContext.
    *
    *@param  context        Description of the Parameter
    *@exception  Exception  Description of the Exception
@@ -45,10 +48,12 @@ public class WorkflowManager {
     loadAnchors(context);
     //Execute the process, starting with 1st component
     BusinessProcessComponent startComponent = context.getProcess().getComponent(startId);
-    boolean startResult = this.executeComponent(context, startComponent);
-    processChildren(context, startComponent, startResult);
-    //Store the nextAnchor as the lastAnchor
-    saveAnchors(context);
+    if (startComponent.getEnabled()) {
+      boolean startResult = this.executeComponent(context, startComponent);
+      processChildren(context, startComponent, startResult);
+      //Store the nextAnchor as the lastAnchor
+      saveAnchors(context);
+    }
     if (System.getProperty("DEBUG") != null) {
       System.out.println("WorkflowManager-> Business Process End");
     }
@@ -56,7 +61,8 @@ public class WorkflowManager {
 
 
   /**
-   *  Description of the Method
+   *  After a component is executed, the qualifying children are executed based
+   *  on the parent's result.
    *
    *@param  context         Description of the Parameter
    *@param  bpc             Description of the Parameter
@@ -64,30 +70,19 @@ public class WorkflowManager {
    *@exception  Exception   Description of the Exception
    */
   private void processChildren(ComponentContext context, BusinessProcessComponent bpc, boolean previousResult) throws Exception {
-    if (previousResult == true) {
-      if (bpc.getTrueChildren() != null) {
-        Iterator i = bpc.getTrueChildren().iterator();
-        while (i.hasNext()) {
-          BusinessProcessComponent child = (BusinessProcessComponent) i.next();
-          boolean result = executeComponent(context, child);
-          processChildren(context, child, result);
-        }
-      }
-    } else {
-      if (bpc.getFalseChildren() != null) {
-        Iterator i = bpc.getFalseChildren().iterator();
-        while (i.hasNext()) {
-          BusinessProcessComponent child = (BusinessProcessComponent) i.next();
-          boolean result = executeComponent(context, child);
-          processChildren(context, child, result);
-        }
+    Iterator i = bpc.getChildren(previousResult).iterator();
+    while (i.hasNext()) {
+      BusinessProcessComponent child = (BusinessProcessComponent) i.next();
+      if (child.getEnabled()) {
+        boolean result = executeComponent(context, child);
+        processChildren(context, child, result);
       }
     }
   }
 
 
   /**
-   *  Description of the Method
+   *  Executes a specific component and returns the component's return value.
    *
    *@param  context        Description of the Parameter
    *@param  component      Description of the Parameter
@@ -153,7 +148,8 @@ public class WorkflowManager {
 
 
   /**
-   *  Description of the Method
+   *  Before a component is executed, global parameters are applied to the
+   *  component, however, local parameters for a component will override these.
    *
    *@param  context  Description of the Parameter
    */
@@ -162,7 +158,7 @@ public class WorkflowManager {
     if (thisProcess.hasParameters()) {
       Iterator i = thisProcess.getParameters().iterator();
       while (i.hasNext()) {
-        ComponentParameter thisParameter = (ComponentParameter) i.next();
+        ProcessParameter thisParameter = (ProcessParameter) i.next();
         if (thisParameter.getEnabled()) {
           context.setParameter(thisParameter.getName(), thisParameter.getValue());
         }
@@ -172,7 +168,8 @@ public class WorkflowManager {
 
 
   /**
-   *  Description of the Method
+   *  Before a component is executed, local parameters for a component are
+   *  applied, overwriting any global parameters that may have been set.
    *
    *@param  context    Description of the Parameter
    *@param  component  Description of the Parameter
@@ -191,7 +188,7 @@ public class WorkflowManager {
 
 
   /**
-   *  Loads, from the database, the last time the process executed successfully
+   *  Loads the last time the process executed successfully from the database,
    *
    *@param  context  Description of the Parameter
    */
@@ -220,7 +217,8 @@ public class WorkflowManager {
 
 
   /**
-   *  Saves, to the database, the start time when the last process executed successfully
+   *  Saves the start time when the last process executed successfully, to the
+   *  database
    *
    *@param  context  Description of the Parameter
    */

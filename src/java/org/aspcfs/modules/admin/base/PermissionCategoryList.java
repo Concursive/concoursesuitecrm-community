@@ -306,7 +306,9 @@ public class PermissionCategoryList extends Vector {
       sqlFilter.append("AND active = ? ");
     }
     if (customizableModulesOnly) {
-      sqlFilter.append("AND (lookups = ? OR folders = ?) ");
+      sqlFilter.append(
+          "AND (lookups = ? OR folders = ? " +
+          "OR scheduled_events = ? OR object_events = ?) ");
     }
   }
 
@@ -327,6 +329,8 @@ public class PermissionCategoryList extends Vector {
       pst.setBoolean(++i, activeState == Constants.TRUE);
     }
     if (customizableModulesOnly) {
+      pst.setBoolean(++i, true);
+      pst.setBoolean(++i, true);
       pst.setBoolean(++i, true);
       pst.setBoolean(++i, true);
     }

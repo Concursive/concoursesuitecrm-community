@@ -32,10 +32,18 @@ public final class ProcessSystem extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandReloadSystemPrefs(ActionContext context) {
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    Connection db = null;
     Iterator i = this.getSystemIterator(context);
     while (i.hasNext()) {
       SystemStatus systemStatus = (SystemStatus) i.next();
-      systemStatus.buildPreferences();
+      try {
+        db = sqlDriver.getConnection(systemStatus.getConnectionElement());
+        systemStatus.buildPreferences(db);
+      } catch (Exception e) {
+      } finally {
+        sqlDriver.free(db);
+      }
     }
     return "ProcessOK";
   }
@@ -119,7 +127,7 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action that prepares a list of the cron data from the running crontab
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -170,7 +178,7 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
-   *  Method to begin precompiling JSPs by specifying the directory to compile
+   *  Action to begin precompiling JSPs by specifying the directory to compile
    *
    *@param  context        Description of the Parameter
    *@param  thisDirectory  Description of the Parameter
@@ -198,7 +206,7 @@ public final class ProcessSystem extends CFSModule {
    *@param  dir       Description of the Parameter
    */
   private void precompileJSP(ActionContext context, File thisFile, String dir) {
-    if (thisFile.getName().endsWith(".jsp")) {
+    if (thisFile.getName().endsWith(".jsp") && !thisFile.getName().endsWith("_include.jsp")) {
       String serverName = "http://" + context.getRequest().getServerName();
       String jsp = serverName + dir + thisFile.getName();
       try {

@@ -89,7 +89,7 @@ public class SystemStatus {
    */
   public void queryRecord(Connection db) throws SQLException {
     buildHierarchyList(db);
-    buildPreferences();
+    buildPreferences(db);
     buildRolePermissions(db);
     buildCategoryLists(db);
   }
@@ -412,7 +412,7 @@ public class SystemStatus {
    *  Loads the preferences for this specific system. Preference files are
    *  stored as XML in the system's fileLibrary.
    */
-  public void buildPreferences() {
+  public void buildPreferences(Connection db) {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> Loading system preferences: " + fileLibraryPath + "system.xml ");
     }
@@ -473,13 +473,26 @@ public class SystemStatus {
       System.out.println("SystemStatus-> Loading workflow processes: " + fileLibraryPath + "workflow.xml");
     }
     try {
-      if (fileLibraryPath != null) {
-        File prefsFile = new File(fileLibraryPath + "workflow.xml");
-        if (prefsFile.exists()) {
-          XMLUtils xml = new XMLUtils(prefsFile);
-          hookManager.setFileLibraryPath(fileLibraryPath);
-          hookManager.initializeBusinessProcessList(xml.getDocumentElement());
-          hookManager.initializeObjectHookList(xml.getDocumentElement());
+      //Build processes from database
+      hookManager.setFileLibraryPath(fileLibraryPath);
+      hookManager.initializeBusinessProcessList(db);
+      hookManager.initializeObjectHookList(db);
+      if (hookManager.getProcessList().size() == 0 || hookManager.getHookList().size() == 0) {
+        //Build processes from file (backwards compatible)
+        //NOTE: The file is fine, but it should be imported into the database so
+        //users can use the web editor
+        if (fileLibraryPath != null) {
+          File prefsFile = new File(fileLibraryPath + "workflow.xml");
+          if (prefsFile.exists()) {
+            XMLUtils xml = new XMLUtils(prefsFile);
+            hookManager.setFileLibraryPath(fileLibraryPath);
+            if (hookManager.getProcessList().size() == 0) {
+              hookManager.initializeBusinessProcessList(xml.getDocumentElement());
+            }
+            if (hookManager.getHookList().size() == 0) {
+              hookManager.initializeObjectHookList(xml.getDocumentElement());
+            }
+          }
         }
       }
     } catch (Exception e) {

@@ -46,6 +46,16 @@ public class ObjectHookManager {
 
 
   /**
+   *  Gets the hookList attribute of the ObjectHookManager object
+   *
+   *@return    The hookList value
+   */
+  public ObjectHookList getHookList() {
+    return hookList;
+  }
+
+
+  /**
    *  Gets the processList attribute of the ObjectHookManager object
    *
    *@return    The processList value
@@ -56,18 +66,7 @@ public class ObjectHookManager {
 
 
   /**
-   *  Description of the Method
-   *
-   *@param  hookXML  Description of the Parameter
-   */
-  public void initializeObjectHookList(String hookXML) {
-    hookList = new ObjectHookList();
-    hookList.parse(hookXML);
-  }
-
-
-  /**
-   *  Description of the Method
+   *  Initializes the list of objects that can be hooked from an XML Element
    *
    *@param  documentElement  Description of the Parameter
    */
@@ -80,16 +79,18 @@ public class ObjectHookManager {
   /**
    *  Description of the Method
    *
-   *@param  processXML  Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
-  public void initializeBusinessProcessList(String processXML) {
-    processList = new BusinessProcessList();
-    processList.parse(processXML);
+  public void initializeObjectHookList(Connection db) throws SQLException {
+    hookList = new ObjectHookList();
+    hookList.buildList(db);
   }
 
 
   /**
-   *  Description of the Method
+   *  Initializes the list of processes that can be executed, from an XML
+   *  Element
    *
    *@param  documentElement  Description of the Parameter
    */
@@ -100,7 +101,19 @@ public class ObjectHookManager {
 
 
   /**
-   *  Description of the Method
+   *  Initializes the list of processes that can be executed, from a database
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void initializeBusinessProcessList(Connection db) throws SQLException {
+    processList = new BusinessProcessList();
+    processList.buildList(db);
+  }
+
+
+  /**
+   *  Forwards the request to execute a business process to process(...)
    *
    *@param  packetContext   Description of the Parameter
    *@param  action          Description of the Parameter
@@ -165,8 +178,8 @@ public class ObjectHookManager {
 
 
   /**
-   *  Executes a specified business process. The business process must already
-   *  be loaded into the business process list.<p>
+   *  Executes a specified business process in a new thread. The business
+   *  process must already be loaded into the business process list.<p>
    *
    *  Commonly used for business processes that are triggered by a cron, or
    *  manually triggered.

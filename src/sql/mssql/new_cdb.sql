@@ -266,7 +266,10 @@ CREATE TABLE permission_category (
   active BIT NOT NULL DEFAULT 1,
   folders BIT NOT NULL DEFAULT 0,
   lookups BIT NOT NULL DEFAULT 0,
-  viewpoints BIT DEFAULT 0
+  viewpoints BIT DEFAULT 0,
+  categories BIT DEFAULT 0,
+  scheduled_events BIT DEFAULT 0,
+  object_events BIT DEFAULT 0
 );
 
 CREATE TABLE permission (

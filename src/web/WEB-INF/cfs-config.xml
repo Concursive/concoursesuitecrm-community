@@ -1159,6 +1159,27 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   
+  <action name="AdminObjectEvents" class="org.aspcfs.modules.admin.actions.AdminObjectEvents">
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/admin/admin_object_events_list.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/AdminWorkflow.do?actionSource=AdminObjectEvents"/>
+    <forward name="WorkflowOK" resource="/admin/admin_workflow_details.jsp" layout="nav"/>
+  </action>
+  <action name="AdminScheduledEvents" class="org.aspcfs.modules.admin.actions.AdminScheduledEvents">
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/admin/admin_scheduled_events_list.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/AdminWorkflow.do?actionSource=AdminScheduledEvents"/>
+    <forward name="WorkflowOK" resource="/admin/admin_workflow_details.jsp" layout="nav"/>
+  </action>
+  <action name="AdminWorkflow" class="org.aspcfs.modules.admin.actions.AdminWorkflow">
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+  </action>
   <!-- End Setup Module -->
   
   <action name="Help" class="org.aspcfs.modules.help.actions.Help">

@@ -20,6 +20,7 @@ import org.aspcfs.modules.base.DependencyList;
  */
 public class PermissionCategory extends GenericBean {
 
+  //PermissionCategory properties
   private int id = -1;
   private String category = null;
   private String description = null;
@@ -30,7 +31,11 @@ public class PermissionCategory extends GenericBean {
   private boolean folders = false;
   private boolean viewpoints = false;
   private boolean categories = false;
-
+  private boolean scheduledEvents = false;
+  private boolean objectEvents = false;
+  
+  //Constants for working with lookup lists
+  //NOTE: currently all editable lookup lists need to be defined here
   public final static int PERMISSION_CAT_LEADS = 4;
   public final static int LOOKUP_LEADS_STAGE = 1;
   public final static int LOOKUP_LEADS_TYPE = 2;
@@ -83,7 +88,7 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Populates the permission category from the database with the specified id
    *
    *@param  db                Description of the Parameter
    *@param  id                Description of the Parameter
@@ -107,6 +112,38 @@ public class PermissionCategory extends GenericBean {
     if (id == -1) {
       throw new SQLException("Permission category not found");
     }
+  }
+
+
+  /**
+   *  Returns a permission category id for the specified category name by
+   *  lookup up the value in the database and returning the first id found.
+   *
+   *@param  db                Description of the Parameter
+   *@param  name              Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int lookupId(Connection db, String name) throws SQLException {
+    if (name == null) {
+      throw new SQLException("Invalid Permission Category Name");
+    }
+    int i = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT category_id " +
+        "FROM permission_category " +
+        "WHERE category = ? ");
+    pst.setString(1, name);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      i = rs.getInt("category_id");
+    }
+    rs.close();
+    pst.close();
+    if (i == -1) {
+      throw new SQLException("Permission category not found: " + name);
+    }
+    return i;
   }
 
 
@@ -330,6 +367,25 @@ public class PermissionCategory extends GenericBean {
   }
 
 
+  /**
+   *  Gets the scheduledEvents attribute of the PermissionCategory object
+   *
+   *@return    The scheduledEvents value
+   */
+  public boolean getScheduledEvents() {
+    return scheduledEvents;
+  }
+
+
+  /**
+   *  Gets the objectEvents attribute of the PermissionCategory object
+   *
+   *@return    The objectEvents value
+   */
+  public boolean getObjectEvents() {
+    return objectEvents;
+  }
+
 
   /**
    *  Sets the lookups attribute of the PermissionCategory object
@@ -392,7 +448,47 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Sets the scheduledEvents attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new scheduledEvents value
+   */
+  public void setScheduledEvents(boolean tmp) {
+    this.scheduledEvents = tmp;
+  }
+
+
+  /**
+   *  Sets the scheduledEvents attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new scheduledEvents value
+   */
+  public void setScheduledEvents(String tmp) {
+    this.scheduledEvents = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the objectEvents attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new objectEvents value
+   */
+  public void setObjectEvents(boolean tmp) {
+    this.objectEvents = tmp;
+  }
+
+
+  /**
+   *  Sets the objectEvents attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new objectEvents value
+   */
+  public void setObjectEvents(String tmp) {
+    this.objectEvents = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Inserts a permission category object into the database
    *
    *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
@@ -401,8 +497,9 @@ public class PermissionCategory extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission_category (category, description, " +
-        "level, enabled, active, lookups, folders, viewpoints, categories) " +
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?,? ) ");
+        "level, enabled, active, lookups, folders, viewpoints, categories, scheduled_events, " +
+        "object_events) " +
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setString(++i, category);
     pst.setString(++i, description);
@@ -413,6 +510,8 @@ public class PermissionCategory extends GenericBean {
     pst.setBoolean(++i, folders);
     pst.setBoolean(++i, viewpoints);
     pst.setBoolean(++i, categories);
+    pst.setBoolean(++i, scheduledEvents);
+    pst.setBoolean(++i, objectEvents);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_cate_category_id_seq");
@@ -421,7 +520,7 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Populates a permission category object from a database resultset
    *
    *@param  rs                Description of the Parameter
    *@exception  SQLException  Description of the Exception
@@ -437,6 +536,8 @@ public class PermissionCategory extends GenericBean {
     lookups = rs.getBoolean("lookups");
     viewpoints = rs.getBoolean("viewpoints");
     categories = rs.getBoolean("categories");
+    scheduledEvents = rs.getBoolean("scheduled_events");
+    objectEvents = rs.getBoolean("object_events");
   }
 
 }

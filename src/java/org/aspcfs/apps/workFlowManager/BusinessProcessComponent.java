@@ -1,10 +1,11 @@
-//Copyright 2002 Dark Horse Ventures
+//Copyright 2003 Dark Horse Ventures
 package org.aspcfs.apps.workFlowManager;
 
 import java.util.*;
 import org.w3c.dom.Element;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;
+import java.sql.*;
 
 /**
  *  A BusinessProcessComponent is a definition of where and when a class will be
@@ -17,16 +18,21 @@ import org.aspcfs.modules.base.Constants;
  */
 public class BusinessProcessComponent {
 
+  //properties mapped to database
   private int id = -1;
-  private int parentId = -1;
+  private int parentId = 0;
   private int parentResult = -1;
+  private int processId = -1;
+  private int componentId = -1;
+  private boolean enabled = true;
+  //references
+  private int processType = -1;
+  private ComponentParameterList parameters = null;
+  private BusinessProcessComponent parent = null;
+  private HashMap children = null;
+  private String name = null;
   private String className = null;
   private String description = null;
-  private boolean enabled = true;
-  private ArrayList parameters = null;
-  //private ObjectLayout layout = null;
-  private ArrayList trueChildren = null;
-  private ArrayList falseChildren = null;
 
 
   /**
@@ -38,18 +44,30 @@ public class BusinessProcessComponent {
   /**
    *  Constructor for the BusinessProcessComponent object
    *
-   *@param  componentElement  Description of the Parameter
-   *@param  enabled           Description of the Parameter
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
-  public BusinessProcessComponent(Element componentElement, int enabled) {
+  public BusinessProcessComponent(ResultSet rs) throws SQLException {
+    buildRecord(rs);
+  }
+
+
+  /**
+   *  Constructor for the BusinessProcessComponent object
+   *
+   *@param  componentElement  Description of the Parameter
+   */
+  public BusinessProcessComponent(Element componentElement) {
     //Set the base data
     this.setId((String) componentElement.getAttribute("id"));
     this.setParentId((String) componentElement.getAttribute("parent"));
     this.setParentResult((String) componentElement.getAttribute("if"));
+    //this.setName((String) componentElement.getAttribute("name"));
     this.setClassName((String) componentElement.getAttribute("class"));
+    this.setName(className);
     this.setDescription((String) componentElement.getAttribute("description"));
     this.setEnabled((String) componentElement.getAttribute("enabled"));
-    //Add the enabled parameters
+    //Add the parameters
     Element parameters = XMLUtils.getFirstElement(componentElement, "parameters");
     if (parameters != null) {
       ArrayList parameterNodes = XMLUtils.getElements(parameters, "parameter");
@@ -57,14 +75,11 @@ public class BusinessProcessComponent {
       while (parameterElements.hasNext()) {
         Element parameterElement = (Element) parameterElements.next();
         String parameterEnabled = (String) parameterElement.getAttribute("enabled");
-        if ((enabled != Constants.TRUE) ||
-            (enabled == Constants.TRUE && (parameterEnabled == null || !"false".equals(parameterEnabled)))) {
-          ComponentParameter thisParameter = new ComponentParameter(parameterElement, enabled);
-          if (this.parameters == null) {
-            this.parameters = new ArrayList();
-          }
-          this.parameters.add(thisParameter);
+        ComponentParameter thisParameter = new ComponentParameter(parameterElement);
+        if (this.parameters == null) {
+          this.parameters = new ComponentParameterList();
         }
+        this.parameters.add(thisParameter);
       }
     }
   }
@@ -106,7 +121,7 @@ public class BusinessProcessComponent {
    *@param  tmp  The new parentId value
    */
   public void setParentId(String tmp) {
-    this.parentId = DatabaseUtils.parseInt(tmp, -1);
+    this.parentId = DatabaseUtils.parseInt(tmp, 0);
   }
 
 
@@ -133,6 +148,76 @@ public class BusinessProcessComponent {
     } else {
       this.parentResult = -1;
     }
+  }
+
+
+  /**
+   *  Sets the processId attribute of the BusinessProcessComponent object
+   *
+   *@param  tmp  The new processId value
+   */
+  public void setProcessId(int tmp) {
+    this.processId = tmp;
+  }
+
+
+  /**
+   *  Sets the processId attribute of the BusinessProcessComponent object
+   *
+   *@param  tmp  The new processId value
+   */
+  public void setProcessId(String tmp) {
+    this.processId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the componentId attribute of the BusinessProcessComponent object
+   *
+   *@param  tmp  The new componentId value
+   */
+  public void setComponentId(int tmp) {
+    this.componentId = tmp;
+  }
+
+
+  /**
+   *  Sets the processType attribute of the BusinessProcessComponent object
+   *
+   *@param  tmp  The new processType value
+   */
+  public void setProcessType(int tmp) {
+    this.processType = tmp;
+  }
+
+
+  /**
+   *  Sets the processType attribute of the BusinessProcessComponent object
+   *
+   *@param  tmp  The new processType value
+   */
+  public void setProcessType(String tmp) {
+    this.processType = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the componentId attribute of the BusinessProcessComponent object
+   *
+   *@param  tmp  The new componentId value
+   */
+  public void setComponentId(String tmp) {
+    this.componentId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the name attribute of the BusinessProcessComponent object
+   *
+   *@param  tmp  The new name value
+   */
+  public void setName(String tmp) {
+    this.name = tmp;
   }
 
 
@@ -181,28 +266,28 @@ public class BusinessProcessComponent {
    *
    *@param  tmp  The new parameters value
    */
-  public void setParameters(ArrayList tmp) {
+  public void setParameters(ComponentParameterList tmp) {
     this.parameters = tmp;
   }
 
 
   /**
-   *  Sets the trueChildren attribute of the BusinessProcessComponent object
+   *  Sets the parent attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new trueChildren value
+   *@param  tmp  The new parent value
    */
-  public void setTrueChildren(ArrayList tmp) {
-    this.trueChildren = tmp;
+  public void setParent(BusinessProcessComponent tmp) {
+    this.parent = tmp;
   }
 
 
   /**
-   *  Sets the falseChildren attribute of the BusinessProcessComponent object
+   *  Sets the children attribute of the BusinessProcessComponent object
    *
-   *@param  tmp  The new falseChildren value
+   *@param  tmp  The new children value
    */
-  public void setFalseChildren(ArrayList tmp) {
-    this.falseChildren = tmp;
+  public void setChildren(HashMap tmp) {
+    this.children = tmp;
   }
 
 
@@ -233,6 +318,46 @@ public class BusinessProcessComponent {
    */
   public int getParentResult() {
     return parentResult;
+  }
+
+
+  /**
+   *  Gets the processId attribute of the BusinessProcessComponent object
+   *
+   *@return    The processId value
+   */
+  public int getProcessId() {
+    return processId;
+  }
+
+
+  /**
+   *  Gets the componentId attribute of the BusinessProcessComponent object
+   *
+   *@return    The componentId value
+   */
+  public int getComponentId() {
+    return componentId;
+  }
+
+
+  /**
+   *  Gets the processType attribute of the BusinessProcessComponent object
+   *
+   *@return    The processType value
+   */
+  public int getProcessType() {
+    return processType;
+  }
+
+
+  /**
+   *  Gets the name attribute of the BusinessProcessComponent object
+   *
+   *@return    The name value
+   */
+  public String getName() {
+    return name;
   }
 
 
@@ -271,33 +396,77 @@ public class BusinessProcessComponent {
    *
    *@return    The parameters value
    */
-  public ArrayList getParameters() {
+  public ComponentParameterList getParameters() {
     return parameters;
   }
 
 
   /**
-   *  Gets the trueChildren attribute of the BusinessProcessComponent object
+   *  Gets the parent attribute of the BusinessProcessComponent object
    *
-   *@return    The trueChildren value
+   *@return    The parent value
    */
-  public ArrayList getTrueChildren() {
-    return trueChildren;
+  public BusinessProcessComponent getParent() {
+    return parent;
   }
 
 
   /**
-   *  Gets the falseChildren attribute of the BusinessProcessComponent object
+   *  Gets the children attribute of the BusinessProcessComponent object
    *
-   *@return    The falseChildren value
+   *@return    The children value
    */
-  public ArrayList getFalseChildren() {
-    return falseChildren;
+  public HashMap getChildren() {
+    if (children == null) {
+      children = new HashMap();
+    }
+    return children;
   }
 
 
   /**
-   *  Description of the Method
+   *  Gets the children attribute of the BusinessProcessComponent object
+   *
+   *@param  result  Description of the Parameter
+   *@return         The children value
+   */
+  public ArrayList getChildren(boolean result) {
+    //Return the components that don't have a resultType and return the correct result ones
+    ArrayList listToReturn = new ArrayList();
+    if (children != null) {
+      ArrayList indifferent = (ArrayList) children.get(new Integer(-1));
+      if (indifferent != null) {
+        listToReturn.addAll(indifferent);
+      }
+      ArrayList matching = (ArrayList) children.get(new Integer(result == true ? Constants.TRUE : Constants.FALSE));
+      if (matching != null) {
+        listToReturn.addAll(matching);
+      }
+    }
+    return listToReturn;
+  }
+
+
+  /**
+   *  Gets the allChildren attribute of the BusinessProcessComponent object
+   *
+   *@return    The allChildren value
+   */
+  public ArrayList getAllChildren() {
+    ArrayList listToReturn = new ArrayList();
+    if (children != null) {
+      Iterator i = children.values().iterator();
+      while (i.hasNext()) {
+        ArrayList resultChildren = (ArrayList) i.next();
+        listToReturn.addAll(resultChildren);
+      }
+    }
+    return listToReturn;
+  }
+
+
+  /**
+   *  Returns whether this component has any associated parameters
    *
    *@return    Description of the Return Value
    */
@@ -307,30 +476,189 @@ public class BusinessProcessComponent {
 
 
   /**
-   *  Adds a feature to the TrueChild attribute of the BusinessProcessComponent
+   *  Adds a feature to the Child attribute of the BusinessProcessComponent
    *  object
    *
-   *@param  childComponent  The feature to be added to the TrueChild attribute
+   *@param  childComponent  The feature to be added to the Child attribute
    */
-  public void addTrueChild(BusinessProcessComponent childComponent) {
-    if (trueChildren == null) {
-      trueChildren = new ArrayList();
+  public void addChild(BusinessProcessComponent childComponent) {
+    if (children == null) {
+      children = new HashMap();
     }
-    trueChildren.add(childComponent);
+    ArrayList results = (ArrayList) children.get(new Integer(childComponent.getParentResult()));
+    if (results == null) {
+      results = new ArrayList();
+      children.put(new Integer(childComponent.getParentResult()), results);
+    }
+    results.add(childComponent);
   }
 
 
   /**
-   *  Adds a feature to the FalseChild attribute of the BusinessProcessComponent
-   *  object
+   *  Populates this object from a database recordset
    *
-   *@param  childComponent  The feature to be added to the FalseChild attribute
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
-  public void addFalseChild(BusinessProcessComponent childComponent) {
-    if (falseChildren == null) {
-      falseChildren = new ArrayList();
+  protected void buildRecord(ResultSet rs) throws SQLException {
+    //business_process_component
+    id = rs.getInt("id");
+    processId = rs.getInt("process_id");
+    componentId = rs.getInt("component_id");
+    parentId = DatabaseUtils.getInt(rs, "parent_id", 0);
+    parentResult = DatabaseUtils.getInt(rs, "parent_result_id");
+    enabled = rs.getBoolean("enabled");
+    //business_process_component_library
+    name = rs.getString("component_name");
+    className = rs.getString("class_name");
+    description = rs.getString("description");
+  }
+
+
+  /**
+   *  Builds related data for this component
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  protected void buildResources(Connection db) throws SQLException {
+    //Add local parameters to the component
+    parameters = new ComponentParameterList();
+    parameters.setComponentId(id);
+    parameters.buildList(db);
+  }
+
+
+  /**
+   *  Inserts this business process component along with any related data. A
+   *  business process must exist in the library first, so that is seamlessly
+   *  verified and inserted if necessary.
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void insert(Connection db) throws SQLException {
+    PreparedStatement pst;
+    //Insert the related component library item
+    if (componentId == -1) {
+      try {
+        //Access the component object for its description
+        Object classRef = Class.forName(className).newInstance();
+        description = ObjectUtils.getParam(classRef, "description");
+        classRef = null;
+      } catch (Exception classEx) {
+        //Use the class name when the class does not exist... this might be
+        //a prototype class
+        description = className;
+      }
+      LibraryComponent libraryComponent = new LibraryComponent();
+      libraryComponent.setName(name);
+      libraryComponent.setTypeId(processType);
+      libraryComponent.setClassName(className);
+      libraryComponent.setDescription(description);
+      libraryComponent.setEnabled(true);
+      libraryComponent.insert(db);
+      componentId = libraryComponent.getId();
     }
-    falseChildren.add(childComponent);
+    boolean doInsert = false;
+    //Insert a result type for the parent
+    if (parent != null) {
+      if (parentResult > -1) {
+        //Store the parent's result id in the database if it's not already there
+        ComponentResult result = new ComponentResult();
+        result.setComponentId(parent.getComponentId());
+        result.setReturnId(parentResult);
+        //NOTE: This will change once parent result is no longer boolean
+        result.setDescription(parentResult == Constants.TRUE ? "Yes" : "No");
+        //NOTE: This will change once parent result is no longer boolean
+        result.setReturnId(parentResult == Constants.TRUE ? 1 : 0);
+        result.setLevel(parentResult == Constants.TRUE ? 0 : 1);
+        result.setEnabled(true);
+        result.insert(db);
+        doInsert = true;
+      } else {
+        //Some children are not triggered by a parentResult and are always executed,
+        //these need to be checked before inserting a duplicate component
+        pst = db.prepareStatement(
+            "SELECT id " +
+            "FROM business_process_component " +
+            "WHERE process_id = ? " +
+            "AND component_id = ? " +
+            "AND parent_id = ? " +
+            "AND parent_result_id IS NULL ");
+        pst.setInt(1, processId);
+        pst.setInt(2, componentId);
+        pst.setInt(3, parent.getId());
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+          id = rs.getInt("id");
+          doInsert = false;
+        } else {
+          doInsert = true;
+        }
+        rs.close();
+        pst.close();
+      }
+    } else {
+      doInsert = true;
+    }
+    if (doInsert) {
+      //Insert the component
+      pst = db.prepareStatement(
+          "INSERT INTO business_process_component " +
+          "(process_id, component_id, parent_id, parent_result_id, enabled) " +
+          "VALUES " +
+          "(?, ?, ?, ?, ?)");
+      int i = 0;
+      pst.setInt(++i, processId);
+      pst.setInt(++i, componentId);
+      if (parent != null) {
+        pst.setInt(++i, parent.getId());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      DatabaseUtils.setInt(pst, ++i, parentResult);
+      pst.setBoolean(++i, enabled);
+      pst.execute();
+      pst.close();
+      id = DatabaseUtils.getCurrVal(db, "business_process_compone_id_seq");
+      //Insert component parameters
+      if (parameters != null) {
+        parameters.setComponentId(id);
+        parameters.insert(db);
+      }
+    }
+  }
+
+
+  /**
+   *  Outputs the object for debugging
+   *
+   *@return    Description of the Return Value
+   */
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append("=[Business Process Component]================================\r\n");
+    sb.append(" id: " + id + "\r\n");
+    sb.append(" parentId: " + parentId + "\r\n");
+    sb.append(" parentResult: " + parentResult + "\r\n");
+    sb.append(" processId: " + processId + "\r\n");
+    sb.append(" componentId: " + componentId + "\r\n");
+    sb.append(" enabled: " + enabled + "\r\n");
+    sb.append(" processType: " + processType + "\r\n");
+    sb.append(" name: " + name + "\r\n");
+    sb.append(" className: " + className + "\r\n");
+    sb.append(" description: " + description + "\r\n");
+    if (children != null) {
+      sb.append(" children:");
+      Iterator i = children.keySet().iterator();
+      while (i.hasNext()) {
+        BusinessProcessComponent child = (BusinessProcessComponent) i.next();
+        sb.append(" " + child.getId());
+      }
+      sb.append("\r\n");
+    }
+    return sb.toString();
   }
 }
 

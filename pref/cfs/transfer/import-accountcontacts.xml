@@ -1,0 +1,15 @@
+<data-import-config>
+  <description>
+    Copies contacts from an Excel generated CSV file into CFS under a new Electronic Import user
+  </description>
+  <reader class="org.aspcfs.apps.transfer.reader.cfs.ImportAccountContacts">
+    <propertyFile>@PROPERTY.FILE@</propertyFile>
+    <csvFile>@CSV.FILE@</csvFile>
+  </reader>
+  <writer class="org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter">
+    <url>http://@URL@/ProcessPacket.do</url>
+    <id>@URL@</id>
+    <code>@CODE@</code>
+    <systemId>@SYSTEM.ID@</systemId>
+  </writer>
+</data-import-config>

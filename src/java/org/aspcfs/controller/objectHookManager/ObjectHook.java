@@ -154,7 +154,7 @@ public class ObjectHook extends Thread {
         if (actionList != null) {
           ObjectHookAction thisAction =
               (ObjectHookAction) actionList.get(new Integer(actionId));
-          if (thisAction != null) {
+          if (thisAction != null && thisAction.getEnabled()) {
             businessProcess = thisAction.getProcessName();
           }
         }
@@ -166,12 +166,7 @@ public class ObjectHook extends Thread {
           BusinessProcess thisProcess = (BusinessProcess) businessProcessList.get(businessProcess);
           if (thisProcess != null) {
             context.setProcess(thisProcess);
-            //
-            
-            //
             manager.execute(context);
-            //
-            
           }
         }
       }

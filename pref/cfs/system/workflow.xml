@@ -3,7 +3,7 @@
   that executes the WorkflowManager when a ticket is updated or inserted,
   the corresponding process is activated -->
   <hooks>
-    <hook class="org.aspcfs.modules.troubletickets.base.Ticket">
+    <hook class="org.aspcfs.modules.troubletickets.base.Ticket" module="Tickets">
       <actions>
         <action type="update" process="dhv.ticket.insert" enabled="true"/>
         <action type="insert" process="dhv.ticket.insert" enabled="true"/>
@@ -13,7 +13,7 @@
   <!-- Each process describes the workflow for the various object and action
     that is being hooked-->
   <processes>
-    <process name="dhv.ticket.insert" description="Ticket change notification" startId="1" entered="" modified="">
+    <process name="dhv.ticket.insert" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="Tickets">
       <parameters>
         <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
         <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
@@ -29,8 +29,7 @@
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
             <parameter name="notification.subject">CFS Ticket Closed: ${this.paddedId}</parameter>
-<parameter name="notification.body">
-<![CDATA[The following ticket in CFS has been closed:
+<parameter name="notification.body"><![CDATA[The following ticket in CFS has been closed:
 
 --- Ticket Details ---
 
@@ -54,8 +53,7 @@ Solution: ${this.solution}
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
             <parameter name="notification.subject">CFS Ticket Assigned: ${this.paddedId}</parameter>
-            <parameter name="notification.body">
-<![CDATA[The following ticket in CFS has been assigned to you:
+            <parameter name="notification.body"><![CDATA[The following ticket in CFS has been assigned to you:
 
 --- Ticket Details ---
 
@@ -74,7 +72,7 @@ Comment: ${this.comment}
     </process>
     
     
-    <process name="dhv.report.ticketList.overdue" description="Overdue ticket notification" startId="1">
+    <process name="dhv.report.ticketList.overdue" description="Overdue ticket notification" startId="1" type="SCHEDULED_EVENT" module="Tickets">
       <parameters>
         <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
         <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>

@@ -6,49 +6,45 @@ import org.aspcfs.utils.*;
 import java.sql.*;
 
 /**
- *  Represents a key=value pair preference that will be used for either a
- *  BusinessProcess definition or a BusinessProcess component.
+ *  Represents a key=value pair preference that will be used for a
+ *  BusinessProcess.
  *
  *@author     matt rajkowski
- *@created    November 11, 2002
- *@version    $Id: ComponentParameter.java,v 1.3 2003/01/13 21:41:16 mrajkowski
- *      Exp $
+ *@created    June 6, 2003
+ *@version    $Id$
  */
-public class ComponentParameter {
+public class ProcessParameter {
 
-  //Object properties
   private int id = -1;
-  private int componentId = -1;
-  private int parameterId = -1;
+  private int processId = -1;
+  private String name = null;
   private String value = null;
   private boolean enabled = true;
-  //Reference properties
-  private String name = null;
 
 
   /**
-   *  Constructor for the ComponentParameter object
+   *  Constructor for the ProcessParameter object
    */
-  public ComponentParameter() { }
+  public ProcessParameter() { }
 
 
   /**
-   *  Constructor for the ComponentParameter object
+   *  Constructor for the ProcessParameter object
    *
    *@param  rs                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public ComponentParameter(ResultSet rs) throws SQLException {
+  public ProcessParameter(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
 
 
   /**
-   *  Constructor for the ComponentParameter object
+   *  Constructor for the ProcessParameter object
    *
    *@param  parameterElement  Description of the Parameter
    */
-  public ComponentParameter(Element parameterElement) {
+  public ProcessParameter(Element parameterElement) {
     this.setName((String) parameterElement.getAttribute("name"));
     String newValue = (String) parameterElement.getAttribute("value");
     if (newValue == null || "".equals(newValue)) {
@@ -63,7 +59,7 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the id attribute of the ComponentParameter object
+   *  Sets the id attribute of the ProcessParameter object
    *
    *@param  tmp  The new id value
    */
@@ -73,7 +69,7 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the id attribute of the ComponentParameter object
+   *  Sets the id attribute of the ProcessParameter object
    *
    *@param  tmp  The new id value
    */
@@ -83,42 +79,22 @@ public class ComponentParameter {
 
 
   /**
-   *  Sets the componentId attribute of the ComponentParameter object
+   *  Sets the processId attribute of the ProcessParameter object
    *
-   *@param  tmp  The new componentId value
+   *@param  tmp  The new processId value
    */
-  public void setComponentId(int tmp) {
-    this.componentId = tmp;
+  public void setProcessId(int tmp) {
+    this.processId = tmp;
   }
 
 
   /**
-   *  Sets the componentId attribute of the ComponentParameter object
+   *  Sets the processId attribute of the ProcessParameter object
    *
-   *@param  tmp  The new componentId value
+   *@param  tmp  The new processId value
    */
-  public void setComponentId(String tmp) {
-    this.componentId = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the parameterId attribute of the ComponentParameter object
-   *
-   *@param  tmp  The new parameterId value
-   */
-  public void setParameterId(int tmp) {
-    this.parameterId = tmp;
-  }
-
-
-  /**
-   *  Sets the parameterId attribute of the ComponentParameter object
-   *
-   *@param  tmp  The new parameterId value
-   */
-  public void setParameterId(String tmp) {
-    this.parameterId = Integer.parseInt(tmp);
+  public void setProcessId(String tmp) {
+    this.processId = Integer.parseInt(tmp);
   }
 
 
@@ -163,7 +139,7 @@ public class ComponentParameter {
 
 
   /**
-   *  Gets the id attribute of the ComponentParameter object
+   *  Gets the id attribute of the ProcessParameter object
    *
    *@return    The id value
    */
@@ -173,22 +149,12 @@ public class ComponentParameter {
 
 
   /**
-   *  Gets the componentId attribute of the ComponentParameter object
+   *  Gets the processId attribute of the ProcessParameter object
    *
-   *@return    The componentId value
+   *@return    The processId value
    */
-  public int getComponentId() {
-    return componentId;
-  }
-
-
-  /**
-   *  Gets the parameterId attribute of the ComponentParameter object
-   *
-   *@return    The parameterId value
-   */
-  public int getParameterId() {
-    return parameterId;
+  public int getProcessId() {
+    return processId;
   }
 
 
@@ -223,50 +189,37 @@ public class ComponentParameter {
 
 
   /**
-   *  Populates this object from a database recordset
+   *  Populates this object from a database record
    *
    *@param  rs                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    //business_process_component_parameter
     id = rs.getInt("id");
-    componentId = rs.getInt("component_id");
-    parameterId = rs.getInt("parameter_id");
+    processId = rs.getInt("process_id");
+    name = rs.getString("param_name");
     value = rs.getString("param_value");
     enabled = rs.getBoolean("enabled");
-    //business_process_parameter_library
-    name = rs.getString("param_name");
   }
 
 
   /**
-   *  Description of the Method
+   *  Inserts this object into a database
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void insert(Connection db) throws SQLException {
-    //Parameters must be registered in the library, no dupes per component
-    if (parameterId == -1) {
-      LibraryComponentParameter libraryParam = new LibraryComponentParameter();
-      libraryParam.setComponentId(componentId);
-      libraryParam.setName(name);
-      libraryParam.setDescription(null);
-      libraryParam.setDefaultValue(value);
-      libraryParam.setEnabled(true);
-      libraryParam.insert(db);
-      parameterId = libraryParam.getId();
-    }
-    //Insert the parameter
     PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO business_process_component_parameter " +
-        "(component_id, parameter_id, param_value, enabled) VALUES " +
-        "(?, ?, ?, ?) ");
-    pst.setInt(1, componentId);
-    pst.setInt(2, parameterId);
-    pst.setString(3, value);
-    pst.setBoolean(4, enabled);
+        "INSERT INTO business_process_parameter " +
+        "(process_id, param_name, param_value, enabled) " +
+        "VALUES " +
+        "(?, ?, ?, ?)");
+    int i = 0;
+    pst.setInt(++i, processId);
+    pst.setString(++i, name);
+    pst.setString(++i, value);
+    pst.setBoolean(++i, enabled);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "business_process_param_id_seq");

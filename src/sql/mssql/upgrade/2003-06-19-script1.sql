@@ -1,11 +1,30 @@
-/**
- *  MSSQL Table Creation
- *  Workflow tables to support the WorkflowManager
- *
- *@author     mrajkowski
- *@created    May 15, 2003
- *@version    $Id$
- */
+/* ticket category editor */
+
+CREATE TABLE ticket_category_draft (
+  id INT IDENTITY PRIMARY KEY,
+  link_id INT DEFAULT -1,
+  cat_level int NOT NULL DEFAULT 0,
+  parent_cat_code int NOT NULL,
+  description VARCHAR(300) NOT NULL,
+  full_description text NOT NULL DEFAULT '',
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
+ALTER TABLE permission_category ADD categories BIT NOT NULL DEFAULT 0;
+UPDATE permission_category SET categories = 0;
+UPDATE permission_category SET categories = 1 where category = 'Tickets';
+
+ALTER TABLE permission_category ADD scheduled_events BIT NOT NULL DEFAULT 0;
+UPDATE permission_category SET scheduled_events = false;
+
+ALTER TABLE permission_category ADD object_events BIT NOT NULL DEFAULT 0;
+UPDATE permission_category SET object_events = false;
+
+UPDATE permission_category SET scheduled_events = true, object_events = true WHERE category = 'Tickets';
+
+/* New business process tables */
 
 CREATE TABLE business_process_component_library (
   component_id INT IDENTITY PRIMARY KEY,
@@ -68,28 +87,6 @@ CREATE TABLE business_process_component_parameter (
   parameter_id INTEGER NOT NULL REFERENCES business_process_parameter_library,
   param_value VARCHAR(4000),
   enabled BIT DEFAULT 1 NOT NULL
-);
-
-CREATE TABLE business_process_events (
-  event_id INT IDENTITY PRIMARY KEY,
-  second VARCHAR(64) DEFAULT '0',
-  minute VARCHAR(64) DEFAULT '*', 
-  hour VARCHAR(64) DEFAULT '*',
-  dayofmonth VARCHAR(64) DEFAULT '*',
-  month VARCHAR(64) DEFAULT '*', 
-  dayofweek VARCHAR(64) DEFAULT '*',
-  year VARCHAR(64) DEFAULT '*',
-  task VARCHAR(255),
-  extrainfo VARCHAR(255),
-  businessDays VARCHAR(6) DEFAULT 'true',
-  enabled BIT DEFAULT 0,
-  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  process_id INTEGER NOT NULL REFERENCES business_process
-);
-
-CREATE TABLE business_process_log (
-  process_name VARCHAR(255) UNIQUE NOT NULL,
-  anchor DATETIME NOT NULL
 );
 
 CREATE TABLE business_process_hook_library (

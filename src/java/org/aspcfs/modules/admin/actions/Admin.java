@@ -74,7 +74,7 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action that prepares system usage data
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -201,7 +201,7 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action that prepares a list of modules that can be configured
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -238,85 +238,71 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action that prepares a list of specific module items that can be
+   *  configured.
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandConfigDetails(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+    if (!hasPermission(context, "admin-sysconfig-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     addModuleBean(context, "Configuration", "Configuration");
     Connection db = null;
     String moduleId = context.getRequest().getParameter("moduleId");
-
     try {
       db = this.getConnection(context);
       PermissionCategory permCat = new PermissionCategory(db, Integer.parseInt(moduleId));
       context.getRequest().setAttribute("PermissionCategory", permCat);
-    } catch (Exception e) {
-      errorMessage = e;
+      return ("ConfigDetailsOK");
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      return ("ConfigDetailsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-
   }
 
 
   /**
-   *  Take an initial look at all of the configurable lists within CFS
+   *  Action that prepares a list of the configurable module lookup lists
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    */
   public String executeCommandEditLists(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-lists-view"))) {
+    if (!hasPermission(context, "admin-sysconfig-lists-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     PermissionCategory permCat = null;
     String moduleId = context.getRequest().getParameter("moduleId");
-
     try {
       db = this.getConnection(context);
       permCat = new PermissionCategory(db, Integer.parseInt(moduleId));
       buildFormElements(context, db);
-    } catch (Exception e) {
-      errorMessage = e;
-    } finally {
-      this.freeConnection(context, db);
-    }
-    context.getRequest().setAttribute("PermissionCategory", permCat);
-    addModuleBean(context, "Configuration", "Configuration");
-    if (errorMessage == null) {
+      context.getRequest().setAttribute("PermissionCategory", permCat);
+      addModuleBean(context, "Configuration", "Configuration");
       return ("EditListsOK");
-    } else {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return "SystemError";
+    } finally {
+      this.freeConnection(context, db);
     }
   }
 
 
   /**
-   *  Update a particular list with the new values
+   *  Action that updates a particular list with the new values
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
    *@since
    */
   public String executeCommandUpdateList(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-lists-edit"))) {
+    if (!hasPermission(context, "admin-sysconfig-lists-edit")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -335,10 +321,8 @@ public final class Admin extends CFSModule {
       names[j] = (String) st.nextToken();
       j++;
     }
-
     try {
       db = this.getConnection(context);
-
       //begin for all lookup lists
       LookupList compareList = new LookupList(db, tblName);
       LookupList newList = new LookupList(params, names);
@@ -358,19 +342,15 @@ public final class Admin extends CFSModule {
           thisElement.disableElement(db, tblName);
         }
       }
-
       Iterator k = newList.iterator();
       while (k.hasNext()) {
         LookupElement thisElement = (LookupElement) k.next();
-
         if (thisElement.getCode() == 0) {
           thisElement.insertElement(db, tblName);
         } else {
           thisElement.setNewOrder(db, tblName);
         }
-
       }
-      //end
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -459,7 +439,7 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Modify a selected list
+   *  Action that prepares the selected lookup list for modification
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -525,7 +505,7 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Lists the global parameters.
+   *  Action that prepares a list of the editable global parameters
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -544,7 +524,7 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action that routes to the modify timeout page
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -559,23 +539,21 @@ public final class Admin extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Action that updates the global session timeout from form data
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandUpdateTimeout(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+    if (!hasPermission(context, "admin-sysconfig-view")) {
       return ("PermissionError");
     }
     int timeout = Integer.parseInt(context.getRequest().getParameter("timeout"));
     addModuleBean(context, "Configuration", "Configuration");
-
-    //get the session timeout
+    //get the session timeout and update
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     thisSystem.setSessionTimeout(timeout * 60);
-
     return executeCommandListGlobalParams(context);
   }
 
@@ -595,97 +573,6 @@ public final class Admin extends CFSModule {
     thisList.setModuleId(moduleId);
     thisList.buildList(db);
     context.getRequest().setAttribute("LookupLists", thisList);
-  }
-
-
-  /**
-   *  This action maps the current system workflow processes to the request so
-   *  that a user can select one to view.
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandWorkflow(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-view"))) {
-      return ("PermissionError");
-    }
-    addModuleBean(context, "Configuration", "Workflow");
-    context.getRequest().setAttribute("hookManager", this.getSystemStatus(context).getHookManager());
-    return "WorkflowOK";
-  }
-
-
-  /**
-   *  This action prepares the selected workflow process components to be
-   *  viewed.
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandWorkflowDetails(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-view"))) {
-      return ("PermissionError");
-    }
-    addModuleBean(context, "Configuration", "Workflow");
-    ObjectHookManager hookManager = this.getSystemStatus(context).getHookManager();
-    BusinessProcessList processList = hookManager.getProcessList();
-    String param = context.getRequest().getParameter("process");
-    if (processList == null || param == null) {
-      return ("SystemError");
-    }
-    //Take all of the components for the selected process and assign
-    //a step id so that the workflow can be conveyed visually
-    Iterator i = processList.values().iterator();
-    while (i.hasNext()) {
-      BusinessProcess process = (BusinessProcess) i.next();
-      if (process.getName().equals(param)) {
-        LinkedHashMap steps = new LinkedHashMap();
-        //Put the starting component in place
-        BusinessProcessComponent component = process.getComponent(process.getStartId());
-        steps.put(new Integer(component.getId()), component);
-        //Now put each child result in the list
-        addChildren(steps, component);
-        context.getRequest().setAttribute("steps", steps);
-        context.getRequest().setAttribute("process", process);
-        return "WorkflowDetailsOK";
-      }
-    }
-    return ("SystemError");
-  }
-
-
-  /**
-   *  Adds children to the step/component list... children are either a result
-   *  of the parent component being true or false after execution.
-   *
-   *@param  map        The feature to be added to the Children attribute
-   *@param  component  The feature to be added to the Children attribute
-   */
-  private void addChildren(LinkedHashMap map, BusinessProcessComponent component) {
-    //Add the children that are a result of the parent being true
-    ArrayList trueChildren = component.getTrueChildren();
-    if (trueChildren != null) {
-      Iterator trueList = trueChildren.iterator();
-      while (trueList.hasNext()) {
-        BusinessProcessComponent thisComponent = (BusinessProcessComponent) trueList.next();
-        if (!map.containsKey(new Integer(thisComponent.getId()))) {
-          map.put(new Integer(thisComponent.getId()), thisComponent);
-        }
-        addChildren(map, thisComponent);
-      }
-    }
-    //Add the children that are a result of the parent being false
-    ArrayList falseChildren = component.getFalseChildren();
-    if (falseChildren != null) {
-      Iterator falseList = falseChildren.iterator();
-      while (falseList.hasNext()) {
-        BusinessProcessComponent thisComponent = (BusinessProcessComponent) falseList.next();
-        if (!map.containsKey(new Integer(thisComponent.getId()))) {
-          map.put(new Integer(thisComponent.getId()), thisComponent);
-        }
-        addChildren(map, thisComponent);
-      }
-    }
   }
 }
 

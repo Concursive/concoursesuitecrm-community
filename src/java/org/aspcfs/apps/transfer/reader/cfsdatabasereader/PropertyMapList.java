@@ -39,7 +39,7 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   *  Populates this object by reading an XML file with mappings
    *
    *@param  mapFile  Description of the Parameter
    *@param  modules  Description of the Parameter
@@ -102,7 +102,8 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   *  Creates a DataRecord object by comparing and extracting properties
+   *  from an object that must be in the loaded mappings
    *
    *@param  object  Description of the Parameter
    *@param  action  Description of the Parameter
@@ -114,14 +115,19 @@ public class PropertyMapList extends HashMap {
       DataRecord record = new DataRecord();
       record.setName(thisMap.getId());
       record.setAction(action);
-
+      //Go through each property map and get the corresponding data from the object
       Iterator properties = thisMap.iterator();
       while (properties.hasNext()) {
         Property thisProperty = (Property) properties.next();
-        if (thisProperty.hasValue()) {
-          record.addField(thisProperty.getName(), thisProperty.getValue(), thisProperty.getLookupValue(), thisProperty.getAlias());
+        if (thisProperty.getLookupValue() != null && "-1".equals(ObjectUtils.getParam(object, thisProperty.getName()))) {
+          //Looking up a -1 is not helpful and will cause the server to
+          //reject the transaction
         } else {
-          record.addField(thisProperty.getName(), ObjectUtils.getParam(object, thisProperty.getName()), thisProperty.getLookupValue(), thisProperty.getAlias());
+          if (thisProperty.hasValue()) {
+            record.addField(thisProperty.getName(), thisProperty.getValue(), thisProperty.getLookupValue(), thisProperty.getAlias());
+          } else {
+            record.addField(thisProperty.getName(), ObjectUtils.getParam(object, thisProperty.getName()), thisProperty.getLookupValue(), thisProperty.getAlias());
+          }
         }
       }
       return record;
@@ -133,7 +139,8 @@ public class PropertyMapList extends HashMap {
 
 
   /**
-   *  Description of the Method
+   *  Writes all of the objects in the supplied list to a writer by converting
+   *  them to Data Record objects first
    *
    *@param  writer  Description of the Parameter
    *@param  list    Description of the Parameter
