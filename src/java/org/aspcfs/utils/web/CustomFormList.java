@@ -165,30 +165,38 @@ public class CustomFormList extends HashMap {
               CustomField thisField = new CustomField();
               processField(field, thisField);
               thisColumn.add(thisField);
+/*
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("--CustomFormList-> Field Added: " + thisField.getType());
               }
+*/
             }
+/*
             if (System.getProperty("DEBUG") != null) {
-              System.out.println("--CustomFormList-> Column Added: ");
+              System.out.println("--CustomFormList-> Column Added ");
             }
+*/
             thisRow.add(thisColumn);
           }
+/*
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("--CustomFormList-> Row Added: ");
+            System.out.println("--CustomFormList-> Row Added ");
           }
+*/
           thisGroup.add(thisRow);
         }
-
+/*
         if (System.getProperty("DEBUG") != null) {
           System.out.println("--CustomFormList-> Group Added: " + thisGroup.getName());
         }
+*/
         thisTab.add(thisGroup);
       }
-
+/*
       if (System.getProperty("DEBUG") != null) {
         System.out.println("-CustomFormList-> Tab Added: " + thisTab.getName());
       }
+*/
       thisForm.add(thisTab);
     }
     return thisForm;
