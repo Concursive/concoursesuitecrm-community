@@ -45,7 +45,7 @@ public final class Search extends CFSModule {
         contactList.setSearchText(searchCriteria);
         contactList.setPagedListInfo(searchSiteInfo);
         contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-        contactList.setAllContacts(true, this.getUserRange(context));
+        contactList.setAllContacts(true, this.getUserId(context), this.getUserRange(context));
         contactList.setBuildDetails(true);
         contactList.setBuildTypes(false);
         contactList.buildList(db);
