@@ -31,6 +31,10 @@ public final class Login extends GenericAction {
     String username = loginBean.getUsername();
     String password = loginBean.getPassword();
     String serverName = context.getRequest().getServerName();
+    String gkDriver = (String)context.getServletContext().getAttribute("GKDRIVER");
+    if (gkDriver == null || gkDriver.equals("")) {
+      gkDriver = "org.postgresql.Driver";
+    }
     String gkHost = (String)context.getServletContext().getAttribute("GKHOST");
     String gkUser = (String)context.getServletContext().getAttribute("GKUSER");
     String gkUserPw = (String)context.getServletContext().getAttribute("GKUSERPW");
@@ -41,7 +45,7 @@ public final class Login extends GenericAction {
     
 
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
-    gk.setDriver("org.postgresql.Driver");
+    gk.setDriver(gkDriver);
     ConnectionElement ce = null;
     Connection db = null;
     PreparedStatement pst = null;
