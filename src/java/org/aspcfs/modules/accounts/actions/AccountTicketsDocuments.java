@@ -36,7 +36,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-view")) {
+    if (!hasPermission(context, "accounts-accounts-tickets-documents-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -73,7 +73,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-documents-add")) {
+    if (!hasPermission(context, "accounts-accounts-tickets-documents-add")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -103,7 +103,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpload(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-edit")) {
+    if (!hasPermission(context, "accounts-accounts-tickets-documents-edit")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -180,7 +180,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-edit")) {
+    if (!hasPermission(context, "accounts-accounts-tickets-documents-add")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -222,7 +222,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUploadVersion(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-edit")) {
+    if (!hasPermission(context, "accounts-accounts-tickets-documents-add")) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
@@ -299,7 +299,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    */
   public String executeCommandDetails(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-view"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-documents-view"))) {
       return ("PermissionError");
     }
 
@@ -340,11 +340,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
+    
     Exception errorMessage = null;
 
     String itemId = (String) context.getRequest().getParameter("fid");
@@ -443,7 +439,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    */
   public String executeCommandModify(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-documents-edit"))) {
       return ("PermissionError");
     }
 
@@ -485,7 +481,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    */
   public String executeCommandUpdate(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-documents-edit"))) {
       return ("PermissionError");
     }
 
@@ -537,7 +533,7 @@ public final class AccountTicketsDocuments extends CFSModule {
    */
   public String executeCommandDelete(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-documents-delete"))) {
       return ("PermissionError");
     }
 
