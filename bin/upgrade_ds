@@ -71,7 +71,7 @@ echo `date` >${LOG}
 #
 #############################################################################
 if [ ! -d "$DIRDST" ] ; then
-	if [ ! -d "$DIRDST" ] ; then echo "Exiting..."; exit 1; fi
+	if [ ! -d "$DIRDST" ] ; then echo "Exiting... destination directory does not exist"; exit 1; fi
 fi
 
 
