@@ -706,7 +706,8 @@ public class OrganizationList extends Vector {
 
 
   /**
-   *  Description of the Method
+   *  This method is required for synchronization, it allows for the resultset
+   *  to be streamed with lower overhead
    *
    *@param  db                Description of the Parameter
    *@param  pst               Description of the Parameter

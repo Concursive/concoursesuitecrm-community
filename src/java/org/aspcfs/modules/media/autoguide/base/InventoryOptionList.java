@@ -208,7 +208,8 @@ public class InventoryOptionList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   *  This method is required for synchronization, it allows for the resultset
+   *  to be streamed with lower overhead
    *
    *@param  db                Description of Parameter
    *@param  pst               Description of Parameter
