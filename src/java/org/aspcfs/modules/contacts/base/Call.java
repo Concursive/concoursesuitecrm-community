@@ -8,6 +8,8 @@ import java.sql.*;
 import java.text.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.actionlist.base.*;
 
 /**
  *  Description of the Class
@@ -37,6 +39,9 @@ public class Call extends GenericBean {
   private java.sql.Date alertDate = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
+
+  //action list properties
+  private int actionId = -1;
 
 
   /**
@@ -250,6 +255,36 @@ public class Call extends GenericBean {
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
+  }
+
+
+  /**
+   *  Sets the actionId attribute of the Call object
+   *
+   *@param  actionId  The new actionId value
+   */
+  public void setActionId(int actionId) {
+    this.actionId = actionId;
+  }
+
+
+  /**
+   *  Sets the actionId attribute of the Call object
+   *
+   *@param  actionId  The new actionId value
+   */
+  public void setActionId(String actionId) {
+    this.actionId = Integer.parseInt(actionId);
+  }
+
+
+  /**
+   *  Gets the actionId attribute of the Call object
+   *
+   *@return    The actionId value
+   */
+  public int getActionId() {
+    return actionId;
   }
 
 
@@ -568,6 +603,16 @@ public class Call extends GenericBean {
 
 
   /**
+   *  Gets the idString attribute of the Call object
+   *
+   *@return    The idString value
+   */
+  public String getIdString() {
+    return String.valueOf(id);
+  }
+
+
+  /**
    *  Gets the OrgId attribute of the Call object
    *
    *@return    The OrgId value
@@ -739,72 +784,136 @@ public class Call extends GenericBean {
     if (!isValid(db)) {
       return false;
     }
+    try {
+      db.setAutoCommit(false);
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          "INSERT INTO call_log " +
+          "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, alertdate, alert, ");
+      if (entered != null) {
+        sql.append("entered, ");
+      }
+      if (modified != null) {
+        sql.append("modified, ");
+      }
+      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      }
+      sql.append("?, ?) ");
+      int i = 0;
 
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "INSERT INTO call_log " +
-        "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, alertdate, alert, ");
-    if (entered != null) {
-      sql.append("entered, ");
-    }
-    if (modified != null) {
-      sql.append("modified, ");
-    }
-    sql.append("enteredBy, modifiedBy ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
-    if (entered != null) {
-      sql.append("?, ");
-    }
-    if (modified != null) {
-      sql.append("?, ");
-    }
-    sql.append("?, ?) ");
-    int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      if (this.getOrgId() > 0) {
+        pst.setInt(++i, this.getOrgId());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      if (this.getContactId() > 0) {
+        pst.setInt(++i, this.getContactId());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      if (this.getOppHeaderId() > 0) {
+        pst.setInt(++i, this.getOppHeaderId());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      if (this.getCallTypeId() > 0) {
+        pst.setInt(++i, this.getCallTypeId());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      pst.setInt(++i, this.getLength());
+      pst.setString(++i, this.getSubject());
+      pst.setString(++i, this.getNotes());
+      if (alertDate == null) {
+        pst.setNull(++i, java.sql.Types.DATE);
+      } else {
+        pst.setDate(++i, this.getAlertDate());
+      }
+      pst.setString(++i, this.getAlertText());
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
+      pst.execute();
+      pst.close();
 
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    if (this.getOrgId() > 0) {
-      pst.setInt(++i, this.getOrgId());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-    if (this.getContactId() > 0) {
-      pst.setInt(++i, this.getContactId());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-    if (this.getOppHeaderId() > 0) {
-      pst.setInt(++i, this.getOppHeaderId());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
-    if (this.getCallTypeId() > 0) {
-      pst.setInt(++i, this.getCallTypeId());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
+      id = DatabaseUtils.getCurrVal(db, "call_log_call_id_seq");
 
-    pst.setInt(++i, this.getLength());
-    pst.setString(++i, this.getSubject());
-    pst.setString(++i, this.getNotes());
-    if (alertDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setDate(++i, this.getAlertDate());
+      if (actionId > 0) {
+        updateLog(db);
+      }
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
     }
-    pst.setString(++i, this.getAlertText());
-    if (entered != null) {
-      pst.setTimestamp(++i, entered);
-    }
-    if (modified != null) {
-      pst.setTimestamp(++i, modified);
-    }
-    pst.setInt(++i, this.getEnteredBy());
-    pst.setInt(++i, this.getModifiedBy());
-    pst.execute();
-    pst.close();
-
-    id = DatabaseUtils.getCurrVal(db, "call_log_call_id_seq");
     return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateLog(Connection db) throws SQLException {
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      ActionItemLog thisLog = new ActionItemLog();
+      thisLog.setEnteredBy(this.getEnteredBy());
+      thisLog.setModifiedBy(this.getModifiedBy());
+      thisLog.setItemId(this.getActionId());
+      thisLog.setLinkItemId(this.getId());
+      thisLog.setType(Constants.CALL_OBJECT);
+      thisLog.insert(db);
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public DependencyList processDependencies(Connection db) throws SQLException {
+    DependencyList dependencyList = new DependencyList();
+    ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId());
+    if (actionList != null) {
+      Dependency thisDependency = new Dependency();
+      thisDependency.setName(actionList.getDescription());
+      thisDependency.setCount(1);
+      thisDependency.setCanDelete(true);
+      dependencyList.add(thisDependency);
+    }
+    return dependencyList;
   }
 
 
@@ -822,20 +931,18 @@ public class Call extends GenericBean {
     }
 
     int recordCount = 0;
-
+    ActionItemLog.deleteLink(db, this.getId(), Constants.CALL_OBJECT);
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM call_log " +
         "WHERE call_id = ? ");
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
     pst.close();
-
     if (recordCount == 0) {
       errors.put("actionError", "Call could not be deleted because it no longer exists.");
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
 
 
