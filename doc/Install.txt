@@ -104,7 +104,7 @@
   # Add the following to the bottom of /etc/profile:
     export JAVA_HOME=/usr/java/j2se
     export ANT_HOME=/usr/java/ant
-    PATH=$PATH:${JAVA_HOME}/bin:${ANT_HOME}/bin
+    export PATH=$PATH:${JAVA_HOME}/bin:${ANT_HOME}/bin
     export CATALINA_HOME=/usr/java/tomcat
     export CATALINA_OPTS=-Djava.awt.headless=true
     export CFS_HOME=/home/webapps/ROOT
@@ -270,27 +270,27 @@ things on the system.
 # This is a calculation based on ACTUAL server memory!!!
 # To check the current shared memory on a system, use:
     $ cat /proc/sys/kernel/shmmax
-# In this example, the server has 256MB so I want to increase shared memory to 128MB
-# 256Mb total, 96Mb shared, 12Mb sort
-# 512Mb total, 224Mb shared, 12Mb sort
-# 1Gb total, 480Mb shared, 32Mb sort
+# In this example, the server has 256MB so I want to increase shared memory to ~64MB
+# 256Mb total, 64Mb shared, 12Mb sort
+# 512Mb total, 128Mb shared, 12Mb sort
+# 1Gb total, 256Mb shared, 32Mb sort
 
 # The greater this number, the more PostgreSQL can load the database into memory
   $ vi /etc/sysctl.conf
   
   # Add the following line at the bottom:
-    kernel.shmmax = 96000000
+    kernel.shmmax = 68403200
 
 # To update the server at run-time, without rebooting:
-  $ echo 96000000 > /proc/sys/kernel/shmmax
+  $ echo 68403200 > /proc/sys/kernel/shmmax
 
 # Now modify postgresql configuration to use more memory
 # This is a calculation based on the kernel shmmax!!!
   $ vi /var/lib/pgsql/data/postgresql.conf
   
   # Uncomment the following line and change the value:
-  # shared buffers AT THE MOST can be shmmax / 8192
-    shared_buffers = 11700
+  # shared buffers AT THE MOST can be (shmmax - 2867200) / 8192
+    shared_buffers = 8000
   # Uncomment the following line and change the value:
   # sort_mem should not be too much, 512k is the default so try:
     sort_mem = 12288
