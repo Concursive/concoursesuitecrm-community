@@ -2,56 +2,186 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.utils.DatabaseUtils;
 import javax.servlet.http.*;
 
-
-public class AccessLogList extends Vector {
+/**
+ *  Description of the Class
+ *
+ *@author     chris
+ *@created    November, 2002
+ *@version    $Id$
+ */
+public class AccessLogList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
   private int userId = -1;
-  
+
+  /**
+   *  Used by XML API
+   */
   public final static String tableName = "access_log";
+  /**
+   *  Used by XML API
+   */
   public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
 
+  private java.sql.Timestamp enteredRangeStart = null;
+  private java.sql.Timestamp enteredRangeEnd = null;
 
+
+  /**
+   *  Constructor for the AccessLogList object
+   */
   public AccessLogList() { }
 
+
+  /**
+   *  Sets the pagedListInfo attribute of the AccessLogList object
+   *
+   *@param  tmp  The new pagedListInfo value
+   */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
-  
+
+
+  /**
+   *  Gets the pagedListInfo attribute of the AccessLogList object
+   *
+   *@return    The pagedListInfo value
+   */
   public PagedListInfo getPagedListInfo() {
-	return pagedListInfo;
-}
-
-public int getUserId() {
-	return userId;
-}
-public void setUserId(int userId) {
-	this.userId = userId;
-}
-public void setUserId(String userId) {
-	this.userId = Integer.parseInt(userId);
-}
+    return pagedListInfo;
+  }
 
 
-public String getTableName() { return tableName; }
-public String getUniqueField() { return uniqueField; }
-public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
-public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
-public int getSyncType() { return syncType; }
-public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
-public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
-public void setSyncType(int tmp) { this.syncType = tmp; }
+  /**
+   *  Gets the userId attribute of the AccessLogList object
+   *
+   *@return    The userId value
+   */
+  public int getUserId() {
+    return userId;
+  }
 
+
+  /**
+   *  Sets the userId attribute of the AccessLogList object
+   *
+   *@param  userId  The new userId value
+   */
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
+
+
+  /**
+   *  Sets the userId attribute of the AccessLogList object
+   *
+   *@param  userId  The new userId value
+   */
+  public void setUserId(String userId) {
+    this.userId = Integer.parseInt(userId);
+  }
+  
+  public void setEnteredRangeStart(java.sql.Timestamp tmp) { this.enteredRangeStart = tmp; }
+  public void setEnteredRangeEnd(java.sql.Timestamp tmp) { this.enteredRangeEnd = tmp; }
+
+
+  /**
+   *  Gets the tableName attribute of the AccessLogList object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the AccessLogList object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   *  Gets the lastAnchor attribute of the AccessLogList object
+   *
+   *@return    The lastAnchor value
+   */
+  public java.sql.Timestamp getLastAnchor() {
+    return lastAnchor;
+  }
+
+
+  /**
+   *  Gets the nextAnchor attribute of the AccessLogList object
+   *
+   *@return    The nextAnchor value
+   */
+  public java.sql.Timestamp getNextAnchor() {
+    return nextAnchor;
+  }
+
+
+  /**
+   *  Gets the syncType attribute of the AccessLogList object
+   *
+   *@return    The syncType value
+   */
+  public int getSyncType() {
+    return syncType;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the AccessLogList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the AccessLogList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the AccessLogList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildList(Connection db) throws SQLException {
 
     PreparedStatement pst = null;
@@ -120,44 +250,78 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-    
+
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-    
+
     int count = 0;
     while (rs.next()) {
-
-            /**
-      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
-        break;
-      }
-*/
       ++count;
       AccessLog thisAccessLog = new AccessLog(rs);
-      this.addElement(thisAccessLog);
+      this.add(thisAccessLog);
     }
     rs.close();
     pst.close();
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of the Parameter
+   */
   private void createFilter(StringBuffer sqlFilter) {
     if (userId > -1) {
       sqlFilter.append("AND a.user_id = ? ");
     }
+    if (enteredRangeStart != null) {
+      sqlFilter.append("AND entered >= ? ");
+    }
+    if (enteredRangeEnd != null) {
+      sqlFilter.append("AND entered <= ? ");
+    }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
     if (userId > -1) {
       pst.setInt(++i, userId);
     }
-
+    if (enteredRangeStart != null) {
+      pst.setTimestamp(++i, enteredRangeStart);
+    }
+    if (enteredRangeEnd != null) {
+      pst.setTimestamp(++i, enteredRangeEnd);
+    }
     return i;
   }
-
+  
+  public int queryRecordCount(Connection db) throws SQLException {
+    int recordCount = 0;
+    StringBuffer sqlFilter = new StringBuffer();
+    String sqlCount =
+      "SELECT COUNT(*) AS recordcount " +
+      "FROM access_log a " +
+      "WHERE a.id > 0 ";
+    createFilter(sqlFilter);
+    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    int items = prepareFilter(pst);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      recordCount = DatabaseUtils.getInt(rs, "recordcount", 0);
+    }
+    pst.close();
+    rs.close();
+    return recordCount;
+  }
 }
 
