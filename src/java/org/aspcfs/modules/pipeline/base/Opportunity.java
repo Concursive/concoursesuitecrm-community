@@ -1630,7 +1630,7 @@ public class Opportunity extends GenericBean {
     if (this.getAccountLink() == -1 && this.getContactLink() == -1) {
       throw new SQLException("You must associate an opportunity with an account or contact.");
     }
-    this.setStageChange(true);
+    //this.setStageChange(true);
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
