@@ -18,7 +18,6 @@
 <dhv:permission name="myhomepage-tasks-add">
  <body onLoad="javascript:document.forms['addTask'].description.focus();">
 </dhv:permission>
-<form name="addTask" action="MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
 <%-- Trails --%>
 <table class="trails">
 <tr>
@@ -30,6 +29,7 @@ My Tasks
 </table>
 <%-- End Trails --%>
  <dhv:permission name="myhomepage-tasks-add">
+ <form name="addTask" action="MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
