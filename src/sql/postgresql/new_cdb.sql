@@ -63,14 +63,6 @@ CREATE TABLE system_prefs (
   enabled BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE system_modules (
-  code SERIAL PRIMARY KEY,
-  description VARCHAR(255) NOT NULL,
-  default_item BOOLEAN DEFAULT false,
-  level INTEGER DEFAULT 0,
-  enabled BOOLEAN DEFAULT true
-);
-
 CREATE TABLE mod_log (
 datetime			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ,username			varchar(80) NOT NULL
@@ -279,7 +271,9 @@ CREATE TABLE permission_category (
   description VARCHAR(255),
   level INT NOT NULL DEFAULT 0,
   enabled boolean NOT NULL DEFAULT true,
-  active boolean NOT NULL DEFAULT true
+  active boolean NOT NULL DEFAULT true,
+  folders boolean NOT NULL DEFAULT false,
+  lookups boolean NOT NULL DEFAULT false
 );
 
 CREATE TABLE permission (

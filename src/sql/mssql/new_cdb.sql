@@ -63,14 +63,6 @@ CREATE TABLE system_prefs (
   enabled BIT NOT NULL DEFAULT 1
 );
 
-CREATE TABLE system_modules (
-  code INT IDENTITY PRIMARY KEY,
-  description VARCHAR(255) NOT NULL,
-  default_item BIT DEFAULT 0,
-  level INTEGER DEFAULT 0,
-  enabled BIT DEFAULT 1
-);
-
 CREATE TABLE mod_log (
 datetime			DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ,username			varchar(80) NOT NULL
@@ -279,7 +271,9 @@ CREATE TABLE permission_category (
   description VARCHAR(255),
   level INT NOT NULL DEFAULT 0,
   enabled BIT NOT NULL DEFAULT 1,
-  active BIT NOT NULL DEFAULT 1
+  active BIT NOT NULL DEFAULT 1,
+  folders BIT NOT NULL DEFAULT 0,
+  lookups BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE permission (

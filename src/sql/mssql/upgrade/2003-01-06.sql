@@ -66,7 +66,7 @@ DROP TABLE custom_field_category
 GO
 
 CREATE TABLE custom_field_category (
-  module_id INTEGER NOT NULL REFERENCES system_modules(code),
+  module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
   category_id INT IDENTITY PRIMARY KEY,
   category_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
