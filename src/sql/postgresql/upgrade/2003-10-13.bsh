@@ -2,6 +2,8 @@
  * - The .xml will be copied by ant
  * - This script inserts the report into the database so users can use it
  */
+import org.aspcfs.utils.DatabaseUtils;
+
 //Check to see if report already exists
 exists = false;
 st = db.createStatement();
@@ -44,14 +46,16 @@ if (!exists) {
   //Insert the filename, type, title, description
   pst = db.prepareStatement(
     "INSERT INTO report " +
-    "(category_id, permission_id, filename, type, title, description) " +
-    "VALUES (?, ?, ?, ?, ?, ?) ");
+    "(category_id, permission_id, filename, type, title, description, enteredby, modifiedby) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
   pst.setInt(1, categoryId);
   DatabaseUtils.setInt(pst, 2, permissionId);
   pst.setString(3, "opportunity_pipeline.xml");
-  pst.setString(4, type);
+  pst.setInt(4, type);
   pst.setString(5, "Opportunity Pipeline");
   pst.setString(6, "What are my upcoming opportunities by stage?");
+  pst.setInt(7, 0);
+  pst.setInt(8, 0);
   pst.execute();
   pst.close();
   print("Report inserted");
