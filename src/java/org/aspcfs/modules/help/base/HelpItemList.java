@@ -1,5 +1,3 @@
-//Copyright 2002 Dark Horse Ventures
-
 package org.aspcfs.modules.help.base;
 
 import java.util.ArrayList;
@@ -10,50 +8,13 @@ import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 
+public class HelpItemList extends ArrayList {
 
-/**
- *  Description of the Class
- *
- *@author     mrajkowski
- *@created    January 14, 2003
- *@version    $Id$
- */
-public class HelpContents extends ArrayList {
-  private boolean buildFeatures = false;
-  private String module = null;
-  private String section = null;
-  private String subSection = null;
   private PagedListInfo pagedListInfo = null;
 
 
   /**
-   *  Constructor for the HelpContents object
-   */
-  public HelpContents() { }
-
-
-  /**
-   *  Sets the module attribute of the HelpContents object
-   *
-   *@param  module  The new module value
-   */
-  public void setModule(String module) {
-    this.module = module;
-  }
-
-
-  /**
-   *  Sets the section attribute of the HelpContents object
-   *
-   *@param  section  The new section value
-   */
-  public void setSection(String section) {
-    this.section = section;
-  }
-
-
-  /**
-   *  Sets the pagedListInfo attribute of the HelpContents object
+   *  Sets the pagedListInfo attribute of the HelpNoteList object
    *
    *@param  pagedListInfo  The new pagedListInfo value
    */
@@ -63,27 +24,7 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Sets the subSection attribute of the HelpContents object
-   *
-   *@param  subSection  The new subSection value
-   */
-  public void setSubSection(String subSection) {
-    this.subSection = subSection;
-  }
-
-
-  /**
-   *  Gets the subSection attribute of the HelpContents object
-   *
-   *@return    The subSection value
-   */
-  public String getSubSection() {
-    return subSection;
-  }
-
-
-  /**
-   *  Gets the pagedListInfo attribute of the HelpContents object
+   *  Gets the pagedListInfo attribute of the HelpNoteList object
    *
    *@return    The pagedListInfo value
    */
@@ -93,52 +34,12 @@ public class HelpContents extends ArrayList {
 
 
   /**
-   *  Gets the module attribute of the HelpContents object
-   *
-   *@return    The module value
-   */
-  public String getModule() {
-    return module;
-  }
-
-
-  /**
-   *  Gets the section attribute of the HelpContents object
-   *
-   *@return    The section value
-   */
-  public String getSection() {
-    return section;
-  }
-
-
-  /**
-   *  Sets the buildFeatures attribute of the HelpContents object
-   *
-   *@param  buildFeatures  The new buildFeatures value
-   */
-  public void setBuildFeatures(boolean buildFeatures) {
-    this.buildFeatures = buildFeatures;
-  }
-
-
-  /**
-   *  Gets the buildFeatures attribute of the HelpContents object
-   *
-   *@return    The buildFeatures value
-   */
-  public boolean getBuildFeatures() {
-    return buildFeatures;
-  }
-
-
-  /**
-   *  Description of the Method
+   *  Builds the list
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void build(Connection db) throws SQLException {
+  public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
@@ -151,8 +52,8 @@ public class HelpContents extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM help_contents hc " +
-        "WHERE hc.help_id > -1 ");
+        "FROM help_contents c " +
+        "WHERE c.help_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
@@ -174,7 +75,7 @@ public class HelpContents extends ArrayList {
     if (!pagedListInfo.getCurrentLetter().equals("")) {
       pst = db.prepareStatement(sqlCount.toString() +
           sqlFilter.toString() +
-          "AND hc.description < ? ");
+          "AND c.description < ? ");
       items = prepareFilter(pst);
       pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
       rs = pst.executeQuery();
@@ -187,15 +88,15 @@ public class HelpContents extends ArrayList {
     }
 
     //Determine column to sort by
-    pagedListInfo.setDefaultSort("hc.module", "");
+    pagedListInfo.setDefaultSort("c.module, c.section, c.subsection, c.entered", "");
     pagedListInfo.appendSqlTail(db, sqlOrder);
 
     //Need to build a base SQL statement for returning records
     pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     sqlSelect.append(
         "* " +
-        "FROM help_contents hc " +
-        "WHERE hc.help_id > -1 ");
+        "FROM help_contents c " +
+        "WHERE c.help_id > -1 ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -218,19 +119,11 @@ public class HelpContents extends ArrayList {
     }
     rs.close();
     pst.close();
-    //build details
-    Iterator i = this.iterator();
-    while (i.hasNext()) {
-      HelpItem thisItem = (HelpItem) i.next();
-      if (buildFeatures) {
-        thisItem.buildFeatures(db);
-      }
-    }
   }
 
 
   /**
-   *  Description of the Method
+   *  Create the filters
    *
    *@param  sqlFilter  Description of the Parameter
    */
@@ -238,23 +131,11 @@ public class HelpContents extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
-    if (module != null) {
-      sqlFilter.append("AND hc.module = ? ");
-    }
-
-    if (section != null) {
-      sqlFilter.append("AND hc.section = ? ");
-    }
-
-    if (subSection != null) {
-      sqlFilter.append("AND hc.subSection = ? ");
-    }
   }
 
 
   /**
-   *  Description of the Method
+   *  Sets the filters
    *
    *@param  pst               Description of the Parameter
    *@return                   Description of the Return Value
@@ -262,20 +143,8 @@ public class HelpContents extends ArrayList {
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
-    if (module != null) {
-      pst.setString(++i, module);
-    }
-
-    if (section != null) {
-      pst.setString(++i, section);
-    }
-
-    if (subSection != null) {
-      pst.setString(++i, subSection);
-    }
     return i;
   }
-
 }
+
 
