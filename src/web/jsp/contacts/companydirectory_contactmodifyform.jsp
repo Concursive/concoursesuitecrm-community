@@ -203,6 +203,15 @@
       </table>
      </td>
   </tr>
+  <tr class="containerBody"> 
+  <td nowrap class="formLabel">
+      Access Type
+    </td>
+    <td>
+      <%= AccessTypeList.getHtmlSelect("accessType", ContactDetails.getAccessType()) %>
+      <%= showAttribute(request, "accountAccessError") %>
+    </td>
+   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       First Name
@@ -245,15 +254,6 @@
       <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
     </td>
   </tr>
-  <tr class="containerBody"> 
-  <td nowrap class="formLabel">
-      Access Type
-    </td>
-    <td>
-      <%= AccessTypeList.getHtmlSelect("accessType", ContactDetails.getAccessType()) %>
-      <%= showAttribute(request, "accountAccessError") %>
-    </td>
-   </tr>
 </table>
 &nbsp;<br>
 <%--  include basic contact form --%>

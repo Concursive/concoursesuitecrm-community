@@ -160,6 +160,19 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      Access Type
+    </td>
+    <td>
+      <% 
+          HtmlSelect thisSelect = AccessTypeList.getHtmlSelectObj(ContactDetails.getAccessType());
+          thisSelect.addAttribute("id", "accessType");
+      %>
+      <%=  thisSelect.getHtml("accessType") %>
+      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       First Name
     </td>
     <td>
@@ -208,19 +221,7 @@
     <td>
       <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
     </td>
-    <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Access Type
-    </td>
-    <td>
-      <% 
-          HtmlSelect thisSelect = AccessTypeList.getHtmlSelectObj(ContactDetails.getAccessType());
-          thisSelect.addAttribute("id", "accessType");
-      %>
-      <%=  thisSelect.getHtml("accessType") %>
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-    </td>
-  </tr>
+    </tr>
 </table>
 &nbsp;<br>
 <%--  include basic contact form --%>
