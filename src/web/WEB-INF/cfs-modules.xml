@@ -186,7 +186,7 @@
       <permission value="pipeline-opportunities-view"/>
       <long_html value="Search Opportunities"/>
       <short_html value="Search&lt;br&gt;Opportunities"/>
-      <link value="Leads.do?command=SearchOpp"/>
+      <link value="Leads.do?command=SearchForm"/>
     </submenu>
     
     <submenu name="-">
@@ -261,7 +261,7 @@
       <permission value="accounts-accounts-view"/>
       <long_html value="Search Accounts"/>
       <short_html value="Search&lt;br&gt;Accounts"/>
-      <link value="Accounts.do?command=Search"/>
+      <link value="Accounts.do?command=SearchForm"/>
     </submenu>
     
     <submenu name="-">
