@@ -111,7 +111,7 @@ public class PilotOnlineReader implements DataReader {
         InventoryList inventoryList = new InventoryList();
         inventoryList.setOrgId(dealer.getId());
         inventoryList.setShowSold(Constants.FALSE);
-        inventoryList.setAdRunDate(new java.sql.Date(new java.util.Date().getTime()));
+        //inventoryList.setAdRunDate(new java.sql.Date(new java.util.Date().getTime()));
         inventoryList.setBuildPictureId(true);
         inventoryList.buildList(db);
         Iterator inventory = inventoryList.iterator();
@@ -143,14 +143,20 @@ public class PilotOnlineReader implements DataReader {
             }
           }
           thisRecord.addField("options", optionText.toString());
-          thisRecord.addField("comments", vehicle.getComments());
+          thisRecord.addField("comments", toOneLine(vehicle.getComments()));
           thisRecord.addField("condition", vehicle.getCondition());
           thisRecord.addField("sellingPrice", vehicle.getSellingPriceString());
           //Dealer Info
           thisRecord.addField("accountPhone", dealer.getPhoneNumber("Main"));
           thisRecord.addField("accountEmail", dealer.getEmailAddress("Primary"));
+          //Picture
+          if (vehicle.hasPicture()) {
+            thisRecord.addField("pictureFilename", vehicle.getPicture().getFilename() + ".jpg");
+          } else {
+            thisRecord.addField("pictureFilename", "");
+          }
           writer.save(thisRecord);
-          logger.info(writer.getLastResponse());
+          //logger.info(writer.getLastResponse());
         }
       }
     } catch (Exception ex) {
@@ -163,6 +169,17 @@ public class PilotOnlineReader implements DataReader {
       sqlDriver = null;
     }
     return true;
+  }
+  
+  private static String toOneLine(String in) {
+    if (in != null && in.length() > 0) {
+      String out = StringUtils.replace(in, "\r\n", " ");
+      out = StringUtils.replace(out, "\r", " ");
+      out = StringUtils.replace(out, "\n", " ");
+      return out;
+    } else {
+      return "";
+    }
   }
 }
 
