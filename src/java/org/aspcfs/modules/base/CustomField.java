@@ -868,20 +868,40 @@ public class CustomField extends GenericBean implements Cloneable {
   /**
    *  Sets the lookupList attribute of the CustomField object
    *
-   *@param  lookupList  The new lookupList value
+   *@param  tmp  The new lookupList value
    */
-  public void setLookupList(String lookupList) {
-    this.lookupList = lookupList;
+  public void setLookupList(String tmp) {
+    lookupList = tmp;
   }
 
 
   /**
-   *  Gets the lookupList attribute of the CustomField object
+   *  Sets the lookupList attribute of the CustomField object
    *
-   *@return    The lookupList value
+   *@param  tmp  The new lookupList value
    */
-  public String getLookupList() {
-    return lookupList;
+  public void setLookupListText(String tmp) {
+    elementData = new LookupList();
+    int count = 0;
+    StringTokenizer st = new StringTokenizer(tmp, delimiter);
+    while (st.hasMoreTokens()) {
+      String listField = st.nextToken();
+      if (!listField.trim().equals("")) {
+        ++count;
+        LookupElement thisElement = new LookupElement();
+        thisElement.setDescription(listField.trim());
+
+        if (textAsCode) {
+          thisElement.setCode(Integer.parseInt(thisElement.getDescription()));
+        } else {
+          thisElement.setCode(count);
+        }
+
+        thisElement.setLevel(count);
+        thisElement.setDefaultItem(false);
+        ((LookupList) elementData).add(thisElement);
+      }
+    }
   }
 
 
@@ -916,12 +936,22 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
-   *  Gets the LookupList attribute of the CustomField object
+   *  Gets the lookupList attribute of the CustomField object
+   *
+   *@return    The lookupList value
+   */
+  public String getLookupList() {
+    return lookupList;
+  }
+
+
+  /**
+   *  When building a folder, this method generates the text for the HTML form
+   *  for a new LookupList
    *
    *@return    The LookupList value
-   *@since
    */
-  /*public String getLookupList() {
+  public String getLookupListText() {
     StringBuffer sb = new StringBuffer();
     if (elementData != null) {
       Iterator i = ((LookupList) elementData).iterator();
@@ -934,7 +964,7 @@ public class CustomField extends GenericBean implements Cloneable {
       }
     }
     return sb.toString();
-  }*/
+  }
 
 
   /**
@@ -1352,7 +1382,7 @@ public class CustomField extends GenericBean implements Cloneable {
         case LABEL:
           return this.getDisplayHtml();
         case LINK:
-          return ("<a href=\"" + jsEvent + "\" > " + display + " </a>");
+          return ("<a href=\"" + jsEvent + "\" >" + display + "</a>");
         default:
           String maxlength = this.getParameter("maxlength");
           String size = "";
@@ -1580,7 +1610,6 @@ public class CustomField extends GenericBean implements Cloneable {
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
-   *@since
    */
   public boolean insertField(Connection db) throws SQLException {
     boolean result = false;
