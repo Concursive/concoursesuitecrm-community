@@ -65,7 +65,7 @@ You will also need a database server installed.  The following are supported:
 You will need the required Centric CRM 3rd party libraries, these are 
 distributed separately and include:
 
-  PDFBox-0.6.5.jar
+  PDFBox-0.6.7.jar
   activation.jar
   batik-all.jar
   bcprov-jdk14-121.jar
@@ -79,9 +79,9 @@ distributed separately and include:
   jasperreports-0.5.3.jar
   jcommon.jar
   jfreechart.jar
-  jtds-0.9-rc2.jar
+  jtds-0.9.jar
   log4j.jar
-  lucene-1.4-final.jar
+  lucene-1.4.2.jar
   mail.jar
   nekohtml.jar
   poi-2.5-final-20040302.jar
