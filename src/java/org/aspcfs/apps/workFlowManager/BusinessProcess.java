@@ -619,8 +619,10 @@ public class BusinessProcess {
         pst.close();
         id = DatabaseUtils.getCurrVal(db, "business_process_process_id_seq");
         //Insert the parameters
-        parameters.setProcessId(id);
-        parameters.insert(db);
+        if (parameters != null) {
+          parameters.setProcessId(id);
+          parameters.insert(db);
+        }
         //Insert the components, must be done using tree
         BusinessProcessComponent startComponent = (BusinessProcessComponent) components.get(new Integer(startId));
         startComponent.setProcessId(id);

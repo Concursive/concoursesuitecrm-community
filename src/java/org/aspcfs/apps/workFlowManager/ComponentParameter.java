@@ -269,7 +269,7 @@ public class ComponentParameter {
     pst.setBoolean(4, enabled);
     pst.execute();
     pst.close();
-    id = DatabaseUtils.getCurrVal(db, "business_process_param_id_seq");
+    id = DatabaseUtils.getCurrVal(db, "business_process_comp_pa_id_seq");
   }
 }
 

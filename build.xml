@@ -203,6 +203,20 @@
     </taskdef>
   </target>
   
+  <target name="taskdef.register" depends="init">
+    <taskdef name="register" 
+        classname="org.aspcfs.ant.tasks.RegisterTask">
+        <classpath>
+          <fileset dir="${build.lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+          </fileset>
+        </classpath>
+    </taskdef>
+  </target>
+  
   <!-- See if files are up-to-date so only new files are installed during development -->
   <target name="classes.prepare" depends="init">
     <uptodate property="classes.uptodate">
@@ -247,7 +261,7 @@
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on"
            debug="true" debuglevel="lines, vars, source">
     -->
-    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on">
+    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="off">
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
@@ -437,6 +451,24 @@
     <!-- Export the certificate for a client app to use
     keytool -export -alias cfs -file ${CFS_HOME}/WEB-INF/fileLibrary/domain.cert -keystore ${CFS_HOME}/WEB-INF/fileLibrary/keystore
     -->
+  </target>
+  
+  <!-- Check if license exists -->
+  <target name="license.exists" depends="init">
+    <available file="${CFS_HOME}/WEB-INF/fileLibrary/init/input.txt" property="license.present"/>
+  </target>
+  
+  <!-- Generate license for new system -->
+  <target name="license" depends="license.exists,taskdef.register" unless="license.present">
+    <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary/init"/>
+    <register
+        organization="${LICENSE.ORGANIZATION}"
+        firstName="${LICENSE.FIRST_NAME}"
+        lastName="${LICENSE.LAST_NAME}"
+        email="${LICENSE.EMAIL}"
+        profile="${LICENSE.PROFILE}"
+        webPath="${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}init${fs}">
+    </register>
   </target>
   
   <!-- Copy all data to the web-app folder and finalize any items -->
@@ -781,15 +813,16 @@
     </copy>
     <!-- Install the workflow.xml to the database -->
     <upgradeDatabase
-        sitecode="${GATEKEEPER.APPCODE}"
-        driver="${GATEKEEPER.DRIVER}"
-        url="${GATEKEEPER.URL}"
-        user="${GATEKEEPER.USER}"
-        password="${GATEKEEPER.PASSWORD}"
+        sitecode="${SITE.APPCODE}"
+        driver="${SITE.DRIVER}"
+        url="${SITE.URL}${DATABASE.NAME}"
+        user="${SITE.USER}"
+        password="${SITE.PASSWORD}"
         servletJar="${CATALINA_HOME}${fs}common${fs}lib${fs}servlet.jar"
         webPath="${CFS_HOME}"
         baseFile="${src.sql.dir}${fs}init${fs}workflow.bsh"
-        specificDatabase="${DATABASE.NAME}">
+        specificDatabase="${DATABASE.NAME}"
+        processSpecifiedDatabaseOnly="true">
     </upgradeDatabase>
   </target>
   

@@ -37,6 +37,7 @@ public class UpgradeDatabaseTask extends Task {
   private String servletJar = null;
   private String webPath = null;
   private String specificDatabase = null;
+  private boolean processSpecifiedDatabaseOnly = false;
 
 
   /**
@@ -130,6 +131,17 @@ public class UpgradeDatabaseTask extends Task {
 
 
   /**
+   *  Sets the processSpecifiedDatabaseOnly attribute of the UpgradeDatabaseTask
+   *  object
+   *
+   *@param  tmp  The new processSpecifiedDatabaseOnly value
+   */
+  public void setProcessSpecifiedDatabaseOnly(String tmp) {
+    processSpecifiedDatabaseOnly = "true".equals(tmp);
+  }
+
+
+  /**
    *  This method is called by Ant when the upgradeDatabaseTask is used
    *
    *@exception  BuildException  Description of the Exception
@@ -162,27 +174,38 @@ public class UpgradeDatabaseTask extends Task {
         executeScript(db, baseFile, fsEval, null);
         executeSql(db, baseFile, fsEval);
       } else {
-        //Run the rest of the databases
-        PreparedStatement pst = db.prepareStatement(
-            "SELECT DISTINCT dbhost, dbname, dbuser, dbpw, driver " +
-            "FROM sites " +
-            "WHERE sitecode = ? ");
-        pst.setString(1, sitecode);
-        ResultSet rs = pst.executeQuery();
-        while (rs.next()) {
+        if (processSpecifiedDatabaseOnly && specificDatabase != null && !"".equals(specificDatabase)) {
+          //Run just the specified database
           HashMap siteInfo = new HashMap();
-          siteInfo.put("url", rs.getString("dbhost"));
-          siteInfo.put("dbName", rs.getString("dbname"));
-          siteInfo.put("user", rs.getString("dbuser"));
-          siteInfo.put("password", rs.getString("dbpw"));
-          siteInfo.put("driver", rs.getString("driver"));
-          if ((specificDatabase == null || "".equals(specificDatabase)) ||
-             (specificDatabase.equals((String) siteInfo.get("dbName")))) {
-            siteList.add(siteInfo);
+          siteInfo.put("url", url);
+          siteInfo.put("dbName", specificDatabase);
+          siteInfo.put("user", user);
+          siteInfo.put("password", password);
+          siteInfo.put("driver", driver);
+          siteList.add(siteInfo);
+        } else {
+          //Run the rest of the databases
+          PreparedStatement pst = db.prepareStatement(
+              "SELECT DISTINCT dbhost, dbname, dbuser, dbpw, driver " +
+              "FROM sites " +
+              "WHERE sitecode = ? ");
+          pst.setString(1, sitecode);
+          ResultSet rs = pst.executeQuery();
+          while (rs.next()) {
+            HashMap siteInfo = new HashMap();
+            siteInfo.put("url", rs.getString("dbhost"));
+            siteInfo.put("dbName", rs.getString("dbname"));
+            siteInfo.put("user", rs.getString("dbuser"));
+            siteInfo.put("password", rs.getString("dbpw"));
+            siteInfo.put("driver", rs.getString("driver"));
+            if ((specificDatabase == null || "".equals(specificDatabase)) ||
+                (specificDatabase.equals((String) siteInfo.get("dbName")))) {
+              siteList.add(siteInfo);
+            }
           }
+          rs.close();
+          pst.close();
         }
-        rs.close();
-        pst.close();
       }
       sqlDriver.free(db);
       //Iterate over the databases to upgrade and run the correct
@@ -264,8 +287,8 @@ public class UpgradeDatabaseTask extends Task {
 
 
   /**
-   *  After a file is executed, the database is updated with the file's date
-   *  for reference
+   *  After a file is executed, the database is updated with the file's date for
+   *  reference
    *
    *@param  db             Description of the Parameter
    *@param  baseName       Description of the Parameter

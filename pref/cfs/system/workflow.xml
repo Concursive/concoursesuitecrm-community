@@ -1,5 +1,5 @@
 <workflow>
-  <!-- Hooks decide which items can be hooked in CFS, so if there is code
+  <!-- Hooks decide which items can be hooked in Dark Horse CRM, so if there is code
   that executes the WorkflowManager when a ticket is updated or inserted,
   the corresponding process is activated -->
   <hooks>
@@ -15,6 +15,7 @@
   <processes>
     <process name="dhv.ticket.insert" description="Ticket change notification" startId="1" type="OBJECT_EVENT" module="Tickets">
       <parameters>
+        <!-- Global parameters for the process override the defaults from Dark Horse CRM -->
         <!--
         <parameter name="notification.host" value="127.0.0.1" type="java.lang.String" enabled="true"/>
         <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
@@ -26,12 +27,13 @@
         <component id="3" parent="2" if="false" class="org.aspcfs.modules.troubletickets.components.QueryTicketJustAssigned"/>
         <component id="4" parent="2" if="true" class="org.aspcfs.modules.components.SendUserNotification">
           <parameters>
+            <!-- Component parameters override the global process parameters -->
             <parameter name="notification.module" value="Tickets"/>
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${previous.enteredBy}"/>
-            <parameter name="notification.subject">CFS Ticket Closed: ${this.paddedId}</parameter>
-<parameter name="notification.body"><![CDATA[The following ticket in CFS has been closed:
+            <parameter name="notification.subject">Dark Horse CRM Ticket Closed: ${this.paddedId}</parameter>
+<parameter name="notification.body"><![CDATA[The following ticket in Dark Horse CRM has been closed:
 
 --- Ticket Details ---
 
@@ -54,8 +56,8 @@ Solution: ${this.solution}
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.assignedTo}"/>
-            <parameter name="notification.subject">CFS Ticket Assigned: ${this.paddedId}</parameter>
-            <parameter name="notification.body"><![CDATA[The following ticket in CFS has been assigned to you:
+            <parameter name="notification.subject">Dark Horse CRM Ticket Assigned: ${this.paddedId}</parameter>
+            <parameter name="notification.body"><![CDATA[The following ticket in Dark Horse CRM has been assigned to you:
 
 --- Ticket Details ---
 
@@ -73,7 +75,7 @@ Comment: ${this.comment}
       </components>
     </process>
     
-    
+    <!-- Example of a Scheduled Event -->
     <process name="dhv.report.ticketList.overdue" description="Overdue ticket notification" startId="1" type="SCHEDULED_EVENT" module="Tickets">
       <parameters>
         <!--
@@ -102,10 +104,10 @@ Comment: ${this.comment}
             <!-- not implemented
             <parameter name="notification.departments.to" value="${this.departmentCode}" enabled="false"/>
             -->
-            <parameter name="notification.subject">CFS Unassigned Ticket Report (${objects.size})</parameter>
+            <parameter name="notification.subject">Dark Horse CRM Unassigned Ticket Report (${objects.size})</parameter>
             <parameter name="notification.body"><![CDATA[** This is an automated message **
 
-The following tickets in CFS are unassigned and need attention:
+The following tickets in Dark Horse CRM are unassigned and need attention:
 
 ]]></parameter>
             <parameter name="report.ticket.content"><![CDATA[----- Ticket Details -----
