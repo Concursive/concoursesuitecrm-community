@@ -97,7 +97,7 @@ public final class AutoGuide extends CFSModule {
    */
   public String executeCommandDetails(ActionContext context) {
     if (!(hasPermission(context, "autoguide-adruns-view")) &&
-        !(hasPermission(context, "accounts-autoguide-view"))) {
+        !(hasPermission(context, "accounts-autoguide-inventory-view"))) {
       return ("PermissionError");
     }
 
