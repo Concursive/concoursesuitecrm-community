@@ -19,7 +19,6 @@ public class AccessLog extends GenericBean {
   private String username = "";
   private String ip = "";
   private String browser = "";
-  
   private java.sql.Timestamp entered = null;
   
   public AccessLog() { }
@@ -64,6 +63,7 @@ public class AccessLog extends GenericBean {
   public String getUsername() { return username; }
   public String getIp() { return ip; }
   public String getBrowser() { return browser; }
+  public java.sql.Timestamp getEntered() { return entered; }
   public void setId(int tmp) { this.id = tmp; }
   public void setId(String tmp) { this.id = Integer.parseInt(tmp); }
   public void setUserId(int tmp) { this.userId = tmp; }
@@ -71,13 +71,10 @@ public class AccessLog extends GenericBean {
   public void setUsername(String tmp) { this.username = tmp; }
   public void setIp(String tmp) { this.ip = tmp; }
   public void setBrowser(String tmp) { this.browser = tmp; }
-  
-  
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
   }
-  
-  
+
   public String getEnteredString() {
     String tmp = "";
     try {
