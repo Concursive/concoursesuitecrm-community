@@ -57,7 +57,7 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
     try {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("OpportunityListScheduledActions -> Building opportunity alerts");
+        System.out.println("OppListScheduledActions -> Building opportunity alerts");
       }
       this.setOwner(this.getUserId());
       this.setHasAlertDate(true);
@@ -90,7 +90,7 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
   public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
 
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("OppListScheduledActions --> Building Alert Counts ");
+      System.out.println("OppListScheduledActions -> Building Alert Counts ");
     }
     try {
       this.setOwner(this.getUserId());
@@ -101,9 +101,6 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
       while (i.hasNext()) {
         String thisDay = (String) i.next();
         companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[2], thisDay, dayEvents.get(thisDay));
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("OppListScheduledActions --> Added Opps for day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
-        }
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Opportunity Calendar Alert Counts");

@@ -164,13 +164,10 @@ public class TaskList extends ArrayList {
     prepareFilter(pst);
     rs = pst.executeQuery();
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("TaskList-> Queryin Record Count " + pst.toString());
+      System.out.println("TaskList-> Building Record Count ");
     }
     while (rs.next()) {
       String duedate = Task.getAlertDateStringLongYear(rs.getDate("duedate"));
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("TaskList-> Added tuple " + duedate + ":" + rs.getInt("count"));
-      }
       events.put(duedate, new Integer(rs.getInt("count")));
     }
     rs.close();

@@ -59,7 +59,7 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
     try {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("TaskListScheduledActions-> Getting user Record for " + this.getUserId());
+        System.out.println("TaskListScheduledActions-> Building Task Alerts for user " + this.getUserId());
       }
 
       // Add Tasks to calendar details
@@ -89,7 +89,7 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
     try {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("TaskListScheduledActions-> Building Alert Counts ");
+        System.out.println("TaskListScheduledActions-> Building Alert Count ");
       }
 
       // Add Task count to calendar
@@ -101,7 +101,7 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
         String thisDay = (String) i.next();
         companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[0], thisDay, dayEvents.get(thisDay));
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("TaskListScheduledActions-> Added Tasks for Day " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
+          System.out.println("TaskListScheduledActions-> Added Tasks for " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
         }
       }
     } catch (SQLException e) {
