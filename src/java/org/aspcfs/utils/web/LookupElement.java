@@ -525,10 +525,11 @@ public class LookupElement {
         "SELECT * " +
         "FROM " + tableName + " " +
         "WHERE description = ? " +
-        "AND enabled = false ");
+        "AND enabled = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.description);
+    pst.setBoolean(++i, false);
     rs = pst.executeQuery();
     if (rs.next()) {
       tmpCode = rs.getInt("code");
