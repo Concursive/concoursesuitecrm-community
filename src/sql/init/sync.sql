@@ -827,4 +827,28 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'accountTypeLevelsList', 'com.darkhorseventures.webutils.CustomLookupList');
 
+   INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'fieldTypes', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'fieldTypesList', 'com.darkhorseventures.webutils.CustomLookupList');
+ 
+   INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'excludedRecipient', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'excludedRecipientList', 'com.darkhorseventures.webutils.CustomLookupList');
+ 
+    INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'recipientList', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'recipientListList', 'com.darkhorseventures.webutils.CustomLookupList');
+ 
+    INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'campaignRun', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'campaignRunList', 'com.darkhorseventures.webutils.CustomLookupList');
+ 
+     INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'campaignListGroups', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'campaignListGroupsList', 'com.darkhorseventures.webutils.CustomLookupList');
  

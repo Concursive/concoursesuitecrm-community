@@ -71,6 +71,36 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    logger.info("ImportCommunications-> Inserting Field Types");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "fieldTypes");
+    if (!processOK) {
+      return false;
+    }
+    
+    logger.info("ImportCommunications-> Inserting Excluded Recipients");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "excludedRecipient");
+    if (!processOK) {
+      return false;
+    }
+    
+    logger.info("ImportCommunications-> Inserting Recipient Lists");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "recipientList");
+    if (!processOK) {
+      return false;
+    }
+    
+    logger.info("ImportCommunications-> Inserting Campaign Run");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaignRun");
+    if (!processOK) {
+      return false;
+    }
+    
+    logger.info("ImportCommunications-> Inserting Campaign List Groups");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "campaignListGroups");
+    if (!processOK) {
+      return false;
+    }
+    
     /**
     processOK = writer.commit();
     if (!processOK) {

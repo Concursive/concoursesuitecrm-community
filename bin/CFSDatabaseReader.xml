@@ -566,8 +566,8 @@
       <property alias="guid" field="id"/>
       <property field="name"/>
       <property field="description"/>
-      <property field="list_id"/>
-      <property field="message_id"/>
+      <property lookup="searchCriteriaList" field="list_id"/>
+      <property lookup="message" field="message_id"/>
       <property field="reply_addr"/>
       <property field="subject"/>
       <property field="message"/>
@@ -608,5 +608,41 @@
       <property lookup="lookupAccountTypes" field="type_id"/>
       <property field="level"/>
     </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="fieldTypes" table="field_types" uniqueField="id">
+      <property alias="guid" field="id"/>
+      <property field="data_typeid"/>
+      <property field="data_type"/>
+      <property field="operator"/>
+      <property field="display_text"/>
+    </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="excludedRecipient" table="excluded_recipient" uniqueField="id">
+      <property alias="guid" field="id"/>
+      <property lookup="campaign" field="campaign_id"/>
+      <property lookup="contact" field="contact_id"/>
+    </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="recipientList" table="recipient_list" uniqueField="id">
+      <property alias="guid" field="id"/>
+      <property field="name"/>
+      <property field="description"/>
+      <property field="search_id"/>
+      <property field="dynamic"/>
+      <property field="enabled"/>
+      <property lookup="user" field="enteredby"/>
+      <property lookup="user" field="modifiedby"/>
+    </map>   
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaignRun" table="campaign_run" uniqueField="id">
+      <property alias="guid" field="id"/>
+      <property lookup="campaign" field="campaign_id"/>
+      <property field="status"/>
+      <property field="run_date"/>
+      <property field="total_contacts"/>
+      <property field="total_sent"/>
+      <property field="total_replied"/>
+      <property field="total_bounced"/>
+    </map>   
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaignListGroups" table="campaign_list_groups">
+      <property lookup="campaign" field="campaign_id"/>
+      <property lookup="searchCriteriaList" field="group_id"/>
+    </map>  
   </mappings>
 </CFSDatabaseReader>
