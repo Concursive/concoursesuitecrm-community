@@ -415,6 +415,8 @@ public final class ExternalContacts extends CFSModule {
         contactList.setOwnerIdRange(this.getUserRange(context));
       } else if ("archived".equals(externalContactsInfo.getListView())) {
         contactList.setIncludeEnabled(ContactList.FALSE);
+      } else if ("search".equals(externalContactsInfo.getListView())) {
+        contactList.setOwnerIdRange(this.getUserRange(context));
       } else {
         contactList.setOwner(this.getUserId(context));
       }
