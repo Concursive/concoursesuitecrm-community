@@ -4,9 +4,6 @@
 
 package com.darkhorseventures.cfsbase;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.util.Hashtable;
 import java.sql.*;
 import java.text.*;
 import java.util.*;

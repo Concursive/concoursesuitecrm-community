@@ -52,7 +52,7 @@ public final class Leads extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  DetailsOpp: Show details of selected opportunity
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
@@ -139,8 +139,6 @@ public final class Leads extends CFSModule {
 	
     UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
     String overrideId = context.getRequest().getParameter("oid");
-
-    //System.out.println("Leads-> got " + overrideId);
 
     User thisRec = null;
 
@@ -296,11 +294,8 @@ public final class Leads extends CFSModule {
 	
 	    chart.setLegend(null);
 	    chart.setTitle("");
-	
-	    //Define the chart
-	    //int width = 325;
-	    //int height = 225;
 	    
+	    //define the chart    
 	    int width = 300;
 	    int height = 200;
 	
@@ -1184,11 +1179,7 @@ public final class Leads extends CFSModule {
         {createDate( 2002, 5, 18),  new Integer(56)}
         }
         };
-/**
-    data = new Object[1][1][2];
-    data[0][0][0] = new Integer(0);
-    data[0][0][1] = new Integer(0);
-*/
+
     return new DefaultXYDataSource(data);
   }
 
