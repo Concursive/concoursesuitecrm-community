@@ -147,11 +147,21 @@ public class OpportunityComponent extends GenericBean {
   }
 
 
+  /**
+   *  Sets the headerId attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new headerId value
+   */
   public void setHeaderId(int tmp) {
     headerId = tmp;
   }
 
 
+  /**
+   *  Sets the headerId attribute of the OpportunityComponent object
+   *
+   *@param  tmp  The new headerId value
+   */
   public void setHeaderId(String tmp) {
     headerId = Integer.parseInt(tmp);
   }
@@ -675,6 +685,11 @@ public class OpportunityComponent extends GenericBean {
   }
 
 
+  /**
+   *  Gets the headerId attribute of the OpportunityComponent object
+   *
+   *@return    The headerId value
+   */
   public int getHeaderId() {
     return headerId;
   }
@@ -1359,7 +1374,7 @@ public class OpportunityComponent extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } 
+    }
     rs.close();
     pst.close();
     if (id == -1) {
@@ -1777,7 +1792,6 @@ public class OpportunityComponent extends GenericBean {
   /**
    *  Gets the Valid attribute of the Opportunity object
    *
-   *@param  db                Description of Parameter
    *@return                   The Valid value
    *@exception  SQLException  Description of Exception
    *@since
