@@ -95,7 +95,7 @@ public class TransactionItem {
   /**
    *  Sets the object attribute of the TransactionItem object from XML based on
    *  the mapping data. If the element tag is "contact" and there is a mapping
-   *  to "com.darkhorseventures.cfsbase.Contact", then the Object is created and
+   *  to "org.aspcfs.modules.contacts.base.Contact", then the Object is created and
    *  populated from the XML.
    *
    *@param  element        The new object value
