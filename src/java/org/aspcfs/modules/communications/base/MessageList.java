@@ -8,8 +8,8 @@ import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.PagedListInfo;
-
-
+import org.aspcfs.modules.admin.base.AccessType;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 /**
  *  Contains a list of Campaign Message objects. The list can be built by
  *  setting parameters and then calling buildList.
@@ -20,12 +20,21 @@ import org.aspcfs.utils.web.PagedListInfo;
  */
 public class MessageList extends ArrayList {
 
+  public final static int EXCLUDE_PERSONAL = -1;
+  public final static int IGNORE_PERSONAL = -2;
+
   private PagedListInfo pagedListInfo = null;
   private String name = "";
   private String description = "";
   private int owner = -1;
   private String ownerIdRange = null;
   private String jsEvent = null;
+  //Combination filters
+  private boolean allMessages = false;
+  private boolean controlledHierarchyOnly = false;
+  //access type filters
+  private int ruleId = -1;
+  private int personalId = EXCLUDE_PERSONAL;
 
 
   /**
@@ -91,6 +100,113 @@ public class MessageList extends ArrayList {
    */
   public void setJsEvent(String tmp) {
     this.jsEvent = tmp;
+  }
+
+
+  /**
+   *  Sets the allMessages attribute of the MessageList object
+   *
+   *@param  allMessages  The new allMessages value
+   */
+  public void setAllMessages(boolean allMessages) {
+    this.allMessages = allMessages;
+  }
+
+
+  /**
+   *  Sets the allMessages attribute of the MessageList object
+   *
+   *@param  allMessages   The new allMessages value
+   *@param  owner         The new allMessages value
+   *@param  ownerIdRange  The new allMessages value
+   */
+  public void setAllMessages(boolean allMessages, int owner, String ownerIdRange) {
+    this.ownerIdRange = ownerIdRange;
+    this.allMessages = allMessages;
+    this.personalId = owner;
+  }
+
+
+  /**
+   *  Sets the ruleId attribute of the MessageList object
+   *
+   *@param  ruleId  The new ruleId value
+   */
+  public void setRuleId(int ruleId) {
+    this.ruleId = ruleId;
+  }
+
+
+  /**
+   *  Sets the controlledHierarchyOnly attribute of the MessageList object
+   *
+   *@param  controlledHierarchyOnly  The new controlledHierarchyOnly value
+   */
+  public void setControlledHierarchyOnly(boolean controlledHierarchyOnly) {
+    this.controlledHierarchyOnly = controlledHierarchyOnly;
+  }
+
+
+
+  /**
+   *  Sets the controlledHierarchyOnly attribute of the MessageList object
+   *
+   *@param  controlledHierarchyOnly  The new controlledHierarchyOnly value
+   *@param  ownerIdRange             The new controlledHierarchyOnly value
+   */
+  public void setControlledHierarchyOnly(boolean controlledHierarchyOnly, String ownerIdRange) {
+    this.controlledHierarchyOnly = controlledHierarchyOnly;
+    this.ownerIdRange = ownerIdRange;
+  }
+
+
+  /**
+   *  Sets the personalId attribute of the MessageList object
+   *
+   *@param  personalId  The new personalId value
+   */
+  public void setPersonalId(int personalId) {
+    this.personalId = personalId;
+  }
+
+
+  /**
+   *  Gets the personalId attribute of the MessageList object
+   *
+   *@return    The personalId value
+   */
+  public int getPersonalId() {
+    return personalId;
+  }
+
+
+  /**
+   *  Gets the controlledHierarchyOnly attribute of the MessageList object
+   *
+   *@return    The controlledHierarchyOnly value
+   */
+  public boolean getControlledHierarchyOnly() {
+    return controlledHierarchyOnly;
+  }
+
+
+  /**
+   *  Gets the ruleId attribute of the MessageList object
+   *
+   *@return    The ruleId value
+   */
+  public int getRuleId() {
+    return ruleId;
+  }
+
+
+  /**
+   *  Gets the allMessages attribute of the MessageList object
+   *
+   *@return    The allMessages value
+   */
+  public boolean getAllMessages() {
+    return allMessages;
   }
 
 
@@ -283,23 +399,68 @@ public class MessageList extends ArrayList {
     }
 
     if (owner != -1) {
-      sqlFilter.append("AND m.enteredby = " + owner + " ");
+      sqlFilter.append("AND m.enteredby = ? ");
     }
 
-    if (ownerIdRange != null) {
+    if (controlledHierarchyOnly) {
       sqlFilter.append("AND m.enteredby IN (" + ownerIdRange + ") ");
+    }
+
+    if (ruleId != -1) {
+      sqlFilter.append("AND m.access_type IN (SELECT code from lookup_access_types where rule_id = ? AND code = m.access_type) ");
+    }
+
+    if (allMessages) {
+      //get contact in users hierarchy
+      sqlFilter.append("AND (m.enteredby IN (" + ownerIdRange + ") OR m.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type)) ");
+    }
+
+    switch (personalId) {
+        case IGNORE_PERSONAL:
+          break;
+        case EXCLUDE_PERSONAL:
+          sqlFilter.append("AND m.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type) ");
+          break;
+        default:
+          sqlFilter.append("AND (m.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type)  OR (m.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = m.access_type) AND m.enteredby = ?)) ");
+          break;
     }
   }
 
 
   /**
-   *  Sets the PreparedStatement parameters that were added in createFilter 
+   *  Sets the PreparedStatement parameters that were added in createFilter
    *
    *@param  pst  Description of Parameter
    *@return      Description of the Returned Value
    */
-  private int prepareFilter(PreparedStatement pst) {
+  private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+
+    if (owner != -1) {
+      pst.setInt(++i, owner);
+    }
+
+    if (ruleId != -1) {
+      pst.setInt(++i, ruleId);
+    }
+
+    if (allMessages) {
+      pst.setInt(++i, AccessType.PUBLIC);
+    }
+
+    switch (personalId) {
+        case IGNORE_PERSONAL:
+          break;
+        case EXCLUDE_PERSONAL:
+          pst.setInt(++i, AccessType.PERSONAL);
+          break;
+        default:
+          pst.setInt(++i, AccessType.PERSONAL);
+          pst.setInt(++i, AccessType.PERSONAL);
+          pst.setInt(++i, personalId);
+          break;
+    }
     return i;
   }
 

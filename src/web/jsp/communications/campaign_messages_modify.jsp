@@ -46,7 +46,6 @@ function highlight() {
 <a href="CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>">Message Details</a> >
 Modify Message
 <hr color="#BFBFBB" noshade>
-<input type="hidden" name="id" value="<%= Message.getId() %>">
 <input type="hidden" name="modified" value="<%= Message.getModified() %>">
 <dhv:evaluate if="<%= request.getParameter("return") != null %>">
   <input type="hidden" name="return" value="<%= request.getParameter("return") %>">

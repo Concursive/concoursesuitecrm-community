@@ -94,7 +94,7 @@ Add Ticket<br>
   <br>
   <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-	<tr class="title">
+	<tr>
     <th colspan="2">
       <strong>Add a new Ticket</strong>
     </th>

@@ -9,6 +9,8 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import com.zeroio.iteam.base.*;
@@ -179,9 +181,9 @@ public final class CampaignManager extends CFSModule {
       addModuleBean(context, "Add Campaign", "Build New Campaign");
     }
 
-
     try {
       context.getSession().removeAttribute("CampaignCenterGroupInfo");
+      
     } catch (Exception e) {
       errorMessage = e;
     }
@@ -488,12 +490,13 @@ public final class CampaignManager extends CFSModule {
       //Build my messages
       MessageList messageList = new MessageList();
       messageList.setOwner(this.getUserId(context));
+      messageList.setPersonalId(messageList.IGNORE_PERSONAL);
       messageList.buildList(db);
       //Message is not in my messages, so build hierarchy of messages
       if (campaign.getMessageId() > 0 && !messageList.hasId(campaign.getMessageId())) {
         messageList.clear();
         messageList.setOwner(-1);
-        messageList.setOwnerIdRange(this.getUserRange(context));
+        messageList.setControlledHierarchyOnly(true, this.getUserRange(context));
         messageList.buildList(db);
         context.getRequest().setAttribute("listView", "all");
       } else {
@@ -968,6 +971,7 @@ public final class CampaignManager extends CFSModule {
 
       MessageList messageList = new MessageList();
       messageList.setOwner(this.getUserId(context));
+      messageList.setPersonalId(messageList.IGNORE_PERSONAL);
       messageList.buildList(db);
       context.getRequest().setAttribute("MessageList", messageList);
 
@@ -2249,11 +2253,22 @@ public final class CampaignManager extends CFSModule {
     String listView = context.getRequest().getParameter("listView");
     try {
       MessageList messageList = new MessageList();
+
+      //check if a filter is selected
       if ("all".equals(listView)) {
-        messageList.setOwnerIdRange(this.getUserRange(context));
+        messageList.setAllMessages(true, this.getUserId(context), this.getUserRange(context));
+      } else if ("hierarchy".equals(listView)) {
+        messageList.setControlledHierarchyOnly(true, this.getUserRange(context));
+        messageList.setPersonalId(this.getUserId(context));
+      } else if ("personal".equals(listView)) {
+        messageList.setOwner(this.getUserId(context));
+        messageList.setRuleId(AccessType.PERSONAL);
+        messageList.setPersonalId(messageList.IGNORE_PERSONAL);
       } else {
         messageList.setOwner(this.getUserId(context));
+        messageList.setPersonalId(messageList.IGNORE_PERSONAL);
       }
+
       db = this.getConnection(context);
       messageList.buildList(db);
       context.getRequest().setAttribute("messageList", messageList);

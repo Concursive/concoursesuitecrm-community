@@ -22,7 +22,7 @@ import java.sql.*;
 import java.util.*;
 import java.text.*;
 import java.io.*;
-
+import java.lang.reflect.*;
 /**
  *  Base class for all modules
  *
@@ -918,32 +918,46 @@ public class CFSModule {
 
 
   /**
-   *  Checks to see if the user has authority to acccess a contact
+   *  Description of the Method
    *
    *@param  db                Description of the Parameter
    *@param  context           Description of the Parameter
-   *@param  contact           Description of the Parameter
+   *@param  thisElt           Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean hasContactAuthority(Connection db, ActionContext context, Contact contact) throws SQLException {
-    //check if user has authority by virtue of the hierarchy
-    if (!hasAuthority(context, contact.getOwner())) {
-      return false;
-    }
+  public boolean hasAuthority(Connection db, ActionContext context, Object thisElt) throws SQLException {
+    try {
 
-    //check if user is the owner of the record
-    if (contact.getOwner() == this.getUserId(context)) {
-      return true;
-    }
+      //get all the access types possible for this type of a record
+      AccessTypeList accessList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.getLinkModuleId(thisElt));
 
-    //it has to be a hierarchy contact so make sure that it is not personal
-    AccessTypeList accessList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.GENERAL_CONTACTS);
-    if (accessList == null || accessList.size() == 0) {
-      return true;
-    }
-    if (accessList.getCode(AccessType.PERSONAL) == contact.getAccessType()) {
-      return false;
+      //get the access type associated with this record
+      Method method = thisElt.getClass().getMethod("getAccessTypeString", null);
+      Object result = method.invoke(thisElt, null);
+      int accessType = Integer.parseInt((String) result);
+      
+      //check if record is public
+      if (accessList.getCode(AccessType.PUBLIC) == accessType) {
+        return true;
+      }
+      
+      //get the owner
+      method = thisElt.getClass().getMethod("getOwnerString", null);
+      result = method.invoke(thisElt, null);
+      int owner = Integer.parseInt((String) result);
+      
+      //check if user has authority by virtue of the hierarchy
+      if(!hasAuthority(context, owner)){
+        return false;
+      }
+      
+      //make sure that it is not personal although record is owned by someone in the hierarchy
+      if (accessList.getCode(AccessType.PERSONAL) == accessType && owner != this.getUserId(context)) {
+        return false;
+      }
+    } catch (Exception e) {
+      System.out.println("hasAuthority - > Error: " + e.getMessage());
     }
     return true;
   }

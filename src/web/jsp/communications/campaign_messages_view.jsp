@@ -12,10 +12,12 @@ Message List
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="CampaignManagerMessage.do?command=View">
-    <td align="left">
+    <td>
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= CampaignMessageListInfo.getOptionValue("my") %>>My Messages</option>
         <option <%= CampaignMessageListInfo.getOptionValue("all") %>>All Messages</option>
+        <option <%= CampaignMessageListInfo.getOptionValue("hierarchy") %>>Controlled Hierarchy Messages</option>
+        <option <%= CampaignMessageListInfo.getOptionValue("personal") %>>Personal Messages</option>
       </select>
     </td>
     <td>
@@ -39,11 +41,11 @@ Message List
       <a href="CampaignManagerMessage.do?command=View&column=description"><strong>Description</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("description") %>
     </th>
-    <th align="center" nowrap>
+    <th style="text-align: center;" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=ct_eb.namelast,ct_eb.namefirst"><strong>Entered By</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("ct_eb.namelast,ct_eb.namefirst") %>
     </th>
-    <th align="center" nowrap>
+    <th style="text-align: center;" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=m.modified"><strong>Last Modified</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("m.modified") %>
     </th>
@@ -68,10 +70,10 @@ Message List
 		<td width="60%" valign="center" class="row<%= rowid %>">
       <%= toHtml(thisMessage.getDescription()) %>
     </td>
-    <td valign="center" align="center" class="row<%= rowid %>" nowrap>
+    <td valign="center" class="row<%= rowid %>" nowrap>
       <dhv:username id="<%= thisMessage.getEnteredBy() %>" lastFirst="true" />
     </td>
-    <td valign="center" align="center" class="row<%= rowid %>" nowrap>
+    <td valign="center" class="row<%= rowid %>" nowrap>
       <%= toHtml(thisMessage.getModifiedDateTimeString()) %>
     </td>
   </tr>

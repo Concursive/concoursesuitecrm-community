@@ -62,19 +62,19 @@ Action Contacts<br>
       <strong><%= toHtml(ActionList.getDescription()) %></strong>
     </th>
   </tr>
-  <tr class="title">
-    <td align="center">
+  <tr>
+    <th style="text-align: center;">
       <strong>Action</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Name</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Status</strong>
-    </td>
-    <td nowrap>
+    </th>
+    <th nowrap>
       <strong>Last Updated</strong>
-    </td>
+    </th>
   </tr>
 <%
   Iterator j = ActionContacts.iterator();

@@ -9,6 +9,8 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.base.DependencyList;
 
@@ -41,9 +43,17 @@ public final class CampaignManagerMessage extends CFSModule {
       db = this.getConnection(context);
       messageList.setPagedListInfo(pagedListInfo);
       if ("all".equals(pagedListInfo.getListView())) {
-        messageList.setOwnerIdRange(this.getUserRange(context));
-      } else {
+        messageList.setAllMessages(true, this.getUserId(context), this.getUserRange(context));
+      } else if ("hierarchy".equals(pagedListInfo.getListView())) {
+        messageList.setControlledHierarchyOnly(true, this.getUserRange(context));
+        messageList.setPersonalId(this.getUserId(context));
+      } else if ("personal".equals(pagedListInfo.getListView())) {
         messageList.setOwner(this.getUserId(context));
+        messageList.setRuleId(AccessType.PERSONAL);
+        messageList.setPersonalId(MessageList.IGNORE_PERSONAL);
+      }else {
+        messageList.setOwner(this.getUserId(context));
+        messageList.setPersonalId(MessageList.IGNORE_PERSONAL);
       }
       messageList.buildList(db);
     } catch (Exception e) {
@@ -88,6 +98,12 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       newMessage = new Message(db, messageId);
+      if (!hasAuthority(db, context, newMessage)) {
+        return ("PermissionError");
+      }
+      //get access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.COMMUNICATION_MESSAGES);
+      context.getRequest().setAttribute("AccessTypeList", accessTypeList);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -103,9 +119,6 @@ public final class CampaignManagerMessage extends CFSModule {
     context.getRequest().setAttribute("submenu", submenu);
     addModuleBean(context, submenu, "Modify Message");
     if (errorMessage == null) {
-      if (!hasAuthority(context, newMessage.getEnteredBy())) {
-        return ("PermissionError");
-      }
       context.getRequest().setAttribute("Message", newMessage);
       return ("ModifyOK");
     } else {
@@ -134,7 +147,7 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       Message oldMessage = new Message(db, Integer.parseInt(id));
-      if (!hasAuthority(context, oldMessage.getEnteredBy())) {
+      if (!hasAuthority(db, context, oldMessage)) {
         return ("PermissionError");
       }
       newMessage.setModifiedBy(getUserId(context));
@@ -196,6 +209,9 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       newMessage = new Message(db, messageId);
+      if (!hasAuthority(db, context, newMessage)) {
+        return ("PermissionError");
+      }
 
     } catch (Exception e) {
       errorMessage = e;
@@ -204,11 +220,6 @@ public final class CampaignManagerMessage extends CFSModule {
     }
 
     if (errorMessage == null) {
-
-      if (!hasAuthority(context, newMessage.getEnteredBy())) {
-        return ("PermissionError");
-      }
-
       context.getRequest().setAttribute("MessageDetails", newMessage);
       return ("DetailsOK");
     } else {
@@ -238,9 +249,29 @@ public final class CampaignManagerMessage extends CFSModule {
     if (submenu == null) {
       submenu = "ManageMessages";
     }
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      //get access types
+      AccessTypeList accessTypeList = this.getSystemStatus(context).getAccessTypeList(db, AccessType.COMMUNICATION_MESSAGES);
+      context.getRequest().setAttribute("AccessTypeList", accessTypeList);
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
     context.getRequest().setAttribute("submenu", submenu);
     addModuleBean(context, submenu, "Add Message");
-    return this.getReturn(context, "Add");
+    
+    if (errorMessage == null) {
+      return this.getReturn(context, "Add");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 
@@ -312,7 +343,7 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       thisMessage = new Message(db, context.getRequest().getParameter("id"));
-      if (!hasAuthority(context, thisMessage.getEnteredBy())) {
+      if (!hasAuthority(db, context, thisMessage)) {
         return ("PermissionError");
       }
       recordDeleted = thisMessage.delete(db);
@@ -447,7 +478,7 @@ public final class CampaignManagerMessage extends CFSModule {
     try {
       db = this.getConnection(context);
       thisMessage = new Message(db, id);
-      if (!hasAuthority(context, thisMessage.getEnteredBy())) {
+      if (!hasAuthority(db, context, thisMessage)) {
         return ("PermissionError");
       }
       htmlDialog.setTitle("CFS: Campaign Manager");

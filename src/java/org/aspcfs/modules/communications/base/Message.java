@@ -14,6 +14,7 @@ import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.admin.base.AccessType;
 
 /**
  *  Represents an HTML message than can be emailed, faxed, or printed. Messages
@@ -40,6 +41,7 @@ public class Message extends GenericBean {
   private java.sql.Timestamp entered = null;
   private boolean enabled = true;
   private boolean formatLineFeeds = true;
+  private int accessType = -1;
 
   /**
    *  Description of the Field
@@ -153,6 +155,46 @@ public class Message extends GenericBean {
    */
   public void setName(String tmp) {
     this.name = tmp;
+  }
+
+
+  /**
+   *  Sets the accessType attribute of the Message object
+   *
+   *@param  accessType  The new accessType value
+   */
+  public void setAccessType(int accessType) {
+    this.accessType = accessType;
+  }
+
+
+  /**
+   *  Sets the accessType attribute of the Message object
+   *
+   *@param  accessType  The new accessType value
+   */
+  public void setAccessType(String accessType) {
+    this.accessType = Integer.parseInt(accessType);
+  }
+
+
+  /**
+   *  Gets the accessType attribute of the Message object
+   *
+   *@return    The accessType value
+   */
+  public int getAccessType() {
+    return accessType;
+  }
+
+
+  /**
+   *  Gets the accessTypeString attribute of the Message object
+   *
+   *@return    The accessTypeString value
+   */
+  public String getAccessTypeString() {
+    return String.valueOf(accessType);
   }
 
 
@@ -605,6 +647,16 @@ public class Message extends GenericBean {
 
 
   /**
+   *  Returns the owner for the message(for a message owner is the person who entered the message)
+   *
+   *@return    The ownerString value
+   */
+  public String getOwnerString() {
+    return String.valueOf(enteredBy);
+  }
+
+
+  /**
    *  Gets the modifiedBy attribute of the Message object
    *
    *@return    The modifiedBy value
@@ -654,7 +706,7 @@ public class Message extends GenericBean {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO MESSAGE " +
-          "(name, ");
+          "(name, access_type, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -662,7 +714,7 @@ public class Message extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ");
+      sql.append("VALUES (?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -674,6 +726,7 @@ public class Message extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, this.getName());
+      pst.setInt(++i, this.getAccessType());
 
       if (entered != null) {
         pst.setTimestamp(++i, entered);
@@ -842,7 +895,6 @@ public class Message extends GenericBean {
   /**
    *  Gets the valid attribute of the Message object
    *
-   *@param  db                Description of Parameter
    *@return                   The valid value
    *@exception  SQLException  Description of Exception
    *@since
@@ -893,7 +945,7 @@ public class Message extends GenericBean {
     sql.append(
         "UPDATE message " +
         "SET name=?, description = ?, template_id = ?, subject = ?, " +
-        "body = ?, reply_addr = ?, url = ?, img = ?, " +
+        "body = ?, reply_addr = ?, url = ?, img = ?, access_type = ?, " +
         "enabled = ?, ");
 
     if (override == false) {
@@ -916,6 +968,7 @@ public class Message extends GenericBean {
     pst.setString(++i, this.getReplyTo());
     pst.setString(++i, this.getUrl());
     pst.setString(++i, this.getImage());
+    pst.setInt(++i, this.getAccessType());
     pst.setBoolean(++i, this.getEnabled());
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
@@ -959,6 +1012,7 @@ public class Message extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    accessType = rs.getInt("access_type");
   }
 
 }

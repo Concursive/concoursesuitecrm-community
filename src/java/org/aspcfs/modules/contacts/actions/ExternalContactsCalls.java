@@ -44,7 +44,7 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       callList.setPagedListInfo(callListInfo);
@@ -139,7 +139,7 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       thisCall = new Call(db, callId);
@@ -173,7 +173,7 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       thisCall = new Call(db, Integer.parseInt(id));
@@ -226,7 +226,7 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       thisCall = new Call(db, context.getRequest().getParameter("id"));
@@ -283,7 +283,7 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -338,7 +338,7 @@ public final class ExternalContactsCalls extends CFSModule {
       thisCall = new Call(db, callId);
 
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -387,7 +387,7 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       thisCall.setModifiedBy(getUserId(context));

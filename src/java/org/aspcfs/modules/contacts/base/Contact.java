@@ -263,6 +263,16 @@ public class Contact extends GenericBean {
 
 
   /**
+   *  Gets the accessType attribute of the Contact object
+   *
+   *@return    The accessType value
+   */
+  public String getAccessTypeString() {
+    return String.valueOf(accessType);
+  }
+
+
+  /**
    *  Gets the employee attribute of the Contact object
    *
    *@return    The employee value
@@ -1245,6 +1255,16 @@ public class Contact extends GenericBean {
    */
   public int getOwner() {
     return owner;
+  }
+
+
+  /**
+   *  Gets the ownerString attribute of the Contact object
+   *
+   *@return    The ownerString value
+   */
+  public String getOwnerString() {
+    return String.valueOf(owner);
   }
 
 
@@ -2327,13 +2347,13 @@ public class Contact extends GenericBean {
     //Prevent personal contacts from being associated with actions
     if (accessType != -1) {
       AccessType thisType = new AccessType(db, accessType);
-      
+
       //all account contacts are public
       if (orgId > 0 && thisType.getRuleId() != AccessType.PUBLIC) {
         errors.put("accountAccessError", "All Account Contacts have public access");
       }
-      
-      //personal contacts should be owned by the user who enters it i.e they cannot be reassigned 
+
+      //personal contacts should be owned by the user who enters it i.e they cannot be reassigned
       if (thisType.getRuleId() == AccessType.PERSONAL && owner != enteredBy) {
         errors.put("accessReassignError", "Personal Contact has to be owned by the user who entered it");
       }

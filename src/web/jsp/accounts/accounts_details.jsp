@@ -288,7 +288,7 @@ Account Details<br>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr class="title">
+  <tr>
     <th colspan="2">
 	    <strong>Email Addresses</strong>
 	  </th>

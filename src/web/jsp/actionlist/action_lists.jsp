@@ -40,13 +40,13 @@ My Action Lists<br>
       <%= ActionListInfo.getSortIcon("al.modified") %>
     </th>
   </tr>
-  <tr class="title">
-    <td>
+  <tr>
+    <th>
       <strong>Complete</strong>
-    </td>
-    <td>
+    </th>
+    <th>
       <strong>Total</strong>
-    </td>
+    </th>
   </tr>
 <%
   Iterator j = ActionLists.iterator();

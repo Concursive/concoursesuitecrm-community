@@ -1,4 +1,5 @@
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.StringUtils" %>
+<jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <%-- HtmlArea --%>
 <script type="text/javascript" src="htmlarea/htmlarea.js"></script>
 <script type="text/javascript" src="htmlarea/htmlarea-lang-en.js"></script>
@@ -45,6 +46,14 @@ function highlight() {
     </td>
     <td>
       <input type="text" size="50" maxlength="255" name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Access Type
+    </td>
+    <td>
+      <%=  AccessTypeList.getHtmlSelect("accessType", Message.getAccessType()) %>
     </td>
   </tr>
   </dhv:evaluate>

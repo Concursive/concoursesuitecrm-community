@@ -2,6 +2,8 @@ package org.aspcfs.modules.admin.base;
 
 import java.sql.*;
 import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.communications.base.Message;
 
 /**
  *  Represents Access Type for a CFS component
@@ -11,10 +13,11 @@ import org.aspcfs.utils.web.LookupElement;
  *@version    $id:exp$
  */
 public class AccessType extends LookupElement {
-  //link module ids
+  //link module ids (format is mmddyyhhmm: if month is single digit do not add 0 in front)
   public final static int GENERAL_CONTACTS = 626030330;
   public final static int ACCOUNT_CONTACTS = 626030331;
   public final static int EMPLOYEES = 626030332;
+  public final static int COMMUNICATION_MESSAGES = 707031028;
 
   //sharing types
   public final static int PERSONAL = 626030333;
@@ -108,6 +111,27 @@ public class AccessType extends LookupElement {
    */
   public int getLinkModuleId() {
     return linkModuleId;
+  }
+
+
+  /**
+   *  Returns the linkModuleId given  a instance of an object
+   *
+   *@param  obj  Description of the Parameter
+   *@return      The linkModuleId value
+   */
+  public static int getLinkModuleId(Object obj) {
+    if (obj instanceof Contact) {
+      Contact thisContact = (Contact) obj;
+      if (thisContact.getOrgId() > 0) {
+        return ACCOUNT_CONTACTS;
+      } else {
+        return GENERAL_CONTACTS;
+      }
+    } else if (obj instanceof Message) {
+      return COMMUNICATION_MESSAGES;
+    }
+    return -1;
   }
 
 

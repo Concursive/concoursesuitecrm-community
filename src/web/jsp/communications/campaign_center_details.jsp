@@ -21,6 +21,7 @@ Campaign Details
   <li>Select from the following items to build a campaign</li>
   <li>Items can be worked on in any order</li>
   <li>Campaigns will not start until each section is complete, and the campaign has been activated</li>
+  <li>Campaign items can be accessed by all users who have access to campaigns</li>
 </ul>
       <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>

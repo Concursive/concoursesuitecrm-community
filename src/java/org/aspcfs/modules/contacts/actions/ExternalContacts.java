@@ -604,7 +604,7 @@ public final class ExternalContacts extends CFSModule {
       pagedListInfo.setLink("ExternalContacts.do?command=ViewMessages&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
 
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -662,7 +662,7 @@ public final class ExternalContacts extends CFSModule {
       String contactId = context.getRequest().getParameter("contactId");
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -717,7 +717,7 @@ public final class ExternalContacts extends CFSModule {
       String contactId = context.getRequest().getParameter("contactId");
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -858,7 +858,7 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!(hasContactAuthority(db, context, thisContact) || OpportunityHeaderList.isComponentOwner(db, getUserId(context)))) {
+      if (!(hasAuthority(db, context, thisContact) || OpportunityHeaderList.isComponentOwner(db, getUserId(context)))) {
         return ("PermissionError");
       }
 
@@ -909,7 +909,7 @@ public final class ExternalContacts extends CFSModule {
       db = this.getConnection(context);
       thisContact = (Contact) context.getFormBean();
       thisContact.queryRecord(db, Integer.parseInt(contactId));
-      if (!(hasContactAuthority(db, context, thisContact) || OpportunityHeaderList.isComponentOwner(db, getUserId(context)))) {
+      if (!(hasAuthority(db, context, thisContact) || OpportunityHeaderList.isComponentOwner(db, getUserId(context)))) {
         return ("PermissionError");
       }
 
@@ -1092,7 +1092,7 @@ public final class ExternalContacts extends CFSModule {
       if (thisContact.getId() > 0) {
         addModuleBean(context, "External Contacts", "Update Contact");
         Contact oldContact = new Contact(db, id);
-        if (!hasContactAuthority(db, context, oldContact)) {
+        if (!hasAuthority(db, context, oldContact)) {
           return ("PermissionError");
         }
         resultCount = thisContact.update(db);
@@ -1175,7 +1175,7 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, context.getRequest().getParameter("id"));
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       recordDeleted = thisContact.delete(db);
@@ -1226,7 +1226,7 @@ public final class ExternalContacts extends CFSModule {
       String contactId = context.getRequest().getParameter("contactId");
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
 
@@ -1284,7 +1284,7 @@ public final class ExternalContacts extends CFSModule {
       String contactId = context.getRequest().getParameter("contactId");
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("ContactDetails", thisContact);
@@ -1489,7 +1489,7 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, id);
-      if (!hasContactAuthority(db, context, thisContact)) {
+      if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       thisContact.checkUserAccount(db);
