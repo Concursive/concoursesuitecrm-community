@@ -495,22 +495,22 @@ public class Permission extends GenericBean {
     }
     if (request.getParameter("permission" + parseItem + "add") != null) {
       String action = request.getParameter("permission" + parseItem + "add").toLowerCase();
-      this.setAdd(action.equals("on"));
+      this.setAdd(DatabaseUtils.parseBoolean(action));
       this.setEnabled(true);
     }
     if (request.getParameter("permission" + parseItem + "view") != null) {
       String action = request.getParameter("permission" + parseItem + "view").toLowerCase();
-      this.setView(action.equals("on"));
+      this.setView(DatabaseUtils.parseBoolean(action));
       this.setEnabled(true);
     }
     if (request.getParameter("permission" + parseItem + "edit") != null) {
       String action = request.getParameter("permission" + parseItem + "edit").toLowerCase();
-      this.setEdit(action.equals("on"));
+      this.setEdit(DatabaseUtils.parseBoolean(action));
       this.setEnabled(true);
     }
     if (request.getParameter("permission" + parseItem + "delete") != null) {
       String action = request.getParameter("permission" + parseItem + "delete").toLowerCase();
-      this.setDelete(action.equals("on"));
+      this.setDelete(DatabaseUtils.parseBoolean(action));
       this.setEnabled(true);
     }
   }

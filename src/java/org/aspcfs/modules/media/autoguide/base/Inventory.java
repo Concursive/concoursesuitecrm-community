@@ -232,7 +232,7 @@ public class Inventory {
    *@param  tmp  The new isNew value
    */
   public void setIsNew(String tmp) {
-    this.isNew = ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.isNew = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -352,7 +352,7 @@ public class Inventory {
    *@param  tmp  The new sold value
    */
   public void setSold(String tmp) {
-    this.sold = ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.sold = DatabaseUtils.parseBoolean(tmp);
   }
 
 

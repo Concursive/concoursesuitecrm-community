@@ -214,7 +214,7 @@ public class LookupElement {
    *@param  tmp  The new defaultItem value
    */
   public void setDefaultItem(String tmp) {
-    this.defaultItem = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+    this.defaultItem = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -257,7 +257,7 @@ public class LookupElement {
    *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
-    this.enabled = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
   }
 
 

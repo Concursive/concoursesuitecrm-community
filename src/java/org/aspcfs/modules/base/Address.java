@@ -59,7 +59,7 @@ public class Address {
    *@param  tmp  The new enabled value
    */
   public void setEnabled(String tmp) {
-    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    enabled = (DatabaseUtils.parseBoolean(tmp));
   }
 
 

@@ -231,7 +231,7 @@ public class Viewpoint extends GenericBean {
    */
   public void setRequestItems(HttpServletRequest request) {
     permissionList = new ViewpointPermissionList(request);
-    if(request.getParameter("enabled") == null){
+    if (request.getParameter("enabled") == null) {
       this.enabled = false;
     }
   }
@@ -273,11 +273,16 @@ public class Viewpoint extends GenericBean {
   }
 
 
+  /**
+   *  Sets the enabled attribute of the Viewpoint object
+   *
+   *@param  enabled  The new enabled value
+   */
   public void setEnabled(String enabled) {
-    this.enabled = "ON".equalsIgnoreCase(enabled);
+    this.enabled = DatabaseUtils.parseBoolean(enabled);
   }
-  
-  
+
+
   /**
    *  Gets the enabled attribute of the Viewpoint object
    *
