@@ -566,10 +566,10 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.SearchCriteriaList" id="searchCriteriaList">
+    <map class="com.darkhorseventures.cfsbase.SearchCriteriaList" id="searchCriteriaElements">
       <property alias="guid">id</property>
       <property>groupName</property>
-      <property lookup="">contactSource</property>
+      <property>contactSource</property>
       <property lookup="user">owner</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
@@ -577,7 +577,7 @@
       <property>modified</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
-      <property lookup="searchCriteriaList" field="id"/>
+      <property lookup="searchCriteriaElements" field="id"/>
       <property lookup="searchFieldElement" field="field"/>
       <property field="operator"/>
       <property lookup="fieldTypes" field="operatorid"/>
@@ -612,7 +612,7 @@
       <property alias="guid" field="id">id</property>
       <property field="name">name</property>
       <property field="description">description</property>
-      <property lookup="searchCriteriaList" field="list_id">groupId</property>
+      <property lookup="searchCriteriaElements" field="list_id">groupId</property>
       <property lookup="message" field="message_id">messageId</property>
       <property field="reply_addr">replyTo</property>
       <property field="subject">subject</property>
@@ -692,7 +692,7 @@
     </map>   
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaignListGroups" table="campaign_list_groups">
       <property lookup="campaign" field="campaign_id">campaignId</property>
-      <property lookup="searchCriteriaList" field="group_id">groupId</property>
+      <property lookup="searchCriteriaElements" field="group_id">groupId</property>
     </map>  
   </mappings>
 </CFSDatabaseReader>
