@@ -11,7 +11,8 @@ import org.aspcfs.modules.base.Address;
  *
  *@author     mrajkowski
  *@created    September 1, 2001
- *@version    $Id$
+ *@version    $Id: ContactAddress.java,v 1.8 2003/01/13 20:48:10 mrajkowski Exp
+ *      $
  */
 public class ContactAddress extends Address {
 
@@ -47,13 +48,29 @@ public class ContactAddress extends Address {
    *@since                    1.1
    */
   public ContactAddress(Connection db, String addressId) throws SQLException {
-          queryRecord(db, Integer.parseInt(addressId));
+    queryRecord(db, Integer.parseInt(addressId));
   }
-          
+
+
+  /**
+   *  Constructor for the ContactAddress object
+   *
+   *@param  db                Description of the Parameter
+   *@param  addressId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public ContactAddress(Connection db, int addressId) throws SQLException {
-          queryRecord(db, addressId);
+    queryRecord(db, addressId);
   }
-          
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  addressId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db, int addressId) throws SQLException {
     isContact = true;
     Statement st = null;
@@ -77,50 +94,74 @@ public class ContactAddress extends Address {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  contactId         Description of the Parameter
+   *@param  enteredBy         Description of the Parameter
+   *@param  modifiedBy        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
-	this.setContactId(contactId);
-	this.setEnteredBy(enteredBy);
-	this.setModifiedBy(modifiedBy);
+        this.setContactId(contactId);
+        this.setEnteredBy(enteredBy);
+        this.setModifiedBy(modifiedBy);
         this.insert(db, contactId, enteredBy);
       } else {
-	this.setModifiedBy(modifiedBy);
+        this.setModifiedBy(modifiedBy);
         this.update(db, modifiedBy);
       }
     } else {
       this.delete(db);
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void insert(Connection db) throws SQLException {
-          insert(db, this.getContactId(), this.getEnteredBy());
+    insert(db, this.getContactId(), this.getEnteredBy());
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  contactId         Description of the Parameter
+   *@param  enteredBy         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO contact_address " +
         "(contact_id, address_type, addrline1, addrline2, city, state, postalcode, country, ");
-                if (this.getEntered() != null) {
-                        sql.append("entered, ");
-                }
-                if (this.getModified() != null) {
-                        sql.append("modified, ");
-                }        
+    if (this.getEntered() != null) {
+      sql.append("entered, ");
+    }
+    if (this.getModified() != null) {
+      sql.append("modified, ");
+    }
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
-                if (this.getEntered() != null) {
-                        sql.append("?, ");
-                }
-                if (this.getModified() != null) {
-                        sql.append("?, ");
-                }    
-    sql.append("?, ?) ");                
-    
+    if (this.getEntered() != null) {
+      sql.append("?, ");
+    }
+    if (this.getModified() != null) {
+      sql.append("?, ");
+    }
+    sql.append("?, ?) ");
+
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    
+
     if (this.getContactId() > -1) {
       pst.setInt(++i, this.getContactId());
     } else {
@@ -137,20 +178,20 @@ public class ContactAddress extends Address {
     pst.setString(++i, this.getState());
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
-    
-        if (this.getEntered() != null) {
-                pst.setTimestamp(++i, this.getEntered());
-        }
-        if (this.getModified() != null) {
-                pst.setTimestamp(++i, this.getModified());
-        }
-    
+
+    if (this.getEntered() != null) {
+      pst.setTimestamp(++i, this.getEntered());
+    }
+    if (this.getModified() != null) {
+      pst.setTimestamp(++i, this.getModified());
+    }
+
     pst.setInt(++i, this.getEnteredBy());
     pst.setInt(++i, this.getModifiedBy());
-      
+
     pst.execute();
     pst.close();
-    
+
     this.setId(DatabaseUtils.getCurrVal(db, "contact_address_address_id_seq"));
   }
 

@@ -45,10 +45,17 @@ public class Address {
     this.id = tmp;
   }
 
+
+  /**
+   *  Sets the enabled attribute of the Address object
+   *
+   *@param  tmp  The new enabled value
+   */
   public void setEnabled(String tmp) {
     enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
-  
+
+
   /**
    *  Sets the Id attribute of the Address object
    *
@@ -69,7 +76,13 @@ public class Address {
   public void setOrgId(int orgId) {
     this.orgId = orgId;
   }
-  
+
+
+  /**
+   *  Sets the orgId attribute of the Address object
+   *
+   *@param  orgId  The new orgId value
+   */
   public void setOrgId(String orgId) {
     this.orgId = Integer.parseInt(orgId);
   }
@@ -84,14 +97,26 @@ public class Address {
   public void setContactId(int tmp) {
     this.contactId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the contactId attribute of the Address object
+   *
+   *@param  tmp  The new contactId value
+   */
   public void setContactId(String tmp) {
     this.contactId = Integer.parseInt(tmp);
   }
 
-public int getContactId() {
-	return contactId;
-}
+
+  /**
+   *  Gets the contactId attribute of the Address object
+   *
+   *@return    The contactId value
+   */
+  public int getContactId() {
+    return contactId;
+  }
 
 
   /**
@@ -209,7 +234,13 @@ public int getContactId() {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the enteredBy attribute of the Address object
+   *
+   *@param  tmp  The new enteredBy value
+   */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
@@ -224,7 +255,13 @@ public int getContactId() {
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the modifiedBy attribute of the Address object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
@@ -262,8 +299,26 @@ public int getContactId() {
     return orgId;
   }
 
-public java.sql.Timestamp getEntered() { return entered; }
-public java.sql.Timestamp getModified() { return modified; }
+
+  /**
+   *  Gets the entered attribute of the Address object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the Address object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
 
   /**
    *  Gets the StreetAddressLine1 attribute of the Address object
@@ -362,6 +417,7 @@ public java.sql.Timestamp getModified() { return modified; }
     return type;
   }
 
+
   /**
    *  Gets the TypeName attribute of the Address object
    *
@@ -387,10 +443,10 @@ public java.sql.Timestamp getModified() { return modified; }
         (city != null && !city.trim().equals("")) ||
         (state != null && !state.trim().equals("") && !state.trim().equals("-1")) ||
         (zip != null && !zip.trim().equals("")) ||
-        (country != null && !country.equals("") && !country.equals("-1") && ((streetAddressLine1 != null && !streetAddressLine1.trim().equals("")) || 
-		(streetAddressLine2 != null && !streetAddressLine2.trim().equals("")) || (city != null && !city.trim().equals("")) || 
-		(state != null && !state.trim().equals("") && !state.trim().equals("-1")) || (zip != null && !zip.trim().equals("")) )) ||
-	(!country.equals("UNITED STATES"))
+        (country != null && !country.equals("") && !country.equals("-1") && ((streetAddressLine1 != null && !streetAddressLine1.trim().equals("")) ||
+        (streetAddressLine2 != null && !streetAddressLine2.trim().equals("")) || (city != null && !city.trim().equals("")) ||
+        (state != null && !state.trim().equals("") && !state.trim().equals("-1")) || (zip != null && !zip.trim().equals("")))) ||
+        (!country.equals("UNITED STATES"))
         ));
   }
 
@@ -405,17 +461,47 @@ public java.sql.Timestamp getModified() { return modified; }
     return enteredBy;
   }
 
-public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
-public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
 
+  /**
+   *  Sets the entered attribute of the Address object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Address object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the Address object
+   *
+   *@param  tmp  The new entered value
+   */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
   }
-  
+
+
+  /**
+   *  Sets the modified attribute of the Address object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
   }
-  
+
+
   /**
    *  Gets the ModifiedBy attribute of the Address object
    *
@@ -478,17 +564,17 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
     if (!isContact) {
       this.setOrgId(rs.getInt("org_id"));
       if (rs.wasNull()) {
-              this.setOrgId(-1);
+        this.setOrgId(-1);
       }
     } else {
       this.setContactId(rs.getInt("contact_id"));
       if (rs.wasNull()) {
-              this.setContactId(-1);
+        this.setContactId(-1);
       }
     }
     this.setType(rs.getInt("address_type"));
     if (rs.wasNull()) {
-            this.setType(-1);
+      this.setType(-1);
     }
     this.setTypeName(rs.getString("description"));
     this.setStreetAddressLine1(rs.getString("addrline1"));
@@ -500,12 +586,12 @@ public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
     this.setEntered(rs.getTimestamp("entered"));
     this.setEnteredBy(rs.getInt("enteredby"));
     if (this.getEnteredBy() == -1) {
-            this.setEnteredBy(0);
+      this.setEnteredBy(0);
     }
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
     if (this.getModifiedBy() == -1) {
-            this.setModifiedBy(0);
+      this.setModifiedBy(0);
     }
   }
 
