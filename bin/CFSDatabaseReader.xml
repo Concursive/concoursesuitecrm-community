@@ -451,7 +451,7 @@
       <property field="value"/>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
-      <property field="id" alias="guid"/>
+      <property alias="guid" field="id"/>
       <property field="field"/>
       <property field="description"/>
       <property field="searchable"/>

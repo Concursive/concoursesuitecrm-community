@@ -59,11 +59,13 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
     
+    /**
     processOK = writer.commit();
     if (!processOK) {
       return false;
     }
-
+    */
+    
     /**
     logger.info("ImportCommunications-> Inserting Campaign Records");
     CampaignList campaigns = new CampaignList();
