@@ -1256,10 +1256,10 @@ public void setIncludeEnabled(int includeEnabled) {
         //System needs to get all contacts
         case -2: break;
         //Typical contact list
-        case -1: sqlFilter.append("AND c.type_id != 2 OR c.type_id is NULL "); break;
+        case -1: sqlFilter.append("AND (c.type_id != 2 OR c.type_id is NULL) "); break;
         //Typical contact list by a specific user
         default:
-          sqlFilter.append("AND (c.type_id != 2 OR c.type_id is NULL OR (c.type_id = 2 AND c.owner = ?) ) ");
+          sqlFilter.append("AND ( (c.type_id != 2 OR c.type_id is NULL) OR (c.type_id = 2 AND c.owner = ?) ) ");
           break;
       }
 
@@ -1287,7 +1287,7 @@ public void setIncludeEnabled(int includeEnabled) {
       sqlFilter.append("AND ( lower(c.namelast) like lower(?) OR lower(c.namefirst) like lower(?) OR lower(c.company) like lower(?) ) ");
 
       if (personalId != -1) {
-        sqlFilter.append("AND (c.type_id != 2 OR c.type_id is NULL OR (c.type_id = 2 AND c.owner = ?) ) ");
+        sqlFilter.append("AND ( (c.type_id != 2 OR c.type_id is NULL) OR (c.type_id = 2 AND c.owner = ?) ) ");
       }
     }
 
