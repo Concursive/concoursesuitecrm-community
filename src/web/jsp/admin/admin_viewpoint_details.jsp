@@ -51,7 +51,10 @@ Update Viewpoint
   </tr>
   <tr class="containerBody">
     <td class="formLabel">Viewpoint</td>
-    <td> <%= Viewpoint.getVpUser().getContact().getNameLastFirst() %> <%= showAttribute(request, "ViewpointError") %></td>
+    <td>
+      <%= toHtml(Viewpoint.getVpUser().getContact().getNameLastFirst()) %>
+      <%= showAttribute(request, "ViewpointError") %>
+    </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">Entered</td>
@@ -87,12 +90,12 @@ Update Viewpoint
    }    
 %>    
   <tr class="containerBody">
-    <td>
-      <input type="hidden" name="permission<%= idCount %>id" value="<%= thisPermission.getId() %>">
-      &nbsp; &nbsp;<%= toHtml(thisPermission.getDescription()) %>
-    </td>
     <td align="center">
-        <input type="checkbox" value="ON" name="permission<%= idCount %>view" <%= (Viewpoint.getPermissionList().hasPermission(thisPermission.getName(), "view"))?"checked":"" %>>
+      <input type="checkbox" value="ON" name="permission<%= idCount %>view" <%= (Viewpoint.getPermissionList().hasPermission(thisPermission.getName(), "view"))?"checked":"" %>>
+    </td>
+    <td width="100%">
+      <input type="hidden" name="permission<%= idCount %>id" value="<%= thisPermission.getId() %>">
+      <%= toHtml(thisPermission.getDescription()) %>
     </td>
   </tr>
 <%

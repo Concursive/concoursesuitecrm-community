@@ -58,7 +58,7 @@ Add Viewpoint
           <td>
             <font color="red">*</font><%= showAttribute(request, "ContactError") %>
             <input type="hidden" name="vpUserId" id="contactid" value="-1">
-            [<a href="javascript:popContactsListSingle('contactid','changecontact','usersOnly=true&reset=true');">Change Contact</a>]&nbsp;
+            [<a href="javascript:popContactsListSingle('contactid','changecontact','usersOnly=true&reset=true&filters=employees');">Change Contact</a>]&nbsp;
             [<a href="javascript:document.forms[0].vpUserId.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a>]
           </td>
         </tr>
@@ -91,12 +91,12 @@ Add Viewpoint
    }
 %>
   <tr class="containerBody">
-    <td>
-      <input type="hidden" name="permission<%= idCount %>id" value="<%= thisPermission.getId() %>">
-      &nbsp; &nbsp;<%= toHtml(thisPermission.getDescription()) %>
-    </td>
     <td align="center">
-        <input type="checkbox" value="ON" name="permission<%= idCount %>view" <%= (Viewpoint.getPermissionList().hasPermission(thisPermission.getName(), "view"))?"checked":"" %>>
+      <input type="checkbox" value="ON" name="permission<%= idCount %>view" <%= (Viewpoint.getPermissionList().hasPermission(thisPermission.getName(), "view"))?"checked":"" %>>
+    </td>
+    <td width="100%">
+      <input type="hidden" name="permission<%= idCount %>id" value="<%= thisPermission.getId() %>">
+      <%= toHtml(thisPermission.getDescription()) %>
     </td>
   </tr>
 <%
