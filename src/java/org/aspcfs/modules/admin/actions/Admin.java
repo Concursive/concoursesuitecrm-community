@@ -118,56 +118,37 @@ public final class Admin extends CFSModule {
       int logins = accessLog.queryRecordCount(db);
       usageList2.add(nf.format(logins) + " login" + StringUtils.addS(logins) + " today");
 
+      //Prepare to get usage for several different actions
+      UsageList usage = new UsageList();
+      usage.setEnteredRangeStart(new java.sql.Timestamp(startRange));
+      usage.setEnteredRangeEnd(new java.sql.Timestamp(endRange));
+      
       //Upstream bw: x, the specific files uploaded on date x size
-      fileList.setEnteredRangeStart(new java.sql.Timestamp(startRange));
-      fileList.setEnteredRangeEnd(new java.sql.Timestamp(endRange));
-      int fileUploadCount = fileList.queryRecordCount(db);
-      long fileUploadSize = fileList.queryFileSize(db);
+      usage.setAction(Constants.USAGE_FILE_UPLOAD);
+      usage.buildUsage(db);
+      long fileUploadCount = usage.getCount();
+      long fileUploadSize = usage.getSize();
       usageList2.add(nf.format(fileUploadCount) + " file" + StringUtils.addS(fileUploadCount) + " uploaded today, using " + nf.format(fileUploadSize) + " byte" + StringUtils.addS(fileUploadSize) + " of bandwidth");
 
       //Downstream bw: x
-      int fileDownloadCount = fileList.queryDownloadCount(db);
-      long fileDownloadSize = fileList.queryDownloadSize(db);
+      usage.setAction(Constants.USAGE_FILE_DOWNLOAD);
+      usage.buildUsage(db);
+      long fileDownloadCount = usage.getCount();
+      long fileDownloadSize = usage.getSize();
       usageList2.add(nf.format(fileDownloadCount) + " file" + StringUtils.addS(fileDownloadCount) + " downloaded today, using " + nf.format(fileDownloadSize) + " byte" + StringUtils.addS(fileDownloadSize) + " of bandwidth");
-
-      //TODO: Get a list of the date's campaign runs...
-      //Then get the size of the message and attachments...
-      //Then get the count of email and fax messages...
-      CampaignList campaignList = new CampaignList();
-      campaignList.setCompleteOnly(true);
-      campaignList.setRunRangeStart(new java.sql.Timestamp(startRange));
-      campaignList.setRunRangeEnd(new java.sql.Timestamp(endRange));
-      campaignList.buildList(db);
-      //TODO: Iterate the campaigns
-      int emailRecipientCount = 0;
-      long emailSize = 0;
-      int faxRecipientCount = 0;
-      long faxSize = 0;
-      Iterator campaigns = campaignList.iterator();
-      while (campaigns.hasNext()) {
-        Campaign thisCampaign = (Campaign) campaigns.next();
-        //Campaign has a message and subject
-        long campaignSize = thisCampaign.getMessage().length() + thisCampaign.getSubject().length();
-        //Campaign has attachments
-        FileItemList attachmentList = new FileItemList();
-        attachmentList.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
-        attachmentList.setLinkItemId(thisCampaign.getId());
-        long attachmentSize = attachmentList.queryFileSize(db);
-        //Campaign has e-mail recipients
-        RecipientList recipientList = new RecipientList();
-        recipientList.setCampaignId(thisCampaign.getId());
-        //Add em all up
-        recipientList.setStatus("Email Sent");
-        emailRecipientCount = recipientList.queryRecordCount(db);
-        emailSize += ((campaignSize * emailRecipientCount) + (attachmentSize * emailRecipientCount));
-
-        //Campaign has fax recipients
-        //TODO: Get the actual size of the tiff being sent...
-        recipientList.setStatus("Fax Queued");
-        faxRecipientCount = recipientList.queryRecordCount(db);
-        faxSize += (campaignSize * faxRecipientCount);
-      }
+ 
+      //Communications Manager emails
+      usage.setAction(Constants.USAGE_COMMUNICATIONS_EMAIL);
+      usage.buildUsage(db);
+      long emailRecipientCount = usage.getCount();
+      long emailSize = usage.getSize();
       usageList2.add(nf.format(emailRecipientCount) + " email" + StringUtils.addS(emailRecipientCount) + " sent today, consisting of " + nf.format(emailSize) + " byte" + StringUtils.addS(emailSize));
+      
+      //Communications Manager faxes
+      usage.setAction(Constants.USAGE_COMMUNICATIONS_FAX);
+      usage.buildUsage(db);
+      long faxRecipientCount = usage.getCount();
+      long faxSize = usage.getSize();
       usageList2.add(nf.format(faxRecipientCount) + " fax" + StringUtils.addES(faxRecipientCount) + " sent today, consisting of  " + nf.format(faxSize) + " byte" + StringUtils.addS(faxSize));
 
       context.getRequest().setAttribute("usageList", usageList);

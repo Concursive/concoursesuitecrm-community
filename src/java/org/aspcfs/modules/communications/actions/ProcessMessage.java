@@ -17,35 +17,42 @@ public final class ProcessMessage extends CFSModule {
 
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
-
-    ConnectionPool sqlDriver = null;
     Connection db = null;
-    String id = context.getRequest().getParameter("id");
+    String code = context.getRequest().getParameter("code");
+    String messageId = context.getRequest().getParameter("messageId");
+    String contactId = context.getRequest().getParameter("contactId");
 
     try {
-      StringTokenizer st = new StringTokenizer(id, "|");
-      String dbName = st.nextToken();
-      String messageId = st.nextToken();
-
-      sqlDriver = (ConnectionPool)context.getServletContext().getAttribute("ConnectionPool");
-      ConnectionElement ce = new ConnectionElement();
-      //TODO: Remove this hard-coded url and get the URL from the gatekeeper
-      ce.setDriver("org.postgresql.Driver");
-      ce.setUrl("jdbc:postgresql://127.0.0.1:5432/" + dbName);
-      ce.setUsername("cfsdba");
-      ce.setPassword("");
-      ce.setDbName(dbName);
-      db = sqlDriver.getConnection(ce);
+      AuthenticationItem auth = new AuthenticationItem();
+      auth.setId(context.getRequest().getServerName());
+      auth.setCode(code);
+      db = auth.getConnection(context);
 
       Message thisMessage = new Message(db, messageId);
+      if (contactId != null && !"".equals(contactId)) {
+        Contact thisContact = new Contact(db, Integer.parseInt(contactId));
+        Template template = new Template();
+        template.setText(thisMessage.getMessageText());
+        String value = template.getValue("surveyId");
+        if (value != null) {
+          template.addParseElement("${surveyId=" + value + "}", "- Survey not available by fax -");
+        }
+        //NOTE: The following items are the same as the Notifier.java items
+        template.addParseElement("${name}", StringUtils.toHtml(thisContact.getNameFirstLast()));
+        template.addParseElement("${firstname}", StringUtils.toHtml(thisContact.getNameFirst()));
+        template.addParseElement("${lastname}", StringUtils.toHtml(thisContact.getNameLast()));
+        template.addParseElement("${company}", StringUtils.toHtml(thisContact.getCompany()));
+        template.addParseElement("${department}", StringUtils.toHtml(thisContact.getDepartmentName()));
+        thisMessage.setMessageText(template.getParsedText());
+      }
       context.getRequest().setAttribute("Message", thisMessage);
 
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace(System.out);
     } finally {
-      if (sqlDriver != null && db != null) {
-        sqlDriver.free(db);
+      if (db != null) {
+        this.freeConnection(context, db);
       }
     }
 

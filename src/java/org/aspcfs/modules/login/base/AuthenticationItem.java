@@ -4,11 +4,14 @@ import java.sql.*;
 import org.theseus.actions.*;
 
 /**
- *  Description of the Class
+ *  When a module needs to get a connection to the database, it must first
+ *  be authenticated.  Used by the Login module, XML transactions, and
+ *  any of the Process modules that do not go through login.
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
- *@version    $Id$
+ *@version    $Id: AuthenticationItem.java,v 1.13 2002/11/14 13:30:31 mrajkowski
+ *      Exp $
  */
 public class AuthenticationItem {
 
@@ -38,7 +41,8 @@ public class AuthenticationItem {
 
 
   /**
-   *  Sets the code attribute of the AuthenticationItem object
+   *  Sets the code attribute of the AuthenticationItem object, this is
+   *  manually set by the module
    *
    *@param  tmp  The new code value
    */
@@ -188,7 +192,8 @@ public class AuthenticationItem {
 
 
   /**
-   *  Gets the connection attribute of the AuthenticationItem object
+   *  Gets the connection attribute of the AuthenticationItem object using
+   *  the context to validate
    *
    *@param  context           Description of the Parameter
    *@return                   The connection value
@@ -253,7 +258,8 @@ public class AuthenticationItem {
 
 
   /**
-   *  Gets the connection attribute of the AuthenticationItem object
+   *  Returns a Connection, and can optionally make sure the connection is
+   *  authenticated first
    *
    *@param  context           Description of the Parameter
    *@param  checkCode         Description of the Parameter
@@ -261,8 +267,8 @@ public class AuthenticationItem {
    *@exception  SQLException  Description of the Exception
    */
   public Connection getConnection(ActionContext context, boolean checkCode) throws SQLException {
+    ConnectionElement ce = this.getConnectionElement(context);
     if (this.isAuthenticated(context, checkCode)) {
-      ConnectionElement ce = this.getConnectionElement(context);
       if (ce != null) {
         ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
         return sqlDriver.getConnection(ce);

@@ -29,9 +29,9 @@ public final class Constants {
   
   public static final int CAMPAIGN_CONTACT_ID = 9;
   
-  public static final int USAGE_FILE_UPLOADED = 1;
-  public static final int USAGE_FILE_DOWNLOADED = 2;
-  public static final int USAGE_COMMUNICATIONS_EMAIL_SENT = 3;
-  public static final int USAGE_COMMUNICATIONS_FAX_SENT = 4;
+  public static final int USAGE_FILE_UPLOAD = 1;
+  public static final int USAGE_FILE_DOWNLOAD = 2;
+  public static final int USAGE_COMMUNICATIONS_EMAIL = 3;
+  public static final int USAGE_COMMUNICATIONS_FAX = 4;
   
 }

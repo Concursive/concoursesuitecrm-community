@@ -11,8 +11,8 @@ import com.zeroio.iteam.base.*;
 import com.darkhorseventures.controller.ComponentContext;
 
 /**
- *  A logged message sent to a person using 1 of several transports:
- *  SMTP, Fax, Letter, IM
+ *  A logged message sent to a person using 1 of several transports: SMTP, Fax,
+ *  Letter, IM
  *
  *@author     mrajkowski
  *@created    October 15, 2001
@@ -20,26 +20,26 @@ import com.darkhorseventures.controller.ComponentContext;
  */
 public class Notification extends Thread {
 
-  public static final int EMAIL = 1;
-  public static final int FAX = 2;
-  public static final int LETTER = 3;
-  public static final int EMAILFAX = 4;
-  public static final int EMAILLETTER = 5;
-  public static final int EMAILFAXLETTER = 6;
-  public static final int IM = 7;
-  public static final int SSL = 8;
+  public final static int EMAIL = 1;
+  public final static int FAX = 2;
+  public final static int LETTER = 3;
+  public final static int EMAILFAX = 4;
+  public final static int EMAILLETTER = 5;
+  public final static int EMAILFAXLETTER = 6;
+  public final static int IM = 7;
+  public final static int SSL = 8;
 
-  public static final String EMAIL_TEXT = "Email";
-  public static final String FAX_TEXT = "Fax";
-  public static final String LETTER_TEXT = "Letter";
-  public static final String EMAILFAX_TEXT = "Email first, try Fax";
-  public static final String EMAILLETTER_TEXT = "Email first, then Letter";
-  public static final String EMAILFAXLETTER_TEXT = "Email first, try Fax, then Letter";
-  public static final String IM_TEXT = "Instant Message";
-  public static final String SSL_TEXT = "SSL Message";
-  
-  public static final String lf = System.getProperty("line.separator");
-  
+  public final static String EMAIL_TEXT = "Email";
+  public final static String FAX_TEXT = "Fax";
+  public final static String LETTER_TEXT = "Letter";
+  public final static String EMAILFAX_TEXT = "Email first, try Fax";
+  public final static String EMAILLETTER_TEXT = "Email first, then Letter";
+  public final static String EMAILFAXLETTER_TEXT = "Email first, try Fax, then Letter";
+  public final static String IM_TEXT = "Instant Message";
+  public final static String SSL_TEXT = "SSL Message";
+
+  public final static String lf = System.getProperty("line.separator");
+
   String faxLogEntry = null;
   Contact contact = null;
 
@@ -56,10 +56,10 @@ public class Notification extends Thread {
   private String messageToSend = null;
   private int type = -1;
   private String typeText = null;
-  
+
   private String host = "127.0.0.1";
   private int port = -1;
-  
+
   private String siteCode = null;
   private java.sql.Timestamp attempt = null;
   private int result = 0;
@@ -70,22 +70,38 @@ public class Notification extends Thread {
   private Object context = null;
 
   private FileItemList fileAttachments = null;
-  
+
+  private long size = 0;
+
+
   /**
    *  Constructor for the Notification object
    *
    *@since
    */
-  public Notification() { 
+  public Notification() {
     if (System.getProperty("MailServer") != null) {
-      host = (String)System.getProperty("MailServer");
+      host = (String) System.getProperty("MailServer");
     }
   }
-  
+
+
+  /**
+   *  Constructor for the Notification object
+   *
+   *@param  thisType  Description of the Parameter
+   */
   public Notification(int thisType) {
     this.setType(thisType);
   }
-  
+
+
+  /**
+   *  Constructor for the Notification object
+   *
+   *@param  thisType  Description of the Parameter
+   *@param  context   Description of the Parameter
+   */
   public Notification(int thisType, ActionContext context) {
     this.setType(thisType);
     this.context = context;
@@ -256,20 +272,47 @@ public class Notification extends Thread {
   public void setSiteCode(String tmp) {
     this.siteCode = tmp;
   }
-  
+
+
+  /**
+   *  Sets the port attribute of the Notification object
+   *
+   *@param  tmp  The new port value
+   */
   public void setPort(int tmp) {
     this.port = tmp;
   }
-  
+
+
+  /**
+   *  Sets the host attribute of the Notification object
+   *
+   *@param  tmp  The new host value
+   */
   public void setHost(String tmp) {
     this.host = tmp;
   }
 
-  public void setFileAttachments(FileItemList tmp) { this.fileAttachments = tmp; }
-  
+
+  /**
+   *  Sets the fileAttachments attribute of the Notification object
+   *
+   *@param  tmp  The new fileAttachments value
+   */
+  public void setFileAttachments(FileItemList tmp) {
+    this.fileAttachments = tmp;
+  }
+
+
+  /**
+   *  Sets the context attribute of the Notification object
+   *
+   *@param  context  The new context value
+   */
   public void setContext(Object context) {
     this.context = context;
   }
+
 
   /**
    *  Gets the Id attribute of the Notification object
@@ -315,6 +358,16 @@ public class Notification extends Thread {
 
 
   /**
+   *  Gets the type attribute of the Notification object
+   *
+   *@return    The type value
+   */
+  public int getType() {
+    return type;
+  }
+
+
+  /**
    *  Gets the errorMessage attribute of the Notification object
    *
    *@return    The errorMessage value
@@ -344,7 +397,25 @@ public class Notification extends Thread {
     return contact;
   }
 
-  public FileItemList getFileAttachments() { return fileAttachments; }
+
+  /**
+   *  Gets the fileAttachments attribute of the Notification object
+   *
+   *@return    The fileAttachments value
+   */
+  public FileItemList getFileAttachments() {
+    return fileAttachments;
+  }
+
+
+  /**
+   *  Gets the size attribute of the Notification object
+   *
+   *@return    The size value
+   */
+  public long getSize() {
+    return size;
+  }
 
 
   /**
@@ -484,7 +555,7 @@ public class Notification extends Thread {
         } else if (type == FAX) {
 
         } else if (type == SSL) {
-          
+
         }
       } catch (Exception e) {
         result = 2;
@@ -560,13 +631,16 @@ public class Notification extends Thread {
           } else {
             status = "Email Sent";
             insertNotification(db);
+            size = subject.length() +
+                messageToSend.length() +
+                fileAttachments.getFileSize();
           }
         } else if (type == IM) {
 
           status = "IM Sent";
         } else if (type == FAX) {
-          System.out.println("Notification-> To: " + thisContact.getPhoneNumber("Demo Fax"));
-          String phoneNumber = thisContact.getPhoneNumber("Demo Fax");
+          System.out.println("Notification-> To: " + thisContact.getPhoneNumber("Business Fax"));
+          String phoneNumber = thisContact.getPhoneNumber("Business Fax");
           if (!phoneNumber.equals("") && phoneNumber.length() > 0) {
             phoneNumber = PhoneNumber.convertToNumber(phoneNumber);
             if (phoneNumber.startsWith("1")) {
@@ -578,14 +652,14 @@ public class Notification extends Thread {
               phoneNumber = "1" + phoneNumber;
             }
             System.out.println("Notification-> Will send fax to: " + phoneNumber);
-            faxLogEntry = databaseName + "|" + messageIdToSend + "|" + phoneNumber;
+            faxLogEntry = databaseName + "|" + messageIdToSend + "|" + phoneNumber + "|" + thisContact.getId();
             status = "Fax Queued";
           }
         } else if (type == LETTER) {
           contact = thisContact;
           status = "Added to Report";
         } else if (type == SSL) {
-          
+
         }
       } catch (Exception e) {
         result = 2;
@@ -596,7 +670,13 @@ public class Notification extends Thread {
       System.out.println("Notification-> Type not set");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@exception  Exception  Description of the Exception
+   */
   public void notifySystem() throws Exception {
     if (type == SSL) {
       if (System.getProperty("DEBUG") != null) {
@@ -608,11 +688,11 @@ public class Notification extends Thread {
       thisMessage.setMessage(messageToSend);
       if (context != null) {
         if (context instanceof ActionContext) {
-          thisMessage.setKeystoreLocation((String)((ActionContext)context).getServletContext().getAttribute("ClientSSLKeystore"));
-          thisMessage.setKeystorePassword((String)((ActionContext)context).getServletContext().getAttribute("ClientSSLKeystorePassword"));
+          thisMessage.setKeystoreLocation((String) ((ActionContext) context).getServletContext().getAttribute("ClientSSLKeystore"));
+          thisMessage.setKeystorePassword((String) ((ActionContext) context).getServletContext().getAttribute("ClientSSLKeystorePassword"));
         } else if (context instanceof ComponentContext) {
-          thisMessage.setKeystoreLocation((String)((ComponentContext)context).getAttribute("ClientSSLKeystore"));
-          thisMessage.setKeystorePassword((String)((ComponentContext)context).getAttribute("ClientSSLKeystorePassword"));
+          thisMessage.setKeystoreLocation((String) ((ComponentContext) context).getAttribute("ClientSSLKeystore"));
+          thisMessage.setKeystorePassword((String) ((ComponentContext) context).getAttribute("ClientSSLKeystorePassword"));
         }
       }
       result = thisMessage.send();
@@ -622,20 +702,40 @@ public class Notification extends Thread {
     }
   }
 
-  public void send()  {
+
+  /**
+   *  Description of the Method
+   */
+  public void send() {
     this.start();
   }
-  
-  public void send(Connection db)  {
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db  Description of the Parameter
+   */
+  public void send(Connection db) {
     this.connection = db;
     this.start();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   */
   public void send(ActionContext context) {
     this.context = context;
     this.start();
   }
-  
+
+
+  /**
+   *  Main processing method for the Notification object
+   */
   public void run() {
     try {
       if (userToNotify > -1) {
@@ -643,13 +743,14 @@ public class Notification extends Thread {
       } else if (contactToNotify > -1) {
         this.notifyContact(connection);
       } else {
-       this.notifySystem();
+        this.notifySystem();
       }
     } catch (Exception ignore) {
       ignore.printStackTrace(System.out);
       result = 1;
     }
   }
+
 
   /**
    *  Gets the HostName attribute of the Notification object
@@ -668,9 +769,15 @@ public class Notification extends Thread {
     }
     return tmp;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
   public String toString() {
-    
+
     StringBuffer text = new StringBuffer();
     text.append("==[ NOTIFICATION ]============================" + lf);
     text.append("User to notify: " + userToNotify + lf);

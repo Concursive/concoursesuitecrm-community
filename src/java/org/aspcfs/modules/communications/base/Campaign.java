@@ -1908,7 +1908,6 @@ public class Campaign extends GenericBean {
           "modifiedby = ?, " +
           "modified = CURRENT_TIMESTAMP " +
           "WHERE campaign_id = ? " +
-      //"WHERE id = ? " +
           "AND status_id IN (" + QUEUE + ", " + ERROR + ") ");
       int i = 0;
       pst.setInt(++i, CANCELLED);
@@ -2413,6 +2412,32 @@ public class Campaign extends GenericBean {
 
     //lookup_delivery_options table
     deliveryName = rs.getString("delivery");
+  }
+
+
+  /**
+   *  This method is called when the notifier begins processing a campaign.
+   *  If lockProcess returns a 1, then it was successful and this instance
+   *  of the notifier can execute the campaign.  If lockProcess is not successful
+   *  then the notifier should skip this campaign because another instance may
+   *  have processed this one already.
+   *
+   *@param  db                Description of the Parameter
+   *@return                   1 if successfully locked
+   *@exception  SQLException  Description of the Exception
+   */
+  public int lockProcess(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE campaign " +
+        "SET status_id = ? " +
+        "WHERE campaign_id = ? " +
+        "AND status_id = ? ");
+    pst.setInt(1, statusId);
+    pst.setInt(2, id);
+    pst.setInt(3, Campaign.QUEUE);
+    int count = pst.executeUpdate();
+    pst.close();
+    return count;
   }
 }
 

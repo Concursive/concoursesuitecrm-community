@@ -18,14 +18,18 @@ import java.util.zip.*;
  *  Application that processes various kinds of Alerts in CFS, generating
  *  notifications for users.
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    October 16, 2001
  *@version    $Id$
  */
 public class Notifier extends ReportBuilder {
 
   private HashMap config = new HashMap();
-  public static final String fs = System.getProperty("file.separator");
+  /**
+   *  Description of the Field
+   */
+  public final static String fs = System.getProperty("file.separator");
+
 
   /**
    *  Constructor for the Notifier object public Notifier() { } ** Starts the
@@ -55,20 +59,22 @@ public class Notifier extends ReportBuilder {
         Connection dbSites = DriverManager.getConnection(
             thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
         PreparedStatement pstSites = dbSites.prepareStatement(
-          "SELECT * " +
-          "FROM sites " +
-          "WHERE enabled = ? ");
+            "SELECT * " +
+            "FROM sites " +
+            "WHERE enabled = ? ");
         pstSites.setBoolean(1, true);
         ResultSet rsSites = pstSites.executeQuery();
         while (rsSites.next()) {
-          Hashtable siteInfo = new Hashtable();
-          siteInfo.put("driver", rsSites.getString("driver"));
+          HashMap siteInfo = new HashMap();
+          siteInfo.put("sitecode", rsSites.getString("sitecode"));
+          siteInfo.put("vhost", rsSites.getString("vhost"));
           siteInfo.put("host", rsSites.getString("dbhost"));
           siteInfo.put("name", rsSites.getString("dbname"));
           siteInfo.put("port", rsSites.getString("dbport"));
           siteInfo.put("user", rsSites.getString("dbuser"));
           siteInfo.put("password", rsSites.getString("dbpw"));
-          siteInfo.put("sitecode", rsSites.getString("sitecode"));
+          siteInfo.put("driver", rsSites.getString("driver"));
+          siteInfo.put("code", rsSites.getString("code"));
           siteList.add(siteInfo);
         }
         rsSites.close();
@@ -77,8 +83,7 @@ public class Notifier extends ReportBuilder {
 
         Iterator i = siteList.iterator();
         while (i.hasNext()) {
-
-          Hashtable siteInfo = (Hashtable) i.next();
+          HashMap siteInfo = (HashMap) i.next();
           Class.forName((String) siteInfo.get("driver"));
           Connection db = DriverManager.getConnection(
               (String) siteInfo.get("host") + ":" +
@@ -88,16 +93,13 @@ public class Notifier extends ReportBuilder {
               (String) siteInfo.get("password"));
           thisNotifier.baseName = (String) siteInfo.get("sitecode");
 
-          //TODO: Generate site XML for notifier
-          //TODO: Check site XML for components to execute on this database connection
-          
           System.out.println("Running Alerts...");
           thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
           //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
           thisNotifier.output.append("<br><hr><br>");
 
           System.out.println("Running Communications...");
-          thisNotifier.output.append(thisNotifier.buildCommunications(db, (String) siteInfo.get("name")));
+          thisNotifier.output.append(thisNotifier.buildCommunications(db, siteInfo));
           thisNotifier.output.append("<br><hr><br>");
 
           db.close();
@@ -245,12 +247,13 @@ public class Notifier extends ReportBuilder {
    *  Scans the Communications module to see if there are any recipients that
    *  need to be sent a message.
    *
-   *@param  db                Description of Parameter
-   *@param  dbName            Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  Exception     Description of Exception
+   *@param  db             Description of Parameter
+   *@param  dbName         Description of Parameter
+   *@return                Description of the Returned Value
+   *@exception  Exception  Description of Exception
    */
-  private String buildCommunications(Connection db, String dbName) throws Exception {
+  private String buildCommunications(Connection db, HashMap siteInfo) throws Exception {
+    String dbName = (String) siteInfo.get("name");
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("Report");
@@ -274,20 +277,27 @@ public class Notifier extends ReportBuilder {
     //Get this database's key
     String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "keys" + fs;
     File f = new File(filePath);
-		f.mkdirs();
+    f.mkdirs();
     PrivateString thisKey = new PrivateString(filePath + "survey.key");
-    
+
     //Process each campaign that is active and not processed
     Iterator i = thisList.iterator();
     int notifyCount = 0;
     while (i.hasNext()) {
+      System.out.println("  Getting campaign ...");
+      //Lock the campaign so the user cannot cancel, and so that another process
+      //does not execute this campaign
+      Campaign thisCampaign = (Campaign) i.next();
+      thisCampaign.setStatusId(Campaign.STARTED);
+      if (thisCampaign.lockProcess(db) != 1) {
+        continue;
+      }
+      //Now that the campaign is locked, process it
       int campaignCount = 0;
       int sentCount = 0;
       ArrayList faxLog = new ArrayList();
       ContactReport letterLog = new ContactReport();
-      System.out.println("  Getting campaign ...");
-      Campaign thisCampaign = (Campaign) i.next();
-      
+
       //Read the file attachments list, and copy into another FileItemList
       //with the clientFilename, and the server's filename for the notification
       FileItemList attachments = new FileItemList();
@@ -298,14 +308,16 @@ public class Notifier extends ReportBuilder {
       System.out.println("  Campaign file attachments: " + fileItemList.size());
       Iterator files = fileItemList.iterator();
       while (files.hasNext()) {
-        FileItem thisItem = (FileItem)files.next();
+        FileItem thisItem = (FileItem) files.next();
         FileItem actualItem = new FileItem();
         actualItem.setClientFilename(thisItem.getClientFilename());
         actualItem.setDirectory((String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs);
         actualItem.setFilename(thisItem.getFilename());
+        actualItem.setSize(thisItem.getSize());
         attachments.add(actualItem);
       }
-      
+
+      //Load in the recipients
       System.out.println("  Getting recipient list ...");
       RecipientList recipientList = new RecipientList();
       recipientList.setCampaignId(thisCampaign.getId());
@@ -317,8 +329,6 @@ public class Notifier extends ReportBuilder {
       int runId = -1;
       Iterator iList = recipientList.iterator();
       if (iList.hasNext()) {
-        thisCampaign.setStatusId(Campaign.STARTED);
-        thisCampaign.update(db);
         runId = thisCampaign.insertRun(db);
       } else {
         thisCampaign.setStatusId(Campaign.ERROR);
@@ -350,8 +360,9 @@ public class Notifier extends ReportBuilder {
           template.setText(thisCampaign.getMessage());
           String value = template.getValue("surveyId");
           if (value != null) {
-            template.addParseElement("${surveyId=" + value + "}",  java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value + ",cid=" + thisContact.getId())));
+            template.addParseElement("${surveyId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value + ",cid=" + thisContact.getId())));
           }
+          //NOTE: The following items are the same as the ProcessMessage.java items
           template.addParseElement("${name}", StringUtils.toHtml(thisContact.getNameFirstLast()));
           template.addParseElement("${firstname}", StringUtils.toHtml(thisContact.getNameFirst()));
           template.addParseElement("${lastname}", StringUtils.toHtml(thisContact.getNameLast()));
@@ -361,8 +372,16 @@ public class Notifier extends ReportBuilder {
           //thisNotification.setMessageToSend(thisCampaign.getMessage());
           thisNotification.setType(thisCampaign.getSendMethodId());
           thisNotification.notifyContact(db);
+          if (thisNotification.getType() == Notification.EMAIL) {
+            Usage emailUsage = new Usage();
+            emailUsage.setEnteredBy(thisCampaign.getModifiedBy());
+            emailUsage.setAction(Constants.USAGE_COMMUNICATIONS_EMAIL);
+            emailUsage.setRecordId(thisCampaign.getId());
+            emailUsage.setRecordSize(thisNotification.getSize());
+            emailUsage.insert(db);
+          }
           if (thisNotification.getFaxLogEntry() != null) {
-            faxLog.add(thisNotification.getFaxLogEntry());
+            faxLog.add(thisNotification.getFaxLogEntry() + "|" + thisCampaign.getEnteredBy() + "|" + thisCampaign.getId());
           } else if (thisNotification.getContact() != null) {
             letterLog.add(thisNotification.getContact());
           }
@@ -384,7 +403,7 @@ public class Notifier extends ReportBuilder {
       }
       if (campaignCount > 0) {
         outputLetterLog(thisCampaign, letterLog, dbName, db);
-        outputFaxLog(faxLog);
+        outputFaxLog(faxLog, db, siteInfo);
         thisCampaign.setStatusId(Campaign.FINISHED);
         thisCampaign.setRecipientCount(campaignCount);
         thisCampaign.setSentCount(sentCount);
@@ -395,14 +414,16 @@ public class Notifier extends ReportBuilder {
     return thisReport.getHtml();
   }
 
+
   /**
    *  From a list of fax entries, a script is exported and executed to kick-off
    *  the fax process.
    *
    *@param  faxLog  Description of Parameter
+   *@param  db      Description of the Parameter
    *@return         Description of the Returned Value
    */
-  private boolean outputFaxLog(ArrayList faxLog) {
+  private boolean outputFaxLog(ArrayList faxLog, Connection db, HashMap siteInfo) throws Exception {
     System.out.println("Notifier-> Outputting fax log");
     if (faxLog == null || faxLog.size() == 0) {
       return false;
@@ -422,22 +443,58 @@ public class Notifier extends ReportBuilder {
       out = new PrintWriter(new BufferedWriter(new FileWriter(baseDirectory + (String) config.get("BaseFilename") + uniqueScript + ".sh")));
       Iterator faxEntries = faxLog.iterator();
       while (faxEntries.hasNext()) {
+        String uniqueId = formatter1.format(new java.util.Date());
         String thisEntry = (String) faxEntries.next();
         StringTokenizer st = new StringTokenizer(thisEntry, "|");
         String databaseName = st.nextToken();
         String messageId = st.nextToken();
         String faxNumber = st.nextToken();
-        String uniqueId = formatter1.format(new java.util.Date());
-
-        String baseFilename = baseDirectory + (String) config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
-        out.println("perl /usr/local/bin/html2ps -o " + baseFilename + ".ps http://" + (String) config.get("CFSWebServer") + "/ProcessMessage.do?id=" + databaseName + "\\|" + messageId + " >/dev/null 2>&1");
-        out.println("gs -q -sDEVICE=tiffg4 -dNOPAUSE -dBATCH -sOutputFile=" + baseFilename + ".tiff " + baseFilename + ".ps");
-        out.println("rm " + baseFilename + ".ps");
+        String contactId = null;
+        if (st.hasMoreTokens()) {
+          contactId = st.nextToken();
+        }
+        String enteredBy = null;
+        if (st.hasMoreTokens()) {
+          enteredBy = st.nextToken();
+        }
+        String recordId = null;
+        if (st.hasMoreTokens()) {
+          recordId = st.nextToken();
+        }
 
         if (!"false".equals((String) config.get("FaxEnabled"))) {
-          out.println("sendfax -n -h " + (String) config.get("FaxServer") + " -d " + faxNumber + " " + baseFilename + ".tiff");
+          //Faxing is enabled
+          String baseFilename = baseDirectory + (String) config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
+          String url = "http://" + (String) siteInfo.get("vhost") + "/ProcessMessage.do?code=" + (String) siteInfo.get("code") + "&messageId=" + messageId + (contactId != null?"&contactId=" + contactId:"");
+          if (HTTPUtils.convertUrlToPostscriptFile(url, baseFilename) == 1) {
+            continue;
+          }
+          if (ImageUtils.convertPostscriptToTiffFile(baseFilename) == 1) {
+            continue;
+          }
+          File psFile = new File(baseFilename + ".ps");
+          psFile.delete();
+          
+          //Fax command -- only removes file if sendfax is successful
+          out.println(
+            "sendfax -n " +
+            "-h " + (String) config.get("FaxServer") + " " +
+            "-d " + faxNumber + " " + 
+            baseFilename + ".tiff " +
+            "&& rm " + baseFilename + ".tiff ");
+
+          //Track usage
+          //NOTE: Could add a URL post in the script to let the server know the file was actually faxed instead
+          File faxFile = new File(baseFilename + ".tiff");
+          if (faxFile.exists()) {
+            Usage faxUsage = new Usage();
+            faxUsage.setEnteredBy(Integer.parseInt(enteredBy));
+            faxUsage.setAction(Constants.USAGE_COMMUNICATIONS_FAX);
+            faxUsage.setRecordId(Integer.parseInt(recordId));
+            faxUsage.setRecordSize(faxFile.length());
+            faxUsage.insert(db);
+          }
         }
-        out.println("rm " + baseFilename + ".tiff");
       }
     } catch (IOException e) {
       e.printStackTrace(System.err);
@@ -449,7 +506,8 @@ public class Notifier extends ReportBuilder {
     }
 
     try {
-      java.lang.Process process = java.lang.Runtime.getRuntime().exec("/bin/sh " + baseDirectory + "cfsfax" + uniqueScript + ".sh");
+      java.lang.Process process = java.lang.Runtime.getRuntime().exec(
+        "/bin/sh " + baseDirectory + "cfsfax" + uniqueScript + ".sh");
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
@@ -477,8 +535,8 @@ public class Notifier extends ReportBuilder {
     String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs + "id" + thisCampaign.getId() + fs + CFSModule.getDatePath(new java.util.Date()) + fs;
     String baseFilename = contactReport.generateFilename();
     File f = new File(filePath);
-		f.mkdirs();
-    
+    f.mkdirs();
+
     String[] fields = {"nameLast", "nameMiddle", "nameFirst", "company", "title", "department", "businessPhone", "businessAddress", "city", "state", "zip", "country"};
     contactReport.setCriteria(fields);
     contactReport.setFilePath(filePath);
@@ -489,17 +547,17 @@ public class Notifier extends ReportBuilder {
     contactReport.buildReportHeaders();
     contactReport.buildReportData(null);
     CFSModule.saveTextFile(contactReport.getRep().getHtml(), filePath + baseFilename + ".html");
-    
+
     //Stream communications data to Zip file
     ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(filePath + baseFilename));
     ZipUtils.addTextEntry(zip, "contacts-" + baseFilename + ".csv", contactReport.getRep().getDelimited());
-    
+
     //Get this database's key
     String keyFilePath = (String) config.get("FileLibrary") + fs + dbName + fs + "keys" + fs;
     File keys = new File(keyFilePath);
-		keys.mkdirs();
+    keys.mkdirs();
     PrivateString thisKey = new PrivateString(keyFilePath + "survey.key");
-    
+
     Template template = new Template();
     template.setText(thisCampaign.getMessage());
     String value = template.getValue("surveyId");
@@ -509,7 +567,7 @@ public class Notifier extends ReportBuilder {
     ZipUtils.addTextEntry(zip, "letter-" + baseFilename + ".txt", template.getParsedText());
     zip.close();
     int fileSize = (int) (new File(filePath + baseFilename)).length();
-    
+
     FileItem thisItem = new FileItem();
     thisItem.setLinkModuleId(Constants.COMMUNICATIONS);
     thisItem.setLinkItemId(thisCampaign.getId());
