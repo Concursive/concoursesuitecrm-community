@@ -409,7 +409,7 @@ public final class Reports extends CFSModule {
       try {
         FileDownload download = new FileDownload();
         download.setFullPath(this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
-        download.setDisplayName(queue.getReport().getFilename() + ".pdf");
+        download.setDisplayName(queue.getReport().getFilename().substring(0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".pdf");
         download.sendFile(context);
       } catch (Exception e) {
         e.printStackTrace(System.out);
