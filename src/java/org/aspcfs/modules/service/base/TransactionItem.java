@@ -613,15 +613,17 @@ public class TransactionItem {
               }
             }
           } else {
-            SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(param + "List");
-            if (referencedTable != null) {
-              int recordId = syncClientMap.lookupServerId(packetContext.getClientManager(), referencedTable.getId(), value);
-              ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("TransactionItem-> Setting new parameter: " + param + "Id" + " data: " + recordId);
+            if (value != null && Integer.parseInt(value) > -1) {
+              SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(param + "List");
+              if (referencedTable != null) {
+                int recordId = syncClientMap.lookupServerId(packetContext.getClientManager(), referencedTable.getId(), value);
+                ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println("TransactionItem-> Setting new parameter: " + param + "Id" + " data: " + recordId);
+                }
+              } else {
+                throw new SQLException("Sync reference does not exist, you must sync referenced tables first");
               }
-            } else {
-              throw new SQLException("Sync reference does not exist, you must sync referenced tables first");
             }
           }
         }

@@ -6,6 +6,7 @@ import org.aspcfs.apps.transfer.*;
 import org.aspcfs.apps.transfer.reader.cfsdatabasereader.PropertyMapList;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.admin.base.*;
 import java.util.logging.*;
 import java.util.*;
 import java.io.*;
@@ -161,8 +162,14 @@ public class NetDescAccountsReader implements DataReader {
 
     logger.info("Processing excel file" + excelFile);
     try {
-
       int userId = 1;
+      
+      User newUser = new User();
+      newUser.setId(userId);
+      newUser.setUsername("Importer");
+      DataRecord newUserRecord = mappings.createDataRecord(newUser, "insert");
+      writer.save(newUserRecord);
+
       HashMap accounts = new HashMap();
 
       POIFSFileSystem fs =

@@ -107,8 +107,6 @@
       <property lookup="user">alias</property>
       <property>entered</property>
       <property>modified</property>
-      <property>entered</property>
-      <property>modified</property>
       <property>lastLogin</property>
     </map>
     <map class="org.aspcfs.modules.admin.base.Role" id="role">
