@@ -230,7 +230,7 @@ public class PagedListInfo {
       String tmpListFilter = context.getRequest().getParameter("listFilter" + filter);
       addFilter(filter, tmpListFilter);
     }
-    if (filter > 0) {
+    if (context.getRequest().getParameter("listFilter1") != null) {
       this.setCurrentLetter("");
       this.setCurrentOffset(0);
     }
