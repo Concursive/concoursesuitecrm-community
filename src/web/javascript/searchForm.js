@@ -245,16 +245,21 @@ function removeValues(){
 					tempArray[i] = searchCriteria[i+offset];
 				}
 		}
-		delete searchCriteria;
+		
+    alert("before delete");
+    delete searchCriteria;
+    alert("after delete");
+    //for (j=0; j<searchCriteria.length; j++) {
+    //  alert(j+"::"+searchCriteria.length);
+    //  searchCriteria[j] = null;
+    //}
     
-    for (j=0; j<searchCriteria.length; j++) {
-      alert(j+"::"+searchCriteria.length);
-      searchCriteria[j] = null;
-    }
+		searchCriteria = new Array();
+    alert("after new");
     
-		//searchCriteria = new Array();
     alert("four " + tempArray.length);
-		for (i=0; i < tempArray.length; i++){
+		
+    for (i=0; i < tempArray.length; i++){
 			if (tempArray[i] != null) {
 				searchCriteria[i] = tempArray[i];
 			}
