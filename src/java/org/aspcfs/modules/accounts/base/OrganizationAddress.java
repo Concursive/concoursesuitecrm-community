@@ -1,9 +1,12 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.accounts.base;
 
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Address;
 
 /**
  *  Builds an address for an organization using a custom query that extends the
@@ -11,7 +14,8 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *
  *@author     mrajkowski
  *@created    September 1, 2001
- *@version    $Id$
+ *@version    $Id: OrganizationAddress.java,v 1.7 2002/09/20 14:52:45 chris Exp
+ *      $
  */
 public class OrganizationAddress extends Address {
 
@@ -44,13 +48,29 @@ public class OrganizationAddress extends Address {
    *@since                    1.1
    */
   public OrganizationAddress(Connection db, String addressId) throws SQLException {
-          queryRecord(db, Integer.parseInt(addressId));
+    queryRecord(db, Integer.parseInt(addressId));
   }
-  
+
+
+  /**
+   *  Constructor for the OrganizationAddress object
+   *
+   *@param  db                Description of the Parameter
+   *@param  addressId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public OrganizationAddress(Connection db, int addressId) throws SQLException {
-          queryRecord(db, addressId);
+    queryRecord(db, addressId);
   }
-          
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  addressId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db, int addressId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
@@ -73,50 +93,76 @@ public class OrganizationAddress extends Address {
     st.close();
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  orgId             Description of the Parameter
+   *@param  enteredBy         Description of the Parameter
+   *@param  modifiedBy        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void process(Connection db, int orgId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
-	this.setOrgId(orgId);
-	this.setEnteredBy(enteredBy);
-	this.setModifiedBy(modifiedBy);
+        this.setOrgId(orgId);
+        this.setEnteredBy(enteredBy);
+        this.setModifiedBy(modifiedBy);
         this.insert(db);
       } else {
-	this.setModifiedBy(modifiedBy);
+        this.setModifiedBy(modifiedBy);
         this.update(db, modifiedBy);
       }
     } else {
       this.delete(db);
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void insert(Connection db) throws SQLException {
-          insert(db, this.getOrgId(), this.getEnteredBy());
+    insert(db, this.getOrgId(), this.getEnteredBy());
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  orgId             Description of the Parameter
+   *@param  enteredBy         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO organization_address " +
         "(org_id, address_type, addrline1, addrline2, city, state, postalcode, country, ");
-                if (this.getEntered() != null) {
-                        sql.append("entered, ");
-                }
-                if (this.getModified() != null) {
-                        sql.append("modified, ");
-                }        
+    if (this.getEntered() != null) {
+      sql.append("entered, ");
+    }
+    if (this.getModified() != null) {
+      sql.append("modified, ");
+    }
     sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
-    
-                if (this.getEntered() != null) {
-                        sql.append("?, ");
-                }
-                if (this.getModified() != null) {
-                        sql.append("?, ");
-                }    
-    sql.append("?, ?) ");          
-    
+
+    if (this.getEntered() != null) {
+      sql.append("?, ");
+    }
+    if (this.getModified() != null) {
+      sql.append("?, ");
+    }
+    sql.append("?, ?) ");
+
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    
+
     if (this.getOrgId() > -1) {
       pst.setInt(++i, this.getOrgId());
     } else {
@@ -133,18 +179,18 @@ public class OrganizationAddress extends Address {
     pst.setString(++i, this.getState());
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
-        if (this.getEntered() != null) {
-                pst.setTimestamp(++i, this.getEntered());
-        }
-        if (this.getModified() != null) {
-                pst.setTimestamp(++i, this.getModified());
-        }
-    
+    if (this.getEntered() != null) {
+      pst.setTimestamp(++i, this.getEntered());
+    }
+    if (this.getModified() != null) {
+      pst.setTimestamp(++i, this.getModified());
+    }
+
     pst.setInt(++i, this.getEnteredBy());
     pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
-    
+
     this.setId(DatabaseUtils.getCurrVal(db, "organization_add_address_id_seq"));
   }
 

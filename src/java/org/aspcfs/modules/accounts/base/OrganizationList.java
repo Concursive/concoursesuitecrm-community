@@ -1,13 +1,13 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.accounts.base;
 
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.utils.ObjectUtils;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.accounts.base.Organization;
 
 /**
  *  Contains a list of organizations... currently used to build the list from
@@ -48,7 +48,7 @@ public class OrganizationList extends Vector {
   protected boolean buildRevenueYTD = false;
   protected java.sql.Date alertRangeStart = null;
   protected java.sql.Date alertRangeEnd = null;
-  
+
   protected int typeId = 0;
 
 
@@ -109,16 +109,37 @@ public class OrganizationList extends Vector {
   public void setSyncType(int tmp) {
     this.syncType = tmp;
   }
-  
+
+
+  /**
+   *  Gets the typeId attribute of the OrganizationList object
+   *
+   *@return    The typeId value
+   */
   public int getTypeId() {
     return typeId;
   }
+
+
+  /**
+   *  Sets the typeId attribute of the OrganizationList object
+   *
+   *@param  typeId  The new typeId value
+   */
   public void setTypeId(int typeId) {
     this.typeId = typeId;
   }
+
+
+  /**
+   *  Sets the typeId attribute of the OrganizationList object
+   *
+   *@param  typeId  The new typeId value
+   */
   public void setTypeId(String typeId) {
     this.typeId = Integer.parseInt(typeId);
   }
+
 
   /**
    *  Sets the syncType attribute of the OrganizationList object
@@ -587,7 +608,7 @@ public class OrganizationList extends Vector {
     }
     rs.close();
     pst.close();
-    
+
     return events;
   }
 
@@ -650,7 +671,7 @@ public class OrganizationList extends Vector {
       if (thisOrganization.getNameLast() != null) {
         thisOrganization.populatePrimaryContact(db);
       }
-      
+
       if (buildRevenueYTD && revenueYear > -1 && revenueOwnerId > -1) {
         thisOrganization.buildRevenueYTD(db, this.getRevenueYear(), this.getRevenueType(), this.getRevenueOwnerId());
         if (thisOrganization.getYTD() != 0) {
@@ -846,11 +867,10 @@ public class OrganizationList extends Vector {
         sqlFilter.append("AND lower(o.account_number) = lower(?) ");
       }
     }
-    
+
     if (typeId > 0) {
       sqlFilter.append("AND o.org_id IN (select atl.org_id from account_type_levels atl where atl.type_id = ?) ");
-    }    
-    
+    }
   }
 
 
@@ -945,10 +965,10 @@ public class OrganizationList extends Vector {
     if (accountNumber != null) {
       pst.setString(++i, accountNumber);
     }
-    
+
     if (typeId > 0) {
       pst.setInt(++i, typeId);
-    }    
+    }
 
     return i;
   }

@@ -5,23 +5,50 @@ package com.darkhorseventures.cfsbase;
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.utils.web.*;
+import org.aspcfs.modules.modules.admin.base.*;
+import org.aspcfs.modules.utils.DatabaseUtils;
 
+/**
+ *  Description of the Class
+ *
+ *@author     Mathur
+ *@created    January 13, 2003
+ *@version    $Id$
+ */
 public class UserPermissionList extends Vector {
-  
+
   private int roleId = -1;
-  
+
+
+  /**
+   *  Constructor for the UserPermissionList object
+   */
   public UserPermissionList() { }
-  
+
+
+  /**
+   *  Constructor for the UserPermissionList object
+   *
+   *@param  db                Description of the Parameter
+   *@param  roleId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public UserPermissionList(Connection db, int roleId) throws SQLException {
     this.roleId = roleId;
     buildList(db);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildList(Connection db) throws SQLException {
 
     PreparedStatement pst = null;
@@ -42,7 +69,7 @@ public class UserPermissionList extends Vector {
         "AND c.enabled = " + DatabaseUtils.getTrue(db) + " ");
 
     sqlOrder.append("ORDER BY role_id, c.level, p.level ");
-        
+
     createFilter(sqlFilter);
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -58,7 +85,13 @@ public class UserPermissionList extends Vector {
     rs.close();
     pst.close();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of the Parameter
+   */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
@@ -67,7 +100,15 @@ public class UserPermissionList extends Vector {
       sqlFilter.append("AND r.role_id = ? ");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (roleId > -1) {
@@ -75,5 +116,6 @@ public class UserPermissionList extends Vector {
     }
     return i;
   }
-  
+
 }
+

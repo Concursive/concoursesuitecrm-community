@@ -1,15 +1,17 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.admin.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
 import java.sql.*;
 import java.util.Vector;
 import java.util.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.controller.SystemStatus;
+import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.servlets.*;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.utils.*;
+import org.aspcfs.modules.utils.web.*;
 import com.zeroio.iteam.base.*;
 import java.text.*;
 
@@ -123,7 +125,7 @@ public final class Admin extends CFSModule {
       cal.set(Calendar.MILLISECOND, 999);
       long endRange = cal.getTimeInMillis();
       context.getRequest().setAttribute("dateEnd", new java.sql.Date(cal.getTimeInMillis()));
-      
+
       NumberFormat nf = NumberFormat.getInstance();
       db = this.getConnection(context);
 
@@ -295,11 +297,11 @@ public final class Admin extends CFSModule {
     }
     context.getRequest().setAttribute("PermissionCategory", permCat);
     addModuleBean(context, "Configuration", "Configuration");
-    if(errorMessage == null){
+    if (errorMessage == null) {
       return ("EditListsOK");
     }
     context.getRequest().setAttribute("Error", errorMessage);
-    return  "SystemError";
+    return "SystemError";
   }
 
 
@@ -640,7 +642,7 @@ public final class Admin extends CFSModule {
       contactTypeList.buildList(db);
       int category = (moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS ? PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE : PermissionCategory.LOOKUP_CONTACTS_TYPE);
       LookupListElement thisElement = thisList.getElement(category);
-      if(thisElement != null){
+      if (thisElement != null) {
         thisElement.setLookupList(contactTypeList.getLookupList("list", 0));
       }
     }

@@ -2,14 +2,16 @@
 //The createFilter method and the prepareFilter method need to have the same
 //number of parameters if modified.
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.accounts.base;
 
 import java.sql.*;
 import java.text.*;
 import java.util.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Description of the Class

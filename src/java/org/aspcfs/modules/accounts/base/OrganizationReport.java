@@ -1,13 +1,16 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.accounts.base;
 
-import org.theseus.beans.*;
 import java.sql.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.utils.*;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.io.*;
@@ -18,7 +21,8 @@ import java.text.*;
  *
  *@author     chris
  *@created    March 8, 2002
- *@version    $Id$
+ *@version    $Id: OrganizationReport.java,v 1.8 2002/12/20 14:07:55 mrajkowski
+ *      Exp $
  */
 public class OrganizationReport extends OrganizationList {
   protected Report rep = new Report();

@@ -1,18 +1,21 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.accounts.base;
 
-import org.theseus.beans.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.zeroio.iteam.base.FileItemList;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.webutils.LookupList;
-import com.darkhorseventures.webutils.LookupElement;
-import com.darkhorseventures.utils.DateUtils;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.modules.contacts.base.Contact;
+
 
 /**
  *@author     chris

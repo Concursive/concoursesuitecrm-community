@@ -1,21 +1,23 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.accounts.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.Vector;
 import java.sql.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.utils.web.*;
+
 
 /**
  *  Description of the Class
  *
  *@author     chris
  *@created    October 17, 2001
- *@version    $Id$
+ *@version    $Id: Opportunities.java,v 1.17 2003/01/07 16:29:07 mrajkowski Exp
+ *      $
  */
 public final class Opportunities extends CFSModule {
 

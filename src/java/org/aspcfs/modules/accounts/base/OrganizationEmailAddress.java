@@ -1,29 +1,71 @@
 //Copyright 2001 Dark Horse Ventures
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.accounts.base;
 
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.EmailAddress;
 
+/**
+ *  Description of the Class
+ *
+ *@author     Mathur
+ *@created    January 13, 2003
+ *@version    $Id$
+ */
 public class OrganizationEmailAddress extends EmailAddress {
 
+  /**
+   *  Constructor for the OrganizationEmailAddress object
+   */
   public OrganizationEmailAddress() {
     isContact = false;
   }
 
 
+  /**
+   *  Constructor for the OrganizationEmailAddress object
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public OrganizationEmailAddress(ResultSet rs) throws SQLException {
     isContact = false;
     buildRecord(rs);
   }
 
+
+  /**
+   *  Constructor for the OrganizationEmailAddress object
+   *
+   *@param  db                Description of the Parameter
+   *@param  emailAddressId    Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public OrganizationEmailAddress(Connection db, int emailAddressId) throws SQLException {
-          queryRecord(db, emailAddressId);
+    queryRecord(db, emailAddressId);
   }
 
+
+  /**
+   *  Constructor for the OrganizationEmailAddress object
+   *
+   *@param  db                Description of the Parameter
+   *@param  emailAddressId    Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public OrganizationEmailAddress(Connection db, String emailAddressId) throws SQLException {
-          queryRecord(db, Integer.parseInt(emailAddressId));
+    queryRecord(db, Integer.parseInt(emailAddressId));
   }
-          
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  emailAddressId    Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db, int emailAddressId) throws SQLException {
     isContact = false;
     if (emailAddressId <= 0) {
@@ -57,7 +99,7 @@ public class OrganizationEmailAddress extends EmailAddress {
    *  DELETE
    *
    *@param  db                Description of Parameter
-   *@param  orgId         Description of Parameter
+   *@param  orgId             Description of Parameter
    *@param  enteredBy         Description of Parameter
    *@param  modifiedBy        Description of Parameter
    *@exception  SQLException  Description of Exception
@@ -66,12 +108,12 @@ public class OrganizationEmailAddress extends EmailAddress {
   public void process(Connection db, int orgId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
-	this.setOrgId(orgId);
-	this.setEnteredBy(enteredBy);
-	this.setModifiedBy(modifiedBy);
-      	this.insert(db);
+        this.setOrgId(orgId);
+        this.setEnteredBy(enteredBy);
+        this.setModifiedBy(modifiedBy);
+        this.insert(db);
       } else {
-	this.setModifiedBy(modifiedBy);
+        this.setModifiedBy(modifiedBy);
         this.update(db, modifiedBy);
       }
     } else {
@@ -79,28 +121,44 @@ public class OrganizationEmailAddress extends EmailAddress {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void insert(Connection db) throws SQLException {
-          insert(db, this.getOrgId(), this.getEnteredBy());
+    insert(db, this.getOrgId(), this.getEnteredBy());
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  orgId             Description of the Parameter
+   *@param  enteredBy         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO organization_emailaddress " +
         "(org_id, emailaddress_type, email, ");
-                if (this.getEntered() != null) {
-                        sql.append("entered, ");
-                }
-                if (this.getModified() != null) {
-                        sql.append("modified, ");
-                }        
-    sql.append("enteredBy, modifiedBy ) ");  
+    if (this.getEntered() != null) {
+      sql.append("entered, ");
+    }
+    if (this.getModified() != null) {
+      sql.append("modified, ");
+    }
+    sql.append("enteredBy, modifiedBy ) ");
     sql.append("VALUES (?, ?, ?, ");
-                if (this.getEntered() != null) {
-                        sql.append("?, ");
-                }
-                if (this.getModified() != null) {
-                        sql.append("?, ");
-                }    
+    if (this.getEntered() != null) {
+      sql.append("?, ");
+    }
+    if (this.getModified() != null) {
+      sql.append("?, ");
+    }
     sql.append("?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -115,14 +173,14 @@ public class OrganizationEmailAddress extends EmailAddress {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
     pst.setString(++i, this.getEmail());
-        if (this.getEntered() != null) {
-                pst.setTimestamp(++i, this.getEntered());
-        }
-        if (this.getModified() != null) {
-                pst.setTimestamp(++i, this.getModified());
-        }
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
+    if (this.getEntered() != null) {
+      pst.setTimestamp(++i, this.getEntered());
+    }
+    if (this.getModified() != null) {
+      pst.setTimestamp(++i, this.getModified());
+    }
+    pst.setInt(++i, this.getEnteredBy());
+    pst.setInt(++i, this.getModifiedBy());
     pst.execute();
     pst.close();
 

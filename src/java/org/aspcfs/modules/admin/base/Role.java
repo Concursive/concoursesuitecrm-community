@@ -1,14 +1,18 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
-import org.theseus.beans.*;
 import java.sql.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.text.DateFormat;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import com.darkhorseventures.framework.beans.*;
+import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.admin.base.*;
 
 /**
  *  Represents a Role (User Group)
@@ -36,7 +40,6 @@ public class Role extends GenericBean {
 
   /**
    *  Constructor for the Role object
-   *
    */
   public Role() { }
 
@@ -61,9 +64,9 @@ public class Role extends GenericBean {
    */
   public Role(Connection db, int roleId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM role " +
-      "WHERE role_id = ? ");
+        "SELECT * " +
+        "FROM role " +
+        "WHERE role_id = ? ");
     pst.setInt(1, roleId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -89,6 +92,7 @@ public class Role extends GenericBean {
     this.entered = tmp;
   }
 
+
   /**
    *  Sets the Entered attribute of the Role object
    *
@@ -98,6 +102,7 @@ public class Role extends GenericBean {
     this.entered = DatabaseUtils.parseTimestamp(tmp);
   }
 
+
   /**
    *  Sets the Modified attribute of the Role object
    *
@@ -106,6 +111,7 @@ public class Role extends GenericBean {
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
   }
+
 
   /**
    *  Sets the Modified attribute of the Role object
@@ -408,7 +414,15 @@ public class Role extends GenericBean {
     db.setAutoCommit(true);
     return resultCount;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
     String sql = "";
@@ -427,26 +441,25 @@ public class Role extends GenericBean {
         int usercount = rs.getInt("user_count");
         if (usercount != 0) {
           Dependency thisDependency = new Dependency();
-        thisDependency.setName("Active Users");
-        thisDependency.setCount(usercount);
-        thisDependency.setCanDelete(true);
-        dependencyList.add(thisDependency);
+          thisDependency.setName("Active Users");
+          thisDependency.setCount(usercount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
         }
       }
 
       pst.close();
       db.commit();
-    }
-    catch (SQLException e) {
+    } catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
-    }
-    finally {
+    } finally {
       db.setAutoCommit(true);
     }
     return dependencyList;
-  }  
+  }
+
 
   /**
    *  Description of the Method
@@ -471,7 +484,7 @@ public class Role extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredby, modifiedby, enabled ) " +
-        "VALUES (?, ?, ");
+          "VALUES (?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }

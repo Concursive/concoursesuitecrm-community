@@ -1,28 +1,54 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.utils.web.*;
+import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.modules.modules.admin.base.Permission;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     Mathur
+ *@created    January 13, 2003
+ *@version    $Id$
+ */
 public class RolePermissionList extends Hashtable {
-  
+
   private int roleId = -1;
   private int enabledState = Constants.TRUE;
-  
+
+
+  /**
+   *  Constructor for the RolePermissionList object
+   */
   public RolePermissionList() { }
-  
+
+
+  /**
+   *  Constructor for the RolePermissionList object
+   *
+   *@param  db                Description of the Parameter
+   *@param  roleId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public RolePermissionList(Connection db, int roleId) throws SQLException {
     this.roleId = roleId;
     buildCombinedList(db);
   }
-  
+
+
+  /**
+   *  Constructor for the RolePermissionList object
+   *
+   *@param  request  Description of the Parameter
+   */
   public RolePermissionList(HttpServletRequest request) {
     int i = 0;
     while (request.getParameter("permission" + (++i) + "id") != null) {
@@ -31,10 +57,34 @@ public class RolePermissionList extends Hashtable {
       this.put("permission" + i, thisPermission);
     }
   }
-  
-  public void setEnabledState(int tmp) { this.enabledState = tmp; }
-  public int getEnabledState() { return enabledState; }
-  
+
+
+  /**
+   *  Sets the enabledState attribute of the RolePermissionList object
+   *
+   *@param  tmp  The new enabledState value
+   */
+  public void setEnabledState(int tmp) {
+    this.enabledState = tmp;
+  }
+
+
+  /**
+   *  Gets the enabledState attribute of the RolePermissionList object
+   *
+   *@return    The enabledState value
+   */
+  public int getEnabledState() {
+    return enabledState;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildCombinedList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -65,42 +115,64 @@ public class RolePermissionList extends Hashtable {
     }
     rs.close();
     pst.close();
-    
+
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of the Parameter
+   */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-    
+
     if (enabledState != -1) {
       sqlFilter.append("AND p.enabled = ? ");
       sqlFilter.append("AND c.enabled = ? ");
     }
-    
+
     if (roleId > -1) {
       sqlFilter.append("AND r.role_id = ? ");
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-    
+
     if (enabledState != -1) {
       pst.setBoolean(++i, enabledState == Constants.TRUE);
       pst.setBoolean(++i, enabledState == Constants.TRUE);
     }
-    
+
     if (roleId > -1) {
       pst.setInt(++i, roleId);
     }
     return i;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  thisName  Description of the Parameter
+   *@param  thisType  Description of the Parameter
+   *@return           Description of the Return Value
+   */
   public boolean hasPermission(String thisName, String thisType) {
     Iterator i = this.keySet().iterator();
     while (i.hasNext()) {
-      Permission thisPermission = (Permission)this.get((String)i.next());
+      Permission thisPermission = (Permission) this.get((String) i.next());
       if ("add".equals(thisType) && thisName.equals(thisPermission.getName()) && thisPermission.getAdd()) {
         return true;
       }
@@ -117,3 +189,4 @@ public class RolePermissionList extends Hashtable {
     return false;
   }
 }
+

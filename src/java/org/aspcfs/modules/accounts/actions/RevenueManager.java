@@ -1,12 +1,12 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.accounts.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
+import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.utils.web.*;
 import java.text.*;
 
 import java.awt.*;
@@ -28,7 +28,8 @@ import com.jrefinery.chart.ui.*;
  *
  *@author     chris
  *@created    November, 2002
- *@version    $Id$
+ *@version    $Id: RevenueManager.java,v 1.24 2003/01/09 18:10:27 mrajkowski Exp
+ *      $
  */
 public final class RevenueManager extends CFSModule {
 
@@ -44,7 +45,7 @@ public final class RevenueManager extends CFSModule {
     }
     addModuleBean(context, "Revenue", "Revenue");
     String errorMessage = null;
-    
+
     //Prepare the user id to base all data on
     int idToUse = 0;
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
@@ -70,7 +71,7 @@ public final class RevenueManager extends CFSModule {
     } else {
       overrideId = thisUser.getUserId();
     }
-    
+
     //Check that the user hasAuthority for this oid
     if (hasAuthority(context, overrideId)) {
       idToUse = overrideId;
@@ -78,14 +79,14 @@ public final class RevenueManager extends CFSModule {
       idToUse = thisUser.getUserId();
     }
     thisRec = this.getUser(context, idToUse);
-    
+
     //Track the id in the request and the session
     if (idToUse > -1 && idToUse != getUserId(context)) {
       context.getSession().setAttribute("revenueoverride", String.valueOf(overrideId));
       context.getSession().setAttribute("revenueothername", thisRec.getContact().getNameFull());
       context.getSession().setAttribute("revenuepreviousId", String.valueOf(thisRec.getManagerId()));
     }
-    
+
     //Check the cache and see if the current graph exists and is valid
     //TODO: This line invalidates the data no matter what... need to fix
     thisRec.setRevenueIsValid(false, true);
@@ -93,7 +94,7 @@ public final class RevenueManager extends CFSModule {
     if (thisRec.getRevenueIsValid()) {
       checkFileName = thisRec.getRevenue().getLastFileName();
     }
-    
+
     //Determine the year to use
     Calendar cal = Calendar.getInstance();
     int year = cal.get(Calendar.YEAR);
@@ -109,13 +110,13 @@ public final class RevenueManager extends CFSModule {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("RevenueManager-> YEAR: " + year);
     }
-    
+
     //Determine the type to show
     String revenueType = context.getRequest().getParameter("type");
     if (revenueType == null) {
       revenueType = (String) context.getSession().getAttribute("revenuetype");
     }
-    
+
     UserList fullChildList = new UserList();
     UserList shortChildList = new UserList();
     shortChildList = thisRec.getShortChildList();
@@ -127,7 +128,7 @@ public final class RevenueManager extends CFSModule {
       db = this.getConnection(context);
       //Information about the org currently selected, etc.
       buildFormElements(context, db);
-      
+
       //Build the revenueTypeList combo box
       RevenueTypeList rtl = new RevenueTypeList(db);
       rtl.addItem(0, "-- All --");
@@ -151,7 +152,7 @@ public final class RevenueManager extends CFSModule {
       Comparator comparator = new OrganizationYTDComparator();
       java.util.Collections.sort(displayList, comparator);
       context.getRequest().setAttribute("MyRevList", displayList);
-      
+
       //FullChildList is the complete user hierarchy for the selected user and
       //is needed for the graph
       if (checkFileName == null) {
@@ -259,7 +260,7 @@ public final class RevenueManager extends CFSModule {
         param.setQuality(1.0f, true);
         encoder.encode(img, param);
         foutstream.close();
-        
+
         //Update the cached filename
         thisRec.getRevenue().setLastFileName(fileName);
         context.getRequest().setAttribute("GraphFileName", fileName);
@@ -721,7 +722,7 @@ public final class RevenueManager extends CFSModule {
    *@param  pertainsTo    Description of the Parameter
    *@param  revList       Description of the Parameter
    *@param  usersToGraph  Description of the Parameter
-   *@param  y             Description of the Parameter
+   *@param  year          Description of the Parameter
    *@return               Description of the Return Value
    */
   private UserList prepareLines(User pertainsTo, RevenueList revList, UserList usersToGraph, int year) {
@@ -769,7 +770,7 @@ public final class RevenueManager extends CFSModule {
    *
    *@param  primaryNode   Description of the Parameter
    *@param  currentLines  Description of the Parameter
-   *@param  y             Description of the Parameter
+   *@param  year          Description of the Parameter
    *@return               Description of the Return Value
    */
   private UserList calculateLine(User primaryNode, UserList currentLines, int year) {
@@ -794,7 +795,7 @@ public final class RevenueManager extends CFSModule {
    *
    *@param  toRollUp      Description of the Parameter
    *@param  currentLines  Description of the Parameter
-   *@param  y             Description of the Parameter
+   *@param  year          Description of the Parameter
    *@return               Description of the Return Value
    */
   private UserList calculateLine(UserList toRollUp, UserList currentLines, int year) {
@@ -819,7 +820,7 @@ public final class RevenueManager extends CFSModule {
    *  Description of the Method
    *
    *@param  passedList  Description of the Parameter
-   *@param  y           Description of the Parameter
+   *@param  year        Description of the Parameter
    *@return             Description of the Return Value
    */
   private XYDataset createCategoryDataset(UserList passedList, int year) {

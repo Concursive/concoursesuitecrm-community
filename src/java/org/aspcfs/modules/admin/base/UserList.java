@@ -1,13 +1,15 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.utils.web.*;
+import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.modules.modules.admin.base.*;
+
 
 /**
  *  A list of User objects.

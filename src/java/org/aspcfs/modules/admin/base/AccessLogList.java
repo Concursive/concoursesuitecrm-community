@@ -1,12 +1,16 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.utils.DatabaseUtils;
+
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.modules.utils.web.*;
+import org.aspcfs.modules.admin.base.AccessLog;
+
 import javax.servlet.http.*;
 
 /**
@@ -91,9 +95,26 @@ public class AccessLogList extends ArrayList {
   public void setUserId(String userId) {
     this.userId = Integer.parseInt(userId);
   }
-  
-  public void setEnteredRangeStart(java.sql.Timestamp tmp) { this.enteredRangeStart = tmp; }
-  public void setEnteredRangeEnd(java.sql.Timestamp tmp) { this.enteredRangeEnd = tmp; }
+
+
+  /**
+   *  Sets the enteredRangeStart attribute of the AccessLogList object
+   *
+   *@param  tmp  The new enteredRangeStart value
+   */
+  public void setEnteredRangeStart(java.sql.Timestamp tmp) {
+    this.enteredRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredRangeEnd attribute of the AccessLogList object
+   *
+   *@param  tmp  The new enteredRangeEnd value
+   */
+  public void setEnteredRangeEnd(java.sql.Timestamp tmp) {
+    this.enteredRangeEnd = tmp;
+  }
 
 
   /**
@@ -304,14 +325,22 @@ public class AccessLogList extends ArrayList {
     }
     return i;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int queryRecordCount(Connection db) throws SQLException {
     int recordCount = 0;
     StringBuffer sqlFilter = new StringBuffer();
     String sqlCount =
-      "SELECT COUNT(*) AS recordcount " +
-      "FROM access_log a " +
-      "WHERE a.id > 0 ";
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM access_log a " +
+        "WHERE a.id > 0 ";
     createFilter(sqlFilter);
     PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);

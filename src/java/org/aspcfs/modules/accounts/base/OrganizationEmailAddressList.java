@@ -1,30 +1,46 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.accounts.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.utils.DatabaseUtils;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.base.EmailAddressList;
 
 /**
  *  Contains a list of email addresses... currently used to build the list from
  *  the database with any of the parameters to limit the results.
  *
+ *@author     Mathur
+ *@created    January 13, 2003
+ *@version    $Id$
  */
 public class OrganizationEmailAddressList extends EmailAddressList {
-        
+
   public final static String tableName = "organization_emailaddress";
   public final static String uniqueField = "emailaddress_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
-        
+
+
+  /**
+   *  Constructor for the OrganizationEmailAddressList object
+   */
   public OrganizationEmailAddressList() { }
 
+
+  /**
+   *  Constructor for the OrganizationEmailAddressList object
+   *
+   *@param  request  Description of the Parameter
+   */
   public OrganizationEmailAddressList(HttpServletRequest request) {
     int i = 0;
     while (request.getParameter("email" + (++i) + "type") != null) {
@@ -35,15 +51,94 @@ public class OrganizationEmailAddressList extends EmailAddressList {
       }
     }
   }
-public String getTableName() { return tableName; }
-public String getUniqueField() { return uniqueField; }
-public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
-public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
-public int getSyncType() { return syncType; }
-public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
-public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
-public void setSyncType(int tmp) { this.syncType = tmp; }
 
+
+  /**
+   *  Gets the tableName attribute of the OrganizationEmailAddressList object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the OrganizationEmailAddressList object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   *  Gets the lastAnchor attribute of the OrganizationEmailAddressList object
+   *
+   *@return    The lastAnchor value
+   */
+  public java.sql.Timestamp getLastAnchor() {
+    return lastAnchor;
+  }
+
+
+  /**
+   *  Gets the nextAnchor attribute of the OrganizationEmailAddressList object
+   *
+   *@return    The nextAnchor value
+   */
+  public java.sql.Timestamp getNextAnchor() {
+    return nextAnchor;
+  }
+
+
+  /**
+   *  Gets the syncType attribute of the OrganizationEmailAddressList object
+   *
+   *@return    The syncType value
+   */
+  public int getSyncType() {
+    return syncType;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the OrganizationEmailAddressList object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the OrganizationEmailAddressList object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the OrganizationEmailAddressList object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildList(Connection db) throws SQLException {
 
     PreparedStatement pst = null;

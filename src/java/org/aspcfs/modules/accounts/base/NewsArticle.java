@@ -1,6 +1,7 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.accounts.base;
 
-import org.theseus.beans.*;
+import com.darkhorseventures.database.Connection;
+import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;
 import java.text.*;
@@ -35,7 +36,15 @@ public class NewsArticle extends GenericBean {
    *  Constructor for the NewsArticle object
    */
   public NewsArticle() { }
-  
+
+
+  /**
+   *  Constructor for the NewsArticle object
+   *
+   *@param  db                Description of the Parameter
+   *@param  newsId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public NewsArticle(Connection db, String newsId) throws SQLException {
     queryRecord(db, Integer.parseInt(newsId));
   }
@@ -45,7 +54,7 @@ public class NewsArticle extends GenericBean {
    *  Constructor for the Contact object
    *
    *@param  db                Description of the Parameter
-   *@param  contactId         Description of the Parameter
+   *@param  newsId            Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public NewsArticle(Connection db, int newsId) throws SQLException {
@@ -56,12 +65,21 @@ public class NewsArticle extends GenericBean {
   /**
    *  Constructor for the NewsArticle object
    *
-   *@param  rs  Description of Parameter
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of the Exception
    */
   public NewsArticle(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  newsId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   private void queryRecord(Connection db, int newsId) throws SQLException {
     if (newsId < 0) {
       throw new SQLException("News ID not specified.");
@@ -69,7 +87,7 @@ public class NewsArticle extends GenericBean {
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT n.* " +
-        //"o.name as org_name, o.industry_temp_code as org_industry, o.miner_only as org_mineronly " +
+    //"o.name as org_name, o.industry_temp_code as org_industry, o.miner_only as org_mineronly " +
         "FROM news n " +
         "LEFT JOIN organization o ON (n.org_id = o.org_id) " +
         "WHERE n.rec_id = ? ");
@@ -86,6 +104,7 @@ public class NewsArticle extends GenericBean {
     rs.close();
     pst.close();
   }
+
 
   /**
    *  Sets the ErrorMessage attribute of the NewsArticle object
@@ -246,19 +265,26 @@ public class NewsArticle extends GenericBean {
     return url;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   protected void buildRecord(ResultSet rs) throws SQLException {
-      recId = rs.getInt("rec_id");
-      orgId = rs.getInt("org_id");
-      url = rs.getString("url");
-      base = rs.getString("base");
-      headline = rs.getString("headline");
-      dateEntered = rs.getString("dateentered");
-      java.sql.Timestamp tmpDateCreated = rs.getTimestamp("created");
-      if (tmpDateCreated != null) {
-        dateEntered = shortDateTimeFormat.format(tmpDateCreated);
-      } else {
-        dateEntered = "";
-      }
+    recId = rs.getInt("rec_id");
+    orgId = rs.getInt("org_id");
+    url = rs.getString("url");
+    base = rs.getString("base");
+    headline = rs.getString("headline");
+    dateEntered = rs.getString("dateentered");
+    java.sql.Timestamp tmpDateCreated = rs.getTimestamp("created");
+    if (tmpDateCreated != null) {
+      dateEntered = shortDateTimeFormat.format(tmpDateCreated);
+    } else {
+      dateEntered = "";
+    }
   }
 
 }

@@ -1,15 +1,18 @@
 //Copyright 2001-2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
+import com.darkhorseventures.database.Connection;
+import com.darkhorseventures.framework.beans.*;
+import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.modules.admin.base.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Builds a list of user Roles

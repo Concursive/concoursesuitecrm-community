@@ -1,13 +1,15 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.admin.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import com.darkhorseventures.database.Connection;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.utils.*;
+import org.aspcfs.modules.utils.web.*;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.base.*;
 
 /**
  *  Description of the Class
@@ -91,12 +93,12 @@ public final class AdminFields extends CFSModule {
     }
 
     addModuleBean(context, "Configuration", "Configuration");
-    
+
     if (context.getRequest().getParameter("modId") != null) {
       context.getRequest().setAttribute("ModId", context.getRequest().getParameter("modId"));
       context.getRequest().setAttribute("PermissionCategory", permCat);
     }
-    
+
     return ("AddFolderOK");
   }
 
@@ -718,6 +720,7 @@ public final class AdminFields extends CFSModule {
     }
   }
 
+
   /**
    *  Adds a feature to the CategoryList attribute of the AdminFields object
    *
@@ -765,11 +768,11 @@ public final class AdminFields extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("AdminFields-> Adding Category: " + categoryId);
       }
-      
+
       if (context.getRequest().getParameter("modId") != null) {
         moduleId = Integer.parseInt(context.getRequest().getParameter("modId"));
       }
-      
+
       if (categoryId != null) {
         context.getRequest().setAttribute("catId", categoryId);
         LookupList moduleList = (LookupList) context.getRequest().getAttribute("ModuleList");

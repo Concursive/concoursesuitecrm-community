@@ -1,22 +1,26 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.accounts.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
 import java.sql.*;
-import java.util.Vector;
-import java.util.Iterator;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
 import java.text.*;
+import java.util.*;
+import com.darkhorseventures.database.Connection;
+import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.admin.base.*;
 
 /**
  *  Description of the Class
  *
  *@author     chris
  *@created    August 15, 2001
- *@version    $Id$
+ *@version    $Id: AccountTickets.java,v 1.13 2002/12/24 14:53:03 mrajkowski Exp
+ *      $
  */
 public final class AccountTickets extends CFSModule {
 
@@ -34,17 +38,24 @@ public final class AccountTickets extends CFSModule {
     addModuleBean(context, module, module);
     return ("IncludeOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandReopenTicket(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
       return ("PermissionError");
-    }    
+    }
     int resultCount = -1;
     Exception errorMessage = null;
     Connection db = null;
     Ticket thisTicket = null;
-    
+
     try {
       db = this.getConnection(context);
       thisTicket = new Ticket(db, Integer.parseInt(context.getRequest().getParameter("id")));
@@ -55,7 +66,7 @@ public final class AccountTickets extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-      
+
     if (errorMessage == null) {
       if (resultCount == -1) {
         return (executeCommandTicketDetails(context));
@@ -69,7 +80,7 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
-    
+
   }
 
 
@@ -243,10 +254,10 @@ public final class AccountTickets extends CFSModule {
       ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       newTic = new Ticket(db, Integer.parseInt(ticketId));
-      
+
       //check whether or not the owner is an active User
-      newTic.checkEnabledOwnerAccount(db);      
-      
+      newTic.checkEnabledOwnerAccount(db);
+
       newTic.getHistory().setPagedListInfo(ticListInfo);
 
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
@@ -348,9 +359,9 @@ public final class AccountTickets extends CFSModule {
       } else {
         newTic = (Ticket) context.getFormBean();
         newTic.getHistory().setTicketId(newTic.getId());
-        newTic.getHistory().buildList(db);        
+        newTic.getHistory().buildList(db);
       }
-      
+
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
@@ -406,7 +417,7 @@ public final class AccountTickets extends CFSModule {
       if (newTic != null && newTic.getOrgId() != -1) {
         contactList.setBuildDetails(false);
         contactList.setOrgId(newTic.getOrgId());
-	contactList.setEmptyHtmlSelectRecord("-- None --");
+        contactList.setEmptyHtmlSelectRecord("-- None --");
         contactList.buildList(db);
       }
 
@@ -556,8 +567,7 @@ public final class AccountTickets extends CFSModule {
         return (executeCommandModifyTicket(context));
       } else if (resultCount == 1) {
 
-		      return ("UpdateTicketOK");
-        
+        return ("UpdateTicketOK");
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
@@ -671,15 +681,22 @@ public final class AccountTickets extends CFSModule {
 
     context.getRequest().setAttribute("TicketDetails", newTic);
   }
-  
-    public String executeCommandCategoryJSList(ActionContext context) {
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandCategoryJSList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
     try {
       String catCode = context.getRequest().getParameter("catCode");
       String subCat1 = context.getRequest().getParameter("subCat1");
       String subCat2 = context.getRequest().getParameter("subCat2");
-      
+
       db = this.getConnection(context);
       if (catCode != null) {
         TicketCategoryList subList1 = new TicketCategoryList();
@@ -707,7 +724,14 @@ public final class AccountTickets extends CFSModule {
     }
     return ("CategoryJSListOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandDepartmentJSList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
@@ -729,14 +753,21 @@ public final class AccountTickets extends CFSModule {
     }
     return ("DepartmentJSListOK");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandOrganizationJSList(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
-      
+
       ContactList contactList = new ContactList();
       if (orgId != null && !"-1".equals(orgId)) {
         contactList.setBuildDetails(false);

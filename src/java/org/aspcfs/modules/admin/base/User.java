@@ -1,17 +1,21 @@
 //Copyright 2001-2003 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
-import org.theseus.beans.*;
-import org.theseus.actions.*;
 import java.sql.*;
-import com.darkhorseventures.controller.*;
-import com.darkhorseventures.utils.*;
 import java.util.*;
 import java.text.DateFormat;
-
 import java.text.*;
-import com.darkhorseventures.utils.DateUtils;
+import com.darkhorseventures.database.*;
+import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.servlets.*;
+import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.controller.*;
+import org.aspcfs.modules.utils.*;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.base.*;
+
 
 /**
  *  Represents a user access record <p>

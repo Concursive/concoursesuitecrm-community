@@ -1,11 +1,13 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.accounts.base;
 
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.webutils.*;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.base.ScheduledActions;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.mycfs.base.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.*;
 import java.util.*;
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -187,10 +189,11 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
   /**
    *  Description of the Method
    *
-   *@param  companyCalendar  Description of the Parameter
-   *@param  db               Description of the Parameter
+   *@param  companyCalendar   Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
-  public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException{
+  public void buildAlertCount(CalendarView companyCalendar, Connection db) throws SQLException {
 
     if (System.getProperty("DEBUG") != null) {
       System.out.println("AccountsListScheduledActions --> Building Account Alert Count ");

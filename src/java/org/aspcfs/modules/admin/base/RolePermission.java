@@ -1,15 +1,24 @@
 //Copyright 2002 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
-import org.theseus.beans.*;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import com.darkhorseventures.framework.beans.*;
+import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.modules.admin.base.*;
 
+/**
+ *  Description of the Class
+ *
+ *@author     Mathur
+ *@created    January 13, 2003
+ *@version    $Id$
+ */
 public class RolePermission extends GenericBean {
-  
+
   protected int id = -1;
   protected int roleId = -1;
   protected int permissionId = -1;
@@ -17,18 +26,37 @@ public class RolePermission extends GenericBean {
   protected boolean view = false;
   protected boolean edit = false;
   protected boolean delete = false;
-  
+
+
+  /**
+   *  Constructor for the RolePermission object
+   */
   public RolePermission() { }
-  
+
+
+  /**
+   *  Constructor for the RolePermission object
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public RolePermission(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
+  /**
+   *  Constructor for the RolePermission object
+   *
+   *@param  db                Description of the Parameter
+   *@param  thisId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public RolePermission(Connection db, int thisId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM role_permission rp " +
-      "WHERE rp.id = ? ");
+        "SELECT * " +
+        "FROM role_permission rp " +
+        "WHERE rp.id = ? ");
     pst.setInt(1, thisId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -41,29 +69,224 @@ public class RolePermission extends GenericBean {
     rs.close();
     pst.close();
   }
-  
-  public void setId(int tmp) { this.id = tmp; }
-  public void setId(String tmp) { this.id = Integer.parseInt(tmp); }
-  public void setRoleId(int tmp) { this.roleId = tmp; }
-  public void setRoleId(String tmp) { this.roleId = Integer.parseInt(tmp); }
-  public void setPermissionId(int tmp) { this.permissionId = tmp; }
-  public void setPermissionId(String tmp) { this.permissionId = Integer.parseInt(tmp); }
-  public void setAdd(boolean tmp) { this.add = tmp; }
-  public void setAdd(String tmp) { this.add = DatabaseUtils.parseBoolean(tmp); }
-  public void setView(boolean tmp) { this.view = tmp; }
-  public void setView(String tmp) { this.view = DatabaseUtils.parseBoolean(tmp); }
-  public void setEdit(boolean tmp) { this.edit = tmp; }
-  public void setEdit(String tmp) { this.edit = DatabaseUtils.parseBoolean(tmp); }
-  public void setDelete(boolean tmp) { this.delete = tmp; }
-  public void setDelete(String tmp) { this.delete = DatabaseUtils.parseBoolean(tmp); }
-  public int getId() { return id; }
-  public int getRoleId() { return roleId; }
-  public int getPermissionId() { return permissionId; }
-  public boolean getAdd() { return add; }
-  public boolean getView() { return view; }
-  public boolean getEdit() { return edit; }
-  public boolean getDelete() { return delete; }
 
+
+  /**
+   *  Sets the id attribute of the RolePermission object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   *  Sets the id attribute of the RolePermission object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the roleId attribute of the RolePermission object
+   *
+   *@param  tmp  The new roleId value
+   */
+  public void setRoleId(int tmp) {
+    this.roleId = tmp;
+  }
+
+
+  /**
+   *  Sets the roleId attribute of the RolePermission object
+   *
+   *@param  tmp  The new roleId value
+   */
+  public void setRoleId(String tmp) {
+    this.roleId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the permissionId attribute of the RolePermission object
+   *
+   *@param  tmp  The new permissionId value
+   */
+  public void setPermissionId(int tmp) {
+    this.permissionId = tmp;
+  }
+
+
+  /**
+   *  Sets the permissionId attribute of the RolePermission object
+   *
+   *@param  tmp  The new permissionId value
+   */
+  public void setPermissionId(String tmp) {
+    this.permissionId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the add attribute of the RolePermission object
+   *
+   *@param  tmp  The new add value
+   */
+  public void setAdd(boolean tmp) {
+    this.add = tmp;
+  }
+
+
+  /**
+   *  Sets the add attribute of the RolePermission object
+   *
+   *@param  tmp  The new add value
+   */
+  public void setAdd(String tmp) {
+    this.add = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the view attribute of the RolePermission object
+   *
+   *@param  tmp  The new view value
+   */
+  public void setView(boolean tmp) {
+    this.view = tmp;
+  }
+
+
+  /**
+   *  Sets the view attribute of the RolePermission object
+   *
+   *@param  tmp  The new view value
+   */
+  public void setView(String tmp) {
+    this.view = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the edit attribute of the RolePermission object
+   *
+   *@param  tmp  The new edit value
+   */
+  public void setEdit(boolean tmp) {
+    this.edit = tmp;
+  }
+
+
+  /**
+   *  Sets the edit attribute of the RolePermission object
+   *
+   *@param  tmp  The new edit value
+   */
+  public void setEdit(String tmp) {
+    this.edit = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the delete attribute of the RolePermission object
+   *
+   *@param  tmp  The new delete value
+   */
+  public void setDelete(boolean tmp) {
+    this.delete = tmp;
+  }
+
+
+  /**
+   *  Sets the delete attribute of the RolePermission object
+   *
+   *@param  tmp  The new delete value
+   */
+  public void setDelete(String tmp) {
+    this.delete = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the id attribute of the RolePermission object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the roleId attribute of the RolePermission object
+   *
+   *@return    The roleId value
+   */
+  public int getRoleId() {
+    return roleId;
+  }
+
+
+  /**
+   *  Gets the permissionId attribute of the RolePermission object
+   *
+   *@return    The permissionId value
+   */
+  public int getPermissionId() {
+    return permissionId;
+  }
+
+
+  /**
+   *  Gets the add attribute of the RolePermission object
+   *
+   *@return    The add value
+   */
+  public boolean getAdd() {
+    return add;
+  }
+
+
+  /**
+   *  Gets the view attribute of the RolePermission object
+   *
+   *@return    The view value
+   */
+  public boolean getView() {
+    return view;
+  }
+
+
+  /**
+   *  Gets the edit attribute of the RolePermission object
+   *
+   *@return    The edit value
+   */
+  public boolean getEdit() {
+    return edit;
+  }
+
+
+  /**
+   *  Gets the delete attribute of the RolePermission object
+   *
+   *@return    The delete value
+   */
+  public boolean getDelete() {
+    return delete;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //role_permission table
     id = rs.getInt("id");
@@ -74,12 +297,20 @@ public class RolePermission extends GenericBean {
     edit = rs.getBoolean("role_edit");
     delete = rs.getBoolean("role_delete");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "INSERT INTO role_permission (role_id, permission_id, role_view, " +
-      "role_add, role_edit, role_delete) " +
-      "VALUES (?, ?, ?, ?, ?, ?) ");
+        "INSERT INTO role_permission (role_id, permission_id, role_view, " +
+        "role_add, role_edit, role_delete) " +
+        "VALUES (?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, roleId);
     pst.setInt(++i, permissionId);

@@ -1,12 +1,15 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
-import org.theseus.beans.*;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import com.darkhorseventures.framework.beans.*;
+import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
 
 /**
  *  Represents a Permission item
@@ -16,7 +19,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@version    $Id$
  */
 public class Permission extends GenericBean {
-  
+
   protected int id = -1;
   protected int categoryId = -1;
   protected String categoryName = null;
@@ -29,19 +32,38 @@ public class Permission extends GenericBean {
   protected String description = null;
   protected boolean enabled = false;
   protected boolean active = true;
-  
+
+
+  /**
+   *  Constructor for the Permission object
+   */
   public Permission() { }
-  
+
+
+  /**
+   *  Constructor for the Permission object
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public Permission(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
+  /**
+   *  Constructor for the Permission object
+   *
+   *@param  db                Description of the Parameter
+   *@param  permissionId      Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public Permission(Connection db, int permissionId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT p.*, c.category " +
-      "FROM permission p, permission_category c " +
-      "WHERE p.category_id = c.category_id " +
-      "AND p.permission_id = ? ");
+        "SELECT p.*, c.category " +
+        "FROM permission p, permission_category c " +
+        "WHERE p.category_id = c.category_id " +
+        "AND p.permission_id = ? ");
     pst.setInt(1, permissionId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -54,33 +76,273 @@ public class Permission extends GenericBean {
     rs.close();
     pst.close();
   }
-  
-  public void setId(int tmp) { this.id = tmp; }
-  public void setId(String tmp) { this.id = Integer.parseInt(tmp); }
-  public void setCategoryId(int tmp) { this.categoryId = tmp; }
-  public void setCategoryId(String tmp) { this.categoryId = Integer.parseInt(tmp); }
-  public void setCategoryName(String tmp) { this.categoryName = tmp; }
-  public void setPermissionLevel(int tmp) { this.permissionLevel = tmp; }
-  public void setPermissionLevel(String tmp) { this.permissionLevel = Integer.parseInt(tmp); }
-  public void setName(String tmp) { this.name = tmp; }
-  public void setAdd(boolean tmp) { this.add = tmp; }
-  public void setAdd(String tmp) { this.add = DatabaseUtils.parseBoolean(tmp); }
-  public void setView(boolean tmp) { this.view = tmp; }
-  public void setView(String tmp) { this.view = DatabaseUtils.parseBoolean(tmp); }
-  public void setEdit(boolean tmp) { this.edit = tmp; }
-  public void setEdit(String tmp) { this.edit = DatabaseUtils.parseBoolean(tmp); }
-  public void setDelete(boolean tmp) { this.delete = tmp; }
-  public void setDelete(String tmp) { this.delete = DatabaseUtils.parseBoolean(tmp); }
-  public void setDescription(String tmp) { this.description = tmp; }
-  public void setEnabled(boolean tmp) { this.enabled = tmp; }
-  public void setEnabled(String tmp) { this.enabled = DatabaseUtils.parseBoolean(tmp); }
-  public void setActive(boolean tmp) { this.active = tmp; }
-  public void setActive(String tmp) { this.active = DatabaseUtils.parseBoolean(tmp); }
-  public int getId() { return id; }
-  public int getCategoryId() { return categoryId; }
-  public String getCategoryName() { return categoryName; }
-  public int getPermissionLevel() { return permissionLevel; }
-  public String getName() { return name; }
+
+
+  /**
+   *  Sets the id attribute of the Permission object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(int tmp) {
+    this.id = tmp;
+  }
+
+
+  /**
+   *  Sets the id attribute of the Permission object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the Permission object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the Permission object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    this.categoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the categoryName attribute of the Permission object
+   *
+   *@param  tmp  The new categoryName value
+   */
+  public void setCategoryName(String tmp) {
+    this.categoryName = tmp;
+  }
+
+
+  /**
+   *  Sets the permissionLevel attribute of the Permission object
+   *
+   *@param  tmp  The new permissionLevel value
+   */
+  public void setPermissionLevel(int tmp) {
+    this.permissionLevel = tmp;
+  }
+
+
+  /**
+   *  Sets the permissionLevel attribute of the Permission object
+   *
+   *@param  tmp  The new permissionLevel value
+   */
+  public void setPermissionLevel(String tmp) {
+    this.permissionLevel = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the name attribute of the Permission object
+   *
+   *@param  tmp  The new name value
+   */
+  public void setName(String tmp) {
+    this.name = tmp;
+  }
+
+
+  /**
+   *  Sets the add attribute of the Permission object
+   *
+   *@param  tmp  The new add value
+   */
+  public void setAdd(boolean tmp) {
+    this.add = tmp;
+  }
+
+
+  /**
+   *  Sets the add attribute of the Permission object
+   *
+   *@param  tmp  The new add value
+   */
+  public void setAdd(String tmp) {
+    this.add = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the view attribute of the Permission object
+   *
+   *@param  tmp  The new view value
+   */
+  public void setView(boolean tmp) {
+    this.view = tmp;
+  }
+
+
+  /**
+   *  Sets the view attribute of the Permission object
+   *
+   *@param  tmp  The new view value
+   */
+  public void setView(String tmp) {
+    this.view = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the edit attribute of the Permission object
+   *
+   *@param  tmp  The new edit value
+   */
+  public void setEdit(boolean tmp) {
+    this.edit = tmp;
+  }
+
+
+  /**
+   *  Sets the edit attribute of the Permission object
+   *
+   *@param  tmp  The new edit value
+   */
+  public void setEdit(String tmp) {
+    this.edit = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the delete attribute of the Permission object
+   *
+   *@param  tmp  The new delete value
+   */
+  public void setDelete(boolean tmp) {
+    this.delete = tmp;
+  }
+
+
+  /**
+   *  Sets the delete attribute of the Permission object
+   *
+   *@param  tmp  The new delete value
+   */
+  public void setDelete(String tmp) {
+    this.delete = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the description attribute of the Permission object
+   *
+   *@param  tmp  The new description value
+   */
+  public void setDescription(String tmp) {
+    this.description = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the Permission object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the Permission object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the active attribute of the Permission object
+   *
+   *@param  tmp  The new active value
+   */
+  public void setActive(boolean tmp) {
+    this.active = tmp;
+  }
+
+
+  /**
+   *  Sets the active attribute of the Permission object
+   *
+   *@param  tmp  The new active value
+   */
+  public void setActive(String tmp) {
+    this.active = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the id attribute of the Permission object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the categoryId attribute of the Permission object
+   *
+   *@return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
+  }
+
+
+  /**
+   *  Gets the categoryName attribute of the Permission object
+   *
+   *@return    The categoryName value
+   */
+  public String getCategoryName() {
+    return categoryName;
+  }
+
+
+  /**
+   *  Gets the permissionLevel attribute of the Permission object
+   *
+   *@return    The permissionLevel value
+   */
+  public int getPermissionLevel() {
+    return permissionLevel;
+  }
+
+
+  /**
+   *  Gets the name attribute of the Permission object
+   *
+   *@return    The name value
+   */
+  public String getName() {
+    return name;
+  }
+
+
+  /**
+   *  Gets the add attribute of the Permission object
+   *
+   *@return    The add value
+   */
   public boolean getAdd() {
     if (enabled) {
       return add;
@@ -88,6 +350,13 @@ public class Permission extends GenericBean {
       return false;
     }
   }
+
+
+  /**
+   *  Gets the view attribute of the Permission object
+   *
+   *@return    The view value
+   */
   public boolean getView() {
     if (enabled) {
       return view;
@@ -95,6 +364,13 @@ public class Permission extends GenericBean {
       return false;
     }
   }
+
+
+  /**
+   *  Gets the edit attribute of the Permission object
+   *
+   *@return    The edit value
+   */
   public boolean getEdit() {
     if (enabled) {
       return edit;
@@ -102,6 +378,13 @@ public class Permission extends GenericBean {
       return false;
     }
   }
+
+
+  /**
+   *  Gets the delete attribute of the Permission object
+   *
+   *@return    The delete value
+   */
   public boolean getDelete() {
     if (enabled) {
       return delete;
@@ -109,10 +392,44 @@ public class Permission extends GenericBean {
       return false;
     }
   }
-  public String getDescription() { return description; }
-  public boolean getEnabled() { return enabled; }
-  public boolean getActive() { return active; }
 
+
+  /**
+   *  Gets the description attribute of the Permission object
+   *
+   *@return    The description value
+   */
+  public String getDescription() {
+    return description;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the Permission object
+   *
+   *@return    The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Gets the active attribute of the Permission object
+   *
+   *@return    The active value
+   */
+  public boolean getActive() {
+    return active;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   protected void buildRecord(ResultSet rs) throws SQLException {
     //permission table
     id = rs.getInt("permission_id");
@@ -125,12 +442,19 @@ public class Permission extends GenericBean {
     description = rs.getString("description");
     enabled = rs.getBoolean("enabled");
     active = rs.getBoolean("active");
-    
+
     //permission_category table
     categoryName = rs.getString("category");
     permissionLevel = rs.getInt("level");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  request    Description of the Parameter
+   *@param  parseItem  Description of the Parameter
+   */
   protected void buildRecord(HttpServletRequest request, int parseItem) {
     if (request.getParameter("permission" + parseItem + "id") != null) {
       this.setId(request.getParameter("permission" + parseItem + "id"));
@@ -160,13 +484,21 @@ public class Permission extends GenericBean {
       this.setEnabled(true);
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insert(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "INSERT INTO permission (category_id, permission, permission_view, " +
-      "permission_add, permission_edit, permission_delete, " +
-      "description, level, enabled, active) " +
-      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "INSERT INTO permission (category_id, permission, permission_view, " +
+        "permission_add, permission_edit, permission_delete, " +
+        "description, level, enabled, active) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setInt(++i, categoryId);
     pst.setString(++i, name);

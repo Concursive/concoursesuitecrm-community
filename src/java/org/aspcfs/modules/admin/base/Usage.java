@@ -1,15 +1,16 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.utils.DatabaseUtils;
 
 /**
- *  Used for tracking user usage.  All usage should be able to be tracked
- *  to a specific user.  The actual usage may be a count or a sum of items,
- *  as determined by the usage action.<p>
+ *  Used for tracking user usage. All usage should be able to be tracked to a
+ *  specific user. The actual usage may be a count or a sum of items, as
+ *  determined by the usage action.<p>
  *
- *  Ex. Tracking # of emails sent would leave recordSize blank, but tracking
- *  the size of email sent would put the number of bytes in the recordSize.
+ *  Ex. Tracking # of emails sent would leave recordSize blank, but tracking the
+ *  size of email sent would put the number of bytes in the recordSize.
  *
  *@author     matt rajkowski
  *@created    December 6, 2002
@@ -31,8 +32,7 @@ public class Usage {
   /**
    *  Sets the user in which the usage originated from.<p>
    *
-   *  Ex. The person sending an email, NOT the person who the email
-   *  was sent to.
+   *  Ex. The person sending an email, NOT the person who the email was sent to.
    *
    *@param  tmp  The new enteredBy value
    */
@@ -52,11 +52,11 @@ public class Usage {
 
 
   /**
-   *  Sets the type of usage.  This is a unique int that refers to a
-   *  specific action.<p>
+   *  Sets the type of usage. This is a unique int that refers to a specific
+   *  action.<p>
    *
-   *  Ex. Constants.USAGE_FILE_UPLOAD = 1 tracks when a user sent a file
-   *  and the size of the file.
+   *  Ex. Constants.USAGE_FILE_UPLOAD = 1 tracks when a user sent a file and the
+   *  size of the file.
    *
    *@param  tmp  The new action value
    */
@@ -78,8 +78,7 @@ public class Usage {
   /**
    *  If the usage refers back to a record, then set the id.<p>
    *
-   *  Ex. When tracking communications emails, the communication id
-   *  is set.
+   *  Ex. When tracking communications emails, the communication id is set.
    *
    *@param  tmp  The new recordId value
    */
@@ -99,9 +98,9 @@ public class Usage {
 
 
   /**
-   *  Sets the recordSize attribute of the Usage object.  This is typically
-   *  the number of bytes, but could be used for some other measurement like
-   *  time, depending on the action.
+   *  Sets the recordSize attribute of the Usage object. This is typically the
+   *  number of bytes, but could be used for some other measurement like time,
+   *  depending on the action.
    *
    *@param  tmp  The new recordSize value
    */

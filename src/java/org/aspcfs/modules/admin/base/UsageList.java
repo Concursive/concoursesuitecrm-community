@@ -1,13 +1,16 @@
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
 import java.sql.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.utils.web.*;
+import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.modules.modules.admin.base.Usage;
 
 /**
- *  Represents a list of Usage objects.  Can be used for generating the list
- *  by specifying parameters and then initiating buildList to query the
- *  database.  Can also be used for just querying the count of objects and
- *  the sum of record objects.
+ *  Represents a list of Usage objects. Can be used for generating the list by
+ *  specifying parameters and then initiating buildList to query the database.
+ *  Can also be used for just querying the count of objects and the sum of
+ *  record objects.
  *
  *@author     matt rajkowski
  *@created    December 6, 2002

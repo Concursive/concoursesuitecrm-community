@@ -1,14 +1,14 @@
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.actions;
 
-import org.theseus.actions.*;
-import com.darkhorseventures.webutils.*;
-import com.darkhorseventures.utils.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.controller.SystemStatus;
-import com.darkhorseventures.controller.RecentItem;
-import com.darkhorseventures.controller.CustomForm;
-import com.darkhorseventures.controller.CustomFormList;
-import com.darkhorseventures.controller.ObjectHookAction;
+import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.database.*;
+import com.darkhorseventures.framework.servlets.*;
+import com.darkhorseventures.framework.hooks.RecentItem;
+import org.aspcfs.modules.utils.*;
+import org.aspcfs.modules.utils.web.*;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.controller.objectHookManager.*;
 import java.sql.*;
 import java.util.*;
 import java.text.*;

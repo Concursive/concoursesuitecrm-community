@@ -2,26 +2,30 @@
  *  Copyright 2002 Dark Horse Ventures
  *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
  */
-package com.darkhorseventures.cfsmodule;
+package org.aspcfs.modules.accounts.actions;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.theseus.actions.*;
 import java.sql.*;
 import java.util.*;
-import com.darkhorseventures.cfsbase.*;
-import com.darkhorseventures.webutils.*;
+import java.io.*;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
-import java.io.*;
+import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.*;
 
 /**
  *  Description of the Class
  *
  *@author     chris price
  *@created    August 9, 2002
- *@version    $Id$
+ *@version    $Id: AccountsDocuments.java,v 1.13 2002/09/26 13:08:23 mrajkowski
+ *      Exp $
  */
 public final class AccountsDocuments extends CFSModule {
 

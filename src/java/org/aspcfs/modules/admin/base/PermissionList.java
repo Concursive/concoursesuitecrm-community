@@ -1,26 +1,52 @@
 //Copyright 2001 Dark Horse Ventures
 
-package com.darkhorseventures.cfsbase;
+package org.aspcfs.modules.admin.base;
 
 import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
-import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.database.Connection;
+import org.aspcfs.modules.utils.web.*;
+import org.aspcfs.modules.utils.DatabaseUtils;
+import org.aspcfs.modules.modules.admin.base.Permission;
 
+/**
+ *  Description of the Class
+ *
+ *@author     Mathur
+ *@created    January 13, 2003
+ *@version    $Id$
+ */
 public class PermissionList extends Vector {
-  
+
   private String emptyHtmlSelectRecord = null;
   private int userId = -1;
   private String currentCategory = "!new";
-  
+
+
+  /**
+   *  Constructor for the PermissionList object
+   */
   public PermissionList() { }
-  
+
+
+  /**
+   *  Constructor for the PermissionList object
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public PermissionList(Connection db) throws SQLException {
     buildList(db);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildList(Connection db) throws SQLException {
 
     PreparedStatement pst = null;
@@ -39,7 +65,7 @@ public class PermissionList extends Vector {
         "WHERE p.category_id = c.category_id ");
     createFilter(sqlFilter);
     sqlOrder.append("ORDER BY c.level, p.level ");
-    
+
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -51,7 +77,13 @@ public class PermissionList extends Vector {
     rs.close();
     pst.close();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of the Parameter
+   */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
@@ -59,14 +91,29 @@ public class PermissionList extends Vector {
     sqlFilter.append("AND p.enabled = ? ");
     sqlFilter.append("AND c.enabled = ? ");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     pst.setBoolean(++i, true);
     pst.setBoolean(++i, true);
     return i;
   }
-  
+
+
+  /**
+   *  Gets the newCategory attribute of the PermissionList object
+   *
+   *@param  thisCategory  Description of the Parameter
+   *@return               The newCategory value
+   */
   public boolean isNewCategory(String thisCategory) {
     if (thisCategory.equals(currentCategory)) {
       return false;
@@ -75,5 +122,6 @@ public class PermissionList extends Vector {
       return true;
     }
   }
-  
+
 }
+
