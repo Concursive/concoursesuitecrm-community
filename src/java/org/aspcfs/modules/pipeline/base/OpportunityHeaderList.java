@@ -641,12 +641,12 @@ public class OpportunityHeaderList extends Vector {
 
     //Get the opportunity if user is owner in any one of the components of that opportunity
     if (owner != -1) {
-      sqlFilter.append("AND x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner = ? ) ");
+      sqlFilter.append("AND ( (x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner = ? ))  OR (x.opp_id NOT IN (SELECT opp_id from opportunity_component oc1 WHERE oc1.opp_id = x.opp_id )) ) ");
     }
 
     //Get the opportunity if user or anyone in user's hierarchy is owner in any one of the components of that opportunity
     if (ownerIdRange != null) {
-      sqlFilter.append("AND x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ") ) "); 
+      sqlFilter.append("AND ( (x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ") ) ) OR (x.opp_id NOT IN (SELECT opp_id from opportunity_component oc1 WHERE oc1.opp_id = x.opp_id) ) ) ");
     }
   }
 
@@ -690,7 +690,7 @@ public class OpportunityHeaderList extends Vector {
     if (owner != -1) {
       pst.setInt(++i, owner);
     }
-    
+
     return i;
   }
 
