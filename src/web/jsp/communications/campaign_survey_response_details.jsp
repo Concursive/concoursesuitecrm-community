@@ -91,10 +91,10 @@ Response Details
                               <tr><td width="100%" align="left"><li><%= (thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) ? "No comments provided" : toHtml(thisAnswer.getComments()) %></li></td></tr>
                             </dhv:evaluate>
                             <dhv:evaluate exp="<%= (type == SurveyQuestion.QUANT_NOCOMMENTS) %>">
-                              <tr><td width="100%" align="left"><li><%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns() : "No answer provided" %></li></td></tr>
+                              <tr><td width="100%" align="left"><li><%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns() + "" : "No answer provided" %></li></td></tr>
                             </dhv:evaluate>
                             <dhv:evaluate exp="<%= (type == SurveyQuestion.QUANT_COMMENTS) %>">
-                              <tr><td width="4" align="center"><%= thisAnswer.getQuantAns()!= -1 ? thisAnswer.getQuantAns() : "-" %></td><td align="left"><%= (thisAnswer.getComments() != null && !"".thisAnswer.getComments()) ? toHtml(thisAnswer.getComments()) : "No comments provided" %></td></tr>
+                              <tr><td width="4" align="center"><%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns() + "" : "-" %></td><td align="left"><%= (thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) ? toHtml(thisAnswer.getComments()) : "No comments provided" %></td></tr>
                             </dhv:evaluate>
                        <% }
                          }else{
