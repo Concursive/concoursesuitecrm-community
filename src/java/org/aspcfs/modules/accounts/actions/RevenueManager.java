@@ -105,6 +105,7 @@ public final class RevenueManager extends CFSModule {
       
       if (context.getRequest().getParameter("type") != null) {
 	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
+	      thisRec.setRevenueIsValid(false, true);
       }
       
       realFullRevList.setOwnerIdRange(range);
@@ -132,7 +133,7 @@ public final class RevenueManager extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    if (thisRec.getIsValid() == true) {
+    if (thisRec.getRevenueIsValid() == true) {
         checkFileName = thisRec.getRevenue().getLastFileName();
     }
     

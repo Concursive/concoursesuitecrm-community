@@ -43,7 +43,7 @@
        <td valign=top width="100%">
       <table width=100% cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
-	<td>Description</td>
+	<td>Account Name</td>
           <td>Amount</td>
           <td>Owner</td>
         </tr>
@@ -62,7 +62,7 @@
 				Revenue thisRev = (Revenue)n.next();
 %>    
 				<tr>
-	<td class="row<%= rowid %>" valign=top><a href="RevenueManager.do?command=Details&id=<%=thisRev.getId()%>"><%= toHtml(thisRev.getDescription()) %></a></td>
+	<td class="row<%= rowid %>" valign=top><a href="RevenueManager.do?command=Details&id=<%=thisRev.getId()%>"><%= toHtml(thisRev.getOrgName()) %></a></td>
           <td class="row<%= rowid %>" valign=center width=50 nowrap>$<%= thisRev.getAmountCurrency() %></td>
           <td class="row<%= rowid %>" valign=center width=75 nowrap><%= toHtml(thisRev.getOwnerNameAbbr()) %></td>
         </tr>
