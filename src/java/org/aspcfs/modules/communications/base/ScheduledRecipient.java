@@ -125,7 +125,7 @@ public java.sql.Timestamp getBounceDate() { return bounceDate; }
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO scheduled_recipient (campaign_id, contact_id, run_id, status_id, status, status_date, scheduled_date, " +
-          "sent_date, reply_date, bounce_date ");
+          "sent_date, reply_date, bounce_date) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
       
       int i = 0;
