@@ -373,6 +373,21 @@ public final class MyCFS extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandMyCFSProfile(ActionContext context) {
+    Exception errorMessage = null;
+		Connection db = null;
+    try {
+      db = this.getConnection(context);
+      User thisUser = new User(db, this.getUserId(context));
+      thisUser.setBuildContact(true);
+      thisUser.buildResources(db);
+      context.getRequest().setAttribute("User", thisUser);
+      context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
+    } catch (Exception e) {
+      errorMessage = e;
+      e.printStackTrace(System.out);
+    }
+    this.freeConnection(context, db);
+    
 		addModuleBean(context, "MyProfile", "");
 		return ("ProfileOK");
 	}
@@ -423,7 +438,22 @@ public final class MyCFS extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandMyCFSSettings(ActionContext context) {
-		addModuleBean(context, "MyProfile", "");
+		Exception errorMessage = null;
+		Connection db = null;
+    try {
+      db = this.getConnection(context);
+      User thisUser = new User(db, this.getUserId(context));
+      thisUser.setBuildContact(true);
+      thisUser.buildResources(db);
+      context.getRequest().setAttribute("User", thisUser);
+      context.getRequest().setAttribute("EmployeeBean", thisUser.getContact());
+    } catch (Exception e) {
+      errorMessage = e;
+      e.printStackTrace(System.out);
+    }
+    this.freeConnection(context, db);
+    
+    addModuleBean(context, "MyProfile", "");
 		return ("SettingsOK");
 	}
 

@@ -1,8 +1,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="User" class="com.darkhorseventures.cfsbase.User" scope="request"/>
 <jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
-<jsp:useBean id="Locale" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="TimeZone" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="ContactPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -36,14 +34,6 @@
   <tr>
     <td nowrap class="formLabel">Title</td>
     <td><input type="text" name="title" value="<%= toHtmlValue(EmployeeBean.getTitle()) %>"></td>
-  </tr>
-  <tr>
-    <td nowrap class="formLabel">Start of Day</td>
-    <td><input type="text" name="dayStart" value=""></td>
-  </tr>
-  <tr>
-    <td nowrap class="formLabel">End of Day</td>
-    <td><input type="text" name="dayEnd" value=""></td>
   </tr>
 </table>
 &nbsp;<br>  

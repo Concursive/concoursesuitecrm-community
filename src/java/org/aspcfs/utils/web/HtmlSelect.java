@@ -222,7 +222,38 @@ public class HtmlSelect extends Vector {
 		timeZones = TimeZone.getAvailableIDs();
 		for (int i = 0; i < timeZones.length; i++) {
 			TimeZone tz = TimeZone.getTimeZone(timeZones[i]);
-			this.addItem(i, tz.getDisplayName());
+      int rawOffset = tz.getRawOffset();
+      double gmt = (rawOffset/1000/60/60);
+      int gmtInt = (rawOffset/1000/60/60);
+
+      if (gmt != Math.round(gmt)) System.out.println("HtmlSelect-> GMT Offset: " + gmt);      
+      int fraction = 0;
+      if (gmt != gmtInt) {
+        fraction = (int)((Math.abs(gmt) - Math.abs(gmtInt))*60);
+      }
+      
+      String gmtId = tz.getID();
+      String gmtString = "(GMT" + (gmtInt < 0?"-":"+") + (Math.abs(gmtInt) > 9?"":"0") + Math.abs(gmtInt) + ":" + (fraction != 0?"" + fraction:"00") + ") ";
+      String timeZone = gmtString + tz.getDisplayName();
+      if (!tz.getDisplayName().startsWith("GMT")) {
+        this.addItem(gmtId, timeZone + " (" + gmtId + ")");
+        
+        /* Iterator select = this.iterator();
+        boolean matched = false;
+        while (select.hasNext()) {
+          String tmp = (String)select.next();
+          if (tmp.indexOf(timeZone) > -1) {
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) {
+          //&& !this.contains(gmtId + "|" + timeZone))
+          this.addItem(gmtId, timeZone);
+        } else {
+          if (System.getProperty("DEBUG") != null) System.out.println("HtmlSelect-> TimeZone: " + gmtId + " | " + timeZone);
+        } */ 
+      } 
 		}
 	}
 	
@@ -486,6 +517,7 @@ public class HtmlSelect extends Vector {
       String optionChecked = "";
       String optionSelected = "";
       if ((tmp2.equals(this.defaultValue)) ||
+           (tmp1.equals(this.defaultValue)) ||
           (rowSelect == processedRowCount) ||
           (tmp1.equals(this.defaultKey))) {
         optionSelected = "selected ";

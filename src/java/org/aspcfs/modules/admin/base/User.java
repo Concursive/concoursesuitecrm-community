@@ -42,6 +42,10 @@ public class User extends GenericBean {
   protected String manager = null;
   protected User managerUser = null;
   protected String lastLogin = null;
+  protected String ip = null;
+  protected String timeZone = null;
+  protected int startOfDay = -1;
+  protected int endOfDay = -1;
   protected String entered = "";
   protected int enteredBy = -1;
   protected String modified = null;
@@ -485,7 +489,14 @@ public class User extends GenericBean {
       this.enabled = true;
     }
   }
+  
+  public void setIp(String tmp) {
+    this.ip = tmp;
+  }
 
+  public void setTimeZone(String tmp) {
+    this.timeZone = tmp;
+  }
 
   /**
    *  Sets the BuildContact attribute of the User object
@@ -756,6 +767,14 @@ public class User extends GenericBean {
     } else {
       return lastLogin;
     }
+  }
+  
+  public String getIp() {
+    return ip;
+  }
+  
+  public String getTimeZone() {
+    return timeZone;
   }
 
 
@@ -1029,9 +1048,15 @@ public class User extends GenericBean {
    */
   public void updateLogin(Connection db) throws SQLException {
     if (this.id > -1) {
-      Statement st = db.createStatement();
-      st.execute("UPDATE access SET last_login = CURRENT_TIMESTAMP WHERE user_id = " + this.id);
-      st.close();
+      String sql = 
+        "UPDATE access " +
+        "SET last_login = CURRENT_TIMESTAMP, last_ip = ? " +
+        "WHERE user_id = ? ";
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setString(1, this.ip);
+      pst.setInt(2, this.id);
+      pst.executeUpdate();
+      pst.close();
     }
   }
 
@@ -1217,6 +1242,10 @@ public class User extends GenericBean {
     }
 
     enabled = rs.getBoolean("enabled");
+    ip = rs.getString("last_ip");
+    timeZone = rs.getString("timezone");
+    startOfDay = rs.getInt("startofday");
+    endOfDay = rs.getInt("endofday");
   }
 
 

@@ -137,6 +137,7 @@ public final class Login extends GenericAction {
         thisUser = new UserBean(thisSystem, userId);
         if (thisUser != null) {
           System.out.println("Login-> updating user");
+          thisUser.getUserRecord().setIp(context.getIpAddress());
           thisUser.getUserRecord().updateLogin(db);
           thisUser.setBrowserType(context.getBrowser());
           thisUser.setTemplate("template0");

@@ -459,7 +459,7 @@ public class UserList extends Vector {
      *  "AND a.enabled = true ");
      */
     sqlSelect.append(
-        "SELECT a.username, a.password, a.role_id, a.last_login, a.manager_id, " +
+        "SELECT a.username, a.password, a.role_id, a.last_login, a.manager_id, a.last_ip, a.timezone, a.startofday, a.endofday, " +
         "r.role, c.*, d.description as departmentname, t.description as type_name, " +
         "ct_owner.namelast || ', ' || ct_owner.namefirst as o_name, ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name, o.name as org_name, " +
         "m.namefirst as mgr_namefirst, m.namelast as mgr_namelast " +
