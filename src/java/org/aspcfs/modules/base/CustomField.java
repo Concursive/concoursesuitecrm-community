@@ -1355,11 +1355,12 @@ public class CustomField extends GenericBean {
     }
 
     try {
+      level = retrieveNextLevel(db);
       db.setAutoCommit(false);
       String sql =
           "INSERT INTO custom_field_info " +
-          "(group_id, field_name, field_type, required, parameters, additional_text ) " +
-          "VALUES (?, ?, ?, ?, ?, ?) ";
+          "(group_id, field_name, field_type, required, parameters, additional_text, level ) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?) ";
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(++i, groupId);
@@ -1368,6 +1369,7 @@ public class CustomField extends GenericBean {
       pst.setBoolean(++i, required);
       pst.setString(++i, this.getParameterData());
       pst.setString(++i, additionalText);
+      pst.setInt(++i, level);
       pst.execute();
       pst.close();
       
@@ -1714,6 +1716,25 @@ public class CustomField extends GenericBean {
   private void buildPopulatedRecord(ResultSet rs) throws SQLException {
     selectedItemId = rs.getInt("selected_item_id");
     enteredValue = rs.getString("entered_value");
+  }
+  
+  private int retrieveNextLevel(Connection db) throws SQLException {
+    int returnLevel = 0;
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT MAX(level) as level " +
+      "FROM custom_field_info " +
+      "WHERE group_id = ? ");
+    pst.setInt(1, groupId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      returnLevel = rs.getInt("level");
+      if (rs.wasNull()) {
+        returnLevel = 0;
+      }
+    }
+    rs.close();
+    pst.close();
+    return ++returnLevel;
   }
 
 }
