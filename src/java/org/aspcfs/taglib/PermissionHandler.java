@@ -69,6 +69,9 @@ public class PermissionHandler extends TagSupport {
    *@since                    1.1
    */
   public final int doStartTag() throws JspException {
+    if (permissionName == null || "".equals(permissionName)) {
+      return EVAL_BODY_INCLUDE;
+    }
     boolean result = false;
     int matches = 0;
     int checks = 0;

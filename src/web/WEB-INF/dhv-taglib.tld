@@ -54,6 +54,7 @@
     <attribute>
       <name>name</name>
       <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
       <name>all</name>
@@ -92,7 +93,6 @@
       <name>none</name>
       <required>no</required>
     </attribute>
-    
   </tag>
   
   

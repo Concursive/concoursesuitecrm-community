@@ -30,22 +30,24 @@ for the report:<br>
       <strong>Description</strong>
     </th>
   </tr>
-<dhv:evaluate if="<%= reports.size() == 0 %>">
-  <tr>
-    <td colspan="2">No reports found</td>
-  </tr>
-</dhv:evaluate>
 <%
   Iterator i = reports.iterator();
   int row = 0;
   while (i.hasNext()) {
     Report report = (Report) i.next();
 %>
+<dhv:permission name="<%= report.getPermissionId() > -1 ? report.getPermissionName() + "-view" : "" %>">
   <tr class="row<%= ++row%2 == 0 ? "2" : "1" %>">
     <td nowrap><a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>"><%= toHtml(report.getTitle()) %></a></td>
     <td width="100%"><%= toHtml(report.getDescription()) %></td>
   </tr>
+</dhv:permission>
 <%
   }
 %>
+<dhv:evaluate if="<%= reports.size() == 0 || row == 0 %>">
+  <tr>
+    <td colspan="2">No reports found</td>
+  </tr>
+</dhv:evaluate>
 </table>
