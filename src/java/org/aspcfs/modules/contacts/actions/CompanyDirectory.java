@@ -274,7 +274,7 @@ public final class CompanyDirectory extends CFSModule {
 
     Exception errorMessage = null;
 
-    addModuleBean(context, "Add Employee", "Add a new Employee");
+    addModuleBean(context, "Internal Contacts", "Add a new Employee");
 
     Connection db = null;
     try {
