@@ -22,7 +22,8 @@ import java.text.*;
  *
  *@author     chris
  *@created    March 7, 2002
- *@version    $Id$
+ *@version    $Id: OpportunityReport.java,v 1.12 2003/03/07 14:41:52 mrajkowski
+ *      Exp $
  */
 public class OpportunityReport extends OpportunityList {
   protected Report rep = new Report();
@@ -485,13 +486,13 @@ public class OpportunityReport extends OpportunityList {
             thisRow.addCell(oppBean.getComponent().getOwnerName());
           }
           if (param.equals("amount1")) {
-            thisRow.addCell("$" + oppBean.getComponent().getLowCurrency());
+            thisRow.addCell(String.valueOf(oppBean.getComponent().getLow()));
           }
           if (param.equals("amount2")) {
-            thisRow.addCell("$" + oppBean.getComponent().getGuessCurrency());
+            thisRow.addCell(String.valueOf(oppBean.getComponent().getGuess()));
           }
           if (param.equals("amount3")) {
-            thisRow.addCell("$" + oppBean.getComponent().getHighCurrency());
+            thisRow.addCell(String.valueOf(oppBean.getComponent().getHigh()));
           }
           if (param.equals("stageName")) {
             thisRow.addCell(oppBean.getComponent().getStageName());
@@ -500,19 +501,19 @@ public class OpportunityReport extends OpportunityList {
             thisRow.addCell(oppBean.getComponent().getStageDateString());
           }
           if (param.equals("probability")) {
-            thisRow.addCell(oppBean.getComponent().getCloseProbValue());
+            thisRow.addCell(String.valueOf(oppBean.getComponent().getCloseProb()));
           }
           if (param.equals("revenueStart")) {
             thisRow.addCell(oppBean.getComponent().getCloseDateString());
           }
           if (param.equals("terms")) {
-            thisRow.addCell(oppBean.getComponent().getTermsString());
+            thisRow.addCell(String.valueOf(oppBean.getComponent().getTerms()));
           }
           if (param.equals("alertDate")) {
             thisRow.addCell(oppBean.getComponent().getAlertDateString());
           }
           if (param.equals("commission")) {
-            thisRow.addCell(oppBean.getComponent().getCommissionPercent());
+            thisRow.addCell(String.valueOf(oppBean.getComponent().getCommission()));
           }
           if (param.equals("entered")) {
             thisRow.addCell(oppBean.getComponent().getEnteredString());
