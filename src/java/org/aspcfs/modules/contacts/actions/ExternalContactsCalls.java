@@ -43,10 +43,13 @@ public final class ExternalContactsCalls extends CFSModule {
     Contact thisContact = null;
     try {
       db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!hasContactAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
       callList.setPagedListInfo(callListInfo);
       callList.setContactId(contactId);
       callList.buildList(db);
-      thisContact = new Contact(db, contactId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       errorMessage = e;
@@ -54,9 +57,6 @@ public final class ExternalContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      if (!hasAuthority(context, thisContact.getOwner())) {
-        return ("PermissionError");
-      }
       context.getRequest().setAttribute("CallList", callList);
       return this.getReturn(context, "View");
     } else {
@@ -138,8 +138,11 @@ public final class ExternalContactsCalls extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      thisCall = new Call(db, callId);
       thisContact = new Contact(db, contactId);
+      if (!hasContactAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
+      thisCall = new Call(db, callId);
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       errorMessage = e;
@@ -148,10 +151,6 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (!hasAuthority(context, thisContact.getOwner())) {
-        return ("PermissionError");
-      }
-
       context.getRequest().setAttribute("CallDetails", thisCall);
       return this.getReturn(context, "Details");
     } else {
@@ -174,8 +173,8 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasAuthority(context, thisContact.getOwner())) {
-        return "PermissionError";
+      if (!hasContactAuthority(db, context, thisContact)) {
+        return ("PermissionError");
       }
       thisCall = new Call(db, Integer.parseInt(id));
       DependencyList dependencies = thisCall.processDependencies(db);
@@ -227,7 +226,7 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasAuthority(context, thisContact.getOwner())) {
+      if (!hasContactAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       thisCall = new Call(db, context.getRequest().getParameter("id"));
@@ -284,6 +283,9 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
+      if (!hasContactAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
@@ -296,9 +298,6 @@ public final class ExternalContactsCalls extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (!hasAuthority(context, thisContact.getOwner())) {
-        return ("PermissionError");
-      }
       addModuleBean(context, "External Contacts", "Calls");
       //if a different module reuses this action then do a explicit return
       if (context.getRequest().getParameter("actionSource") != null) {
@@ -339,6 +338,9 @@ public final class ExternalContactsCalls extends CFSModule {
       thisCall = new Call(db, callId);
 
       thisContact = new Contact(db, contactId);
+      if (!hasContactAuthority(db, context, thisContact)) {
+        return ("PermissionError");
+      }
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       LookupList callTypeList = new LookupList(db, "lookup_call_types");
@@ -350,9 +352,6 @@ public final class ExternalContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      if (!hasAuthority(context, thisContact.getOwner())) {
-        return ("PermissionError");
-      }
       context.getRequest().setAttribute("CallDetails", thisCall);
       return this.getReturn(context, "Modify");
     } else {
@@ -388,10 +387,10 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      thisCall.setModifiedBy(getUserId(context));
-      if (!hasAuthority(context, thisContact.getOwner())) {
+      if (!hasContactAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
+      thisCall.setModifiedBy(getUserId(context));
       resultCount = thisCall.update(db, context);
       if (resultCount == -1) {
         context.getRequest().setAttribute("ContactDetails", thisContact);
