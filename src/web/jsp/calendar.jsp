@@ -70,7 +70,7 @@
 </script>
 
 <form name="monthBean" action="MyCFS.do?command=MonthView&source=calendar<%=returnPage!=null?"&return="+returnPage:""%>" method="post">
-  <%
+<%
       CompanyCalendar.setBorderSize(1);
       CompanyCalendar.setCellPadding(4);
       CompanyCalendar.setCellSpacing(0);
@@ -79,31 +79,38 @@
       CompanyCalendar.setMonthArrows(true);
       CompanyCalendar.setFrontPageView(true);
       CompanyCalendar.setShowSubject(false);
-  %>
-    <%= CompanyCalendar.getHtml() %>
-</form>
-
-<table bgcolor="#FFFFFF" width="60%" border="0" cellpadding="0" cellspacing="0" border="0">
-<tr>
-  <td nowrap>
-    <img border='0' src='images/alertcall.gif' width='8' height='8' > --  Calls
-  </td>
-  <td nowrap>
-    <img border='0' src='images/box.gif' width='12' height='12' > -- Tasks
-  </td>
-  </tr>
-  <tr>
-  <td nowrap>
-    <img border='0' src='images/alertopp.gif' width='8' height='8' > -- Opportunities
-  </td>
+%>
+<%= CompanyCalendar.getHtml() %>
   
-  <td nowrap>
-    <img border='0' src='images/accounts.gif' width='12' height='12' > -- Accounts
-  </td>
-  </tr>
+<table bgcolor="#FFFFFF" width="98%" border="0" cellpadding="4" cellspacing="0" border="0">
   <tr>
-  <td nowrap>
-    <img border='0' src='images/event-holiday.gif' width='8' height='8' > -- Holidays
-  </td>
+    <td>
+    <table bgcolor="#FFFFFF" width="100%" border="0" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td nowrap>
+          <img border='0' src='images/accounts.gif'> -- Accounts
+        </td>
+        <td nowrap>
+          <img border='0' src='images/alertcall.gif'> -- Calls
+        </td>
+        <td nowrap>
+          <img border='0' src='images/event-holiday.gif'> -- Holidays
+        </td>
+      </tr>
+      <tr>
+        <td nowrap>
+          <img border='0' src='images/alertopp.gif'> -- Opportunities
+        </td>
+        <td nowrap>
+          <img border='0' src='images/box.gif'> -- Tasks
+        </td>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    </td>
   </tr>
 </table>
+
+</form>
