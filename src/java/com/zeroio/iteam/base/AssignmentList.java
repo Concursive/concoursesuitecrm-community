@@ -471,13 +471,13 @@ public class AssignmentList extends ArrayList {
       sqlFilter.append("AND complete_date IS NOT NULL ");
     }
     if (incompleteOnly && withDaysComplete > -1) {
-      sqlFilter.append("AND (complete_date IS NULL OR complete_date > (CURRENT_TIMESTAMP-" + withDaysComplete + ")) ");
+      sqlFilter.append("AND (complete_date IS NULL OR complete_date > ?) ");
     } else {
       if (incompleteOnly) {
         sqlFilter.append("AND complete_date IS NULL ");
       }
       if (withDaysComplete > -1) {
-        sqlFilter.append("AND complete_date > (CURRENT_TIMESTAMP-" + withDaysComplete + ") ");
+        sqlFilter.append("AND complete_date > ? ");
       }
     }
     if (requirementId > -1) {
@@ -506,6 +506,17 @@ public class AssignmentList extends ArrayList {
     }
     if (projectId > -1) {
       pst.setInt(++i, projectId);
+    }
+    if (incompleteOnly && withDaysComplete > -1) {
+      Calendar cal = Calendar.getInstance();
+      cal.add(Calendar.DATE, -withDaysComplete);
+      pst.setTimestamp(++i, new java.sql.Timestamp(cal.getTimeInMillis()));
+    } else {
+      if (withDaysComplete > -1) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -withDaysComplete);
+        pst.setTimestamp(++i, new java.sql.Timestamp(cal.getTimeInMillis()));
+      }
     }
     if (requirementId > -1) {
       pst.setInt(++i, requirementId);

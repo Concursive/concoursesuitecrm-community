@@ -9,6 +9,7 @@ package com.zeroio.iteam.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.sql.*;
 import javax.servlet.*;
@@ -391,13 +392,13 @@ public class ProjectList extends ArrayList {
       sqlFilter.append("AND (p.project_id IN (SELECT DISTINCT project_id FROM project_assignments)) ");
     }
     if (openProjectsOnly && withProjectDaysComplete > -1) {
-      sqlFilter.append("AND (closeDate IS NULL OR closeDate LIKE '' OR closeDate > (CURRENT_TIMESTAMP-" + withProjectDaysComplete + ")) ");
+      sqlFilter.append("AND (closeDate IS NULL OR closeDate LIKE '' OR closeDate > ?) ");
     } else {
       if (openProjectsOnly) {
         sqlFilter.append("AND (closeDate IS NULL OR closeDate LIKE '') ");
       }
       if (withProjectDaysComplete > -1) {
-        sqlFilter.append("AND (closeDate > (CURRENT_TIMESTAMP-" + withProjectDaysComplete + ")) ");
+        sqlFilter.append("AND (closeDate > ?) ");
       }
     }
     if (projectsForUser > -1) {
@@ -424,6 +425,17 @@ public class ProjectList extends ArrayList {
     int i = 0;
     if (groupId > -1) {
       pst.setInt(++i, groupId);
+    }
+    if (openProjectsOnly && withProjectDaysComplete > -1) {
+      Calendar cal = Calendar.getInstance();
+      cal.add(Calendar.DATE, -withProjectDaysComplete);
+      pst.setTimestamp(++i, new java.sql.Timestamp(cal.getTimeInMillis()));
+    } else {
+      if (withProjectDaysComplete > -1) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -withProjectDaysComplete);
+        pst.setTimestamp(++i, new java.sql.Timestamp(cal.getTimeInMillis()));
+      }
     }
     if (projectsForUser > -1) {
       pst.setInt(++i, projectsForUser);
