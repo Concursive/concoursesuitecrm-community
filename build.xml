@@ -11,39 +11,60 @@
   <property environment="env"/>
   
   <!-- computed properties -->
-  <property name="SRC" value="${basedir}"/>
-  <property name="SRC_APP" value="${SRC}/production/webapps/cfs2"/>
-  <property name="SRC_CLASSES" value="${SRC_APP}/WEB-INF/classes"/>
-  <property name="SRC_LIB" value="${SRC_APP}/WEB-INF/lib"/>
-  <property name="SRC_BIN" value="${SRC}/bin"/>
+  <property name="base.dir" value="${basedir}"/>
+  <property name="bin.dir" value="${base.dir}/bin"/>
+  <property name="lib.dir" value="${base.dir}/lib"/>
+  <property name="src.dir" value="${base.dir}/src"/>
+  <property name="classes.dir" value="${src.dir}/java"/>
+  <property name="web.dir" value="${src.dir}/web"/>
+  <property name="build.dir" value="${base.dir}/build"/>
+  <property name="build.lib.dir" value="${build.dir}/lib"/>
+  <property name="dist.dir" value="${base.dir}/dist"/>
 
   <!-- classpath as both object and a property -->
   <path id="cfs2.classpath">
-    <pathelement path="${SRC_CLASSES}"/>
+    <pathelement path="${classes.dir}"/>
     <fileset dir="${env.TOMCAT_HOME}/common/lib">
       <include name="**/*.jar"/>
     </fileset>
   </path>
   <property name="CLASSPATH" refid="cfs2.classpath" />
 
-  <target name="init">
-    <!-- Environment variable must be set before continuing -->
-    <fail unless="env.CFS_HOME">Build aborted, environment variable CFS_HOME is not defined.</fail>
+  <!-- Environment variables must be set before continuing -->
+  <target name="init.environment">
+    <fail unless="env.CATALINA_HOME">Initialization aborted, environment variable CATALINA_HOME is not defined.</fail>
+    <property name="CATALINA_HOME" value="${env.CATALINA_HOME}"/>
+    <fail unless="env.CFS_HOME">Initialization aborted, environment variable CFS_HOME is not defined.</fail>
     <property name="CFS_HOME" value="${env.CFS_HOME}"/>
-    
-    <!-- See if the properties file exists -->
+  </target>
+  
+  <!-- See if the properties file exists -->
+  <target name="init.buildfile.exists" depends="init.environment">
     <available file="${CFS_HOME}/WEB-INF/build.env" property="build.config.present"/>
-    <fail unless="build.config.present">Build aborted, Build properties file not found at ${CFS_HOME}/WEB-INF/build.env.</fail>
-    
-    <!-- Load the properties for this system, stop here if not found -->
-    <loadproperties srcFile="${SRC}/build.env">
+  </target>
+  
+  <!-- Create the properties file if not exists -->
+  <target name="init.buildfile.create" depends="init.buildfile.exists" 
+          unless="build.config.present">
+    <mkdir dir="${CFS_HOME}/WEB-INF"/>
+    <copy file="${base.dir}/build.env" todir="${CFS_HOME}/WEB-INF"/>
+    <available file="${CFS_HOME}/WEB-INF/build.env" property="build.config.present"/>
+  </target>
+  
+  <!-- Load the properties for this system, stop here if not found -->
+  <target name="init.loadproperties" depends="init.buildfile.create">
+    <loadproperties srcFile="${CFS_HOME}/WEB-INF/build.env">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
           <param type="comment" value="#"/>
         </filterreader>
       </filterchain>
     </loadproperties>
-    
+  </target>
+  
+  <target name="init" depends="init.loadproperties">
+    <fail unless="build.config.present">Initialization aborted, build properties file not found at ${CFS_HOME}/WEB-INF/build.env</fail>
+    <fail unless="CONTROL">Initialization aborted, edit the properties file at ${CFS_HOME}/WEB-INF/build.env</fail>
     <!-- Default properties if not set in file above -->
     <property name="SITEHOME" value="/home"/>
     <property name="SITECODE" value="cfs"/>
@@ -69,98 +90,112 @@
     <echo message="System: ${os.name}"/>
     <echo message="Ant version: ${ant.version}"/>
     <echo message="Java version: ${ant.java.version}"/>
-    <echo message="Source Path: ${SRC}"/>
+    <echo message="Source Path: ${base.dir}"/>
     <echo message="Destination Path: ${CFS_HOME}"/>
-    
+  </target>
+  
+  <target name="classes-check">
     <!-- See if files are up-to-date so only new files are installed during development -->
-    <uptodate property="jars-uptodate">
-      <srcfiles dir="${SRC_CLASSES}" includes="**/*.java"/>
-      <mapper type="merge" to="${SRC_LIB}/aspcfs.jar"/>
+    <uptodate property="classes-uptodate">
+      <srcfiles dir="${classes.dir}" includes="**/*.java"/>
+      <mapper type="merge" to="${CFS_HOME}/WEB-INF/lib/*.jar"/>
     </uptodate>
     <uptodate property="site-uptodate" >
-        <srcfiles dir="${SRC_APP}" >
-          <include name="*" />
-          <include name="images/**" />
-          <include name="javascript/**" />
-          <include name="WEB-INF/*.xml" />
-          <include name="css/**" />
-          <include name="WEB-INF/*.tld" />
-          <exclude name="WEB-INF/web.xml" />
-        </srcfiles>
-        <mapper type="glob" from="*" to="${CFS_HOME}/*"/>
+      <srcfiles dir="${web.dir}" >
+        <include name="css/**" />
+        <include name="html/**" />
+        <include name="images/**" />
+        <include name="javascript/**" />
+        <include name="jsp/**" />
+<!--
+        <include name="WEB-INF/*.xml" />
+        <include name="WEB-INF/*.tld" />
+        <exclude name="WEB-INF/web.xml" />
+-->
+      </srcfiles>
+      <mapper type="glob" from="*" to="${CFS_HOME}/*"/>
      </uptodate>
   </target>
 
   <target name="compile" 
-          description="compile classes into JARs"
-          depends="init" 
-          unless="jar-uptodate">
-    <!-- darkhorseventures.jar -->
-    <echo message=" Compiling Source: ${SRC_CLASSES}/com/darkhorseventures"/>
-    <javac srcdir="${SRC_CLASSES}/com/darkhorseventures" verbose="off">
+          description="Compile source"
+          depends="init"
+          unless="classes-uptodate">
+    <echo message=" Compiling Source: ${classes.dir}"/>
+    <javac srcdir="${classes.dir}" verbose="off">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <pathelement location="${lib.dir}/jfreechart.jar"/>
+        <pathelement location="${lib.dir}/utils.jar"/>
+        <pathelement location="${lib.dir}/ccp_integration.jar"/>
+        <pathelement location="${lib.dir}/jakarta-poi.jar"/>
+      </classpath>
+    </javac>
+<!--
+    <echo message=" Compiling Source: ${classes.dir}/org/aspcfs"/>
+    <javac srcdir="${classes.dir}/org/aspcfs" verbose="off">
         <classpath>
             <path refid="cfs2.classpath"/>
+            <pathelement location="${lib.dir}/darkhorseventures.jar"/>
+            <pathelement location="${lib.dir}/isavvix.jar"/>
+            <pathelement location="${lib.dir}/zeroio-iteam.jar"/>
+            <pathelement location="${lib.dir}/jfreechart.jar"/>
+            <pathelement location="${lib.dir}/utils.jar"/>
+            <pathelement location="${lib.dir}/ccp_integration.jar"/>
         </classpath>
     </javac>
-    <delete file="${SRC_LIB}/darkhorseventures.jar"/>
-    <jar jarfile="${SRC_LIB}/darkhorseventures.jar"
-          basedir="${SRC_CLASSES}"
+-->
+  </target>
+  
+  <target name="jar" 
+          description="Create .jar files"
+          depends="init">
+    <mkdir dir="${build.lib.dir}"/>
+    <!-- darkhorseventures.jar -->
+    <delete file="${build.lib.dir}/darkhorseventures.jar"/>
+    <jar jarfile="${build.lib.dir}/darkhorseventures.jar"
+          basedir="${classes.dir}"
           includes="com/darkhorseventures/**/*.class"/>
     <delete>
-        <fileset dir= "${SRC_CLASSES}/com/darkhorseventures" includes="**/*.class"/>
+        <fileset dir= "${classes.dir}/com/darkhorseventures" includes="**/*.class"/>
     </delete>
-    <echo message=""/>
     <!-- isavvix.jar -->
-    <echo message=" Compiling Source: ${SRC_CLASSES}/com/isavvix"/>
-    <javac srcdir="${SRC_CLASSES}/com/isavvix" verbose="off">
-        <classpath>
-            <path refid="cfs2.classpath"/>
-        </classpath>
-    </javac>
-    <delete file="${SRC_LIB}/isavvix.jar"/>
-    <jar jarfile="${SRC_LIB}/isavvix.jar"
-          basedir="${SRC_CLASSES}"
+    <delete file="${build.lib.dir}/isavvix.jar"/>
+    <jar jarfile="${build.lib.dir}/isavvix.jar"
+          basedir="${classes.dir}"
           includes="com/isavvix/**/*.class"/>
     <delete>
-        <fileset dir= "${SRC_CLASSES}/com/isavvix" includes="**/*.class"/>
+        <fileset dir= "${classes.dir}/com/isavvix" includes="**/*.class"/>
     </delete>
-    <echo message=""/>
     <!-- zeroio-iteam.jar -->
-    <echo message=" Compiling Source: ${SRC_CLASSES}/com/zeroio"/>
-    <javac srcdir="${SRC_CLASSES}/com/zeroio" verbose="off">
-        <classpath>
-            <path refid="cfs2.classpath"/>
-        </classpath>
-    </javac>
-    <delete file="${SRC_LIB}/zeroio-iteam.jar"/>
-    <jar jarfile="${SRC_LIB}/zeroio-iteam.jar"
-          basedir="${SRC_CLASSES}"
+    <delete file="${build.lib.dir}/zeroio-iteam.jar"/>
+    <jar jarfile="${build.lib.dir}/zeroio-iteam.jar"
+          basedir="${classes.dir}"
           includes="com/zeroio/**/*.class"/>
     <delete>
-        <fileset dir= "${SRC_CLASSES}/com/zeroio" includes="**/*.class"/>
+        <fileset dir= "${classes.dir}/com/zeroio" includes="**/*.class"/>
     </delete>
-    <echo message=""/>
     <!-- aspcfs.jar -->
-    <echo message=" Compiling Source: ${SRC_CLASSES}/org/aspcfs"/>
-    <javac srcdir="${SRC_CLASSES}/org/aspcfs" verbose="off">
-        <classpath>
-            <path refid="cfs2.classpath"/>
-            <pathelement location="${SRC_LIB}/darkhorseventures.jar"/>
-            <pathelement location="${SRC_LIB}/isavvix.jar"/>
-            <pathelement location="${SRC_LIB}/zeroio-iteam.jar"/>
-            <pathelement location="${SRC_LIB}/jfreechart-0.9.3.jar"/>
-            <pathelement location="${SRC_LIB}/utils.jar"/>
-            <pathelement location="${SRC_LIB}/ccp_integration.jar"/>
-        </classpath>
-    </javac>
-    <delete file="${SRC_LIB}/aspcfs.jar"/>
-    <jar jarfile="${SRC_LIB}/aspcfs.jar"
-          basedir="${SRC_CLASSES}"
+    <delete file="${build.lib.dir}/aspcfs.jar"/>
+    <jar jarfile="${build.lib.dir}/aspcfs.jar"
+          basedir="${classes.dir}"
           includes="org/aspcfs/**/*.class"/>
     <delete>
-        <fileset dir= "${SRC_CLASSES}/org/aspcfs" includes="**/*.class"/>
+        <fileset dir= "${classes.dir}/org/aspcfs" includes="**/*.class"/>
     </delete>
-    <echo message=""/>
+  </target>
+  
+  <target name="compile.clean" 
+          description="Delete compiled class files"
+          depends="init">
+    <delete>
+        <fileset dir= "${classes.dir}" includes="**/*.class"/>
+    </delete>
+  </target>
+  
+  <target name="build"
+          description="Generate all data for deployment"
+          depends="init,compile,jar,compile.clean">
   </target>
   
   <!-- separate app installation stuff -->
@@ -192,7 +227,7 @@
   
   <target name="apps" description="Java applications that get installed."
       depends="compile,apps-configuration"
-      unless="jar-uptodate">
+      unless="classes-uptodate">
     
     <echo message="Installing Apps"/>
     <echo message=" Site code: ${SITECODE}"/>
