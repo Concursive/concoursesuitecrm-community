@@ -547,24 +547,45 @@ public class SystemStatus {
    *  Builds the lookupList on demand and caches it in the lookups HashTable.
    *
    *@param  db                Description of the Parameter
-   *@param  listName          DB Table name.
+   *@param  tableName         Description of the Parameter
    *@return                   The lookupList value
    *@exception  SQLException  Description of the Exception
    */
-  public LookupList getLookupList(Connection db, String listName) throws SQLException {
-    if (!(lookups.containsKey(listName))) {
+  public LookupList getLookupList(Connection db, String tableName) throws SQLException {
+    if (!(lookups.containsKey(tableName))) {
       synchronized (this) {
-        if (!(lookups.containsKey(listName))) {
-          lookups.put(listName, new LookupList(db, listName));
+        if (!(lookups.containsKey(tableName))) {
+          lookups.put(tableName, new LookupList(db, tableName));
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("SystemStatus --> Added new LookupList object: " + listName);
+            System.out.println("SystemStatus --> Added new LookupList object: " + tableName);
           }
         }
       }
     }
-    return (LookupList) lookups.get(listName);
+    return (LookupList) lookups.get(tableName);
   }
 
+
+
+  /**
+   *  Removes a lookup list from the cache
+   *
+   *@param  tableName  Description of the Parameter
+   *@return            Description of the Return Value
+   */
+  public boolean removeLookup(String tableName) {
+    if (!(lookups.containsKey(tableName))) {
+      synchronized (this) {
+        if (!(lookups.containsKey(tableName))) {
+          lookups.remove(tableName);
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("SystemStatus --> Removed LookupList object: " + tableName);
+          }
+        }
+      }
+    }
+    return true;
+  }
 
 
   /**
