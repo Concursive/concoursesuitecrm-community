@@ -14,7 +14,7 @@ import java.util.Locale;
  */
 public class PhoneNumberFormatter {
 
-  private final static String validChars = "0123456789()-., ";
+  private final static String validChars = "[]/0123456789()-., ";
 
 
   /**
