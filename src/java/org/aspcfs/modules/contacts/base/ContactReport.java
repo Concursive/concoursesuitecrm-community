@@ -535,17 +535,15 @@ public class ContactReport extends ContactList {
       thisCat.buildResources(db);
 
       Iterator grp = thisCat.iterator();
-      thisGroup = new CustomFieldGroup();
-      thisGroup = (CustomFieldGroup) grp.next();
-      thisGroup.buildResources(db);
-
-      Iterator fields = thisGroup.iterator();
-
-      if (fields.hasNext()) {
-        while (fields.hasNext()) {
-          CustomField thisField = (CustomField) fields.next();
-          rep.addColumn(thisField.getNameHtml());
-        }
+      while(grp.hasNext()){
+        thisGroup = (CustomFieldGroup) grp.next();
+        thisGroup.buildResources(db);
+        
+        Iterator fields = thisGroup.iterator();
+          while (fields.hasNext()) {
+            CustomField thisField = (CustomField) fields.next();
+            rep.addColumn(thisField.getNameHtml());
+          }
       }
     }
 
@@ -627,7 +625,6 @@ public class ContactReport extends ContactList {
           CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
           Iterator grp = thisCat.iterator();
           while (grp.hasNext()) {
-            thisGroup = new CustomFieldGroup();
             thisGroup = (CustomFieldGroup) grp.next();
             thisGroup.buildResources(db);
 
