@@ -6916,7 +6916,7 @@ INSERT INTO sync_table VALUES (124, 4, 'customField', 'org.aspcfs.modules.base.C
 INSERT INTO sync_table VALUES (125, 4, 'customFieldList', 'org.aspcfs.modules.base.CustomFieldList', '2004-06-15 08:40:28.746', '2004-06-15 08:40:28.746', NULL, -1, false, NULL);
 INSERT INTO sync_table VALUES (126, 4, 'customFieldLookup', 'org.aspcfs.utils.web.LookupElement', '2004-06-15 08:40:28.746', '2004-06-15 08:40:28.746', NULL, -1, false, NULL);
 INSERT INTO sync_table VALUES (127, 4, 'customFieldLookupList', 'org.aspcfs.utils.web.LookupList', '2004-06-15 08:40:28.746', '2004-06-15 08:40:28.746', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (128, 4, 'customFieldRecord', 'org.aspcfs.modules.base.CustomFieldRecord', '2004-06-15 08:40:28.746', '2004-06-15 08:40:28.746', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (128, 4, 'customFieldRecord', 'org.aspcfs.modules.base.CustomFieldRecord', '2004-06-15 08:40:28.746', '2004-06-15 08:40:28.746', NULL, -1, false, 'id');
 INSERT INTO sync_table VALUES (129, 4, 'customFieldRecordList', 'org.aspcfs.modules.base.CustomFieldRecordList', '2004-06-15 08:40:28.746', '2004-06-15 08:40:28.746', NULL, -1, false, NULL);
 INSERT INTO sync_table VALUES (130, 4, 'contactEmailAddress', 'org.aspcfs.modules.contacts.base.ContactEmailAddress', '2004-06-15 08:40:28.746', '2004-06-15 08:40:28.746', NULL, -1, false, NULL);
 INSERT INTO sync_table VALUES (131, 4, 'contactEmailAddressList', 'org.aspcfs.modules.contacts.base.ContactEmailAddressList', '2004-06-15 08:40:28.746', '2004-06-15 08:40:28.746', NULL, -1, false, NULL);

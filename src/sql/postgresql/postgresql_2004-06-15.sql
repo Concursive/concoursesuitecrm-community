@@ -1219,6 +1219,7 @@ INSERT INTO module_field_categorylink VALUES (4, 17, 200403192, 10, 'Product Cat
 
 INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VALUES ('Labor Categories', 0, 0, true);
 
+UPDATE sync_table SET object_key = 'id' WHERE element_name = 'customFieldRecord';
 
 -- rebuild help
 

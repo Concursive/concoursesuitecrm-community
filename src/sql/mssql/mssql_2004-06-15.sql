@@ -2037,6 +2037,8 @@ INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[desc
 
 INSERT INTO product_category (category_name, enteredby, modifiedby, enabled) VALUES ('Labor Categories', 0, 0, 1);
 
+UPDATE sync_table SET object_key = 'id' WHERE element_name = 'customFieldRecord';
+
 -- rebuild help
 
  CREATE  INDEX [import_entered_idx] ON [import]([entered]) ON [PRIMARY]
