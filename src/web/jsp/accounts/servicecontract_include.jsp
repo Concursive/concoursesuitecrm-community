@@ -24,10 +24,6 @@
       message += "- Service Contract Number is required\r\n";
       formTest = false;
     }
-    if (!checkNumber(form.contractValue.value)) { 
-      message += "- Contract Value is invalid\r\n";
-      formTest = false;
-    }
     if (form.initialStartDate.value == "") { 
       message += "- Initial Contract Date is required\r\n";
       formTest = false;
@@ -131,6 +127,7 @@
     </td>
     <td>
       <input type="text" size="12" name="contractValue" maxlength="12" value="<%= ((serviceContract.getContractValue() == -1.0) ? "" : "" + serviceContract.getContractValue()) %>">
+      <%= showAttribute(request, "contractValueError") %>
     </td>
   </tr>
   <tr class="containerBody">
