@@ -90,7 +90,7 @@ Account Details
 <dhv:evaluate if="<%= (OrgDetails.getEmployees() > 0) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      No. of Employees
+      <dhv:label name="organization.employees">No. of Employees</dhv:label>
     </td>
     <td>
        <%= OrgDetails.getEmployees() %>

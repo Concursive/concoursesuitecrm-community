@@ -331,7 +331,7 @@ Add Account
   <dhv:include name="organization.employees" none="true">
   <tr>
     <td nowrap class="formLabel">
-      No. of Employees
+      <dhv:label name="organization.employees">No. of Employees</dhv:label>
     </td>
     <td>
       <input type="text" size="10" name="employees" value="<%= OrgDetails.getEmployees() == 0 ? "" : "" + OrgDetails.getEmployees() %>">
