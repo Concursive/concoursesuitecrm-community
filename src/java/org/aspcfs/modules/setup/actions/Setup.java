@@ -31,6 +31,7 @@ import java.net.InetAddress;
 import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.jcrontab.datasource.Event;
 import java.util.TimeZone;
+import org.aspcfs.modules.service.base.*;
 
 /**
  *  Actions for setting up Dark Horse CRM the first time
@@ -186,10 +187,11 @@ public class Setup extends CFSModule {
       }
       XMLUtils responseXML = new XMLUtils(response);
       Element responseNode = responseXML.getFirstChild("response");
-      if (!"0".equals(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "status")))) {
+      TransactionStatus thisStatus = new TransactionStatus(responseNode);
+      if (thisStatus.getStatusCode() != 0) {
         context.getRequest().setAttribute("actionError",
             "Unspecified Error: Dark Horse CRM Server rejected registration " +
-            XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "errorText")));
+            thisStatus.getMessage());
         return "SendRegERROR";
       }
     } catch (java.io.IOException errorMessage) {
