@@ -52,10 +52,10 @@
             </dhv:evaluate>
               <b class="highlight"><%= User.getRole() %></b>
             <dhv:evaluate if="<%= User.getUserRecord().getManagerUser() != null && User.getUserRecord().getManagerUser().getContact() != null %>">
-              <br>Manager: <b class="highlight"><%= User.getUserRecord().getManagerUser().getContact().getNameFull() %></b>
+              <br />Manager: <b class="highlight"><%= User.getUserRecord().getManagerUser().getContact().getNameFull() %></b>
             </dhv:evaluate>
             <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) && request.getAttribute("debug.action.time") != null %>">
-              <br>Action took: <b class="highlight"><%= request.getAttribute("debug.action.time") %> ms</b>
+              <br />Action took: <b class="highlight"><%= request.getAttribute("debug.action.time") %> ms</b>
             </dhv:evaluate>
           </td>
         </tr>
@@ -133,11 +133,13 @@
   </tr>
 </table>
 <div id="footer">
-<br>
+<br />
 <center><%= request.getAttribute("MainMenuSmall") %></center>
-<br>
-<center>Copyright (c) 2000-2004 Dark Horse Ventures.  All rights reserved.</center>
+<br />
 <center><zeroio:tz timestamp="<%= new java.util.Date() %>" timeFormat="<%= DateFormat.LONG %>"/></center>
+<center>&#169; Copyright 2000-2004 Dark Horse Ventures, LLC &#149; All rights reserved.</center>
+<br />
+<center><a target="_blank" href="http://www.centriccrm.com"><img src="images/centric/Power3sm.gif" border="0" alt="Visit www.CentricCRM.com" /></a></center>
 </div>
 <%-- Allow pages have to have a scrollTo... must be at end of html --%>
 <script language="JavaScript" type="text/javascript" src="javascript/scrollReload.js"></script>

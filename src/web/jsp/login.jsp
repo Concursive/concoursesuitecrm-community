@@ -40,24 +40,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
   <tr>
     <td height="10%" valign="top" width="100%">
-      <%-- Logo --%>
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td><img src="images/dhv1.gif" width="339" height="65"></td>
-          <td width="100%"><img src="images/spaceb1.gif" width="100%" height="65"></td>
-          <td><img src="images/keys.gif" width="326" height="65"></td>
-        </tr>
-        <tr>
-          <td><img src="images/dhv2.gif" width="339" height="30"></td>
-          <td width="100%"><img src="images/spaceb2.gif" width="100%" height="30"></td>
-          <td><img src="images/spaceb2.gif" width="326" height="30"></td>
-        </tr>
-        <tr>
-          <td><img src="images/dhv3.gif" width="339" height="11"></td>
-          <td width="100%"><img src="images/spaceg1.gif" width="100%" height="11"></td>
-          <td><img src="images/green.gif" width="326" height="11"></td>
-        </tr>
-      </table>
+      &nbsp;
     </td>
   </tr>
   <tr>
@@ -66,14 +49,14 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr> 
           <td width="9%" height="26"><img src="images/sidespace.gif" width="97" height="1"></td>
-          <td width="1%" height="26">&nbsp;</td>
+          <td width="1%" height="26" colspan="3">&nbsp;</td>
         </tr>
         <tr>
           <td colspan="4">
           <form name="login" method="POST" action="Login.do?command=Login&auto-populate=true">
             <table width="100%" cellspacing="1" cellpadding="3" border="0">
               <tr>
-                <td colspan="4">&nbsp;</td>
+                <td colspan="4" align="center"><img src="images/centric/logo-centric.gif" width="295" height="66" alt="" border="0" /></td>
               </tr>
               <tr>
                 <td align="center" valign="center" colspan="4">
@@ -152,9 +135,7 @@
       <%-- Copyright --%>
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td><img src="images/bottom.gif" width="120" height="35"></td>
-          <td width="100%"><img src="images/bottomspace.gif" width="100%" height="35"></td>
-          <td align="right"><img src="images/bottomcopyright.gif" width="339" height="35"></td>
+          <td align="center">&#169; Copyright 2000-2004 Dark Horse Ventures, LLC &#149; All rights reserved.</td>
         </tr>
       </table>
     </td>
