@@ -13,12 +13,13 @@
 </table>
    
 <table border='0' width='100%' cellpadding='0' cellspacing='0'>
-  <tr>
-    <td width='5' bgcolor='#808080' nowrap>&nbsp;</td>
-    <td bgcolor='#808080' nowrap><font color='#FFFFFF'>&lt;Pri&gt;</font></td>
-    <td width="100%" bgcolor='#808080' nowrap><font color='#FFFFFF'>&lt;Item&gt;</font></td>
-    <td bgcolor='#808080' nowrap><font color='#FFFFFF'>&lt;Posted By&gt;</font></td>
-    <td bgcolor='#808080' nowrap><font color='#FFFFFF'>&lt;Date&gt;</font></td>
+  <tr bgcolor="#808080">
+    <td width="5" nowrap>&nbsp;</td>
+    <td nowrap><font color='#FFFFFF'>&lt;Action&gt;</font></td>
+    <td nowrap><font color='#FFFFFF'>&lt;Pri&gt;</font></td>
+    <td width="100%"><font color='#FFFFFF'>&lt;Item&gt;</font></td>
+    <td nowrap><font color='#FFFFFF'>&lt;Posted By&gt;</font></td>
+    <td nowrap><font color='#FFFFFF'>&lt;Date&gt;</font></td>
   </tr>
 <%    
   String bgColorVar = " bgColor=\"#E4E4E4\"";
@@ -28,6 +29,7 @@
 %>    
   <tr<%= bgColorVar %>>
     <td width="5" valign="top" nowrap>&nbsp;</td>
+    <td valign="top" align="left" nowrap>Edit|Del</td>
     <td valign="top" align="center" nowrap><%= thisTask.getPriority() %></td>
     <td width="100%" valign="top" align="left"><a href="ProjectManagementIssues.do?command=Details&pid=<%= Project.getId() %>&tid=<%= thisTask.getId() %>&cid=<%= category.getId() %>"><%= toHtml(thisTask.getDescription()) %></a></td>
     <td valign="top" align="left" nowrap>&nbsp; <dhv:username id="<%= thisTask.getEnteredBy() %>"/> &nbsp;</td>
