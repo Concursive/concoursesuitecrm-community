@@ -34,7 +34,7 @@ function switchStyle(E){
          <td align="center" valign="top" nowrap><strong><%= CalendarInfo.isAgendaView()?"Agenda View": Character.toUpperCase(CalendarInfo.getCalendarView().charAt(0)) + CalendarInfo.getCalendarView().substring(1) + " View" %> </strong></td>
       </tr>
       <tr>
-        <td valign="top" align="left" nowrap><a href="MyCFS.do?command=AgendaView&source=calendardetails"><font style="<%=!CalendarInfo.isAgendaView()?"visibility:visible":"visibility:hidden"%>">Back To Agenda View</font></a></td>
+        <td valign="top" align="left" nowrap><a href="MyCFS.do?command=AgendaView&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>"><font style="<%=!CalendarInfo.isAgendaView()?"visibility:visible":"visibility:hidden"%>">Back To Agenda View</font></a></td>
         <table style="visibility:none" border="0" height="6"><tr height='2' style="visibility:none"><td></td></tr></table>
       </tr>
       <tr>
