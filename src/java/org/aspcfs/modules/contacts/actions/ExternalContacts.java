@@ -31,9 +31,10 @@ public final class ExternalContacts extends CFSModule {
   public String executeCommandListContacts(ActionContext context) {
 
     Exception errorMessage = null;
+    
     PagedListInfo externalContactsInfo = this.getPagedListInfo(context, "ExternalContactsInfo");
     externalContactsInfo.setLink("/ExternalContacts.do?command=ListContacts");
-
+    
     String passedFirst = context.getRequest().getParameter("firstname");
     String passedMiddle = context.getRequest().getParameter("middlename");
     String passedLast = context.getRequest().getParameter("lastname");
@@ -70,6 +71,7 @@ public final class ExternalContacts extends CFSModule {
     
     try {
       db = this.getConnection(context);
+      context.getSession().removeAttribute("ContactMessageListInfo");
 
       contactList.setPagedListInfo(externalContactsInfo);
       contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
@@ -93,6 +95,85 @@ public final class ExternalContacts extends CFSModule {
     if (errorMessage == null) {
       context.getRequest().setAttribute("ContactList", contactList);
       return ("ListContactsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandMessageDetails(ActionContext context) {
+    Exception errorMessage = null;
+    addModuleBean(context, "External Contacts", "Message Details");
+    Connection db = null;
+    Contact thisContact = null;
+    Message newMessage = null;
+    
+    String campaignId = context.getRequest().getParameter("id");
+
+    try {
+      db = this.getConnection(context);
+      String contactId = context.getRequest().getParameter("contactId");
+      thisContact = new Contact(db, contactId);
+      Campaign campaign = new Campaign(db, campaignId);
+      context.getRequest().setAttribute("Campaign", campaign);
+      newMessage = new Message(db, campaign.getMessageId());
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("Message", newMessage);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      return ("MessageDetailsOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandViewMessages(ActionContext context) {
+    Connection db = null;
+    Exception errorMessage = null;
+    Contact thisContact = null;
+    
+    try {
+      db = this.getConnection(context);
+      
+      String contactId = context.getRequest().getParameter("contactId");
+      
+      context.getSession().removeAttribute("ContactMessageListInfo");
+      PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ContactMessageListInfo");
+      pagedListInfo.setLink("/ExternalContacts.do?command=ViewMessages&contactId=" + contactId);
+      
+      thisContact = new Contact(db, contactId);
+      String msgRange = thisContact.getCampaignMessageRange(db);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      
+      CampaignList campaignList = new CampaignList();
+      campaignList.setPagedListInfo(pagedListInfo);
+      
+      campaignList.setCompleteOnly(true);
+      campaignList.setIdRange(msgRange);
+      
+      if ("all".equals(pagedListInfo.getListView())) {
+        campaignList.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        campaignList.setOwner(this.getUserId(context));
+      }
+      
+      campaignList.buildList(db);
+      context.getRequest().setAttribute("campList", campaignList);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "External Contacts", "Messages");
+      return ("ViewMessagesOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -277,9 +358,11 @@ public final class ExternalContacts extends CFSModule {
     if (errorMessage == null) {
       if (action != null && action.equals("modify")) {
         addModuleBean(context, "External Contacts", "Modify Contact Details");
+	context.getSession().removeAttribute("ContactMessageListInfo");
         return ("ContactDetailsModifyOK");
       } else {
         addModuleBean(context, "External Contacts", "View Contact Details");
+	context.getSession().removeAttribute("ContactMessageListInfo");
         return ("ContactDetailsOK");
       }
     } else {
@@ -366,6 +449,7 @@ public final class ExternalContacts extends CFSModule {
     }
 
     if (errorMessage == null) {
+      context.getSession().removeAttribute("ContactMessageListInfo");
       return ("ContactInsertFormOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -447,6 +531,7 @@ public final class ExternalContacts extends CFSModule {
     addModuleBean(context, "External Contacts", "Delete a contact");
     if (errorMessage == null) {
       if (recordDeleted) {
+	context.getSession().removeAttribute("ContactMessageListInfo");
         return ("ContactDeleteOK");
       } else {
         processErrors(context, thisContact.getErrors());

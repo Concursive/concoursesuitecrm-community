@@ -1296,7 +1296,6 @@ public void setLastLogin(java.sql.Timestamp tmp) { this.lastLogin = tmp; }
 		}
 	}
 
-
 	/**
 	 *  Description of the Method
 	 *

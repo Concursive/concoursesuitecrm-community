@@ -26,6 +26,7 @@ public class CampaignList extends Vector {
   private boolean completeOnly = false;
   private int owner = -1;
   private String ownerIdRange = null;
+  private String idRange = null;
   private int ready = -1;
 
   public final static int TRUE = 1;
@@ -145,6 +146,12 @@ public class CampaignList extends Vector {
     return pagedListInfo;
   }
 
+public String getIdRange() {
+	return idRange;
+}
+public void setIdRange(String idRange) {
+	this.idRange = idRange;
+}
 
   /**
    *  Gets the name attribute of the CampaignList object
@@ -396,6 +403,10 @@ public class CampaignList extends Vector {
     if (ownerIdRange != null) {
 			sqlFilter.append("AND c.enteredBy IN (" + ownerIdRange + ") ");
 		}
+
+    if (idRange != null) {
+			sqlFilter.append("AND c.id IN (" + idRange + ") ");
+    } 
     
     if (ready == TRUE) {
 			sqlFilter.append("AND c.status_id IN (" + Campaign.QUEUE + ", " + Campaign.STARTED + ") ");

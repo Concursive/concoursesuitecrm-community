@@ -101,6 +101,8 @@
     <forward name="ContactDetailsUpdateOK" resource="/ExternalContacts.do?command=ContactDetails"/>
     <forward name="ContactInsertFormOK" resource="/companydirectory_contactinsertform.jsp" layout="nav"/>
     <forward name="ContactDeleteOK" resource="/ExternalContacts.do?command=ListContacts"/>
+    <forward name="MessageDetailsOK" resource="/companydirectory_message_details.jsp" layout="nav"/>
+    <forward name="ViewMessagesOK" resource="/companydirectory_view_messages.jsp" layout="nav"/>
   </action>
   <action name="ExternalContactsOpps" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
     <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>

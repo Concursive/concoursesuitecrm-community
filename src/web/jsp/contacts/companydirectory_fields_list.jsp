@@ -6,11 +6,11 @@
 <jsp:useBean id="Records" class="com.darkhorseventures.cfsbase.CustomFieldRecordList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name="details" action="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
-<a href="/ExternalContacts.do?command=ListContacts">Back to Contacts List</a><br>&nbsp;
+<a href="/ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(ContactDetails.getNameLastFirst()) %></strong>
+      <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
     </td>
   </tr>
   <tr class="containerMenu">
@@ -18,6 +18,7 @@
       <a href="/ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><font color="#000000">Details</font></a> | 
       <a href="/ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>"><font color="#0000FF">Folders</font></a> | 
       <a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Calls</font></a> |
+      <a href="/ExternalContacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Messages</font></a> |
       <a href = "/ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>"><font color="#000000">Opportunities</font></a> 
     </td>
   </tr>

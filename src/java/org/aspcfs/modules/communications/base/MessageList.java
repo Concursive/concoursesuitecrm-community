@@ -22,9 +22,9 @@ public class MessageList extends Vector {
 	private PagedListInfo pagedListInfo = null;
 	private String name = "";
 	private String description = "";
-  private int owner = -1;
-  private String ownerIdRange = null;
-  private String jsEvent = null;
+  	private int owner = -1;
+  	private String ownerIdRange = null;
+  	private String jsEvent = null;
 
 	/**
 	 *  Constructor for the MessageList object

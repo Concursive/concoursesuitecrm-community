@@ -29,7 +29,7 @@ public class Message extends GenericBean {
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private java.sql.Timestamp modified = null;
-	private java.sql.Timestamp entered = null;
+  private java.sql.Timestamp entered = null;
   private boolean enabled = true;
 
 
@@ -77,6 +77,37 @@ public class Message extends GenericBean {
       sql.append("AND m.id = " + messageId + " ");
     } else {
       throw new SQLException("Message ID not specified.");
+    }
+
+    st = db.createStatement();
+    rs = st.executeQuery(sql.toString());
+    if (rs.next()) {
+      buildRecord(rs);
+    } else {
+      rs.close();
+      st.close();
+      throw new SQLException("Message not found.");
+    }
+    rs.close();
+    st.close();
+  }
+  
+  public Message(Connection db, int messageId) throws SQLException {
+
+    Statement st = null;
+    ResultSet rs = null;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+      "SELECT m.*  FROM message m " +
+      "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+      "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+      "WHERE m.id > -1 ");
+
+    if (messageId > -1) {
+      sql.append("AND m.id = " + messageId + " ");
+    } else {
+      throw new SQLException("Invalid Message ID.");
     }
 
     st = db.createStatement();

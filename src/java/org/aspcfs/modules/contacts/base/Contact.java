@@ -1325,7 +1325,35 @@ public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf
     db.setAutoCommit(true);
     return resultCount;
   }
-
+  
+  public String getCampaignMessageRange(Connection db) throws SQLException {
+	Statement st = null;
+	ResultSet rs = null;
+	StringBuffer r = new StringBuffer();
+	
+	StringBuffer sql = new StringBuffer();
+	sql.append(
+			"SELECT campaign_id from scheduled_recipient " +
+			"WHERE contact_id = " + id + " ");
+			
+	st = db.createStatement();
+	rs = st.executeQuery(sql.toString());
+	while (rs.next()) {
+		if (r.length() > 0) {
+			r.append(", " + rs.getInt("campaign_id"));
+		} else {
+			r.append(rs.getInt("campaign_id"));
+		}
+	} 
+	rs.close();
+	st.close();
+	
+	if (r.length() == 0) {
+		r.append("''");
+	}
+	
+	return r.toString();
+  }
 
   /**
    *  Delete the current object from the database
