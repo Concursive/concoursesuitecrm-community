@@ -4,7 +4,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.servlets.ControllerInitHook;
 import com.darkhorseventures.utils.*;
-import com.darkhorseventures.webutils.StateSelect;
 import java.sql.*;
 import java.util.Hashtable;
 
@@ -26,15 +25,6 @@ public class InitHook implements ControllerInitHook {
    *@since          1.1
    */
   public String executeControllerInit(ServletConfig config) {
-
-    try {
-      ConnectionPool cp = new ConnectionPool();
-      cp.setDebug(true);
-      config.getServletContext().setAttribute("ConnectionPool", cp);
-    } catch (SQLException e) {
-      System.err.println(e.toString());
-    }
-
     if (config.getInitParameter("SiteCode") != null) {
       config.getServletContext().setAttribute("SiteCode", config.getInitParameter("SiteCode"));
     }
@@ -67,7 +57,6 @@ public class InitHook implements ControllerInitHook {
       config.getServletContext().setAttribute("GlobalPWInfo", 
         config.getInitParameter("GlobalPWInfo"));
     } else {
-      if (System.getProperty("DEBUG") != null) System.out.println("InitHook-> No GlobalPWInfo");
       config.getServletContext().setAttribute("GlobalPWInfo", "#notspecified");
     }
     
@@ -107,9 +96,6 @@ public class InitHook implements ControllerInitHook {
       System.setProperty("MailServer", String.valueOf(config.getInitParameter("MailServer")));
     }
     
-    //All virtual hosts will have an entry in SystemStatus
-    config.getServletContext().setAttribute("SystemStatus", new Hashtable());
-
     return null;
   }
   
