@@ -7,10 +7,15 @@
       </actions>
     </hook>
     <hook class="com.darkhorseventures.cfsbase.Opportunity"/>
-    <hook class="com.darkhorseventures.cfsbase.Assignment"/>
+    <hook class="com.zeroio.iteam.base.Assignment">
+      <actions>
+        <action type="insert" process="dhv.assignment.insert" enabled="false"/>
+      </actions>
+    </hook>
   </hooks>
+  
   <processes>
-    <process name="dhv.ticket.insert" description="DHV Ticket Insert Process" startId="1" entered="" modified="">
+    <process name="dhv.ticket.insert" description="DHV Ticket alert" startId="1" entered="" modified="">
       <parameters>
         <parameter name="notification.host" value="mail.darkhorseventures.com" type="java.lang.String" enabled="true"/>
         <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
@@ -27,42 +32,77 @@
             <parameter name="notification.userToNotify" value="${this.enteredBy}"/>
             <parameter name="notification.subject">CFS Ticket Closed: ${this.paddedId}</parameter>
 <parameter name="notification.body">
-The following ticket in CFS has been closed:&lt;br&gt;
-&lt;br&gt;
---- Ticket Details ---&lt;br&gt;
-&lt;br&gt;
-Ticket # ${this.paddedId}&lt;br&gt;
-Priority: ${ticketPriorityLookup.description}&lt;br&gt;
-Severity: ${ticketSeverityLookup.description}&lt;br&gt;
-Issue: ${this.problem}&lt;br&gt;
-&lt;br&gt;
-Comment: ${this.comment}&lt;br&gt;
-&lt;br&gt;
-Closed by: ${ticketModifiedByContact.nameFirstLast}&lt;br&gt;
-&lt;br&gt;
+The following ticket in CFS has been closed:&#13;
+&#13;
+--- Ticket Details ---&#13;
+&#13;
+Ticket # ${this.paddedId}&#13;
+Priority: ${ticketPriorityLookup.description}&#13;
+Severity: ${ticketSeverityLookup.description}&#13;
+Issue: ${this.problem}&#13;
+&#13;
+Comment: ${this.comment}&#13;
+&#13;
+Closed by: ${ticketModifiedByContact.nameFirstLast}&#13;
+&#13;
 Solution: ${this.solution}
 </parameter>
           </parameters>
         </component>
         <component id="5" parent="3" if="true" class="com.darkhorseventures.cfs.component.SendUserNotification">
-        <parameters>
+          <parameters>
             <parameter name="notification.module" value="Tickets"/>
             <parameter name="notification.itemId" value="${this.id}"/>
             <parameter name="notification.itemModified" value="${this.modified}"/>
             <parameter name="notification.userToNotify" value="${this.enteredBy}"/>
             <parameter name="notification.subject">CFS Ticket Assigned: ${this.paddedId}</parameter>
 <parameter name="notification.body">
-The following ticket in CFS has been assigned to you:&lt;br&gt;
-&lt;br&gt;
---- Ticket Details ---&lt;br&gt;
-&lt;br&gt;
-Ticket # ${this.paddedId}&lt;br&gt;
-Priority: ${ticketPriorityLookup.description}&lt;br&gt;
-Severity: ${ticketSeverityLookup.description}&lt;br&gt;
-Issue: ${this.problem}&lt;br&gt;
-&lt;br&gt;
-Assigned By: ${ticketModifiedByContact.nameFirstLast}&lt;br&gt;
+The following ticket in CFS has been assigned to you:&#13;
+&#13;
+--- Ticket Details ---&#13;
+&#13;
+Ticket # ${this.paddedId}&#13;
+Priority: ${ticketPriorityLookup.description}&#13;
+Severity: ${ticketSeverityLookup.description}&#13;
+Issue: ${this.problem}&#13;
+&#13;
+Assigned By: ${ticketModifiedByContact.nameFirstLast}&#13;
 Comment: ${this.comment}
+</parameter>
+          </parameters>
+        </component>
+        <component id="6" parent="1" class="com.darkhorseventures.cfs.troubletickets.component.SendTicketToBPM" enabled="true">
+          <parameters>
+            <parameter name="bpm.host.url" value="http://ds21.darkhorseventures.com:8080/Horse/servlet/ProcessInitiateServlet"/>
+          </parameters>
+        </component>
+        <component id="7" parent="2" if="true" class="com.darkhorseventures.cfs.troubletickets.component.SendTicketSurvey" enabled="true"/>
+      </components>
+    </process>
+    
+    <process name="dhv.assignment.insert" description="DHV Assignment alert" startId="100">
+      <parameter name="notification.host" value="mail.darkhorseventures.com" type="java.lang.String" enabled="true"/>
+      <parameter name="notification.from" value="cfs-root@darkhorseventures.com"/>
+      <components>
+        <component id="100" parent="0" class="com.darkhorseventures.cfs.projectmanager.component.LoadAssignmentDetails" enabled="true"/>
+        <component id="101" parent="100" if="true" class="com.darkhorseventures.cfs.projectmanager.component.QueryAssignmentJustCreated"/>
+        <component id="102" parent="101" if="true" class="com.darkhorseventures.cfs.component.SendUserNotification">
+          <parameters>
+            <parameter name="notification.module" value="Projects"/>
+            <parameter name="notification.itemId" value="${this.id}"/>
+            <parameter name="notification.itemModified" value="${this.modified}"/>
+            <parameter name="notification.userToNotify" value="${this.userAssignedId}"/>
+            <parameter name="notification.subject">CFS Activity assigned for project ${project.title}</parameter>
+<parameter name="notification.body">
+The following activity was assigned to you in CFS:&#13;
+&#13;
+--- Activity Details ---&#13;
+&#13;
+Project Name: ${project.title}&#13;
+Requirement Name: ${requirement.shortDescription}&#13;
+Activity: ${this.role}&#13;
+Due Date: ${this.dueDateString}&#13;
+Assigned By: ${assignmentAssignedByContact.nameFirstLast}&#13;
 </parameter>
           </parameters>
         </component>
