@@ -1,0 +1,48 @@
+#!/bin/sh
+
+#############################################################################
+#
+# Create and initialize gatekeeper database.
+#
+#############################################################################
+PROGNAME=`basename $0`
+BASE=`pwd`
+CFSDBA="cfsdba"
+DB="cfs2gk"
+
+usage ()
+{
+	printf "\nUsage: ${PROGNAME} \n\n"
+	printf "Where:\n"
+	printf "\n"
+	exit 1
+}
+
+#############################################################################
+#
+# Check that user is root.
+#
+#############################################################################
+if [ "`id -u`" != "0" ] ; then echo "Sorry, you must be root." ; exit 1 ; fi
+
+
+
+#############################################################################
+#
+# Begin install
+#
+#############################################################################
+
+
+echo `date` 
+
+su - ${CFSDBA} -c "dropdb ${DB}" 
+su - ${CFSDBA} -c "createdb ${DB}"
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/gatekeeper.sql " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/gatekeeper.init " 
+
+echo ok
+
+exit 0
+
+

@@ -1,0 +1,249 @@
+<%-- Import required libraries --%>
+<jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
+<jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="ContactPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="ContactEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="ContactAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<%@ include file="initPage.jsp" %>
+<body onLoad="javascript:document.forms[0].nameFirst.focus();">
+<form action='/CompanyDirectory.do?command=InsertEmployee&auto-populate=true' method='post'>
+<input type="submit" value="Save" name="Save">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees'">
+<input type="reset" value="Reset">
+<br>
+&nbsp;
+<input type="hidden" name="empid" value="<%= EmployeeBean.getId() %>">
+<input type="hidden" name="id" value="<%= EmployeeBean.getId() %>">
+<input type="hidden" name="modified" value="<%= EmployeeBean.getModified() %>">
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td colspan=2 valign=center align=left>
+	    <strong>Add a New Employee Record</strong>
+	  </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">First Name</td>
+    <td>
+      <input type="text" name="nameFirst" value="<%= toHtmlValue(EmployeeBean.getNameFirst()) %>">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">Middle Name</td>
+    <td>
+      <input type="text" name="nameMiddle" value="<%= toHtmlValue(EmployeeBean.getNameMiddle()) %>">
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">Last Name</td>
+    <td>
+      <input type="text" name="nameLast" value="<%= toHtmlValue(EmployeeBean.getNameLast()) %>">
+      <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">Department</td>
+    <td>
+      <%= DepartmentList.getHtmlSelect("department", EmployeeBean.getDepartment()) %>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">Title</td>
+    <td>
+      <input type="text" name="title" value="<%= toHtmlValue(EmployeeBean.getTitle()) %>">
+    </td>
+  </tr>
+</table>
+&nbsp;<br>  
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td valign=center align=left>
+	    <strong>Email Addresses</strong>
+	  </td>
+  </tr>
+  <tr>
+    <td>
+      <%= ContactEmailTypeList.getHtmlSelect("email1type", ((EmployeeBean.getEmailAddressTypeId(1)==-1)?1:EmployeeBean.getEmailAddressTypeId(1))) %>
+      <input type=text size=40 name="email1address" maxlength=255 value="<%= toHtmlValue(EmployeeBean.getEmailAddress(1)) %>">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= ContactEmailTypeList.getHtmlSelect("email2type", ((EmployeeBean.getEmailAddressTypeId(2)==-1)?2:EmployeeBean.getEmailAddressTypeId(2))) %>
+      <input type=text size=40 name="email2address" maxlength=255 value="<%= toHtmlValue(EmployeeBean.getEmailAddress(2)) %>">
+    </td>
+  </tr>
+</table>
+&nbsp;<br>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td valign=center align=left>
+	    <strong>Phone Numbers</strong>
+	  </td>
+  </tr>
+  <tr>
+    <td>
+      <%= ContactPhoneTypeList.getHtmlSelect("phone1type", "Business") %>
+      <input type=text size=3 name="phone1ac" maxlength=3>-
+      <input type=text size=3 name="phone1pre" maxlength=3>-
+      <input type=text size=4 name="phone1number" maxlength=4>ext.
+      <input type=text size=5 name="phone1ext" maxlength=10>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= ContactPhoneTypeList.getHtmlSelect("phone2type", "Home") %>
+      <input type=text size=3 name="phone2ac" maxlength=3>-
+      <input type=text size=3 name="phone2pre" maxlength=3>-
+      <input type=text size=4 name="phone2number" maxlength=4>ext.
+      <input type=text size=5 name="phone2ext" maxlength=10>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= ContactPhoneTypeList.getHtmlSelect("phone3type", "Mobile") %>
+      <input type=text size=3 name="phone3ac" maxlength=3>-
+      <input type=text size=3 name="phone3pre" maxlength=3>-
+      <input type=text size=4 name="phone3number" maxlength=4>ext.
+      <input type=text size=5 name="phone3ext" maxlength=10>
+    </td>
+  </tr>
+</table>
+&nbsp;<br>  
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td valign=center align=left colspan="2">
+      <strong>Addresses</strong>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+      <%= ContactAddressTypeList.getHtmlSelect("address1type", "Business") %>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type=text size=40 name="address1line1" maxlength=80>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type=text size=40 name="address1line2" maxlength=80>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type=text size=28 name="address1city" maxlength=80>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <input type=text size=12 name="address1state" maxlength=80>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type=text size=28 name="address1zip" maxlength=12>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <input type=text size=28 name="address1country" maxlength=80>
+    </td>
+  </tr>
+  <tr><td colspan="2">&nbsp;</td></tr>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+      <%= ContactAddressTypeList.getHtmlSelect("address2type", "Home") %>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Address Line 1
+    </td>
+    <td>
+      <input type=text size=40 name="address2line1" maxlength=80>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Address Line 2
+    </td>
+    <td>
+      <input type=text size=40 name="address2line2" maxlength=80>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      City
+    </td>
+    <td>
+      <input type=text size=28 name="address2city" maxlength=80>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      State/Province
+    </td>
+    <td>
+      <input type=text size=12 name="address2state" maxlength=80>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Zip/Postal Code
+    </td>
+    <td>
+      <input type=text size=28 name="address2zip" maxlength=12>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">
+      Country
+    </td>
+    <td>
+      <input type=text size=28 name="address2country" maxlength=80>
+    </td>
+  </tr>
+</table>
+&nbsp;<br>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="title">
+    <td colspan=2 valign=center align=left>
+	    <strong>Additional Details</strong>
+	  </td>
+  </tr>
+  <tr>
+    <td nowrap class="formLabel">Notes</td>
+    <td><TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toHtmlValue(EmployeeBean.getNotes()) %></TEXTAREA></td>
+  </tr>
+</table>
+<br>
+<input type="submit" value="Save" name="Save">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='/CompanyDirectory.do?command=ListEmployees'">
+<input type="reset" value="Reset">
+</form>
+</body>

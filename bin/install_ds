@@ -1,0 +1,142 @@
+#!/bin/sh
+
+#############################################################################
+#
+# Configuration
+#
+#############################################################################
+ENVFILE="scripts/env.`hostname`.sh"
+PROGNAME=`basename $0`
+BASE=`pwd`
+WEBUSER="apache"
+CFSGROUP="cfs"
+CFSDBA="cfsdba"
+SITEHOME="/home"
+SITECODE=""
+
+usage ()
+{
+	printf "\nUsage: ${PROGNAME} site_code\n\n"
+	printf "Where:\n"
+	printf "    site_code       is the target directory under ${SITEHOME}\n"
+	printf "\n"
+	exit 1
+}
+
+#############################################################################
+#
+# Check that user is root.
+#
+#############################################################################
+if [ "`id -u`" != "0" ] ; then echo "Sorry, you must be root." ; exit 1 ; fi
+
+#############################################################################
+#
+# Set up environment.
+#
+#############################################################################
+if [ ! -f "${ENVFILE}" ] ; then echo "Missing file: ${ENVFILE}" ; exit ; fi
+. ${ENVFILE}
+
+#############################################################################
+#
+# Get command-line parameters.
+#
+#############################################################################
+if [ -n "$1" ] ; then SITECODE="$1"; shift ; fi
+if [ -z "${SITECODE}" ] ; then echo "Missing site code" ; usage ; fi
+
+#############################################################################
+#
+# Configuration using supplied parameters.
+#
+#############################################################################
+DIRDST="${SITEHOME}/${SITECODE}"
+DB="cdb_${SITECODE}"
+
+#############################################################################
+#
+# Begin install
+#
+#############################################################################
+LOG="${PROGNAME}_${SITECODE}.log"
+
+echo `date` >${LOG}
+
+su - ${CFSDBA} -c "dropdb ${DB}" >>${LOG}
+su - ${CFSDBA} -c "createdb ${DB}" >>${LOG} 2>&1
+if [ -n "`grep -i ERROR ${LOG}`" ] ; then echo "Database error"; exit 2; fi
+
+(
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_cfs2.sql " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_cdb.sql " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/new_tms.sql " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/code_tables.init " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/access.init " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/permissions.init " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/data.init " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/employee.init " 
+su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/organization.init " 
+
+
+
+#############################################################################
+#
+# Verify directories
+#
+#############################################################################
+if [ ! -d "$DIRDST" ] ; then
+	mkdir -p "$DIRDST"
+	if [ ! -d "$DIRDST" ] ; then echo "Exiting..."; exit 1; fi
+fi
+
+#############################################################################
+#
+# Set ownership and permissions for the CFSGROUP on main directory.
+# See below -- more permissions...
+#
+#############################################################################
+chmod 2775 ${DIRDST}
+chown ${WEBUSER} ${DIRDST}
+chgrp ${CFSGROUP} ${DIRDST}
+
+
+#############################################################################
+#
+# Create these empty directories (may not be transfered in the source)
+#
+#############################################################################
+mkdir -p ${DIRDST}/bin
+mkdir -p ${DIRDST}/logs
+
+
+#############################################################################
+#
+# Set ownership and permissions for the installed files (tar doesn't)
+#
+#############################################################################
+#--owners/groups...
+chown -R ${WEBUSER} ${DIRDST}/*					# all
+chgrp -R ${CFSGROUP} ${DIRDST}/*
+## #--directories...
+chown -R root ${DIRDST}/bin
+chmod 2550 ${DIRDST}/bin
+chmod 2775 ${DIRDST}/logs
+
+
+#############################################################################
+#
+#############################################################################
+echo ok
+
+rm -f ${DIRDST}/html/index.jsp
+
+ant -DSITECODE=${SITECODE} lib
+##/home/${SITECODE}/bin/restart 
+
+
+) >>${LOG} 2>&1 
+
+exit 0
+
+

@@ -1,0 +1,1 @@
+java -cp .;c:\tomcat\lib\jdbc7.0-1.2.jar;c:\tomcat\webapps\cfs2\WEB-INF\lib\darkhorseventures.jar TestDB

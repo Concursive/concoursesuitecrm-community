@@ -1,0 +1,130 @@
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
+<jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
+<%@ include file="initPage.jsp" %>
+<body bgcolor='#FFFFFF' onLoad="document.inputForm.subject.focus();">
+<script language="JavaScript">
+  function checkFileForm(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    }
+    
+    var formTest = true;
+    var messageText = "";
+
+    if (form.subject.value == "") {
+      messageText += "- Subject is required\r\n";
+      formTest = false;
+    }
+    
+    if (form.id<%= Project.getId() %>.value.length < 5) {
+      messageText += "- File is required\r\n";
+      formTest = false;
+    }
+    
+    if (formTest == false) {
+      messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      alert(messageText);
+      return false;
+    } else {
+      if (form.upload.value != 'Please Wait...') {
+        form.upload.value='Please Wait...';
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+</script>
+<form method="POST" name="inputForm" action="/ProjectManagementFiles.do?command=UploadVersion" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width='2' bgcolor='#000000'>&nbsp;</td>
+    <td width="100%" bgcolor="#000000" rowspan="2" valign="middle">
+      <font color='#FFFFFF'>&nbsp;<img border="0" src="/images/file.gif" align="absmiddle"><b>File Sharing - Update file with new version</b></font>
+    </td>
+    <td width='2' bgcolor='#000000'>&nbsp;</td>
+  </tr>
+  <tr>
+    <td width='2' bgcolor='#000000'>&nbsp;</td>
+    <td width='2' bgcolor='#000000'>&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="2" bgcolor="#000000">&nbsp;</td>
+    <td width="100%" bgcolor="#B9D3FF" align="center">
+    
+      <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
+    
+      <table border="0" width="300" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="100%" align="left">
+            &nbsp;<br>
+            &nbsp;Subject of file:<br>
+            &nbsp;&nbsp;<input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>">
+          </td>
+        </tr>
+        
+        <tr>
+          <td width="100%" align="left">
+            &nbsp;<br>
+            &nbsp;Current Version: <strong><%= FileItem.getVersion() %></strong><br>
+            &nbsp;<br>
+            &nbsp;New Version: <br>
+            &nbsp;&nbsp;
+             <input type="radio" value="<%= FileItem.getVersionNextMajor() %>" checked name="versionId">Major Update <%= FileItem.getVersionNextMajor() %>
+             <input type="radio" value="<%= FileItem.getVersionNextMinor() %>" name="versionId">Minor Update <%= FileItem.getVersionNextMinor() %>
+             <input type="radio" value="<%= FileItem.getVersionNextChanges() %>" name="versionId">Changes <%= FileItem.getVersionNextChanges() %>
+          </td>
+        </tr>
+              
+        <tr>
+          <td width="100%" align="left">
+            &nbsp;<br>
+            &nbsp;File:<br>
+            &nbsp;&nbsp;<input type="file" name="id<%= Project.getId() %>" size="45">
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+    <td width="2" bgcolor="#000000">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="2" bgcolor="#000000">&nbsp;</td>
+    <td width="100%" bgcolor="#B9D3FF">&nbsp;</td>
+    <td width="2" bgcolor="#000000">&nbsp;</td>
+  </tr>
+        
+  <tr>
+    <td width="2" bgcolor="#000000">&nbsp;</td>
+    <td width="100%" bgcolor="#B9D3FF">
+      <p align="center">* Large files may take a while to upload.<br>
+                 Wait for file completion message when upload is complete.
+      </p>
+    </td>
+    <td width="2" bgcolor="#000000">&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td width="2" bgcolor="#000000">&nbsp;</td>
+    <td width="100%" bgcolor="#B9D3FF">&nbsp;</td>
+    <td width="2" bgcolor="#000000">&nbsp;</td>
+  </tr>
+        
+  <tr bgcolor="#000000">
+    <td width="2">&nbsp;</td>
+    <td width="100%" height="30" align="center">
+      <p align="center">
+        <input type='submit' value=' Upload ' name="upload" onClick="javascript:this.form.dosubmit.value='true';">
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='/ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>';">
+        <input type="hidden" name="dosubmit" value="false">
+        <input type="hidden" name="pid" value="<%= Project.getId() %>">
+        <input type="hidden" name="fid" value="<%= FileItem.getId() %>">
+      </p>
+    </td>
+    <td width="2">&nbsp;</td>
+  </tr>
+</table>
+</form>
+</body>

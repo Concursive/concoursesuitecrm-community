@@ -1,0 +1,10 @@
+#!/bin/sh
+# Copyright (C) Dark Horse Ventures, L.L.C.
+# $Id$
+
+if [ "`id -u`" != "0" ] ; then echo "Not root"; exit 1; fi
+echo "ok"
+
+service httpd stop
+service tomcat stop
+

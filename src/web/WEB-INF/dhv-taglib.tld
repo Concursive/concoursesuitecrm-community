@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<!DOCTYPE taglib
+  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+  "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+  <!-- Version number of this taglib -->
+  <tlibversion>1.0</tlibversion>
+  <!-- Minimum version of JSP spec required -->
+  <jspversion>1.1</jspversion>
+  <!-- taglib name of this tag library -->
+  <shortname>dhv</shortname>
+  <!-- URI of taglib -->
+  <uri>http://www.darkhorseventures.com/taglibs/darkhorseventures.jar</uri>
+  <!-- The name to use in titles, etc. for the taglib -->
+  <info>Darkhorse Ventures Tag Library</info>
+
+  <tag>
+    <name>permission</name> 
+    <tagclass>com.darkhorseventures.taglib.PermissionHandler</tagclass>
+    <bodycontent>JSP</bodycontent>
+    <info>
+      Access the User session and determine if permission is valid.
+    </info>
+    <attribute>
+      <name>name</name>
+      <required>yes</required>
+    </attribute>
+    <attribute>
+      <name>all</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>none</name>
+      <required>no</required>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>username</name> 
+    <tagclass>com.darkhorseventures.taglib.UsernameHandler</tagclass>
+    <bodycontent>empty</bodycontent>
+    <info>
+      Access the Application scope and retrieve user's name from id.
+    </info>
+    <attribute>
+      <name>id</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+</taglib>

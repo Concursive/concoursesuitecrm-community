@@ -1,0 +1,464 @@
+<mvc-app>
+  <!--
+    A sample action. Many more can go here, each having their own name, and
+    each mapping to a different action class. More than one can map to the
+    same action class as well, if wanted. More than one forward can map to the
+    same resource. Also, you can forward to another action like so:
+    <forward name="SomethingOK" resource="/Example.do?command=SomeMethod"/>
+    This allows you to have one action method return a result that forwards to
+    another (or possibly the same) action. This is in effect servlet chaining.
+  -->
+  <!-- 
+  Web default 
+  -->
+  <action name="Login" class="com.darkhorseventures.cfsmodule.Login">
+    <bean name="LoginBean" class="com.darkhorseventures.cfsmodule.LoginBean" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="LoginOK" resource="/MyCFS.do?command=Home"/>
+    <forward name="LoginRetry" resource="/login.jsp"/>
+  </action>
+  
+  
+  <!-- MyCFS Module -->
+  <action name="MyCFS" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="HomeOK" resource="/mycfs.jsp" layout="nav"/>
+    <forward name="GoHomeOK" resource="/MyCFS.do?command=Headline"/>
+    <forward name="DeleteOK" resource="/MyCFS.do?command=Headline"/>
+    <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+    <forward name="HeadlineOK" resource="/MyCFSHeadlines.jsp" layout="nav"/>
+    <forward name="MyProfileOK" resource="/mycfs_profile.jsp" layout="nav"/>
+  </action>
+  <action name="MyCFSProfile" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ProfileOK" resource="/mycfs_personal.jsp" layout="nav"/>
+    <forward name="UpdateProfileOK" resource="/MyCFS.do?command=MyProfile"/>
+  </action>
+  <action name="MyCFSPassword" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="PasswordOK" resource="/mycfs_password.jsp" layout="nav"/>
+    <forward name="UpdatePasswordOK" resource="/MyCFS.do?command=MyProfile"/>
+  </action>
+  <action name="MyCFSSettings" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="SettingsOK" resource="/mycfs_settings.jsp" layout="nav"/>
+    <forward name="UpdateSettingsOK" resource="/MyCFS.do?command=MyProfile"/>
+  </action>
+  <!-- End MyCFS Module -->
+  
+  
+  <!-- Contacts & Resources Module -->
+  <action name="CompanyDirectory" class="com.darkhorseventures.cfsmodule.CompanyDirectory">
+    <bean name="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="CalendarOK" resource="/companydirectory_calendar.jsp" layout="nav"/>
+    <forward name="ListEmployeesOK" resource="/companydirectory_listemployees.jsp" layout="nav"/>
+    <forward name="EmployeeDetailsOK" resource="/companydirectory_employeedetails.jsp" layout="nav"/>
+    <forward name="EmployeeDetailsModifyOK" resource="/companydirectory_employeemodifyform.jsp" layout="nav"/>
+    <forward name="EmployeeDetailsUpdateOK" resource="/CompanyDirectory.do?command=EmployeeDetails"/>
+    <forward name="EmployeeInsertFormOK" resource="/companydirectory_employeeinsertform.jsp" layout="nav"/>
+    <forward name="EmployeeDeleteOK" resource="/CompanyDirectory.do?command=ListEmployees"/>
+    <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+  </action>
+  <action name="ExternalContacts" class="com.darkhorseventures.cfsmodule.ExternalContacts">
+    <bean name="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ListContactsOK" resource="/companydirectory_listcontacts.jsp" layout="nav"/>
+    <forward name="ContactDetailsOK" resource="/companydirectory_contactdetails.jsp" layout="nav"/>
+    <forward name="SearchContactsFormOK" resource="/companydirectory_searchcontacts.jsp" layout="nav"/>
+    <forward name="ListOppsOK" resource="/companydirectory_listopps.jsp" layout="nav"/>
+    <forward name="AddOppOK" resource="/companydirectory_addopp.jsp" layout="nav"/>
+    <forward name="ContactDetailsModifyOK" resource="/companydirectory_contactmodifyform.jsp" layout="nav"/>
+    <forward name="ContactDetailsUpdateOK" resource="/ExternalContacts.do?command=ContactDetails"/>
+    <forward name="ContactInsertFormOK" resource="/companydirectory_contactinsertform.jsp" layout="nav"/>
+    <forward name="ContactDeleteOK" resource="/ExternalContacts.do?command=ListContacts"/>
+  </action>
+  <action name="ExternalContactsOpps" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
+    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ListOppsOK" resource="/companydirectory_listopps.jsp" layout="nav"/>
+    <forward name="AddOppOK" resource="/companydirectory_addopp.jsp" layout="nav"/>
+    <forward name="OppDeleteOK" resource="/ExternalContactsOpps.do?command=ViewOpps"/>
+    <forward name="OppModifyOK" resource="/companydirectory_modifyopp.jsp" layout="nav"/>
+    <forward name="OppUpdateOK" resource="/ExternalContactsOpps.do?command=DetailsOpp"/>
+    <forward name="DetailsOppOK" resource="/companydirectory_detailsopp.jsp" layout="nav"/>
+  </action>
+  <action name="ExternalContactsCalls" class="com.darkhorseventures.cfsmodule.ExternalContactsCalls">
+    <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/companydirectory_listcalls.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/companydirectory_detailscall.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/companydirectory_addcall.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/companydirectory_modifycall.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/ExternalContactsCalls.do?command=Details"/>
+    <forward name="DeleteOK" resource="/ExternalContactsCalls.do?command=View"/>
+  </action>
+  
+  <action name="LeadsCalls" class="com.darkhorseventures.cfsmodule.LeadsCalls">
+    <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/leads_listcalls.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/leads_detailscall.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/leads_modifycall.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/LeadsCalls.do?command=Details"/>
+    <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
+  </action>
+  <!-- End Contacts & Resources Module -->
+  
+  
+  <!-- Pipeline Management Module -->
+  <action name="Leads" class="com.darkhorseventures.cfsmodule.Leads">
+    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="HomeOK" resource="/leads.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/addLead.jsp" layout="nav"/>
+    <forward name="SearchOK" resource="/LeadsSearchOpp.jsp" layout="nav"/>
+    <forward name="DashboardOK" resource="/LeadsDashboard.jsp" layout="nav"/>
+    <forward name="OppDeleteOK" resource="/Leads.do?command=ViewOpp"/>
+    <forward name="ModifyOppOK" resource="/LeadsModify.jsp" layout="nav"/>
+    <forward name="UpdateOppOK" resource="/Leads.do?command=DetailsOpp"/>
+    <forward name="OppListOK" resource="/LeadsViewOpp.jsp" layout="nav"/>
+    <forward name="OppDetailsOK" resource="/LeadsDetailsOpp.jsp" layout="nav"/>
+    <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+  </action>
+  <!-- End Pipeline Management Module -->
+  
+  
+  <!-- Accounts Module -->  
+  <action name="Accounts" class="com.darkhorseventures.cfsmodule.Accounts">
+    <bean name="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/accounts_add.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/accounts_modify.jsp" layout="nav"/>
+    <forward name="DashboardOK" resource="/accounts_dashboard.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/accounts_list.jsp" layout="nav"/>
+    <forward name="ViewTicketsOK" resource="/accounts_tickets_list.jsp" layout="nav"/>
+    <forward name="SearchOK" resource="/accounts_search.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/accounts_details.jsp" layout="nav"/>
+    <forward name="DeleteOK" resource="/Accounts.do?command=View"/>
+    <forward name="UpdateOK" resource="/Accounts.do?command=Details"/>
+    <forward name="InsertOK" resource="/accounts_details.jsp" layout="nav"/>
+    <forward name="FieldRecordListOK" resource="/accounts_fields_list.jsp" layout="nav"/>
+    <forward name="AddFolderRecordOK" resource="/accounts_fields_add.jsp" layout="nav"/>
+    <forward name="FieldsOK" resource="/accounts_fields.jsp" layout="nav"/>
+    <forward name="ModifyFieldsOK" resource="/accounts_fields_modify.jsp" layout="nav"/>
+    <forward name="UpdateFieldsOK" resource="/accounts_fields.jsp" layout="nav"/>
+  </action>
+  <action name="Contacts" class="com.darkhorseventures.cfsmodule.Contacts">
+    <bean name="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/accounts_contacts_list.jsp" layout="nav"/>
+    <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/accounts_contacts_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/Contacts.do?command=View"/>
+    <forward name="DeleteOK" resource="/Contacts.do?command=View"/>
+    <forward name="ModifyOK" resource="/accounts_contacts_modify.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/Contacts.do?command=Details"/>
+    <forward name="DetailsOK" resource="/accounts_contacts_details.jsp" layout="nav"/>
+  </action>
+  <action name="Opportunities" class="com.darkhorseventures.cfsmodule.Opportunities">
+    <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/accounts_opportunities_details.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/Opportunities.do?command=Details"/>
+    <forward name="ListOK" resource="/accounts_opportunities_list.jsp" layout="nav"/>
+    <forward name="DeleteOK" resource="/Opportunities.do?command=View"/>
+    <forward name="AddOK" resource="/accounts_opportunities_add.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/accounts_opportunities_modify.jsp" layout="nav"/>
+    <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+  </action>
+  <action name="AccountTickets" class="com.darkhorseventures.cfsmodule.AccountTickets">
+    <bean name="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
+    <forward name="AddTicketOK" resource="/accounts_tickets_add.jsp" layout="nav"/>
+    <forward name="InsertTicketOK" resource="/accounts_tickets_details.jsp" layout="nav"/>
+    <forward name="DeleteTicketOK" resource="/Accounts.do?command=ViewTickets"/>
+    <forward name="TicketDetailsOK" resource="/accounts_tickets_details.jsp" layout="nav"/>
+    <forward name="ModifyTicketOK" resource="/accounts_tickets_modify.jsp" layout="nav"/>
+    <forward name="UpdateTicketOK" resource="/AccountTickets.do?command=TicketDetails"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+  </action>  
+  <!-- End Account Module -->
+  
+  
+  <!-- Campaign Module -->
+  <action name="CampaignManager" class="com.darkhorseventures.cfsmodule.CampaignManager">
+    <bean name="Campaign" class="com.darkhorseventures.cfsbase.Campaign" scope="request"/>
+		<forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="DashboardOK" resource="/campaign_dashboard.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/campaign_view.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/campaign_add.jsp" layout="nav"/>
+    <forward name="DeleteOK" resource="/CampaignManager.do?command=View"/>
+    <forward name="InsertOK" resource="/campaign_center_details.jsp" layout="nav"/>
+    <forward name="ViewDetailsOK" resource="/campaign_center_details.jsp" layout="nav"/>
+    <forward name="ViewGroupsOK" resource="/campaign_center_groups.jsp" layout="nav"/>
+    <forward name="ViewRecipientsOK" resource="/campaign_center_recipients.jsp" layout="nav"/>
+    <forward name="ViewMessageOK" resource="/campaign_center_message.jsp" layout="nav"/>
+    <forward name="ViewScheduleOK" resource="/campaign_center_schedule.jsp" layout="nav"/>
+    <forward name="AddGroupsOK" resource="/campaign_center_groups_add.jsp" layout="nav"/>
+    <forward name="InsertGroupsOK" resource="/CampaignManager.do?command=ViewDetails"/>
+    <forward name="RemoveGroupsOK" resource="/CampaignManager.do?command=ViewGroups"/>
+    <forward name="AddMessageOK" resource="/campaign_center_message_add.jsp" layout="nav"/>
+    <forward name="InsertMessageOK" resource="/CampaignManager.do?command=ViewDetails"/>
+    <forward name="InsertScheduleOK" resource="/CampaignManager.do?command=ViewDetails"/>
+    <forward name="UpdateDetailsOK" resource="/CampaignManager.do?command=View"/>
+    <forward name="CancelOK" resource="/CampaignManager.do?command=View"/>
+    <forward name="ActivateOK" resource="/CampaignManager.do?command=Dashboard"/>
+    <forward name="DetailsOK" resource="/campaign_details.jsp" layout="nav"/>
+    <forward name="PreviewGroupsOK" resource="/campaign_center_groups_preview.jsp" layout="nav"/>
+  </action>
+  <action name="CampaignManagerGroup" class="com.darkhorseventures.cfsmodule.CampaignManagerGroup">
+    <bean name="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
+		<forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/campaign_groups_view.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/campaign_groups_modify.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/campaign_groups_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/campaign_groups_preview.jsp" layout="nav"/>
+    <forward name="DeleteOK" resource="/CampaignManagerGroup.do?command=View"/>
+    <forward name="UpdateOK" resource="/campaign_groups_preview.jsp" layout="nav"/>
+    <forward name="PreviewOK" resource="/campaign_groups_preview.jsp" layout="nav"/>
+  </action>
+  <action name="CampaignManagerMessage" class="com.darkhorseventures.cfsmodule.CampaignManagerMessage">
+    <bean name="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
+		<forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ViewOK" resource="/campaign_messages_view.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/campaign_messages_modify.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/campaign_messages_details.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/campaign_messages_details.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/campaign_messages_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/CampaignManagerMessage.do?command=View"/>
+    <forward name="PreviewOK" resource="/campaign_messages_preview.jsp"/>
+    <forward name="DeleteOK" resource="/CampaignManagerMessage.do?command=View"/>
+  </action>
+  <!-- End Campaign Module -->
+  
+  
+  <!-- Project Management Module -->
+  <action name="ProjectManagement" class="com.darkhorseventures.cfsmodule.ProjectManagement">
+    <bean name="Project" class="com.zeroio.iteam.base.Project" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="PersonalViewOK" resource="/projects_personalview.jsp" layout="nav"/>
+    <forward name="EnterpriseViewOK" resource="/projects_enterpriseview.jsp" layout="nav"/>
+    <forward name="AddProjectOK" resource="/projects_addproject.jsp" layout="nav"/>
+    <forward name="ModifyProjectOK" resource="/projects_modifyproject.jsp" layout="nav"/>
+    <forward name="UpdateProjectOK" resource="/ProjectManagement.do?command=ProjectCenter"/>
+    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+  </action>
+  <action name="ProjectManagementRequirements" class="com.darkhorseventures.cfsmodule.ProjectManagementRequirements">
+    <bean name="Requirement" class="com.zeroio.iteam.base.Requirement" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
+  </action>
+  <action name="ProjectManagementTeam" class="com.darkhorseventures.cfsmodule.ProjectManagementTeam">
+    <bean name="TeamMemberList" class="com.zeroio.iteam.base.TeamMemberList" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Team"/>
+  </action>
+  <action name="ProjectManagementAssignments" class="com.darkhorseventures.cfsmodule.ProjectManagementAssignments">
+    <bean name="Assignment" class="com.zeroio.iteam.base.Assignment" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="PopupOK" resource="/projects_center_assignments_modify.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopup.jsp"/>
+  </action>
+  <action name="ProjectManagementIssues" class="com.darkhorseventures.cfsmodule.ProjectManagementIssues">
+    <bean name="Issue" class="com.zeroio.iteam.base.Issue" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
+  </action>
+  <action name="ProjectManagementIssueReply" class="com.darkhorseventures.cfsmodule.ProjectManagementIssues">
+    <bean name="IssueReply" class="com.zeroio.iteam.base.IssueReply" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/ProjectManagementIssues.do?command=Details"/>
+    <forward name="DownloadOK" resource="/ProjectManagementIssues.do?command=Details"/>
+  </action>
+  <action name="ProjectManagementFiles" class="com.darkhorseventures.cfsmodule.ProjectManagementFiles">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+  </action>
+  <!-- End Project Management Module -->
+  
+  
+  <!-- Ticket Module -->
+  <action name="TroubleTickets" class="com.darkhorseventures.cfsmodule.TroubleTickets">
+    <bean name="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="HomeOK" resource="/troubletickets.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/troubletickets_add.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/troubletickets_modify.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/troubletickets_details.jsp" layout="nav"/>
+    <forward name="SearchTicketsFormOK" resource="/troubletickets_search.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/troubletickets_details.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/TroubleTickets.do?command=Details"/>
+    <forward name="DeleteOK" resource="/TroubleTickets.do?command=Home"/>
+  </action>
+  <!-- End Ticket Module -->
+  
+  
+  <!-- Setup Module -->
+  <action name="Admin" class="com.darkhorseventures.cfsmodule.Admin">
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="HomeOK" resource="/admin.jsp" layout="nav"/>
+    <forward name="ConfigurationOK" resource="/admin_maintenance.jsp" layout="nav"/>
+    <forward name="EditListsOK" resource="/admin_editlists.jsp" layout="nav"/>
+    <forward name="ModifyListOK" resource="/admin_modifylist.jsp" layout="nav"/>
+    <forward name="UpdateListOK" resource="/admin_editlists.jsp" layout="nav"/>
+  </action>
+  
+  <action name="AdminFieldsFolder" class="com.darkhorseventures.cfsmodule.AdminFields">
+    <bean name="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="ListFoldersOK" resource="/admin_fields_folder_list.jsp" layout="nav"/>
+    <forward name="AddFolderOK" resource="/admin_fields_folder_add.jsp" layout="nav"/>
+    <forward name="InsertFolderOK" resource="/AdminFieldsFolder.do?command=ListFolders"/>
+    <forward name="InsertFolderERROR" resource="/AdminFieldsFolder.do?command=AddFolder"/>
+    <forward name="ModifyFolderOK" resource="/admin_fields_folder_modify.jsp" layout="nav"/>
+    <forward name="UpdateFolderOK" resource="/AdminFieldsFolder.do?command=ListFolders"/>
+    <forward name="UpdateFolderERROR" resource="/AdminFieldsFolder.do?command=ModifyFolder"/>
+    <forward name="DeleteFolderOK" resource="/AdminFieldsFolder.do?command=ListFolders"/>
+    <forward name="DeleteFolderERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="ToggleOK" resource="/AdminFieldsFolder.do?command=ListFolders"/>
+  </action>
+  <action name="AdminFieldsGroup" class="com.darkhorseventures.cfsmodule.AdminFields">
+    <bean name="Group" class="com.darkhorseventures.cfsbase.CustomFieldGroup" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="ListGroupsOK" resource="/admin_fields_groups_list.jsp" layout="nav"/>
+    <forward name="AddGroupOK" resource="/admin_fields_groups_add.jsp" layout="nav"/>
+    <forward name="InsertGroupOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="InsertGroupERROR" resource="/AdminFieldsGroup.do?command=AddGroup"/>
+    <forward name="ModifyGroupOK" resource="/admin_fields_group_modify.jsp" layout="nav"/>
+    <forward name="UpdateGroupOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="UpdateGroupERROR" resource="/AdminFieldsGroup.do?command=ModifyGroup"/>
+    <forward name="DeleteGroupOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="DeleteGroupERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+  </action>
+  <action name="AdminFields" class="com.darkhorseventures.cfsmodule.AdminFields">
+    <bean name="CustomField" class="com.darkhorseventures.cfsbase.CustomField" scope="request"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="AddFieldOK" resource="/admin_fields_groups_addfield.jsp" layout="nav"/>
+    <forward name="InsertFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="InsertFieldERROR" resource="/AdminFields.do?command=AddField"/>
+    
+    <forward name="ModifyFieldOK" resource="/admin_fields_group_modify.jsp" layout="nav"/>
+    <forward name="UpdateFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="UpdateFieldERROR" resource="/AdminFieldsGroup.do?command=ModifyGroup"/>
+    <forward name="DeleteFieldOK" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+    <forward name="DeleteFieldERROR" resource="/AdminFieldsGroup.do?command=ListGroups"/>
+  </action>
+  <action name="Users" class="com.darkhorseventures.cfsmodule.Users">
+    <bean name="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ListUsersOK" resource="/admin_listusers.jsp" layout="nav"/>
+    <forward name="UserDetailsOK" resource="/admin_userdetails.jsp" layout="nav"/>
+    <forward name="UserInsertFormOK" resource="/admin_userinsertform1.jsp" layout="nav"/>
+    <forward name="UserInsertForm2OK" resource="/admin_userinsertform2.jsp" layout="nav"/>
+    <forward name="UserDeleteOK" resource="/Users.do?command=ListUsers"/>
+    <forward name="UserUpdateOK" resource="/Users.do?command=UserDetails"/>
+    <forward name="UserModifyOK" resource="/admin_usermodifyform.jsp" layout="nav"/>
+    <forward name="ReassignOK" resource="/admin_reassign.jsp" layout="nav"/>
+    <forward name="DoReassignOK" resource="/Users.do?command=ListUsers"/>
+    <forward name="NewAccountFirstOK" resource="/admin_newusercontact.jsp" layout="nav"/>
+    <forward name="UserDetailsModifyOK" resource="/admin_userdetails.jsp" layout="nav"/>
+  </action>  
+  <action name="Roles" class="com.darkhorseventures.cfsmodule.Roles">
+    <bean name="Role" class="com.darkhorseventures.cfsbase.Role" scope="request" />
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="ListRolesOK" resource="/admin_listroles.jsp" layout="nav"/>
+    <forward name="RoleInsertFormOK" resource="/admin_roleinsertform.jsp" layout="nav"/>
+    <forward name="RoleDetailsOK" resource="/admin_roledetails.jsp" layout="nav"/>
+    <forward name="RoleDetailsModifyOK" resource="/admin_roledetails.jsp" layout="nav"/>
+    <forward name="RoleUpdateOK" resource="/Roles.do?command=ListRoles"/>
+  </action>
+  <!-- End Setup Module -->
+  
+  
+  <action name="Search" class="com.darkhorseventures.cfsmodule.Search">
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
+    <forward name="SearchOK" resource="/search_results.jsp" layout="nav"/>
+  </action>
+  <!-- 
+  Handheld default 
+  -->
+  <action name="LoginHH" class="com.darkhorseventures.cfsmodule.Login">
+    <bean name="LoginBean" class="com.darkhorseventures.cfsbase.LoginBean" scope="request"/>
+    <forward name="LoginOK" resource="/MyCFSHH.do?command=Home"/>
+    <forward name="LoginRetry" resource="/loginhh.jsp"/>
+  </action>
+  <action name="MyCFSHH" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <forward name="HomeOK" resource="/mycfshh.jsp" layout="nav"/>
+  </action>
+</mvc-app>
