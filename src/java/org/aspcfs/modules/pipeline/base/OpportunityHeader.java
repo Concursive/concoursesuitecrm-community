@@ -833,16 +833,8 @@ public class OpportunityHeader extends GenericBean {
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      if (accountLink > -1) {
-        pst.setInt(++i, this.getAccountLink());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
-      if (contactLink > -1) {
-        pst.setInt(++i, this.getContactLink());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
+      DatabaseUtils.setInt(pst, ++i, this.getAccountLink());
+      DatabaseUtils.setInt(pst, ++i, this.getContactLink());
       pst.setString(++i, this.getDescription());
       if (entered != null) {
         pst.setTimestamp(++i, entered);
