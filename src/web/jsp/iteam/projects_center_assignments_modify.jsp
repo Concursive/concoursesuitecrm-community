@@ -23,6 +23,18 @@
       messageText += "- Description field is required\r\n";
       formTest = false;
     }
+    if (form.userAssignedId.selectedIndex == 0) {
+      messageText += "- Assigned To is a required field\r\n";
+      formTest = false;
+    }
+    if (form.activityId.selectedIndex == 0) {
+      messageText += "- Activity Type is a required field\r\n";
+      formTest = false;
+    }
+    if (form.statusId.selectedIndex == 0) {
+      messageText += "- Current Status is a required field\r\n";
+      formTest = false;
+    }
   
     //Check number field
     var valid = "0123456789.";
@@ -96,6 +108,7 @@
 <% 
     TeamMemberList thisTeam = Project.getTeam();
     HtmlSelect team = new HtmlSelect();
+    team.addItem(0, "-- Select User --");
     Iterator iTeam = thisTeam.iterator();
     while (iTeam.hasNext()) {
       TeamMember thisMember = (TeamMember)iTeam.next();
