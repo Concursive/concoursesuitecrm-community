@@ -6,6 +6,7 @@ import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
+import com.darkhorseventures.utils.DatabaseUtils;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -21,6 +22,7 @@ public class SurveyAnswerList extends Vector {
 
   private int questionId = -1;
   private int hasComments = -1;
+  protected PagedListInfo pagedListInfo = null;
 
 
   /**
@@ -28,10 +30,19 @@ public class SurveyAnswerList extends Vector {
    */
   public SurveyAnswerList() { }
 
+
+  /**
+   *  Constructor for the SurveyAnswerList object
+   *
+   *@param  db                Description of the Parameter
+   *@param  questionId        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public SurveyAnswerList(Connection db, int questionId) throws SQLException {
     this.questionId = questionId;
     buildList(db);
   }
+
 
   /**
    *  Constructor for the SurveyAnswerList object
@@ -72,6 +83,16 @@ public class SurveyAnswerList extends Vector {
 
 
   /**
+   *  Sets the pagedListInfo attribute of the SurveyAnswerList object
+   *
+   *@param  tmp  The new pagedListInfo value
+   */
+  public void setPagedListInfo(PagedListInfo tmp) {
+    this.pagedListInfo = tmp;
+  }
+
+
+  /**
    *  Sets the hasComments attribute of the SurveyAnswerList object
    *
    *@param  tmp  The new hasComments value
@@ -99,21 +120,134 @@ public class SurveyAnswerList extends Vector {
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
-    ResultSet rs = queryList(db, pst);
+    ResultSet rs = null;
+    int items = -1;
+
+    StringBuffer sqlSelect = new StringBuffer();
+    StringBuffer sqlCount = new StringBuffer();
+    StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlOrder = new StringBuffer();
+
+    //Need to build a base SQL statement for counting records
+    sqlCount.append(
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM active_survey_answers sa " +
+        "WHERE sa.question_id > -1 ");
+
+    createFilter(sqlFilter);
+
+    if (pagedListInfo != null) {
+      //Get the total number of records matching filter
+      pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
+      items = prepareFilter(pst);
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        int maxRecords = rs.getInt("recordcount");
+        pagedListInfo.setMaxRecords(maxRecords);
+      }
+      pst.close();
+      rs.close();
+
+      //Determine the offset, based on the filter, for the first record to show
+      if (!pagedListInfo.getCurrentLetter().equals("")) {
+        pst = db.prepareStatement(sqlCount.toString() +
+            sqlFilter.toString() +
+            "AND sa.comments < ? ");
+        items = prepareFilter(pst);
+        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        rs = pst.executeQuery();
+        if (rs.next()) {
+          int offsetCount = rs.getInt("recordcount");
+          pagedListInfo.setCurrentOffset(offsetCount);
+        }
+        rs.close();
+        pst.close();
+      }
+
+      //Determine column to sort by
+      pagedListInfo.setDefaultSort("sr.entered", null);
+      pagedListInfo.appendSqlTail(db, sqlOrder);
+    } else {
+      sqlOrder.append("ORDER BY response_id, question_id ");
+    }
+
+    //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
+    sqlSelect.append("sa.* " +
+        "FROM active_survey_answers sa, active_survey_responses sr " +
+        "WHERE sa.question_id > -1 AND sa.response_id = sr.response_id "
+        );
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    items = prepareFilter(pst);
+    rs = pst.executeQuery();
+    if (pagedListInfo != null) {
+      pagedListInfo.doManualOffset(db, rs);
+    }
+
+    int count = 0;
     while (rs.next()) {
+      if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
+          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+          count >= pagedListInfo.getItemsPerPage()) {
+        break;
+      }
+      ++count;
       SurveyAnswer thisAnswer = this.getObject(db, rs);
       this.add(thisAnswer);
     }
     rs.close();
-    if (pst != null) {
-      pst.close();
-    }
+    pst.close();
     Iterator ans = this.iterator();
     while (ans.hasNext()) {
       SurveyAnswer thisAnswer = (SurveyAnswer) ans.next();
       thisAnswer.setContactId(db);
       thisAnswer.buildItems(db, thisAnswer.getId());
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  sqlFilter  Description of the Parameter
+   */
+  protected void createFilter(StringBuffer sqlFilter) {
+    if (sqlFilter == null) {
+      sqlFilter = new StringBuffer();
+    }
+
+    if (questionId != -1) {
+      sqlFilter.append("AND sa.question_id = ? ");
+    }
+
+    if (hasComments > -1) {
+      if (hasComments == Constants.TRUE) {
+        sqlFilter.append("AND sa.comments <> '' ");
+      } else {
+        sqlFilter.append("AND sa.comments = '' ");
+      }
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  pst               Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  protected int prepareFilter(PreparedStatement pst) throws SQLException {
+    int i = 0;
+
+    if (questionId != -1) {
+      pst.setInt(++i, questionId);
+    }
+    return i;
   }
 
 
@@ -129,35 +263,6 @@ public class SurveyAnswerList extends Vector {
     SurveyAnswer thisAnswer = new SurveyAnswer(rs);
     thisAnswer.buildItems(db, thisAnswer.getId());
     return thisAnswer;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT sa.* " +
-        "FROM active_survey_answers sa " +
-        "WHERE sa.question_id = ? ");
-    if (hasComments > -1) {
-      if (hasComments == Constants.TRUE) {
-        sql.append("AND comments <> '' ");
-      } else {
-        sql.append("AND comments = '' ");
-      }
-    }
-    sql.append("ORDER BY response_id, question_id ");
-    pst = db.prepareStatement(sql.toString());
-    pst.setInt(1, questionId);
-    ResultSet rs = pst.executeQuery();
-    return rs;
   }
 
 
