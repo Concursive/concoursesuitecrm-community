@@ -9,7 +9,8 @@ import java.util.ArrayList;
  *
  *@author     akhi_m
  *@created    November 1, 2002
- *@version    $Id$
+ *@version    $Id: ActiveSurveyQuestionItem.java,v 1.4 2003/01/14 16:11:34
+ *      akhi_m Exp $
  */
 public class ActiveSurveyQuestionItem {
   private int id = -1;
@@ -36,6 +37,34 @@ public class ActiveSurveyQuestionItem {
     this.questionId = thisItem.getQuestionId();
     this.type = thisItem.getType();
   }
+
+
+  /**
+   *  Constructor for the ActiveSurveyQuestionItem object
+   *
+   *@param  db                Description of the Parameter
+   *@param  itemId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public ActiveSurveyQuestionItem(Connection db, int itemId) throws SQLException {
+    if (itemId == -1) {
+      throw new SQLException("Item ID not specified");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT si.item_id, si.question_id, si.type, si.description " +
+        "FROM active_survey_items si " +
+        "WHERE item_id = ? ");
+    int i = 0;
+    pst.setInt(++i, itemId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+  }
+
 
   /**
    *  Constructor for the ActiveSurveyQuestionItem object
@@ -203,9 +232,9 @@ public class ActiveSurveyQuestionItem {
       pst.execute();
       pst.close();
       this.setId(DatabaseUtils.getCurrVal(db, "active_survey_items_item_id_seq"));
-      
+
       //populate the active_survey_answer_avg table with 0 count for items
-      i =0;
+      i = 0;
       pst = db.prepareStatement(
           "INSERT INTO active_survey_answer_avg " +
           "(question_id, item_id, total ) " +

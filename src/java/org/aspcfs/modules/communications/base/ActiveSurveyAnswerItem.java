@@ -3,13 +3,16 @@ package org.aspcfs.modules.communications.base;
 import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import java.util.ArrayList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.communications.base.ActiveSurveyQuestionItem;
 
 /**
  *  A Survey Answer Item.
  *
  *@author     Mathur
  *@created    February 4, 2003
- *@version    $Id$
+ *@version    $Id: ActiveSurveyAnswerItem.java,v 1.1 2003/02/17 14:38:17 akhi_m
+ *      Exp $
  */
 public class ActiveSurveyAnswerItem {
   private int id = -1;
@@ -17,6 +20,7 @@ public class ActiveSurveyAnswerItem {
   private int contactId = -1;
   private Contact recipient = null;
   private ActiveSurveyQuestionItem item = null;
+  private java.sql.Timestamp entered = null;
 
 
   /**
@@ -33,6 +37,26 @@ public class ActiveSurveyAnswerItem {
    */
   public ActiveSurveyAnswerItem(ResultSet rs) throws SQLException {
     buildRecord(rs);
+  }
+
+
+  /**
+   *  Sets the entered attribute of the ActiveSurveyAnswerItem object
+   *
+   *@param  entered  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp entered) {
+    this.entered = entered;
+  }
+
+
+  /**
+   *  Gets the entered attribute of the ActiveSurveyAnswerItem object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
   }
 
 
@@ -172,8 +196,8 @@ public class ActiveSurveyAnswerItem {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void builditem(Connection db) throws SQLException {
-    if (Item == -1) {
+  public void buildItemDetails(Connection db) throws SQLException {
+    if (itemId == -1) {
       throw new SQLException("Item ID not specified");
     }
     item = new ActiveSurveyQuestionItem(db, itemId);
