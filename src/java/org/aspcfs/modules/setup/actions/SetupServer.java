@@ -100,14 +100,16 @@ public class SetupServer extends CFSModule {
           freeConnection(context, db);
         }
         if (sendReg) {
-          //Send the registration email
-          license.sendEmailRegistration();
           if ("ent1source".equals(context.getRequest().getParameter("ent1source"))) {
+            //Stream the license back
             RecordList recordList = new RecordList("license");
             Record record = new Record("processed");
             record.put("license", license.getCode());
             recordList.add(record);
             thisStatus.setRecordList(recordList);
+          } else {
+            //Send the license back as email
+            license.sendEmailRegistration();
           }
         }
       } else {

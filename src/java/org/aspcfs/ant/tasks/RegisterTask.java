@@ -63,7 +63,6 @@ public class RegisterTask extends Task {
       bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
       bean.setText(PrivateString.encrypt(key, "ENTERPRISE-2.7"));
       //Transmit
-      //TODO: Ummm... now that the key has been sent and the license is in email, now what?
       String response = null;
       if (bean.getSsl()) {
         response = HTTPUtils.sendPacket("https://registration.darkhorsecrm.com/LicenseServer.do?command=SubmitRegistration&ent1source=ent1source", bean.toXmlString());
@@ -74,12 +73,13 @@ public class RegisterTask extends Task {
       Element responseNode = responseXML.getFirstChild("response");
       TransactionStatus thisStatus = new TransactionStatus(responseNode);
       if (thisStatus.getStatusCode() == 0) {
-        System.out.println("Registration Sent... a copy of this license will also be sent to: " + email);
-        //Retrieve the license
+        System.out.println("Transmitting registration...");
+        //Retrieve the license and install
         Record record = (Record) thisStatus.getRecordList().get(0);
         String text = (String) record.get("license");
         if (text != null) {
           StringUtils.saveText(webPath + "input.txt", text);
+          System.out.println("Registration sent.  A license was installed for Dark Horse CRM.");
         }
       } else {
         System.out.println("Registration failed... A license was not obtained from Dark Horse Ventures");
