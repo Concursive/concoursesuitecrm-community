@@ -93,7 +93,7 @@
 	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	<tr class="title">
 	<td colspan=2 valign=center align=left>
-	<strong>Call Details (Forward)</strong>
+	<strong>Forward: Call Details</strong>
 	</td>
 	</tr>
 	<tr class="containerBody">

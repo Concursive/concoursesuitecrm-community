@@ -24,12 +24,12 @@ public class CFSNote extends GenericBean {
   private java.sql.Timestamp sent = null;
   private boolean enabled = true;
   private String sentName = "";
+  private int type = -1;
   
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
-
- 
-
+  
+  public final static int CALL = 1;
 
   public CFSNote() { }
 
@@ -111,6 +111,16 @@ public void setSentName(String sentName) {
     rs.close();
     st.close();
   }
+  
+public int getType() {
+	return type;
+}
+public void setType(int type) {
+	this.type = type;
+}
+public void setType(String type) {
+	this.type = Integer.parseInt(type);
+}
 
 
   public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
@@ -194,8 +204,8 @@ public void setSentTo(int sentTo) {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO cfsinbox_message " +
-          "(enteredby, modifiedby, body, reply_id) " +
-          "VALUES (?, ?, ?, ?) ");
+          "(enteredby, modifiedby, body, reply_id, type) " +
+          "VALUES (?, ?, ?, ?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -203,6 +213,7 @@ public void setSentTo(int sentTo) {
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getBody());
       pst.setInt(++i, this.getReplyId());
+      pst.setInt(++i, this.getType());
       
       pst.execute();
       pst.close();
@@ -412,6 +423,7 @@ public void setSentTo(int sentTo) {
     sentTo = rs.getInt("sent_to");
     viewed = rs.getTimestamp("viewed");
     sent = rs.getTimestamp("sent");
+    type = rs.getInt("type");
     
   }
 

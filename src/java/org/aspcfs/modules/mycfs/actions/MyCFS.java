@@ -144,6 +144,82 @@ public final class MyCFS extends CFSModule {
 			return ("SystemError");
 		}
 	}
+	
+	public String executeCommandForward(ActionContext context) {
+		Exception errorMessage = null;
+		boolean recordInserted = false;
+	
+		CFSNote thisNote = new CFSNote();
+		thisNote.setEnteredBy(getUserId(context));
+		thisNote.setModifiedBy(getUserId(context));
+		thisNote.setBody(context.getRequest().getParameter("msgBody"));
+		thisNote.setSubject(context.getRequest().getParameter("fwdsubject"));
+		thisNote.setReplyId(getUserId(context));
+		thisNote.setType(CFSNote.CALL);
+		thisNote.setSentTo(Integer.parseInt(context.getRequest().getParameter("sentTo")));
+	
+		Connection db = null;
+		try {
+			db = this.getConnection(context);
+			recordInserted = thisNote.insert(db);
+	
+		if (!recordInserted) {
+			processErrors(context, thisNote.getErrors());
+		}
+		} catch (SQLException e) {
+			errorMessage = e;
+		} finally {
+			this.freeConnection(context, db);
+		}
+	
+		if (errorMessage == null) {
+		if (!recordInserted) {
+	    		return (executeCommandForwardForm(context));
+		} else {
+			context.getRequest().setAttribute("NoteDetails", thisNote);
+	   		return (executeCommandCFSNoteDetails(context));
+		}
+		} else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+	}
+	
+	public String executeCommandForwardForm(ActionContext context) {
+		Exception errorMessage = null;
+		CFSNote thisNote = (CFSNote)context.getFormBean();
+		addModuleBean(context, "MyInbox", "Inbox Fwd");
+	
+		Connection db = null;
+		UserList list = new UserList();
+		list.setEnabled(UserList.TRUE);
+		list.setBuildContact(false);
+		list.setBuildHierarchy(false);
+		list.setBuildPermissions(false);
+	
+		try {
+			db = this.getConnection(context);
+			
+			if (thisNote.getId() == -1) {
+				thisNote = new CFSNote(db, context.getRequest().getParameter("id"));
+			}
+			
+			list.buildList(db);
+		} catch (Exception e) {
+			errorMessage = e;
+		} finally {
+			this.freeConnection(context, db);
+		}
+	
+		if (errorMessage == null) {
+			context.getRequest().setAttribute("UserList", list);
+			context.getRequest().setAttribute("NoteDetails", thisNote);
+			return ("InboxForwardFormOK");
+		} else {
+			context.getRequest().setAttribute("Error", errorMessage);
+			return ("SystemError");
+		}
+	}
 
 	/**
 	 *  Takes a look at the User Session Object and prepares the MyCFSBean for the
@@ -243,7 +319,7 @@ public final class MyCFS extends CFSModule {
 		CFSNote newNote = null;
 	
 		try {
-			int msgId = Integer.parseInt(context.getRequest().getParameter("msgId"));
+			int msgId = Integer.parseInt(context.getRequest().getParameter("id"));
 			db = this.getConnection(context);
 			newNote = new CFSNote(db, msgId);
 			if (newNote.getStatus() == 0) {

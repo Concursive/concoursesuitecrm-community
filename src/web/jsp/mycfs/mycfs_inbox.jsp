@@ -52,10 +52,10 @@
 %>      
   <tr>
           <td width=4 valign=center nowrap class="row<%= rowid %>">
-          <a href="/MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>">Fwd</a>|<a href="javascript:confirmDelete('/MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
+          <a href="/MyCFSInbox.do?command=ForwardForm&id=<%= thisNote.getId() %>&type=<%= thisNote.getType() %>">Fwd</a>|<a href="javascript:confirmDelete('/MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
         </td>
 		<td width="40%" class="row<%= rowid %>">
-      		<a href="/MyCFSInbox.do?command=CFSNoteDetails&msgId=<%=thisNote.getId()%>"><%= toHtml(thisNote.getSubject()) %></a>
+      		<a href="/MyCFSInbox.do?command=CFSNoteDetails&id=<%=thisNote.getId()%>"><%= toHtml(thisNote.getSubject()) %></a>
 		</td>
 		<td width=30% valign=center class="row<%= rowid %>" nowrap><%= toHtml(thisNote.getSentName()) %></td>
 		<td width=30% valign=center class="row<%= rowid %>" nowrap><%= toHtml(thisNote.getEnteredDateTimeString()) %></td>

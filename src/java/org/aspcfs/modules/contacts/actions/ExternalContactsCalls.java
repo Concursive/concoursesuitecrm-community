@@ -114,6 +114,7 @@ public final class ExternalContactsCalls extends CFSModule {
     thisNote.setBody(context.getRequest().getParameter("msgBody"));
     thisNote.setSubject(context.getRequest().getParameter("fwdsubject"));
     thisNote.setReplyId(getUserId(context));
+    thisNote.setType(CFSNote.CALL);
     thisNote.setSentTo(Integer.parseInt(context.getRequest().getParameter("sentTo")));
     
     Connection db = null;

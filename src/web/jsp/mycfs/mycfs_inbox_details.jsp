@@ -1,13 +1,13 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="details" action="/CFSInbox.do" method="post">
+<form name="details" action="/MyCFSInbox.do" method="post">
 <a href="/MyCFSInbox.do?command=Inbox">Back to Inbox</a>
 <p>
-<input type=button name="action" value="Forward" onClick="document.details.command.value='Forward';document.details.submit()">
+<input type=button name="action" value="Forward" onClick="document.details.command.value='ForwardForm';document.details.submit()">
 <input type=button name="action" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
 <input type=hidden name="id" value="<%= NoteDetails.getId() %>">
-<input type=hidden name="command" value="">
+<input type=hidden name="type" value="<%= NoteDetails.getType() %>">
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -36,7 +36,8 @@
 <%= NoteDetails.getBody() %>
 
 <br>
-<input type=button name="action" value="Forward" onClick="document.details.command.value='Forward';document.details.submit()">
+<input type=hidden name="command" value="">
+<input type=button name="action" value="Forward" onClick="document.details.command.value='ForwardForm';document.details.submit()">
 <input type=button name="action" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
 
 </form>

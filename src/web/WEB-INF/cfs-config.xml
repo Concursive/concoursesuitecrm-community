@@ -53,10 +53,12 @@
     <forward name="UpdateProfileOK" resource="/MyCFS.do?command=MyProfile"/>
   </action>
   <action name="MyCFSInbox" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <bean name="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="InboxOK" resource="/mycfs_inbox.jsp" layout="nav"/>
+    <forward name="InboxForwardFormOK" resource="/mycfs_inbox_forward.jsp" layout="nav"/>
     <forward name="CFSNoteDetailsOK" resource="/mycfs_inbox_details.jsp" layout="nav"/>
   </action>
   <action name="MyCFSPassword" class="com.darkhorseventures.cfsmodule.MyCFS">
