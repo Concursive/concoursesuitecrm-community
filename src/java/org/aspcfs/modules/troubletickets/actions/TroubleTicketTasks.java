@@ -33,7 +33,7 @@ public final class TroubleTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
-    if (!(hasPermission(context, "tickets-tickets-view"))) {
+    if (!(hasPermission(context, "tickets-tickets-tasks-view"))) {
       return ("PermissionError");
     }
 
@@ -77,7 +77,7 @@ public final class TroubleTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-    if (!(hasPermission(context, "tickets-tickets-view"))) {
+    if (!(hasPermission(context, "tickets-tickets-tasks-view"))) {
       return ("PermissionError");
     }
     addModuleBean(context, "View Tickets", "View Tickets");
@@ -92,10 +92,7 @@ public final class TroubleTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    if (!(hasPermission(context, "tickets-tickets-edit"))) {
-      return ("PermissionError");
-    }
-
+    String permission = "tickets-tickets-tasks-edit";
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -104,6 +101,13 @@ public final class TroubleTicketTasks extends CFSModule {
     String ticketId = context.getRequest().getParameter("ticketId");
     TicketTask thisTask = (TicketTask) context.getFormBean();
     String action = (thisTask.getId() > 0 ? "modify" : "insert");
+    
+    if("insert".equals(action)){
+      permission = "tickets-tickets-tasks-add";
+    }
+    if (!(hasPermission(context, permission))) {
+      return ("PermissionError");
+    }
     thisTask.setModifiedBy(getUserId(context));
     try {
       db = this.getConnection(context);
@@ -147,7 +151,7 @@ public final class TroubleTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!(hasPermission(context, "tickets-tickets-edit"))) {
+    if (!(hasPermission(context, "tickets-tickets-tasks-add"))) {
       return ("PermissionError");
     }
     addModuleBean(context, "View Tickets", "Add Ticket");
@@ -166,7 +170,7 @@ public final class TroubleTicketTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
-    if (!(hasPermission(context, "tickets-tickets-edit"))) {
+    if (!(hasPermission(context, "tickets-tickets-tasks-edit"))) {
       return ("PermissionError");
     }
     addModuleBean(context, "View Tickets", "Add Ticket");
@@ -212,7 +216,7 @@ public final class TroubleTicketTasks extends CFSModule {
     String id = context.getRequest().getParameter("id");
     int action = -1;
 
-    if (!(hasPermission(context, "tickets-tickets-edit"))) {
+    if (!(hasPermission(context, "tickets-tickets-tasks-delete"))) {
       return ("PermissionError");
     }
     try {
@@ -246,7 +250,7 @@ public final class TroubleTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    if (!(hasPermission(context, "tickets-tickets-edit"))) {
+    if (!(hasPermission(context, "tickets-tickets-tasks-delete"))) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
