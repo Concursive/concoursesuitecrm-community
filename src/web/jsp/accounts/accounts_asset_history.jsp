@@ -36,7 +36,7 @@
     </th>
     <th width="12%">
       <b><a href="AccountsAssets.do?command=History&id=<%=asset.getId()%>&popup=true&popupType=inline&column=entered">Date Entered</a></b>
-      <%= AssetHistoryInfo.getSortIcon("entered") %>
+      <%= AssetHistoryInfo.getSortIcon("t.entered") %>
     </th>
     <th width="32%">
       <strong>Issue</strong>
