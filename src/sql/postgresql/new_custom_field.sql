@@ -17,7 +17,8 @@ CREATE TABLE custom_field_category (
   end_date TIMESTAMP,
   default_item BOOLEAN DEFAULT false,
   entered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  enabled BOOLEAN DEFAULT true
+  enabled BOOLEAN DEFAULT true,
+  multiple_records BOOLEAN DEFAULT false
 );
 
 CREATE INDEX "custom_field_cat_idx" ON "custom_field_category" USING btree ("module_id");

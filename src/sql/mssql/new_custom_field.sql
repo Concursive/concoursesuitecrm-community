@@ -17,7 +17,8 @@ CREATE TABLE custom_field_category (
   end_date DATETIME,
   default_item BIT DEFAULT 0,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enabled BIT DEFAULT 1
+  enabled BIT DEFAULT 1,
+  multiple_records BIT DEFAULT 0
 );
 
 CREATE INDEX "custom_field_cat_idx" ON "custom_field_category" ("module_id");

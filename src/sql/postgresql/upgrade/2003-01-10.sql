@@ -21,3 +21,28 @@ INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES 
 INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('typeId', 'Contact Type', 't', 0);
 INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('contactId', 'Contact ID', 't', 0);
 INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('title', 'Contact Title', 'f', 0);
+
+/*   3/25/2002  
+
+  On the next update of ASPCFS.com, make sure to update the following
+  in cfs2gk:
+  
+  UPDATE sites SET dbhost = 'jdbc:postgresql://127.0.0.1:5432/cdb_cfs' WHERE site_id = 1;
+  UPDATE sites SET dbhost = 'jdbc:postgresql://127.0.0.1:5432/cdb_cfs' WHERE site_id = 2;
+  UPDATE sites SET dbhost = 'jdbc:postgresql://127.0.0.1:5432/cdb_demo' WHERE site_id = 7;
+  UPDATE sites SET dbhost = 'jdbc:postgresql://127.0.0.1:5432/cdb_edit' WHERE site_id = 5;
+  UPDATE sites SET dbhost = 'jdbc:postgresql://127.0.0.1:5432/cdb_dhv' WHERE site_id = 6;
+  UPDATE sites SET dbhost = 'jdbc:postgresql://127.0.0.1:5432/cdb_sss' WHERE site_id = 4;
+  UPDATE sites SET dbhost = 'jdbc:postgresql://127.0.0.1:5432/cdb_vport' WHERE site_id = 8;
+  UPDATE sites SET dbhost = 'jdbc:postgresql://127.0.0.1:5432/cdb_partners' WHERE site_id = 9;
+  UPDATE sites SET dbhost = 'jdbc:postgresql://127.0.0.1:5432/cdb_insurance' WHERE site_id = 10;
+
+*/
+
+
+/*  3/29/2002  */
+ALTER TABLE custom_field_category ADD COLUMN multiple_records BOOLEAN;
+ALTER TABLE custom_field_category ALTER COLUMN multiple_records SET DEFAULT false;
+UPDATE custom_field_category SET multiple_records = true;
+
+
