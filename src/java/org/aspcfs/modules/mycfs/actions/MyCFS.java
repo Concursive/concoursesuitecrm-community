@@ -436,6 +436,21 @@ public final class MyCFS extends CFSModule {
 	 *@since
 	 */
 	public String executeCommandMyCFSPassword(ActionContext context) {
+		Exception errorMessage = null;
+		Connection db = null;
+		try {
+			db = this.getConnection(context);
+			User thisUser = new User(db, this.getUserId(context));
+			thisUser.setBuildContact(false);
+			thisUser.buildResources(db);
+			context.getRequest().setAttribute("User", thisUser);
+		} catch (Exception e) {
+			errorMessage = e;
+			e.printStackTrace(System.out);
+		}
+		
+		this.freeConnection(context, db);
+			
 		addModuleBean(context, "MyProfile", "");
 		return ("PasswordOK");
 	}
@@ -453,24 +468,33 @@ public final class MyCFS extends CFSModule {
 		Connection db = null;
 		int resultCount = 0;
 		
-		System.out.println("CHRIS213adddds4");
-		/**
-		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
-		User thisRec = thisUser.getUserRecord();
-
+		User tempUser = (User)context.getFormBean();
+		
 		try {
 			db = getConnection(context);
-			System.out.println("here it is");
-			resultCount = thisRec.updatePassword(db, context);
+			
+			User thisUser = new User(db, this.getUserId(context));
+			thisUser.setBuildContact(false);
+			thisUser.buildResources(db);
+			
+			resultCount = tempUser.updatePassword(db, context, thisUser.getPassword());
+
 		} catch (SQLException e) {
 			errorMessage = e;
 		} finally {
 			this.freeConnection(context, db);
 		}
 		
+		
+		if (resultCount == -1) {
+			processErrors(context, tempUser.getErrors());
+			context.getRequest().setAttribute("NewUser", tempUser);
+		}
+		
 		if (errorMessage == null) {
-			if (resultCount == 1) {
-				System.out.println("HERE I AM");
+			if (resultCount == -1) {
+				return (executeCommandMyCFSPassword(context));
+			} else if (resultCount == 1) {
 				return ("UpdatePasswordOK");
 			} else {
 				context.getRequest().setAttribute("Error",
@@ -480,12 +504,10 @@ public final class MyCFS extends CFSModule {
 				return ("UserError");
 			}
 		} else {
-			context.getRequest().setAttribute("Error", errorMessage);
-			return ("SystemError");
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
 		}
-		*/
 		
-		return ("UpdatePasswordOK");
 	}
 
 	/**

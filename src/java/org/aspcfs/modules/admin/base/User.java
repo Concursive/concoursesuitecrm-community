@@ -720,7 +720,11 @@ public class User extends GenericBean {
 	public String getPassword() {
 		return password;
 	}
-
+	
+	public String getEncryptedPassword() {
+		return this.encryptPassword(password);
+	}
+	
 
 	/**
 	 *  Gets the Password1 attribute of the User object
@@ -731,6 +735,7 @@ public class User extends GenericBean {
 	public String getPassword1() {
 		return password1;
 	}
+
 
 
 	/**
@@ -1007,9 +1012,38 @@ public class User extends GenericBean {
 		this.opportunityLock = false;
 	}
 
-	public synchronized int updatePassword(Connection db, ActionContext context) throws SQLException {
-		System.out.println("here I am");
-		return 1;
+	public synchronized int updatePassword(Connection db, ActionContext context, String currPass) throws SQLException {
+		if (!isValidChangePass(context, currPass)) {
+			return -1;
+		} 
+		
+		else {
+			int resultCount = -1;
+			
+			if (this.getId() == -1) {
+				throw new SQLException("User ID was not specified");
+			}
+	
+			PreparedStatement pst = null;
+			StringBuffer sql = new StringBuffer();
+	
+			sql.append("UPDATE access ");
+			
+			sql.append("SET password = ?  ");
+			sql.append("WHERE user_id = ? ");
+	
+			int i = 0;
+			pst = db.prepareStatement(sql.toString());
+	
+			pst.setString(++i, encryptPassword(password1));
+			pst.setInt(++i, getId());
+	
+			resultCount = pst.executeUpdate();
+			pst.close();
+			
+			return resultCount;
+		}
+		
 	}
 
 	/**
@@ -1256,7 +1290,30 @@ public class User extends GenericBean {
 			return true;
 		}
 	}
+	
+	protected boolean isValidChangePass(ActionContext context, String currentPass) {
+		
+		System.out.println("Id " + this.getId());
+		
+		if (!(this.getEncryptedPassword().equals(currentPass)) || password == null || password.trim().equals("") ) {
+			errors.put("passwordError", "Incorrect value for current password");
+		}
+		
+		if (password1 == null || password1.trim().equals("")) {
+			errors.put("password1Error", "Password cannot be left blank");
+		}
 
+		if (!password1.equals(password2)) {
+			errors.put("password2Error", "Verification password does not match the password");
+		}
+
+		if (hasErrors()) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 
 	/**
 	 *  Gets the ValidNoPass attribute of the User object

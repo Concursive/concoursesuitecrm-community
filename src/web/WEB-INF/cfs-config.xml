@@ -45,6 +45,7 @@
     <forward name="UpdateProfileOK" resource="/MyCFS.do?command=MyProfile"/>
   </action>
   <action name="MyCFSPassword" class="com.darkhorseventures.cfsmodule.MyCFS">
+    <bean name="User" class="com.darkhorseventures.cfsbase.User" scope="request" />
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
