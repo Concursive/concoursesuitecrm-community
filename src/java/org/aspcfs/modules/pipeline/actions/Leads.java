@@ -507,9 +507,9 @@ public final class Leads extends CFSModule {
     String graphString = null;
     if (context.getRequest().getParameter("whichGraph") != null) {
       graphString = context.getRequest().getParameter("whichGraph");
-      context.getSession().setAttribute("whichGraph", graphString);
-    } else if ((String) context.getRequest().getSession().getAttribute("whichGraph") != null) {
-      graphString = (String) context.getRequest().getSession().getAttribute("whichGraph");
+      context.getSession().setAttribute("pipelineGraph", graphString);
+    } else if ((String) context.getRequest().getSession().getAttribute("pipelineGraph") != null) {
+      graphString = (String) context.getRequest().getSession().getAttribute("pipelineGraph");
     } else {
       graphString = "gmr";
     }
@@ -1416,11 +1416,6 @@ public final class Leads extends CFSModule {
     java.util.Date myDate = null;
     Calendar readDate = Calendar.getInstance();
     Calendar readDateAdjusted = Calendar.getInstance();
-    java.util.Date d = new java.util.Date();
-
-    Calendar rightNow = Calendar.getInstance();
-    Calendar rightNowAdjusted = Calendar.getInstance();
-    Calendar twelveMonths = Calendar.getInstance();
 
     int passedDay = 0;
     int passedYear = 0;
@@ -1437,15 +1432,17 @@ public final class Leads extends CFSModule {
     String valKey = "";
     boolean adjustTerms = false;
 
-    d.setDate(1);
-
-    rightNow.setTime(d);
-    rightNowAdjusted.setTime(d);
+    Calendar rightNow = Calendar.getInstance();
+    rightNow.set(Calendar.DAY_OF_MONTH, 1);
+    
+    Calendar rightNowAdjusted = Calendar.getInstance();
+    rightNowAdjusted.set(Calendar.DAY_OF_MONTH, 1);
     rightNowAdjusted.add(Calendar.DATE, -1);
 
     //twelve months
-    twelveMonths.setTime(d);
-    twelveMonths.add(java.util.Calendar.MONTH, +13);
+    Calendar twelveMonths = Calendar.getInstance();
+    twelveMonths.set(Calendar.DAY_OF_MONTH, 1);
+    twelveMonths.add(Calendar.MONTH, +13);
 
     if (pertainsTo.getIsValid() == false) {
       pertainsTo.doOpportunityLock();
@@ -1465,14 +1462,11 @@ public final class Leads extends CFSModule {
             if (tempOpp.getOwner() == pertainsTo.getId()) {
               myDate = tempOpp.getCloseDate();
               readDate.setTime(myDate);
-
               readDateAdjusted.setTime(myDate);
               readDateAdjusted.add(java.util.Calendar.MONTH, +(int) (java.lang.Math.round(tempOpp.getTerms())));
-
-              passedDay = readDate.get(java.util.Calendar.DATE);
-              passedYear = readDate.get(java.util.Calendar.YEAR);
-              passedMonth = readDate.get(java.util.Calendar.MONTH);
-
+              passedDay = readDate.get(Calendar.DATE);
+              passedYear = readDate.get(Calendar.YEAR);
+              passedMonth = readDate.get(Calendar.MONTH);
               if (passedDay < 15) {
                 roundedMonth = passedMonth;
                 roundedYear = passedYear;
@@ -1493,7 +1487,6 @@ public final class Leads extends CFSModule {
               ramrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb());
               cgmrAddTerm = new Double((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCommission());
               cramrAddTerm = new Double(((tempOpp.getGuess() / tempOpp.getTerms()) * tempOpp.getCloseProb() * tempOpp.getCommission()));
-              //done
 
               //case: close date within 0-6m range
               if (((rightNow.before(readDate) || rightNowAdjusted.before(readDate)) && twelveMonths.after(readDate)) || rightNow.equals(readDate) || twelveMonths.equals(readDate)) {
@@ -1523,12 +1516,9 @@ public final class Leads extends CFSModule {
           pertainsTo.setIsValid(true, true);
         } catch (Exception e) {
           System.err.println("Leads-> Unwanted exception occurred: " + e.toString());
-        } finally {
-          pertainsTo.doOpportunityUnlock();
         }
-      } else {
-        pertainsTo.doOpportunityUnlock();
       }
+      pertainsTo.doOpportunityUnlock();
     }
     usersToGraph.addElement(pertainsTo);
     if (oppList.size() == 0) {
@@ -1550,25 +1540,16 @@ public final class Leads extends CFSModule {
     if (passedList.size() == 0) {
       return createEmptyCategoryDataset();
     }
-
     Object[][][] data;
-
-    java.util.Date d = new java.util.Date();
-    java.util.Calendar iteratorDate = java.util.Calendar.getInstance();
-
     data = new Object[passedList.size()][12][2];
-    int count = 0;
     int x = 0;
-
     Iterator n = passedList.iterator();
     while (n.hasNext()) {
       User thisUser = (User) n.next();
       String[] valKeys = thisUser.getGmr().getRange(12);
-
-      iteratorDate.setTime(d);
-      for (count = 0; count < 12; count++) {
-        data[x][count][0] = createDate(iteratorDate.get(java.util.Calendar.YEAR), iteratorDate.get(java.util.Calendar.MONTH), 0);
-
+      Calendar iteratorDate = Calendar.getInstance();
+      for (int count = 0; count < 12; count++) {
+        data[x][count][0] = createDate(iteratorDate.get(Calendar.YEAR), iteratorDate.get(Calendar.MONTH), 0);
         if (whichGraph.equals("gmr")) {
           data[x][count][1] = thisUser.getGmr().getValue(valKeys[count]);
         } else if (whichGraph.equals("ramr")) {
@@ -1578,7 +1559,7 @@ public final class Leads extends CFSModule {
         } else if (whichGraph.equals("cramr")) {
           data[x][count][1] = thisUser.getCramr().getValue(valKeys[count]);
         }
-        iteratorDate.add(java.util.Calendar.MONTH, +1);
+        iteratorDate.add(Calendar.MONTH, +1);
       }
       x++;
     }
@@ -1587,7 +1568,11 @@ public final class Leads extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Create the x and y data for a chart for a single user, on top of another
+   *  list of user's data.. 
+   *  Each year and month combo for twelve months from the beginning of this
+   *  month are stored under a new single User object (hmph) for drawing a 
+   *  line on the graph to show cumulative data.
    *
    *@param  primaryNode   Description of Parameter
    *@param  currentLines  Description of Parameter
@@ -1598,10 +1583,8 @@ public final class Leads extends CFSModule {
       currentLines.addElement(primaryNode);
       return currentLines;
     }
-
     User thisLine = new User();
     String[] valKeys = thisLine.getGmr().getRange(12);
-
     Iterator x = currentLines.iterator();
     User addToMe = (User) x.next();
     for (int count = 0; count < 12; count++) {
@@ -1616,7 +1599,10 @@ public final class Leads extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  Create the x and y data for a chart for a list of users. 
+   *  Each year and month combo for twelve months from the beginning of this
+   *  month are added together for each user and stored under a new single 
+   *  User object (hmph) for drawing a line on the graph.
    *
    *@param  toRollUp      Description of Parameter
    *@param  currentLines  Description of Parameter
@@ -1628,7 +1614,6 @@ public final class Leads extends CFSModule {
     }
     User thisLine = new User();
     String[] valKeys = thisLine.getGmr().getRange(12);
-
     Iterator x = toRollUp.iterator();
     while (x.hasNext()) {
       User thisUser = (User) x.next();
