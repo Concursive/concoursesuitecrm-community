@@ -244,7 +244,9 @@ public class ApplicationPrefs {
     try {
       BufferedWriter out = new BufferedWriter(new FileWriter(filename));
       out.write(GENERATED_MESSAGE + " on " + new java.util.Date() + " ###" + ls);
-      add("VERSION", ApplicationVersion.getVersionDate());
+      add("VERSION", ApplicationVersion.VERSION);
+      add("APP_VERSION", ApplicationVersion.APP_VERSION);
+      add("DB_VERSION", ApplicationVersion.DB_VERSION);
       Iterator i = prefs.keySet().iterator();
       while (i.hasNext()) {
         String param = (String) i.next();
@@ -536,7 +538,7 @@ public class ApplicationPrefs {
     if ("true".equals(this.get("WEBSERVER.ASPMODE"))) {
       return false;
     }
-    return (!ApplicationVersion.getVersionDate().equals(this.get("VERSION")));
+    return (ApplicationVersion.isOutOfDate(this));
   }
 }
 

@@ -4,13 +4,13 @@
   // During Servlet initialization, the setup parameter is set if the application
   // is completely configured
   if ((Object) getServletConfig().getServletContext().getAttribute("cfs.setup") == null) {
-    RequestDispatcher setup = getServletContext( ).getRequestDispatcher("/Setup.do?command=Default");
+    RequestDispatcher setup = getServletContext().getRequestDispatcher("/Setup.do?command=Default");
     setup.forward(request, response);
   }
   // If the site is setup, then check to see if this is an upgraded version of the app
   if (applicationPrefs.isUpgradeable()) {
-    RequestDispatcher setup = getServletContext( ).getRequestDispatcher("/Upgrade.do?command=Default");
-    setup.forward(request, response);
+    RequestDispatcher upgrade = getServletContext().getRequestDispatcher("/Upgrade.do?command=Default");
+    upgrade.forward(request, response);
   }
   // 
   String scheme = request.getScheme();

@@ -15,6 +15,8 @@
  */
 package org.aspcfs.modules.system.base;
 
+import org.aspcfs.controller.ApplicationPrefs;
+
 /**
  *  Class for reading the application version information
  *
@@ -24,26 +26,37 @@ package org.aspcfs.modules.system.base;
  *      Exp $
  */
 public class ApplicationVersion {
-  public final static String VERSION = "2.9 test 3 (2004-10-08)";
+  public final static String VERSION = "2.9 test 3 (2004-10-12)";
+  public final static String APP_VERSION = "2004-10-12";
+  public final static String DB_VERSION = "2004-10-05";
 
 
   /**
-   *  returns just the date of the version
+   *  Gets the outOfDate attribute of the ApplicationVersion class
    *
-   *@return    The versionDate value
+   *@param  prefs  Description of the Parameter
+   *@return        The outOfDate value
    */
-  public static String getVersionDate() {
-    return VERSION.substring(VERSION.indexOf("(") + 1, VERSION.indexOf(")"));
+  public static boolean isOutOfDate(ApplicationPrefs prefs) {
+    String installedVersion = getInstalledVersion(prefs);
+    return !installedVersion.equals(ApplicationVersion.VERSION);
   }
 
 
   /**
-   *  Gets the versionName attribute of the ApplicationVersion class
+   *  Gets the installedVersion attribute of the ApplicationVersion class
    *
-   *@return    The versionName value
+   *@param  prefs  Description of the Parameter
+   *@return        The installedVersion value
    */
-  public static String getVersionName() {
-    return VERSION.substring(0, VERSION.indexOf("(") - 1);
+  public static String getInstalledVersion(ApplicationPrefs prefs) {
+    String installedVersion = prefs.get("VERSION");
+    if (installedVersion == null || "".equals(installedVersion)) {
+      return "2.8 (2004-03-16)";
+    } else {
+      return installedVersion;
+    }
   }
+
 }
 

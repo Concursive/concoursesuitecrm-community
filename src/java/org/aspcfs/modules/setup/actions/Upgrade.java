@@ -30,7 +30,7 @@ import bsh.*;
 import org.aspcfs.apps.help.ImportHelp;
 
 /**
- *  Actions that facilitate upgrading an installation of Dark Horse CRM
+ *  Actions that facilitate upgrading an installation of Centric CRM
  *
  *@author     matt rajkowski
  *@created    June 16, 2004
@@ -62,18 +62,16 @@ public class Upgrade extends CFSModule {
     }
     addModuleBean(context, null, "Upgrade");
     Connection db = null;
-    // Retrieve version info (else, default to first binary version date)
-    String installedVersion = getPref(context, "VERSION");
-    if (installedVersion == null) {
-      installedVersion = "2004-03-16";
-    }
-    String newVersion = ApplicationVersion.getVersionDate();
-    if (installedVersion != null && installedVersion.equals(newVersion)) {
-      context.getRequest().setAttribute("status", "0");
-    } else {
+    // Check version info
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    if (prefs.isUpgradeable()) {
+      // Something needs updating
       context.getRequest().setAttribute("status", "1");
+    } else {
+      // All ok
+      context.getRequest().setAttribute("status", "0");
     }
-    context.getRequest().setAttribute("installedVersion", installedVersion);
+    context.getRequest().setAttribute("installedVersion", ApplicationVersion.getInstalledVersion(prefs));
     context.getRequest().setAttribute("newVersion", ApplicationVersion.VERSION);
     return "CheckOK";
   }
@@ -90,18 +88,14 @@ public class Upgrade extends CFSModule {
       return "NeedUpgradeOK";
     }
     addModuleBean(context, null, "Upgrade");
-    // Retrieve version info (else, default to first binary version date)
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
-    String installedVersion = getPref(context, "VERSION");
-    if (installedVersion == null) {
-      installedVersion = "2004-03-16";
-    }
-    context.getRequest().setAttribute("installedVersion", installedVersion);
-    context.getRequest().setAttribute("newVersion", ApplicationVersion.VERSION);
-    String newVersion = ApplicationVersion.getVersionDate();
-    if (!installedVersion.equals(newVersion)) {
+    if (prefs.isUpgradeable()) {
+      // Create a log of upgrade events
       ArrayList installLog = new ArrayList();
       context.getRequest().setAttribute("installLog", installLog);
+      // Display upgrade information
+      context.getRequest().setAttribute("installedVersion", ApplicationVersion.getInstalledVersion(prefs));
+      context.getRequest().setAttribute("newVersion", ApplicationVersion.VERSION);
       Connection db = null;
       String versionToInstall = null;
       try {
