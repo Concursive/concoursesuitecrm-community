@@ -2,9 +2,10 @@ package org.aspcfs.utils;
 
 import java.security.*;
 import java.io.*;
+import java.util.Random;
 
 /**
- *  Description of the Class
+ *  Utility to hash a String. Code from news group.
  *
  *@author     matt rajkowski
  *@created    August 16, 2001
@@ -12,6 +13,8 @@ import java.io.*;
  *      Exp $
  */
 public class PasswordHash {
+  private static Random random = new Random();
+
 
   /**
    *  Default constructor.
@@ -26,7 +29,7 @@ public class PasswordHash {
    *@return           Description of the Returned Value
    *@since
    */
-  public String encrypt(String inString) {
+  public static String encrypt(String inString) {
     try {
       MessageDigest md;
       //MD5, SHA, SHA-1
@@ -72,6 +75,39 @@ public class PasswordHash {
     }
   }
 
+
+  /**
+   *  Gets the randomString attribute of the PasswordHash class
+   *
+   *@param  lo  Description of the Parameter
+   *@param  hi  Description of the Parameter
+   *@return     The randomString value
+   */
+  public static String getRandomString(int lo, int hi) {
+    int n = rand(lo, hi);
+    byte b[] = new byte[n];
+    for (int i = 0; i < n; i++) {
+      b[i] = (byte) rand('a', 'z');
+    }
+    return new String(b);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  lo  Description of the Parameter
+   *@param  hi  Description of the Parameter
+   *@return     Description of the Return Value
+   */
+  public static int rand(int lo, int hi) {
+    int n = hi - lo + 1;
+    int i = random.nextInt() % n;
+    if (i < 0) {
+      i = -i;
+    }
+    return lo + i;
+  }
 }
 
 
