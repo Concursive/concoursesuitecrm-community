@@ -2,6 +2,7 @@
 <head>
 <title>Dark Horse Ventures L.L.C.</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<%@ include file="initPage.jsp" %>
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
@@ -71,7 +72,7 @@
               </tr>
               <tr> 
                 <td valign="center">
-                  <font face="Arial, Helvetica, sans-serif" size="2"><a href="https://<%= request.getServerName() %>">Go to Secure Login</a></font>
+                  <font face="Arial, Helvetica, sans-serif" size="2"><a href="https://<%= getServerUrl(request) %>">Go to Secure Login</a></font>
                 </td>
               </tr>
             </table>

@@ -9,6 +9,7 @@
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
 %>
+<%@ include file="initPage.jsp" %>
 <html>
 <head>
 <title>Dark Horse Ventures L.L.C. ASPCFS</title>
@@ -83,7 +84,7 @@
               <tr> 
                 <td align="center" colspan="4">
                   <font face="Arial, Helvetica, sans-serif" size="2">This site is configured for secure connections only</font><br>
-                  <font face="Arial, Helvetica, sans-serif" size="2"><a href="https://<%= request.getServerName() %>">Go to Secure Login</a></font>
+                  <font face="Arial, Helvetica, sans-serif" size="2"><a href="https://<%= getServerUrl(request) %>">Go to Secure Login</a></font>
                 </td>
               </tr>
 <%} else {%>
@@ -132,9 +133,9 @@
     <td height="5%" valign="bottom"> 
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td width="33%"><img src="images/bottom.gif" width="339" height="35"></td>
-          <td width="34%"><img src="images/bottomspace.gif" width="100%" height="35"></td>
-          <td width="33%"><div align="right"><img src="images/bottomcopyright.gif" width="339" height="35"></div></td>
+          <td><img src="images/bottom.gif" width="120" height="35"></td>
+          <td width="100%"><img src="images/bottomspace.gif" width="100%" height="35"></td>
+          <td><div align="right"><img src="images/bottomcopyright.gif" width="339" height="35"></div></td>
         </tr>
       </table>
     </td>

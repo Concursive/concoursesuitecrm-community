@@ -8,7 +8,8 @@
 %>
 <html>
 <head>
-<META HTTP-EQUIV="refresh" content="<%= User.getSystemStatus(getServletConfig()).getSessionTimeout() + 60 %>;URL=<%= request.getScheme() %>://<%= request.getServerName() %>/MyCFS.do?command=Home">
+<%@ include file="../initPage.jsp" %>
+<META HTTP-EQUIV="refresh" content="<%= User.getSystemStatus(getServletConfig()).getSessionTimeout() + 60 %>;URL=<%= request.getScheme() %>://<%= getServerUrl(request) %>/MyCFS.do?command=Home">
 <title>CFS<%= ((!ModuleBean.hasName())?"":": " + ModuleBean.getName()) %></title>
 <jsp:include page="cssInclude.jsp" flush="true"/>
 </head>
@@ -20,7 +21,7 @@
     <th align="left" valign="top">
       <dhv:label name="logo">&nbsp;</dhv:label>
       &nbsp;
-      <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) %>">
+      <dhv:evaluate if="<%= System.getProperty("DEBUG") != null && "2".equals(System.getProperty("DEBUG")) && request.getAttribute("debug.action.time") != null %>">
         Action took: <b class="highlight"><%= request.getAttribute("debug.action.time") %> ms</b>
       </dhv:evaluate>
     </th>
