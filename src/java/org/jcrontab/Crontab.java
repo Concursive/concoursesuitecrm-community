@@ -370,6 +370,8 @@ public class Crontab {
       return -1;
     }
     if (connectionContext != null) {
+      //This task is running within the CFS framework and will have access to the
+      //SystemStatus object during execution
       if (servletContext != null && connectionPool != null) {
         //Get the corresponding connection element for this event
         com.darkhorseventures.database.ConnectionElement ce =
@@ -393,6 +395,8 @@ public class Crontab {
         }
       }
     } else {
+      //This task is being executed directly and does not have access to the
+      //servlet context
       CronTask newTask;
       Class cl;
       int iTaskID;
@@ -400,9 +404,22 @@ public class Crontab {
       try {
         iTaskID = iNextTaskID;
         cl = (Class) (loadedClasses.get(strClassName));
-
         // Creates the new task
         newTask = new CronTask();
+        //See if any text substitution is necessary for this task
+        if (strExtraInfo != null && strExtraInfo.length > 0) {
+          for (int i = 0; i < strExtraInfo.length; i++) {
+            //Perform substitutions org.jcrontab.path.DefaultFilePath
+            if (strExtraInfo[i].indexOf("${FILEPATH}") > -1) {
+              strExtraInfo[i] = replace(strExtraInfo[i], "${FILEPATH}",
+                  getProperty("org.jcrontab.path.DefaultFilePath"));
+            }
+            if (strExtraInfo[i].indexOf("${WEBSERVER.URL}") > -1) {
+              strExtraInfo[i] = replace(strExtraInfo[i], "${WEBSERVER.URL}",
+                  getProperty("org.jcrontab.path.WebServerUrl"));
+            }
+          }
+        }
         newTask.setParams(this, iTaskID, strClassName, strMethodName,
             strExtraInfo);
         // Added name to newTask to show a name instead of Threads when
@@ -480,10 +497,48 @@ public class Crontab {
 
 
   /**
+   *  Helper method to replace a string with another string in a string
+   *
+   *@param  str  Description of the Parameter
+   *@param  o    Description of the Parameter
+   *@param  n    Description of the Parameter
+   *@return      Description of the Return Value
+   */
+  public static String replace(String str, String o, String n) {
+    boolean all = true;
+    if (str != null && o != null && o.length() > 0 && n != null) {
+      StringBuffer result = null;
+      int oldpos = 0;
+      do {
+        int pos = str.indexOf(o, oldpos);
+        if (pos < 0) {
+          break;
+        }
+        if (result == null) {
+          result = new StringBuffer();
+        }
+        result.append(str.substring(oldpos, pos));
+        result.append(n);
+        pos += o.length();
+        oldpos = pos;
+      } while (all);
+      if (oldpos == 0) {
+        return str;
+      } else {
+        result.append(str.substring(oldpos));
+        return result.toString();
+      }
+    } else {
+      return str;
+    }
+  }
+
+
+  /**
    *  Internal class that represents an entry in the task table
    *
-   *@author     matt rajkowski
-   *@created    February 4, 2003
+   *@author     Israel Olalla
+   *@created    November 2002
    *@version    $Id$
    */
   private class TaskTableEntry {
