@@ -7,6 +7,7 @@ import org.aspcfs.utils.FileUtils;
 
 String CRLF = System.getProperty("line.separator");
 String fs = System.getProperty("file.separator");
+boolean stripLeftSideContent = false;
 
 void processCVSDirectory(File dir) {
   if (dir.isDirectory()) {
@@ -30,27 +31,34 @@ void processCVSDirectory(File dir) {
       Iterator entries = entryList.iterator();
       while (entries.hasNext()) {
         String thisEntry = (String) entries.next();
-        print("To process: " + dir.getPath() + fs + thisEntry);
         // Get the file and process it
         File file = new File(dir.getPath() + fs + thisEntry);
-        processFile(file);
+        if (file.isFile()) {
+          print("To process: " + dir.getPath() + fs + thisEntry);
+          processFile(file);
+        }
       }
     }
   }
 }
 
 void processDirectory(File dir) {
-  if (dir.isDirectory() && !dir.getPath().endsWith("CVS")) {
-    processCVSDirectory(dir);
-    String[] children = dir.list();
-    for (int i = 0; i < children.length; i++) {
-      processDirectory(new File(dir, children[i]));
+  if (dir.isDirectory()) {
+    if (!dir.getPath().endsWith("CVS")) {
+      processCVSDirectory(dir);
+      String[] children = dir.list();
+      for (int i = 0; i < children.length; i++) {
+        processDirectory(new File(dir, children[i]));
+      }
     }
   } else {
-    //if ((dir.getName().endsWith(".java") || dir.getName().endsWith(".sql")) &&
-    //     !dir.getName().startsWith(".")) {
-    //  processFile(dir);
-    //}
+    /*
+    if (dir.isFile() && dir.exists()) {
+      if (!dir.getName().startsWith(".")) {
+        processFile(dir);
+      }
+    }
+    */
   }
 }
 
@@ -60,7 +68,6 @@ void processFile(File checkFile) {
       print("File not found error");
       System.exit(0);
     }
-    
     ArrayList lineList = new ArrayList();
     
     //Read the file
@@ -81,9 +88,15 @@ void processFile(File checkFile) {
     Iterator lines = lineList.iterator();
     int count = -1;
     boolean complete = false;
+    boolean hasConflict = false;
     while (lines.hasNext()) {
       ++count;
       String thisLine = (String) lines.next();
+      // See if file has conflicts
+      if (!hasConflict && thisLine.startsWith("<<<<<<<")) {
+        hasConflict = true;
+      }
+      // Strip out the common ID problem
       if ((l1 == 0 || l2 == 0) && thisLine.startsWith("<<<<<<<")) {
         l1 = count;
       } else if (l2 == 0 && thisLine.indexOf("$Id: ") > -1) {
@@ -102,14 +115,33 @@ void processFile(File checkFile) {
       lineList.remove(l4);
       lineList.remove(l3);
       lineList.remove(l1);
-    
+    }
+    if (complete || (stripLeftSideContent && hasConflict)) {
       // Open file for writing
       BufferedWriter out = new BufferedWriter(new FileWriter(checkFile));
       lines = lineList.iterator();
+      boolean started = false;
       while (lines.hasNext()) {
         String outLine = (String) lines.next();
-        out.write(outLine);
-        out.write(CRLF);
+        // Strip all left side content for visual diff
+        if (stripLeftSideContent) {
+          if (outLine.startsWith("<<<<<<<")) {
+            started = true;
+          }
+          
+          if (!started && !outLine.startsWith(">>>>>>>")) {
+            out.write(outLine);
+            out.write(CRLF);
+          }
+          if (started) {
+            if (outLine.startsWith("=======")) {
+              started = false;
+            }
+          }
+        } else {
+          out.write(outLine);
+          out.write(CRLF);
+        }
       }
       out.close();
       print("File was rewritten: " + checkFile.getName());
@@ -121,13 +153,16 @@ void processFile(File checkFile) {
 
 if (bsh.args.length == 0) {
   print("Usage:");
-  print("  stripMergeJunk [file or directory]");
+  print("  cvsMergeUpdater <file or directory> [true:strip all left side content]");
   print("");
   System.exit(0);
 }
 
 // Recursively get a list of files to merge, checking each one
 String directory = bsh.args[0];
+if (bsh.args.length == 2) {
+  stripLeftSideContent = "true".equals(bsh.args[1]);
+}
 File dir = new File(directory);
 processDirectory(dir);
 print("Done.");
