@@ -34,7 +34,7 @@ public final class AccountTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandList(ActionContext context) {
-    if (!hasPermission(context, "accounts-accounts-tickets-view")) {
+    if (!hasPermission(context, "accounts-accounts-tickets-tasks-view")) {
       return ("PermissionError");
     }
     String ticketId = context.getRequest().getParameter("ticketId");
@@ -70,7 +70,7 @@ public final class AccountTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-tasks-view"))) {
       return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "View Tickets");
@@ -85,7 +85,7 @@ public final class AccountTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-tasks-edit"))) {
       return ("PermissionError");
     }
 
@@ -140,7 +140,7 @@ public final class AccountTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-tasks-add"))) {
       return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "Add Ticket");
@@ -159,7 +159,7 @@ public final class AccountTicketTasks extends CFSModule {
     Connection db = null;
     Task thisTask = null;
     String id = context.getRequest().getParameter("id");
-    if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-tasks-edit"))) {
       return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "Add Ticket");
@@ -205,7 +205,7 @@ public final class AccountTicketTasks extends CFSModule {
     String id = context.getRequest().getParameter("id");
     int action = -1;
 
-    if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-tasks-delete"))) {
       return ("PermissionError");
     }
     try {
@@ -239,7 +239,7 @@ public final class AccountTicketTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+    if (!(hasPermission(context, "accounts-accounts-tickets-tasks-delete"))) {
       return ("PermissionError");
     }
     Exception errorMessage = null;
