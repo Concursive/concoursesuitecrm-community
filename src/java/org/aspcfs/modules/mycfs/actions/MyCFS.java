@@ -453,8 +453,8 @@ public final class MyCFS extends CFSModule {
 		Connection db = null;
 		int resultCount = 0;
 		
-		System.out.println("CHRIS213as4");
-		
+		System.out.println("CHRIS213adddds4");
+		/**
 		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
 		User thisRec = thisUser.getUserRecord();
 
@@ -470,6 +470,7 @@ public final class MyCFS extends CFSModule {
 		
 		if (errorMessage == null) {
 			if (resultCount == 1) {
+				System.out.println("HERE I AM");
 				return ("UpdatePasswordOK");
 			} else {
 				context.getRequest().setAttribute("Error",
@@ -482,6 +483,9 @@ public final class MyCFS extends CFSModule {
 			context.getRequest().setAttribute("Error", errorMessage);
 			return ("SystemError");
 		}
+		*/
+		
+		return ("UpdatePasswordOK");
 	}
 
 	/**

@@ -3,7 +3,7 @@
 <jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].oldPassword.focus();">
-<form action='/MyCFSPassword.do?command=UpdatePassword' method='post'>
+<form action="/MyCFSPassword.do?command=UpdatePassword" method="post">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
