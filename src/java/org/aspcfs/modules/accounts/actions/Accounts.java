@@ -705,6 +705,10 @@ public final class Accounts extends CFSModule {
       if ("my".equals(orgListInfo.getListView())) {
         organizationList.setOwnerId(this.getUserId(context));
       }
+      
+      if ("disabled".equals(orgListInfo.getListView())) {
+        organizationList.setIncludeEnabled(0);
+      }
 
       organizationList.buildList(db);
     } catch (Exception e) {
@@ -944,6 +948,42 @@ public final class Accounts extends CFSModule {
         processErrors(context, thisOrganization.getErrors());
 	return ("PopupCloseOK");
         //return (executeCommandView(context));
+      }
+    } else {
+      System.out.println(errorMessage);
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandEnable(ActionContext context) {
+
+    if (!(hasPermission(context, "accounts-accounts-edit"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    boolean recordEnabled = false;
+    Organization thisOrganization = null;
+    
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      thisOrganization = new Organization(db, Integer.parseInt(context.getRequest().getParameter("orgId")));
+      recordEnabled = thisOrganization.enable(db);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "Accounts", "Delete Account");
+    if (errorMessage == null) {
+      if (recordEnabled) {
+	return (executeCommandView(context));
+      } else {
+        processErrors(context, thisOrganization.getErrors());
+        return (executeCommandView(context));
       }
     } else {
       System.out.println(errorMessage);

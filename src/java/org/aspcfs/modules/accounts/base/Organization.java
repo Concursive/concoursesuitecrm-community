@@ -665,6 +665,9 @@ public void setYTD(double YTD) {
     this.phoneNumberList = tmp;
   }
 
+public boolean getEnabled() {
+	return enabled;
+}
 
   /**
    *  Sets the EmailAddressList attribute of the Organization object
@@ -1323,6 +1326,36 @@ public void setYTD(double YTD) {
 	
 	sql.append(
 		"UPDATE organization set enabled = " + DatabaseUtils.getFalse(db) + " " +
+		"WHERE org_id = ? ");
+
+	sql.append("AND modified = ? ");
+
+	int i = 0;
+	pst = db.prepareStatement(sql.toString());
+	pst.setInt(++i, orgId);
+	
+	pst.setTimestamp(++i, this.getModified());
+	
+	int resultCount = pst.executeUpdate();
+	pst.close();
+	
+	if (resultCount == 1) 
+		success = true;
+	
+	return success;
+  }
+  
+  public boolean enable(Connection db) throws SQLException {
+	if (this.getOrgId() == -1) {
+		throw new SQLException("Organization ID not specified");
+	}
+	
+	PreparedStatement pst = null;
+	StringBuffer sql = new StringBuffer();
+	boolean success = false;
+	
+	sql.append(
+		"UPDATE organization set enabled = " + DatabaseUtils.getTrue(db) + " " +
 		"WHERE org_id = ? ");
 
 	sql.append("AND modified = ? ");

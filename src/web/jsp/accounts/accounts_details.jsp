@@ -29,7 +29,19 @@ Account Details<br>
     <td class="containerBack">
 <input type=hidden name="orgId" value="<%= OrgDetails.getOrgId() %>">
 
-<dhv:permission name="accounts-accounts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
+<dhv:evaluate exp="<%=(OrgDetails.getEnabled())%>">
+<dhv:permission name="accounts-accounts-edit">
+<input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()">
+</dhv:permission>
+</dhv:evaluate>
+<dhv:evaluate exp="<%=!(OrgDetails.getEnabled())%>">
+
+<dhv:permission name="accounts-accounts-edit">
+<input type=button name="action" value="Enable"	onClick="document.details.command.value='Enable';document.details.submit()">
+</dhv:permission>
+
+</dhv:evaluate>
+
 <dhv:permission name="accounts-accounts-delete"><input type=button name="action" value="Delete Account" onClick="document.details.command.value='Delete';popURLReturn('/Accounts.do?command=ConfirmDelete&orgId=<%= OrgDetails.getOrgId() %>','/Accounts.do?command=View','Delete','300','200','no','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
 
@@ -280,7 +292,17 @@ Account Details<br>
   </tr>
 </table>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br></dhv:permission>
+<dhv:evaluate exp="<%=(OrgDetails.getEnabled())%>">
 <dhv:permission name="accounts-accounts-edit"><input type=button name="action" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
+</dhv:evaluate>
+<dhv:evaluate exp="<%=!(OrgDetails.getEnabled())%>">
+<dhv:permission name="accounts-accounts-edit">
+
+<input type=button name="action" value="Enable"	onClick="document.details.command.value='Enable';document.details.submit()">
+
+
+</dhv:permission>
+</dhv:evaluate>
 <dhv:permission name="accounts-accounts-delete"><input type=button name="action" value="Delete Account" onClick="document.details.command.value='Delete';popURLReturn('/Accounts.do?command=ConfirmDelete&orgId=<%= OrgDetails.getOrgId() %>','/Accounts.do?command=View','Delete','300','200','no','no');"></dhv:permission>
 </td></tr>
 </table>
