@@ -605,6 +605,8 @@
              token="@GATEKEEPER.PASSWORD@" value="${GATEKEEPER.PASSWORD}"/>
     <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
              token="@MAILSERVER@" value="${MAILSERVER}"/>
+    <replace file="${CFS_HOME}/WEB-INF/notifier.xml"
+             token="@FORCESSL@" value="${FORCESSL}"/>
     <java classname="org.aspcfs.apps.notifier.Notifier" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
