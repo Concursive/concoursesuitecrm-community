@@ -2154,14 +2154,7 @@ public class Organization extends GenericBean {
     try {
       db.setAutoCommit(false);
 
-      if (contactDelete) {
-        ContactList contactList = new ContactList();
-        contactList.setOrgId(this.getOrgId());
-        contactList.buildList(db);
-        contactList.delete(db);
-        contactList = null;
-      }
-
+      //Tickets have accounts and contact related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setOrgId(this.getOrgId());
       ticketList.buildList(db);
@@ -2197,6 +2190,15 @@ public class Organization extends GenericBean {
       callList.buildList(db);
       callList.delete(db);
       callList = null;
+      
+      //Save for next to last since other records related to contacts
+      if (contactDelete) {
+        ContactList contactList = new ContactList();
+        contactList.setOrgId(this.getOrgId());
+        contactList.buildList(db);
+        contactList.delete(db);
+        contactList = null;
+      }
 
       this.resetType(db);
 
