@@ -45,7 +45,7 @@
       <%= count %>
     </td>
     <td nowrap>
-      <%= toHtml(thisContact.getNameLast()) %>, <%= toHtml(thisContact.getNameFirst()) %>
+      <%= toHtml(thisContact.getNameLastFirst()) %>
     </td>
     <td nowrap>
       <%= toHtml(thisContact.getCompany()) %>

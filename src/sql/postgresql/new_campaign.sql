@@ -49,8 +49,6 @@ INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES 
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', 'between', 'between');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '<=', 'on or before');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', '>=', 'on or after');
-INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', 'is not null', 'exist');
-INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (1, 'date', 'is null', 'does not exist');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', '>', 'greater than');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', '<', 'less than');
 INSERT INTO field_types (data_typeID, data_type, operator, display_text) VALUES (2, 'number', '=', 'equals');
