@@ -67,7 +67,7 @@ public class PagedListStatusHandler extends TagSupport {
         JspWriter out = this.pageContext.getOut();
         
         //Draw the header of the PagedList table
-        out.write("<table align=\"center\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+        out.write("<table align=\"center\" width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\">");
         out.write("<tr>");
         //Display the title
         out.write("<td width=\"50%\" valign=\"bottom\" " +
@@ -84,19 +84,9 @@ public class PagedListStatusHandler extends TagSupport {
         out.write("</td>");
         
         //The status cell on the right
-        out.write("<td valign=\"top\" align=\"right\">");
+        out.write("<td valign=\"bottom\" align=\"right\" nowrap>");
         out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
         out.write("<input type=\"hidden\" name=\"pagedListInfoId\" value=\"" + object + "\">");
-        
-        //Display next/previous buttons
-        if (pagedListInfo.getExpandedSelection() || !showExpandLink) {
-          out.write(" [" +
-            pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
-            "|" +
-            pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
-            "]");
-          out.write("<br>");
-        }
         
         //Display record count
         if (pagedListInfo.getMaxRecords() > 0) {
@@ -109,6 +99,17 @@ public class PagedListStatusHandler extends TagSupport {
           out.write(" of " + pagedListInfo.getMaxRecords() + " total");
         } else {
           out.write("No records to display");
+        }
+        
+        //Display next/previous buttons
+        if (pagedListInfo.getExpandedSelection() || !showExpandLink) {
+          out.write(" [" +
+            pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
+            "|" +
+            pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
+            "]");
+          //out.write("<br>");
+          out.write(" ");
         }
         
         //Display refresh icon
