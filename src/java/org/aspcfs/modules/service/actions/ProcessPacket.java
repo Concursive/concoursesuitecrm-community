@@ -140,6 +140,11 @@ public final class ProcessPacket extends CFSModule {
     return ("PacketOK");
   }
   
+  public String executeCommandReloadSyncMap(ActionContext context) {
+    context.getServletContext().removeAttribute("SyncObjectMap");
+    return ("PacketOK");
+  }
+  
   private Hashtable getObjectMap(ActionContext context, Connection db, int systemId) {
     SyncTableList systemObjectMap = (SyncTableList)context.getServletContext().getAttribute("SyncObjectMap");
     if (systemObjectMap == null) {
