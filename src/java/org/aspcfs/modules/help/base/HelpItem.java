@@ -17,6 +17,7 @@ import java.io.*;
 public class HelpItem extends GenericBean {
 
   public final static String fs = System.getProperty("file.separator");
+  //help item properties
   private int id = -1;
   private int moduleId = -1;
   private String module = null;
@@ -28,17 +29,15 @@ public class HelpItem extends GenericBean {
   private int nextContent = -1;
   private int prevContent = -1;
   private int upContent = -1;
-
   private int enteredBy = -1;
   private java.sql.Timestamp entered = null;
   private int modifiedBy = -1;
   private java.sql.Timestamp modified = null;
-
+  //delay loading properties
   private boolean buildFeatures = false;
   private boolean buildRules = false;
   private boolean buildNotes = false;
   private boolean buildTips = false;
-
   //details
   private HelpFeatureList features = new HelpFeatureList();
   private HelpNoteList notes = new HelpNoteList();
@@ -141,17 +140,13 @@ public class HelpItem extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public synchronized void processRecord(Connection db, int userId) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
     boolean newItem = true;
-
-    String sql =
+    PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM help_contents h " +
         "WHERE module = ? " +
         (section != null ? "AND section = ? " : "AND section IS NULL ") +
-        (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL ");
-    pst = db.prepareStatement(sql);
+        (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL "));
     if (System.getProperty("DEBUG") != null) {
       System.out.println("HelpItem-> Prepared");
     }
@@ -163,18 +158,13 @@ public class HelpItem extends GenericBean {
     if (subsection != null) {
       pst.setString(++i, subsection);
     }
-
-    rs = pst.executeQuery();
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
       newItem = false;
     }
     rs.close();
     pst.close();
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("HelpItem-> Init ok");
-    }
-
     //check for a new entry
     if (newItem) {
       this.setEnteredBy(userId);
@@ -211,20 +201,12 @@ public class HelpItem extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void fetchRecord(Connection db) throws SQLException {
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-
-    String sql =
+    PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM help_contents h " +
         "WHERE module = ? " +
         (section != null ? "AND section = ? " : "AND section IS NULL ") +
-        (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL ");
-
-    pst = db.prepareStatement(sql);
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("HelpItem-> Prepared");
-    }
+        (subsection != null ? "AND subsection = ? " : "AND subsection IS NULL "));
     int i = 0;
     pst.setString(++i, module);
     if (section != null) {
@@ -233,18 +215,12 @@ public class HelpItem extends GenericBean {
     if (subsection != null) {
       pst.setString(++i, subsection);
     }
-
-    rs = pst.executeQuery();
-
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-      //build Module Description
     }
     rs.close();
     pst.close();
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("HelpItem-> processRecordForHelp OK");
-    }
   }
 
 
@@ -267,16 +243,15 @@ public class HelpItem extends GenericBean {
     this.id = Integer.parseInt(tmp);
   }
 
-
+  
   /**
    *  Sets the id attribute of the HelpItem object
    *
    *@param  tmp  The new module id value
    */
   public void setModuleId(String tmp) {
-    this.moduleId = Integer.parseInt(tmp);
+     this.moduleId = Integer.parseInt(tmp);
   }
-
 
   /**
    *  Sets the module attribute of the HelpItem object
@@ -296,7 +271,7 @@ public class HelpItem extends GenericBean {
   public void setTitle(String tmp) {
     this.title = tmp;
   }
-
+  
 
   /**
    *  Sets the section attribute of the HelpItem object
@@ -437,7 +412,6 @@ public class HelpItem extends GenericBean {
   public void setBuildTips(boolean buildTips) {
     this.buildTips = buildTips;
   }
-
 
   /**
    *  Sets the notes attribute of the HelpItem object
@@ -658,7 +632,7 @@ public class HelpItem extends GenericBean {
     return modified;
   }
 
-
+  
   /**
    *  Description of the Method
    *
@@ -691,15 +665,10 @@ public class HelpItem extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("HelpItem-> INSERT");
-    }
-    PreparedStatement pst = null;
-    String sql =
+    PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_contents " +
         "(module, section, subsection, title, description, enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?) ";
-    pst = db.prepareStatement(sql);
+        "VALUES (?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setString(++i, module);
     pst.setString(++i, section);
@@ -736,16 +705,10 @@ public class HelpItem extends GenericBean {
       this.insert(db);
       return 1;
     }
-
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("HelpItem-> UPDATE");
-    }
-    PreparedStatement pst = null;
-    String sql =
+    PreparedStatement pst = db.prepareStatement(
         "UPDATE help_contents " +
         "SET title = ?, description = ?, modifiedby = ?, modified = CURRENT_TIMESTAMP " +
-        "WHERE help_id = ? ";
-    pst = db.prepareStatement(sql);
+        "WHERE help_id = ? ");
     int i = 0;
     pst.setString(++i, title);
     pst.setString(++i, description);

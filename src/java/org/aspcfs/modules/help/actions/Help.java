@@ -19,9 +19,8 @@ import org.aspcfs.utils.HTTPUtils;
  *@created    January 21, 2002
  *@version    $Id$
  */
- 
 
-public final class Help extends CFSModule {
+ public final class Help extends CFSModule {
 
   /**
    *  Description of the Method
@@ -31,7 +30,6 @@ public final class Help extends CFSModule {
    *@since
    */
   public String executeCommandDefault(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       String module = context.getRequest().getParameter("module");
@@ -42,13 +40,11 @@ public final class Help extends CFSModule {
       thisItem.setModule(module);
       thisItem.setSection(section);
       thisItem.setSubsection(subsection);
-      
       thisItem.fetchRecord(db);
       context.getRequest().setAttribute("Help", thisItem);
-
     } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
@@ -68,7 +64,6 @@ public final class Help extends CFSModule {
    */
   public String executeCommandProcess(ActionContext context) {
     if (this.hasPermission(context, "help-edit")) {
-      Exception errorMessage = null;
       Connection db = null;
       try {
         HelpItem thisItem = (HelpItem) context.getFormBean();
@@ -77,8 +72,8 @@ public final class Help extends CFSModule {
         thisItem.setModifiedBy(this.getUserId(context));
         thisItem.update(db);
       } catch (Exception e) {
-        errorMessage = e;
-        e.printStackTrace(System.out);
+        context.getRequest().setAttribute("Error", e);
+        return ("SystemError");
       } finally {
         this.freeConnection(context, db);
       }
@@ -96,7 +91,6 @@ public final class Help extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandViewAll(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -104,13 +98,14 @@ public final class Help extends CFSModule {
       contents.build(db);
       context.getRequest().setAttribute("HelpContents", contents);
     } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
     return ("ViewAllOK");
   }
+
 
   /**
    *  Description of the Method
@@ -119,48 +114,74 @@ public final class Help extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandViewContext(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
-
       String helpId = context.getRequest().getParameter("helpId");
       db = this.getConnection(context);
       HelpItem thisItem = new HelpItem();
-
       thisItem.setId(helpId);
-      thisItem.queryRecord(db);
+      if (!(helpId.equals("-1"))) {
+        thisItem.queryRecord(db);
+      }
       context.getRequest().setAttribute("Help", thisItem);
-
     } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    
     return ("ContextOK");
-
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
 
   public String executeCommandViewModule(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     try {
-
       String moduleId = context.getRequest().getParameter("moduleId");
       db = this.getConnection(context);
-      if (moduleId != null && !"-1".equals(moduleId)) {
-        HelpModule thisModule = new HelpModule(db, Integer.parseInt(moduleId));
-        context.getRequest().setAttribute("helpModule", thisModule);
+      HelpModule thisModule;
+      if (moduleId.equals("-1")) {
+        thisModule = new HelpModule();
+        thisModule.setId(moduleId);
+      } else {
+        thisModule = new HelpModule(db, Integer.parseInt(moduleId));
       }
+      context.getRequest().setAttribute("helpModule", thisModule);
     } catch (Exception e) {
-      errorMessage = e;
-      e.printStackTrace(System.out);
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    
     return ("ModuleOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandViewTableOfContents(ActionContext context) {
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      HelpTOC thisTOC = new HelpTOC(db);
+      context.getRequest().setAttribute("helpTOC", thisTOC);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("TableOfContentsOK");
   }
 }

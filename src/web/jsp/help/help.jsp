@@ -5,10 +5,10 @@
 <html>
 <head><title>Dark Horse CRM: Help</title></head>
 <FRAMESET COLS="25%,75%">
-	<FRAME SRC="help/help_tableof_contents.jsp" name="contents">
+	<FRAME SRC="Help.do?command=ViewTableOfContents" name="contents">
 	<FRAMESET ROWS="30%,70%">
-      		<FRAME SRC="Help.do?command=ViewModule&moduleId=<%=Help.getModuleId() %>" name="module">
+    <FRAME SRC="Help.do?command=ViewModule&moduleId=<%=Help.getModuleId() %>" name="module">
 		<FRAME SRC="Help.do?command=ViewContext&helpId=<%=Help.getId() %>" name="context">
-      </FRAMESET>
+  </FRAMESET>
 </FRAMESET>
 </html>

@@ -975,8 +975,8 @@
     <forward name="ViewAllOK" resource="/help/help_viewall.jsp" layout="style"/>
     <forward name="ContextOK" resource="/help/help_context.jsp"/>
     <forward name="ModuleOK" resource="/help/help_module_content.jsp"/>
+    <forward name="TableOfContentsOK" resource="/help/help_tableof_contents.jsp"/>
   </action>
-
 
   <action name="QA" class="org.aspcfs.modules.help.actions.QA">
     <bean name="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request" />
