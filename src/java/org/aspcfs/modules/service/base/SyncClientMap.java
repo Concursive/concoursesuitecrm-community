@@ -250,7 +250,7 @@ public class SyncClientMap {
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, clientId);
     pst.setInt(++i, referenceTable);
-    pst.setString(++i, serverId);
+    pst.setInt(++i, Integer.parseInt(serverId));
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       resultId = rs.getInt("cuid");
@@ -324,7 +324,7 @@ public class SyncClientMap {
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, clientId);
     pst.setInt(++i, referenceTable);
-    pst.setString(++i, clientCuid);
+    pst.setInt(++i, Integer.parseInt(clientCuid));
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       resultId = rs.getInt("record_id");
@@ -400,9 +400,9 @@ public class SyncClientMap {
       throw new SQLException("ID was not specified");
     }
 
+    System.out.println(this.toString());
+    
     PreparedStatement pst = null;
-    //Delete related records (mappings)
-
     //Delete the record
     int recordCount = 0;
     pst = db.prepareStatement(
@@ -520,7 +520,7 @@ public class SyncClientMap {
   public ResultSet buildSyncDeletes(Connection db, PreparedStatement pst, String uniqueField, String tableName, RecordList recordList) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT cuid " +
+        "SELECT cuid, record_id " +
         "FROM sync_map " +
         "WHERE client_id = ? " +
         "AND table_id = ? " +

@@ -271,6 +271,19 @@ public class TransactionItem {
       syncClientMap.updateStatusDate(db, (String) record.get("modified"));
     }
   }
+  
+  public void deleteClientMapping(Connection db, Record record) throws SQLException {
+    if (record.containsKey("guid")) {
+      syncClientMap.setRecordId(record.getRecordId());
+      syncClientMap.setClientUniqueId((String)record.get("guid"));
+      syncClientMap.delete(db);
+    }
+    clientManager.remove(
+      syncClientMap.getClientId(),
+      syncClientMap.getTableId(),
+      new Integer(record.getRecordId())
+    );
+  }
 
 
   /**
@@ -349,9 +362,15 @@ public class TransactionItem {
         ResultSet rs = syncClientMap.buildSyncDeletes(db, pst, uniqueField, tableName, recordList);
         while (rs.next()) {
           Record thisRecord = new Record("delete");
-          int id = rs.getInt("cuid");
-          thisRecord.put("guid", String.valueOf(id));
+          int cuid = rs.getInt("cuid");
+          int recordId = rs.getInt("record_id");
+          thisRecord.put("guid", String.valueOf(cuid));
+          thisRecord.setRecordId(recordId);
           recordList.add(thisRecord);
+          //This can be done when the client sends a sync_end...
+          //if (syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), String.valueOf(recordId)) == -1) {
+          //  this.deleteClientMapping(dbLookup, thisRecord);
+          //}
         }
         rs.close();
         if (pst != null) {
@@ -402,10 +421,7 @@ public class TransactionItem {
           //Retrieve the previous modified date to ensure integrity of update
           syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
           syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
-          SyncTable referencedTable = (SyncTable) mapping.get(name + "List");
-          if (referencedTable != null) {
-            syncClientMap.setTableId(referencedTable.getId());
-          }
+          this.setReferencedTable();
           syncClientMap.buildStatusDate(db);
           ObjectUtils.setParam(object, "modified", syncClientMap.getStatusDate());
         }
@@ -418,16 +434,9 @@ public class TransactionItem {
           //newly inserted id, so set the syncMap before the insert
           if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
             syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
-            
-            //The client requested an object, but the mapping is stored as the objectList
-            SyncTable referencedTable = (SyncTable) mapping.get(name + "List");
-            if (referencedTable != null) {
+            if (setReferencedTable()) {
               syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
-              syncClientMap.setTableId(referencedTable.getId());
-            } else {
-              //TODO:Error
             }
-            
             //Need to log the date/time of the new record for later approval of updates
             //Reload the newly inserted object to get its insert/modified date
             Object insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
@@ -449,8 +458,20 @@ public class TransactionItem {
             syncClientMap.insertConflict(db);
           }
         } else if (action == DELETE) {
-          //TODO: syncClientMap.delete...
-          addRecords(object, recordList, "delete");
+          Record thisRecord = addRecords(object, recordList, "delete");
+          this.setReferencedTable();
+          if (thisRecord != null && 
+              syncClientMap.lookupClientId(
+                clientManager, 
+                syncClientMap.getTableId(), 
+                ObjectUtils.getParam(object, "id")
+              ) != -1) {
+            this.deleteClientMapping(dbLookup, thisRecord);
+          } else {
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("TransactionItem-> Mapping not found for delete");
+            }
+          }
         } else {
           //It wasn't an insert or an update...
           addRecords(object, recordList, null);
@@ -633,14 +654,14 @@ public class TransactionItem {
             break;
       }
       if (syncType == Constants.SYNC_INSERTS) {
-        //TODO: Check to see if the client already has this record...
+        //Check to see if the client already has this record...
         if (syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")) == -1) {
           Record thisRecord = addRecords(thisObject, recordList, recordAction);
           this.insertClientMapping(dbLookup, thisRecord);
         }
       } else if (syncType == Constants.SYNC_UPDATES) {
+        //Update the status date of the client mapping
         Record thisRecord = addRecords(thisObject, recordList, recordAction);
-        //TODO: See if this works...
         this.updateClientMapping(dbLookup, thisRecord);
       }
     }
@@ -742,9 +763,6 @@ public class TransactionItem {
         thisRecord.put(thisField, thisValue);
       }
       try {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("TransactionItem-> Action: " + thisRecord.getAction());
-        }
         thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
         if (thisRecord.containsKey("guid")) {
           if (thisRecord.getAction().equals("processed")) {
@@ -753,13 +771,28 @@ public class TransactionItem {
             thisRecord.put("guid", String.valueOf(identity++));
           } else if (thisRecord.getAction().equals("update")) {
             //Sending an update back to client, get the correct guid
-            thisRecord.put("guid", syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")));
+          thisRecord.put("guid", syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), ObjectUtils.getParam(thisObject, "id")));
+          } else if (thisRecord.getAction().equals("delete")) {
+            //Let the client know that its record was deleted
+            thisRecord.put("guid", ignoredProperties.get("guid"));
           }
         }
       } catch (java.lang.NumberFormatException e) {
         //This object doesn't have an id, might have multiple keys
       }
     }
+  }
+  
+  public boolean setReferencedTable() {
+    //The client requested an object, but the mapping is stored as the objectList
+    if (!name.endsWith("List")) {
+      SyncTable referencedTable = (SyncTable) mapping.get(name + "List");
+      if (referencedTable != null) {
+        syncClientMap.setTableId(referencedTable.getId());
+        return true;
+      }
+    }
+    return false;
   }
 
 }

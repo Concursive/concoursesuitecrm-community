@@ -57,5 +57,13 @@ public class SyncClientManager extends Hashtable {
     }
     tableLookup.put(recordId, cuid);
   }
+  
+  public void remove(int clientId, int tableId, Integer recordId) {
+    Hashtable clientLookup = (Hashtable)this.get(new Integer(clientId));
+    Hashtable tableLookup = (Hashtable)clientLookup.get(new Integer(tableId));
+    if (tableLookup != null) {
+      tableLookup.remove(recordId);
+    }
+  }
 }
 
