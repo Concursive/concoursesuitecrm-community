@@ -686,6 +686,7 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
   </action>
   <action name="ProjectManagementListsCategory" class="com.darkhorseventures.cfsmodule.ProjectManagementLists">
     <bean name="category" class="com.darkhorseventures.cfsbase.TaskCategory" scope="request" />
