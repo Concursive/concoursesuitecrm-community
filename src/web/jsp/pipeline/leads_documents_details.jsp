@@ -53,16 +53,16 @@
     FileItem thisVersion = (FileItem)versionList.next();
 %>      
     <tr class="row<%= rowid %>">
-      <td rowspan="2" nowrap>
+      <td width="10" align="center" rowspan="2" nowrap>
         <a href="LeadsDocuments.do?command=Download&oppId=<%= OpportunityDetails.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
       </td>
-      <td>
-        <a href="LeadsDocuments.do?command=Download&oppId=<%= OpportunityDetails.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %></a>
+      <td width="100%">
+        <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>
       </td>
-      <td align="right">
+      <td align="right" nowrap>
         <%= thisVersion.getRelativeSize() %> k&nbsp;
       </td>
-      <td align="right">
+      <td align="right" nowrap>
         <%= thisVersion.getVersion() %>&nbsp;
       </td>
       <td nowrap>

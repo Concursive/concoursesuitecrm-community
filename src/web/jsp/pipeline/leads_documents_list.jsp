@@ -48,18 +48,20 @@
       FileItem thisFile = (FileItem)j.next();
 %>      
     <tr class="row<%= rowid %>">
-      <td valign="middle" align="center" rowspan="2" nowrap>
-        <a href="LeadsCalls.do?command=Modify&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('LeadsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>');">Del</a></td>
-      <td valign="top">
-        <a href="LeadsDocuments.do?command=Details&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></a>
+      <td width="10" valign="middle" align="center" rowspan="2" nowrap>
+        <a href="LeadsDocuments.do?command=Download&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
+				<a href="LeadsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>">Edit</a>|<a href="javascript:confirmDelete('LeadsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>');">Del</a>
+			</td>
+      <td valign="top" width="100%">
+        <a href="LeadsDocuments.do?command=Details&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %></a>
       </td>
-      <td valign=center valign="middle" nowrap>
+      <td align="right" valign="middle" nowrap>
         [<a href="LeadsDocuments.do?command=AddVersion&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
       </td>
       <td align="center" valign="middle" nowrap>
         <%= thisFile.getRelativeSize() %> k&nbsp;
       </td>
-      <td align="center" valign="middle">
+      <td align="right" valign="middle" nowrap>
         <%= thisFile.getVersion() %>&nbsp;
       </td>
       <td valign="middle" nowrap>

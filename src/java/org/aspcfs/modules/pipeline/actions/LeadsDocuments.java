@@ -309,6 +309,7 @@ public final class LeadsDocuments extends CFSModule {
       }
     } catch (java.net.SocketException se) {
       //User either cancelled the download or lost connection
+			if (System.getProperty("DEBUG") != null) System.out.println(se.toString());
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
@@ -325,7 +326,7 @@ public final class LeadsDocuments extends CFSModule {
     }
   }
 
-/*
+
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
 
@@ -346,26 +347,26 @@ public final class LeadsDocuments extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "View Opportunities", "");
+    addModuleBean(context, "View Opportunities", "Modify Document Information");
     if (errorMessage == null) {
-      return ("ProjectCenterOK");
+      return ("ModifyOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }
   
+	
   public String executeCommandUpdate(ActionContext context) {
     Exception errorMessage = null;
     boolean recordInserted = false;
 
-    String id = (String)context.getRequest().getParameter("id");
     String itemId = (String)context.getRequest().getParameter("fid");
     String subject = (String)context.getRequest().getParameter("subject");
     String filename = (String)context.getRequest().getParameter("clientFilename");
 
     Connection db = null;
-    opportunityId = -1;
+    int opportunityId = -1;
     try {
       db = getConnection(context);
       opportunityId = addOpportunity(context, db);
@@ -386,7 +387,6 @@ public final class LeadsDocuments extends CFSModule {
       if (recordInserted) {
         return ("UpdateOK");
       } else {
-        context.getRequest().setAttribute("id", opportunityId);
         context.getRequest().setAttribute("fid", itemId);
         return (executeCommandModify(context));
       }
@@ -396,11 +396,11 @@ public final class LeadsDocuments extends CFSModule {
     }
   }
   
+
   public String executeCommandDelete(ActionContext context) {
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
-    String id = (String)context.getRequest().getParameter("id");
     String itemId = (String)context.getRequest().getParameter("fid");
 
     Connection db = null;
@@ -431,7 +431,7 @@ public final class LeadsDocuments extends CFSModule {
       return ("SystemError");
     }
   } 
-*/
+
   
   private int addOpportunity(ActionContext context, Connection db) throws SQLException {
     String opportunityId = (String)context.getRequest().getParameter("oppId");
