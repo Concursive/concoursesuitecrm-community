@@ -285,8 +285,7 @@ public final class Admin extends CFSModule {
       
       if (module == PermissionCategory.PERMISSION_CAT_CONTACTS) {
         if (sublist == PermissionCategory.LOOKUP_CONTACTS_TYPE) {
-          ContactTypeList typeList = new ContactTypeList(db);
-          selectedList = typeList.getLookupList("typeId",0);
+          selectedList = new LookupList(db, "lookup_contact_types");
           subTitle = "Contacts &amp; Resources: Type";
         } else if (sublist == PermissionCategory.LOOKUP_CONTACTS_EMAIL) {
           selectedList = new LookupList(db, "lookup_contactemail_types");
@@ -370,8 +369,7 @@ public final class Admin extends CFSModule {
       LookupList contactEmailTypeList = new LookupList(db, "lookup_contactemail_types");
       LookupList contactPhoneTypeList = new LookupList(db, "lookup_contactphone_types");
       LookupList contactAddressTypeList = new LookupList(db, "lookup_contactaddress_types");
-      ContactTypeList typeList = new ContactTypeList(db);
-      LookupList ctl = typeList.getLookupList("typeId",0);     
+      LookupList ctl = new LookupList(db, "lookup_contact_types"); 
       context.getRequest().setAttribute("DepartmentList", departmentList);
       context.getRequest().setAttribute("ContactTypeList", ctl);
       context.getRequest().setAttribute("ContactEmailTypeList", contactEmailTypeList);
@@ -380,7 +378,7 @@ public final class Admin extends CFSModule {
     } else if (moduleId == PermissionCategory.PERMISSION_CAT_TICKETS) {
       LookupList sourceList = new LookupList(db, "lookup_ticketsource");
       LookupList severityList = new LookupList(db, "ticket_severity");
-      LookupList priorityList = new LookupList(db, "ticket_priority");    
+      LookupList priorityList = new LookupList(db, "ticket_priority"); 
       context.getRequest().setAttribute("SeverityList", severityList);
       context.getRequest().setAttribute("PriorityList", priorityList);
       context.getRequest().setAttribute("SourceList", sourceList);

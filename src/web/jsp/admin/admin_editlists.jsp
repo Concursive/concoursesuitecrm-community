@@ -40,7 +40,7 @@ Lookup Lists<br>
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=1">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Stage</td>
-    <td width="35" valign="center" align="center"><%=StageList.size()%></td>
+    <td width="35" valign="center" align="center"><%=StageList.getEnabledElementCount()%></td>
     <td valign="center"><%= StageList.getHtmlSelect("stage",0) %></td>
   </tr>
   
@@ -48,47 +48,47 @@ Lookup Lists<br>
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=1">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Account Type</td>
-    <td width="35" valign="center" align="center"><%=AccountTypeList.size()%></td>
+    <td width="35" valign="center" align="center"><%=AccountTypeList.getEnabledElementCount()%></td>
     <td valign="center" ><%=AccountTypeList.getHtmlSelect("typeId",0)%></td>
   </tr>
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=2">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Revenue Type</td>
-    <td width="35" valign="center" align="center"><%=RevenueTypeList.size()%></td>
+    <td width="35" valign="center" align="center"><%=RevenueTypeList.getEnabledElementCount()%></td>
     <td valign="center"><%=RevenueTypeList.getHtmlSelect("typeId",0)%></td>
   </tr>
 <%} else if (PermissionCategory.getId() == PermissionCategory.PERMISSION_CAT_CONTACTS) { %>
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=1">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Contact Type</td>
-    <td width="35" valign="center" align="center"><%=ContactTypeList.size()%></td>
+    <td width="35" valign="center" align="center"><%=ContactTypeList.getEnabledElementCount()%></td>
     <td valign="center"><%=ContactTypeList.getHtmlSelect("typeId",0)%></td>
   </tr>
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=2">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Contact Email Type</td>
-    <td width="35" valign="center" align="center"><%=ContactEmailTypeList.size()%></td>
+    <td width="35" valign="center" align="center"><%=ContactEmailTypeList.getEnabledElementCount()%></td>
     <td valign="center"><%= ContactEmailTypeList.getHtmlSelect("contactEmailTypes",0) %></td>
   </tr>
   
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=3">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Contact Address Type</td>
-    <td width="35" valign="center" align="center"><%=ContactAddressTypeList.size()%></td>
+    <td width="35" valign="center" align="center"><%=ContactAddressTypeList.getEnabledElementCount()%></td>
     <td valign="center"><%= ContactAddressTypeList.getHtmlSelect("contactAddressTypes",0) %></td>
   </tr>  
   
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=4">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Contact Phone Type</td>
-    <td width="35" valign="center" align="center"><%=ContactPhoneTypeList.size()%></td>
+    <td width="35" valign="center" align="center"><%=ContactPhoneTypeList.getEnabledElementCount()%></td>
     <td valign="center"><%= ContactPhoneTypeList.getHtmlSelect("contactPhoneTypes",0) %></td>
   </tr>   
   
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=5">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Department</td>
-    <td width="35" valign="center" align="center"><%=DepartmentList.size()%></td>
+    <td width="35" valign="center" align="center"><%=DepartmentList.getEnabledElementCount()%></td>
     <td valign="center"><%= DepartmentList.getHtmlSelect("department",0) %></td>
   </tr>     
   
@@ -96,21 +96,21 @@ Lookup Lists<br>
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=1">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Ticket Source</td>
-    <td width="35" valign="center" align="center"><%=SourceList.size()%></td>
+    <td width="35" valign="center" align="center"><%=SourceList.getEnabledElementCount()%></td>
     <td valign="center"><%= SourceList.getHtmlSelect("sourceCode",0) %></td>
   </tr>    
   
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=2">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Ticket Severity</td>
-    <td width="35" valign="center" align="center"><%=SeverityList.size()%></td>
+    <td width="35" valign="center" align="center"><%=SeverityList.getEnabledElementCount()%></td>
     <td valign="center"><%= SeverityList.getHtmlSelect("severityCode",0) %></td>
   </tr>  
   
   <tr>
     <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=3">Edit</a></td></dhv:permission>
     <td valign="center" width=200>Ticket Priority</td>
-    <td width="35" valign="center" align="center"><%=PriorityList.size()%></td>
+    <td width="35" valign="center" align="center"><%=PriorityList.getEnabledElementCount()%></td>
     <td valign="center"><%= PriorityList.getHtmlSelect("priorityCode",0) %></td>
   </tr>    
 <%} else {%>

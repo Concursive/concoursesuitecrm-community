@@ -29,7 +29,6 @@ public class LookupList extends HtmlSelect {
   protected boolean showDisabledFlag = true;
   protected PagedListInfo pagedListInfo = null;
 
-
   /**
    *  Constructor for the LookupList object. Generates an empty list, which is
    *  not very useful.
@@ -283,6 +282,19 @@ public class LookupList extends HtmlSelect {
     return thisSelect.getHtml(selectName);
   }
 
+  public int getEnabledElementCount() {
+    int count = 0;
+
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+      if (thisElement.getEnabled()) {
+        count++;
+      }
+    }
+    return count;
+  }
+  
   /**
    *  Gets the HtmlSelect attribute of the ContactEmailTypeList object
    *
