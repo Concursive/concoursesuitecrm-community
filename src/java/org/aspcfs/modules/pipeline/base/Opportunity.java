@@ -1058,7 +1058,20 @@ public void setAccountEnabled(boolean accountEnabled) {
     String amountOut = numberFormatter.format(guess);
     return amountOut;
   }
-
+  
+  public String getGuessCurrency(int divisor) {
+	NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+	double tempValue = (guess/divisor);
+	String amountOut = "";
+	
+	if (tempValue < 1) {
+		amountOut = "< 1";
+        } else {
+		amountOut = numberFormatter.format(guess);
+	}
+	
+	return amountOut; 
+  }
 
   /**
    *  Gets the High attribute of the Opportunity object
