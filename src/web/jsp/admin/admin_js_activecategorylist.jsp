@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*, org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <html>
 <head>
@@ -24,7 +24,7 @@ function page_init() {
   if(list1.hasNext()){
     while (list1.hasNext()) {
       TicketCategory thisCategory = (TicketCategory)list1.next();
-      String elementText = thisCategory.getDescription();
+      String elementText = StringUtils.replacePattern(thisCategory.getDescription(), "'", "\\\\'");
   %>
     list.options[list.length] = newOpt('<%= elementText %>', '<%= thisCategory.getId() %>', '<%= !(thisCategory.getEnabled()) ? "Red" : "-none-" %>');
   <%
