@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2002 Dark Horse Ventures
 // The createFilter method and the prepareFilter method need to have the same
 // number of parameters if modified.
 
@@ -11,20 +11,14 @@ import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
 
-public class CustomFieldRecordList extends ArrayList {
-  
-  public static final int TRUE = 1;
-  public static final int FALSE = 0;
+public class CustomFieldDataList extends ArrayList {
   
   private PagedListInfo pagedListInfo = null;
 
   //Properties for building the list
-  private int linkModuleId = -1;
-  private int linkItemId = -1;
-  private int categoryId = -1;
-  private int includeEnabled = -1;
+  private int recordId = -1;
 
-  public CustomFieldRecordList() { }
+  public CustomFieldDataList() { }
 
 
   /**
@@ -38,9 +32,7 @@ public class CustomFieldRecordList extends ArrayList {
   }
 
 
-  public void setLinkModuleId(int tmp) { this.linkModuleId = tmp; }
-  public void setLinkItemId(int tmp) { this.linkItemId = tmp; }
-  public void setCategoryId(int tmp) { this.categoryId = tmp; }
+  public void setRecordId(int tmp) { this.recordId = tmp; }
 
   /**
    *  Gets the PagedListInfo attribute of the CustomFieldCategoryList object
@@ -52,9 +44,7 @@ public class CustomFieldRecordList extends ArrayList {
     return pagedListInfo;
   }
 
-  public int getLinkModuleId() { return linkModuleId; }
-  public int getLinkItemId() { return linkItemId; }
-  public int getCategoryId() { return categoryId; }
+  public int getRecordId() { return recordId; }
 
   public void buildList(Connection db) throws SQLException {
 
@@ -70,8 +60,8 @@ public class CustomFieldRecordList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
-        "FROM custom_field_record cfr " +
-        "WHERE cfr.link_module_id > -1 ");
+        "FROM custom_field_data cfd " +
+        "WHERE cfd.record_id > -1 ");
 
     createFilter(sqlFilter);
 
@@ -88,10 +78,10 @@ public class CustomFieldRecordList extends ArrayList {
       rs.close();
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("entered", "desc");
+      pagedListInfo.setDefaultSort("record_id", "field_id");
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY entered DESC ");
+      sqlOrder.append("ORDER BY record_id, field_id ");
     }
     
     //Need to build a base SQL statement for returning records
@@ -102,8 +92,8 @@ public class CustomFieldRecordList extends ArrayList {
     }
     sqlSelect.append(
         "* " +
-        "FROM custom_field_record cfr " +
-        "WHERE cfr.link_module_id > -1 ");
+        "FROM custom_field_data cfd " +
+        "WHERE cfd.record_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -120,8 +110,8 @@ public class CustomFieldRecordList extends ArrayList {
         break;
       }
       ++count;
-      CustomFieldRecord thisRecord = new CustomFieldRecord(rs);
-      this.add(thisRecord);
+      CustomFieldData thisField = new CustomFieldData(rs);
+      this.add(thisField);
     }
     rs.close();
     pst.close();
@@ -133,62 +123,18 @@ public class CustomFieldRecordList extends ArrayList {
       sqlFilter = new StringBuffer();
     }
     
-    if (linkModuleId > -1) {
-      sqlFilter.append("AND cfr.link_module_id = ? ");
-    }
-    
-    if (linkItemId > -1) {
-      sqlFilter.append("AND cfr.link_item_id = ? ");
-    }
-
-    if (includeEnabled == TRUE || includeEnabled == FALSE) {
-      sqlFilter.append("AND cfr.enabled = ? ");
-    }
-    
-    if (categoryId > -1) {
-      sqlFilter.append("AND cfr.category_id = ? ");
+    if (recordId > -1) {
+      sqlFilter.append("AND cfd.record_id = ? ");
     }
   }
 
 
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-    
-    if (linkModuleId > -1) {
-      pst.setInt(++i, linkModuleId);
+    if (recordId > -1) {
+      pst.setInt(++i, recordId);
     }
-    
-    if (linkItemId > -1) {
-      pst.setInt(++i, linkItemId);
-    }
-    
-    if (includeEnabled == TRUE) {
-      pst.setBoolean(++i, true);
-    } else if (includeEnabled == FALSE) {
-      pst.setBoolean(++i, false);
-    }
-    
-    if (categoryId > -1) {
-      pst.setInt(++i, categoryId);
-    }
-    
     return i;
-  }
-  
-  public void delete(Connection db) throws SQLException {
-    Iterator customRecords = this.iterator();
-    while (customRecords.hasNext()) {
-      CustomFieldRecord thisRecord = (CustomFieldRecord)customRecords.next();
-      thisRecord.delete(db);
-    }
-  }
-  
-  public void buildRecordColumns(Connection db, CustomFieldCategory thisCategory) throws SQLException {
-    Iterator customRecords = this.iterator();
-    while (customRecords.hasNext()) {
-      CustomFieldRecord thisRecord = (CustomFieldRecord)customRecords.next();
-      thisRecord.buildColumns(db, thisCategory);
-    }
   }
 }
 

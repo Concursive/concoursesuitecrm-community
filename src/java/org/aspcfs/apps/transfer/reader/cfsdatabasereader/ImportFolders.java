@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.*;
 import com.darkhorseventures.apps.dataimport.*;
 import com.darkhorseventures.cfsbase.*;
+import com.darkhorseventures.utils.*;
 import com.darkhorseventures.webutils.*;
 
 public class ImportFolders implements CFSDatabaseReaderImportModule {
@@ -75,7 +76,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
         }
         
         
-/*        
+        //TODO: Test this with records... 
         //Copy the actual data
         CustomFieldRecordList recordList = new CustomFieldRecordList();
         recordList.setLinkModuleId(moduleId);
@@ -89,7 +90,7 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           thisRecord.setName("customFieldRecord");
           thisRecord.setAction("insert");
           thisRecord.addField("linkModuleId", String.valueOf(thisCFRecord.getLinkModuleId()), "systemModules", null);
-          switch (thisRecord.getLinkModuleId()) {
+          switch (thisCFRecord.getLinkModuleId()) {
             case 1: 
               thisRecord.addField("linkItemId", String.valueOf(thisCFRecord.getLinkItemId()), "account", null);
               break;
@@ -112,22 +113,25 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
           }
           
           //TODO:For each record, add the field data
-          DataRecord thisFieldRecord = new DataRecord();
-          thisFieldRecord.setName("customFieldCategory");
-          thisFieldRecord.setAction("insert");
-          thisFieldRecord.addField("linkModuleId", String.valueOf(thisCategory.getLinkModuleId()), "systemModules", null);
-          switch (thisRecord.getLinkModuleId()) {
-            case 1: 
-              thisFieldRecord.addField("linkItemId", String.valueOf(thisCategory.getLinkItemId()), "account", null);
-              break;
-            case 2:
-              thisFieldRecord.addField("linkItemId", String.valueOf(thisCategory.getLinkItemId()), "contact", null);
-              break;
-            default:
-              break;
+          CustomFieldDataList fieldList = new CustomFieldDataList();
+          fieldList.setRecordId(thisCFRecord.getId());
+          fieldList.buildList(db);
+          Iterator fieldItems = fieldList.iterator();
+          while (fieldItems.hasNext()) {
+            CustomFieldData thisData = (CustomFieldData)fieldItems.next();
+            DataRecord thisFieldRecord = new DataRecord();
+            thisFieldRecord.setName("customFieldData");
+            thisFieldRecord.setAction("insert");
+            thisFieldRecord.addField("recordId", String.valueOf(thisData.getRecordId()));
+            thisFieldRecord.addField("fieldId", String.valueOf(thisData.getFieldId()));
+            thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()));
+            thisFieldRecord.addField("enteredValue", String.valueOf(thisData.getEnteredValue()));
+            thisFieldRecord.addField("enteredNumber", String.valueOf(thisData.getEnteredNumber()));
+            thisFieldRecord.addField("enteredDouble", String.valueOf(thisData.getEnteredDouble()));
+            processOK = writer.save(thisFieldRecord);
           }
         }
-*/        
+
       }
       
       

@@ -1,17 +1,18 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
 import java.sql.*;
 import java.text.*;
-import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.*;
 
 /**
  *  Represents all of the data that is entered for a CustomFieldCategory
  *
  *@author     matt rajkowski
  *@created    March 22, 2002
- *@version    $Id$
+ *@version    $Id: CustomFieldRecord.java,v 1.6 2002/07/12 21:56:40 mrajkowski
+ *      Exp $
  */
 public class CustomFieldRecord {
 
@@ -22,7 +23,7 @@ public class CustomFieldRecord {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private boolean enabled = false;
-  
+
   //A single record for display purposes only, maybe will be multiple
   //records someday
   private CustomField fieldData = null;
@@ -38,6 +39,14 @@ public class CustomFieldRecord {
    */
   public CustomFieldRecord() { }
 
+
+  /**
+   *  Constructor for the CustomFieldRecord object
+   *
+   *@param  db                Description of the Parameter
+   *@param  recordId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public CustomFieldRecord(Connection db, int recordId) throws SQLException {
     String sql =
         "SELECT * " +
@@ -52,6 +61,7 @@ public class CustomFieldRecord {
     rs.close();
     pst.close();
   }
+
 
   /**
    *  Constructor for the CustomFieldRecord object
@@ -75,12 +85,33 @@ public class CustomFieldRecord {
 
 
   /**
+   *  Sets the id attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    this.id = Integer.parseInt(tmp);
+  }
+
+
+
+  /**
    *  Sets the entered attribute of the CustomFieldRecord object
    *
    *@param  tmp  The new entered value
    */
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -95,12 +126,32 @@ public class CustomFieldRecord {
 
 
   /**
+   *  Sets the enteredBy attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the modified attribute of the CustomFieldRecord object
    *
    *@param  tmp  The new modified value
    */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -115,12 +166,32 @@ public class CustomFieldRecord {
 
 
   /**
+   *  Sets the modifiedBy attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the linkModuleId attribute of the CustomFieldRecord object
    *
    *@param  tmp  The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
+  }
+
+
+  /**
+   *  Sets the linkModuleId attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new linkModuleId value
+   */
+  public void setLinkModuleId(String tmp) {
+    this.linkModuleId = Integer.parseInt(tmp);
   }
 
 
@@ -135,12 +206,52 @@ public class CustomFieldRecord {
 
 
   /**
+   *  Sets the linkItemId attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new linkItemId value
+   */
+  public void setLinkItemId(String tmp) {
+    this.linkItemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the categoryId attribute of the CustomFieldRecord object
    *
    *@param  tmp  The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    this.categoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the CustomFieldRecord object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -223,9 +334,56 @@ public class CustomFieldRecord {
     return modifiedBy;
   }
 
+
+  /**
+   *  Gets the fieldData attribute of the CustomFieldRecord object
+   *
+   *@return    The fieldData value
+   */
   public CustomField getFieldData() {
     return fieldData;
   }
+
+
+  /**
+   *  Gets the enabled attribute of the CustomFieldRecord object
+   *
+   *@return    The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Gets the linkModuleId attribute of the CustomFieldRecord object
+   *
+   *@return    The linkModuleId value
+   */
+  public int getLinkModuleId() {
+    return linkModuleId;
+  }
+
+
+  /**
+   *  Gets the linkItemId attribute of the CustomFieldRecord object
+   *
+   *@return    The linkItemId value
+   */
+  public int getLinkItemId() {
+    return linkItemId;
+  }
+
+
+  /**
+   *  Gets the categoryId attribute of the CustomFieldRecord object
+   *
+   *@return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
+  }
+
 
   /**
    *  Description of the Method
@@ -254,10 +412,11 @@ public class CustomFieldRecord {
 
 
   /**
-   *  When a CustomFieldCategory is deleted, then all of the associated
-   *  data needs to go.
+   *  When a CustomFieldCategory is deleted, then all of the associated data
+   *  needs to go.
    *
    *@param  db                Description of Parameter
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of Exception
    */
   public boolean delete(Connection db) throws SQLException {
@@ -324,6 +483,7 @@ public class CustomFieldRecord {
     return true;
   }
 
+
   /**
    *  Description of the Method
    *
@@ -343,25 +503,33 @@ public class CustomFieldRecord {
     enabled = rs.getBoolean("enabled");
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  thisCategory      Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildColumns(Connection db, CustomFieldCategory thisCategory) throws SQLException {
     //Get the first CustomField, then populate it
     String sql =
-    "   SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL?"TOP 1 ":"") +
-    "    * " +
-    "   FROM custom_field_info cfi " +
-    "   WHERE cfi.group_id IN " +
-    "     (SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL?"TOP 1 ":"") +
-    "        group_id " +
-    "      FROM custom_field_group " +
-    "      WHERE category_id = ? " +
-    "      AND enabled = " + DatabaseUtils.getTrue(db) + " " +
-    "      ORDER BY level, group_id, group_name " +
-           (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL?"LIMIT 1 ":"") +
-    "     ) " +
-    "   AND enabled = " + DatabaseUtils.getTrue(db) + " " +
-    "   ORDER BY level, field_id, field_name " +
-        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL?"LIMIT 1 ":"");
-    
+        "   SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
+        "    * " +
+        "   FROM custom_field_info cfi " +
+        "   WHERE cfi.group_id IN " +
+        "     (SELECT " + (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL ? "TOP 1 " : "") +
+        "        group_id " +
+        "      FROM custom_field_group " +
+        "      WHERE category_id = ? " +
+        "      AND enabled = " + DatabaseUtils.getTrue(db) + " " +
+        "      ORDER BY level, group_id, group_name " +
+        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "") +
+        "     ) " +
+        "   AND enabled = " + DatabaseUtils.getTrue(db) + " " +
+        "   ORDER BY level, field_id, field_name " +
+        (DatabaseUtils.getType(db) == DatabaseUtils.POSTGRESQL ? "LIMIT 1 " : "");
+
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, thisCategory.getId());
     ResultSet rs = pst.executeQuery();
@@ -371,6 +539,6 @@ public class CustomFieldRecord {
       fieldData.buildResources(db);
     }
   }
-  
+
 }
 

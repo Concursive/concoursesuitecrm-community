@@ -307,7 +307,7 @@ public class CustomFieldGroup extends ArrayList {
       thisField.setParameters(context);
     }
   }
-
+  
 
   /**
    *  Gets the Id attribute of the CustomFieldGroup object

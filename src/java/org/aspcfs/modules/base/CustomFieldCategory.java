@@ -381,7 +381,7 @@ public class CustomFieldCategory extends ArrayList {
       thisGroup.setParameters(context);
     }
   }
-
+  
 
   /**
    *  Gets the Id attribute of the CustomFieldCategory object
