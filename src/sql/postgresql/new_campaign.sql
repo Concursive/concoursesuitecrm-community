@@ -27,7 +27,7 @@ CREATE TABLE saved_criteriaelement (
 );
 
 CREATE TABLE campaign (
-  id serial PRIMARY KEY,
+  campaign_id serial PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   list_id int,

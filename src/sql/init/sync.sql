@@ -776,5 +776,10 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'revenueList', 'com.darkhorseventures.cfsbase.RevenueList');
  
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'campaign', 'com.darkhorseventures.webutils.CustomLookupElement');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'campaignList', 'com.darkhorseventures.webutils.CustomLookupList');
+ 
 
  
