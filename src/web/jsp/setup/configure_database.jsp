@@ -4,6 +4,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
   function showProgress() {
+    hideSpan("buttons");
     showSpan("progress");
     return true;
   }
@@ -92,9 +93,11 @@
         </tr>
       </table>
       &nbsp;<br>
-      <input type="submit" value="Continue >"/>
+      <span id="buttons" name="buttons">
+        <input type="submit" value="Continue >"/>
+      </span>
       <span id="progress" name="progress" style="display:none">
-        <b>Please Wait... connecting to the database!</b>
+        <font color="blue"><b>Please Wait... connecting to the database!</b></font>
       </span>
     </td>
   </tr>

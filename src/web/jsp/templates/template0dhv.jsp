@@ -33,8 +33,18 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td width="100%">
-      <% String includeModule = (String) request.getAttribute("IncludeModule"); %>
-      <jsp:include page="<%= includeModule %>" flush="true"/>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="100%" valign="top">
+                  <% String includeModule = (String) request.getAttribute("IncludeModule"); %>
+                  <jsp:include page="<%= includeModule %>" flush="true"/>
+                </td>
+                <td width="150" valign="top" nowrap>
+                  &nbsp;<br>
+                  <jsp:include page="../setup/configure_global_items.jsp" flush="true"/>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
       </table>

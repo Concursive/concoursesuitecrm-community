@@ -43,8 +43,7 @@
             Target Directory:
           </td>
           <td nowrap>
-            <input type="text" name="fileLibrary" value="<%= toHtmlValue(fileLibrary) %>" size="50"/><br>
-            (ex: Linux <b>/var/lib/dh_crm/fileLibrary</b> -- Windows <b>c:\dh_crm\fileLibrary</b>)
+            <input type="text" name="fileLibrary" value="<%= toHtmlValue(fileLibrary) %>" size="50"/>
           </td>
         </tr>
       </table>
