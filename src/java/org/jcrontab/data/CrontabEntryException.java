@@ -16,7 +16,7 @@ package org.jcrontab.data;
 /**
  *  Exception thrown when an entry in the crontab table cannot be parsed
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */

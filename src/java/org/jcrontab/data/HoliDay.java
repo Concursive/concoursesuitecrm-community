@@ -21,7 +21,7 @@ import java.util.Date;
  *  This Bean reresents the basis to build BussnesDays logic, basically
  *  represents the Holiday
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */

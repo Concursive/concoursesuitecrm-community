@@ -17,7 +17,7 @@ package org.jcrontab.data;
 /**
  *  Exception thrown when a No crontab Entry is Found
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */

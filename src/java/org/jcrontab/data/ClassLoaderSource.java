@@ -22,7 +22,7 @@ import java.io.IOException;
  *  This class Is the implementation of DataSource to access Info in a
  *  FileSystem
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */
@@ -76,4 +76,3 @@ public class ClassLoaderSource extends FileSource {
     return rv;
   }
 }
-

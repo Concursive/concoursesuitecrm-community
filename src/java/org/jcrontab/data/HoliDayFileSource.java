@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 /**
  *  This HoliDaySource builds a basic holidays information source.
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */

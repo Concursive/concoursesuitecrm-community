@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Calendar;
+import java.util.Date;
 import org.jcrontab.CrontabBean;
 
 /**
@@ -43,7 +44,9 @@ public class CrontabEntryBean implements Serializable {
   private String daysOfWeek;
   private String daysOfMonth;
   private String years;
-
+  private Date startDate;
+  private Date endDate;
+    
   private String className;
   private String methodName = "";
   private String[] extraInfo;
@@ -283,6 +286,19 @@ public class CrontabEntryBean implements Serializable {
   public void setBusinessDays(boolean runInBusinessDays) {
     this.runInBusinessDays = runInBusinessDays;
   }
+  
+  /**startDate setter
+   * @param the starting date of this Task
+   */
+   public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+   }
+   /**endDate setter
+   * @param the ending date of this Task
+   */
+   public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+   }
 
 
   /**
@@ -503,6 +519,19 @@ public class CrontabEntryBean implements Serializable {
   public boolean getBusinessDays() {
     return runInBusinessDays;
   }
+  
+  /**startDate setter
+  * @param the starting date of this Task
+  */
+  public Date getStartDate() {
+      return startDate;
+  }
+  /**endDate setter
+  * @param the ending date of this Task
+  */
+  public Date getEndDate() {
+      return endDate;
+  }
 
 
   /**
@@ -539,21 +568,23 @@ public class CrontabEntryBean implements Serializable {
    *@param  pw  The printWritter to write the XML
    */
   public void toXML(PrintWriter pw) {
-    pw.println("<crontabentry>");
-    pw.println("<id>" + id + "</id> ");
+    pw.println("<crontabentry id=\""+ id + "\">");
     pw.println("<seconds>" + seconds + "</seconds> ");
     pw.println("<minutes>" + minutes + "</minutes> ");
     pw.println("<hours>" + hours + "</hours> ");
-    pw.println("<month>" + months + "</month> ");
-    pw.println("<daysofweek>" + daysOfWeek + "</daysofweek> ");
     pw.println("<daysofmonth>" + daysOfMonth + "</daysofmonth> ");
+    pw.println("<months>" + months + "</months> ");
+    pw.println("<daysofweek>" + daysOfWeek + "</daysofweek> ");
     pw.println("<years>" + years + "</years> ");
-    pw.println("<classname>" + className + "</classname> ");
-    pw.println("<methodname>" + methodName + "</methodname> ");
+    pw.println("<bussinesdays>" + runInBusinessDays +"</bussinesdays> " );
+    pw.println("<startDate>" + startDate +"</startDate> " );
+    pw.println("<endDate>" + endDate +"</endDate> " );
+    pw.println("<class>" + className + "</class> ");
+    pw.println("<method>" + methodName + "</method> ");
     if (bextraInfo) {
       for (int i = 0; i < extraInfo.length; i++) {
-        pw.println("<extrainfo parameter = \"" + i + "\" >");
-        pw.println(extraInfo[i] + " </extrainfo>");
+        pw.println("<parameters order = \"" + i + "\" >");
+        pw.println(extraInfo[i] + " </parameters>");
       }
     }
     pw.println("<description>" + description + "</description> ");

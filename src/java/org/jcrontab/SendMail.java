@@ -58,7 +58,7 @@ import javax.mail.Message.RecipientType;
  * of things more... </P>
  *	If you can't change your class or running a native program... well take 
  *	it easy and be concious of the problem</P>
- * @author $Author$
+ * @author iolalla
  * @version $Revision$
  */
 

@@ -35,7 +35,7 @@ import org.jcrontab.log.Log;
 /**
  *	This class is the one that captures the output from the 
  *  native progam and writes it to the System.out
- * @author $Author$
+ * @author iolalla
  * @version $Revision$
  */
 public class StreamGobbler extends Thread {

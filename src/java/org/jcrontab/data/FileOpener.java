@@ -23,7 +23,7 @@ import java.util.Properties;
  *  getResourceAsStream, The idea of this way of openning files is from Sergey
  *  Udalstov
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */

@@ -24,7 +24,7 @@ import org.jcrontab.log.Log;
  *  is a "conversor" to convert from CrontabEntries to Calendars. Thanks to
  *  Javier Pardo for the idea and for the Algorithm
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */
@@ -180,7 +180,6 @@ public class CalendarBuilder {
     }
   }
 
-
   /**
    *  This method says wich is next index of this array
    *
@@ -223,4 +222,3 @@ public class CalendarBuilder {
     return true;
   }
 }
-

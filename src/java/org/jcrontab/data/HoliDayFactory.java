@@ -21,7 +21,7 @@ import org.jcrontab.log.Log;
 /**
  *  This Factory builds a HoliDay Source using teh given information.
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */

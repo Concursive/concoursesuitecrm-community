@@ -18,7 +18,7 @@ package org.jcrontab.data;
  *  This interface says which methods a HoliDaysSource should have in order to
  *  be compatible with the HoliDaysFactory
  *
- *@author     $Author$
+ *@author     iolalla
  *@created    February 4, 2003
  *@version    $Revision$
  */
