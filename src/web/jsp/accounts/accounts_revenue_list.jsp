@@ -22,7 +22,20 @@
     <td class="containerBack">
 <dhv:permission name="accounts-accounts-revenue-add"><a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add a new Revenue</a></dhv:permission>
 <center><%= RevenueListInfo.getAlphabeticalPageLinks() %></center>
-<%= showAttribute(request, "actionError") %>
+
+<table width="100%" border="0">
+  <tr>
+    <form name="listView" method="post" action="/RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">
+    <td align="left">
+      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
+        <option <%= RevenueListInfo.getOptionValue("my") %>>My Revenue </option>
+        <option <%= RevenueListInfo.getOptionValue("all") %>>All Revenue</option>
+      </select>
+      <%= showAttribute(request, "actionError") %>
+    </td>
+    </form>
+  </tr>
+</table>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
 <tr class="title">
   <dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete">

@@ -154,11 +154,12 @@ public class GraphSummaryList extends Hashtable {
 		return valKeys;
 	}
 	
-	public String[] getYearRange(int size) {
+	public String[] getYearRange(int size, int y) {
 
 		String[] valKeys = new String[size];
 
 		java.util.Date d = new java.util.Date();
+		d.setYear(y-1900);
 		java.util.Calendar rightNow = java.util.Calendar.getInstance();
 		rightNow.setTime(d);
 

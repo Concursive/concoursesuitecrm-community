@@ -7,6 +7,7 @@
 <jsp:useBean id="MyRevList" class="com.darkhorseventures.cfsbase.RevenueList" scope="request"/>
 <jsp:useBean id="RevenueTypeList" class="com.darkhorseventures.cfsbase.RevenueTypeList" scope="request"/>
 <jsp:useBean id="DBRevenueListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
+<jsp:useBean id="YearList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <form name=Dashboard action="/RevenueManager.do?command=Dashboard" method=POST>
 <table width=100% border=0 cellspacing=0 cellpadding=3>
@@ -14,19 +15,41 @@
     <!-- Left Column -->
     <td width=275 valign=top>
       <!-- Graphic -->
-      <table width=100% cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <table width=275 cellpadding=3 cellspacing=0 border=1 bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr bgcolor="#DEE0FA">
-          <td valign=center colspan=1 align=center>
+          <td width=255 valign=center colspan=1 align=center>
 	    My Dashboard
+          </td>
+	  <td width=20 valign=center colspan=1 align=center>
+	    <% YearList.setJsEvent("onChange=\"document.forms[0].submit();\""); %>
+	    
+	    <%
+	    	if (request.getParameter("year") != null) {
+			YearList.setDefaultValue(request.getParameter("year"));
+		}
+	    %>
+	    
+	    <%=YearList.getHtml()%>
           </td>
         </tr>
         <tr>
-          <td>
+          <td colspan=2>
             <img border="0" width="275" height="200" src="/graphs/<%=request.getAttribute("GraphFileName")%>">
           </td>
         </tr>
-       <tr>
-          <td align="center">
+	<tr>
+          <td width=275 valign=center colspan=2 align=center>
+	    Type&nbsp;
+	    <% if (request.getParameter("type") != null) { %>
+	    <%=RevenueTypeList.getHtmlSelect("type", Integer.parseInt(request.getParameter("type")))%>&nbsp;
+	    <%} else {%>
+            <%=RevenueTypeList.getHtmlSelect("type", 0)%>&nbsp;
+	    <%}%>
+          </td>
+        </tr>
+	
+       <!--tr>
+          <td valign="center" width="275" align="center" coslpan=2>
 	    Type&nbsp;
 	    <% if (request.getParameter("type") != null) { %>
 	    <%=RevenueTypeList.getHtmlSelect("type", Integer.parseInt(request.getParameter("type")))%>&nbsp;
@@ -35,7 +58,8 @@
 	    <%}%>
 	    <input type=submit value="Go">
           </td>
-        </tr>
+        </tr-->
+	
       </table>
       
       </td>
@@ -48,7 +72,7 @@
           <td>Owner</td>
         </tr>
 <%
-	Iterator n = FullRevList.iterator();
+	Iterator n = MyRevList.iterator();
 		if ( n.hasNext() ) {
 			int rowid = 0;
 			while (n.hasNext()) {

@@ -17,6 +17,8 @@ public class RevenueList extends Vector {
   private int orgId = -1;
   private int type = 0;
   private String ownerIdRange = null;
+  private int owner = -1;
+  private int year = -1;
 
   public RevenueList() { }
 
@@ -79,7 +81,7 @@ public class RevenueList extends Vector {
       pagedListInfo.setDefaultSort("r.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY r.description ");
+      sqlOrder.append("ORDER BY r.amount desc ");
     }
     
     
@@ -138,6 +140,12 @@ public int getType() {
 public void setType(int type) {
 	this.type = type;
 }
+public int getYear() {
+	return year;
+}
+public void setYear(int year) {
+	this.year = year;
+}
 
 public void setPagedListInfo(PagedListInfo pagedListInfo) {
 	this.pagedListInfo = pagedListInfo;
@@ -152,6 +160,12 @@ public String getOwnerIdRange() {
 public void setOwnerIdRange(String ownerIdRange) {
 	this.ownerIdRange = ownerIdRange;
 }
+public int getOwner() {
+	return owner;
+}
+public void setOwner(int owner) {
+	this.owner = owner;
+}
 
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -162,6 +176,12 @@ public void setOwnerIdRange(String ownerIdRange) {
     }
     if (type != 0) {
       sqlFilter.append("AND r.type = ? ");
+    }
+    if (owner > -1) {
+      sqlFilter.append("AND r.owner = ? ");
+    }
+    if (year > -1) {
+      sqlFilter.append("AND r.year = ? ");
     }
     if (ownerIdRange != null) {
       sqlFilter.append("AND r.owner in (" + this.ownerIdRange + ") ");
@@ -177,6 +197,12 @@ public void setOwnerIdRange(String ownerIdRange) {
     
     if (type != 0) {
       pst.setInt(++i, type);
+    }
+    if (owner > -1) {
+      pst.setInt(++i, owner);
+    }
+    if (year > -1) {
+      pst.setInt(++i, year);
     }
       
     return i;

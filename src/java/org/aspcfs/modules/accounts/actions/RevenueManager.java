@@ -34,9 +34,10 @@ public final class RevenueManager extends CFSModule {
 
     int errorCode = 0;
     int idToUse = 0;
-
+    
     java.util.Date d = new java.util.Date();
-
+    int y = d.getYear() + 1900;
+    
     String errorMessage = "";
     String fileName = "";
     StringBuffer sql = new StringBuffer();
@@ -60,6 +61,7 @@ public final class RevenueManager extends CFSModule {
     //RevenueList fullRevList = new RevenueList();
     RevenueList tempRevList = new RevenueList();
     RevenueList realFullRevList = new RevenueList();
+    RevenueList displayList = new RevenueList();
 
     XYDataSource categoryData = null;
 
@@ -76,10 +78,12 @@ public final class RevenueManager extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      buildFormElements(context, db);
       System.out.println("Leads-> Got user record of" + idToUse);
       
 	RevenueTypeList rtl = new RevenueTypeList(db);
 	rtl.addItem(0, "--All--");
+	rtl.setJsEvent("onChange=\"document.forms[0].submit();\"");
 	context.getRequest().setAttribute("RevenueTypeList", rtl);
       
       //CHANGE THIS LATER
@@ -93,12 +97,20 @@ public final class RevenueManager extends CFSModule {
       fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
 
       String range = fullChildList.getUserListIds(idToUse);
-
-      //??realFullRevList.setYear();
+      
+      if (context.getRequest().getParameter("year") != null) {
+	      y = Integer.parseInt(context.getRequest().getParameter("year"));
+	      d.setYear(y - 1900);
+      } 
+      
+      thisRec.setRevenueIsValid(false, true);
+      realFullRevList.setYear(y);
+      displayList.setYear(y);
       
       if (context.getRequest().getParameter("type") != null) {
 	      realFullRevList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
-	      thisRec.setRevenueIsValid(false, true);
+	      displayList.setType(Integer.parseInt(context.getRequest().getParameter("type")));
+	      //thisRec.setRevenueIsValid(false, true);
       }
       
       realFullRevList.setOwnerIdRange(range);
@@ -106,7 +118,6 @@ public final class RevenueManager extends CFSModule {
 
       //filter out my revenue for displaying on page
       
-      tempRevList.setPagedListInfo(revenueInfo);
       Iterator z = realFullRevList.iterator();
 
       while (z.hasNext()) {
@@ -116,8 +127,12 @@ public final class RevenueManager extends CFSModule {
           tempRevList.addElement(tempRev);
         }
       }
-
-      context.getRequest().setAttribute("MyRevList", tempRevList);
+      
+      displayList.setOwner(getUserId(context));
+      displayList.setPagedListInfo(revenueInfo);
+      displayList.buildList(db);
+      
+      context.getRequest().setAttribute("MyRevList", displayList);
       
     } catch (Exception e) {
       errorCode = 1;
@@ -140,19 +155,19 @@ public final class RevenueManager extends CFSModule {
 
       while (n.hasNext()) {
         User thisRecord = (User) n.next();
-        tempUserList = prepareLines(thisRecord, realFullRevList, tempUserList);
+        tempUserList = prepareLines(thisRecord, realFullRevList, tempUserList, y);
       }
 
-      linesToDraw = calculateLine(tempUserList, linesToDraw);
+      linesToDraw = calculateLine(tempUserList, linesToDraw, y);
 
       //set my own
 
-      tempUserList = prepareLines(thisRec, tempRevList, tempUserList);
+      tempUserList = prepareLines(thisRec, tempRevList, tempUserList, y);
 
       //add me up -- keep this
-      linesToDraw = calculateLine(thisRec, linesToDraw);
+      linesToDraw = calculateLine(thisRec, linesToDraw, y);
 
-      categoryData = createCategoryDataSource(linesToDraw);
+      categoryData = createCategoryDataSource(linesToDraw, y);
       //categoryData = createEmptyCategoryDataSource();
       
       JFreeChart chart = JFreeChart.createXYChart(categoryData);
@@ -304,6 +319,13 @@ public final class RevenueManager extends CFSModule {
       db = this.getConnection(context);
       revenueList.setPagedListInfo(revenueInfo);
       revenueList.setOrgId(Integer.parseInt(orgid));
+      
+      if ("all".equals(revenueInfo.getListView())) {
+        revenueList.setOwnerIdRange(this.getUserRange(context));
+      } else {
+        revenueList.setOwner(this.getUserId(context));
+      }
+      
       revenueList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
     } catch (Exception e) {
@@ -404,8 +426,8 @@ public final class RevenueManager extends CFSModule {
 
     if (errorMessage == null) {
       if (recordInserted) {
-        return ("DetailsOK");
-	//return("AddOK");
+        //return ("DetailsOK");
+	return("InsertOK");
       } else {
         return (executeCommandAdd(context));
       }
@@ -620,10 +642,11 @@ public final class RevenueManager extends CFSModule {
     return new DefaultXYDataSource(data);
   }
   
-  private UserList prepareLines(User pertainsTo, RevenueList revList, UserList usersToGraph) {
+  private UserList prepareLines(User pertainsTo, RevenueList revList, UserList usersToGraph, int y) {
     java.util.Date d = new java.util.Date();
     java.util.Calendar rightNow = java.util.Calendar.getInstance();
     d.setDate(1);
+    d.setYear(y-1900);
     rightNow.setTime(d);
     
     int passedDay = 0;
@@ -665,7 +688,7 @@ public final class RevenueManager extends CFSModule {
 	      
               //case: amount date within 12 month range
               if ( passedYear == rightNow.get(java.util.Calendar.YEAR) ) {
-		//System.out.println("adding in " + revenueAddTerm + " at " + valKey);
+		System.out.println("adding in " + revenueAddTerm + " at " + valKey);
                 pertainsTo.setRevenueGraphValues(valKey, revenueAddTerm);
               }
 
@@ -710,14 +733,14 @@ public final class RevenueManager extends CFSModule {
     }
   }
   
-  private UserList calculateLine(User primaryNode, UserList currentLines) {
+  private UserList calculateLine(User primaryNode, UserList currentLines, int y) {
     if (currentLines.size() == 0) {
       currentLines.addElement(primaryNode);
       return currentLines;
     }
 
     User thisLine = new User();
-    String[] valKeys = thisLine.getRevenue().getYearRange(12);
+    String[] valKeys = thisLine.getRevenue().getYearRange(12, y);
 
     Iterator x = currentLines.iterator();
     User addToMe = (User) x.next();
@@ -726,20 +749,20 @@ public final class RevenueManager extends CFSModule {
 
     for (count = 0; count < 12; count++) {
       thisLine.getRevenue().setValue(valKeys[count], new Double(primaryNode.getRevenue().getValue(valKeys[count]).doubleValue() + (addToMe.getRevenue().getValue(valKeys[count])).doubleValue()));
-      //System.out.println("VK: " + valKeys[count]);
+      System.out.println("VK: " + valKeys[count]);
     }
 
     currentLines.addElement(thisLine);
     return currentLines;
   }
   
-  private UserList calculateLine(UserList toRollUp, UserList currentLines) {
+  private UserList calculateLine(UserList toRollUp, UserList currentLines, int y) {
     if (toRollUp.size() == 0) {
       return new UserList();
     }
 
     User thisLine = new User();
-    String[] valKeys = thisLine.getRevenue().getYearRange(12);
+    String[] valKeys = thisLine.getRevenue().getYearRange(12, y);
 
     int count = 0;
 
@@ -758,7 +781,7 @@ public final class RevenueManager extends CFSModule {
     return currentLines;
   }
   
-  private XYDataSource createCategoryDataSource(UserList passedList) {
+  private XYDataSource createCategoryDataSource(UserList passedList, int y) {
 
     if (passedList.size() == 0) {
       return createEmptyCategoryDataSource();
@@ -767,6 +790,8 @@ public final class RevenueManager extends CFSModule {
     Object[][][] data;
 
     java.util.Date d = new java.util.Date();
+    d.setYear(y-1900);
+    
     java.util.Calendar iteratorDate = java.util.Calendar.getInstance();
 
     data = new Object[passedList.size()][12][2];
@@ -778,7 +803,7 @@ public final class RevenueManager extends CFSModule {
     while (n.hasNext()) {
       User thisUser = (User) n.next();
 
-      String[] valKeys = thisUser.getRevenue().getYearRange(12);
+      String[] valKeys = thisUser.getRevenue().getYearRange(12, y);
 
       iteratorDate.setTime(d);
       //iteratorDate.add(java.util.Calendar.MONTH, +1);
@@ -800,7 +825,7 @@ public final class RevenueManager extends CFSModule {
 
 	data[x][count][1] = thisUser.getRevenue().getValue(valKeys[count]);
 	
-	//System.out.println("Check from data: " + valKeys[count] + "=" + data[x][count][0] + ", " + data[x][count][1]);
+	System.out.println("Check from data: " + valKeys[count] + "=" + data[x][count][0] + ", " + data[x][count][1]);
       }
 
       x++;
