@@ -48,19 +48,27 @@ public class SecurityHook implements ControllerHook {
         ConnectionElement ce = (ConnectionElement)request.getSession().getAttribute("ConnectionElement");
         SystemStatus systemStatus = (SystemStatus)((Hashtable)servlet.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
         
-        if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
-          User updatedUser = systemStatus.getHierarchyList().getUser(userSession.getUserRecord().getId());
-          userSession.setUserRecord(updatedUser);
-          userSession.setHierarchyCheck(new java.util.Date());
-          System.out.println("SecurityHook-> Updating user session with new user record");
-        }
-        
-        if (userSession.getPermissionCheck().before(systemStatus.getPermissionCheck())) {
+        if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck()) ||
+            userSession.getPermissionCheck().before(systemStatus.getPermissionCheck())) {
           Connection db = null;
           try {
             db = ((ConnectionPool)servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
+            
+            if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
+              if (System.getProperty("DEBUG") != null) System.out.println("SecurityHook-> ** Getting you a new user record");
+              User updatedUser = systemStatus.getHierarchyList().getUser(userSession.getUserId());
+              userSession.setUserRecord(updatedUser);
+              userSession.setHierarchyCheck(new java.util.Date());
+              System.out.println("SecurityHook-> Updating user session with new user record");
+            }
+        
             User updatedUser = userSession.getUserRecord();
-            updatedUser.setBuildContact(false);
+            if (System.getProperty("DEBUG") != null) System.out.println("SecurityHook-> ** Getting you new permissions");
+            if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
+              updatedUser.setBuildContact(true);
+            } else {
+              updatedUser.setBuildContact(false);
+            }
             updatedUser.setBuildPermissions(true);
             updatedUser.setBuildHierarchy(false);
             updatedUser.buildResources(db);

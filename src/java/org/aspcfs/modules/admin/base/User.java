@@ -969,8 +969,8 @@ public class User extends GenericBean {
 
     int resultCount = 0;
     Statement st = db.createStatement();
-    resultCount = st.executeUpdate("DELETE FROM access WHERE user_id = " + this.getId());
-    st.executeUpdate("UPDATE contact SET user_id = null WHERE user_id = " + this.getId());
+    resultCount = st.executeUpdate("UPDATE access SET enabled = false WHERE user_id = " + this.getId());
+    //st.executeUpdate("UPDATE contact SET user_id = null WHERE user_id = " + this.getId());
     st.close();
 
     if (resultCount == 0) {

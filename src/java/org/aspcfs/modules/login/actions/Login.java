@@ -40,7 +40,7 @@ public final class Login extends GenericAction {
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
     ConnectionElement ce = null;
     Connection db = null;
-    Statement st = null;
+    PreparedStatement pst = null;
     ResultSet rs = null;
 
     ConnectionPool sqlDriver =
@@ -56,12 +56,14 @@ public final class Login extends GenericAction {
     //	name and credentials.
     //
     sql = "SELECT * FROM sites " +
-        "WHERE sitecode = '" + siteCode + "' " +
-        "AND vhost = '" + serverName + "' ";
+        "WHERE sitecode = ? " +
+        "AND vhost = ? ";
     try {
       db = sqlDriver.getConnection(gk);
-      st = db.createStatement();
-      rs = st.executeQuery(sql);
+      pst = db.prepareStatement(sql);
+      pst.setString(1, siteCode);
+      pst.setString(2, serverName);
+      rs = pst.executeQuery();
       if (rs.next()) {
         String dbName = rs.getString("dbname");
         ce = new ConnectionElement(
@@ -76,7 +78,7 @@ public final class Login extends GenericAction {
              + serverName + "@" + siteCode + ")");
       }
       rs.close();
-      st.close();
+      pst.close();
 
     } catch (Exception e) {
       loginBean.setMessage("* Gatekeeper: " + e.getMessage());
@@ -110,10 +112,11 @@ public final class Login extends GenericAction {
       
       sql = 
         "SELECT * FROM access " +
-        "WHERE lower(username) = '" + username.toLowerCase() + "' " +
+        "WHERE lower(username) = ? " +
         "AND enabled = true ";
-      st = db.createStatement();
-      rs = st.executeQuery(sql);
+      pst = db.prepareStatement(sql);
+      pst.setString(1, username.toLowerCase());
+      rs = pst.executeQuery();
       if (!rs.next()) {
         loginBean.setMessage("* Access denied: Username not found.");
       } else {
@@ -125,7 +128,7 @@ public final class Login extends GenericAction {
         }
       }
       rs.close();
-      st.close();
+      pst.close();
 
       if (userId > -1) {
         System.out.println("Login-> Getting user " + userId + " from memory");
