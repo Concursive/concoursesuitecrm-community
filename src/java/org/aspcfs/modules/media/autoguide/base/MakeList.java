@@ -73,7 +73,7 @@ public class MakeList extends ArrayList {
       "FROM autoguide_make make ");
     sql.append("WHERE make_id > -1 ");
     createFilter(sql);
-    sql.append("ORDER BY make_id ");
+    sql.append("ORDER BY make_name ");
     pst = db.prepareStatement(sql.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

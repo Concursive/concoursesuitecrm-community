@@ -6,12 +6,16 @@
 <jsp:useBean id="MakeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="ModelSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="OptionList" class="com.darkhorseventures.autoguide.base.OptionList" scope="request"/>
+<jsp:useBean id="adRunTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].stockNo.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
+    if (form.dosubmit.value == "false") {
+      return true;
+    }
     formTest = true;
     message = "";
     if (form.stockNo.value == "") { 
@@ -47,6 +51,7 @@
 </script>
 <form name="addVehicle" action="AccountsAutoGuide.do?command=AccountInsert&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <input type="hidden" name="accountId" value="<%= OrgDetails.getOrgId() %>"/>
+<input type="hidden" name="dosubmit" value="false">
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">Back to Vehicle List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -62,8 +67,8 @@
   </tr>
   <tr>
     <td class="containerBack">
-<input type="submit" value="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>'">
+<input type="submit" value="Save" onClick="javascript:this.form.dosubmit.value='true';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 &nbsp;
@@ -79,7 +84,7 @@
     </td>
     <td width="100%">
       <input type="text" size="15" name="stockNo" value="<%= toHtmlValue(InventoryDetails.getStockNo()) %>">
-      <%= showAttribute(request, "stockNoError") %>
+      <font color=red>*</font> <%= showAttribute(request, "stockNoError") %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -239,29 +244,26 @@
       <strong>Select Ad Run Dates</strong>
     </td>
   </tr>
+<%
+  for (int runCount = 1; runCount < 6; ++runCount) {
+%>  
   <tr class="containerBody">
     <td>
-      Start:<input type="text" size="10" name="adrun1startDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun1startDate');">Date</a> (mm/dd/yyyy)
+      <input type="hidden" name="adrun<%= runCount %>id" value="-1">
+      Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate">
+      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate');">Date</a> (mm/dd/yyyy)
       &nbsp;&nbsp;
-      End:<input type="text" size="10" name="adrun1endDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun1endDate');">Date</a> (mm/dd/yyyy)
+      Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", -1) %>
+      &nbsp;&nbsp;
+      <input type="checkbox" name="adrun<%= runCount %>includePhoto">Include Photo
     </td>
   </tr>
-  <tr class="containerBody">
-    <td>
-      Start:<input type="text" size="10" name="adrun2startDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun2startDate');">Date</a> (mm/dd/yyyy)
-      &nbsp;&nbsp;
-      End:<input type="text" size="10" name="adrun2endDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun2endDate');">Date</a> (mm/dd/yyyy)
-    </td>
-  </tr>
+<%}%>
 </table>
 &nbsp;
 <br>
-<input type="submit" value="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>'">
+<input type="submit" value="Save" onClick="javascript:this.form.dosubmit.value='true'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
     </td>
   </tr>

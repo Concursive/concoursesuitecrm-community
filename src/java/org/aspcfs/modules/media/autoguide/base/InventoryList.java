@@ -72,6 +72,7 @@ public class InventoryList extends ArrayList {
         if (buildPictureId) {
           thisItem.buildPictureId(db);
         }
+        thisItem.buildAdRuns(db);
       }
     }
   }

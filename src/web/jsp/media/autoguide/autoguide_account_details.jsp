@@ -93,6 +93,23 @@
     </td>
   </tr>
 </dhv:evaluate>
+<dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">Ad Run Dates</td>
+    <td>
+<%
+      Iterator adruns = InventoryItem.getAdRuns().iterator();
+      while (adruns.hasNext()) {
+        AdRun thisAdRun = (AdRun)adruns.next();
+%>
+      <img border="0" src="<%= (thisAdRun.isComplete()?"images/box-checked.gif":"images/box.gif") %>" alt="" align="absmiddle"><%= toDateString(thisAdRun.getRunDate()) %>
+      (<%= toHtml(thisAdRun.getAdTypeName()) %> - with<%= (thisAdRun.getIncludePhoto()?"":"out") %> photo)<%= (adruns.hasNext()?"<br>":"") %>
+<%
+      }
+%>
+    </td>
+  </tr>
+</dhv:evaluate>
 </table>
     </td>
     <td class="PhotoDetail">

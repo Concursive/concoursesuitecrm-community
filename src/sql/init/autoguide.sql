@@ -29,3 +29,7 @@ INSERT INTO autoguide_options (option_name) VALUES ('AIRBAG');
 INSERT INTO autoguide_options (option_name) VALUES ('1 OWNER');
 INSERT INTO autoguide_options (option_name) VALUES ('ALLOY WH');
 
+INSERT INTO autoguide_ad_run_types (level, description, enabled) VALUES (1, 'In Column', true);
+INSERT INTO autoguide_ad_run_types (level, description, enabled) VALUES (2, 'Display', true);
+INSERT INTO autoguide_ad_run_types (level, description, enabled) VALUES (3, 'Both', true);
+

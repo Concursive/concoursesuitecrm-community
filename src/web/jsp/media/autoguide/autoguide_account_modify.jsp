@@ -6,6 +6,7 @@
 <jsp:useBean id="MakeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="ModelSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="OptionList" class="com.darkhorseventures.autoguide.base.OptionList" scope="request"/>
+<jsp:useBean id="adRunTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].stockNo.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
@@ -241,24 +242,43 @@
       <strong>Select Ad Run Dates</strong>
     </td>
   </tr>
+<%
+  int runCount = 0;
+  Iterator adRuns = InventoryDetails.getAdRuns().iterator();
+  while (adRuns.hasNext()) {
+    AdRun adRun = (AdRun)adRuns.next();
+    ++runCount;
+%>  
   <tr class="containerBody">
     <td>
-      Start:<input type="text" size="10" name="adrun1startDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun1startDate');">Date</a> (mm/dd/yyyy)
+      <input type="hidden" name="adrun<%= runCount %>id" value="<%= adRun.getId() %>">
+      Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate" value="<%= toDateString(adRun.getRunDate()) %>">
+      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate');">Date</a> (mm/dd/yyyy)
       &nbsp;&nbsp;
-      End:<input type="text" size="10" name="adrun1endDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun1endDate');">Date</a> (mm/dd/yyyy)
+      Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", adRun.getAdType()) %>
+      &nbsp;&nbsp;
+      <input type="checkbox" name="adrun<%= runCount %>includePhoto"<%= (adRun.getIncludePhoto()?" checked":"") %>>Include Photo
+      &nbsp;&nbsp;
+      <input type="checkbox" name="adrun<%= runCount %>remove">remove
     </td>
   </tr>
+<%}%>
+<%
+  int runCount2 = ++runCount;
+  for (; runCount < runCount2 + 5; ++runCount) {
+%>  
   <tr class="containerBody">
     <td>
-      Start:<input type="text" size="10" name="adrun2startDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun2startDate');">Date</a> (mm/dd/yyyy)
+      <input type="hidden" name="adrun<%= runCount %>id" value="-1">
+      Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate">
+      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate');">Date</a> (mm/dd/yyyy)
       &nbsp;&nbsp;
-      End:<input type="text" size="10" name="adrun2endDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun2endDate');">Date</a> (mm/dd/yyyy)
+      Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", -1) %>
+      &nbsp;&nbsp;
+      <input type="checkbox" name="adrun<%= runCount %>includePhoto">Include Photo
     </td>
   </tr>
+<%}%>
 </table>
 &nbsp;
 <br>

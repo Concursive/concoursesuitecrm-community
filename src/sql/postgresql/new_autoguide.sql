@@ -79,7 +79,6 @@ CREATE TABLE autoguide_ad_run (
   run_date DATETIME NOT NULL,
   ad_type VARCHAR(20) NULL,
   include_photo BOOLEAN DEFAULT false,
-  complete BOOLEAN DEFAULT false,
   complete_date DATETIME NULL,
   entered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL,
@@ -88,8 +87,8 @@ CREATE TABLE autoguide_ad_run (
 );
 
 CREATE TABLE autoguide_ad_run_types (
-  type_id SERIAL PRIMARY KEY,
-  type_name VARCHAR(20) NOT NULL,
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(20) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT false,

@@ -107,7 +107,7 @@
           <%= toHtml(thisItem.getExteriorColor()) %>
         </td>
         <td class="row<%= rowid %>">
-          &nbsp;
+          <%= (thisItem.hasAdRuns()?toDateString(thisItem.getAdRuns().getNextAdRun().getRunDate()):"&nbsp;") %>
         </td>
         <td class="row<%= rowid %>" nowrap>
           <%= (thisItem.hasPictureId()?"yes":"&nbsp;") %>

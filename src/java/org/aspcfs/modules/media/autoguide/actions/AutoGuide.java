@@ -206,7 +206,7 @@ public final class AutoGuide extends CFSModule {
       this.freeConnection(context, db);
     }
 
-    addModuleBean(context, "Auto Guide", "List");
+    addModuleBean(context, "View Accounts", "Vehicle Inventory");
     if (errorMessage == null) {
       if ("slides".equals(autoGuideAccountInfo.getListView())) {
         return ("List2OK");
@@ -236,12 +236,12 @@ public final class AutoGuide extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-
       populateOrganization(context, db, orgId);
       populateYearSelect(context, db);
       populateMakeSelect(context, db, null);
       populateModelSelect(context, db, null);
       populateOptionList(context, db);
+      populateAdRunTypeSelect(context, db);
 
     } catch (SQLException e) {
       errorMessage = e;
@@ -396,6 +396,7 @@ public final class AutoGuide extends CFSModule {
       populateMakeSelect(context, db, thisItem.getVehicle());
       populateModelSelect(context, db, thisItem.getVehicle());
       populateOptionList(context, db);
+      populateAdRunTypeSelect(context, db);
 
     } catch (Exception e) {
       errorMessage = e;
@@ -749,6 +750,11 @@ public final class AutoGuide extends CFSModule {
   private void populateOptionList(ActionContext context, Connection db) throws SQLException {
     OptionList options = new OptionList(db);
     context.getRequest().setAttribute("OptionList", options);
+  }
+  
+  private void populateAdRunTypeSelect(ActionContext context, Connection db) throws SQLException {
+    LookupList adRunType = new LookupList(db, "autoguide_ad_run_types");
+    context.getRequest().setAttribute("adRunTypeList", adRunType);
   }
 }
 

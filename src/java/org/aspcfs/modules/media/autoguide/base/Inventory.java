@@ -230,32 +230,14 @@ public class Inventory {
     pst.close();
 
     id = DatabaseUtils.getCurrVal(db, "autoguide_inve_inventory_id_seq");
-    //vehicle = new Vehicle(db, vehicleId);
     
     if (options != null) {
       options.setInventoryId(id);
       options.insert(db);
     }
     if (adRuns != null) {
-      sql.setLength(0);
-      sql.append(
-        "INSERT INTO autoguide_ad_run (inventory_id, " +
-        "run_date, complete_date, " +
-        "enteredby, modifiedby) " +
-        "VALUES (?, ?, ?, ?, ?)");
-      Iterator adRunList = adRuns.iterator();
-      while (adRunList.hasNext()) {
-        AdRun thisAdRun = (AdRun)adRunList.next();
-        pst = db.prepareStatement(sql.toString());
-        i = 0;
-        pst.setInt(++i, id);
-        pst.setDate(++i, thisAdRun.getRunDate());
-        pst.setDate(++i, thisAdRun.getCompleteDate());
-        pst.setInt(++i, this.getModifiedBy());
-        pst.setInt(++i, this.getModifiedBy());
-        pst.execute();
-        pst.close();
-      }
+      adRuns.setInventoryId(id);
+      adRuns.insert(db);
     }
     return true;
   }
@@ -282,7 +264,7 @@ public class Inventory {
         "stock_no = ?, ext_color = ?, int_color = ?, invoice_price = ?, selling_price = ?, sold = ?, status = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP ");
       sql.append("WHERE inventory_id = ? ");
-      sql.append("AND modified = ? ");
+      //sql.append("AND modified = ? ");
         
       int i = 0;
       pst = db.prepareStatement(sql.toString());
@@ -301,17 +283,22 @@ public class Inventory {
       pst.setString(++i, this.getStatus());
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getId());
-      pst.setTimestamp(++i, this.getModified());
+      //pst.setTimestamp(++i, this.getModified());
       resultCount = pst.executeUpdate();
       pst.close();
 
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Inventory-> Vehicle updated, updating options...");
-      }
-      
       if (resultCount == 1) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Inventory-> Vehicle updated, updating options...");
+        }
         options.setInventoryId(id);
         options.update(db);
+        
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Inventory-> Options updated, updating ad runs...");
+        }
+        adRuns.setInventoryId(id);
+        adRuns.update(db);
       }
       
       db.commit();

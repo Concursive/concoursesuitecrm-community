@@ -81,6 +81,14 @@ public static String replace(String str, String o, String n) {
     return "";
   }
   
+  public static String toDateString(java.sql.Date inDate) {
+    try {
+      return java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT).format(inDate);
+    } catch (NullPointerException e) {
+    }
+    return "";
+  }
+  
   public static String toLongDateString(java.util.Date inDate) {
     try {
       return java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG).format(inDate);

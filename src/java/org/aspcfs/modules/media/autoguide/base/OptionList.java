@@ -144,21 +144,11 @@ public class OptionList extends ArrayList {
   }
   
   public void insert(Connection db) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-      "INSERT INTO autoguide_inventory_options (inventory_id, option_id) " +
-      "VALUES (?, ?)");
     Iterator optionList = this.iterator();
     while (optionList.hasNext()) {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("OptionList-> Inserting option...");
-      }
       Option thisOption = (Option)optionList.next();
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(1, inventoryId);
-      pst.setInt(2, thisOption.getId());
-      pst.execute();
-      pst.close();
+      thisOption.setInventoryId(inventoryId);
+      thisOption.insert(db);
     }
   }
   
@@ -168,12 +158,11 @@ public class OptionList extends ArrayList {
   }
   
   public void delete(Connection db) throws SQLException {
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-      "DELETE FROM autoguide_inventory_options WHERE inventory_id = ? ");
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setInt(1, inventoryId);
-    pst.execute();
-    pst.close();
+    Iterator optionList = this.iterator();
+    while (optionList.hasNext()) {
+      Option thisOption = (Option)optionList.next();
+      thisOption.setInventoryId(inventoryId);
+      thisOption.delete(db);
+    }
   }
 }
