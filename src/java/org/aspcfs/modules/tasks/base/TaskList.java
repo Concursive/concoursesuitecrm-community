@@ -7,10 +7,12 @@ package org.aspcfs.modules.tasks.base;
 import java.sql.*;
 import java.text.*;
 import java.util.*;
+import java.text.DateFormat;
 import javax.servlet.http.HttpServletRequest;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.Constants;
 
 /**
@@ -26,8 +28,8 @@ public class TaskList extends ArrayList {
   protected int owner = -1;
   protected int complete = -1;
   protected int tasksAssignedByUser = -1;
-  protected java.sql.Date alertRangeStart = null;
-  protected java.sql.Date alertRangeEnd = null;
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
   protected int categoryId = -1;
   protected int projectId = -1;
   protected int ticketId = -1;
@@ -95,7 +97,7 @@ public class TaskList extends ArrayList {
    *
    *@param  alertRangeStart  The new alertRangeStart value
    */
-  public void setAlertRangeStart(java.sql.Date alertRangeStart) {
+  public void setAlertRangeStart(java.sql.Timestamp alertRangeStart) {
     this.alertRangeStart = alertRangeStart;
   }
 
@@ -125,7 +127,7 @@ public class TaskList extends ArrayList {
    *
    *@param  alertRangeEnd  The new alertRangeEnd value
    */
-  public void setAlertRangeEnd(java.sql.Date alertRangeEnd) {
+  public void setAlertRangeEnd(java.sql.Timestamp alertRangeEnd) {
     this.alertRangeEnd = alertRangeEnd;
   }
 
@@ -167,7 +169,7 @@ public class TaskList extends ArrayList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap queryRecordCount(Connection db) throws SQLException {
+  public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     HashMap events = new HashMap();
@@ -188,8 +190,8 @@ public class TaskList extends ArrayList {
       System.out.println("TaskList-> Building Record Count ");
     }
     while (rs.next()) {
-      String duedate = Task.getAlertDateStringLongYear(rs.getDate("duedate"));
-      events.put(duedate, new Integer(rs.getInt("count")));
+      String dueDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("duedate"));
+      events.put(dueDate, new Integer(rs.getInt("count")));
     }
     rs.close();
     pst.close();
@@ -220,7 +222,7 @@ public class TaskList extends ArrayList {
       Task thisTask = new Task();
       thisTask.setId(rs.getInt("task_id"));
       thisTask.setDescription(rs.getString("description"));
-      thisTask.setDueDate(rs.getDate("duedate"));
+      thisTask.setDueDate(rs.getTimestamp("duedate"));
       thisTask.setComplete(rs.getBoolean("complete"));
       this.add(thisTask);
     }
@@ -355,7 +357,7 @@ public class TaskList extends ArrayList {
     }
 
     if (alertRangeEnd != null) {
-      sqlFilter.append("AND t.duedate <= ? ");
+      sqlFilter.append("AND t.duedate < ? ");
     }
 
     if (categoryId > 0) {
@@ -400,11 +402,11 @@ public class TaskList extends ArrayList {
     }
 
     if (alertRangeStart != null) {
-      pst.setDate(++i, alertRangeStart);
+      pst.setTimestamp(++i, alertRangeStart);
     }
 
     if (alertRangeEnd != null) {
-      pst.setDate(++i, alertRangeEnd);
+      pst.setTimestamp(++i, alertRangeEnd);
     }
 
     if (categoryId > 0) {

@@ -4,6 +4,7 @@ import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.ScheduledActions;
 import org.aspcfs.modules.mycfs.base.*;
+import java.text.DateFormat;
 import java.util.*;
 import com.zeroio.iteam.base.*;
 import java.sql.*;
@@ -55,6 +56,10 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ProjectListScheduledActions --> Building Project Alerts ");
       }
+      
+      //get TimeZone
+      TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
       this.setGroupId(-1);
       this.setOpenProjectsOnly(true);
       this.setProjectsWithAssignmentsOnly(true);
@@ -71,8 +76,10 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
         Iterator assignmentList = thisProject.getAssignments().iterator();
         while (assignmentList.hasNext()) {
           com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
+          String tmp = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisAssignment.getDueDate());
+          java.sql.Timestamp dueDate = DateUtils.parseTimestampString(tmp);
           CalendarEvent thisEvent = new CalendarEvent();
-          thisEvent.setDate(thisAssignment.getDueDate());
+          thisEvent.setDate(dueDate);
           thisEvent.setSubject(thisAssignment.getRole());
           thisEvent.setCategory("Assignments");
           thisEvent.setId(thisAssignment.getProjectId());
@@ -91,6 +98,9 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       System.out.println("ProjectListScheduledActions --> Building Alert Counts ");
     }
     try {
+      //get TimeZone
+      TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
       this.setGroupId(-1);
       this.setOpenProjectsOnly(true);
       this.setProjectsWithAssignmentsOnly(true);
@@ -99,7 +109,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       this.setAssignmentsForUser(userId);
       this.setOpenAssignmentsOnly(true);
       this.setBuildIssues(false);
-      HashMap dayEvents = this.queryAssignmentRecordCount(db);
+      HashMap dayEvents = this.queryAssignmentRecordCount(db, timeZone);
       Set s = dayEvents.keySet();
       Iterator i = s.iterator();
       while (i.hasNext()) {

@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.base.EmailAddress" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*, org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
@@ -125,7 +125,7 @@ Ticket Details<br>
 		<td>
       <dhv:username id="<%= TicketDetails.getEnteredBy() %>"/>
       -
-      <%= TicketDetails.getEnteredString() %>
+      <dhv:tz timestamp="<%= TicketDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
 		</td>
   </tr>
   <tr class="containerBody">
@@ -135,7 +135,7 @@ Ticket Details<br>
 		<td>
       <dhv:username id="<%= TicketDetails.getModifiedBy() %>"/>
       -
-      <%= TicketDetails.getModifiedString() %>
+      <dhv:tz timestamp="<%= TicketDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
 		</td>
   </tr>
 </table>

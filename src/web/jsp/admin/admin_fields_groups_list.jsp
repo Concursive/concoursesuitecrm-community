@@ -130,10 +130,10 @@ Folder<br>
         <%= (thisField.getEnabled()? "Yes" : "No") %>
       </td>
       <td width="10%" align="center" nowrap>
-        <%= toHtml(toDateString(thisField.getStartDate())) %>
+      <dhv:tz timestamp="<%= thisField.getStartDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
       </td>
       <td width="10%" align="center" nowrap>
-        <%= toHtml(toDateString(thisField.getEndDate())) %>
+        <dhv:tz timestamp="<%= thisField.getEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
       </td>
     </tr>
 <%

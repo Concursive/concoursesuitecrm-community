@@ -167,5 +167,13 @@ public class OpportunityBean extends GenericBean {
     return true;
   }
   
+  /**
+   *  Gets the properties that are TimeZone sensitive for a Call
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    return OpportunityComponent.getTimeZoneParams();
+  }
 }
 

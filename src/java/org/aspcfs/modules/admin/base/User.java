@@ -17,7 +17,6 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.base.*;
 
 
-
 /**
  *  Represents a user access record <p>
  *
@@ -69,7 +68,7 @@ public class User extends GenericBean {
   protected java.sql.Timestamp modified = null;
   protected java.sql.Timestamp lastLogin = null;
 
-  protected java.sql.Date expires = null;
+  protected java.sql.Timestamp expires = null;
 
   protected boolean buildContact = false;
   protected boolean buildContactDetails = false;
@@ -244,7 +243,7 @@ public class User extends GenericBean {
    *
    *@param  expires  The new expires value
    */
-  public void setExpires(java.sql.Date expires) {
+  public void setExpires(java.sql.Timestamp expires) {
     this.expires = expires;
   }
 
@@ -255,7 +254,7 @@ public class User extends GenericBean {
    *@param  tmp  The new expires value
    */
   public void setExpires(String tmp) {
-    this.expires = DateUtils.parseDateString(tmp);
+    this.expires = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -911,7 +910,13 @@ public class User extends GenericBean {
   public void setBuildContact(boolean tmp) {
     this.buildContact = tmp;
   }
-  
+
+
+  /**
+   *  Sets the buildContactDetails attribute of the User object
+   *
+   *@param  tmp  The new buildContactDetails value
+   */
   public void setBuildContactDetails(boolean tmp) {
     this.buildContactDetails = tmp;
   }
@@ -966,7 +971,7 @@ public class User extends GenericBean {
    *
    *@return    The expires value
    */
-  public java.sql.Date getExpires() {
+  public java.sql.Timestamp getExpires() {
     return expires;
   }
 
@@ -1556,7 +1561,6 @@ public class User extends GenericBean {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Beginning insert");
       }
-
       //new contact at the same time
       if (contactId < 1) {
         Contact newContact = this.getContact();
@@ -1564,18 +1568,15 @@ public class User extends GenericBean {
         newContact.setModifiedBy(modifiedBy);
         newContact.setOwner(enteredBy);
         newContact.insert(db);
-
         if (System.getProperty("DEBUG") != null) {
           System.out.println("User-> Inserting new Contact");
         }
-
         contactId = newContact.getId();
-
         if (System.getProperty("DEBUG") != null) {
           System.out.println("User-> New Contact ID: " + newContact.getId());
         }
       }
-
+      //Insert the user
       StringBuffer sql = new StringBuffer();
       sql.append(
           "INSERT INTO access " +
@@ -1602,11 +1603,9 @@ public class User extends GenericBean {
         sql.append("?, ");
       }
       sql.append("?, ?) ");
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, getUsername());
-
       if (encryptedPassword != null) {
         pst.setString(++i, encryptedPassword);
       } else {
@@ -1620,12 +1619,7 @@ public class User extends GenericBean {
         pst.setInt(++i, getManagerId());
       }
       pst.setInt(++i, getRoleId());
-
-      if (expires == null) {
-        pst.setNull(++i, java.sql.Types.DATE);
-      } else {
-        pst.setDate(++i, this.getExpires());
-      }
+      DatabaseUtils.setTimestamp(pst, ++i, this.getExpires());
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1646,6 +1640,7 @@ public class User extends GenericBean {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Updating contact");
       }
+      //Update the backwards pointer
       pst = db.prepareStatement(
           "UPDATE contact " +
           "SET user_id = ? " +
@@ -1791,9 +1786,7 @@ public class User extends GenericBean {
       pst.executeUpdate();
       pst.close();
     }
-
     insertLogRecord(db);
-
   }
 
 
@@ -1809,6 +1802,27 @@ public class User extends GenericBean {
     thisLog.setUsername(this.getUsername());
     thisLog.setIp(this.getIp());
     thisLog.insert(db);
+  }
+
+
+  /**
+   *  Updates just the user settings
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateSettings(Connection db) throws SQLException {
+    if (this.id > -1) {
+      String sql =
+          "UPDATE access " +
+          "SET timezone = ? " +
+          "WHERE user_id = ? ";
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setString(1, this.timeZone);
+      pst.setInt(2, this.id);
+      pst.executeUpdate();
+      pst.close();
+    }
   }
 
 
@@ -2145,7 +2159,7 @@ public class User extends GenericBean {
     timeZone = rs.getString("timezone");
     startOfDay = rs.getInt("access_startofday");
     endOfDay = rs.getInt("access_endofday");
-    expires = rs.getDate("expires");
+    expires = rs.getTimestamp("expires");
     this.setAlias(rs.getInt("alias"));
     this.setContactId(rs.getInt("contact_id_link"));
     this.setId(rs.getInt("access_user_id"));
@@ -2317,9 +2331,9 @@ public class User extends GenericBean {
     }
     pst.setInt(++i, roleId);
     if (expires == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
+      pst.setNull(++i, java.sql.Types.TIMESTAMP);
     } else {
-      pst.setDate(++i, this.getExpires());
+      pst.setTimestamp(++i, this.getExpires());
     }
     if (password1 != null) {
       pst.setString(++i, encryptPassword(password1));
@@ -2403,6 +2417,12 @@ public class User extends GenericBean {
     UserList shortChildList = this.getShortChildList();
     UserList fullChildList = this.getFullChildList(shortChildList, new UserList());
     return (fullChildList.getUserListIds(id));
+  }
+  
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("expires");
+    return thisList;
   }
 }
 

@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="CampaignGroupListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="sclList" class="org.aspcfs.modules.communications.base.SearchCriteriaListList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -72,7 +72,7 @@ View Groups
       <dhv:username id="<%= thisList.getEnteredBy() %>" lastFirst="true"/>
     </td>
     <td valign="center" nowrap class="row<%= rowid %>">
-      <%= thisList.getModifiedDateTimeString() %>
+      <dhv:tz timestamp="<%= thisList.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
 	<%}%>

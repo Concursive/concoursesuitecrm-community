@@ -53,8 +53,8 @@ public class Campaign extends GenericBean {
   private int owner = -1;
   private int modifiedBy = -1;
   private int enteredBy = -1;
-  private java.sql.Date activeDate = null;
-  private java.sql.Date inactiveDate = null;
+  private java.sql.Timestamp activeDate = null;
+  private java.sql.Timestamp inactiveDate = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
   private boolean enabled = true;
@@ -694,7 +694,7 @@ public class Campaign extends GenericBean {
    *@param  tmp  The new ActiveDate value
    *@since       1.10
    */
-  public void setActiveDate(java.sql.Date tmp) {
+  public void setActiveDate(java.sql.Timestamp tmp) {
     this.activeDate = tmp;
   }
 
@@ -705,7 +705,7 @@ public class Campaign extends GenericBean {
    *@param  tmp  The new entered value
    */
   public void setActiveDate(String tmp) {
-    this.activeDate = DateUtils.parseDateString(tmp);
+    this.activeDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -714,7 +714,7 @@ public class Campaign extends GenericBean {
    *
    *@param  tmp  The new inactiveDate value
    */
-  public void setInactiveDate(java.sql.Date tmp) {
+  public void setInactiveDate(java.sql.Timestamp tmp) {
     this.inactiveDate = tmp;
   }
 
@@ -725,7 +725,7 @@ public class Campaign extends GenericBean {
    *@param  tmp  The new inactiveDate value
    */
   public void setInactiveDate(String tmp) {
-    this.inactiveDate = DateUtils.parseDateString(tmp);
+    this.inactiveDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -1027,7 +1027,7 @@ public class Campaign extends GenericBean {
    *@return    The ActiveDate value
    *@since     1.10
    */
-  public java.sql.Date getActiveDate() {
+  public java.sql.Timestamp getActiveDate() {
     return activeDate;
   }
 
@@ -1642,17 +1642,13 @@ public class Campaign extends GenericBean {
       pst.setString(++i, subject);
       pst.setString(++i, message);
       pst.setInt(++i, sendMethodId);
-      pst.setDate(++i, inactiveDate);
+      pst.setTimestamp(++i, inactiveDate);
       pst.setTimestamp(++i, approvalDate);
       pst.setInt(++i, type);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
-      if (approvedBy > -1) {
-        pst.setInt(++i, this.getApprovedBy());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
+      DatabaseUtils.setInt(pst, ++i, this.getApprovedBy());
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "campaign_campaign_id_seq");
@@ -1780,13 +1776,10 @@ public class Campaign extends GenericBean {
   public boolean deleteGroups(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
-
       if (this.getGroupList() != null && !this.getGroupList().equals("")) {
         StringTokenizer strt = new StringTokenizer(this.getGroupList(), "*");
-
         while (strt.hasMoreTokens()) {
           String tmpString = (String) strt.nextToken();
-
           PreparedStatement pstx = null;
           StringBuffer groupSql = new StringBuffer();
           groupSql.append(
@@ -1862,7 +1855,6 @@ public class Campaign extends GenericBean {
     SQLException message = null;
     try {
       db.setAutoCommit(false);
-
       //make sure there arent any  for instant action campaigns
       ActionItemLog.deleteLink(db, this.getId(), Constants.CAMPAIGN_OBJECT);
 
@@ -1936,11 +1928,9 @@ public class Campaign extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-
     boolean commit = true;
     int resultCount = 0;
     PreparedStatement pst = null;
-
     try {
       commit = db.getAutoCommit();
       if (commit) {
@@ -2034,7 +2024,7 @@ public class Campaign extends GenericBean {
           "modifiedby = ?, " +
           "modified = CURRENT_TIMESTAMP " +
           "WHERE campaign_id = ? " +
-      //"WHERE id = ? " +
+          //"WHERE id = ? " +
           "AND modified = ? " +
           "AND active = ? ");
       int i = 0;
@@ -2326,7 +2316,7 @@ public class Campaign extends GenericBean {
         "WHERE campaign_id = " + id);
     //"WHERE id = " + id);
     pst.setInt(++i, messageId);
-    pst.setDate(++i, activeDate);
+    pst.setTimestamp(++i, activeDate);
     pst.setInt(++i, sendMethodId);
     resultCount = pst.executeUpdate();
     pst.close();
@@ -2400,11 +2390,7 @@ public class Campaign extends GenericBean {
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getDescription());
-    if (activeDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setDate(++i, this.getActiveDate());
-    }
+    DatabaseUtils.setTimestamp(pst, ++i, this.getActiveDate());
     pst.setBoolean(++i, this.getEnabled());
     if (override && modified != null) {
       pst.setTimestamp(++i, modified);
@@ -2417,12 +2403,10 @@ public class Campaign extends GenericBean {
     pst.setInt(++i, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
-
     //The original survey is no longer needed
     if (statusId == FINISHED) {
       Survey.removeLink(db, this.id);
     }
-
     return resultCount;
   }
 
@@ -2447,23 +2431,18 @@ public class Campaign extends GenericBean {
     statusId = rs.getInt("status_id");
     status = rs.getString("status");
     active = rs.getBoolean("active");
-    activeDate = rs.getDate("active_date");
+    activeDate = rs.getTimestamp("active_date");
     sendMethodId = rs.getInt("send_method_id");
-    inactiveDate = rs.getDate("inactive_date");
+    inactiveDate = rs.getTimestamp("inactive_date");
     approvalDate = rs.getTimestamp("approval_date");
-    approvedBy = rs.getInt("approvedBy");
-    if (rs.wasNull()) {
-      approvedBy = -1;
-    }
+    approvedBy = DatabaseUtils.getInt(rs, "approvedBy");
     enabled = rs.getBoolean("enabled");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
-
     //message table
     messageName = rs.getString("messageName");
-
     //lookup_delivery_options table
     deliveryName = rs.getString("delivery");
   }
@@ -2518,6 +2497,19 @@ public class Campaign extends GenericBean {
     rs.close();
     pst.close();
     return enteredBy;
+  }
+  
+  
+    /**
+   *  Gets the properties that are TimeZone sensitive for a Call
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("activeDate");
+    thisList.add("inactiveDate");
+    return thisList;
   }
 }
 

@@ -786,7 +786,7 @@ public class OpportunityList extends ArrayList {
       sqlFilter.append("AND oc.alertdate >= ? ");
     }
     if (alertRangeEnd != null) {
-      sqlFilter.append("AND oc.alertdate <= ? ");
+      sqlFilter.append("AND oc.alertdate < ? ");
     }
     if (closeDateStart != null) {
       sqlFilter.append("AND oc.closedate >= ? ");

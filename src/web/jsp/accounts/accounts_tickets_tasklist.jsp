@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.*, org.aspcfs.modules.tasks.base.*,org.aspcfs.modules.base.EmailAddress, org.aspcfs.modules.base.Constants" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.troubletickets.base.*, org.aspcfs.modules.tasks.base.*,org.aspcfs.modules.base.EmailAddress, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="TaskList" class="org.aspcfs.modules.tasks.base.TaskList" scope="request"/>
@@ -183,10 +183,10 @@ Tasks<br>
             <%}%>
           </td>
           <td nowrap align="center" valign="top">
-            <%= thisTask.getDueDateString().equals("")?"-NA-":thisTask.getDueDateString() %>
+            <dhv:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="-NA-"/>
           </td>
             <td nowrap align="center" valign="top">
-              <%= thisTask.getCompleteDateString().equals("")?"-NA-":thisTask.getCompleteDateString() %>
+              <dhv:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="-NA-"/>
             </td>
             <td nowrap align="center" valign="top">
               <%= thisTask.getAgeString() %>

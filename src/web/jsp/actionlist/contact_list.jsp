@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.actionlist.base.ActionContact, org.aspcfs.modules.base.Constants" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.actionlist.base.ActionContact, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="ActionContacts" class="org.aspcfs.modules.actionlist.base.ActionContactsList" scope="request"/>
 <jsp:useBean id="ActionList" class="org.aspcfs.modules.actionlist.base.ActionList" scope="request"/>
 <jsp:useBean id="ContactActionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -130,7 +130,7 @@ Action Contacts<br>
         <a href="javascript:toggleImage('<%= thisContact.getId() %>', 'history<%= thisContact.getId() %>', 'contact<%= thisContact.getId() %>', '<%= rowid %>','<%= thisContact.getContact().getId() %>');"><img src="images/arrowright.gif" name="hisImage<%= thisContact.getId() %>" id="1" border="0" title="Click To View History"></a>
       </td>
       <td width="100%" valign="top">
-        <%= toHtml(thisContact.getMostRecentItem().getTypeString()) %>: <a href="javascript:parent.location.href='<%= thisContact.getMostRecentItem().getItemLink(thisContact.getContact().getId()) %>';"  onMouseOver="this.style.color='blue';window.status='View Details';return true;"  onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisContact.getMostRecentItem().getDescription()) %></a> [<%= toDateTimeString(thisContact.getMostRecentItem().getEntered()) %>]<br>
+        <%= toHtml(thisContact.getMostRecentItem().getTypeString()) %>: <a href="javascript:parent.location.href='<%= thisContact.getMostRecentItem().getItemLink(thisContact.getContact().getId()) %>';"  onMouseOver="this.style.color='blue';window.status='View Details';return true;"  onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisContact.getMostRecentItem().getDescription()) %></a> [<dhv:tz timestamp="<%= thisContact.getMostRecentItem().getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>]<br>
         <span name="contact<%= thisContact.getId() %>" id="contact<%= thisContact.getId() %>" style="display:none">
           <iframe src="empty.html" name="history<%= thisContact.getId() %>" height="100" width="100%" frameborder="0" marginwidth="0" marginheight="0" ></iframe>
         </span>
@@ -142,7 +142,7 @@ Action Contacts<br>
     <% } %>
     </td>
     <td nowrap align="center" valign="top">
-      <%= thisContact.getModifiedString() %>
+      <dhv:tz timestamp="<%= thisContact.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
 <%}

@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.tasks.base.*,org.aspcfs.modules.base.EmailAddress, org.aspcfs.modules.base.Constants" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.tasks.base.*,org.aspcfs.modules.base.EmailAddress, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="TaskList" class="org.aspcfs.modules.tasks.base.TaskList" scope="request"/>
 <jsp:useBean id="TaskListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -222,15 +222,15 @@
         <dhv:username id="<%= thisTask.getOwner() %>"/>
       <% }else{ %>
         -NA-
-      <%}%>
+      <% } %>
     </td>
     <%}%>
     <td nowrap align="center" valign="top">
-      <%= thisTask.getDueDateString().equals("")?"-NA-":thisTask.getDueDateString() %>
+      <dhv:tz timestamp="<%= thisTask.getDueDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="-NA-"/>
     </td>
     <% if(TaskListInfo.getFilterValue("listFilter2").equalsIgnoreCase("true")){ %>
       <td nowrap align="center" valign="top">
-        <%= thisTask.getCompleteDateString().equals("")?"-NA-":thisTask.getCompleteDateString() %>
+        <dhv:tz timestamp="<%= thisTask.getCompleteDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="-NA-"/>
       </td>
     <%}%>
       <td nowrap align="center" valign="top">

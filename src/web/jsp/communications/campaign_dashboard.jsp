@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="campList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="CampaignDashboardListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -84,7 +84,7 @@ Dashboard
       <%= ("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id"))?" <font color=\"red\">(Added)</font>":"") %>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
-      <%=toHtml(campaign.getActiveDateString())%>
+      <dhv:tz timestamp="<%=  campaign.getActiveDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <%=campaign.getRecipientCount()%>

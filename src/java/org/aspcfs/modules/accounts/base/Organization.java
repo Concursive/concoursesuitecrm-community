@@ -39,9 +39,9 @@ public class Organization extends GenericBean {
 
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
-  private java.sql.Date contractEndDate = null;
+  private java.sql.Timestamp contractEndDate = null;
 
-  private java.sql.Date alertDate = null;
+  private java.sql.Timestamp alertDate = null;
   private String alertText = "";
 
   private int modifiedBy = -1;
@@ -356,7 +356,7 @@ public class Organization extends GenericBean {
    *
    *@param  tmp  The new alertDate value
    */
-  public void setAlertDate(java.sql.Date tmp) {
+  public void setAlertDate(java.sql.Timestamp tmp) {
     this.alertDate = tmp;
   }
 
@@ -426,7 +426,7 @@ public class Organization extends GenericBean {
    *
    *@param  contractEndDate  The new ContractEndDate value
    */
-  public void setContractEndDate(java.sql.Date contractEndDate) {
+  public void setContractEndDate(java.sql.Timestamp contractEndDate) {
     this.contractEndDate = contractEndDate;
   }
 
@@ -447,7 +447,7 @@ public class Organization extends GenericBean {
    *@param  tmp  The new ContractEndDate value
    */
   public void setContractEndDate(String tmp) {
-    this.contractEndDate = DateUtils.parseDateString(tmp);
+    this.contractEndDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -457,7 +457,7 @@ public class Organization extends GenericBean {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    this.alertDate = DateUtils.parseDateString(tmp);
+    this.alertDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -855,7 +855,7 @@ public class Organization extends GenericBean {
    *
    *@return    The alertDate value
    */
-  public java.sql.Date getAlertDate() {
+  public java.sql.Timestamp getAlertDate() {
     return alertDate;
   }
 
@@ -1025,7 +1025,7 @@ public class Organization extends GenericBean {
    *
    *@return    The ContractEndDate value
    */
-  public java.sql.Date getContractEndDate() {
+  public java.sql.Timestamp getContractEndDate() {
     return contractEndDate;
   }
 
@@ -1154,7 +1154,7 @@ public class Organization extends GenericBean {
    *@param  alertDate  Description of the Parameter
    *@return            The alertDateStringLongYear value
    */
-  public static String getAlertDateStringLongYear(java.sql.Date alertDate) {
+  public static String getAlertDateStringLongYear(java.sql.Timestamp alertDate) {
     String tmp = "";
     try {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
@@ -1839,11 +1839,7 @@ public class Organization extends GenericBean {
       pst.setInt(++i, this.getIndustry());
       pst.setString(++i, this.getUrl());
       pst.setBoolean(++i, this.getMinerOnly());
-      if (owner > -1) {
-        pst.setInt(++i, this.getOwner());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
+      DatabaseUtils.setInt(pst, ++i, this.getOwner());
       pst.setInt(++i, this.getDuplicateId());
       pst.setString(++i, this.getNotes());
       pst.setInt(++i, this.getEmployees());
@@ -1926,7 +1922,6 @@ public class Organization extends GenericBean {
     if (!isValid(db)) {
       return -1;
     }
-
     try {
       db.setAutoCommit(false);
       i = this.update(db, false);
@@ -2094,18 +2089,8 @@ public class Organization extends GenericBean {
       pst.setInt(++i, this.getOwner());
     }
     pst.setInt(++i, this.getDuplicateId());
-
-    if (contractEndDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setDate(++i, this.getContractEndDate());
-    }
-
-    if (alertDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
-    } else {
-      pst.setDate(++i, this.getAlertDate());
-    }
+    DatabaseUtils.setTimestamp(pst, ++i, this.getContractEndDate());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getAlertDate());
     pst.setString(++i, alertText);
     pst.setString(++i, nameFirst);
     pst.setString(++i, nameMiddle);
@@ -2331,8 +2316,8 @@ public class Organization extends GenericBean {
       owner = -1;
     }
     duplicateId = rs.getInt("duplicate_id");
-    contractEndDate = rs.getDate("contract_end");
-    alertDate = rs.getDate("alertdate");
+    contractEndDate = rs.getTimestamp("contract_end");
+    alertDate = rs.getTimestamp("alertdate");
     alertText = rs.getString("alert");
 
     //contacts as accounts
@@ -2400,6 +2385,18 @@ public class Organization extends GenericBean {
       return null;
     }
     return out.toString().trim();
+  }
+  
+  /**
+   *  Gets the properties that are TimeZone sensitive for a Call
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("alertDate");
+    thisList.add("contractEndDate");
+    return thisList;
   }
 }
 

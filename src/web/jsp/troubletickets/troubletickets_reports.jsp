@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.modules.troubletickets.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,com.zeroio.iteam.base.*,org.aspcfs.modules.troubletickets.base.*" %>
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="TicketRptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -76,7 +76,7 @@ Reports<br>
       <%= thisItem.getRelativeSize() %>k
     </td>
     <td class="row<%= rowid %>" nowrap>
-      <%= toHtml(thisItem.getEnteredDateTimeString()) %>
+      <dhv:tz timestamp="<%= thisItem.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
     <td class="row<%= rowid %>" nowrap>
       <%= toHtml(thisItem.getEnteredByString()) %>

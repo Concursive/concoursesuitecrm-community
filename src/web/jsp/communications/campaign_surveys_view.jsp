@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="CampaignSurveyListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SurveyList" class="org.aspcfs.modules.communications.base.SurveyList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -74,7 +74,7 @@ Surveys
           <dhv:username id="<%= thisSurvey.getEnteredBy() %>"/>
         </td>
         <td class="row<%= rowid %>" nowrap>
-          <%= toHtml(thisSurvey.getModifiedDateTimeString()) %>
+          <dhv:tz timestamp="<%= thisSurvey.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
         </td>
       </tr>
 <%

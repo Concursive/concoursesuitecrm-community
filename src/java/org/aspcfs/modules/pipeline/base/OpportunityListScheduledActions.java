@@ -5,6 +5,7 @@ import org.aspcfs.modules.mycfs.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
+import java.text.DateFormat;
 import java.util.*;
 import java.sql.*;
 
@@ -59,6 +60,9 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
       if (System.getProperty("DEBUG") != null) {
         System.out.println("OppListScheduledActions -> Building opportunity alerts");
       }
+      //get TimeZone
+      TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
       this.setOwner(this.getUserId());
       this.setHasAlertDate(true);
       this.buildShortList(db);
@@ -68,7 +72,8 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
       Iterator n = this.iterator();
       while (n.hasNext()) {
         OpportunityComponent thisOpp = (OpportunityComponent) n.next();
-        companyCalendar.addEvent(thisOpp.getAlertDateStringLongYear(), "",
+        String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisOpp.getAlertDate());
+        companyCalendar.addEvent(alertDate, "",
             ((thisOpp.getAccountName() != null && !thisOpp.getAccountName().equals("")) ? thisOpp.getAccountName() + ": " : "") +
             thisOpp.getDescription() +
             " (" + thisOpp.getAlertText() + ")",
@@ -92,10 +97,15 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
     if (System.getProperty("DEBUG") != null) {
       System.out.println("OppListScheduledActions -> Building Alert Counts ");
     }
+    
     try {
+      //get TimeZone
+      TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
       this.setOwner(this.getUserId());
       this.setHasAlertDate(true);
-      HashMap dayEvents = this.queryRecordCount(db);
+      
+      HashMap dayEvents = this.queryRecordCount(db, timeZone);
       Set s = dayEvents.keySet();
       Iterator i = s.iterator();
       while (i.hasNext()) {

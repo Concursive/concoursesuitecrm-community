@@ -41,8 +41,8 @@ public class AssignmentList extends ArrayList {
 
   private java.sql.Date offsetDate = null;
 
-  protected java.sql.Date alertRangeStart = null;
-  protected java.sql.Date alertRangeEnd = null;
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
 
 
   /**
@@ -176,7 +176,7 @@ public class AssignmentList extends ArrayList {
    *
    *@param  tmp  The new alertRangeStart value
    */
-  public void setAlertRangeStart(java.sql.Date tmp) {
+  public void setAlertRangeStart(java.sql.Timestamp tmp) {
     this.alertRangeStart = tmp;
   }
 
@@ -186,7 +186,7 @@ public class AssignmentList extends ArrayList {
    *
    *@param  tmp  The new alertRangeEnd value
    */
-  public void setAlertRangeEnd(java.sql.Date tmp) {
+  public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
   }
 
@@ -340,7 +340,7 @@ public class AssignmentList extends ArrayList {
    *
    *@return    The alertRangeStart value
    */
-  public java.sql.Date getAlertRangeStart() {
+  public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
   }
 
@@ -350,7 +350,7 @@ public class AssignmentList extends ArrayList {
    *
    *@return    The alertRangeEnd value
    */
-  public java.sql.Date getAlertRangeEnd() {
+  public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
   }
 
@@ -487,7 +487,7 @@ public class AssignmentList extends ArrayList {
       sqlFilter.append("AND a.due_date >= ? ");
     }
     if (alertRangeEnd != null) {
-      sqlFilter.append("AND a.due_date <= ? ");
+      sqlFilter.append("AND a.due_date < ? ");
     }
   }
 
@@ -522,10 +522,10 @@ public class AssignmentList extends ArrayList {
       pst.setInt(++i, requirementId);
     }
     if (alertRangeStart != null) {
-      pst.setDate(++i, alertRangeStart);
+      pst.setTimestamp(++i, alertRangeStart);
     }
     if (alertRangeEnd != null) {
-      pst.setDate(++i, alertRangeEnd);
+      pst.setTimestamp(++i, alertRangeEnd);
     }
     return i;
   }

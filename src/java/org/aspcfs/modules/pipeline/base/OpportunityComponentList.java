@@ -7,9 +7,8 @@ import java.util.Iterator;
 import java.sql.*;
 import java.util.*;
 import java.text.*;
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.ObjectUtils;
 import org.aspcfs.modules.contacts.base.Call;
 import org.aspcfs.modules.base.Constants;
 
@@ -34,13 +33,13 @@ public class OpportunityComponentList extends ArrayList {
   protected int headerId = -1;
   protected int enteredBy = -1;
   protected boolean hasAlertDate = false;
-  protected java.sql.Date alertDate = null;
+  protected java.sql.Timestamp alertDate = null;
   protected int owner = -1;
   protected String ownerIdRange = null;
-  protected java.sql.Date alertRangeStart = null;
-  protected java.sql.Date alertRangeEnd = null;
-  protected java.sql.Date closeDateStart = null;
-  protected java.sql.Date closeDateEnd = null;
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
+  protected java.sql.Timestamp closeDateStart = null;
+  protected java.sql.Timestamp closeDateEnd = null;
   protected boolean queryOpenOnly = false;
 
 
@@ -95,7 +94,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    *@param  tmp  The new alertRangeStart value
    */
-  public void setAlertRangeStart(java.sql.Date tmp) {
+  public void setAlertRangeStart(java.sql.Timestamp tmp) {
     this.alertRangeStart = tmp;
   }
 
@@ -106,7 +105,7 @@ public class OpportunityComponentList extends ArrayList {
    *@param  tmp  The new alertRangeStart value
    */
   public void setAlertRangeStart(String tmp) {
-    this.alertRangeStart = java.sql.Date.valueOf(tmp);
+    this.alertRangeStart = java.sql.Timestamp.valueOf(tmp);
   }
 
 
@@ -115,7 +114,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    *@param  tmp  The new alertRangeEnd value
    */
-  public void setAlertRangeEnd(java.sql.Date tmp) {
+  public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
   }
 
@@ -126,7 +125,7 @@ public class OpportunityComponentList extends ArrayList {
    *@param  tmp  The new alertRangeEnd value
    */
   public void setAlertRangeEnd(String tmp) {
-    this.alertRangeEnd = java.sql.Date.valueOf(tmp);
+    this.alertRangeEnd = java.sql.Timestamp.valueOf(tmp);
   }
 
 
@@ -135,7 +134,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    *@return    The alertRangeStart value
    */
-  public java.sql.Date getAlertRangeStart() {
+  public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
   }
 
@@ -145,7 +144,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    *@return    The alertRangeEnd value
    */
-  public java.sql.Date getAlertRangeEnd() {
+  public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
   }
 
@@ -165,7 +164,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    *@param  tmp  The new alertDate value
    */
-  public void setAlertDate(java.sql.Date tmp) {
+  public void setAlertDate(java.sql.Timestamp tmp) {
     this.alertDate = tmp;
   }
 
@@ -195,7 +194,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    *@return    The closeDateStart value
    */
-  public java.sql.Date getCloseDateStart() {
+  public java.sql.Timestamp getCloseDateStart() {
     return closeDateStart;
   }
 
@@ -205,7 +204,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    *@return    The closeDateEnd value
    */
-  public java.sql.Date getCloseDateEnd() {
+  public java.sql.Timestamp getCloseDateEnd() {
     return closeDateEnd;
   }
 
@@ -215,7 +214,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    *@param  tmp  The new closeDateStart value
    */
-  public void setCloseDateStart(java.sql.Date tmp) {
+  public void setCloseDateStart(java.sql.Timestamp tmp) {
     this.closeDateStart = tmp;
   }
 
@@ -227,8 +226,8 @@ public class OpportunityComponentList extends ArrayList {
    */
   public void setCloseDateStart(String tmp) {
     try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      closeDateStart = new java.sql.Date(new java.util.Date().getTime());
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
+      closeDateStart = new java.sql.Timestamp(new java.util.Date().getTime());
       closeDateStart.setTime(tmpDate.getTime());
     } catch (Exception e) {
       closeDateStart = null;
@@ -241,7 +240,7 @@ public class OpportunityComponentList extends ArrayList {
    *
    *@param  tmp  The new closeDateEnd value
    */
-  public void setCloseDateEnd(java.sql.Date tmp) {
+  public void setCloseDateEnd(java.sql.Timestamp tmp) {
     this.closeDateEnd = tmp;
   }
 
@@ -253,8 +252,8 @@ public class OpportunityComponentList extends ArrayList {
    */
   public void setCloseDateEnd(String tmp) {
     try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      closeDateEnd = new java.sql.Date(new java.util.Date().getTime());
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
+      closeDateEnd = new java.sql.Timestamp(new java.util.Date().getTime());
       closeDateEnd.setTime(tmpDate.getTime());
     } catch (Exception e) {
       closeDateEnd = null;
@@ -339,7 +338,7 @@ public class OpportunityComponentList extends ArrayList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap queryRecordCount(Connection db) throws SQLException {
+  public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
 
@@ -357,8 +356,8 @@ public class OpportunityComponentList extends ArrayList {
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertdate = Call.getAlertDateStringLongYear(rs.getDate("alertdate"));
-      events.put(alertdate, new Integer(rs.getInt("count")));
+      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("alertdate"));
+      events.put(alertDate, new Integer(rs.getInt("count")));
     }
     rs.close();
     pst.close();
@@ -392,7 +391,7 @@ public class OpportunityComponentList extends ArrayList {
       thisOpp.setId(rs.getInt("id"));
       thisOpp.setDescription(rs.getString("description"));
       thisOpp.setAccountName(rs.getString("acct_name"));
-      thisOpp.setAlertDate(rs.getDate("alertdate"));
+      thisOpp.setAlertDate(rs.getTimestamp("alertdate"));
       thisOpp.setAlertText(rs.getString("alert"));
       this.add(thisOpp);
     }
@@ -526,7 +525,7 @@ public class OpportunityComponentList extends ArrayList {
       sqlFilter.append("AND oc.alertdate >= ? ");
     }
     if (alertRangeEnd != null) {
-      sqlFilter.append("AND oc.alertdate <= ? ");
+      sqlFilter.append("AND oc.alertdate < ? ");
     }
     if (closeDateStart != null) {
       sqlFilter.append("AND oc.closedate >= ? ");
@@ -585,19 +584,19 @@ public class OpportunityComponentList extends ArrayList {
       pst.setInt(++i, enteredBy);
     }
     if (alertDate != null) {
-      pst.setDate(++i, alertDate);
+      pst.setTimestamp(++i, alertDate);
     }
     if (alertRangeStart != null) {
-      pst.setDate(++i, alertRangeStart);
+      pst.setTimestamp(++i, alertRangeStart);
     }
     if (alertRangeEnd != null) {
-      pst.setDate(++i, alertRangeEnd);
+      pst.setTimestamp(++i, alertRangeEnd);
     }
     if (closeDateStart != null) {
-      pst.setDate(++i, closeDateStart);
+      pst.setTimestamp(++i, closeDateStart);
     }
     if (closeDateEnd != null) {
-      pst.setDate(++i, closeDateEnd);
+      pst.setTimestamp(++i, closeDateEnd);
     }
     if (owner != -1) {
       pst.setInt(++i, owner);

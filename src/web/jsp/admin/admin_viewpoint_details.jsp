@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="org.aspcfs.modules.admin.base.User,java.util.*,org.aspcfs.modules.admin.base.Permission" %>
+<%@ page import="java.text.DateFormat,org.aspcfs.modules.admin.base.User,java.util.*,org.aspcfs.modules.admin.base.Permission" %>
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="Viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint" scope="request"/>
 <jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
@@ -35,16 +35,16 @@ Update Viewpoint <br>
 	  </th>
   </tr>
   <tr class="containerBody">
-    <td width="150" align="right" class="formLabel">Viewpoint</td>
-    <td align="left"> <%= Viewpoint.getVpUser().getContact().getNameLastFirst() %> <%= showAttribute(request, "ViewpointError") %></td>
+    <td class="formLabel">Viewpoint</td>
+    <td> <%= Viewpoint.getVpUser().getContact().getNameLastFirst() %> <%= showAttribute(request, "ViewpointError") %></td>
   </tr>
   <tr class="containerBody">
-    <td width="150" align="right" class="formLabel">Entered</td>
-    <td align="left"><%= toDateTimeString(Viewpoint.getEntered()) %></td>
+    <td class="formLabel">Entered</td>
+    <td><dhv:tz timestamp="<%= Viewpoint.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/></td>
   </tr>
   <tr class="containerBody">
-    <td width="150" align="right" class="formLabel">Enabled</td>
-    <td align="left"><input type="checkbox" name="enabled" <%= Viewpoint.getEnabled() ? " checked" : ""%>></td>
+    <td class="formLabel">Enabled</td>
+    <td><input type="checkbox" name="enabled" <%= Viewpoint.getEnabled() ? " checked" : ""%>></td>
   </tr>
 </table>
 &nbsp;

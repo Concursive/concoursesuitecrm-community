@@ -2,14 +2,14 @@
 <%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="Locale" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<jsp:useBean id="TimeZone" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="TimeZone" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form action="MyCFSSettings.do?command=UpdateSettings" method="post">
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 <a href="MyCFS.do?command=MyProfile">My Settings</a> >
-Locale<br>
+Location<br>
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="myhomepage-profile-settings-edit">
+<dhv:permission name="myhomepage-profile-settings-edit,myhomepage-profile-view">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
@@ -23,6 +23,7 @@ Locale<br>
       <strong>Location Settings</strong>
     </th>
   </tr>
+<%--
   <tr>
     <td nowrap class="formLabel">Start of Day</td>
     <td><input type="text" name="dayStart" value=""></td>
@@ -31,16 +32,17 @@ Locale<br>
     <td nowrap class="formLabel">End of Day</td>
     <td><input type="text" name="dayEnd" value=""></td>
   </tr>
+--%>
   <tr>
     <td nowrap class="formLabel">
       Time Zone
     </td>
     <td>
-      <% TimeZone.setTypeTimeZone(); %><%= TimeZone.getHtml("timeZone", User.getTimeZone()) %>
+      <%= TimeZone.getSelect("timeZone", User.getTimeZone()).getHtml() %>
     </td>
   </tr>
 </table>
-<dhv:permission name="myhomepage-profile-settings-edit">
+<dhv:permission name="myhomepage-profile-settings-edit,myhomepage-profile-view">
 <br>
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">

@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.pipeline.base.OpportunityComponent,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.pipeline.base.OpportunityComponent,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="ComponentList" class="org.aspcfs.modules.pipeline.base.OpportunityComponentList" scope="request"/>
@@ -97,7 +97,7 @@ Opportunity Details<br>
       $<%= oppComponent.getGuessCurrency() %>
     </td>
     <td valign="top" align="center" nowrap>
-      <%= toHtml(oppComponent.getCloseDateString()) %>
+      <dhv:tz timestamp="<%= oppComponent.getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>" default="&nbsp;"/>
     </td>
     <td valign="top" align="center" nowrap>
       <%= toHtml(oppComponent.getStageName()) %>

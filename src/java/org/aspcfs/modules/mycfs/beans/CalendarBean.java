@@ -35,6 +35,7 @@ public class CalendarBean {
   private String selectedUserName = "";
   private boolean agendaView = true;
   private ArrayList alertTypes = new ArrayList();
+  private TimeZone timeZone = null;
 
 
 
@@ -101,6 +102,26 @@ public class CalendarBean {
    */
   public void setPrimaryYear(int primaryYear) {
     this.primaryYear = primaryYear;
+  }
+
+
+  /**
+   *  Sets the timeZone attribute of the CalendarBean object
+   *
+   *@param  timeZone  The new timeZone value
+   */
+  public void setTimeZone(TimeZone timeZone) {
+    this.timeZone = timeZone;
+  }
+
+
+  /**
+   *  Gets the timeZone attribute of the CalendarBean object
+   *
+   *@return    The timeZone value
+   */
+  public TimeZone getTimeZone() {
+    return timeZone;
   }
 
 
@@ -346,7 +367,7 @@ public class CalendarBean {
    *@return    The startOfWeekDate value
    */
   public java.util.Date getStartOfWeekDate() {
-    Calendar thisCal = Calendar.getInstance();
+    Calendar thisCal = cal.getInstance();
     thisCal.set(yearSelected, startMonthOfWeek - 1, startDayOfWeek);
     return thisCal.getTime();
   }
@@ -358,7 +379,7 @@ public class CalendarBean {
    *@return    The endOfWeekDate value
    */
   public java.util.Date getEndOfWeekDate() {
-    Calendar thisCal = Calendar.getInstance();
+    Calendar thisCal = cal.getInstance();
     thisCal.set(yearSelected, startMonthOfWeek - 1, startDayOfWeek);
     thisCal.add(java.util.Calendar.DATE, +6);
     return thisCal.getTime();
@@ -373,41 +394,61 @@ public class CalendarBean {
    *@exception  SQLException  Description of the Exception
    */
   public void update(Connection db, ActionContext context) throws SQLException {
-    if (context.getRequest().getParameter("primaryMonth") != null) {
-      setPrimaryMonth(Integer.parseInt(context.getRequest().getParameter("primaryMonth")));
-    }
+    HttpServletRequest request = context.getRequest();
 
-    if (context.getRequest().getParameter("primaryYear") != null) {
-      setPrimaryYear(Integer.parseInt(context.getRequest().getParameter("primaryYear")));
-    }
+    //set the timezone if it is different from the server timezone
+    UserBean thisUser = (UserBean) request.getSession().getAttribute("User");
+    String tZone = thisUser.getUserRecord().getTimeZone();
     
-    if (context.getRequest().getParameter("alertsView") != null) {
-      setCalendarDetailsView(context.getRequest().getParameter("alertsView"));
+      if (tZone != null && (timeZone == null || (timeZone != null && !timeZone.hasSameRules(TimeZone.getTimeZone(tZone))))) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CalendarBean -- > Setting timezone to " + tZone);
+        }
+        setTimeZone(TimeZone.getTimeZone(tZone));
+        cal.setTimeZone(timeZone);
+        if(timeZone == null){
+          primaryMonth = cal.get(Calendar.MONTH) + 1;
+          primaryYear = cal.get(Calendar.YEAR);
+          monthSelected = cal.get(Calendar.MONTH) + 1;
+          yearSelected = cal.get(Calendar.YEAR);
+        }
+      }
+
+    if (request.getParameter("primaryMonth") != null) {
+      setPrimaryMonth(Integer.parseInt(request.getParameter("primaryMonth")));
     }
 
-    if (context.getRequest().getParameter("userId") != null) {
-      setSelectedUserId(Integer.parseInt(context.getRequest().getParameter("userId")));
+    if (request.getParameter("primaryYear") != null) {
+      setPrimaryYear(Integer.parseInt(request.getParameter("primaryYear")));
+    }
+
+    if (request.getParameter("alertsView") != null) {
+      setCalendarDetailsView(request.getParameter("alertsView"));
+    }
+
+    if (request.getParameter("userId") != null) {
+      setSelectedUserId(Integer.parseInt(request.getParameter("userId")));
       setSelectedUserName(db);
     }
 
-    if (context.getRequest().getParameter("day") != null) {
-      setDaySelected(Integer.parseInt(context.getRequest().getParameter("day")));
+    if (request.getParameter("day") != null) {
+      setDaySelected(Integer.parseInt(request.getParameter("day")));
     }
 
-    if (context.getRequest().getParameter("month") != null) {
-      monthSelected = Integer.parseInt(context.getRequest().getParameter("month"));
+    if (request.getParameter("month") != null) {
+      monthSelected = Integer.parseInt(request.getParameter("month"));
     }
 
-    if (context.getRequest().getParameter("year") != null) {
-      yearSelected = Integer.parseInt(context.getRequest().getParameter("year"));
+    if (request.getParameter("year") != null) {
+      yearSelected = Integer.parseInt(request.getParameter("year"));
     }
 
-    if (context.getRequest().getParameter("startMonthOfWeek") != null) {
-      startMonthOfWeek = Integer.parseInt(context.getRequest().getParameter("startMonthOfWeek"));
+    if (request.getParameter("startMonthOfWeek") != null) {
+      startMonthOfWeek = Integer.parseInt(request.getParameter("startMonthOfWeek"));
     }
 
-    if (context.getRequest().getParameter("startDayOfWeek") != null) {
-      startDayOfWeek = Integer.parseInt(context.getRequest().getParameter("startDayOfWeek"));
+    if (request.getParameter("startDayOfWeek") != null) {
+      startDayOfWeek = Integer.parseInt(request.getParameter("startDayOfWeek"));
     }
 
     if (this.getSelectedUserId() == -1) {

@@ -3,6 +3,7 @@ package org.aspcfs.utils.web;
 import org.aspcfs.modules.mycfs.base.CalendarEvent;
 import org.aspcfs.modules.mycfs.base.CalendarEventList;
 import org.aspcfs.modules.mycfs.beans.CalendarBean;
+import org.aspcfs.utils.DateUtils;
 import com.darkhorseventures.framework.actions.ActionContext;
 import java.text.*;
 import java.util.*;
@@ -62,6 +63,9 @@ public class CalendarView {
   private int synchFrameCounter = 1;
   CalendarBean calendarInfo = null;
 
+  //timezone
+  TimeZone timeZone = null;
+
 
   /**
    *  The Default Constructor
@@ -89,6 +93,7 @@ public class CalendarView {
     String origYear = request.getParameter("origYear");
     String origMonth = request.getParameter("origMonth");
     String dateString = request.getParameter("date");
+    String timeZone = request.getParameter("timeZone");
 
     //If the user clicks the next/previous arrow, increment/decrement the month
     //Range checking is not necessary on the month.  The calendar object automatically
@@ -106,6 +111,11 @@ public class CalendarView {
       } catch (NumberFormatException e) {
       }
     }
+
+    //set time zone
+    if (timeZone != null && !"".equals(timeZone)) {
+      cal.setTimeZone(TimeZone.getTimeZone(timeZone));
+    }
     this.setYear(year);
     this.setMonth(month);
     this.setDay(day);
@@ -113,17 +123,25 @@ public class CalendarView {
 
 
   /**
-   *Constructor for using with the CalendarBean 
+   *  Constructor for using with the CalendarBean
    *
    *@param  calendarInfo  Description of the Parameter
    */
   public CalendarView(CalendarBean calendarInfo) {
     this("EN", "US");
-    
+
     this.calendarInfo = calendarInfo;
+
     int month = calendarInfo.getPrimaryMonth();
     int year = calendarInfo.getPrimaryYear();
     int day = calendarInfo.getDaySelected();
+
+    //set time zone and update the Calendar
+    this.setTimeZone(calendarInfo.getTimeZone());
+    cal.setTimeZone(timeZone);
+    calPrev.setTimeZone(timeZone);
+    calNext.setTimeZone(timeZone);
+
     this.setYear(year);
     this.setMonth(month);
     this.setDay(day);
@@ -403,6 +421,26 @@ public class CalendarView {
 
 
   /**
+   *  Sets the timeZone attribute of the CalendarView object
+   *
+   *@param  timeZone  The new timeZone value
+   */
+  public void setTimeZone(TimeZone timeZone) {
+    this.timeZone = timeZone;
+  }
+
+
+  /**
+   *  Gets the timeZone attribute of the CalendarView object
+   *
+   *@return    The timeZone value
+   */
+  public TimeZone getTimeZone() {
+    return timeZone;
+  }
+
+
+  /**
    *  Gets the calendarInfo attribute of the CalendarView object
    *
    *@return    The calendarInfo value
@@ -619,14 +657,14 @@ public class CalendarView {
    *@param  context  Description of the Parameter
    *@return          The calendarStartDate value
    */
-  public java.sql.Date getCalendarStartDate(ActionContext context) {
+  public String getCalendarStartDate(ActionContext context) {
     int displayMonth = 0;
     int displayDay = 0;
     int displayYear = 0;
     String source = context.getRequest().getParameter("source");
     if (source != null) {
       if (calendarInfo.isAgendaView() && source.equalsIgnoreCase("calendarDetails")) {
-        Calendar today = Calendar.getInstance();
+        Calendar today = Calendar.getInstance(timeZone);
         displayMonth = today.get(Calendar.MONTH) + 1;
         displayDay = today.get(Calendar.DAY_OF_MONTH);
         displayYear = today.get(Calendar.YEAR);
@@ -653,7 +691,7 @@ public class CalendarView {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("CalendarView-> Start Day: " + displayMonth + "/" + displayDay + "/" + displayYear);
     }
-    return (java.sql.Date.valueOf(displayYear + "-" + displayMonth + "-" + displayDay));
+    return (displayMonth + "/" + displayDay + "/" + displayYear);
   }
 
 
@@ -663,27 +701,30 @@ public class CalendarView {
    *@param  context  Description of the Parameter
    *@return          The calendarEndDate value
    */
-  public java.sql.Date getCalendarEndDate(ActionContext context) {
+  public String getCalendarEndDate(ActionContext context) {
     int displayMonth = 0;
     int displayDay = 0;
     int displayYear = 0;
     String source = context.getRequest().getParameter("source");
     if (source != null) {
       if (calendarInfo.isAgendaView() && source.equalsIgnoreCase("calendarDetails")) {
-        Calendar today = Calendar.getInstance();
-        today.add(Calendar.DATE, 6);
+        Calendar today = Calendar.getInstance(timeZone);
+        today.add(Calendar.DATE, 7);
         displayMonth = today.get(Calendar.MONTH) + 1;
         displayDay = today.get(Calendar.DAY_OF_MONTH);
         displayYear = today.get(Calendar.YEAR);
       } else if (!source.equalsIgnoreCase("Calendar")) {
         if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
-          displayMonth = calendarInfo.getMonthSelected();
-          displayDay = calendarInfo.getDaySelected();
-          displayYear = calendarInfo.getYearSelected();
+          Calendar tmpCal = Calendar.getInstance();
+          tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected() - 1, calendarInfo.getDaySelected());
+          tmpCal.add(java.util.Calendar.DATE, +1);
+          displayMonth = tmpCal.get(Calendar.MONTH) + 1;
+          displayDay = tmpCal.get(Calendar.DAY_OF_MONTH);
+          displayYear = tmpCal.get(Calendar.YEAR);
         } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
-          Calendar newDate = Calendar.getInstance();
+          Calendar newDate = Calendar.getInstance(timeZone);
           newDate.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek() - 1, calendarInfo.getStartDayOfWeek());
-          newDate.add(Calendar.DATE, 6);
+          newDate.add(Calendar.DATE, 7);
           displayMonth = newDate.get(Calendar.MONTH) + 1;
           displayDay = newDate.get(Calendar.DATE);
           displayYear = newDate.get(Calendar.YEAR);
@@ -693,15 +734,18 @@ public class CalendarView {
           displayDay = numberOfCells - getEndCell(cal) - 1;
         }
       } else {
-        displayMonth = calNext.get(Calendar.MONTH) + 1;
-        displayYear = calNext.get(Calendar.YEAR);
-        displayDay = numberOfCells - getEndCell(cal) - 1;
+        Calendar tmpCal = Calendar.getInstance();
+        tmpCal.set(calNext.get(Calendar.YEAR), calNext.get(Calendar.MONTH), (numberOfCells - getEndCell(cal) - 1));
+        tmpCal.add(java.util.Calendar.DATE, +1);
+        displayMonth = tmpCal.get(Calendar.MONTH) + 1;
+        displayDay = tmpCal.get(Calendar.DAY_OF_MONTH);
+        displayYear = tmpCal.get(Calendar.YEAR);
       }
     }
     if (System.getProperty("DEBUG") != null) {
       System.out.println("CalendarView-> End Day: " + displayMonth + "/" + displayDay + "/" + displayYear);
     }
-    return (java.sql.Date.valueOf(displayYear + "-" + displayMonth + "-" + displayDay));
+    return (displayMonth + "/" + displayDay + "/" + displayYear);
   }
 
 
@@ -714,10 +758,13 @@ public class CalendarView {
    *@since
    */
   public boolean isCurrentDay(Calendar tmp, int indate) {
-    Calendar thisMonth = Calendar.getInstance();
-    if ((indate == thisMonth.get(Calendar.DAY_OF_MONTH)) &&
-        (tmp.get(Calendar.MONTH) == thisMonth.get(Calendar.MONTH)) &&
-        (tmp.get(Calendar.YEAR) == thisMonth.get(Calendar.YEAR))) {
+    Calendar thisCal = Calendar.getInstance();
+    if (timeZone != null) {
+      thisCal.setTimeZone(timeZone);
+    }
+    if ((indate == thisCal.get(Calendar.DAY_OF_MONTH)) &&
+        (tmp.get(Calendar.MONTH) == thisCal.get(Calendar.MONTH)) &&
+        (tmp.get(Calendar.YEAR) == thisCal.get(Calendar.YEAR))) {
       return true;
     } else {
       return false;
@@ -768,6 +815,9 @@ public class CalendarView {
    */
   public String getToday() {
     Calendar today = Calendar.getInstance();
+    if (timeZone != null) {
+      today.setTimeZone(timeZone);
+    }
     return (this.getMonthName(today) + " " + today.get(Calendar.DAY_OF_MONTH) + ", " + today.get(Calendar.YEAR));
   }
 
@@ -889,7 +939,11 @@ public class CalendarView {
       html.append("&nbsp;");
       html.append(getHtmlYearSelect());
       html.append("&nbsp;");
-      html.append("<a href=\"javascript:showToDaysEvents('" + (Calendar.getInstance().get(Calendar.MONTH) + 1) + "','" + Calendar.getInstance().get(Calendar.DATE) + "','" + Calendar.getInstance().get(Calendar.YEAR) + "');\">Today</a>");
+      Calendar tmp = Calendar.getInstance();
+      if (timeZone != null) {
+        tmp.setTimeZone(timeZone);
+      }
+      html.append("<a href=\"javascript:showToDaysEvents('" + (tmp.get(Calendar.MONTH) + 1) + "','" + tmp.get(Calendar.DATE) + "','" + tmp.get(Calendar.YEAR) + "');\">Today</a>");
       html.append("</th>");
     }
     html.append("</tr>");
@@ -1072,6 +1126,9 @@ public class CalendarView {
     //Display a link that selects today
     if (popup) {
       Calendar tmp = Calendar.getInstance();
+      if (timeZone != null) {
+        tmp.setTimeZone(timeZone);
+      }
       int displayMonth = tmp.get(Calendar.MONTH) + 1;
       int displayYear = tmp.get(Calendar.YEAR);
       int displayDay = tmp.get(Calendar.DAY_OF_MONTH);
@@ -1140,7 +1197,7 @@ public class CalendarView {
     StringBuffer html = new StringBuffer();
 
     //Calendar tmpCal = new GregorianCalendar();
-    Calendar tmpCal = Calendar.getInstance();
+    Calendar tmpCal = Calendar.getInstance(timeZone);
     Date now = new Date();
     if (calendarInfo != null) {
       if (calendarInfo.isAgendaView()) {
@@ -1153,23 +1210,21 @@ public class CalendarView {
         tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek() - 1, calendarInfo.getStartDayOfWeek());
       }
     }
-
     while (count < max && loopCount < dayCount) {
       thisDay = getDaysEvents(tmpCal.get(Calendar.MONTH), tmpCal.get(Calendar.DAY_OF_MONTH), tmpCal.get(Calendar.YEAR));
-
       Iterator i = thisDay.iterator();
       if (i.hasNext()) {
         CalendarEventList thisEventList = new CalendarEventList();
-        thisEventList.setDate(tmpCal.getTime());
+        thisEventList.setDate(DateUtils.getDate(tmpCal));
         allDays.add(thisEventList);
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("CalendarView-> Day added");
+          System.out.println("CalendarView-> Day added ");
         }
         while (i.hasNext() && count < max) {
           CalendarEvent thisEvent = (CalendarEvent) i.next();
           thisEventList.add(thisEvent);
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("CalendarView-> Event added: " + thisEvent.getCategory());
+            System.out.println("CalendarView-> Event added: " + thisEvent.getCategory() + " on " + thisEvent.getDateString());
           }
           count++;
         }

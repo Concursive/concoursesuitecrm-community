@@ -110,5 +110,128 @@ public class DateUtils {
     }
     return null;
   }
+
+
+  /**
+   *  Gets the dateString attribute of the DateUtils object
+   *
+   *@param  date        Description of the Parameter
+   *@param  timeZone    Description of the Parameter
+   *@param  dateFormat  Description of the Parameter
+   *@param  timeFormat  Description of the Parameter
+   *@return             The dateString value
+   */
+  public static String getUserToServerDateTimeString(TimeZone timeZone, int dateFormat, int timeFormat, String date) {
+    String convertedDate = null;
+    try {
+      DateFormat localeFormatter = DateFormat.getDateInstance(dateFormat);
+      if (timeZone != null) {
+        localeFormatter.setTimeZone(timeZone);
+      }
+      DateFormat serverFormatter = DateFormat.getDateTimeInstance(dateFormat, timeFormat);
+      convertedDate = serverFormatter.format(localeFormatter.parse(date));
+    } catch (Exception e) {
+      System.err.println("EXCEPTION: DateTimeHandler-> Timestamp ");
+    }
+    return convertedDate;
+  }
+
+
+  /**
+   *  Returns the converted server time based on the current calendar time and timezone of the user
+   *
+   *@param  cal       Description of the Parameter
+   *@param  timeZone  Description of the Parameter
+   *@return           The userToServerDateTime value
+   */
+  public static java.sql.Timestamp getUserToServerDateTime(Calendar cal, TimeZone timeZone) {
+    java.sql.Timestamp timestampValue = null;
+    try {
+      String date = getDateString(cal);
+      DateFormat localFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
+      if (timeZone != null) {
+        localFormatter.setTimeZone(timeZone);
+      }
+      timestampValue = new java.sql.Timestamp(localFormatter.parse(date).getTime());
+    } catch (Exception e) {
+      System.out.println("DateUtils -- > getUserToServerDateTime Exception" + e.toString());
+    }
+    return timestampValue;
+  }
+
+
+  /**
+   *  Gets the serverToUserDateString attribute of the DateUtils class
+   *
+   *@param  timeZone    Description of the Parameter
+   *@param  dateFormat  Description of the Parameter
+   *@param  date        Description of the Parameter
+   *@return             The serverToUserDateString value
+   */
+  public static String getServerToUserDateString(TimeZone timeZone, int dateFormat, java.sql.Timestamp date) {
+    SimpleDateFormat formatter = null;
+    try {
+      //TODO: combine the Locale when User Locale that has been implemented
+      formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(dateFormat);
+      formatter.applyPattern("M/d/yyyy");
+      formatter.setTimeZone(timeZone);
+    } catch (Exception e) {
+      System.err.println("EXCEPTION: DateUtils -> Timestamp " + date);
+    }
+    return formatter.format((java.util.Date) date);
+  }
+
+
+  /**
+   *  Gets the serverToUserDateTimeString attribute of the DateUtils class
+   *
+   *@param  timeZone    Description of the Parameter
+   *@param  dateFormat  Description of the Parameter
+   *@param  timeFormat  Description of the Parameter
+   *@param  date        Description of the Parameter
+   *@return             The serverToUserDateTimeString value
+   */
+  public static String getServerToUserDateTimeString(TimeZone timeZone, int dateFormat, int timeFormat, java.sql.Timestamp date) {
+    SimpleDateFormat formatter = null;
+    try {
+      //TODO: combine the Locale when User Locale that has been implemented
+      formatter = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance(dateFormat, timeFormat);
+      formatter.setTimeZone(timeZone);
+    } catch (Exception e) {
+      System.err.println("EXCEPTION: DateUtils -> Timestamp " + date);
+    }
+    return formatter.format(date);
+  }
+
+
+  /**
+   *  Returns the current time from a calendar object
+   *
+   *@param  cal         Description of the Parameter
+   *@return             The date value
+   */
+  public static java.util.Date getDate(Calendar cal) {
+    java.util.Date convertedDate = null;
+    try {
+      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(DateFormat.SHORT);
+      formatter.applyPattern("M/d/yyyy");
+      String tmpDate = (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR);
+      convertedDate = formatter.parse(tmpDate);
+    } catch (Exception e) {
+      System.err.println("EXCEPTION: DateUtils -> Timestamp ");
+    }
+    return convertedDate;
+  }
+
+
+  /**
+   *  Returns the current date of the calendar in the m/d/yyyy format as a string
+   *
+   *@param  cal         Description of the Parameter
+   *@return             The dateString value
+   */
+  public static String getDateString(Calendar cal) {
+    return (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR);
+  }
 }
 

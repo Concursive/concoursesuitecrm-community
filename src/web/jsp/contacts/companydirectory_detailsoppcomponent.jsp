@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="oppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
@@ -83,7 +83,7 @@ Component Details
       Est. Close Date
     </td>
     <td>
-      <%= oppComponentDetails.getCloseDateString() %>&nbsp;
+    <dhv:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -131,7 +131,7 @@ Component Details
       Current Stage Date
     </td>
     <td>
-      <%= toHtml(oppComponentDetails.getStageDateString()) %>&nbsp;
+      <dhv:tz timestamp="<%= oppComponentDetails.getStageDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -158,7 +158,7 @@ Component Details
       Alert Date
     </td>
     <td>
-       <%= oppComponentDetails.getAlertDateStringLongYear() %>
+      <dhv:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
 </dhv:evaluate>  
@@ -169,7 +169,7 @@ Component Details
     <td>
       <dhv:username id="<%= oppComponentDetails.getEnteredBy() %>"/>
       -
-      <%= oppComponentDetails.getEnteredString() %>
+      <dhv:tz timestamp="<%= oppComponentDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -179,7 +179,7 @@ Component Details
     <td>
       <dhv:username id="<%= oppComponentDetails.getModifiedBy() %>"/>
       -
-      <%= oppComponentDetails.getModifiedString() %>
+      <dhv:tz timestamp="<%= oppComponentDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
 </table>

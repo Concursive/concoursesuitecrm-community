@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -51,7 +51,7 @@ Contact Details<br>
     <td>
       <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
       -
-      <%= ContactDetails.getEnteredString() %>
+      <dhv:tz timestamp="<%= ContactDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -61,7 +61,7 @@ Contact Details<br>
     <td>
       <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
       -
-      <%= ContactDetails.getModifiedString() %>
+      <dhv:tz timestamp="<%= ContactDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
 </table>

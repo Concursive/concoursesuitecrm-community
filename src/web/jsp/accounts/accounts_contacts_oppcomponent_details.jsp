@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
@@ -96,7 +96,7 @@ Component Details<br>
             Est. Close Date
           </td>
           <td>
-            <%= OppComponentDetails.getCloseDateString() %>&nbsp;
+            <dhv:tz timestamp="<%= OppComponentDetails.getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -144,7 +144,7 @@ Component Details<br>
             Current Stage Date
           </td>
           <td>
-            <%= toHtml(OppComponentDetails.getStageDateString()) %>&nbsp;
+            <dhv:tz timestamp="<%= OppComponentDetails.getStageDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -171,7 +171,7 @@ Component Details<br>
             Alert Date
           </td>
           <td>
-             <%= OppComponentDetails.getAlertDateStringLongYear() %>
+            <dhv:tz timestamp="<%= OppComponentDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
           </td>
         </tr>
       </dhv:evaluate>  
@@ -182,7 +182,7 @@ Component Details<br>
           <td>
             <dhv:username id="<%= OppComponentDetails.getEnteredBy() %>"/>
             -
-            <%= OppComponentDetails.getEnteredString() %>
+            <dhv:tz timestamp="<%= OppComponentDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -192,7 +192,7 @@ Component Details<br>
           <td>
             <dhv:username id="<%= OppComponentDetails.getModifiedBy() %>"/>
             -
-            <%= OppComponentDetails.getModifiedString() %>
+            <dhv:tz timestamp="<%= OppComponentDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
           </td>
         </tr>
       </table>

@@ -6,6 +6,7 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.admin.base.User;
+import java.text.DateFormat;
 import java.util.*;
 import java.sql.*;
 
@@ -62,6 +63,9 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
         System.out.println("TaskListScheduledActions-> Building Task Alerts for user " + this.getUserId());
       }
 
+      //get TimeZone
+      TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
       // Add Tasks to calendar details
       this.setOwner(this.getUserId());
       this.buildShortList(db);
@@ -70,7 +74,8 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       while (taskList.hasNext()) {
         Task thisTask = (Task) taskList.next();
         int status = thisTask.getComplete() ? 1 : 0;
-        companyCalendar.addEvent(thisTask.getAlertDateStringLongYear(), "", thisTask.getDescription(), CalendarEventList.EVENT_TYPES[0], thisTask.getId(), -1, status);
+        String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisTask.getDueDate());
+        companyCalendar.addEvent(alertDate, "", thisTask.getDescription(), CalendarEventList.EVENT_TYPES[0], thisTask.getId(), -1, status);
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Task Calendar Alerts");
@@ -91,10 +96,13 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TaskListScheduledActions-> Building Alert Count ");
       }
-
+      
+      //get TimeZone
+      TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
       // Add Task count to calendar
       this.setOwner(this.getUserId());
-      HashMap dayEvents = this.queryRecordCount(db);
+      HashMap dayEvents = this.queryRecordCount(db, timeZone);
       Set s = dayEvents.keySet();
       Iterator i = s.iterator();
       while (i.hasNext()) {

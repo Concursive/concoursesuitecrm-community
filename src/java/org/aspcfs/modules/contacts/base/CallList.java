@@ -6,9 +6,11 @@ package org.aspcfs.modules.contacts.base;
 
 import java.util.*;
 import java.sql.*;
+import java.text.DateFormat;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DateUtils;
 
 /**
  *  Description of the Class
@@ -31,9 +33,9 @@ public class CallList extends ArrayList {
   protected int oppHeaderId = -1;
   protected int enteredBy = -1;
   protected boolean hasAlertDate = false;
-  protected java.sql.Date alertDate = null;
-  protected java.sql.Date alertRangeStart = null;
-  protected java.sql.Date alertRangeEnd = null;
+  protected java.sql.Timestamp alertDate = null;
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
 
 
 
@@ -111,7 +113,7 @@ public class CallList extends ArrayList {
    *@param  alertDate  The new AlertDate value
    *@since
    */
-  public void setAlertDate(java.sql.Date alertDate) {
+  public void setAlertDate(java.sql.Timestamp alertDate) {
     this.alertDate = alertDate;
   }
 
@@ -137,7 +139,7 @@ public class CallList extends ArrayList {
    *
    *@param  tmp  The new alertRangeStart value
    */
-  public void setAlertRangeStart(java.sql.Date tmp) {
+  public void setAlertRangeStart(java.sql.Timestamp tmp) {
     this.alertRangeStart = tmp;
   }
 
@@ -148,7 +150,7 @@ public class CallList extends ArrayList {
    *@param  tmp  The new alertRangeStart value
    */
   public void setAlertRangeStart(String tmp) {
-    this.alertRangeStart = java.sql.Date.valueOf(tmp);
+    this.alertRangeStart = java.sql.Timestamp.valueOf(tmp);
   }
 
 
@@ -157,7 +159,7 @@ public class CallList extends ArrayList {
    *
    *@param  tmp  The new alertRangeEnd value
    */
-  public void setAlertRangeEnd(java.sql.Date tmp) {
+  public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
   }
 
@@ -168,7 +170,7 @@ public class CallList extends ArrayList {
    *@param  tmp  The new alertRangeEnd value
    */
   public void setAlertRangeEnd(String tmp) {
-    this.alertRangeEnd = java.sql.Date.valueOf(tmp);
+    this.alertRangeEnd = java.sql.Timestamp.valueOf(tmp);
   }
 
 
@@ -177,7 +179,7 @@ public class CallList extends ArrayList {
    *
    *@return    The alertRangeStart value
    */
-  public java.sql.Date getAlertRangeStart() {
+  public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
   }
 
@@ -187,7 +189,7 @@ public class CallList extends ArrayList {
    *
    *@return    The alertRangeEnd value
    */
-  public java.sql.Date getAlertRangeEnd() {
+  public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
   }
 
@@ -198,7 +200,7 @@ public class CallList extends ArrayList {
    *@return    The AlertDate value
    *@since
    */
-  public java.sql.Date getAlertDate() {
+  public java.sql.Timestamp getAlertDate() {
     return alertDate;
   }
 
@@ -350,7 +352,7 @@ public class CallList extends ArrayList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap queryRecordCount(Connection db) throws SQLException {
+  public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
 
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -372,8 +374,8 @@ public class CallList extends ArrayList {
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertdate = Call.getAlertDateStringLongYear(rs.getDate("alertdate"));
-      events.put(alertdate, new Integer(rs.getInt("count")));
+      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("alertdate"));
+      events.put(alertDate, new Integer(rs.getInt("count")));
     }
     rs.close();
     pst.close();
@@ -406,7 +408,7 @@ public class CallList extends ArrayList {
       thisCall.setSubject(rs.getString("subject"));
       thisCall.setContactId(DatabaseUtils.getInt(rs, "contact_id"));
       thisCall.setOppHeaderId(DatabaseUtils.getInt(rs, "opp_id"));
-      thisCall.setAlertDate(rs.getDate("alertdate"));
+      thisCall.setAlertDate(rs.getTimestamp("alertdate"));
       this.add(thisCall);
     }
     rs.close();
@@ -553,7 +555,7 @@ public class CallList extends ArrayList {
       sqlFilter.append("AND c.alertdate >= ? ");
     }
     if (alertRangeEnd != null) {
-      sqlFilter.append("AND c.alertdate <= ? ");
+      sqlFilter.append("AND c.alertdate < ? ");
     }
   }
 
@@ -581,7 +583,7 @@ public class CallList extends ArrayList {
     }
 
     if (alertDate != null) {
-      pst.setDate(++i, alertDate);
+      pst.setTimestamp(++i, alertDate);
     }
 
     if (orgId != -1) {
@@ -589,11 +591,11 @@ public class CallList extends ArrayList {
     }
 
     if (alertRangeStart != null) {
-      pst.setDate(++i, alertRangeStart);
+      pst.setTimestamp(++i, alertRangeStart);
     }
 
     if (alertRangeEnd != null) {
-      pst.setDate(++i, alertRangeEnd);
+      pst.setTimestamp(++i, alertRangeEnd);
     }
     return i;
   }

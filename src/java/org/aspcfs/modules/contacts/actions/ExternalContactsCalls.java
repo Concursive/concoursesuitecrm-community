@@ -4,6 +4,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.ActionContext;
 import java.sql.*;
+import java.text.DateFormat;
 import java.util.Vector;
 import java.io.*;
 import org.aspcfs.utils.*;
@@ -413,8 +414,8 @@ public final class ExternalContactsCalls extends CFSModule {
           "Length: " + StringUtils.toString(thisCall.getLengthText()) + "\n" +
           "Subject: " + StringUtils.toString(thisCall.getSubject()) + "\n" +
           "Notes: " + StringUtils.toString(thisCall.getNotes()) + "\n" +
-          "Entered: " + StringUtils.toString(thisCall.getEnteredName()) + " - " + thisCall.getEnteredString() + "\n" +
-          "Modified: " + StringUtils.toString(thisCall.getModifiedName()) + " - " + thisCall.getModifiedString());
+          "Entered: " + StringUtils.toString(thisCall.getEnteredName()) + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +
+          "Modified: " + StringUtils.toString(thisCall.getModifiedName()) + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
 
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {

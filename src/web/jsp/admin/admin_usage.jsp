@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="org.aspcfs.modules.admin.base.PermissionCategory, java.util.*" %>
+<%@ page import="java.text.DateFormat,org.aspcfs.modules.admin.base.PermissionCategory, java.util.*" %>
 <jsp:useBean id="rangeSelect" class="java.lang.String" scope="request"/>
 <jsp:useBean id="dateStart" class="java.sql.Date" scope="request"/>
 <jsp:useBean id="dateEnd" class="java.sql.Date" scope="request"/>
@@ -118,7 +118,7 @@ Current Usage and Billing Usage Information<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong>Usage for <%= toDateString(dateStart) %> - <%= toDateString(dateEnd) %></strong>
+      <strong>Usage for <dhv:tz timestamp="<%= dateStart %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/> - <dhv:tz timestamp="<%= dateEnd %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/></strong>
     </th>
   </tr>
 <%

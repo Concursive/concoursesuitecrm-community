@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -99,7 +99,11 @@ Campaign Details
               </tr>
               <tr class="containerBody">
                 <td style="text-align: center;">
-                  <%= (Campaign.hasDetails()?"<font color='green'>Scheduled for " + Campaign.getActiveDateString() + "<br>" + toHtml(Campaign.getDeliveryName()) + "</font><br>":"<font color='red'>Not Scheduled</font><br>&nbsp;<br>") %>
+                  <% if(Campaign.hasDetails()){ %>
+                    <font color='green'>Scheduled for <br> <dhv:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/> <%= toHtml(Campaign.getDeliveryName()) %> </font><br>
+                  <% }else{ %>
+                    <font color='red'>Not Scheduled</font><br>&nbsp;<br>
+                  <% } %>
                   <dhv:permission name="campaign-campaigns-view"><a href="CampaignManager.do?command=ViewSchedule&id=<%= Campaign.getId() %>">Choose Options</a><br>&nbsp;</dhv:permission>
                 </td>
               </tr>
@@ -168,7 +172,9 @@ Campaign Details
       Created
     </td>
     <td>
-      <dhv:username id="<%= Campaign.getEnteredBy() %>" /> - <%= Campaign.getEnteredString() %>
+      <dhv:username id="<%= Campaign.getEnteredBy() %>" />
+      -
+      <dhv:tz timestamp="<%= Campaign.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
   
@@ -177,7 +183,9 @@ Campaign Details
       Modified
     </td>
     <td>
-      <dhv:username id="<%= Campaign.getModifiedBy() %>" /> - <%= Campaign.getModifiedString() %>
+      <dhv:username id="<%= Campaign.getModifiedBy() %>" />
+      -
+      <dhv:tz timestamp="<%= Campaign.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
 </table>

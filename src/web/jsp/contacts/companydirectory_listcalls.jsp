@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="CallList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
 <jsp:useBean id="CallListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -101,7 +101,7 @@ Calls<br>
         <%= toHtml(thisCall.getLengthText()) %>
       </td>
       <td valign="center" nowrap class="row<%= rowid %>">
-        <%= toHtml(thisCall.getEnteredString()) %>
+      <dhv:tz timestamp="<%= thisCall.getEntered()  %>" dateFormat="<%= java.text.DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
       </td>
     </tr>
  <%}%>

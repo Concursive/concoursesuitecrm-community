@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="DeliveryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -52,7 +52,7 @@ Delivery
       Run Date
     </td>
     <td>
-      <input type="text" size="10" name="activeDate" value="<%= toHtmlValue(Campaign.getActiveDateString()) %>">
+      <input type="text" size="10" name="activeDate" value="<dhv:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
       <dhv:permission name="campaign-campaigns-edit"><a href="javascript:popCalendar('inputForm', 'activeDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)</dhv:permission>
     </td>
   </tr>

@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.modules.contacts.base.Contact" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*,org.aspcfs.modules.contacts.base.Contact" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="RecipientList" class="org.aspcfs.modules.communications.base.RecipientList" scope="request"/>
 <jsp:useBean id="CampaignDashboardRecipientInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -62,7 +62,7 @@ Recipients
 	      <%= toHtml(thisContact.getCompany()) %>
 	    </td>
 	    <td align="center" nowrap>
-	      <%= toHtml(thisRecipient.getSentDateString()) %>
+        <dhv:tz timestamp="<%= thisRecipient.getSentDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
 	    </td>
 	    <td align="center" nowrap>
 	      <%= toHtml(thisRecipient.getStatus()) %>

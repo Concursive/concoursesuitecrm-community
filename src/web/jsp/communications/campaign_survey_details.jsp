@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Survey" class="org.aspcfs.modules.communications.base.Survey" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
@@ -51,7 +51,7 @@ Survey Details<br>
         Date
       </td>
       <td>
-        <%= Survey.getEnteredString() %>&nbsp;
+        <dhv:tz timestamp="<%= Survey.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
       </td>
     </tr>
     <tr class="containerBody">
@@ -67,7 +67,7 @@ Survey Details<br>
         Date
       </td>
       <td>
-        <%= Survey.getModifiedString() %>&nbsp;
+        <dhv:tz timestamp="<%= Survey.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
       </td>
     </tr>
   </table>

@@ -9,6 +9,7 @@ import com.darkhorseventures.framework.servlets.ControllerGlobalItemsHook;
 import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.mycfs.base.CFSNoteList;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.utils.DateUtils;
 
 /**
  *  Configures globally available items for CFS.
@@ -32,9 +33,24 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) servlet.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     UserBean thisUser = (UserBean) request.getSession().getAttribute("User");
+    TimeZone timeZone = TimeZone.getTimeZone(thisUser.getUserRecord().getTimeZone());
     int userId = thisUser.getUserId();
     int departmentId = thisUser.getUserRecord().getContact().getDepartment();
     int contactId = thisUser.getUserRecord().getContact().getId();
+
+    //get today
+    Calendar today = Calendar.getInstance(timeZone);
+    today.set(Calendar.HOUR, 0);
+    today.set(Calendar.MINUTE, 0);
+    today.set(Calendar.SECOND, 0);
+    today.set(Calendar.MILLISECOND, 0);
+    //get tomorrow
+    Calendar tomorrow = Calendar.getInstance(timeZone);
+    tomorrow.set(Calendar.HOUR, 0);
+    tomorrow.set(Calendar.MINUTE, 0);
+    tomorrow.set(Calendar.SECOND, 0);
+    tomorrow.set(Calendar.MILLISECOND, 0);
+    tomorrow.add(Calendar.DAY_OF_MONTH, 1);
 
     StringBuffer items = new StringBuffer();
     
@@ -69,23 +85,29 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           "<td nowrap align='center'>" +
           "<img src=\"images/icons/stock_hyperlink-target-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
           "<select name='quickAction' onChange='javascript:quickAction(this.options[this.selectedIndex].value);this.selectedIndex = 0'>");
-          
+
       items.append("<option value='0'>Select...</option>");
-      /* if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
-        items.append("<option value='call'>Add a Call</option>");
-      } */
-      /* if (systemStatus.hasPermission(userId, "pipeline-opportunities-add")) {
-        items.append("<option value='opportunity'>Add an Opportunity</option>");
-      } */
+      /*
+       *  if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
+       *  items.append("<option value='call'>Add a Call</option>");
+       *  }
+       */
+      /*
+       *  if (systemStatus.hasPermission(userId, "pipeline-opportunities-add")) {
+       *  items.append("<option value='opportunity'>Add an Opportunity</option>");
+       *  }
+       */
       if (systemStatus.hasPermission(userId, "myhomepage-tasks-add")) {
         items.append("<option value='task'>Add a Task</option>");
       }
       if (systemStatus.hasPermission(userId, "tickets-tickets-add")) {
         items.append("<option value='ticket'>Add a Ticket</option>");
       }
-      /* if (systemStatus.hasPermission(userId, "myhomepage-inbox-add")) {
-        items.append("<option value='message'>Send a Message</option>");
-      } */
+      /*
+       *  if (systemStatus.hasPermission(userId, "myhomepage-inbox-add")) {
+       *  items.append("<option value='message'>Send a Message</option>");
+       *  }
+       */
       items.append(
           "</select>" +
           "</td>" +
@@ -93,7 +115,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           "</form>" +
           "</table>");
     }
-    
+
     //My Items
     if (systemStatus.hasPermission(userId, "globalitems-myitems-view")) {
       ConnectionPool sqlDriver = (ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool");
@@ -118,10 +140,15 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-view")) {
           int callCount = 0;
           sql =
-              "SELECT COUNT(*) as callcount FROM call_log WHERE alertdate = ? AND enteredby = ?";
+              "SELECT COUNT(*) as callcount " +
+              "FROM call_log " +
+              "WHERE alertdate >= ? " +
+              "AND alertdate < ? " +
+              "AND enteredby = ?";
           pst = db.prepareStatement(sql);
-          pst.setDate(1, new java.sql.Date(new java.util.Date().getTime()));
-          pst.setInt(2, userId);
+          pst.setTimestamp(1, new java.sql.Timestamp(today.getTimeInMillis()));
+          pst.setTimestamp(2, new java.sql.Timestamp(tomorrow.getTimeInMillis()));
+          pst.setInt(3, userId);
           rs = pst.executeQuery();
           if (rs.next()) {
             callCount = rs.getInt("callcount");
@@ -131,7 +158,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
           rs.close();
           pst.close();
-          items.append("<a href='MyCFS.do?command=Home' class='s'>Calls to make</a> (" + paint(callCount) + ")<br>");
+          items.append("<a href='MyCFS.do?command=Home' class='s'>Pending Calls</a> (" + paint(callCount) + ")<br>");
           ++myItems;
         }
 
@@ -139,7 +166,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         if (systemStatus.hasPermission(userId, "projects-view")) {
           int activityCount = 0;
           sql =
-              "SELECT count(*) as activitycount FROM project_assignments WHERE complete_date IS NULL AND user_assign_id = ?";
+              "SELECT count(*) as activitycount " +
+              "FROM project_assignments " +
+              "WHERE complete_date IS NULL " +
+              "AND user_assign_id = ?";
           pst = db.prepareStatement(sql);
           pst.setInt(1, userId);
           rs = pst.executeQuery();
@@ -297,4 +327,5 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
   }
 
 }
+
 

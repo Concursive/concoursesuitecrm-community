@@ -51,8 +51,8 @@ public class Project extends GenericBean {
   private boolean buildRequirementAssignments = false;
   private String userRange = null;
 
-  private java.sql.Date assignmentAlertRangeStart = null;
-  private java.sql.Date assignmentAlertRangeEnd = null;
+  private java.sql.Timestamp assignmentAlertRangeStart = null;
+  private java.sql.Timestamp assignmentAlertRangeEnd = null;
 
   private RequirementList requirements = new RequirementList();
   private TeamMemberList team = new TeamMemberList();
@@ -554,7 +554,7 @@ public class Project extends GenericBean {
    *
    *@param  tmp  The new assignmentAlertRangeStart value
    */
-  public void setAssignmentAlertRangeStart(java.sql.Date tmp) {
+  public void setAssignmentAlertRangeStart(java.sql.Timestamp tmp) {
     assignmentAlertRangeStart = tmp;
   }
 
@@ -564,7 +564,7 @@ public class Project extends GenericBean {
    *
    *@param  tmp  The new assignmentAlertRangeEnd value
    */
-  public void setAssignmentAlertRangeEnd(java.sql.Date tmp) {
+  public void setAssignmentAlertRangeEnd(java.sql.Timestamp tmp) {
     assignmentAlertRangeEnd = tmp;
   }
 

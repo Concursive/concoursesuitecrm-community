@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="ActiveSurvey" class="org.aspcfs.modules.communications.base.ActiveSurvey" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
@@ -65,7 +65,9 @@ Campaign Details
             Entered
           </td>
           <td>
-            <dhv:username id="<%= Campaign.getEnteredBy() %>" /> - <%= toHtml(Campaign.getEnteredString()) %>
+            <dhv:username id="<%= Campaign.getEnteredBy() %>" />
+            -
+            <dhv:tz timestamp="<%= Campaign.getEntered() %>"  dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -73,7 +75,9 @@ Campaign Details
             Modified
           </td>
           <td>
-            <dhv:username id="<%= Campaign.getModifiedBy() %>" /> - <%= toHtml(Campaign.getModifiedString()) %>
+            <dhv:username id="<%= Campaign.getModifiedBy() %>" />
+            -
+            <dhv:tz timestamp="<%= Campaign.getModified() %>"  dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
           </td>
         </tr>
         <tr class="containerBody">

@@ -1,7 +1,8 @@
 package org.aspcfs.modules.base;
 
 /**
- *  Description of the Interface
+ *  All scheduled actions should implement this interface to ensure the
+ *  required properties for generating a list of scheduled actions are met.
  *
  *@author     mathur
  *@version    $Id$
@@ -20,7 +21,7 @@ public interface ScheduledActions {
    *
    *@param  startDate  The new alertRangeStart value
    */
-  public void setAlertRangeStart(java.sql.Date startDate);
+  public void setAlertRangeStart(java.sql.Timestamp startDate);
 
 
   /**
@@ -28,6 +29,6 @@ public interface ScheduledActions {
    *
    *@param  endDate  The new alertRangeEnd value
    */
-  public void setAlertRangeEnd(java.sql.Date endDate);
+  public void setAlertRangeEnd(java.sql.Timestamp endDate);
 }
 

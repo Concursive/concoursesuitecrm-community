@@ -1,4 +1,7 @@
-<%@ page import="org.aspcfs.modules.mycfs.base.CalendarEvent"%>
+<%-- This jsp shows a calendar to the user and sends the selected date back
+     to the calling form.
+     NOTE: THIS JSP DOES NOT REQUIRE A USER TO BE LOGGED IN --%>
+<%@ page import="java.util.TimeZone,org.aspcfs.modules.mycfs.base.CalendarEvent"%>
 <jsp:useBean id="cal" class="org.aspcfs.utils.web.CalendarView" scope="page"/>
 <html>
 <head>
@@ -55,6 +58,12 @@
     cal.setHeaderSpace(true);
     cal.setMonthArrows(true);
     //cal.showWeekSelector(false);    //Not implemented yet
+  }
+  
+  //set the timezone if the user is logged in
+  org.aspcfs.modules.login.beans.UserBean thisUser = (org.aspcfs.modules.login.beans.UserBean) request.getSession().getAttribute("User");
+  if (thisUser != null) {
+    cal.setTimeZone(TimeZone.getTimeZone(thisUser.getUserRecord().getTimeZone()));
   }
   
   if (dateString != null) {

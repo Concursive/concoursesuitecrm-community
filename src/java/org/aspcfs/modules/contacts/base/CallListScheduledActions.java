@@ -5,6 +5,7 @@ import org.aspcfs.modules.mycfs.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
+import java.text.DateFormat;
 import java.util.*;
 import java.sql.*;
 
@@ -60,6 +61,9 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       System.out.println("CallListScheduledActions --> Building Call Alerts ");
     }
     try {
+      //get TimeZone
+      TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
       this.setEnteredBy(this.getUserId());
       this.setHasAlertDate(true);
       this.buildList(db);
@@ -67,10 +71,11 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       while (m.hasNext()) {
         Call thisCall = (Call) m.next();
         CalendarEvent thisEvent = null;
+        String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisCall.getAlertDate());
         if (thisCall.getOppHeaderId() == -1 && thisCall.getContactId() > -1) {
-          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", (thisCall.getContactName() != null && !"".equals(thisCall.getContactName()) ? thisCall.getContactName() + ": " : "") + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[5], thisCall.getContactId(), thisCall.getId());
+          thisEvent = companyCalendar.addEvent(alertDate, "", (thisCall.getContactName() != null && !"".equals(thisCall.getContactName()) ? thisCall.getContactName() + ": " : "") + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[5], thisCall.getContactId(), thisCall.getId());
         } else {
-          thisEvent = companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", (thisCall.getContactName() != null && !"".equals(thisCall.getContactName()) ? thisCall.getContactName() + ": " : "") + ": " + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[6], thisCall.getOppHeaderId(), thisCall.getId());
+          thisEvent = companyCalendar.addEvent(alertDate, "", (thisCall.getContactName() != null && !"".equals(thisCall.getContactName()) ? thisCall.getContactName() + ": " : "") + ": " + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[6], thisCall.getOppHeaderId(), thisCall.getId());
         }
         String contactLink = "[<a href=\"javascript:popURL('ExternalContacts.do?command=ContactDetails&id=" + thisCall.getContactId() + "&popup=true&popupType=inline','Details','650','500','yes','yes');\">Contact Link</a>]";
         thisEvent.addRelatedLink(contactLink);
@@ -94,9 +99,12 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       System.out.println("CallListScheduledActions --> Building Alert Counts ");
     }
     try {
+      //get TimeZone
+      TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
       this.setEnteredBy(this.getUserId());
       this.setHasAlertDate(true);
-      HashMap dayEvents = this.queryRecordCount(db);
+      HashMap dayEvents = this.queryRecordCount(db, timeZone);
       Set s = dayEvents.keySet();
       Iterator i = s.iterator();
       while (i.hasNext()) {

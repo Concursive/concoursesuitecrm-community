@@ -1,3 +1,4 @@
+<%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="EstimatedLOETypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -25,7 +26,7 @@
       Due Date
     </td>
     <td>
-      <input type="text" size="10" name="dueDate" value="<%= (Task.getDueDate()==null)?"":Task.getDueDateString() %>">
+      <input type="text" size="10" name="dueDate" value="<dhv:tz timestamp="<%= Task.getDueDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
       <a href="javascript:popCalendar('addTask', 'dueDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
       <%= showAttribute(request, "dueDateError") %>
     </td>

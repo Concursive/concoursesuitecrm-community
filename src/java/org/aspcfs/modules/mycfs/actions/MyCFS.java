@@ -18,11 +18,11 @@ import org.aspcfs.modules.mycfs.beans.CalendarBean;
 import org.aspcfs.modules.tasks.base.Task;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.accounts.base.NewsArticleList;
-
 import com.zeroio.iteam.base.*;
 import java.sql.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.text.DateFormat;
 
 /**
  *  The MyCFS module.
@@ -492,7 +492,6 @@ public final class MyCFS extends CFSModule {
                 System.out.println("MyCFS-> Send error: " + mail.getErrorMsg() + "<br><br>");
               }
               System.err.println(mail.getErrorMsg());
-              System.out.println(mail.getErrorMsg());
               if (errors == null) {
                 errors = new HashMap();
               }
@@ -580,7 +579,7 @@ public final class MyCFS extends CFSModule {
         newNote.setBody(
             "\n\n----Original Message----\n" +
             "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
-            "Sent: " + newNote.getEnteredDateTimeString() + "\n" +
+            "Sent: " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT,DateFormat.LONG, newNote.getEntered()) + "\n" +
             "To: " + recipientList.toString() + "\n" +
             "Subject: " + StringUtils.toString(newNote.getSubject()) +
             "\n\n" +
@@ -592,7 +591,7 @@ public final class MyCFS extends CFSModule {
             "------Task Details------\n\n" +
             "Task:" + StringUtils.toString(thisTask.getDescription()) + "\n" +
             "From: " + StringUtils.toString(userName) + "\n" +
-            "Due Date: " + thisTask.getDueDateString() + "\n" +
+            "Due Date: " + (thisTask.getDueDate() != null ? DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisTask.getDueDate()) : "-NA-")  + "\n" +
             ("".equals(thisTask.getNotes()) ? "" : "Relevant Notes: " + StringUtils.toString(thisTask.getNotes())) + "\n\n");
       }
     } catch (Exception errorMessage) {
@@ -645,7 +644,7 @@ public final class MyCFS extends CFSModule {
       newNote.setBody(
           "\n\n----Original Message----\n" +
           "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
-          "Sent: " + newNote.getEnteredDateTimeString() + "\n" +
+          "Sent: " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT,DateFormat.LONG, newNote.getEntered()) + "\n" +
           "To: " + recipientList.toString() + "\n" +
           "Subject: " + StringUtils.toString(newNote.getSubject()) +
           "\n\n" +
@@ -819,11 +818,13 @@ public final class MyCFS extends CFSModule {
           method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});
 
           //set Start and End Dates
-          method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Date")});
-          method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarStartDate(context)});
+          method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Timestamp")});
+          java.sql.Timestamp startDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarStartDate(context)));
+          method.invoke(thisInstance, new Object[]{startDate});
 
-          method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Date")});
-          method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarEndDate(context)});
+          method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Timestamp")});
+          java.sql.Timestamp endDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarEndDate(context)));
+          method.invoke(thisInstance, new Object[]{endDate});
 
           //Add Events
           method = Class.forName(thisAlert.getClassName()).getMethod("buildAlerts", new Class[]{Class.forName(param1), Class.forName(param2)});
@@ -860,19 +861,18 @@ public final class MyCFS extends CFSModule {
     addModuleBean(context, "Home", "");
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
-    if(calendarInfo == null){
+    if (calendarInfo == null) {
       calendarInfo = new CalendarBean();
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
-    
+
     try {
       db = this.getConnection(context);
-      
+
       calendarInfo.update(db, context);
       companyCalendar = new CalendarView(calendarInfo);
       //companyCalendar.updateParams();
       companyCalendar.addHolidaysByRange();
-      
 
       //Use reflection to invoke methods on scheduler classes
       String param1 = "org.aspcfs.utils.web.CalendarView";
@@ -887,11 +887,13 @@ public final class MyCFS extends CFSModule {
         method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});
 
         //set Start and End Dates
-        method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Date")});
-        method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarStartDate(context)});
+        java.sql.Timestamp startDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarStartDate(context)));
+        method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Timestamp")});
+        method.invoke(thisInstance, new Object[]{startDate});
 
-        method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Date")});
-        method.invoke(thisInstance, new Object[]{companyCalendar.getCalendarEndDate(context)});
+        java.sql.Timestamp endDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarEndDate(context)));
+        method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Timestamp")});
+        method.invoke(thisInstance, new Object[]{endDate});
 
         //Add Events
         method = Class.forName(thisAlert.getClassName()).getMethod("buildAlertCount", new Class[]{Class.forName(param1), Class.forName(param2)});
@@ -945,6 +947,7 @@ public final class MyCFS extends CFSModule {
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
     Calendar cal = Calendar.getInstance();
+    cal.setTimeZone(calendarInfo.getTimeZone());
     calendarInfo.setCalendarView("day");
     calendarInfo.resetParams("day");
     calendarInfo.setPrimaryMonth(cal.get(Calendar.MONTH) + 1);
@@ -1165,7 +1168,8 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandMyCFSSettings(ActionContext context) {
-    if (!hasPermission(context, "myhomepage-profile-settings-view")) {
+    //if (!hasPermission(context, "myhomepage-profile-settings-view")) {
+    if (!hasPermission(context, "myhomepage-profile-view")) {
       return ("PermissionError");
     }
     Connection db = null;
@@ -1194,8 +1198,23 @@ public final class MyCFS extends CFSModule {
    *@since
    */
   public String executeCommandUpdateSettings(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-profile-settings-edit"))) {
+    //if (!(hasPermission(context, "myhomepage-profile-settings-edit"))) {
+    if (!(hasPermission(context, "myhomepage-profile-view"))) {
       return ("PermissionError");
+    }
+    //Process params
+    String timeZone = context.getRequest().getParameter("timeZone");
+    //Update the user record AND the cached record
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      getUser(context, getUserId(context)).setTimeZone(timeZone);
+      getUser(context, getUserId(context)).updateSettings(db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      freeConnection(context, db);
     }
     return ("UpdateSettingsOK");
   }

@@ -4,6 +4,7 @@ package org.aspcfs.modules.accounts.base;
 
 import java.util.*;
 import java.sql.*;
+import java.text.DateFormat;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.utils.*;
@@ -48,8 +49,8 @@ public class OrganizationList extends Vector implements SyncableList {
   protected int revenueYear = -1;
   protected int revenueOwnerId = -1;
   protected boolean buildRevenueYTD = false;
-  protected java.sql.Date alertRangeStart = null;
-  protected java.sql.Date alertRangeEnd = null;
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
 
   protected int typeId = 0;
 
@@ -203,7 +204,7 @@ public class OrganizationList extends Vector implements SyncableList {
    *
    *@param  alertRangeStart  The new alertRangeStart value
    */
-  public void setAlertRangeStart(java.sql.Date alertRangeStart) {
+  public void setAlertRangeStart(java.sql.Timestamp alertRangeStart) {
     this.alertRangeStart = alertRangeStart;
   }
 
@@ -214,7 +215,7 @@ public class OrganizationList extends Vector implements SyncableList {
    *
    *@param  alertRangeEnd  The new alertRangeEnd value
    */
-  public void setAlertRangeEnd(java.sql.Date alertRangeEnd) {
+  public void setAlertRangeEnd(java.sql.Timestamp alertRangeEnd) {
     this.alertRangeEnd = alertRangeEnd;
   }
 
@@ -579,7 +580,7 @@ public class OrganizationList extends Vector implements SyncableList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap queryRecordCount(Connection db) throws SQLException {
+  public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
 
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -602,8 +603,8 @@ public class OrganizationList extends Vector implements SyncableList {
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertdate = Organization.getAlertDateStringLongYear(rs.getDate(sqlDate.trim()));
-      events.put(alertdate, new Integer(rs.getInt("count")));
+      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp(sqlDate.trim()));
+      events.put(alertDate, new Integer(rs.getInt("count")));
     }
     rs.close();
     pst.close();
@@ -638,9 +639,9 @@ public class OrganizationList extends Vector implements SyncableList {
       Organization thisOrg = new Organization();
       thisOrg.setOrgId(rs.getInt("org_id"));
       thisOrg.setName(rs.getString("name"));
-      thisOrg.setAlertDate(rs.getDate("alertdate"));
+      thisOrg.setAlertDate(rs.getTimestamp("alertdate"));
       thisOrg.setAlertText(rs.getString("alert"));
-      thisOrg.setContractEndDate(rs.getDate("contract_end"));
+      thisOrg.setContractEndDate(rs.getTimestamp("contract_end"));
       this.add(thisOrg);
     }
     rs.close();
@@ -843,7 +844,7 @@ public class OrganizationList extends Vector implements SyncableList {
       }
 
       if (alertRangeEnd != null) {
-        sqlFilter.append("AND o.alertdate <= ? ");
+        sqlFilter.append("AND o.alertdate < ? ");
       }
     }
 
@@ -962,19 +963,19 @@ public class OrganizationList extends Vector implements SyncableList {
 
     if (hasAlertDate == true) {
       if (alertRangeStart != null) {
-        pst.setDate(++i, alertRangeStart);
+        pst.setTimestamp(++i, alertRangeStart);
       }
       if (alertRangeEnd != null) {
-        pst.setDate(++i, alertRangeEnd);
+        pst.setTimestamp(++i, alertRangeEnd);
       }
     }
 
     if (hasExpireDate == true) {
       if (alertRangeStart != null) {
-        pst.setDate(++i, alertRangeStart);
+        pst.setTimestamp(++i, alertRangeStart);
       }
       if (alertRangeEnd != null) {
-        pst.setDate(++i, alertRangeEnd);
+        pst.setTimestamp(++i, alertRangeEnd);
       }
     }
     if (syncType == Constants.SYNC_INSERTS) {

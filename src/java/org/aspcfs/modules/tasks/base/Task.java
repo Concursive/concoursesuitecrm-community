@@ -43,7 +43,7 @@ public class Task extends GenericBean {
   private String description = null;
   private boolean complete = false;
   private boolean enabled = false;
-  private java.sql.Date dueDate = null;
+  private java.sql.Timestamp dueDate = null;
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp completeDate = null;
@@ -263,7 +263,7 @@ public class Task extends GenericBean {
    *
    *@param  dueDate  The new dueDate value
    */
-  public void setDueDate(java.sql.Date dueDate) {
+  public void setDueDate(java.sql.Timestamp dueDate) {
     this.dueDate = dueDate;
   }
 
@@ -275,7 +275,7 @@ public class Task extends GenericBean {
    *@param  tmp  The new dueDate value
    */
   public void setDueDate(String tmp) {
-    this.dueDate = DatabaseUtils.parseDate(tmp);
+    this.dueDate = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -715,7 +715,7 @@ public class Task extends GenericBean {
    *@param  dueDate  Description of the Parameter
    *@return          The alertDateStringLongYear value
    */
-  public static String getAlertDateStringLongYear(java.sql.Date dueDate) {
+  public static String getAlertDateStringLongYear(java.sql.Timestamp dueDate) {
     String tmp = "";
     try {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
@@ -905,7 +905,7 @@ public class Task extends GenericBean {
    *
    *@return    The dueDate value
    */
-  public java.sql.Date getDueDate() {
+  public java.sql.Timestamp getDueDate() {
     return dueDate;
   }
 
@@ -1027,7 +1027,7 @@ public class Task extends GenericBean {
       pst.setString(++i, this.getNotes());
       pst.setInt(++i, this.getSharing());
       DatabaseUtils.setInt(pst, ++i, this.getOwner());
-      pst.setDate(++i, this.getDueDate());
+      pst.setTimestamp(++i, this.getDueDate());
       pst.setDouble(++i, this.getEstimatedLOE());
       if (this.getEstimatedLOEType() != -1) {
         pst.setInt(++i, this.getEstimatedLOEType());
@@ -1136,7 +1136,7 @@ public class Task extends GenericBean {
       pst.setString(++i, this.getNotes());
       pst.setInt(++i, this.getSharing());
       DatabaseUtils.setInt(pst, ++i, this.getOwner());
-      pst.setDate(++i, this.getDueDate());
+      pst.setTimestamp(++i, this.getDueDate());
       pst.setDouble(++i, this.getEstimatedLOE());
       if (this.getEstimatedLOEType() != -1) {
         pst.setInt(++i, this.getEstimatedLOEType());
@@ -1448,7 +1448,7 @@ public class Task extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     priority = rs.getInt("priority");
     description = rs.getString("description");
-    dueDate = rs.getDate("duedate");
+    dueDate = rs.getTimestamp("duedate");
     notes = rs.getString("notes");
     sharing = rs.getInt("sharing");
     complete = rs.getBoolean("complete");
@@ -1511,6 +1511,12 @@ public class Task extends GenericBean {
     pst.setInt(++i, projectId);
     pst.execute();
     pst.close();
+  }
+  
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("dueDate");
+    return thisList;
   }
 }
 

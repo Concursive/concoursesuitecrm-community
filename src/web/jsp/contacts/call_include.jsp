@@ -1,4 +1,6 @@
+<%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="CallTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript">
@@ -92,7 +94,7 @@
       Alert Date
     </td>
     <td>
-      <input type="text" size="10" name="alertDate" value="<%= toHtmlValue(CallDetails.getAlertDateString()) %>"> 
+      <input type="text" size="10" name="alertDate" value="<dhv:tz timestamp="<%= CallDetails.getAlertDate() %>"  dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>"> 
       <a href="javascript:popCalendar('addCall', 'alertDate');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>

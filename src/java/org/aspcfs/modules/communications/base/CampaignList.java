@@ -24,7 +24,7 @@ public class CampaignList extends Vector {
   private PagedListInfo pagedListInfo = null;
   private String name = "";
   private String description = "";
-  private java.sql.Date activeDate = null;
+  private java.sql.Timestamp activeDate = null;
   private int enabled = -1;
   private int active = -1;
 
@@ -95,7 +95,7 @@ public class CampaignList extends Vector {
    *@param  tmp  The new ActiveDate value
    *@since       1.2
    */
-  public void setActiveDate(java.sql.Date tmp) {
+  public void setActiveDate(java.sql.Timestamp tmp) {
     this.activeDate = tmp;
   }
 
@@ -419,7 +419,7 @@ public class CampaignList extends Vector {
    *@return    The ActiveDate value
    *@since     1.2
    */
-  public java.sql.Date getActiveDate() {
+  public java.sql.Timestamp getActiveDate() {
     return activeDate;
   }
 
@@ -638,7 +638,7 @@ public class CampaignList extends Vector {
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
     if (activeDate != null) {
-      pst.setDate(++i, activeDate);
+      pst.setTimestamp(++i, activeDate);
     }
     if (enabled == FALSE) {
       pst.setBoolean(++i, false);

@@ -7,6 +7,7 @@ import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Dependency;
+import java.text.DateFormat;
 import java.util.*;
 import java.sql.*;
 
@@ -87,6 +88,10 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
    *@exception  SQLException  Description of the Exception
    */
   public void addAlertDates(CalendarView companyCalendar, Connection db) throws SQLException {
+    
+    //get TimeZone
+    TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
     OrganizationList alertOrgs = new OrganizationList();
     alertOrgs.setOwnerId(this.getUserId());
     alertOrgs.setHasExpireDate(false);
@@ -95,7 +100,8 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     Iterator n = alertOrgs.iterator();
     while (n.hasNext()) {
       Organization thisOrg = (Organization) n.next();
-      companyCalendar.addEvent(thisOrg.getAlertDateStringLongYear(), "", thisOrg.getName() + ": " + thisOrg.getAlertText(), CalendarEventList.EVENT_TYPES[3], thisOrg.getOrgId());
+      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisOrg.getAlertDate());
+      companyCalendar.addEvent(alertDate, "", thisOrg.getName() + ": " + thisOrg.getAlertText(), CalendarEventList.EVENT_TYPES[3], thisOrg.getOrgId());
     }
   }
 
@@ -114,6 +120,10 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     if (System.getProperty("DEBUG") != null) {
       System.out.println("AccountsListScheduledActions --> Building Account Contract End Dates ");
     }
+    
+    //get TimeZone
+    TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+      
     OrganizationList contractEndOrgs = new OrganizationList();
     contractEndOrgs.setOwnerId(this.getUserId());
     contractEndOrgs.setHasAlertDate(false);
@@ -123,7 +133,8 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     Iterator n = contractEndOrgs.iterator();
     while (n.hasNext()) {
       Organization thisOrg = (Organization) n.next();
-      companyCalendar.addEvent(thisOrg.getContractEndDateStringLongYear(), "", thisOrg.getName() + ": " + "Contract Expiration", CalendarEventList.EVENT_TYPES[4], thisOrg.getOrgId());
+      String endDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisOrg.getContractEndDate());
+      companyCalendar.addEvent(endDate, "", thisOrg.getName() + ": " + "Contract Expiration", CalendarEventList.EVENT_TYPES[4], thisOrg.getOrgId());
     }
   }
 
@@ -142,12 +153,15 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
     if (System.getProperty("DEBUG") != null) {
       System.out.println("AccountsListScheduledActions --> Building Alert Date Count ");
     }
+    //get TimeZone
+    TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+
     OrganizationList alertOrgs = new OrganizationList();
     alertOrgs.setOwnerId(this.getUserId());
     alertOrgs.setHasExpireDate(false);
     alertOrgs.setHasAlertDate(true);
 
-    HashMap dayEvents = alertOrgs.queryRecordCount(db);
+    HashMap dayEvents = alertOrgs.queryRecordCount(db, timeZone);
     Set s = dayEvents.keySet();
     Iterator i = s.iterator();
     while (i.hasNext()) {
@@ -172,11 +186,14 @@ public class AccountsListScheduledActions extends OrganizationList implements Sc
       System.out.println("AccountsListScheduledActions --> Building Account Contract End Count ");
     }
 
+    //get TimeZone
+    TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
+
     OrganizationList contractEndOrgs = new OrganizationList();
     contractEndOrgs.setOwnerId(this.getUserId());
     contractEndOrgs.setHasAlertDate(false);
     contractEndOrgs.setHasExpireDate(true);
-    HashMap dayEvents = contractEndOrgs.queryRecordCount(db);
+    HashMap dayEvents = contractEndOrgs.queryRecordCount(db, timeZone);
     Set s = dayEvents.keySet();
     Iterator i = s.iterator();
     while (i.hasNext()) {

@@ -13,7 +13,7 @@ My Settings<br>
     <td><a href="MyCFSProfile.do?command=MyCFSProfile">Update my personal information</a></td>
   </tr>
   </dhv:permission>
-  <dhv:permission name="myhomepage-profile-settings-view">
+  <dhv:permission name="myhomepage-profile-settings-view,myhomepage-profile-view">
   <tr>
     <td><a href="MyCFSSettings.do?command=MyCFSSettings">Configure my location</a></td>
   </tr>
@@ -24,3 +24,6 @@ My Settings<br>
   </tr>
   </dhv:permission>
 </table>
+<br>
+The time is currently <dhv:tz timestamp="<%= new java.util.Date() %>"/>
+

@@ -7,14 +7,12 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Calendar;
-import java.util.HashMap;
+import java.util.*;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.text.*;
+import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.HtmlSelect;
@@ -45,8 +43,8 @@ public class ProjectList extends ArrayList {
   private boolean buildIssues = false;
   private int lastIssues = -1;
 
-  protected java.sql.Date alertRangeStart = null;
-  protected java.sql.Date alertRangeEnd = null;
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
 
 
   /**
@@ -210,7 +208,7 @@ public class ProjectList extends ArrayList {
    *
    *@param  alertRangeStart  The new alertRangeStart value
    */
-  public void setAlertRangeStart(java.sql.Date alertRangeStart) {
+  public void setAlertRangeStart(java.sql.Timestamp alertRangeStart) {
     this.alertRangeStart = alertRangeStart;
   }
 
@@ -220,7 +218,7 @@ public class ProjectList extends ArrayList {
    *
    *@param  alertRangeEnd  The new alertRangeEnd value
    */
-  public void setAlertRangeEnd(java.sql.Date alertRangeEnd) {
+  public void setAlertRangeEnd(java.sql.Timestamp alertRangeEnd) {
     this.alertRangeEnd = alertRangeEnd;
   }
 
@@ -451,7 +449,7 @@ public class ProjectList extends ArrayList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap queryAssignmentRecordCount(Connection db) throws SQLException {
+  public HashMap queryAssignmentRecordCount(Connection db, TimeZone timeZone) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     HashMap events = new HashMap();
@@ -483,19 +481,19 @@ public class ProjectList extends ArrayList {
       pst.setInt(++i, assignmentsForUser);
     }
     if (alertRangeStart != null) {
-      pst.setDate(++i, alertRangeStart);
+      pst.setTimestamp(++i, alertRangeStart);
     }
     if (alertRangeEnd != null) {
-      pst.setDate(++i, alertRangeEnd);
+      pst.setTimestamp(++i, alertRangeEnd);
     }
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertdate = ProjectList.getAlertDateStringLongYear(rs.getDate("due_date"));
+      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("due_date"));
       int alertCount = rs.getInt("count");
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("ProjectList --> Added Days Assignments " + alertdate + ":" + alertCount);
+        System.out.println("ProjectList --> Added Days Assignments " + alertDate + ":" + alertCount);
       }
-      events.put(alertdate, new Integer(alertCount));
+      events.put(alertDate, new Integer(alertCount));
     }
     rs.close();
     pst.close();

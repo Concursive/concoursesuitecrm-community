@@ -1,3 +1,4 @@
+<%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="EstimatedLOETypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -20,7 +21,7 @@
       Due Date
     </td>
     <td>
-      <%= !"".equals(toString(Task.getDueDateString())) ?  toString(Task.getDueDateString()) : "&nbsp;" %>
+      <dhv:tz timestamp="<%= Task.getDueDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">

@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.text.DateFormat"%>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="RoleList" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
@@ -131,7 +132,7 @@ Add User<br>
       Expire Date
     </td>
     <td>
-      <input type="text" size="10" name="expires" value="">
+      <input type="text" size="10" name="expires" value="<dhv:tz timestamp="<%= UserRecord.getExpires() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
       <a href="javascript:popCalendar('addUser', 'expires');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>

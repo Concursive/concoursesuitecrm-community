@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.base.Constants" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
@@ -85,7 +85,7 @@ Call Details<br>
             Alert Date
           </td>
           <td>
-            <%= toHtml(CallDetails.getAlertDateString()) %>
+            <dhv:tz timestamp="<%= CallDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -93,7 +93,9 @@ Call Details<br>
             Entered
           </td>
           <td>
-            <%= toHtml(CallDetails.getEnteredName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getEnteredString()) %>
+            <dhv:username id="<%= CallDetails.getEnteredBy() %>"/>
+            -
+            <dhv:tz timestamp="<%= CallDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
           </td>
         </tr>
         <tr class="containerBody">
@@ -101,7 +103,9 @@ Call Details<br>
             Modified
           </td>
           <td>
-            <%= toHtml(CallDetails.getModifiedName()) %>&nbsp;-&nbsp;<%= toHtml(CallDetails.getModifiedString()) %>
+            <dhv:username id="<%= CallDetails.getModifiedBy() %>"/>
+            -
+            <dhv:tz timestamp="<%= CallDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
           </td>
         </tr>
       </table><br>

@@ -453,6 +453,23 @@ public class CFSModule {
 
 
   /**
+   *  Gets the User's TimeZone
+   *
+   *@param  context  Description of the Parameter
+   *@return          The userTimeZone value
+   */
+  public TimeZone getUserTimeZone(ActionContext context) {
+    TimeZone timeZone = Calendar.getInstance().getTimeZone();
+    User thisUser = this.getUser(context, this.getUserId(context));
+    String tZone = thisUser.getTimeZone();
+    if (tZone != null && !"".equals(tZone)) {
+      timeZone = TimeZone.getTimeZone(tZone);
+    }
+    return timeZone;
+  }
+
+
+  /**
    *  Removes an object from the session
    *
    *@param  context   Description of Parameter
@@ -626,7 +643,9 @@ public class CFSModule {
           User indUser = (User) k.next();
           if (indUser.getId() == userId) {
             indUser.setIsValid(false, true);
-            System.out.println("clearing: " + indUser.getId());
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("clearing: " + indUser.getId());
+            }
           }
         }
       }

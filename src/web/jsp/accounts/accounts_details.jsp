@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
@@ -125,7 +125,7 @@ Account Details<br>
       Contract End Date
     </td>
     <td>
-       <%= toHtml(OrgDetails.getContractEndDateString()) %>&nbsp;
+      <dhv:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
 </dhv:evaluate>
@@ -145,7 +145,7 @@ Account Details<br>
       Alert Date
     </td>
     <td>
-       <%= OrgDetails.getAlertDateStringLongYear() %>
+      <dhv:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
 </dhv:evaluate>
@@ -154,7 +154,9 @@ Account Details<br>
       Entered
     </td>
     <td>
-      <%= toHtml(OrgDetails.getEnteredByName()) %>&nbsp;-&nbsp;<%= OrgDetails.getEnteredString() %>
+      <%= toHtml(OrgDetails.getEnteredByName()) %>
+      -
+      <dhv:tz timestamp="<%= OrgDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -162,7 +164,9 @@ Account Details<br>
       Modified
     </td>
     <td>
-      <%= toHtml(OrgDetails.getModifiedByName()) %>&nbsp;-&nbsp;<%= OrgDetails.getModifiedString() %>
+      <%= toHtml(OrgDetails.getModifiedByName()) %>
+      -
+      <dhv:tz timestamp="<%= OrgDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
 </table>

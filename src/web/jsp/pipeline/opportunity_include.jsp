@@ -1,6 +1,6 @@
 <%-- reusable opportunity form --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*" %>
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
@@ -166,7 +166,7 @@
       Est. Close Date
     </td>
     <td>
-      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" value="<%= toHtmlValue(ComponentDetails.getCloseDateString()) %>">
+      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" value="<dhv:tz timestamp="<%= ComponentDetails.getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
       <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
       <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
@@ -237,7 +237,7 @@
       Alert Date
     </td>
     <td>
-      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" value="<%= toHtmlValue(ComponentDetails.getAlertDateString()) %>">
+      <input type="text" size="10" name="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" value="<dhv:tz timestamp="<%= ComponentDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>">
       <a href="javascript:popCalendar('opportunityForm', '<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>');"><img src="images/icons/stock_form-date-field-16.gif" border="0" align="absmiddle" height="16" width="16"/></a> (mm/dd/yyyy)
     </td>
   </tr>

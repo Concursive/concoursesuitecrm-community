@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.admin.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.admin.base.*" %>
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="AccessLog" class="org.aspcfs.modules.admin.base.AccessLogList" scope="request"/>
@@ -37,7 +37,7 @@ Login History<br>
 			<%= toHtml(thisLog.getIp()) %>
 		</td>
 		<td nowrap valign="top" class="row<%= rowid %>">
-      <%= toHtml(thisLog.getEnteredString()) %>
+      <dhv:tz timestamp="<%= thisLog.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
 		</td>
 	</tr>
   <%}%>

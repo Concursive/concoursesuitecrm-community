@@ -18,13 +18,13 @@
 <div id="header">
 <table border="0" width="100%" cellpadding="2" cellspacing="0">
   <tr>
-    <th align="left" valign="top">
+    <td valign="top">
       <table border="0" cellpadding="0" cellspacing="2">
         <tr>
-          <th align="left" valign="top">
+          <td valign="top">
             <dhv:label name="logo"/>
-          </th>
-          <th align="left" valign="top" nowrap>
+          </td>
+          <td valign="top" nowrap>
 <%
   if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
 %>  
@@ -39,10 +39,10 @@
         <br>Action took: <b class="highlight"><%= request.getAttribute("debug.action.time") %> ms</b>
       </dhv:evaluate>
 <%}%>
-          </th>
+          </td>
         </tr>
       </table>
-    </th>
+    </td>
     <th align="right" valign="top" nowrap>
       <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="javascript:window.print()" class="s">Print</a>
@@ -116,6 +116,8 @@
 <div id="footer">
 <br>
 <center><%= request.getAttribute("MainMenuSmall") %></center>
+<br>
+<center><dhv:tz timestamp="<%= new java.util.Date() %>"/></center>
 <br>
 <center>Copyright (c) 2000-2003 Dark Horse Ventures.  All rights reserved.</center>
 </div>

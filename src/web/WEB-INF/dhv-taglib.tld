@@ -403,4 +403,40 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  
+  <tag>
+    <name>tz</name> 
+    <tag-class>org.aspcfs.taglib.DateTimeHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Access the User's session and output the specified datetime according to their timezone
+    </display-name>
+    <attribute>
+      <name>timestamp</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>dateOnly</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>dateFormat</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>timeFormat</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>default</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>pattern</name>
+      <required>no</required>
+    </attribute>
+  </tag>
 </taglib>

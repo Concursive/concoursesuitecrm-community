@@ -35,7 +35,7 @@ public class OpportunityComponent extends GenericBean {
   protected int headerId = -1;
   protected int owner = -1;
   protected String description = null;
-  protected java.sql.Date closeDate = null;
+  protected java.sql.Timestamp closeDate = null;
   protected double closeProb = 0;
   protected double terms = 0;
   protected String units = null;
@@ -44,10 +44,10 @@ public class OpportunityComponent extends GenericBean {
   protected double high = 0;
   protected int stage = -1;
   protected String stageName = null;
-  protected java.sql.Date stageDate = null;
+  protected java.sql.Timestamp stageDate = null;
   protected double commission = 0;
   protected String type = null;
-  protected java.sql.Date alertDate = null;
+  protected java.sql.Timestamp alertDate = null;
   protected String alertText = null;
   protected String notes = null;
   protected java.sql.Timestamp entered = null;
@@ -201,7 +201,7 @@ public class OpportunityComponent extends GenericBean {
    *
    *@param  tmp  The new alertDate value
    */
-  public void setAlertDate(java.sql.Date tmp) {
+  public void setAlertDate(java.sql.Timestamp tmp) {
     this.alertDate = tmp;
   }
 
@@ -212,7 +212,7 @@ public class OpportunityComponent extends GenericBean {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    this.alertDate = DateUtils.parseDateString(tmp);
+    this.alertDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -231,7 +231,7 @@ public class OpportunityComponent extends GenericBean {
    *
    *@param  tmp  The new closeDate value
    */
-  public void setCloseDate(java.sql.Date tmp) {
+  public void setCloseDate(java.sql.Timestamp tmp) {
     this.closeDate = tmp;
   }
 
@@ -241,7 +241,7 @@ public class OpportunityComponent extends GenericBean {
    *
    *@param  tmp  The new stageDate value
    */
-  public void setStageDate(java.sql.Date tmp) {
+  public void setStageDate(java.sql.Timestamp tmp) {
     this.stageDate = tmp;
   }
 
@@ -272,7 +272,7 @@ public class OpportunityComponent extends GenericBean {
    *@param  tmp  The new closeDate value
    */
   public void setCloseDate(String tmp) {
-    this.closeDate = DateUtils.parseDateString(tmp);
+    this.closeDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -282,7 +282,7 @@ public class OpportunityComponent extends GenericBean {
    *@param  tmp  The new stageDate value
    */
   public void setStageDate(String tmp) {
-    this.stageDate = DateUtils.parseDateString(tmp);
+    this.stageDate = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -696,7 +696,7 @@ public class OpportunityComponent extends GenericBean {
    *
    *@return    The alertDate value
    */
-  public java.sql.Date getAlertDate() {
+  public java.sql.Timestamp getAlertDate() {
     return alertDate;
   }
 
@@ -706,7 +706,7 @@ public class OpportunityComponent extends GenericBean {
    *
    *@return    The closeDate value
    */
-  public java.sql.Date getCloseDate() {
+  public java.sql.Timestamp getCloseDate() {
     return closeDate;
   }
 
@@ -716,7 +716,7 @@ public class OpportunityComponent extends GenericBean {
    *
    *@return    The stageDate value
    */
-  public java.sql.Date getStageDate() {
+  public java.sql.Timestamp getStageDate() {
     return stageDate;
   }
 
@@ -1565,12 +1565,12 @@ public class OpportunityComponent extends GenericBean {
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getOwner());
-      pst.setDate(++i, this.getCloseDate());
+      pst.setTimestamp(++i, this.getCloseDate());
       pst.setInt(++i, this.getStage());
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getHeaderId());
       if (stageDate != null) {
-        pst.setDate(++i, stageDate);
+        pst.setTimestamp(++i, stageDate);
       }
       if (entered != null) {
         pst.setTimestamp(++i, entered);
@@ -1896,7 +1896,7 @@ public class OpportunityComponent extends GenericBean {
     headerId = rs.getInt("opp_id");
     owner = rs.getInt("owner");
     description = rs.getString("description");
-    closeDate = rs.getDate("closedate");
+    closeDate = rs.getTimestamp("closedate");
     closeProb = rs.getDouble("closeprob");
     terms = rs.getDouble("terms");
     units = rs.getString("units");
@@ -1904,10 +1904,10 @@ public class OpportunityComponent extends GenericBean {
     guess = rs.getDouble("guessvalue");
     high = rs.getDouble("highvalue");
     stage = rs.getInt("stage");
-    stageDate = rs.getDate("stagedate");
+    stageDate = rs.getTimestamp("stagedate");
     commission = rs.getDouble("commission");
     type = rs.getString("type");
-    alertDate = rs.getDate("alertdate");
+    alertDate = rs.getTimestamp("alertdate");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
@@ -2002,8 +2002,8 @@ public class OpportunityComponent extends GenericBean {
     pst.setString(++i, this.getType());
     pst.setInt(++i, this.getStage());
     pst.setString(++i, this.getDescription());
-    DatabaseUtils.setDate(pst, ++i, this.getCloseDate());
-    DatabaseUtils.setDate(pst, ++i, this.getAlertDate());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getCloseDate());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getAlertDate());
     pst.setString(++i, this.getAlertText());
     pst.setDouble(++i, this.getTerms());
     pst.setString(++i, this.getUnits());
@@ -2044,5 +2044,17 @@ public class OpportunityComponent extends GenericBean {
     return resultCount;
   }
 
+  /**
+   *  Gets the properties that are TimeZone sensitive for a Call
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("alertDate");
+    thisList.add("stageDate");
+    thisList.add("closeDate");
+    return thisList;
+  }
 }
 

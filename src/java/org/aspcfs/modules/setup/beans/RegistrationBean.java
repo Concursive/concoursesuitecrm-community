@@ -273,10 +273,15 @@ public class RegistrationBean extends GenericBean {
     profileElement.appendChild(document.createTextNode(profile));
     rootElement.appendChild(profileElement);
     //OS
-    String os = ...;
+    String os = System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version");
     Element osElement = document.createElement("os");
     osElement.appendChild(document.createTextNode(os));
     rootElement.appendChild(osElement);
+    //java
+    String java = System.getProperty("java.version");
+    Element javaElement = document.createElement("java");
+    javaElement.appendChild(document.createTextNode(java));
+    rootElement.appendChild(javaElement);
     //Key
     if (zlib != null) {
       Element zlibElement = document.createElement("zlib");

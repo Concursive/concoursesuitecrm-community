@@ -1,4 +1,4 @@
-<%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <%@ include file="contact_details_header_include.jsp" %>
@@ -146,7 +146,7 @@
     <td>
       <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
       -
-      <%= ContactDetails.getEnteredString() %>
+      <dhv:tz timestamp="<%= ContactDetails.getEntered()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -156,7 +156,7 @@
     <td>
       <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
       -
-      <%= ContactDetails.getModifiedString() %>
+      <dhv:tz timestamp="<%= ContactDetails.getModified()  %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
 </table>

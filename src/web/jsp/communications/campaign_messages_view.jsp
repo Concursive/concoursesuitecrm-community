@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="MessageList" class="org.aspcfs.modules.communications.base.MessageList" scope="request"/>
 <jsp:useBean id="CampaignMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -82,7 +82,7 @@ Message List
       <dhv:username id="<%= thisMessage.getEnteredBy() %>" lastFirst="true" />
     </td>
     <td valign="center" class="row<%= rowid %>" nowrap>
-      <%= toHtml(thisMessage.getModifiedDateTimeString()) %>
+      <dhv:tz timestamp="<%= thisMessage.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
 <%

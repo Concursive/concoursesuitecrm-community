@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.base.EmailAddress" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <a href="TroubleTickets.do">Tickets</a> > 
@@ -40,7 +40,7 @@ History<br>
               <%= toHtml(thisEntry.getEnteredByName()) %>
             </td>
             <td nowrap valign="top">
-              <%= thisEntry.getEnteredString() %>
+            <dhv:tz timestamp="<%= thisEntry.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
             </td>
             <td valign="top" width="100%">
               <%= toHtml(thisEntry.getEntryText()) %>

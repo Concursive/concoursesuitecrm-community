@@ -5,6 +5,8 @@ import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.util.*;
+import java.io.*;
+import java.text.DateFormat;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.communications.base.*;
@@ -16,7 +18,6 @@ import org.aspcfs.utils.web.*;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
-import java.io.*;
 
 /**
  *  Actions for dealing with Campaigns in the Communications Module, including
@@ -1155,6 +1156,7 @@ public final class CampaignManager extends CFSModule {
     Campaign campaign = null;
 
     String campaignId = context.getRequest().getParameter("id");
+    String activeDate = context.getRequest().getParameter("activeDate");
 
     try {
       db = this.getConnection(context);
@@ -1162,7 +1164,8 @@ public final class CampaignManager extends CFSModule {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
       }
-      campaign.setActiveDate(context.getRequest().getParameter("activeDate"));
+      TimeZone userTimeZone = this.getUserTimeZone(context);
+      campaign.setActiveDate(DateUtils.getUserToServerDateTimeString(userTimeZone, DateFormat.SHORT, DateFormat.LONG, activeDate));
 
       if (context.getRequest().getParameter("active") != null) {
         campaign.setActive(context.getRequest().getParameter("active"));

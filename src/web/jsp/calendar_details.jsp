@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.lang.reflect.*, org.aspcfs.modules.mycfs.beans.CalendarBean, org.aspcfs.modules.mycfs.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,java.lang.reflect.*, org.aspcfs.modules.mycfs.beans.CalendarBean, org.aspcfs.modules.mycfs.base.*" %>
 <jsp:useBean id="CompanyCalendar" class="org.aspcfs.utils.web.CalendarView" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
@@ -8,6 +8,10 @@
 <% 
    String returnPage = request.getParameter("return");
    CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage!=null?returnPage + "CalendarInfo" :"CalendarInfo");
+   TimeZone timeZone = Calendar.getInstance().getTimeZone();
+   if(User.getUserRecord().getTimeZone() != null){
+    timeZone = TimeZone.getTimeZone(User.getUserRecord().getTimeZone());
+   }
 %>
 <script type="text/javascript">
 function changeUserName(id){
@@ -54,8 +58,15 @@ function reloadCalendar(){
 <dhv:evaluate exp="<%= CalendarInfo.isAgendaView() %>">      
         <tr class="weekSelector">
           <td colspan="2" width="100%">
-            <strong><%= toFullDateString(Calendar.getInstance().getTime()) %>
-            <font color="#006699">(Today)</font></strong>
+            <strong><%
+              Calendar tmpCal = Calendar.getInstance();
+              tmpCal.setTimeZone(timeZone);
+              int currDay = tmpCal.get(Calendar.DAY_OF_MONTH);
+              int currMonth = tmpCal.get(Calendar.MONTH) + 1;
+              int currYear = tmpCal.get(Calendar.YEAR);
+              DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
+               %>
+            <%= toFullDateString(formatter.parse(currMonth  + "/" + currDay + "/" + currYear)) %><font color="#006699">(Today)</font></strong>
           </td>
         </tr>
 </dhv:evaluate>
@@ -65,7 +76,7 @@ function reloadCalendar(){
      boolean showToday = false;
      int count = 0;
      Calendar today = Calendar.getInstance();
-     today.setTime(new java.util.Date());
+     today.setTimeZone(timeZone);
      while (days.hasNext()) {
        CalendarEventList thisDay = (CalendarEventList)days.next();
        Calendar thisCal = Calendar.getInstance();
@@ -100,7 +111,7 @@ function reloadCalendar(){
        boolean firstTime = true;
        for (int i = 0; i< Array.getLength(CalendarEventList.EVENT_TYPES); i++) {
        firstTime = true;
-       int categoryCount = CompanyCalendar.getEventCount(thisCal.get(Calendar.MONTH) + 1, thisCal.get(Calendar.DAY_OF_MONTH), thisCal.get(Calendar.YEAR), CalendarEventList.EVENT_TYPES[i]);
+       
        Iterator eventList = thisDay.iterator();
        while (eventList.hasNext()) {
          CalendarEvent thisEvent = (CalendarEvent)eventList.next();
@@ -112,7 +123,7 @@ function reloadCalendar(){
         <td colspan="2" width="100%">
           <table cellspacing="0" cellpadding="0" border="0" marginheight="0" marginwidth="0">
             <tr>
-              <td><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;(<%= categoryCount %>)</td>
+              <td><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;(<%= 1 %>)</td>
             </tr>
           </table>
           <table cellspacing="0" cellpadding="0" marginheight="0" marginwidth="0" border="0" id="alertdetails<%= toFullDateString(thisDay.getDate()) + i %>" style="<%=count==0?"display:":"display:none"%>">

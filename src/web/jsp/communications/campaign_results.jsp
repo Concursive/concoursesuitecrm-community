@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="SurveyQuestionList" class="org.aspcfs.modules.communications.base.ActiveSurveyQuestionList" scope="request"/>
 <jsp:useBean id="SurveyQuestionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -34,7 +34,7 @@ Results
                   --
                   </dhv:evaluate>
                   <dhv:evaluate if="<%= !"".equals(Campaign.getLastResponseString()) %>">
-                  <%= Campaign.getLastResponseString() %>
+                    <dhv:tz timestamp="<%= Campaign.getLastResponse() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>" default="&nbsp;"/>
                   </dhv:evaluate>
                 </td>
               </tr>

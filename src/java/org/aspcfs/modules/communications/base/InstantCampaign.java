@@ -99,7 +99,7 @@ public class InstantCampaign extends Campaign {
 
       //insert the campaign
       java.util.Date dtNow = new java.util.Date();
-      java.sql.Date today = new java.sql.Date(dtNow.getTime());
+      java.sql.Timestamp today = new java.sql.Timestamp(dtNow.getTime());
       this.setMessageId(instantMessage.getId());
       this.setReplyTo(instantMessage.getReplyTo());
       this.setSubject(instantMessage.getMessageSubject());

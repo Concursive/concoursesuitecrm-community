@@ -6,6 +6,7 @@ import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.text.*;
+import java.util.ArrayList;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.*;
@@ -36,7 +37,7 @@ public class Call extends GenericBean {
   private String contactName = "";
   private String alertText = "";
 
-  private java.sql.Date alertDate = null;
+  private java.sql.Timestamp alertDate = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
 
@@ -177,7 +178,7 @@ public class Call extends GenericBean {
    *
    *@param  alertDate  The new alertDate value
    */
-  public void setAlertDate(java.sql.Date alertDate) {
+  public void setAlertDate(java.sql.Timestamp alertDate) {
     this.alertDate = alertDate;
   }
 
@@ -188,7 +189,7 @@ public class Call extends GenericBean {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    this.alertDate = DateUtils.parseDateString(tmp);
+    this.alertDate = DateUtils.parseTimestampString(tmp);
 
   }
 
@@ -486,7 +487,7 @@ public class Call extends GenericBean {
    *
    *@return    The alertDate value
    */
-  public java.sql.Date getAlertDate() {
+  public java.sql.Timestamp getAlertDate() {
     return alertDate;
   }
 
@@ -499,7 +500,7 @@ public class Call extends GenericBean {
   public String getAlertDateString() {
     String tmp = "";
     try {
-      return DateFormat.getDateInstance(3).format(alertDate);
+      return DateFormat.getDateInstance(3).format((java.util.Date) alertDate);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -516,7 +517,7 @@ public class Call extends GenericBean {
     try {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
       formatter.applyPattern("M/d/yyyy");
-      return formatter.format(alertDate);
+      return formatter.format((java.util.Date) alertDate);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -529,12 +530,12 @@ public class Call extends GenericBean {
    *@param  alertDate  Description of the Parameter
    *@return            The alertDateStringLongYear value
    */
-  public static String getAlertDateStringLongYear(java.sql.Date alertDate) {
+  public static String getAlertDateStringLongYear(java.sql.Timestamp alertDate) {
     String tmp = "";
     try {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
       formatter.applyPattern("M/d/yyyy");
-      return formatter.format(alertDate);
+      return formatter.format((java.util.Date) alertDate);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -832,9 +833,9 @@ public class Call extends GenericBean {
       pst.setString(++i, this.getSubject());
       pst.setString(++i, this.getNotes());
       if (alertDate == null) {
-        pst.setNull(++i, java.sql.Types.DATE);
+        pst.setNull(++i, java.sql.Types.TIMESTAMP);
       } else {
-        pst.setDate(++i, this.getAlertDate());
+        pst.setTimestamp(++i, this.getAlertDate());
       }
       pst.setString(++i, this.getAlertText());
       if (entered != null) {
@@ -991,9 +992,9 @@ public class Call extends GenericBean {
     pst.setString(++i, notes);
     pst.setInt(++i, this.getModifiedBy());
     if (alertDate == null) {
-      pst.setNull(++i, java.sql.Types.DATE);
+      pst.setNull(++i, java.sql.Types.TIMESTAMP);
     } else {
-      pst.setDate(++i, this.getAlertDate());
+      pst.setTimestamp(++i, this.getAlertDate());
     }
     pst.setString(++i, this.getAlertText());
     pst.setInt(++i, this.getId());
@@ -1054,7 +1055,7 @@ public class Call extends GenericBean {
     length = rs.getInt("length");
     subject = rs.getString("subject");
     notes = rs.getString("notes");
-    alertDate = rs.getDate("alertdate");
+    alertDate = rs.getTimestamp("alertdate");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
@@ -1067,9 +1068,21 @@ public class Call extends GenericBean {
     enteredName = Contact.getNameLastFirst(rs.getString("elast"), rs.getString("efirst"));
     modifiedName = Contact.getNameLastFirst(rs.getString("mlast"), rs.getString("mfirst"));
     contactName = Contact.getNameLastFirst(rs.getString("ctlast"), rs.getString("ctfirst"));
-    if(contactName == null || "".equals(contactName)){
+    if (contactName == null || "".equals(contactName)) {
       contactName = rs.getString("ctcompany");
     }
+  }
+
+
+  /**
+   *  Gets the properties that are TimeZone sensitive for a Call
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("alertDate");
+    return thisList;
   }
 }
 

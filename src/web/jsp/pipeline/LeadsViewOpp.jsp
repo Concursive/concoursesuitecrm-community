@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*, org.aspcfs.utils.web.HtmlSelect" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.HtmlSelect" %>
 <%@ page import="org.aspcfs.modules.pipeline.base.*" %>
 <%@ page import="com.zeroio.iteam.base.*" %>
 <%@ page import="org.aspcfs.modules.pipeline.beans.OpportunityBean" %>
@@ -74,7 +74,7 @@ View Components<br>
       <%= OpportunityListInfo.getSortIcon("closeprob") %>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=ViewOpp&column=closedate">Start</a></strong>
+      <strong><a href="Leads.do?command=ViewOpp&column=closedate">Close Date</a></strong>
       <%= OpportunityListInfo.getSortIcon("closedate") %>
     </th>
     <th valign="center" nowrap>
@@ -120,7 +120,7 @@ View Components<br>
       <%= thisOpp.getComponent().getCloseProbValue() %>%
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
-      <%= toHtml(thisOpp.getComponent().getCloseDateString()) %>
+      <dhv:tz timestamp="<%= thisOpp.getComponent().getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
     <td valign="top" align="center" nowrap class="row<%= rowid %>">
       <%= toHtml(thisOpp.getComponent().getTermsString()) %>

@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.*,org.aspcfs.modules.admin.base.*,org.aspcfs.modules.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,java.text.*,org.aspcfs.modules.admin.base.*,org.aspcfs.modules.base.*" %>
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
@@ -63,10 +63,10 @@ Custom Folders<br>
           <dhv:permission name="admin-sysconfig-folders-edit"></a></dhv:permission>
       </td>
       <td align="center" nowrap>
-        <%= toHtml(toDateString(thisCategory.getStartDate())) %>
+        <dhv:tz timestamp="<%= thisCategory.getStartDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
       </td>
       <td align="center" nowrap>
-        <%= toHtml(toDateString(thisCategory.getEndDate())) %>
+        <dhv:tz timestamp="<%= thisCategory.getEndDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
       </td>
     </tr>
 <%    

@@ -37,6 +37,8 @@ public class Notifier extends ReportBuilder {
 
   private HashMap config = new HashMap();
   private ArrayList taskList = new ArrayList();
+  private java.sql.Timestamp today = null;
+  private java.sql.Timestamp yesterday = null;
 
   /**
    *  Description of the Field
@@ -139,6 +141,14 @@ public class Notifier extends ReportBuilder {
           thisSite.setVirtualHost((String) this.config.get("WEBSERVER.URL"));
           siteList.add(thisSite);
         }
+        //Get the time range for the reports
+        Calendar calToday = Calendar.getInstance();
+        today = new java.sql.Timestamp(calToday.getTimeInMillis());
+        
+        Calendar calYesterday = Calendar.getInstance();
+        calYesterday.set(Calendar.DAY_OF_MONTH, -1);
+        yesterday = new java.sql.Timestamp(calYesterday.getTimeInMillis());
+        
         //Process each site
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Notifier-> Processing each site");
@@ -207,24 +217,11 @@ public class Notifier extends ReportBuilder {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("User");
-
-    Calendar thisCalendar = Calendar.getInstance();
-
+    //Build the list
     OpportunityComponentList thisList = new OpportunityComponentList();
-    java.sql.Date thisDate = new java.sql.Date(System.currentTimeMillis());
-    thisDate = thisDate.valueOf(
-        thisCalendar.get(Calendar.YEAR) + "-" +
-        (thisCalendar.get(Calendar.MONTH) + 1) + "-" +
-        thisCalendar.get(Calendar.DAY_OF_MONTH));
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("Notifier-> " +
-          thisCalendar.get(Calendar.YEAR) + "-" +
-          (thisCalendar.get(Calendar.MONTH) + 1) + "-" +
-          thisCalendar.get(Calendar.DAY_OF_MONTH));
-    }
-    thisList.setAlertDate(thisDate);
+    thisList.setAlertRangeStart(yesterday);
+    thisList.setAlertRangeEnd(today);
     thisList.buildList(db);
-
     int notifyCount = 0;
     Iterator i = thisList.iterator();
     while (i.hasNext()) {
@@ -266,7 +263,6 @@ public class Notifier extends ReportBuilder {
             relationshipType + ": " + StringUtils.toHtml(relationshipName) + "<br>" : "") +
             "Opportunity Name: " + StringUtils.toHtml(thisOpportunity.getDescription()) + "<br>" +
             "Component Description: " + StringUtils.toHtml(thisComponent.getDescription()) + "<br>" +
-            "Close Date: " + thisComponent.getCloseDateString() + "<br>" +
             "Alert Text: " + StringUtils.toHtml(thisComponent.getAlertText()) + "<br>" +
             "Notes: " + StringUtils.toHtml(thisComponent.getNotes()) + "<br>" +
             "<br>" +
@@ -301,18 +297,11 @@ public class Notifier extends ReportBuilder {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("User");
-
-    Calendar thisCalendar = Calendar.getInstance();
-
+    //Build the list
     CallList thisList = new CallList();
-    java.sql.Date thisDate = new java.sql.Date(System.currentTimeMillis());
-    thisDate = thisDate.valueOf(
-        thisCalendar.get(Calendar.YEAR) + "-" +
-        (thisCalendar.get(Calendar.MONTH) + 1) + "-" +
-        thisCalendar.get(Calendar.DAY_OF_MONTH));
-    thisList.setAlertDate(thisDate);
+    thisList.setAlertRangeStart(yesterday);
+    thisList.setAlertRangeEnd(today);
     thisList.buildList(db);
-
     int notifyCount = 0;
     Iterator i = thisList.iterator();
     while (i.hasNext()) {
@@ -365,14 +354,10 @@ public class Notifier extends ReportBuilder {
     Report thisReport = new Report();
     thisReport.setBorderSize(0);
     thisReport.addColumn("Report");
-    Calendar thisCalendar = Calendar.getInstance();
+    //Build the list
     CampaignList thisList = new CampaignList();
-    java.sql.Date thisDate = new java.sql.Date(System.currentTimeMillis());
-    thisDate = thisDate.valueOf(
-        thisCalendar.get(Calendar.YEAR) + "-" +
-        (thisCalendar.get(Calendar.MONTH) + 1) + "-" +
-        thisCalendar.get(Calendar.DAY_OF_MONTH));
-    thisList.setActiveDate(thisDate);
+    thisList.setActiveRangeStart(yesterday);
+    thisList.setActiveRangeEnd(today);
     thisList.setActive(CampaignList.TRUE);
     thisList.setReady(CampaignList.TRUE);
     thisList.setEnabled(CampaignList.TRUE);

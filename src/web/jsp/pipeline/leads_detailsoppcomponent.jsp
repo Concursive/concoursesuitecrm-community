@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="LeadsComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
@@ -71,7 +71,7 @@ Component Details<br>
       Est. Close Date
     </td>
     <td>
-      <%= LeadsComponentDetails.getCloseDateString() %>&nbsp;
+    <dhv:tz timestamp="<%= LeadsComponentDetails.getCloseDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -119,7 +119,7 @@ Component Details<br>
       Current Stage Date
     </td>
     <td>
-      <%= toHtml(LeadsComponentDetails.getStageDateString()) %>&nbsp;
+      <dhv:tz timestamp="<%= LeadsComponentDetails.getStageDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -146,7 +146,7 @@ Component Details<br>
       Alert Date
     </td>
     <td>
-       <%= LeadsComponentDetails.getAlertDateStringLongYear() %>
+      <dhv:tz timestamp="<%= LeadsComponentDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
     </td>
   </tr>
 </dhv:evaluate>  
@@ -157,7 +157,7 @@ Component Details<br>
     <td>
       <dhv:username id="<%= LeadsComponentDetails.getEnteredBy() %>"/>
       -
-      <%= LeadsComponentDetails.getEnteredString() %>
+      <dhv:tz timestamp="<%= LeadsComponentDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
   <tr class="containerBody">
@@ -167,7 +167,7 @@ Component Details<br>
     <td>
       <dhv:username id="<%= LeadsComponentDetails.getModifiedBy() %>"/>
       -
-      <%= LeadsComponentDetails.getModifiedString() %>
+      <dhv:tz timestamp="<%= LeadsComponentDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>  
 </table>
