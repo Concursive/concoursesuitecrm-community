@@ -10,11 +10,11 @@
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCalls</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportFolders</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunityReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportAccountReports</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRevenue</module>
     <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportDocuments</module>
+    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
   </processes>
   <mappings>
     <map class="com.darkhorseventures.webutils.LookupList" id="lookupIndustry" table="lookup_industry"/>
@@ -323,6 +323,19 @@
       <property>modified</property>
       <property lookup="user">modifiedBy</property>
     </map>
+    <map class="com.zeroio.iteam.base.Issue" id="issue">
+      <property alias="guid">id</property>
+      <property lookup="project">projectId</property>
+      <property lookup="lookupProjectIssues">categoryId</property>
+      <property>subject</property>
+      <property>body</property>
+      <property>importance</property>
+      <property>enabled</property>
+      <property>entered</property>
+      <property lookup="user">enteredBy</property>
+      <property>modified</property>
+      <property lookup="user">modifiedBy</property>
+    </map>
     <map class="com.darkhorseventures.cfsbase.ContactEmailAddress" id="contactEmailAddress">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
@@ -456,8 +469,8 @@
       <property>replyTo</property>
       <property>sendMethodId</property>
       <property>surveyId</property>
-      </map>
-      <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
+    </map>
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
       <property lookup="searchCriteriaList" field="id"/>
       <property field="field"/>
       <property field="operator"/>

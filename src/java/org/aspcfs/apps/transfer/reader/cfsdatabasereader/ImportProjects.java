@@ -73,10 +73,6 @@ public class ImportProjects implements CFSDatabaseReaderImportModule {
       return false;
     }
     
-    if (1 == 1) {
-      return false;
-    }
-    
 /*
     logger.info("ImportBaseData-> Inserting Issue Replies");
     IssueReplyList issueReplyList = new IssueReplyList();

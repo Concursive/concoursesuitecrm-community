@@ -1,9 +1,9 @@
 
-INSERT INTO ticket_level (level_code,level,default_item,enabled) VALUES (0,'Entry level',false,true);
-INSERT INTO ticket_level (level_code,level,default_item,enabled) VALUES (1,'First level',false,true);
-INSERT INTO ticket_level (level_code,level,default_item,enabled) VALUES (2,'Second level',false,true);
-INSERT INTO ticket_level (level_code,level,default_item,enabled) VALUES (3,'Third level',false,true);
-INSERT INTO ticket_level (level_code,level,default_item,enabled) VALUES (4,'Top level',false,true);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (0,'Entry level',false,true);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (1,'First level',false,true);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (2,'Second level',false,true);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (3,'Third level',false,true);
+INSERT INTO ticket_level (level,description,default_item,enabled) VALUES (4,'Top level',false,true);
 
 
 INSERT INTO ticket_severity (description,style,default_item,level,enabled) VALUES 

@@ -1691,7 +1691,7 @@ public void setCompanyEnabled(boolean companyEnabled) {
     if (rs.wasNull()) {
             priorityCode = -1;
     }
-    levelCode = rs.getInt("level_code");
+    levelCode = DatabaseUtils.getInt(rs, "level_code");
     departmentCode = rs.getInt("department_code");
     if (rs.wasNull()) {
             departmentCode = -1;

@@ -6,12 +6,11 @@
  *@version    $Id$
  */
  
-/* Not used, re-write as a lookup */
 CREATE TABLE ticket_level (
-  id serial
-  ,level_code int NOT NULL PRIMARY KEY
-  ,level VARCHAR(300) NOT NULL UNIQUE
+  code serial PRIMARY KEY
+  ,description VARCHAR(300) NOT NULL UNIQUE
   ,default_item BOOLEAN DEFAULT false
+  ,level INTEGER DEFAULT 0
   ,enabled BOOLEAN DEFAULT true
 );
 
@@ -68,7 +67,7 @@ CREATE TABLE ticket (
   modifiedby INT NOT NULL REFERENCES access(user_id),
   closed TIMESTAMP,
   pri_code INT REFERENCES ticket_priority(code), 
-  level_code INT,
+  level_code INT REFERENCES ticket_level(code),
   department_code INT REFERENCES lookup_department,
   source_code INT REFERENCES lookup_ticketsource(code), 
   cat_code INT,
