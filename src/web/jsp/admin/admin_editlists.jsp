@@ -32,8 +32,7 @@ Lookup Lists
   </tr>
 <%
   Iterator i = LookupLists.iterator();
-  if (i.hasNext()){
-    while (i.hasNext()) {
+  while (i.hasNext()) {
     LookupListElement thisElement = (LookupListElement)i.next();
 %>
     <tr>
@@ -44,9 +43,10 @@ Lookup Lists
     </tr>
 <%
      }
-   } else {%>
+%>
+<dhv:evaluate if="<%= LookupLists.size() == 0 %>">
   <tr>
     <td valign="center" colspan="4">No custom lookup lists to configure.</td>
-  </tr>  
-<%}%>
+  </tr>
+</dhv:evaluate>
 </table>
