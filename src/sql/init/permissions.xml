@@ -161,6 +161,12 @@
       <report file="call_history_report.xml" type="user" permission="tickets-tickets" title="Call History" description="How have tickets been resolved?"/>
       <report file="assets_under_contract_report.xml" type="user" permission="tickets-tickets" title="Assets Under Contract" description="Which assets are covered by contracts?"/>
       <report file="activity_log_report.xml" type="user" permission="tickets-tickets" title="Contract Activity Summary" description="What is the hourly summary for each contract?"/>
+      <report file="callvolume_day_assignee.xml" type="user" permission="tickets-tickets" title="Call Volume by Assignee per Day" description="How many tickets are there by assignee per day?"/>
+      <report file="callvolume_month_assignee.xml" type="user" permission="tickets-tickets" title="Call Volume by Assignee per Month" description="How many tickets are there by assignee per month?"/>
+      <report file="callvolume_day_cat.xml" type="user" permission="tickets-tickets" title="Call Volume by Category per Day" description="How many tickets are there by category per day?"/>
+      <report file="callvolume_month_cat.xml" type="user" permission="tickets-tickets" title="Call Volume by Category per Month" description="How many tickets are there by category per month?"/>
+      <report file="callvolume_day_enteredby.xml" type="user" permission="tickets-tickets" title="Call Volume by User Entered per Day" description="How many tickets are there by user who entered the ticket per day?"/>
+      <report file="callvolume_month_ent.xml" type="user" permission="tickets-tickets" title="Call Volume by User Entered per Month" description="How many tickets are there by user who entered the ticket per month?"/>
       <multipleCategory constantId="202041401" table="ticket_category" maxLevels="4" description="Ticket Categories"/>
     </category>
     <category id="16" name="Reports" folders="false" lookups="false">
