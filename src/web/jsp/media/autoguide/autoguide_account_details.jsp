@@ -21,9 +21,9 @@
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="autoguide-accounts-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
-<dhv:permission name="autoguide-accounts-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>'"></dhv:permission>
-<dhv:permission name="autoguide-accounts-inventory-edit,autoguide-accounts-inventory-delete"><br>&nbsp;</dhv:permission>
+<dhv:permission name="accounts-autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
+<dhv:permission name="accounts-autoguide-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%=InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>'"></dhv:permission>
+<dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
@@ -154,15 +154,15 @@
         <img src="images/vehicle_unavailable.gif" border="0"/>
 </dhv:evaluate>
       </span>
-<dhv:permission name="autoguide-accounts-inventory-edit">
+<dhv:permission name="accounts-autoguide-inventory-edit">
       <br><a href="javascript:popURLReturn('AutoGuide.do?command=UploadForm&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>', 'AccountsAutoGuide.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&id=<%= InventoryItem.getId() %>', 'Photo_Upload','500','300','no','no');">Upload Photo</a>
 </dhv:permission>
     </td>
   </tr>
 </table>
-<dhv:permission name="autoguide-accounts-inventory-edit,autoguide-accounts-inventory-delete"><br></dhv:permission>
-<dhv:permission name="autoguide-accounts-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
-<dhv:permission name="autoguide-accounts-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>'"></dhv:permission>
+<dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete"><br></dhv:permission>
+<dhv:permission name="accounts-autoguide-inventory-edit"><input type='submit' value='Modify' name='Modify'></dhv:permission>
+<dhv:permission name="accounts-autoguide-inventory-delete"><input type="submit" value="Delete" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=Delete&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>'"></dhv:permission>
   </td>
   </tr>
 </table>

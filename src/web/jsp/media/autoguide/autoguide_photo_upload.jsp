@@ -51,7 +51,7 @@
         <br>&nbsp;
         <br><input type="file" name="id<%= InventoryItem.getId() %>" size="45">
         <br>
-<dhv:permission name="autoguide-inventory-edit">
+<dhv:permission name="accounts-autoguide-inventory-edit">
         <input type='submit' value=' Upload ' name="upload" onClick="javascript:this.form.dosubmit.value='true';">
 </dhv:permission>
         <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';window.close();">
