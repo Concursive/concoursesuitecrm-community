@@ -75,7 +75,7 @@ public final class Admin extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUsage(ActionContext context) {
-    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+    if (!hasPermission(context, "admin-sysconfig-view")) {
       return ("PermissionError");
     }
     addModuleBean(context, "Configuration", "Usage");
@@ -83,30 +83,54 @@ public final class Admin extends CFSModule {
     Exception errorMessage = null;
     ArrayList usageList = new ArrayList();
     ArrayList usageList2 = new ArrayList();
+    String rangeSelect = context.getRequest().getParameter("rangeSelect");
+    java.sql.Date dateStart = null;
+    String dateStartParam = context.getRequest().getParameter("dateStart");
+    if (dateStartParam != null) {
+      dateStart = DatabaseUtils.parseDate(dateStartParam);
+      if (dateStart != null) {
+        rangeSelect = "custom";
+      }
+    }
+    java.sql.Date dateEnd = null;
+    String dateEndParam = context.getRequest().getParameter("dateEnd");
+    if (dateEndParam != null) {
+      dateEnd = DatabaseUtils.parseDate(dateEndParam);
+      if (dateEnd != null) {
+        rangeSelect = "custom";
+      }
+    }
+    context.getRequest().setAttribute("rangeSelect", rangeSelect);
     try {
       Calendar cal = Calendar.getInstance();
-      cal.set(Calendar.HOUR, 0);
+      //Date Start Range
+      if (dateStart != null) {
+        cal.setTimeInMillis(dateStart.getTime());
+      }
+      cal.set(Calendar.HOUR_OF_DAY, 0);
       cal.set(Calendar.MINUTE, 0);
       cal.set(Calendar.SECOND, 0);
       cal.set(Calendar.MILLISECOND, 0);
       long startRange = cal.getTimeInMillis();
-      cal.set(Calendar.HOUR, 23);
+      context.getRequest().setAttribute("dateStart", new java.sql.Date(cal.getTimeInMillis()));
+      //Date End Range
+      if (dateStart != null && dateEnd != null && dateEnd.after(dateStart)) {
+        cal.setTimeInMillis(dateEnd.getTime());
+      }
+      cal.set(Calendar.HOUR_OF_DAY, 23);
       cal.set(Calendar.MINUTE, 59);
       cal.set(Calendar.SECOND, 59);
-      cal.set(Calendar.MILLISECOND, 0);
+      cal.set(Calendar.MILLISECOND, 999);
       long endRange = cal.getTimeInMillis();
-
+      context.getRequest().setAttribute("dateEnd", new java.sql.Date(cal.getTimeInMillis()));
+      
       NumberFormat nf = NumberFormat.getInstance();
-
       db = this.getConnection(context);
 
       //Users enabled as of date range
       UserList userList = new UserList();
       userList.setEnabled(Constants.TRUE);
-      //userList.setEnteredRangeStart(new java.sql.Timestamp(startRange));
-      //userList.setEnteredRangeEnd(new java.sql.Timestamp(endRange));
       int userListCount = userList.queryRecordCount(db);
-      //System.out.println("Total users enabled as of today: " + userListCount);
       usageList.add(nf.format(userListCount) + " user" + StringUtils.addS(userListCount) + " enabled");
 
       //File count: x size: x
@@ -115,12 +139,12 @@ public final class Admin extends CFSModule {
       long fileSize = fileList.queryFileSize(db);
       usageList.add(nf.format(fileCount) + " file" + StringUtils.addS(fileCount) + " stored in document library using " + nf.format(fileSize) + " byte" + StringUtils.addS(fileSize) + " of storage");
 
-      //Logins today
+      //Logins
       AccessLogList accessLog = new AccessLogList();
       accessLog.setEnteredRangeStart(new java.sql.Timestamp(startRange));
       accessLog.setEnteredRangeEnd(new java.sql.Timestamp(endRange));
       int logins = accessLog.queryRecordCount(db);
-      usageList2.add(nf.format(logins) + " login" + StringUtils.addS(logins) + " today");
+      usageList2.add(nf.format(logins) + " login" + StringUtils.addS(logins));
 
       //Prepare to get usage for several different actions
       UsageList usage = new UsageList();
@@ -132,28 +156,28 @@ public final class Admin extends CFSModule {
       usage.buildUsage(db);
       long fileUploadCount = usage.getCount();
       long fileUploadSize = usage.getSize();
-      usageList2.add(nf.format(fileUploadCount) + " file" + StringUtils.addS(fileUploadCount) + " uploaded today, using " + nf.format(fileUploadSize) + " byte" + StringUtils.addS(fileUploadSize) + " of bandwidth");
+      usageList2.add(nf.format(fileUploadCount) + " file" + StringUtils.addS(fileUploadCount) + " uploaded, using " + nf.format(fileUploadSize) + " byte" + StringUtils.addS(fileUploadSize) + " of bandwidth");
 
       //Downstream bw: x
       usage.setAction(Constants.USAGE_FILE_DOWNLOAD);
       usage.buildUsage(db);
       long fileDownloadCount = usage.getCount();
       long fileDownloadSize = usage.getSize();
-      usageList2.add(nf.format(fileDownloadCount) + " file" + StringUtils.addS(fileDownloadCount) + " downloaded today, using " + nf.format(fileDownloadSize) + " byte" + StringUtils.addS(fileDownloadSize) + " of bandwidth");
+      usageList2.add(nf.format(fileDownloadCount) + " file" + StringUtils.addS(fileDownloadCount) + " downloaded, using " + nf.format(fileDownloadSize) + " byte" + StringUtils.addS(fileDownloadSize) + " of bandwidth");
 
       //Communications Manager emails
       usage.setAction(Constants.USAGE_COMMUNICATIONS_EMAIL);
       usage.buildUsage(db);
       long emailRecipientCount = usage.getCount();
       long emailSize = usage.getSize();
-      usageList2.add(nf.format(emailRecipientCount) + " email" + StringUtils.addS(emailRecipientCount) + " sent today, consisting of " + nf.format(emailSize) + " byte" + StringUtils.addS(emailSize));
+      usageList2.add(nf.format(emailRecipientCount) + " email" + StringUtils.addS(emailRecipientCount) + " sent, consisting of " + nf.format(emailSize) + " byte" + StringUtils.addS(emailSize));
 
       //Communications Manager faxes
       usage.setAction(Constants.USAGE_COMMUNICATIONS_FAX);
       usage.buildUsage(db);
       long faxRecipientCount = usage.getCount();
       long faxSize = usage.getSize();
-      usageList2.add(nf.format(faxRecipientCount) + " fax" + StringUtils.addES(faxRecipientCount) + " sent today, consisting of  " + nf.format(faxSize) + " byte" + StringUtils.addS(faxSize));
+      usageList2.add(nf.format(faxRecipientCount) + " fax" + StringUtils.addES(faxRecipientCount) + " sent, consisting of  " + nf.format(faxSize) + " byte" + StringUtils.addS(faxSize));
 
       context.getRequest().setAttribute("usageList", usageList);
       context.getRequest().setAttribute("usageList2", usageList2);
