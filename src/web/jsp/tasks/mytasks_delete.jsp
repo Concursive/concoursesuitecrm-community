@@ -15,7 +15,6 @@
 This task is linked to :
 <br>
 <form name="deleteView" method="post" action="MyTasks.do?command=Delete&id=<%=Task.getId()%>">
-<!-- Make sure that when the list selection changes previous selected entries are saved -->
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
    <tr>
     <th align="center" width="8%">

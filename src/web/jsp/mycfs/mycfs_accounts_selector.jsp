@@ -60,7 +60,6 @@
 		</tr>
 	</table>
 	&nbsp;<br>	
-<!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">
   <table width="100%" border="0">
     <tr>

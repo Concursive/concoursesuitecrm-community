@@ -21,7 +21,7 @@
     </td>
   </tr>
 </table>
-<!-- (C) 2001-2002 Dark Horse Ventures -->
+<!-- (C) 2001-2004 Dark Horse Ventures -->
 </body>
 
 </html>

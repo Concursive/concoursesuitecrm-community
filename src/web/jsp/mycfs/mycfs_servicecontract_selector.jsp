@@ -20,7 +20,6 @@
 <br>
 
 <form name="serviceContractListView" method="post" action="ServiceContractSelector.do?command=ListServiceContracts">
-<!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>

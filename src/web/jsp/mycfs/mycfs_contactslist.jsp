@@ -56,7 +56,6 @@
 	</table>
 	&nbsp;<br>
 	<center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>
-<!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">
   
   <%@ include file="contactlist_include.jsp" %>

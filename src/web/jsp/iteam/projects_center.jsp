@@ -19,18 +19,14 @@
     <p align='right'>
     <font color='#000000'>
 
-<!--  if ((accessAdmin.equals(trueChar)) || (projectManager == 1)) {-->
     &nbsp; [<a href="ProjectManagementRequirements.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Requirement</a>]
 
-<!--  if ((accessAdmin.equals(trueChar)) || (projectManager == 1)) {-->
     &nbsp; [<a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Modify Team</a>]
 
-<!--  if ((accessAdmin.equals(trueChar)) || (projectManager == 1)) {-->
     &nbsp; [<a href="ProjectManagementAssignments.do?command=Add&pid=<%= Project.getId() %><%= ("Requirements".equals(request.getParameter("section"))?"&return=Requirements":"") %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Activity</a>]
 
     &nbsp; [<a href="ProjectManagementIssues.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Issue</a>]
 
-  <!--  if ((accessAdmin.equals(trueChar)) || (projectManager == 1)) {-->
     <br>[<a href="ProjectManagement.do?command=ModifyProject&pid=<%= Project.getId() %>&return=ProjectCenter" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Update Project</a>]
 
   </font>

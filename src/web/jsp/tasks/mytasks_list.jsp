@@ -55,7 +55,6 @@ Tasks
 </dhv:permission>
 <br>
 <form name="taskListView" method="post" action="MyTasks.do?command=ListTasks">
-<!-- Make sure that when the list selection changes previous selected entries are saved -->
 <table width="100%" border="0">
   <tr>
     <td>
