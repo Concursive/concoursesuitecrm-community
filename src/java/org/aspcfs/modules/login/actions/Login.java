@@ -82,7 +82,7 @@ public final class Login extends CFSModule {
       } else {
         //A single database is configured, so use it only regardless of ip/domain name
         ce = new ConnectionElement(gkHost, gkUser, gkUserPw);
-        ce.setDbName("cfs_data");
+        ce.setDbName(getPref(context, "GATEKEEPER.DATABASE"));
         ce.setDriver(gkDriver);
       }
     } catch (Exception e) {
