@@ -654,13 +654,11 @@ public class CFSModule {
    *@param  which    Description of the Parameter
    *@return          The dynamicForm value
    */
-  public CustomForm getDynamicForm(ActionContext context, String which) {
+  public CustomForm getDynamicForm(ActionContext context, String formName) {
     CustomForm thisForm = new CustomForm();
-
-    if (((CustomFormList) context.getServletContext().getAttribute("DynamicFormList")).containsKey(which)) {
-      thisForm = (CustomForm) (((CustomForm) ((CustomFormList) context.getServletContext().getAttribute("DynamicFormList")).get(which)).clone());
+    if (((CustomFormList) context.getServletContext().getAttribute("DynamicFormList")).containsKey(formName)) {
+      thisForm = (CustomForm) (((CustomForm) ((CustomFormList) context.getServletContext().getAttribute("DynamicFormList")).get(formName)).clone());
     }
-
     return thisForm;
   }
 }
