@@ -87,251 +87,266 @@ Modify Ticket<br>
   </tr>
   <tr>
     <td class="containerBack">
-<form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" onSubmit="return checkForm(this);" method="post">    
-<% if (TicketDetails.getClosed() != null) { %>
-      <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
-    <% if ("list".equals(request.getParameter("return"))) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
-    <%} else {%> 
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
-    <%}%>
-<%} else {%>
-      <input type="submit" value="Update">
-  <% if (request.getParameter("return") != null) {%>
-    <% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
-    <%} else {%> 
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
-    <%}%>
-  <%}%>
-      <%= showAttribute(request, "closedError") %>
-<%}%>
-      <br>
-      <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-		<td colspan="2">
-		<strong>Ticket Information</strong>
-		</td>     
-  </tr>
-  <tr class="containerBody">
-		<td class="formLabel">
-      Ticket Source
-		</td>
-		<td>
-      <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
-		</td>
-  </tr>
-  <tr class="containerBody">
-		<td nowrap class="formLabel">
-      Contact
-		</td>
-    <td>
-      <% if ( TicketDetails.getThisContact() == null ) {%>
-        <%= ContactList.getHtmlSelect("contactId", 0 ) %>
-      <%} else {%>
-        <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
-      <%}%>
-      <font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
-		</td>
-  </tr>
-</table>
-<br>
-<a name="categories"></a>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-		<td colspan="2">
-      <strong>Classification</strong>
-		</td>     
-  </tr>
-  <tr class="containerBody">
-		<td class="formLabel" valign="top">
-      <dhv:label name="tickets-problem">Issue</dhv:label>
-    </td>
-		<td>
-      <table border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td>
-            <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
-          </td>
-          <td valign="top">
-            <font color="red">*</font> <%= showAttribute(request, "problemError") %>
-          </td>
-        </tr>
+    <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+      <tr class="containerMenu">
+        <td>
+          <% String param2 = "id=" + TicketDetails.getId(); %>
+          <dhv:container name="accountstickets" selected="details" param="<%= param2 %>"/>
+          <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+          <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
+          </dhv:evaluate>
+       </td>
+      </tr>
+      <tr>
+        <td>
+        <form name="details" action="AccountTickets.do?command=UpdateTicket&auto-populate=true" onSubmit="return checkForm(this);" method="post">    
+        <% if (TicketDetails.getClosed() != null) { %>
+              <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
+            <% if ("list".equals(request.getParameter("return"))) {%>
+              <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+            <%} else {%> 
+              <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+            <%}%>
+        <%} else {%>
+              <input type="submit" value="Update">
+          <% if (request.getParameter("return") != null) {%>
+            <% if (request.getParameter("return").equals("list")) {%>
+              <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+            <%} else {%> 
+              <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+            <%}%>
+          <%}%>
+              <%= showAttribute(request, "closedError") %>
+        <%}%>
+              <br>
+              <%= showError(request, "actionError") %>
+        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+          <tr class="title">
+            <td colspan="2">
+            <strong>Ticket Information</strong>
+            </td>     
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Ticket Source
+            </td>
+            <td>
+              <%= SourceList.getHtmlSelect("sourceCode",  TicketDetails.getSourceCode()) %>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td nowrap class="formLabel">
+              Contact
+            </td>
+            <td>
+              <% if ( TicketDetails.getThisContact() == null ) {%>
+                <%= ContactList.getHtmlSelect("contactId", 0 ) %>
+              <%} else {%>
+                <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
+              <%}%>
+              <font color="red">*</font> <%= showAttribute(request, "contactIdError") %>
+            </td>
+          </tr>
+        </table>
+        <br>
+        <a name="categories"></a>
+        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+          <tr class="title">
+            <td colspan="2">
+              <strong>Classification</strong>
+            </td>     
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel" valign="top">
+              <dhv:label name="tickets-problem">Issue</dhv:label>
+            </td>
+            <td>
+              <table border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>
+                    <textarea name="problem" cols="55" rows="3"><%= toString(TicketDetails.getProblem()) %></textarea>
+                  </td>
+                  <td valign="top">
+                    <font color="red">*</font> <%= showAttribute(request, "problemError") %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <dhv:include name="tickets-code" none="true">
+          <tr class="containerBody">
+            <td class="formLabel">
+              Category
+            </td>
+            <td>
+              <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
+            </td>
+          </tr>
+          </dhv:include>
+          <dhv:include name="tickets-subcat1" none="true">
+          <tr class="containerBody">
+            <td class="formLabel">
+              Sub-level 1
+            </td>
+            <td>
+              <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
+            </td>
+          </tr>
+          </dhv:include>
+          <dhv:include name="tickets-subcat2" none="true">
+          <tr class="containerBody">
+            <td class="formLabel">
+              Sub-level 2
+            </td>
+            <td>
+              <%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
+            </td>
+          </tr>
+          </dhv:include>
+          <dhv:include name="tickets-subcat3" none="true">
+          <tr class="containerBody">
+            <td class="formLabel">
+              Sub-level 3
+            </td>
+            <td>
+              <%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
+            </td>
+          </tr>
+          </dhv:include>
+        </table>
+        <br>
+        <a name="department"></a> 
+        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+          <tr class="title">
+            <td colspan="2">
+              <strong>Assignment</strong>
+            </td>     
+          </tr>
+          <dhv:include name="tickets-severity" none="true">
+          <tr class="containerBody">
+            <td class="formLabel">
+              Severity
+            </td>
+            <td>
+              <%= SeverityList.getHtmlSelect("severityCode", TicketDetails.getSeverityCode()) %>
+            </td>
+          </tr>
+          </dhv:include>
+          <dhv:include name="tickets-priority" none="true">
+          <tr class="containerBody">
+            <td class="formLabel">
+              Priority
+            </td>
+            <td>
+              <%= PriorityList.getHtmlSelect("priorityCode", TicketDetails.getPriorityCode()) %>
+            </td>
+          </tr>
+          </dhv:include>
+          <tr class="containerBody">
+            <td class="formLabel">
+              Department
+            </td>
+            <td>
+              <%= DepartmentList.getHtmlSelect("departmentCode", TicketDetails.getDepartmentCode()) %>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td nowrap class="formLabel">
+              Reassign To
+            </td>
+            <td valign=center>
+              <%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
+            </td>
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel" valign="top">
+              User Comments
+            </td>
+            <td>
+              <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
+            </td>
+          </tr>
+        </table>
+        <br>
+        <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+          <tr class="title">
+            <td colspan="2">
+              <strong>Resolution</strong>
+            </td>     
+          </tr>
+          <tr class="containerBody">
+            <td class="formLabel" valign="top">
+              Solution
+            </td>
+            <td>
+              <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
+                <input type="checkbox" name="closeNow">Close ticket
+                <br><input type="checkbox" name="kbase">Add this solution to Knowledge Base &nbsp;
+              </td>
+            </tr>
+        </table>
+        <br>
+          <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+            <tr class="title">
+              <td colspan="3" valign="center" align="left">
+                <strong>Ticket Log History</strong>
+              </td>     
+            </tr>
+        <%  
+            Iterator hist = TicketDetails.getHistory().iterator();
+            if (hist.hasNext()) {
+              while (hist.hasNext()) {
+                TicketLog thisEntry = (TicketLog)hist.next();
+          %>    
+          <% if (thisEntry.getSystemMessage() == true) {%>
+            <tr bgColor="#F1F0E0">
+          <% } else { %>
+            <tr class="containerBody">
+          <%}%>
+              <td nowrap valign="top" class="formLabel">
+                <%=toHtml(thisEntry.getEnteredByName())%>
+              </td>
+              <td nowrap valign="top" width="150">
+                <%=thisEntry.getEnteredString()%>
+              </td>
+              <td valign="top">
+                <%=toHtml(thisEntry.getEntryText())%>
+              </td>
+            </tr>
+          <%    
+              }
+            } else {
+          %>
+            <tr class="containerBody">
+              <td>
+                <font color="#9E9E9E" colspan="3">No Log Entries.</font>
+              </td>
+            </tr>
+          <%}%>
+        </table>
+        &nbsp;<br>
+        <% if (TicketDetails.getClosed() != null) { %>
+              <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
+          <% if (request.getParameter("return") != null) {%>
+            <% if (request.getParameter("return").equals("list")) {%>
+              <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+            <%} else {%> 
+              <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+            <%}%>
+          <%}%>
+        <%} else {%>
+              <input type="submit" value="Update">
+            <% if ("list".equals(request.getParameter("return"))) {%>
+              <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
+            <%} else {%> 
+              <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
+            <%}%>
+        <%}%>
+        </td>
+       </tr>
       </table>
-		</td>
-  </tr>
-  <dhv:include name="tickets-code" none="true">
-	<tr class="containerBody">
-		<td class="formLabel">
-      Category
-		</td>
-		<td>
-      <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
-		</td>
-  </tr>
-  </dhv:include>
-  <dhv:include name="tickets-subcat1" none="true">
-	<tr class="containerBody">
-		<td class="formLabel">
-      Sub-level 1
-		</td>
-    <td>
-      <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
-		</td>
-  </tr>
-  </dhv:include>
-  <dhv:include name="tickets-subcat2" none="true">
-	<tr class="containerBody">
-		<td class="formLabel">
-      Sub-level 2
-		</td>
-		<td>
-      <%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
-		</td>
-  </tr>
-  </dhv:include>
-  <dhv:include name="tickets-subcat3" none="true">
-	<tr class="containerBody">
-		<td class="formLabel">
-      Sub-level 3
-		</td>
-		<td>
-      <%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
-		</td>
-  </tr>
-  </dhv:include>
-</table>
-<br>
-<a name="department"></a> 
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-		<td colspan="2">
-      <strong>Assignment</strong>
-		</td>     
-  </tr>
-  <dhv:include name="tickets-severity" none="true">
-	<tr class="containerBody">
-		<td class="formLabel">
-      Severity
-		</td>
-		<td>
-      <%= SeverityList.getHtmlSelect("severityCode", TicketDetails.getSeverityCode()) %>
-		</td>
-  </tr>
-  </dhv:include>
-  <dhv:include name="tickets-priority" none="true">
-	<tr class="containerBody">
-		<td class="formLabel">
-      Priority
-		</td>
-		<td>
-      <%= PriorityList.getHtmlSelect("priorityCode", TicketDetails.getPriorityCode()) %>
-		</td>
-  </tr>
-  </dhv:include>
-	<tr class="containerBody">
-		<td class="formLabel">
-      Department
-		</td>
-		<td>
-      <%= DepartmentList.getHtmlSelect("departmentCode", TicketDetails.getDepartmentCode()) %>
-		</td>
-  </tr>
-	<tr class="containerBody">
-		<td nowrap class="formLabel">
-      Reassign To
-		</td>
-		<td valign=center>
-      <%= UserList.getHtmlSelect("assignedTo", TicketDetails.getAssignedTo() ) %>
-		</td>
-  </tr>
-	<tr class="containerBody">
-		<td class="formLabel" valign="top">
-      User Comments
-    </td>
-		<td>
-      <textarea name="comment" cols="55" rows="3"><%= toString(TicketDetails.getComment()) %></textarea>
-		</td>
-  </tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-		<td colspan="2">
-      <strong>Resolution</strong>
-		</td>     
-  </tr>
-	<tr class="containerBody">
-		<td class="formLabel" valign="top">
-      Solution
-		</td>
-		<td>
-      <textarea name="solution" cols="55" rows="3"><%= toString(TicketDetails.getSolution()) %></textarea><br>
-        <input type="checkbox" name="closeNow">Close ticket
-        <br><input type="checkbox" name="kbase">Add this solution to Knowledge Base &nbsp;
-      </td>
-		</tr>
-</table>
-<br>
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-      <td colspan="3" valign="center" align="left">
-        <strong>Ticket Log History</strong>
-      </td>     
-    </tr>
-<%  
-		Iterator hist = TicketDetails.getHistory().iterator();
-		if (hist.hasNext()) {
-			while (hist.hasNext()) {
-				TicketLog thisEntry = (TicketLog)hist.next();
-	%>    
-  <% if (thisEntry.getSystemMessage() == true) {%>
-    <tr bgColor="#F1F0E0">
-  <% } else { %>
-    <tr class="containerBody">
-  <%}%>
-			<td nowrap valign="top" class="formLabel">
-        <%=toHtml(thisEntry.getEnteredByName())%>
-			</td>
-			<td nowrap valign="top" width="150">
-        <%=thisEntry.getEnteredString()%>
-			</td>
-			<td valign="top">
-        <%=toHtml(thisEntry.getEntryText())%>
-			</td>
-    </tr>
-	<%    
-			}
-		} else {
-	%>
-    <tr class="containerBody">
-      <td>
-        <font color="#9E9E9E" colspan="3">No Log Entries.</font>
-			</td>
-    </tr>
-  <%}%>
-</table>
-&nbsp;<br>
-<% if (TicketDetails.getClosed() != null) { %>
-      <input type="submit" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>'">
-  <% if (request.getParameter("return") != null) {%>
-    <% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
-    <%} else {%> 
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
-    <%}%>
-  <%}%>
-<%} else {%>
-      <input type="submit" value="Update">
-    <% if ("list".equals(request.getParameter("return"))) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>'">
-    <%} else {%> 
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
-    <%}%>
-<%}%>
-</td>
-</tr>
+     </td>
+ </tr>
 <input type="hidden" name="modified" value="<%= TicketDetails.getModified() %>">
 <input type="hidden" name="orgId" value="<%=TicketDetails.getOrgId()%>">
 <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
