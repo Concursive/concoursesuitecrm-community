@@ -39,7 +39,7 @@ WHERE con.org_id = $P{org_id}]]></queryString>
 	<variable name="address" class="java.lang.String" resetType="Page" calculation="Nothing">
 		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
 	<variable name="cont_types" class="java.lang.String" resetType="Group" resetGroup="contactName" calculation="Nothing">
-		<variableExpression><![CDATA[$V{cont_types} + ($V{cont_types}.length() > 0 ? ", " : "") + ($F{contact_type} != null ? $F{contact_type} : "")]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
+		<variableExpression><![CDATA[($V{cont_types} != null ? ($V{cont_types} + ($V{cont_types}.length() > 0 ? ", " : "") + ($F{contact_type} != null ? $F{contact_type} : "")) : "")]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
 		<group  name="contactName" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{contact_id}]]></groupExpression>
 			<groupHeader>

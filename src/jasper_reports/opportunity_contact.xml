@@ -31,6 +31,9 @@
 		<parameterDescription><![CDATA[path]]></parameterDescription>
 		<defaultValueExpression><![CDATA["/home/ananth/current_reports/"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="path_icons" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/home/ananth/current_reports/"]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[SELECT distinct(x.opp_id) AS header_opp_id, 
 x.description AS header_description, 
 x.acctlink AS header_acctlink, 
@@ -441,7 +444,7 @@ $F{header_contactlink} != null &&
 $F{header_contactlink}.intValue() > 0)]]></printWhenExpression>
 						</reportElement>
 					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
-					<imageExpression class="java.lang.String"><![CDATA["/home/ananth/current_reports/stock_bcard-16.gif"]]></imageExpression>				</image>
+					<imageExpression class="java.lang.String"><![CDATA[$P{path_icons} + "stock_bcard-16.gif"]]></imageExpression>				</image>
 				<image  scaleImage="FillFrame" vAlign="Top" hAlign="Left" isUsingCache="false" evaluationTime="Now" hyperlinkType="None">					<reportElement
 						mode="Opaque"
 						x="2"
@@ -460,7 +463,7 @@ $F{header_acctlink} != null &&
 $F{header_acctlink}.intValue() > 0)]]></printWhenExpression>
 						</reportElement>
 					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
-					<imageExpression class="java.lang.String"><![CDATA["/home/ananth/current_reports/stock_account-16.gif"]]></imageExpression>				</image>
+					<imageExpression class="java.lang.String"><![CDATA[$P{path_icons} + "stock_account-16.gif"]]></imageExpression>				</image>
 			</band>
 		</detail>
 		<columnFooter>

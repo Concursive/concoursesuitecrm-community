@@ -83,9 +83,9 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="3"
-						y="1"
+						y="2"
 						width="329"
-						height="15"
+						height="12"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -116,22 +116,6 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 						isPrintWhenDetailOverflows="false"/>
 					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
 				</rectangle>
-				<subreport  isUsingCache="true">
-					<reportElement
-						mode="Opaque"
-						x="34"
-						y="30"
-						width="0"
-						height="0"
-						forecolor="#FFFFFF"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						printWhenGroupChanges="expire_group"
-						isPrintWhenDetailOverflows="false"/>
-				</subreport>
 				<staticText>
 					<reportElement
 						mode="Opaque"
@@ -280,7 +264,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 		<group  name="name" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{org_id}]]></groupExpression>
 			<groupHeader>
-			<band height="17"  isSplitAllowed="true" >
+			<band height="19"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="318"
@@ -429,7 +413,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 			</band>
 		</background>
 		<title>
-			<band height="38"  isSplitAllowed="true" >
+			<band height="36"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="1"
@@ -458,7 +442,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="1"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</columnHeader>
 		<detail>
@@ -470,12 +454,12 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 			</band>
 		</columnFooter>
 		<pageFooter>
-			<band height="26"  isSplitAllowed="true" >
+			<band height="29"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Transparent"
 						x="1"
-						y="4"
+						y="9"
 						width="551"
 						height="19"
 						forecolor="#000000"
@@ -493,7 +477,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="5"
-						y="4"
+						y="9"
 						width="209"
 						height="19"
 						forecolor="#000000"
@@ -511,7 +495,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="332"
-						y="4"
+						y="9"
 						width="174"
 						height="19"
 						forecolor="#000000"
@@ -529,7 +513,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="509"
-						y="4"
+						y="9"
 						width="36"
 						height="19"
 						forecolor="#000000"
@@ -548,7 +532,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="2"
+						y="4"
 						width="552"
 						height="0"
 						forecolor="#000000"
@@ -558,7 +542,7 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
 				</line>
 			</band>
 		</pageFooter>

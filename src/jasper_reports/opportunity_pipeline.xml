@@ -20,18 +20,16 @@
 	<parameter name="user_name" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Ananth Balasubramanyam"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
-		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2003-12-01 00:00:00")]]></defaultValueExpression>
-	</parameter>
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[Begin Date]]></parameterDescription>
 		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2002-10-01 00:00:00")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[End Date]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2003-12-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="percent_close" isForPrompting="true" class="java.lang.String">
 		<parameterDescription><![CDATA[probability]]></parameterDescription>
-	</parameter>
-	<parameter name="userid" isForPrompting="true" class="java.lang.Integer">
-		<parameterDescription><![CDATA[opportunity component owner]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new Integer(31)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="percent_close_min" isForPrompting="false" class="java.lang.Double">
 		<defaultValueExpression><![CDATA[new Double(0.0)]]></defaultValueExpression>
@@ -40,6 +38,7 @@
 		<defaultValueExpression><![CDATA[new Double(1.0)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="userid_range_source" isForPrompting="true" class="java.lang.String">
+		<parameterDescription><![CDATA[Source]]></parameterDescription>
 		<defaultValueExpression><![CDATA["my"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="userid_range" isForPrompting="false" class="java.lang.String">
@@ -50,6 +49,7 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="lookup_stage" isForPrompting="true" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Stage]]></parameterDescription>
 		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT x.opp_id AS header_opp_id, 

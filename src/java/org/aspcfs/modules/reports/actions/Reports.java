@@ -306,6 +306,7 @@ public final class Reports extends CFSModule {
       //Set the system generated parameters
       //TODO: Move this into ParameterList.java
       params.addParam("user_name", (getUser(context, getUserId(context))).getContact().getNameFirstLast());
+      params.addParam("path_icons", context.getServletContext().getRealPath("/") + "images" + fs + "icons" + fs);
       //Populate a criteria record which will be used in the report
       Criteria thisCriteria = new Criteria();
       thisCriteria.setReportId(report.getId());
