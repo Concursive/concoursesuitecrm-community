@@ -21,11 +21,11 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *      $
  */
 public class ContactList extends Vector {
-        
+  
   public static final int TRUE = 1;
   public static final int FALSE = 0;
   private int includeEnabled = 1;
-
+  
   private PagedListInfo pagedListInfo = null;
   private int orgId = -1;
   private int typeId = -1;
@@ -47,7 +47,7 @@ public class ContactList extends Vector {
   private boolean withAccountsOnly = false;
   private boolean withProjectsOnly = false;
   private String emptyHtmlSelectRecord = null;
-
+  
   //ranges
   private String companyRange = null;
   private String nameFirstRange = null;
@@ -57,28 +57,28 @@ public class ContactList extends Vector {
   private String cityRange = null;
   private String typeIdRange = null;
   private String contactIdRange = null;
-
+  
   private String dateBefore = null;
   private String dateAfter = null;
   private String dateOnOrBefore = null;
   private String dateOnOrAfter = null;
-
+  
   private SearchCriteriaList scl = null;
   private boolean showEmployeeContacts = false;
-
+  
   private String searchText = "";
-
+  
   private int personalId = -1;
-
-
+  
+  
   /**
    *  Constructor for the ContactList object
    *
    *@since    1.1
    */
   public ContactList() { }
-
-
+  
+  
   /**
    *  Sets the CompanyRange attribute of the ContactList object
    *
@@ -88,8 +88,8 @@ public class ContactList extends Vector {
   public void setCompanyRange(String companyRange) {
     this.companyRange = companyRange;
   }
-
-
+  
+  
   /**
    *  Sets the ShowEmployeeContacts attribute of the ContactList object
    *
@@ -99,8 +99,8 @@ public class ContactList extends Vector {
   public void setShowEmployeeContacts(boolean showEmployeeContacts) {
     this.showEmployeeContacts = showEmployeeContacts;
   }
-
-
+  
+  
   /**
    *  Sets the checkExcludedFromCampaign attribute of the ContactList object
    *
@@ -109,8 +109,8 @@ public class ContactList extends Vector {
   public void setCheckExcludedFromCampaign(int checkExcludedFromCampaign) {
     this.checkExcludedFromCampaign = checkExcludedFromCampaign;
   }
-
-
+  
+  
   /**
    *  Sets the contactIdRange attribute of the ContactList object
    *
@@ -119,8 +119,8 @@ public class ContactList extends Vector {
   public void setContactIdRange(String contactIdRange) {
     this.contactIdRange = contactIdRange;
   }
-
-
+  
+  
   /**
    *  Sets the FirstName attribute of the ContactList object
    *
@@ -130,8 +130,8 @@ public class ContactList extends Vector {
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
-
-
+  
+  
   /**
    *  Sets the SearchText attribute of the ContactList object
    *
@@ -141,8 +141,8 @@ public class ContactList extends Vector {
   public void setSearchText(String searchText) {
     this.searchText = searchText;
   }
-
-
+  
+  
   /**
    *  Sets the Company attribute of the ContactList object
    *
@@ -152,8 +152,8 @@ public class ContactList extends Vector {
   public void setCompany(String company) {
     this.company = company;
   }
-
-
+  
+  
   /**
    *  Sets the OwnerIdRange attribute of the ContactList object
    *
@@ -163,8 +163,8 @@ public class ContactList extends Vector {
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
   }
-
-
+  
+  
   /**
    *  Gets the emptyHtmlSelectRecord attribute of the ContactList object
    *
@@ -173,8 +173,8 @@ public class ContactList extends Vector {
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
   }
-
-
+  
+  
   /**
    *  Sets the emptyHtmlSelectRecord attribute of the ContactList object
    *
@@ -183,8 +183,8 @@ public class ContactList extends Vector {
   public void setEmptyHtmlSelectRecord(String emptyHtmlSelectRecord) {
     this.emptyHtmlSelectRecord = emptyHtmlSelectRecord;
   }
-
-
+  
+  
   /**
    *  Sets the accountOwnerIdRange attribute of the ContactList object
    *
@@ -193,8 +193,8 @@ public class ContactList extends Vector {
   public void setAccountOwnerIdRange(String tmp) {
     this.accountOwnerIdRange = tmp;
   }
-
-
+  
+  
   /**
    *  Sets the withAccountsOnly attribute of the ContactList object
    *
@@ -203,8 +203,8 @@ public class ContactList extends Vector {
   public void setWithAccountsOnly(boolean tmp) {
     this.withAccountsOnly = tmp;
   }
-
-
+  
+  
   /**
    *  Sets the Owner attribute of the ContactList object
    *
@@ -214,8 +214,8 @@ public class ContactList extends Vector {
   public void setOwner(int owner) {
     this.owner = owner;
   }
-
-
+  
+  
   /**
    *  Sets the PersonalId attribute of the ContactList object
    *
@@ -225,8 +225,8 @@ public class ContactList extends Vector {
   public void setPersonalId(int personalId) {
     this.personalId = personalId;
   }
-
-
+  
+  
   /**
    *  Sets the TypeIdRange attribute of the ContactList object
    *
@@ -236,8 +236,8 @@ public class ContactList extends Vector {
   public void setTypeIdRange(String typeIdRange) {
     this.typeIdRange = typeIdRange;
   }
-
-
+  
+  
   /**
    *  Sets the NameFirstRange attribute of the ContactList object
    *
@@ -247,8 +247,8 @@ public class ContactList extends Vector {
   public void setNameFirstRange(String nameFirstRange) {
     this.nameFirstRange = nameFirstRange;
   }
-
-
+  
+  
   /**
    *  Sets the Scl attribute of the ContactList object
    *
@@ -261,8 +261,8 @@ public class ContactList extends Vector {
     this.scl = scl;
     buildQuery(thisOwnerId, thisUserRange);
   }
-
-
+  
+  
   /**
    *  Sets the MiddleName attribute of the ContactList object
    *
@@ -272,8 +272,8 @@ public class ContactList extends Vector {
   public void setMiddleName(String tmp) {
     this.middleName = tmp;
   }
-
-
+  
+  
   /**
    *  Sets the LastName attribute of the ContactList object
    *
@@ -283,8 +283,8 @@ public class ContactList extends Vector {
   public void setLastName(String tmp) {
     this.lastName = tmp;
   }
-
-
+  
+  
   /**
    *  Sets the PagedListInfo attribute of the ContactList object
    *
@@ -294,8 +294,8 @@ public class ContactList extends Vector {
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
-
-
+  
+  
   /**
    *  Sets the ZipRange attribute of the ContactList object
    *
@@ -305,8 +305,8 @@ public class ContactList extends Vector {
   public void setZipRange(String zipRange) {
     this.zipRange = zipRange;
   }
-
-
+  
+  
   /**
    *  Sets the Title attribute of the ContactList object
    *
@@ -316,8 +316,8 @@ public class ContactList extends Vector {
   public void setTitle(String title) {
     this.title = title;
   }
-
-
+  
+  
   /**
    *  Sets the OrgId attribute of the ContactList object
    *
@@ -327,8 +327,8 @@ public class ContactList extends Vector {
   public void setOrgId(int tmp) {
     this.orgId = tmp;
   }
-
-
+  
+  
   /**
    *  Sets the EmailNotNull attribute of the ContactList object
    *
@@ -338,8 +338,8 @@ public class ContactList extends Vector {
   public void setEmailNotNull(boolean emailNotNull) {
     this.emailNotNull = emailNotNull;
   }
-
-
+  
+  
   /**
    *  Sets the TypeId attribute of the ContactList object
    *
@@ -349,8 +349,8 @@ public class ContactList extends Vector {
   public void setTypeId(int tmp) {
     this.typeId = tmp;
   }
-
-
+  
+  
   /**
    *  Sets the CheckUserAccess attribute of the ContactList object
    *
@@ -360,8 +360,8 @@ public class ContactList extends Vector {
   public void setCheckUserAccess(boolean tmp) {
     this.checkUserAccess = tmp;
   }
-
-
+  
+  
   /**
    *  Sets the BuildDetails attribute of the ContactList object
    *
@@ -371,8 +371,8 @@ public class ContactList extends Vector {
   public void setBuildDetails(boolean tmp) {
     this.buildDetails = tmp;
   }
-
-
+  
+  
   /**
    *  Sets the NameLastRange attribute of the ContactList object
    *
@@ -382,8 +382,8 @@ public class ContactList extends Vector {
   public void setNameLastRange(String nameLastRange) {
     this.nameLastRange = nameLastRange;
   }
-
-
+  
+  
   /**
    *  Sets the SearchValues attribute of the ContactList object
    *
@@ -394,54 +394,54 @@ public class ContactList extends Vector {
     if (outerHash[0].containsKey("=") == true) {
       this.companyRange = outerHash[0].get(new String("=")).toString();
     }
-
+    
     if (outerHash[1].containsKey("=") == true) {
       this.nameFirstRange = outerHash[1].get(new String("=")).toString();
     }
-
+    
     if (outerHash[2].containsKey("=") == true) {
       this.nameLastRange = outerHash[2].get(new String("=")).toString();
     }
-
+    
     if (outerHash[3].containsKey("<") == true) {
       this.dateBefore = outerHash[3].get(new String("<")).toString();
     }
-
+    
     if (outerHash[3].containsKey(">") == true) {
       this.dateAfter = outerHash[3].get(new String(">")).toString();
     }
-
+    
     if (outerHash[3].containsKey("<=") == true) {
       this.dateOnOrBefore = outerHash[3].get(new String("<=")).toString();
     }
-
+    
     if (outerHash[3].containsKey(">=") == true) {
       this.dateOnOrAfter = outerHash[3].get(new String(">=")).toString();
     }
-
+    
     if (outerHash[4].containsKey("=") == true) {
       this.zipRange = outerHash[4].get(new String("=")).toString();
     }
-
+    
     if (outerHash[5].containsKey("=") == true) {
       this.areaCodeRange = outerHash[5].get(new String("=")).toString();
     }
-
+    
     if (outerHash[6].containsKey("=") == true) {
       this.cityRange = outerHash[6].get(new String("=")).toString();
     }
-
+    
     if (outerHash[7].containsKey("=") == true) {
       this.typeIdRange = outerHash[7].get(new String("=")).toString();
     }
-
+    
     if (outerHash[8].containsKey("=") == true) {
       this.contactIdRange = outerHash[8].get(new String("=")).toString();
     }
   }
-
-
-
+  
+  
+  
   /**
    *  Sets the departmentId attribute of the ContactList object
    *
@@ -450,8 +450,8 @@ public class ContactList extends Vector {
   public void setDepartmentId(int departmentId) {
     this.departmentId = departmentId;
   }
-
-
+  
+  
   /**
    *  Sets the withProjectsOnly attribute of the ContactList object
    *
@@ -460,8 +460,8 @@ public class ContactList extends Vector {
   public void setWithProjectsOnly(boolean withProjectsOnly) {
     this.withProjectsOnly = withProjectsOnly;
   }
-
-
+  
+  
   /**
    *  Sets the projectId attribute of the ContactList object
    *
@@ -470,8 +470,8 @@ public class ContactList extends Vector {
   public void setProjectId(int projectId) {
     this.projectId = projectId;
   }
-
-
+  
+  
   /**
    *  Gets the contactIdRange attribute of the ContactList object
    *
@@ -480,8 +480,8 @@ public class ContactList extends Vector {
   public String getContactIdRange() {
     return contactIdRange;
   }
-
-
+  
+  
   /**
    *  Gets the checkExcludedFromCampaign attribute of the ContactList object
    *
@@ -490,8 +490,8 @@ public class ContactList extends Vector {
   public int getCheckExcludedFromCampaign() {
     return checkExcludedFromCampaign;
   }
-
-
+  
+  
   /**
    *  Gets the pagedListInfo attribute of the ContactList object
    *
@@ -500,8 +500,8 @@ public class ContactList extends Vector {
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
   }
-
-
+  
+  
   /**
    *  Gets the PersonalId attribute of the ContactList object
    *
@@ -511,15 +511,15 @@ public class ContactList extends Vector {
   public int getPersonalId() {
     return personalId;
   }
-
+  
   public int getIncludeEnabled() {
-	return includeEnabled;
-}
-public void setIncludeEnabled(int includeEnabled) {
-	this.includeEnabled = includeEnabled;
-}
-
-
+    return includeEnabled;
+  }
+  public void setIncludeEnabled(int includeEnabled) {
+    this.includeEnabled = includeEnabled;
+  }
+  
+  
   /**
    *  Gets the ShowEmployeeContacts attribute of the ContactList object
    *
@@ -529,8 +529,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public boolean getShowEmployeeContacts() {
     return showEmployeeContacts;
   }
-
-
+  
+  
   /**
    *  Gets the SearchText attribute of the ContactList object
    *
@@ -540,8 +540,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getSearchText() {
     return searchText;
   }
-
-
+  
+  
   /**
    *  Gets the TypeIdRange attribute of the ContactList object
    *
@@ -551,8 +551,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getTypeIdRange() {
     return typeIdRange;
   }
-
-
+  
+  
   /**
    *  Gets the OwnerIdRange attribute of the ContactList object
    *
@@ -562,8 +562,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getOwnerIdRange() {
     return ownerIdRange;
   }
-
-
+  
+  
   /**
    *  Gets the accountOwnerIdRange attribute of the ContactList object
    *
@@ -572,8 +572,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getAccountOwnerIdRange() {
     return accountOwnerIdRange;
   }
-
-
+  
+  
   /**
    *  Gets the withAccountsOnly attribute of the ContactList object
    *
@@ -582,8 +582,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public boolean getWithAccountsOnly() {
     return withAccountsOnly;
   }
-
-
+  
+  
   /**
    *  Gets the ZipRange attribute of the ContactList object
    *
@@ -593,8 +593,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getZipRange() {
     return zipRange;
   }
-
-
+  
+  
   /**
    *  Gets the CompanyRange attribute of the ContactList object
    *
@@ -604,8 +604,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getCompanyRange() {
     return companyRange;
   }
-
-
+  
+  
   /**
    *  Gets the NameFirstRange attribute of the ContactList object
    *
@@ -615,8 +615,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getNameFirstRange() {
     return nameFirstRange;
   }
-
-
+  
+  
   /**
    *  Gets the Scl attribute of the ContactList object
    *
@@ -626,8 +626,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public SearchCriteriaList getScl() {
     return scl;
   }
-
-
+  
+  
   /**
    *  Gets the NameLastRange attribute of the ContactList object
    *
@@ -637,8 +637,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getNameLastRange() {
     return nameLastRange;
   }
-
-
+  
+  
   /**
    *  Gets the EmailNotNull attribute of the ContactList object
    *
@@ -648,8 +648,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public boolean getEmailNotNull() {
     return emailNotNull;
   }
-
-
+  
+  
   /**
    *  Gets the Owner attribute of the ContactList object
    *
@@ -659,8 +659,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public int getOwner() {
     return owner;
   }
-
-
+  
+  
   /**
    *  Gets the Company attribute of the ContactList object
    *
@@ -670,8 +670,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getCompany() {
     return company;
   }
-
-
+  
+  
   /**
    *  Gets the Title attribute of the ContactList object
    *
@@ -681,8 +681,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getTitle() {
     return title;
   }
-
-
+  
+  
   /**
    *  Gets the MiddleName attribute of the ContactList object
    *
@@ -692,8 +692,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getMiddleName() {
     return middleName;
   }
-
-
+  
+  
   /**
    *  Gets the LastName attribute of the ContactList object
    *
@@ -703,8 +703,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getLastName() {
     return lastName;
   }
-
-
+  
+  
   /**
    *  Gets the FirstName attribute of the ContactList object
    *
@@ -714,8 +714,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getFirstName() {
     return firstName;
   }
-
-
+  
+  
   /**
    *  Gets the HtmlSelect attribute of the ContactList object
    *
@@ -726,8 +726,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
   }
-
-
+  
+  
   /**
    *  Gets the EmptyHtmlSelect attribute of the ContactList object
    *
@@ -740,8 +740,8 @@ public void setIncludeEnabled(int includeEnabled) {
     contactListSelect.addItem(-1, "-- None --");
     return contactListSelect.getHtml(selectName);
   }
-
-
+  
+  
   /**
    *  Gets the HtmlSelect attribute of the ContactList object
    *
@@ -752,24 +752,24 @@ public void setIncludeEnabled(int includeEnabled) {
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect contactListSelect = new HtmlSelect();
-
+    
     if (emptyHtmlSelectRecord != null) {
       contactListSelect.addItem(-1, emptyHtmlSelectRecord);
     }
-
+    
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Contact thisContact = (Contact) i.next();
       contactListSelect.addItem(
-          thisContact.getId(),
-          Contact.getNameLastFirst(thisContact.getNameLast(),
-          thisContact.getNameFirst()) +
-          (checkUserAccess ? (thisContact.hasAccount() ? " (*)" : "") : ""));
+      thisContact.getId(),
+      Contact.getNameLastFirst(thisContact.getNameLast(),
+      thisContact.getNameFirst()) +
+      (checkUserAccess ? (thisContact.hasAccount() ? " (*)" : "") : ""));
     }
     return contactListSelect.getHtml(selectName, defaultKey);
   }
-
-
+  
+  
   /**
    *  Description of the Method
    *
@@ -778,36 +778,36 @@ public void setIncludeEnabled(int includeEnabled) {
    *@since
    */
   public void buildQuery(int thisOwnerId, String thisUserRange) {
-
+    
     switch (scl.getContactSource()) {
-        case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-          this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-          this.setWithAccountsOnly(true);
-          break;
-        case SearchCriteriaList.SOURCE_MY_ACCOUNTS:
-          this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-          this.setAccountOwnerIdRange("" + thisOwnerId);
-          break;
-        case SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY:
-          this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-          this.setAccountOwnerIdRange(thisUserRange);
-          break;
-        case SearchCriteriaList.SOURCE_MY_CONTACTS:
-          this.setOwner(thisOwnerId);
-          this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-          break;
-        case SearchCriteriaList.SOURCE_EMPLOYEES:
-          this.setTypeId(Contact.EMPLOYEE_TYPE);
-          break;
-        default:
-          break;
+      case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        this.setWithAccountsOnly(true);
+        break;
+      case SearchCriteriaList.SOURCE_MY_ACCOUNTS:
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        this.setAccountOwnerIdRange("" + thisOwnerId);
+        break;
+      case SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY:
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        this.setAccountOwnerIdRange(thisUserRange);
+        break;
+      case SearchCriteriaList.SOURCE_MY_CONTACTS:
+        this.setOwner(thisOwnerId);
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        break;
+      case SearchCriteriaList.SOURCE_EMPLOYEES:
+        this.setTypeId(Contact.EMPLOYEE_TYPE);
+        break;
+      default:
+        break;
     }
-
+    
     String fieldName = "";
     String readyToGo = "";
-
+    
     Hashtable[] outerHash = null;
-
+    
     //ONE FOR EACH IN THE FIELD LIST
     Hashtable company = null;
     Hashtable namefirst = null;
@@ -818,9 +818,9 @@ public void setIncludeEnabled(int includeEnabled) {
     Hashtable city = null;
     Hashtable typeId = null;
     Hashtable contactId = null;
-
+    
     int count = 0;
-
+    
     //CREATE EACH
     company = new Hashtable();
     namefirst = new Hashtable();
@@ -831,21 +831,21 @@ public void setIncludeEnabled(int includeEnabled) {
     city = new Hashtable();
     typeId = new Hashtable();
     contactId = new Hashtable();
-
+    
     //THIS CORRESPONDS TO THE FIELD LIST
-
+    
     outerHash = new Hashtable[]{
-        company,
-        namefirst,
-        namelast,
-        entered,
-        zip,
-        areacode,
-        city,
-        typeId,
-        contactId
-        };
-
+      company,
+      namefirst,
+      namelast,
+      entered,
+      zip,
+      areacode,
+      city,
+      typeId,
+      contactId
+    };
+    
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ContactList-> SCL Size: " + this.getScl().size() + " name: " + this.getScl().getGroupName());
     }
@@ -855,38 +855,38 @@ public void setIncludeEnabled(int includeEnabled) {
       Integer group = (Integer) i.next();
       SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.getScl().get(group);
       fieldName = thisGroup.getGroupField().getFieldName();
-
+      
       Iterator j = thisGroup.iterator();
-
+      
       while (j.hasNext()) {
-
+        
         SearchCriteriaElement thisElement = (SearchCriteriaElement) j.next();
-
+        
         readyToGo = replace(thisElement.getText().toLowerCase(), '\'', "\\'");
         String check = (String) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
-
+        
         //only if we have string data to deal with
         if (check == null || thisElement.getDataType().equals("date")) {
           if (thisElement.getDataType().equals("date")) {
             int month = 0;
             int day = 0;
             int year = 0;
-
+            
             StringTokenizer st = new StringTokenizer(readyToGo, "/");
-
+            
             if (st.hasMoreTokens()) {
               month = Integer.parseInt(st.nextToken());
               day = Integer.parseInt(st.nextToken());
               year = Integer.parseInt(st.nextToken());
             }
-
+            
             Calendar tmpCal = new GregorianCalendar(year, (month - 1), day);
-
+            
             //fix it if "on or before" or "after" is selected.
             if (thisElement.getOperatorId() == 8 || thisElement.getOperatorId() == 10) {
               tmpCal.add(java.util.Calendar.DATE, +1);
             }
-
+            
             String backToString = (tmpCal.get(Calendar.MONTH) + 1) + "/" + tmpCal.get(Calendar.DAY_OF_MONTH) + "/" + tmpCal.get(Calendar.YEAR);
             outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), ("'" + backToString + "'"));
           } else {
@@ -897,16 +897,16 @@ public void setIncludeEnabled(int includeEnabled) {
           outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), check);
         }
         //end of that
-
-
+        
+        
       }
     }
-
+    
     //THIS PART IS ALSO DEPENDENT
     this.setSearchValues(outerHash);
   }
-
-
+  
+  
   /**
    *  Builds a list of contacts based on several parameters. The parameters are
    *  set after this object is constructed, then the buildList method is called
@@ -917,30 +917,30 @@ public void setIncludeEnabled(int includeEnabled) {
    *@since                    1.1
    */
   public void buildList(Connection db) throws SQLException {
-
+    
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
+    
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlCount = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlOrder = new StringBuffer();
-
+    
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        "SELECT COUNT(*) AS recordcount " +
-        "FROM contact c " +
-        "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
-        "WHERE c.contact_id > -1 ");
-
+    "SELECT COUNT(*) AS recordcount " +
+    "FROM contact c " +
+    "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
+    "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+    "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+    "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
+    "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
+    "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
+    "WHERE c.contact_id > -1 ");
+    
     createFilter(sqlFilter);
-
+    
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() + sqlFilter.toString());
@@ -952,12 +952,12 @@ public void setIncludeEnabled(int includeEnabled) {
       }
       pst.close();
       rs.close();
-
+      
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
-            sqlFilter.toString() +
-            "AND c.namelast < ? ");
+        sqlFilter.toString() +
+        "AND c.namelast < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -968,14 +968,14 @@ public void setIncludeEnabled(int includeEnabled) {
         rs.close();
         pst.close();
       }
-
+      
       //Determine column to sort by
       pagedListInfo.setDefaultSort("c.namelast", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY c.namelast ");
     }
-
+    
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -983,33 +983,33 @@ public void setIncludeEnabled(int includeEnabled) {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.*, d.description as departmentname, t.description as type_name, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-        "o.name as org_name,o.enabled as orgenabled " +
-        "FROM contact c " +
-        "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
-        "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
-        "LEFT JOIN lookup_department d ON (c.department = d.code) " +
-        "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
-        "WHERE c.contact_id > -1 ");
-
+    "c.*, d.description as departmentname, t.description as type_name, " +
+    "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+    "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+    "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
+    "o.name as org_name,o.enabled as orgenabled " +
+    "FROM contact c " +
+    "LEFT JOIN lookup_contact_types t ON (c.type_id = t.code) " +
+    "LEFT JOIN organization o ON (c.org_id = o.org_id) " +
+    "LEFT JOIN lookup_department d ON (c.department = d.code) " +
+    "LEFT JOIN contact ct_owner ON (c.owner = ct_owner.user_id) " +
+    "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
+    "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
+    "WHERE c.contact_id > -1 ");
+    
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
-
+    
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
     }
-
+    
     int count = 0;
     while (rs.next()) {
       if (pagedListInfo != null && pagedListInfo.getItemsPerPage() > 0 &&
-          DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
-          count >= pagedListInfo.getItemsPerPage()) {
+      DatabaseUtils.getType(db) == DatabaseUtils.MSSQL &&
+      count >= pagedListInfo.getItemsPerPage()) {
         break;
       }
       ++count;
@@ -1020,8 +1020,8 @@ public void setIncludeEnabled(int includeEnabled) {
     pst.close();
     buildResources(db);
   }
-
-
+  
+  
   /**
    *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
    *
@@ -1031,8 +1031,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public void addIgnoreTypeId(String tmp) {
     ignoreTypeIdList.addElement(tmp);
   }
-
-
+  
+  
   /**
    *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
    *
@@ -1042,8 +1042,8 @@ public void setIncludeEnabled(int includeEnabled) {
   public void addIgnoreTypeId(int tmp) {
     ignoreTypeIdList.addElement("" + tmp);
   }
-
-
+  
+  
   /**
    *  Description of the Method
    *
@@ -1057,8 +1057,8 @@ public void setIncludeEnabled(int includeEnabled) {
       thisContact.delete(db);
     }
   }
-
-
+  
+  
   /**
    *  Description of the Method
    *
@@ -1080,8 +1080,8 @@ public void setIncludeEnabled(int includeEnabled) {
     }
     return replacedStr;
   }
-
-
+  
+  
   /**
    *  Convenience method to get a list of phone numbers for each contact
    *
@@ -1106,8 +1106,8 @@ public void setIncludeEnabled(int includeEnabled) {
       }
     }
   }
-
-
+  
+  
   /**
    *  Builds a base SQL where statement for filtering records to be used by
    *  sqlSelect and sqlCount
@@ -1119,33 +1119,33 @@ public void setIncludeEnabled(int includeEnabled) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
+    
     if (searchText == null || (searchText.equals(""))) {
       if (orgId != -1) {
         sqlFilter.append("AND c.org_id = ? ");
       }
       
       if (includeEnabled == TRUE || includeEnabled == FALSE) {
-              sqlFilter.append("AND c.enabled = ? ");
+        sqlFilter.append("AND c.enabled = ? ");
       }
-
+      
       if (owner != -1) {
         sqlFilter.append("AND c.owner = ? ");
       }
-
+      
       if (typeId != -1) {
         sqlFilter.append("AND c.type_id = ? ");
       }
-
+      
       if (departmentId != -1) {
         sqlFilter.append("AND c.department = ? ");
       }
       
       if (projectId != -1) {
-        sqlFilter.append("AND c.user_id in (Select distinct user_id from project_team where project_id = ?) ");
+        sqlFilter.append("AND c.user_id in (SELECT DISTINCT user_id FROM project_team WHERE project_id = ?) ");
       }
       
-
+      
       if (firstName != null) {
         if (firstName.indexOf("%") >= 0) {
           sqlFilter.append("AND lower(c.namefirst) like lower(?) ");
@@ -1153,7 +1153,7 @@ public void setIncludeEnabled(int includeEnabled) {
           sqlFilter.append("AND lower(c.namefirst) = lower(?) ");
         }
       }
-
+      
       if (middleName != null) {
         if (middleName.indexOf("%") >= 0) {
           sqlFilter.append("AND lower(c.namemiddle) like lower(?) ");
@@ -1161,7 +1161,7 @@ public void setIncludeEnabled(int includeEnabled) {
           sqlFilter.append("AND lower(c.namemiddle) = lower(?) ");
         }
       }
-
+      
       if (lastName != null) {
         if (lastName.indexOf("%") >= 0) {
           sqlFilter.append("AND lower(c.namelast) like lower(?) ");
@@ -1169,7 +1169,7 @@ public void setIncludeEnabled(int includeEnabled) {
           sqlFilter.append("AND lower(c.namelast) = lower(?) ");
         }
       }
-
+      
       if (title != null) {
         if (title.indexOf("%") >= 0) {
           sqlFilter.append("AND lower(c.title) like lower(?) ");
@@ -1177,7 +1177,7 @@ public void setIncludeEnabled(int includeEnabled) {
           sqlFilter.append("AND lower(c.title) = lower(?) ");
         }
       }
-
+      
       if (company != null) {
         if (company.indexOf("%") >= 0) {
           sqlFilter.append("AND lower(c.company) like lower(?) ");
@@ -1185,64 +1185,64 @@ public void setIncludeEnabled(int includeEnabled) {
           sqlFilter.append("AND lower(c.company) = lower(?) ");
         }
       }
-
+      
       if (companyRange != null) {
         sqlFilter.append("AND (lower(o.name) in (" + companyRange + ") OR lower(c.company) in (" + companyRange + "))");
       }
-
+      
       if (nameFirstRange != null) {
         sqlFilter.append("AND lower(c.namefirst) in (" + nameFirstRange + ") ");
       }
-
+      
       if (nameLastRange != null) {
         sqlFilter.append("AND lower(c.namelast) in (" + nameLastRange + ") ");
       }
-
+      
       if (typeIdRange != null) {
         sqlFilter.append("AND c.type_id in (" + typeIdRange + ") ");
       }
-
+      
       if (zipRange != null) {
         sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and postalcode in (" + zipRange + ")) ");
       }
-
+      
       if (areaCodeRange != null) {
         //TODO: Update this with the new phone number logic
         sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,0,4) in (" + areaCodeRange + ")) ");
       }
-
+      
       if (cityRange != null) {
         sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_address where address_type = 1 and lower(city) in (" + cityRange + ")) ");
       }
-
+      
       if (dateBefore != null) {
         sqlFilter.append("AND (c.entered < " + dateBefore + ") ");
       }
-
+      
       if (dateAfter != null) {
         sqlFilter.append("AND (c.entered > " + dateAfter + ") ");
       }
-
+      
       if (dateOnOrBefore != null) {
         sqlFilter.append("AND (c.entered <= " + dateOnOrBefore + ") ");
       }
-
+      
       if (dateOnOrAfter != null) {
         sqlFilter.append("AND (c.entered >= " + dateOnOrAfter + ") ");
       }
-
+      
       if (ownerIdRange != null) {
         sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
       }
-
+      
       if (contactIdRange != null) {
         sqlFilter.append("AND c.contact_id IN (" + contactIdRange + ") ");
       }
-
+      
       if (withAccountsOnly) {
         sqlFilter.append("AND c.org_id > 0 ");
       }
-
+      
       if (withProjectsOnly) {
         sqlFilter.append("AND c.user_id in (Select distinct user_id from project_team) ");
       }
@@ -1250,7 +1250,7 @@ public void setIncludeEnabled(int includeEnabled) {
       if (accountOwnerIdRange != null) {
         sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
       }
-
+      
       //Decide which contacts can be shown
       switch (personalId) {
         //System needs to get all contacts
@@ -1262,7 +1262,7 @@ public void setIncludeEnabled(int includeEnabled) {
           sqlFilter.append("AND ( (c.type_id != 2 OR c.type_id is NULL) OR (c.type_id = 2 AND c.owner = ?) ) ");
           break;
       }
-
+      
       if (ignoreTypeIdList.size() > 0) {
         Iterator iList = ignoreTypeIdList.iterator();
         sqlFilter.append("AND c.type_id not in (");
@@ -1279,21 +1279,21 @@ public void setIncludeEnabled(int includeEnabled) {
       if (typeId != -1) {
         sqlFilter.append("AND c.type_id = ? ");
       }
-
+      
       if (ownerIdRange != null) {
         sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
       }
-
+      
       sqlFilter.append("AND ( lower(c.namelast) like lower(?) OR lower(c.namefirst) like lower(?) OR lower(c.company) like lower(?) ) ");
-
+      
       if (personalId != -1) {
         sqlFilter.append("AND ( (c.type_id != 2 OR c.type_id is NULL) OR (c.type_id = 2 AND c.owner = ?) ) ");
       }
     }
-
+    
   }
-
-
+  
+  
   /**
    *  Sets the parameters for the preparedStatement - these items must
    *  correspond with the createFilter statement
@@ -1305,27 +1305,27 @@ public void setIncludeEnabled(int includeEnabled) {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-
+    
     if (searchText == null || (searchText.equals(""))) {
-
+      
       if (orgId != -1) {
         pst.setInt(++i, orgId);
       }
       
       if (includeEnabled == TRUE) {
-              pst.setBoolean(++i, true);
+        pst.setBoolean(++i, true);
       } else if (includeEnabled == FALSE) {
-              pst.setBoolean(++i, false);
+        pst.setBoolean(++i, false);
       }
-
+      
       if (owner != -1) {
         pst.setInt(++i, owner);
       }
-
+      
       if (typeId != -1) {
         pst.setInt(++i, typeId);
       }
-
+      
       if (departmentId != -1) {
         pst.setInt(++i, departmentId);
       }
@@ -1341,25 +1341,25 @@ public void setIncludeEnabled(int includeEnabled) {
       if (middleName != null) {
         pst.setString(++i, middleName);
       }
-
+      
       if (lastName != null) {
         pst.setString(++i, lastName);
       }
-
+      
       if (title != null) {
         pst.setString(++i, title);
       }
-
+      
       if (company != null) {
         pst.setString(++i, company);
       }
-
+      
       switch (personalId) {
         case -2: break;
         case -1: break;
         default: pst.setInt(++i, personalId); break;
       }
-
+      
       if (ignoreTypeIdList.size() > 0) {
         Iterator iList = ignoreTypeIdList.iterator();
         while (iList.hasNext()) {
@@ -1371,18 +1371,18 @@ public void setIncludeEnabled(int includeEnabled) {
       if (typeId != -1) {
         pst.setInt(++i, typeId);
       }
-
+      
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);
       pst.setString(++i, searchText);
-
+      
       if (personalId != -1) {
         pst.setInt(++i, personalId);
       }
     }
-
+    
     return i;
   }
-
+  
 }
 
