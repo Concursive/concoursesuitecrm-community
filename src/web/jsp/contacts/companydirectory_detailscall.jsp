@@ -6,6 +6,15 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <form name="addCall" action="/ExternalContactsCalls.do?id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>" method="post">
+
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+<a href="/ExternalContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>">Calls</a> >
+Call Details
+<hr color="#BFBFBB" noshade>
+
+
 <a href="/ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>">Back to Call List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">

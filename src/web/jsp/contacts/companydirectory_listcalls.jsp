@@ -13,6 +13,14 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="addCall" action="/ExternalContactsCalls.do?command=Insert&contactId=<%= ContactDetails.getId() %>&auto-populate=true" method="post">
+
+<a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
+<a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
+Calls<br>
+<hr color="#BFBFBB" noshade>
+
+
 <a href="/ExternalContacts.do?command=ListContacts">Back to Contact List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
