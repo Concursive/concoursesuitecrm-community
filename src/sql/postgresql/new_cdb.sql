@@ -1,11 +1,3 @@
-/**
- *  PostgreSQL Table Creation
- *
- *@author     mrajkowski
- *@created    March 19, 2002
- *@version    $Id$
- */
-
 CREATE TABLE access (
   user_id SERIAL PRIMARY KEY,
   username VARCHAR(80) NOT NULL, 
@@ -29,6 +21,15 @@ CREATE TABLE access (
   enabled boolean NOT NULL DEFAULT true
 );
 
+CREATE TABLE lookup_industry (
+  code SERIAL PRIMARY KEY,
+  order_id INT,
+  description VARCHAR(50) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
 CREATE TABLE access_log (
   id serial,
   user_id INT NOT NULL references access(user_id),
@@ -46,11 +47,6 @@ CREATE TABLE system_prefs (
   data TEXT DEFAULT '' NOT NULL
 );
 
-INSERT INTO system_prefs (category, data) VALUES ('graphic', '/images/logo.gif');
-INSERT INTO system_prefs (category, data) VALUES ('template', 'template0');
-INSERT INTO system_prefs (category, data) VALUES ('css', 'template0');
-INSERT INTO system_prefs (category, data) VALUES ('license', 'fdb61e1f82a9e32b89263c81db0115d5');
-
 CREATE TABLE system_modules (
   code SERIAL PRIMARY KEY,
   description VARCHAR(255) NOT NULL,
@@ -58,10 +54,6 @@ CREATE TABLE system_modules (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
 );
-
-INSERT INTO system_modules (description) VALUES ('Account Management');
-INSERT INTO system_modules (description) VALUES ('Contacts & Resources');
-
 
 CREATE TABLE mod_log (
 datetime			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -79,12 +71,6 @@ CREATE TABLE lookup_contact_types (
   enabled BOOLEAN DEFAULT true
 );
 
-INSERT INTO lookup_contact_types (description) VALUES ('Employee');
-INSERT INTO lookup_contact_types (description) VALUES ('Personal');
-INSERT INTO lookup_contact_types (description) VALUES ('Sales');
-INSERT INTO lookup_contact_types (description) VALUES ('Billing');
-INSERT INTO lookup_contact_types (description) VALUES ('Technical');
-
 CREATE TABLE lookup_account_types (
   code SERIAL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -92,11 +78,6 @@ CREATE TABLE lookup_account_types (
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
 );
-
-INSERT INTO lookup_account_types (description) VALUES ('Customer');
-INSERT INTO lookup_account_types (description) VALUES ('Competitor');
-INSERT INTO lookup_account_types (description) VALUES ('Partner');
-INSERT INTO lookup_account_types (description) VALUES ('Vendor');
 
 CREATE TABLE state (
   state_code CHAR(2) PRIMARY KEY NOT NULL,
@@ -120,10 +101,6 @@ CREATE TABLE lookup_orgaddress_types (
   enabled BOOLEAN DEFAULT true
 )
 ;
-INSERT INTO lookup_orgaddress_types (description) VALUES ('Primary');
-INSERT INTO lookup_orgaddress_types (description) VALUES ('Auxiliary');
-INSERT INTO lookup_orgaddress_types (description) VALUES ('Billing');
-INSERT INTO lookup_orgaddress_types (description) VALUES ('Shipping');
 
 CREATE TABLE lookup_orgemail_types (
   code SERIAL PRIMARY KEY,
@@ -133,9 +110,6 @@ CREATE TABLE lookup_orgemail_types (
   enabled BOOLEAN DEFAULT true
 )
 ;
-
-INSERT INTO lookup_orgemail_types (description) VALUES ('Primary');
-INSERT INTO lookup_orgemail_types (description) VALUES ('Auxiliary');
 
 CREATE TABLE note (
   id serial PRIMARY KEY,
@@ -160,9 +134,6 @@ CREATE TABLE lookup_orgphone_types (
   enabled BOOLEAN DEFAULT true
 )
 ;
-INSERT INTO lookup_orgphone_types (description) VALUES ('Main');
-INSERT INTO lookup_orgphone_types (description) VALUES ('Fax');
-
 
 CREATE TABLE lookup_instantmessenger_types (
   code SERIAL PRIMARY KEY,
@@ -197,9 +168,6 @@ CREATE TABLE lookup_contactaddress_types (
   enabled BOOLEAN DEFAULT true
 )
 ;
-INSERT INTO lookup_contactaddress_types (description) VALUES ('Business');
-INSERT INTO lookup_contactaddress_types (description) VALUES ('Home');
-INSERT INTO lookup_contactaddress_types (description) VALUES ('Other');
 
 CREATE TABLE lookup_contactemail_types (
   code SERIAL PRIMARY KEY,
@@ -209,10 +177,6 @@ CREATE TABLE lookup_contactemail_types (
   enabled BOOLEAN DEFAULT true
 )
 ;
-INSERT INTO lookup_contactemail_types (description) VALUES ('Business');
-INSERT INTO lookup_contactemail_types (description) VALUES ('Personal');
-INSERT INTO lookup_contactemail_types (description) VALUES ('Other');
-
 
 CREATE TABLE lookup_contactphone_types (
   code SERIAL PRIMARY KEY,
@@ -222,15 +186,6 @@ CREATE TABLE lookup_contactphone_types (
   enabled BOOLEAN DEFAULT true
 )
 ;
-INSERT INTO lookup_contactphone_types (description) VALUES ('Business');
-INSERT INTO lookup_contactphone_types (description) VALUES ('Business2');
-INSERT INTO lookup_contactphone_types (description) VALUES ('Business Fax');
-INSERT INTO lookup_contactphone_types (description) VALUES ('Home');
-INSERT INTO lookup_contactphone_types (description) VALUES ('Home2');
-INSERT INTO lookup_contactphone_types (description) VALUES ('Home Fax');
-INSERT INTO lookup_contactphone_types (description) VALUES ('Mobile');
-INSERT INTO lookup_contactphone_types (description) VALUES ('Pager');
-INSERT INTO lookup_contactphone_types (description) VALUES ('Other');
 
 CREATE TABLE organization (
   org_id serial PRIMARY KEY,
@@ -373,16 +328,6 @@ CREATE TABLE lookup_delivery_options (
 )
 ;
 
-insert into lookup_delivery_options (description,level) values ('Email only',1);
-insert into lookup_delivery_options (description,level) values ('Fax only',2);
-insert into lookup_delivery_options (description,level) values ('Letter only',3);
-insert into lookup_delivery_options (description,level) values ('Email then Fax',4);
-insert into lookup_delivery_options (description,level) values ('Email then Letter',5);
-insert into lookup_delivery_options (description,level) values ('Email, Fax, then Letter',6);
-
-
-
-
 CREATE TABLE lookup_call_types (
   code SERIAL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -391,9 +336,6 @@ CREATE TABLE lookup_call_types (
   enabled BOOLEAN DEFAULT true
 )
 ;
-INSERT INTO lookup_call_types (description, default_item, level) VALUES ('Phone Call', true, 10);
-INSERT INTO lookup_call_types (description, default_item, level) VALUES ('Fax', false, 20);
-INSERT INTO lookup_call_types (description, default_item, level) VALUES ('In-Person', false, 30);
 
 CREATE TABLE call_log (
   call_id SERIAL PRIMARY KEY,

@@ -7,8 +7,6 @@ CREATE TABLE lookup_revenue_types (
 )
 ;
 
-INSERT INTO lookup_revenue_types (description) VALUES ('Technical');
-
 CREATE TABLE lookup_revenuedetail_types (
   code SERIAL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -17,6 +15,7 @@ CREATE TABLE lookup_revenuedetail_types (
   enabled BOOLEAN DEFAULT true
 )
 ;
+
 CREATE TABLE revenue (
   id serial PRIMARY KEY,
   org_id int references organization(org_id),
@@ -32,7 +31,6 @@ CREATE TABLE revenue (
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL references access(user_id)
 );
- 
 
 CREATE TABLE revenue_detail (
   id serial PRIMARY KEY,
