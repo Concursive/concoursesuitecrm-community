@@ -317,6 +317,8 @@
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ProjectCenterOK" resource="/projects_center.jsp" layout="nav"/>
     <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
+    <forward name="PopupOK" resource="/projects_center_issues_details.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopup.jsp"/>
   </action>
   <action name="ProjectManagementIssueReply" class="com.darkhorseventures.cfsmodule.ProjectManagementIssues">
     <bean name="IssueReply" class="com.zeroio.iteam.base.IssueReply" scope="request" />

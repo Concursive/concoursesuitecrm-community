@@ -197,8 +197,8 @@
   }
 </script>
 <body bgcolor='#FFFFFF' onLoad="changeDept(document.all.projectMemberForm, '- Select Department -')">
-<form name="projectMemberForm" method="post" action="/ProjectManagementTeam.do?command=Update&pid=<%= Project.getId() %>&auto-populate=true">
-  <table border="0" width="100%" cellpadding="0" cellspacing="0">
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+  <form name="projectMemberForm" method="post" action="/ProjectManagementTeam.do?command=Update&pid=<%= Project.getId() %>&auto-populate=true">
     <tr>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
       <td width="100%" colspan="3" rowspan="2" bgcolor="#808080">
@@ -251,6 +251,6 @@
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
     </tr>
-  </table>
-</form>
+  </form>
+</table>
 </body>

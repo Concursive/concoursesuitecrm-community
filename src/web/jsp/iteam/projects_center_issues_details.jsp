@@ -66,6 +66,16 @@
 %>  
 <br>
 <font color='#000000'>
+<%
+  if (request.getParameter("popup") != null) {
+%>
+  [<a href="javascript:window.close();">Close Window</a>]
+<%  
+  } else {
+%>
   [<a href="/ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>">Back to Topics</a>]  [<a href="/ProjectManagementIssues.do?command=Reply&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>">Add Reply</a>]
+<%  
+  }
+%>
 </font>
 <br>

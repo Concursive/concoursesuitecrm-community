@@ -7,7 +7,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="7">
-      &nbsp;All Versions:
+      &nbsp;<strong>All Versions:</strong>
     </td>
   </tr>
   <tr>
@@ -46,7 +46,7 @@
 %>
   <tr class="row<%= rowid %>">
     <td rowspan="2">
-      &nbsp;
+      <a href="/ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
     </td>
     <td>
       <a href="/ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %></a>

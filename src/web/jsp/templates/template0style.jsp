@@ -88,9 +88,9 @@ A:visited:hover{color:#FF3300;}
 </head>
 
 <body leftmargin=0 rightmargin=0 margin=0 marginwidth=0 topmargin=0 marginheight=0>
-<table border="0" width="100%" height="100%">
+<table border="0" width="100%">
   <tr>
-    <td valign="middle">
+    <td valign="top">
 <% String includeModule = (String) request.getAttribute("IncludeModule"); %>          
 <jsp:include page="<%= includeModule %>" flush="true"/>
     </td>

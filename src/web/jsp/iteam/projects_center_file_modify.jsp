@@ -32,8 +32,8 @@
     }
   }
 </script>
-<form method="POST" name="inputForm" action="/ProjectManagementFiles.do?command=Update" onSubmit="return checkFileForm(this);">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
+<form method="POST" name="inputForm" action="/ProjectManagementFiles.do?command=Update" onSubmit="return checkFileForm(this);">
   <tr>
     <td width='2' bgcolor='#000000'>&nbsp;</td>
     <td width="100%" bgcolor="#000000" rowspan="2" valign="middle">
@@ -102,6 +102,6 @@
     </td>
     <td width="2">&nbsp;</td>
   </tr>
-</table>
 </form>
+</table>
 </body>
